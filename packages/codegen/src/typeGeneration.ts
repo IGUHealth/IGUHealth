@@ -11,6 +11,7 @@ export interface ElementDefinition {
 export interface StructureDefinition {
   id: string;
   kind: "primitive-type" | "complex-type" | "resource" | "logical";
+  abstract: boolean;
   snapshot: { element: Array<ElementDefinition> };
 }
 
@@ -98,11 +99,10 @@ function wrapAsCollection(
   }
 }
 
-function contentReferenceToTypescriptType(element: ElementDefinition) {}
-
 function _typeToTypescriptType(type: string): string {
-  if (fhirSystemTypePredicate(type)) {
-    return fhirSystemTypePredicate(type) as string;
+  let systemType = fhirSystemTypePredicate(type);
+  if (systemType !== undefined) {
+    return systemType;
   }
   return type;
 }
@@ -142,9 +142,17 @@ function complexToTypescriptType(
         if (isNested(contentReferenceType)) {
           referenceTypescriptType = getInterfaceName(contentReferenceType);
         } else {
+          let type = contentReferenceType.type?.[0]?.code;
+          if (type === undefined) {
+            throw new Error(
+              "No type found for content reference: '" +
+                contentReferenceType.id +
+                "'"
+            );
+          }
           referenceTypescriptType = typeToTypescriptType(
             contentReferenceType,
-            contentReferenceType.type?.[0]?.code as string
+            type
           );
         }
         return [`${getElementField(element)}: ${referenceTypescriptType};`];
@@ -169,7 +177,12 @@ function complexToTypescriptType(
 export interface ${interfaceName} {
   ${children.join("\n  ")}
 }`;
-      return [`${getElementField(element)}: ${interfaceName};`];
+      return [
+        `${getElementField(element)}: ${wrapAsCollection(
+          element,
+          interfaceName
+        )};`,
+      ];
     } else {
       const interfaceName = getInterfaceName(element);
       typescriptTypes = `${typescriptTypes}
@@ -183,6 +196,27 @@ export interface ${interfaceName} {
   return typescriptTypes;
 }
 
+function getNonAbstractResourceTypes(sds: StructureDefinition[]) {
+  return sds.filter((sd) => !sd.abstract);
+}
+
+// Handle DomainResource and Resource by union joining existing generated types.
+function abstractResourceTypes(resourcesSds: StructureDefinition[]) {
+  const abstractResourceTypes = resourcesSds.filter((sd) => sd.abstract);
+  const nonAbstractResourceTypes = resourcesSds.filter((sd) => !sd.abstract);
+  if (abstractResourceTypes.length > 0) {
+    let abstractResourceTypescriptTypes = `export type ${
+      abstractResourceTypes[0].id
+    } = ${nonAbstractResourceTypes.map((sd) => sd.id).join("\n  | ")};`;
+
+    return `${abstractResourceTypescriptTypes}\n${abstractResourceTypes
+      .slice(1)
+      .map((sd) => `export type ${sd.id} = ${abstractResourceTypes[0].id}`)
+      .join("  |\n")};`;
+  }
+  return;
+}
+
 export function generateTypes(
   version: "r4",
   structureDefinitions: Readonly<Array<StructureDefinition>>
@@ -190,8 +224,8 @@ export function generateTypes(
   const primitiveTypes = structureDefinitions.filter(
     (sd) => sd.kind === "primitive-type"
   );
-  const complexTypes = structureDefinitions.filter(
-    (sd) => sd.kind === "complex-type"
+  const complexTypes = getNonAbstractResourceTypes(
+    structureDefinitions.filter((sd) => sd.kind === "complex-type")
   );
   const resourceTypes = structureDefinitions.filter(
     (sd) => sd.kind === "resource"
@@ -201,7 +235,12 @@ export function generateTypes(
     .map(primitiveToTypescriptType)
     .filter((type) => type)
     .concat(complexTypes.map(complexToTypescriptType).filter((type) => type))
-    .concat(resourceTypes.map(complexToTypescriptType).filter((type) => type))
+    .concat(abstractResourceTypes(resourceTypes))
+    .concat(
+      getNonAbstractResourceTypes(resourceTypes)
+        .map(complexToTypescriptType)
+        .filter((type) => type)
+    )
     .join("\n");
 
   return typescriptTypes;
