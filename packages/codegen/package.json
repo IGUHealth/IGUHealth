@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@genfhi/artifacts": "workspace:^",
+    "@genfhi/fhir-types": "workspace:^",
     "commander": "^10.0.1"
   }
 }

@@ -3,7 +3,8 @@ import { readFileSync, writeFileSync } from "fs";
 import resourceSDs from "@genfhi/artifacts/r4/profiles-resources.json";
 import typeSDs from "@genfhi/artifacts/r4/profiles-types.json";
 
-import { generateTypes, StructureDefinition } from "./typeGeneration";
+import { generateTypes } from "./typeGeneration";
+import { StructureDefinition } from "@genfhi/fhir-types/r4";
 
 interface StructureDefinitionBundle {
   resourceType: "Bundle";
@@ -48,8 +49,8 @@ program
     }
     // Quick hack for generation
     const bundles = [
-      resourceSDs as unknown as StructureDefinitionBundle,
-      typeSDs as unknown as StructureDefinitionBundle,
+      resourceSDs as StructureDefinitionBundle,
+      typeSDs as StructureDefinitionBundle,
     ];
 
     const structureDefinitions = bundles.flatMap((bundle) =>

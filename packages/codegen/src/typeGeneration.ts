@@ -1,20 +1,5 @@
 import { traversalBottomUp } from "./sdTraversal";
-
-export interface ElementDefinition {
-  id: string;
-  path: string;
-  min: number;
-  max: string;
-  contentReference: string;
-  type?: Array<{ code: string }>;
-  short?: string;
-}
-export interface StructureDefinition {
-  id: string;
-  kind: "primitive-type" | "complex-type" | "resource" | "logical";
-  abstract: boolean;
-  snapshot: { element: Array<ElementDefinition> };
-}
+import { ElementDefinition, StructureDefinition } from "@genfhi/fhir-types/r4";
 
 function fhirSystemTypePredicate(type: string) {
   switch (type) {
@@ -58,7 +43,7 @@ function documentation(element: ElementDefinition) {
 
 function getElementField(element: ElementDefinition, type?: string) {
   const path = element.path;
-  const isRequired = element.min > 0;
+  const isRequired = element.min && (element.min as unknown as number) > 0;
   const pathSplit = path.split(".");
   let field = pathSplit[pathSplit.length - 1];
   if (type) {
@@ -74,7 +59,7 @@ function getElementField(element: ElementDefinition, type?: string) {
 function primitiveToTypescriptType(
   primitiveSd: StructureDefinition
 ): string | void {
-  const primitiveValueType = primitiveSd.snapshot.element.filter((element) =>
+  const primitiveValueType = primitiveSd.snapshot?.element.filter((element) =>
     element.path.endsWith(".value")
   )[0]?.type?.[0]?.code;
   // Skip over these primitive types as already exist in typescript
@@ -94,6 +79,7 @@ function isCollection(elementDefinition: ElementDefinition) {
     case "*":
       return true;
     default:
+      if (!elementDefinition.max) return false;
       return parseInt(elementDefinition.max) > 1;
   }
 }
@@ -132,6 +118,8 @@ function isNested(element: ElementDefinition) {
   );
 }
 function getInterfaceName(element: ElementDefinition) {
+  if (!element.id)
+    throw new Error("Cannot create interface name for '" + element.path + "'");
   return element.id.split(".").map(capitalize).join("");
 }
 
@@ -139,10 +127,14 @@ function getInterfaceName(element: ElementDefinition) {
   Resolves an elements content Reference
 */
 function contentReference(sd: StructureDefinition, element: ElementDefinition) {
-  const contentReference = element.contentReference.split("#")[1];
-  const referenceElement = sd.snapshot.element.filter(
+  const contentReference = element.contentReference?.split("#")[1];
+  const referenceElement = sd.snapshot?.element.filter(
     (element) => element.id === contentReference
   )[0];
+  if (!referenceElement)
+    throw new Error(
+      "unable to resolve contentreference: '" + element.contentReference + "'"
+    );
   let referenceTypescriptType;
   if (isNested(referenceElement)) {
     referenceTypescriptType = getInterfaceName(referenceElement);

@@ -1,4 +1,4 @@
-import { StructureDefinition, ElementDefinition } from "./typeGeneration";
+import { StructureDefinition, ElementDefinition } from "@genfhi/fhir-types/r4";
 type VisitorFunction<T> = (element: ElementDefinition, children: T[]) => T[];
 
 function eleIndexToChildIndices(
@@ -42,6 +42,7 @@ export function traversalBottomUp<T>(
   sd: StructureDefinition,
   visitorFunction: VisitorFunction<T>
 ) {
-  const elements = sd.snapshot.element;
+  const elements = sd.snapshot?.element;
+  if (!elements) throw new Error("StructureDefinition has no elements");
   return traversalSdElements(elements, 0, visitorFunction);
 }
