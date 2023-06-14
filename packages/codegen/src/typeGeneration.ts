@@ -7,6 +7,7 @@ export interface ElementDefinition {
   max: string;
   contentReference: string;
   type?: Array<{ code: string }>;
+  short?: string;
 }
 export interface StructureDefinition {
   id: string;
@@ -50,6 +51,11 @@ function isRoot(sd: StructureDefinition, elementDefinition: ElementDefinition) {
   return elementDefinition.path === sd.id;
 }
 
+function documentation(element: ElementDefinition) {
+  if (element.short) return `  /* \n   * ${element.short}\n   */\n`;
+  return "";
+}
+
 function getElementField(element: ElementDefinition, type?: string) {
   const path = element.path;
   const isRequired = element.min > 0;
@@ -62,7 +68,7 @@ function getElementField(element: ElementDefinition, type?: string) {
   if (!isRequired || type) {
     field = field + "?";
   }
-  return field;
+  return `${documentation(element)}  ${field}`;
 }
 
 function primitiveToTypescriptType(
@@ -129,71 +135,95 @@ function getInterfaceName(element: ElementDefinition) {
   return element.id.split(".").map(capitalize).join("");
 }
 
-function complexToTypescriptType(
-  complexSD: StructureDefinition
+/*
+  Resolves an elements content Reference
+*/
+function contentReference(sd: StructureDefinition, element: ElementDefinition) {
+  const contentReference = element.contentReference.split("#")[1];
+  const referenceElement = sd.snapshot.element.filter(
+    (element) => element.id === contentReference
+  )[0];
+  let referenceTypescriptType;
+  if (isNested(referenceElement)) {
+    referenceTypescriptType = getInterfaceName(referenceElement);
+  } else {
+    let type = referenceElement.type?.[0]?.code;
+    if (type === undefined) {
+      throw new Error(
+        "No type found for content reference: '" + referenceElement.id + "'"
+      );
+    }
+    referenceTypescriptType = typeToTypescriptType(referenceElement, type);
+  }
+  return [`${getElementField(element)}: ${referenceTypescriptType};`];
+}
+
+function processLeaf(sd: StructureDefinition, element: ElementDefinition) {
+  if (element.contentReference) {
+    return contentReference(sd, element);
+  } else if (element.type?.length && element.type?.length > 1) {
+    return element.type?.map(
+      (type) =>
+        `${getElementField(element, type.code)}: ${typeToTypescriptType(
+          element,
+          type.code
+        )};`
+    );
+  }
+  return [
+    `${getElementField(element)}: ${typeToTypescriptType(
+      element,
+      element.type?.[0]?.code as string
+    )};`,
+  ];
+}
+
+interface ComplexTypeOutput {
+  typescriptInterface: string;
+  field: string[];
+}
+
+function processComplexToTypescript(
+  sd: StructureDefinition,
+  element: ElementDefinition,
+  children: string[]
+): ComplexTypeOutput {
+  const interfaceName = getInterfaceName(element);
+  // for resources include the resourceType filed
+  if (isRoot(sd, element) && sd.kind === "resource") {
+    children.unshift(`resourceType: "${sd.id}"`);
+  }
+
+  return {
+    typescriptInterface: `export interface ${interfaceName} {
+${children.join("\n")}
+}`,
+    field: [
+      `${getElementField(element)}: ${wrapAsCollection(
+        element,
+        interfaceName
+      )};`,
+    ],
+  };
+}
+
+function resourceOrComplexFhirToTypescript(
+  sd: StructureDefinition
 ): string | void {
   let typescriptTypes = "";
-
-  traversalBottomUp(complexSD, (element, children): string[] => {
+  traversalBottomUp(sd, (element, children: string[]): string[] => {
     if (children.length === 0) {
-      if (element.contentReference) {
-        // Resolves contentReference to TS type
-        const contentReference = element.contentReference.split("#")[1];
-        const contentReferenceType = complexSD.snapshot.element.filter(
-          (element) => element.id === contentReference
-        )[0];
-        let referenceTypescriptType;
-        if (isNested(contentReferenceType)) {
-          referenceTypescriptType = getInterfaceName(contentReferenceType);
-        } else {
-          let type = contentReferenceType.type?.[0]?.code;
-          if (type === undefined) {
-            throw new Error(
-              "No type found for content reference: '" +
-                contentReferenceType.id +
-                "'"
-            );
-          }
-          referenceTypescriptType = typeToTypescriptType(
-            contentReferenceType,
-            type
-          );
-        }
-        return [`${getElementField(element)}: ${referenceTypescriptType};`];
-      } else if (element.type?.length && element.type?.length > 1) {
-        return element.type?.map(
-          (type) =>
-            `${getElementField(element, type.code)}: ${typeToTypescriptType(
-              element,
-              type.code
-            )};`
-        );
-      }
-      return [
-        `${getElementField(element)}: ${typeToTypescriptType(
-          element,
-          element.type?.[0]?.code as string
-        )};`,
-      ];
+      return processLeaf(sd, element);
     } else {
-      const interfaceName = getInterfaceName(element);
-      // for resources include the resourceType filed
-      if (isRoot(complexSD, element) && complexSD.kind === "resource") {
-        children.unshift(`resourceType: "${complexSD.id}"`);
-      }
-      typescriptTypes = `${typescriptTypes}
-export interface ${interfaceName} {
-  ${children.join("\n  ")}
-}`;
-      return [
-        `${getElementField(element)}: ${wrapAsCollection(
-          element,
-          interfaceName
-        )};`,
-      ];
+      let { typescriptInterface, field } = processComplexToTypescript(
+        sd,
+        element,
+        children
+      );
+      typescriptTypes = `${typescriptTypes}\n${typescriptInterface}`;
+      return field;
     }
   });
-
   return typescriptTypes;
 }
 
@@ -235,11 +265,13 @@ export function generateTypes(
   const typescriptTypes: string = primitiveTypes
     .map(primitiveToTypescriptType)
     .filter((type) => type)
-    .concat(complexTypes.map(complexToTypescriptType).filter((type) => type))
+    .concat(
+      complexTypes.map(resourceOrComplexFhirToTypescript).filter((type) => type)
+    )
     .concat(abstractResourceTypes(resourceTypes))
     .concat(
       getNonAbstractResourceTypes(resourceTypes)
-        .map(complexToTypescriptType)
+        .map(resourceOrComplexFhirToTypescript)
         .filter((type) => type)
     )
     .join("\n");

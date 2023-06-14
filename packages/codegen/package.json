@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
-    "generate-r4": "pnpm ts-node src/index.ts generate-types-artifacts --output ../fhir-types/lib/r4.d.ts"
+    "generate-r4": "pnpm ts-node src/index.ts generate-types-artifacts --output ../fhir-types/r4.d.ts"
   },
   "keywords": [],
   "author": "",
