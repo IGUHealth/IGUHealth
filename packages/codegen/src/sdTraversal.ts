@@ -1,5 +1,5 @@
 import { StructureDefinition, ElementDefinition } from "./typeGeneration";
-type VisitorFunction = (element: ElementDefinition, children: any[][]) => any;
+type VisitorFunction<T> = (element: ElementDefinition, children: T[]) => T[];
 
 function eleIndexToChildIndices(
   elements: Array<ElementDefinition>,
@@ -24,10 +24,10 @@ function eleIndexToChildIndices(
   }
 }
 
-function traversalSdElements(
+function traversalSdElements<T>(
   elements: Array<ElementDefinition>,
   index: number,
-  visitorFunction: VisitorFunction
+  visitorFunction: VisitorFunction<T>
 ) {
   const childIndices = eleIndexToChildIndices(elements, index);
   const childTraversalValues: any[] = childIndices
@@ -38,9 +38,9 @@ function traversalSdElements(
   return visitorFunction(elements[index], childTraversalValues);
 }
 
-export function traversalBottomUp(
+export function traversalBottomUp<T>(
   sd: StructureDefinition,
-  visitorFunction: VisitorFunction
+  visitorFunction: VisitorFunction<T>
 ) {
   const elements = sd.snapshot.element;
   return traversalSdElements(elements, 0, visitorFunction);

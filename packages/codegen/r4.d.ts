@@ -17,17 +17,6 @@ export type url = string;
 export type uuid = string;
 export type xhtml = string;
 
-export interface Element {
-  id?: string;
-  extension?: Array<Extension>;
-}
-
-export interface BackboneElement {
-  id?: string;
-  extension?: Array<Extension>;
-  modifierExtension?: Array<Extension>;
-}
-
 export interface Address {
   id?: string;
   extension?: Array<Extension>;
@@ -158,10 +147,10 @@ export interface DataRequirement {
   subjectCodeableConcept?: CodeableConcept;
   subjectReference?: Reference;
   mustSupport?: Array<string>;
-  codeFilter?: DataRequirementCodeFilter;
-  dateFilter?: DataRequirementDateFilter;
+  codeFilter?: Array<DataRequirementCodeFilter>;
+  dateFilter?: Array<DataRequirementDateFilter>;
   limit?: positiveInt;
-  sort?: DataRequirementSort;
+  sort?: Array<DataRequirementSort>;
 }
 
 export interface Distance {
@@ -198,7 +187,7 @@ export interface Dosage {
   site?: CodeableConcept;
   route?: CodeableConcept;
   method?: CodeableConcept;
-  doseAndRate?: DosageDoseAndRate;
+  doseAndRate?: Array<DosageDoseAndRate>;
   maxDosePerPeriod?: Ratio;
   maxDosePerAdministration?: Quantity;
   maxDosePerLifetime?: Quantity;
@@ -223,7 +212,7 @@ export interface ElementDefinitionSlicingDiscriminator {
 export interface ElementDefinitionSlicing {
   id?: string;
   extension?: Array<Extension>;
-  discriminator?: ElementDefinitionSlicingDiscriminator;
+  discriminator?: Array<ElementDefinitionSlicingDiscriminator>;
   description?: string;
   ordered?: boolean;
   rules: code;
@@ -345,7 +334,7 @@ export interface ElementDefinition {
   max?: string;
   base?: ElementDefinitionBase;
   contentReference?: uri;
-  type?: ElementDefinitionType;
+  type?: Array<ElementDefinitionType>;
   defaultValueBase64Binary?: base64Binary;
   defaultValueBoolean?: boolean;
   defaultValueCanonical?: canonical;
@@ -498,7 +487,7 @@ export interface ElementDefinition {
   patternUsageContext?: UsageContext;
   patternDosage?: Dosage;
   patternMeta?: Meta;
-  example?: ElementDefinitionExample;
+  example?: Array<ElementDefinitionExample>;
   minValueDate?: date;
   minValueDateTime?: dateTime;
   minValueInstant?: instant;
@@ -519,13 +508,13 @@ export interface ElementDefinition {
   maxValueQuantity?: Quantity;
   maxLength?: integer;
   condition?: Array<id>;
-  constraint?: ElementDefinitionConstraint;
+  constraint?: Array<ElementDefinitionConstraint>;
   mustSupport?: boolean;
   isModifier?: boolean;
   isModifierReason?: string;
   isSummary?: boolean;
   binding?: ElementDefinitionBinding;
-  mapping?: ElementDefinitionMapping;
+  mapping?: Array<ElementDefinitionMapping>;
 }
 
 export interface Expression {
@@ -869,13 +858,153 @@ export interface Quantity {
   system?: uri;
   code?: code;
 }
-
-export interface Resource {
-  id?: string;
-  meta?: Meta;
-  implicitRules?: uri;
-  language?: code;
-}
+export type Resource = Account
+  | ActivityDefinition
+  | AdverseEvent
+  | AllergyIntolerance
+  | Appointment
+  | AppointmentResponse
+  | AuditEvent
+  | Basic
+  | Binary
+  | BiologicallyDerivedProduct
+  | BodyStructure
+  | Bundle
+  | CapabilityStatement
+  | CarePlan
+  | CareTeam
+  | CatalogEntry
+  | ChargeItem
+  | ChargeItemDefinition
+  | Claim
+  | ClaimResponse
+  | ClinicalImpression
+  | CodeSystem
+  | Communication
+  | CommunicationRequest
+  | CompartmentDefinition
+  | Composition
+  | ConceptMap
+  | Condition
+  | Consent
+  | Contract
+  | Coverage
+  | CoverageEligibilityRequest
+  | CoverageEligibilityResponse
+  | DetectedIssue
+  | Device
+  | DeviceDefinition
+  | DeviceMetric
+  | DeviceRequest
+  | DeviceUseStatement
+  | DiagnosticReport
+  | DocumentManifest
+  | DocumentReference
+  | EffectEvidenceSynthesis
+  | Encounter
+  | Endpoint
+  | EnrollmentRequest
+  | EnrollmentResponse
+  | EpisodeOfCare
+  | EventDefinition
+  | Evidence
+  | EvidenceVariable
+  | ExampleScenario
+  | ExplanationOfBenefit
+  | FamilyMemberHistory
+  | Flag
+  | Goal
+  | GraphDefinition
+  | Group
+  | GuidanceResponse
+  | HealthcareService
+  | ImagingStudy
+  | Immunization
+  | ImmunizationEvaluation
+  | ImmunizationRecommendation
+  | ImplementationGuide
+  | InsurancePlan
+  | Invoice
+  | Library
+  | Linkage
+  | List
+  | Location
+  | Measure
+  | MeasureReport
+  | Media
+  | Medication
+  | MedicationAdministration
+  | MedicationDispense
+  | MedicationKnowledge
+  | MedicationRequest
+  | MedicationStatement
+  | MedicinalProduct
+  | MedicinalProductAuthorization
+  | MedicinalProductContraindication
+  | MedicinalProductIndication
+  | MedicinalProductIngredient
+  | MedicinalProductInteraction
+  | MedicinalProductManufactured
+  | MedicinalProductPackaged
+  | MedicinalProductPharmaceutical
+  | MedicinalProductUndesirableEffect
+  | MessageDefinition
+  | MessageHeader
+  | MolecularSequence
+  | NamingSystem
+  | NutritionOrder
+  | Observation
+  | ObservationDefinition
+  | OperationDefinition
+  | OperationOutcome
+  | Organization
+  | OrganizationAffiliation
+  | Parameters
+  | Patient
+  | PaymentNotice
+  | PaymentReconciliation
+  | Person
+  | PlanDefinition
+  | Practitioner
+  | PractitionerRole
+  | Procedure
+  | Provenance
+  | Questionnaire
+  | QuestionnaireResponse
+  | RelatedPerson
+  | RequestGroup
+  | ResearchDefinition
+  | ResearchElementDefinition
+  | ResearchStudy
+  | ResearchSubject
+  | RiskAssessment
+  | RiskEvidenceSynthesis
+  | Schedule
+  | SearchParameter
+  | ServiceRequest
+  | Slot
+  | Specimen
+  | SpecimenDefinition
+  | StructureDefinition
+  | StructureMap
+  | Subscription
+  | Substance
+  | SubstanceNucleicAcid
+  | SubstancePolymer
+  | SubstanceProtein
+  | SubstanceReferenceInformation
+  | SubstanceSourceMaterial
+  | SubstanceSpecification
+  | SupplyDelivery
+  | SupplyRequest
+  | Task
+  | TerminologyCapabilities
+  | TestReport
+  | TestScript
+  | ValueSet
+  | VerificationResult
+  | VisionPrescription;
+export type DomainResource = Resource;
 
 export interface AccountCoverage {
   id?: string;
@@ -893,6 +1022,7 @@ export interface AccountGuarantor {
   period?: Period;
 }
 export interface Account {
+  resourceType: "Account"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -907,10 +1037,10 @@ export interface Account {
   name?: string;
   subject?: Array<Reference>;
   servicePeriod?: Period;
-  coverage?: AccountCoverage;
+  coverage?: Array<AccountCoverage>;
   owner?: Reference;
   description?: string;
-  guarantor?: AccountGuarantor;
+  guarantor?: Array<AccountGuarantor>;
   partOf?: Reference;
 }
 
@@ -929,6 +1059,7 @@ export interface ActivityDefinitionDynamicValue {
   expression: Expression;
 }
 export interface ActivityDefinition {
+  resourceType: "ActivityDefinition"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -979,7 +1110,7 @@ export interface ActivityDefinition {
   timingRange?: Range;
   timingDuration?: Duration;
   location?: Reference;
-  participant?: ActivityDefinitionParticipant;
+  participant?: Array<ActivityDefinitionParticipant>;
   productReference?: Reference;
   productCodeableConcept?: CodeableConcept;
   quantity?: Quantity;
@@ -989,7 +1120,7 @@ export interface ActivityDefinition {
   observationRequirement?: Array<Reference>;
   observationResultRequirement?: Array<Reference>;
   transform?: canonical;
-  dynamicValue?: ActivityDefinitionDynamicValue;
+  dynamicValue?: Array<ActivityDefinitionDynamicValue>;
 }
 
 export interface AdverseEventSuspectEntityCausality {
@@ -1006,9 +1137,10 @@ export interface AdverseEventSuspectEntity {
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
   instance: Reference;
-  causality?: AdverseEventSuspectEntityCausality;
+  causality?: Array<AdverseEventSuspectEntityCausality>;
 }
 export interface AdverseEvent {
+  resourceType: "AdverseEvent"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -1033,7 +1165,7 @@ export interface AdverseEvent {
   outcome?: CodeableConcept;
   recorder?: Reference;
   contributor?: Array<Reference>;
-  suspectEntity?: AdverseEventSuspectEntity;
+  suspectEntity?: Array<AdverseEventSuspectEntity>;
   subjectMedicalHistory?: Array<Reference>;
   referenceDocument?: Array<Reference>;
   study?: Array<Reference>;
@@ -1052,6 +1184,7 @@ export interface AllergyIntoleranceReaction {
   note?: Array<Annotation>;
 }
 export interface AllergyIntolerance {
+  resourceType: "AllergyIntolerance"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -1079,7 +1212,7 @@ export interface AllergyIntolerance {
   asserter?: Reference;
   lastOccurrence?: dateTime;
   note?: Array<Annotation>;
-  reaction?: AllergyIntoleranceReaction;
+  reaction?: Array<AllergyIntoleranceReaction>;
 }
 
 export interface AppointmentParticipant {
@@ -1093,6 +1226,7 @@ export interface AppointmentParticipant {
   period?: Period;
 }
 export interface Appointment {
+  resourceType: "Appointment"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -1121,11 +1255,12 @@ export interface Appointment {
   comment?: string;
   patientInstruction?: string;
   basedOn?: Array<Reference>;
-  participant: AppointmentParticipant;
+  participant: Array<AppointmentParticipant>;
   requestedPeriod?: Array<Period>;
 }
 
 export interface AppointmentResponse {
+  resourceType: "AppointmentResponse"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -1195,9 +1330,10 @@ export interface AuditEventEntity {
   name?: string;
   description?: string;
   query?: base64Binary;
-  detail?: AuditEventEntityDetail;
+  detail?: Array<AuditEventEntityDetail>;
 }
 export interface AuditEvent {
+  resourceType: "AuditEvent"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -1214,12 +1350,13 @@ export interface AuditEvent {
   outcome?: code;
   outcomeDesc?: string;
   purposeOfEvent?: Array<CodeableConcept>;
-  agent: AuditEventAgent;
+  agent: Array<AuditEventAgent>;
   source: AuditEventSource;
-  entity?: AuditEventEntity;
+  entity?: Array<AuditEventEntity>;
 }
 
 export interface Basic {
+  resourceType: "Basic"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -1236,6 +1373,7 @@ export interface Basic {
 }
 
 export interface Binary {
+  resourceType: "Binary"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -1282,6 +1420,7 @@ export interface BiologicallyDerivedProductStorage {
   duration?: Period;
 }
 export interface BiologicallyDerivedProduct {
+  resourceType: "BiologicallyDerivedProduct"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -1298,12 +1437,13 @@ export interface BiologicallyDerivedProduct {
   quantity?: integer;
   parent?: Array<Reference>;
   collection?: BiologicallyDerivedProductCollection;
-  processing?: BiologicallyDerivedProductProcessing;
+  processing?: Array<BiologicallyDerivedProductProcessing>;
   manipulation?: BiologicallyDerivedProductManipulation;
-  storage?: BiologicallyDerivedProductStorage;
+  storage?: Array<BiologicallyDerivedProductStorage>;
 }
 
 export interface BodyStructure {
+  resourceType: "BodyStructure"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -1369,6 +1509,7 @@ export interface BundleEntry {
   response?: BundleEntryResponse;
 }
 export interface Bundle {
+  resourceType: "Bundle"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -1377,8 +1518,8 @@ export interface Bundle {
   type: code;
   timestamp?: instant;
   total?: unsignedInt;
-  link?: BundleLink;
-  entry?: BundleEntry;
+  link?: Array<BundleLink>;
+  entry?: Array<BundleEntry>;
   signature?: Signature;
 }
 
@@ -1438,7 +1579,7 @@ export interface CapabilityStatementRestResource {
   profile?: canonical;
   supportedProfile?: Array<canonical>;
   documentation?: markdown;
-  interaction?: CapabilityStatementRestResourceInteraction;
+  interaction?: Array<CapabilityStatementRestResourceInteraction>;
   versioning?: code;
   readHistory?: boolean;
   updateCreate?: boolean;
@@ -1449,8 +1590,8 @@ export interface CapabilityStatementRestResource {
   referencePolicy?: Array<code>;
   searchInclude?: Array<string>;
   searchRevInclude?: Array<string>;
-  searchParam?: CapabilityStatementRestResourceSearchParam;
-  operation?: CapabilityStatementRestResourceOperation;
+  searchParam?: Array<CapabilityStatementRestResourceSearchParam>;
+  operation?: Array<CapabilityStatementRestResourceOperation>;
 }
 export interface CapabilityStatementRestInteraction {
   id?: string;
@@ -1466,8 +1607,8 @@ export interface CapabilityStatementRest {
   mode: code;
   documentation?: markdown;
   security?: CapabilityStatementRestSecurity;
-  resource?: CapabilityStatementRestResource;
-  interaction?: CapabilityStatementRestInteraction;
+  resource?: Array<CapabilityStatementRestResource>;
+  interaction?: Array<CapabilityStatementRestInteraction>;
   searchParam?: CapabilityStatementRestResourceSearchParam;
   operation?: CapabilityStatementRestResourceOperation;
   compartment?: Array<canonical>;
@@ -1490,10 +1631,10 @@ export interface CapabilityStatementMessaging {
   id?: string;
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
-  endpoint?: CapabilityStatementMessagingEndpoint;
+  endpoint?: Array<CapabilityStatementMessagingEndpoint>;
   reliableCache?: unsignedInt;
   documentation?: markdown;
-  supportedMessage?: CapabilityStatementMessagingSupportedMessage;
+  supportedMessage?: Array<CapabilityStatementMessagingSupportedMessage>;
 }
 export interface CapabilityStatementDocument {
   id?: string;
@@ -1504,6 +1645,7 @@ export interface CapabilityStatementDocument {
   profile: canonical;
 }
 export interface CapabilityStatement {
+  resourceType: "CapabilityStatement"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -1535,9 +1677,9 @@ export interface CapabilityStatement {
   format: Array<code>;
   patchFormat?: Array<code>;
   implementationGuide?: Array<canonical>;
-  rest?: CapabilityStatementRest;
-  messaging?: CapabilityStatementMessaging;
-  document?: CapabilityStatementDocument;
+  rest?: Array<CapabilityStatementRest>;
+  messaging?: Array<CapabilityStatementMessaging>;
+  document?: Array<CapabilityStatementDocument>;
 }
 
 export interface CarePlanActivityDetail {
@@ -1576,6 +1718,7 @@ export interface CarePlanActivity {
   detail?: CarePlanActivityDetail;
 }
 export interface CarePlan {
+  resourceType: "CarePlan"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -1605,7 +1748,7 @@ export interface CarePlan {
   addresses?: Array<Reference>;
   supportingInfo?: Array<Reference>;
   goal?: Array<Reference>;
-  activity?: CarePlanActivity;
+  activity?: Array<CarePlanActivity>;
   note?: Array<Annotation>;
 }
 
@@ -1619,6 +1762,7 @@ export interface CareTeamParticipant {
   period?: Period;
 }
 export interface CareTeam {
+  resourceType: "CareTeam"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -1634,7 +1778,7 @@ export interface CareTeam {
   subject?: Reference;
   encounter?: Reference;
   period?: Period;
-  participant?: CareTeamParticipant;
+  participant?: Array<CareTeamParticipant>;
   reasonCode?: Array<CodeableConcept>;
   reasonReference?: Array<Reference>;
   managingOrganization?: Array<Reference>;
@@ -1650,6 +1794,7 @@ export interface CatalogEntryRelatedEntry {
   item: Reference;
 }
 export interface CatalogEntry {
+  resourceType: "CatalogEntry"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -1670,7 +1815,7 @@ export interface CatalogEntry {
   lastUpdated?: dateTime;
   additionalCharacteristic?: Array<CodeableConcept>;
   additionalClassification?: Array<CodeableConcept>;
-  relatedEntry?: CatalogEntryRelatedEntry;
+  relatedEntry?: Array<CatalogEntryRelatedEntry>;
 }
 
 export interface ChargeItemPerformer {
@@ -1681,6 +1826,7 @@ export interface ChargeItemPerformer {
   actor: Reference;
 }
 export interface ChargeItem {
+  resourceType: "ChargeItem"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -1700,7 +1846,7 @@ export interface ChargeItem {
   occurrenceDateTime?: dateTime;
   occurrencePeriod?: Period;
   occurrenceTiming?: Timing;
-  performer?: ChargeItemPerformer;
+  performer?: Array<ChargeItemPerformer>;
   performingOrganization?: Reference;
   requestingOrganization?: Reference;
   costCenter?: Reference;
@@ -1742,9 +1888,10 @@ export interface ChargeItemDefinitionPropertyGroup {
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
   applicability?: ChargeItemDefinitionApplicability;
-  priceComponent?: ChargeItemDefinitionPropertyGroupPriceComponent;
+  priceComponent?: Array<ChargeItemDefinitionPropertyGroupPriceComponent>;
 }
 export interface ChargeItemDefinition {
+  resourceType: "ChargeItemDefinition"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -1774,8 +1921,8 @@ export interface ChargeItemDefinition {
   effectivePeriod?: Period;
   code?: CodeableConcept;
   instance?: Array<Reference>;
-  applicability?: ChargeItemDefinitionApplicability;
-  propertyGroup?: ChargeItemDefinitionPropertyGroup;
+  applicability?: Array<ChargeItemDefinitionApplicability>;
+  propertyGroup?: Array<ChargeItemDefinitionPropertyGroup>;
 }
 
 export interface ClaimRelated {
@@ -1893,7 +2040,7 @@ export interface ClaimItemDetail {
   factor?: decimal;
   net?: Money;
   udi?: Array<Reference>;
-  subDetail?: ClaimItemDetailSubDetail;
+  subDetail?: Array<ClaimItemDetailSubDetail>;
 }
 export interface ClaimItem {
   id?: string;
@@ -1922,9 +2069,10 @@ export interface ClaimItem {
   bodySite?: CodeableConcept;
   subSite?: Array<CodeableConcept>;
   encounter?: Array<Reference>;
-  detail?: ClaimItemDetail;
+  detail?: Array<ClaimItemDetail>;
 }
 export interface Claim {
+  resourceType: "Claim"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -1946,19 +2094,19 @@ export interface Claim {
   provider: Reference;
   priority: CodeableConcept;
   fundsReserve?: CodeableConcept;
-  related?: ClaimRelated;
+  related?: Array<ClaimRelated>;
   prescription?: Reference;
   originalPrescription?: Reference;
   payee?: ClaimPayee;
   referral?: Reference;
   facility?: Reference;
-  careTeam?: ClaimCareTeam;
-  supportingInfo?: ClaimSupportingInfo;
-  diagnosis?: ClaimDiagnosis;
-  procedure?: ClaimProcedure;
-  insurance: ClaimInsurance;
+  careTeam?: Array<ClaimCareTeam>;
+  supportingInfo?: Array<ClaimSupportingInfo>;
+  diagnosis?: Array<ClaimDiagnosis>;
+  procedure?: Array<ClaimProcedure>;
+  insurance: Array<ClaimInsurance>;
   accident?: ClaimAccident;
-  item?: ClaimItem;
+  item?: Array<ClaimItem>;
   total?: Money;
 }
 
@@ -1986,7 +2134,7 @@ export interface ClaimResponseItemDetail {
   detailSequence: positiveInt;
   noteNumber?: Array<positiveInt>;
   adjudication: ClaimResponseItemAdjudication;
-  subDetail?: ClaimResponseItemDetailSubDetail;
+  subDetail?: Array<ClaimResponseItemDetailSubDetail>;
 }
 export interface ClaimResponseItem {
   id?: string;
@@ -1994,8 +2142,8 @@ export interface ClaimResponseItem {
   modifierExtension?: Array<Extension>;
   itemSequence: positiveInt;
   noteNumber?: Array<positiveInt>;
-  adjudication: ClaimResponseItemAdjudication;
-  detail?: ClaimResponseItemDetail;
+  adjudication: Array<ClaimResponseItemAdjudication>;
+  detail?: Array<ClaimResponseItemDetail>;
 }
 export interface ClaimResponseAddItemDetailSubDetail {
   id?: string;
@@ -2022,7 +2170,7 @@ export interface ClaimResponseAddItemDetail {
   net?: Money;
   noteNumber?: Array<positiveInt>;
   adjudication: ClaimResponseItemAdjudication;
-  subDetail?: ClaimResponseAddItemDetailSubDetail;
+  subDetail?: Array<ClaimResponseAddItemDetailSubDetail>;
 }
 export interface ClaimResponseAddItem {
   id?: string;
@@ -2048,7 +2196,7 @@ export interface ClaimResponseAddItem {
   subSite?: Array<CodeableConcept>;
   noteNumber?: Array<positiveInt>;
   adjudication: ClaimResponseItemAdjudication;
-  detail?: ClaimResponseAddItemDetail;
+  detail?: Array<ClaimResponseAddItemDetail>;
 }
 export interface ClaimResponseTotal {
   id?: string;
@@ -2097,6 +2245,7 @@ export interface ClaimResponseError {
   code: CodeableConcept;
 }
 export interface ClaimResponse {
+  resourceType: "ClaimResponse"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -2120,18 +2269,18 @@ export interface ClaimResponse {
   preAuthRef?: string;
   preAuthPeriod?: Period;
   payeeType?: CodeableConcept;
-  item?: ClaimResponseItem;
-  addItem?: ClaimResponseAddItem;
+  item?: Array<ClaimResponseItem>;
+  addItem?: Array<ClaimResponseAddItem>;
   adjudication?: ClaimResponseItemAdjudication;
-  total?: ClaimResponseTotal;
+  total?: Array<ClaimResponseTotal>;
   payment?: ClaimResponsePayment;
   fundsReserve?: CodeableConcept;
   formCode?: CodeableConcept;
   form?: Attachment;
-  processNote?: ClaimResponseProcessNote;
+  processNote?: Array<ClaimResponseProcessNote>;
   communicationRequest?: Array<Reference>;
-  insurance?: ClaimResponseInsurance;
-  error?: ClaimResponseError;
+  insurance?: Array<ClaimResponseInsurance>;
+  error?: Array<ClaimResponseError>;
 }
 
 export interface ClinicalImpressionInvestigation {
@@ -2150,6 +2299,7 @@ export interface ClinicalImpressionFinding {
   basis?: string;
 }
 export interface ClinicalImpression {
+  resourceType: "ClinicalImpression"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -2171,10 +2321,10 @@ export interface ClinicalImpression {
   assessor?: Reference;
   previous?: Reference;
   problem?: Array<Reference>;
-  investigation?: ClinicalImpressionInvestigation;
+  investigation?: Array<ClinicalImpressionInvestigation>;
   protocol?: Array<uri>;
   summary?: string;
-  finding?: ClinicalImpressionFinding;
+  finding?: Array<ClinicalImpressionFinding>;
   prognosisCodeableConcept?: Array<CodeableConcept>;
   prognosisReference?: Array<Reference>;
   supportingInfo?: Array<Reference>;
@@ -2227,11 +2377,12 @@ export interface CodeSystemConcept {
   code: code;
   display?: string;
   definition?: string;
-  designation?: CodeSystemConceptDesignation;
-  property?: CodeSystemConceptProperty;
+  designation?: Array<CodeSystemConceptDesignation>;
+  property?: Array<CodeSystemConceptProperty>;
   concept?: CodeSystemConcept;
 }
 export interface CodeSystem {
+  resourceType: "CodeSystem"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -2263,9 +2414,9 @@ export interface CodeSystem {
   content: code;
   supplements?: canonical;
   count?: unsignedInt;
-  filter?: CodeSystemFilter;
-  property?: CodeSystemProperty;
-  concept?: CodeSystemConcept;
+  filter?: Array<CodeSystemFilter>;
+  property?: Array<CodeSystemProperty>;
+  concept?: Array<CodeSystemConcept>;
 }
 
 export interface CommunicationPayload {
@@ -2277,6 +2428,7 @@ export interface CommunicationPayload {
   contentReference?: Reference;
 }
 export interface Communication {
+  resourceType: "Communication"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -2306,7 +2458,7 @@ export interface Communication {
   sender?: Reference;
   reasonCode?: Array<CodeableConcept>;
   reasonReference?: Array<Reference>;
-  payload?: CommunicationPayload;
+  payload?: Array<CommunicationPayload>;
   note?: Array<Annotation>;
 }
 
@@ -2319,6 +2471,7 @@ export interface CommunicationRequestPayload {
   contentReference?: Reference;
 }
 export interface CommunicationRequest {
+  resourceType: "CommunicationRequest"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -2340,7 +2493,7 @@ export interface CommunicationRequest {
   subject?: Reference;
   about?: Array<Reference>;
   encounter?: Reference;
-  payload?: CommunicationRequestPayload;
+  payload?: Array<CommunicationRequestPayload>;
   occurrenceDateTime?: dateTime;
   occurrencePeriod?: Period;
   authoredOn?: dateTime;
@@ -2361,6 +2514,7 @@ export interface CompartmentDefinitionResource {
   documentation?: string;
 }
 export interface CompartmentDefinition {
+  resourceType: "CompartmentDefinition"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -2382,7 +2536,7 @@ export interface CompartmentDefinition {
   purpose?: markdown;
   code: code;
   search: boolean;
-  resource?: CompartmentDefinitionResource;
+  resource?: Array<CompartmentDefinitionResource>;
 }
 
 export interface CompositionAttester {
@@ -2425,6 +2579,7 @@ export interface CompositionSection {
   section?: CompositionSection;
 }
 export interface Composition {
+  resourceType: "Composition"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -2443,11 +2598,11 @@ export interface Composition {
   author: Array<Reference>;
   title: string;
   confidentiality?: code;
-  attester?: CompositionAttester;
+  attester?: Array<CompositionAttester>;
   custodian?: Reference;
-  relatesTo?: CompositionRelatesTo;
-  event?: CompositionEvent;
-  section?: CompositionSection;
+  relatesTo?: Array<CompositionRelatesTo>;
+  event?: Array<CompositionEvent>;
+  section?: Array<CompositionSection>;
 }
 
 export interface ConceptMapGroupElementTargetDependsOn {
@@ -2467,7 +2622,7 @@ export interface ConceptMapGroupElementTarget {
   display?: string;
   equivalence: code;
   comment?: string;
-  dependsOn?: ConceptMapGroupElementTargetDependsOn;
+  dependsOn?: Array<ConceptMapGroupElementTargetDependsOn>;
   product?: ConceptMapGroupElementTargetDependsOn;
 }
 export interface ConceptMapGroupElement {
@@ -2476,7 +2631,7 @@ export interface ConceptMapGroupElement {
   modifierExtension?: Array<Extension>;
   code?: code;
   display?: string;
-  target?: ConceptMapGroupElementTarget;
+  target?: Array<ConceptMapGroupElementTarget>;
 }
 export interface ConceptMapGroupUnmapped {
   id?: string;
@@ -2495,10 +2650,11 @@ export interface ConceptMapGroup {
   sourceVersion?: string;
   target?: uri;
   targetVersion?: string;
-  element: ConceptMapGroupElement;
+  element: Array<ConceptMapGroupElement>;
   unmapped?: ConceptMapGroupUnmapped;
 }
 export interface ConceptMap {
+  resourceType: "ConceptMap"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -2526,7 +2682,7 @@ export interface ConceptMap {
   sourceCanonical?: canonical;
   targetUri?: uri;
   targetCanonical?: canonical;
-  group?: ConceptMapGroup;
+  group?: Array<ConceptMapGroup>;
 }
 
 export interface ConditionStage {
@@ -2545,6 +2701,7 @@ export interface ConditionEvidence {
   detail?: Array<Reference>;
 }
 export interface Condition {
+  resourceType: "Condition"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -2575,8 +2732,8 @@ export interface Condition {
   recordedDate?: dateTime;
   recorder?: Reference;
   asserter?: Reference;
-  stage?: ConditionStage;
-  evidence?: ConditionEvidence;
+  stage?: Array<ConditionStage>;
+  evidence?: Array<ConditionEvidence>;
   note?: Array<Annotation>;
 }
 
@@ -2615,17 +2772,18 @@ export interface ConsentProvision {
   modifierExtension?: Array<Extension>;
   type?: code;
   period?: Period;
-  actor?: ConsentProvisionActor;
+  actor?: Array<ConsentProvisionActor>;
   action?: Array<CodeableConcept>;
   securityLabel?: Array<Coding>;
   purpose?: Array<Coding>;
   class?: Array<Coding>;
   code?: Array<CodeableConcept>;
   dataPeriod?: Period;
-  data?: ConsentProvisionData;
+  data?: Array<ConsentProvisionData>;
   provision?: ConsentProvision;
 }
 export interface Consent {
+  resourceType: "Consent"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -2644,9 +2802,9 @@ export interface Consent {
   organization?: Array<Reference>;
   sourceAttachment?: Attachment;
   sourceReference?: Reference;
-  policy?: ConsentPolicy;
+  policy?: Array<ConsentPolicy>;
   policyRule?: CodeableConcept;
-  verification?: ConsentVerification;
+  verification?: Array<ConsentVerification>;
   provision?: ConsentProvision;
 }
 
@@ -2699,12 +2857,12 @@ export interface ContractTermOffer {
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
   identifier?: Array<Identifier>;
-  party?: ContractTermOfferParty;
+  party?: Array<ContractTermOfferParty>;
   topic?: Reference;
   type?: CodeableConcept;
   decision?: CodeableConcept;
   decisionMode?: Array<CodeableConcept>;
-  answer?: ContractTermOfferAnswer;
+  answer?: Array<ContractTermOfferAnswer>;
   text?: string;
   linkId?: Array<string>;
   securityLabelNumber?: Array<unsignedInt>;
@@ -2746,7 +2904,7 @@ export interface ContractTermAsset {
   typeReference?: Array<Reference>;
   subtype?: Array<CodeableConcept>;
   relationship?: Coding;
-  context?: ContractTermAssetContext;
+  context?: Array<ContractTermAssetContext>;
   condition?: string;
   periodType?: Array<CodeableConcept>;
   period?: Array<Period>;
@@ -2755,7 +2913,7 @@ export interface ContractTermAsset {
   linkId?: Array<string>;
   answer?: ContractTermOfferAnswer;
   securityLabelNumber?: Array<unsignedInt>;
-  valuedItem?: ContractTermAssetValuedItem;
+  valuedItem?: Array<ContractTermAssetValuedItem>;
 }
 export interface ContractTermActionSubject {
   id?: string;
@@ -2770,7 +2928,7 @@ export interface ContractTermAction {
   modifierExtension?: Array<Extension>;
   doNotPerform?: boolean;
   type: CodeableConcept;
-  subject?: ContractTermActionSubject;
+  subject?: Array<ContractTermActionSubject>;
   intent: CodeableConcept;
   linkId?: Array<string>;
   status: CodeableConcept;
@@ -2804,10 +2962,10 @@ export interface ContractTerm {
   type?: CodeableConcept;
   subType?: CodeableConcept;
   text?: string;
-  securityLabel?: ContractTermSecurityLabel;
+  securityLabel?: Array<ContractTermSecurityLabel>;
   offer: ContractTermOffer;
-  asset?: ContractTermAsset;
-  action?: ContractTermAction;
+  asset?: Array<ContractTermAsset>;
+  action?: Array<ContractTermAction>;
   group?: ContractTerm;
 }
 export interface ContractSigner {
@@ -2840,6 +2998,7 @@ export interface ContractRule {
   contentReference?: Reference;
 }
 export interface Contract {
+  resourceType: "Contract"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -2874,13 +3033,13 @@ export interface Contract {
   type?: CodeableConcept;
   subType?: Array<CodeableConcept>;
   contentDefinition?: ContractContentDefinition;
-  term?: ContractTerm;
+  term?: Array<ContractTerm>;
   supportingInfo?: Array<Reference>;
   relevantHistory?: Array<Reference>;
-  signer?: ContractSigner;
-  friendly?: ContractFriendly;
-  legal?: ContractLegal;
-  rule?: ContractRule;
+  signer?: Array<ContractSigner>;
+  friendly?: Array<ContractFriendly>;
+  legal?: Array<ContractLegal>;
+  rule?: Array<ContractRule>;
   legallyBindingAttachment?: Attachment;
   legallyBindingReference?: Reference;
 }
@@ -2907,9 +3066,10 @@ export interface CoverageCostToBeneficiary {
   type?: CodeableConcept;
   valueQuantity?: Quantity;
   valueMoney?: Money;
-  exception?: CoverageCostToBeneficiaryException;
+  exception?: Array<CoverageCostToBeneficiaryException>;
 }
 export interface Coverage {
+  resourceType: "Coverage"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -2929,10 +3089,10 @@ export interface Coverage {
   relationship?: CodeableConcept;
   period?: Period;
   payor: Array<Reference>;
-  class?: CoverageClass;
+  class?: Array<CoverageClass>;
   order?: positiveInt;
   network?: string;
-  costToBeneficiary?: CoverageCostToBeneficiary;
+  costToBeneficiary?: Array<CoverageCostToBeneficiary>;
   subrogation?: boolean;
   contract?: Array<Reference>;
 }
@@ -2972,10 +3132,11 @@ export interface CoverageEligibilityRequestItem {
   quantity?: Quantity;
   unitPrice?: Money;
   facility?: Reference;
-  diagnosis?: CoverageEligibilityRequestItemDiagnosis;
+  diagnosis?: Array<CoverageEligibilityRequestItemDiagnosis>;
   detail?: Array<Reference>;
 }
 export interface CoverageEligibilityRequest {
+  resourceType: "CoverageEligibilityRequest"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -2996,9 +3157,9 @@ export interface CoverageEligibilityRequest {
   provider?: Reference;
   insurer: Reference;
   facility?: Reference;
-  supportingInfo?: CoverageEligibilityRequestSupportingInfo;
-  insurance?: CoverageEligibilityRequestInsurance;
-  item?: CoverageEligibilityRequestItem;
+  supportingInfo?: Array<CoverageEligibilityRequestSupportingInfo>;
+  insurance?: Array<CoverageEligibilityRequestInsurance>;
+  item?: Array<CoverageEligibilityRequestItem>;
 }
 
 export interface CoverageEligibilityResponseInsuranceItemBenefit {
@@ -3027,7 +3188,7 @@ export interface CoverageEligibilityResponseInsuranceItem {
   network?: CodeableConcept;
   unit?: CodeableConcept;
   term?: CodeableConcept;
-  benefit?: CoverageEligibilityResponseInsuranceItemBenefit;
+  benefit?: Array<CoverageEligibilityResponseInsuranceItemBenefit>;
   authorizationRequired?: boolean;
   authorizationSupporting?: Array<CodeableConcept>;
   authorizationUrl?: uri;
@@ -3039,7 +3200,7 @@ export interface CoverageEligibilityResponseInsurance {
   coverage: Reference;
   inforce?: boolean;
   benefitPeriod?: Period;
-  item?: CoverageEligibilityResponseInsuranceItem;
+  item?: Array<CoverageEligibilityResponseInsuranceItem>;
 }
 export interface CoverageEligibilityResponseError {
   id?: string;
@@ -3048,6 +3209,7 @@ export interface CoverageEligibilityResponseError {
   code: CodeableConcept;
 }
 export interface CoverageEligibilityResponse {
+  resourceType: "CoverageEligibilityResponse"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -3068,10 +3230,10 @@ export interface CoverageEligibilityResponse {
   outcome: code;
   disposition?: string;
   insurer: Reference;
-  insurance?: CoverageEligibilityResponseInsurance;
+  insurance?: Array<CoverageEligibilityResponseInsurance>;
   preAuthRef?: string;
   form?: CodeableConcept;
-  error?: CoverageEligibilityResponseError;
+  error?: Array<CoverageEligibilityResponseError>;
 }
 
 export interface DetectedIssueEvidence {
@@ -3090,6 +3252,7 @@ export interface DetectedIssueMitigation {
   author?: Reference;
 }
 export interface DetectedIssue {
+  resourceType: "DetectedIssue"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -3107,10 +3270,10 @@ export interface DetectedIssue {
   identifiedPeriod?: Period;
   author?: Reference;
   implicated?: Array<Reference>;
-  evidence?: DetectedIssueEvidence;
+  evidence?: Array<DetectedIssueEvidence>;
   detail?: string;
   reference?: uri;
-  mitigation?: DetectedIssueMitigation;
+  mitigation?: Array<DetectedIssueMitigation>;
 }
 
 export interface DeviceUdiCarrier {
@@ -3155,6 +3318,7 @@ export interface DeviceProperty {
   valueCode?: Array<CodeableConcept>;
 }
 export interface Device {
+  resourceType: "Device"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -3165,7 +3329,7 @@ export interface Device {
   modifierExtension?: Array<Extension>;
   identifier?: Array<Identifier>;
   definition?: Reference;
-  udiCarrier?: DeviceUdiCarrier;
+  udiCarrier?: Array<DeviceUdiCarrier>;
   status?: code;
   statusReason?: Array<CodeableConcept>;
   distinctIdentifier?: string;
@@ -3174,13 +3338,13 @@ export interface Device {
   expirationDate?: dateTime;
   lotNumber?: string;
   serialNumber?: string;
-  deviceName?: DeviceDeviceName;
+  deviceName?: Array<DeviceDeviceName>;
   modelNumber?: string;
   partNumber?: string;
   type?: CodeableConcept;
-  specialization?: DeviceSpecialization;
-  version?: DeviceVersion;
-  property?: DeviceProperty;
+  specialization?: Array<DeviceSpecialization>;
+  version?: Array<DeviceVersion>;
+  property?: Array<DeviceProperty>;
   patient?: Reference;
   owner?: Reference;
   contact?: Array<ContactPoint>;
@@ -3237,6 +3401,7 @@ export interface DeviceDefinitionMaterial {
   allergenicIndicator?: boolean;
 }
 export interface DeviceDefinition {
+  resourceType: "DeviceDefinition"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -3246,20 +3411,20 @@ export interface DeviceDefinition {
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
   identifier?: Array<Identifier>;
-  udiDeviceIdentifier?: DeviceDefinitionUdiDeviceIdentifier;
+  udiDeviceIdentifier?: Array<DeviceDefinitionUdiDeviceIdentifier>;
   manufacturerString?: string;
   manufacturerReference?: Reference;
-  deviceName?: DeviceDefinitionDeviceName;
+  deviceName?: Array<DeviceDefinitionDeviceName>;
   modelNumber?: string;
   type?: CodeableConcept;
-  specialization?: DeviceDefinitionSpecialization;
+  specialization?: Array<DeviceDefinitionSpecialization>;
   version?: Array<string>;
   safety?: Array<CodeableConcept>;
   shelfLifeStorage?: Array<ProductShelfLife>;
   physicalCharacteristics?: ProdCharacteristic;
   languageCode?: Array<CodeableConcept>;
-  capability?: DeviceDefinitionCapability;
-  property?: DeviceDefinitionProperty;
+  capability?: Array<DeviceDefinitionCapability>;
+  property?: Array<DeviceDefinitionProperty>;
   owner?: Reference;
   contact?: Array<ContactPoint>;
   url?: uri;
@@ -3267,7 +3432,7 @@ export interface DeviceDefinition {
   note?: Array<Annotation>;
   quantity?: Quantity;
   parentDevice?: Reference;
-  material?: DeviceDefinitionMaterial;
+  material?: Array<DeviceDefinitionMaterial>;
 }
 
 export interface DeviceMetricCalibration {
@@ -3279,6 +3444,7 @@ export interface DeviceMetricCalibration {
   time?: instant;
 }
 export interface DeviceMetric {
+  resourceType: "DeviceMetric"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -3296,7 +3462,7 @@ export interface DeviceMetric {
   color?: code;
   category: code;
   measurementPeriod?: Timing;
-  calibration?: DeviceMetricCalibration;
+  calibration?: Array<DeviceMetricCalibration>;
 }
 
 export interface DeviceRequestParameter {
@@ -3310,6 +3476,7 @@ export interface DeviceRequestParameter {
   valueBoolean?: boolean;
 }
 export interface DeviceRequest {
+  resourceType: "DeviceRequest"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -3329,7 +3496,7 @@ export interface DeviceRequest {
   priority?: code;
   codeReference?: Reference;
   codeCodeableConcept?: CodeableConcept;
-  parameter?: DeviceRequestParameter;
+  parameter?: Array<DeviceRequestParameter>;
   subject: Reference;
   encounter?: Reference;
   occurrenceDateTime?: dateTime;
@@ -3348,6 +3515,7 @@ export interface DeviceRequest {
 }
 
 export interface DeviceUseStatement {
+  resourceType: "DeviceUseStatement"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -3381,6 +3549,7 @@ export interface DiagnosticReportMedia {
   link: Reference;
 }
 export interface DiagnosticReport {
+  resourceType: "DiagnosticReport"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -3404,7 +3573,7 @@ export interface DiagnosticReport {
   specimen?: Array<Reference>;
   result?: Array<Reference>;
   imagingStudy?: Array<Reference>;
-  media?: DiagnosticReportMedia;
+  media?: Array<DiagnosticReportMedia>;
   conclusion?: string;
   conclusionCode?: Array<CodeableConcept>;
   presentedForm?: Array<Attachment>;
@@ -3418,6 +3587,7 @@ export interface DocumentManifestRelated {
   ref?: Reference;
 }
 export interface DocumentManifest {
+  resourceType: "DocumentManifest"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -3437,7 +3607,7 @@ export interface DocumentManifest {
   source?: uri;
   description?: string;
   content: Array<Reference>;
-  related?: DocumentManifestRelated;
+  related?: Array<DocumentManifestRelated>;
 }
 
 export interface DocumentReferenceRelatesTo {
@@ -3467,6 +3637,7 @@ export interface DocumentReferenceContext {
   related?: Array<Reference>;
 }
 export interface DocumentReference {
+  resourceType: "DocumentReference"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -3486,22 +3657,11 @@ export interface DocumentReference {
   author?: Array<Reference>;
   authenticator?: Reference;
   custodian?: Reference;
-  relatesTo?: DocumentReferenceRelatesTo;
+  relatesTo?: Array<DocumentReferenceRelatesTo>;
   description?: string;
   securityLabel?: Array<CodeableConcept>;
-  content: DocumentReferenceContent;
+  content: Array<DocumentReferenceContent>;
   context?: DocumentReferenceContext;
-}
-
-export interface DomainResource {
-  id?: string;
-  meta?: Meta;
-  implicitRules?: uri;
-  language?: code;
-  text?: Narrative;
-  contained?: Array<Resource>;
-  extension?: Array<Extension>;
-  modifierExtension?: Array<Extension>;
 }
 
 export interface EffectEvidenceSynthesisSampleSize {
@@ -3539,7 +3699,7 @@ export interface EffectEvidenceSynthesisEffectEstimate {
   variantState?: CodeableConcept;
   value?: decimal;
   unitOfMeasure?: CodeableConcept;
-  precisionEstimate?: EffectEvidenceSynthesisEffectEstimatePrecisionEstimate;
+  precisionEstimate?: Array<EffectEvidenceSynthesisEffectEstimatePrecisionEstimate>;
 }
 export interface EffectEvidenceSynthesisCertaintyCertaintySubcomponent {
   id?: string;
@@ -3555,9 +3715,10 @@ export interface EffectEvidenceSynthesisCertainty {
   modifierExtension?: Array<Extension>;
   rating?: Array<CodeableConcept>;
   note?: Array<Annotation>;
-  certaintySubcomponent?: EffectEvidenceSynthesisCertaintyCertaintySubcomponent;
+  certaintySubcomponent?: Array<EffectEvidenceSynthesisCertaintyCertaintySubcomponent>;
 }
 export interface EffectEvidenceSynthesis {
+  resourceType: "EffectEvidenceSynthesis"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -3596,9 +3757,9 @@ export interface EffectEvidenceSynthesis {
   exposureAlternative: Reference;
   outcome: Reference;
   sampleSize?: EffectEvidenceSynthesisSampleSize;
-  resultsByExposure?: EffectEvidenceSynthesisResultsByExposure;
-  effectEstimate?: EffectEvidenceSynthesisEffectEstimate;
-  certainty?: EffectEvidenceSynthesisCertainty;
+  resultsByExposure?: Array<EffectEvidenceSynthesisResultsByExposure>;
+  effectEstimate?: Array<EffectEvidenceSynthesisEffectEstimate>;
+  certainty?: Array<EffectEvidenceSynthesisCertainty>;
 }
 
 export interface EncounterStatusHistory {
@@ -3655,6 +3816,7 @@ export interface EncounterLocation {
   period?: Period;
 }
 export interface Encounter {
+  resourceType: "Encounter"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -3665,30 +3827,31 @@ export interface Encounter {
   modifierExtension?: Array<Extension>;
   identifier?: Array<Identifier>;
   status: code;
-  statusHistory?: EncounterStatusHistory;
+  statusHistory?: Array<EncounterStatusHistory>;
   class: Coding;
-  classHistory?: EncounterClassHistory;
+  classHistory?: Array<EncounterClassHistory>;
   type?: Array<CodeableConcept>;
   serviceType?: CodeableConcept;
   priority?: CodeableConcept;
   subject?: Reference;
   episodeOfCare?: Array<Reference>;
   basedOn?: Array<Reference>;
-  participant?: EncounterParticipant;
+  participant?: Array<EncounterParticipant>;
   appointment?: Array<Reference>;
   period?: Period;
   length?: Duration;
   reasonCode?: Array<CodeableConcept>;
   reasonReference?: Array<Reference>;
-  diagnosis?: EncounterDiagnosis;
+  diagnosis?: Array<EncounterDiagnosis>;
   account?: Array<Reference>;
   hospitalization?: EncounterHospitalization;
-  location?: EncounterLocation;
+  location?: Array<EncounterLocation>;
   serviceProvider?: Reference;
   partOf?: Reference;
 }
 
 export interface Endpoint {
+  resourceType: "Endpoint"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -3711,6 +3874,7 @@ export interface Endpoint {
 }
 
 export interface EnrollmentRequest {
+  resourceType: "EnrollmentRequest"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -3729,6 +3893,7 @@ export interface EnrollmentRequest {
 }
 
 export interface EnrollmentResponse {
+  resourceType: "EnrollmentResponse"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -3763,6 +3928,7 @@ export interface EpisodeOfCareDiagnosis {
   rank?: positiveInt;
 }
 export interface EpisodeOfCare {
+  resourceType: "EpisodeOfCare"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -3773,9 +3939,9 @@ export interface EpisodeOfCare {
   modifierExtension?: Array<Extension>;
   identifier?: Array<Identifier>;
   status: code;
-  statusHistory?: EpisodeOfCareStatusHistory;
+  statusHistory?: Array<EpisodeOfCareStatusHistory>;
   type?: Array<CodeableConcept>;
-  diagnosis?: EpisodeOfCareDiagnosis;
+  diagnosis?: Array<EpisodeOfCareDiagnosis>;
   patient: Reference;
   managingOrganization?: Reference;
   period?: Period;
@@ -3786,6 +3952,7 @@ export interface EpisodeOfCare {
 }
 
 export interface EventDefinition {
+  resourceType: "EventDefinition"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -3826,6 +3993,7 @@ export interface EventDefinition {
 }
 
 export interface Evidence {
+  resourceType: "Evidence"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -3885,6 +4053,7 @@ export interface EvidenceVariableCharacteristic {
   groupMeasure?: code;
 }
 export interface EvidenceVariable {
+  resourceType: "EvidenceVariable"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -3919,7 +4088,7 @@ export interface EvidenceVariable {
   endorser?: Array<ContactDetail>;
   relatedArtifact?: Array<RelatedArtifact>;
   type?: code;
-  characteristic: EvidenceVariableCharacteristic;
+  characteristic: Array<EvidenceVariableCharacteristic>;
 }
 
 export interface ExampleScenarioActor {
@@ -3953,8 +4122,8 @@ export interface ExampleScenarioInstance {
   resourceType: code;
   name?: string;
   description?: markdown;
-  version?: ExampleScenarioInstanceVersion;
-  containedInstance?: ExampleScenarioInstanceContainedInstance;
+  version?: Array<ExampleScenarioInstanceVersion>;
+  containedInstance?: Array<ExampleScenarioInstanceContainedInstance>;
 }
 export interface ExampleScenarioProcessStepOperation {
   id?: string;
@@ -3986,7 +4155,7 @@ export interface ExampleScenarioProcessStep {
   process?: ExampleScenarioProcess;
   pause?: boolean;
   operation?: ExampleScenarioProcessStepOperation;
-  alternative?: ExampleScenarioProcessStepAlternative;
+  alternative?: Array<ExampleScenarioProcessStepAlternative>;
 }
 export interface ExampleScenarioProcess {
   id?: string;
@@ -3996,9 +4165,10 @@ export interface ExampleScenarioProcess {
   description?: markdown;
   preConditions?: markdown;
   postConditions?: markdown;
-  step?: ExampleScenarioProcessStep;
+  step?: Array<ExampleScenarioProcessStep>;
 }
 export interface ExampleScenario {
+  resourceType: "ExampleScenario"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -4020,9 +4190,9 @@ export interface ExampleScenario {
   jurisdiction?: Array<CodeableConcept>;
   copyright?: markdown;
   purpose?: markdown;
-  actor?: ExampleScenarioActor;
-  instance?: ExampleScenarioInstance;
-  process?: ExampleScenarioProcess;
+  actor?: Array<ExampleScenarioActor>;
+  instance?: Array<ExampleScenarioInstance>;
+  process?: Array<ExampleScenarioProcess>;
   workflow?: Array<canonical>;
 }
 
@@ -4150,7 +4320,7 @@ export interface ExplanationOfBenefitItemDetail {
   udi?: Array<Reference>;
   noteNumber?: Array<positiveInt>;
   adjudication?: ExplanationOfBenefitItemAdjudication;
-  subDetail?: ExplanationOfBenefitItemDetailSubDetail;
+  subDetail?: Array<ExplanationOfBenefitItemDetailSubDetail>;
 }
 export interface ExplanationOfBenefitItem {
   id?: string;
@@ -4180,8 +4350,8 @@ export interface ExplanationOfBenefitItem {
   subSite?: Array<CodeableConcept>;
   encounter?: Array<Reference>;
   noteNumber?: Array<positiveInt>;
-  adjudication?: ExplanationOfBenefitItemAdjudication;
-  detail?: ExplanationOfBenefitItemDetail;
+  adjudication?: Array<ExplanationOfBenefitItemAdjudication>;
+  detail?: Array<ExplanationOfBenefitItemDetail>;
 }
 export interface ExplanationOfBenefitAddItemDetailSubDetail {
   id?: string;
@@ -4208,7 +4378,7 @@ export interface ExplanationOfBenefitAddItemDetail {
   net?: Money;
   noteNumber?: Array<positiveInt>;
   adjudication?: ExplanationOfBenefitItemAdjudication;
-  subDetail?: ExplanationOfBenefitAddItemDetailSubDetail;
+  subDetail?: Array<ExplanationOfBenefitAddItemDetailSubDetail>;
 }
 export interface ExplanationOfBenefitAddItem {
   id?: string;
@@ -4234,7 +4404,7 @@ export interface ExplanationOfBenefitAddItem {
   subSite?: Array<CodeableConcept>;
   noteNumber?: Array<positiveInt>;
   adjudication?: ExplanationOfBenefitItemAdjudication;
-  detail?: ExplanationOfBenefitAddItemDetail;
+  detail?: Array<ExplanationOfBenefitAddItemDetail>;
 }
 export interface ExplanationOfBenefitTotal {
   id?: string;
@@ -4285,9 +4455,10 @@ export interface ExplanationOfBenefitBenefitBalance {
   network?: CodeableConcept;
   unit?: CodeableConcept;
   term?: CodeableConcept;
-  financial?: ExplanationOfBenefitBenefitBalanceFinancial;
+  financial?: Array<ExplanationOfBenefitBenefitBalanceFinancial>;
 }
 export interface ExplanationOfBenefit {
+  resourceType: "ExplanationOfBenefit"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -4310,7 +4481,7 @@ export interface ExplanationOfBenefit {
   priority?: CodeableConcept;
   fundsReserveRequested?: CodeableConcept;
   fundsReserve?: CodeableConcept;
-  related?: ExplanationOfBenefitRelated;
+  related?: Array<ExplanationOfBenefitRelated>;
   prescription?: Reference;
   originalPrescription?: Reference;
   payee?: ExplanationOfBenefitPayee;
@@ -4322,23 +4493,23 @@ export interface ExplanationOfBenefit {
   disposition?: string;
   preAuthRef?: Array<string>;
   preAuthRefPeriod?: Array<Period>;
-  careTeam?: ExplanationOfBenefitCareTeam;
-  supportingInfo?: ExplanationOfBenefitSupportingInfo;
-  diagnosis?: ExplanationOfBenefitDiagnosis;
-  procedure?: ExplanationOfBenefitProcedure;
+  careTeam?: Array<ExplanationOfBenefitCareTeam>;
+  supportingInfo?: Array<ExplanationOfBenefitSupportingInfo>;
+  diagnosis?: Array<ExplanationOfBenefitDiagnosis>;
+  procedure?: Array<ExplanationOfBenefitProcedure>;
   precedence?: positiveInt;
-  insurance: ExplanationOfBenefitInsurance;
+  insurance: Array<ExplanationOfBenefitInsurance>;
   accident?: ExplanationOfBenefitAccident;
-  item?: ExplanationOfBenefitItem;
-  addItem?: ExplanationOfBenefitAddItem;
+  item?: Array<ExplanationOfBenefitItem>;
+  addItem?: Array<ExplanationOfBenefitAddItem>;
   adjudication?: ExplanationOfBenefitItemAdjudication;
-  total?: ExplanationOfBenefitTotal;
+  total?: Array<ExplanationOfBenefitTotal>;
   payment?: ExplanationOfBenefitPayment;
   formCode?: CodeableConcept;
   form?: Attachment;
-  processNote?: ExplanationOfBenefitProcessNote;
+  processNote?: Array<ExplanationOfBenefitProcessNote>;
   benefitPeriod?: Period;
-  benefitBalance?: ExplanationOfBenefitBenefitBalance;
+  benefitBalance?: Array<ExplanationOfBenefitBenefitBalance>;
 }
 
 export interface FamilyMemberHistoryCondition {
@@ -4355,6 +4526,7 @@ export interface FamilyMemberHistoryCondition {
   note?: Array<Annotation>;
 }
 export interface FamilyMemberHistory {
+  resourceType: "FamilyMemberHistory"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -4388,10 +4560,11 @@ export interface FamilyMemberHistory {
   reasonCode?: Array<CodeableConcept>;
   reasonReference?: Array<Reference>;
   note?: Array<Annotation>;
-  condition?: FamilyMemberHistoryCondition;
+  condition?: Array<FamilyMemberHistoryCondition>;
 }
 
 export interface Flag {
+  resourceType: "Flag"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -4426,6 +4599,7 @@ export interface GoalTarget {
   dueDuration?: Duration;
 }
 export interface Goal {
+  resourceType: "Goal"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -4443,7 +4617,7 @@ export interface Goal {
   subject: Reference;
   startDate?: date;
   startCodeableConcept?: CodeableConcept;
-  target?: GoalTarget;
+  target?: Array<GoalTarget>;
   statusDate?: date;
   statusReason?: string;
   expressedBy?: Reference;
@@ -4470,7 +4644,7 @@ export interface GraphDefinitionLinkTarget {
   type: code;
   params?: string;
   profile?: canonical;
-  compartment?: GraphDefinitionLinkTargetCompartment;
+  compartment?: Array<GraphDefinitionLinkTargetCompartment>;
   link?: GraphDefinitionLink;
 }
 export interface GraphDefinitionLink {
@@ -4482,9 +4656,10 @@ export interface GraphDefinitionLink {
   min?: integer;
   max?: string;
   description?: string;
-  target?: GraphDefinitionLinkTarget;
+  target?: Array<GraphDefinitionLinkTarget>;
 }
 export interface GraphDefinition {
+  resourceType: "GraphDefinition"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -4507,7 +4682,7 @@ export interface GraphDefinition {
   purpose?: markdown;
   start: code;
   profile?: canonical;
-  link?: GraphDefinitionLink;
+  link?: Array<GraphDefinitionLink>;
 }
 
 export interface GroupCharacteristic {
@@ -4532,6 +4707,7 @@ export interface GroupMember {
   inactive?: boolean;
 }
 export interface Group {
+  resourceType: "Group"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -4548,11 +4724,12 @@ export interface Group {
   name?: string;
   quantity?: unsignedInt;
   managingEntity?: Reference;
-  characteristic?: GroupCharacteristic;
-  member?: GroupMember;
+  characteristic?: Array<GroupCharacteristic>;
+  member?: Array<GroupMember>;
 }
 
 export interface GuidanceResponse {
+  resourceType: "GuidanceResponse"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -4604,6 +4781,7 @@ export interface HealthcareServiceNotAvailable {
   during?: Period;
 }
 export interface HealthcareService {
+  resourceType: "HealthcareService"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -4626,14 +4804,14 @@ export interface HealthcareService {
   telecom?: Array<ContactPoint>;
   coverageArea?: Array<Reference>;
   serviceProvisionCode?: Array<CodeableConcept>;
-  eligibility?: HealthcareServiceEligibility;
+  eligibility?: Array<HealthcareServiceEligibility>;
   program?: Array<CodeableConcept>;
   characteristic?: Array<CodeableConcept>;
   communication?: Array<CodeableConcept>;
   referralMethod?: Array<CodeableConcept>;
   appointmentRequired?: boolean;
-  availableTime?: HealthcareServiceAvailableTime;
-  notAvailable?: HealthcareServiceNotAvailable;
+  availableTime?: Array<HealthcareServiceAvailableTime>;
+  notAvailable?: Array<HealthcareServiceNotAvailable>;
   availabilityExceptions?: string;
   endpoint?: Array<Reference>;
 }
@@ -4668,10 +4846,11 @@ export interface ImagingStudySeries {
   laterality?: Coding;
   specimen?: Array<Reference>;
   started?: dateTime;
-  performer?: ImagingStudySeriesPerformer;
-  instance?: ImagingStudySeriesInstance;
+  performer?: Array<ImagingStudySeriesPerformer>;
+  instance?: Array<ImagingStudySeriesInstance>;
 }
 export interface ImagingStudy {
+  resourceType: "ImagingStudy"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -4699,7 +4878,7 @@ export interface ImagingStudy {
   reasonReference?: Array<Reference>;
   note?: Array<Annotation>;
   description?: string;
-  series?: ImagingStudySeries;
+  series?: Array<ImagingStudySeries>;
 }
 
 export interface ImmunizationPerformer {
@@ -4739,6 +4918,7 @@ export interface ImmunizationProtocolApplied {
   seriesDosesString?: string;
 }
 export interface Immunization {
+  resourceType: "Immunization"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -4765,20 +4945,21 @@ export interface Immunization {
   site?: CodeableConcept;
   route?: CodeableConcept;
   doseQuantity?: Quantity;
-  performer?: ImmunizationPerformer;
+  performer?: Array<ImmunizationPerformer>;
   note?: Array<Annotation>;
   reasonCode?: Array<CodeableConcept>;
   reasonReference?: Array<Reference>;
   isSubpotent?: boolean;
   subpotentReason?: Array<CodeableConcept>;
-  education?: ImmunizationEducation;
+  education?: Array<ImmunizationEducation>;
   programEligibility?: Array<CodeableConcept>;
   fundingSource?: CodeableConcept;
-  reaction?: ImmunizationReaction;
-  protocolApplied?: ImmunizationProtocolApplied;
+  reaction?: Array<ImmunizationReaction>;
+  protocolApplied?: Array<ImmunizationProtocolApplied>;
 }
 
 export interface ImmunizationEvaluation {
+  resourceType: "ImmunizationEvaluation"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -4820,7 +5001,7 @@ export interface ImmunizationRecommendationRecommendation {
   contraindicatedVaccineCode?: Array<CodeableConcept>;
   forecastStatus: CodeableConcept;
   forecastReason?: Array<CodeableConcept>;
-  dateCriterion?: ImmunizationRecommendationRecommendationDateCriterion;
+  dateCriterion?: Array<ImmunizationRecommendationRecommendationDateCriterion>;
   description?: string;
   series?: string;
   doseNumberPositiveInt?: positiveInt;
@@ -4831,6 +5012,7 @@ export interface ImmunizationRecommendationRecommendation {
   supportingPatientInformation?: Array<Reference>;
 }
 export interface ImmunizationRecommendation {
+  resourceType: "ImmunizationRecommendation"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -4843,7 +5025,7 @@ export interface ImmunizationRecommendation {
   patient: Reference;
   date: dateTime;
   authority?: Reference;
-  recommendation: ImmunizationRecommendationRecommendation;
+  recommendation: Array<ImmunizationRecommendationRecommendation>;
 }
 
 export interface ImplementationGuideDependsOn {
@@ -4909,11 +5091,11 @@ export interface ImplementationGuideDefinition {
   id?: string;
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
-  grouping?: ImplementationGuideDefinitionGrouping;
-  resource: ImplementationGuideDefinitionResource;
+  grouping?: Array<ImplementationGuideDefinitionGrouping>;
+  resource: Array<ImplementationGuideDefinitionResource>;
   page?: ImplementationGuideDefinitionPage;
-  parameter?: ImplementationGuideDefinitionParameter;
-  template?: ImplementationGuideDefinitionTemplate;
+  parameter?: Array<ImplementationGuideDefinitionParameter>;
+  template?: Array<ImplementationGuideDefinitionTemplate>;
 }
 export interface ImplementationGuideManifestResource {
   id?: string;
@@ -4937,12 +5119,13 @@ export interface ImplementationGuideManifest {
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
   rendering?: url;
-  resource: ImplementationGuideManifestResource;
-  page?: ImplementationGuideManifestPage;
+  resource: Array<ImplementationGuideManifestResource>;
+  page?: Array<ImplementationGuideManifestPage>;
   image?: Array<string>;
   other?: Array<string>;
 }
 export interface ImplementationGuide {
+  resourceType: "ImplementationGuide"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -4967,8 +5150,8 @@ export interface ImplementationGuide {
   packageId: id;
   license?: code;
   fhirVersion: Array<code>;
-  dependsOn?: ImplementationGuideDependsOn;
-  global?: ImplementationGuideGlobal;
+  dependsOn?: Array<ImplementationGuideDependsOn>;
+  global?: Array<ImplementationGuideGlobal>;
   definition?: ImplementationGuideDefinition;
   manifest?: ImplementationGuideManifest;
 }
@@ -4995,7 +5178,7 @@ export interface InsurancePlanCoverageBenefit {
   modifierExtension?: Array<Extension>;
   type: CodeableConcept;
   requirement?: string;
-  limit?: InsurancePlanCoverageBenefitLimit;
+  limit?: Array<InsurancePlanCoverageBenefitLimit>;
 }
 export interface InsurancePlanCoverage {
   id?: string;
@@ -5003,7 +5186,7 @@ export interface InsurancePlanCoverage {
   modifierExtension?: Array<Extension>;
   type: CodeableConcept;
   network?: Array<Reference>;
-  benefit: InsurancePlanCoverageBenefit;
+  benefit: Array<InsurancePlanCoverageBenefit>;
 }
 export interface InsurancePlanPlanGeneralCost {
   id?: string;
@@ -5028,14 +5211,14 @@ export interface InsurancePlanPlanSpecificCostBenefit {
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
   type: CodeableConcept;
-  cost?: InsurancePlanPlanSpecificCostBenefitCost;
+  cost?: Array<InsurancePlanPlanSpecificCostBenefitCost>;
 }
 export interface InsurancePlanPlanSpecificCost {
   id?: string;
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
   category: CodeableConcept;
-  benefit?: InsurancePlanPlanSpecificCostBenefit;
+  benefit?: Array<InsurancePlanPlanSpecificCostBenefit>;
 }
 export interface InsurancePlanPlan {
   id?: string;
@@ -5045,10 +5228,11 @@ export interface InsurancePlanPlan {
   type?: CodeableConcept;
   coverageArea?: Array<Reference>;
   network?: Array<Reference>;
-  generalCost?: InsurancePlanPlanGeneralCost;
-  specificCost?: InsurancePlanPlanSpecificCost;
+  generalCost?: Array<InsurancePlanPlanGeneralCost>;
+  specificCost?: Array<InsurancePlanPlanSpecificCost>;
 }
 export interface InsurancePlan {
+  resourceType: "InsurancePlan"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -5066,11 +5250,11 @@ export interface InsurancePlan {
   ownedBy?: Reference;
   administeredBy?: Reference;
   coverageArea?: Array<Reference>;
-  contact?: InsurancePlanContact;
+  contact?: Array<InsurancePlanContact>;
   endpoint?: Array<Reference>;
   network?: Array<Reference>;
-  coverage?: InsurancePlanCoverage;
-  plan?: InsurancePlanPlan;
+  coverage?: Array<InsurancePlanCoverage>;
+  plan?: Array<InsurancePlanPlan>;
 }
 
 export interface InvoiceParticipant {
@@ -5096,9 +5280,10 @@ export interface InvoiceLineItem {
   sequence?: positiveInt;
   chargeItemReference?: Reference;
   chargeItemCodeableConcept?: CodeableConcept;
-  priceComponent?: InvoiceLineItemPriceComponent;
+  priceComponent?: Array<InvoiceLineItemPriceComponent>;
 }
 export interface Invoice {
+  resourceType: "Invoice"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -5114,10 +5299,10 @@ export interface Invoice {
   subject?: Reference;
   recipient?: Reference;
   date?: dateTime;
-  participant?: InvoiceParticipant;
+  participant?: Array<InvoiceParticipant>;
   issuer?: Reference;
   account?: Reference;
-  lineItem?: InvoiceLineItem;
+  lineItem?: Array<InvoiceLineItem>;
   totalPriceComponent?: InvoiceLineItemPriceComponent;
   totalNet?: Money;
   totalGross?: Money;
@@ -5126,6 +5311,7 @@ export interface Invoice {
 }
 
 export interface Library {
+  resourceType: "Library"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -5176,6 +5362,7 @@ export interface LinkageItem {
   resource: Reference;
 }
 export interface Linkage {
+  resourceType: "Linkage"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -5186,7 +5373,7 @@ export interface Linkage {
   modifierExtension?: Array<Extension>;
   active?: boolean;
   author?: Reference;
-  item: LinkageItem;
+  item: Array<LinkageItem>;
 }
 
 export interface ListEntry {
@@ -5199,6 +5386,7 @@ export interface ListEntry {
   item: Reference;
 }
 export interface List {
+  resourceType: "List"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -5218,7 +5406,7 @@ export interface List {
   source?: Reference;
   orderedBy?: CodeableConcept;
   note?: Array<Annotation>;
-  entry?: ListEntry;
+  entry?: Array<ListEntry>;
   emptyReason?: CodeableConcept;
 }
 
@@ -5240,6 +5428,7 @@ export interface LocationHoursOfOperation {
   closingTime?: time;
 }
 export interface Location {
+  resourceType: "Location"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -5262,7 +5451,7 @@ export interface Location {
   position?: LocationPosition;
   managingOrganization?: Reference;
   partOf?: Reference;
-  hoursOfOperation?: LocationHoursOfOperation;
+  hoursOfOperation?: Array<LocationHoursOfOperation>;
   availabilityExceptions?: string;
   endpoint?: Array<Reference>;
 }
@@ -5290,7 +5479,7 @@ export interface MeasureGroupStratifier {
   code?: CodeableConcept;
   description?: string;
   criteria?: Expression;
-  component?: MeasureGroupStratifierComponent;
+  component?: Array<MeasureGroupStratifierComponent>;
 }
 export interface MeasureGroup {
   id?: string;
@@ -5298,8 +5487,8 @@ export interface MeasureGroup {
   modifierExtension?: Array<Extension>;
   code?: CodeableConcept;
   description?: string;
-  population?: MeasureGroupPopulation;
-  stratifier?: MeasureGroupStratifier;
+  population?: Array<MeasureGroupPopulation>;
+  stratifier?: Array<MeasureGroupStratifier>;
 }
 export interface MeasureSupplementalData {
   id?: string;
@@ -5311,6 +5500,7 @@ export interface MeasureSupplementalData {
   criteria: Expression;
 }
 export interface Measure {
+  resourceType: "Measure"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -5359,8 +5549,8 @@ export interface Measure {
   improvementNotation?: CodeableConcept;
   definition?: Array<markdown>;
   guidance?: markdown;
-  group?: MeasureGroup;
-  supplementalData?: MeasureSupplementalData;
+  group?: Array<MeasureGroup>;
+  supplementalData?: Array<MeasureSupplementalData>;
 }
 
 export interface MeasureReportGroupPopulation {
@@ -5391,8 +5581,8 @@ export interface MeasureReportGroupStratifierStratum {
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
   value?: CodeableConcept;
-  component?: MeasureReportGroupStratifierStratumComponent;
-  population?: MeasureReportGroupStratifierStratumPopulation;
+  component?: Array<MeasureReportGroupStratifierStratumComponent>;
+  population?: Array<MeasureReportGroupStratifierStratumPopulation>;
   measureScore?: Quantity;
 }
 export interface MeasureReportGroupStratifier {
@@ -5400,18 +5590,19 @@ export interface MeasureReportGroupStratifier {
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
   code?: Array<CodeableConcept>;
-  stratum?: MeasureReportGroupStratifierStratum;
+  stratum?: Array<MeasureReportGroupStratifierStratum>;
 }
 export interface MeasureReportGroup {
   id?: string;
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
   code?: CodeableConcept;
-  population?: MeasureReportGroupPopulation;
+  population?: Array<MeasureReportGroupPopulation>;
   measureScore?: Quantity;
-  stratifier?: MeasureReportGroupStratifier;
+  stratifier?: Array<MeasureReportGroupStratifier>;
 }
 export interface MeasureReport {
+  resourceType: "MeasureReport"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -5429,11 +5620,12 @@ export interface MeasureReport {
   reporter?: Reference;
   period: Period;
   improvementNotation?: CodeableConcept;
-  group?: MeasureReportGroup;
+  group?: Array<MeasureReportGroup>;
   evaluatedResource?: Array<Reference>;
 }
 
 export interface Media {
+  resourceType: "Media"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -5484,6 +5676,7 @@ export interface MedicationBatch {
   expirationDate?: dateTime;
 }
 export interface Medication {
+  resourceType: "Medication"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -5498,7 +5691,7 @@ export interface Medication {
   manufacturer?: Reference;
   form?: CodeableConcept;
   amount?: Ratio;
-  ingredient?: MedicationIngredient;
+  ingredient?: Array<MedicationIngredient>;
   batch?: MedicationBatch;
 }
 
@@ -5522,6 +5715,7 @@ export interface MedicationAdministrationDosage {
   rateQuantity?: Quantity;
 }
 export interface MedicationAdministration {
+  resourceType: "MedicationAdministration"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -5543,7 +5737,7 @@ export interface MedicationAdministration {
   supportingInformation?: Array<Reference>;
   effectiveDateTime?: dateTime;
   effectivePeriod?: Period;
-  performer?: MedicationAdministrationPerformer;
+  performer?: Array<MedicationAdministrationPerformer>;
   reasonCode?: Array<CodeableConcept>;
   reasonReference?: Array<Reference>;
   request?: Reference;
@@ -5570,6 +5764,7 @@ export interface MedicationDispenseSubstitution {
   responsibleParty?: Array<Reference>;
 }
 export interface MedicationDispense {
+  resourceType: "MedicationDispense"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -5589,7 +5784,7 @@ export interface MedicationDispense {
   subject?: Reference;
   context?: Reference;
   supportingInformation?: Array<Reference>;
-  performer?: MedicationDispensePerformer;
+  performer?: Array<MedicationDispensePerformer>;
   location?: Reference;
   authorizingPrescription?: Array<Reference>;
   type?: CodeableConcept;
@@ -5663,10 +5858,10 @@ export interface MedicationKnowledgeAdministrationGuidelines {
   id?: string;
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
-  dosage?: MedicationKnowledgeAdministrationGuidelinesDosage;
+  dosage?: Array<MedicationKnowledgeAdministrationGuidelinesDosage>;
   indicationCodeableConcept?: CodeableConcept;
   indicationReference?: Reference;
-  patientCharacteristics?: MedicationKnowledgeAdministrationGuidelinesPatientCharacteristics;
+  patientCharacteristics?: Array<MedicationKnowledgeAdministrationGuidelinesPatientCharacteristics>;
 }
 export interface MedicationKnowledgeMedicineClassification {
   id?: string;
@@ -5717,8 +5912,8 @@ export interface MedicationKnowledgeRegulatory {
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
   regulatoryAuthority: Reference;
-  substitution?: MedicationKnowledgeRegulatorySubstitution;
-  schedule?: MedicationKnowledgeRegulatorySchedule;
+  substitution?: Array<MedicationKnowledgeRegulatorySubstitution>;
+  schedule?: Array<MedicationKnowledgeRegulatorySchedule>;
   maxDispense?: MedicationKnowledgeRegulatoryMaxDispense;
 }
 export interface MedicationKnowledgeKinetics {
@@ -5730,6 +5925,7 @@ export interface MedicationKnowledgeKinetics {
   halfLifePeriod?: Duration;
 }
 export interface MedicationKnowledge {
+  resourceType: "MedicationKnowledge"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -5744,22 +5940,22 @@ export interface MedicationKnowledge {
   doseForm?: CodeableConcept;
   amount?: Quantity;
   synonym?: Array<string>;
-  relatedMedicationKnowledge?: MedicationKnowledgeRelatedMedicationKnowledge;
+  relatedMedicationKnowledge?: Array<MedicationKnowledgeRelatedMedicationKnowledge>;
   associatedMedication?: Array<Reference>;
   productType?: Array<CodeableConcept>;
-  monograph?: MedicationKnowledgeMonograph;
-  ingredient?: MedicationKnowledgeIngredient;
+  monograph?: Array<MedicationKnowledgeMonograph>;
+  ingredient?: Array<MedicationKnowledgeIngredient>;
   preparationInstruction?: markdown;
   intendedRoute?: Array<CodeableConcept>;
-  cost?: MedicationKnowledgeCost;
-  monitoringProgram?: MedicationKnowledgeMonitoringProgram;
-  administrationGuidelines?: MedicationKnowledgeAdministrationGuidelines;
-  medicineClassification?: MedicationKnowledgeMedicineClassification;
+  cost?: Array<MedicationKnowledgeCost>;
+  monitoringProgram?: Array<MedicationKnowledgeMonitoringProgram>;
+  administrationGuidelines?: Array<MedicationKnowledgeAdministrationGuidelines>;
+  medicineClassification?: Array<MedicationKnowledgeMedicineClassification>;
   packaging?: MedicationKnowledgePackaging;
-  drugCharacteristic?: MedicationKnowledgeDrugCharacteristic;
+  drugCharacteristic?: Array<MedicationKnowledgeDrugCharacteristic>;
   contraindication?: Array<Reference>;
-  regulatory?: MedicationKnowledgeRegulatory;
-  kinetics?: MedicationKnowledgeKinetics;
+  regulatory?: Array<MedicationKnowledgeRegulatory>;
+  kinetics?: Array<MedicationKnowledgeKinetics>;
 }
 
 export interface MedicationRequestDispenseRequestInitialFill {
@@ -5790,6 +5986,7 @@ export interface MedicationRequestSubstitution {
   reason?: CodeableConcept;
 }
 export interface MedicationRequest {
+  resourceType: "MedicationRequest"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -5835,6 +6032,7 @@ export interface MedicationRequest {
 }
 
 export interface MedicationStatement {
+  resourceType: "MedicationStatement"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -5884,8 +6082,8 @@ export interface MedicinalProductName {
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
   productName: string;
-  namePart?: MedicinalProductNameNamePart;
-  countryLanguage?: MedicinalProductNameCountryLanguage;
+  namePart?: Array<MedicinalProductNameNamePart>;
+  countryLanguage?: Array<MedicinalProductNameCountryLanguage>;
 }
 export interface MedicinalProductManufacturingBusinessOperation {
   id?: string;
@@ -5912,6 +6110,7 @@ export interface MedicinalProductSpecialDesignation {
   species?: CodeableConcept;
 }
 export interface MedicinalProduct {
+  resourceType: "MedicinalProduct"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -5936,10 +6135,10 @@ export interface MedicinalProduct {
   masterFile?: Array<Reference>;
   contact?: Array<Reference>;
   clinicalTrial?: Array<Reference>;
-  name: MedicinalProductName;
+  name: Array<MedicinalProductName>;
   crossReference?: Array<Identifier>;
-  manufacturingBusinessOperation?: MedicinalProductManufacturingBusinessOperation;
-  specialDesignation?: MedicinalProductSpecialDesignation;
+  manufacturingBusinessOperation?: Array<MedicinalProductManufacturingBusinessOperation>;
+  specialDesignation?: Array<MedicinalProductSpecialDesignation>;
 }
 
 export interface MedicinalProductAuthorizationJurisdictionalAuthorization {
@@ -5963,6 +6162,7 @@ export interface MedicinalProductAuthorizationProcedure {
   application?: MedicinalProductAuthorizationProcedure;
 }
 export interface MedicinalProductAuthorization {
+  resourceType: "MedicinalProductAuthorization"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -5983,7 +6183,7 @@ export interface MedicinalProductAuthorization {
   dateOfFirstAuthorization?: dateTime;
   internationalBirthDate?: dateTime;
   legalBasis?: CodeableConcept;
-  jurisdictionalAuthorization?: MedicinalProductAuthorizationJurisdictionalAuthorization;
+  jurisdictionalAuthorization?: Array<MedicinalProductAuthorizationJurisdictionalAuthorization>;
   holder?: Reference;
   regulator?: Reference;
   procedure?: MedicinalProductAuthorizationProcedure;
@@ -5998,6 +6198,7 @@ export interface MedicinalProductContraindicationOtherTherapy {
   medicationReference?: Reference;
 }
 export interface MedicinalProductContraindication {
+  resourceType: "MedicinalProductContraindication"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -6011,7 +6212,7 @@ export interface MedicinalProductContraindication {
   diseaseStatus?: CodeableConcept;
   comorbidity?: Array<CodeableConcept>;
   therapeuticIndication?: Array<Reference>;
-  otherTherapy?: MedicinalProductContraindicationOtherTherapy;
+  otherTherapy?: Array<MedicinalProductContraindicationOtherTherapy>;
   population?: Array<Population>;
 }
 
@@ -6024,6 +6225,7 @@ export interface MedicinalProductIndicationOtherTherapy {
   medicationReference?: Reference;
 }
 export interface MedicinalProductIndication {
+  resourceType: "MedicinalProductIndication"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -6038,7 +6240,7 @@ export interface MedicinalProductIndication {
   comorbidity?: Array<CodeableConcept>;
   intendedEffect?: CodeableConcept;
   duration?: Quantity;
-  otherTherapy?: MedicinalProductIndicationOtherTherapy;
+  otherTherapy?: Array<MedicinalProductIndicationOtherTherapy>;
   undesirableEffect?: Array<Reference>;
   population?: Array<Population>;
 }
@@ -6063,7 +6265,7 @@ export interface MedicinalProductIngredientSpecifiedSubstanceStrength {
   concentrationLowLimit?: Ratio;
   measurementPoint?: string;
   country?: Array<CodeableConcept>;
-  referenceStrength?: MedicinalProductIngredientSpecifiedSubstanceStrengthReferenceStrength;
+  referenceStrength?: Array<MedicinalProductIngredientSpecifiedSubstanceStrengthReferenceStrength>;
 }
 export interface MedicinalProductIngredientSpecifiedSubstance {
   id?: string;
@@ -6072,7 +6274,7 @@ export interface MedicinalProductIngredientSpecifiedSubstance {
   code: CodeableConcept;
   group: CodeableConcept;
   confidentiality?: CodeableConcept;
-  strength?: MedicinalProductIngredientSpecifiedSubstanceStrength;
+  strength?: Array<MedicinalProductIngredientSpecifiedSubstanceStrength>;
 }
 export interface MedicinalProductIngredientSubstance {
   id?: string;
@@ -6082,6 +6284,7 @@ export interface MedicinalProductIngredientSubstance {
   strength?: MedicinalProductIngredientSpecifiedSubstanceStrength;
 }
 export interface MedicinalProductIngredient {
+  resourceType: "MedicinalProductIngredient"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -6094,7 +6297,7 @@ export interface MedicinalProductIngredient {
   role: CodeableConcept;
   allergenicIndicator?: boolean;
   manufacturer?: Array<Reference>;
-  specifiedSubstance?: MedicinalProductIngredientSpecifiedSubstance;
+  specifiedSubstance?: Array<MedicinalProductIngredientSpecifiedSubstance>;
   substance?: MedicinalProductIngredientSubstance;
 }
 
@@ -6106,6 +6309,7 @@ export interface MedicinalProductInteractionInteractant {
   itemCodeableConcept?: CodeableConcept;
 }
 export interface MedicinalProductInteraction {
+  resourceType: "MedicinalProductInteraction"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -6116,7 +6320,7 @@ export interface MedicinalProductInteraction {
   modifierExtension?: Array<Extension>;
   subject?: Array<Reference>;
   description?: string;
-  interactant?: MedicinalProductInteractionInteractant;
+  interactant?: Array<MedicinalProductInteractionInteractant>;
   type?: CodeableConcept;
   effect?: CodeableConcept;
   incidence?: CodeableConcept;
@@ -6124,6 +6328,7 @@ export interface MedicinalProductInteraction {
 }
 
 export interface MedicinalProductManufactured {
+  resourceType: "MedicinalProductManufactured"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -6166,6 +6371,7 @@ export interface MedicinalProductPackagedPackageItem {
   manufacturer?: Array<Reference>;
 }
 export interface MedicinalProductPackaged {
+  resourceType: "MedicinalProductPackaged"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -6181,8 +6387,8 @@ export interface MedicinalProductPackaged {
   marketingStatus?: Array<MarketingStatus>;
   marketingAuthorization?: Reference;
   manufacturer?: Array<Reference>;
-  batchIdentifier?: MedicinalProductPackagedBatchIdentifier;
-  packageItem: MedicinalProductPackagedPackageItem;
+  batchIdentifier?: Array<MedicinalProductPackagedBatchIdentifier>;
+  packageItem: Array<MedicinalProductPackagedPackageItem>;
 }
 
 export interface MedicinalProductPharmaceuticalCharacteristics {
@@ -6205,7 +6411,7 @@ export interface MedicinalProductPharmaceuticalRouteOfAdministrationTargetSpecie
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
   code: CodeableConcept;
-  withdrawalPeriod?: MedicinalProductPharmaceuticalRouteOfAdministrationTargetSpeciesWithdrawalPeriod;
+  withdrawalPeriod?: Array<MedicinalProductPharmaceuticalRouteOfAdministrationTargetSpeciesWithdrawalPeriod>;
 }
 export interface MedicinalProductPharmaceuticalRouteOfAdministration {
   id?: string;
@@ -6217,9 +6423,10 @@ export interface MedicinalProductPharmaceuticalRouteOfAdministration {
   maxDosePerDay?: Quantity;
   maxDosePerTreatmentPeriod?: Ratio;
   maxTreatmentPeriod?: Duration;
-  targetSpecies?: MedicinalProductPharmaceuticalRouteOfAdministrationTargetSpecies;
+  targetSpecies?: Array<MedicinalProductPharmaceuticalRouteOfAdministrationTargetSpecies>;
 }
 export interface MedicinalProductPharmaceutical {
+  resourceType: "MedicinalProductPharmaceutical"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -6233,11 +6440,12 @@ export interface MedicinalProductPharmaceutical {
   unitOfPresentation?: CodeableConcept;
   ingredient?: Array<Reference>;
   device?: Array<Reference>;
-  characteristics?: MedicinalProductPharmaceuticalCharacteristics;
-  routeOfAdministration: MedicinalProductPharmaceuticalRouteOfAdministration;
+  characteristics?: Array<MedicinalProductPharmaceuticalCharacteristics>;
+  routeOfAdministration: Array<MedicinalProductPharmaceuticalRouteOfAdministration>;
 }
 
 export interface MedicinalProductUndesirableEffect {
+  resourceType: "MedicinalProductUndesirableEffect"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -6270,6 +6478,7 @@ export interface MessageDefinitionAllowedResponse {
   situation?: markdown;
 }
 export interface MessageDefinition {
+  resourceType: "MessageDefinition"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -6299,9 +6508,9 @@ export interface MessageDefinition {
   eventCoding?: Coding;
   eventUri?: uri;
   category?: code;
-  focus?: MessageDefinitionFocus;
+  focus?: Array<MessageDefinitionFocus>;
   responseRequired?: code;
-  allowedResponse?: MessageDefinitionAllowedResponse;
+  allowedResponse?: Array<MessageDefinitionAllowedResponse>;
   graph?: Array<canonical>;
 }
 
@@ -6333,6 +6542,7 @@ export interface MessageHeaderResponse {
   details?: Reference;
 }
 export interface MessageHeader {
+  resourceType: "MessageHeader"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -6343,7 +6553,7 @@ export interface MessageHeader {
   modifierExtension?: Array<Extension>;
   eventCoding?: Coding;
   eventUri?: uri;
-  destination?: MessageHeaderDestination;
+  destination?: Array<MessageHeaderDestination>;
   sender?: Reference;
   enterer?: Reference;
   author?: Reference;
@@ -6448,6 +6658,7 @@ export interface MolecularSequenceStructureVariant {
   inner?: MolecularSequenceStructureVariantInner;
 }
 export interface MolecularSequence {
+  resourceType: "MolecularSequence"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -6465,13 +6676,13 @@ export interface MolecularSequence {
   performer?: Reference;
   quantity?: Quantity;
   referenceSeq?: MolecularSequenceReferenceSeq;
-  variant?: MolecularSequenceVariant;
+  variant?: Array<MolecularSequenceVariant>;
   observedSeq?: string;
-  quality?: MolecularSequenceQuality;
+  quality?: Array<MolecularSequenceQuality>;
   readCoverage?: integer;
-  repository?: MolecularSequenceRepository;
+  repository?: Array<MolecularSequenceRepository>;
   pointer?: Array<Reference>;
-  structureVariant?: MolecularSequenceStructureVariant;
+  structureVariant?: Array<MolecularSequenceStructureVariant>;
 }
 
 export interface NamingSystemUniqueId {
@@ -6485,6 +6696,7 @@ export interface NamingSystemUniqueId {
   period?: Period;
 }
 export interface NamingSystem {
+  resourceType: "NamingSystem"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -6505,7 +6717,7 @@ export interface NamingSystem {
   useContext?: Array<UsageContext>;
   jurisdiction?: Array<CodeableConcept>;
   usage?: string;
-  uniqueId: NamingSystemUniqueId;
+  uniqueId: Array<NamingSystemUniqueId>;
 }
 
 export interface NutritionOrderOralDietNutrient {
@@ -6528,8 +6740,8 @@ export interface NutritionOrderOralDiet {
   modifierExtension?: Array<Extension>;
   type?: Array<CodeableConcept>;
   schedule?: Array<Timing>;
-  nutrient?: NutritionOrderOralDietNutrient;
-  texture?: NutritionOrderOralDietTexture;
+  nutrient?: Array<NutritionOrderOralDietNutrient>;
+  texture?: Array<NutritionOrderOralDietTexture>;
   fluidConsistencyType?: Array<CodeableConcept>;
   instruction?: string;
 }
@@ -6562,11 +6774,12 @@ export interface NutritionOrderEnteralFormula {
   additiveProductName?: string;
   caloricDensity?: Quantity;
   routeofAdministration?: CodeableConcept;
-  administration?: NutritionOrderEnteralFormulaAdministration;
+  administration?: Array<NutritionOrderEnteralFormulaAdministration>;
   maxVolumeToDeliver?: Quantity;
   administrationInstruction?: string;
 }
 export interface NutritionOrder {
+  resourceType: "NutritionOrder"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -6589,7 +6802,7 @@ export interface NutritionOrder {
   foodPreferenceModifier?: Array<CodeableConcept>;
   excludeFoodModifier?: Array<CodeableConcept>;
   oralDiet?: NutritionOrderOralDiet;
-  supplement?: NutritionOrderSupplement;
+  supplement?: Array<NutritionOrderSupplement>;
   enteralFormula?: NutritionOrderEnteralFormula;
   note?: Array<Annotation>;
 }
@@ -6626,6 +6839,7 @@ export interface ObservationComponent {
   referenceRange?: ObservationReferenceRange;
 }
 export interface Observation {
+  resourceType: "Observation"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -6667,10 +6881,10 @@ export interface Observation {
   method?: CodeableConcept;
   specimen?: Reference;
   device?: Reference;
-  referenceRange?: ObservationReferenceRange;
+  referenceRange?: Array<ObservationReferenceRange>;
   hasMember?: Array<Reference>;
   derivedFrom?: Array<Reference>;
-  component?: ObservationComponent;
+  component?: Array<ObservationComponent>;
 }
 
 export interface ObservationDefinitionQuantitativeDetails {
@@ -6696,6 +6910,7 @@ export interface ObservationDefinitionQualifiedInterval {
   condition?: string;
 }
 export interface ObservationDefinition {
+  resourceType: "ObservationDefinition"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -6712,7 +6927,7 @@ export interface ObservationDefinition {
   method?: CodeableConcept;
   preferredReportName?: string;
   quantitativeDetails?: ObservationDefinitionQuantitativeDetails;
-  qualifiedInterval?: ObservationDefinitionQualifiedInterval;
+  qualifiedInterval?: Array<ObservationDefinitionQualifiedInterval>;
   validCodedValueSet?: Reference;
   normalCodedValueSet?: Reference;
   abnormalCodedValueSet?: Reference;
@@ -6746,7 +6961,7 @@ export interface OperationDefinitionParameter {
   targetProfile?: Array<canonical>;
   searchType?: code;
   binding?: OperationDefinitionParameterBinding;
-  referencedFrom?: OperationDefinitionParameterReferencedFrom;
+  referencedFrom?: Array<OperationDefinitionParameterReferencedFrom>;
   part?: OperationDefinitionParameter;
 }
 export interface OperationDefinitionOverload {
@@ -6757,6 +6972,7 @@ export interface OperationDefinitionOverload {
   comment?: string;
 }
 export interface OperationDefinition {
+  resourceType: "OperationDefinition"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -6789,8 +7005,8 @@ export interface OperationDefinition {
   instance: boolean;
   inputProfile?: canonical;
   outputProfile?: canonical;
-  parameter?: OperationDefinitionParameter;
-  overload?: OperationDefinitionOverload;
+  parameter?: Array<OperationDefinitionParameter>;
+  overload?: Array<OperationDefinitionOverload>;
 }
 
 export interface OperationOutcomeIssue {
@@ -6805,6 +7021,7 @@ export interface OperationOutcomeIssue {
   expression?: Array<string>;
 }
 export interface OperationOutcome {
+  resourceType: "OperationOutcome"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -6813,7 +7030,7 @@ export interface OperationOutcome {
   contained?: Array<Resource>;
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
-  issue: OperationOutcomeIssue;
+  issue: Array<OperationOutcomeIssue>;
 }
 
 export interface OrganizationContact {
@@ -6826,6 +7043,7 @@ export interface OrganizationContact {
   address?: Address;
 }
 export interface Organization {
+  resourceType: "Organization"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -6842,11 +7060,12 @@ export interface Organization {
   telecom?: Array<ContactPoint>;
   address?: Array<Address>;
   partOf?: Reference;
-  contact?: OrganizationContact;
+  contact?: Array<OrganizationContact>;
   endpoint?: Array<Reference>;
 }
 
 export interface OrganizationAffiliation {
+  resourceType: "OrganizationAffiliation"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -6928,11 +7147,12 @@ export interface ParametersParameter {
   part?: ParametersParameter;
 }
 export interface Parameters {
+  resourceType: "Parameters"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
   language?: code;
-  parameter?: ParametersParameter;
+  parameter?: Array<ParametersParameter>;
 }
 
 export interface PatientContact {
@@ -6962,6 +7182,7 @@ export interface PatientLink {
   type: code;
 }
 export interface Patient {
+  resourceType: "Patient"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -6983,14 +7204,15 @@ export interface Patient {
   multipleBirthBoolean?: boolean;
   multipleBirthInteger?: integer;
   photo?: Array<Attachment>;
-  contact?: PatientContact;
-  communication?: PatientCommunication;
+  contact?: Array<PatientContact>;
+  communication?: Array<PatientCommunication>;
   generalPractitioner?: Array<Reference>;
   managingOrganization?: Reference;
-  link?: PatientLink;
+  link?: Array<PatientLink>;
 }
 
 export interface PaymentNotice {
+  resourceType: "PaymentNotice"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -7036,6 +7258,7 @@ export interface PaymentReconciliationProcessNote {
   text?: string;
 }
 export interface PaymentReconciliation {
+  resourceType: "PaymentReconciliation"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -7056,9 +7279,9 @@ export interface PaymentReconciliation {
   paymentDate: date;
   paymentAmount: Money;
   paymentIdentifier?: Identifier;
-  detail?: PaymentReconciliationDetail;
+  detail?: Array<PaymentReconciliationDetail>;
   formCode?: CodeableConcept;
-  processNote?: PaymentReconciliationProcessNote;
+  processNote?: Array<PaymentReconciliationProcessNote>;
 }
 
 export interface PersonLink {
@@ -7069,6 +7292,7 @@ export interface PersonLink {
   assurance?: code;
 }
 export interface Person {
+  resourceType: "Person"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -7086,7 +7310,7 @@ export interface Person {
   photo?: Attachment;
   managingOrganization?: Reference;
   active?: boolean;
-  link?: PersonLink;
+  link?: Array<PersonLink>;
 }
 
 export interface PlanDefinitionGoalTarget {
@@ -7109,7 +7333,7 @@ export interface PlanDefinitionGoal {
   start?: CodeableConcept;
   addresses?: Array<CodeableConcept>;
   documentation?: Array<RelatedArtifact>;
-  target?: PlanDefinitionGoalTarget;
+  target?: Array<PlanDefinitionGoalTarget>;
 }
 export interface PlanDefinitionActionCondition {
   id?: string;
@@ -7157,17 +7381,17 @@ export interface PlanDefinitionAction {
   subjectCodeableConcept?: CodeableConcept;
   subjectReference?: Reference;
   trigger?: Array<TriggerDefinition>;
-  condition?: PlanDefinitionActionCondition;
+  condition?: Array<PlanDefinitionActionCondition>;
   input?: Array<DataRequirement>;
   output?: Array<DataRequirement>;
-  relatedAction?: PlanDefinitionActionRelatedAction;
+  relatedAction?: Array<PlanDefinitionActionRelatedAction>;
   timingDateTime?: dateTime;
   timingAge?: Age;
   timingPeriod?: Period;
   timingDuration?: Duration;
   timingRange?: Range;
   timingTiming?: Timing;
-  participant?: PlanDefinitionActionParticipant;
+  participant?: Array<PlanDefinitionActionParticipant>;
   type?: CodeableConcept;
   groupingBehavior?: code;
   selectionBehavior?: code;
@@ -7177,10 +7401,11 @@ export interface PlanDefinitionAction {
   definitionCanonical?: canonical;
   definitionUri?: uri;
   transform?: canonical;
-  dynamicValue?: PlanDefinitionActionDynamicValue;
+  dynamicValue?: Array<PlanDefinitionActionDynamicValue>;
   action?: PlanDefinitionAction;
 }
 export interface PlanDefinition {
+  resourceType: "PlanDefinition"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -7219,8 +7444,8 @@ export interface PlanDefinition {
   endorser?: Array<ContactDetail>;
   relatedArtifact?: Array<RelatedArtifact>;
   library?: Array<canonical>;
-  goal?: PlanDefinitionGoal;
-  action?: PlanDefinitionAction;
+  goal?: Array<PlanDefinitionGoal>;
+  action?: Array<PlanDefinitionAction>;
 }
 
 export interface PractitionerQualification {
@@ -7233,6 +7458,7 @@ export interface PractitionerQualification {
   issuer?: Reference;
 }
 export interface Practitioner {
+  resourceType: "Practitioner"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -7249,7 +7475,7 @@ export interface Practitioner {
   gender?: code;
   birthDate?: date;
   photo?: Array<Attachment>;
-  qualification?: PractitionerQualification;
+  qualification?: Array<PractitionerQualification>;
   communication?: Array<CodeableConcept>;
 }
 
@@ -7270,6 +7496,7 @@ export interface PractitionerRoleNotAvailable {
   during?: Period;
 }
 export interface PractitionerRole {
+  resourceType: "PractitionerRole"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -7288,8 +7515,8 @@ export interface PractitionerRole {
   location?: Array<Reference>;
   healthcareService?: Array<Reference>;
   telecom?: Array<ContactPoint>;
-  availableTime?: PractitionerRoleAvailableTime;
-  notAvailable?: PractitionerRoleNotAvailable;
+  availableTime?: Array<PractitionerRoleAvailableTime>;
+  notAvailable?: Array<PractitionerRoleNotAvailable>;
   availabilityExceptions?: string;
   endpoint?: Array<Reference>;
 }
@@ -7310,6 +7537,7 @@ export interface ProcedureFocalDevice {
   manipulated: Reference;
 }
 export interface Procedure {
+  resourceType: "Procedure"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -7336,7 +7564,7 @@ export interface Procedure {
   performedRange?: Range;
   recorder?: Reference;
   asserter?: Reference;
-  performer?: ProcedurePerformer;
+  performer?: Array<ProcedurePerformer>;
   location?: Reference;
   reasonCode?: Array<CodeableConcept>;
   reasonReference?: Array<Reference>;
@@ -7347,7 +7575,7 @@ export interface Procedure {
   complicationDetail?: Array<Reference>;
   followUp?: Array<CodeableConcept>;
   note?: Array<Annotation>;
-  focalDevice?: ProcedureFocalDevice;
+  focalDevice?: Array<ProcedureFocalDevice>;
   usedReference?: Array<Reference>;
   usedCode?: Array<CodeableConcept>;
 }
@@ -7370,6 +7598,7 @@ export interface ProvenanceEntity {
   agent?: ProvenanceAgent;
 }
 export interface Provenance {
+  resourceType: "Provenance"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -7386,8 +7615,8 @@ export interface Provenance {
   location?: Reference;
   reason?: Array<CodeableConcept>;
   activity?: CodeableConcept;
-  agent: ProvenanceAgent;
-  entity?: ProvenanceEntity;
+  agent: Array<ProvenanceAgent>;
+  entity?: Array<ProvenanceEntity>;
   signature?: Array<Signature>;
 }
 
@@ -7447,18 +7676,19 @@ export interface QuestionnaireItem {
   prefix?: string;
   text?: string;
   type: code;
-  enableWhen?: QuestionnaireItemEnableWhen;
+  enableWhen?: Array<QuestionnaireItemEnableWhen>;
   enableBehavior?: code;
   required?: boolean;
   repeats?: boolean;
   readOnly?: boolean;
   maxLength?: integer;
   answerValueSet?: canonical;
-  answerOption?: QuestionnaireItemAnswerOption;
-  initial?: QuestionnaireItemInitial;
+  answerOption?: Array<QuestionnaireItemAnswerOption>;
+  initial?: Array<QuestionnaireItemInitial>;
   item?: QuestionnaireItem;
 }
 export interface Questionnaire {
+  resourceType: "Questionnaire"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -7488,7 +7718,7 @@ export interface Questionnaire {
   lastReviewDate?: date;
   effectivePeriod?: Period;
   code?: Array<Coding>;
-  item?: QuestionnaireItem;
+  item?: Array<QuestionnaireItem>;
 }
 
 export interface QuestionnaireResponseItemAnswer {
@@ -7516,10 +7746,11 @@ export interface QuestionnaireResponseItem {
   linkId: string;
   definition?: uri;
   text?: string;
-  answer?: QuestionnaireResponseItemAnswer;
+  answer?: Array<QuestionnaireResponseItemAnswer>;
   item?: QuestionnaireResponseItem;
 }
 export interface QuestionnaireResponse {
+  resourceType: "QuestionnaireResponse"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -7538,7 +7769,7 @@ export interface QuestionnaireResponse {
   authored?: dateTime;
   author?: Reference;
   source?: Reference;
-  item?: QuestionnaireResponseItem;
+  item?: Array<QuestionnaireResponseItem>;
 }
 
 export interface RelatedPersonCommunication {
@@ -7549,6 +7780,7 @@ export interface RelatedPersonCommunication {
   preferred?: boolean;
 }
 export interface RelatedPerson {
+  resourceType: "RelatedPerson"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -7568,7 +7800,7 @@ export interface RelatedPerson {
   address?: Array<Address>;
   photo?: Array<Attachment>;
   period?: Period;
-  communication?: RelatedPersonCommunication;
+  communication?: Array<RelatedPersonCommunication>;
 }
 
 export interface RequestGroupActionCondition {
@@ -7598,8 +7830,8 @@ export interface RequestGroupAction {
   priority?: code;
   code?: Array<CodeableConcept>;
   documentation?: Array<RelatedArtifact>;
-  condition?: RequestGroupActionCondition;
-  relatedAction?: RequestGroupActionRelatedAction;
+  condition?: Array<RequestGroupActionCondition>;
+  relatedAction?: Array<RequestGroupActionRelatedAction>;
   timingDateTime?: dateTime;
   timingAge?: Age;
   timingPeriod?: Period;
@@ -7617,6 +7849,7 @@ export interface RequestGroupAction {
   action?: RequestGroupAction;
 }
 export interface RequestGroup {
+  resourceType: "RequestGroup"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -7642,10 +7875,11 @@ export interface RequestGroup {
   reasonCode?: Array<CodeableConcept>;
   reasonReference?: Array<Reference>;
   note?: Array<Annotation>;
-  action?: RequestGroupAction;
+  action?: Array<RequestGroupAction>;
 }
 
 export interface ResearchDefinition {
+  resourceType: "ResearchDefinition"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -7718,6 +7952,7 @@ export interface ResearchElementDefinitionCharacteristic {
   participantEffectiveGroupMeasure?: code;
 }
 export interface ResearchElementDefinition {
+  resourceType: "ResearchElementDefinition"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -7759,7 +7994,7 @@ export interface ResearchElementDefinition {
   library?: Array<canonical>;
   type: code;
   variableType?: code;
-  characteristic: ResearchElementDefinitionCharacteristic;
+  characteristic: Array<ResearchElementDefinitionCharacteristic>;
 }
 
 export interface ResearchStudyArm {
@@ -7778,6 +8013,7 @@ export interface ResearchStudyObjective {
   type?: CodeableConcept;
 }
 export interface ResearchStudy {
+  resourceType: "ResearchStudy"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -7808,11 +8044,12 @@ export interface ResearchStudy {
   site?: Array<Reference>;
   reasonStopped?: CodeableConcept;
   note?: Array<Annotation>;
-  arm?: ResearchStudyArm;
-  objective?: ResearchStudyObjective;
+  arm?: Array<ResearchStudyArm>;
+  objective?: Array<ResearchStudyObjective>;
 }
 
 export interface ResearchSubject {
+  resourceType: "ResearchSubject"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -7845,6 +8082,7 @@ export interface RiskAssessmentPrediction {
   rationale?: string;
 }
 export interface RiskAssessment {
+  resourceType: "RiskAssessment"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -7868,7 +8106,7 @@ export interface RiskAssessment {
   reasonCode?: Array<CodeableConcept>;
   reasonReference?: Array<Reference>;
   basis?: Array<Reference>;
-  prediction?: RiskAssessmentPrediction;
+  prediction?: Array<RiskAssessmentPrediction>;
   mitigation?: string;
   note?: Array<Annotation>;
 }
@@ -7900,7 +8138,7 @@ export interface RiskEvidenceSynthesisRiskEstimate {
   unitOfMeasure?: CodeableConcept;
   denominatorCount?: integer;
   numeratorCount?: integer;
-  precisionEstimate?: RiskEvidenceSynthesisRiskEstimatePrecisionEstimate;
+  precisionEstimate?: Array<RiskEvidenceSynthesisRiskEstimatePrecisionEstimate>;
 }
 export interface RiskEvidenceSynthesisCertaintyCertaintySubcomponent {
   id?: string;
@@ -7916,9 +8154,10 @@ export interface RiskEvidenceSynthesisCertainty {
   modifierExtension?: Array<Extension>;
   rating?: Array<CodeableConcept>;
   note?: Array<Annotation>;
-  certaintySubcomponent?: RiskEvidenceSynthesisCertaintyCertaintySubcomponent;
+  certaintySubcomponent?: Array<RiskEvidenceSynthesisCertaintyCertaintySubcomponent>;
 }
 export interface RiskEvidenceSynthesis {
+  resourceType: "RiskEvidenceSynthesis"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -7957,10 +8196,11 @@ export interface RiskEvidenceSynthesis {
   outcome: Reference;
   sampleSize?: RiskEvidenceSynthesisSampleSize;
   riskEstimate?: RiskEvidenceSynthesisRiskEstimate;
-  certainty?: RiskEvidenceSynthesisCertainty;
+  certainty?: Array<RiskEvidenceSynthesisCertainty>;
 }
 
 export interface Schedule {
+  resourceType: "Schedule"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -7987,6 +8227,7 @@ export interface SearchParameterComponent {
   expression: string;
 }
 export interface SearchParameter {
+  resourceType: "SearchParameter"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -8020,10 +8261,11 @@ export interface SearchParameter {
   comparator?: Array<code>;
   modifier?: Array<code>;
   chain?: Array<string>;
-  component?: SearchParameterComponent;
+  component?: Array<SearchParameterComponent>;
 }
 
 export interface ServiceRequest {
+  resourceType: "ServiceRequest"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -8073,6 +8315,7 @@ export interface ServiceRequest {
 }
 
 export interface Slot {
+  resourceType: "Slot"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -8131,6 +8374,7 @@ export interface SpecimenContainer {
   additiveReference?: Reference;
 }
 export interface Specimen {
+  resourceType: "Specimen"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -8148,8 +8392,8 @@ export interface Specimen {
   parent?: Array<Reference>;
   request?: Array<Reference>;
   collection?: SpecimenCollection;
-  processing?: SpecimenProcessing;
-  container?: SpecimenContainer;
+  processing?: Array<SpecimenProcessing>;
+  container?: Array<SpecimenContainer>;
   condition?: Array<CodeableConcept>;
   note?: Array<Annotation>;
 }
@@ -8172,7 +8416,7 @@ export interface SpecimenDefinitionTypeTestedContainer {
   capacity?: Quantity;
   minimumVolumeQuantity?: Quantity;
   minimumVolumeString?: string;
-  additive?: SpecimenDefinitionTypeTestedContainerAdditive;
+  additive?: Array<SpecimenDefinitionTypeTestedContainerAdditive>;
   preparation?: string;
 }
 export interface SpecimenDefinitionTypeTestedHandling {
@@ -8195,9 +8439,10 @@ export interface SpecimenDefinitionTypeTested {
   requirement?: string;
   retentionTime?: Duration;
   rejectionCriterion?: Array<CodeableConcept>;
-  handling?: SpecimenDefinitionTypeTestedHandling;
+  handling?: Array<SpecimenDefinitionTypeTestedHandling>;
 }
 export interface SpecimenDefinition {
+  resourceType: "SpecimenDefinition"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -8211,7 +8456,7 @@ export interface SpecimenDefinition {
   patientPreparation?: Array<CodeableConcept>;
   timeAspect?: string;
   collection?: Array<CodeableConcept>;
-  typeTested?: SpecimenDefinitionTypeTested;
+  typeTested?: Array<SpecimenDefinitionTypeTested>;
 }
 
 export interface StructureDefinitionMapping {
@@ -8243,6 +8488,7 @@ export interface StructureDefinitionDifferential {
   element: Array<ElementDefinition>;
 }
 export interface StructureDefinition {
+  resourceType: "StructureDefinition"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -8268,10 +8514,10 @@ export interface StructureDefinition {
   copyright?: markdown;
   keyword?: Array<Coding>;
   fhirVersion?: code;
-  mapping?: StructureDefinitionMapping;
+  mapping?: Array<StructureDefinitionMapping>;
   kind: code;
   abstract: boolean;
-  context?: StructureDefinitionContext;
+  context?: Array<StructureDefinitionContext>;
   contextInvariant?: Array<string>;
   type: uri;
   baseDefinition?: canonical;
@@ -8384,7 +8630,7 @@ export interface StructureMapGroupRuleTarget {
   listMode?: Array<code>;
   listRuleId?: id;
   transform?: code;
-  parameter?: StructureMapGroupRuleTargetParameter;
+  parameter?: Array<StructureMapGroupRuleTargetParameter>;
 }
 export interface StructureMapGroupRuleDependent {
   id?: string;
@@ -8398,10 +8644,10 @@ export interface StructureMapGroupRule {
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
   name: id;
-  source: StructureMapGroupRuleSource;
-  target?: StructureMapGroupRuleTarget;
+  source: Array<StructureMapGroupRuleSource>;
+  target?: Array<StructureMapGroupRuleTarget>;
   rule?: StructureMapGroupRule;
-  dependent?: StructureMapGroupRuleDependent;
+  dependent?: Array<StructureMapGroupRuleDependent>;
   documentation?: string;
 }
 export interface StructureMapGroup {
@@ -8412,10 +8658,11 @@ export interface StructureMapGroup {
   extends?: id;
   typeMode: code;
   documentation?: string;
-  input: StructureMapGroupInput;
-  rule: StructureMapGroupRule;
+  input: Array<StructureMapGroupInput>;
+  rule: Array<StructureMapGroupRule>;
 }
 export interface StructureMap {
+  resourceType: "StructureMap"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -8439,9 +8686,9 @@ export interface StructureMap {
   jurisdiction?: Array<CodeableConcept>;
   purpose?: markdown;
   copyright?: markdown;
-  structure?: StructureMapStructure;
+  structure?: Array<StructureMapStructure>;
   import?: Array<canonical>;
-  group: StructureMapGroup;
+  group: Array<StructureMapGroup>;
 }
 
 export interface SubscriptionChannel {
@@ -8454,6 +8701,7 @@ export interface SubscriptionChannel {
   header?: Array<string>;
 }
 export interface Subscription {
+  resourceType: "Subscription"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -8488,6 +8736,7 @@ export interface SubstanceIngredient {
   substanceReference?: Reference;
 }
 export interface Substance {
+  resourceType: "Substance"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -8501,8 +8750,8 @@ export interface Substance {
   category?: Array<CodeableConcept>;
   code: CodeableConcept;
   description?: string;
-  instance?: SubstanceInstance;
-  ingredient?: SubstanceIngredient;
+  instance?: Array<SubstanceInstance>;
+  ingredient?: Array<SubstanceIngredient>;
 }
 
 export interface SubstanceNucleicAcidSubunitLinkage {
@@ -8532,10 +8781,11 @@ export interface SubstanceNucleicAcidSubunit {
   sequenceAttachment?: Attachment;
   fivePrime?: CodeableConcept;
   threePrime?: CodeableConcept;
-  linkage?: SubstanceNucleicAcidSubunitLinkage;
-  sugar?: SubstanceNucleicAcidSubunitSugar;
+  linkage?: Array<SubstanceNucleicAcidSubunitLinkage>;
+  sugar?: Array<SubstanceNucleicAcidSubunitSugar>;
 }
 export interface SubstanceNucleicAcid {
+  resourceType: "SubstanceNucleicAcid"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -8548,7 +8798,7 @@ export interface SubstanceNucleicAcid {
   numberOfSubunits?: integer;
   areaOfHybridisation?: string;
   oligoNucleotideType?: CodeableConcept;
-  subunit?: SubstanceNucleicAcidSubunit;
+  subunit?: Array<SubstanceNucleicAcidSubunit>;
 }
 
 export interface SubstancePolymerMonomerSetStartingMaterial {
@@ -8565,7 +8815,7 @@ export interface SubstancePolymerMonomerSet {
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
   ratioType?: CodeableConcept;
-  startingMaterial?: SubstancePolymerMonomerSetStartingMaterial;
+  startingMaterial?: Array<SubstancePolymerMonomerSetStartingMaterial>;
 }
 export interface SubstancePolymerRepeatRepeatUnitDegreeOfPolymerisation {
   id?: string;
@@ -8589,8 +8839,8 @@ export interface SubstancePolymerRepeatRepeatUnit {
   orientationOfPolymerisation?: CodeableConcept;
   repeatUnit?: string;
   amount?: SubstanceAmount;
-  degreeOfPolymerisation?: SubstancePolymerRepeatRepeatUnitDegreeOfPolymerisation;
-  structuralRepresentation?: SubstancePolymerRepeatRepeatUnitStructuralRepresentation;
+  degreeOfPolymerisation?: Array<SubstancePolymerRepeatRepeatUnitDegreeOfPolymerisation>;
+  structuralRepresentation?: Array<SubstancePolymerRepeatRepeatUnitStructuralRepresentation>;
 }
 export interface SubstancePolymerRepeat {
   id?: string;
@@ -8599,9 +8849,10 @@ export interface SubstancePolymerRepeat {
   numberOfUnits?: integer;
   averageMolecularFormula?: string;
   repeatUnitAmountType?: CodeableConcept;
-  repeatUnit?: SubstancePolymerRepeatRepeatUnit;
+  repeatUnit?: Array<SubstancePolymerRepeatRepeatUnit>;
 }
 export interface SubstancePolymer {
+  resourceType: "SubstancePolymer"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -8614,8 +8865,8 @@ export interface SubstancePolymer {
   geometry?: CodeableConcept;
   copolymerConnectivity?: Array<CodeableConcept>;
   modification?: Array<string>;
-  monomerSet?: SubstancePolymerMonomerSet;
-  repeat?: SubstancePolymerRepeat;
+  monomerSet?: Array<SubstancePolymerMonomerSet>;
+  repeat?: Array<SubstancePolymerRepeat>;
 }
 
 export interface SubstanceProteinSubunit {
@@ -8632,6 +8883,7 @@ export interface SubstanceProteinSubunit {
   cTerminalModification?: string;
 }
 export interface SubstanceProtein {
+  resourceType: "SubstanceProtein"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -8643,7 +8895,7 @@ export interface SubstanceProtein {
   sequenceType?: CodeableConcept;
   numberOfSubunits?: integer;
   disulfideLinkage?: Array<string>;
-  subunit?: SubstanceProteinSubunit;
+  subunit?: Array<SubstanceProteinSubunit>;
 }
 
 export interface SubstanceReferenceInformationGene {
@@ -8687,6 +8939,7 @@ export interface SubstanceReferenceInformationTarget {
   source?: Array<Reference>;
 }
 export interface SubstanceReferenceInformation {
+  resourceType: "SubstanceReferenceInformation"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -8696,10 +8949,10 @@ export interface SubstanceReferenceInformation {
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
   comment?: string;
-  gene?: SubstanceReferenceInformationGene;
-  geneElement?: SubstanceReferenceInformationGeneElement;
-  classification?: SubstanceReferenceInformationClassification;
-  target?: SubstanceReferenceInformationTarget;
+  gene?: Array<SubstanceReferenceInformationGene>;
+  geneElement?: Array<SubstanceReferenceInformationGeneElement>;
+  classification?: Array<SubstanceReferenceInformationClassification>;
+  target?: Array<SubstanceReferenceInformationTarget>;
 }
 
 export interface SubstanceSourceMaterialFractionDescription {
@@ -8744,7 +8997,7 @@ export interface SubstanceSourceMaterialOrganism {
   species?: CodeableConcept;
   intraspecificType?: CodeableConcept;
   intraspecificDescription?: string;
-  author?: SubstanceSourceMaterialOrganismAuthor;
+  author?: Array<SubstanceSourceMaterialOrganismAuthor>;
   hybrid?: SubstanceSourceMaterialOrganismHybrid;
   organismGeneral?: SubstanceSourceMaterialOrganismOrganismGeneral;
 }
@@ -8756,6 +9009,7 @@ export interface SubstanceSourceMaterialPartDescription {
   partLocation?: CodeableConcept;
 }
 export interface SubstanceSourceMaterial {
+  resourceType: "SubstanceSourceMaterial"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -8774,9 +9028,9 @@ export interface SubstanceSourceMaterial {
   countryOfOrigin?: Array<CodeableConcept>;
   geographicalLocation?: Array<string>;
   developmentStage?: CodeableConcept;
-  fractionDescription?: SubstanceSourceMaterialFractionDescription;
+  fractionDescription?: Array<SubstanceSourceMaterialFractionDescription>;
   organism?: SubstanceSourceMaterialOrganism;
-  partDescription?: SubstanceSourceMaterialPartDescription;
+  partDescription?: Array<SubstanceSourceMaterialPartDescription>;
 }
 
 export interface SubstanceSpecificationMoiety {
@@ -8838,10 +9092,10 @@ export interface SubstanceSpecificationStructure {
   opticalActivity?: CodeableConcept;
   molecularFormula?: string;
   molecularFormulaByMoiety?: string;
-  isotope?: SubstanceSpecificationStructureIsotope;
+  isotope?: Array<SubstanceSpecificationStructureIsotope>;
   molecularWeight?: SubstanceSpecificationStructureIsotopeMolecularWeight;
   source?: Array<Reference>;
-  representation?: SubstanceSpecificationStructureRepresentation;
+  representation?: Array<SubstanceSpecificationStructureRepresentation>;
 }
 export interface SubstanceSpecificationCode {
   id?: string;
@@ -8874,7 +9128,7 @@ export interface SubstanceSpecificationName {
   jurisdiction?: Array<CodeableConcept>;
   synonym?: SubstanceSpecificationName;
   translation?: SubstanceSpecificationName;
-  official?: SubstanceSpecificationNameOfficial;
+  official?: Array<SubstanceSpecificationNameOfficial>;
   source?: Array<Reference>;
 }
 export interface SubstanceSpecificationRelationship {
@@ -8894,6 +9148,7 @@ export interface SubstanceSpecificationRelationship {
   source?: Array<Reference>;
 }
 export interface SubstanceSpecification {
+  resourceType: "SubstanceSpecification"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -8909,14 +9164,14 @@ export interface SubstanceSpecification {
   description?: string;
   source?: Array<Reference>;
   comment?: string;
-  moiety?: SubstanceSpecificationMoiety;
-  property?: SubstanceSpecificationProperty;
+  moiety?: Array<SubstanceSpecificationMoiety>;
+  property?: Array<SubstanceSpecificationProperty>;
   referenceInformation?: Reference;
   structure?: SubstanceSpecificationStructure;
-  code?: SubstanceSpecificationCode;
-  name?: SubstanceSpecificationName;
+  code?: Array<SubstanceSpecificationCode>;
+  name?: Array<SubstanceSpecificationName>;
   molecularWeight?: SubstanceSpecificationStructureIsotopeMolecularWeight;
-  relationship?: SubstanceSpecificationRelationship;
+  relationship?: Array<SubstanceSpecificationRelationship>;
   nucleicAcid?: Reference;
   polymer?: Reference;
   protein?: Reference;
@@ -8932,6 +9187,7 @@ export interface SupplyDeliverySuppliedItem {
   itemReference?: Reference;
 }
 export interface SupplyDelivery {
+  resourceType: "SupplyDelivery"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -8966,6 +9222,7 @@ export interface SupplyRequestParameter {
   valueBoolean?: boolean;
 }
 export interface SupplyRequest {
+  resourceType: "SupplyRequest"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -8981,7 +9238,7 @@ export interface SupplyRequest {
   itemCodeableConcept?: CodeableConcept;
   itemReference?: Reference;
   quantity: Quantity;
-  parameter?: SupplyRequestParameter;
+  parameter?: Array<SupplyRequestParameter>;
   occurrenceDateTime?: dateTime;
   occurrencePeriod?: Period;
   occurrenceTiming?: Timing;
@@ -9115,6 +9372,7 @@ export interface TaskOutput {
   valueMeta?: Meta;
 }
 export interface Task {
+  resourceType: "Task"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -9152,8 +9410,8 @@ export interface Task {
   note?: Array<Annotation>;
   relevantHistory?: Array<Reference>;
   restriction?: TaskRestriction;
-  input?: TaskInput;
-  output?: TaskOutput;
+  input?: Array<TaskInput>;
+  output?: Array<TaskOutput>;
 }
 
 export interface TerminologyCapabilitiesSoftware {
@@ -9185,7 +9443,7 @@ export interface TerminologyCapabilitiesCodeSystemVersion {
   isDefault?: boolean;
   compositional?: boolean;
   language?: Array<code>;
-  filter?: TerminologyCapabilitiesCodeSystemVersionFilter;
+  filter?: Array<TerminologyCapabilitiesCodeSystemVersionFilter>;
   property?: Array<code>;
 }
 export interface TerminologyCapabilitiesCodeSystem {
@@ -9193,7 +9451,7 @@ export interface TerminologyCapabilitiesCodeSystem {
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
   uri?: canonical;
-  version?: TerminologyCapabilitiesCodeSystemVersion;
+  version?: Array<TerminologyCapabilitiesCodeSystemVersion>;
   subsumption?: boolean;
 }
 export interface TerminologyCapabilitiesExpansionParameter {
@@ -9210,7 +9468,7 @@ export interface TerminologyCapabilitiesExpansion {
   hierarchical?: boolean;
   paging?: boolean;
   incomplete?: boolean;
-  parameter?: TerminologyCapabilitiesExpansionParameter;
+  parameter?: Array<TerminologyCapabilitiesExpansionParameter>;
   textFilter?: markdown;
 }
 export interface TerminologyCapabilitiesValidateCode {
@@ -9232,6 +9490,7 @@ export interface TerminologyCapabilitiesClosure {
   translation?: boolean;
 }
 export interface TerminologyCapabilities {
+  resourceType: "TerminologyCapabilities"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -9258,7 +9517,7 @@ export interface TerminologyCapabilities {
   software?: TerminologyCapabilitiesSoftware;
   implementation?: TerminologyCapabilitiesImplementation;
   lockedDate?: boolean;
-  codeSystem?: TerminologyCapabilitiesCodeSystem;
+  codeSystem?: Array<TerminologyCapabilitiesCodeSystem>;
   expansion?: TerminologyCapabilitiesExpansion;
   codeSearch?: code;
   validateCode?: TerminologyCapabilitiesValidateCode;
@@ -9301,7 +9560,7 @@ export interface TestReportSetup {
   id?: string;
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
-  action: TestReportSetupAction;
+  action: Array<TestReportSetupAction>;
 }
 export interface TestReportTestAction {
   id?: string;
@@ -9316,7 +9575,7 @@ export interface TestReportTest {
   modifierExtension?: Array<Extension>;
   name?: string;
   description?: string;
-  action: TestReportTestAction;
+  action: Array<TestReportTestAction>;
 }
 export interface TestReportTeardownAction {
   id?: string;
@@ -9328,9 +9587,10 @@ export interface TestReportTeardown {
   id?: string;
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
-  action: TestReportTeardownAction;
+  action: Array<TestReportTeardownAction>;
 }
 export interface TestReport {
+  resourceType: "TestReport"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -9347,9 +9607,9 @@ export interface TestReport {
   score?: decimal;
   tester?: string;
   issued?: dateTime;
-  participant?: TestReportParticipant;
+  participant?: Array<TestReportParticipant>;
   setup?: TestReportSetup;
-  test?: TestReportTest;
+  test?: Array<TestReportTest>;
   teardown?: TestReportTeardown;
 }
 
@@ -9390,8 +9650,8 @@ export interface TestScriptMetadata {
   id?: string;
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
-  link?: TestScriptMetadataLink;
-  capability: TestScriptMetadataCapability;
+  link?: Array<TestScriptMetadataLink>;
+  capability: Array<TestScriptMetadataCapability>;
 }
 export interface TestScriptFixture {
   id?: string;
@@ -9436,7 +9696,7 @@ export interface TestScriptSetupActionOperation {
   method?: code;
   origin?: integer;
   params?: string;
-  requestHeader?: TestScriptSetupActionOperationRequestHeader;
+  requestHeader?: Array<TestScriptSetupActionOperationRequestHeader>;
   requestId?: id;
   responseId?: id;
   sourceId?: id;
@@ -9481,7 +9741,7 @@ export interface TestScriptSetup {
   id?: string;
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
-  action: TestScriptSetupAction;
+  action: Array<TestScriptSetupAction>;
 }
 export interface TestScriptTestAction {
   id?: string;
@@ -9496,7 +9756,7 @@ export interface TestScriptTest {
   modifierExtension?: Array<Extension>;
   name?: string;
   description?: string;
-  action: TestScriptTestAction;
+  action: Array<TestScriptTestAction>;
 }
 export interface TestScriptTeardownAction {
   id?: string;
@@ -9508,9 +9768,10 @@ export interface TestScriptTeardown {
   id?: string;
   extension?: Array<Extension>;
   modifierExtension?: Array<Extension>;
-  action: TestScriptTeardownAction;
+  action: Array<TestScriptTeardownAction>;
 }
 export interface TestScript {
+  resourceType: "TestScript"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -9534,14 +9795,14 @@ export interface TestScript {
   jurisdiction?: Array<CodeableConcept>;
   purpose?: markdown;
   copyright?: markdown;
-  origin?: TestScriptOrigin;
-  destination?: TestScriptDestination;
+  origin?: Array<TestScriptOrigin>;
+  destination?: Array<TestScriptDestination>;
   metadata?: TestScriptMetadata;
-  fixture?: TestScriptFixture;
+  fixture?: Array<TestScriptFixture>;
   profile?: Array<Reference>;
-  variable?: TestScriptVariable;
+  variable?: Array<TestScriptVariable>;
   setup?: TestScriptSetup;
-  test?: TestScriptTest;
+  test?: Array<TestScriptTest>;
   teardown?: TestScriptTeardown;
 }
 
@@ -9559,7 +9820,7 @@ export interface ValueSetComposeIncludeConcept {
   modifierExtension?: Array<Extension>;
   code: code;
   display?: string;
-  designation?: ValueSetComposeIncludeConceptDesignation;
+  designation?: Array<ValueSetComposeIncludeConceptDesignation>;
 }
 export interface ValueSetComposeIncludeFilter {
   id?: string;
@@ -9575,8 +9836,8 @@ export interface ValueSetComposeInclude {
   modifierExtension?: Array<Extension>;
   system?: uri;
   version?: string;
-  concept?: ValueSetComposeIncludeConcept;
-  filter?: ValueSetComposeIncludeFilter;
+  concept?: Array<ValueSetComposeIncludeConcept>;
+  filter?: Array<ValueSetComposeIncludeFilter>;
   valueSet?: Array<canonical>;
 }
 export interface ValueSetCompose {
@@ -9585,7 +9846,7 @@ export interface ValueSetCompose {
   modifierExtension?: Array<Extension>;
   lockedDate?: date;
   inactive?: boolean;
-  include: ValueSetComposeInclude;
+  include: Array<ValueSetComposeInclude>;
   exclude?: ValueSetComposeInclude;
 }
 export interface ValueSetExpansionParameter {
@@ -9622,10 +9883,11 @@ export interface ValueSetExpansion {
   timestamp: dateTime;
   total?: integer;
   offset?: integer;
-  parameter?: ValueSetExpansionParameter;
-  contains?: ValueSetExpansionContains;
+  parameter?: Array<ValueSetExpansionParameter>;
+  contains?: Array<ValueSetExpansionContains>;
 }
 export interface ValueSet {
+  resourceType: "ValueSet"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -9688,6 +9950,7 @@ export interface VerificationResultValidator {
   attestationSignature?: Signature;
 }
 export interface VerificationResult {
+  resourceType: "VerificationResult"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -9707,9 +9970,9 @@ export interface VerificationResult {
   lastPerformed?: dateTime;
   nextScheduled?: date;
   failureAction?: CodeableConcept;
-  primarySource?: VerificationResultPrimarySource;
+  primarySource?: Array<VerificationResultPrimarySource>;
   attestation?: VerificationResultAttestation;
-  validator?: VerificationResultValidator;
+  validator?: Array<VerificationResultValidator>;
 }
 
 export interface VisionPrescriptionLensSpecificationPrism {
@@ -9728,7 +9991,7 @@ export interface VisionPrescriptionLensSpecification {
   sphere?: decimal;
   cylinder?: decimal;
   axis?: integer;
-  prism?: VisionPrescriptionLensSpecificationPrism;
+  prism?: Array<VisionPrescriptionLensSpecificationPrism>;
   add?: decimal;
   power?: decimal;
   backCurve?: decimal;
@@ -9739,6 +10002,7 @@ export interface VisionPrescriptionLensSpecification {
   note?: Array<Annotation>;
 }
 export interface VisionPrescription {
+  resourceType: "VisionPrescription"
   id?: string;
   meta?: Meta;
   implicitRules?: uri;
@@ -9754,5 +10018,5 @@ export interface VisionPrescription {
   encounter?: Reference;
   dateWritten: dateTime;
   prescriber: Reference;
-  lensSpecification: VisionPrescriptionLensSpecification;
+  lensSpecification: Array<VisionPrescriptionLensSpecification>;
 }
