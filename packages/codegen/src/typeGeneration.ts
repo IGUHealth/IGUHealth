@@ -37,7 +37,7 @@ function isRoot(sd: StructureDefinition, elementDefinition: ElementDefinition) {
 }
 
 function documentation(element: ElementDefinition) {
-  if (element.short) return `  /* \n   * ${element.short}\n   */\n`;
+  if (element.short) return `  /** \n   * ${element.short}\n   */\n`;
   return "";
 }
 
