@@ -46,8 +46,8 @@ function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-function isRoot(elementDefinition: ElementDefinition) {
-  return elementDefinition.path === elementDefinition.id;
+function isRoot(sd: StructureDefinition, elementDefinition: ElementDefinition) {
+  return elementDefinition.path === sd.id;
 }
 
 function getElementField(element: ElementDefinition, type?: string) {
@@ -176,9 +176,9 @@ function complexToTypescriptType(
         )};`,
       ];
     } else {
-      const interfaceName = getInterfaceName(element);c
+      const interfaceName = getInterfaceName(element);
       // for resources include the resourceType filed
-      if (isRoot(element) && complexSD.kind === "resource") {
+      if (isRoot(complexSD, element) && complexSD.kind === "resource") {
         children.unshift(`resourceType: "${complexSD.id}"`);
       }
       typescriptTypes = `${typescriptTypes}
