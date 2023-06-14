@@ -46,6 +46,10 @@ function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+function isRoot(elementDefinition: ElementDefinition) {
+  return elementDefinition.path === elementDefinition.id;
+}
+
 function getElementField(element: ElementDefinition, type?: string) {
   const path = element.path;
   const isRequired = element.min > 0;
@@ -130,7 +134,7 @@ function complexToTypescriptType(
 ): string | void {
   let typescriptTypes = "";
 
-  traversalBottomUp(complexSD, (element, children) => {
+  traversalBottomUp(complexSD, (element, children): string[] => {
     if (children.length === 0) {
       if (element.contentReference) {
         // Resolves contentReference to TS type
@@ -156,7 +160,7 @@ function complexToTypescriptType(
           );
         }
         return [`${getElementField(element)}: ${referenceTypescriptType};`];
-      } else if (element.type?.length !== 1) {
+      } else if (element.type?.length && element.type?.length > 1) {
         return element.type?.map(
           (type) =>
             `${getElementField(element, type.code)}: ${typeToTypescriptType(
@@ -168,11 +172,15 @@ function complexToTypescriptType(
       return [
         `${getElementField(element)}: ${typeToTypescriptType(
           element,
-          element.type?.[0]?.code
+          element.type?.[0]?.code as string
         )};`,
       ];
-    } else if (isNested(element)) {
-      const interfaceName = getInterfaceName(element);
+    } else {
+      const interfaceName = getInterfaceName(element);c
+      // for resources include the resourceType filed
+      if (isRoot(element) && complexSD.kind === "resource") {
+        children.unshift(`resourceType: "${complexSD.id}"`);
+      }
       typescriptTypes = `${typescriptTypes}
 export interface ${interfaceName} {
   ${children.join("\n  ")}
@@ -183,13 +191,6 @@ export interface ${interfaceName} {
           interfaceName
         )};`,
       ];
-    } else {
-      const interfaceName = getInterfaceName(element);
-      typescriptTypes = `${typescriptTypes}
-export interface ${interfaceName} {
-  ${children.join("\n  ")}
-}`;
-      return [interfaceName];
     }
   });
 
