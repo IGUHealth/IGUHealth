@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import { readFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 
 import { generateTypes, StructureDefinition } from "./typeGeneration";
 
@@ -17,16 +17,18 @@ program
 program
   .command("generate-types")
   .description("Generates typescript types off profiles")
-  .argument("<profiles...> <output>", "FHIR Version")
+  .argument("<profiles...>", "FHIR profiles to use")
+  .option("-o, --output <output>", "output file", "types.d.ts")
   .option("-v, --version <version>", "FHIR Profiles to use", "r4")
-  .action((profiles, output, options) => {
+  .action((profiles, options) => {
     const bundles: Array<StructureDefinitionBundle> = profiles.map(
-      (fileURI: string) =>
-        JSON.parse(
-          readFileSync(fileURI, "utf8")
-    ))
-    const structureDefinitions = bundles.flatMap((bundle) => bundle.entry.map(entry=> entry.resource));
+      (fileURI: string) => JSON.parse(readFileSync(fileURI, "utf8"))
+    );
+    const structureDefinitions = bundles.flatMap((bundle) =>
+      bundle.entry.map((entry) => entry.resource)
+    );
     const types = generateTypes(options.version, structureDefinitions);
+    writeFileSync(options.output, types);
   });
 
 program.parse();

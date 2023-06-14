@@ -2846,7 +2846,7 @@
               "url" : "http://hl7.org/fhir/StructureDefinition/regex",
               "valueString" : "[1-9][0-9]*"
             }],
-            "code" : "http://hl7.org/fhirpath/System.String"
+            "code" : "http://hl7.org/fhirpath/System.Integer"
           }],
           "isModifier" : false,
           "isSummary" : false

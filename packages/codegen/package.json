@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "generate-r4": "ts-node src/index.ts generate-types ../artifacts/r4/profiles-types.json  ../artifacts/r4/profiles-resources.json  -o r4.d.ts"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +16,7 @@
   },
   "dependencies": {
     "@genfhi/artifacts": "workspace:^",
-    "commander": "^10.0.1"
+    "commander": "^10.0.1",
+    "prettier": "^2.8.8"
   }
 }
