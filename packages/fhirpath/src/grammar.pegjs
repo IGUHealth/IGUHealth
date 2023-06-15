@@ -5,24 +5,25 @@
 //line: ID ( '(' expr ')') ':' expr '\r'? '\n';
 
 expression
-        = term expression_2
-        / ('+' / '-') expression //polarityExpression
-        
-        /// (IDENTIFIER)? '=>' expression                           //lambdaExpression
+        = (operations)
+        // ('+' / '-') init                                         // polarity expression
+        /// (IDENTIFIER)? '=>' expression                           //lambdaExpressio
+init = term expression_2
+
+operations = multiplicativeExpression (('+' / '-' / '&') multiplicativeExpression)*
+multiplicativeExpression = init (('*' / '/' / 'div' / 'mod') init)*
 
 expression_2
-        = '.' invocation expression_2                            //invocationExpression
-        / '[' expression ']' expression_2                        //indexerExpression
-        / ('*' / '/' / 'div' / 'mod') expression expression_2    //multiplicativeExpression
-        / ('+' / '-' / '&') expression  expression_2             //additiveExpression
+        = '.' invocation expression_2 ?                            //invocationExpression
+        / '[' expression ']' expression_2 ?                        //indexerExpression
        // / expression ('is' / 'as') //typeSpecifier             //typeExpression
-        /  '/' expression  expression_2                          //unionExpression
-        /  ('<=' / '<' / '>' / '>=') expression expression_2     //inequalityExpression
-        /  ('=' / '~' / '!=' / '!~') expression expression_2     //equalityExpression
-        /  ('in' / 'contains') expression expression_2           //membershipExpression
-        /  'and' expression expression_2                         //andExpression
-        /  ('or' / 'xor') expression expression_2                //orExpression
-        /  'implies' expression expression_2                     //impliesExpression;
+        /  '/' expression  expression_2?                          //unionExpression
+        /  ('<=' / '<' / '>' / '>=') expression expression_2 ?     //inequalityExpression
+        /  ('=' / '~' / '!=' / '!~') expression expression_2 ?     //equalityExpression
+        /  ('in' / 'contains') expression expression_2 ?           //membershipExpression
+        /  'and' expression expression_2 ?                         //andExpression
+        /  ('or' / 'xor') expression expression_2 ?                //orExpression
+        /  'implies' expression expression_2 ?                     //impliesExpression;
 
 term
         = invocation                                            //invocationTerm
@@ -33,8 +34,8 @@ term
 
 
 literal
-        = '{' '}'                                               //nullLiteral
-        / ('true' / 'false')                                    //booleanLiteral
+        = '{' '}'                                                  //nullLiteral
+        / ('true' / 'false')                                       //booleanLiteral
         // / STRING                                                //stringLiteral
         // / NUMBER                                                //numberLiteral
         // / DATE                                                  //dateLiteral
@@ -47,11 +48,11 @@ externalConstant
         ;        
 
 invocation                          // Terms that can be used after the function/member invocation '.'
-        // = identifier                                            //memberInvocation
+        = identifier                                            //memberInvocation
         // / function                                              //functionInvocation
         // / '$this'                                               //thisInvocation
         // / '$index'                                              //indexInvocation
-        = '$total'                                              //totalInvocation        
+        / '$total'                                              //totalInvocation        
 
 identifier
         = IDENTIFIER
@@ -71,3 +72,6 @@ STRING
 IDENTIFIER
         = ([A-Za-z] / '_')([A-Za-z0-9] / '_')*            // Added _ to support CQL (FHIR could constrain it out)
         ;
+
+WS "whitespace"
+  = ("\t" / "\r" / "\n" / " ")*
