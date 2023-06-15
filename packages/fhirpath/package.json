@@ -1,0 +1,19 @@
+{
+  "name": "@genfhi/fhirpath",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate": "peggy --plugin ./node_modules/ts-pegjs/dist/tspegjs.js -o src/parser/arithmetics.ts --cache src/parser/arithmetic.pegjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@genfhi/fhir-types": "workspace:^",
+    "peggy": "^3.0.2",
+    "ts-pegjs": "^4.2.1",
+    "typescript": "^5.1.3"
+  }
+}
