@@ -5,25 +5,34 @@
 //line: ID ( '(' expr ')') ':' expr '\r'? '\n';
 
 expression
-        = (operations)
+        = additive_operation WS
         // ('+' / '-') init                                         // polarity expression
-        /// (IDENTIFIER)? '=>' expression                           //lambdaExpressio
-init = term expression_2
+        /// (IDENTIFIER)? '=>' expression                           //lambdaExpression
 
-operations = multiplicativeExpression (('+' / '-' / '&') multiplicativeExpression)*
-multiplicativeExpression = init (('*' / '/' / 'div' / 'mod') init)*
+non_op = term expression_inner
 
-expression_2
-        = '.' invocation expression_2 ?                            //invocationExpression
-        / '[' expression ']' expression_2 ?                        //indexerExpression
+equality_operation = additive_operation ('<=' / '<' / '>' / '>=' / '=' / '~' / '!=' / '!~') WS additive_operation
+                   / additive_operation
+
+additive_operation = rh:multiplication_operation WS ('+' / '-' / '&') WS multiplication_operation 
+                   / multiplication_operation
+
+multiplication_operation = rh:union_operation WS lh:(('*' / '/' / 'div' / 'mod') WS union_operation)*
+
+union_operation  = rh:mem_operation WS lh:(("|") WS mem_operation) * 
+
+mem_operation =    rh: and_operation WS lh:(('in' / 'contains') WS and_operation) *
+
+and_operation =    rh:or_operation WS lh:(('and') WS or_operation) *
+
+or_operation =     rh:implies_operation WS lh:(('or' / 'xor') WS implies_operation) *
+
+implies_operation = rh:non_op WS lh:(('implies') WS non_op) *
+
+expression_inner
+        = '.' invocation expression_inner ?                      //invocationExpression
+        / '[' expression ']' expression_inner ?                  //indexerExpression
        // / expression ('is' / 'as') //typeSpecifier             //typeExpression
-        /  '/' expression  expression_2?                          //unionExpression
-        /  ('<=' / '<' / '>' / '>=') expression expression_2 ?     //inequalityExpression
-        /  ('=' / '~' / '!=' / '!~') expression expression_2 ?     //equalityExpression
-        /  ('in' / 'contains') expression expression_2 ?           //membershipExpression
-        /  'and' expression expression_2 ?                         //andExpression
-        /  ('or' / 'xor') expression expression_2 ?                //orExpression
-        /  'implies' expression expression_2 ?                     //impliesExpression;
 
 term
         = invocation                                            //invocationTerm
@@ -44,11 +53,11 @@ literal
         // / quantity                                              //quantityLiteral
 
 externalConstant
-        = '%' ( identifier / STRING )
+        = '%' (identifier / STRING )
         ;        
 
 invocation                          // Terms that can be used after the function/member invocation '.'
-        = identifier                                            //memberInvocation
+        = $(identifier)                                            //memberInvocation
         // / function                                              //functionInvocation
         // / '$this'                                               //thisInvocation
         // / '$index'                                              //indexInvocation
@@ -66,11 +75,11 @@ identifier
 ESC  = [^\'\"]
 
 STRING
-        = '\'' (ESC / .)* '\''
+        = '\'' $(ESC / .)* '\''
         ;
 
 IDENTIFIER
-        = ([A-Za-z] / '_')([A-Za-z0-9] / '_')*            // Added _ to support CQL (FHIR could constrain it out)
+        = $([A-Za-z] / '_')([A-Za-z0-9] / '_')*            // Added _ to support CQL (FHIR could constrain it out)
         ;
 
 WS "whitespace"
