@@ -1,0 +1,23 @@
+name: Workflow for Codecov example-javascript
+on: [push, pull_request]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Node 19
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 6.0.2
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run tests and collect coverage
+        run: pnpm run test
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
