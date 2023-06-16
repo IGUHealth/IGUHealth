@@ -18,5 +18,14 @@
     "ts-jest": "^29.1.0",
     "ts-pegjs": "^4.2.1",
     "typescript": "^5.1.3"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "coverageReporters": [
+      "text",
+      "cobertura"
+    ]
   }
 }

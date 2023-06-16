@@ -3,84 +3,177 @@
 
 //prog: line (line)*;
 //line: ID ( '(' expr ')') ':' expr '\r'? '\n';
-
+{
+  function buildBinaryExpression(head, tail) {
+    return tail.reduce(function(result, element) {
+      return {
+        type: "Operation",
+        operator: element[0],
+        left: result,
+        right: element[2]
+      };
+    }, head);
+  }
+  function buildNode<T>(type: string, value: T, children){
+        let node = {type: type};
+        if (value ) node.value = value
+        if (children) node.children = children;
+        return node
+  }
+  function buildExpression(property, children){
+        return buildNode("Expression", property, children || []);
+  }
+}
 expression
-        = additive_operation WS
+        = WS expression:equality_operation WS
+        {return expression}
         // ('+' / '-') init                                         // polarity expression
         /// (IDENTIFIER)? '=>' expression                           //lambdaExpression
 
-non_op = term expression_inner
+non_op = term:term children:expression_inner
+{ return buildExpression(term, children) }
 
-equality_operation = additive_operation ('<=' / '<' / '>' / '>=' / '=' / '~' / '!=' / '!~') WS additive_operation
-                   / additive_operation
-
-additive_operation = rh:multiplication_operation WS ('+' / '-' / '&') WS multiplication_operation 
-                   / multiplication_operation
-
-multiplication_operation = rh:union_operation WS lh:(('*' / '/' / 'div' / 'mod') WS union_operation)*
-
-union_operation  = rh:mem_operation WS lh:(("|") WS mem_operation) * 
-
-mem_operation =    rh: and_operation WS lh:(('in' / 'contains') WS and_operation) *
-
-and_operation =    rh:or_operation WS lh:(('and') WS or_operation) *
-
-or_operation =     rh:implies_operation WS lh:(('or' / 'xor') WS implies_operation) *
-
-implies_operation = rh:non_op WS lh:(('implies') WS non_op) *
+equality_operation = head:additive_operation WS tail:(('<=' / '<' / '>' / '>=' / '=' / '~' / '!=' / '!~') WS additive_operation) *
+{ return buildBinaryExpression(head, tail)}
+additive_operation = head:multiplication_operation WS tail:(('+' / '-' / '&') WS multiplication_operation)*
+{ return buildBinaryExpression(head, tail)}
+multiplication_operation = head:union_operation WS tail:(('*' / '/' / 'div' / 'mod') WS union_operation)*
+{ return buildBinaryExpression(head, tail)}
+union_operation  = head:mem_operation WS tail:(("|") WS mem_operation) * 
+{ return buildBinaryExpression(head, tail)}
+mem_operation =    head: and_operation WS tail:(('in' / 'contains') WS and_operation) *
+{ return buildBinaryExpression(head, tail)}
+and_operation =    head:or_operation WS tail:(('and') WS or_operation) *
+{ return buildBinaryExpression(head, tail)}
+or_operation =     head:implies_operation WS tail:(('or' / 'xor') WS implies_operation) *
+{ return buildBinaryExpression(head, tail)}
+implies_operation = head:non_op WS tail:(('implies') WS non_op) *
+{ return buildBinaryExpression(head, tail)}
+// / expression ('is' / 'as') //typeSpecifier             //typeExpression
 
 expression_inner
-        = '.' invocation expression_inner ?                      //invocationExpression
-        / '[' expression ']' expression_inner ?                  //indexerExpression
-       // / expression ('is' / 'as') //typeSpecifier             //typeExpression
+        = invocation_expression          
+        / indexed_expression
+
+
+invocation_expression
+      = '.' invocation:invocation children:expression_inner ?    //invocationExpression
+{ return buildExpression(invocation, children) }
+indexed_expression
+        = '[' exp:(expression) ']' children:(expression_inner) ?                  //indexerExpression
+{ return buildExpression(expression, children) }
 
 term
         = invocation                                            //invocationTerm
         / literal                                               //literalTerm
         / externalConstant                                      //externalConstantTerm
-        / '(' expression ')'                                    //parenthesizedTerm
+        / '(' expression:expression ')' {return expression}     //parenthesizedTerm
         ;
 
 
 literal
-        = '{' '}'                                                  //nullLiteral
-        / ('true' / 'false')                                       //booleanLiteral
-        // / STRING                                                //stringLiteral
-        // / NUMBER                                                //numberLiteral
-        // / DATE                                                  //dateLiteral
-        // / DATETIME                                              //dateTimeLiteral
-        // / TIME                                                  //timeLiteral
-        // / quantity                                              //quantityLiteral
+        = 
+        value:(
+                '{' '}' {return null}                                 //nullLiteral
+                / bool:$('true' / 'false') {return bool === "true"}     //booleanLiteral
+                / STRING                                                //stringLiteral
+                / num:NUMBER   {return Number(num)}                     //numberLiteral
+                / DATE                                                  //dateLiteral
+                / DATETIME                                              //dateTimeLiteral
+                / TIME                                                  //timeLiteral
+                / quantity                                              //quantityLiteral
+        )
+        {return buildeNode("Literal", value)}
+
+NUMBER = $([0-9]+('.' [0-9]+)?)
 
 externalConstant
-        = '%' (identifier / STRING )
-        ;        
+        = '%' variable:(identifier / STRING)                              //externalConstant
+        {return buildeNode("Variable", variable)}
 
 invocation                          // Terms that can be used after the function/member invocation '.'
-        = $(identifier)                                            //memberInvocation
-        // / function                                              //functionInvocation
-        // / '$this'                                               //thisInvocation
-        // / '$index'                                              //indexInvocation
-        / '$total'                                              //totalInvocation        
+        = identifier
+        / function                                 //functionInvocation
+        / '$this'    {return buildNode("This")}   //thisInvocation
+        / '$index'   {return buildNode("Index")}  //indexInvocation
+        / '$total'   {return buildNode("Total")} //totalInvocation        
+
+function
+        = identifier:identifier '(' paramList:paramList? ')'
+        {return buildNode("Function", identifier, paramList || [])}
+        ;
+
+paramList
+        = head:expression tail:(',' expression)*
+        {return [head].concat(tail.map(function(element) {return element[1]}))}
+        ;
+
+quantity
+        = value:NUMBER unit:unit? { return {value:value, unit:unit}}
+
+unit
+        = dateTimePrecision
+        / pluralDateTimePrecision
+        / STRING // UCUM syntax for units of measure 
+
+dateTimePrecision
+        = $('year' / 'month' / 'week' / 'day' / 'hour' / 'minute' / 'second' / 'millisecond')
+        ;
+
+pluralDateTimePrecision
+        = $('years' / 'months' / 'weeks' / 'days' / 'hours' / 'minutes' / 'seconds' / 'milliseconds')
 
 identifier
-        = IDENTIFIER
-        /// DELIMITEDIDENTIFIER
-        / 'as'
-        / 'contains'
-        / 'in'
-        / 'is'
-        ;        
+        = identifier:IDENTIFIER {return buildNode("Identifier", identifier)} //identifier
+         / identifier:DELIMITEDIDENTIFIER {return buildNode("Identifier", identifier)} //identifier
+
+
+DATE = '@' date:DATEFORMAT { return date }
+
+DATETIME = '@' datetime:$(DATEFORMAT 'T' (TIMEFORMAT TIMEZONEOFFSETFORMAT?)?) {return datetime}
+
+TIME = '@' 'T' time:TIMEFORMAT { return time }
+
+DATEFORMAT = 
+         $([0-9][0-9][0-9][0-9] ('-'[0-9][0-9] ('-'[0-9][0-9])?)?)
+
+TIMEFORMAT =
+        $(([0-9][0-9] (':'[0-9][0-9] (':'[0-9][0-9] ('.'[0-9]+)?)?)?))
+
+TIMEZONEOFFSETFORMAT
+        = $(('Z' / ('+' / '-') [0-9][0-9]':'[0-9][0-9]))
+
+IDENTIFIER
+        = $(([A-Za-z] / '_')([A-Za-z0-9] / '_')*)            // Added _ to support CQL (FHIR could constrain it out)
+
+DELIMITEDIDENTIFIER  
+        = '`' id:$((ESC / .)*) '`' {return id}
 
 ESC  = [^\'\"]
 
 STRING
-        = '\'' $(ESC / .)* '\''
-        ;
-
-IDENTIFIER
-        = $([A-Za-z] / '_')([A-Za-z0-9] / '_')*            // Added _ to support CQL (FHIR could constrain it out)
-        ;
+        = '\'' str:$((ESC / .)*) '\''    {return str}                             //singleQuotedString
 
 WS "whitespace"
   = ("\t" / "\r" / "\n" / " ")*
+
+
+//   COMMENT
+//         : '/*' .*? '*/' -> channel(HIDDEN)
+//         ;
+
+// LINE_COMMENT
+//         : '//' ~[\r\n]* -> channel(HIDDEN)
+//         ;
+
+// fragment ESC
+//         : '\\' ([`'\\/fnrt] | UNICODE)    // allow \`, \', \\, \/, \f, etc. and \uXXX
+//         ;
+
+// fragment UNICODE
+//         : 'u' HEX HEX HEX HEX
+//         ;
+
+// fragment HEX
+//         : [0-9a-fA-F]
+//         ;
