@@ -1,0 +1,500 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SNAPSHOT Tests 1`] = `
+{
+  "left": {
+    "children": {
+      "children": [],
+      "type": "Expression",
+      "value": {
+        "type": "Identifier",
+        "value": "test",
+      },
+    },
+    "type": "Expression",
+    "value": {
+      "type": "This",
+    },
+  },
+  "operator": "+",
+  "right": {
+    "children": {
+      "children": [],
+      "type": "Expression",
+      "value": {
+        "type": "Identifier",
+        "value": "test2",
+      },
+    },
+    "type": "Expression",
+    "value": {
+      "type": "This",
+    },
+  },
+  "type": "Operation",
+}
+`;
+
+exports[`SNAPSHOT Tests 2`] = `
+{
+  "left": {
+    "left": {
+      "children": {
+        "children": [],
+        "type": "Expression",
+        "value": {
+          "type": "Identifier",
+          "value": "test",
+        },
+      },
+      "type": "Expression",
+      "value": {
+        "type": "This",
+      },
+    },
+    "operator": "+",
+    "right": {
+      "children": {
+        "children": [],
+        "type": "Expression",
+        "value": {
+          "type": "Identifier",
+          "value": "test2",
+        },
+      },
+      "type": "Expression",
+      "value": {
+        "type": "This",
+      },
+    },
+    "type": "Operation",
+  },
+  "operator": "-",
+  "right": {
+    "children": [],
+    "type": "Expression",
+    "value": {
+      "type": "Literal",
+      "value": 14,
+    },
+  },
+  "type": "Operation",
+}
+`;
+
+exports[`SNAPSHOT Tests 3`] = `
+{
+  "left": {
+    "left": {
+      "children": [],
+      "type": "Expression",
+      "value": {
+        "type": "Literal",
+        "value": 45,
+      },
+    },
+    "operator": "<",
+    "right": {
+      "left": {
+        "left": {
+          "children": {
+            "children": {
+              "children": [],
+              "type": "Expression",
+              "value": {
+                "type": "Identifier",
+                "value": "that",
+              },
+            },
+            "type": "Expression",
+            "value": {
+              "type": "Identifier",
+              "value": "test",
+            },
+          },
+          "type": "Expression",
+          "value": {
+            "type": "This",
+          },
+        },
+        "operator": "*",
+        "right": {
+          "children": {
+            "children": [],
+            "type": "Expression",
+            "value": {
+              "type": "Identifier",
+              "value": "test2",
+            },
+          },
+          "type": "Expression",
+          "value": {
+            "type": "This",
+          },
+        },
+        "type": "Operation",
+      },
+      "operator": "/",
+      "right": {
+        "left": {
+          "children": [],
+          "type": "Expression",
+          "value": {
+            "type": "Literal",
+            "value": 14,
+          },
+        },
+        "operator": "|",
+        "right": {
+          "left": {
+            "children": [],
+            "type": "Expression",
+            "value": {
+              "type": "Literal",
+              "value": "test",
+            },
+          },
+          "operator": "in",
+          "right": {
+            "left": {
+              "children": [],
+              "type": "Expression",
+              "value": {
+                "type": "Literal",
+                "value": "hello",
+              },
+            },
+            "operator": "and",
+            "right": {
+              "children": [],
+              "type": "Expression",
+              "value": {
+                "type": "Identifier",
+                "value": "x",
+              },
+            },
+            "type": "Operation",
+          },
+          "type": "Operation",
+        },
+        "type": "Operation",
+      },
+      "type": "Operation",
+    },
+    "type": "Operation",
+  },
+  "operator": "!=",
+  "right": {
+    "left": {
+      "children": [],
+      "type": "Expression",
+      "value": {
+        "type": "Literal",
+        "value": 12,
+      },
+    },
+    "operator": "and",
+    "right": {
+      "left": {
+        "children": [],
+        "type": "Expression",
+        "value": {
+          "type": "Literal",
+          "value": 45,
+        },
+      },
+      "operator": "implies",
+      "right": {
+        "children": [],
+        "type": "Expression",
+        "value": {
+          "type": "Literal",
+          "value": 23,
+        },
+      },
+      "type": "Operation",
+    },
+    "type": "Operation",
+  },
+  "type": "Operation",
+}
+`;
+
+exports[`SNAPSHOT Tests 4`] = `
+{
+  "children": {
+    "children": {
+      "children": {
+        "children": [],
+        "type": "Expression",
+        "value": {
+          "type": "Identifier",
+          "value": "strange-synt",
+        },
+      },
+      "type": "Expression",
+      "value": {
+        "type": "Identifier",
+        "value": "deliniated",
+      },
+    },
+    "type": "Expression",
+    "value": {
+      "type": "Identifier",
+      "value": "HELLO-WORLD IDENTIFIER",
+    },
+  },
+  "type": "Expression",
+  "value": {
+    "type": "Identifier",
+    "value": "test",
+  },
+}
+`;
+
+exports[`SNAPSHOT Tests 5`] = `
+{
+  "children": {
+    "children": {
+      "children": [],
+      "type": "Expression",
+      "value": {
+        "children": [
+          {
+            "left": {
+              "left": {
+                "children": [],
+                "type": "Expression",
+                "value": {
+                  "type": "Identifier",
+                  "value": "value",
+                },
+              },
+              "operator": "!=",
+              "right": {
+                "left": {
+                  "left": {
+                    "children": [],
+                    "type": "Expression",
+                    "value": {
+                      "type": "Literal",
+                      "value": "test",
+                    },
+                  },
+                  "operator": "and",
+                  "right": {
+                    "children": [],
+                    "type": "Expression",
+                    "value": {
+                      "type": "Identifier",
+                      "value": "value",
+                    },
+                  },
+                  "type": "Operation",
+                },
+                "operator": "/",
+                "right": {
+                  "children": [],
+                  "type": "Expression",
+                  "value": {
+                    "type": "Literal",
+                    "value": 11,
+                  },
+                },
+                "type": "Operation",
+              },
+              "type": "Operation",
+            },
+            "operator": "=",
+            "right": {
+              "children": [],
+              "type": "Expression",
+              "value": {
+                "type": "Literal",
+                "value": 12,
+              },
+            },
+            "type": "Operation",
+          },
+          {
+            "left": {
+              "children": [],
+              "type": "Expression",
+              "value": {
+                "type": "Index",
+              },
+            },
+            "operator": "!=",
+            "right": {
+              "left": {
+                "children": [],
+                "type": "Expression",
+                "value": {
+                  "type": "Total",
+                },
+              },
+              "operator": "+",
+              "right": {
+                "children": [],
+                "type": "Expression",
+                "value": {
+                  "type": "Variable",
+                  "value": {
+                    "type": "Identifier",
+                    "value": "testing",
+                  },
+                },
+              },
+              "type": "Operation",
+            },
+            "type": "Operation",
+          },
+        ],
+        "type": "Function",
+        "value": {
+          "type": "Identifier",
+          "value": "where",
+        },
+      },
+    },
+    "type": "Expression",
+    "value": {
+      "type": "Identifier",
+      "value": "test",
+    },
+  },
+  "type": "Expression",
+  "value": {
+    "type": "This",
+  },
+}
+`;
+
+exports[`SNAPSHOT Tests 6`] = `
+{
+  "children": [],
+  "type": "Expression",
+  "value": {
+    "type": "Literal",
+    "value": "testing",
+  },
+}
+`;
+
+exports[`SNAPSHOT Tests 7`] = `
+{
+  "left": {
+    "left": {
+      "left": {
+        "left": {
+          "children": [],
+          "type": "Expression",
+          "value": {
+            "type": "Identifier",
+            "value": "true",
+          },
+        },
+        "operator": "!=",
+        "right": {
+          "left": {
+            "children": [],
+            "type": "Expression",
+            "value": {
+              "type": "Identifier",
+              "value": "false",
+            },
+          },
+          "operator": "and",
+          "right": {
+            "children": [],
+            "type": "Expression",
+            "value": {
+              "type": "Literal",
+              "value": "04:00",
+            },
+          },
+          "type": "Operation",
+        },
+        "type": "Operation",
+      },
+      "operator": "=",
+      "right": {
+        "left": {
+          "children": [],
+          "type": "Expression",
+          "value": {
+            "type": "Literal",
+            "value": "04:00",
+          },
+        },
+        "operator": "and",
+        "right": {
+          "children": [],
+          "type": "Expression",
+          "value": {
+            "type": "Literal",
+            "value": "1980-01-01",
+          },
+        },
+        "type": "Operation",
+      },
+      "type": "Operation",
+    },
+    "operator": "!=",
+    "right": {
+      "children": [],
+      "type": "Expression",
+      "value": {
+        "type": "Literal",
+        "value": "1980-01-01T00:00:00Z",
+      },
+    },
+    "type": "Operation",
+  },
+  "operator": "=",
+  "right": {
+    "children": [],
+    "type": "Expression",
+    "value": {
+      "type": "Literal",
+      "value": "1980-01-01T00:00:00-05:00",
+    },
+  },
+  "type": "Operation",
+}
+`;
+
+exports[`SNAPSHOT Tests 8`] = `
+{
+  "left": {
+    "left": {
+      "children": [],
+      "type": "Expression",
+      "value": {
+        "type": "Literal",
+        "value": 45,
+      },
+    },
+    "operator": "-",
+    "right": {
+      "children": [],
+      "type": "Expression",
+      "value": {
+        "type": "Literal",
+        "value": 55.23,
+      },
+    },
+    "type": "Operation",
+  },
+  "operator": "+",
+  "right": {
+    "children": [],
+    "type": "Expression",
+    "value": {
+      "type": "Literal",
+      "value": 0.23,
+    },
+  },
+  "type": "Operation",
+}
+`;
