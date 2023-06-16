@@ -30,7 +30,7 @@ expression
         // ('+' / '-') init                                         // polarity expression
         /// (IDENTIFIER)? '=>' expression                           //lambdaExpression
 
-non_op = term:term children:expression_inner
+non_op = term:term children:expression_inner?
 { return buildExpression(term, children) }
 
 equality_operation = head:additive_operation WS tail:(('<=' / '<' / '>' / '>=' / '=' / '~' / '!=' / '!~') WS additive_operation) *
@@ -55,7 +55,6 @@ expression_inner
         = invocation_expression          
         / indexed_expression
 
-
 invocation_expression
       = '.' invocation:invocation children:expression_inner ?    //invocationExpression
 { return buildExpression(invocation, children) }
@@ -78,24 +77,24 @@ literal
                 / bool:$('true' / 'false') {return bool === "true"}     //booleanLiteral
                 / STRING                                                //stringLiteral
                 / num:NUMBER   {return Number(num)}                     //numberLiteral
-                / DATE                                                  //dateLiteral
                 / DATETIME                                              //dateTimeLiteral
+                / DATE                                                  //dateLiteral
                 / TIME                                                  //timeLiteral
                 / quantity                                              //quantityLiteral
         )
-        {return buildeNode("Literal", value)}
+        {return buildNode("Literal", value)}
 
 NUMBER = $([0-9]+('.' [0-9]+)?)
 
 externalConstant
         = '%' variable:(identifier / STRING)                              //externalConstant
-        {return buildeNode("Variable", variable)}
+        {return buildNode("Variable", variable)}
 
 invocation                          // Terms that can be used after the function/member invocation '.'
-        = identifier
-        / function                                 //functionInvocation
-        / '$this'    {return buildNode("This")}   //thisInvocation
-        / '$index'   {return buildNode("Index")}  //indexInvocation
+        = function                               //functionInvocation
+        / identifier                             //identifierInvocation
+        / '$this'    {return buildNode("This")}  //thisInvocation
+        / '$index'   {return buildNode("Index")} //indexInvocation
         / '$total'   {return buildNode("Total")} //totalInvocation        
 
 function
@@ -104,12 +103,12 @@ function
         ;
 
 paramList
-        = head:expression tail:(',' expression)*
-        {return [head].concat(tail.map(function(element) {return element[1]}))}
+        = WS head:expression WS tail:(',' WS expression)*
+        {return [head].concat(tail.map(function(element) {return element[2]}))}
         ;
 
 quantity
-        = value:NUMBER unit:unit? { return {value:value, unit:unit}}
+        = value:NUMBER WS unit:unit? { return {value:value, unit:unit}}
 
 unit
         = dateTimePrecision
@@ -147,12 +146,12 @@ IDENTIFIER
         = $(([A-Za-z] / '_')([A-Za-z0-9] / '_')*)            // Added _ to support CQL (FHIR could constrain it out)
 
 DELIMITEDIDENTIFIER  
-        = '`' id:$((ESC / .)*) '`' {return id}
+        = '`' id:$(([^\`])*) '`' {return id}
 
-ESC  = [^\'\"]
+//ESC  = [^\'\"\`]
 
 STRING
-        = '\'' str:$((ESC / .)*) '\''    {return str}                             //singleQuotedString
+        = '\'' str:$(([^\'])*) '\''    {return str}                             //singleQuotedString
 
 WS "whitespace"
   = ("\t" / "\r" / "\n" / " ")*

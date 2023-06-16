@@ -1,54 +1,34 @@
 import { parse } from "./parser";
 
-test("adds 1 + 2 to equal 3", () => {
-  expect(parse("test.this != test.this + whatever.test - testerino.z")).toBe(3);
-});
+test("SNAPSHOT Tests", () => {
+  // Operator testing
+  expect(parse("$this.test + $this.test2")).toMatchSnapshot();
+  expect(parse("$this.test + $this.test2 - 14")).toMatchSnapshot();
+  expect(
+    parse(
+      "45 < $this.test.that * $this.test2 / 14 | 'test' in 'hello' and x != 12 and 45 implies 23"
+    )
+  ).toMatchSnapshot();
 
-const output = {
-  left: {
-    children: {
-      children: [],
-      type: "Expression",
-      value: { type: "Identifier", value: "this" },
-    },
-    type: "Expression",
-    value: { type: "Identifier", value: "test" },
-  },
-  operator: "!=",
-  right: {
-    left: {
-      left: {
-        children: {
-          children: [],
-          type: "Expression",
-          value: { type: "Identifier", value: "this" },
-        },
-        type: "Expression",
-        value: { type: "Identifier", value: "test" },
-      },
-      operator: "+",
-      right: {
-        children: {
-          children: [],
-          type: "Expression",
-          value: { type: "Identifier", value: "test" },
-        },
-        type: "Expression",
-        value: { type: "Identifier", value: "whatever" },
-      },
-      type: "Operation",
-    },
-    operator: "-",
-    right: {
-      children: {
-        children: [],
-        type: "Expression",
-        value: { type: "Identifier", value: "z" },
-      },
-      type: "Expression",
-      value: { type: "Identifier", value: "testerino" },
-    },
-    type: "Operation",
-  },
-  type: "Operation",
-};
+  // Deliniated identifiers testing
+  expect(
+    parse("test.`HELLO-WORLD IDENTIFIER`.deliniated.`strange-synt`")
+  ).toMatchSnapshot();
+
+  // expect(parse("45days - 12years")).toMatchSnapshot();
+  // Parameter testing
+  expect(
+    parse(
+      "$this.test.where(value != 'test' and value / 11 = 12, $index != $total + %testing)"
+    )
+  ).toMatchSnapshot();
+  // Literal testing
+  expect(parse("'testing'")).toMatchSnapshot();
+  expect(
+    parse(
+      "true != false and @T04:00 = @T04:00 and @1980-01-01 != @1980-01-01T00:00:00Z = @1980-01-01T00:00:00-05:00"
+    )
+  ).toMatchSnapshot();
+  // Number testing
+  expect(parse("45 - 55.23 + 0.23")).toMatchSnapshot();
+});
