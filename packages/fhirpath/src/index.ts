@@ -15,7 +15,6 @@ function getVariableValue(
   } else if (options.variables instanceof Object) {
     value = options.variables[name];
   }
-
   return toFhirPathNode(value);
 }
 
@@ -70,7 +69,7 @@ function _evaluateTermStart(
       return toFhirPathNode(ast.value.value);
     }
     case "Variable":
-      return getVariableValue(ast.value.value, options);
+      return getVariableValue(ast.value.value.value, options);
     case "Expression":
       return _evaluate(ast.value, context, options);
     default:
