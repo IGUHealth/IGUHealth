@@ -10,3 +10,26 @@ test("Eval tests", () => {
     6,
   ]);
 });
+
+test("Variable tests", () => {
+  expect(evaluate("%nonexistant", {}, { variables: {} })).toEqual([]);
+  expect(
+    evaluate(
+      "%hello.test",
+      {},
+      { variables: { hello: [{ test: 4 }, { test: 3 }] } }
+    )
+  ).toEqual([4, 3]);
+
+  expect(
+    evaluate(
+      "%hello.test",
+      {},
+      {
+        variables: (name: string) => {
+          return [{ test: 4 }, { test: 3 }];
+        },
+      }
+    )
+  ).toEqual([4, 3]);
+});
