@@ -6,6 +6,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: typos-action
+        uses: crate-ci/typos@v1.15.0
+        # https://github.com/crate-ci/typos/blob/master/docs/github-action.md
+        with:
+          config: ./typos.config.toml
+
       - name: Set up Node 19
         uses: actions/setup-node@v3
         with:

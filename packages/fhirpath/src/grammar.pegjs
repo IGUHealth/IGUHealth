@@ -29,7 +29,7 @@ expression
         // ('+' / '-') init                                         // polarity expression
         /// (IDENTIFIER)? '=>' expression                           //lambdaExpression
 
-_singlular_expression = term:term next:expression_inner?
+_singular_expression = term:term next:expression_inner?
 { return buildNode("Term", term, next) }
 
 equality_operation = head:additive_operation WS tail:(('<=' / '<' / '>' / '>=' / '=' / '~' / '!=' / '!~') WS additive_operation) *
@@ -46,7 +46,7 @@ and_operation =    head:or_operation WS tail:(('and') WS or_operation) *
 { return buildBinaryExpression(head, tail)}
 or_operation =     head:implies_operation WS tail:(('or' / 'xor') WS implies_operation) *
 { return buildBinaryExpression(head, tail)}
-implies_operation = head:_singlular_expression WS tail:(('implies') WS _singlular_expression) *
+implies_operation = head:_singular_expression WS tail:(('implies') WS _singular_expression) *
 { return buildBinaryExpression(head, tail)}
 // / expression ('is' / 'as') //typeSpecifier             //typeExpression
 

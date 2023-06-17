@@ -1,0 +1,2 @@
+[files]
+extend-exclude = ["*.json", "packages/fhir-types/*.d.ts", "*lock*"]
