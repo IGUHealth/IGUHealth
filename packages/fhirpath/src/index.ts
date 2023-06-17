@@ -41,7 +41,13 @@ function evaluateInvocation(
     case "This":
       return context;
     case "Identifier":
-      return context.map((v) => descend(v, ast.value.value)).flat();
+      return context.reduce(
+        (acc: FHIRPathNode<unknown>[], v) => [
+          ...acc,
+          ...descend(v, ast.value.value),
+        ],
+        []
+      );
     case "Function":
       let fp_func = fp_functions[ast.value.value];
       if (!fp_func)
@@ -82,9 +88,8 @@ function evaluateTerm(
     return ast.next.reduce((context: FHIRPathNode<unknown>[], next: any) => {
       return evaluateInvocation(next, context, options);
     }, start);
-  } else {
-    return start;
   }
+  return start;
 }
 
 function evaluateProperty(
