@@ -20,18 +20,15 @@
         if (children) node.children = children;
         return node
   }
-  function buildExpression(property, children){
-        return buildNode("Expression", property, children || []);
-  }
 }
 expression
         = WS expression:equality_operation WS
-        {return expression}
+        {return buildNode("Expression", expression)}
         // ('+' / '-') init                                         // polarity expression
         /// (IDENTIFIER)? '=>' expression                           //lambdaExpression
 
 non_op = term:term children:expression_inner?
-{ return buildExpression(term, children) }
+{ return buildNode("Term", term, children) }
 
 equality_operation = head:additive_operation WS tail:(('<=' / '<' / '>' / '>=' / '=' / '~' / '!=' / '!~') WS additive_operation) *
 { return buildBinaryExpression(head, tail)}
@@ -57,10 +54,10 @@ expression_inner
 
 invocation_expression
       = '.' invocation:invocation children:expression_inner ?    //invocationExpression
-{ return buildExpression(invocation, children) }
+{ return buildNode("DotAccess", invocation, children) }
 indexed_expression
-        = '[' exp:(expression) ']' children:(expression_inner) ?                  //indexerExpression
-{ return buildExpression(expression, children) }
+        = '[' expression:(expression) ']' children:(expression_inner) ?                  //indexerExpression
+{ return buildNode("Indexed", expression, children) }
 
 term
         = invocation                                            //invocationTerm

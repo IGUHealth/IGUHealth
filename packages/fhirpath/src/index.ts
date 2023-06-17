@@ -12,7 +12,7 @@ function toCollection<T>(v: T | T[]): T[] {
   }
 }
 
-function expression(ast, context) {}
+function _evaluate(ast: )
 
 function evaluate(expression: string, value: unknown): unknown[] {
   const ast = parse(expression);
