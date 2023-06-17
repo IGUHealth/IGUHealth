@@ -1,22 +1,14 @@
 import { parse } from "./parser";
+import { toFhirPathNode, FHIRPathNode, descend } from "./node";
 
 type Options = {
   variables: Record<string, unknown> | ((v: string) => unknown);
 };
 
-function isArray<T>(v: T | T[]): v is T[] {
-  return Array.isArray(v);
-}
-
-function toCollection<T>(v: T | T[]): T[] {
-  if (isArray(v)) {
-    return v;
-  } else {
-    return [v];
-  }
-}
-
-function getVariableValue(name: string, options: Options): unknown[] {
+function getVariableValue(
+  name: string,
+  options: Options
+): FHIRPathNode<unknown>[] {
   let value;
   if (options.variables instanceof Function) {
     value = options.variables(name);
@@ -24,19 +16,23 @@ function getVariableValue(name: string, options: Options): unknown[] {
     value = options.variables[name];
   }
 
-  return toCollection(value);
+  return toFhirPathNode(value);
 }
 
 const fp_functions: Record<
   string,
-  (ast: any, context: unknown[], options: Options) => unknown[]
+  (
+    ast: any,
+    context: FHIRPathNode<unknown>[],
+    options: Options
+  ) => FHIRPathNode<unknown>[]
 > = {};
 
 function evaluateInvocation(
   ast: any,
-  context: unknown[],
+  context: FHIRPathNode<unknown>[],
   options: Options
-): unknown[] {
+): FHIRPathNode<unknown>[] {
   switch (ast.value.type) {
     case "Index":
       throw new Error("Not implemented");
@@ -45,9 +41,7 @@ function evaluateInvocation(
     case "This":
       return context;
     case "Identifier":
-      return context
-        .map((v: unknown) => (v as any)[ast.value.value])
-        .filter((v: unknown) => v !== undefined);
+      return context.map((v) => descend(v, ast.value.value)).flat();
     case "Function":
       let fp_func = fp_functions[ast.value.value];
       if (!fp_func)
@@ -60,17 +54,17 @@ function evaluateInvocation(
 
 function _evaluateTermStart(
   ast: any,
-  context: unknown[],
+  context: FHIRPathNode<unknown>[],
   options: Options
-): unknown[] {
+): FHIRPathNode<unknown>[] {
   switch (ast.value.type) {
     case "Invocation":
       return evaluateInvocation(ast.value, context, options);
     case "Literal": {
-      return [ast.value.value];
+      return toFhirPathNode(ast.value.value);
     }
     case "Variable":
-      return [getVariableValue(ast.value.value, options)];
+      return getVariableValue(ast.value.value, options);
     case "Expression":
       return _evaluate(ast.value, context, options);
     default:
@@ -80,12 +74,12 @@ function _evaluateTermStart(
 
 function evaluateTerm(
   ast: any,
-  context: unknown[],
+  context: FHIRPathNode<unknown>[],
   options: Options
-): unknown[] {
+): FHIRPathNode<unknown>[] {
   const start = _evaluateTermStart(ast, context, options);
   if (ast.next) {
-    return ast.next.reduce((context: unknown[], next: any) => {
+    return ast.next.reduce((context: FHIRPathNode<unknown>[], next: any) => {
       return evaluateInvocation(next, context, options);
     }, start);
   } else {
@@ -93,7 +87,11 @@ function evaluateTerm(
   }
 }
 
-function evaluateProperty(ast: any, context: unknown[], options: Options) {
+function evaluateProperty(
+  ast: any,
+  context: FHIRPathNode<unknown>[],
+  options: Options
+): FHIRPathNode<unknown>[] {
   switch (ast.value.type) {
     case "Invocation":
       return evaluateInvocation(ast.value, context, options);
@@ -135,37 +133,37 @@ function invalidOperandError(args: unknown[], operator: string) {
 
 function evaluateOperation(
   ast: any,
-  context: unknown[],
+  context: FHIRPathNode<unknown>[],
   options: Options
-): unknown[] {
+): FHIRPathNode<unknown>[] {
   const left = _evaluate(ast.left, context, options);
   const right = _evaluate(ast.right, context, options);
-  const binaryArgs = [left[0], right[0]];
+  const binaryArgs = [left[0]?.value, right[0]?.value];
 
   switch (ast.operator) {
     case "+":
       if (validateOperators("number", binaryArgs)) {
-        return [binaryArgs[0] + binaryArgs[1]];
+        return toFhirPathNode(binaryArgs[0] + binaryArgs[1]);
       } else if (validateOperators("string", binaryArgs)) {
-        return [binaryArgs[0] + binaryArgs[1]];
+        return toFhirPathNode(binaryArgs[0] + binaryArgs[1]);
       } else {
         invalidOperandError(binaryArgs, ast.operator);
       }
     case "_":
       if (validateOperators("number", binaryArgs)) {
-        return [binaryArgs[0] - binaryArgs[0]];
+        return toFhirPathNode(binaryArgs[0] - binaryArgs[0]);
       } else {
         invalidOperandError(binaryArgs, ast.operator);
       }
     case "*":
       if (validateOperators("number", binaryArgs)) {
-        return [binaryArgs[0] * binaryArgs[0]];
+        return toFhirPathNode(binaryArgs[0] * binaryArgs[0]);
       } else {
         invalidOperandError(binaryArgs, ast.operator);
       }
     case "/":
       if (validateOperators("number", binaryArgs)) {
-        return [binaryArgs[0] / binaryArgs[0]];
+        return toFhirPathNode(binaryArgs[0] / binaryArgs[0]);
       } else {
         invalidOperandError(binaryArgs, ast.operator);
       }
@@ -174,7 +172,11 @@ function evaluateOperation(
   }
 }
 
-function _evaluate(ast: any, context: unknown[], options: Options): unknown[] {
+function _evaluate(
+  ast: any,
+  context: FHIRPathNode<unknown>[],
+  options: Options
+): FHIRPathNode<unknown>[] {
   switch (ast.type) {
     case "Operation": {
       return evaluateOperation(ast, context, options);
@@ -193,6 +195,6 @@ export function evaluate(
   options: Options
 ): unknown[] {
   const ast = parse(expression);
-  const ctx = toCollection(value);
-  return _evaluate(ast, ctx, options);
+  const ctx = toFhirPathNode(value);
+  return _evaluate(ast, ctx, options).map((v) => v.value);
 }
