@@ -14,10 +14,10 @@
       };
     }, head);
   }
-  function buildNode<T>(type: string, value: T, children){
+  function buildNode<T>(type: string, value: T, next){
         let node = {type: type};
         if (value ) node.value = value
-        if (children) node.children = children;
+        if (next) node.next = next;
         return node
   }
 }
@@ -27,8 +27,8 @@ expression
         // ('+' / '-') init                                         // polarity expression
         /// (IDENTIFIER)? '=>' expression                           //lambdaExpression
 
-non_op = term:term children:expression_inner?
-{ return buildNode("Term", term, children) }
+non_op = term:term next:expression_inner?
+{ return buildNode("Term", term, next) }
 
 equality_operation = head:additive_operation WS tail:(('<=' / '<' / '>' / '>=' / '=' / '~' / '!=' / '!~') WS additive_operation) *
 { return buildBinaryExpression(head, tail)}
@@ -53,11 +53,11 @@ expression_inner
         / indexed_expression
 
 invocation_expression
-      = '.' invocation:invocation children:expression_inner ?    //invocationExpression
-{ return buildNode("DotAccess", invocation, children) }
+      = '.' invocation:invocation next:expression_inner ?    //invocationExpression
+{ return buildNode("DotAccess", invocation, next) }
 indexed_expression
-        = '[' expression:(expression) ']' children:(expression_inner) ?                  //indexerExpression
-{ return buildNode("Indexed", expression, children) }
+        = '[' expression:(expression) ']' next:(expression_inner) ?                  //indexerExpression
+{ return buildNode("Indexed", expression, next) }
 
 term
         = invocation                                            //invocationTerm

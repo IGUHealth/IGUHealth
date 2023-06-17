@@ -445,8 +445,8 @@ function peg$parse(input, options) {
   var peg$f0 = function(expression) {// @ts-ignore
 return buildNode("Expression", expression)};// @ts-ignore
 
-  var peg$f1 = function(term, children) {// @ts-ignore
- return buildNode("Term", term, children) };// @ts-ignore
+  var peg$f1 = function(term, next) {// @ts-ignore
+ return buildNode("Term", term, next) };// @ts-ignore
 
   var peg$f2 = function(head, tail) {// @ts-ignore
  return buildBinaryExpression(head, tail)};// @ts-ignore
@@ -472,11 +472,11 @@ return buildNode("Expression", expression)};// @ts-ignore
   var peg$f9 = function(head, tail) {// @ts-ignore
  return buildBinaryExpression(head, tail)};// @ts-ignore
 
-  var peg$f10 = function(invocation, children) {// @ts-ignore
- return buildNode("DotAccess", invocation, children) };// @ts-ignore
+  var peg$f10 = function(invocation, next) {// @ts-ignore
+ return buildNode("DotAccess", invocation, next) };// @ts-ignore
 
-  var peg$f11 = function(expression, children) {// @ts-ignore
- return buildNode("Indexed", expression, children) };// @ts-ignore
+  var peg$f11 = function(expression, next) {// @ts-ignore
+ return buildNode("Indexed", expression, next) };// @ts-ignore
 
   var peg$f12 = function(expression) {// @ts-ignore
 return expression};// @ts-ignore
@@ -5686,13 +5686,13 @@ peg$parseWS() {
     }, head);
   }
 // @ts-ignore
-  function buildNode<T>(type: string, value: T, children){
+  function buildNode<T>(type: string, value: T, next){
 // @ts-ignore
         let node = {type: type};
 // @ts-ignore
         if (value ) node.value = value
 // @ts-ignore
-        if (children) node.children = children;
+        if (next) node.next = next;
 // @ts-ignore
         return node
   }

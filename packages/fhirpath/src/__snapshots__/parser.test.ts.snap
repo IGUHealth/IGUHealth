@@ -5,7 +5,7 @@ exports[`SNAPSHOT Tests 1`] = `
   "type": "Expression",
   "value": {
     "left": {
-      "children": {
+      "child": {
         "type": "DotAccess",
         "value": {
           "type": "Identifier",
@@ -19,7 +19,7 @@ exports[`SNAPSHOT Tests 1`] = `
     },
     "operator": "+",
     "right": {
-      "children": {
+      "child": {
         "type": "DotAccess",
         "value": {
           "type": "Identifier",
@@ -42,7 +42,7 @@ exports[`SNAPSHOT Tests 2`] = `
   "value": {
     "left": {
       "left": {
-        "children": {
+        "child": {
           "type": "DotAccess",
           "value": {
             "type": "Identifier",
@@ -56,7 +56,7 @@ exports[`SNAPSHOT Tests 2`] = `
       },
       "operator": "+",
       "right": {
-        "children": {
+        "child": {
           "type": "DotAccess",
           "value": {
             "type": "Identifier",
@@ -99,8 +99,8 @@ exports[`SNAPSHOT Tests 3`] = `
       "right": {
         "left": {
           "left": {
-            "children": {
-              "children": {
+            "child": {
+              "child": {
                 "type": "DotAccess",
                 "value": {
                   "type": "Identifier",
@@ -120,7 +120,7 @@ exports[`SNAPSHOT Tests 3`] = `
           },
           "operator": "*",
           "right": {
-            "children": {
+            "child": {
               "type": "DotAccess",
               "value": {
                 "type": "Identifier",
@@ -218,9 +218,9 @@ exports[`SNAPSHOT Tests 4`] = `
 {
   "type": "Expression",
   "value": {
-    "children": {
-      "children": {
-        "children": {
+    "child": {
+      "child": {
+        "child": {
           "type": "DotAccess",
           "value": {
             "type": "Identifier",
@@ -252,11 +252,11 @@ exports[`SNAPSHOT Tests 5`] = `
 {
   "type": "Expression",
   "value": {
-    "children": {
-      "children": {
+    "child": {
+      "child": {
         "type": "DotAccess",
         "value": {
-          "children": [
+          "child": [
             {
               "type": "Expression",
               "value": {
@@ -497,8 +497,8 @@ exports[`SNAPSHOT Tests 9`] = `
 {
   "type": "Expression",
   "value": {
-    "children": {
-      "children": {
+    "child": {
+      "child": {
         "type": "DotAccess",
         "value": {
           "type": "Identifier",
