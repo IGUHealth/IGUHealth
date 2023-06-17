@@ -31,4 +31,7 @@ test("SNAPSHOT Tests", () => {
   ).toMatchSnapshot();
   // Number testing
   expect(parse("45 - 55.23 + 0.23")).toMatchSnapshot();
+
+  expect(parse("this[45 + 15 * 3].hello")).toMatchSnapshot();
+  expect(parse("$this.test + 2 * 4")).toMatchSnapshot();
 });

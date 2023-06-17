@@ -3,32 +3,40 @@
 exports[`SNAPSHOT Tests 1`] = `
 {
   "left": {
-    "children": {
-      "children": [],
-      "type": "Expression",
-      "value": {
-        "type": "Identifier",
-        "value": "test",
+    "next": [
+      {
+        "type": "Invocation",
+        "value": {
+          "type": "Identifier",
+          "value": "test",
+        },
       },
-    },
-    "type": "Expression",
+    ],
+    "type": "Term",
     "value": {
-      "type": "This",
+      "type": "Invocation",
+      "value": {
+        "type": "This",
+      },
     },
   },
   "operator": "+",
   "right": {
-    "children": {
-      "children": [],
-      "type": "Expression",
-      "value": {
-        "type": "Identifier",
-        "value": "test2",
+    "next": [
+      {
+        "type": "Invocation",
+        "value": {
+          "type": "Identifier",
+          "value": "test2",
+        },
       },
-    },
-    "type": "Expression",
+    ],
+    "type": "Term",
     "value": {
-      "type": "This",
+      "type": "Invocation",
+      "value": {
+        "type": "This",
+      },
     },
   },
   "type": "Operation",
@@ -39,40 +47,47 @@ exports[`SNAPSHOT Tests 2`] = `
 {
   "left": {
     "left": {
-      "children": {
-        "children": [],
-        "type": "Expression",
-        "value": {
-          "type": "Identifier",
-          "value": "test",
+      "next": [
+        {
+          "type": "Invocation",
+          "value": {
+            "type": "Identifier",
+            "value": "test",
+          },
         },
-      },
-      "type": "Expression",
+      ],
+      "type": "Term",
       "value": {
-        "type": "This",
+        "type": "Invocation",
+        "value": {
+          "type": "This",
+        },
       },
     },
     "operator": "+",
     "right": {
-      "children": {
-        "children": [],
-        "type": "Expression",
-        "value": {
-          "type": "Identifier",
-          "value": "test2",
+      "next": [
+        {
+          "type": "Invocation",
+          "value": {
+            "type": "Identifier",
+            "value": "test2",
+          },
         },
-      },
-      "type": "Expression",
+      ],
+      "type": "Term",
       "value": {
-        "type": "This",
+        "type": "Invocation",
+        "value": {
+          "type": "This",
+        },
       },
     },
     "type": "Operation",
   },
   "operator": "-",
   "right": {
-    "children": [],
-    "type": "Expression",
+    "type": "Term",
     "value": {
       "type": "Literal",
       "value": 14,
@@ -86,8 +101,7 @@ exports[`SNAPSHOT Tests 3`] = `
 {
   "left": {
     "left": {
-      "children": [],
-      "type": "Expression",
+      "type": "Term",
       "value": {
         "type": "Literal",
         "value": 45,
@@ -97,39 +111,47 @@ exports[`SNAPSHOT Tests 3`] = `
     "right": {
       "left": {
         "left": {
-          "children": {
-            "children": {
-              "children": [],
-              "type": "Expression",
+          "next": [
+            {
+              "type": "Invocation",
+              "value": {
+                "type": "Identifier",
+                "value": "test",
+              },
+            },
+            {
+              "type": "Invocation",
               "value": {
                 "type": "Identifier",
                 "value": "that",
               },
             },
-            "type": "Expression",
-            "value": {
-              "type": "Identifier",
-              "value": "test",
-            },
-          },
-          "type": "Expression",
+          ],
+          "type": "Term",
           "value": {
-            "type": "This",
+            "type": "Invocation",
+            "value": {
+              "type": "This",
+            },
           },
         },
         "operator": "*",
         "right": {
-          "children": {
-            "children": [],
-            "type": "Expression",
-            "value": {
-              "type": "Identifier",
-              "value": "test2",
+          "next": [
+            {
+              "type": "Invocation",
+              "value": {
+                "type": "Identifier",
+                "value": "test2",
+              },
             },
-          },
-          "type": "Expression",
+          ],
+          "type": "Term",
           "value": {
-            "type": "This",
+            "type": "Invocation",
+            "value": {
+              "type": "This",
+            },
           },
         },
         "type": "Operation",
@@ -137,8 +159,7 @@ exports[`SNAPSHOT Tests 3`] = `
       "operator": "/",
       "right": {
         "left": {
-          "children": [],
-          "type": "Expression",
+          "type": "Term",
           "value": {
             "type": "Literal",
             "value": 14,
@@ -147,8 +168,7 @@ exports[`SNAPSHOT Tests 3`] = `
         "operator": "|",
         "right": {
           "left": {
-            "children": [],
-            "type": "Expression",
+            "type": "Term",
             "value": {
               "type": "Literal",
               "value": "test",
@@ -157,8 +177,7 @@ exports[`SNAPSHOT Tests 3`] = `
           "operator": "in",
           "right": {
             "left": {
-              "children": [],
-              "type": "Expression",
+              "type": "Term",
               "value": {
                 "type": "Literal",
                 "value": "hello",
@@ -166,11 +185,13 @@ exports[`SNAPSHOT Tests 3`] = `
             },
             "operator": "and",
             "right": {
-              "children": [],
-              "type": "Expression",
+              "type": "Term",
               "value": {
-                "type": "Identifier",
-                "value": "x",
+                "type": "Invocation",
+                "value": {
+                  "type": "Identifier",
+                  "value": "x",
+                },
               },
             },
             "type": "Operation",
@@ -186,8 +207,7 @@ exports[`SNAPSHOT Tests 3`] = `
   "operator": "!=",
   "right": {
     "left": {
-      "children": [],
-      "type": "Expression",
+      "type": "Term",
       "value": {
         "type": "Literal",
         "value": 12,
@@ -196,8 +216,7 @@ exports[`SNAPSHOT Tests 3`] = `
     "operator": "and",
     "right": {
       "left": {
-        "children": [],
-        "type": "Expression",
+        "type": "Term",
         "value": {
           "type": "Literal",
           "value": 45,
@@ -205,8 +224,7 @@ exports[`SNAPSHOT Tests 3`] = `
       },
       "operator": "implies",
       "right": {
-        "children": [],
-        "type": "Expression",
+        "type": "Term",
         "value": {
           "type": "Literal",
           "value": 23,
@@ -222,60 +240,71 @@ exports[`SNAPSHOT Tests 3`] = `
 
 exports[`SNAPSHOT Tests 4`] = `
 {
-  "children": {
-    "children": {
-      "children": {
-        "children": [],
-        "type": "Expression",
-        "value": {
-          "type": "Identifier",
-          "value": "strange-synt",
-        },
+  "next": [
+    {
+      "type": "Invocation",
+      "value": {
+        "type": "Identifier",
+        "value": "HELLO-WORLD IDENTIFIER",
       },
-      "type": "Expression",
+    },
+    {
+      "type": "Invocation",
       "value": {
         "type": "Identifier",
         "value": "deliniated",
       },
     },
-    "type": "Expression",
+    {
+      "type": "Invocation",
+      "value": {
+        "type": "Identifier",
+        "value": "strange-synt",
+      },
+    },
+  ],
+  "type": "Term",
+  "value": {
+    "type": "Invocation",
     "value": {
       "type": "Identifier",
-      "value": "HELLO-WORLD IDENTIFIER",
+      "value": "test",
     },
-  },
-  "type": "Expression",
-  "value": {
-    "type": "Identifier",
-    "value": "test",
   },
 }
 `;
 
 exports[`SNAPSHOT Tests 5`] = `
 {
-  "children": {
-    "children": {
-      "children": [],
-      "type": "Expression",
+  "next": [
+    {
+      "type": "Invocation",
       "value": {
-        "children": [
+        "type": "Identifier",
+        "value": "test",
+      },
+    },
+    {
+      "type": "Invocation",
+      "value": {
+        "next": [
           {
             "left": {
               "left": {
-                "children": [],
-                "type": "Expression",
+                "type": "Term",
                 "value": {
-                  "type": "Identifier",
-                  "value": "value",
+                  "type": "Invocation",
+                  "value": {
+                    "type": "Identifier",
+                    "value": "value",
+                  },
                 },
               },
               "operator": "!=",
               "right": {
                 "left": {
                   "left": {
-                    "children": [],
-                    "type": "Expression",
+                    "type": "Term",
                     "value": {
                       "type": "Literal",
                       "value": "test",
@@ -283,19 +312,20 @@ exports[`SNAPSHOT Tests 5`] = `
                   },
                   "operator": "and",
                   "right": {
-                    "children": [],
-                    "type": "Expression",
+                    "type": "Term",
                     "value": {
-                      "type": "Identifier",
-                      "value": "value",
+                      "type": "Invocation",
+                      "value": {
+                        "type": "Identifier",
+                        "value": "value",
+                      },
                     },
                   },
                   "type": "Operation",
                 },
                 "operator": "/",
                 "right": {
-                  "children": [],
-                  "type": "Expression",
+                  "type": "Term",
                   "value": {
                     "type": "Literal",
                     "value": 11,
@@ -307,8 +337,7 @@ exports[`SNAPSHOT Tests 5`] = `
             },
             "operator": "=",
             "right": {
-              "children": [],
-              "type": "Expression",
+              "type": "Term",
               "value": {
                 "type": "Literal",
                 "value": 12,
@@ -318,25 +347,28 @@ exports[`SNAPSHOT Tests 5`] = `
           },
           {
             "left": {
-              "children": [],
-              "type": "Expression",
+              "type": "Term",
               "value": {
-                "type": "Index",
+                "type": "Invocation",
+                "value": {
+                  "type": "Index",
+                },
               },
             },
             "operator": "!=",
             "right": {
               "left": {
-                "children": [],
-                "type": "Expression",
+                "type": "Term",
                 "value": {
-                  "type": "Total",
+                  "type": "Invocation",
+                  "value": {
+                    "type": "Total",
+                  },
                 },
               },
               "operator": "+",
               "right": {
-                "children": [],
-                "type": "Expression",
+                "type": "Term",
                 "value": {
                   "type": "Variable",
                   "value": {
@@ -357,23 +389,20 @@ exports[`SNAPSHOT Tests 5`] = `
         },
       },
     },
-    "type": "Expression",
-    "value": {
-      "type": "Identifier",
-      "value": "test",
-    },
-  },
-  "type": "Expression",
+  ],
+  "type": "Term",
   "value": {
-    "type": "This",
+    "type": "Invocation",
+    "value": {
+      "type": "This",
+    },
   },
 }
 `;
 
 exports[`SNAPSHOT Tests 6`] = `
 {
-  "children": [],
-  "type": "Expression",
+  "type": "Term",
   "value": {
     "type": "Literal",
     "value": "testing",
@@ -387,27 +416,30 @@ exports[`SNAPSHOT Tests 7`] = `
     "left": {
       "left": {
         "left": {
-          "children": [],
-          "type": "Expression",
+          "type": "Term",
           "value": {
-            "type": "Identifier",
-            "value": "true",
+            "type": "Invocation",
+            "value": {
+              "type": "Identifier",
+              "value": "true",
+            },
           },
         },
         "operator": "!=",
         "right": {
           "left": {
-            "children": [],
-            "type": "Expression",
+            "type": "Term",
             "value": {
-              "type": "Identifier",
-              "value": "false",
+              "type": "Invocation",
+              "value": {
+                "type": "Identifier",
+                "value": "false",
+              },
             },
           },
           "operator": "and",
           "right": {
-            "children": [],
-            "type": "Expression",
+            "type": "Term",
             "value": {
               "type": "Literal",
               "value": "04:00",
@@ -420,8 +452,7 @@ exports[`SNAPSHOT Tests 7`] = `
       "operator": "=",
       "right": {
         "left": {
-          "children": [],
-          "type": "Expression",
+          "type": "Term",
           "value": {
             "type": "Literal",
             "value": "04:00",
@@ -429,8 +460,7 @@ exports[`SNAPSHOT Tests 7`] = `
         },
         "operator": "and",
         "right": {
-          "children": [],
-          "type": "Expression",
+          "type": "Term",
           "value": {
             "type": "Literal",
             "value": "1980-01-01",
@@ -442,8 +472,7 @@ exports[`SNAPSHOT Tests 7`] = `
     },
     "operator": "!=",
     "right": {
-      "children": [],
-      "type": "Expression",
+      "type": "Term",
       "value": {
         "type": "Literal",
         "value": "1980-01-01T00:00:00Z",
@@ -453,8 +482,7 @@ exports[`SNAPSHOT Tests 7`] = `
   },
   "operator": "=",
   "right": {
-    "children": [],
-    "type": "Expression",
+    "type": "Term",
     "value": {
       "type": "Literal",
       "value": "1980-01-01T00:00:00-05:00",
@@ -468,8 +496,7 @@ exports[`SNAPSHOT Tests 8`] = `
 {
   "left": {
     "left": {
-      "children": [],
-      "type": "Expression",
+      "type": "Term",
       "value": {
         "type": "Literal",
         "value": 45,
@@ -477,8 +504,7 @@ exports[`SNAPSHOT Tests 8`] = `
     },
     "operator": "-",
     "right": {
-      "children": [],
-      "type": "Expression",
+      "type": "Term",
       "value": {
         "type": "Literal",
         "value": 55.23,
@@ -488,12 +514,108 @@ exports[`SNAPSHOT Tests 8`] = `
   },
   "operator": "+",
   "right": {
-    "children": [],
-    "type": "Expression",
+    "type": "Term",
     "value": {
       "type": "Literal",
       "value": 0.23,
     },
+  },
+  "type": "Operation",
+}
+`;
+
+exports[`SNAPSHOT Tests 9`] = `
+{
+  "next": [
+    {
+      "type": "Indexed",
+      "value": {
+        "left": {
+          "type": "Term",
+          "value": {
+            "type": "Literal",
+            "value": 45,
+          },
+        },
+        "operator": "+",
+        "right": {
+          "left": {
+            "type": "Term",
+            "value": {
+              "type": "Literal",
+              "value": 15,
+            },
+          },
+          "operator": "*",
+          "right": {
+            "type": "Term",
+            "value": {
+              "type": "Literal",
+              "value": 3,
+            },
+          },
+          "type": "Operation",
+        },
+        "type": "Operation",
+      },
+    },
+    {
+      "type": "Invocation",
+      "value": {
+        "type": "Identifier",
+        "value": "hello",
+      },
+    },
+  ],
+  "type": "Term",
+  "value": {
+    "type": "Invocation",
+    "value": {
+      "type": "Identifier",
+      "value": "this",
+    },
+  },
+}
+`;
+
+exports[`SNAPSHOT Tests 10`] = `
+{
+  "left": {
+    "next": [
+      {
+        "type": "Invocation",
+        "value": {
+          "type": "Identifier",
+          "value": "test",
+        },
+      },
+    ],
+    "type": "Term",
+    "value": {
+      "type": "Invocation",
+      "value": {
+        "type": "This",
+      },
+    },
+  },
+  "operator": "+",
+  "right": {
+    "left": {
+      "type": "Term",
+      "value": {
+        "type": "Literal",
+        "value": 2,
+      },
+    },
+    "operator": "*",
+    "right": {
+      "type": "Term",
+      "value": {
+        "type": "Literal",
+        "value": 4,
+      },
+    },
+    "type": "Operation",
   },
   "type": "Operation",
 }
