@@ -18,11 +18,11 @@ function toCollection<T>(v: T | T[]): T[] {
 
 function getVariableValue(name: string, options: Options): unknown[] {
   let value;
-
   if (options.variables instanceof Function) {
     value = options.variables(name);
+  } else if (options.variables instanceof Object) {
+    value = options.variables[name];
   }
-  value = options.variables[name];
 
   return toCollection(value);
 }
@@ -32,53 +32,105 @@ const fp_functions: Record<
   (ast: any, context: unknown[], options: Options) => unknown[]
 > = {};
 
+function evaluateInvocation(
+  ast: any,
+  context: unknown[],
+  options: Options
+): unknown[] {
+  switch (ast.value.type) {
+    case "Index":
+      throw new Error("Not implemented");
+    case "Total":
+      throw new Error("Not implemented");
+    case "This":
+      return context;
+    case "Identifier":
+      return context
+        .map((v: unknown) => (v as any)[ast.value.value])
+        .filter((v: unknown) => v !== undefined);
+    case "Function":
+      let fp_func = fp_functions[ast.value.value];
+      if (!fp_func)
+        throw new Error("Unknown function '" + ast.value.value + "'");
+      return fp_func(ast.value, context, options);
+    default:
+      throw new Error("Unknown invocation type: '" + ast.value.type + "'");
+  }
+}
+
+function _evaluateTermStart(
+  ast: any,
+  context: unknown[],
+  options: Options
+): unknown[] {
+  switch (ast.value.type) {
+    case "Invocation":
+      return evaluateInvocation(ast.value, context, options);
+    case "Literal": {
+      return [ast.value.value];
+    }
+    case "Variable":
+      return [getVariableValue(ast.value.value, options)];
+    case "Expression":
+      return _evaluate(ast.value, context, options);
+    default:
+      throw new Error("Unknown term type: '" + ast.value.type + "'");
+  }
+}
+
 function evaluateTerm(
   ast: any,
   context: unknown[],
   options: Options
 ): unknown[] {
-  let curNode = ast;
-  while (curNode) {
-    switch (curNode.value.type) {
-      case "Literal": {
-        context = [curNode.value.value];
-        break;
-      }
-      case "Variable": {
-        context = [getVariableValue(curNode.value.value, options)];
-        break;
-      }
-      case "Function":
-        let fp_func = fp_functions[curNode.value.value];
-        if (!fp_func)
-          throw new Error("Unknown function '" + curNode.value.value + "'");
-        context = fp_func(curNode.value, context, options);
-        break;
-
-      case "DotAccess":
-        context = context
-          .map((v: unknown) => (v as any)[curNode.value.value])
-          .filter((v: unknown) => v !== undefined);
-        break;
-
-      case "Indexed":
-        let indexed = _evaluate(curNode.value.value, context, options);
-        if (indexed.length !== 1)
-          throw new Error("Indexing requires a single value");
-        if (typeof indexed[0] !== "number")
-          throw new Error("Indexing requires a number");
-        context = context.map((v) => (v as any)[indexed[0] as number]);
-        break;
-      default:
-        throw new Error("Unknown term type: '" + curNode.value.type + "'");
-    }
-    curNode = curNode.next;
+  const start = _evaluateTermStart(ast, context, options);
+  if (ast.next) {
+    return ast.next.reduce((context: unknown[], next: any) => {
+      return evaluateInvocation(next, context, options);
+    }, start);
+  } else {
+    return start;
   }
-  return context;
 }
 
-function binaryOperator<T>(left: T[], right: T[]): [T, T] {
-  return [left[0], right[0]];
+function evaluateProperty(ast: any, context: unknown[], options: Options) {
+  switch (ast.value.type) {
+    case "Invocation":
+      return evaluateInvocation(ast.value, context, options);
+    case "Indexed":
+      let indexed = _evaluate(ast.value, ast, options);
+      if (indexed.length !== 1)
+        throw new Error("Indexing requires a single value");
+      if (typeof indexed[0] !== "number")
+        throw new Error("Indexing requires a number");
+      return [context[indexed[0] as number]];
+    default:
+      throw new Error("Unknown term type: '" + ast.value.type + "'");
+  }
+}
+
+type OperatorType<op_type> = op_type extends "number"
+  ? number
+  : op_type extends "string"
+  ? string
+  : unknown;
+
+type ValidOperandType = "number" | "string";
+
+function validateOperators<T extends ValidOperandType, U>(
+  typeChecking: T,
+  args: unknown[]
+): args is Array<OperatorType<T>> {
+  return args.reduce((acc: boolean, v) => {
+    if (typeof v !== typeChecking) return false;
+    return acc;
+  }, true) as boolean;
+}
+
+function invalidOperandError(args: unknown[], operator: string) {
+  throw new Error(
+    `Invalid operands for operator: '${operator}' Found types '${typeof args[0]}' and '${typeof args[1]}'`
+  );
 }
 
 function evaluateOperation(
@@ -86,41 +138,61 @@ function evaluateOperation(
   context: unknown[],
   options: Options
 ): unknown[] {
-  const left = evaluateTerm(ast.left, context, options);
-  const right = evaluateTerm(ast.right, context, options);
+  const left = _evaluate(ast.left, context, options);
+  const right = _evaluate(ast.right, context, options);
+  const binaryArgs = [left[0], right[0]];
+
   switch (ast.operator) {
     case "+":
-      return left[0] + right[0];
+      if (validateOperators("number", binaryArgs)) {
+        return [binaryArgs[0] + binaryArgs[1]];
+      } else if (validateOperators("string", binaryArgs)) {
+        return [binaryArgs[0] + binaryArgs[1]];
+      } else {
+        invalidOperandError(binaryArgs, ast.operator);
+      }
     case "_":
-      return left[0] - right[0];
+      if (validateOperators("number", binaryArgs)) {
+        return [binaryArgs[0] - binaryArgs[0]];
+      } else {
+        invalidOperandError(binaryArgs, ast.operator);
+      }
     case "*":
-      return left[0] * right[0];
+      if (validateOperators("number", binaryArgs)) {
+        return [binaryArgs[0] * binaryArgs[0]];
+      } else {
+        invalidOperandError(binaryArgs, ast.operator);
+      }
     case "/":
-      return left[0] / right[0];
+      if (validateOperators("number", binaryArgs)) {
+        return [binaryArgs[0] / binaryArgs[0]];
+      } else {
+        invalidOperandError(binaryArgs, ast.operator);
+      }
     default:
       throw new Error("Unsupported operator: '" + ast.operator + "'");
   }
 }
 
 function _evaluate(ast: any, context: unknown[], options: Options): unknown[] {
-  if (ast.type !== "Expression") throw new Error("Invalid AST");
-  switch (ast.value.type) {
+  switch (ast.type) {
     case "Operation": {
-      return evaluateOperation(ast.value, context, options);
+      return evaluateOperation(ast, context, options);
     }
     case "Term": {
-      return evaluateTerm(ast.value, context, options);
+      return evaluateTerm(ast, context, options);
     }
+    default:
+      throw new Error("Invalid AST Expression Node '" + ast.value.type + "'");
   }
 }
 
-function evaluate(
+export function evaluate(
   expression: string,
   value: unknown,
   options: Options
 ): unknown[] {
   const ast = parse(expression);
   const ctx = toCollection(value);
-  _evaluate(ast, ctx, options);
-  return ctx;
+  return _evaluate(ast, ctx, options);
 }

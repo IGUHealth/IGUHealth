@@ -14,6 +14,7 @@
       };
     }, head);
   }
+
   function buildNode<T>(type: string, value: T, next){
         let node = {type: type};
         if (value ) node.value = value
@@ -21,13 +22,14 @@
         return node
   }
 }
+
 expression
         = WS expression:equality_operation WS
-        {return buildNode("Expression", expression)}
+        {return expression}
         // ('+' / '-') init                                         // polarity expression
         /// (IDENTIFIER)? '=>' expression                           //lambdaExpression
 
-non_op = term:term next:expression_inner?
+_singlular_expression = term:term next:expression_inner?
 { return buildNode("Term", term, next) }
 
 equality_operation = head:additive_operation WS tail:(('<=' / '<' / '>' / '>=' / '=' / '~' / '!=' / '!~') WS additive_operation) *
@@ -44,20 +46,21 @@ and_operation =    head:or_operation WS tail:(('and') WS or_operation) *
 { return buildBinaryExpression(head, tail)}
 or_operation =     head:implies_operation WS tail:(('or' / 'xor') WS implies_operation) *
 { return buildBinaryExpression(head, tail)}
-implies_operation = head:non_op WS tail:(('implies') WS non_op) *
+implies_operation = head:_singlular_expression WS tail:(('implies') WS _singlular_expression) *
 { return buildBinaryExpression(head, tail)}
 // / expression ('is' / 'as') //typeSpecifier             //typeExpression
 
 expression_inner
-        = invocation_expression          
+        = invocation_expression
         / indexed_expression
 
 invocation_expression
-      = '.' invocation:invocation next:expression_inner ?    //invocationExpression
-{ return buildNode("DotAccess", invocation, next) }
+      = '.' invocation:invocation next:(expression_inner)*    //invocationExpression
+{ return [invocation, ...next.flat()]; }
+
 indexed_expression
-        = '[' expression:(expression) ']' next:(expression_inner) ?                  //indexerExpression
-{ return buildNode("Indexed", expression, next) }
+        = '[' expression:(expression) ']' next:(expression_inner)*                   //indexerExpression
+{ return [buildNode("Indexed", expression), ...next.flat()] }
 
 term
         = invocation                                            //invocationTerm
@@ -88,11 +91,13 @@ externalConstant
         {return buildNode("Variable", variable)}
 
 invocation                          // Terms that can be used after the function/member invocation '.'
-        = function                               //functionInvocation
+        = invocation:(function                               //functionInvocation
         / identifier                             //identifierInvocation
         / '$this'    {return buildNode("This")}  //thisInvocation
         / '$index'   {return buildNode("Index")} //indexInvocation
         / '$total'   {return buildNode("Total")} //totalInvocation        
+        )
+        {return buildNode("Invocation", invocation)}
 
 function
         = identifier:identifier '(' paramList:paramList? ')'
