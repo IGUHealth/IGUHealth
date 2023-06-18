@@ -247,8 +247,8 @@ export function generateTypes(
   const primitiveTypes = structureDefinitions.filter(
     (sd) => sd.kind === "primitive-type"
   );
-  const complexTypes = getNonAbstractResourceTypes(
-    structureDefinitions.filter((sd) => sd.kind === "complex-type")
+  const complexTypes = structureDefinitions.filter(
+    (sd) => sd.kind === "complex-type"
   );
   const resourceTypes = structureDefinitions.filter(
     (sd) => sd.kind === "resource"
