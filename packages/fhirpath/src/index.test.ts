@@ -98,4 +98,9 @@ test("typechoices", () => {
     },
   };
   expect(evaluate("%hello.test", {}, options)).toEqual([4, 5, "3"]);
+  expect(evaluate("%hello.test.id", {}, options)).toEqual([
+    "id1",
+    "id2",
+    "id3",
+  ]);
 });
