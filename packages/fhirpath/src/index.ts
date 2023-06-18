@@ -77,20 +77,6 @@ function _evaluateTermStart(
   }
 }
 
-function evaluateTerm(
-  ast: any,
-  context: FHIRPathNode<unknown>[],
-  options: Options
-): FHIRPathNode<unknown>[] {
-  const start = _evaluateTermStart(ast, context, options);
-  if (ast.next) {
-    return ast.next.reduce((context: FHIRPathNode<unknown>[], next: any) => {
-      return evaluateProperty(next, context, options);
-    }, start);
-  }
-  return start;
-}
-
 function evaluateProperty(
   ast: any,
   context: FHIRPathNode<unknown>[],
@@ -109,6 +95,20 @@ function evaluateProperty(
     default:
       throw new Error("Unknown term type: '" + ast.type + "'");
   }
+}
+
+function evaluateTerm(
+  ast: any,
+  context: FHIRPathNode<unknown>[],
+  options: Options
+): FHIRPathNode<unknown>[] {
+  const start = _evaluateTermStart(ast, context, options);
+  if (ast.next) {
+    return ast.next.reduce((context: FHIRPathNode<unknown>[], next: any) => {
+      return evaluateProperty(next, context, options);
+    }, start);
+  }
+  return start;
 }
 
 type OperatorType<op_type> = op_type extends "number"
