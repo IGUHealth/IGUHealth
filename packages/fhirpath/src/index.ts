@@ -143,7 +143,7 @@ function evaluateOperation(
   const left = _evaluate(ast.left, context, options);
   const right = _evaluate(ast.right, context, options);
   const binaryArgs = [left[0].value, right[0].value];
-  console.log(binaryArgs, ast.operator);
+
   switch (ast.operator) {
     case "+":
       if (validateOperators("number", binaryArgs)) {

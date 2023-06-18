@@ -51,7 +51,7 @@ export function toFhirPathNode<T>(
       .map((v, i: number) =>
         toFhirPathNode(v, element && isArray(element) ? element[i] : undefined)
       )
-      .flat();
+      .reduce((acc, v) => [...acc, ...v], []);
   }
   return value ? [new FHIRPathNode(value)] : [];
 }
