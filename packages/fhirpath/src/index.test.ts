@@ -110,3 +110,21 @@ test("Test all operations", () => {
   expect(evaluate("4 + 4 / 4 - 2", {}, { variables: {} })).toEqual([3]);
   expect(evaluate("(4 + 4) / (4 - 2)", {}, { variables: {} })).toEqual([4]);
 });
+
+test("exists", () => {
+  expect(
+    evaluate("$this.exists(test)", { test: [1, 2, 3] }, { variables: {} })
+  ).toEqual([true]);
+
+  expect(
+    evaluate("$this.exists()", { test: [1, 2, 3] }, { variables: {} })
+  ).toEqual([true]);
+
+  expect(
+    evaluate("$this.exists($this.z)", { test: [1, 2, 3] }, { variables: {} })
+  ).toEqual([false]);
+
+  expect(evaluate("$this.exists()", undefined, { variables: {} })).toEqual([
+    false,
+  ]);
+});

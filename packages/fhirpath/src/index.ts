@@ -25,7 +25,15 @@ const fp_functions: Record<
     context: FHIRPathNode<unknown>[],
     options: Options
   ) => FHIRPathNode<unknown>[]
-> = {};
+> = {
+  exists: (ast, context, options) => {
+    if (ast.next.length === 1)
+      return [
+        new FHIRPathNode(_evaluate(ast.next[0], context, options).length > 0),
+      ];
+    return [new FHIRPathNode(context.length > 0)];
+  },
+};
 
 function evaluateInvocation(
   ast: any,
@@ -48,9 +56,9 @@ function evaluateInvocation(
         []
       );
     case "Function":
-      let fp_func = fp_functions[ast.value.value];
+      const fp_func = fp_functions[ast.value.value.value];
       if (!fp_func)
-        throw new Error("Unknown function '" + ast.value.value + "'");
+        throw new Error("Unknown function '" + ast.value.value.value + "'");
       return fp_func(ast.value, context, options);
     default:
       throw new Error("Unknown invocation type: '" + ast.value.type + "'");
