@@ -446,7 +446,7 @@ function peg$parse(input, options) {
 return expression};// @ts-ignore
 
   var peg$f1 = function(term, next) {// @ts-ignore
- return buildNode("Term", term, next) };// @ts-ignore
+ return buildNode("Expression", buildNode("Singular", term, next)) };// @ts-ignore
 
   var peg$f2 = function(head, tail) {// @ts-ignore
  return buildBinaryExpression(head, tail)};// @ts-ignore
@@ -5694,7 +5694,7 @@ peg$parseWS() {
 // @ts-ignore
     return tail.reduce(function(result, element) {
 // @ts-ignore
-      return {
+      return buildNode("Expression", {
 // @ts-ignore
         type: "Operation",
 // @ts-ignore
@@ -5703,7 +5703,7 @@ peg$parseWS() {
         left: result,
 // @ts-ignore
         right: element[2]
-      };
+      });
 // @ts-ignore
     }, head);
   }

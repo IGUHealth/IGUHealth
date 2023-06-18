@@ -6,12 +6,12 @@
 {
   function buildBinaryExpression(head, tail) {
     return tail.reduce(function(result, element) {
-      return {
+      return buildNode("Expression", {
         type: "Operation",
         operator: element[0],
         left: result,
         right: element[2]
-      };
+      });
     }, head);
   }
 
@@ -30,7 +30,7 @@ expression
         /// (IDENTIFIER)? '=>' expression                           //lambdaExpression
 
 _singular_expression = term:term next:expression_inner?
-{ return buildNode("Term", term, next) }
+{ return buildNode("Expression", buildNode("Singular", term, next)) }
 
 equality_operation = head:additive_operation WS tail:(('<=' / '<' / '>' / '>=' / '=' / '~' / '!=' / '!~') WS additive_operation) *
 { return buildBinaryExpression(head, tail)}

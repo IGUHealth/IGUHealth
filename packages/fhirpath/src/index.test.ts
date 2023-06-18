@@ -104,3 +104,9 @@ test("typechoices", () => {
     "id3",
   ]);
 });
+
+test("Test all operations", () => {
+  expect(evaluate("(5 + 5) / (4-2)", {}, { variables: {} })).toEqual([5]);
+  expect(evaluate("4 + 4 / 4 - 2", {}, { variables: {} })).toEqual([3]);
+  expect(evaluate("(4 + 4) / (4 - 2)", {}, { variables: {} })).toEqual([4]);
+});

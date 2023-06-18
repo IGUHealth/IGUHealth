@@ -86,7 +86,7 @@ function evaluateProperty(
     case "Invocation":
       return evaluateInvocation(ast, context, options);
     case "Indexed":
-      let indexed = _evaluate(ast, ast, options);
+      let indexed = _evaluate(ast.value, context, options);
       if (indexed.length !== 1)
         throw new Error("Indexing requires a single value");
       if (typeof indexed[0] !== "number")
@@ -97,7 +97,7 @@ function evaluateProperty(
   }
 }
 
-function evaluateTerm(
+function evaluateSingular(
   ast: any,
   context: FHIRPathNode<unknown>[],
   options: Options
@@ -153,7 +153,7 @@ function evaluateOperation(
       } else {
         invalidOperandError(binaryArgs, ast.operator);
       }
-    case "_":
+    case "-":
       if (validateOperators("number", binaryArgs)) {
         return toFhirPathNode(binaryArgs[0] - binaryArgs[1]);
       } else {
@@ -181,12 +181,12 @@ function _evaluate(
   context: FHIRPathNode<unknown>[],
   options: Options
 ): FHIRPathNode<unknown>[] {
-  switch (ast.type) {
+  switch (ast.value.type) {
     case "Operation": {
-      return evaluateOperation(ast, context, options);
+      return evaluateOperation(ast.value, context, options);
     }
-    case "Term": {
-      return evaluateTerm(ast, context, options);
+    case "Singular": {
+      return evaluateSingular(ast.value, context, options);
     }
     default:
       throw new Error("Invalid AST Expression Node '" + ast.value.type + "'");
