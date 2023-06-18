@@ -193,6 +193,9 @@ function _evaluate(
   }
 }
 
+/**
+ * Because Primitive types could have undefined on .value do quick check here to confirm existance.
+ */
 function nonNullable(v: unknown): v is NonNullable<unknown> {
   return v !== undefined && v !== null;
 }
