@@ -85,7 +85,7 @@ function evaluateTerm(
   const start = _evaluateTermStart(ast, context, options);
   if (ast.next) {
     return ast.next.reduce((context: FHIRPathNode<unknown>[], next: any) => {
-      return evaluateInvocation(next, context, options);
+      return evaluateProperty(next, context, options);
     }, start);
   }
   return start;
@@ -96,18 +96,18 @@ function evaluateProperty(
   context: FHIRPathNode<unknown>[],
   options: Options
 ): FHIRPathNode<unknown>[] {
-  switch (ast.value.type) {
+  switch (ast.type) {
     case "Invocation":
-      return evaluateInvocation(ast.value, context, options);
+      return evaluateInvocation(ast, context, options);
     case "Indexed":
-      let indexed = _evaluate(ast.value, ast, options);
+      let indexed = _evaluate(ast, ast, options);
       if (indexed.length !== 1)
         throw new Error("Indexing requires a single value");
       if (typeof indexed[0] !== "number")
         throw new Error("Indexing requires a number");
       return [context[indexed[0] as number]];
     default:
-      throw new Error("Unknown term type: '" + ast.value.type + "'");
+      throw new Error("Unknown term type: '" + ast.type + "'");
   }
 }
 
