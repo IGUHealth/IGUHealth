@@ -31,7 +31,7 @@ function toFPPrimitive<T extends RawPrimitive>(
 function isElement(
   element: Element | Element[] | undefined
 ): element is Element {
-  return isArray(element) ? element instanceof Object : true;
+  return isArray(element) ? false : element instanceof Object;
 }
 
 export function toFhirPathNode<T>(
