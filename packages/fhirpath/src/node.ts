@@ -81,18 +81,30 @@ function isFPPrimitive(v: unknown): v is FHIRPathPrimitive<RawPrimitive> {
   return isObject(v) && v._type_ === "primitive";
 }
 
+function getField<T extends { [key: string]: unknown }>(
+  value: T,
+  field: string
+): string | undefined {
+  if (value[field]) return field;
+  return Object.keys(value).find((k) => k.startsWith(field));
+}
+
 export function descend<T>(
   node: FHIRPathNode<T>,
   field: string
 ): Readonly<FHIRPathNode<NonNullable<unknown>>[]> {
   const internalValue = node.internalValue;
+
   if (isObject(internalValue)) {
-    let v = internalValue[field];
-    let extension = internalValue[`_${field}`] as
-      | Element[]
-      | Element
-      | undefined;
-    return toFhirPathNode(v, extension);
+    const computedField = getField(internalValue, field);
+    if (computedField) {
+      let v = internalValue[computedField];
+      let extension = internalValue[`_${computedField}`] as
+        | Element[]
+        | Element
+        | undefined;
+      return toFhirPathNode(v, extension);
+    }
   }
   return [];
 }

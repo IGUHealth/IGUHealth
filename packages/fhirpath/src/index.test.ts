@@ -80,3 +80,22 @@ test("PrimitiveExtensions array", () => {
     "id3",
   ]);
 });
+
+test("typechoices", () => {
+  const options = {
+    variables: {
+      hello: [
+        {
+          testInteger: [4, undefined, 5],
+          _testInteger: [
+            { id: "id1", extension: [{ valueBoolean: true }] },
+            { id: "id2" },
+            { id: "id3" },
+          ],
+        },
+        { testString: "3" },
+      ],
+    },
+  };
+  expect(evaluate("%hello.test", {}, options)).toEqual([4, 5, "3"]);
+});
