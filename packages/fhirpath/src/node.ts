@@ -85,7 +85,7 @@ function getField<T extends { [key: string]: unknown }>(
   value: T,
   field: string
 ): string | undefined {
-  if (value[field]) return field;
+  if (value.hasOwnProperty(field)) return field;
   return Object.keys(value).find((k) => k.startsWith(field));
 }
 
