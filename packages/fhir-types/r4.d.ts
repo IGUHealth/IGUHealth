@@ -17,6 +17,32 @@ export type url = string;
 export type uuid = string;
 export type xhtml = string;
 
+export interface Element {
+  /** 
+   * Unique id for inter-element referencing
+   */
+  id?: string;
+  /** 
+   * Additional content defined by implementations
+   */
+  extension?: Array<Extension>;
+}
+
+export interface BackboneElement {
+  /** 
+   * Unique id for inter-element referencing
+   */
+  id?: string;
+  /** 
+   * Additional content defined by implementations
+   */
+  extension?: Array<Extension>;
+  /** 
+   * Extensions that cannot be ignored even if unrecognized
+   */
+  modifierExtension?: Array<Extension>;
+}
+
 export interface Address {
   /** 
    * Unique id for inter-element referencing

@@ -1,5 +1,5 @@
 import { parse } from "./parser";
-import { toFhirPathNode, FHIRPathNode, descend } from "./node";
+import { toFhirPathNode, FHIRPathNode, descend, getValue } from "./node";
 
 type Options = {
   variables: Record<string, unknown> | ((v: string) => unknown);
@@ -142,7 +142,7 @@ function evaluateOperation(
 ): FHIRPathNode<unknown>[] {
   const left = _evaluate(ast.left, context, options);
   const right = _evaluate(ast.right, context, options);
-  const binaryArgs = [left[0]?.value, right[0]?.value];
+  const binaryArgs = [getValue(left[0]), getValue(right[0])];
 
   switch (ast.operator) {
     case "+":
@@ -200,5 +200,6 @@ export function evaluate(
 ): unknown[] {
   const ast = parse(expression);
   const ctx = toFhirPathNode(value);
-  return _evaluate(ast, ctx, options).map((v) => v.value);
+  const output = _evaluate(ast, ctx, options);
+  return output.map((v) => getValue(v));
 }
