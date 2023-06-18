@@ -5,9 +5,12 @@ test("Eval tests", () => {
   expect(evaluate("4 + 5", {}, { variables: {} })).toEqual([9]);
   expect(
     evaluate("$this.test + 2 * 4", { test: 4 }, { variables: {} })
-  ).toEqual([9]);
-  expect(evaluate("$this.test + 2", { test: 4 }, { variables: {} })).toEqual([
-    6,
+  ).toEqual([12]);
+
+  expect(evaluate("2 * 4", { test: 4 }, { variables: {} })).toEqual([8]);
+
+  expect(evaluate("$this.test * 2", { test: 4 }, { variables: {} })).toEqual([
+    8,
   ]);
 });
 

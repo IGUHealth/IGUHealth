@@ -1,5 +1,5 @@
 import { parse } from "./parser";
-import { toFhirPathNode, FHIRPathNode, descend, getValue } from "./node";
+import { toFhirPathNode, FHIRPathNode, descend } from "./node";
 
 type Options = {
   variables: Record<string, unknown> | ((v: string) => unknown);
@@ -142,7 +142,7 @@ function evaluateOperation(
 ): FHIRPathNode<unknown>[] {
   const left = _evaluate(ast.left, context, options);
   const right = _evaluate(ast.right, context, options);
-  const binaryArgs = [getValue(left[0]), getValue(right[0])];
+  const binaryArgs = [left[0].value, right[0].value];
 
   switch (ast.operator) {
     case "+":
@@ -155,19 +155,19 @@ function evaluateOperation(
       }
     case "_":
       if (validateOperators("number", binaryArgs)) {
-        return toFhirPathNode(binaryArgs[0] - binaryArgs[0]);
+        return toFhirPathNode(binaryArgs[0] - binaryArgs[1]);
       } else {
         invalidOperandError(binaryArgs, ast.operator);
       }
     case "*":
       if (validateOperators("number", binaryArgs)) {
-        return toFhirPathNode(binaryArgs[0] * binaryArgs[0]);
+        return toFhirPathNode(binaryArgs[0] * binaryArgs[1]);
       } else {
         invalidOperandError(binaryArgs, ast.operator);
       }
     case "/":
       if (validateOperators("number", binaryArgs)) {
-        return toFhirPathNode(binaryArgs[0] / binaryArgs[0]);
+        return toFhirPathNode(binaryArgs[0] / binaryArgs[1]);
       } else {
         invalidOperandError(binaryArgs, ast.operator);
       }
@@ -201,5 +201,5 @@ export function evaluate(
   const ast = parse(expression);
   const ctx = toFhirPathNode(value);
   const output = _evaluate(ast, ctx, options);
-  return output.map((v) => getValue(v));
+  return output.map((v) => v.value);
 }
