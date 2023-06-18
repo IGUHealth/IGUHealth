@@ -193,13 +193,23 @@ function _evaluate(
   }
 }
 
+/**
+ * Because Primitive types could have undefined on .value do quick check here to confirm existence.
+ */
+function nonNullable(v: unknown): v is NonNullable<unknown> {
+  return v !== undefined && v !== null;
+}
+
 export function evaluate(
   expression: string,
   value: unknown,
   options: Options
-): unknown[] {
+): NonNullable<unknown>[] {
   const ast = parse(expression);
   const ctx = toFhirPathNode(value);
-  const output = _evaluate(ast, ctx, options);
-  return output.map((v) => v.value);
+  const output = _evaluate(ast, ctx, options)
+    .map((v) => v.value)
+    .filter(nonNullable);
+
+  return output;
 }
