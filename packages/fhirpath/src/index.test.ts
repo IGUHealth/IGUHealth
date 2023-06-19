@@ -213,3 +213,56 @@ test("anyTrue", () => {
     evaluate("$this.test.anyTrue()", { test: [false, 5, 1] }, { variables: {} })
   ).toEqual([false]);
 });
+
+test("allFalse", () => {
+  expect(
+    evaluate(
+      "$this.test.allFalse()",
+      { test: [0, 1, false] },
+      { variables: {} }
+    )
+  ).toEqual([false]);
+});
+
+test("anyFalse", () => {
+  expect(
+    evaluate(
+      "$this.test.anyFalse()",
+      { test: [0, 1, false] },
+      { variables: {} }
+    )
+  ).toEqual([true]);
+});
+
+test("subsetOf", () => {
+  expect(
+    evaluate("%set2.subsetOf(%set1)", undefined, {
+      variables: { set1: [0, 1, false], set2: [0, -1], set3: ["none"] },
+    })
+  ).toEqual([false]);
+  expect(
+    evaluate("%set2.subsetOf(%set1)", undefined, {
+      variables: { set1: [0, 1, false], set2: [0], set3: ["none"] },
+    })
+  ).toEqual([true]);
+  expect(
+    evaluate("%set2.subsetOf(%set1)", undefined, {
+      variables: { set1: [0, 1, false], set2: [0, 1], set3: ["none"] },
+    })
+  ).toEqual([true]);
+  expect(
+    evaluate("%set2.subsetOf(%set1)", undefined, {
+      variables: { set1: [0, 1, false], set2: [0, 1, false], set3: ["none"] },
+    })
+  ).toEqual([true]);
+  expect(
+    evaluate("%set1.subsetOf(%set2)", undefined, {
+      variables: { set1: [0, 1, false], set2: [0, 1], set3: ["none"] },
+    })
+  ).toEqual([false]);
+  expect(
+    evaluate("%set3.subsetOf(%set2)", undefined, {
+      variables: { set1: [0, 1, false], set2: [0, 1], set3: ["none"] },
+    })
+  ).toEqual([false]);
+});
