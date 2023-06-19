@@ -39,7 +39,7 @@ function isElement(
 export function toFPNodes<T>(
   value: T | T[],
   element?: Element | Element[]
-): FHIRPathNode<NonNullable<unknown>>[] {
+): FHIRPathNode<NonNullable<T> | FHIRPathPrimitive<RawPrimitive>>[] {
   if (isRawPrimitive(value)) {
     return [
       new FHIRPathNode(
@@ -94,7 +94,7 @@ function getField<T extends { [key: string]: unknown }>(
 export function descend<T>(
   node: FHIRPathNode<T>,
   field: string
-): Readonly<FHIRPathNode<NonNullable<unknown>>[]> {
+): FHIRPathNode<NonNullable<unknown>>[] {
   const internalValue = node.internalValue;
 
   if (isObject(internalValue)) {

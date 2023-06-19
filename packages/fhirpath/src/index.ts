@@ -5,6 +5,10 @@ type Options = {
   variables: Record<string, unknown> | ((v: string) => unknown);
 };
 
+function flatten<T>(arr: T[][]): T[] {
+  return arr.reduce((acc, v) => [...acc, ...v], []);
+}
+
 function getVariableValue(
   name: string,
   options: Options
@@ -32,12 +36,26 @@ const fp_functions: Record<
     if (ast.next.length === 1) {
       return toFPNodes(_evaluate(ast.next[0], context, options).length > 0);
     }
-
     return toFPNodes(context.length > 0);
   },
   // exists([criteria : expression]) : Boolean
   empty(ast, context, options) {
     return toFPNodes(context.length === 0);
+  },
+  all(ast, context, options) {
+    return toFPNodes(
+      flatten(context.map((v) => _evaluate(ast.next[0], [v], options)))
+        .map((v) => v.value)
+        .reduce((acc, v) => acc && v, true)
+    );
+  },
+  allTrue(ast, context, options) {
+    return toFPNodes(context.reduce((acc, v) => v.value === true && acc, true));
+  },
+  anyTrue(ast, context, options) {
+    return toFPNodes(
+      context.reduce((acc, v) => v.value === true || acc, false)
+    );
   },
 };
 
@@ -54,13 +72,7 @@ function evaluateInvocation(
     case "This":
       return context;
     case "Identifier":
-      return context.reduce(
-        (acc: FHIRPathNodeType<unknown>[], v) => [
-          ...acc,
-          ...descend(v, ast.value.value),
-        ],
-        []
-      );
+      return flatten(context.map((v) => descend(v, ast.value.value)));
     case "Function":
       const fp_func = fp_functions[ast.value.value.value];
       if (!fp_func)
@@ -188,6 +200,9 @@ function evaluateOperation(
       } else {
         invalidOperandError(binaryArgs, ast.operator);
       }
+    case "=":
+      // TODO Deep Equals
+      return toFPNodes(binaryArgs[0] === binaryArgs[1]);
     default:
       throw new Error("Unsupported operator: '" + ast.operator + "'");
   }
