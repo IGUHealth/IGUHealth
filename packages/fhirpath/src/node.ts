@@ -1,12 +1,14 @@
 import { Element } from "@genfhi/fhir-types/r4";
 
 type RawPrimitive = string | number | boolean | undefined;
-type FHIRPathPrimitive<T extends RawPrimitive> = Element & {
+export type FHIRPathPrimitive<T extends RawPrimitive> = Element & {
   _type_: "primitive";
   value: T;
 };
 
-export class FHIRPathNode<T> {
+export type FHIRPathNodeType<T> = InstanceType<typeof FHIRPathNode<T>>;
+
+class FHIRPathNode<T> {
   private readonly _internalValue: T | FHIRPathPrimitive<RawPrimitive>;
   constructor(value: T) {
     this._internalValue = value;
@@ -34,10 +36,10 @@ function isElement(
   return isArray(element) ? false : element instanceof Object;
 }
 
-export function toFhirPathNode<T>(
+export function toFPNodes<T>(
   value: T | T[],
   element?: Element | Element[]
-): FHIRPathNode<NonNullable<T> | FHIRPathPrimitive<RawPrimitive>>[] {
+): FHIRPathNode<NonNullable<unknown>>[] {
   if (isRawPrimitive(value)) {
     return [
       new FHIRPathNode(
@@ -49,7 +51,7 @@ export function toFhirPathNode<T>(
   } else if (isArray(value)) {
     return value
       .map((v, i: number) =>
-        toFhirPathNode(v, element && isArray(element) ? element[i] : undefined)
+        toFPNodes(v, element && isArray(element) ? element[i] : undefined)
       )
       .reduce((acc, v) => [...acc, ...v], []);
   }
@@ -103,7 +105,7 @@ export function descend<T>(
         | Element[]
         | Element
         | undefined;
-      return toFhirPathNode(v, extension);
+      return toFPNodes(v, extension);
     }
   }
   return [];
