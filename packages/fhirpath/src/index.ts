@@ -12,7 +12,7 @@ function flatten<T>(arr: T[][]): T[] {
 function getVariableValue(
   name: string,
   options: Options
-): FHIRPathNodeType<NonNullable<unknown>>[] {
+): FHIRPathNodeType<unknown>[] {
   let value;
   if (options.variables instanceof Function) {
     value = options.variables(name);
@@ -29,7 +29,7 @@ const fp_functions: Record<
     ast: any,
     context: FHIRPathNodeType<unknown>[],
     options: Options
-  ) => FHIRPathNodeType<NonNullable<unknown>>[]
+  ) => FHIRPathNodeType<unknown>[]
 > = {
   // Returns true if the input collection is empty ({ }) and false otherwise.
   exists: function (ast, context, options) {
@@ -55,6 +55,30 @@ const fp_functions: Record<
   anyTrue(ast, context, options) {
     return toFPNodes(
       context.reduce((acc, v) => v.value === true || acc, false)
+    );
+  },
+  allFalse(ast, context, options) {
+    return toFPNodes(
+      context.reduce((acc, v) => v.value === false && acc, true)
+    );
+  },
+  anyFalse(ast, context, options) {
+    return toFPNodes(
+      context.reduce((acc, v) => v.value === false || acc, false)
+    );
+  },
+  subsetOf(ast, context, options) {
+    const otherSet = _evaluate(ast.next[0], context, options);
+    return toFPNodes(
+      context.reduce(
+        (acc, v1) =>
+          acc &&
+          otherSet.find((v2) => {
+            const result = fp_operations["="]([v1], [v2], options);
+            return result[0].value;
+          }) !== undefined,
+        true
+      )
     );
   },
 };
@@ -150,19 +174,83 @@ type ValidOperandType = "number" | "string";
 
 function validateOperators<T extends ValidOperandType, U>(
   typeChecking: T,
-  args: unknown[]
-): args is Array<OperatorType<T>> {
-  return args.reduce((acc: boolean, v) => {
-    if (typeof v !== typeChecking) return false;
+  args: FHIRPathNodeType<unknown>[]
+): args is FHIRPathNodeType<OperatorType<T>>[] {
+  return args.reduce((acc: boolean, v: FHIRPathNodeType<unknown>) => {
+    if (typeof v.value !== typeChecking) return false;
     return acc;
   }, true) as boolean;
 }
 
 function invalidOperandError(args: unknown[], operator: string) {
-  throw new Error(
+  new Error(
     `Invalid operands for operator: '${operator}' Found types '${typeof args[0]}' and '${typeof args[1]}'`
   );
 }
+
+const fp_operations: Record<
+  string,
+  (
+    left: FHIRPathNodeType<unknown>[],
+    right: FHIRPathNodeType<unknown>[],
+    options: Options
+  ) => FHIRPathNodeType<unknown>[]
+> = {
+  "+"(left, right, options) {
+    if (
+      validateOperators("number", left) &&
+      validateOperators("number", right)
+    ) {
+      return toFPNodes(left[0].value + right[0].value);
+    } else if (
+      validateOperators("string", left) &&
+      validateOperators("string", right)
+    ) {
+      return toFPNodes(left[0].value + right[0].value);
+    } else {
+      throw invalidOperandError([left[0], right[0]], "+");
+    }
+  },
+  "-"(left, right, options) {
+    if (
+      validateOperators("number", left) &&
+      validateOperators("number", right)
+    ) {
+      return toFPNodes(left[0].value - right[0].value);
+    } else {
+      throw invalidOperandError([left[0], right[0]], "-");
+    }
+  },
+  "*"(left, right, options) {
+    if (
+      validateOperators("number", left) &&
+      validateOperators("number", right)
+    ) {
+      return toFPNodes(left[0].value * right[0].value);
+    } else {
+      throw invalidOperandError([left[0], right[0]], "*");
+    }
+  },
+  "/"(left, right, options) {
+    if (
+      validateOperators("number", left) &&
+      validateOperators("number", right)
+    ) {
+      return toFPNodes(left[0].value / right[0].value);
+    } else {
+      throw invalidOperandError([left[0], right[0]], "/");
+    }
+  },
+  "="(left, right, options): FHIRPathNodeType<boolean>[] {
+    // TODO improve Deep Equals speed.
+    if (typeof left[0].value === "object") {
+      return toFPNodes(
+        JSON.stringify(left[0].value) === JSON.stringify(right[0].value)
+      );
+    }
+    return toFPNodes(left[0].value === right[0].value);
+  },
+};
 
 function evaluateOperation(
   ast: any,
@@ -171,41 +259,10 @@ function evaluateOperation(
 ): FHIRPathNodeType<unknown>[] {
   const left = _evaluate(ast.left, context, options);
   const right = _evaluate(ast.right, context, options);
-  const binaryArgs = [left[0].value, right[0].value];
 
-  switch (ast.operator) {
-    case "+":
-      if (validateOperators("number", binaryArgs)) {
-        return toFPNodes(binaryArgs[0] + binaryArgs[1]);
-      } else if (validateOperators("string", binaryArgs)) {
-        return toFPNodes(binaryArgs[0] + binaryArgs[1]);
-      } else {
-        invalidOperandError(binaryArgs, ast.operator);
-      }
-    case "-":
-      if (validateOperators("number", binaryArgs)) {
-        return toFPNodes(binaryArgs[0] - binaryArgs[1]);
-      } else {
-        invalidOperandError(binaryArgs, ast.operator);
-      }
-    case "*":
-      if (validateOperators("number", binaryArgs)) {
-        return toFPNodes(binaryArgs[0] * binaryArgs[1]);
-      } else {
-        invalidOperandError(binaryArgs, ast.operator);
-      }
-    case "/":
-      if (validateOperators("number", binaryArgs)) {
-        return toFPNodes(binaryArgs[0] / binaryArgs[1]);
-      } else {
-        invalidOperandError(binaryArgs, ast.operator);
-      }
-    case "=":
-      // TODO Deep Equals
-      return toFPNodes(binaryArgs[0] === binaryArgs[1]);
-    default:
-      throw new Error("Unsupported operator: '" + ast.operator + "'");
-  }
+  const operator = fp_operations[ast.operator];
+  if (operator) return operator(left, right, options);
+  else throw new Error("Unsupported operator: '" + ast.operator + "'");
 }
 
 function _evaluate(

@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "test": "jest ",
+    "test": "jest",
     "generate": "peggy --plugin ./node_modules/ts-pegjs/dist/tspegjs.js -o src/parser.ts --cache src/grammar.pegjs"
   },
   "keywords": [],
