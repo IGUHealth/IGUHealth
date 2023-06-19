@@ -560,11 +560,8 @@ exports[`SNAPSHOT Tests 7`] = `
                   "value": {
                     "type": "Singular",
                     "value": {
-                      "type": "Invocation",
-                      "value": {
-                        "type": "Identifier",
-                        "value": "true",
-                      },
+                      "type": "Literal",
+                      "value": true,
                     },
                   },
                 },
@@ -577,11 +574,7 @@ exports[`SNAPSHOT Tests 7`] = `
                       "value": {
                         "type": "Singular",
                         "value": {
-                          "type": "Invocation",
-                          "value": {
-                            "type": "Identifier",
-                            "value": "false",
-                          },
+                          "type": "Literal",
                         },
                       },
                     },
@@ -836,6 +829,32 @@ exports[`SNAPSHOT Tests 10`] = `
       },
     },
     "type": "Operation",
+  },
+}
+`;
+
+exports[`SNAPSHOT Tests 11`] = `
+{
+  "type": "Expression",
+  "value": {
+    "next": [
+      {
+        "type": "Invocation",
+        "value": {
+          "next": [],
+          "type": "Function",
+          "value": {
+            "type": "Identifier",
+            "value": "anyTrue",
+          },
+        },
+      },
+    ],
+    "type": "Singular",
+    "value": {
+      "type": "Literal",
+      "value": true,
+    },
   },
 }
 `;

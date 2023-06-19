@@ -63,8 +63,8 @@ indexed_expression
 { return [buildNode("Indexed", expression), ...next.flat()] }
 
 term
-        = invocation                                            //invocationTerm
-        / literal                                               //literalTerm
+        = literal                                               //literalTerm
+        / invocation                                            //invocationTerm
         / externalConstant                                      //externalConstantTerm
         / '(' expression:expression ')' {return expression}     //parenthesizedTerm
         ;

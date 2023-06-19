@@ -148,3 +148,68 @@ test("empty", () => {
     evaluate("$this.z.empty()", { test: [1, 2, 3] }, { variables: {} })
   ).toEqual([true]);
 });
+
+test("all", () => {
+  expect(
+    evaluate("$this.test.all($this=1)", { test: [1, 2, 3] }, { variables: {} })
+  ).toEqual([false]);
+  expect(
+    evaluate("$this.test.all($this=1)", { test: [1, 1] }, { variables: {} })
+  ).toEqual([true]);
+  expect(
+    evaluate("$this.test.all($this=1)", { test: [1] }, { variables: {} })
+  ).toEqual([true]);
+  expect(evaluate("1.all($this=1)", { test: [1] }, { variables: {} })).toEqual([
+    true,
+  ]);
+});
+
+test("allTrue", () => {
+  expect(
+    evaluate("$this.test.allTrue()", { test: [true, true] }, { variables: {} })
+  ).toEqual([true]);
+  expect(
+    evaluate(
+      "$this.test.allTrue()",
+      { test: [true, true, false] },
+      { variables: {} }
+    )
+  ).toEqual([false]);
+
+  expect(
+    evaluate(
+      "$this.test.allTrue()",
+      { test: [true, true, 1] },
+      { variables: {} }
+    )
+  ).toEqual([false]);
+
+  expect(
+    evaluate("true.allTrue()", { test: [true, true, 1] }, { variables: {} })
+  ).toEqual([true]);
+});
+
+test("anyTrue", () => {
+  expect(
+    evaluate("$this.test.anyTrue()", { test: [true, true] }, { variables: {} })
+  ).toEqual([true]);
+  expect(
+    evaluate(
+      "$this.test.anyTrue()",
+      { test: [true, true, false] },
+      { variables: {} }
+    )
+  ).toEqual([true]);
+  expect(
+    evaluate(
+      "$this.test.anyTrue()",
+      { test: [true, true, 1] },
+      { variables: {} }
+    )
+  ).toEqual([true]);
+  expect(evaluate("false.anyTrue()", {}, { variables: {} })).toEqual([false]);
+  expect(evaluate("true.anyTrue()", {}, { variables: {} })).toEqual([true]);
+  expect(
+    evaluate("$this.test.anyTrue()", { test: [false, 5, 1] }, { variables: {} })
+  ).toEqual([false]);
+});

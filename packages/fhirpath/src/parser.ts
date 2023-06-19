@@ -2669,11 +2669,11 @@ peg$parseterm() {
     }
 
 // @ts-ignore
-    s0 = peg$parseinvocation();
+    s0 = peg$parseliteral();
 // @ts-ignore
     if (s0 === peg$FAILED) {
 // @ts-ignore
-      s0 = peg$parseliteral();
+      s0 = peg$parseinvocation();
 // @ts-ignore
       if (s0 === peg$FAILED) {
 // @ts-ignore
@@ -5874,7 +5874,7 @@ export type IndexedExpression = [
       : InnerArr
     : ExpressionInner[])[]
 ];
-export type Term = Invocation | Literal | ExternalConstant | Expression;
+export type Term = Literal | Invocation | ExternalConstant | Expression;
 export type Literal = { type: string };
 export type NUMBER = string;
 export type ExternalConstant = { type: string };
