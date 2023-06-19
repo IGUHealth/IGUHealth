@@ -214,7 +214,7 @@ test("anyTrue", () => {
   ).toEqual([false]);
 });
 
-test("anyTrue", () => {
+test("anyFalse", () => {
   expect(
     evaluate(
       "$this.test.anyFalse()",
