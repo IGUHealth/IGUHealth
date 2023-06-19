@@ -213,3 +213,13 @@ test("anyTrue", () => {
     evaluate("$this.test.anyTrue()", { test: [false, 5, 1] }, { variables: {} })
   ).toEqual([false]);
 });
+
+test("anyTrue", () => {
+  expect(
+    evaluate(
+      "$this.test.anyFalse()",
+      { test: [0, 1, false] },
+      { variables: {} }
+    )
+  ).toEqual([true]);
+});
