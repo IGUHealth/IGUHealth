@@ -131,89 +131,10 @@ exports[`SNAPSHOT Tests 3`] = `
         "left": {
           "type": "Expression",
           "value": {
-            "type": "Singular",
-            "value": {
-              "type": "Literal",
-              "value": 45,
-            },
-          },
-        },
-        "operator": "<",
-        "right": {
-          "type": "Expression",
-          "value": {
             "left": {
               "type": "Expression",
               "value": {
                 "left": {
-                  "type": "Expression",
-                  "value": {
-                    "next": [
-                      {
-                        "type": "Invocation",
-                        "value": {
-                          "type": "Identifier",
-                          "value": "test",
-                        },
-                      },
-                      {
-                        "type": "Invocation",
-                        "value": {
-                          "type": "Identifier",
-                          "value": "that",
-                        },
-                      },
-                    ],
-                    "type": "Singular",
-                    "value": {
-                      "type": "Invocation",
-                      "value": {
-                        "type": "This",
-                      },
-                    },
-                  },
-                },
-                "operator": "*",
-                "right": {
-                  "type": "Expression",
-                  "value": {
-                    "next": [
-                      {
-                        "type": "Invocation",
-                        "value": {
-                          "type": "Identifier",
-                          "value": "test2",
-                        },
-                      },
-                    ],
-                    "type": "Singular",
-                    "value": {
-                      "type": "Invocation",
-                      "value": {
-                        "type": "This",
-                      },
-                    },
-                  },
-                },
-                "type": "Operation",
-              },
-            },
-            "operator": "/",
-            "right": {
-              "type": "Expression",
-              "value": {
-                "left": {
-                  "type": "Expression",
-                  "value": {
-                    "type": "Singular",
-                    "value": {
-                      "type": "Literal",
-                      "value": 14,
-                    },
-                  },
-                },
-                "operator": "|",
-                "right": {
                   "type": "Expression",
                   "value": {
                     "left": {
@@ -222,35 +143,95 @@ exports[`SNAPSHOT Tests 3`] = `
                         "type": "Singular",
                         "value": {
                           "type": "Literal",
-                          "value": "test",
+                          "value": 45,
                         },
                       },
                     },
-                    "operator": "in",
+                    "operator": "<",
                     "right": {
                       "type": "Expression",
                       "value": {
                         "left": {
                           "type": "Expression",
                           "value": {
-                            "type": "Singular",
-                            "value": {
-                              "type": "Literal",
-                              "value": "hello",
+                            "left": {
+                              "type": "Expression",
+                              "value": {
+                                "left": {
+                                  "type": "Expression",
+                                  "value": {
+                                    "next": [
+                                      {
+                                        "type": "Invocation",
+                                        "value": {
+                                          "type": "Identifier",
+                                          "value": "test",
+                                        },
+                                      },
+                                      {
+                                        "type": "Invocation",
+                                        "value": {
+                                          "type": "Identifier",
+                                          "value": "that",
+                                        },
+                                      },
+                                    ],
+                                    "type": "Singular",
+                                    "value": {
+                                      "type": "Invocation",
+                                      "value": {
+                                        "type": "This",
+                                      },
+                                    },
+                                  },
+                                },
+                                "operator": "*",
+                                "right": {
+                                  "type": "Expression",
+                                  "value": {
+                                    "next": [
+                                      {
+                                        "type": "Invocation",
+                                        "value": {
+                                          "type": "Identifier",
+                                          "value": "test2",
+                                        },
+                                      },
+                                    ],
+                                    "type": "Singular",
+                                    "value": {
+                                      "type": "Invocation",
+                                      "value": {
+                                        "type": "This",
+                                      },
+                                    },
+                                  },
+                                },
+                                "type": "Operation",
+                              },
                             },
+                            "operator": "/",
+                            "right": {
+                              "type": "Expression",
+                              "value": {
+                                "type": "Singular",
+                                "value": {
+                                  "type": "Literal",
+                                  "value": 14,
+                                },
+                              },
+                            },
+                            "type": "Operation",
                           },
                         },
-                        "operator": "and",
+                        "operator": "|",
                         "right": {
                           "type": "Expression",
                           "value": {
                             "type": "Singular",
                             "value": {
-                              "type": "Invocation",
-                              "value": {
-                                "type": "Identifier",
-                                "value": "x",
-                              },
+                              "type": "Literal",
+                              "value": "test",
                             },
                           },
                         },
@@ -260,58 +241,77 @@ exports[`SNAPSHOT Tests 3`] = `
                     "type": "Operation",
                   },
                 },
+                "operator": "in",
+                "right": {
+                  "type": "Expression",
+                  "value": {
+                    "type": "Singular",
+                    "value": {
+                      "type": "Literal",
+                      "value": "hello",
+                    },
+                  },
+                },
+                "type": "Operation",
+              },
+            },
+            "operator": "and",
+            "right": {
+              "type": "Expression",
+              "value": {
+                "left": {
+                  "type": "Expression",
+                  "value": {
+                    "type": "Singular",
+                    "value": {
+                      "type": "Invocation",
+                      "value": {
+                        "type": "Identifier",
+                        "value": "x",
+                      },
+                    },
+                  },
+                },
+                "operator": "!=",
+                "right": {
+                  "type": "Expression",
+                  "value": {
+                    "type": "Singular",
+                    "value": {
+                      "type": "Literal",
+                      "value": 12,
+                    },
+                  },
+                },
                 "type": "Operation",
               },
             },
             "type": "Operation",
           },
         },
-        "type": "Operation",
-      },
-    },
-    "operator": "!=",
-    "right": {
-      "type": "Expression",
-      "value": {
-        "left": {
+        "operator": "and",
+        "right": {
           "type": "Expression",
           "value": {
             "type": "Singular",
             "value": {
               "type": "Literal",
-              "value": 12,
+              "value": 45,
             },
-          },
-        },
-        "operator": "and",
-        "right": {
-          "type": "Expression",
-          "value": {
-            "left": {
-              "type": "Expression",
-              "value": {
-                "type": "Singular",
-                "value": {
-                  "type": "Literal",
-                  "value": 45,
-                },
-              },
-            },
-            "operator": "implies",
-            "right": {
-              "type": "Expression",
-              "value": {
-                "type": "Singular",
-                "value": {
-                  "type": "Literal",
-                  "value": 23,
-                },
-              },
-            },
-            "type": "Operation",
           },
         },
         "type": "Operation",
+      },
+    },
+    "operator": "implies",
+    "right": {
+      "type": "Expression",
+      "value": {
+        "type": "Singular",
+        "value": {
+          "type": "Literal",
+          "value": 23,
+        },
       },
     },
     "type": "Operation",
@@ -397,34 +397,34 @@ exports[`SNAPSHOT Tests 5`] = `
                     "right": {
                       "type": "Expression",
                       "value": {
+                        "type": "Singular",
+                        "value": {
+                          "type": "Literal",
+                          "value": "test",
+                        },
+                      },
+                    },
+                    "type": "Operation",
+                  },
+                },
+                "operator": "and",
+                "right": {
+                  "type": "Expression",
+                  "value": {
+                    "left": {
+                      "type": "Expression",
+                      "value": {
                         "left": {
                           "type": "Expression",
                           "value": {
-                            "left": {
-                              "type": "Expression",
+                            "type": "Singular",
+                            "value": {
+                              "type": "Invocation",
                               "value": {
-                                "type": "Singular",
-                                "value": {
-                                  "type": "Literal",
-                                  "value": "test",
-                                },
+                                "type": "Identifier",
+                                "value": "value",
                               },
                             },
-                            "operator": "and",
-                            "right": {
-                              "type": "Expression",
-                              "value": {
-                                "type": "Singular",
-                                "value": {
-                                  "type": "Invocation",
-                                  "value": {
-                                    "type": "Identifier",
-                                    "value": "value",
-                                  },
-                                },
-                              },
-                            },
-                            "type": "Operation",
                           },
                         },
                         "operator": "/",
@@ -441,18 +441,18 @@ exports[`SNAPSHOT Tests 5`] = `
                         "type": "Operation",
                       },
                     },
-                    "type": "Operation",
-                  },
-                },
-                "operator": "=",
-                "right": {
-                  "type": "Expression",
-                  "value": {
-                    "type": "Singular",
-                    "value": {
-                      "type": "Literal",
-                      "value": 12,
+                    "operator": "=",
+                    "right": {
+                      "type": "Expression",
+                      "value": {
+                        "type": "Singular",
+                        "value": {
+                          "type": "Literal",
+                          "value": 12,
+                        },
+                      },
                     },
+                    "type": "Operation",
                   },
                 },
                 "type": "Operation",
@@ -555,100 +555,101 @@ exports[`SNAPSHOT Tests 7`] = `
             "left": {
               "type": "Expression",
               "value": {
-                "left": {
-                  "type": "Expression",
-                  "value": {
-                    "type": "Singular",
-                    "value": {
-                      "type": "Literal",
-                      "value": true,
-                    },
-                  },
+                "type": "Singular",
+                "value": {
+                  "type": "Literal",
+                  "value": true,
                 },
-                "operator": "!=",
-                "right": {
-                  "type": "Expression",
-                  "value": {
-                    "left": {
-                      "type": "Expression",
-                      "value": {
-                        "type": "Singular",
-                        "value": {
-                          "type": "Literal",
-                        },
-                      },
-                    },
-                    "operator": "and",
-                    "right": {
-                      "type": "Expression",
-                      "value": {
-                        "type": "Singular",
-                        "value": {
-                          "type": "Literal",
-                          "value": "04:00",
-                        },
-                      },
-                    },
-                    "type": "Operation",
-                  },
+              },
+            },
+            "operator": "!=",
+            "right": {
+              "type": "Expression",
+              "value": {
+                "type": "Singular",
+                "value": {
+                  "type": "Literal",
+                  "value": false,
                 },
-                "type": "Operation",
+              },
+            },
+            "type": "Operation",
+          },
+        },
+        "operator": "and",
+        "right": {
+          "type": "Expression",
+          "value": {
+            "left": {
+              "type": "Expression",
+              "value": {
+                "type": "Singular",
+                "value": {
+                  "type": "Literal",
+                  "value": "04:00",
+                },
               },
             },
             "operator": "=",
             "right": {
               "type": "Expression",
               "value": {
-                "left": {
-                  "type": "Expression",
-                  "value": {
-                    "type": "Singular",
-                    "value": {
-                      "type": "Literal",
-                      "value": "04:00",
-                    },
-                  },
+                "type": "Singular",
+                "value": {
+                  "type": "Literal",
+                  "value": "04:00",
                 },
-                "operator": "and",
-                "right": {
-                  "type": "Expression",
-                  "value": {
-                    "type": "Singular",
-                    "value": {
-                      "type": "Literal",
-                      "value": "1980-01-01",
-                    },
-                  },
-                },
-                "type": "Operation",
               },
             },
             "type": "Operation",
           },
         },
-        "operator": "!=",
+        "type": "Operation",
+      },
+    },
+    "operator": "and",
+    "right": {
+      "type": "Expression",
+      "value": {
+        "left": {
+          "type": "Expression",
+          "value": {
+            "left": {
+              "type": "Expression",
+              "value": {
+                "type": "Singular",
+                "value": {
+                  "type": "Literal",
+                  "value": "1980-01-01",
+                },
+              },
+            },
+            "operator": "!=",
+            "right": {
+              "type": "Expression",
+              "value": {
+                "type": "Singular",
+                "value": {
+                  "type": "Literal",
+                  "value": "1980-01-01T00:00:00Z",
+                },
+              },
+            },
+            "type": "Operation",
+          },
+        },
+        "operator": "=",
         "right": {
           "type": "Expression",
           "value": {
             "type": "Singular",
             "value": {
               "type": "Literal",
-              "value": "1980-01-01T00:00:00Z",
+              "value": "1980-01-01T00:00:00-05:00",
             },
           },
         },
         "type": "Operation",
-      },
-    },
-    "operator": "=",
-    "right": {
-      "type": "Expression",
-      "value": {
-        "type": "Singular",
-        "value": {
-          "type": "Literal",
-          "value": "1980-01-01T00:00:00-05:00",
-        },
       },
     },
     "type": "Operation",
