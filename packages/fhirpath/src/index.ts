@@ -81,6 +81,48 @@ const fp_functions: Record<
       )
     );
   },
+  // Conceptionally this is the opposite of subsetOf.
+  supersetOf(ast, context, options) {
+    const otherSet = _evaluate(ast.next[0], context, options);
+    return toFPNodes(
+      otherSet.reduce(
+        (acc, v1) =>
+          acc &&
+          context.find((v2) => {
+            const result = fp_operations["="]([v1], [v2], options);
+            return result[0].value;
+          }) !== undefined,
+        true
+      )
+    );
+  },
+  count(ast, context, options) {
+    return toFPNodes(context.length);
+  },
+  distinct(ast, context, options) {
+    const map = context
+      .map(
+        (v: FHIRPathNodeType<unknown>): [string, FHIRPathNodeType<unknown>] => [
+          JSON.stringify(v.value),
+          v,
+        ]
+      )
+      .reduce(
+        (
+          m: { [key: string]: FHIRPathNodeType<unknown> },
+          [k, v]: [string, FHIRPathNodeType<unknown>]
+        ) => {
+          m[k] = v;
+          return m;
+        },
+        {}
+      );
+    return Object.values(map);
+  },
+  isDistinct(ast, context, options) {
+    const distinct = fp_functions.distinct(undefined, context, options);
+    return toFPNodes(context.length === distinct.length);
+  },
 };
 
 function evaluateInvocation(

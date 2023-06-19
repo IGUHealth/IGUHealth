@@ -266,3 +266,27 @@ test("subsetOf", () => {
     })
   ).toEqual([false]);
 });
+
+test("distinct", () => {
+  expect(
+    evaluate("$this.distinct()", [{ v: 1 }, { v: 1 }, 2], { variables: {} })
+  ).toEqual([2, { v: 1 }]);
+
+  expect(
+    evaluate(
+      "$this.distinct().count()= %set1.count()",
+      [{ v: 1 }, { v: 1 }, 2],
+      {
+        variables: { set1: [1, 1, 2] },
+      }
+    )
+  ).toEqual([false]);
+
+  expect(
+    evaluate("$this.isDistinct()", [{ v: 1 }, { v: 1 }, 2], { variables: {} })
+  ).toEqual([false]);
+
+  expect(
+    evaluate("$this.isDistinct()", [{ v: 1 }, { v: 2 }], { variables: {} })
+  ).toEqual([true]);
+});
