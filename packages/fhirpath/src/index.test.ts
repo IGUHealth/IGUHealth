@@ -267,6 +267,20 @@ test("subsetOf", () => {
   ).toEqual([false]);
 });
 
+test("supersetOf", () => {
+  expect(
+    evaluate("%set1.supersetOf(%set2)", undefined, {
+      variables: { set1: [0, 1, false], set2: [0, 1], set3: ["none"] },
+    })
+  ).toEqual([true]);
+
+  expect(
+    evaluate("%set2.supersetOf(%set1)", undefined, {
+      variables: { set1: [0, 1, false], set2: [0, 1], set3: ["none"] },
+    })
+  ).toEqual([false]);
+});
+
 test("distinct", () => {
   expect(
     evaluate("$this.distinct()", [{ v: 1 }, { v: 1 }, 2], { variables: {} })
