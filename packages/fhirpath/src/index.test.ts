@@ -128,3 +128,23 @@ test("exists", () => {
     false,
   ]);
 });
+
+test("empty", () => {
+  expect(evaluate("5.empty()", { test: [1, 2, 3] }, { variables: {} })).toEqual(
+    [false]
+  );
+
+  expect(
+    evaluate("$this.test.empty()", { test: [1, 2, 3] }, { variables: {} })
+  ).toEqual([false]);
+
+  expect(
+    evaluate("test.empty()", { test: [1, 2, 3] }, { variables: {} })
+  ).toEqual([false]);
+
+  expect(evaluate("empty()", undefined, { variables: {} })).toEqual([true]);
+
+  expect(
+    evaluate("$this.z.empty()", { test: [1, 2, 3] }, { variables: {} })
+  ).toEqual([true]);
+});

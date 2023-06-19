@@ -1,5 +1,5 @@
 import { parse } from "./parser";
-import { toFhirPathNode, FHIRPathNode, descend } from "./node";
+import { toFPNodes, FHIRPathNodeType, descend } from "./node";
 
 type Options = {
   variables: Record<string, unknown> | ((v: string) => unknown);
@@ -8,38 +8,44 @@ type Options = {
 function getVariableValue(
   name: string,
   options: Options
-): FHIRPathNode<unknown>[] {
+): FHIRPathNodeType<NonNullable<unknown>>[] {
   let value;
   if (options.variables instanceof Function) {
     value = options.variables(name);
   } else if (options.variables instanceof Object) {
     value = options.variables[name];
   }
-  return toFhirPathNode(value);
+
+  return toFPNodes(value);
 }
 
 const fp_functions: Record<
   string,
   (
     ast: any,
-    context: FHIRPathNode<unknown>[],
+    context: FHIRPathNodeType<unknown>[],
     options: Options
-  ) => FHIRPathNode<unknown>[]
+  ) => FHIRPathNodeType<NonNullable<unknown>>[]
 > = {
-  exists: (ast, context, options) => {
-    if (ast.next.length === 1)
-      return [
-        new FHIRPathNode(_evaluate(ast.next[0], context, options).length > 0),
-      ];
-    return [new FHIRPathNode(context.length > 0)];
+  // Returns true if the input collection is empty ({ }) and false otherwise.
+  exists: function (ast, context, options) {
+    if (ast.next.length === 1) {
+      return toFPNodes(_evaluate(ast.next[0], context, options).length > 0);
+    }
+
+    return toFPNodes(context.length > 0);
+  },
+  // exists([criteria : expression]) : Boolean
+  empty(ast, context, options) {
+    return toFPNodes(context.length === 0);
   },
 };
 
 function evaluateInvocation(
   ast: any,
-  context: FHIRPathNode<unknown>[],
+  context: FHIRPathNodeType<unknown>[],
   options: Options
-): FHIRPathNode<unknown>[] {
+): FHIRPathNodeType<unknown>[] {
   switch (ast.value.type) {
     case "Index":
       throw new Error("Not implemented");
@@ -49,7 +55,7 @@ function evaluateInvocation(
       return context;
     case "Identifier":
       return context.reduce(
-        (acc: FHIRPathNode<unknown>[], v) => [
+        (acc: FHIRPathNodeType<unknown>[], v) => [
           ...acc,
           ...descend(v, ast.value.value),
         ],
@@ -67,14 +73,14 @@ function evaluateInvocation(
 
 function _evaluateTermStart(
   ast: any,
-  context: FHIRPathNode<unknown>[],
+  context: FHIRPathNodeType<unknown>[],
   options: Options
-): FHIRPathNode<unknown>[] {
+): FHIRPathNodeType<unknown>[] {
   switch (ast.value.type) {
     case "Invocation":
       return evaluateInvocation(ast.value, context, options);
     case "Literal": {
-      return toFhirPathNode(ast.value.value);
+      return toFPNodes(ast.value.value);
     }
     case "Variable":
       return getVariableValue(ast.value.value.value, options);
@@ -87,9 +93,9 @@ function _evaluateTermStart(
 
 function evaluateProperty(
   ast: any,
-  context: FHIRPathNode<unknown>[],
+  context: FHIRPathNodeType<unknown>[],
   options: Options
-): FHIRPathNode<unknown>[] {
+): FHIRPathNodeType<unknown>[] {
   switch (ast.type) {
     case "Invocation":
       return evaluateInvocation(ast, context, options);
@@ -107,14 +113,17 @@ function evaluateProperty(
 
 function evaluateSingular(
   ast: any,
-  context: FHIRPathNode<unknown>[],
+  context: FHIRPathNodeType<unknown>[],
   options: Options
-): FHIRPathNode<unknown>[] {
+): FHIRPathNodeType<unknown>[] {
   const start = _evaluateTermStart(ast, context, options);
   if (ast.next) {
-    return ast.next.reduce((context: FHIRPathNode<unknown>[], next: any) => {
-      return evaluateProperty(next, context, options);
-    }, start);
+    return ast.next.reduce(
+      (context: FHIRPathNodeType<unknown>[], next: any) => {
+        return evaluateProperty(next, context, options);
+      },
+      start
+    );
   }
   return start;
 }
@@ -145,9 +154,9 @@ function invalidOperandError(args: unknown[], operator: string) {
 
 function evaluateOperation(
   ast: any,
-  context: FHIRPathNode<unknown>[],
+  context: FHIRPathNodeType<unknown>[],
   options: Options
-): FHIRPathNode<unknown>[] {
+): FHIRPathNodeType<unknown>[] {
   const left = _evaluate(ast.left, context, options);
   const right = _evaluate(ast.right, context, options);
   const binaryArgs = [left[0].value, right[0].value];
@@ -155,27 +164,27 @@ function evaluateOperation(
   switch (ast.operator) {
     case "+":
       if (validateOperators("number", binaryArgs)) {
-        return toFhirPathNode(binaryArgs[0] + binaryArgs[1]);
+        return toFPNodes(binaryArgs[0] + binaryArgs[1]);
       } else if (validateOperators("string", binaryArgs)) {
-        return toFhirPathNode(binaryArgs[0] + binaryArgs[1]);
+        return toFPNodes(binaryArgs[0] + binaryArgs[1]);
       } else {
         invalidOperandError(binaryArgs, ast.operator);
       }
     case "-":
       if (validateOperators("number", binaryArgs)) {
-        return toFhirPathNode(binaryArgs[0] - binaryArgs[1]);
+        return toFPNodes(binaryArgs[0] - binaryArgs[1]);
       } else {
         invalidOperandError(binaryArgs, ast.operator);
       }
     case "*":
       if (validateOperators("number", binaryArgs)) {
-        return toFhirPathNode(binaryArgs[0] * binaryArgs[1]);
+        return toFPNodes(binaryArgs[0] * binaryArgs[1]);
       } else {
         invalidOperandError(binaryArgs, ast.operator);
       }
     case "/":
       if (validateOperators("number", binaryArgs)) {
-        return toFhirPathNode(binaryArgs[0] / binaryArgs[1]);
+        return toFPNodes(binaryArgs[0] / binaryArgs[1]);
       } else {
         invalidOperandError(binaryArgs, ast.operator);
       }
@@ -186,9 +195,9 @@ function evaluateOperation(
 
 function _evaluate(
   ast: any,
-  context: FHIRPathNode<unknown>[],
+  context: FHIRPathNodeType<unknown>[],
   options: Options
-): FHIRPathNode<unknown>[] {
+): FHIRPathNodeType<unknown>[] {
   switch (ast.value.type) {
     case "Operation": {
       return evaluateOperation(ast.value, context, options);
@@ -214,7 +223,7 @@ export function evaluate(
   options: Options
 ): NonNullable<unknown>[] {
   const ast = parse(expression);
-  const ctx = toFhirPathNode(value);
+  const ctx = toFPNodes(value);
   const output = _evaluate(ast, ctx, options)
     .map((v) => v.value)
     .filter(nonNullable);
