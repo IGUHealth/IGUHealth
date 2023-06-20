@@ -2,6 +2,8 @@ lib
 .#*
 coverage
 
+## Below comes from the react-storybook gitignore
+
 # Logs
 logs
 *.log
