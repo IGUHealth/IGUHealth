@@ -316,3 +316,16 @@ test("where", () => {
     });
   }).toThrow();
 });
+
+test("select", () => {
+  expect(
+    evaluate(
+      "$this.select($this.name.given + ' ' + $this.name.family)",
+      [
+        { name: { given: ["Bob"], family: "Jameson" } },
+        { name: { given: ["Jason"], family: "Kyle" } },
+      ],
+      { variables: {} }
+    )
+  ).toEqual(["Bob Jameson", "Jason Kyle"]);
+});

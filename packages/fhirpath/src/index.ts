@@ -140,6 +140,14 @@ const fp_functions: Record<
       throw new Error("Where clause criteria must evaluate to a boolean");
     });
   },
+  select(ast, context, options) {
+    const selection = ast.next[0];
+    return flatten(
+      context.map((v) => {
+        return _evaluate(selection, [v], options);
+      })
+    );
+  },
 };
 
 function evaluateInvocation(
