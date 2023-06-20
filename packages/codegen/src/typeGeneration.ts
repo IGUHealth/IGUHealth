@@ -267,6 +267,5 @@ export function generateTypes(
         .filter((type) => type)
     )
     .join("\n");
-
   return typescriptTypes;
 }
