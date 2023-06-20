@@ -2,7 +2,7 @@ import { parse } from "./parser";
 import { toFPNodes, FHIRPathNodeType, descend } from "./node";
 
 type Options = {
-  variables: Record<string, unknown> | ((v: string) => unknown);
+  variables?: Record<string, unknown> | ((v: string) => unknown);
 };
 
 function flatten<T>(arr: T[][]): T[] {
@@ -11,16 +11,22 @@ function flatten<T>(arr: T[][]): T[] {
 
 function getVariableValue(
   name: string,
-  options: Options
+  options?: Options
 ): FHIRPathNodeType<unknown>[] {
   let value;
-  if (options.variables instanceof Function) {
+  if (options?.variables instanceof Function) {
     value = options.variables(name);
-  } else if (options.variables instanceof Object) {
+  } else if (options?.variables instanceof Object) {
     value = options.variables[name];
   }
 
   return toFPNodes(value);
+}
+
+function assert(assertion: boolean, message?: string) {
+  if (!assertion) {
+    throw new Error(message || "Assertion failed");
+  }
 }
 
 const fp_functions: Record<
@@ -28,9 +34,10 @@ const fp_functions: Record<
   (
     ast: any,
     context: FHIRPathNodeType<unknown>[],
-    options: Options
+    options?: Options
   ) => FHIRPathNodeType<unknown>[]
 > = {
+  // [EXISTENCE FUNCTIONS]
   // Returns true if the input collection is empty ({ }) and false otherwise.
   exists: function (ast, context, options) {
     if (ast.next.length === 1) {
@@ -123,12 +130,43 @@ const fp_functions: Record<
     const distinct = fp_functions.distinct(undefined, context, options);
     return toFPNodes(context.length === distinct.length);
   },
+  // [FILTER FUNCTIONS]
+  where(ast, context, options) {
+    const criteria = ast.next[0];
+    return context.filter((v) => {
+      const result = _evaluate(criteria, [v], options);
+      assert(result.length === 1, "result must be one");
+      if (typeChecking("boolean", result)) return result[0].value;
+      throw new Error("Where clause criteria must evaluate to a boolean");
+    });
+  },
+  select(ast, context, options) {
+    const selection = ast.next[0];
+    return flatten(
+      context.map((v) => {
+        return _evaluate(selection, [v], options);
+      })
+    );
+  },
+  repeat(ast, context, options) {
+    const projection = ast.next[0];
+    let endResult: FHIRPathNodeType<unknown>[] = [];
+    let cur = context;
+    while (cur.length !== 0) {
+      cur = _evaluate(projection, cur, options);
+      endResult = [...endResult, ...cur];
+    }
+    return endResult;
+  },
+  ofType(ast, context, options) {
+    throw new Error("Not implemented");
+  },
 };
 
 function evaluateInvocation(
   ast: any,
   context: FHIRPathNodeType<unknown>[],
-  options: Options
+  options?: Options
 ): FHIRPathNodeType<unknown>[] {
   switch (ast.value.type) {
     case "Index":
@@ -152,7 +190,7 @@ function evaluateInvocation(
 function _evaluateTermStart(
   ast: any,
   context: FHIRPathNodeType<unknown>[],
-  options: Options
+  options?: Options
 ): FHIRPathNodeType<unknown>[] {
   switch (ast.value.type) {
     case "Invocation":
@@ -172,7 +210,7 @@ function _evaluateTermStart(
 function evaluateProperty(
   ast: any,
   context: FHIRPathNodeType<unknown>[],
-  options: Options
+  options?: Options
 ): FHIRPathNodeType<unknown>[] {
   switch (ast.type) {
     case "Invocation":
@@ -192,7 +230,7 @@ function evaluateProperty(
 function evaluateSingular(
   ast: any,
   context: FHIRPathNodeType<unknown>[],
-  options: Options
+  options?: Options
 ): FHIRPathNodeType<unknown>[] {
   const start = _evaluateTermStart(ast, context, options);
   if (ast.next) {
@@ -210,11 +248,13 @@ type OperatorType<op_type> = op_type extends "number"
   ? number
   : op_type extends "string"
   ? string
+  : op_type extends "boolean"
+  ? boolean
   : unknown;
 
-type ValidOperandType = "number" | "string";
+type ValidOperandType = "number" | "string" | "boolean";
 
-function validateOperators<T extends ValidOperandType, U>(
+function typeChecking<T extends ValidOperandType, U>(
   typeChecking: T,
   args: FHIRPathNodeType<unknown>[]
 ): args is FHIRPathNodeType<OperatorType<T>>[] {
@@ -235,49 +275,34 @@ const fp_operations: Record<
   (
     left: FHIRPathNodeType<unknown>[],
     right: FHIRPathNodeType<unknown>[],
-    options: Options
+    options?: Options
   ) => FHIRPathNodeType<unknown>[]
 > = {
   "+"(left, right, options) {
-    if (
-      validateOperators("number", left) &&
-      validateOperators("number", right)
-    ) {
+    if (typeChecking("number", left) && typeChecking("number", right)) {
       return toFPNodes(left[0].value + right[0].value);
-    } else if (
-      validateOperators("string", left) &&
-      validateOperators("string", right)
-    ) {
+    } else if (typeChecking("string", left) && typeChecking("string", right)) {
       return toFPNodes(left[0].value + right[0].value);
     } else {
       throw invalidOperandError([left[0], right[0]], "+");
     }
   },
   "-"(left, right, options) {
-    if (
-      validateOperators("number", left) &&
-      validateOperators("number", right)
-    ) {
+    if (typeChecking("number", left) && typeChecking("number", right)) {
       return toFPNodes(left[0].value - right[0].value);
     } else {
       throw invalidOperandError([left[0], right[0]], "-");
     }
   },
   "*"(left, right, options) {
-    if (
-      validateOperators("number", left) &&
-      validateOperators("number", right)
-    ) {
+    if (typeChecking("number", left) && typeChecking("number", right)) {
       return toFPNodes(left[0].value * right[0].value);
     } else {
       throw invalidOperandError([left[0], right[0]], "*");
     }
   },
   "/"(left, right, options) {
-    if (
-      validateOperators("number", left) &&
-      validateOperators("number", right)
-    ) {
+    if (typeChecking("number", left) && typeChecking("number", right)) {
       return toFPNodes(left[0].value / right[0].value);
     } else {
       throw invalidOperandError([left[0], right[0]], "/");
@@ -297,7 +322,7 @@ const fp_operations: Record<
 function evaluateOperation(
   ast: any,
   context: FHIRPathNodeType<unknown>[],
-  options: Options
+  options?: Options
 ): FHIRPathNodeType<unknown>[] {
   const left = _evaluate(ast.left, context, options);
   const right = _evaluate(ast.right, context, options);
@@ -310,7 +335,7 @@ function evaluateOperation(
 function _evaluate(
   ast: any,
   context: FHIRPathNodeType<unknown>[],
-  options: Options
+  options?: Options
 ): FHIRPathNodeType<unknown>[] {
   switch (ast.value.type) {
     case "Operation": {
@@ -334,7 +359,7 @@ function nonNullable(v: unknown): v is NonNullable<unknown> {
 export function evaluate(
   expression: string,
   value: unknown,
-  options: Options
+  options?: Options
 ): NonNullable<unknown>[] {
   const ast = parse(expression);
   const ctx = toFPNodes(value);
