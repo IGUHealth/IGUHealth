@@ -13,7 +13,6 @@ const Main = styled.div`
 export const String = ({ value = "", ...props }: Props) => {
   return (
     <Main>
-      foo
       <input type="text" value={value} />
     </Main>
   );
