@@ -2,7 +2,7 @@ import { parse } from "./parser";
 import { toFPNodes, FHIRPathNodeType, descend } from "./node";
 
 type Options = {
-  variables: Record<string, unknown> | ((v: string) => unknown);
+  variables?: Record<string, unknown> | ((v: string) => unknown);
 };
 
 function flatten<T>(arr: T[][]): T[] {
@@ -11,12 +11,12 @@ function flatten<T>(arr: T[][]): T[] {
 
 function getVariableValue(
   name: string,
-  options: Options
+  options?: Options
 ): FHIRPathNodeType<unknown>[] {
   let value;
-  if (options.variables instanceof Function) {
+  if (options?.variables instanceof Function) {
     value = options.variables(name);
-  } else if (options.variables instanceof Object) {
+  } else if (options?.variables instanceof Object) {
     value = options.variables[name];
   }
 
@@ -34,7 +34,7 @@ const fp_functions: Record<
   (
     ast: any,
     context: FHIRPathNodeType<unknown>[],
-    options: Options
+    options?: Options
   ) => FHIRPathNodeType<unknown>[]
 > = {
   // [EXISTENCE FUNCTIONS]
@@ -148,12 +148,25 @@ const fp_functions: Record<
       })
     );
   },
+  repeat(ast, context, options) {
+    const projection = ast.next[0];
+    let endResult: FHIRPathNodeType<unknown>[] = [];
+    let cur = context;
+    while (cur.length !== 0) {
+      cur = _evaluate(projection, cur, options);
+      endResult = [...endResult, ...cur];
+    }
+    return endResult;
+  },
+  ofType(ast, context, options) {
+    throw new Error("Not implemented");
+  },
 };
 
 function evaluateInvocation(
   ast: any,
   context: FHIRPathNodeType<unknown>[],
-  options: Options
+  options?: Options
 ): FHIRPathNodeType<unknown>[] {
   switch (ast.value.type) {
     case "Index":
@@ -177,7 +190,7 @@ function evaluateInvocation(
 function _evaluateTermStart(
   ast: any,
   context: FHIRPathNodeType<unknown>[],
-  options: Options
+  options?: Options
 ): FHIRPathNodeType<unknown>[] {
   switch (ast.value.type) {
     case "Invocation":
@@ -197,7 +210,7 @@ function _evaluateTermStart(
 function evaluateProperty(
   ast: any,
   context: FHIRPathNodeType<unknown>[],
-  options: Options
+  options?: Options
 ): FHIRPathNodeType<unknown>[] {
   switch (ast.type) {
     case "Invocation":
@@ -217,7 +230,7 @@ function evaluateProperty(
 function evaluateSingular(
   ast: any,
   context: FHIRPathNodeType<unknown>[],
-  options: Options
+  options?: Options
 ): FHIRPathNodeType<unknown>[] {
   const start = _evaluateTermStart(ast, context, options);
   if (ast.next) {
@@ -262,7 +275,7 @@ const fp_operations: Record<
   (
     left: FHIRPathNodeType<unknown>[],
     right: FHIRPathNodeType<unknown>[],
-    options: Options
+    options?: Options
   ) => FHIRPathNodeType<unknown>[]
 > = {
   "+"(left, right, options) {
@@ -309,7 +322,7 @@ const fp_operations: Record<
 function evaluateOperation(
   ast: any,
   context: FHIRPathNodeType<unknown>[],
-  options: Options
+  options?: Options
 ): FHIRPathNodeType<unknown>[] {
   const left = _evaluate(ast.left, context, options);
   const right = _evaluate(ast.right, context, options);
@@ -322,7 +335,7 @@ function evaluateOperation(
 function _evaluate(
   ast: any,
   context: FHIRPathNodeType<unknown>[],
-  options: Options
+  options?: Options
 ): FHIRPathNodeType<unknown>[] {
   switch (ast.value.type) {
     case "Operation": {
@@ -346,7 +359,7 @@ function nonNullable(v: unknown): v is NonNullable<unknown> {
 export function evaluate(
   expression: string,
   value: unknown,
-  options: Options
+  options?: Options
 ): NonNullable<unknown>[] {
   const ast = parse(expression);
   const ctx = toFPNodes(value);

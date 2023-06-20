@@ -2,20 +2,16 @@ import { evaluate } from "./index";
 
 test("Eval tests", () => {
   // Operator testing
-  expect(evaluate("4 + 5", {}, { variables: {} })).toEqual([9]);
-  expect(
-    evaluate("$this.test + 2 * 4", { test: 4 }, { variables: {} })
-  ).toEqual([12]);
+  expect(evaluate("4 + 5", {})).toEqual([9]);
+  expect(evaluate("$this.test + 2 * 4", { test: 4 })).toEqual([12]);
 
-  expect(evaluate("2 * 4", { test: 4 }, { variables: {} })).toEqual([8]);
+  expect(evaluate("2 * 4", { test: 4 })).toEqual([8]);
 
-  expect(evaluate("$this.test * 2", { test: 4 }, { variables: {} })).toEqual([
-    8,
-  ]);
+  expect(evaluate("$this.test * 2", { test: 4 })).toEqual([8]);
 });
 
 test("Variable tests", () => {
-  expect(evaluate("%nonexistant", {}, { variables: {} })).toEqual([]);
+  expect(evaluate("%nonexistant", {})).toEqual([]);
   expect(
     evaluate(
       "%hello.test",
@@ -38,7 +34,7 @@ test("Variable tests", () => {
 });
 
 test("PrimitiveExtensions", () => {
-  expect(evaluate("%nonexistant", {}, { variables: {} })).toEqual([]);
+  expect(evaluate("%nonexistant", {})).toEqual([]);
   expect(
     evaluate(
       "%hello.test.extension.valueBoolean",
@@ -106,132 +102,86 @@ test("typechoices", () => {
 });
 
 test("Test all operations", () => {
-  expect(evaluate("(5 + 5) / (4-2)", {}, { variables: {} })).toEqual([5]);
-  expect(evaluate("4 + 4 / 4 - 2", {}, { variables: {} })).toEqual([3]);
-  expect(evaluate("(4 + 4) / (4 - 2)", {}, { variables: {} })).toEqual([4]);
+  expect(evaluate("(5 + 5) / (4-2)", {})).toEqual([5]);
+  expect(evaluate("4 + 4 / 4 - 2", {})).toEqual([3]);
+  expect(evaluate("(4 + 4) / (4 - 2)", {})).toEqual([4]);
 });
 
 test("exists", () => {
-  expect(
-    evaluate("$this.exists(test)", { test: [1, 2, 3] }, { variables: {} })
-  ).toEqual([true]);
+  expect(evaluate("$this.exists(test)", { test: [1, 2, 3] })).toEqual([true]);
 
-  expect(
-    evaluate("$this.exists()", { test: [1, 2, 3] }, { variables: {} })
-  ).toEqual([true]);
+  expect(evaluate("$this.exists()", { test: [1, 2, 3] })).toEqual([true]);
 
+  expect(evaluate("$this.exists($this.z)", { test: [1, 2, 3] })).toEqual([
+    false,
+  ]);
+
+  expect(evaluate("$this.exists()", undefined)).toEqual([false]);
+});
+
+test("empty", () => {
+  expect(evaluate("5.empty()", { test: [1, 2, 3] })).toEqual([false]);
+
+  expect(evaluate("$this.test.empty()", { test: [1, 2, 3] })).toEqual([false]);
+
+  expect(evaluate("test.empty()", { test: [1, 2, 3] })).toEqual([false]);
+
+  expect(evaluate("empty()", undefined)).toEqual([true]);
+
+  expect(evaluate("$this.z.empty()", { test: [1, 2, 3] })).toEqual([true]);
+});
+
+test("all", () => {
+  expect(evaluate("$this.test.all($this=1)", { test: [1, 2, 3] })).toEqual([
+    false,
+  ]);
+  expect(evaluate("$this.test.all($this=1)", { test: [1, 1] })).toEqual([true]);
+  expect(evaluate("$this.test.all($this=1)", { test: [1] })).toEqual([true]);
+  expect(evaluate("1.all($this=1)", { test: [1] })).toEqual([true]);
+});
+
+test("allTrue", () => {
+  expect(evaluate("$this.test.allTrue()", { test: [true, true] })).toEqual([
+    true,
+  ]);
   expect(
-    evaluate("$this.exists($this.z)", { test: [1, 2, 3] }, { variables: {} })
+    evaluate("$this.test.allTrue()", { test: [true, true, false] })
   ).toEqual([false]);
 
-  expect(evaluate("$this.exists()", undefined, { variables: {} })).toEqual([
+  expect(evaluate("$this.test.allTrue()", { test: [true, true, 1] })).toEqual([
+    false,
+  ]);
+
+  expect(evaluate("true.allTrue()", { test: [true, true, 1] })).toEqual([true]);
+});
+
+test("anyTrue", () => {
+  expect(evaluate("$this.test.anyTrue()", { test: [true, true] })).toEqual([
+    true,
+  ]);
+  expect(
+    evaluate("$this.test.anyTrue()", { test: [true, true, false] })
+  ).toEqual([true]);
+  expect(evaluate("$this.test.anyTrue()", { test: [true, true, 1] })).toEqual([
+    true,
+  ]);
+  expect(evaluate("false.anyTrue()", {})).toEqual([false]);
+  expect(evaluate("true.anyTrue()", {})).toEqual([true]);
+  expect(evaluate("$this.test.anyTrue()", { test: [false, 5, 1] })).toEqual([
     false,
   ]);
 });
 
-test("empty", () => {
-  expect(evaluate("5.empty()", { test: [1, 2, 3] }, { variables: {} })).toEqual(
-    [false]
-  );
-
-  expect(
-    evaluate("$this.test.empty()", { test: [1, 2, 3] }, { variables: {} })
-  ).toEqual([false]);
-
-  expect(
-    evaluate("test.empty()", { test: [1, 2, 3] }, { variables: {} })
-  ).toEqual([false]);
-
-  expect(evaluate("empty()", undefined, { variables: {} })).toEqual([true]);
-
-  expect(
-    evaluate("$this.z.empty()", { test: [1, 2, 3] }, { variables: {} })
-  ).toEqual([true]);
-});
-
-test("all", () => {
-  expect(
-    evaluate("$this.test.all($this=1)", { test: [1, 2, 3] }, { variables: {} })
-  ).toEqual([false]);
-  expect(
-    evaluate("$this.test.all($this=1)", { test: [1, 1] }, { variables: {} })
-  ).toEqual([true]);
-  expect(
-    evaluate("$this.test.all($this=1)", { test: [1] }, { variables: {} })
-  ).toEqual([true]);
-  expect(evaluate("1.all($this=1)", { test: [1] }, { variables: {} })).toEqual([
-    true,
+test("allFalse", () => {
+  expect(evaluate("$this.test.allFalse()", { test: [0, 1, false] })).toEqual([
+    false,
   ]);
 });
 
-test("allTrue", () => {
-  expect(
-    evaluate("$this.test.allTrue()", { test: [true, true] }, { variables: {} })
-  ).toEqual([true]);
-  expect(
-    evaluate(
-      "$this.test.allTrue()",
-      { test: [true, true, false] },
-      { variables: {} }
-    )
-  ).toEqual([false]);
-
-  expect(
-    evaluate(
-      "$this.test.allTrue()",
-      { test: [true, true, 1] },
-      { variables: {} }
-    )
-  ).toEqual([false]);
-
-  expect(
-    evaluate("true.allTrue()", { test: [true, true, 1] }, { variables: {} })
-  ).toEqual([true]);
-});
-
-test("anyTrue", () => {
-  expect(
-    evaluate("$this.test.anyTrue()", { test: [true, true] }, { variables: {} })
-  ).toEqual([true]);
-  expect(
-    evaluate(
-      "$this.test.anyTrue()",
-      { test: [true, true, false] },
-      { variables: {} }
-    )
-  ).toEqual([true]);
-  expect(
-    evaluate(
-      "$this.test.anyTrue()",
-      { test: [true, true, 1] },
-      { variables: {} }
-    )
-  ).toEqual([true]);
-  expect(evaluate("false.anyTrue()", {}, { variables: {} })).toEqual([false]);
-  expect(evaluate("true.anyTrue()", {}, { variables: {} })).toEqual([true]);
-  expect(
-    evaluate("$this.test.anyTrue()", { test: [false, 5, 1] }, { variables: {} })
-  ).toEqual([false]);
-});
-
-test("allFalse", () => {
-  expect(
-    evaluate(
-      "$this.test.allFalse()",
-      { test: [0, 1, false] },
-      { variables: {} }
-    )
-  ).toEqual([false]);
-});
-
 test("anyFalse", () => {
-  expect(
-    evaluate(
-      "$this.test.anyFalse()",
-      { test: [0, 1, false] },
-      { variables: {} }
-    )
-  ).toEqual([true]);
+  expect(evaluate("$this.test.anyFalse()", { test: [0, 1, false] })).toEqual([
+    true,
+  ]);
 });
 
 test("subsetOf", () => {
@@ -282,9 +232,10 @@ test("supersetOf", () => {
 });
 
 test("distinct", () => {
-  expect(
-    evaluate("$this.distinct()", [{ v: 1 }, { v: 1 }, 2], { variables: {} })
-  ).toEqual([2, { v: 1 }]);
+  expect(evaluate("$this.distinct()", [{ v: 1 }, { v: 1 }, 2])).toEqual([
+    2,
+    { v: 1 },
+  ]);
 
   expect(
     evaluate(
@@ -296,36 +247,41 @@ test("distinct", () => {
     )
   ).toEqual([false]);
 
-  expect(
-    evaluate("$this.isDistinct()", [{ v: 1 }, { v: 1 }, 2], { variables: {} })
-  ).toEqual([false]);
+  expect(evaluate("$this.isDistinct()", [{ v: 1 }, { v: 1 }, 2])).toEqual([
+    false,
+  ]);
 
-  expect(
-    evaluate("$this.isDistinct()", [{ v: 1 }, { v: 2 }], { variables: {} })
-  ).toEqual([true]);
+  expect(evaluate("$this.isDistinct()", [{ v: 1 }, { v: 2 }])).toEqual([true]);
 });
 
 test("where", () => {
-  expect(
-    evaluate("$this.where($this=1)", [1, 2, 3], { variables: {} })
-  ).toEqual([1]);
+  expect(evaluate("$this.where($this=1)", [1, 2, 3])).toEqual([1]);
 
   expect(() => {
-    evaluate("$this.where('Bob')", [{ name: "John" }, { name: "Bob" }], {
-      variables: {},
-    });
+    evaluate("$this.where('Bob')", [{ name: "John" }, { name: "Bob" }]);
   }).toThrow();
 });
 
 test("select", () => {
   expect(
-    evaluate(
-      "$this.select($this.name.given + ' ' + $this.name.family)",
-      [
-        { name: { given: ["Bob"], family: "Jameson" } },
-        { name: { given: ["Jason"], family: "Kyle" } },
-      ],
-      { variables: {} }
-    )
+    evaluate("$this.select($this.name.given + ' ' + $this.name.family)", [
+      { name: { given: ["Bob"], family: "Jameson" } },
+      { name: { given: ["Jason"], family: "Kyle" } },
+    ])
   ).toEqual(["Bob Jameson", "Jason Kyle"]);
+});
+
+test("repeat", () => {
+  expect(
+    evaluate("$this.repeat(item)", [
+      {
+        resourceType: "Questionnaire",
+        item: [{ id: "1", item: [{ id: "2", item: { id: "4" } }] }],
+      },
+    ])
+  ).toEqual([
+    { id: "1", item: [{ id: "2", item: { id: "4" } }] },
+    { id: "2", item: { id: "4" } },
+    { id: "4" },
+  ]);
 });
