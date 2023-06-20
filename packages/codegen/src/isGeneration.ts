@@ -7,7 +7,7 @@ function generateTypeSet(
   name: string,
   sds: Readonly<Array<StructureDefinition>>
 ) {
-  return `export const ${name}:  = new Set([${sds
+  return `export const ${name}: Set<string>  = new Set([${sds
     .map((sd) => `"${sd.id}"`)
     .join(",")}])\n`;
 }
