@@ -179,7 +179,7 @@ const fp_functions: Record<
       complexTypes.has(typeIdentifier)
     ) {
       throw new Error(
-        "Of Type not implemented for complex or primtive types yet"
+        "Of Type not implemented for complex or primitive types yet"
       );
     }
     return context.filter((v) => {
