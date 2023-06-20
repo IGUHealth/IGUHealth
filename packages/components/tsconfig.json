@@ -1,0 +1,3 @@
+{
+    "references": ["./tsconfig.node.json"]
+}
