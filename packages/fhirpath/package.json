@@ -30,5 +30,8 @@
     "testMatch": [
       "**/?(*.)+(spec|test).[t]s?(x)"
     ]
+  },
+  "dependencies": {
+    "@genfhi/fhir-json-schema": "workspace:^"
   }
 }
