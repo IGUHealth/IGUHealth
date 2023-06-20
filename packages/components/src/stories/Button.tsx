@@ -1,6 +1,6 @@
 import React from 'react';
 import './button.css';
-import { String } from 'src/basic/String';
+import { String } from '../basic/String';
 
 interface ButtonProps {
   /**
