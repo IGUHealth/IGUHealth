@@ -298,3 +298,18 @@ test("backtick", () => {
     "PID-1 value",
   ]);
 });
+
+test("ofType", () => {
+  expect(
+    evaluate("ofType(Patient)", [
+      { resourceType: "Patient" },
+      { resourceType: "MedicationRequest" },
+    ])
+  ).toEqual([{ resourceType: "Patient" }]);
+  expect(() => {
+    evaluate("ofType(HumanName)", [
+      { resourceType: "Patient" },
+      { resourceType: "MedicationRequest" },
+    ]);
+  }).toThrow();
+});

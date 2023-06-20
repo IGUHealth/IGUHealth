@@ -64,7 +64,7 @@ export function toFPNodes<T>(
   return [new FHIRPathNode(value, element as Element | undefined)];
 }
 
-function isObject(value: unknown): value is { [key: string]: unknown } {
+export function isObject(value: unknown): value is { [key: string]: unknown } {
   return value instanceof Object;
 }
 

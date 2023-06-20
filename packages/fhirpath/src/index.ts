@@ -1,6 +1,7 @@
 // import validator from "@genfhi/fhir-json-schema";
 import { parse } from "./parser";
-import { toFPNodes, FHIRPathNodeType, descend } from "./node";
+import { primitiveTypes, complexTypes } from "@genfhi/fhir-types/r4/sets";
+import { toFPNodes, FHIRPathNodeType, descend, isObject } from "./node";
 
 type Options = {
   variables?: Record<string, unknown> | ((v: string) => unknown);
@@ -28,6 +29,16 @@ function assert(assertion: boolean, message?: string) {
   if (!assertion) {
     throw new Error(message || "Assertion failed");
   }
+}
+
+// Problem is you can't distinguish an identifier vs typeidentifier so just check to confirm singular and only identifier present.
+function getTypeIdentifier(ast: any) {
+  if (ast.type !== "Expression") return;
+  if (ast.value?.type !== "Singular") return;
+  if (ast.value?.next !== undefined) return;
+  if (ast.value?.value?.type !== "Invocation") return;
+  if (ast.value?.value?.value?.type !== "Identifier") return;
+  return ast.value.value.value.value;
 }
 
 const fp_functions: Record<
@@ -160,7 +171,23 @@ const fp_functions: Record<
     return endResult;
   },
   ofType(ast, context, options) {
-    throw new Error("Not implemented");
+    const parameters = ast.next;
+    const typeIdentifier = getTypeIdentifier(parameters[0]);
+
+    if (
+      primitiveTypes.has(typeIdentifier) ||
+      complexTypes.has(typeIdentifier)
+    ) {
+      throw new Error(
+        "Of Type not implemented for complex or primtive types yet"
+      );
+    }
+    return context.filter((v) => {
+      if (isObject(v.value)) {
+        return v.value?.resourceType === typeIdentifier;
+      }
+      return false;
+    });
   },
 };
 
