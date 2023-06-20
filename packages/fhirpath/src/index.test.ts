@@ -285,3 +285,10 @@ test("repeat", () => {
     { id: "4" },
   ]);
 });
+
+test("indexed", () => {
+  expect(() => {
+    evaluate("$this.test['test']", { test: [1, 2, 3] });
+  }).toThrow();
+  expect(evaluate("$this.test[0]", { test: [1, 2, 3] })).toEqual([1]);
+});

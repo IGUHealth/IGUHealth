@@ -219,9 +219,10 @@ function evaluateProperty(
       let indexed = _evaluate(ast.value, context, options);
       if (indexed.length !== 1)
         throw new Error("Indexing requires a single value");
-      if (typeof indexed[0] !== "number")
+      console.log(indexed);
+      if (!typeChecking("number", indexed))
         throw new Error("Indexing requires a number");
-      return [context[indexed[0] as number]];
+      return [context[indexed[0].value]];
     default:
       throw new Error("Unknown term type: '" + ast.type + "'");
   }
