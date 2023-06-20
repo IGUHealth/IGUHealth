@@ -1,2 +1,2 @@
 [files]
-extend-exclude = ["*.json", "packages/fhir-types/r4/*.d.ts", "*lock*"]
+extend-exclude = ["*.json", "packages/fhir-types/*", "*lock*"]
