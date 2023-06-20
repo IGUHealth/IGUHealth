@@ -1,8 +1,6 @@
-import validator from "@genfhi/fhir-json-schema";
+// import validator from "@genfhi/fhir-json-schema";
 import { parse } from "./parser";
 import { toFPNodes, FHIRPathNodeType, descend } from "./node";
-
-console.log(validator);
 
 type Options = {
   variables?: Record<string, unknown> | ((v: string) => unknown);
@@ -162,8 +160,7 @@ const fp_functions: Record<
     return endResult;
   },
   ofType(ast, context, options) {
-    let subValidator = validator.getSchema(ast.value.value);
-    return context.filter((d) => subValidator(d.value));
+    throw new Error("Not implemented");
   },
 };
 

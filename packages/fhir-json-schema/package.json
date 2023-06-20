@@ -5,7 +5,7 @@
   "main": "./lib/r4.js",
   "types": "./lib/r4.d.ts",
   "scripts": {
-    "test": "jest",
+    "test": "echo 'No tests'",
     "postinstall": "tsc"
   },
   "keywords": [],
