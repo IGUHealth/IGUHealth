@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import "./button.css";
 
 interface Props {
   value: string;
