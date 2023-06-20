@@ -1,4 +1,4 @@
-import { Element } from "@genfhi/fhir-types/r4";
+import { Element } from "@genfhi/fhir-types/r4/types";
 
 type RawPrimitive = string | number | boolean | undefined;
 export type FHIRPathPrimitive<T extends RawPrimitive> = Element & {
@@ -8,26 +8,39 @@ export type FHIRPathPrimitive<T extends RawPrimitive> = Element & {
 
 export type FHIRPathNodeType<T> = InstanceType<typeof FHIRPathNode<T>>;
 
+function toFPPrimitive<T extends RawPrimitive>(
+  value: T,
+  element?: Element
+): FHIRPathPrimitive<T> {
+  return { ...element, value, _type_: "primitive" };
+}
+
+function isRawPrimitive(v: unknown): v is RawPrimitive {
+  return (
+    typeof v === "string" ||
+    typeof v === "number" ||
+    typeof v === "boolean" ||
+    v === undefined
+  );
+}
+
 class FHIRPathNode<T> {
   private readonly _internalValue: T | FHIRPathPrimitive<RawPrimitive>;
-  constructor(value: T) {
-    this._internalValue = value;
+  constructor(value: T, element?: Element) {
+    if (isRawPrimitive(value)) {
+      this._internalValue = toFPPrimitive(value, element);
+    } else {
+      this._internalValue = value;
+    }
   }
-  get value() {
-    if (isFPPrimitive(this.internalValue)) return this.internalValue.value;
+  get value(): T {
+    if (isFPPrimitive(this.internalValue)) return this.internalValue.value as T;
     return this.internalValue;
   }
 
   get internalValue() {
     return this._internalValue;
   }
-}
-
-function toFPPrimitive<T extends RawPrimitive>(
-  value: T,
-  element?: Element
-): FHIRPathPrimitive<T> {
-  return { ...element, value, _type_: "primitive" };
 }
 
 function isElement(
@@ -39,26 +52,19 @@ function isElement(
 export function toFPNodes<T>(
   value: T | T[],
   element?: Element | Element[]
-): FHIRPathNode<NonNullable<T> | FHIRPathPrimitive<RawPrimitive>>[] {
-  if (isRawPrimitive(value)) {
-    return [
-      new FHIRPathNode(
-        toFPPrimitive(value, !isArray(element) ? element : undefined)
-      ),
-    ];
-  } else if (value === undefined && isElement(element)) {
-    return [new FHIRPathNode(toFPPrimitive(undefined, element))];
-  } else if (isArray(value)) {
+): FHIRPathNode<T>[] {
+  if (isArray(value)) {
     return value
       .map((v, i: number) =>
         toFPNodes(v, element && isArray(element) ? element[i] : undefined)
       )
       .reduce((acc, v) => [...acc, ...v], []);
   }
-  return value ? [new FHIRPathNode(value)] : [];
+  if (value === undefined && element === undefined) return [];
+  return [new FHIRPathNode(value, element as Element | undefined)];
 }
 
-function isObject(value: unknown): value is { [key: string]: unknown } {
+export function isObject(value: unknown): value is { [key: string]: unknown } {
   return value instanceof Object;
 }
 
@@ -71,12 +77,6 @@ function toCollection<T>(v: T | T[]): T[] {
     return v;
   }
   return [v];
-}
-
-function isRawPrimitive(v: unknown): v is RawPrimitive {
-  return (
-    typeof v === "string" || typeof v === "number" || typeof v === "boolean"
-  );
 }
 
 function isFPPrimitive(v: unknown): v is FHIRPathPrimitive<RawPrimitive> {
@@ -94,9 +94,8 @@ function getField<T extends { [key: string]: unknown }>(
 export function descend<T>(
   node: FHIRPathNode<T>,
   field: string
-): FHIRPathNode<NonNullable<unknown>>[] {
+): FHIRPathNode<unknown>[] {
   const internalValue = node.internalValue;
-
   if (isObject(internalValue)) {
     const computedField = getField(internalValue, field);
     if (computedField) {

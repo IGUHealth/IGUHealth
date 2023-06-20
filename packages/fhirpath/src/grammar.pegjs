@@ -17,14 +17,15 @@
 
   function buildNode<T>(type: string, value: T, next){
         let node = {type: type};
-        if (value ) node.value = value
+        // Value could be false literal
+        if (value !== undefined && value !== null) node.value = value
         if (next) node.next = next;
         return node
   }
 }
 
 expression
-        = WS expression:equality_operation WS
+        = WS expression:implies_operation WS
         {return expression}
         // ('+' / '-') init                                         // polarity expression
         /// (IDENTIFIER)? '=>' expression                           //lambdaExpression
@@ -32,22 +33,40 @@ expression
 _singular_expression = term:term next:expression_inner?
 { return buildNode("Expression", buildNode("Singular", term, next)) }
 
-equality_operation = head:additive_operation WS tail:(('<=' / '<' / '>' / '>=' / '=' / '~' / '!=' / '!~') WS additive_operation) *
+// #01 . (path/function invocation)
+// #02 [] (indexer)
+// #03 unary + and -
+// #04: *, /, div, mod
+// #05: +, -, &
+// #06: is, as
+// #07: |
+// #08: >, <, >=, <=
+// #09: =, ~, !=, !~
+// #10: in, contains
+// #11: and
+// #12: xor, or
+// #13: implies
+
+implies_operation = head:or_operation WS tail:($('implies') WS or_operation WS) *
 { return buildBinaryExpression(head, tail)}
-additive_operation = head:multiplication_operation WS tail:(('+' / '-' / '&') WS multiplication_operation)*
+or_operation =     head:and_operation WS tail:($('or' / 'xor') WS and_operation WS) *
 { return buildBinaryExpression(head, tail)}
-multiplication_operation = head:union_operation WS tail:(('*' / '/' / 'div' / 'mod') WS union_operation)*
+and_operation =    head:mem_operation WS tail:($('and') WS mem_operation WS) *
 { return buildBinaryExpression(head, tail)}
-union_operation  = head:mem_operation WS tail:(("|") WS mem_operation) * 
+mem_operation =    head: equality_operation WS tail:($('in' / 'contains') WS equality_operation WS) *
 { return buildBinaryExpression(head, tail)}
-mem_operation =    head: and_operation WS tail:(('in' / 'contains') WS and_operation) *
+equality_operation = head:union_operation WS tail:($('<=' / '<' / '>' / '>=' / '=' / '~' / '!=' / '!~') WS union_operation WS) *
 { return buildBinaryExpression(head, tail)}
-and_operation =    head:or_operation WS tail:(('and') WS or_operation) *
+union_operation  = head:additive_operation WS tail:($("|") WS additive_operation WS) * 
 { return buildBinaryExpression(head, tail)}
-or_operation =     head:implies_operation WS tail:(('or' / 'xor') WS implies_operation) *
+// is_as_operation
+additive_operation = head:multiplication_operation WS tail:($('+' / '-' / '&') WS multiplication_operation WS)*
 { return buildBinaryExpression(head, tail)}
-implies_operation = head:_singular_expression WS tail:(('implies') WS _singular_expression) *
+multiplication_operation = head:_singular_expression WS tail:($('*' / '/' / 'div' / 'mod') WS _singular_expression WS)*
 { return buildBinaryExpression(head, tail)}
+
+
+
 // / expression ('is' / 'as') //typeSpecifier             //typeExpression
 
 expression_inner

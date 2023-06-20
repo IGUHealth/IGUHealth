@@ -1,4 +1,7 @@
-import { StructureDefinition, ElementDefinition } from "@genfhi/fhir-types/r4";
+import {
+  StructureDefinition,
+  ElementDefinition,
+} from "@genfhi/fhir-types/r4/types";
 type VisitorFunction<T> = (element: ElementDefinition, children: T[]) => T[];
 
 function eleIndexToChildIndices(
