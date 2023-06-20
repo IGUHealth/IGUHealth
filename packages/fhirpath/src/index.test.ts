@@ -292,3 +292,9 @@ test("indexed", () => {
   }).toThrow();
   expect(evaluate("$this.test[0]", { test: [1, 2, 3] })).toEqual([1]);
 });
+
+test("backtick", () => {
+  expect(evaluate("$this.`PID-1`", { "PID-1": "PID-1 value" })).toEqual([
+    "PID-1 value",
+  ]);
+});

@@ -158,9 +158,9 @@ const fp_functions: Record<
     }
     return endResult;
   },
-  ofType(ast, context, options) {
-    throw new Error("Not implemented");
-  },
+  // ofType(ast, context, options) {
+  //   const typeToCheck = ast.value.value;
+  // },
 };
 
 function evaluateInvocation(
@@ -219,7 +219,6 @@ function evaluateProperty(
       let indexed = _evaluate(ast.value, context, options);
       if (indexed.length !== 1)
         throw new Error("Indexing requires a single value");
-      console.log(indexed);
       if (!typeChecking("number", indexed))
         throw new Error("Indexing requires a number");
       return [context[indexed[0].value]];
