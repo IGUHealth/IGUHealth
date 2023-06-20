@@ -304,3 +304,16 @@ test("distinct", () => {
     evaluate("$this.isDistinct()", [{ v: 1 }, { v: 2 }], { variables: {} })
   ).toEqual([true]);
 });
+
+test("where", () => {
+  expect(
+    evaluate("$this.where($this=1)", [1, 2, 3], { variables: {} })
+  ).toEqual([1]);
+  expect(
+    evaluate(
+      "$this.where($this.name='Bob')",
+      [{ name: "John" }, { name: "Bob" }],
+      { variables: {} }
+    )
+  ).toEqual([{ name: "Bob" }]);
+});
