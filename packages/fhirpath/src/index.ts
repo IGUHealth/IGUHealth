@@ -37,7 +37,7 @@ const fp_functions: Record<
     options: Options
   ) => FHIRPathNodeType<unknown>[]
 > = {
-  // [EXISTANCE FUNCTIONS]
+  // [EXISTENCE FUNCTIONS]
   // Returns true if the input collection is empty ({ }) and false otherwise.
   exists: function (ast, context, options) {
     if (ast.next.length === 1) {
