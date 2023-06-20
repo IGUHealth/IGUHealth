@@ -1,10 +1,12 @@
 import { Command } from "commander";
-import { readFileSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync, mkdirSync } from "fs";
+import path from "path";
 import resourceSDs from "@genfhi/artifacts/r4/profiles-resources.json";
 import typeSDs from "@genfhi/artifacts/r4/profiles-types.json";
 
+import { generateSets } from "./isGeneration";
 import { generateTypes } from "./typeGeneration";
-import { StructureDefinition } from "@genfhi/fhir-types/r4";
+import { StructureDefinition } from "@genfhi/fhir-types/r4/types";
 
 interface StructureDefinitionBundle {
   resourceType: "Bundle";
@@ -35,8 +37,12 @@ program
     const structureDefinitions = bundles.flatMap((bundle) =>
       bundle.entry.map((entry) => entry.resource)
     );
-    const types = generateTypes(options.version, structureDefinitions);
-    writeFileSync(options.output, types);
+    mkdirSync(options.output, { recursive: true });
+    const generatedTypes = generateTypes(options.version, structureDefinitions);
+    const generatedSets = generateSets(options.version, structureDefinitions);
+
+    writeFileSync(path.join(options.output, "types.d.ts"), generatedTypes);
+    writeFileSync(path.join(options.output, "sets.ts"), generatedSets);
   });
 
 program.parse();

@@ -1,4 +1,7 @@
-import { ElementDefinition, StructureDefinition } from "@genfhi/fhir-types/r4";
+import {
+  ElementDefinition,
+  StructureDefinition,
+} from "@genfhi/fhir-types/r4/types";
 
 function generateTypeSet(
   name: string,
@@ -6,7 +9,7 @@ function generateTypeSet(
 ) {
   return `export const ${name}:  = new Set([${sds
     .map((sd) => `"${sd.id}"`)
-    .join(",")}])\nprimitiveTypes`;
+    .join(",")}])\n`;
 }
 
 export function generateSets(

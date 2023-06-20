@@ -1,4 +1,4 @@
-import { Element } from "@genfhi/fhir-types/r4";
+import { Element } from "@genfhi/fhir-types/r4/types";
 
 type RawPrimitive = string | number | boolean | undefined;
 export type FHIRPathPrimitive<T extends RawPrimitive> = Element & {

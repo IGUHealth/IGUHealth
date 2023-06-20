@@ -1,5 +1,8 @@
 import { traversalBottomUp } from "./sdTraversal";
-import { ElementDefinition, StructureDefinition } from "@genfhi/fhir-types/r4";
+import {
+  ElementDefinition,
+  StructureDefinition,
+} from "@genfhi/fhir-types/r4/types";
 
 function fhirSystemTypePredicate(type: string) {
   switch (type) {
