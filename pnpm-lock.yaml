@@ -61,10 +61,6 @@ importers:
   packages/fhir-types: {}
 
   packages/fhirpath:
-    dependencies:
-      '@genfhi/fhir-json-schema':
-        specifier: workspace:^
-        version: link:../fhir-json-schema
     devDependencies:
       '@genfhi/fhir-types':
         specifier: workspace:^

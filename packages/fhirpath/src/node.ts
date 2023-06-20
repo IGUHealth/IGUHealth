@@ -1,4 +1,4 @@
-import { Element } from "@genfhi/fhir-types/r4";
+import { Element } from "@genfhi/fhir-types/r4/types";
 
 type RawPrimitive = string | number | boolean | undefined;
 export type FHIRPathPrimitive<T extends RawPrimitive> = Element & {
@@ -64,7 +64,7 @@ export function toFPNodes<T>(
   return [new FHIRPathNode(value, element as Element | undefined)];
 }
 
-function isObject(value: unknown): value is { [key: string]: unknown } {
+export function isObject(value: unknown): value is { [key: string]: unknown } {
   return value instanceof Object;
 }
 
