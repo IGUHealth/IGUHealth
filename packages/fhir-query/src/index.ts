@@ -1,10 +1,13 @@
-type FHIRSearchQuery = {
-  level: "system" | "resource";
+import { version } from "os";
+
+export type FHIRURL = {
   resourceType?: string;
-  parameters: SearchParameter<unknown>[];
+  id?: string;
+  versionId?: string;
+  parameters: Record<string, ParsedParameter<unknown>>;
 };
 
-type SearchParameter<T> = {
+export type ParsedParameter<T> = {
   name: string;
   value: T | T[];
   modifier?: string;
@@ -13,23 +16,27 @@ type SearchParameter<T> = {
 /*
  ** Given a query string create complex FHIR Query object.
  */
-export function parseFHIRSearch(base: string, query: string): FHIRSearchQuery {
+export default function parseURL(base: string, query: string): FHIRURL {
   const url = new URL(query, base);
-  const [_, resourceType] = url.pathname.split("/");
-  const fhirSearchQuery: FHIRSearchQuery = {
-    level: resourceType ? "resource" : "system",
-    parameters: Array.from(url.searchParams.entries()).map(([key, value]) => {
-      let [name, modifier] = key.split(":");
-      let searchParam = {
-        name,
-        modifier,
-        value,
-      };
-      if (modifier) searchParam.modifier = modifier;
-      return searchParam;
-    }),
+  const [_, resourceType, id, versionId] = url.pathname.split("/");
+  const fhirURL: FHIRURL = {
+    parameters: Array.from(url.searchParams.entries()).reduce(
+      (parameters, [key, value]): Record<string, ParsedParameter<unknown>> => {
+        let [name, modifier] = key.split(":");
+        let searchParam = {
+          name,
+          modifier,
+          value,
+        };
+        if (modifier) searchParam.modifier = modifier;
+        return { ...parameters, searchParam };
+      },
+      {}
+    ),
   };
+  if (resourceType) fhirURL.resourceType = resourceType;
+  if (id) fhirURL.id = id;
+  if (versionId) fhirURL.versionId = versionId;
 
-  if (resourceType) fhirSearchQuery.resourceType = resourceType;
-  return fhirSearchQuery;
+  return fhirURL;
 }

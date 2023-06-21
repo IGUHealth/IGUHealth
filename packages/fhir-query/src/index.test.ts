@@ -1,4 +1,4 @@
-import { parseFHIRSearch } from "./index";
+import parseFHIRSearch from "./index";
 
 test("Test resource level", () => {
   expect(
@@ -9,7 +9,7 @@ test("Test resource level", () => {
   ).toEqual({
     resourceType: "Patient",
     level: "resource",
-    parameters: [{ name: "name", modifier: "text", value: "bob" }],
+    parameters: { name: { name: "name", modifier: "text", value: "bob" } },
   });
 });
 
@@ -21,9 +21,13 @@ test("Test System level", () => {
     )
   ).toEqual({
     level: "system",
-    parameters: [
-      { name: "name", modifier: "text", value: "bob" },
-      { name: "lastUpdated", modifier: "not-in", value: "1980-01-01" },
-    ],
+    parameters: {
+      name: { name: "name", modifier: "text", value: "bob" },
+      lastUpdated: {
+        name: "lastUpdated",
+        modifier: "not-in",
+        value: "1980-01-01",
+      },
+    },
   });
 });
