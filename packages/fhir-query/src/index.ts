@@ -1,5 +1,3 @@
-import { version } from "os";
-
 export type FHIRURL = {
   resourceType?: string;
   id?: string;
