@@ -2,7 +2,7 @@
   "name": "@genfhi/fhir-query",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.ts",
   "scripts": {
     "test": "jest"
   },
