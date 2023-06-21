@@ -1,6 +1,9 @@
 import MemoryDatabase from "./memory";
 import parseURL from "@genfhi/fhir-query";
-import { SearchParameter } from "@genfhi/fhir-types/r4/types";
+import {
+  SearchParameter,
+  StructureDefinition,
+} from "@genfhi/fhir-types/r4/types";
 
 function generateParameter(
   fieldOverrides: Partial<SearchParameter>
@@ -18,6 +21,22 @@ function generateParameter(
   };
 }
 
+function generateSD(
+  fieldOverrides: Partial<StructureDefinition>
+): StructureDefinition {
+  return {
+    resourceType: "StructureDefinition",
+    description: "test SD",
+    url: "https://my-sd",
+    abstract: false,
+    type: "CustomType",
+    kind: "resource",
+    status: "active",
+    name: "SD",
+    ...fieldOverrides,
+  };
+}
+
 test("Creation and search", () => {
   const memDb = new MemoryDatabase();
   memDb.create(
@@ -31,14 +50,47 @@ test("Creation and search", () => {
     })
   );
 
+  memDb.create(generateSD({ name: "test1" }));
+
   expect(
-    memDb.search(parseURL("https://test.com", "https://test.com?name=test"))
+    memDb.search(
+      parseURL("https://test.com", "https://test.com/SearchParameter?name=test")
+    )
   ).toEqual([]);
+
+  expect(
+    memDb.search(
+      parseURL(
+        "https://test.com",
+        "https://test.com/SearchParameter?name=test1"
+      )
+    )
+  ).toEqual([
+    generateParameter({
+      name: "test1",
+    }),
+  ]);
+
+  expect(
+    memDb.search(
+      parseURL("https://test.com", "https://test.com/SearchParameter")
+    )
+  ).toEqual([
+    generateParameter({
+      name: "test1",
+    }),
+    generateParameter({
+      name: "test2",
+    }),
+  ]);
 
   expect(
     memDb.search(parseURL("https://test.com", "https://test.com?name=test1"))
   ).toEqual([
     generateParameter({
+      name: "test1",
+    }),
+    generateSD({
       name: "test1",
     }),
   ]);

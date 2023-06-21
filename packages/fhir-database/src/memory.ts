@@ -19,7 +19,7 @@ function fitsSearchCriteria(
           criteria.value
       );
     default:
-      throw new Error("Not supported");
+      throw new Error(`Not supported ${criteria.name}`);
   }
 }
 
