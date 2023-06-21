@@ -32,14 +32,34 @@ test("Creation and search", () => {
   );
 
   expect(
-    memDb.search(parseURL("https://test.com", "https://test.com?name=test"))
+    memDb.search(
+      parseURL("https://test.com", "https://test.com/SearchParameter?name=test")
+    )
   ).toEqual([]);
 
   expect(
-    memDb.search(parseURL("https://test.com", "https://test.com?name=test1"))
+    memDb.search(
+      parseURL(
+        "https://test.com",
+        "https://test.com/SearchParameter?name=test1"
+      )
+    )
   ).toEqual([
     generateParameter({
       name: "test1",
+    }),
+  ]);
+
+  expect(
+    memDb.search(
+      parseURL("https://test.com", "https://test.com/SearchParameter")
+    )
+  ).toEqual([
+    generateParameter({
+      name: "test1",
+    }),
+    generateParameter({
+      name: "test2",
     }),
   ]);
 });
