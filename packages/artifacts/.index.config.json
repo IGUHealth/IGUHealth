@@ -1,0 +1,17 @@
+{
+    "index-version": 1,
+    "files": [
+        {
+            "filename": "./r4/profiles-resources.json",
+            "resourceType": "StructureDefinition"
+        },
+        {
+            "filename": "./r4/profiles-types.json",
+            "resourceType": "StructureDefinition"
+        },
+        {
+            "filename": "./r4/search-parameters.json",
+            "resourceType": "SearchParameter"
+        }
+    ]
+}
