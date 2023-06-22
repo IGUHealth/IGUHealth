@@ -1,4 +1,4 @@
-# genfhi-ts
+# GenFHI TS
 FHIR development environment.
 
 # Code Organization
