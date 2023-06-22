@@ -1,8 +1,6 @@
 import { Command } from "commander";
-import { readFileSync, writeFileSync, mkdirSync } from "fs";
+import { writeFileSync, mkdirSync } from "fs";
 import path from "path";
-
-import { StructureDefinition } from "@genfhi/fhir-types/r4/types";
 import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
 
 import { generateSets } from "./isGeneration";
