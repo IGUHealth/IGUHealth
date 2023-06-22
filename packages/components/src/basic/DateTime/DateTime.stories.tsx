@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Datetime } from './Time';
+import { Datetime } from './DateTime';
 
 const meta = {
   title: 'Time',

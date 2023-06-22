@@ -3,10 +3,11 @@ import styled from "styled-components";
 import { SingleDatePicker } from "react-dates";
 import moment from "moment";
 import type { Moment } from "moment";
+import type { dateTime } from '@genfhi/fhir-types/r4/types'
 
 interface Props {
-  value: string
-  onChange: (newValue: string) => void
+  value: dateTime
+  onChange: (newValue: dateTime) => void
 }
 
 const Main = styled.div`
