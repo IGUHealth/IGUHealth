@@ -1,11 +1,12 @@
 import { Command } from "commander";
 import { readFileSync, writeFileSync, mkdirSync } from "fs";
 import path from "path";
+
+import { StructureDefinition } from "@genfhi/fhir-types/r4/types";
 import loadArtifcats from "@genfhi/artifacts/loadArtifacts";
 
 import { generateSets } from "./isGeneration";
 import { generateTypes } from "./typeGeneration";
-import { StructureDefinition } from "@genfhi/fhir-types/r4/types";
 
 const program = new Command();
 program
