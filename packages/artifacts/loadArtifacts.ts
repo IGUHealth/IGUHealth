@@ -1,7 +1,12 @@
 import { readFileSync } from "fs";
 import { createRequire } from "node:module";
 import process from "process";
-import { Resource, Bundle, ResourceType } from "@genfhi/fhir-types/r4/types";
+import {
+  Resource,
+  Bundle,
+  ResourceType,
+  AResource,
+} from "@genfhi/fhir-types/r4/types";
 
 interface PackageJSON {
   dependencies?: Record<string, string>;
@@ -42,7 +47,9 @@ function flattenOrInclude(r: Resource): Resource[] {
 /*
  ** Interface used to search dependencies for .index.config.json files and load their contents.
  */
-export default function loadArtifacts(resourceTypes?: string[]): Resource[] {
+export default function loadArtifacts<T extends ResourceType>(
+  resourceType?: T
+): AResource<T>[] {
   const requirer = createRequire(process.cwd() + "/");
   const packageJson: PackageJSON = requirer("./package.json");
   return Object.keys(packageJson.dependencies || {})
@@ -61,11 +68,11 @@ export default function loadArtifacts(resourceTypes?: string[]): Resource[] {
           `${d}/.index.config.json`
         );
         if (indexFile?.files) {
-          const fileInfos = resourceTypes
+          const fileInfos = resourceType
             ? indexFile.files.filter(
                 (metaInfo) =>
                   metaInfo.resourceType &&
-                  resourceTypes.indexOf(metaInfo.resourceType) !== -1
+                  resourceType === metaInfo.resourceType
               )
             : indexFile.files;
           return fileInfos

@@ -23,10 +23,7 @@ program
     if (options.version !== "r4") {
       throw new Error("Currently only support r4");
     }
-    const structureDefinitions = loadArtifacts([
-      "StructureDefinition",
-    ]) as StructureDefinition[];
-
+    const structureDefinitions = loadArtifacts("StructureDefinition");
     mkdirSync(options.output, { recursive: true });
     const generatedTypes = generateTypes(options.version, structureDefinitions);
     const generatedSets = generateSets(options.version, structureDefinitions);
