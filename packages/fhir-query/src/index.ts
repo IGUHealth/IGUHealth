@@ -14,8 +14,8 @@ export type ParsedParameter<T> = {
 /*
  ** Given a query string create complex FHIR Query object.
  */
-export default function parseURL(base: string, query: string): FHIRURL {
-  const url = new URL(query, base);
+export default function parseURL(url: URL): FHIRURL {
+  console.log(url.pathname, Array.from(url.searchParams.entries()));
   const [_, resourceType, id, versionId] = url.pathname.split("/");
   const fhirURL: FHIRURL = {
     parameters: Array.from(url.searchParams.entries()).reduce(
