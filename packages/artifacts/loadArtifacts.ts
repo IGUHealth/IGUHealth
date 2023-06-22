@@ -44,22 +44,27 @@ export default function loadArtifacts(resourceTypes?: string[]): Resource[] {
   const packageJson: PackageJSON = require("package.json");
   return Object.values(packageJson.dependencies || {})
     .map((d) => {
-      const indexFile:
-        | IndexFile
-        | undefined = require(`${d}/.index.config.json`);
-      if (indexFile?.files) {
-        const fileInfos = resourceTypes
-          ? indexFile.files.filter(
-              (metaInfo) =>
-                metaInfo.resourceType &&
-                resourceTypes.indexOf(metaInfo.resourceType) !== -1
-            )
-          : indexFile.files;
-        return fileInfos
-          .map((r) => flattenOrInclude(require(`${d}./${r.filename}`)))
-          .flat();
+      try {
+        console.log(d);
+        const indexFile:
+          | IndexFile
+          | undefined = require(`${d}/.index.config.json`);
+        if (indexFile?.files) {
+          const fileInfos = resourceTypes
+            ? indexFile.files.filter(
+                (metaInfo) =>
+                  metaInfo.resourceType &&
+                  resourceTypes.indexOf(metaInfo.resourceType) !== -1
+              )
+            : indexFile.files;
+          return fileInfos
+            .map((r) => flattenOrInclude(require(`${d}./${r.filename}`)))
+            .flat();
+        }
+        return [];
+      } catch (e) {
+        return [];
       }
-      return [];
     })
     .flat();
 }
