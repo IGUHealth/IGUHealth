@@ -3,8 +3,10 @@ import parseFHIRSearch from "./index";
 test("Test resource level", () => {
   expect(
     parseFHIRSearch(
-      "https://fhir-api.com/",
-      "https://fhir-api.com/Patient?name:text=bob"
+      new URL(
+        "https://fhir-api.com/Patient?name:text=bob",
+        "https://fhir-api.com/"
+      )
     )
   ).toEqual({
     resourceType: "Patient",
@@ -15,8 +17,10 @@ test("Test resource level", () => {
 test("Test System level", () => {
   expect(
     parseFHIRSearch(
-      "https://fhir-api.com/",
-      "https://fhir-api.com/?name:text=bob&lastUpdated:not-in=1980-01-01"
+      new URL(
+        "https://fhir-api.com/?name:text=bob&lastUpdated:not-in=1980-01-01",
+        "https://fhir-api.com/"
+      )
     )
   ).toEqual({
     parameters: {
