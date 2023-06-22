@@ -20,7 +20,7 @@ jobs:
         with:
           version: 8.6.2
       - name: Install dependencies
-        run: pnpm installc
+        run: pnpm install
       - name: Run tests and collect coverage
         run: pnpm test
       - name: Upload coverage to Codecov
