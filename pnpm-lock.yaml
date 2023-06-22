@@ -159,6 +159,9 @@ importers:
 
   packages/fhir-server:
     dependencies:
+      '@genfhi/fhir-database':
+        specifier: workspace:^
+        version: link:../fhir-database
       '@genfhi/fhir-query':
         specifier: workspace:^
         version: link:../fhir-query

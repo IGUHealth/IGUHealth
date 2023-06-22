@@ -8,6 +8,7 @@
     "watch": "nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.spec.ts\" --exec \"ts-node src/index.ts\""
   },
   "dependencies": {
+    "@genfhi/fhir-database": "workspace:^",
     "@genfhi/fhir-query": "workspace:^",
     "koa": "^2.14.2"
   },
