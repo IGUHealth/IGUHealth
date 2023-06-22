@@ -46,9 +46,13 @@ export default function loadArtifacts(resourceTypes?: string[]): Resource[] {
   const requirer = createRequire(process.cwd() + "/");
   const packageJson: PackageJSON = requirer("./package.json");
   return Object.keys(packageJson.dependencies || {})
+    .filter((d) => {
+      const depPackage = requirer(`${d}/package.jsonm`);
+      return !!depPackage.fhirVersion;
+    })
     .map((d) => {
       try {
-        console.log(`'${d}' Checking package for .index.config.json`);
+        console.log(` '${d}' Checking package for .index.config.json`);
         const indexFile: IndexFile | undefined = requirer(
           `${d}/.index.config.json`
         );
