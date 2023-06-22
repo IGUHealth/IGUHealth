@@ -78,7 +78,7 @@ test("Creation and search", () => {
     }),
   ]);
 
-  expect(memDb.search(parseURL(generateURL("name=test1")))).toEqual([
+  expect(memDb.search(parseURL(generateURL("?name=test1")))).toEqual([
     generateParameter({
       name: "test1",
     }),
