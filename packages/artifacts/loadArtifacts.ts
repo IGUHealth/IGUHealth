@@ -47,8 +47,12 @@ export default function loadArtifacts(resourceTypes?: string[]): Resource[] {
   const packageJson: PackageJSON = requirer("./package.json");
   return Object.keys(packageJson.dependencies || {})
     .filter((d) => {
-      const depPackage = requirer(`${d}/package.jsonm`);
-      return !!depPackage.fhirVersion;
+      try {
+        const depPackage = requirer(`${d}/package.json`);
+        return !!depPackage.fhirVersion;
+      } catch (e) {
+        return false;
+      }
     })
     .map((d) => {
       try {
