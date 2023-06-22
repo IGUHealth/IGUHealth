@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync, mkdirSync } from "fs";
 import path from "path";
 
 import { StructureDefinition } from "@genfhi/fhir-types/r4/types";
-import loadArtifcats from "@genfhi/artifacts/loadArtifacts";
+import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
 
 import { generateSets } from "./isGeneration";
 import { generateTypes } from "./typeGeneration";
@@ -23,7 +23,7 @@ program
     if (options.version !== "r4") {
       throw new Error("Currently only support r4");
     }
-    const structureDefinitions = loadArtifcats([
+    const structureDefinitions = loadArtifacts([
       "StructureDefinition",
     ]) as StructureDefinition[];
 
