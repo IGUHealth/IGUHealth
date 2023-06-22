@@ -1,5 +1,3 @@
-import { version } from "os";
-
 export type FHIRURL = {
   resourceType?: string;
   id?: string;
@@ -29,7 +27,7 @@ export default function parseURL(base: string, query: string): FHIRURL {
           value,
         };
         if (modifier) searchParam.modifier = modifier;
-        return { ...parameters, searchParam };
+        return { ...parameters, [searchParam.name]: searchParam };
       },
       {}
     ),

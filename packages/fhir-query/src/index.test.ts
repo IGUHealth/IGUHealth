@@ -8,7 +8,6 @@ test("Test resource level", () => {
     )
   ).toEqual({
     resourceType: "Patient",
-    level: "resource",
     parameters: { name: { name: "name", modifier: "text", value: "bob" } },
   });
 });
@@ -20,7 +19,6 @@ test("Test System level", () => {
       "https://fhir-api.com/?name:text=bob&lastUpdated:not-in=1980-01-01"
     )
   ).toEqual({
-    level: "system",
     parameters: {
       name: { name: "name", modifier: "text", value: "bob" },
       lastUpdated: {
