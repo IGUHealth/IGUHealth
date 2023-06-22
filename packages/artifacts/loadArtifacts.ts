@@ -34,13 +34,20 @@ function isBundle(r: Resource): r is Bundle {
   return r?.resourceType === "Bundle";
 }
 
-function isResource(r: Resource | undefined): r is Resource {
-  return r !== undefined;
+function isType<T extends ResourceType>(
+  type: T,
+  r: Resource | undefined
+): r is AResource<T> {
+  return r !== undefined && r.resourceType === type;
 }
 
-function flattenOrInclude(r: Resource): Resource[] {
+function flattenOrInclude<T extends ResourceType>(
+  type: T,
+  r: AResource<T> | Bundle
+): AResource<T>[] {
   if (isBundle(r)) {
-    return (r.entry || [])?.map((entry) => entry.resource).filter(isResource);
+    let resources = (r.entry || [])?.map((entry) => entry.resource);
+    return resources.filter((r) => isType(type, r)) as AResource<T>[];
   }
   return [r];
 }
@@ -48,7 +55,7 @@ function flattenOrInclude(r: Resource): Resource[] {
  ** Interface used to search dependencies for .index.config.json files and load their contents.
  */
 export default function loadArtifacts<T extends ResourceType>(
-  resourceType?: T
+  resourceType: T
 ): AResource<T>[] {
   const requirer = createRequire(process.cwd() + "/");
   const packageJson: PackageJSON = requirer("./package.json");
@@ -76,7 +83,9 @@ export default function loadArtifacts<T extends ResourceType>(
               )
             : indexFile.files;
           return fileInfos
-            .map((r) => flattenOrInclude(requirer(`${d}/${r.filename}`)))
+            .map((r) =>
+              flattenOrInclude(resourceType, requirer(`${d}/${r.filename}`))
+            )
             .flat();
         }
         return [];

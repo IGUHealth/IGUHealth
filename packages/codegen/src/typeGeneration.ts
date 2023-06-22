@@ -240,7 +240,7 @@ function abstractResourceTypes(resourcesSds: StructureDefinition[]) {
   const AResource = `export type AResource<T extends keyof ResourceMap> = ResourceMap[T];`;
   const ConcreteType = `export type ConcreteType = ResourceMap[keyof ResourceMap]`;
   if (abstractResourceTypes.length > 0) {
-    return `${ResourceMap}\n${ResourceType}\n${AResource}\n${abstractResourceTypes
+    return `${ResourceMap}\n${ResourceType}\n${AResource}\n${ConcreteType}\n${abstractResourceTypes
       .map(
         (abstractResource) =>
           `export type ${abstractResource.id} = ConcreteType`

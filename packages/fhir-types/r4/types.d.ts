@@ -3108,6 +3108,7 @@ export type ResourceMap = {
 
 export type ResourceType = keyof ResourceMap
 export type AResource<T extends keyof ResourceMap> = ResourceMap[T];
+export type ConcreteType = ResourceMap[keyof ResourceMap]
 export type Resource = ConcreteType
 export type DomainResource = ConcreteType
 
