@@ -43,16 +43,16 @@ function isType<T extends ResourceType>(
 
 function flattenOrInclude<T extends ResourceType>(
   type: T,
-  r: Resource
+  resource: Resource
 ): AResource<T>[] {
-  if (isBundle(r)) {
-    let resources = (r.entry || [])?.map((entry) => entry.resource);
+  if (isBundle(resource)) {
+    let resources = (resource.entry || [])?.map((entry) => entry.resource);
     return resources.filter((r: Resource | undefined): r is AResource<T> =>
       isType(type, r)
     );
   }
-  if (isType(type, r)) {
-    return [r];
+  if (isType(type, resource)) {
+    return [resource];
   }
   return [];
 }
