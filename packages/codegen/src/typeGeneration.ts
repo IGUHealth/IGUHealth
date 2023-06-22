@@ -230,19 +230,20 @@ function getNonAbstractResourceTypes(sds: StructureDefinition[]) {
 function abstractResourceTypes(resourcesSds: StructureDefinition[]) {
   const abstractResourceTypes = resourcesSds.filter((sd) => sd.abstract);
   const nonAbstractResourceTypes = resourcesSds.filter((sd) => !sd.abstract);
-  const AResource = `export type ResourceMap = {\n${nonAbstractResourceTypes
+  const ResourceMap = `export type ResourceMap = {\n${nonAbstractResourceTypes
     .map((resource) => {
-      return `"${resource.id}": ${resource.id},`;
+      return `  ${resource.id}: ${resource.id};`;
     })
-    .join("\n")}`;
+    .join("\n")}\n}\n`;
 
   const ResourceType = `export type ResourceType = keyof ResourceMap`;
-  const Resource = `export type AResource<T extends keyof ResourceMap> = ResourceMap[T];`;
-
+  const AResource = `export type AResource<T extends keyof ResourceMap> = ResourceMap[T];`;
+  const ConcreteType = `export type ConcreteType = ResourceMap[keyof ResourceMap]`;
   if (abstractResourceTypes.length > 0) {
-    return `${AResource}\n${ResourceType}\n${Resource}\n${abstractResourceTypes
+    return `${ResourceMap}\n${ResourceType}\n${AResource}\n${abstractResourceTypes
       .map(
-        (abstractResource) => `export type ${abstractResource.id} = AResource`
+        (abstractResource) =>
+          `export type ${abstractResource.id} = ConcreteType`
       )
       .join("\n")}`;
   }

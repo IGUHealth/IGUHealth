@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
 import { createRequire } from "node:module";
 import process from "process";
-import { Resource, Bundle } from "@genfhi/fhir-types/r4/types";
+import { Resource, Bundle, ResourceType } from "@genfhi/fhir-types/r4/types";
 
 interface PackageJSON {
   dependencies?: Record<string, string>;
