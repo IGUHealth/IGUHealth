@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import 'react-dates/initialize';
 import { SingleDatePicker } from "react-dates";
 import moment from "moment";
 import type { Moment } from "moment";
@@ -27,11 +28,11 @@ export const Datetime = ({ value = "",  onChange, ...props }: Props) => {
     return <div>(Invalid: {value})</div>;
   }
 
-  const m = moment(value);
+  // const m = moment(value, 'YYYY-MM-DDThh:mm:ss+zz:zz');
 
   return (
     <Main>
-      <SingleDatePicker
+      {/* <SingleDatePicker
         date={m}
         onDateChange={(date: Moment | null) => date ? onChange(date.format('YYYY-MM-DDThh:mm:ss+zz:zz')) : null}
         focused={focused}
@@ -39,7 +40,7 @@ export const Datetime = ({ value = "",  onChange, ...props }: Props) => {
           setFocused(focused)
         }
         id="Foo"
-      />
+      /> */}
     </Main>
   );
 };

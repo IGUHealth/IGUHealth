@@ -15,6 +15,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    value: '03:54:45.323'
+    value: '2022-06-23T03:22:12+02:00'
+  },
+};
+
+export const Secondary: Story = {
+  args: {
+    // invalid
+    value: '2022-06-23zT03:22:12+02:00'
   },
 };
