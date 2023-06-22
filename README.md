@@ -1,5 +1,7 @@
 # GenFHI TS
+
 FHIR development environment.
 
-# Code Organization
-Code is organized as seperate packages in /packages.
+## Code Organizationg
+
+Code is organized as separate packages in /packages.
