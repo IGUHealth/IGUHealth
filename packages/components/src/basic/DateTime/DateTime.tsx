@@ -58,12 +58,7 @@ export const Datetime = ({ value = "",  onChange, ...props }: Props) => {
               onChange(null)
               return
             }
-            let tzOffset = value.format('Z')
-            if (!tzOffset.startsWith('+') && !tzOffset.startsWith('-')) {
-              tzOffset = `+${tzOffset}`
-            }
-            const newVal = value.format('YYYY-MM-DD[T]hh:mm:ss') + tzOffset
-            console.log(newVal)
+            const newVal = value.format('YYYY-MM-DD[T]hh:mm:ssZ')
             onChange(newVal)
           }}
         />
