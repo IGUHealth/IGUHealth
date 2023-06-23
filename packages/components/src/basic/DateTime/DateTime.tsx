@@ -13,35 +13,32 @@ const validRegex =
 const Invalid = () => <div>(invalid)</div>;
 
 export const Datetime: FC<Props> = ({ value = "", onChange }) => {
-  if (!validRegex.test(value)) {
-    // TODO
-    return <Invalid />;
-  }
-
-  const formats = [
-    "YYYY-MM-DDThh:mm:ss+zz:zz",
-    "YYYY-MM-DD",
-    "YYYY-MM",
-    "YYYY",
-  ];
-
   let parsed: dayjs.Dayjs | undefined;
-  for (const format of formats) {
-    const contender = dayjs(value, format);
-    if (contender.isValid()) {
-      parsed = contender;
-      break;
+  if (validRegex.test(value)) {
+    const formats = [
+      "YYYY-MM-DDThh:mm:ss+zz:zz",
+      "YYYY-MM-DD",
+      "YYYY-MM",
+      "YYYY",
+    ];
+
+    for (const format of formats) {
+      const contender = dayjs(value, format);
+      if (contender.isValid()) {
+        parsed = contender;
+        break;
+      }
     }
   }
-  if (!parsed) {
-    return <Invalid />;
-  }
+
+  const invalid = !parsed
 
   return (
     <ConfigProvider locale={locale}>
       <DatePicker
         defaultValue={parsed}
         showTime
+        status={invalid ? 'error' : ''}
         onChange={(value) => {
           if (!value) {
             onChange(null);
