@@ -36,3 +36,9 @@ export type FHIRRequest = (
   | InstanceLevelInteraction
   | TypeLevelInteractions
 ) & { body?: Resource; url: FHIRURL };
+
+export type FHIRResponse = (
+  | SystemInteraction
+  | InstanceLevelInteraction
+  | TypeLevelInteractions
+) & { body?: Resource };

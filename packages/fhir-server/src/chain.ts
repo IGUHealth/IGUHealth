@@ -1,20 +1,28 @@
-type ReturnTypeToArgument<InitialArgs, ReturnTypes extends any[]> = Extract<
-  [[args: InitialArgs], ...{ [I in keyof ReturnTypes]: [arg: ReturnTypes[I]] }],
-  Record<keyof ReturnTypes, any>
->;
-type DeriveFunctionSignatures<InitialArgs, T extends any[]> = {
-  [I in keyof T]: (
-    ...args: Extract<ReturnTypeToArgument<InitialArgs, T>[I], any[]>
-  ) => T[I];
-};
-type LastReturnType<T extends any[]> = T extends [...infer _, infer L]
-  ? L
-  : never;
+// Derived from Medium POST https://dev.to/ecyrbe/how-to-use-advanced-typescript-to-define-a-pipe-function-381h
 
-export default function CreateChain<InitialArgs extends any, T extends any[]>(
-  fns: [...DeriveFunctionSignatures<InitialArgs, T>]
-): (args: InitialArgs) => LastReturnType<T>;
-export default function CreateChain(funcs: ((...args: any) => any)[]) {
-  const [f0, ...fs] = funcs;
-  return (args: any[]) => fs.reduce((a, f) => f(a), f0(args));
+type AnyFunc = (...arg: any) => any;
+
+type LastFnReturnType<F extends Array<AnyFunc>, Else = never> = F extends [
+  ...any[],
+  (...arg: any) => infer R
+]
+  ? R
+  : Else;
+
+type PipeArgs<F extends AnyFunc[], Acc extends AnyFunc[] = []> = F extends [
+  (...args: infer A) => infer B
+]
+  ? [...Acc, (...args: A) => B]
+  : F extends [(...args: infer A) => any, ...infer Tail]
+  ? Tail extends [(arg: infer B) => any, ...any[]]
+    ? PipeArgs<Tail, [...Acc, (...args: A) => B]>
+    : Acc
+  : Acc;
+
+export default function chain<FirstFn extends AnyFunc, F extends AnyFunc[]>(
+  arg: Parameters<FirstFn>[0],
+  firstFn: FirstFn,
+  ...fns: PipeArgs<F> extends F ? F : PipeArgs<F>
+): LastFnReturnType<F, ReturnType<FirstFn>> {
+  return (fns as AnyFunc[]).reduce((acc, fn) => fn(acc), firstFn(arg));
 }

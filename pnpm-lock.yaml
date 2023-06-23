@@ -159,21 +159,24 @@ importers:
 
   packages/fhir-server:
     dependencies:
+      '@genfhi/artifacts':
+        specifier: workspace:^
+        version: link:../artifacts
       '@genfhi/fhir-database':
         specifier: workspace:^
         version: link:../fhir-database
       '@genfhi/fhir-query':
         specifier: workspace:^
         version: link:../fhir-query
+      '@koa/router':
+        specifier: ^12.0.0
+        version: 12.0.0
       koa:
         specifier: ^2.14.2
         version: 2.14.2
       koa-bodyparser:
         specifier: ^4.4.1
         version: 4.4.1
-      koa-router:
-        specifier: ^12.0.0
-        version: 12.0.0
     devDependencies:
       '@genfhi/fhir-types':
         specifier: workspace:^
@@ -187,6 +190,9 @@ importers:
       '@types/koa-bodyparser':
         specifier: ^4.3.10
         version: 4.3.10
+      '@types/koa__router':
+        specifier: ^12.0.0
+        version: 12.0.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@20.3.1)(ts-node@10.9.1)
@@ -3116,6 +3122,16 @@ packages:
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
     dev: true
 
+  /@koa/router@12.0.0:
+    resolution: {integrity: sha512-cnnxeKHXlt7XARJptflGURdJaO+ITpNkOHmQu7NHmCoRinPbyvFzce/EG/E8Zy81yQ1W9MoSdtklc3nyaDReUw==}
+    engines: {node: '>= 12'}
+    dependencies:
+      http-errors: 2.0.0
+      koa-compose: 4.1.0
+      methods: 1.1.2
+      path-to-regexp: 6.2.1
+    dev: false
+
   /@mdx-js/react@2.3.0(react@18.2.0):
     resolution: {integrity: sha512-zQH//gdOmuu7nt2oJR29vFhDv88oGPmVw6BggmrHeMI+xgEkp1B2dX9/bMBSYtK0dyLX/aOmesKS09g222K1/g==}
     peerDependencies:
@@ -4413,6 +4429,12 @@ packages:
       '@types/keygrip': 1.0.2
       '@types/koa-compose': 3.2.5
       '@types/node': 20.3.1
+    dev: true
+
+  /@types/koa__router@12.0.0:
+    resolution: {integrity: sha512-S6eHyZyoWCZLNHyy8j0sMW85cPrpByCbGGU2/BO4IzGiI87aHJ92lZh4E9xfsM9DcbCT469/OIqyC0sSJXSIBQ==}
+    dependencies:
+      '@types/koa': 2.13.6
     dev: true
 
   /@types/lodash@4.14.195:
@@ -7332,16 +7354,6 @@ packages:
     dependencies:
       co: 4.6.0
       koa-compose: 4.1.0
-    dev: false
-
-  /koa-router@12.0.0:
-    resolution: {integrity: sha512-zGrdiXygGYW8WvrzeGsHZvKnHs4DzyGoqJ9a8iHlRkiwuEAOAPyI27//OlhoWdgFAEIM3qbUgr0KCuRaP/TCag==}
-    engines: {node: '>= 12'}
-    dependencies:
-      http-errors: 2.0.0
-      koa-compose: 4.1.0
-      methods: 1.1.2
-      path-to-regexp: 6.2.1
     dev: false
 
   /koa@2.14.2:
