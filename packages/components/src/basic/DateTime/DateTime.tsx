@@ -8,7 +8,7 @@ import type { dateTime } from '@genfhi/fhir-types/r4/types'
 
 interface Props {
   value: dateTime
-  onChange: (newValue: dateTime) => void
+  onChange: (newValue: dateTime | null) => void
 }
 
 const Main = styled.div`
@@ -23,8 +23,6 @@ const validRegex =
 
 
 export const Datetime = ({ value = "",  onChange, ...props }: Props) => {
-  const [focused, setFocused] = useState(false);
-
   if (!validRegex.test(value)) {
     // TODO
     return <Invalid />
@@ -49,25 +47,22 @@ export const Datetime = ({ value = "",  onChange, ...props }: Props) => {
     return <Invalid />
   }
 
-  // const m = moment(value, 'YYYY-MM-DDThh:mm:ss+zz:zz');
-
   return (
     <Main>
       <ConfigProvider locale={locale}>
         <DatePicker
           defaultValue={parsed}
           showTime
+          onChange={(value) => {
+            if (!value) {
+              onChange(null)
+              return
+            }
+            const newVal = value.format('YYYY-MM-DDThh:mm:ss+zz:zz')
+            onChange(newVal)
+          }}
         />
       </ConfigProvider>
-      {/* <SingleDatePicker
-        date={m}
-        onDateChange={(date: Moment | null) => date ? onChange(date.format('YYYY-MM-DDThh:mm:ss+zz:zz')) : null}
-        focused={focused}
-        onFocusChange={({ focused }: { focused: boolean }) =>
-          setFocused(focused)
-        }
-        id="Foo"
-      /> */}
     </Main>
   );
 };
