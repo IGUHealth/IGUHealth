@@ -1,35 +1,18 @@
 import Koa from "koa";
+import bodyParser from "koa-bodyparser";
 
+import {
+  FHIRRequest,
+  InteractionLevel,
+  InstanceLevelInteraction,
+} from "./types";
 import parseQuery, { FHIRURL } from "@genfhi/fhir-query";
-import { ResourceType, id } from "@genfhi/fhir-types/r4/types";
 
 const app = new Koa();
 
-type InteractionLevel = {
-  instance: "instance";
-  system: "system";
-  type: "type";
-};
-
-type InstanceLevelInteraction = {
-  level: InteractionLevel["instance"];
-  type: "read" | "vread" | "update" | "patch" | "delete" | "history";
-  resourceType: ResourceType;
-  id: id;
-};
-
-type TypeLevelInteractions = {
-  level: InteractionLevel["type"];
-  type: "create" | "search" | "delete" | "history";
-  resourceType: ResourceType;
-};
-
-type SystemInteraction = {
-  level: InteractionLevel["system"];
-  type: "capabilities" | "batch/transaction" | "delete" | "history" | "search";
-};
-
-function getLevel(fhirURL: FHIRURL): InteractionLevel[keyof InteractionLevel] {
+function getInteractionLevel(
+  fhirURL: FHIRURL
+): InteractionLevel[keyof InteractionLevel] {
   if (fhirURL.resourceType && fhirURL.id) {
     return "instance";
   } else if (fhirURL.resourceType) {
@@ -38,10 +21,52 @@ function getLevel(fhirURL: FHIRURL): InteractionLevel[keyof InteractionLevel] {
   return "system";
 }
 
-function KoaRequestToFHIRRequest(request: Koa.Request) {
+function parseInstantRequest(
+  request: Koa.Request,
+  fhirURL: FHIRURL,
+  fhirRequest: Pick<InstanceLevelInteraction, "level" | "resourceType" | "id">
+): FHIRRequest {
+  switch (request.method) {
+    case "GET":
+      return {
+        url: fhirURL,
+        type: "read",
+        ...fhirRequest,
+      };
+    default:
+      throw new Error(`Instance interaction '${request.method}' not supported`);
+  }
+}
+
+function KoaRequestToFHIRRequest(request: Koa.Request): FHIRRequest {
   const method = request.method;
   const fhirQuery = parseQuery(request.URL);
+  const level = getInteractionLevel(fhirQuery);
+
+  switch (level) {
+    case "instance":
+      if (!fhirQuery.resourceType)
+        throw new Error("Invalid instance search no resourceType found");
+      if (!fhirQuery.id) throw new Error("Invalid instance search no ID found");
+      return parseInstantRequest(request, fhirQuery, {
+        level: "instance",
+        id: fhirQuery.id,
+        resourceType: fhirQuery.resourceType,
+      });
+    case "type":
+      if (!fhirQuery.resourceType) throw new Error("Invalid Type search");
+      return {
+        url: fhirQuery,
+        type: "search",
+        level: "type",
+        resourceType: fhirQuery.resourceType,
+      };
+    case "system":
+      return { url: fhirQuery, level: "system", type: "batch" };
+  }
 }
+
+app.use(bodyParser);
 
 app.use(async (ctx, next) => {
   await next();

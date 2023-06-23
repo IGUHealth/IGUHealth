@@ -11,12 +11,14 @@
     "@genfhi/fhir-database": "workspace:^",
     "@genfhi/fhir-query": "workspace:^",
     "koa": "^2.14.2",
+    "koa-bodyparser": "^4.4.1",
     "koa-router": "^12.0.0"
   },
   "devDependencies": {
     "@genfhi/fhir-types": "workspace:^",
     "@types/jest": "^29.5.2",
     "@types/koa": "^2.13.6",
+    "@types/koa-bodyparser": "^4.3.10",
     "jest": "^29.5.0",
     "nodemon": "^2.0.22",
     "ts-jest": "^29.1.0",
