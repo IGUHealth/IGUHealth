@@ -82,7 +82,6 @@ export const NegativeInvalidTime: Story = {
 
 export const NegativeInvalidMilliseconds: Story = {
   args: {
-    // TODO for some reason this doesn't error
     value: '2022-06-23T03:22:12.1234567890', // Invalid format for milliseconds
   },
 };
