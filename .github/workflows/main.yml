@@ -15,14 +15,14 @@ jobs:
       - name: Set up Node 19
         uses: actions/setup-node@v3
         with:
-          node-version: 19
+          node-version: 19.6.0
       - uses: pnpm/action-setup@v2
         with:
           version: 8.6.2
       - name: Install dependencies
         run: pnpm install
       - name: Run tests and collect coverage
-        run: pnpm run test
+        run: pnpm test
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:

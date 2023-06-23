@@ -1,19 +1,23 @@
 {
-  "name": "@genfhi/fhir-database",
+  "name": "fhir-server",
   "version": "0.0.1",
   "description": "",
+  "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "echo \"No tests\"",
+    "watch": "nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.spec.ts\" --exec \"ts-node src/index.ts\""
   },
-  "keywords": [],
-  "author": "",
   "dependencies": {
-    "@genfhi/fhir-query": "workspace:^"
+    "@genfhi/fhir-database": "workspace:^",
+    "@genfhi/fhir-query": "workspace:^",
+    "koa": "^2.14.2"
   },
   "devDependencies": {
     "@genfhi/fhir-types": "workspace:^",
     "@types/jest": "^29.5.2",
+    "@types/koa": "^2.13.6",
     "jest": "^29.5.0",
+    "nodemon": "^2.0.22",
     "ts-jest": "^29.1.0",
     "typescript": "^5.1.3"
   },
