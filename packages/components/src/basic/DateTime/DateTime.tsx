@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import 'react-dates/initialize';
-import { SingleDatePicker } from "react-dates";
-import moment from "moment";
-import type { Moment } from "moment";
+import dayjs from 'dayjs';
+import locale from 'antd/locale/en_US';
+import { DatePicker, TimePicker, ConfigProvider } from "antd"
 import type { dateTime } from '@genfhi/fhir-types/r4/types'
 
 interface Props {
@@ -16,8 +16,10 @@ const Main = styled.div`
 `;
 
 const validRegex =
-  /([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]{1,9})?)?)?(Z|(\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)?)?)?/;
+  /^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]{1,9})?)?)?(Z|(\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)?)?)?$/;
 
+
+  const Invalid = () => <div>(invalid)</div>
 
 
 export const Datetime = ({ value = "",  onChange, ...props }: Props) => {
@@ -25,13 +27,38 @@ export const Datetime = ({ value = "",  onChange, ...props }: Props) => {
 
   if (!validRegex.test(value)) {
     // TODO
-    return <div>(Invalid: {value})</div>;
+    return <Invalid />
+  }
+
+  const formats = [
+    'YYYY-MM-DDThh:mm:ss+zz:zz',
+    'YYYY-MM-DD',
+    'YYYY-MM',
+    'YYYY',
+  ]
+
+  let parsed: dayjs.Dayjs | undefined
+  for (const format of formats) {
+    const contender = dayjs(value, format)
+    if (contender.isValid()) {
+      parsed = contender
+      break
+    }
+  }
+  if (!parsed) {
+    return <Invalid />
   }
 
   // const m = moment(value, 'YYYY-MM-DDThh:mm:ss+zz:zz');
 
   return (
     <Main>
+      <ConfigProvider locale={locale}>
+        <DatePicker
+          defaultValue={parsed}
+          showTime
+        />
+      </ConfigProvider>
       {/* <SingleDatePicker
         date={m}
         onDateChange={(date: Moment | null) => date ? onChange(date.format('YYYY-MM-DDThh:mm:ss+zz:zz')) : null}
