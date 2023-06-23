@@ -15,6 +15,8 @@ const Invalid = () => <div>(invalid)</div>;
 export const Datetime: FC<Props> = ({ value = "", onChange }) => {
   let parsed: dayjs.Dayjs | undefined;
   if (validRegex.test(value)) {
+    // "The format is YYYY, YYYY-MM, YYYY-MM-DD or YYYY-MM-DDThh:mm:ss+zz:zz,"
+    // Per https://www.hl7.org/fhir/datatypes.html#dateTime
     const formats = [
       "YYYY-MM-DDThh:mm:ss+zz:zz",
       "YYYY-MM-DD",
