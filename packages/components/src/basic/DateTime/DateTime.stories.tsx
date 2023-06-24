@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Datetime } from './DateTime';
 
 const meta = {
-  title: 'Time',
+  title: 'Datetime',
   component: Datetime,
   tags: ['autodocs'],
   argTypes: {
