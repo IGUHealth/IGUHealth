@@ -1,27 +1,67 @@
 import Koa from "koa";
+import Router from "@koa/router";
+import bodyParser from "koa-bodyparser";
 
-const app = new Koa();
+import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
+import MemoryDatabase from "@genfhi/fhir-database/src/memory";
 
-app.use(async (ctx, next) => {
-  await next();
-  const rt = ctx.response.get("X-Response-Time");
-  console.log(`${ctx.method} ${ctx.url} - ${rt}`);
-});
+import createFhirServer from "./fhirServer";
+import { CapabilityStatement } from "@genfhi/fhir-types/r4/types";
 
-// x-response-time
+function serverCapabilities(): CapabilityStatement {
+  return {
+    resourceType: "CapabilityStatement",
+    status: "active",
+    date: new Date().toDateString(),
+    fhirVersion: "r4",
+    kind: "capability",
+    format: ["json"],
+  };
+}
 
-app.use(async (ctx, next) => {
-  console.log(ctx.URL);
-  const start = Date.now();
-  await next();
-  const ms = Date.now() - start;
-  ctx.set("X-Response-Time", `${ms}ms`);
-});
+function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
+  const app = new Koa();
+  const sds = loadArtifacts("StructureDefinition");
+  const database = new MemoryDatabase();
+  sds.map((sd) => database.create(sd));
+  const fhirServer = createFhirServer({
+    capabilities: serverCapabilities(),
+    database: database,
+  });
+  const router = new Router();
+  router.all("/w/:workspace/api/fhir/r4/:fhirUrl*", async (ctx, next) => {
+    // console.log("route", ctx.request.querystring, ctx.params.fhirUrl);
+    ctx.body = ctx.params.fhirUrl;
+    const fhirServerResponse = await fhirServer(ctx, ctx.request);
+    Object.keys(fhirServerResponse).map(
+      (k) =>
+        (ctx[k as keyof Koa.DefaultContext] =
+          fhirServerResponse[k as keyof Partial<Koa.Response>])
+    );
+    next();
+  });
 
-// response
+  app.use(bodyParser());
+  app
+    .use(async (ctx, next) => {
+      await next();
+      const rt = ctx.response.get("X-Response-Time");
+      console.log(`${ctx.method} ${ctx.url} - ${rt}`);
+    })
+    .use(async (ctx, next) => {
+      console.log(ctx.URL);
+      const start = Date.now();
+      await next();
+      const ms = Date.now() - start;
+      ctx.set("X-Response-Time", `${ms}ms`);
+    })
+    .use(router.routes())
+    .use(router.allowedMethods());
 
-app.use(async (ctx) => {
-  ctx.body = "Hello Worlds";
-});
+  console.log("Running app");
+  app.listen(port);
 
-app.listen(3000);
+  return app;
+}
+
+createServer(3000);
