@@ -6,7 +6,11 @@ import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
 import MemoryDatabase from "@genfhi/fhir-database/src/memory";
 
 import createFhirServer from "./fhirServer";
-import { CapabilityStatement } from "@genfhi/fhir-types/r4/types";
+import {
+  CapabilityStatement,
+  ResourceType,
+  Resource,
+} from "@genfhi/fhir-types/r4/types";
 
 function serverCapabilities(): CapabilityStatement {
   return {
@@ -19,11 +23,23 @@ function serverCapabilities(): CapabilityStatement {
   };
 }
 
+function createMemoryDatabase(resourceTypes: ResourceType[]): MemoryDatabase {
+  const database = new MemoryDatabase();
+  const artifactResources: Resource[] = resourceTypes
+    .map((resourceType) => loadArtifacts(resourceType))
+    .flat();
+  for (const resource of artifactResources) {
+    database.create(resource);
+  }
+  return database;
+}
+
 function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
   const app = new Koa();
-  const sds = loadArtifacts("StructureDefinition");
-  const database = new MemoryDatabase();
-  sds.map((sd) => database.create(sd));
+  const database = createMemoryDatabase([
+    "StructureDefinition",
+    "SearchParameter",
+  ]);
   const fhirServer = createFhirServer({
     capabilities: serverCapabilities(),
     database: database,
