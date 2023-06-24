@@ -4,18 +4,26 @@ import {
   Resource,
   id,
   ResourceType,
+  AResource,
 } from "@genfhi/fhir-types/r4/types";
 
-export interface FHIRDataBase {
-  search(query: FHIRURL): Resource[];
-  create<T extends Resource>(resource: T): T;
-  update<T extends Resource>(resource: T): T;
+export interface FHIRClient {
+  search(query: FHIRURL): Promise<Resource[]>;
+  create<T extends Resource>(resource: T): Promise<T>;
+  update<T extends Resource>(resource: T): Promise<T>;
   // [ADD JSON PATCH TYPES]
-  patch<T extends Resource>(resource: T, patches: any): T;
-  read(resourceType: ResourceType, id: id): Resource;
-  vread(resourceType: ResourceType, id: id, versionId: id): Resource;
+  patch<T extends Resource>(resource: T, patches: any): Promise<T>;
+  read<T extends ResourceType>(resourceType: T, id: id): Promise<AResource<T>>;
+  vread<T extends ResourceType>(
+    resourceType: T,
+    id: id,
+    versionId: id
+  ): Promise<AResource<T>>;
   delete(resourceType: ResourceType, id: id): void;
-  historySystem(): Resource[];
-  historyType(resourceType: ResourceType): Resource[];
-  historyInstance(resourceType: ResourceType, id: id): Resource[];
+  historySystem(): Promise<Resource[]>;
+  historyType<T extends ResourceType>(resourceType: T): Promise<AResource<T>[]>;
+  historyInstance<T extends ResourceType>(
+    resourceType: T,
+    id: id
+  ): Promise<AResource<T>[]>;
 }
