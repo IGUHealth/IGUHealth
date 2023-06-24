@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"No tests\"",
+    "test": "jest",
     "watch": "nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.test.ts\" --exec \"ts-node src/index.ts\""
   },
   "dependencies": {
@@ -13,7 +13,8 @@
     "@genfhi/fhir-query": "workspace:^",
     "@koa/router": "^12.0.0",
     "koa": "^2.14.2",
-    "koa-bodyparser": "^4.4.1"
+    "koa-bodyparser": "^4.4.1",
+    "pg": "^8.11.0"
   },
   "devDependencies": {
     "@genfhi/fhir-types": "workspace:^",

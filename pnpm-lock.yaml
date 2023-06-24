@@ -189,6 +189,9 @@ importers:
       koa-bodyparser:
         specifier: ^4.4.1
         version: 4.4.1
+      pg:
+        specifier: ^8.11.0
+        version: 8.11.0
     devDependencies:
       '@genfhi/fhir-types':
         specifier: workspace:^
