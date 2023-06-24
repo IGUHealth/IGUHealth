@@ -2,7 +2,7 @@ import { FHIRURL, ParsedParameter } from "@genfhi/fhir-query";
 import { Bundle, Resource, id } from "@genfhi/fhir-types/r4/types";
 import { FHIRDataBase } from "./types";
 
-type InternalData = Record<string, Resource[]>;
+type InternalData = Record<string, Resource[] | undefined>;
 
 function fitsSearchCriteria(
   criteria: ParsedParameter<unknown>,
@@ -33,9 +33,10 @@ export default class MemoryDatabase implements FHIRDataBase {
       ? this.data[query.resourceType]
       : Object.keys(this.data)
           .map((k) => this.data[k])
+          .filter((v): v is Resource[] => v !== undefined)
           .flat();
 
-    return resourceSet?.filter((resource) => {
+    return (resourceSet || []).filter((resource) => {
       for (let param of Object.values(query.parameters)) {
         if (!fitsSearchCriteria(param, resource)) return false;
         return true;
