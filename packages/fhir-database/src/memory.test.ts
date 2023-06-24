@@ -37,11 +37,6 @@ function generateSD(
   };
 }
 
-const prefixURL = `https://test.com/`;
-function generateURL(path: string): URL {
-  return new URL(`${prefixURL}${path}`, prefixURL);
-}
-
 test("Creation and search", () => {
   const memDb = new MemoryDatabase();
   memDb.create(
@@ -57,19 +52,15 @@ test("Creation and search", () => {
 
   memDb.create(generateSD({ name: "test1" }));
 
-  expect(
-    memDb.search(parseURL(generateURL("SearchParameter?name=test")))
-  ).toEqual([]);
+  expect(memDb.search(parseURL("SearchParameter?name=test"))).toEqual([]);
 
-  expect(
-    memDb.search(parseURL(generateURL("SearchParameter?name=test1")))
-  ).toEqual([
+  expect(memDb.search(parseURL("SearchParameter?name=test1"))).toEqual([
     generateParameter({
       name: "test1",
     }),
   ]);
 
-  expect(memDb.search(parseURL(generateURL("SearchParameter")))).toEqual([
+  expect(memDb.search(parseURL("SearchParameter"))).toEqual([
     generateParameter({
       name: "test1",
     }),
@@ -78,7 +69,7 @@ test("Creation and search", () => {
     }),
   ]);
 
-  expect(memDb.search(parseURL(generateURL("?name=test1")))).toEqual([
+  expect(memDb.search(parseURL("?name=test1"))).toEqual([
     generateParameter({
       name: "test1",
     }),
