@@ -1,10 +1,9 @@
 import React, { FC } from "react";
 import dayjs from "dayjs";
-import locale from "antd/locale/en_US";
-import { DatePicker, ConfigProvider } from "antd";
+import { DatePicker } from "antd";
 import type { dateTime } from "@genfhi/fhir-types/r4/types";
 
-type Props = FhirWidgetProps<dateTime>
+type Props = FhirWidgetProps<dateTime>;
 
 // Taken from FHIR standard: https://www.hl7.org/fhir/datatypes.html#dateTime
 const validRegex =
@@ -31,23 +30,21 @@ export const Datetime: FC<Props> = ({ value = "", onChange }) => {
     }
   }
 
-  const invalid = parsed === undefined
+  const invalid = parsed === undefined;
 
   return (
-    <ConfigProvider locale={locale}>
-      <DatePicker
-        defaultValue={parsed}
-        showTime
-        status={invalid ? 'error' : ''}
-        onChange={(value) => {
-          if (!value) {
-            onChange?.(undefined);
-            return;
-          }
-          const newVal = value.format("YYYY-MM-DD[T]hh:mm:ssZ");
-          onChange?.(newVal);
-        }}
-      />
-    </ConfigProvider>
+    <DatePicker
+      defaultValue={parsed}
+      showTime
+      status={invalid ? "error" : ""}
+      onChange={(value) => {
+        if (!value) {
+          onChange?.(undefined);
+          return;
+        }
+        const newVal = value.format("YYYY-MM-DD[T]hh:mm:ssZ");
+        onChange?.(newVal);
+      }}
+    />
   );
 };

@@ -1,6 +1,5 @@
 import React, { FC } from "react";
-import locale from "antd/locale/en_US";
-import { ConfigProvider, InputNumber } from "antd";
+import { InputNumber } from "antd";
 import type { integer } from "@genfhi/fhir-types/r4/types";
 
 type Props = FhirWidgetProps<integer>;
@@ -11,15 +10,13 @@ export const Integer: FC<Props> = ({ value, onChange }) => {
   };
 
   return (
-    <ConfigProvider locale={locale}>
-      <InputNumber
-        className="Fhir__Integer"
-        status={Number.isNaN(value) ? "error" : ""}
-        value={value}
-        onChange={handleChange}
-        placeholder="Input an integer"
-        maxLength={16}
-      />
-    </ConfigProvider>
+    <InputNumber
+      className="Fhir__Integer"
+      status={Number.isNaN(value) ? "error" : ""}
+      value={value}
+      onChange={handleChange}
+      placeholder="Input an integer"
+      maxLength={16}
+    />
   );
 };
