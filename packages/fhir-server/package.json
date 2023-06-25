@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "migrate": "db-migrate -m src/database/postgres/migrations",
+    "migrate": "db-migrate --sql-file -m src/database/postgres/migrations",
     "watch": "nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.test.ts\" --exec \"ts-node src/index.ts\""
   },
   "dependencies": {
