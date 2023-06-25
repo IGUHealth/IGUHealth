@@ -2,6 +2,7 @@ lib
 .#*
 coverage
 tsconfig.tsbuildinfo
+.env
 
 ## Below comes from the react-storybook gitignore
 

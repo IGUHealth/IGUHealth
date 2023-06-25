@@ -1,9 +1,9 @@
 import Koa from "koa";
-import Router from "@koa/router";
 
 import parseQuery, { FHIRURL } from "@genfhi/fhir-query";
-import { FHIRDataBase } from "@genfhi/fhir-database/src/types";
 import { CapabilityStatement } from "@genfhi/fhir-types/r4/types";
+
+import { FHIRClient } from "./database/types";
 import {
   FHIRRequest,
   FHIRResponse,
@@ -74,10 +74,10 @@ function KoaRequestToFHIRRequest(
   }
 }
 
-function fhirRequestToFHIRResponse(
+async function fhirRequestToFHIRResponse(
   ctx: FHIRServerParameter,
   request: FHIRRequest
-): FHIRResponse {
+): Promise<FHIRResponse> {
   switch (request.level) {
     case "system":
       throw new Error("not Implemented");
@@ -91,9 +91,11 @@ function fhirRequestToFHIRResponse(
             body: {
               resourceType: "Bundle",
               type: "search",
-              entry: ctx.database.search(request.url).map((resource) => ({
-                resource: resource,
-              })),
+              entry: (await ctx.database.search(request.url)).map(
+                (resource) => ({
+                  resource: resource,
+                })
+              ),
             },
           };
         default:
@@ -127,7 +129,7 @@ function fhirResponseToKoaResponse(
 
 type FHIRServerParameter = {
   capabilities: CapabilityStatement;
-  database: FHIRDataBase;
+  database: FHIRClient;
 };
 
 const createFhirServer =
@@ -144,11 +146,11 @@ const createFhirServer =
         serverCtx,
         request,
       ],
-      ([ctx, request]): FHIRResponse => fhirRequestToFHIRResponse(ctx, request),
-      (fhirResponse: FHIRResponse): Promise<Partial<Koa.Response>> =>
-        new Promise((resolve) =>
-          resolve(fhirResponseToKoaResponse(fhirResponse))
-        )
+      async ([ctx, request]): Promise<FHIRResponse> =>
+        fhirRequestToFHIRResponse(ctx, request),
+      async (
+        fhirResponse: Promise<FHIRResponse>
+      ): Promise<Partial<Koa.Response>> => fhirResponse
     );
 
 export default createFhirServer;

@@ -1,6 +1,11 @@
 import { FHIRURL, ParsedParameter } from "@genfhi/fhir-query";
-import { Bundle, Resource, id } from "@genfhi/fhir-types/r4/types";
-import { FHIRDataBase } from "./types";
+import {
+  ResourceType,
+  AResource,
+  Resource,
+  id,
+} from "@genfhi/fhir-types/r4/types";
+import { FHIRClient } from "./types";
 
 type InternalData = Record<string, Resource[] | undefined>;
 
@@ -23,12 +28,12 @@ function fitsSearchCriteria(
   }
 }
 
-export default class MemoryDatabase implements FHIRDataBase {
+export default class MemoryDatabase implements FHIRClient {
   data: InternalData;
   constructor(data?: InternalData) {
     this.data = data || {};
   }
-  search(query: FHIRURL): Resource[] {
+  async search(query: FHIRURL): Promise<Resource[]> {
     const resourceSet = query.resourceType
       ? this.data[query.resourceType]
       : Object.keys(this.data)
@@ -44,12 +49,12 @@ export default class MemoryDatabase implements FHIRDataBase {
       return true;
     });
   }
-  create<T extends Resource>(resource: T): T {
+  async create<T extends Resource>(resource: T): Promise<T> {
     const resources = this.data[resource.resourceType];
     this.data[resource.resourceType] = [...(resources || []), resource];
     return resource;
   }
-  update<T extends Resource>(resource: T): T {
+  async update<T extends Resource>(resource: T): Promise<T> {
     const filtered = this.data[resource.resourceType]?.filter(
       (v) => v.id === resource.id
     );
@@ -57,25 +62,34 @@ export default class MemoryDatabase implements FHIRDataBase {
     return resource;
   }
   // [ADD JSON PATCH TYPES]
-  patch<T extends Resource>(resource: T, patches: any): T {
+  patch<T extends Resource>(resource: T, patches: any): Promise<T> {
     throw new Error("Not Implemented");
   }
-  read(resourceType: string, id: id): Resource {
+  read<T extends ResourceType>(resourceType: T, id: id): Promise<AResource<T>> {
     throw new Error("Not Implemented");
   }
-  vread(resourceType: string, id: id, versionId: id): Resource {
+  vread<T extends ResourceType>(
+    resourceType: T,
+    id: id,
+    versionId: id
+  ): Promise<AResource<T>> {
     throw new Error("Not Implemented");
   }
-  delete(resourceType: string, id: id) {
+  delete<T extends ResourceType>(resourceType: T, id: id) {
     throw new Error("Not Implemented");
   }
-  historySystem(): Resource[] {
+  historySystem(): Promise<Resource[]> {
     throw new Error("Not Implemented");
   }
-  historyType(resourceType: string): Resource[] {
+  historyType<T extends ResourceType>(
+    resourceType: T
+  ): Promise<AResource<T>[]> {
     throw new Error("Not Implemented");
   }
-  historyInstance(resourceType: string, id: string): Resource[] {
+  historyInstance<T extends ResourceType>(
+    resourceType: T,
+    id: string
+  ): Promise<AResource<T>[]> {
     throw new Error("Not Implemented");
   }
 }
