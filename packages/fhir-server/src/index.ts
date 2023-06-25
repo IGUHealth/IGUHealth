@@ -3,7 +3,7 @@ import Router from "@koa/router";
 import bodyParser from "koa-bodyparser";
 
 import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
-import MemoryDatabase from "@genfhi/fhir-database/src/memory";
+import MemoryDatabase from "./database/memory";
 
 import createFhirServer from "./fhirServer";
 import {

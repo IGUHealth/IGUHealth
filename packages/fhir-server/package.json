@@ -4,16 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"No tests\"",
+    "test": "jest",
+    "migrate": "db-migrate --sql-file -m src/database/postgres/migrations",
     "watch": "nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.test.ts\" --exec \"ts-node src/index.ts\""
   },
   "dependencies": {
     "@genfhi/artifacts": "workspace:^",
-    "@genfhi/fhir-database": "workspace:^",
     "@genfhi/fhir-query": "workspace:^",
     "@koa/router": "^12.0.0",
+    "db-migrate": "^0.11.13",
+    "db-migrate-pg": "^1.3.0",
+    "dotenv": "^16.3.1",
     "koa": "^2.14.2",
-    "koa-bodyparser": "^4.4.1"
+    "koa-bodyparser": "^4.4.1",
+    "pg": "^8.11.0"
   },
   "devDependencies": {
     "@genfhi/fhir-types": "workspace:^",

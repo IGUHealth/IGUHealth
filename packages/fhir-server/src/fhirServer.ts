@@ -1,8 +1,9 @@
 import Koa from "koa";
 
 import parseQuery, { FHIRURL } from "@genfhi/fhir-query";
-import { FHIRClient } from "@genfhi/fhir-database/src/types";
 import { CapabilityStatement } from "@genfhi/fhir-types/r4/types";
+
+import { FHIRClient } from "./database/types";
 import {
   FHIRRequest,
   FHIRResponse,
