@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "tailwind": "pnpm build-tailwind --watch",
-    "build": "tsc && pnpm tailwind && vite build",
+    "build": "tsc && pnpm build-tailwind && vite build",
     "test": "echo \"Error: no test specified\"",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
