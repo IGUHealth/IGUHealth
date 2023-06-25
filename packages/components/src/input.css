@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 .Fhir__Integer {
-    width: 10em;
+    width: auto;
 }
