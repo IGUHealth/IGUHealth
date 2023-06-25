@@ -69,5 +69,5 @@ button:focus-visible {
 }
 
 .Fhir__Integer {
-  width: 10em;
+  width: auto;
 }
