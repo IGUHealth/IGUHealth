@@ -4,13 +4,11 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "dev-tailwind": "pnpm tailwind --watch",
-    "build": "tsc && pnpm tailwind && vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "echo \"Error: no test specified\"",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "tailwind": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "antd": "^5.6.2",
@@ -32,7 +30,6 @@
     "@vitejs/plugin-react-swc": "^3.0.0",
     "prop-types": "^15.8.1",
     "storybook": "^7.0.22",
-    "tailwindcss": "^3.3.2",
     "typescript": "^5.0.2",
     "vite": "^4.3.9"
   }
