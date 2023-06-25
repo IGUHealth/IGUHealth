@@ -4,11 +4,13 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "dev-tailwind": "pnpm tailwind --watch",
+    "build": "tsc && pnpm tailwind && vite build",
     "preview": "vite preview",
     "test": "echo \"Error: no test specified\"",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "tailwind": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
   },
   "dependencies": {
     "antd": "^5.6.2",

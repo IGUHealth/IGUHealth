@@ -12,13 +12,8 @@ export const Integer: FC<Props> = ({ value, onChange }) => {
 
   return (
     <ConfigProvider locale={locale}>
-      <style>{`
-        .input__integer {
-          width: 10em;
-        }
-      `}</style>
       <InputNumber
-        className="input__integer"
+        className="Fhir__Integer"
         status={Number.isNaN(value) ? "error" : ""}
         value={value}
         onChange={handleChange}
