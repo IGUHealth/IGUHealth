@@ -1,4 +1,4 @@
 interface FhirWidgetProps<T> {
-  value: T;
-  onChange: (newValue: T | null) => void;
+  value: T | undefined;
+  onChange?: (newValue: T | undefined) => void;
 }
