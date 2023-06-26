@@ -1,5 +1,5 @@
 {
-  "name": "sd-proxy",
+  "name": "@genfhi/sd-proxy",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",

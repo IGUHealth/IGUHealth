@@ -1,14 +1,11 @@
 import { createProxy } from "./index";
 import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
-import { StructureDefinition, Patient } from "@genfhi/fhir-types";
-import { createRequire } from "module";
+import { StructureDefinition, Patient } from "@genfhi/fhir-types/r4/types";
 
-console.log(process.cwd());
-const requirer = createRequire(process.cwd() + "/");
-console.log("AYO");
-console.log(requirer("../package.json"));
-
-const sds: StructureDefinition[] = loadArtifacts("StructureDefinition");
+const sds: StructureDefinition[] = loadArtifacts(
+  "StructureDefinition",
+  "/sd-proxy/"
+);
 
 const patientSD = sds.find(
   (sd) => sd.type === "Patient"
@@ -20,6 +17,9 @@ test("Simple Proxy Test", () => {
     name: [{ given: ["bob"] }],
   };
   const myValue = createProxy(patientSD, patient, 0) as any;
-  expect(myValue.name).toEqual([{ given: ["bob"] }]);
-  expect(myValue.name.__meta__).toEqual("HumanName");
+
+  expect(myValue.name.valueOf()).toEqual([{ given: ["bob"] }]);
+  expect(myValue.name.__meta__).toEqual(
+    patientSD.snapshot?.element.find((e) => e.path === "Patient.name")
+  );
 });
