@@ -5,6 +5,7 @@
   "scripts": {
     "tailwind": "pnpm build-tailwind --watch",
     "build": "tsc && pnpm build-tailwind && vite build",
+    "build-vite": "vite build",
     "test": "echo \"Error: no test specified\"",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
