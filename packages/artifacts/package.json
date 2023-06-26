@@ -5,11 +5,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\""
   },
-  "fhirVersion": ["r4"],
+  "fhirVersion": [
+    "r4"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@genfhi/fhir-types": "workspace:^"
+    "@genfhi/fhir-types": "workspace:^",
+    "@types/node": "^20.3.1"
   }
 }

@@ -17,6 +17,9 @@ importers:
       '@genfhi/fhir-types':
         specifier: workspace:^
         version: link:../fhir-types
+      '@types/node':
+        specifier: ^20.3.1
+        version: 20.3.1
 
   packages/codegen:
     dependencies:
