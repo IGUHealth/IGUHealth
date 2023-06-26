@@ -1,5 +1,6 @@
 {
   "name": "@genfhi/fhirpath",
+  "private": false,
   "version": "1.0.0",
   "description": "",
   "main": "src/index.ts",
