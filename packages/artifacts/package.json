@@ -5,7 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\""
   },
-  "fhirVersion": ["r4"],
+  "fhirVersion": [
+    "r4"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
