@@ -5,6 +5,9 @@
   "main": "./dist/genfhi-ts.umd.js",
   "module": "./dist/genfhi-ts.mjs",
   "types": "./dist/main.d.ts",
+  "files": [
+    "dist/output.css"
+  ],
   "scripts": {
     "tailwind": "pnpm build-tailwind --watch",
     "build": "tsc && pnpm build-tailwind && vite build --emptyOutDir false",

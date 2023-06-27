@@ -233,6 +233,12 @@ importers:
 
   packages/sample-app:
     dependencies:
+      '@genfhi/components':
+        specifier: workspace:^
+        version: link:../components
+      '@genfhi/components-dist':
+        specifier: file:./../components/dist
+        version: file:packages/components/dist
       '@testing-library/jest-dom':
         specifier: ^5.16.5
         version: 5.16.5
@@ -269,10 +275,6 @@ importers:
       web-vitals:
         specifier: ^2.1.4
         version: 2.1.4
-    devDependencies:
-      '@genfhi/components':
-        specifier: workspace:^
-        version: link:../components
 
 packages:
 
@@ -16760,4 +16762,10 @@ packages:
       validator: 13.9.0
     optionalDependencies:
       commander: 9.5.0
+    dev: false
+
+  file:packages/components/dist:
+    resolution: {directory: packages/components/dist, type: directory}
+    name: dist
+    version: 0.0.0
     dev: false
