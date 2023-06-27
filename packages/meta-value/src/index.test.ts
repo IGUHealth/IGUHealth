@@ -15,9 +15,11 @@ const patientSD = sds.find(
 
 test("Simple Proxy Test", () => {
   const patient: Patient = {
+    id: "123",
     resourceType: "Patient",
     identifier: [{ system: "mrn", value: "123" }],
     name: [{ given: ["bob"] }],
+    deceasedBoolean: true,
   };
   const myValue = new MetaValueSingular(
     {
@@ -32,6 +34,11 @@ test("Simple Proxy Test", () => {
   expect(descend(myValue, "name")?.valueOf()).toEqual([{ given: ["bob"] }]);
   expect(descend(myValue, "name")?.meta()?.type).toEqual("HumanName");
   expect(descend(myValue, "identifier")?.meta()?.type).toEqual("Identifier");
+  expect(descend(myValue, "id")?.meta()?.type).toEqual(
+    "http://hl7.org/fhirpath/System.String"
+  );
+  expect(descend(myValue, "deceased")?.valueOf()).toEqual(true);
+  expect(descend(myValue, "deceased")?.meta()?.type).toEqual("boolean");
 });
 
 // test("Test FHIRPATH", () => {

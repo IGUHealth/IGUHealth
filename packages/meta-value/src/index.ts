@@ -75,7 +75,8 @@ function getField<T extends { [key: string]: unknown }>(
  */
 function isElementDefinitionWithType(
   element: ElementDefinition,
-  path: string
+  path: string,
+  expectedType?: string
 ): code | undefined {
   if (element.path === path) return element.type?.[0].code;
   if (
@@ -84,7 +85,11 @@ function isElementDefinitionWithType(
     path.startsWith(element.path.replace("[x]", ""))
   ) {
     for (let type of element.type) {
-      if (element.path.replace("[x]", type.code) === path) return type.code;
+      // Because type pulled from typechoice will be capitalized and it may or may not be
+      // on the actual type for example HumanName vs boolean
+      // Just lowercase both and compare.
+      if (type.code.toLocaleLowerCase() === expectedType?.toLocaleLowerCase())
+        return type.code;
     }
   }
   return undefined;
@@ -97,7 +102,8 @@ function isElementDefinitionWithType(
  */
 function deriveNextMetaInformation(
   meta: MetaInformation | undefined,
-  field: string
+  field: string,
+  expectedType?: string // For Typechoices pass in chunk pulled from field.
 ): MetaInformation | undefined {
   if (meta?.elementIndex !== undefined) {
     const curElement = meta.sd.snapshot?.element[meta.elementIndex];
@@ -108,7 +114,11 @@ function deriveNextMetaInformation(
       // Comparison returns the type of the field to element if valid.
       const type =
         elementToCheck &&
-        isElementDefinitionWithType(elementToCheck, nextElementPath);
+        isElementDefinitionWithType(
+          elementToCheck,
+          nextElementPath,
+          expectedType
+        );
       if (type) {
         return {
           sd: meta.sd,
@@ -152,7 +162,11 @@ export function descend<T>(
         | Element[]
         | Element
         | undefined;
-      const nextMeta = deriveNextMetaInformation(node.meta(), field);
+      const nextMeta = deriveNextMetaInformation(
+        node.meta(),
+        field,
+        computedField.replace(field, "")
+      );
 
       return toMetaValueNodes(nextMeta, v, extension);
     }
