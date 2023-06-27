@@ -41,8 +41,6 @@ test("Simple Type test", () => {
   };
   const myValue = new MetaValueSingular(
     {
-      sd: patientSD,
-      elementIndex: 0,
       type: "Patient",
       getSD: (type: string) => {
         const foundSD = sds.find((sd) => sd.type === type);
