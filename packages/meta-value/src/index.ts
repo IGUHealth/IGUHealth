@@ -1,10 +1,17 @@
 import {
   StructureDefinition,
-  Resource,
+  Element,
   ElementDefinition,
   code,
 } from "@genfhi/fhir-types/r4/types";
 import { complexTypes } from "@genfhi/fhir-types/r4/sets";
+
+// [TODO] Primitive value extensions which start with _
+function isComplexType(type: string): boolean {
+  return (
+    complexTypes.has(type) && type !== "Element" && type !== "BackboneElement"
+  );
+}
 
 type MetaInformation = {
   sd: StructureDefinition;
@@ -12,9 +19,61 @@ type MetaInformation = {
   // Typechoice so need to maintain the type here.
   type: string;
   cardinality: "many" | "singular";
+  getSD?: (type: code) => StructureDefinition;
 };
 
-function Comparison(
+interface MetaValue<T> {
+  meta(): MetaInformation | undefined;
+  valueOf(): T;
+}
+
+type RawPrimitive = string | number | boolean | undefined;
+export type FHIRPathPrimitive<T extends RawPrimitive> = Element & {
+  _type_: "primitive";
+  value: T;
+};
+
+function isFPPrimitive(v: unknown): v is FHIRPathPrimitive<RawPrimitive> {
+  return isObject(v) && v._type_ === "primitive";
+}
+
+function toFPPrimitive<T extends RawPrimitive>(
+  value: T,
+  element?: Element
+): FHIRPathPrimitive<T> {
+  return { ...element, value, _type_: "primitive" };
+}
+
+function isRawPrimitive(v: unknown): v is RawPrimitive {
+  return (
+    typeof v === "string" ||
+    typeof v === "number" ||
+    typeof v === "boolean" ||
+    v === undefined
+  );
+}
+
+function isObject(value: unknown): value is { [key: string]: unknown } {
+  return value instanceof Object;
+}
+
+function isArray<T>(v: T | T[]): v is T[] {
+  return Array.isArray(v);
+}
+
+function getField<T extends { [key: string]: unknown }>(
+  value: T,
+  field: string
+): string | undefined {
+  if (value.hasOwnProperty(field)) return field;
+  return Object.keys(value).find((k) => k.startsWith(field.toString()));
+}
+
+/*
+ ** If Element definition fits criteria of path return the type [for typechoice].
+ ** If Undefined signals it's not compliant (will always return a type if compliant).
+ */
+function isElementDefinitionWithType(
   element: ElementDefinition,
   path: string
 ): code | undefined {
@@ -31,18 +90,14 @@ function Comparison(
   return undefined;
 }
 
-// [TODO] Primitive value extensions which start with _
-
-function isComplexType(type: string): boolean {
-  return (
-    complexTypes.has(type) && type !== "Element" && type !== "BackboneElement"
-  );
-}
-
-function findNextElementIndex(
+/*
+ ** Given Metainformation and field derive the next metainformation.
+ ** This could mean pulling in a new StructureDefinition (IE in case of complex type or resource)
+ ** Or setting a new Element index with type.
+ */
+function deriveNextMetaInformation(
   meta: MetaInformation | undefined,
-  field: string,
-  getSD?: (type: code) => StructureDefinition
+  field: string
 ): MetaInformation | undefined {
   if (meta?.elementIndex !== undefined) {
     const curElement = meta.sd.snapshot?.element[meta.elementIndex];
@@ -52,7 +107,8 @@ function findNextElementIndex(
       const elementToCheck = meta.sd.snapshot?.element[i];
       // Comparison returns the type of the field to element if valid.
       const type =
-        elementToCheck && Comparison(elementToCheck, nextElementPath);
+        elementToCheck &&
+        isElementDefinitionWithType(elementToCheck, nextElementPath);
       if (type) {
         return {
           sd: meta.sd,
@@ -67,34 +123,83 @@ function findNextElementIndex(
   return undefined;
 }
 
-interface MetaValue<T> {
-  valueOf(): T;
+export function toMetaValueNodes<T>(
+  meta: MetaInformation | undefined,
+  value: T | T[],
+  element?: Element | Element[]
+): MetaValue<T | T[]> | undefined {
+  if (isArray(value)) {
+    return new MetaValueArray(
+      meta,
+      value,
+      element && isArray(element) ? element : undefined
+    );
+  }
+  if (value === undefined && element === undefined) return undefined;
+  return new MetaValueSingular(meta, value, element as Element | undefined);
 }
 
-class MetaValueSingular<T> implements MetaValue<T> {
-  private value: T;
-  constructor(
-    metaInformation: MetaInformation,
-    value: T,
-    getSD: (type: code) => StructureDefinition
-  ) {
-    this.value = value;
+export function descend<T>(
+  node: MetaValueSingular<T>,
+  field: string
+): MetaValue<unknown> | undefined {
+  const internalValue = node.internalValue;
+  if (isObject(internalValue)) {
+    const computedField = getField(internalValue, field);
+    if (computedField) {
+      let v = internalValue[computedField];
+      let extension = internalValue[`_${computedField}`] as
+        | Element[]
+        | Element
+        | undefined;
+      const nextMeta = deriveNextMetaInformation(node.meta(), field);
+
+      return toMetaValueNodes(nextMeta, v, extension);
+    }
+  }
+  return undefined;
+}
+
+export class MetaValueSingular<T> implements MetaValue<T> {
+  private _value: T | FHIRPathPrimitive<RawPrimitive>;
+  private _meta: MetaInformation | undefined;
+  constructor(meta: MetaInformation | undefined, value: T, element?: Element) {
+    if (isRawPrimitive(value)) {
+      this._value = toFPPrimitive(value, element);
+    } else {
+      this._value = value;
+    }
+    this._meta = meta;
+  }
+  get internalValue() {
+    return this._value;
   }
   valueOf(): T {
-    return this.value;
+    if (isFPPrimitive(this._value)) return this._value.value as T;
+    return this._value;
+  }
+  meta(): MetaInformation | undefined {
+    return this._meta;
   }
 }
 
-class MetaValueArray<T> implements MetaValue<Array<T>> {
+export class MetaValueArray<T> implements MetaValue<Array<T>> {
   private value: Array<MetaValueSingular<T>>;
+  private _meta: MetaInformation | undefined;
   constructor(
-    metaInformation: MetaInformation,
+    meta: MetaInformation | undefined,
     value: Array<T>,
-    getSD: (type: code) => StructureDefinition
+    element?: Element[]
   ) {
     this.value = value.map(
-      (v) => new MetaValueSingular(metaInformation, v, getSD)
+      (v, i: number) =>
+        new MetaValueSingular(
+          meta,
+          v,
+          element && isArray(element) ? element[i] : undefined
+        )
     );
+    this._meta = meta;
   }
   valueOf(): Array<T> {
     return this.value.map((v) => v.valueOf());
@@ -102,47 +207,7 @@ class MetaValueArray<T> implements MetaValue<Array<T>> {
   toArray(): Array<MetaValueSingular<T>> {
     return this.value;
   }
-}
-
-export function createProxy<T>(
-  { meta, value }: { meta: MetaInformation | undefined; value: any },
-  getSD?: (v: string) => StructureDefinition
-): InstanceType<typeof Proxy> | undefined | string {
-  if (value && value.resourceType && meta?.sd.type !== value.resourceType)
-    throw new Error(
-      `Expected '${meta?.sd.type}' but found value of '${value.resourceType}'`
-    );
-  const proxy = new Proxy(
-    { meta, value },
-    {
-      get: ({ meta, value }: any, field: string | symbol, receiver) => {
-        // Special field to return the contextual information
-        if (field === "__meta__") {
-          return meta;
-        }
-        const nextTarget = value[field];
-        const nextMeta = findNextElementIndex(meta, field.toString(), getSD);
-        if (nextTarget instanceof Function) {
-          return function (...args: any[]) {
-            // @ts-ignore
-            return nextTarget.apply(this === receiver ? value : this, args);
-          };
-        }
-        if (Array.isArray(nextTarget)) {
-          return nextTarget.map((v) =>
-            createProxy(
-              {
-                meta: nextMeta && { ...nextMeta, cardinality: "singular" },
-                value: v,
-              },
-              getSD
-            )
-          );
-        }
-        return createProxy({ meta: nextMeta, value: nextTarget }, getSD);
-      },
-    }
-  );
-
-  return proxy;
+  meta(): MetaInformation | undefined {
+    return this._meta;
+  }
 }
