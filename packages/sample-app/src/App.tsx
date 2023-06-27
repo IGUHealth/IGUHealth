@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { FhirApp, Integer } from "@genfhi/components";
-import "./App.css";
 import "@genfhi/components/dist/output.css";
 
 function App() {
