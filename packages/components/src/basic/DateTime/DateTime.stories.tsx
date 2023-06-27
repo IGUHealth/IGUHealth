@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Datetime } from "./DateTime";
+import { DateTime } from "./DateTime";
 
 const meta = {
   title: "Datetime",
-  component: Datetime,
+  component: DateTime,
   tags: ["autodocs"],
   argTypes: {},
 } satisfies Meta<typeof String>;

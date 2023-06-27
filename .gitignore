@@ -3,6 +3,7 @@ lib
 coverage
 tsconfig.tsbuildinfo
 .env
+packages/sample-app/build/
 
 ## Below comes from the react-storybook gitignore
 

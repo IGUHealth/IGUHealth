@@ -1,19 +1,31 @@
 {
   "name": "@genfhi/components",
-  "private": true,
-  "version": "0.0.0",
+  "private": false,
+  "version": "1.0.0",
+  "main": "./dist/genfhi-ts.umd.js",
+  "module": "./dist/genfhi-ts.mjs",
+  "types": "./dist/main.d.ts",
+  "files": [
+    "dist/output.css"
+  ],
   "scripts": {
-    "build": "tsc",
-    "preview": "vite preview",
+    "tailwind": "pnpm build-tailwind --watch",
+    "build": "tsc && pnpm build-tailwind && vite build --emptyOutDir false",
+    "watch": "vite build --watch --emptyOutDir false",
+    "build-vite": "vite build",
     "test": "echo \"Error: no test specified\"",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "build-tailwind": "tailwindcss -i ./src/index.css -o ./dist/output.css"
   },
   "dependencies": {
     "antd": "^5.6.2",
     "dayjs": "^1.11.8",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "vite-plugin-dts": "3.0.0-beta.1"
+  },
+  "peerDependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
     "@genfhi/fhir-types": "workspace:^",
@@ -29,6 +41,7 @@
     "@vitejs/plugin-react-swc": "^3.0.0",
     "prop-types": "^15.8.1",
     "storybook": "^7.0.22",
+    "tailwindcss": "^3.3.2",
     "typescript": "^5.0.2",
     "vite": "^4.3.9"
   }
