@@ -153,7 +153,7 @@ export function toMetaValueNodes<T>(
   meta: MetaInformation | undefined,
   value: T | T[],
   element?: Element | Element[]
-): MetaValue<T | T[]> | undefined {
+): MetaValueSingular<T> | MetaValueArray<T> | undefined {
   if (isArray(value)) {
     return new MetaValueArray(
       meta,

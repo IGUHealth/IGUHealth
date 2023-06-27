@@ -42,6 +42,7 @@ test("Simple Proxy Test", () => {
   );
   expect(descend(myValue, "deceased")?.valueOf()).toEqual(true);
   expect(descend(myValue, "deceased")?.meta()?.type).toEqual("boolean");
+
   let output: (string | undefined)[] = [];
   const v = descend(myValue, "identifier");
   if (v && v.isArray()) {
@@ -49,33 +50,3 @@ test("Simple Proxy Test", () => {
   }
   expect(output).toEqual(["uri"]);
 });
-
-// test("Test FHIRPATH", () => {
-//   const patient: Patient = {
-//     resourceType: "Patient",
-//     identifier: [{ system: "mrn", value: "123" }],
-//     name: [{ given: ["bob"] }],
-//   };
-//   const myValue = createProxy({
-//     meta: {
-//       sd: patientSD,
-//       elementIndex: 0,
-//       type: "Patient",
-//       cardinality: "singular",
-//     },
-//     value: patient,
-//   }) as any;
-
-//   expect(evaluate("$this.identifier.where(system='mrn')", myValue)).toEqual([
-//     { system: "mrn", value: "123" },
-//   ]);
-
-//   expect(
-//     evaluate("$this.identifier.where(system='mrn')", myValue).map((r) => {
-//       //@ts-ignore
-//       console.log(r.given);
-//       // @ts-ignore
-//       return r.__meta__.type;
-//     })
-//   ).toEqual(["HumanName"]);
-// });
