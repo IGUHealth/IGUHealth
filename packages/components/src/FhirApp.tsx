@@ -8,7 +8,9 @@ export const FhirApp: FC<{children: ReactNode}> = ({ children }) => {
   return (
     <ConfigProvider locale={locale}>
       <style>{tailwindStyles}</style>
+      <div className="Fhir__FhirApp">
       {children}
+      </div>
     </ConfigProvider>
   );
 };

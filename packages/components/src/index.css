@@ -5,3 +5,7 @@
 .Fhir__Integer {
     width: auto;
 }
+
+.Fhir__FhirApp {
+    padding: theme('spacing.4');
+}

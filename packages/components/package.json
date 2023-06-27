@@ -4,9 +4,11 @@
   "version": "1.0.0",
   "main": "./dist/genfhi-ts.umd.js",
   "module": "./dist/genfhi-ts.mjs",
+  "types": "./dist/main.d.ts",
   "scripts": {
     "tailwind": "pnpm build-tailwind --watch",
-    "build": "tsc && pnpm build-tailwind && vite build",
+    "build": "tsc && pnpm build-tailwind && vite build --emptyOutDir false",
+    "watch": "vite build --watch --emptyOutDir false",
     "build-vite": "vite build",
     "test": "echo \"Error: no test specified\"",
     "storybook": "storybook dev -p 6006",
@@ -15,7 +17,8 @@
   },
   "dependencies": {
     "antd": "^5.6.2",
-    "dayjs": "^1.11.8"
+    "dayjs": "^1.11.8",
+    "vite-plugin-dts": "3.0.0-beta.1"
   },
   "peerDependencies": {
     "react": "18.2.0",
