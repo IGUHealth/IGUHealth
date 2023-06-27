@@ -58,7 +58,7 @@ export function toFPNodes<T>(
       .map((v, i: number) =>
         toFPNodes(v, element && isArray(element) ? element[i] : undefined)
       )
-      .reduce((acc, v) => [...acc, ...v], []);
+      .flat();
   }
   if (value === undefined && element === undefined) return [];
   return [new FHIRPathNode(value, element as Element | undefined)];

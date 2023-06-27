@@ -13,7 +13,10 @@ export interface FHIRClient {
   update<T extends Resource>(resource: T): Promise<T>;
   // [ADD JSON PATCH TYPES]
   patch<T extends Resource>(resource: T, patches: any): Promise<T>;
-  read<T extends ResourceType>(resourceType: T, id: id): Promise<AResource<T>>;
+  read<T extends ResourceType>(
+    resourceType: T,
+    id: id
+  ): Promise<AResource<T> | undefined>;
   vread<T extends ResourceType>(
     resourceType: T,
     id: id,

@@ -7,7 +7,7 @@ import {
 } from "@genfhi/fhir-types/r4/types";
 import { FHIRClient } from "./types";
 
-type InternalData = Record<string, Resource[] | undefined>;
+type InternalData = Partial<Record<string, Record<id, Resource | undefined>>>;
 
 function fitsSearchCriteria(
   criteria: ParsedParameter<unknown>,
@@ -35,9 +35,11 @@ export default class MemoryDatabase implements FHIRClient {
   }
   async search(query: FHIRURL): Promise<Resource[]> {
     const resourceSet = query.resourceType
-      ? this.data[query.resourceType]
+      ? Object.values(this.data[query.resourceType] || {}).filter(
+          (v): v is Resource => v !== undefined
+        )
       : Object.keys(this.data)
-          .map((k) => this.data[k])
+          .map((k) => Object.values(this.data[k] || {}))
           .filter((v): v is Resource[] => v !== undefined)
           .flat();
 
@@ -51,22 +53,37 @@ export default class MemoryDatabase implements FHIRClient {
   }
   async create<T extends Resource>(resource: T): Promise<T> {
     const resources = this.data[resource.resourceType];
-    this.data[resource.resourceType] = [...(resources || []), resource];
+    if (!resource.id) resource.id = `${Math.round(Math.random() * 100000000)}`;
+    this.data[resource.resourceType] = {
+      ...resources,
+      [resource.id]: resource,
+    };
     return resource;
   }
   async update<T extends Resource>(resource: T): Promise<T> {
-    const filtered = this.data[resource.resourceType]?.filter(
-      (v) => v.id === resource.id
-    );
-    this.data[resource.resourceType] = filtered;
+    if (!resource.id) throw new Error("Updated resource does not have an id.");
+    this.data[resource.resourceType] = {
+      ...this.data[resource.resourceType],
+      [resource.id]: resource,
+    };
     return resource;
   }
   // [ADD JSON PATCH TYPES]
   patch<T extends Resource>(resource: T, patches: any): Promise<T> {
     throw new Error("Not Implemented");
   }
-  read<T extends ResourceType>(resourceType: T, id: id): Promise<AResource<T>> {
-    throw new Error("Not Implemented");
+  async read<T extends ResourceType>(
+    resourceType: T,
+    id: id
+  ): Promise<AResource<T> | undefined> {
+    const data = this.data[resourceType]?.[id] as AResource<T>;
+    if (!data) {
+      console.error(
+        `Not found resource of type '${resourceType}' with id '${id}'`
+      );
+      return;
+    }
+    return data;
   }
   vread<T extends ResourceType>(
     resourceType: T,
