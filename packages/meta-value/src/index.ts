@@ -27,6 +27,14 @@ type MetaInformation = {
   getSD?: (type: code) => StructureDefinition | undefined;
 };
 
+type PartialMeta = {
+  type: MetaInformation["type"];
+  elementIndex?: MetaInformation["elementIndex"];
+  sd?: MetaInformation["sd"];
+  // Typechoice so need to maintain the type here.
+  getSD?: MetaInformation["getSD"];
+};
+
 interface MetaValue<T> {
   meta(): MetaInformation | undefined;
   valueOf(): T;
@@ -38,6 +46,17 @@ type FHIRPathPrimitive<T extends RawPrimitive> = Element & {
   _type_: "primitive";
   value: T;
 };
+
+function deriveMetaInformation(
+  partialMeta: PartialMeta | undefined
+): MetaInformation | undefined {
+  if (!partialMeta) return partialMeta;
+  if (!partialMeta.elementIndex) partialMeta.elementIndex = 0;
+  if (!partialMeta.sd)
+    partialMeta.sd = partialMeta.getSD && partialMeta.getSD(partialMeta.type);
+
+  return partialMeta.sd ? (partialMeta as MetaInformation) : undefined;
+}
 
 function isFPPrimitive(v: unknown): v is FHIRPathPrimitive<RawPrimitive> {
   return isObject(v) && v._type_ === "primitive";
@@ -151,7 +170,7 @@ function deriveNextMetaInformation(
 }
 
 export function toMetaValueNodes<T>(
-  meta: MetaInformation | undefined,
+  meta: PartialMeta | undefined,
   value: T | T[],
   element?: Element | Element[]
 ): MetaValueSingular<T> | MetaValueArray<T> | undefined {
@@ -189,24 +208,6 @@ export function descend<T>(
     }
   }
   return undefined;
-}
-type PartialMeta = {
-  type: string;
-  elementIndex?: number;
-  sd?: StructureDefinition;
-  // Typechoice so need to maintain the type here.
-  getSD?: (type: code) => StructureDefinition | undefined;
-};
-
-function deriveMetaInformation(
-  partialMeta: PartialMeta | undefined
-): MetaInformation | undefined {
-  if (!partialMeta) return partialMeta;
-  if (!partialMeta.elementIndex) partialMeta.elementIndex = 0;
-  if (!partialMeta.sd)
-    partialMeta.sd = partialMeta.getSD && partialMeta.getSD(partialMeta.type);
-
-  return partialMeta.sd ? (partialMeta as MetaInformation) : undefined;
 }
 
 export class MetaValueSingular<T> implements MetaValue<T> {
