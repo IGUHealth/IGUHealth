@@ -60,11 +60,13 @@ function flattenOrInclude<T extends ResourceType>(
  ** Interface used to search dependencies for .index.config.json files and load their contents.
  */
 export default function loadArtifacts<T extends ResourceType>(
-  resourceType: T
+  resourceType: T,
+  relativeURL: string = "/"
 ): AResource<T>[] {
-  const requirer = createRequire(process.cwd() + "/");
+  const requirer = createRequire(process.cwd() + relativeURL);
   const packageJson: PackageJSON = requirer("./package.json");
-  return Object.keys(packageJson.dependencies || {})
+  const deps = { ...packageJson.devDependencies, ...packageJson.dependencies };
+  return Object.keys(deps || {})
     .filter((d) => {
       try {
         const depPackage = requirer(`${d}/package.json`);
