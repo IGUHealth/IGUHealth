@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import logo from "./logo.svg";
 import { FhirApp, Integer } from "@genfhi/components";
 import "./App.css";
 import "@genfhi/components/dist/output.css";
