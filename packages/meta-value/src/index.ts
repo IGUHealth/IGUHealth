@@ -4,12 +4,17 @@ import {
   ElementDefinition,
   code,
 } from "@genfhi/fhir-types/r4/types";
-import { complexTypes } from "@genfhi/fhir-types/r4/sets";
+import { complexTypes, resourceTypes } from "@genfhi/fhir-types/r4/sets";
 
-// [TODO] Primitive value extensions which start with _
-function isComplexType(type: string): boolean {
+//
+function isResourceOrComplexType(type: string): boolean {
   return (
-    complexTypes.has(type) && type !== "Element" && type !== "BackboneElement"
+    (complexTypes.has(type) || resourceTypes.has(type)) &&
+    // Because element and backbone can be used
+    // in certain contexts to extend
+    // just ignore for now
+    type !== "Element" &&
+    type !== "BackboneElement"
   );
 }
 
@@ -18,13 +23,13 @@ type MetaInformation = {
   elementIndex: number;
   // Typechoice so need to maintain the type here.
   type: string;
-  cardinality: "many" | "singular";
-  getSD?: (type: code) => StructureDefinition;
+  getSD?: (type: code) => StructureDefinition | undefined;
 };
 
 interface MetaValue<T> {
   meta(): MetaInformation | undefined;
   valueOf(): T;
+  isArray(): this is MetaValueArray<T>;
 }
 
 type RawPrimitive = string | number | boolean | undefined;
@@ -119,12 +124,23 @@ function deriveNextMetaInformation(
           nextElementPath,
           expectedType
         );
+
       if (type) {
+        // In this case pull in the SD means it's a complex or resource type
+        // so need to retrieve the SD.
+        if (isResourceOrComplexType(type)) {
+          const sd = meta.getSD && meta.getSD(type);
+          if (!sd) throw new Error(`Unknown type found '${type}'`);
+          return {
+            sd: sd,
+            type: type,
+            elementIndex: 0,
+          };
+        }
         return {
           sd: meta.sd,
           type: type,
           elementIndex: i,
-          cardinality: elementToCheck.max !== "1" ? "many" : "singular",
         };
       }
       i++;
@@ -195,6 +211,9 @@ export class MetaValueSingular<T> implements MetaValue<T> {
   meta(): MetaInformation | undefined {
     return this._meta;
   }
+  isArray(): this is MetaValueArray<T> {
+    return false;
+  }
 }
 
 export class MetaValueArray<T> implements MetaValue<Array<T>> {
@@ -220,6 +239,9 @@ export class MetaValueArray<T> implements MetaValue<Array<T>> {
   }
   toArray(): Array<MetaValueSingular<T>> {
     return this.value;
+  }
+  isArray(): this is MetaValueArray<Array<T>> {
+    return true;
   }
   meta(): MetaInformation | undefined {
     return this._meta;

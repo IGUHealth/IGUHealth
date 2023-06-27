@@ -26,7 +26,10 @@ test("Simple Proxy Test", () => {
       sd: patientSD,
       elementIndex: 0,
       type: "Patient",
-      cardinality: "singular",
+      getSD: (type: string) => {
+        const foundSD = sds.find((sd) => sd.type === type);
+        return foundSD;
+      },
     },
     patient
   ) as any;
@@ -39,6 +42,12 @@ test("Simple Proxy Test", () => {
   );
   expect(descend(myValue, "deceased")?.valueOf()).toEqual(true);
   expect(descend(myValue, "deceased")?.meta()?.type).toEqual("boolean");
+  let output: (string | undefined)[] = [];
+  const v = descend(myValue, "identifier");
+  if (v && v.isArray()) {
+    output = v.toArray().map((v) => descend(v, "system")?.meta()?.type);
+  }
+  expect(output).toEqual(["uri"]);
 });
 
 // test("Test FHIRPATH", () => {
