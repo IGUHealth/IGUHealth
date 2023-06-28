@@ -3,6 +3,7 @@ import {
   Element,
   ElementDefinition,
   code,
+  Meta,
 } from "@genfhi/fhir-types/r4/types";
 import { complexTypes, resourceTypes } from "@genfhi/fhir-types/r4/sets";
 
@@ -26,6 +27,14 @@ type MetaInformation = {
   getSD?: (type: code) => StructureDefinition | undefined;
 };
 
+type PartialMeta = {
+  type: MetaInformation["type"];
+  elementIndex?: MetaInformation["elementIndex"];
+  sd?: MetaInformation["sd"];
+  // Typechoice so need to maintain the type here.
+  getSD?: MetaInformation["getSD"];
+};
+
 interface MetaValue<T> {
   meta(): MetaInformation | undefined;
   valueOf(): T;
@@ -33,10 +42,21 @@ interface MetaValue<T> {
 }
 
 type RawPrimitive = string | number | boolean | undefined;
-export type FHIRPathPrimitive<T extends RawPrimitive> = Element & {
+type FHIRPathPrimitive<T extends RawPrimitive> = Element & {
   _type_: "primitive";
   value: T;
 };
+
+function deriveMetaInformation(
+  partialMeta: PartialMeta | undefined
+): MetaInformation | undefined {
+  if (!partialMeta) return partialMeta;
+  if (!partialMeta.elementIndex) partialMeta.elementIndex = 0;
+  if (!partialMeta.sd)
+    partialMeta.sd = partialMeta.getSD && partialMeta.getSD(partialMeta.type);
+
+  return partialMeta.sd ? (partialMeta as MetaInformation) : undefined;
+}
 
 function isFPPrimitive(v: unknown): v is FHIRPathPrimitive<RawPrimitive> {
   return isObject(v) && v._type_ === "primitive";
@@ -150,7 +170,7 @@ function deriveNextMetaInformation(
 }
 
 export function toMetaValueNodes<T>(
-  meta: MetaInformation | undefined,
+  meta: PartialMeta | undefined,
   value: T | T[],
   element?: Element | Element[]
 ): MetaValueSingular<T> | MetaValueArray<T> | undefined {
@@ -193,13 +213,13 @@ export function descend<T>(
 export class MetaValueSingular<T> implements MetaValue<T> {
   private _value: T | FHIRPathPrimitive<RawPrimitive>;
   private _meta: MetaInformation | undefined;
-  constructor(meta: MetaInformation | undefined, value: T, element?: Element) {
+  constructor(meta: PartialMeta | undefined, value: T, element?: Element) {
     if (isRawPrimitive(value)) {
       this._value = toFPPrimitive(value, element);
     } else {
       this._value = value;
     }
-    this._meta = meta;
+    this._meta = deriveMetaInformation(meta);
   }
   get internalValue() {
     return this._value;
@@ -220,7 +240,7 @@ export class MetaValueArray<T> implements MetaValue<Array<T>> {
   private value: Array<MetaValueSingular<T>>;
   private _meta: MetaInformation | undefined;
   constructor(
-    meta: MetaInformation | undefined,
+    meta: PartialMeta | undefined,
     value: Array<T>,
     element?: Element[]
   ) {
@@ -232,7 +252,7 @@ export class MetaValueArray<T> implements MetaValue<Array<T>> {
           element && isArray(element) ? element[i] : undefined
         )
     );
-    this._meta = meta;
+    this._meta = deriveMetaInformation(meta);
   }
   valueOf(): Array<T> {
     return this.value.map((v) => v.valueOf());

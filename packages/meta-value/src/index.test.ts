@@ -13,7 +13,25 @@ const patientSD = sds.find(
   (sd) => sd.type === "Patient"
 ) as StructureDefinition;
 
-test("Simple Proxy Test", () => {
+test("Untyped", () => {
+  const patient: Patient = {
+    id: "123",
+    resourceType: "Patient",
+    identifier: [{ system: "mrn", value: "123" }],
+    name: [{ given: ["bob"] }],
+    deceasedBoolean: true,
+  };
+  const myValue = new MetaValueSingular(undefined, patient) as any;
+
+  expect(descend(myValue, "name")?.valueOf()).toEqual([{ given: ["bob"] }]);
+  expect(descend(myValue, "deceased")?.valueOf()).toEqual(true);
+  expect(descend(myValue, "identifier")?.valueOf()).toEqual([
+    { system: "mrn", value: "123" },
+  ]);
+  expect(descend(myValue, "nonExistent")?.valueOf()).toEqual(undefined);
+});
+
+test("Simple Type test", () => {
   const patient: Patient = {
     id: "123",
     resourceType: "Patient",
@@ -23,8 +41,6 @@ test("Simple Proxy Test", () => {
   };
   const myValue = new MetaValueSingular(
     {
-      sd: patientSD,
-      elementIndex: 0,
       type: "Patient",
       getSD: (type: string) => {
         const foundSD = sds.find((sd) => sd.type === type);
