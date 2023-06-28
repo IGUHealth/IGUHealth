@@ -32,6 +32,7 @@ function toMetaValueSingulars<T>(
 }
 
 type Options = {
+  returnWithMeta?: boolean;
   variables?: Record<string, unknown> | ((v: string) => unknown);
   meta?: PartialMeta;
 };
@@ -456,10 +457,9 @@ export function evaluate(
 ): NonNullable<unknown>[] {
   const ast = parse(expression);
   const ctx = toMetaValueSingulars(options?.meta, value);
-
-  const output = _evaluate(ast, ctx, options)
-    .map((v) => v.valueOf())
-    .filter(nonNullable);
-
-  return output;
+  const result = _evaluate(ast, ctx, options);
+  if (options?.returnWithMeta) {
+    return result.filter((v) => nonNullable(v.valueOf()));
+  }
+  return result.map((v) => v.valueOf()).filter(nonNullable);
 }
