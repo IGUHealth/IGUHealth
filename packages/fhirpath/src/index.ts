@@ -1,7 +1,6 @@
 // import validator from "@genfhi/fhir-json-schema";
 import { parse } from "./parser";
-import { primitiveTypes, complexTypes } from "@genfhi/fhir-types/r4/sets";
-import { isObject } from "./node";
+import { Resource } from "@genfhi/fhir-types/r4/types";
 import {
   PartialMeta,
   MetaValueArray,
@@ -133,7 +132,7 @@ const fp_functions: Record<
         (acc, v1) =>
           acc &&
           otherSet.find((v2) => {
-            const result = fp_operations["="]([v1], [v2], options);
+            const result = equalityCheck([v1], [v2], options);
             return result[0].valueOf();
           }) !== undefined,
         true
@@ -149,7 +148,7 @@ const fp_functions: Record<
         (acc, v1) =>
           acc &&
           context.find((v2) => {
-            const result = fp_operations["="]([v1], [v2], options);
+            const result = equalityCheck([v1], [v2], options);
             return result[0].valueOf();
           }) !== undefined,
         true
@@ -219,20 +218,13 @@ const fp_functions: Record<
   ofType(ast, context, options) {
     const parameters = ast.next;
     const typeIdentifier = getTypeIdentifier(parameters[0]);
-
-    if (
-      primitiveTypes.has(typeIdentifier) ||
-      complexTypes.has(typeIdentifier)
-    ) {
-      throw new Error(
-        "Of Type not implemented for complex or primitive types yet"
-      );
-    }
     return context.filter((v) => {
-      if (isObject(v.valueOf())) {
-        return (v.valueOf() as any)?.resourceType === typeIdentifier;
+      if (v.meta()?.type) {
+        return v.meta()?.type === typeIdentifier;
       }
-      return false;
+      return (
+        (v.valueOf() as Resource | undefined)?.resourceType === typeIdentifier
+      );
     });
   },
 };
@@ -344,15 +336,54 @@ function invalidOperandError(args: unknown[], operator: string) {
   );
 }
 
+type EvaledOperation = (
+  left: MetaValueSingular<unknown>[],
+  right: MetaValueSingular<unknown>[],
+  options?: Options
+) => MetaValueSingular<unknown>[];
+
+function op_prevaled(
+  operation_function: EvaledOperation
+): (
+  ast: any,
+  context: MetaValueSingular<unknown>[],
+  options?: Options
+) => MetaValueSingular<unknown>[] {
+  return (ast, context, options) => {
+    const left = _evaluate(ast.left, context, options);
+    const right = _evaluate(ast.right, context, options);
+
+    return operation_function(left, right, options);
+  };
+}
+
+const equalityCheck: EvaledOperation = (
+  left,
+  right,
+  options
+): MetaValueSingular<boolean>[] => {
+  // TODO improve Deep Equals speed.
+  if (typeof left[0].valueOf() === "object") {
+    return toMetaValueSingulars(
+      options?.meta,
+      JSON.stringify(left[0].valueOf()) === JSON.stringify(right[0].valueOf())
+    );
+  }
+  return toMetaValueSingulars(
+    options?.meta,
+    left[0].valueOf() === right[0].valueOf()
+  );
+};
+
 const fp_operations: Record<
   string,
   (
-    left: MetaValueSingular<unknown>[],
-    right: MetaValueSingular<unknown>[],
+    ast: any,
+    context: MetaValueSingular<unknown>[],
     options?: Options
   ) => MetaValueSingular<unknown>[]
 > = {
-  "+"(left, right, options) {
+  "+": op_prevaled((left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
       return toMetaValueSingulars(
         options?.meta,
@@ -366,8 +397,19 @@ const fp_operations: Record<
     } else {
       throw invalidOperandError([left[0], right[0]], "+");
     }
+  }),
+  as: (ast, context, options) => {
+    const left = _evaluate(ast.left, context, options);
+    if (left.length > 1)
+      throw new Error(
+        "The 'is' operator left hand operand must be equal to length 1"
+      );
+    const typeIdentifier = getTypeIdentifier(ast.right);
+    return left.filter((v) => {
+      return v.meta()?.type === typeIdentifier;
+    });
   },
-  "-"(left, right, options) {
+  "-": op_prevaled((left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
       return toMetaValueSingulars(
         options?.meta,
@@ -376,8 +418,8 @@ const fp_operations: Record<
     } else {
       throw invalidOperandError([left[0], right[0]], "-");
     }
-  },
-  "*"(left, right, options) {
+  }),
+  "*": op_prevaled((left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
       return toMetaValueSingulars(
         options?.meta,
@@ -386,8 +428,8 @@ const fp_operations: Record<
     } else {
       throw invalidOperandError([left[0], right[0]], "*");
     }
-  },
-  "/"(left, right, options) {
+  }),
+  "/": op_prevaled((left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
       return toMetaValueSingulars(
         options?.meta,
@@ -396,20 +438,8 @@ const fp_operations: Record<
     } else {
       throw invalidOperandError([left[0], right[0]], "/");
     }
-  },
-  "="(left, right, options): MetaValueSingular<boolean>[] {
-    // TODO improve Deep Equals speed.
-    if (typeof left[0].valueOf() === "object") {
-      return toMetaValueSingulars(
-        options?.meta,
-        JSON.stringify(left[0].valueOf()) === JSON.stringify(right[0].valueOf())
-      );
-    }
-    return toMetaValueSingulars(
-      options?.meta,
-      left[0].valueOf() === right[0].valueOf()
-    );
-  },
+  }),
+  "=": op_prevaled(equalityCheck),
 };
 
 function evaluateOperation(
@@ -417,11 +447,8 @@ function evaluateOperation(
   context: MetaValueSingular<unknown>[],
   options?: Options
 ): MetaValueSingular<unknown>[] {
-  const left = _evaluate(ast.left, context, options);
-  const right = _evaluate(ast.right, context, options);
-
   const operator = fp_operations[ast.operator];
-  if (operator) return operator(left, right, options);
+  if (operator) return operator(ast, context, options);
   else throw new Error("Unsupported operator: '" + ast.operator + "'");
 }
 

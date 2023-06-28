@@ -326,12 +326,12 @@ test("ofType", () => {
       { resourceType: "MedicationRequest" },
     ])
   ).toEqual([{ resourceType: "Patient" }]);
-  expect(() => {
+  expect(
     evaluate("ofType(HumanName)", [
       { resourceType: "Patient" },
       { resourceType: "MedicationRequest" },
-    ]);
-  }).toThrow();
+    ])
+  ).toEqual([]);
 });
 
 test("Return Type meta", () => {
@@ -420,4 +420,36 @@ test("Typechoice meta", () => {
       metaOptions("Patient")
     ).map((v) => v.meta()?.type)
   ).toEqual(["dateTime"]);
+});
+
+test("is operator", () => {
+  expect(
+    evaluate(
+      "($this.deceased as dateTime)",
+      {
+        resourceType: "Patient",
+        deceasedBoolean: false,
+      },
+      {
+        meta: {
+          getSD,
+        },
+      }
+    )
+  ).toEqual([]);
+
+  expect(
+    evaluate(
+      "($this.deceased as dateTime)",
+      {
+        resourceType: "Patient",
+        deceasedDateTime: "1980-01-01T00:00:00Z",
+      },
+      {
+        meta: {
+          getSD,
+        },
+      }
+    )
+  ).toEqual(["1980-01-01T00:00:00Z"]);
 });

@@ -28,7 +28,7 @@ type MetaInformation = {
 };
 
 export type PartialMeta = {
-  type: MetaInformation["type"];
+  type?: MetaInformation["type"];
   elementIndex?: MetaInformation["elementIndex"];
   sd?: MetaInformation["sd"];
   // Typechoice so need to maintain the type here.
@@ -52,9 +52,8 @@ function deriveMetaInformation(
 ): MetaInformation | undefined {
   if (!partialMeta) return partialMeta;
   if (!partialMeta.elementIndex) partialMeta.elementIndex = 0;
-  if (!partialMeta.sd)
+  if (!partialMeta.sd && partialMeta.type)
     partialMeta.sd = partialMeta.getSD && partialMeta.getSD(partialMeta.type);
-
   return partialMeta.sd ? (partialMeta as MetaInformation) : undefined;
 }
 
@@ -184,6 +183,9 @@ export function toMetaValueNodes<T>(
     );
   }
   if (value === undefined && element === undefined) return undefined;
+  // Assign a type automatically if the value is a resourceType
+  if (isObject(value) && typeof value.resourceType === "string")
+    meta = { ...meta, type: value.resourceType };
   return new MetaValueSingular(meta, value, element as Element | undefined);
 }
 
