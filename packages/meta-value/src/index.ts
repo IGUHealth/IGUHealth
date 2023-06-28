@@ -27,7 +27,7 @@ type MetaInformation = {
   getSD?: (type: code) => StructureDefinition | undefined;
 };
 
-type PartialMeta = {
+export type PartialMeta = {
   type: MetaInformation["type"];
   elementIndex?: MetaInformation["elementIndex"];
   sd?: MetaInformation["sd"];
@@ -35,7 +35,7 @@ type PartialMeta = {
   getSD?: MetaInformation["getSD"];
 };
 
-interface MetaValue<T> {
+export interface MetaValue<T> {
   meta(): MetaInformation | undefined;
   valueOf(): T;
   isArray(): this is MetaValueArray<T>;

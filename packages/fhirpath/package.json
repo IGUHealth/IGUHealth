@@ -10,6 +10,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "@genfhi/meta-value": "workspace:^"
+  },
   "devDependencies": {
     "@genfhi/fhir-types": "workspace:^",
     "@types/jest": "^29.5.2",

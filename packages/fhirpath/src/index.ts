@@ -1,10 +1,39 @@
 // import validator from "@genfhi/fhir-json-schema";
 import { parse } from "./parser";
 import { primitiveTypes, complexTypes } from "@genfhi/fhir-types/r4/sets";
-import { toFPNodes, FHIRPathNodeType, descend, isObject } from "./node";
+import { toFPNodes, isObject } from "./node";
+import {
+  PartialMeta,
+  MetaValueArray,
+  MetaValueSingular,
+  descend,
+  toMetaValueNodes,
+} from "@genfhi/meta-value";
+
+function flattenedDescend<T>(
+  node: MetaValueSingular<T>,
+  field: string
+): MetaValueSingular<unknown>[] {
+  const v = descend(node, field);
+  if (v instanceof MetaValueArray) return v.toArray();
+  if (v instanceof MetaValueSingular) return [v];
+  return [];
+}
+
+function toMetaValueSingulars<T>(
+  meta: PartialMeta | undefined,
+  value: T | T[],
+  element?: Element | Element[]
+): MetaValueSingular<T>[] {
+  const node = toMetaValueNodes(meta, value, element);
+  if (node instanceof MetaValueArray) return node.toArray();
+  if (node instanceof MetaValueSingular) return [node];
+  return [];
+}
 
 type Options = {
   variables?: Record<string, unknown> | ((v: string) => unknown);
+  meta?: PartialMeta;
 };
 
 function flatten<T>(arr: T[][]): T[] {
@@ -14,7 +43,7 @@ function flatten<T>(arr: T[][]): T[] {
 function getVariableValue(
   name: string,
   options?: Options
-): FHIRPathNodeType<unknown>[] {
+): MetaValueSingular<unknown>[] {
   let value;
   if (options?.variables instanceof Function) {
     value = options.variables(name);
@@ -22,7 +51,7 @@ function getVariableValue(
     value = options.variables[name];
   }
 
-  return toFPNodes(value);
+  return toMetaValueSingulars(options?.meta, value);
 }
 
 function assert(assertion: boolean, message?: string) {
@@ -45,56 +74,67 @@ const fp_functions: Record<
   string,
   (
     ast: any,
-    context: FHIRPathNodeType<unknown>[],
+    context: MetaValueSingular<unknown>[],
     options?: Options
-  ) => FHIRPathNodeType<unknown>[]
+  ) => MetaValueSingular<unknown>[]
 > = {
   // [EXISTENCE FUNCTIONS]
   // Returns true if the input collection is empty ({ }) and false otherwise.
   exists: function (ast, context, options) {
     if (ast.next.length === 1) {
-      return toFPNodes(_evaluate(ast.next[0], context, options).length > 0);
+      return toMetaValueSingulars(
+        options?.meta,
+        _evaluate(ast.next[0], context, options).length > 0
+      );
     }
-    return toFPNodes(context.length > 0);
+    return toMetaValueSingulars(options?.meta, context.length > 0);
   },
   // exists([criteria : expression]) : Boolean
   empty(ast, context, options) {
-    return toFPNodes(context.length === 0);
+    return toMetaValueSingulars(options?.meta, context.length === 0);
   },
   all(ast, context, options) {
-    return toFPNodes(
+    return toMetaValueSingulars(
+      options?.meta,
       flatten(context.map((v) => _evaluate(ast.next[0], [v], options)))
-        .map((v) => v.value)
+        .map((v) => v.valueOf())
         .reduce((acc, v) => acc && v, true)
     );
   },
   allTrue(ast, context, options) {
-    return toFPNodes(context.reduce((acc, v) => v.value === true && acc, true));
+    return toMetaValueSingulars(
+      options?.meta,
+      context.reduce((acc, v) => v.valueOf() === true && acc, true)
+    );
   },
   anyTrue(ast, context, options) {
-    return toFPNodes(
-      context.reduce((acc, v) => v.value === true || acc, false)
+    return toMetaValueSingulars(
+      options?.meta,
+      context.reduce((acc, v) => v.valueOf() === true || acc, false)
     );
   },
   allFalse(ast, context, options) {
-    return toFPNodes(
-      context.reduce((acc, v) => v.value === false && acc, true)
+    return toMetaValueSingulars(
+      options?.meta,
+      context.reduce((acc, v) => v.valueOf() === false && acc, true)
     );
   },
   anyFalse(ast, context, options) {
-    return toFPNodes(
-      context.reduce((acc, v) => v.value === false || acc, false)
+    return toMetaValueSingulars(
+      options?.meta,
+      context.reduce((acc, v) => v.valueOf() === false || acc, false)
     );
   },
   subsetOf(ast, context, options) {
     const otherSet = _evaluate(ast.next[0], context, options);
-    return toFPNodes(
+    return toMetaValueSingulars(
+      options?.meta,
       context.reduce(
         (acc, v1) =>
           acc &&
           otherSet.find((v2) => {
             const result = fp_operations["="]([v1], [v2], options);
-            return result[0].value;
+            return result[0].valueOf();
           }) !== undefined,
         true
       )
@@ -103,33 +143,36 @@ const fp_functions: Record<
   // Conceptionally this is the opposite of subsetOf.
   supersetOf(ast, context, options) {
     const otherSet = _evaluate(ast.next[0], context, options);
-    return toFPNodes(
+    return toMetaValueSingulars(
+      options?.meta,
       otherSet.reduce(
         (acc, v1) =>
           acc &&
           context.find((v2) => {
             const result = fp_operations["="]([v1], [v2], options);
-            return result[0].value;
+            return result[0].valueOf();
           }) !== undefined,
         true
       )
     );
   },
   count(ast, context, options) {
-    return toFPNodes(context.length);
+    return toMetaValueSingulars(options?.meta, context.length);
   },
   distinct(ast, context, options) {
     const map = context
       .map(
-        (v: FHIRPathNodeType<unknown>): [string, FHIRPathNodeType<unknown>] => [
-          JSON.stringify(v.value),
+        (
+          v: MetaValueSingular<unknown>
+        ): [string, MetaValueSingular<unknown>] => [
+          JSON.stringify(v.valueOf()),
           v,
         ]
       )
       .reduce(
         (
-          m: { [key: string]: FHIRPathNodeType<unknown> },
-          [k, v]: [string, FHIRPathNodeType<unknown>]
+          m: { [key: string]: MetaValueSingular<unknown> },
+          [k, v]: [string, MetaValueSingular<unknown>]
         ) => {
           m[k] = v;
           return m;
@@ -140,7 +183,10 @@ const fp_functions: Record<
   },
   isDistinct(ast, context, options) {
     const distinct = fp_functions.distinct(undefined, context, options);
-    return toFPNodes(context.length === distinct.length);
+    return toMetaValueSingulars(
+      options?.meta,
+      context.length === distinct.length
+    );
   },
   // [FILTER FUNCTIONS]
   where(ast, context, options) {
@@ -148,7 +194,7 @@ const fp_functions: Record<
     return context.filter((v) => {
       const result = _evaluate(criteria, [v], options);
       assert(result.length === 1, "result must be one");
-      if (typeChecking("boolean", result)) return result[0].value;
+      if (typeChecking("boolean", result)) return result[0].valueOf();
       throw new Error("Where clause criteria must evaluate to a boolean");
     });
   },
@@ -162,7 +208,7 @@ const fp_functions: Record<
   },
   repeat(ast, context, options) {
     const projection = ast.next[0];
-    let endResult: FHIRPathNodeType<unknown>[] = [];
+    let endResult: MetaValueSingular<unknown>[] = [];
     let cur = context;
     while (cur.length !== 0) {
       cur = _evaluate(projection, cur, options);
@@ -183,8 +229,8 @@ const fp_functions: Record<
       );
     }
     return context.filter((v) => {
-      if (isObject(v.value)) {
-        return v.value?.resourceType === typeIdentifier;
+      if (isObject(v.valueOf())) {
+        return (v.valueOf() as any)?.resourceType === typeIdentifier;
       }
       return false;
     });
@@ -193,9 +239,9 @@ const fp_functions: Record<
 
 function evaluateInvocation(
   ast: any,
-  context: FHIRPathNodeType<unknown>[],
+  context: MetaValueSingular<unknown>[],
   options?: Options
-): FHIRPathNodeType<unknown>[] {
+): MetaValueSingular<unknown>[] {
   switch (ast.value.type) {
     case "Index":
       throw new Error("Not implemented");
@@ -204,7 +250,7 @@ function evaluateInvocation(
     case "This":
       return context;
     case "Identifier":
-      return flatten(context.map((v) => descend(v, ast.value.value)));
+      return flatten(context.map((v) => flattenedDescend(v, ast.value.value)));
     case "Function":
       const fp_func = fp_functions[ast.value.value.value];
       if (!fp_func)
@@ -217,14 +263,14 @@ function evaluateInvocation(
 
 function _evaluateTermStart(
   ast: any,
-  context: FHIRPathNodeType<unknown>[],
+  context: MetaValueSingular<unknown>[],
   options?: Options
-): FHIRPathNodeType<unknown>[] {
+): MetaValueSingular<unknown>[] {
   switch (ast.value.type) {
     case "Invocation":
       return evaluateInvocation(ast.value, context, options);
     case "Literal": {
-      return toFPNodes(ast.value.value);
+      return toMetaValueSingulars(options?.meta, ast.value.value);
     }
     case "Variable":
       return getVariableValue(ast.value.value.value, options);
@@ -237,9 +283,9 @@ function _evaluateTermStart(
 
 function evaluateProperty(
   ast: any,
-  context: FHIRPathNodeType<unknown>[],
+  context: MetaValueSingular<unknown>[],
   options?: Options
-): FHIRPathNodeType<unknown>[] {
+): MetaValueSingular<unknown>[] {
   switch (ast.type) {
     case "Invocation":
       return evaluateInvocation(ast, context, options);
@@ -249,7 +295,7 @@ function evaluateProperty(
         throw new Error("Indexing requires a single value");
       if (!typeChecking("number", indexed))
         throw new Error("Indexing requires a number");
-      return [context[indexed[0].value]];
+      return [context[indexed[0].valueOf()]];
     default:
       throw new Error("Unknown term type: '" + ast.type + "'");
   }
@@ -257,13 +303,13 @@ function evaluateProperty(
 
 function evaluateSingular(
   ast: any,
-  context: FHIRPathNodeType<unknown>[],
+  context: MetaValueSingular<unknown>[],
   options?: Options
-): FHIRPathNodeType<unknown>[] {
+): MetaValueSingular<unknown>[] {
   const start = _evaluateTermStart(ast, context, options);
   if (ast.next) {
     return ast.next.reduce(
-      (context: FHIRPathNodeType<unknown>[], next: any) => {
+      (context: MetaValueSingular<unknown>[], next: any) => {
         return evaluateProperty(next, context, options);
       },
       start
@@ -284,10 +330,10 @@ type ValidOperandType = "number" | "string" | "boolean";
 
 function typeChecking<T extends ValidOperandType, U>(
   typeChecking: T,
-  args: FHIRPathNodeType<unknown>[]
-): args is FHIRPathNodeType<OperatorType<T>>[] {
-  return args.reduce((acc: boolean, v: FHIRPathNodeType<unknown>) => {
-    if (typeof v.value !== typeChecking) return false;
+  args: MetaValueSingular<unknown>[]
+): args is MetaValueSingular<OperatorType<T>>[] {
+  return args.reduce((acc: boolean, v: MetaValueSingular<unknown>) => {
+    if (typeof v.valueOf() !== typeChecking) return false;
     return acc;
   }, true) as boolean;
 }
@@ -301,57 +347,76 @@ function invalidOperandError(args: unknown[], operator: string) {
 const fp_operations: Record<
   string,
   (
-    left: FHIRPathNodeType<unknown>[],
-    right: FHIRPathNodeType<unknown>[],
+    left: MetaValueSingular<unknown>[],
+    right: MetaValueSingular<unknown>[],
     options?: Options
-  ) => FHIRPathNodeType<unknown>[]
+  ) => MetaValueSingular<unknown>[]
 > = {
   "+"(left, right, options) {
     if (typeChecking("number", left) && typeChecking("number", right)) {
-      return toFPNodes(left[0].value + right[0].value);
+      return toMetaValueSingulars(
+        options?.meta,
+        left[0].valueOf() + right[0].valueOf()
+      );
     } else if (typeChecking("string", left) && typeChecking("string", right)) {
-      return toFPNodes(left[0].value + right[0].value);
+      return toMetaValueSingulars(
+        options?.meta,
+        left[0].valueOf() + right[0].valueOf()
+      );
     } else {
       throw invalidOperandError([left[0], right[0]], "+");
     }
   },
   "-"(left, right, options) {
     if (typeChecking("number", left) && typeChecking("number", right)) {
-      return toFPNodes(left[0].value - right[0].value);
+      return toMetaValueSingulars(
+        options?.meta,
+        left[0].valueOf() - right[0].valueOf()
+      );
     } else {
       throw invalidOperandError([left[0], right[0]], "-");
     }
   },
   "*"(left, right, options) {
     if (typeChecking("number", left) && typeChecking("number", right)) {
-      return toFPNodes(left[0].value * right[0].value);
+      return toMetaValueSingulars(
+        options?.meta,
+        left[0].valueOf() * right[0].valueOf()
+      );
     } else {
       throw invalidOperandError([left[0], right[0]], "*");
     }
   },
   "/"(left, right, options) {
     if (typeChecking("number", left) && typeChecking("number", right)) {
-      return toFPNodes(left[0].value / right[0].value);
+      return toMetaValueSingulars(
+        options?.meta,
+        left[0].valueOf() / right[0].valueOf()
+      );
     } else {
       throw invalidOperandError([left[0], right[0]], "/");
     }
   },
-  "="(left, right, options): FHIRPathNodeType<boolean>[] {
+  "="(left, right, options): MetaValueSingular<boolean>[] {
     // TODO improve Deep Equals speed.
-    if (typeof left[0].value === "object") {
-      return toFPNodes(
-        JSON.stringify(left[0].value) === JSON.stringify(right[0].value)
+    if (typeof left[0].valueOf() === "object") {
+      return toMetaValueSingulars(
+        options?.meta,
+        JSON.stringify(left[0].valueOf()) === JSON.stringify(right[0].valueOf())
       );
     }
-    return toFPNodes(left[0].value === right[0].value);
+    return toMetaValueSingulars(
+      options?.meta,
+      left[0].valueOf() === right[0].valueOf()
+    );
   },
 };
 
 function evaluateOperation(
   ast: any,
-  context: FHIRPathNodeType<unknown>[],
+  context: MetaValueSingular<unknown>[],
   options?: Options
-): FHIRPathNodeType<unknown>[] {
+): MetaValueSingular<unknown>[] {
   const left = _evaluate(ast.left, context, options);
   const right = _evaluate(ast.right, context, options);
 
@@ -362,9 +427,9 @@ function evaluateOperation(
 
 function _evaluate(
   ast: any,
-  context: FHIRPathNodeType<unknown>[],
+  context: MetaValueSingular<unknown>[],
   options?: Options
-): FHIRPathNodeType<unknown>[] {
+): MetaValueSingular<unknown>[] {
   switch (ast.value.type) {
     case "Operation": {
       return evaluateOperation(ast.value, context, options);
@@ -390,9 +455,9 @@ export function evaluate(
   options?: Options
 ): NonNullable<unknown>[] {
   const ast = parse(expression);
-  const ctx = toFPNodes(value);
+  const ctx = toMetaValueSingulars(options?.meta, value);
   const output = _evaluate(ast, ctx, options)
-    .map((v) => v.value)
+    .map((v) => v.valueOf())
     .filter(nonNullable);
 
   return output;
