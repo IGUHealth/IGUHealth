@@ -60,7 +60,7 @@ function assert(assertion: boolean, message?: string) {
 }
 
 // Problem is you can't distinguish an identifier vs typeidentifier so just check to confirm singular and only identifier present.
-function getTypeIdentifier(ast: any) {
+function expressionToTypeIdentifier(ast: any) {
   if (ast.type !== "Expression") return;
   if (ast.value?.type !== "Singular") return;
   if (ast.value?.next !== undefined) return;
@@ -217,15 +217,8 @@ const fp_functions: Record<
   },
   ofType(ast, context, options) {
     const parameters = ast.next;
-    const typeIdentifier = getTypeIdentifier(parameters[0]);
-    return context.filter((v) => {
-      if (v.meta()?.type) {
-        return v.meta()?.type === typeIdentifier;
-      }
-      return (
-        (v.valueOf() as Resource | undefined)?.resourceType === typeIdentifier
-      );
-    });
+    const typeIdentifier = expressionToTypeIdentifier(parameters[0]);
+    return filterByType(typeIdentifier, context);
   },
 };
 
@@ -260,6 +253,12 @@ function _evaluateTermStart(
 ): MetaValueSingular<unknown>[] {
   switch (ast.value.type) {
     case "Invocation":
+      // Special code handling for start with typeidentifier
+      if (ast.value.value.type === "Identifier") {
+        const typeIdentifier = ast?.value?.value?.value;
+        const result = filterByType(typeIdentifier, context);
+        if (result.length > 0) return result;
+      }
       return evaluateInvocation(ast.value, context, options);
     case "Literal": {
       return toMetaValueSingulars(options?.meta, ast.value.value);
@@ -375,6 +374,15 @@ const equalityCheck: EvaledOperation = (
   );
 };
 
+function filterByType<T>(type: string, context: MetaValueSingular<T>[]) {
+  return context.filter((v) => {
+    if (v.meta()?.type) {
+      return v.meta()?.type === type;
+    }
+    return (v.valueOf() as Resource | undefined)?.resourceType === type;
+  });
+}
+
 const fp_operations: Record<
   string,
   (
@@ -404,10 +412,8 @@ const fp_operations: Record<
       throw new Error(
         "The 'is' operator left hand operand must be equal to length 1"
       );
-    const typeIdentifier = getTypeIdentifier(ast.right);
-    return left.filter((v) => {
-      return v.meta()?.type === typeIdentifier;
-    });
+    const typeIdentifier = expressionToTypeIdentifier(ast.right);
+    return filterByType(typeIdentifier, left);
   },
   "-": op_prevaled((left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
