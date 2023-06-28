@@ -400,7 +400,7 @@ const fp_operations: Record<
   }),
   as: (ast, context, options) => {
     const left = _evaluate(ast.left, context, options);
-    if (left.length !== 1)
+    if (left.length > 1)
       throw new Error(
         "The 'is' operator left hand operand must be equal to length 1"
       );
