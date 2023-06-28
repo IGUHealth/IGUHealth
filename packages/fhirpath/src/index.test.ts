@@ -404,3 +404,35 @@ test("Return Type meta", () => {
     ).map((v) => v.meta()?.type)
   ).toEqual(["uri"]);
 });
+
+test("Typechoice meta", () => {
+  expect(
+    (
+      evaluate(
+        "$this.deceased",
+        {
+          resourceType: "Patient",
+          name: [{ given: ["bob"], family: "jameson" }],
+          deceasedBoolean: false,
+          identifier: [{ system: "mrn", value: "123" }],
+        },
+        metaOptions("Patient")
+      ) as MetaValue<unknown>[]
+    ).map((v) => v.meta()?.type)
+  ).toEqual(["boolean"]);
+
+  expect(
+    (
+      evaluate(
+        "$this.deceased",
+        {
+          resourceType: "Patient",
+          name: [{ given: ["bob"], family: "jameson" }],
+          deceasedDateTime: "1980-01-01T00:00:00Z",
+          identifier: [{ system: "mrn", value: "123" }],
+        },
+        metaOptions("Patient")
+      ) as MetaValue<unknown>[]
+    ).map((v) => v.meta()?.type)
+  ).toEqual(["dateTime"]);
+});
