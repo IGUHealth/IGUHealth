@@ -456,6 +456,7 @@ export function evaluate(
 ): NonNullable<unknown>[] {
   const ast = parse(expression);
   const ctx = toMetaValueSingulars(options?.meta, value);
+
   const output = _evaluate(ast, ctx, options)
     .map((v) => v.valueOf())
     .filter(nonNullable);

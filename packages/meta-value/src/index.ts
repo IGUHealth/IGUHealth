@@ -174,6 +174,8 @@ export function toMetaValueNodes<T>(
   value: T | T[],
   element?: Element | Element[]
 ): MetaValueSingular<T> | MetaValueArray<T> | undefined {
+  if (value instanceof MetaValueArray || value instanceof MetaValueSingular)
+    return value;
   if (isArray(value)) {
     return new MetaValueArray(
       meta,
