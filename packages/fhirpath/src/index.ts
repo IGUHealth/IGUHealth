@@ -1,7 +1,6 @@
 // import validator from "@genfhi/fhir-json-schema";
 import { parse } from "./parser";
 import { Resource } from "@genfhi/fhir-types/r4/types";
-import { isObject } from "./node";
 import {
   PartialMeta,
   MetaValueArray,
@@ -399,14 +398,17 @@ const fp_operations: Record<
       throw invalidOperandError([left[0], right[0]], "+");
     }
   }),
-  is: op_prevaled((left, right, options) => {
+  as: (ast, context, options) => {
+    const left = _evaluate(ast.left, context, options);
     if (left.length !== 1)
       throw new Error(
         "The 'is' operator left hand operand must be equal to length 1"
       );
-    const typeIdentifier = getTypeIdentifier(right);
-    return left.filter((v) => v.meta()?.type === typeIdentifier);
-  }),
+    const typeIdentifier = getTypeIdentifier(ast.right);
+    return left.filter((v) => {
+      return v.meta()?.type === typeIdentifier;
+    });
+  },
   "-": op_prevaled((left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
       return toMetaValueSingulars(

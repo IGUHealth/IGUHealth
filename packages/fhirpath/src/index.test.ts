@@ -422,6 +422,34 @@ test("Typechoice meta", () => {
   ).toEqual(["dateTime"]);
 });
 
-// test("ofType", () => {
+test("is operator", () => {
+  expect(
+    evaluate(
+      "($this.deceased as dateTime)",
+      {
+        resourceType: "Patient",
+        deceasedBoolean: false,
+      },
+      {
+        meta: {
+          getSD,
+        },
+      }
+    )
+  ).toEqual([]);
 
-// });
+  expect(
+    evaluate(
+      "($this.deceased as dateTime)",
+      {
+        resourceType: "Patient",
+        deceasedDateTime: "1980-01-01T00:00:00Z",
+      },
+      {
+        meta: {
+          getSD,
+        },
+      }
+    )
+  ).toEqual(["1980-01-01T00:00:00Z"]);
+});
