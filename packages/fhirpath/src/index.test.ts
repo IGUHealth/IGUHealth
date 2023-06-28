@@ -326,12 +326,12 @@ test("ofType", () => {
       { resourceType: "MedicationRequest" },
     ])
   ).toEqual([{ resourceType: "Patient" }]);
-  expect(() => {
+  expect(
     evaluate("ofType(HumanName)", [
       { resourceType: "Patient" },
       { resourceType: "MedicationRequest" },
-    ]);
-  }).toThrow();
+    ])
+  ).toEqual([]);
 });
 
 test("Return Type meta", () => {
@@ -421,3 +421,7 @@ test("Typechoice meta", () => {
     ).map((v) => v.meta()?.type)
   ).toEqual(["dateTime"]);
 });
+
+// test("ofType", () => {
+
+// });

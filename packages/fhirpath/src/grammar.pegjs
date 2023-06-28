@@ -57,9 +57,10 @@ mem_operation =    head: equality_operation WS tail:($('in' / 'contains') WS equ
 { return buildBinaryExpression(head, tail)}
 equality_operation = head:union_operation WS tail:($('<=' / '<' / '>' / '>=' / '=' / '~' / '!=' / '!~') WS union_operation WS) *
 { return buildBinaryExpression(head, tail)}
-union_operation  = head:additive_operation WS tail:($("|") WS additive_operation WS) * 
+union_operation  = head:is_as_operation WS tail:($("|") WS is_as_operation WS) * 
 { return buildBinaryExpression(head, tail)}
-// is_as_operation
+is_as_operation  = head:additive_operation WS tail:($("is" / "as") WS additive_operation WS) * 
+{ return buildBinaryExpression(head, tail)}
 additive_operation = head:multiplication_operation WS tail:($('+' / '-' / '&') WS multiplication_operation WS)*
 { return buildBinaryExpression(head, tail)}
 multiplication_operation = head:_singular_expression WS tail:($('*' / '/' / 'div' / 'mod') WS _singular_expression WS)*
@@ -67,7 +68,6 @@ multiplication_operation = head:_singular_expression WS tail:($('*' / '/' / 'div
 
 
 
-// / expression ('is' / 'as') //typeSpecifier             //typeExpression
 
 expression_inner
         = invocation_expression

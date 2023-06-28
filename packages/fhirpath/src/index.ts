@@ -1,6 +1,6 @@
 // import validator from "@genfhi/fhir-json-schema";
 import { parse } from "./parser";
-import { primitiveTypes, complexTypes } from "@genfhi/fhir-types/r4/sets";
+import { Resource } from "@genfhi/fhir-types/r4/types";
 import { isObject } from "./node";
 import {
   PartialMeta,
@@ -219,20 +219,13 @@ const fp_functions: Record<
   ofType(ast, context, options) {
     const parameters = ast.next;
     const typeIdentifier = getTypeIdentifier(parameters[0]);
-
-    if (
-      primitiveTypes.has(typeIdentifier) ||
-      complexTypes.has(typeIdentifier)
-    ) {
-      throw new Error(
-        "Of Type not implemented for complex or primitive types yet"
-      );
-    }
     return context.filter((v) => {
-      if (isObject(v.valueOf())) {
-        return (v.valueOf() as any)?.resourceType === typeIdentifier;
+      if (v.meta()?.type) {
+        return v.meta()?.type === typeIdentifier;
       }
-      return false;
+      return (
+        (v.valueOf() as Resource | undefined)?.resourceType === typeIdentifier
+      );
     });
   },
 };
