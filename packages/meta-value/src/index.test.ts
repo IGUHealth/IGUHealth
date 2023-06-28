@@ -28,7 +28,7 @@ test("Untyped", () => {
   expect(descend(myValue, "identifier")?.valueOf()).toEqual([
     { system: "mrn", value: "123" },
   ]);
-  expect(descend(myValue, "nonExistant")?.valueOf()).toEqual(undefined);
+  expect(descend(myValue, "nonExistent")?.valueOf()).toEqual(undefined);
 });
 
 test("Simple Type test", () => {
