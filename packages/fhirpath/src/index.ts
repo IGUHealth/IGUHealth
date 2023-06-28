@@ -1,7 +1,7 @@
 // import validator from "@genfhi/fhir-json-schema";
 import { parse } from "./parser";
 import { primitiveTypes, complexTypes } from "@genfhi/fhir-types/r4/sets";
-import { toFPNodes, isObject } from "./node";
+import { isObject } from "./node";
 import {
   PartialMeta,
   MetaValueArray,

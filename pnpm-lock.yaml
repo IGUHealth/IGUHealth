@@ -216,6 +216,9 @@ importers:
         specifier: workspace:^
         version: link:../meta-value
     devDependencies:
+      '@genfhi/artifacts':
+        specifier: workspace:^
+        version: link:../artifacts
       '@genfhi/fhir-types':
         specifier: workspace:^
         version: link:../fhir-types

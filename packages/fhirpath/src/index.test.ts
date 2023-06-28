@@ -1,4 +1,25 @@
 import { evaluate } from "./index";
+import { StructureDefinition, code } from "@genfhi/fhir-types/r4/types";
+import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
+import { MetaValue } from "@genfhi/meta-value";
+
+const sds: StructureDefinition[] = loadArtifacts(
+  "StructureDefinition",
+  "/sd-proxy/"
+);
+
+function getSD(type: code) {
+  const foundSD = sds.find((sd) => sd.type === type);
+  return foundSD;
+}
+
+const metaOptions = (startingType: code) => ({
+  returnWithMeta: true,
+  meta: {
+    type: startingType,
+    getSD: getSD,
+  },
+});
 
 test("Eval tests", () => {
   // Operator testing
@@ -312,4 +333,74 @@ test("ofType", () => {
       { resourceType: "MedicationRequest" },
     ]);
   }).toThrow();
+});
+
+test("Return Type meta", () => {
+  expect(
+    (
+      evaluate(
+        "$this.name",
+        {
+          resourceType: "Patient",
+          name: [{ given: ["bob"], family: "jameson" }],
+        },
+        metaOptions("Patient")
+      ) as MetaValue<unknown>[]
+    ).map((v) => v.meta()?.type)
+  ).toEqual(["HumanName"]);
+
+  expect(
+    (
+      evaluate(
+        "$this.name.given",
+        {
+          resourceType: "Patient",
+          name: [{ given: ["bob"], family: "jameson" }],
+        },
+        metaOptions("Patient")
+      ) as MetaValue<unknown>[]
+    ).map((v) => v.meta()?.type)
+  ).toEqual(["string"]);
+
+  expect(
+    (
+      evaluate(
+        "$this.identifier",
+        {
+          resourceType: "Patient",
+          name: [{ given: ["bob"], family: "jameson" }],
+          identifier: [{ system: "mrn", value: "123" }],
+        },
+        metaOptions("Patient")
+      ) as MetaValue<unknown>[]
+    ).map((v) => v.meta()?.type)
+  ).toEqual(["Identifier"]);
+
+  expect(
+    (
+      evaluate(
+        "$this.identifier.value",
+        {
+          resourceType: "Patient",
+          name: [{ given: ["bob"], family: "jameson" }],
+          identifier: [{ system: "mrn", value: "123" }],
+        },
+        metaOptions("Patient")
+      ) as MetaValue<unknown>[]
+    ).map((v) => v.meta()?.type)
+  ).toEqual(["string"]);
+
+  expect(
+    (
+      evaluate(
+        "$this.identifier.system",
+        {
+          resourceType: "Patient",
+          name: [{ given: ["bob"], family: "jameson" }],
+          identifier: [{ system: "mrn", value: "123" }],
+        },
+        metaOptions("Patient")
+      ) as MetaValue<unknown>[]
+    ).map((v) => v.meta()?.type)
+  ).toEqual(["uri"]);
 });
