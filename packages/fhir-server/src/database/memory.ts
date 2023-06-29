@@ -5,7 +5,7 @@ import {
   Resource,
   id,
 } from "@genfhi/fhir-types/r4/types";
-import { FHIRClientAsync, FHIRClientSynchronous } from "./types";
+import { FHIRClientAsync, FHIRClientSync } from "./types";
 
 type InternalData = Partial<Record<string, Record<id, Resource | undefined>>>;
 
@@ -28,7 +28,7 @@ function fitsSearchCriteria(
   }
 }
 
-export default class MemoryDatabase<CTX> implements FHIRClientSynchronous<CTX> {
+export default class MemoryDatabase<CTX> implements FHIRClientSync<CTX> {
   data: InternalData;
   constructor(data?: InternalData) {
     this.data = data || {};

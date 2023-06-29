@@ -12,7 +12,9 @@ type Async<F, Else = never> = F extends (...arg: infer A) => infer R
   ? (...args: A) => Promise<R>
   : Else;
 
-export interface FHIRClientSynchronous<CTX> {
+export type FHIRClient<CTX> = FHIRClientSync<CTX> | FHIRClientAsync<CTX>;
+
+export interface FHIRClientSync<CTX> {
   search(ctx: CTX, query: FHIRURL): Resource[];
   create<T extends Resource>(ctx: CTX, resource: T): T;
   update<T extends Resource>(ctx: CTX, resource: T): T;
@@ -43,14 +45,14 @@ export interface FHIRClientSynchronous<CTX> {
 }
 
 export interface FHIRClientAsync<CTX> {
-  search: Async<FHIRClientSynchronous<CTX>["search"]>;
-  create: Async<FHIRClientSynchronous<CTX>["create"]>;
-  update: Async<FHIRClientSynchronous<CTX>["update"]>;
-  patch: Async<FHIRClientSynchronous<CTX>["patch"]>;
-  read: Async<FHIRClientSynchronous<CTX>["read"]>;
-  vread: Async<FHIRClientSynchronous<CTX>["vread"]>;
-  delete: Async<FHIRClientSynchronous<CTX>["delete"]>;
-  historySystem: Async<FHIRClientSynchronous<CTX>["historySystem"]>;
-  historyType: Async<FHIRClientSynchronous<CTX>["historyType"]>;
-  historyInstance: Async<FHIRClientSynchronous<CTX>["historyInstance"]>;
+  search: Async<FHIRClientSync<CTX>["search"]>;
+  create: Async<FHIRClientSync<CTX>["create"]>;
+  update: Async<FHIRClientSync<CTX>["update"]>;
+  patch: Async<FHIRClientSync<CTX>["patch"]>;
+  read: Async<FHIRClientSync<CTX>["read"]>;
+  vread: Async<FHIRClientSync<CTX>["vread"]>;
+  delete: Async<FHIRClientSync<CTX>["delete"]>;
+  historySystem: Async<FHIRClientSync<CTX>["historySystem"]>;
+  historyType: Async<FHIRClientSync<CTX>["historyType"]>;
+  historyInstance: Async<FHIRClientSync<CTX>["historyInstance"]>;
 }

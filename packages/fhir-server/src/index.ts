@@ -38,14 +38,17 @@ function createMemoryDatabase(
 
 function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
   const app = new Koa();
+
   const database = createMemoryDatabase([
     "StructureDefinition",
     "SearchParameter",
   ]);
+
   const fhirServer = createFhirServer({
     capabilities: serverCapabilities(),
     database: database,
   });
+
   const router = new Router();
   router.all("/w/:workspace/api/fhir/r4/:fhirUrl*", async (ctx, next) => {
     // console.log("route", ctx.request.querystring, ctx.params.fhirUrl);

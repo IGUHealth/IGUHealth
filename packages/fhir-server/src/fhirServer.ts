@@ -6,7 +6,7 @@ import {
   StructureDefinition,
 } from "@genfhi/fhir-types/r4/types";
 
-import { FHIRClientAsync } from "./database/types";
+import { FHIRClient } from "./database/types";
 import {
   FHIRRequest,
   FHIRResponse,
@@ -14,10 +14,6 @@ import {
   InstanceLevelInteraction,
 } from "./types";
 import chain from "./chain";
-
-type ServerCTX = {
-  resolveSD: (type: string) => StructureDefinition;
-};
 
 function getInteractionLevel(
   fhirURL: FHIRURL
@@ -136,7 +132,7 @@ function fhirResponseToKoaResponse(
 
 export type FHIRServerCTX = {
   capabilities: CapabilityStatement;
-  database: FHIRClientAsync<FHIRServerCTX>;
+  database: FHIRClient<FHIRServerCTX>;
 };
 
 const createFhirServer =
