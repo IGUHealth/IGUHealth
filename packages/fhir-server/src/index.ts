@@ -5,7 +5,7 @@ import bodyParser from "koa-bodyparser";
 import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
 import MemoryDatabase from "./database/memory";
 
-import createFhirServer from "./fhirServer";
+import createFhirServer, { FHIRServerCTX } from "./fhirServer";
 import {
   CapabilityStatement,
   ResourceType,
@@ -23,27 +23,32 @@ function serverCapabilities(): CapabilityStatement {
   };
 }
 
-function createMemoryDatabase(resourceTypes: ResourceType[]): MemoryDatabase {
+function createMemoryDatabase(
+  resourceTypes: ResourceType[]
+): MemoryDatabase<FHIRServerCTX> {
   const database = new MemoryDatabase();
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) => loadArtifacts(resourceType))
     .flat();
   for (const resource of artifactResources) {
-    database.create(resource);
+    database.create({}, resource);
   }
   return database;
 }
 
 function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
   const app = new Koa();
+
   const database = createMemoryDatabase([
     "StructureDefinition",
     "SearchParameter",
   ]);
+
   const fhirServer = createFhirServer({
     capabilities: serverCapabilities(),
     database: database,
   });
+
   const router = new Router();
   router.all("/w/:workspace/api/fhir/r4/:fhirUrl*", async (ctx, next) => {
     // console.log("route", ctx.request.querystring, ctx.params.fhirUrl);
