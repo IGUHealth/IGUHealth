@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/index.ts",
+  "type": "module",
   "scripts": {
     "test": "jest",
     "generate": "peggy --plugin ./node_modules/ts-pegjs/dist/tspegjs.js -o src/parser.ts --cache src/grammar.pegjs"

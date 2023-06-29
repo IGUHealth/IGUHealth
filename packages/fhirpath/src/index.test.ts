@@ -1,11 +1,11 @@
 import { evaluate, evaluateWithMeta } from "./index";
 import { StructureDefinition, code } from "@genfhi/fhir-types/r4/types";
 import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
-import { MetaValue } from "@genfhi/meta-value";
+import { fileURLToPath } from "node:url";
 
 const sds: StructureDefinition[] = loadArtifacts(
   "StructureDefinition",
-  "/sd-proxy/"
+  fileURLToPath(new URL("../package.json", import.meta.url))
 );
 
 function getSD(type: code) {

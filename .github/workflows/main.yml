@@ -16,13 +16,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 19.6.0
-      - uses: pnpm/action-setup@v2
+      - uses: oven-sh/setup-bun@v1
         with:
-          version: 8.6.2
+          bun-version: latest
       - name: Install dependencies
-        run: pnpm install
+        run: bun install
       - name: Run tests and collect coverage
-        run: pnpm test
+        run: bun test
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:

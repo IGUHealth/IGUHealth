@@ -61,9 +61,9 @@ function flattenOrInclude<T extends ResourceType>(
  */
 export default function loadArtifacts<T extends ResourceType>(
   resourceType: T,
-  relativeURL: string = "/"
+  location: string
 ): AResource<T>[] {
-  const requirer = createRequire(process.cwd() + relativeURL);
+  const requirer = createRequire(location);
   const packageJson: PackageJSON = requirer("./package.json");
   const deps = { ...packageJson.devDependencies, ...packageJson.dependencies };
   return Object.keys(deps || {})
