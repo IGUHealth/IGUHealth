@@ -5,7 +5,7 @@ import bodyParser from "koa-bodyparser";
 import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
 import MemoryDatabase from "./database/memory";
 
-import createFhirServer from "./fhirServer";
+import createFhirServer, { FHIRServerCTX } from "./fhirServer";
 import {
   CapabilityStatement,
   ResourceType,
@@ -23,13 +23,15 @@ function serverCapabilities(): CapabilityStatement {
   };
 }
 
-function createMemoryDatabase(resourceTypes: ResourceType[]): MemoryDatabase {
+function createMemoryDatabase(
+  resourceTypes: ResourceType[]
+): MemoryDatabase<FHIRServerCTX> {
   const database = new MemoryDatabase();
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) => loadArtifacts(resourceType))
     .flat();
   for (const resource of artifactResources) {
-    database.create(resource);
+    database.create({}, resource);
   }
   return database;
 }

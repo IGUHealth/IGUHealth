@@ -8,45 +8,53 @@ import * as pg from "pg";
 import { FHIRClientAsync } from "../types";
 
 const client = new pg.Client();
-class Postgres implements FHIRClientAsync {
+class Postgres<CTX> implements FHIRClientAsync<CTX> {
   constructor(config: pg.ClientConfig) {}
-  search(query: FHIRURL): Promise<ConcreteType[]> {
+  search(ctx: CTX, query: FHIRURL): Promise<ConcreteType[]> {
     throw new Error("Method not implemented.");
   }
-  create<T extends ConcreteType>(resource: T): Promise<T> {
+  create<T extends ConcreteType>(ctx: CTX, resource: T): Promise<T> {
     throw new Error("Method not implemented.");
   }
-  update<T extends ConcreteType>(resource: T): Promise<T> {
+  update<T extends ConcreteType>(ctx: CTX, resource: T): Promise<T> {
     throw new Error("Method not implemented.");
   }
-  patch<T extends ConcreteType>(resource: T, patches: any): Promise<T> {
+  patch<T extends ConcreteType>(
+    ctx: CTX,
+    resource: T,
+    patches: any
+  ): Promise<T> {
     throw new Error("Method not implemented.");
   }
   read<T extends keyof ResourceMap>(
+    ctx: CTX,
     resourceType: T,
     id: string
   ): Promise<AResource<T>> {
     throw new Error("Method not implemented.");
   }
   vread<T extends keyof ResourceMap>(
+    ctx: CTX,
     resourceType: T,
     id: string,
     versionId: string
   ): Promise<AResource<T>> {
     throw new Error("Method not implemented.");
   }
-  delete(resourceType: keyof ResourceMap, id: string): void {
+  delete(ctx: CTX, resourceType: keyof ResourceMap, id: string): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  historySystem(): Promise<ConcreteType[]> {
+  historySystem(ctx: CTX): Promise<ConcreteType[]> {
     throw new Error("Method not implemented.");
   }
   historyType<T extends keyof ResourceMap>(
+    ctx: CTX,
     resourceType: T
   ): Promise<AResource<T>[]> {
     throw new Error("Method not implemented.");
   }
   historyInstance<T extends keyof ResourceMap>(
+    ctx: CTX,
     resourceType: T,
     id: string
   ): Promise<AResource<T>[]> {

@@ -1,7 +1,10 @@
 import Koa from "koa";
 
 import parseQuery, { FHIRURL } from "@genfhi/fhir-query";
-import { CapabilityStatement } from "@genfhi/fhir-types/r4/types";
+import {
+  CapabilityStatement,
+  StructureDefinition,
+} from "@genfhi/fhir-types/r4/types";
 
 import { FHIRClientAsync } from "./database/types";
 import {
@@ -11,6 +14,10 @@ import {
   InstanceLevelInteraction,
 } from "./types";
 import chain from "./chain";
+
+type ServerCTX = {
+  resolveSD: (type: string) => StructureDefinition;
+};
 
 function getInteractionLevel(
   fhirURL: FHIRURL
@@ -75,7 +82,7 @@ function KoaRequestToFHIRRequest(
 }
 
 async function fhirRequestToFHIRResponse(
-  ctx: FHIRServerParameter,
+  ctx: FHIRServerCTX,
   request: FHIRRequest
 ): Promise<FHIRResponse> {
   switch (request.level) {
@@ -91,7 +98,7 @@ async function fhirRequestToFHIRResponse(
             body: {
               resourceType: "Bundle",
               type: "search",
-              entry: (await ctx.database.search(request.url)).map(
+              entry: (await ctx.database.search(ctx, request.url)).map(
                 (resource) => ({
                   resource: resource,
                 })
@@ -127,14 +134,13 @@ function fhirResponseToKoaResponse(
   }
 }
 
-type FHIRServerParameter = {
+export type FHIRServerCTX = {
   capabilities: CapabilityStatement;
-  database: FHIRClientAsync;
+  database: FHIRClientAsync<FHIRServerCTX>;
 };
 
 const createFhirServer =
-  (serverCtx: FHIRServerParameter) =>
-  (ctx: Koa.Context, request: Koa.Request) =>
+  (serverCtx: FHIRServerCTX) => (ctx: Koa.Context, request: Koa.Request) =>
     chain(
       request,
       (request: Koa.Request) =>
@@ -142,7 +148,7 @@ const createFhirServer =
           `${ctx.params.fhirUrl}?${request.querystring}`,
           request
         ),
-      (request: FHIRRequest): [FHIRServerParameter, FHIRRequest] => [
+      (request: FHIRRequest): [FHIRServerCTX, FHIRRequest] => [
         serverCtx,
         request,
       ],

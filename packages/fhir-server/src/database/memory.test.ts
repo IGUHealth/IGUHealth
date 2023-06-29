@@ -38,32 +38,38 @@ function generateSD(
 }
 
 test("Creation and search", async () => {
-  const memDb = new MemoryDatabase();
+  const memDb = new MemoryDatabase<{}>();
   await memDb.create(
+    {},
     generateParameter({
       id: "test1",
       name: "test1",
     })
   );
   await memDb.create(
+    {},
     generateParameter({
       id: "test2",
       name: "test2",
     })
   );
 
-  await memDb.create(generateSD({ id: "test0", name: "test1" }));
+  await memDb.create({}, generateSD({ id: "test0", name: "test1" }));
 
-  expect(await memDb.search(parseURL("SearchParameter?name=test"))).toEqual([]);
+  expect(await memDb.search({}, parseURL("SearchParameter?name=test"))).toEqual(
+    []
+  );
 
-  expect(await memDb.search(parseURL("SearchParameter?name=test1"))).toEqual([
+  expect(
+    await memDb.search({}, parseURL("SearchParameter?name=test1"))
+  ).toEqual([
     generateParameter({
       id: "test1",
       name: "test1",
     }),
   ]);
 
-  expect(await memDb.search(parseURL("SearchParameter"))).toEqual([
+  expect(await memDb.search({}, parseURL("SearchParameter"))).toEqual([
     generateParameter({
       id: "test1",
       name: "test1",
@@ -74,7 +80,7 @@ test("Creation and search", async () => {
     }),
   ]);
 
-  expect(await memDb.search(parseURL("?name=test1"))).toEqual([
+  expect(await memDb.search({}, parseURL("?name=test1"))).toEqual([
     generateParameter({
       id: "test1",
       name: "test1",

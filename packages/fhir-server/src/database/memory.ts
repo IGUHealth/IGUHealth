@@ -5,7 +5,7 @@ import {
   Resource,
   id,
 } from "@genfhi/fhir-types/r4/types";
-import { FHIRClientAsync } from "./types";
+import { FHIRClientAsync, FHIRClientSynchronous } from "./types";
 
 type InternalData = Partial<Record<string, Record<id, Resource | undefined>>>;
 
@@ -28,12 +28,12 @@ function fitsSearchCriteria(
   }
 }
 
-export default class MemoryDatabase implements FHIRClientAsync {
+export default class MemoryDatabase<CTX> implements FHIRClientSynchronous<CTX> {
   data: InternalData;
   constructor(data?: InternalData) {
     this.data = data || {};
   }
-  async search(query: FHIRURL): Promise<Resource[]> {
+  search(ctx: CTX, query: FHIRURL): Resource[] {
     const resourceSet = query.resourceType
       ? Object.values(this.data[query.resourceType] || {}).filter(
           (v): v is Resource => v !== undefined
@@ -51,7 +51,7 @@ export default class MemoryDatabase implements FHIRClientAsync {
       return true;
     });
   }
-  async create<T extends Resource>(resource: T): Promise<T> {
+  create<T extends Resource>(ctx: CTX, resource: T): T {
     const resources = this.data[resource.resourceType];
     if (!resource.id) resource.id = `${Math.round(Math.random() * 100000000)}`;
     this.data[resource.resourceType] = {
@@ -60,7 +60,7 @@ export default class MemoryDatabase implements FHIRClientAsync {
     };
     return resource;
   }
-  async update<T extends Resource>(resource: T): Promise<T> {
+  update<T extends Resource>(ctx: CTX, resource: T): T {
     if (!resource.id) throw new Error("Updated resource does not have an id.");
     this.data[resource.resourceType] = {
       ...this.data[resource.resourceType],
@@ -69,13 +69,14 @@ export default class MemoryDatabase implements FHIRClientAsync {
     return resource;
   }
   // [ADD JSON PATCH TYPES]
-  patch<T extends Resource>(resource: T, patches: any): Promise<T> {
+  patch<T extends Resource>(ctx: CTX, resource: T, patches: any): T {
     throw new Error("Not Implemented");
   }
-  async read<T extends ResourceType>(
+  read<T extends ResourceType>(
+    ctx: CTX,
     resourceType: T,
     id: id
-  ): Promise<AResource<T> | undefined> {
+  ): AResource<T> | undefined {
     const data = this.data[resourceType]?.[id] as AResource<T>;
     if (!data) {
       console.error(
@@ -86,27 +87,30 @@ export default class MemoryDatabase implements FHIRClientAsync {
     return data;
   }
   vread<T extends ResourceType>(
+    ctx: CTX,
     resourceType: T,
     id: id,
     versionId: id
-  ): Promise<AResource<T>> {
+  ): AResource<T> {
     throw new Error("Not Implemented");
   }
-  delete<T extends ResourceType>(resourceType: T, id: id) {
+  delete<T extends ResourceType>(ctx: CTX, resourceType: T, id: id) {
     throw new Error("Not Implemented");
   }
-  historySystem(): Promise<Resource[]> {
+  historySystem(ctx: CTX): Resource[] {
     throw new Error("Not Implemented");
   }
   historyType<T extends ResourceType>(
+    ctx: CTX,
     resourceType: T
-  ): Promise<AResource<T>[]> {
+  ): AResource<T>[] {
     throw new Error("Not Implemented");
   }
   historyInstance<T extends ResourceType>(
+    ctx: CTX,
     resourceType: T,
     id: string
-  ): Promise<AResource<T>[]> {
+  ): AResource<T>[] {
     throw new Error("Not Implemented");
   }
 }
