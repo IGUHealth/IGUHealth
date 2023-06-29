@@ -7,26 +7,43 @@ import {
   AResource,
 } from "@genfhi/fhir-types/r4/types";
 
-export interface FHIRClient {
-  search(query: FHIRURL): Promise<Resource[]>;
-  create<T extends Resource>(resource: T): Promise<T>;
-  update<T extends Resource>(resource: T): Promise<T>;
+type Async<F, Else = never> = F extends (...arg: infer A) => infer R
+  ? (...args: A) => Promise<R>
+  : Else;
+
+export interface FHIRClientSynchronous {
+  search(query: FHIRURL): Resource[];
+  create<T extends Resource>(resource: T): T;
+  update<T extends Resource>(resource: T): T;
   // [ADD JSON PATCH TYPES]
-  patch<T extends Resource>(resource: T, patches: any): Promise<T>;
+  patch<T extends Resource>(resource: T, patches: any): T;
   read<T extends ResourceType>(
     resourceType: T,
     id: id
-  ): Promise<AResource<T> | undefined>;
+  ): AResource<T> | undefined;
   vread<T extends ResourceType>(
     resourceType: T,
     id: id,
     versionId: id
-  ): Promise<AResource<T>>;
+  ): AResource<T>;
   delete(resourceType: ResourceType, id: id): void;
-  historySystem(): Promise<Resource[]>;
-  historyType<T extends ResourceType>(resourceType: T): Promise<AResource<T>[]>;
+  historySystem(): Resource[];
+  historyType<T extends ResourceType>(resourceType: T): AResource<T>[];
   historyInstance<T extends ResourceType>(
     resourceType: T,
     id: id
-  ): Promise<AResource<T>[]>;
+  ): AResource<T>[];
+}
+
+export interface FHIRClientAsync {
+  search: Async<FHIRClientSynchronous["search"]>;
+  create: Async<FHIRClientSynchronous["create"]>;
+  update: Async<FHIRClientSynchronous["update"]>;
+  patch: Async<FHIRClientSynchronous["patch"]>;
+  read: Async<FHIRClientSynchronous["read"]>;
+  vread: Async<FHIRClientSynchronous["vread"]>;
+  delete: Async<FHIRClientSynchronous["delete"]>;
+  historySystem: Async<FHIRClientSynchronous["historySystem"]>;
+  historyType: Async<FHIRClientSynchronous["historyType"]>;
+  historyInstance: Async<FHIRClientSynchronous["historyInstance"]>;
 }

@@ -5,10 +5,10 @@ import {
   AResource,
 } from "@genfhi/fhir-types/r4/types";
 import * as pg from "pg";
-import { FHIRClient } from "../types";
+import { FHIRClientAsync } from "../types";
 
 const client = new pg.Client();
-class Postgres implements FHIRClient {
+class Postgres implements FHIRClientAsync {
   constructor(config: pg.ClientConfig) {}
   search(query: FHIRURL): Promise<ConcreteType[]> {
     throw new Error("Method not implemented.");

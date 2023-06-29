@@ -3,7 +3,7 @@ import Koa from "koa";
 import parseQuery, { FHIRURL } from "@genfhi/fhir-query";
 import { CapabilityStatement } from "@genfhi/fhir-types/r4/types";
 
-import { FHIRClient } from "./database/types";
+import { FHIRClientAsync } from "./database/types";
 import {
   FHIRRequest,
   FHIRResponse,
@@ -129,7 +129,7 @@ function fhirResponseToKoaResponse(
 
 type FHIRServerParameter = {
   capabilities: CapabilityStatement;
-  database: FHIRClient;
+  database: FHIRClientAsync;
 };
 
 const createFhirServer =
