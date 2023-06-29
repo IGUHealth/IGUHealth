@@ -14,7 +14,7 @@ function searchResources(resource: Resource): (ResourceType | string)[] {
   return ["Resource", "DomainResource", resource.resourceType];
 }
 
-async function resolveIndices<CTX extends FHIRServerCTX>(
+async function getParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
   resource: Resource
 ): Promise<SearchParameter[]> {
@@ -24,13 +24,7 @@ async function resolveIndices<CTX extends FHIRServerCTX>(
       value: searchResources(resource),
     },
   };
-  const searchParameters = await ctx.database.search_type(
-    ctx,
-    "SearchParameter",
-    parameters
-  );
-
-  return searchParameters;
+  return await ctx.database.search_type(ctx, "SearchParameter", parameters);
 }
 
 const client = new pg.Client();
