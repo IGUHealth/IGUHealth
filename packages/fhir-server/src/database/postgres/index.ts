@@ -9,12 +9,13 @@ import {
 import * as pg from "pg";
 import { FHIRServerCTX } from "../../fhirServer";
 import { FHIRClientAsync } from "../types";
+import { evaluateWithMeta } from "@genfhi/fhirpath";
 
 function searchResources(resource: Resource): (ResourceType | string)[] {
   return ["Resource", "DomainResource", resource.resourceType];
 }
 
-async function resolveIndices<CTX extends FHIRServerCTX>(
+async function getParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
   resource: Resource
 ): Promise<SearchParameter[]> {
@@ -24,13 +25,20 @@ async function resolveIndices<CTX extends FHIRServerCTX>(
       value: searchResources(resource),
     },
   };
-  const searchParameters = await ctx.database.search_type(
-    ctx,
-    "SearchParameter",
-    parameters
-  );
+  return await ctx.database.search_type(ctx, "SearchParameter", parameters);
+}
 
-  return searchParameters;
+async function indexResource<CTX extends FHIRServerCTX>(
+  ctx: CTX,
+  resource: Resource
+) {
+  const searchParameters = await getParametersForResource(ctx, resource);
+  for (const searchParameter of searchParameters) {
+    if (searchParameter.expression === undefined) continue;
+    const output = evaluateWithMeta(searchParameter.expression, resource, {
+      meta: { getSD: (type: string) => ctx.resolveSD(ctx, type) },
+    });
+  }
 }
 
 const client = new pg.Client();
@@ -47,6 +55,7 @@ class Postgres<CTX extends FHIRServerCTX> implements FHIRClientAsync<CTX> {
     throw new Error("Method not implemented.");
   }
   create<T extends Resource>(ctx: CTX, resource: T): Promise<T> {
+    indexResource(ctx, resource);
     throw new Error("Method not implemented.");
   }
   update<T extends Resource>(ctx: CTX, resource: T): Promise<T> {

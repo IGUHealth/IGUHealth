@@ -485,3 +485,12 @@ test("term with TypeIdentifier", () => {
     )
   ).toEqual(["1980-01-01T00:00:00Z"]);
 });
+
+test("term with TypeIdentifier 'Resource'", () => {
+  expect(
+    evaluate("Resource.name", {
+      resourceType: "Patient",
+      name: [{ given: ["bob"], family: "waterson" }],
+    })
+  ).toEqual([{ given: ["bob"], family: "waterson" }]);
+});
