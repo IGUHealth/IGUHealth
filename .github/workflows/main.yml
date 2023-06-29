@@ -20,9 +20,9 @@ jobs:
         with:
           bun-version: latest
       - name: Install dependencies
-        run: pnpm install
+        run: bun install
       - name: Run tests and collect coverage
-        run: pnpm test
+        run: bun test
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
