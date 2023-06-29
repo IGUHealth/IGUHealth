@@ -4,12 +4,12 @@ export type FHIRURL = {
   resourceType?: ResourceType;
   id?: string;
   versionId?: string;
-  parameters: Parameters<unknown>;
+  parameters: Parameters<string | number>;
 };
 
 export type ParsedParameter<T> = {
   name: string;
-  value: (string | number)[];
+  value: T[];
   modifier?: string;
 };
 
