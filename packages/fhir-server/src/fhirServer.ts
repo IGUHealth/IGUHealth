@@ -13,6 +13,7 @@ import {
   FHIRResponse,
   InteractionLevel,
   InstanceLevelInteraction,
+  TypeLevelInteractions,
 } from "./types";
 import chain from "./chain";
 
@@ -44,6 +45,29 @@ function parseInstantRequest(
   }
 }
 
+function parseTypeRequest(
+  request: Koa.Request,
+  fhirURL: FHIRURL,
+  fhirRequest: Pick<TypeLevelInteractions, "level" | "resourceType">
+): FHIRRequest {
+  switch (request.method) {
+    case "GET":
+      return {
+        url: fhirURL,
+        type: "search",
+        ...fhirRequest,
+      };
+    case "POST":
+      return {
+        url: fhirURL,
+        type: "create",
+        ...fhirRequest,
+      };
+    default:
+      throw new Error(`Type interaction '${request.method}' not supported`);
+  }
+}
+
 function KoaRequestToFHIRRequest(
   url: string,
   request: Koa.Request
@@ -63,18 +87,12 @@ function KoaRequestToFHIRRequest(
       });
     case "type":
       if (!fhirQuery.resourceType) throw new Error("Invalid Type search");
-      return {
-        url: fhirQuery,
-        type: "search",
+      return parseTypeRequest(request, fhirQuery, {
         level: "type",
         resourceType: fhirQuery.resourceType,
-      };
+      });
     case "system":
-      return {
-        url: fhirQuery,
-        level: "system",
-        type: "batch",
-      };
+      throw new Error("system level interactions are not supported");
   }
 }
 
@@ -87,6 +105,15 @@ async function fhirRequestToFHIRResponse(
       throw new Error("not Implemented");
     case "type":
       switch (request.type) {
+        case "create":
+          if (!request.body)
+            throw new Error("No resource found on body for creation.");
+          return {
+            resourceType: request.resourceType,
+            type: request.type,
+            level: request.level,
+            body: await ctx.database.create(ctx, request.body),
+          };
         case "search":
           return {
             resourceType: request.resourceType,
