@@ -50,6 +50,8 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
   const fhirServer = createFhirServer({
     capabilities: serverCapabilities(),
     database: database,
+    resolveSD: (ctx, type: string) =>
+      database.read(ctx, "StructureDefinition", type),
   });
 
   const router = new Router();

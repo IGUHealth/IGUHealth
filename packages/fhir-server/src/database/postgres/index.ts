@@ -1,29 +1,58 @@
-import { FHIRURL } from "@genfhi/fhir-query";
+import { FHIRURL, Parameters as FParameters } from "@genfhi/fhir-query";
 import {
-  ConcreteType,
+  Resource,
   ResourceMap,
   AResource,
+  ResourceType,
+  SearchParameter,
 } from "@genfhi/fhir-types/r4/types";
 import * as pg from "pg";
+import { FHIRServerCTX } from "../../fhirServer";
 import { FHIRClientAsync } from "../types";
 
+function searchResources(resource: Resource): (ResourceType | string)[] {
+  return ["Resource", "DomainResource", resource.resourceType];
+}
+
+async function resolveIndices<CTX extends FHIRServerCTX>(
+  ctx: CTX,
+  resource: Resource
+): Promise<SearchParameter[]> {
+  const parameters: FParameters<unknown> = {
+    base: {
+      name: "base",
+      value: searchResources(resource),
+    },
+  };
+  const searchParameters = await ctx.database.search_type(
+    ctx,
+    "SearchParameter",
+    parameters
+  );
+
+  return searchParameters;
+}
+
 const client = new pg.Client();
-class Postgres<CTX> implements FHIRClientAsync<CTX> {
+class Postgres<CTX extends FHIRServerCTX> implements FHIRClientAsync<CTX> {
   constructor(config: pg.ClientConfig) {}
-  search(ctx: CTX, query: FHIRURL): Promise<ConcreteType[]> {
+  search_system(ctx: CTX, query: FHIRURL["parameters"]): Promise<Resource[]> {
     throw new Error("Method not implemented.");
   }
-  create<T extends ConcreteType>(ctx: CTX, resource: T): Promise<T> {
-    throw new Error("Method not implemented.");
-  }
-  update<T extends ConcreteType>(ctx: CTX, resource: T): Promise<T> {
-    throw new Error("Method not implemented.");
-  }
-  patch<T extends ConcreteType>(
+  search_type<T extends ResourceType>(
     ctx: CTX,
-    resource: T,
-    patches: any
-  ): Promise<T> {
+    resourceType: T,
+    query: FHIRURL["parameters"]
+  ): Promise<AResource<T>[]> {
+    throw new Error("Method not implemented.");
+  }
+  create<T extends Resource>(ctx: CTX, resource: T): Promise<T> {
+    throw new Error("Method not implemented.");
+  }
+  update<T extends Resource>(ctx: CTX, resource: T): Promise<T> {
+    throw new Error("Method not implemented.");
+  }
+  patch<T extends Resource>(ctx: CTX, resource: T, patches: any): Promise<T> {
     throw new Error("Method not implemented.");
   }
   read<T extends keyof ResourceMap>(
@@ -44,7 +73,7 @@ class Postgres<CTX> implements FHIRClientAsync<CTX> {
   delete(ctx: CTX, resourceType: keyof ResourceMap, id: string): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  historySystem(ctx: CTX): Promise<ConcreteType[]> {
+  historySystem(ctx: CTX): Promise<Resource[]> {
     throw new Error("Method not implemented.");
   }
   historyType<T extends keyof ResourceMap>(
