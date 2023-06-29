@@ -1,6 +1,7 @@
 import Koa from "koa";
 import Router from "@koa/router";
 import bodyParser from "koa-bodyparser";
+import path from "path";
 
 import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
 import MemoryDatabase from "./database/memory";
@@ -26,7 +27,9 @@ function serverCapabilities(): CapabilityStatement {
 function createMemoryDatabase(resourceTypes: ResourceType[]): MemoryDatabase {
   const database = new MemoryDatabase();
   const artifactResources: Resource[] = resourceTypes
-    .map((resourceType) => loadArtifacts(resourceType))
+    .map((resourceType) =>
+      loadArtifacts(resourceType, path.join(__dirname, "../"))
+    )
     .flat();
   for (const resource of artifactResources) {
     database.create(resource);

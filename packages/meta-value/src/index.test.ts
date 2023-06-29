@@ -3,10 +3,11 @@ import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
 import { StructureDefinition, Patient } from "@genfhi/fhir-types/r4/types";
 // import { evaluate } from "@genfhi/fhirpath";
 import { expect, test } from "@jest/globals";
+import { fileURLToPath } from "node:url";
 
 const sds: StructureDefinition[] = loadArtifacts(
   "StructureDefinition",
-  "/sd-proxy/"
+  fileURLToPath(new URL("../package.json", import.meta.url))
 );
 
 const patientSD = sds.find(
