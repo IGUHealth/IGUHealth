@@ -1,0 +1,53 @@
+// Bun Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`artifactParameters 1`] = `
+[
+  "Patient-active",
+  "individual-address",
+  "individual-address-city",
+  "individual-address-country",
+  "individual-address-postalcode",
+  "individual-address-state",
+  "individual-address-use",
+  "individual-birthdate",
+  "Patient-death-date",
+  "Patient-deceased",
+  "individual-email",
+  "individual-family",
+  "individual-gender",
+  "Patient-general-practitioner",
+  "individual-given",
+  "Patient-identifier",
+  "Patient-language",
+  "Patient-link",
+  "Patient-name",
+  "Patient-organization",
+  "individual-phone",
+  "individual-phonetic",
+  "individual-telecom",
+]
+`;
+
+exports[`artifactParameters 2`] = `
+[
+  "DomainResource-text",
+  "Resource-content",
+  "individual-address",
+  "individual-address-city",
+  "individual-address-country",
+  "individual-address-postalcode",
+  "individual-address-state",
+  "individual-family",
+  "individual-given",
+  "Patient-name",
+  "individual-phonetic",
+]
+`;
+
+exports[`artifactParameters 3`] = `
+[
+  "Resource-lastUpdated",
+  "individual-birthdate",
+  "Patient-death-date",
+]
+`;

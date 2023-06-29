@@ -4,6 +4,7 @@ import parseQuery, { FHIRURL } from "@genfhi/fhir-query";
 import {
   CapabilityStatement,
   StructureDefinition,
+  ResourceType,
 } from "@genfhi/fhir-types/r4/types";
 
 import { FHIRClient } from "./database/types";
@@ -94,11 +95,15 @@ async function fhirRequestToFHIRResponse(
             body: {
               resourceType: "Bundle",
               type: "search",
-              entry: (await ctx.database.search(ctx, request.url)).map(
-                (resource) => ({
-                  resource: resource,
-                })
-              ),
+              entry: (
+                await ctx.database.search_type(
+                  ctx,
+                  request.resourceType as ResourceType,
+                  request.url.parameters
+                )
+              ).map((resource) => ({
+                resource: resource,
+              })),
             },
           };
         default:
@@ -133,6 +138,10 @@ function fhirResponseToKoaResponse(
 export type FHIRServerCTX = {
   capabilities: CapabilityStatement;
   database: FHIRClient<FHIRServerCTX>;
+  resolveSD: (
+    ctx: FHIRServerCTX,
+    type: string
+  ) => StructureDefinition | undefined;
 };
 
 const createFhirServer =

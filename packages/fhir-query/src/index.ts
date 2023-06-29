@@ -1,22 +1,25 @@
+import { ResourceType } from "@genfhi/fhir-types/r4/types";
+
 export type FHIRURL = {
-  resourceType?: string;
+  resourceType?: ResourceType;
   id?: string;
   versionId?: string;
-  parameters: Record<string, ParsedParameter<unknown>>;
+  parameters: Parameters<unknown>;
 };
 
 export type ParsedParameter<T> = {
   name: string;
-  value: T | T[];
+  value: (string | number)[];
   modifier?: string;
 };
+
+export type Parameters<T> = Record<string, ParsedParameter<T>>;
 
 /*
  ** Given a query string create complex FHIR Query object.
  */
 export default function parseURL(url: string): FHIRURL {
   const [path, queryParams] = url.split("?");
-  console.log(path, queryParams, url);
   const [resourceType, id, versionId] = path.split("/");
   const fhirURL: FHIRURL = {
     parameters: !queryParams
@@ -28,12 +31,12 @@ export default function parseURL(url: string): FHIRURL {
             (
               parameters,
               [key, value]
-            ): Record<string, ParsedParameter<unknown>> => {
+            ): Record<string, ParsedParameter<string>> => {
               let [name, modifier] = key.split(":");
               let searchParam = {
                 name,
                 modifier,
-                value,
+                value: value.split(","),
               };
               if (modifier) searchParam.modifier = modifier;
               return { ...parameters, [searchParam.name]: searchParam };
@@ -41,7 +44,7 @@ export default function parseURL(url: string): FHIRURL {
             {}
           ),
   };
-  if (resourceType) fhirURL.resourceType = resourceType;
+  if (resourceType) fhirURL.resourceType = resourceType as ResourceType;
   if (id) fhirURL.id = id;
   if (versionId) fhirURL.versionId = versionId;
 
