@@ -375,6 +375,12 @@ const equalityCheck: EvaledOperation = (
 };
 
 function filterByType<T>(type: string, context: MetaValueSingular<T>[]) {
+  // Special handling for type 'Resource' and 'DomainResource' abstract types
+  if (type === "Resource" || type === "DomainResource") {
+    return context.filter(
+      (v) => (v.valueOf() as Resource).resourceType !== undefined
+    );
+  }
   return context.filter((v) => {
     if (v.meta()?.type) {
       return v.meta()?.type === type;
