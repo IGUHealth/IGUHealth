@@ -2,7 +2,6 @@ import parseURL from "@genfhi/fhir-query";
 import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
 import path from "path";
 
-import MemoryDatabase from "./memory";
 import {
   SearchParameter,
   StructureDefinition,

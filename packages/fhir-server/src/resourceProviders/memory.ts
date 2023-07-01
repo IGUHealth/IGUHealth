@@ -5,8 +5,8 @@ import {
   Resource,
   id,
 } from "@genfhi/fhir-types/r4/types";
-import { FHIRClientSync } from "./types";
-import { FHIRRequest, FHIRResponse } from "../types";
+import { SynchronousClient } from "../client";
+import { FHIRRequest, FHIRResponse } from "../client/types";
 
 type InternalData<T extends ResourceType> = Partial<
   Record<T, Record<id, AResource<T> | undefined>>
@@ -45,12 +45,6 @@ type Middleware<State, CTX> = (
   args: { ctx: CTX; state: State },
   next?: Middleware<State, CTX>
 ) => Promise<{ ctx: CTX; state: State; response: FHIRResponse }>;
-
-type MiddlewareSync<State, CTX> = (
-  request: FHIRRequest,
-  args: { ctx: CTX; state: State },
-  next?: Middleware<State, CTX>
-) => { ctx: CTX; state: State; response: FHIRResponse };
 
 function MemoryMiddleware<
   State extends { data: InternalData<ResourceType> },
@@ -165,116 +159,6 @@ function MemoryMiddleware<
     }
     default:
       throw new Error("Not implemented");
-  }
-}
-
-class SynchronousClient<State, CTX> implements FHIRClientSync<CTX> {
-  state: State;
-  middleware: MiddlewareSync<State, CTX>;
-  constructor(initialState: State, middleware: MiddlewareSync<State, CTX>) {
-    this.state = initialState;
-    this.middleware = middleware;
-  }
-  request(ctx: CTX, request: FHIRRequest): FHIRResponse {
-    const res = this.middleware(request, { ctx, state: this.state });
-    this.state = res.state;
-    return res.response;
-  }
-  search_system(ctx: CTX, fhirURL: FHIRURL): Resource[] {
-    const response = this.request(ctx, {
-      type: "search-request",
-      level: "system",
-      query: fhirURL,
-    });
-    if (response.type !== "search-response")
-      throw new Error("Unexpected response type");
-    return response.body;
-  }
-  search_type<T extends ResourceType>(
-    ctx: CTX,
-    resourceType: T,
-    fhirURL: FHIRURL
-  ): AResource<T>[] {
-    const response = this.request(ctx, {
-      type: "search-request",
-      level: "type",
-      resourceType: resourceType,
-      query: fhirURL,
-    });
-    if (response.type !== "search-response")
-      throw new Error("Unexpected response type");
-    return response.body as AResource<T>[];
-  }
-  create<T extends Resource>(ctx: CTX, resource: T): T {
-    const response = this.request(ctx, {
-      type: "create-request",
-      level: "type",
-      resourceType: resource.resourceType,
-      body: resource,
-    });
-    if (response.type !== "create-response")
-      throw new Error("Unexpected response type");
-    return response.body as T;
-  }
-  update<T extends Resource>(ctx: CTX, resource: T): T {
-    if (resource.id === undefined)
-      throw new Error("Cannot update resource without id");
-    const response = this.request(ctx, {
-      type: "update-request",
-      level: "instance",
-      resourceType: resource.resourceType,
-      id: resource.id,
-      body: resource,
-    });
-    if (response.type !== "update-response")
-      throw new Error("Unexpected response type");
-    return response.body as T;
-  }
-  // [ADD JSON PATCH TYPES]
-  patch<T extends Resource>(ctx: CTX, resource: T, patches: any): T {
-    throw new Error("Not Implemented");
-  }
-  read<T extends ResourceType>(
-    ctx: CTX,
-    resourceType: T,
-    id: id
-  ): AResource<T> | undefined {
-    const response = this.request(ctx, {
-      type: "read-request",
-      level: "instance",
-      resourceType: resourceType,
-      id: id,
-    });
-    if (response.type !== "read-response")
-      throw new Error("Unexpected response type");
-    return response.body as AResource<T>;
-  }
-  vread<T extends ResourceType>(
-    ctx: CTX,
-    resourceType: T,
-    id: id,
-    versionId: id
-  ): AResource<T> {
-    throw new Error("Not Implemented");
-  }
-  delete<T extends ResourceType>(ctx: CTX, resourceType: T, id: id) {
-    throw new Error("Not Implemented");
-  }
-  historySystem(ctx: CTX): Resource[] {
-    throw new Error("Not Implemented");
-  }
-  historyType<T extends ResourceType>(
-    ctx: CTX,
-    resourceType: T
-  ): AResource<T>[] {
-    throw new Error("Not Implemented");
-  }
-  historyInstance<T extends ResourceType>(
-    ctx: CTX,
-    resourceType: T,
-    id: string
-  ): AResource<T>[] {
-    throw new Error("Not Implemented");
   }
 }
 

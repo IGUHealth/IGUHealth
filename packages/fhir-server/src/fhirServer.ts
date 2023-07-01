@@ -8,14 +8,14 @@ import {
   Resource,
 } from "@genfhi/fhir-types/r4/types";
 
-import { FHIRClient } from "./database/types";
+import { FHIRClient } from "./client/interface";
 import {
   FHIRRequest,
   FHIRResponse,
   RequestLevel,
   TypeLevelInteractions,
   InstanceLevelInteraction,
-} from "./types";
+} from "./client/types";
 import chain from "./chain";
 
 function getInteractionLevel(

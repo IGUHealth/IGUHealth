@@ -4,8 +4,8 @@ import bodyParser from "koa-bodyparser";
 import path from "path";
 
 import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
-import MemoryDatabase from "./database/memory";
-import { FHIRClientSync } from "./database/types";
+import MemoryDatabase from "./resourceProviders/memory";
+import { FHIRClientSync } from "./client/interface";
 
 import createFhirServer, { FHIRServerCTX } from "./fhirServer";
 import {
