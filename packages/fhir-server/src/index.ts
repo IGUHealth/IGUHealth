@@ -67,8 +67,8 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
     next();
   });
 
-  app.use(bodyParser());
   app
+    .use(bodyParser())
     .use(async (ctx, next) => {
       await next();
       const rt = ctx.response.get("X-Response-Time");

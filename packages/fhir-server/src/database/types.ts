@@ -1,12 +1,11 @@
-import { Parameters } from "@genfhi/fhir-query";
+import { FHIRURL } from "@genfhi/fhir-query";
 import {
-  Bundle,
   Resource,
   id,
   ResourceType,
-  StructureDefinition,
   AResource,
 } from "@genfhi/fhir-types/r4/types";
+import { FHIRRequest, FHIRResponse } from "../types";
 
 type Async<F, Else = never> = F extends (...arg: infer A) => infer R
   ? (...args: A) => Promise<R>
@@ -15,11 +14,12 @@ type Async<F, Else = never> = F extends (...arg: infer A) => infer R
 export type FHIRClient<CTX> = FHIRClientSync<CTX> | FHIRClientAsync<CTX>;
 
 export interface FHIRClientSync<CTX> {
-  search_system(ctx: CTX, query: Parameters<any>): Resource[];
+  request(ctx: CTX, request: FHIRRequest): FHIRResponse;
+  search_system(ctx: CTX, query: FHIRURL): Resource[];
   search_type<T extends ResourceType>(
     ctx: CTX,
     type: T,
-    query: Parameters<any>
+    query: FHIRURL
   ): AResource<T>[];
   create<T extends Resource>(ctx: CTX, resource: T): T;
   update<T extends Resource>(ctx: CTX, resource: T): T;
@@ -50,11 +50,12 @@ export interface FHIRClientSync<CTX> {
 }
 
 export interface FHIRClientAsync<CTX> {
-  search_system(ctx: CTX, query: Parameters<any>): Promise<Resource[]>;
+  request(ctx: CTX, request: FHIRRequest): Promise<FHIRResponse>;
+  search_system(ctx: CTX, query: FHIRURL): Promise<Resource[]>;
   search_type<T extends ResourceType>(
     ctx: CTX,
     type: T,
-    query: Parameters<any>
+    query: FHIRURL
   ): Promise<AResource<T>[]>;
   create<T extends Resource>(ctx: CTX, resource: T): Promise<T>;
   update<T extends Resource>(ctx: CTX, resource: T): Promise<T>;
