@@ -5,8 +5,8 @@ import {
   ResourceType,
   AResource,
 } from "@genfhi/fhir-types/r4/types";
-import { FHIRRequest, FHIRResponse } from "../types";
-import { FHIRClient, FHIRClientAsync } from "./types";
+import { FHIRRequest, FHIRResponse } from "../client/types";
+import { FHIRClient, FHIRClientAsync } from "../client/interface";
 
 type InteractionSupported<T> = keyof FHIRClient<T>;
 type InteractionsSupported<T> = InteractionSupported<T>[];

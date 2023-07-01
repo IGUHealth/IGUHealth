@@ -8,8 +8,8 @@ import {
 } from "@genfhi/fhir-types/r4/types";
 import * as pg from "pg";
 import { FHIRServerCTX } from "../../fhirServer";
-import { FHIRClientAsync } from "../types";
-import { FHIRRequest, FHIRResponse } from "../../types";
+import { FHIRClientAsync } from "../../client/interface";
+import { FHIRRequest, FHIRResponse } from "../../client/types";
 import { evaluateWithMeta } from "@genfhi/fhirpath";
 
 function searchResources(resource: Resource): (ResourceType | string)[] {
