@@ -63,7 +63,7 @@ function PGMiddleware<
 
 // const client = new pg.Client();
 
-export function createPostGresClient<
+export function createPostgresClient<
   CTX extends FHIRServerCTX
 >(): FHIRClientAsync<CTX> {
   const client = new pg.Client();
