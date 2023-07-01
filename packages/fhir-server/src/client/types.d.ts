@@ -136,73 +136,73 @@ export type FHIRRequest =
   | SystemHistoryRequest
   | SystemSearchRequest;
 
-type ReadResponse = InstanceLevelInteraction & {
+export type ReadResponse = InstanceLevelInteraction & {
   type: ResponseInteractionTypes["read"];
   body: Resource;
 };
 
-type VersionReadResponse = InstanceLevelInteraction & {
+export type VersionReadResponse = InstanceLevelInteraction & {
   type: ResponseInteractionTypes["vread"];
   body: Resource;
 };
 
-type UpdateResponse = InstanceLevelInteraction & {
+export type UpdateResponse = InstanceLevelInteraction & {
   type: ResponseInteractionTypes["update"];
   body: Resource;
 };
 
 // TODO - implement patch type
-type PatchResponse = InstanceLevelInteraction & {
+export type PatchResponse = InstanceLevelInteraction & {
   type: ResponseInteractionTypes["patch"];
   body: Resource;
 };
 
-type DeleteResponse = InstanceLevelInteraction & {
+export type DeleteResponse = InstanceLevelInteraction & {
   type: ResponseInteractionTypes["delete"];
 };
 
-type HistoryInstanceResponse = InstanceLevelInteraction & {
+export type HistoryInstanceResponse = InstanceLevelInteraction & {
   type: ResponseInteractionTypes["history"];
   body: Resource[];
 };
 
-type CreateResponse = TypeLevelInteractions & {
+export type CreateResponse = TypeLevelInteractions & {
   type: ResponseInteractionTypes["create"];
   body: Resource;
 };
 
-type TypeSearchResponse = TypeLevelInteractions & {
+export type TypeSearchResponse = TypeLevelInteractions & {
   query: FHIRURL;
   type: ResponseInteractionTypes["search"];
   body: Resource[];
 };
 
-type TypeHistoryResponse = TypeLevelInteractions & {
+export type TypeHistoryResponse = TypeLevelInteractions & {
   type: ResponseInteractionTypes["history"];
   body: Resource[];
 };
 
-type CapabilitiesResponse = SystemInteraction & {
+export type CapabilitiesResponse = SystemInteraction & {
   type: ResponseInteractionTypes["capabilities"];
   body: CapabilityStatement;
 };
 
-type BatchResponse = SystemInteraction & {
+export type BatchResponse = SystemInteraction & {
   type: ResponseInteractionTypes["batch"];
   body: Bundle;
 };
 
-type TransactionResponse = SystemInteraction & {
+export type TransactionResponse = SystemInteraction & {
   type: ResponseInteractionTypes["transaction"];
   body: Bundle;
 };
 
-type SystemHistoryResponse = SystemInteraction & {
+export type SystemHistoryResponse = SystemInteraction & {
   type: ResponseInteractionTypes["history"];
   body: Resource[];
 };
 
-type SystemSearchResponse = SystemInteraction & {
+export type SystemSearchResponse = SystemInteraction & {
   query: FHIRURL;
   type: ResponseInteractionTypes["search"];
   body: Resource[];
