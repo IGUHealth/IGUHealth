@@ -7,6 +7,7 @@ import {
   SearchParameter,
   StructureDefinition,
 } from "@genfhi/fhir-types/r4/types";
+import createMemoryDatabase from "./memory";
 
 const artifactParameters = loadArtifacts(
   "SearchParameter",
@@ -46,7 +47,7 @@ function generateSD(
 }
 
 test("Creation and search", async () => {
-  const memDb = new MemoryDatabase<{}>();
+  const memDb = createMemoryDatabase({});
   await memDb.create(
     {},
     generateParameter({
@@ -113,7 +114,7 @@ test("Creation and search", async () => {
 });
 
 test("artifactParameters", () => {
-  const memDb = new MemoryDatabase<{}>();
+  const memDb = createMemoryDatabase({});
   for (let param of artifactParameters) {
     //console.log(param.base[0], param.id);
     memDb.create({}, param);

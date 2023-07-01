@@ -40,24 +40,37 @@ function fitsSearchCriteria(
 //   (request: Request, state: State, next: Next): Promise<Response>;
 // }
 
-type State<T> = {
-  ctx: T;
-  response: FHIRResponse;
-};
+type Middleware<State, CTX> = (
+  request: FHIRRequest,
+  args: { ctx: CTX; state: State },
+  next?: Middleware<State, CTX>
+) => Promise<{ ctx: CTX; state: State; response: FHIRResponse }>;
 
-function MemoryMiddleware<T extends { data: InternalData<ResourceType> }>(
-  ctx: T,
-  request: FHIRRequest
-): State<T> {
+type MiddlewareSync<State, CTX> = (
+  request: FHIRRequest,
+  args: { ctx: CTX; state: State },
+  next?: Middleware<State, CTX>
+) => { ctx: CTX; state: State; response: FHIRResponse };
+
+function MemoryMiddleware<
+  State extends { data: InternalData<ResourceType> },
+  CTX extends any
+>(
+  request: FHIRRequest,
+  args: { ctx: CTX; state: State },
+  next?: Middleware<State, CTX>
+): { ctx: CTX; state: State; response: FHIRResponse } {
   switch (request.type) {
     case "search-request": {
       const resourceSet =
         request.level === "type"
           ? Object.values(
-              ctx.data[request.resourceType as ResourceType] || {}
+              args.state.data[request.resourceType as ResourceType] || {}
             ).filter((v): v is Resource => v !== undefined)
-          : Object.keys(ctx.data)
-              .map((k) => Object.values(ctx.data[k as ResourceType] || {}))
+          : Object.keys(args.state.data)
+              .map((k) =>
+                Object.values(args.state.data[k as ResourceType] || {})
+              )
               .filter((v): v is Resource[] => v !== undefined)
               .flat();
       const output = (resourceSet || []).filter((resource) => {
@@ -68,7 +81,8 @@ function MemoryMiddleware<T extends { data: InternalData<ResourceType> }>(
       });
       if (request.level === "system") {
         return {
-          ctx: ctx,
+          state: args.state,
+          ctx: args.ctx,
           response: {
             level: request.level,
             query: request.query,
@@ -78,7 +92,8 @@ function MemoryMiddleware<T extends { data: InternalData<ResourceType> }>(
         };
       }
       return {
-        ctx: ctx,
+        state: args.state,
+        ctx: args.ctx,
         response: {
           resourceType: request.resourceType,
           level: "type",
@@ -92,12 +107,13 @@ function MemoryMiddleware<T extends { data: InternalData<ResourceType> }>(
       const resource = request.body;
       if (!resource.id)
         throw new Error("Updated resource does not have an id.");
-      ctx.data[resource.resourceType] = {
-        ...ctx.data[resource.resourceType],
+      args.state.data[resource.resourceType] = {
+        ...args.state.data[resource.resourceType],
         [resource.id]: resource,
       };
       return {
-        ctx: ctx,
+        state: args.state,
+        ctx: args.ctx,
         response: {
           level: "instance",
           type: "update-response",
@@ -109,15 +125,16 @@ function MemoryMiddleware<T extends { data: InternalData<ResourceType> }>(
     }
     case "create-request": {
       const resource = request.body;
-      const resources = ctx.data[request.resourceType as ResourceType];
+      const resources = args.state.data[request.resourceType as ResourceType];
       if (!resource?.id)
         resource.id = `${Math.round(Math.random() * 100000000)}`;
-      ctx.data[resource.resourceType] = {
+      args.state.data[resource.resourceType] = {
         ...resources,
         [resource.id]: resource,
       };
       return {
-        ctx: ctx,
+        state: args.state,
+        ctx: args.ctx,
         response: {
           level: "type",
           type: "create-response",
@@ -127,14 +144,16 @@ function MemoryMiddleware<T extends { data: InternalData<ResourceType> }>(
       };
     }
     case "read-request": {
-      const data = ctx.data[request.resourceType as ResourceType]?.[request.id];
+      const data =
+        args.state.data[request.resourceType as ResourceType]?.[request.id];
       if (!data) {
         throw new Error(
           `Not found resource of type '${request.resourceType}' with id '${request.id}'`
         );
       }
       return {
-        ctx: ctx,
+        state: args.state,
+        ctx: args.ctx,
         response: {
           level: "instance",
           type: "read-response",
@@ -149,14 +168,17 @@ function MemoryMiddleware<T extends { data: InternalData<ResourceType> }>(
   }
 }
 
-export default class MemoryDatabase<CTX> implements FHIRClientSync<CTX> {
-  data: InternalData<ResourceType>;
-  constructor(data?: InternalData<ResourceType>) {
-    this.data = data || {};
+class SynchronousClient<State, CTX> implements FHIRClientSync<CTX> {
+  state: State;
+  middleware: MiddlewareSync<State, CTX>;
+  constructor(initialState: State, middleware: MiddlewareSync<State, CTX>) {
+    this.state = initialState;
+    this.middleware = middleware;
   }
   request(ctx: CTX, request: FHIRRequest): FHIRResponse {
-    const state = MemoryMiddleware(this, request);
-    return state.response;
+    const res = this.middleware(request, { ctx, state: this.state });
+    this.state = res.state;
+    return res.response;
   }
   search_system(ctx: CTX, fhirURL: FHIRURL): Resource[] {
     const response = this.request(ctx, {
@@ -254,4 +276,13 @@ export default class MemoryDatabase<CTX> implements FHIRClientSync<CTX> {
   ): AResource<T>[] {
     throw new Error("Not Implemented");
   }
+}
+
+export default function createMemoryDatabase<CTX>(
+  data: InternalData<ResourceType>
+): SynchronousClient<{ data: InternalData<ResourceType> }, CTX> {
+  return new SynchronousClient<{ data: InternalData<ResourceType> }, CTX>(
+    { data: data },
+    MemoryMiddleware
+  );
 }

@@ -5,6 +5,7 @@ import path from "path";
 
 import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
 import MemoryDatabase from "./database/memory";
+import { FHIRClientSync } from "./database/types";
 
 import createFhirServer, { FHIRServerCTX } from "./fhirServer";
 import {
@@ -26,8 +27,8 @@ function serverCapabilities(): CapabilityStatement {
 
 function createMemoryDatabase(
   resourceTypes: ResourceType[]
-): MemoryDatabase<FHIRServerCTX> {
-  const database = new MemoryDatabase();
+): FHIRClientSync<any> {
+  const database = MemoryDatabase<any>({});
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
       loadArtifacts(resourceType, path.join(__dirname, "../"))
