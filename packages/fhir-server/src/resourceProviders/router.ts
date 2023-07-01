@@ -98,6 +98,19 @@ async function RouterMiddleware<
         }
       }
     }
+    case "create-request": {
+      const sources = findSource(args.state.sources, {
+        interactionsSupported: ["create"],
+        resourcesSupported: [request.body.resourceType],
+      });
+      if (sources.length !== 1)
+        throw new Error(
+          `Only one source can support create per resource type '${request.body.resourceType}'`
+        );
+      const source = sources[0];
+      const response = await source.source.request(args.ctx, request);
+      return { state: args.state, ctx: args.ctx, response };
+    }
     default:
       throw new Error("Not implemented");
   }
