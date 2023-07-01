@@ -1,14 +1,13 @@
-import { FHIRURL, Parameters as FParameters } from "@genfhi/fhir-query";
+import { FHIRURL } from "@genfhi/fhir-query";
 import {
   Resource,
-  ResourceMap,
-  AResource,
   ResourceType,
   SearchParameter,
 } from "@genfhi/fhir-types/r4/types";
 import * as pg from "pg";
 import { FHIRServerCTX } from "../../fhirServer";
-import { FHIRClientAsync } from "../../client/interface";
+import { FHIRClientAsync, MiddlewareAsync } from "../../client/interface";
+import { ASynchronousClient } from "../../client";
 import { FHIRRequest, FHIRResponse } from "../../client/types";
 import { evaluateWithMeta } from "@genfhi/fhirpath";
 
@@ -45,81 +44,31 @@ async function indexResource<CTX extends FHIRServerCTX>(
   }
 }
 
-const client = new pg.Client();
-class Postgres<CTX extends FHIRServerCTX> implements FHIRClientAsync<CTX> {
-  constructor(config: pg.ClientConfig) {}
-  request(ctx: CTX, request: FHIRRequest): Promise<FHIRResponse> {
-    throw new Error("Method not implemented.");
+function PGMiddleware<
+  State extends { client: pg.Client },
+  CTX extends FHIRServerCTX
+>(
+  request: FHIRRequest,
+  args: { state: State; ctx: CTX },
+  next: MiddlewareAsync<State, CTX>
+): Promise<{ state: State; ctx: CTX; response: FHIRResponse }> {
+  const client = args.state.client;
+  switch (request.type) {
+    case "search-request":
+      throw new Error("Not implemented");
+    default:
+      throw new Error(`Not implemented ${request.type}`);
   }
-  async search_system(ctx: CTX, query: FHIRURL): Promise<Resource[]> {
-    const response = await this.request(ctx, {
-      query: query,
-      level: "system",
-      type: "search-request",
-    });
-    if (response.type === "search-response") {
-      return response.body;
-    }
-    throw new Error("invalid response was returned");
-  }
-  async search_type<T extends ResourceType>(
-    ctx: CTX,
-    resourceType: T,
-    query: FHIRURL
-  ): Promise<AResource<T>[]> {
-    const response = await this.request(ctx, {
-      query: query,
-      resourceType: resourceType,
-      level: "type",
-      type: "search-request",
-    });
-    if (response.type === "search-response") {
-      return response.body as AResource<T>[];
-    }
-    throw new Error("invalid response was returned");
-  }
-  create<T extends Resource>(ctx: CTX, resource: T): Promise<T> {
-    indexResource(ctx, resource);
-    throw new Error("Method not implemented.");
-  }
-  update<T extends Resource>(ctx: CTX, resource: T): Promise<T> {
-    throw new Error("Method not implemented.");
-  }
-  patch<T extends Resource>(ctx: CTX, resource: T, patches: any): Promise<T> {
-    throw new Error("Method not implemented.");
-  }
-  read<T extends keyof ResourceMap>(
-    ctx: CTX,
-    resourceType: T,
-    id: string
-  ): Promise<AResource<T>> {
-    throw new Error("Method not implemented.");
-  }
-  vread<T extends keyof ResourceMap>(
-    ctx: CTX,
-    resourceType: T,
-    id: string,
-    versionId: string
-  ): Promise<AResource<T>> {
-    throw new Error("Method not implemented.");
-  }
-  delete(ctx: CTX, resourceType: keyof ResourceMap, id: string): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-  historySystem(ctx: CTX): Promise<Resource[]> {
-    throw new Error("Method not implemented.");
-  }
-  historyType<T extends keyof ResourceMap>(
-    ctx: CTX,
-    resourceType: T
-  ): Promise<AResource<T>[]> {
-    throw new Error("Method not implemented.");
-  }
-  historyInstance<T extends keyof ResourceMap>(
-    ctx: CTX,
-    resourceType: T,
-    id: string
-  ): Promise<AResource<T>[]> {
-    throw new Error("Method not implemented.");
-  }
+}
+
+// const client = new pg.Client();
+
+export function createPostGresClient<
+  CTX extends FHIRServerCTX
+>(): FHIRClientAsync<CTX> {
+  const client = new pg.Client();
+  return new ASynchronousClient<{ client: pg.Client }, CTX>(
+    { client: client },
+    PGMiddleware
+  );
 }
