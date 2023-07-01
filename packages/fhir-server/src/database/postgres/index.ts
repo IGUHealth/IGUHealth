@@ -9,6 +9,7 @@ import {
 import * as pg from "pg";
 import { FHIRServerCTX } from "../../fhirServer";
 import { FHIRClientAsync } from "../types";
+import { FHIRRequest, FHIRResponse } from "../../types";
 import { evaluateWithMeta } from "@genfhi/fhirpath";
 
 function searchResources(resource: Resource): (ResourceType | string)[] {
@@ -19,10 +20,13 @@ async function getParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
   resource: Resource
 ): Promise<SearchParameter[]> {
-  const parameters: FParameters<unknown> = {
-    base: {
-      name: "base",
-      value: searchResources(resource),
+  const parameters: FHIRURL = {
+    resourceType: "SearchParameter",
+    parameters: {
+      base: {
+        name: "base",
+        value: searchResources(resource),
+      },
     },
   };
   return await ctx.database.search_type(ctx, "SearchParameter", parameters);
@@ -44,15 +48,35 @@ async function indexResource<CTX extends FHIRServerCTX>(
 const client = new pg.Client();
 class Postgres<CTX extends FHIRServerCTX> implements FHIRClientAsync<CTX> {
   constructor(config: pg.ClientConfig) {}
-  search_system(ctx: CTX, query: FHIRURL["parameters"]): Promise<Resource[]> {
+  request(ctx: CTX, request: FHIRRequest): Promise<FHIRResponse> {
     throw new Error("Method not implemented.");
   }
-  search_type<T extends ResourceType>(
+  async search_system(ctx: CTX, query: FHIRURL): Promise<Resource[]> {
+    const response = await this.request(ctx, {
+      query: query,
+      level: "system",
+      type: "search-request",
+    });
+    if (response.type === "search-response") {
+      return response.body;
+    }
+    throw new Error("invalid response was returned");
+  }
+  async search_type<T extends ResourceType>(
     ctx: CTX,
     resourceType: T,
-    query: FHIRURL["parameters"]
+    query: FHIRURL
   ): Promise<AResource<T>[]> {
-    throw new Error("Method not implemented.");
+    const response = await this.request(ctx, {
+      query: query,
+      resourceType: resourceType,
+      level: "type",
+      type: "search-request",
+    });
+    if (response.type === "search-response") {
+      return response.body as AResource<T>[];
+    }
+    throw new Error("invalid response was returned");
   }
   create<T extends Resource>(ctx: CTX, resource: T): Promise<T> {
     indexResource(ctx, resource);

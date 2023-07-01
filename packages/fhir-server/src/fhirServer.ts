@@ -5,21 +5,22 @@ import {
   CapabilityStatement,
   StructureDefinition,
   ResourceType,
+  Resource,
 } from "@genfhi/fhir-types/r4/types";
 
 import { FHIRClient } from "./database/types";
 import {
   FHIRRequest,
   FHIRResponse,
-  InteractionLevel,
-  InstanceLevelInteraction,
+  RequestLevel,
   TypeLevelInteractions,
+  InstanceLevelInteraction,
 } from "./types";
 import chain from "./chain";
 
 function getInteractionLevel(
   fhirURL: FHIRURL
-): InteractionLevel[keyof InteractionLevel] {
+): RequestLevel[keyof RequestLevel] {
   if (fhirURL.resourceType && fhirURL.id) {
     return "instance";
   } else if (fhirURL.resourceType) {
@@ -36,8 +37,7 @@ function parseInstantRequest(
   switch (request.method) {
     case "GET":
       return {
-        url: fhirURL,
-        type: "read",
+        type: "read-request",
         ...fhirRequest,
       };
     default:
@@ -53,14 +53,14 @@ function parseTypeRequest(
   switch (request.method) {
     case "GET":
       return {
-        url: fhirURL,
-        type: "search",
+        query: fhirURL,
+        type: "search-request",
         ...fhirRequest,
       };
     case "POST":
       return {
-        url: fhirURL,
-        type: "create",
+        type: "create-request",
+        body: request.body as Resource,
         ...fhirRequest,
       };
     default:
@@ -105,33 +105,26 @@ async function fhirRequestToFHIRResponse(
       throw new Error("not Implemented");
     case "type":
       switch (request.type) {
-        case "create":
+        case "create-request":
           if (!request.body)
             throw new Error("No resource found on body for creation.");
           return {
             resourceType: request.resourceType,
-            type: request.type,
+            type: "create-response",
             level: request.level,
             body: await ctx.database.create(ctx, request.body),
           };
-        case "search":
+        case "search-request":
           return {
+            query: request.query,
             resourceType: request.resourceType,
-            type: request.type,
+            type: "search-response",
             level: request.level,
-            body: {
-              resourceType: "Bundle",
-              type: "search",
-              entry: (
-                await ctx.database.search_type(
-                  ctx,
-                  request.resourceType as ResourceType,
-                  request.url.parameters
-                )
-              ).map((resource) => ({
-                resource: resource,
-              })),
-            },
+            body: await ctx.database.search_type(
+              ctx,
+              request.resourceType as ResourceType,
+              request.query
+            ),
           };
         default:
           throw new Error("not Implemented");
@@ -149,7 +142,7 @@ function fhirResponseToKoaResponse(
       throw new Error("not Implemented");
     case "type":
       switch (fhirResponse.type) {
-        case "search":
+        case "search-response":
           return {
             status: 200,
             body: fhirResponse.body,
