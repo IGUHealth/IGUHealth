@@ -76,7 +76,6 @@ async function RouterMiddleware<
           | HistoryInstanceResponse =>
           res.type === "history-response" || res.type === "search-response"
       );
-      console.log(args.state, sources, responses);
       return {
         state: args.state,
         ctx: args.ctx,
