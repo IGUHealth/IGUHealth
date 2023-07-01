@@ -5,6 +5,7 @@ import path from "path";
 
 import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
 import MemoryDatabase from "./resourceProviders/memory";
+import RouterDatabase from "./resourceProviders/router";
 import { FHIRClientSync } from "./client/interface";
 
 import createFhirServer, { FHIRServerCTX } from "./fhirServer";
@@ -43,9 +44,12 @@ function createMemoryDatabase(
 function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
   const app = new Koa();
 
-  const database = createMemoryDatabase([
-    "StructureDefinition",
-    "SearchParameter",
+  const database = RouterDatabase([
+    {
+      resourcesSupported: ["StructureDefinition", "SearchParameter"],
+      interactionsSupported: ["read-request", "search-request"],
+      source: createMemoryDatabase(["StructureDefinition", "SearchParameter"]),
+    },
   ]);
 
   const fhirServer = createFhirServer({
