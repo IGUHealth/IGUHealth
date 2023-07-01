@@ -115,7 +115,7 @@ type SystemHistoryRequest = SystemInteraction & {
   type: RequestInteractionTypes["history"];
 };
 
-type SytemSearchRequest = SystemInteraction & {
+type SystemSearchRequest = SystemInteraction & {
   query: FHIRURL;
   type: RequestInteractionTypes["search"];
 };
@@ -134,7 +134,7 @@ export type FHIRRequest =
   | BatchRequest
   | TransactionRequest
   | SystemHistoryRequest
-  | SytemSearchRequest;
+  | SystemSearchRequest;
 
 type ReadResponse = InstanceLevelInteraction & {
   type: ResponseInteractionTypes["read"];
@@ -202,7 +202,7 @@ type SystemHistoryResponse = SystemInteraction & {
   body: Resource[];
 };
 
-type SytemSearchResponse = SystemInteraction & {
+type SystemSearchResponse = SystemInteraction & {
   query: FHIRURL;
   type: ResponseInteractionTypes["search"];
   body: Resource[];
@@ -222,4 +222,4 @@ export type FHIRResponse =
   | BatchResponse
   | TransactionResponse
   | SystemHistoryResponse
-  | SytemSearchResponse;
+  | SystemSearchResponse;
