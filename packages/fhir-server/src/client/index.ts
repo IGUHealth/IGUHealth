@@ -47,8 +47,9 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       resourceType: resourceType,
       query: fhirURL,
     });
+    console.log(response);
     if (response.type !== "search-response")
-      throw new Error("Unexpected response type");
+      throw new Error(`Unexpected response type '${response.type}'`);
     return response.body as AResource<T>[];
   }
   async create<T extends Resource>(ctx: CTX, resource: T): Promise<T> {

@@ -43,12 +43,16 @@ function createMemoryDatabase(
 
 function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
   const app = new Koa();
+  const memoryDatabase = createMemoryDatabase([
+    "StructureDefinition",
+    "SearchParameter",
+  ]);
 
   const database = RouterDatabase([
     {
       resourcesSupported: ["StructureDefinition", "SearchParameter"],
       interactionsSupported: ["read-request", "search-request"],
-      source: createMemoryDatabase(["StructureDefinition", "SearchParameter"]),
+      source: memoryDatabase,
     },
   ]);
 
@@ -56,7 +60,7 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
     capabilities: serverCapabilities(),
     database: database,
     resolveSD: (ctx, type: string) =>
-      database.read(ctx, "StructureDefinition", type),
+      memoryDatabase.read(ctx, "StructureDefinition", type),
   });
 
   const router = new Router();

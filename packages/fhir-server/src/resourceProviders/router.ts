@@ -33,11 +33,11 @@ function findSource<T>(
 ): Sources<T> {
   return sources.filter((source) => {
     return (
-      source.resourcesSupported.every((resource) =>
-        constraints.resourcesSupported?.includes(resource)
+      constraints.resourcesSupported?.every((resource) =>
+        source.resourcesSupported.includes(resource)
       ) &&
-      source.interactionsSupported.every((interaction) =>
-        constraints.interactionsSupported?.includes(interaction)
+      constraints.interactionsSupported?.every((interaction) =>
+        source.interactionsSupported.includes(interaction)
       )
     );
   });
@@ -76,6 +76,7 @@ async function RouterMiddleware<
           | HistoryInstanceResponse =>
           res.type === "history-response" || res.type === "search-response"
       );
+      console.log(args.state, sources, responses);
       return {
         state: args.state,
         ctx: args.ctx,
