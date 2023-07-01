@@ -47,7 +47,7 @@ export interface FHIRClientSync<CTX> {
     resourceType: T,
     id: id,
     versionId: id
-  ): AResource<T>;
+  ): AResource<T> | undefined;
   delete(ctx: CTX, resourceType: ResourceType, id: id): void;
   historySystem(ctx: CTX): Resource[];
   historyType<T extends ResourceType>(
@@ -82,7 +82,7 @@ export interface FHIRClientAsync<CTX> {
     resourceType: T,
     id: id,
     versionId: id
-  ): Promise<AResource<T>>;
+  ): Promise<AResource<T> | undefined>;
   delete(ctx: CTX, resourceType: ResourceType, id: id): Promise<void>;
   historySystem(ctx: CTX): Promise<Resource[]>;
   historyType<T extends ResourceType>(

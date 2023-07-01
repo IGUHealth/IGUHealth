@@ -7,7 +7,7 @@ import {
 import * as pg from "pg";
 import { FHIRServerCTX } from "../../fhirServer";
 import { FHIRClientAsync, MiddlewareAsync } from "../../client/interface";
-import { ASynchronousClient } from "../../client";
+import { AsynchronousClient } from "../../client";
 import { FHIRRequest, FHIRResponse } from "../../client/types";
 import { evaluateWithMeta } from "@genfhi/fhirpath";
 
@@ -67,7 +67,7 @@ export function createPostgresClient<
   CTX extends FHIRServerCTX
 >(): FHIRClientAsync<CTX> {
   const client = new pg.Client();
-  return new ASynchronousClient<{ client: pg.Client }, CTX>(
+  return new AsynchronousClient<{ client: pg.Client }, CTX>(
     { client: client },
     PGMiddleware
   );

@@ -14,7 +14,7 @@ import {
 } from "./interface";
 import { FHIRRequest, FHIRResponse } from "./types";
 
-export class ASynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
+export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   state: State;
   middleware: MiddlewareAsync<State, CTX>;
   constructor(initialState: State, middleware: MiddlewareAsync<State, CTX>) {

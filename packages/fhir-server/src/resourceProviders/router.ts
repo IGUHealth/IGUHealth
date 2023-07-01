@@ -1,27 +1,27 @@
 import { FHIRURL, Parameters } from "@genfhi/fhir-query";
+import { ResourceType } from "@genfhi/fhir-types/r4/types";
 import {
-  ConcreteType,
-  ResourceMap,
-  ResourceType,
-  AResource,
-} from "@genfhi/fhir-types/r4/types";
-import { FHIRRequest, FHIRResponse } from "../client/types";
-import {
-  FHIRClient,
-  FHIRClientAsync,
-  MiddlewareAsync,
-} from "../client/interface";
+  FHIRRequest,
+  FHIRResponse,
+  SystemHistoryResponse,
+  SystemSearchResponse,
+  TypeHistoryResponse,
+  TypeSearchResponse,
+  HistoryInstanceResponse,
+} from "../client/types";
+import { AsynchronousClient } from "../client";
+import { FHIRClient, MiddlewareAsync } from "../client/interface";
 import { FHIRServerCTX } from "../fhirServer";
 
-type InteractionSupported<T> = keyof FHIRClient<T>;
+type InteractionSupported<T> = FHIRRequest["type"];
 type InteractionsSupported<T> = InteractionSupported<T>[];
 
-type Source<T> = {
+type Source<CTX> = {
   resourcesSupported: ResourceType[];
-  interactionsSupported: InteractionsSupported<T>;
-  source: FHIRClient<T>;
+  interactionsSupported: InteractionsSupported<CTX>;
+  source: FHIRClient<CTX>;
 };
-type Sources<T> = Source<T>[];
+type Sources<CTX> = Source<CTX>[];
 
 type Constraint<T> = Partial<
   Pick<Source<T>, "resourcesSupported" | "interactionsSupported">
@@ -51,229 +51,84 @@ async function RouterMiddleware<
   args: { ctx: CTX; state: State },
   next?: MiddlewareAsync<State, CTX>
 ): Promise<{ ctx: CTX; state: State; response: FHIRResponse }> {
+  const constraint = {
+    interactionsSupported: [request.type],
+    resourcesSupported:
+      "resourceType" in request ? [request.resourceType as ResourceType] : [],
+  };
+  const sources = findSource(args.state.sources, constraint);
   switch (request.type) {
-    case "search-request": {
-      switch (request.level) {
-        case "system": {
-          const responses = findSource(args.state.sources, {
-            interactionsSupported: ["search_system"],
-          }).map((source) =>
-            source.source.search_system(args.ctx, request.query)
-          );
-          const resources = (await Promise.all(responses)).flat();
-          return {
-            state: args.state,
-            ctx: args.ctx,
-            response: {
-              query: request.query,
-              level: "system",
-              type: "search-response",
-              body: resources,
-            },
-          };
-        }
-        case "type": {
-          const responses = findSource(args.state.sources, {
-            interactionsSupported: ["search_system"],
-            resourcesSupported: [request.resourceType as ResourceType],
-          }).map((source) =>
-            source.source.search_type(
-              args.ctx,
-              request.resourceType as ResourceType,
-              request.query
-            )
-          );
-          const resources = (await Promise.all(responses)).flat();
-          return {
-            ctx: args.ctx,
-            state: args.state,
-            response: {
-              type: "search-response",
-              resourceType: request.resourceType,
-              query: request.query,
-              level: "type",
-              body: resources,
-            },
-          };
-        }
-      }
+    // Multi-types allowed
+    case "search-request":
+    case "history-request": {
+      const responses = (
+        await Promise.all(
+          sources.map((source) => source.source.request(args.ctx, request))
+        )
+      ).filter(
+        (
+          res
+        ): res is
+          | TypeSearchResponse
+          | SystemSearchResponse
+          | SystemHistoryResponse
+          | TypeHistoryResponse
+          | HistoryInstanceResponse =>
+          res.type === "history-response" || res.type === "search-response"
+      );
+      return {
+        state: args.state,
+        ctx: args.ctx,
+        response: {
+          ...responses[0],
+          body: responses.map((r) => r.body).flat(),
+        },
+      };
     }
-    case "create-request": {
-      const sources = findSource(args.state.sources, {
-        interactionsSupported: ["create"],
-        resourcesSupported: [request.body.resourceType],
-      });
+    // Search for the first one successful
+    case "read-request":
+    case "vread-request": {
+      const responses = (
+        await Promise.all(
+          sources.map(async (source) => {
+            try {
+              return await source.source.request(args.ctx, request);
+            } catch (e) {
+              return undefined;
+            }
+          })
+        )
+      ).filter((response): response is FHIRResponse => response !== undefined);
+      if (responses.length !== 1)
+        throw new Error(`Could not perform request type '${request.type}'`);
+      return { state: args.state, ctx: args.ctx, response: responses[0] };
+    }
+
+    // Mutations should only have one source
+    case "batch-request":
+    case "transaction-request":
+    case "create-request":
+    case "update-request":
+    case "patch-request":
+    case "delete-request": {
       if (sources.length !== 1)
         throw new Error(
-          `Only one source can support create per resource type '${request.body.resourceType}'`
+          `Only one source can support create per mutation operation'`
         );
       const source = sources[0];
       const response = await source.source.request(args.ctx, request);
       return { state: args.state, ctx: args.ctx, response };
     }
-    default:
-      throw new Error("Not implemented");
+    case "capabilities-request":
+      throw new Error(`Not supported '${request.type}'`);
   }
 }
 
-export class Router<CTX> implements FHIRClientAsync<CTX> {
-  private sources: Sources<CTX>;
-  constructor(sources: Sources<CTX>) {
-    this.sources = sources;
-  }
-  async request(ctx: CTX, request: FHIRRequest): Promise<FHIRResponse> {
-    throw new Error("Method not implemented.");
-  }
-  async search_system(ctx: CTX, query: FHIRURL): Promise<ConcreteType[]> {
-    const responses = findSource(this.sources, {
-      interactionsSupported: ["search_system"],
-    }).map((source) => source.source.search_system(ctx, query));
-    const resources = (await Promise.all(responses)).flat();
-    return resources;
-  }
-  async search_type<T extends ResourceType>(
-    ctx: CTX,
-    type: T,
-    query: FHIRURL
-  ): Promise<AResource<T>[]> {
-    const responses = findSource(this.sources, {
-      interactionsSupported: ["search_system"],
-      resourcesSupported: [type],
-    }).map((source) => source.source.search_type(ctx, type, query));
-    const resources = (await Promise.all(responses)).flat();
-    return resources;
-  }
-  async create<T extends ConcreteType>(ctx: CTX, resource: T): Promise<T> {
-    const sources = findSource(this.sources, {
-      interactionsSupported: ["create"],
-      resourcesSupported: [resource.resourceType],
-    });
-    if (sources.length !== 1)
-      throw new Error(
-        `Only one source can support create per resource type '${resource.resourceType}'`
-      );
-    const source = sources[0];
-
-    return source.source.create(ctx, resource);
-  }
-  async update<T extends ConcreteType>(ctx: CTX, resource: T): Promise<T> {
-    const sources = findSource(this.sources, {
-      interactionsSupported: ["update"],
-      resourcesSupported: [resource.resourceType],
-    });
-    if (sources.length !== 1)
-      throw new Error(
-        `Only one source can support update per resource type '${resource.resourceType}'`
-      );
-    const source = sources[0];
-
-    return source.source.update(ctx, resource);
-  }
-  async patch<T extends ConcreteType>(
-    ctx: CTX,
-    resource: T,
-    patches: any
-  ): Promise<T> {
-    const sources = findSource(this.sources, {
-      interactionsSupported: ["patch"],
-      resourcesSupported: [resource.resourceType],
-    });
-    if (sources.length !== 1)
-      throw new Error(
-        `Only one source can support patch per resource type '${resource.resourceType}'`
-      );
-    const source = sources[0];
-
-    return source.source.patch(ctx, resource, patches);
-  }
-  async read<T extends keyof ResourceMap>(
-    ctx: CTX,
-    resourceType: T,
-    id: string
-  ): Promise<AResource<T> | undefined> {
-    const sources = findSource(this.sources, {
-      interactionsSupported: ["read"],
-      resourcesSupported: [resourceType],
-    });
-    if (sources.length !== 1)
-      throw new Error(
-        `Only one source can support read per resource type '${resourceType}'`
-      );
-    const source = sources[0];
-
-    return source.source.read(ctx, resourceType, id);
-  }
-  async vread<T extends ResourceType>(
-    ctx: CTX,
-    resourceType: T,
-    id: string,
-    versionId: string
-  ): Promise<AResource<T>> {
-    const sources = findSource(this.sources, {
-      interactionsSupported: ["vread"],
-      resourcesSupported: [resourceType],
-    });
-    if (sources.length !== 1)
-      throw new Error(
-        `Only one source can support vread per resource type '${resourceType}'`
-      );
-    const source = sources[0];
-
-    return source.source.vread(ctx, resourceType, id, versionId);
-  }
-  async delete(
-    ctx: CTX,
-    resourceType: keyof ResourceMap,
-    id: string
-  ): Promise<void> {
-    const sources = findSource(this.sources, {
-      interactionsSupported: ["vread"],
-      resourcesSupported: [resourceType],
-    });
-    if (sources.length !== 1)
-      throw new Error(
-        `Only one source can support vread per resource type '${resourceType}'`
-      );
-    const source = sources[0];
-
-    return source.source.delete(ctx, resourceType, id);
-  }
-  async historySystem(ctx: CTX): Promise<ConcreteType[]> {
-    const sources = findSource(this.sources, {
-      interactionsSupported: ["historySystem"],
-    });
-    const result = await Promise.all(
-      sources.map((source) => source.source.historySystem(ctx))
-    );
-    return result.flat();
-  }
-  async historyType<T extends ResourceType>(
-    ctx: CTX,
-    resourceType: T
-  ): Promise<AResource<T>[]> {
-    const sources = findSource(this.sources, {
-      interactionsSupported: ["historyType"],
-    });
-    const result = await Promise.all(
-      sources.map((source) => source.source.historyType(ctx, resourceType))
-    );
-    return result.flat();
-  }
-  async historyInstance<T extends ResourceType>(
-    ctx: CTX,
-    resourceType: T,
-    id: string
-  ): Promise<AResource<T>[]> {
-    const sources = findSource(this.sources, {
-      interactionsSupported: ["historyInstance"],
-      resourcesSupported: [resourceType],
-    });
-    if (sources.length !== 1)
-      throw new Error(
-        `Only one source can support historyInstance per resource type '${resourceType}'`
-      );
-    const source = sources[0];
-
-    return source.source.historyInstance(ctx, resourceType, id);
-  }
+export default function createRouter<CTX extends FHIRServerCTX>(
+  sources: Sources<CTX>
+): AsynchronousClient<{ sources: Sources<CTX> }, CTX> {
+  return new AsynchronousClient<{ sources: Sources<CTX> }, CTX>(
+    { sources },
+    RouterMiddleware
+  );
 }
