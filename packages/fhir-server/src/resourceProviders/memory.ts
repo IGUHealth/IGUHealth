@@ -6,6 +6,7 @@ import {
   id,
 } from "@genfhi/fhir-types/r4/types";
 import { SynchronousClient } from "../client";
+import { MiddlewareSync } from "../client/interface";
 import { FHIRRequest, FHIRResponse } from "../client/types";
 
 type InternalData<T extends ResourceType> = Partial<
@@ -40,19 +41,13 @@ function fitsSearchCriteria(
 //   (request: Request, state: State, next: Next): Promise<Response>;
 // }
 
-type Middleware<State, CTX> = (
-  request: FHIRRequest,
-  args: { ctx: CTX; state: State },
-  next?: Middleware<State, CTX>
-) => Promise<{ ctx: CTX; state: State; response: FHIRResponse }>;
-
 function MemoryMiddleware<
   State extends { data: InternalData<ResourceType> },
   CTX extends any
 >(
   request: FHIRRequest,
   args: { ctx: CTX; state: State },
-  next?: Middleware<State, CTX>
+  next?: MiddlewareSync<State, CTX>
 ): { ctx: CTX; state: State; response: FHIRResponse } {
   switch (request.type) {
     case "search-request": {

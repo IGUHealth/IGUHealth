@@ -6,7 +6,12 @@ import {
   AResource,
 } from "@genfhi/fhir-types/r4/types";
 import { FHIRRequest, FHIRResponse } from "../client/types";
-import { FHIRClient, FHIRClientAsync } from "../client/interface";
+import {
+  FHIRClient,
+  FHIRClientAsync,
+  MiddlewareAsync,
+} from "../client/interface";
+import { FHIRServerCTX } from "../fhirServer";
 
 type InteractionSupported<T> = keyof FHIRClient<T>;
 type InteractionsSupported<T> = InteractionSupported<T>[];
@@ -36,6 +41,66 @@ function findSource<T>(
       )
     );
   });
+}
+
+async function RouterMiddleware<
+  CTX extends FHIRServerCTX,
+  State extends { sources: Sources<CTX> }
+>(
+  request: FHIRRequest,
+  args: { ctx: CTX; state: State },
+  next?: MiddlewareAsync<State, CTX>
+): Promise<{ ctx: CTX; state: State; response: FHIRResponse }> {
+  switch (request.type) {
+    case "search-request": {
+      switch (request.level) {
+        case "system": {
+          const responses = findSource(args.state.sources, {
+            interactionsSupported: ["search_system"],
+          }).map((source) =>
+            source.source.search_system(args.ctx, request.query)
+          );
+          const resources = (await Promise.all(responses)).flat();
+          return {
+            state: args.state,
+            ctx: args.ctx,
+            response: {
+              query: request.query,
+              level: "system",
+              type: "search-response",
+              body: resources,
+            },
+          };
+        }
+        case "type": {
+          const responses = findSource(args.state.sources, {
+            interactionsSupported: ["search_system"],
+            resourcesSupported: [request.resourceType as ResourceType],
+          }).map((source) =>
+            source.source.search_type(
+              args.ctx,
+              request.resourceType as ResourceType,
+              request.query
+            )
+          );
+          const resources = (await Promise.all(responses)).flat();
+          return {
+            ctx: args.ctx,
+            state: args.state,
+            response: {
+              type: "search-response",
+              resourceType: request.resourceType,
+              query: request.query,
+              level: "type",
+              body: resources,
+            },
+          };
+        }
+      }
+    }
+    default:
+      throw new Error("Not implemented");
+  }
 }
 
 export class Router<CTX> implements FHIRClientAsync<CTX> {
