@@ -1,10 +1,13 @@
+import * as pg from "pg";
+
 import { FHIRURL } from "@genfhi/fhir-query";
 import {
   Resource,
   ResourceType,
   SearchParameter,
 } from "@genfhi/fhir-types/r4/types";
-import * as pg from "pg";
+import { evaluateWithMeta } from "@genfhi/fhirpath";
+
 import { FHIRServerCTX } from "../../fhirServer";
 import { FHIRClientAsync } from "../../client/interface";
 import { AsynchronousClient } from "../../client";
@@ -12,8 +15,6 @@ import {
   createMiddlewareAsync,
   MiddlewareAsync,
 } from "../../client/middleware";
-import { FHIRRequest, FHIRResponse } from "../../client/types";
-import { evaluateWithMeta } from "@genfhi/fhirpath";
 
 function searchResources(resource: Resource): (ResourceType | string)[] {
   return ["Resource", "DomainResource", resource.resourceType];

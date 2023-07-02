@@ -1,4 +1,4 @@
-import { FHIRURL, ParsedParameter } from "@genfhi/fhir-query";
+import { ParsedParameter } from "@genfhi/fhir-query";
 import {
   ResourceType,
   AResource,
@@ -7,7 +7,6 @@ import {
 } from "@genfhi/fhir-types/r4/types";
 import { SynchronousClient } from "../client";
 import { createMiddlewareSync, MiddlewareSync } from "../client/middleware";
-import { FHIRRequest, FHIRResponse } from "../client/types";
 
 type InternalData<T extends ResourceType> = Partial<
   Record<T, Record<id, AResource<T> | undefined>>
