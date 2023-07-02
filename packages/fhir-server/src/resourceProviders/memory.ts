@@ -1,4 +1,4 @@
-import { FHIRURL, ParsedParameter } from "@genfhi/fhir-query";
+import { ParsedParameter } from "@genfhi/fhir-query";
 import {
   ResourceType,
   AResource,
@@ -6,8 +6,7 @@ import {
   id,
 } from "@genfhi/fhir-types/r4/types";
 import { SynchronousClient } from "../client";
-import { MiddlewareSync } from "../client/interface";
-import { FHIRRequest, FHIRResponse } from "../client/types";
+import { createMiddlewareSync, MiddlewareSync } from "../client/middleware";
 
 type InternalData<T extends ResourceType> = Partial<
   Record<T, Record<id, AResource<T> | undefined>>
@@ -37,131 +36,128 @@ function fitsSearchCriteria(
   }
 }
 
-// export interface Middleware {
-//   (request: Request, state: State, next: Next): Promise<Response>;
-// }
-
-function MemoryMiddleware<
+function createMemoryMiddleware<
   State extends { data: InternalData<ResourceType> },
   CTX extends any
->(
-  request: FHIRRequest,
-  args: { ctx: CTX; state: State },
-  next?: MiddlewareSync<State, CTX>
-): { ctx: CTX; state: State; response: FHIRResponse } {
-  switch (request.type) {
-    case "search-request": {
-      const resourceSet =
-        request.level === "type"
-          ? Object.values(
-              args.state.data[request.resourceType as ResourceType] || {}
-            ).filter((v): v is Resource => v !== undefined)
-          : Object.keys(args.state.data)
-              .map((k) =>
-                Object.values(args.state.data[k as ResourceType] || {})
-              )
-              .filter((v): v is Resource[] => v !== undefined)
-              .flat();
-      const output = (resourceSet || []).filter((resource) => {
-        for (let param of Object.values(request.query.parameters)) {
-          if (!fitsSearchCriteria(param, resource)) return false;
+>(): MiddlewareSync<State, CTX> {
+  return createMiddlewareSync<State, CTX>([
+    (request, args, next) => {
+      switch (request.type) {
+        case "search-request": {
+          const resourceSet =
+            request.level === "type"
+              ? Object.values(
+                  args.state.data[request.resourceType as ResourceType] || {}
+                ).filter((v): v is Resource => v !== undefined)
+              : Object.keys(args.state.data)
+                  .map((k) =>
+                    Object.values(args.state.data[k as ResourceType] || {})
+                  )
+                  .filter((v): v is Resource[] => v !== undefined)
+                  .flat();
+          const output = (resourceSet || []).filter((resource) => {
+            for (let param of Object.values(request.query.parameters)) {
+              if (!fitsSearchCriteria(param, resource)) return false;
+            }
+            return true;
+          });
+          if (request.level === "system") {
+            return {
+              state: args.state,
+              ctx: args.ctx,
+              response: {
+                level: request.level,
+                query: request.query,
+                type: "search-response",
+                body: output,
+              },
+            };
+          }
+          return {
+            state: args.state,
+            ctx: args.ctx,
+            response: {
+              resourceType: request.resourceType,
+              level: "type",
+              query: request.query,
+              type: "search-response",
+              body: output,
+            },
+          };
         }
-        return true;
-      });
-      if (request.level === "system") {
-        return {
-          state: args.state,
-          ctx: args.ctx,
-          response: {
-            level: request.level,
-            query: request.query,
-            type: "search-response",
-            body: output,
-          },
-        };
+        case "update-request": {
+          const resource = request.body;
+          if (!resource.id)
+            throw new Error("Updated resource does not have an id.");
+          args.state.data[resource.resourceType] = {
+            ...args.state.data[resource.resourceType],
+            [resource.id]: resource,
+          };
+          return {
+            state: args.state,
+            ctx: args.ctx,
+            response: {
+              level: "instance",
+              type: "update-response",
+              resourceType: request.resourceType,
+              id: resource.id,
+              body: resource,
+            },
+          };
+        }
+        case "create-request": {
+          const resource = request.body;
+          const resources =
+            args.state.data[request.resourceType as ResourceType];
+          if (!resource?.id)
+            resource.id = `${Math.round(Math.random() * 100000000)}`;
+          args.state.data[resource.resourceType] = {
+            ...resources,
+            [resource.id]: resource,
+          };
+          return {
+            state: args.state,
+            ctx: args.ctx,
+            response: {
+              level: "type",
+              type: "create-response",
+              resourceType: request.resourceType,
+              body: resource,
+            },
+          };
+        }
+        case "read-request": {
+          const data =
+            args.state.data[request.resourceType as ResourceType]?.[request.id];
+          if (!data) {
+            throw new Error(
+              `Not found resource of type '${request.resourceType}' with id '${request.id}'`
+            );
+          }
+          return {
+            state: args.state,
+            ctx: args.ctx,
+            response: {
+              level: "instance",
+              type: "read-response",
+              resourceType: request.resourceType,
+              id: request.id,
+              body: data,
+            },
+          };
+        }
+        default:
+          throw new Error("Not implemented");
       }
-      return {
-        state: args.state,
-        ctx: args.ctx,
-        response: {
-          resourceType: request.resourceType,
-          level: "type",
-          query: request.query,
-          type: "search-response",
-          body: output,
-        },
-      };
-    }
-    case "update-request": {
-      const resource = request.body;
-      if (!resource.id)
-        throw new Error("Updated resource does not have an id.");
-      args.state.data[resource.resourceType] = {
-        ...args.state.data[resource.resourceType],
-        [resource.id]: resource,
-      };
-      return {
-        state: args.state,
-        ctx: args.ctx,
-        response: {
-          level: "instance",
-          type: "update-response",
-          resourceType: request.resourceType,
-          id: resource.id,
-          body: resource,
-        },
-      };
-    }
-    case "create-request": {
-      const resource = request.body;
-      const resources = args.state.data[request.resourceType as ResourceType];
-      if (!resource?.id)
-        resource.id = `${Math.round(Math.random() * 100000000)}`;
-      args.state.data[resource.resourceType] = {
-        ...resources,
-        [resource.id]: resource,
-      };
-      return {
-        state: args.state,
-        ctx: args.ctx,
-        response: {
-          level: "type",
-          type: "create-response",
-          resourceType: request.resourceType,
-          body: resource,
-        },
-      };
-    }
-    case "read-request": {
-      const data =
-        args.state.data[request.resourceType as ResourceType]?.[request.id];
-      if (!data) {
-        throw new Error(
-          `Not found resource of type '${request.resourceType}' with id '${request.id}'`
-        );
-      }
-      return {
-        state: args.state,
-        ctx: args.ctx,
-        response: {
-          level: "instance",
-          type: "read-response",
-          resourceType: request.resourceType,
-          id: request.id,
-          body: data,
-        },
-      };
-    }
-    default:
-      throw new Error("Not implemented");
-  }
+    },
+  ]);
 }
 
-export default function createMemoryDatabase<CTX>(
+export default function MemoryDatabase<CTX>(
   data: InternalData<ResourceType>
 ): SynchronousClient<{ data: InternalData<ResourceType> }, CTX> {
   return new SynchronousClient<{ data: InternalData<ResourceType> }, CTX>(
     { data: data },
-    MemoryMiddleware
+    createMemoryMiddleware()
   );
 }

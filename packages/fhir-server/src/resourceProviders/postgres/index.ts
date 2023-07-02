@@ -1,15 +1,20 @@
+import * as pg from "pg";
+
 import { FHIRURL } from "@genfhi/fhir-query";
 import {
   Resource,
   ResourceType,
   SearchParameter,
 } from "@genfhi/fhir-types/r4/types";
-import * as pg from "pg";
-import { FHIRServerCTX } from "../../fhirServer";
-import { FHIRClientAsync, MiddlewareAsync } from "../../client/interface";
-import { AsynchronousClient } from "../../client";
-import { FHIRRequest, FHIRResponse } from "../../client/types";
 import { evaluateWithMeta } from "@genfhi/fhirpath";
+
+import { FHIRServerCTX } from "../../fhirServer";
+import { FHIRClientAsync } from "../../client/interface";
+import { AsynchronousClient } from "../../client";
+import {
+  createMiddlewareAsync,
+  MiddlewareAsync,
+} from "../../client/middleware";
 
 function searchResources(resource: Resource): (ResourceType | string)[] {
   return ["Resource", "DomainResource", resource.resourceType];
@@ -44,21 +49,21 @@ async function indexResource<CTX extends FHIRServerCTX>(
   }
 }
 
-function PGMiddleware<
+function createPostgresMiddleware<
   State extends { client: pg.Client },
   CTX extends FHIRServerCTX
->(
-  request: FHIRRequest,
-  args: { state: State; ctx: CTX },
-  next: MiddlewareAsync<State, CTX>
-): Promise<{ state: State; ctx: CTX; response: FHIRResponse }> {
-  const client = args.state.client;
-  switch (request.type) {
-    case "search-request":
-      throw new Error("Not implemented");
-    default:
-      throw new Error(`Not implemented ${request.type}`);
-  }
+>(): MiddlewareAsync<State, CTX> {
+  return createMiddlewareAsync<State, CTX>([
+    (request, args, next) => {
+      const client = args.state.client;
+      switch (request.type) {
+        case "search-request":
+          throw new Error("Not implemented");
+        default:
+          throw new Error(`Not implemented ${request.type}`);
+      }
+    },
+  ]);
 }
 
 // const client = new pg.Client();
@@ -69,6 +74,6 @@ export function createPostgresClient<
   const client = new pg.Client();
   return new AsynchronousClient<{ client: pg.Client }, CTX>(
     { client: client },
-    PGMiddleware
+    createPostgresMiddleware()
   );
 }

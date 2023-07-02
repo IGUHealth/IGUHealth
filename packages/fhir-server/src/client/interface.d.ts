@@ -11,18 +11,6 @@ type Async<F, Else = never> = F extends (...arg: infer A) => infer R
   ? (...args: A) => Promise<R>
   : Else;
 
-export type MiddlewareAsync<State, CTX> = (
-  request: FHIRRequest,
-  args: { ctx: CTX; state: State },
-  next?: Middleware<State, CTX>
-) => Promise<{ ctx: CTX; state: State; response: FHIRResponse }>;
-
-export type MiddlewareSync<State, CTX> = (
-  request: FHIRRequest,
-  args: { ctx: CTX; state: State },
-  next?: Middleware<State, CTX>
-) => { ctx: CTX; state: State; response: FHIRResponse };
-
 export type FHIRClient<CTX> = FHIRClientSync<CTX> | FHIRClientAsync<CTX>;
 
 export interface FHIRClientSync<CTX> {
