@@ -82,7 +82,6 @@ test("Test middleware Async", async () => {
       };
     },
     async (request, args, next) => {
-      const body = [{ resourceType: "Patient" }];
       return {
         state: args.state,
         ctx: args.ctx,
@@ -90,7 +89,7 @@ test("Test middleware Async", async () => {
           query: (request as any).query as FHIRURL,
           type: "search-response",
           level: "system",
-          body: body,
+          body: [{ resourceType: "Patient" }],
         },
       };
     },
