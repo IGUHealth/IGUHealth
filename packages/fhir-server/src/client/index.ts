@@ -6,12 +6,8 @@ import {
   id,
 } from "@genfhi/fhir-types/r4/types";
 
-import {
-  FHIRClientAsync,
-  FHIRClientSync,
-  MiddlewareSync,
-  MiddlewareAsync,
-} from "./interface";
+import { MiddlewareSync, MiddlewareAsync } from "./middleware";
+import { FHIRClientAsync, FHIRClientSync } from "./interface";
 import { FHIRRequest, FHIRResponse } from "./types";
 
 export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
