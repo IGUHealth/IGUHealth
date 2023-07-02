@@ -27,6 +27,10 @@ async function getParametersForResource<CTX extends FHIRServerCTX>(
   const parameters: FHIRURL = {
     resourceType: "SearchParameter",
     parameters: {
+      type: {
+        name: "type",
+        value: ["string"],
+      },
       base: {
         name: "base",
         value: searchResources(resource),
@@ -46,11 +50,34 @@ async function indexResource<CTX extends FHIRServerCTX>(
     const output = evaluateWithMeta(searchParameter.expression, resource, {
       meta: { getSD: (type: string) => ctx.resolveSD(ctx, type) },
     });
-    console.log(
-      searchParameter.name,
-      searchParameter.expression,
-      JSON.stringify(output.map((o) => ({ type: o.meta()?.type })))
-    );
+  }
+}
+
+async function saveResource<CTX extends FHIRServerCTX>(
+  client: pg.Client,
+  ctx: CTX,
+  resource: Resource
+): Promise<Resource> {
+  try {
+    console.log("beginning");
+    await client.query("BEGIN");
+    const queryText =
+      "INSERT INTO resources(workspace, author, resource) VALUES($1, $2, $3) RETURNING resource";
+    const res = await client.query(queryText, [
+      ctx.workspace,
+      ctx.author,
+      resource,
+    ]);
+    console.log("commiting");
+    await client.query("COMMIT");
+    console.log("commited");
+    return res.rows[0].resource as Resource;
+  } catch (e) {
+    await client.query("ROLLBACK");
+    throw e;
+  } finally {
+    // Finally
+    // client.release() when switching to pool
   }
 }
 
@@ -66,6 +93,11 @@ function createPostgresMiddleware<
           throw new Error("Not implemented");
         case "create-request":
           await indexResource(args.ctx, request.body);
+          const savedResource = await saveResource(
+            client,
+            args.ctx,
+            request.body
+          );
           return {
             state: args.state,
             ctx: args.ctx,
@@ -73,7 +105,7 @@ function createPostgresMiddleware<
               level: "type",
               resourceType: request.resourceType,
               type: "create-response",
-              body: request.body,
+              body: savedResource,
             },
           };
         default:
@@ -85,10 +117,11 @@ function createPostgresMiddleware<
 
 // const client = new pg.Client();
 
-export function createPostgresClient<
-  CTX extends FHIRServerCTX
->(): FHIRClientAsync<CTX> {
-  const client = new pg.Client();
+export function createPostgresClient<CTX extends FHIRServerCTX>(
+  config: pg.ClientConfig
+): FHIRClientAsync<CTX> {
+  const client = new pg.Client(config);
+  client.connect();
   return new AsynchronousClient<{ client: pg.Client }, CTX>(
     { client: client },
     createPostgresMiddleware()
