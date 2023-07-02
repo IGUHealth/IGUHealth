@@ -37,10 +37,6 @@ function fitsSearchCriteria(
   }
 }
 
-// export interface Middleware {
-//   (request: Request, state: State, next: Next): Promise<Response>;
-// }
-
 function MemoryMiddleware<
   State extends { data: InternalData<ResourceType> },
   CTX extends any
@@ -157,7 +153,7 @@ function MemoryMiddleware<
   }
 }
 
-export default function createMemoryDatabase<CTX>(
+export default function MemoryDatabase<CTX>(
   data: InternalData<ResourceType>
 ): SynchronousClient<{ data: InternalData<ResourceType> }, CTX> {
   return new SynchronousClient<{ data: InternalData<ResourceType> }, CTX>(
