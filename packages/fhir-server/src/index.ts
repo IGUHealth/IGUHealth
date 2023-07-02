@@ -65,8 +65,6 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
 
   const router = new Router();
   router.all("/w/:workspace/api/fhir/r4/:fhirUrl*", async (ctx, next) => {
-    // console.log("route", ctx.request.querystring, ctx.params.fhirUrl);
-    ctx.body = ctx.params.fhirUrl;
     const fhirServerResponse = await fhirServer(ctx, ctx.request);
     Object.keys(fhirServerResponse).map(
       (k) =>

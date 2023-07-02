@@ -15,15 +15,15 @@ import {
   RequestLevel,
   TypeLevelInteractions,
   InstanceLevelInteraction,
+  SystemInteraction,
 } from "./client/types";
 import chain from "./chain";
-
 function getInteractionLevel(
   fhirURL: FHIRURL
 ): RequestLevel[keyof RequestLevel] {
   if (fhirURL.resourceType && fhirURL.id) {
     return "instance";
-  } else if (fhirURL.resourceType) {
+  } else if (fhirURL.resourceType !== undefined) {
     return "type";
   }
   return "system";
@@ -68,6 +68,23 @@ function parseTypeRequest(
   }
 }
 
+function parseSystemRequest(
+  request: Koa.Request,
+  fhirURL: FHIRURL,
+  fhirRequest: Pick<SystemInteraction, "level">
+): FHIRRequest {
+  switch (request.method) {
+    case "GET":
+      return {
+        query: fhirURL,
+        type: "search-request",
+        ...fhirRequest,
+      };
+    default:
+      throw new Error(`Type interaction '${request.method}' not supported`);
+  }
+}
+
 function KoaRequestToFHIRRequest(
   url: string,
   request: Koa.Request
@@ -92,7 +109,9 @@ function KoaRequestToFHIRRequest(
         resourceType: fhirQuery.resourceType,
       });
     case "system":
-      throw new Error("system level interactions are not supported");
+      return parseSystemRequest(request, fhirQuery, {
+        level: "system",
+      });
   }
 }
 
@@ -100,38 +119,7 @@ async function fhirRequestToFHIRResponse(
   ctx: FHIRServerCTX,
   request: FHIRRequest
 ): Promise<FHIRResponse> {
-  switch (request.level) {
-    case "system":
-      throw new Error("not Implemented");
-    case "type":
-      switch (request.type) {
-        case "create-request":
-          if (!request.body)
-            throw new Error("No resource found on body for creation.");
-          return {
-            resourceType: request.resourceType,
-            type: "create-response",
-            level: request.level,
-            body: await ctx.database.create(ctx, request.body),
-          };
-        case "search-request":
-          return {
-            query: request.query,
-            resourceType: request.resourceType,
-            type: "search-response",
-            level: request.level,
-            body: await ctx.database.search_type(
-              ctx,
-              request.resourceType as ResourceType,
-              request.query
-            ),
-          };
-        default:
-          throw new Error("not Implemented");
-      }
-    case "instance":
-      throw new Error("not Implemented");
-  }
+  return ctx.database.request(ctx, request);
 }
 
 function fhirResponseToKoaResponse(
@@ -170,7 +158,7 @@ const createFhirServer =
       request,
       (request: Koa.Request) =>
         KoaRequestToFHIRRequest(
-          `${ctx.params.fhirUrl}?${request.querystring}`,
+          `${ctx.params.fhirUrl || ""}?${request.querystring}`,
           request
         ),
       (request: FHIRRequest): [FHIRServerCTX, FHIRRequest] => [
