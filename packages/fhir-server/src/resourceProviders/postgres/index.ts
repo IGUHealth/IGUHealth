@@ -46,6 +46,11 @@ async function indexResource<CTX extends FHIRServerCTX>(
     const output = evaluateWithMeta(searchParameter.expression, resource, {
       meta: { getSD: (type: string) => ctx.resolveSD(ctx, type) },
     });
+    console.log(
+      searchParameter.name,
+      searchParameter.expression,
+      JSON.stringify(output.map((o) => ({ type: o.meta()?.type })))
+    );
   }
 }
 
@@ -54,11 +59,23 @@ function createPostgresMiddleware<
   CTX extends FHIRServerCTX
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
-    (request, args, next) => {
+    async (request, args, next) => {
       const client = args.state.client;
       switch (request.type) {
         case "search-request":
           throw new Error("Not implemented");
+        case "create-request":
+          await indexResource(args.ctx, request.body);
+          return {
+            state: args.state,
+            ctx: args.ctx,
+            response: {
+              level: "type",
+              resourceType: request.resourceType,
+              type: "create-response",
+              body: request.body,
+            },
+          };
         default:
           throw new Error(`Not implemented ${request.type}`);
       }

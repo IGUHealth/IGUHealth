@@ -113,9 +113,15 @@ function createRouterMiddleware<
         case "update-request":
         case "patch-request":
         case "delete-request": {
-          if (sources.length !== 1)
+          if (sources.length > 1)
             throw new Error(
               `Only one source can support create per mutation operation'`
+            );
+          if (sources.length < 1)
+            throw new Error(
+              `No source found for mutation operation '${
+                request.type
+              } and resource type '${(request as any).resourceType}'`
             );
           const source = sources[0];
           const response = await source.source.request(args.ctx, request);

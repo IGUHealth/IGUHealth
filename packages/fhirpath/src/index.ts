@@ -362,6 +362,8 @@ const equalityCheck: EvaledOperation = (
   options
 ): MetaValueSingular<boolean>[] => {
   // TODO improve Deep Equals speed.
+  if (left.length !== right.length)
+    return toMetaValueSingulars(options?.meta, false);
   if (typeof left[0].valueOf() === "object") {
     return toMetaValueSingulars(
       options?.meta,
@@ -369,7 +371,7 @@ const equalityCheck: EvaledOperation = (
     );
   }
   return toMetaValueSingulars(
-    options?.meta,
+    { ...options?.meta, type: "boolean" },
     left[0].valueOf() === right[0].valueOf()
   );
 };
@@ -451,7 +453,27 @@ const fp_operations: Record<
       throw invalidOperandError([left[0], right[0]], "/");
     }
   }),
+  "|": op_prevaled((left, right, options) => {
+    return left.concat(right);
+  }),
+  and: op_prevaled((left, right, options) => {
+    if (typeChecking("boolean", left) && typeChecking("boolean", right)) {
+      return toMetaValueSingulars(
+        { ...options?.meta, type: "boolean" },
+        left[0].valueOf() && right[0].valueOf()
+      );
+    }
+    throw invalidOperandError([left[0], right[0]], "/");
+  }),
   "=": op_prevaled(equalityCheck),
+  "!=": op_prevaled((left, right, options) => {
+    const equality = equalityCheck(left, right, options);
+    equality[0].valueOf() === false;
+    return toMetaValueSingulars(
+      { ...options?.meta, type: "boolean" },
+      equality[0].valueOf() === false
+    );
+  }),
 };
 
 function evaluateOperation(

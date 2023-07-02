@@ -14,6 +14,7 @@ import {
   ResourceType,
   Resource,
 } from "@genfhi/fhir-types/r4/types";
+import { createPostgresClient } from "./resourceProviders/postgres";
 
 function serverCapabilities(): CapabilityStatement {
   return {
@@ -53,6 +54,15 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
       resourcesSupported: ["StructureDefinition", "SearchParameter"],
       interactionsSupported: ["read-request", "search-request"],
       source: memoryDatabase,
+    },
+    {
+      resourcesSupported: ["Patient"],
+      interactionsSupported: [
+        "read-request",
+        "search-request",
+        "create-request",
+      ],
+      source: createPostgresClient(),
     },
   ]);
 

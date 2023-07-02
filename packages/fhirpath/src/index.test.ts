@@ -494,3 +494,20 @@ test("term with TypeIdentifier 'Resource'", () => {
     })
   ).toEqual([{ given: ["bob"], family: "waterson" }]);
 });
+
+test("union operation", () => {
+  expect(
+    evaluate(
+      "$this.name.given | $this.name.family",
+      {
+        resourceType: "Patient",
+        name: [{ given: ["bob"], family: "waterson" }],
+      },
+      {
+        meta: {
+          getSD,
+        },
+      }
+    )
+  ).toEqual(["bob", "waterson"]);
+});
