@@ -59,7 +59,6 @@ async function saveResource<CTX extends FHIRServerCTX>(
   resource: Resource
 ): Promise<Resource> {
   try {
-    console.log("beginning");
     await client.query("BEGIN");
     const queryText =
       "INSERT INTO resources(workspace, author, resource) VALUES($1, $2, $3) RETURNING resource";
@@ -68,9 +67,7 @@ async function saveResource<CTX extends FHIRServerCTX>(
       ctx.author,
       resource,
     ]);
-    console.log("commiting");
     await client.query("COMMIT");
-    console.log("commited");
     return res.rows[0].resource as Resource;
   } catch (e) {
     await client.query("ROLLBACK");
