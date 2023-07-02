@@ -1,14 +1,16 @@
 {
   "name": "genfhi-ts",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "keywords": [],
   "author": "",
-  "license": "ISC",
+  "main": "index.js",
   "devDependencies": {
     "@types/node": "^20.3.1",
     "ts-node": "^10.9.1"
   },
-  "workspaces": ["packages/*"]
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "workspaces": [
+    "packages/*"
+  ]
 }

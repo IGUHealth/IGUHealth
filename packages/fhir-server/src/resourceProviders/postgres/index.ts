@@ -1,4 +1,5 @@
 import * as pg from "pg";
+import uuid from "uuid";
 
 import { FHIRURL } from "@genfhi/fhir-query";
 import {
@@ -90,11 +91,10 @@ function createPostgresMiddleware<
           throw new Error("Not implemented");
         case "create-request":
           await indexResource(args.ctx, request.body);
-          const savedResource = await saveResource(
-            client,
-            args.ctx,
-            request.body
-          );
+          const savedResource = await saveResource(client, args.ctx, {
+            id: uuid.v4(),
+            ...request.body,
+          });
           return {
             state: args.state,
             ctx: args.ctx,

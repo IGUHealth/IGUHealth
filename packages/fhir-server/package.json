@@ -9,6 +9,7 @@
     "watch": "nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.test.ts\" --exec \"ts-node src/index.ts\""
   },
   "dependencies": {
+    "uuid": "9.0.0",
     "@genfhi/artifacts": "workspace:^",
     "@genfhi/fhir-query": "workspace:^",
     "@koa/router": "^12.0.0",
@@ -22,6 +23,7 @@
   "devDependencies": {
     "@genfhi/fhir-types": "workspace:^",
     "@types/jest": "^29.5.2",
+    "@types/uuid": "9.0.2",
     "@types/koa": "^2.13.6",
     "@types/koa-bodyparser": "^4.3.10",
     "@types/koa__router": "^12.0.0",
