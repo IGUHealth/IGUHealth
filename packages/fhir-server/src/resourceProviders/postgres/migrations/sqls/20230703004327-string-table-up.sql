@@ -2,6 +2,7 @@
 
 CREATE TABLE string_search (
   workspace     UUID        NOT NULL, 
+  r_id          TEXT        NOT NULL,
   r_version_id  SERIAL      NOT NULL PRIMARY KEY,
   name          TEXT        NOT NULL,
   parameter_url TEXT        NOT NULL,
