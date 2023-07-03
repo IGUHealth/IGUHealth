@@ -1,1 +1,1 @@
-drop table string_search;
+drop table search_string;

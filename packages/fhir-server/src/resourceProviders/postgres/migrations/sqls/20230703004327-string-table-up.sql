@@ -1,12 +1,13 @@
 /* Replace with your SQL commands */
 
-CREATE TABLE string_search (
-  workspace     UUID        NOT NULL, 
-  r_id          TEXT        NOT NULL,
-  r_version_id  SERIAL      NOT NULL PRIMARY KEY,
-  name          TEXT        NOT NULL,
-  parameter_url TEXT        NOT NULL,
-  value         TEXT        NOT NULL,
+CREATE TABLE search_string (
+  id             SERIAL      NOT NULL PRIMARY KEY,
+  workspace      UUID        NOT NULL, 
+  r_id           TEXT        NOT NULL,
+  r_version_id   SERIAL      NOT NULL,
+  parameter_name TEXT        NOT NULL,
+  parameter_url  TEXT        NOT NULL,
+  value          TEXT        NOT NULL,
   
   -- When was indexed
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
