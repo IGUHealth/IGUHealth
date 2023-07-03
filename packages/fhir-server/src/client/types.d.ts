@@ -55,67 +55,67 @@ export type SystemInteraction = {
   level: RequestLevel["system"];
 };
 
-type ReadRequest = InstanceLevelInteraction & {
+export type ReadRequest = InstanceLevelInteraction & {
   type: RequestInteractionTypes["read"];
 };
 
-type VersionReadRequest = InstanceLevelInteraction & {
+export type VersionReadRequest = InstanceLevelInteraction & {
   type: RequestInteractionTypes["vread"];
   versionId: string;
 };
 
-type UpdateRequest = InstanceLevelInteraction & {
+export type UpdateRequest = InstanceLevelInteraction & {
   type: RequestInteractionTypes["update"];
   body: Resource;
 };
 
 // TODO - implement patch type
-type PatchRequest = InstanceLevelInteraction & {
+export type PatchRequest = InstanceLevelInteraction & {
   type: RequestInteractionTypes["patch"];
   body: Object;
 };
 
-type DeleteRequest = InstanceLevelInteraction & {
+export type DeleteRequest = InstanceLevelInteraction & {
   type: RequestInteractionTypes["delete"];
 };
 
-type HistoryInstanceRequest = InstanceLevelInteraction & {
+export type HistoryInstanceRequest = InstanceLevelInteraction & {
   type: RequestInteractionTypes["history"];
 };
 
-type CreateRequest = TypeLevelInteractions & {
+export type CreateRequest = TypeLevelInteractions & {
   type: RequestInteractionTypes["create"];
   body: Resource;
 };
 
-type TypeSearchRequest = TypeLevelInteractions & {
+export type TypeSearchRequest = TypeLevelInteractions & {
   query: FHIRURL;
   type: RequestInteractionTypes["search"];
 };
 
-type TypeHistoryRequest = TypeLevelInteractions & {
+export type TypeHistoryRequest = TypeLevelInteractions & {
   type: RequestInteractionTypes["history"];
 };
 
-type CapabilitiesRequest = SystemInteraction & {
+export type CapabilitiesRequest = SystemInteraction & {
   type: RequestInteractionTypes["capabilities"];
 };
 
-type BatchRequest = SystemInteraction & {
+export type BatchRequest = SystemInteraction & {
   type: RequestInteractionTypes["batch"];
   body: Bundle;
 };
 
-type TransactionRequest = SystemInteraction & {
+export type TransactionRequest = SystemInteraction & {
   type: RequestInteractionTypes["transaction"];
   body: Bundle;
 };
 
-type SystemHistoryRequest = SystemInteraction & {
+export type SystemHistoryRequest = SystemInteraction & {
   type: RequestInteractionTypes["history"];
 };
 
-type SystemSearchRequest = SystemInteraction & {
+export type SystemSearchRequest = SystemInteraction & {
   query: FHIRURL;
   type: RequestInteractionTypes["search"];
 };
