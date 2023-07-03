@@ -59,24 +59,24 @@ function toStringParameters(
     case "HumanName": {
       const humanName = value.valueOf() as HumanName;
       return [
-        humanName.text,
-        humanName.family,
-        humanName.given,
-        humanName.prefix,
-        humanName.suffix,
-      ].filter((v): v is string => v !== undefined);
+        humanName.text ? [humanName.text] : [],
+        humanName.family ? [humanName.family] : [],
+        humanName.given ? humanName.given : [],
+        humanName.prefix ? humanName.prefix : [],
+        humanName.suffix ? humanName.suffix : [],
+      ].flat();
     }
     case "Address": {
       const address = value.valueOf() as Address;
       return [
-        address.text,
-        address.line,
-        address.city,
-        address.district,
-        address.state,
-        address.postalCode,
-        address.country,
-      ].filter((v): v is string => v !== undefined);
+        address.text ? [address.text] : [],
+        address.line ? address.line : [],
+        address.city ? [address.city] : [],
+        address.district ? [address.district] : [],
+        address.state ? [address.state] : [],
+        address.postalCode ? [address.postalCode] : [],
+        address.country ? [address.country] : [],
+      ].flat();
     }
     default:
       throw new Error(`Unknown string parameter '${value.meta()?.type}}'`);
