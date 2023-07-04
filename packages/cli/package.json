@@ -1,9 +1,15 @@
 {
   "name": "@genfhi/cli",
+  "bin": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "type": "module",
   "dependencies": {
     "@genfhi/artifacts": "workspace:packages/artifacts",
     "@genfhi/codegen": "workspace:packages/codegen",
     "@genfhi/fhir-types": "workspace:packages/fhir-types",
     "commander": "^11.0.0"
+  },
+  "devDependencies": {
+    "typescript": "5.1.3"
   }
 }

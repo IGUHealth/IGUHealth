@@ -1,4 +1,4 @@
-import * as pg from "pg";
+import pg from "pg";
 import { v4 } from "uuid";
 import * as jsonpatch from "fast-json-patch";
 
@@ -12,13 +12,13 @@ import {
 } from "@genfhi/fhir-types/r4/types";
 import { evaluateWithMeta } from "@genfhi/fhirpath";
 
-import { FHIRServerCTX } from "../../fhirServer";
+import { FHIRServerCTX } from "../../fhirServer.js";
 import { FHIRClientAsync } from "../../client/interface";
-import { AsynchronousClient } from "../../client";
+import { AsynchronousClient } from "../../client/index.js";
 import {
   createMiddlewareAsync,
   MiddlewareAsync,
-} from "../../client/middleware";
+} from "../../client/middleware/index.js";
 import { MetaValueSingular } from "@genfhi/meta-value";
 import { SystemSearchRequest, TypeSearchRequest } from "../../client/types";
 
@@ -425,8 +425,6 @@ function createPostgresMiddleware<
     },
   ]);
 }
-
-// const client = new pg.Client();
 
 export function createPostgresClient<CTX extends FHIRServerCTX>(
   config: pg.ClientConfig

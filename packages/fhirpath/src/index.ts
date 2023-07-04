@@ -1,5 +1,3 @@
-// import validator from "@genfhi/fhir-json-schema";
-import { parse } from "./parser";
 import { Resource } from "@genfhi/fhir-types/r4/types";
 import {
   PartialMeta,
@@ -8,6 +6,7 @@ import {
   descend,
   toMetaValueNodes,
 } from "@genfhi/meta-value";
+import { parse } from "./parser.js";
 
 function flattenedDescend<T>(
   node: MetaValueSingular<T>,

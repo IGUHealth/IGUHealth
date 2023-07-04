@@ -1,7 +1,7 @@
 import { Command } from "commander";
 import { writeFileSync, mkdirSync } from "fs";
 import path from "path";
-import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
+import { loadArtifacts } from "@genfhi/artifacts";
 
 import { generateSets, generateTypes } from "@genfhi/codegen";
 

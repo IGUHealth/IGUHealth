@@ -6,7 +6,7 @@ import {
   id,
 } from "@genfhi/fhir-types/r4/types";
 
-import { MiddlewareSync, MiddlewareAsync } from "./middleware";
+import { MiddlewareSync, MiddlewareAsync } from "./middleware/index.js";
 import { FHIRClientAsync, FHIRClientSync } from "./interface";
 import { FHIRRequest, FHIRResponse } from "./types";
 

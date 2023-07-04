@@ -4,6 +4,7 @@
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "type": "module",
   "scripts": {
     "testing": "tsc",
     "generate-r4": "bun ts-node src/index.ts generate-types-artifacts --output ../fhir-types/r4"
