@@ -1,6 +1,8 @@
 {
   "name": "@genfhi/cli",
   "dependencies": {
+    "@genfhi/artifacts": "workspace:packages/artifacts",
+    "@genfhi/codegen": "workspace:packages/codegen",
     "@genfhi/fhir-types": "workspace:packages/fhir-types",
     "commander": "^11.0.0"
   }

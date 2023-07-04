@@ -2,10 +2,11 @@
   "name": "@genfhi/codegen",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "tsc": "tsc",
-    "generate-r4": "pnpm ts-node src/index.ts generate-types-artifacts --output ../fhir-types/r4"
+    "testing": "tsc",
+    "generate-r4": "bun ts-node src/index.ts generate-types-artifacts --output ../fhir-types/r4"
   },
   "keywords": [],
   "author": "",
