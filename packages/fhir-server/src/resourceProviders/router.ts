@@ -94,6 +94,7 @@ function createRouterMiddleware<
                 try {
                   return await source.source.request(args.ctx, request);
                 } catch (e) {
+                  console.error(e);
                   return undefined;
                 }
               })

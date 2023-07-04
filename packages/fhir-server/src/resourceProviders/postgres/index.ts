@@ -197,8 +197,9 @@ async function getResource<CTX extends FHIRServerCTX>(
   id: string
 ): Promise<Resource> {
   const queryText =
-    "SELECT resource FROM resources WHERE workspace = $1 AND resource->>'resourceType' = $2 AND resource->>'id' = $3 ORDER BY resource->>'versionId' ASC LIMIT 1";
+    "SELECT resource FROM resources WHERE workspace = $1 AND resource_type = $2 AND id = $3 ORDER BY version_id DESC LIMIT 1";
   const res = await client.query(queryText, [ctx.workspace, resourceType, id]);
+  console.log(res);
   if (res.rows.length === 0) {
     throw new Error(`Resource not found`);
   }
@@ -218,8 +219,12 @@ async function patchResource<CTX extends FHIRServerCTX>(
     // [TODO] CHECK VALIDATION
     const newResource = jsonpatch.applyPatch(resource, patches)
       .newDocument as Resource;
-    newResource.resourceType = resourceType;
-    newResource.id = id;
+    if (
+      newResource.resourceType !== resource.resourceType ||
+      newResource.id !== resource.id
+    ) {
+      throw new Error("Invalid Patch");
+    }
     const queryText =
       "INSERT INTO resources(workspace, author, resource, prev_version_id, patches) VALUES($1, $2, $3, $4, $5) RETURNING resource";
     const res = await client.query(queryText, [
@@ -229,7 +234,6 @@ async function patchResource<CTX extends FHIRServerCTX>(
       resource.meta?.versionId,
       JSON.stringify(patches),
     ]);
-    console.log("newResource:", newResource);
     await indexResource(client, ctx, res.rows[0].resource as Resource);
     await client.query("COMMIT");
     return res.rows[0].resource as Resource;
@@ -318,8 +322,6 @@ async function executeSearchQuery(
   console.log(queryText, values);
 
   const res = await client.query(queryText, values);
-  console.log(res.rows.map((r) => r.version_id));
-
   return res.rows.map((row) => row.resource) as Resource[];
 }
 
@@ -332,12 +334,14 @@ function createPostgresMiddleware<
       const client = args.state.client;
       switch (request.type) {
         case "read-request": {
+          console.log("read-request:");
           const resource = await getResource(
             client,
             args.ctx,
             request.resourceType as ResourceType,
             request.id
           );
+          console.log("read-request-resource:", resource);
           return {
             state: args.state,
             ctx: args.ctx,
