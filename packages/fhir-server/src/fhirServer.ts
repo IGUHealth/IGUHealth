@@ -177,10 +177,7 @@ const createFhirServer =
         request,
       ],
       async ([ctx, request]): Promise<FHIRResponse> =>
-        fhirRequestToFHIRResponse(ctx, request),
-      async (
-        fhirResponse: Promise<FHIRResponse>
-      ): Promise<Partial<Koa.Response>> => fhirResponse
+        fhirRequestToFHIRResponse(ctx, request)
     );
 
 export default createFhirServer;

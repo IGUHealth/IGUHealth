@@ -11,11 +11,13 @@ import { FHIRClientSync } from "./client/interface";
 
 import createFhirServer, { FHIRServerCTX } from "./fhirServer";
 import {
+  Bundle,
   CapabilityStatement,
   ResourceType,
   Resource,
 } from "@genfhi/fhir-types/r4/types";
 import { createPostgresClient } from "./resourceProviders/postgres";
+import { FHIRResponse } from "./client/types";
 
 dotEnv.config();
 
@@ -43,6 +45,46 @@ function createMemoryDatabase(
     database.create({}, resource);
   }
   return database;
+}
+
+function toBundle(bundleType: Bundle["type"], resources: Resource[]): Bundle {
+  return {
+    resourceType: "Bundle",
+    type: bundleType,
+    entry: resources.map((resource) => ({ resource })),
+  };
+}
+
+function fhirResponseToKoaResponse(
+  fhirResponse: FHIRResponse
+): Partial<Koa.Response> {
+  switch (fhirResponse.type) {
+    case "read-response":
+    case "vread-response":
+      return { body: fhirResponse.body, status: 200 };
+    case "update-response":
+    case "patch-response":
+      return { body: fhirResponse.body, status: 200 };
+    case "delete-response":
+      return { status: 200 };
+    case "history-response":
+      return {
+        status: 200,
+        body: toBundle("history", fhirResponse.body),
+      };
+    case "create-response":
+      return { body: fhirResponse.body, status: 201 };
+    case "search-response": {
+      return {
+        status: 200,
+        body: toBundle("searchset", fhirResponse.body),
+      };
+    }
+    case "capabilities-response":
+    case "batch-response":
+    case "transaction-response":
+      throw new Error("Not implemented");
+  }
 }
 
 function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
@@ -86,10 +128,11 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
   const router = new Router();
   router.all("/w/:workspace/api/fhir/r4/:fhirUrl*", async (ctx, next) => {
     const fhirServerResponse = await fhirServer(ctx, ctx.request);
-    Object.keys(fhirServerResponse).map(
+    const koaResponse = fhirResponseToKoaResponse(fhirServerResponse);
+    Object.keys(koaResponse).map(
       (k) =>
         (ctx[k as keyof Koa.DefaultContext] =
-          fhirServerResponse[k as keyof Partial<Koa.Response>])
+          koaResponse[k as keyof Partial<Koa.Response>])
     );
     next();
   });
