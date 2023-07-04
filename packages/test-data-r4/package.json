@@ -2,7 +2,7 @@
   "name": "@genfhi/test-data",
   "version": "0.1.0",
   "devDependencies": {
-    "@genfhi/cli": "^0.1.0"
+    "@genfhi/cli": "workspace:packages/cli"
   },
   "scripts": {
     "generate-index-file": "generate-index-file"

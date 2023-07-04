@@ -12,6 +12,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@genfhi/fhir-types": "workspace:^"
+    "@genfhi/fhir-types": "workspace:packages/fhir-types"
   }
 }

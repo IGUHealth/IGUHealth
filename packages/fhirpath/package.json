@@ -11,11 +11,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@genfhi/meta-value": "workspace:^"
+    "@genfhi/meta-value": "workspace:packages/meta-value"
   },
   "devDependencies": {
-    "@genfhi/artifacts": "workspace:^",
-    "@genfhi/fhir-types": "workspace:^",
+    "@genfhi/artifacts": "workspace:packages/artifacts",
+    "@genfhi/fhir-types": "workspace:packages/fhir-types",
     "@types/jest": "^29.5.2",
     "jest": "^29.5.0",
     "peggy": "^3.0.2",
