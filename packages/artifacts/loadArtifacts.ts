@@ -1,34 +1,11 @@
-import { readFileSync } from "fs";
 import { createRequire } from "node:module";
-import process from "process";
 import {
   Resource,
   Bundle,
   ResourceType,
   AResource,
 } from "@genfhi/fhir-types/r4/types";
-
-interface PackageJSON {
-  dependencies?: Record<string, string>;
-  devDependencies?: Record<string, string>;
-}
-
-type IndexedFiles = {
-  filename?: string;
-  resourceType?: string;
-  id?: string;
-  url?: string;
-  version?: string;
-  kind?: string;
-  type?: string;
-  supplements?: string;
-  content?: string;
-};
-
-type IndexFile = {
-  "index-version"?: string;
-  files?: Array<IndexedFiles>;
-};
+import { IndexFile, PackageJSON } from "./types";
 
 function isBundle(r: Resource): r is Bundle {
   return r?.resourceType === "Bundle";
