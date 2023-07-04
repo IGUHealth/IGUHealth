@@ -40,6 +40,12 @@ function parseInstantRequest(
         type: "read-request",
         ...fhirRequest,
       };
+    case "PUT":
+      return {
+        type: "update-request",
+        body: request.body as Resource,
+        ...fhirRequest,
+      };
     default:
       throw new Error(`Instance interaction '${request.method}' not supported`);
   }
@@ -144,6 +150,10 @@ function fhirResponseToKoaResponse(
 }
 
 export type FHIRServerCTX = {
+  workspace: string;
+  author: string;
+
+  // Services setup
   capabilities: CapabilityStatement;
   database: FHIRClient<FHIRServerCTX>;
   resolveSD: (
@@ -153,7 +163,8 @@ export type FHIRServerCTX = {
 };
 
 const createFhirServer =
-  (serverCtx: FHIRServerCTX) => (ctx: Koa.Context, request: Koa.Request) =>
+  (serverCtx: Pick<FHIRServerCTX, "capabilities" | "database" | "resolveSD">) =>
+  (ctx: Koa.Context, request: Koa.Request) =>
     chain(
       request,
       (request: Koa.Request) =>
@@ -162,7 +173,7 @@ const createFhirServer =
           request
         ),
       (request: FHIRRequest): [FHIRServerCTX, FHIRRequest] => [
-        serverCtx,
+        { ...serverCtx, workspace: ctx.params.workspace, author: "Fake User" },
         request,
       ],
       async ([ctx, request]): Promise<FHIRResponse> =>

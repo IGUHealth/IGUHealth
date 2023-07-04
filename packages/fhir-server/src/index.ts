@@ -2,6 +2,7 @@ import Koa from "koa";
 import Router from "@koa/router";
 import bodyParser from "koa-bodyparser";
 import path from "path";
+import dotEnv from "dotenv";
 
 import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
 import MemoryDatabase from "./resourceProviders/memory";
@@ -15,6 +16,8 @@ import {
   Resource,
 } from "@genfhi/fhir-types/r4/types";
 import { createPostgresClient } from "./resourceProviders/postgres";
+
+dotEnv.config();
 
 function serverCapabilities(): CapabilityStatement {
   return {
@@ -61,8 +64,15 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
         "read-request",
         "search-request",
         "create-request",
+        "update-request",
       ],
-      source: createPostgresClient(),
+      source: createPostgresClient({
+        user: process.env["FHIR_DATABASE_USERNAME"],
+        password: process.env["FHIR_DATABASE_PASSWORD"],
+        host: process.env["FHIR_DATABASE_HOST"],
+        database: process.env["FHIR_DATABASE_NAME"],
+        port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
+      }),
     },
   ]);
 
