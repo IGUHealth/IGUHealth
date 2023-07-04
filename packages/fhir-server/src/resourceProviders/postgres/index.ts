@@ -334,14 +334,12 @@ function createPostgresMiddleware<
       const client = args.state.client;
       switch (request.type) {
         case "read-request": {
-          console.log("read-request:");
           const resource = await getResource(
             client,
             args.ctx,
             request.resourceType as ResourceType,
             request.id
           );
-          console.log("read-request-resource:", resource);
           return {
             state: args.state,
             ctx: args.ctx,
