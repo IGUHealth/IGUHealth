@@ -64,6 +64,7 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
         "read-request",
         "search-request",
         "create-request",
+        "update-request",
       ],
       source: createPostgresClient({
         user: process.env["FHIR_DATABASE_USERNAME"],

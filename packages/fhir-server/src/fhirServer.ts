@@ -40,6 +40,12 @@ function parseInstantRequest(
         type: "read-request",
         ...fhirRequest,
       };
+    case "PUT":
+      return {
+        type: "update-request",
+        body: request.body as Resource,
+        ...fhirRequest,
+      };
     default:
       throw new Error(`Instance interaction '${request.method}' not supported`);
   }
