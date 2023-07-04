@@ -28,7 +28,7 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@genfhi/fhir-types": "workspace:^",
+    "@genfhi/fhir-types": "workspace:packages/fhir-types",
     "@storybook/addon-essentials": "^7.0.22",
     "@storybook/addon-interactions": "^7.0.22",
     "@storybook/addon-links": "^7.0.22",

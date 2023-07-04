@@ -10,9 +10,9 @@
   "author": "GenFHI",
   "license": "ISC",
   "devDependencies": {
-    "@genfhi/artifacts": "workspace:^",
-    "@genfhi/fhir-types": "workspace:^",
-    "@genfhi/fhirpath": "workspace:^",
+    "@genfhi/artifacts": "workspace:packages/artifacts",
+    "@genfhi/fhir-types": "workspace:packages/fhir-types",
+    "@genfhi/fhirpath": "workspace:packages/fhirpath",
     "@jest/globals": "^29.5.0",
     "@types/jest": "^29.5.2",
     "jest": "^29.5.0",

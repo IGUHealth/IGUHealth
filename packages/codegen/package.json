@@ -15,8 +15,8 @@
     "typescript": "^5.1.3"
   },
   "dependencies": {
-    "@genfhi/artifacts": "workspace:^",
-    "@genfhi/fhir-types": "workspace:^",
+    "@genfhi/artifacts": "workspace:packages/artifacts",
+    "@genfhi/fhir-types": "workspace:packages/fhir-types",
     "commander": "^10.0.1"
   }
 }

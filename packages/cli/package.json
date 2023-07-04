@@ -1,0 +1,7 @@
+{
+  "name": "@genfhi/cli",
+  "dependencies": {
+    "@genfhi/fhir-types": "workspace:packages/fhir-types",
+    "commander": "^11.0.0"
+  }
+}
