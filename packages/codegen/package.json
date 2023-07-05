@@ -6,6 +6,7 @@
   "types": "lib/index.d.ts",
   "type": "module",
   "scripts": {
+    "build": "tsc",
     "generate-r4": "bun ts-node src/index.ts generate-types-artifacts --output ../fhir-types/r4"
   },
   "keywords": [],

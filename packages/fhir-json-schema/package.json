@@ -5,7 +5,7 @@
   "main": "./lib/r4.js",
   "types": "./lib/r4.d.ts",
   "scripts": {
-    "test": "echo 'No tests'"
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",

@@ -5,6 +5,8 @@
   "main": "index.js",
   "devDependencies": {
     "@types/node": "^20.3.1",
+    "nx": "^16.4.3",
+    "nx-cloud": "latest",
     "ts-node": "^10.9.1"
   },
   "description": "",
