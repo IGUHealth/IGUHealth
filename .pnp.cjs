@@ -89,7 +89,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["@types/node", "npm:20.3.3"],\
-            ["ts-node", "virtual:0b07630da0743d2106613db2df98cd9fe3a7fbd7b886911ad5c9cbc8e150cb4e6c60790e77fdadd73f0ee921b4b9358229c4f6215922badef3fb64156bfad5bf#npm:10.9.1"]\
+            ["ts-node", "virtual:0b07630da0743d2106613db2df98cd9fe3a7fbd7b886911ad5c9cbc8e150cb4e6c60790e77fdadd73f0ee921b4b9358229c4f6215922badef3fb64156bfad5bf#npm:10.9.1"],\
+            ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -16331,7 +16332,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["genfhi-ts", "workspace:."],\
             ["@types/node", "npm:20.3.3"],\
-            ["ts-node", "virtual:0b07630da0743d2106613db2df98cd9fe3a7fbd7b886911ad5c9cbc8e150cb4e6c60790e77fdadd73f0ee921b4b9358229c4f6215922badef3fb64156bfad5bf#npm:10.9.1"]\
+            ["ts-node", "virtual:0b07630da0743d2106613db2df98cd9fe3a7fbd7b886911ad5c9cbc8e150cb4e6c60790e77fdadd73f0ee921b4b9358229c4f6215922badef3fb64156bfad5bf#npm:10.9.1"],\
+            ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -28111,7 +28113,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["create-require", "npm:1.1.1"],\
             ["diff", "npm:4.0.2"],\
             ["make-error", "npm:1.3.6"],\
-            ["typescript", null],\
+            ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"],\
             ["v8-compile-cache-lib", "npm:3.0.1"],\
             ["yn", "npm:3.1.1"]\
           ],\
