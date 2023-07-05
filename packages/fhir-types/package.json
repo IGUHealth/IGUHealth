@@ -4,6 +4,7 @@
   "description": "",
   "type": "module",
   "scripts": {
+    "generate": "bun cli generate-types-artifacts --output=./r4",
     "build": "tsc",
     "test": "echo \"Error: no test specified\""
   },
@@ -14,5 +15,8 @@
   "exports": {
     "./r4/sets": "./lib/sets.js",
     "./r4/types": "./r4/types.d.ts"
+  },
+  "dependencies": {
+    "@genfhi/cli": "workspace:packages/cli"
   }
 }
