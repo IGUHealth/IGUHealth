@@ -12,6 +12,6 @@
   "license": "ISC",
   "exports": {
     "./r4/sets": "./lib/sets.js",
-    "./r4/types": "./src/r4/types.d.ts"
+    "./r4/types": "./r4/types.d.ts"
   }
 }
