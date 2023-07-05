@@ -10,7 +10,7 @@ test("Test middleware Sync", () => {
           ...nextVal,
           response: {
             ...nextVal.response,
-            body: (nextVal.response as any).body?.map((resource) => ({
+            body: (nextVal.response as any).body?.map((resource: any) => ({
               ...resource,
               id: "123",
             })),
@@ -63,7 +63,7 @@ test("Test middleware Async", async () => {
           ...nextVal,
           response: {
             ...nextVal.response,
-            body: (nextVal.response as any).body?.map((resource) => ({
+            body: (nextVal.response as any).body?.map((resource: any) => ({
               ...resource,
               id: "123",
             })),

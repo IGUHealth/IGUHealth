@@ -16,6 +16,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@genfhi/fhir-types": "workspace:packages/fhir-types"
+    "@genfhi/fhir-types": "workspace:^",
+    "@types/node": "^20.4.0",
+    "typescript": "5.1.3"
   }
 }

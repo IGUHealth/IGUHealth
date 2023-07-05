@@ -1,11 +1,11 @@
 import { evaluate, evaluateWithMeta } from "./index";
 import { StructureDefinition, code } from "@genfhi/fhir-types/r4/types";
+import { expect, test } from "@jest/globals";
 import { loadArtifacts } from "@genfhi/artifacts";
-import { fileURLToPath } from "node:url";
 
 const sds: StructureDefinition[] = loadArtifacts(
   "StructureDefinition",
-  fileURLToPath(new URL("../package.json", import.meta.url))
+  __dirname
 );
 
 function getSD(type: code) {
