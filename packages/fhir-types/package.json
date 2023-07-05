@@ -2,10 +2,16 @@
   "name": "@genfhi/fhir-types",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\""
   },
+  "types": "r4/types.d.ts",
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "exports": {
+    "./r4/sets": "./lib/sets.js",
+    "./r4/types": "./r4/types.d.ts"
+  }
 }

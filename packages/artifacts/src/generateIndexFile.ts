@@ -25,7 +25,10 @@ function checkBundleResourceTypesAlign(b: Bundle): boolean {
   return set.size === 1 && resourceTypes[0] !== undefined;
 }
 
-function generateIndexFile(root: string, artifactLocations: string[]) {
+export default function generateIndexFile(
+  root: string,
+  artifactLocations: string[]
+) {
   // Read artifactLocation and recursively walk the directory tree reading all files from root
   // For each file, read the contents and parse the JSON
   // If the JSON has a "resourceType" property, add it to the index
@@ -61,4 +64,4 @@ function generateIndexFile(root: string, artifactLocations: string[]) {
   console.log(index);
 }
 
-generateIndexFile("./", ["./r4"]);
+// generateIndexFile("./", ["./r4"]);

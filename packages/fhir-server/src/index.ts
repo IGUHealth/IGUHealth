@@ -3,23 +3,26 @@ import Router from "@koa/router";
 import bodyParser from "koa-bodyparser";
 import path from "path";
 import dotEnv from "dotenv";
+import { fileURLToPath } from "url";
 
-import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
-import MemoryDatabase from "./resourceProviders/memory";
-import RouterDatabase from "./resourceProviders/router";
-import { FHIRClientSync } from "./client/interface";
+import { loadArtifacts } from "@genfhi/artifacts";
+import MemoryDatabase from "./resourceProviders/memory.js";
+import RouterDatabase from "./resourceProviders/router.js";
+import { FHIRClientSync } from "./client/interface.js";
 
-import createFhirServer, { FHIRServerCTX } from "./fhirServer";
+import createFhirServer, { FHIRServerCTX } from "./fhirServer.js";
 import {
   Bundle,
   CapabilityStatement,
   ResourceType,
   Resource,
 } from "@genfhi/fhir-types/r4/types";
-import { createPostgresClient } from "./resourceProviders/postgres";
+import { createPostgresClient } from "./resourceProviders/postgres/index.js";
 import { FHIRResponse } from "./client/types";
 
 dotEnv.config();
+
+console.log(path.join(fileURLToPath(import.meta.url), "../"));
 
 function serverCapabilities(): CapabilityStatement {
   return {
@@ -38,7 +41,10 @@ function createMemoryDatabase(
   const database = MemoryDatabase<any>({});
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
-      loadArtifacts(resourceType, path.join(__dirname, "../"))
+      loadArtifacts(
+        resourceType,
+        path.join(fileURLToPath(import.meta.url), "../../")
+      )
     )
     .flat();
   for (const resource of artifactResources) {

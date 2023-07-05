@@ -1,6 +1,6 @@
 import { evaluate, evaluateWithMeta } from "./index";
 import { StructureDefinition, code } from "@genfhi/fhir-types/r4/types";
-import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
+import { loadArtifacts } from "@genfhi/artifacts";
 import { fileURLToPath } from "node:url";
 
 const sds: StructureDefinition[] = loadArtifacts(

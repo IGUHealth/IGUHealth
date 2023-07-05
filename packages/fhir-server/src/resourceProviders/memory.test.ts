@@ -1,5 +1,5 @@
 import parseURL from "@genfhi/fhir-query";
-import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
+import { loadArtifacts } from "@genfhi/artifacts";
 import path from "path";
 
 import {

@@ -17,7 +17,8 @@ import {
   InstanceLevelInteraction,
   SystemInteraction,
 } from "./client/types";
-import chain from "./chain";
+import chain from "./chain.js";
+
 function getInteractionLevel(
   fhirURL: FHIRURL
 ): RequestLevel[keyof RequestLevel] {

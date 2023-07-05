@@ -16,7 +16,7 @@ function eleIndexToChildIndices(
     const parentPathEscaped = parentPath.replace(/\./g, "\\."); // Escape periods
     const childRegex = new RegExp("^" + parentPathEscaped + "\\." + "[^\\.]+$");
     let curIndex = index + 1;
-    const childrenIndices = [];
+    const childrenIndices: number[] = [];
     while (curIndex < elements.length) {
       if (elements[curIndex].path.match(childRegex)) {
         childrenIndices.push(curIndex);

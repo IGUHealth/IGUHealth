@@ -2,7 +2,11 @@
   "name": "@genfhi/artifacts",
   "version": "1.0.0",
   "description": "",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "type": "module",
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\""
   },
   "fhirVersion": [

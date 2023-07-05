@@ -8,10 +8,13 @@ import {
   TypeSearchResponse,
   HistoryInstanceResponse,
 } from "../client/types";
-import { AsynchronousClient } from "../client";
-import { MiddlewareAsync, createMiddlewareAsync } from "../client/middleware";
+import { AsynchronousClient } from "../client/index.js";
+import {
+  MiddlewareAsync,
+  createMiddlewareAsync,
+} from "../client/middleware/index.js";
 import { FHIRClient } from "../client/interface";
-import { FHIRServerCTX } from "../fhirServer";
+import { FHIRServerCTX } from "../fhirServer.js";
 
 type InteractionSupported<T> = FHIRRequest["type"];
 type InteractionsSupported<T> = InteractionSupported<T>[];

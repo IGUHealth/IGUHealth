@@ -1,5 +1,5 @@
 import { MetaValueSingular, descend } from "./index";
-import loadArtifacts from "@genfhi/artifacts/loadArtifacts";
+import { loadArtifacts } from "@genfhi/artifacts";
 import { StructureDefinition, Patient } from "@genfhi/fhir-types/r4/types";
 // import { evaluate } from "@genfhi/fhirpath";
 import { expect, test } from "@jest/globals";
