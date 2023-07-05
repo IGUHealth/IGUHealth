@@ -1,6 +1,7 @@
 import { Command } from "commander";
 import { writeFileSync, mkdirSync } from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 import { loadArtifacts } from "@genfhi/artifacts";
 
 import { generateSets, generateTypes } from "@genfhi/codegen";
@@ -22,7 +23,7 @@ program
     }
     const structureDefinitions = loadArtifacts(
       "StructureDefinition",
-      __dirname
+      path.join(fileURLToPath(import.meta.url), "../../")
     );
     mkdirSync(options.output, { recursive: true });
     const generatedTypes = generateTypes(options.version, structureDefinitions);

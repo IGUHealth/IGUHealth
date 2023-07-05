@@ -22,8 +22,6 @@ import { FHIRResponse } from "./client/types";
 
 dotEnv.config();
 
-console.log(path.join(fileURLToPath(import.meta.url), "../"));
-
 function serverCapabilities(): CapabilityStatement {
   return {
     resourceType: "CapabilityStatement",
