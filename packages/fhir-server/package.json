@@ -8,7 +8,7 @@
     "build": "tsc",
     "test": "jest",
     "migrate": "db-migrate --sql-file -m src/resourceProviders/postgres/migrations",
-    "watch": "nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.test.ts\" --exec \"yarn ts-node --esm src/index.ts\""
+    "watch": "yarn nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.test.ts\" --exec \"yarn ts-node --esm src/index.ts\""
   },
   "dependencies": {
     "@genfhi/artifacts": "workspace:^",
