@@ -5519,7 +5519,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@genfhi/artifacts", "workspace:packages/artifacts"],\
             ["@genfhi/fhir-types", "workspace:packages/fhir-types"],\
-            ["@types/node", "npm:20.4.0"]\
+            ["@types/node", "npm:20.4.0"],\
+            ["typescript", "patch:typescript@npm%3A5.1.3#~builtin<compat/typescript>::version=5.1.3&hash=5da071"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -5532,6 +5533,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@genfhi/artifacts", "workspace:packages/artifacts"],\
             ["@genfhi/codegen", "workspace:packages/codegen"],\
             ["@genfhi/fhir-types", "workspace:packages/fhir-types"],\
+            ["@types/node", "npm:20.4.0"],\
             ["commander", "npm:11.0.0"],\
             ["typescript", "patch:typescript@npm%3A5.1.3#~builtin<compat/typescript>::version=5.1.3&hash=5da071"]\
           ],\
@@ -5681,7 +5683,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         ["workspace:packages/fhir-types", {\
           "packageLocation": "./packages/fhir-types/",\
           "packageDependencies": [\
-            ["@genfhi/fhir-types", "workspace:packages/fhir-types"]\
+            ["@genfhi/fhir-types", "workspace:packages/fhir-types"],\
+            ["typescript", "patch:typescript@npm%3A5.1.3#~builtin<compat/typescript>::version=5.1.3&hash=5da071"]\
           ],\
           "linkType": "SOFT"\
         }]\

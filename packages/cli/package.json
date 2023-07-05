@@ -8,6 +8,7 @@
     "@genfhi/artifacts": "workspace:^",
     "@genfhi/codegen": "workspace:^",
     "@genfhi/fhir-types": "workspace:^",
+    "@types/node": "^20.4.0",
     "commander": "^11.0.0"
   },
   "devDependencies": {
