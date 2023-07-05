@@ -21,7 +21,7 @@ jobs:
           bun-version: latest
       - name: Install dependencies
         run: bun install
-      - name: Install dependencies
+      - name: Compile
         run: bun ts-node compile.ts && bun ts-node compile.ts
       - name: Run tests and collect coverage
         run: bun test
