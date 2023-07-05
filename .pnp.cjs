@@ -5518,7 +5518,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/artifacts/",\
           "packageDependencies": [\
             ["@genfhi/artifacts", "workspace:packages/artifacts"],\
-            ["@genfhi/fhir-types", "workspace:packages/fhir-types"]\
+            ["@genfhi/fhir-types", "workspace:packages/fhir-types"],\
+            ["@types/node", "npm:20.4.0"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -5693,6 +5694,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@genfhi/artifacts", "workspace:packages/artifacts"],\
             ["@genfhi/fhir-types", "workspace:packages/fhir-types"],\
             ["@genfhi/meta-value", "workspace:packages/meta-value"],\
+            ["@jest/globals", "npm:29.6.0"],\
             ["@types/jest", "npm:29.5.2"],\
             ["jest", "virtual:eca05c14a2c819ccd0b20694dfb2b67b85cb91afd6b434a35d85502de7428e91b90cd83ac7cae38e3a4a6134a28ab3beb5f617222e3db7c9b6edc8ed67e8d6a5#npm:29.6.0"],\
             ["peggy", "npm:3.0.2"],\
@@ -10064,6 +10066,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-npm-20.3.3-aac92e0a89-7a0d008004.zip/node_modules/@types/node/",\
           "packageDependencies": [\
             ["@types/node", "npm:20.3.3"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:20.4.0", {\
+          "packageLocation": "./.yarn/cache/@types-node-npm-20.4.0-2eb9c50cc4-8ad632ee13.zip/node_modules/@types/node/",\
+          "packageDependencies": [\
+            ["@types/node", "npm:20.4.0"]\
           ],\
           "linkType": "HARD"\
         }]\

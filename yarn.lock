@@ -2503,6 +2503,7 @@ __metadata:
   resolution: "@genfhi/artifacts@workspace:packages/artifacts"
   dependencies:
     "@genfhi/fhir-types": "workspace:^"
+    "@types/node": ^20.4.0
   languageName: unknown
   linkType: soft
 
@@ -2631,6 +2632,7 @@ __metadata:
     "@genfhi/artifacts": "workspace:^"
     "@genfhi/fhir-types": "workspace:^"
     "@genfhi/meta-value": "workspace:^"
+    "@jest/globals": ^29.6.0
     "@types/jest": ^29.5.2
     jest: ^29.5.0
     peggy: ^3.0.2
@@ -5534,6 +5536,13 @@ __metadata:
   version: 16.18.38
   resolution: "@types/node@npm:16.18.38"
   checksum: a3baa141e49ce94486f083eea1240cf38479a73ba663e1bf3f52f85b466125821b6e3ea85ded38fde3901530aca4601291395a50eefcea533a4f3b45171bda28
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^20.4.0":
+  version: 20.4.0
+  resolution: "@types/node@npm:20.4.0"
+  checksum: 8ad632ee131611651fc5f4ac3a47427640e2492ab314fe1c4d0c3b97af71784ef48c53221d5f9922aab4724375dcb4f33137b3107ba2c356d9366216a31678aa
   languageName: node
   linkType: hard
 
