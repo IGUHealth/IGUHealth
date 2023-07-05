@@ -190,4 +190,5 @@ test("artifactParameters", () => {
       )
       .map((s) => s.id)
   ).toMatchSnapshot();
+  expect(5).toEqual(2);
 });

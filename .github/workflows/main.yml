@@ -11,20 +11,16 @@ jobs:
         # https://github.com/crate-ci/typos/blob/master/docs/github-action.md
         with:
           config: ./typos.config.toml
-
       - name: Set up Node 19
         uses: actions/setup-node@v3
         with:
           node-version: 19.6.0
-      - uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: latest
       - name: Install dependencies
-        run: bun install
+        run: yarn
       - name: Compile
-        run: npx nx run-many -t build
+        run: yarn workspaces foreach run build
       - name: Run tests and collect coverage
-        run: bun test
+        run: yarn workspaces foreach run test
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
