@@ -1,4 +1,4 @@
-import { generateSets } from "./isGeneration";
-import { generateTypes } from "./typeGeneration";
+import { generateSets } from "./isGeneration.js";
+import { generateTypes } from "./typeGeneration.js";
 
 export { generateSets, generateTypes };

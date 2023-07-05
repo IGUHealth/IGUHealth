@@ -2,6 +2,7 @@
   "name": "@genfhi/cli",
   "bin": "lib/index.js",
   "types": "lib/index.d.ts",
+  "target": "node",
   "type": "module",
   "dependencies": {
     "@genfhi/artifacts": "workspace:packages/artifacts",
