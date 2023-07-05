@@ -2,8 +2,8 @@
   "name": "@genfhi/fhir-query",
   "version": "1.0.0",
   "description": "",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "lib/index.mjs",
+  "types": "lib/index.d.mts",
   "type": "module",
   "scripts": {
     "build": "tsc",
