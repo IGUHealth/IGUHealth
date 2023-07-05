@@ -15,6 +15,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 19.6.0
+          cache: "yarn"
       - name: EnableCorePack
         run: corepack enable
       - name: Install dependencies
