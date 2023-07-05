@@ -5,6 +5,6 @@
     "generate-index-file": "generate-index-file"
   },
   "dependencies": {
-    "@genfhi/cli": "workspace:packages/cli"
+    "@genfhi/cli": "workspace:^"
   }
 }

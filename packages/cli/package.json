@@ -5,9 +5,9 @@
   "target": "node",
   "type": "module",
   "dependencies": {
-    "@genfhi/artifacts": "workspace:packages/artifacts",
-    "@genfhi/codegen": "workspace:packages/codegen",
-    "@genfhi/fhir-types": "workspace:packages/fhir-types",
+    "@genfhi/artifacts": "workspace:^",
+    "@genfhi/codegen": "workspace:^",
+    "@genfhi/fhir-types": "workspace:^",
     "commander": "^11.0.0"
   },
   "devDependencies": {

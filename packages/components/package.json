@@ -1,6 +1,5 @@
 {
   "name": "@genfhi/components",
-  "private": false,
   "version": "1.0.0",
   "main": "./dist/genfhi-ts.umd.js",
   "module": "./dist/genfhi-ts.mjs",
@@ -28,7 +27,7 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@genfhi/fhir-types": "workspace:packages/fhir-types",
+    "@genfhi/fhir-types": "workspace:^",
     "@storybook/addon-essentials": "^7.0.22",
     "@storybook/addon-interactions": "^7.0.22",
     "@storybook/addon-links": "^7.0.22",

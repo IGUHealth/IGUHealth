@@ -15,8 +15,5 @@
   "exports": {
     "./r4/sets": "./lib/sets.js",
     "./r4/types": "./r4/types.d.ts"
-  },
-  "dependencies": {
-    "@genfhi/cli": "workspace:packages/cli"
   }
 }
