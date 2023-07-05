@@ -4,6 +4,7 @@
   "description": "",
   "type": "module",
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\""
   },
   "types": "r4/types.d.ts",

@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "build": "tsc",
     "test": "jest",
     "migrate": "db-migrate --sql-file -m src/resourceProviders/postgres/migrations",
     "watch": "nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.test.ts\" --exec \"bun ts-node --esm src/index.ts\""

@@ -9,8 +9,8 @@
     "dist/output.css"
   ],
   "scripts": {
-    "tailwind": "pnpm build-tailwind --watch",
-    "build": "tsc && pnpm build-tailwind && vite build --emptyOutDir false",
+    "tailwind": "bun build-tailwind --watch",
+    "build-": "tsc && bun build-tailwind && vite build --emptyOutDir false",
     "watch": "vite build --watch --emptyOutDir false",
     "build-vite": "vite build",
     "test": "echo \"Error: no test specified\"",
