@@ -5698,6 +5698,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@genfhi/artifacts", "workspace:packages/artifacts"],\
             ["@genfhi/fhir-types", "workspace:packages/fhir-types"],\
             ["@genfhi/meta-value", "workspace:packages/meta-value"],\
+            ["@genfhi/test-data", "workspace:packages/test-data-r4"],\
             ["@jest/globals", "npm:29.6.0"],\
             ["@types/jest", "npm:29.5.2"],\
             ["jest", "virtual:eca05c14a2c819ccd0b20694dfb2b67b85cb91afd6b434a35d85502de7428e91b90cd83ac7cae38e3a4a6134a28ab3beb5f617222e3db7c9b6edc8ed67e8d6a5#npm:29.6.0"],\

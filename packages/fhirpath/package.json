@@ -19,6 +19,7 @@
   "devDependencies": {
     "@genfhi/artifacts": "workspace:^",
     "@genfhi/fhir-types": "workspace:^",
+    "@genfhi/test-data": "workspace:^",
     "@jest/globals": "^29.6.0",
     "@types/jest": "^29.5.2",
     "jest": "^29.5.0",
