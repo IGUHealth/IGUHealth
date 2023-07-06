@@ -1,0 +1,3899 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing indexing resourceType 'Account' 1`] = `
+[
+  "Inpatient: Peter James Chalmers",
+]
+`;
+
+exports[`Testing indexing resourceType 'Account' 2`] = `
+[
+  "HACC Funded Billing for Peter James Chalmers",
+]
+`;
+
+exports[`Testing indexing resourceType 'ActivityDefinition' 1`] = `
+[
+  "Administer Zika Virus Exposure Assessment",
+]
+`;
+
+exports[`Testing indexing resourceType 'ActivityDefinition' 2`] = `[]`;
+
+exports[`Testing indexing resourceType 'ActivityDefinition' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'ActivityDefinition' 4`] = `[]`;
+
+exports[`Testing indexing resourceType 'ActivityDefinition' 5`] = `
+[
+  "Alteplase Dosing for Stroke",
+]
+`;
+
+exports[`Testing indexing resourceType 'ActivityDefinition' 6`] = `
+[
+  "AlteplaseDosingForStroke",
+]
+`;
+
+exports[`Testing indexing resourceType 'ActivityDefinition' 7`] = `[]`;
+
+exports[`Testing indexing resourceType 'ActivityDefinition' 8`] = `
+[
+  "Alteplase Dosing for Stroke",
+]
+`;
+
+exports[`Testing indexing resourceType 'ActivityDefinition' 9`] = `
+[
+  "refer to primary care mental-health integrated care program for evaluation and treatment of mental health conditions now",
+]
+`;
+
+exports[`Testing indexing resourceType 'ActivityDefinition' 10`] = `
+[
+  "ReferralPrimaryCareMentalHealth",
+]
+`;
+
+exports[`Testing indexing resourceType 'ActivityDefinition' 11`] = `
+[
+  "Motive Medical Intelligence",
+]
+`;
+
+exports[`Testing indexing resourceType 'ActivityDefinition' 12`] = `
+[
+  "Referral to Primary Care Mental Health",
+]
+`;
+
+exports[`Testing indexing resourceType 'ActivityDefinition' 13`] = `
+[
+  "Citalopram 20 mg tablet 1 tablet oral 1 time daily now (30 table; 3 refills",
+]
+`;
+
+exports[`Testing indexing resourceType 'ActivityDefinition' 14`] = `
+[
+  "CitalopramPrescription",
+]
+`;
+
+exports[`Testing indexing resourceType 'ActivityDefinition' 15`] = `
+[
+  "Motive Medical Intelligence",
+]
+`;
+
+exports[`Testing indexing resourceType 'ActivityDefinition' 16`] = `
+[
+  "Citalopram Prescription",
+]
+`;
+
+exports[`Testing indexing resourceType 'ActivityDefinition' 17`] = `
+[
+  "Order Serum Dengue Virus IgM",
+]
+`;
+
+exports[`Testing indexing resourceType 'ActivityDefinition' 18`] = `[]`;
+
+exports[`Testing indexing resourceType 'ActivityDefinition' 19`] = `[]`;
+
+exports[`Testing indexing resourceType 'ActivityDefinition' 20`] = `[]`;
+
+exports[`Testing indexing resourceType 'AuditEvent' 1`] = `[]`;
+
+exports[`Testing indexing resourceType 'AuditEvent' 2`] = `[]`;
+
+exports[`Testing indexing resourceType 'AuditEvent' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'AuditEvent' 4`] = `[]`;
+
+exports[`Testing indexing resourceType 'AuditEvent' 5`] = `[]`;
+
+exports[`Testing indexing resourceType 'AuditEvent' 6`] = `[]`;
+
+exports[`Testing indexing resourceType 'AuditEvent' 7`] = `[]`;
+
+exports[`Testing indexing resourceType 'AuditEvent' 8`] = `[]`;
+
+exports[`Testing indexing resourceType 'AuditEvent' 9`] = `[]`;
+
+exports[`Testing indexing resourceType 'AuditEvent' 10`] = `[]`;
+
+exports[`Testing indexing resourceType 'AuditEvent' 11`] = `[]`;
+
+exports[`Testing indexing resourceType 'AuditEvent' 12`] = `[]`;
+
+exports[`Testing indexing resourceType 'AuditEvent' 13`] = `[]`;
+
+exports[`Testing indexing resourceType 'AuditEvent' 14`] = `[]`;
+
+exports[`Testing indexing resourceType 'AuditEvent' 15`] = `[]`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 1`] = `
+[
+  "This is the base Capability Statement for FHIR. It represents a server that provides the full set of functionality defined by FHIR. It is provided to use as a template for system designers to build their own Capability Statements from",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 2`] = `
+[
+  "Base FHIR Capability Statement (Full)",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 3`] = `
+[
+  "FHIR Project Team",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 4`] = `
+[
+  "Insert your software name here...",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 5`] = `[]`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 6`] = `
+[
+  "This is the base Capability Statement for FHIR. It represents a server that provides the none of the functionality defined by FHIR. It is provided to use as a template for system designers to build their own Capability Statements from. A capability statement has to contain something, so this contains a read of a Capability Statement",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 7`] = `
+[
+  "Base FHIR Capability Statement (Empty)",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 8`] = `
+[
+  "FHIR Project Team",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 9`] = `
+[
+  "Insert your software name here...",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 10`] = `[]`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 11`] = `
+[
+  "This is the FHIR capability statement for the main EHR at ACME for the private interface - it does not describe the public interface",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 12`] = `
+[
+  "ACMEEHR",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 13`] = `
+[
+  "ACME Corporation",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 14`] = `
+[
+  "EHR",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 15`] = `
+[
+  "ACME EHR capability statement",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 16`] = `
+[
+  "Basic conformance statement for a Knowledge Repository Service. A server can support more functionality    than defined here, but this is the minimum amount",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 17`] = `
+[
+  "KnowledgeRepositoryServiceConformanceStatement",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 18`] = `
+[
+  "HL7, Inc",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 19`] = `
+[
+  "ACME Knowledge Repository Service",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 20`] = `
+[
+  "Knowledge Repository Service Conformance Statement",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 21`] = `
+[
+  "Basic conformance statement for a Measure Processor Service. A server can support more functionality    than defined here, but this is the minimum amount",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 22`] = `
+[
+  "MeasureProcessorServiceConformanceStatement",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 23`] = `
+[
+  "HL7, Inc",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 24`] = `
+[
+  "ACME Measure Processor Service",
+]
+`;
+
+exports[`Testing indexing resourceType 'CapabilityStatement' 25`] = `
+[
+  "Measure Processor Service Conformance Statement",
+]
+`;
+
+exports[`Testing indexing resourceType 'ChargeItemDefinition' 1`] = `
+[
+  "Financial details for custom made device",
+]
+`;
+
+exports[`Testing indexing resourceType 'ChargeItemDefinition' 2`] = `
+[
+  "Example Publisher",
+]
+`;
+
+exports[`Testing indexing resourceType 'ChargeItemDefinition' 3`] = `
+[
+  "Financial details for custom made device (345675)",
+]
+`;
+
+exports[`Testing indexing resourceType 'ChargeItemDefinition' 4`] = `
+[
+  "Allergologisch-diagnostischer Komplex zur Diagnostik und/oder zum Ausschluss einer (Kontakt-)Allergie vom Spättyp (Typ IV), einschl. Kosten",
+]
+`;
+
+exports[`Testing indexing resourceType 'ChargeItemDefinition' 5`] = `[]`;
+
+exports[`Testing indexing resourceType 'ChargeItemDefinition' 6`] = `[]`;
+
+exports[`Testing indexing resourceType 'ClaimResponse' 1`] = `
+[
+  "Claim could not be processed",
+]
+`;
+
+exports[`Testing indexing resourceType 'ClaimResponse' 2`] = `
+[
+  "Claim settled as per contract.",
+]
+`;
+
+exports[`Testing indexing resourceType 'ClaimResponse' 3`] = `
+[
+  "The enclosed services are authorized for your provision within 30 days of this notice.",
+]
+`;
+
+exports[`Testing indexing resourceType 'ClaimResponse' 4`] = `
+[
+  "Claim settled as per contract.",
+]
+`;
+
+exports[`Testing indexing resourceType 'ClaimResponse' 5`] = `
+[
+  "Claim settled as per contract.",
+]
+`;
+
+exports[`Testing indexing resourceType 'CodeSystem' 1`] = `
+[
+  "All published FHIR Versions.",
+]
+`;
+
+exports[`Testing indexing resourceType 'CodeSystem' 2`] = `
+[
+  "FHIRVersion",
+]
+`;
+
+exports[`Testing indexing resourceType 'CodeSystem' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'CodeSystem' 4`] = `
+[
+  "FHIRVersion",
+]
+`;
+
+exports[`Testing indexing resourceType 'CodeSystem' 5`] = `
+[
+  "Indicates who is expected to pay a part of the account balance.",
+]
+`;
+
+exports[`Testing indexing resourceType 'CodeSystem' 6`] = `
+[
+  "AccountAggregate",
+]
+`;
+
+exports[`Testing indexing resourceType 'CodeSystem' 7`] = `
+[
+  "HL7 (FHIR Project)",
+]
+`;
+
+exports[`Testing indexing resourceType 'CodeSystem' 8`] = `
+[
+  "Account Aggregate",
+]
+`;
+
+exports[`Testing indexing resourceType 'CodeSystem' 9`] = `
+[
+  "Indicates the account balance's age",
+]
+`;
+
+exports[`Testing indexing resourceType 'CodeSystem' 10`] = `
+[
+  "AccountBalanceTerm",
+]
+`;
+
+exports[`Testing indexing resourceType 'CodeSystem' 11`] = `
+[
+  "HL7 (FHIR Project)",
+]
+`;
+
+exports[`Testing indexing resourceType 'CodeSystem' 12`] = `
+[
+  "Account Balance Term",
+]
+`;
+
+exports[`Testing indexing resourceType 'CodeSystem' 13`] = `
+[
+  "Indicates whether the account is available to be used for billing purposes.",
+]
+`;
+
+exports[`Testing indexing resourceType 'CodeSystem' 14`] = `
+[
+  "AccountBillingStatus",
+]
+`;
+
+exports[`Testing indexing resourceType 'CodeSystem' 15`] = `
+[
+  "HL7 (FHIR Project)",
+]
+`;
+
+exports[`Testing indexing resourceType 'CodeSystem' 16`] = `
+[
+  "Example Account Billing Statuses",
+]
+`;
+
+exports[`Testing indexing resourceType 'CodeSystem' 17`] = `
+[
+  "Relationship between accounts",
+]
+`;
+
+exports[`Testing indexing resourceType 'CodeSystem' 18`] = `
+[
+  "AccountRelationship",
+]
+`;
+
+exports[`Testing indexing resourceType 'CodeSystem' 19`] = `
+[
+  "HL7 (FHIR Project)",
+]
+`;
+
+exports[`Testing indexing resourceType 'CodeSystem' 20`] = `
+[
+  "Account Relationship",
+]
+`;
+
+exports[`Testing indexing resourceType 'CompartmentDefinition' 1`] = `
+[
+  "There is an instance of the device compartment for each Device resource, and the identity of the compartment is the same as the Device. The set of resources associated with a particular device",
+]
+`;
+
+exports[`Testing indexing resourceType 'CompartmentDefinition' 2`] = `
+[
+  "Base FHIR compartment definition for Device",
+]
+`;
+
+exports[`Testing indexing resourceType 'CompartmentDefinition' 3`] = `
+[
+  "FHIR Project Team",
+]
+`;
+
+exports[`Testing indexing resourceType 'CompartmentDefinition' 4`] = `
+[
+  "There is an instance of the encounter compartment for each encounter resource, and the identity of the compartment is the same as the encounter. The set of resources associated with a particular encounter",
+]
+`;
+
+exports[`Testing indexing resourceType 'CompartmentDefinition' 5`] = `
+[
+  "Base FHIR compartment definition for Encounter",
+]
+`;
+
+exports[`Testing indexing resourceType 'CompartmentDefinition' 6`] = `
+[
+  "FHIR Project Team",
+]
+`;
+
+exports[`Testing indexing resourceType 'CompartmentDefinition' 7`] = `
+[
+  "The set of resources associated with a particular Device (example with Communication and CommunicationRequest resourses only).",
+]
+`;
+
+exports[`Testing indexing resourceType 'CompartmentDefinition' 8`] = `
+[
+  "EXAMPLE",
+]
+`;
+
+exports[`Testing indexing resourceType 'CompartmentDefinition' 9`] = `
+[
+  "Health Level Seven International (FHIR Infrastructure)",
+]
+`;
+
+exports[`Testing indexing resourceType 'CompartmentDefinition' 10`] = `
+[
+  "There is an instance of the patient compartment for each patient resource, and the identity of the compartment is the same as the patient. When a patient is linked to another patient resource, the records associated with the linked patient resource will not be returned as part of the compartment search. Those records will be returned only with another compartment search using the "id" for the linked patient resource.
+ 
+In cases where two patients have been merged rather than linked, associated resources should be moved to the target patient as part of the merge process, so the patient compartment for the target patient would include all relevant data, and the patient compartment for the source patient would include only the linked Patient and possibly remnant resources like AuditEvent.. The set of resources associated with a particular patient",
+]
+`;
+
+exports[`Testing indexing resourceType 'CompartmentDefinition' 11`] = `
+[
+  "Base FHIR compartment definition for Patient",
+]
+`;
+
+exports[`Testing indexing resourceType 'CompartmentDefinition' 12`] = `
+[
+  "FHIR Project Team",
+]
+`;
+
+exports[`Testing indexing resourceType 'CompartmentDefinition' 13`] = `
+[
+  "There is an instance of the practitioner compartment for each Practitioner resource, and the identity of the compartment is the same as the Practitioner. The set of resources associated with a particular practitioner",
+]
+`;
+
+exports[`Testing indexing resourceType 'CompartmentDefinition' 14`] = `
+[
+  "Base FHIR compartment definition for Practitioner",
+]
+`;
+
+exports[`Testing indexing resourceType 'CompartmentDefinition' 15`] = `
+[
+  "FHIR Project Team",
+]
+`;
+
+exports[`Testing indexing resourceType 'Composition' 1`] = `
+[
+  "Discharge Summary (Neonatal Service)",
+]
+`;
+
+exports[`Testing indexing resourceType 'Composition' 2`] = `
+[
+  "Consultation Note",
+]
+`;
+
+exports[`Testing indexing resourceType 'Composition' 3`] = `
+[
+  "Discharge Summary",
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 1`] = `
+[
+  "A mapping between the FHIR and HL7 v3 AddressUse Code systems",
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 2`] = `
+[
+  "FHIRv3AddressUse",
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 3`] = `
+[
+  "HL7, Inc",
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 4`] = `
+[
+  "FHIR/v3 Address Use Mapping",
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 5`] = `
+[
+  "Specimen mapping from v2 table 0487 to SNOMED CT",
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 6`] = `
+[
+  "SpecimenMappingFromV2Table0487ToSNOMEDCT",
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 7`] = `
+[
+  "FHIR project team (original source: LabMCoP)",
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 8`] = `
+[
+  "Specimen mapping from v2 table 0487 to SNOMED CT",
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 9`] = `
+[
+  "Example rule-based mappings between SNOMED CT to ICD-10-CM for fracture of ulna",
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 10`] = `
+[
+  "SNOMEDCTToICD10CMMappingsForFractureOfUlna",
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 11`] = `
+[
+  "HL7, Inc",
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 12`] = `
+[
+  "SNOMED CT to ICD-10-CM mappings for fracture of ulna",
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 13`] = `[]`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 14`] = `
+[
+  "v3.AddressType",
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 15`] = `
+[
+  "HL7 (FHIR Project)",
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 16`] = `
+[
+  "v3 map for AddressType",
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 17`] = `[]`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 18`] = `
+[
+  "v2.AddressUse",
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 19`] = `
+[
+  "HL7 (FHIR Project)",
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 20`] = `
+[
+  "v2 map for AddressUse",
+]
+`;
+
+exports[`Testing indexing resourceType 'Coverage' 1`] = `
+[
+  {
+    "value": "WESTAIR",
+  },
+  {
+    "value": "BG4352",
+  },
+  {
+    "value": "D15C9",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Coverage' 2`] = `
+[
+  "1",
+]
+`;
+
+exports[`Testing indexing resourceType 'Coverage' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'Coverage' 4`] = `[]`;
+
+exports[`Testing indexing resourceType 'Coverage' 5`] = `[]`;
+
+exports[`Testing indexing resourceType 'Coverage' 6`] = `[]`;
+
+exports[`Testing indexing resourceType 'Coverage' 7`] = `
+[
+  {
+    "value": "CB135",
+  },
+  {
+    "value": "123",
+  },
+  {
+    "value": "B37FC",
+  },
+  {
+    "value": "P7",
+  },
+  {
+    "value": "SILVER",
+  },
+  {
+    "value": "Tier2",
+  },
+  {
+    "value": "9",
+  },
+  {
+    "value": "MDF12345",
+  },
+  {
+    "value": "987654",
+  },
+  {
+    "value": "M35PT",
+  },
+  {
+    "value": "234516",
+  },
+  {
+    "value": "9",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Coverage' 8`] = `
+[
+  "0",
+]
+`;
+
+exports[`Testing indexing resourceType 'CoverageEligibilityResponse' 1`] = `
+[
+  "Policy is currently in-force.",
+]
+`;
+
+exports[`Testing indexing resourceType 'CoverageEligibilityResponse' 2`] = `
+[
+  "Policy is currently in-force.",
+]
+`;
+
+exports[`Testing indexing resourceType 'CoverageEligibilityResponse' 3`] = `
+[
+  "Eligibiliy request could not be processed, please address errors before submitting.",
+]
+`;
+
+exports[`Testing indexing resourceType 'CoverageEligibilityResponse' 4`] = `
+[
+  "Policy is currently in-force.",
+]
+`;
+
+exports[`Testing indexing resourceType 'Device' 1`] = `
+[
+  "Device (physical object)",
+]
+`;
+
+exports[`Testing indexing resourceType 'Device' 2`] = `
+[
+  "Illumina",
+]
+`;
+
+exports[`Testing indexing resourceType 'Device' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'Device' 4`] = `[]`;
+
+exports[`Testing indexing resourceType 'Device' 5`] = `[]`;
+
+exports[`Testing indexing resourceType 'Device' 6`] = `
+[
+  "Software (physical object)",
+]
+`;
+
+exports[`Testing indexing resourceType 'Device' 7`] = `
+[
+  "Vanderbilt Genetics Institute",
+]
+`;
+
+exports[`Testing indexing resourceType 'Device' 8`] = `[]`;
+
+exports[`Testing indexing resourceType 'Device' 9`] = `[]`;
+
+exports[`Testing indexing resourceType 'Device' 10`] = `[]`;
+
+exports[`Testing indexing resourceType 'Device' 11`] = `
+[
+  "MDC_MOC_VMS_MDS_SIMP",
+  "MDC_MOC_VMS_MDS_SIMP: Personal Health Device",
+]
+`;
+
+exports[`Testing indexing resourceType 'Device' 12`] = `
+[
+  "A&D Medical",
+]
+`;
+
+exports[`Testing indexing resourceType 'Device' 13`] = `
+[
+  "UA-767PBT-C",
+]
+`;
+
+exports[`Testing indexing resourceType 'Device' 14`] = `
+[
+  "(01)39183189818(21)5091100966",
+]
+`;
+
+exports[`Testing indexing resourceType 'Device' 15`] = `
+[
+  "39183189818",
+]
+`;
+
+exports[`Testing indexing resourceType 'Device' 16`] = `
+[
+  "MDC_MOC_VMS_MDS_SIMP",
+  "MDC_MOC_VMS_MDS_SIMP: Personal Health Device",
+]
+`;
+
+exports[`Testing indexing resourceType 'Device' 17`] = `
+[
+  "A&D Medical",
+]
+`;
+
+exports[`Testing indexing resourceType 'Device' 18`] = `
+[
+  "UT-201BLE-A",
+]
+`;
+
+exports[`Testing indexing resourceType 'Device' 19`] = `
+[
+  "(01)92677176693286(21)5160800011",
+]
+`;
+
+exports[`Testing indexing resourceType 'Device' 20`] = `
+[
+  "92677176693286",
+]
+`;
+
+exports[`Testing indexing resourceType 'Device' 21`] = `
+[
+  "MDC_MOC_VMS_MDS_AHD",
+  "MDC_MOC_VMS_MDS_AHD: Continua compliant Gateway",
+]
+`;
+
+exports[`Testing indexing resourceType 'Device' 22`] = `[]`;
+
+exports[`Testing indexing resourceType 'Device' 23`] = `[]`;
+
+exports[`Testing indexing resourceType 'Device' 24`] = `[]`;
+
+exports[`Testing indexing resourceType 'Device' 25`] = `[]`;
+
+exports[`Testing indexing resourceType 'DocumentReference' 1`] = `
+[
+  "Physical",
+]
+`;
+
+exports[`Testing indexing resourceType 'DocumentReference' 2`] = `
+[
+  "CNVAnalysis_called: A sample Document Reference instance representing a BED file that may be used as input or output of a genomic analysis pipeline.",
+]
+`;
+
+exports[`Testing indexing resourceType 'DocumentReference' 3`] = `
+[
+  "SimpleVariantAnalysis_called: A sample Document Reference instance representing a BED file that may be used as input or output of a genomic analysis pipeline.",
+]
+`;
+
+exports[`Testing indexing resourceType 'DocumentReference' 4`] = `
+[
+  "WES_FullSequencedRegion_GRCh38: A sample Document Reference instance representing a BED file that may be used as input or output of a genomic analysis pipeline.",
+]
+`;
+
+exports[`Testing indexing resourceType 'DocumentReference' 5`] = `
+[
+  "A sample Document Reference instance representing a BED file that may be used as input or output of a genomic analysis pipeline.",
+]
+`;
+
+exports[`Testing indexing resourceType 'Endpoint' 1`] = `
+[
+  "CarePlan repository",
+]
+`;
+
+exports[`Testing indexing resourceType 'Endpoint' 2`] = `
+[
+  "Questionnaire Destination",
+]
+`;
+
+exports[`Testing indexing resourceType 'Endpoint' 3`] = `
+[
+  "Referral Requests",
+]
+`;
+
+exports[`Testing indexing resourceType 'Endpoint' 4`] = `
+[
+  "Referral Requests",
+]
+`;
+
+exports[`Testing indexing resourceType 'Endpoint' 5`] = `
+[
+  "Subscription receiver",
+]
+`;
+
+exports[`Testing indexing resourceType 'EventDefinition' 1`] = `[]`;
+
+exports[`Testing indexing resourceType 'EventDefinition' 2`] = `[]`;
+
+exports[`Testing indexing resourceType 'EventDefinition' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'EventDefinition' 4`] = `[]`;
+
+exports[`Testing indexing resourceType 'Evidence' 1`] = `
+[
+  "5.3% risk of mRS 3-6 at 90 days",
+]
+`;
+
+exports[`Testing indexing resourceType 'Evidence' 2`] = `
+[
+  "RiskOfMRS36At90DaysAfterAlteplaseForStrokeIfASTRALScore12",
+]
+`;
+
+exports[`Testing indexing resourceType 'Evidence' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'Evidence' 4`] = `
+[
+  "Risk of mRS3-6 at 90 days after Alteplase for Stroke if ASTRAL score 12",
+]
+`;
+
+exports[`Testing indexing resourceType 'Evidence' 5`] = `
+[
+  "mRS 3-6 at 90 days Odds Ratio 0.65 for Alteplase vs. No Alteplase in patients with acute ischemic stroke 0-3 hours prior",
+]
+`;
+
+exports[`Testing indexing resourceType 'Evidence' 6`] = `
+[
+  "EffectOfAlteplaseVsNoAlteplaseOnMRS36At90DaysInStroke03HoursPrior",
+]
+`;
+
+exports[`Testing indexing resourceType 'Evidence' 7`] = `[]`;
+
+exports[`Testing indexing resourceType 'Evidence' 8`] = `
+[
+  "Effect of Alteplase vs No alteplase on mRS 3-6 at 90 days in Stroke 0-3 hours prior",
+]
+`;
+
+exports[`Testing indexing resourceType 'Evidence' 9`] = `
+[
+  "mRS 0-2 at 90 days Odds Ratio 1.2 for Alteplase vs. No Alteplase in patients with acute ischemic stroke 3-4.5 hours prior",
+]
+`;
+
+exports[`Testing indexing resourceType 'Evidence' 10`] = `
+[
+  "EffectOfAlteplaseVsNoAlteplaseOnMRS02At90DaysInStroke345HoursPrior",
+]
+`;
+
+exports[`Testing indexing resourceType 'Evidence' 11`] = `[]`;
+
+exports[`Testing indexing resourceType 'Evidence' 12`] = `
+[
+  "Effect of Alteplase vs No alteplase on mRS 0-2 at 90 days in Stroke 3-4.5 hours prior",
+]
+`;
+
+exports[`Testing indexing resourceType 'Evidence' 13`] = `
+[
+  "2.7% incidence of fatal intracranial hemorrhage within 7 days with alteplase in patients with acute ischemic stroke",
+]
+`;
+
+exports[`Testing indexing resourceType 'Evidence' 14`] = `
+[
+  "RiskOfFatalICHWithAlteplaseForStroke",
+]
+`;
+
+exports[`Testing indexing resourceType 'Evidence' 15`] = `[]`;
+
+exports[`Testing indexing resourceType 'Evidence' 16`] = `
+[
+  "Risk of fatal ICH with alteplase for stroke",
+]
+`;
+
+exports[`Testing indexing resourceType 'Evidence' 17`] = `
+[
+  "0.4% incidence of fatal intracranial hemorrhage within 7 days without alteplase in patients with acute ischemic stroke",
+]
+`;
+
+exports[`Testing indexing resourceType 'Evidence' 18`] = `
+[
+  "RiskOfFatalICHWithoutAlteplaseForStroke",
+]
+`;
+
+exports[`Testing indexing resourceType 'Evidence' 19`] = `[]`;
+
+exports[`Testing indexing resourceType 'Evidence' 20`] = `
+[
+  "Risk of fatal ICH without alteplase for stroke",
+]
+`;
+
+exports[`Testing indexing resourceType 'EvidenceVariable' 1`] = `
+[
+  "Stroke Thrombolysis Trialists’ Collaborators Group collection used for individual patient data meta-analysis",
+]
+`;
+
+exports[`Testing indexing resourceType 'EvidenceVariable' 2`] = `
+[
+  "StrokeThrombolysisTrialists20142016IPDMACohort",
+]
+`;
+
+exports[`Testing indexing resourceType 'EvidenceVariable' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'EvidenceVariable' 4`] = `
+[
+  "Stroke Thrombolysis Trialists’ Collaborators Group collection used for individual patient data meta-analysis",
+]
+`;
+
+exports[`Testing indexing resourceType 'EvidenceVariable' 5`] = `
+[
+  "Wardlaw 2014  Analysis 1.16.3  Evidence set",
+]
+`;
+
+exports[`Testing indexing resourceType 'EvidenceVariable' 6`] = `
+[
+  "Wardlaw2014Analysis1163EvidenceSet",
+]
+`;
+
+exports[`Testing indexing resourceType 'EvidenceVariable' 7`] = `[]`;
+
+exports[`Testing indexing resourceType 'EvidenceVariable' 8`] = `
+[
+  "Wardlaw 2014  Analysis 1.16.3  Evidence set",
+]
+`;
+
+exports[`Testing indexing resourceType 'EvidenceVariable' 9`] = `
+[
+  "Alive and not functionally dependent at 90 days",
+]
+`;
+
+exports[`Testing indexing resourceType 'EvidenceVariable' 10`] = `
+[
+  "AliveAndNotFunctionallyDependentAt90Days",
+]
+`;
+
+exports[`Testing indexing resourceType 'EvidenceVariable' 11`] = `[]`;
+
+exports[`Testing indexing resourceType 'EvidenceVariable' 12`] = `
+[
+  "Alive and not functionally dependent at 90 days",
+]
+`;
+
+exports[`Testing indexing resourceType 'EvidenceVariable' 13`] = `
+[
+  "Alteplase for Stroke",
+]
+`;
+
+exports[`Testing indexing resourceType 'EvidenceVariable' 14`] = `
+[
+  "AlteplaseForStroke",
+]
+`;
+
+exports[`Testing indexing resourceType 'EvidenceVariable' 15`] = `[]`;
+
+exports[`Testing indexing resourceType 'EvidenceVariable' 16`] = `
+[
+  "Alteplase for Stroke",
+]
+`;
+
+exports[`Testing indexing resourceType 'EvidenceVariable' 17`] = `
+[
+  "Dead or functionally dependent at 90 days",
+]
+`;
+
+exports[`Testing indexing resourceType 'EvidenceVariable' 18`] = `
+[
+  "DeadOrFunctionallyDependentAt90Days",
+]
+`;
+
+exports[`Testing indexing resourceType 'EvidenceVariable' 19`] = `[]`;
+
+exports[`Testing indexing resourceType 'EvidenceVariable' 20`] = `
+[
+  "Dead or functionally dependent at 90 days",
+]
+`;
+
+exports[`Testing indexing resourceType 'ExampleScenario' 1`] = `
+[
+  "LabOrderTrackingWithTask",
+]
+`;
+
+exports[`Testing indexing resourceType 'ExampleScenario' 2`] = `[]`;
+
+exports[`Testing indexing resourceType 'ExampleScenario' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'ExampleScenario' 4`] = `[]`;
+
+exports[`Testing indexing resourceType 'ExplanationOfBenefit' 1`] = `
+[
+  "Could not process.",
+]
+`;
+
+exports[`Testing indexing resourceType 'ExplanationOfBenefit' 2`] = `
+[
+  "Claim settled as per contract.",
+]
+`;
+
+exports[`Testing indexing resourceType 'GraphDefinition' 1`] = `
+[
+  "Specify to include list references when generating a document using the $document operation",
+]
+`;
+
+exports[`Testing indexing resourceType 'GraphDefinition' 2`] = `
+[
+  "DocumentGenerationTemplate",
+]
+`;
+
+exports[`Testing indexing resourceType 'GraphDefinition' 3`] = `
+[
+  "FHIR Project",
+]
+`;
+
+exports[`Testing indexing resourceType 'HealthcareService' 1`] = `
+[
+  "Consulting psychologists and/or psychology services",
+]
+`;
+
+exports[`Testing indexing resourceType 'Immunization' 1`] = `[]`;
+
+exports[`Testing indexing resourceType 'Immunization' 2`] = `[]`;
+
+exports[`Testing indexing resourceType 'Immunization' 3`] = `
+[
+  "PT123F",
+]
+`;
+
+exports[`Testing indexing resourceType 'Immunization' 4`] = `
+[
+  "2-dose",
+  "3-dose",
+]
+`;
+
+exports[`Testing indexing resourceType 'Immunization' 5`] = `
+[
+  "PPL909K",
+]
+`;
+
+exports[`Testing indexing resourceType 'Immunization' 6`] = `[]`;
+
+exports[`Testing indexing resourceType 'Immunization' 7`] = `[]`;
+
+exports[`Testing indexing resourceType 'Immunization' 8`] = `[]`;
+
+exports[`Testing indexing resourceType 'Immunization' 9`] = `
+[
+  "AAJN11K",
+]
+`;
+
+exports[`Testing indexing resourceType 'Immunization' 10`] = `[]`;
+
+exports[`Testing indexing resourceType 'ImplementationGuide' 1`] = `
+[
+  "The Data Access Framework (DAF) Initiative leverages the HL7 FHIR standards to standardize access to Meaningful Use Stage 2 structured information both within the organization and from external organizations",
+]
+`;
+
+exports[`Testing indexing resourceType 'ImplementationGuide' 2`] = `
+[
+  "DataAccessFrameworkDAF",
+]
+`;
+
+exports[`Testing indexing resourceType 'ImplementationGuide' 3`] = `
+[
+  "ONC / HL7 Joint project",
+]
+`;
+
+exports[`Testing indexing resourceType 'ImplementationGuide' 4`] = `
+[
+  "Data Access Framework (DAF)",
+]
+`;
+
+exports[`Testing indexing resourceType 'InsurancePlan' 1`] = `[]`;
+
+exports[`Testing indexing resourceType 'InsurancePlan' 2`] = `[]`;
+
+exports[`Testing indexing resourceType 'InsurancePlan' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'InsurancePlan' 4`] = `[]`;
+
+exports[`Testing indexing resourceType 'InsurancePlan' 5`] = `[]`;
+
+exports[`Testing indexing resourceType 'InsurancePlan' 6`] = `
+[
+  "foo",
+]
+`;
+
+exports[`Testing indexing resourceType 'InsurancePlan' 7`] = `
+[
+  "foo",
+]
+`;
+
+exports[`Testing indexing resourceType 'Library' 1`] = `
+[
+  "Logic for CMS 146: Appropriate Testing for Children with Pharyngitis",
+]
+`;
+
+exports[`Testing indexing resourceType 'Library' 2`] = `
+[
+  "CMS146",
+]
+`;
+
+exports[`Testing indexing resourceType 'Library' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'Library' 4`] = `
+[
+  "CMS146: Appropriate Testing for Children with Pharyngitis",
+]
+`;
+
+exports[`Testing indexing resourceType 'Library' 5`] = `
+[
+  "Artifacts required for implementation of Zika Virus Management",
+]
+`;
+
+exports[`Testing indexing resourceType 'Library' 6`] = `
+[
+  "ZikaArtifacts",
+]
+`;
+
+exports[`Testing indexing resourceType 'Library' 7`] = `[]`;
+
+exports[`Testing indexing resourceType 'Library' 8`] = `
+[
+  "Zika Artifacts",
+]
+`;
+
+exports[`Testing indexing resourceType 'Library' 9`] = `
+[
+  "Common Logic for adherence to Chlamydia Screening guidelines",
+]
+`;
+
+exports[`Testing indexing resourceType 'Library' 10`] = `
+[
+  "ChlamydiaScreeningCommonLibrary",
+]
+`;
+
+exports[`Testing indexing resourceType 'Library' 11`] = `[]`;
+
+exports[`Testing indexing resourceType 'Library' 12`] = `
+[
+  "Chlamydia Screening Common Library",
+]
+`;
+
+exports[`Testing indexing resourceType 'Library' 13`] = `
+[
+  "Decision support logic for improving outcomes for exclusive breastmilk feeding of newborns",
+]
+`;
+
+exports[`Testing indexing resourceType 'Library' 14`] = `
+[
+  "ExclusiveBreastfeedingCDSLogic",
+]
+`;
+
+exports[`Testing indexing resourceType 'Library' 15`] = `[]`;
+
+exports[`Testing indexing resourceType 'Library' 16`] = `
+[
+  "Exclusive Breastfeeding CDS Logic",
+]
+`;
+
+exports[`Testing indexing resourceType 'Library' 17`] = `
+[
+  "Quality measure logic for measuring outcomes for exclusive breastmilk feeding of newborns",
+]
+`;
+
+exports[`Testing indexing resourceType 'Library' 18`] = `
+[
+  "ExclusiveBreastfeedingCQMLogic",
+]
+`;
+
+exports[`Testing indexing resourceType 'Library' 19`] = `[]`;
+
+exports[`Testing indexing resourceType 'Library' 20`] = `
+[
+  "Exclusive Breastfeeding CQM Logic",
+]
+`;
+
+exports[`Testing indexing resourceType 'List' 1`] = `[]`;
+
+exports[`Testing indexing resourceType 'List' 2`] = `
+[
+  "Current Allergy List",
+]
+`;
+
+exports[`Testing indexing resourceType 'List' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'List' 4`] = `[]`;
+
+exports[`Testing indexing resourceType 'List' 5`] = `[]`;
+
+exports[`Testing indexing resourceType 'List' 6`] = `[]`;
+
+exports[`Testing indexing resourceType 'List' 7`] = `
+[
+  "Both parents, both brothers and both children (twin) are still alive.",
+]
+`;
+
+exports[`Testing indexing resourceType 'List' 8`] = `[]`;
+
+exports[`Testing indexing resourceType 'List' 9`] = `[]`;
+
+exports[`Testing indexing resourceType 'List' 10`] = `[]`;
+
+exports[`Testing indexing resourceType 'Location' 1`] = `
+[
+  {
+    "city": "Den Burg",
+    "country": "NLD",
+    "line": [
+      "Galapagosweg 91, Building A",
+    ],
+    "postalCode": "9105 PZ",
+    "use": "work",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Location' 2`] = `
+[
+  "Den Burg",
+]
+`;
+
+exports[`Testing indexing resourceType 'Location' 3`] = `
+[
+  "NLD",
+]
+`;
+
+exports[`Testing indexing resourceType 'Location' 4`] = `
+[
+  "9105 PZ",
+]
+`;
+
+exports[`Testing indexing resourceType 'Location' 5`] = `[]`;
+
+exports[`Testing indexing resourceType 'Location' 6`] = `
+[
+  "South Wing, second floor",
+  "BU MC, SW, F2",
+  "Burgers University Medical Center, South Wing, second floor",
+]
+`;
+
+exports[`Testing indexing resourceType 'Location' 7`] = `[]`;
+
+exports[`Testing indexing resourceType 'Location' 8`] = `[]`;
+
+exports[`Testing indexing resourceType 'Location' 9`] = `[]`;
+
+exports[`Testing indexing resourceType 'Location' 10`] = `[]`;
+
+exports[`Testing indexing resourceType 'Location' 11`] = `[]`;
+
+exports[`Testing indexing resourceType 'Location' 12`] = `
+[
+  "USSS Enterprise-D",
+]
+`;
+
+exports[`Testing indexing resourceType 'Location' 13`] = `[]`;
+
+exports[`Testing indexing resourceType 'Location' 14`] = `[]`;
+
+exports[`Testing indexing resourceType 'Location' 15`] = `[]`;
+
+exports[`Testing indexing resourceType 'Location' 16`] = `[]`;
+
+exports[`Testing indexing resourceType 'Location' 17`] = `[]`;
+
+exports[`Testing indexing resourceType 'Location' 18`] = `
+[
+  "USSS Enterprise-D Sickbay",
+]
+`;
+
+exports[`Testing indexing resourceType 'Location' 19`] = `[]`;
+
+exports[`Testing indexing resourceType 'Location' 20`] = `[]`;
+
+exports[`Testing indexing resourceType 'Location' 21`] = `[]`;
+
+exports[`Testing indexing resourceType 'Location' 22`] = `[]`;
+
+exports[`Testing indexing resourceType 'Location' 23`] = `[]`;
+
+exports[`Testing indexing resourceType 'Location' 24`] = `
+[
+  "BUMC Ambulance",
+]
+`;
+
+exports[`Testing indexing resourceType 'Location' 25`] = `
+[
+  {
+    "city": "Ann Arbor",
+    "country": "USA",
+    "line": [
+      "3300 Washtenaw Avenue, Suite 227",
+    ],
+    "postalCode": "48104",
+    "state": "MI",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Location' 26`] = `
+[
+  "Ann Arbor",
+]
+`;
+
+exports[`Testing indexing resourceType 'Location' 27`] = `
+[
+  "USA",
+]
+`;
+
+exports[`Testing indexing resourceType 'Location' 28`] = `
+[
+  "48104",
+]
+`;
+
+exports[`Testing indexing resourceType 'Location' 29`] = `
+[
+  "MI",
+]
+`;
+
+exports[`Testing indexing resourceType 'Location' 30`] = `
+[
+  "Health Level Seven International",
+]
+`;
+
+exports[`Testing indexing resourceType 'Measure' 1`] = `
+[
+  "Percentage of children 3-18 years of age who were diagnosed with pharyngitis, ordered an antibiotic and received a group A streptococcus (strep) test for the episode.",
+]
+`;
+
+exports[`Testing indexing resourceType 'Measure' 2`] = `
+[
+  "CMS146",
+]
+`;
+
+exports[`Testing indexing resourceType 'Measure' 3`] = `
+[
+  "National Committee for Quality Assurance",
+]
+`;
+
+exports[`Testing indexing resourceType 'Measure' 4`] = `
+[
+  "Appropriate Testing for Children with Pharyngitis",
+]
+`;
+
+exports[`Testing indexing resourceType 'Measure' 5`] = `
+[
+  "Screening for Alcohol Misuse",
+]
+`;
+
+exports[`Testing indexing resourceType 'Measure' 6`] = `
+[
+  "ScreeningForAlcoholMisuse",
+]
+`;
+
+exports[`Testing indexing resourceType 'Measure' 7`] = `[]`;
+
+exports[`Testing indexing resourceType 'Measure' 8`] = `
+[
+  "Screening for Alcohol Misuse",
+]
+`;
+
+exports[`Testing indexing resourceType 'Measure' 9`] = `
+[
+  "Screening for Depression",
+]
+`;
+
+exports[`Testing indexing resourceType 'Measure' 10`] = `
+[
+  "ScreeningForDepression",
+]
+`;
+
+exports[`Testing indexing resourceType 'Measure' 11`] = `[]`;
+
+exports[`Testing indexing resourceType 'Measure' 12`] = `
+[
+  "Screening for Depression",
+]
+`;
+
+exports[`Testing indexing resourceType 'Measure' 13`] = `
+[
+  "Behavioral Assessment Composite Measure",
+]
+`;
+
+exports[`Testing indexing resourceType 'Measure' 14`] = `
+[
+  "BehavioralAssessmentCompositeMeasure",
+]
+`;
+
+exports[`Testing indexing resourceType 'Measure' 15`] = `[]`;
+
+exports[`Testing indexing resourceType 'Measure' 16`] = `
+[
+  "Behavioral Assessment Composite Measure",
+]
+`;
+
+exports[`Testing indexing resourceType 'Measure' 17`] = `
+[
+  "Exclusive breastfeeding measure of outcomes for exclusive breastmilk feeding of newborns.",
+]
+`;
+
+exports[`Testing indexing resourceType 'Measure' 18`] = `
+[
+  "ExclusiveBreastfeedingMeasure",
+]
+`;
+
+exports[`Testing indexing resourceType 'Measure' 19`] = `[]`;
+
+exports[`Testing indexing resourceType 'Measure' 20`] = `
+[
+  "Exclusive Breastfeeding Measure",
+]
+`;
+
+exports[`Testing indexing resourceType 'MessageDefinition' 1`] = `
+[
+  "Message definition base example",
+]
+`;
+
+exports[`Testing indexing resourceType 'MessageDefinition' 2`] = `
+[
+  "EXAMPLE",
+]
+`;
+
+exports[`Testing indexing resourceType 'MessageDefinition' 3`] = `
+[
+  "Health Level Seven, Int'l",
+]
+`;
+
+exports[`Testing indexing resourceType 'MessageDefinition' 4`] = `
+[
+  "Message definition base example",
+]
+`;
+
+exports[`Testing indexing resourceType 'MessageDefinition' 5`] = `
+[
+  "Notification of two patient records that represent the same individual that require an established linkage.",
+]
+`;
+
+exports[`Testing indexing resourceType 'MessageDefinition' 6`] = `
+[
+  "PATIENTLINKNOTIFICATION",
+]
+`;
+
+exports[`Testing indexing resourceType 'MessageDefinition' 7`] = `
+[
+  "Health Level Seven, Int'l",
+]
+`;
+
+exports[`Testing indexing resourceType 'MessageDefinition' 8`] = `
+[
+  "Link Patients Notification",
+]
+`;
+
+exports[`Testing indexing resourceType 'MessageDefinition' 9`] = `
+[
+  "Optional response to a patient link notification.",
+]
+`;
+
+exports[`Testing indexing resourceType 'MessageDefinition' 10`] = `
+[
+  "PATIENTLINKRESPONSE",
+]
+`;
+
+exports[`Testing indexing resourceType 'MessageDefinition' 11`] = `
+[
+  "Health Level Seven, Int'l",
+]
+`;
+
+exports[`Testing indexing resourceType 'MessageDefinition' 12`] = `
+[
+  "Link Patients Response",
+]
+`;
+
+exports[`Testing indexing resourceType 'MessageHeader' 1`] = `[]`;
+
+exports[`Testing indexing resourceType 'MessageHeader' 2`] = `[]`;
+
+exports[`Testing indexing resourceType 'MessageHeader' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'MessageHeader' 4`] = `[]`;
+
+exports[`Testing indexing resourceType 'MessageHeader' 5`] = `
+[
+  "Acme Message Gateway",
+]
+`;
+
+exports[`Testing indexing resourceType 'MessageHeader' 6`] = `
+[
+  "Acme Central Patient Registry",
+]
+`;
+
+exports[`Testing indexing resourceType 'MessageHeader' 7`] = `[]`;
+
+exports[`Testing indexing resourceType 'MessageHeader' 8`] = `[]`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 1`] = `
+[
+  "Australian HI Identifier as established by relevant regulations etc.",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 2`] = `
+[
+  "AustalianHealthcareIdentifierIndividual",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 3`] = `
+[
+  "HL7 Australia on behalf of NEHTA",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 4`] = `
+[
+  "HL7 Australia FHIR Team",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 5`] = `
+[
+  "HI Service Operator / NEHTA",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 6`] = `
+[
+  "1.2.36.1.2001.1003.0",
+  "http://ns.electronichealth.net.au/id/hi/ihi/1.0",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 7`] = `
+[
+  "This is an example code system that illustrates usage of the metadata resource elements introduced in R5",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 8`] = `
+[
+  "ExampleMetadata",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 9`] = `
+[
+  "FHIR (Example)",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 10`] = `
+[
+  "FHIR project team",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 11`] = `[]`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 12`] = `
+[
+  "http://hl7.org/fhir/CodeSystem/example-metadata-2",
+  "2.16.840.1.113883.4.642.4.1829",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 13`] = `
+[
+  "This is an example code system that illustrates usage of the metadata resource elements introduced in R5",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 14`] = `
+[
+  "ExampleMetadata",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 15`] = `
+[
+  "FHIR (Example)",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 16`] = `
+[
+  "FHIR project team",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 17`] = `[]`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 18`] = `
+[
+  "http://hl7.org/fhir/CodeSystem/example-metadata",
+  "2.16.840.1.113883.4.642.4.1824",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 19`] = `
+[
+  "This is an example code system that includes all the ACME codes for serum/plasma cholesterol from v2.36.",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 20`] = `
+[
+  "ACMECholCodesBlood",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 21`] = `
+[
+  "Acme Co",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 22`] = `
+[
+  "FHIR project team",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 23`] = `[]`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 24`] = `
+[
+  "http://hl7.org/fhir/CodeSystem/example",
+  "2.16.840.1.113883.4.642.4.1827",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 25`] = `
+[
+  "Codes identifying the lifecycle stage of a product.",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 26`] = `
+[
+  "ProductStatus",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 27`] = `
+[
+  "HL7 (FHIR Project)",
+]
+`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 28`] = `[]`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 29`] = `[]`;
+
+exports[`Testing indexing resourceType 'NamingSystem' 30`] = `
+[
+  "http://hl7.org/fhir/product-status",
+  "2.16.840.1.113883.4.642.4.903",
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 1`] = `[]`;
+
+exports[`Testing indexing resourceType 'Observation' 2`] = `[]`;
+
+exports[`Testing indexing resourceType 'Observation' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'Observation' 4`] = `[]`;
+
+exports[`Testing indexing resourceType 'Observation' 5`] = `[]`;
+
+exports[`Testing indexing resourceType 'OperationDefinition' 1`] = `
+[
+  "The apply operation applies a definition in a specific context",
+]
+`;
+
+exports[`Testing indexing resourceType 'OperationDefinition' 2`] = `
+[
+  "Apply",
+]
+`;
+
+exports[`Testing indexing resourceType 'OperationDefinition' 3`] = `
+[
+  "HL7 (FHIR Project)",
+]
+`;
+
+exports[`Testing indexing resourceType 'OperationDefinition' 4`] = `
+[
+  "Apply",
+]
+`;
+
+exports[`Testing indexing resourceType 'OperationDefinition' 5`] = `
+[
+  "The data-requirements operation aggregates and returns the parameters and data requirements for the activity definition and all its dependencies as a single module definition library",
+]
+`;
+
+exports[`Testing indexing resourceType 'OperationDefinition' 6`] = `
+[
+  "DataRequirements",
+]
+`;
+
+exports[`Testing indexing resourceType 'OperationDefinition' 7`] = `
+[
+  "HL7 (FHIR Project)",
+]
+`;
+
+exports[`Testing indexing resourceType 'OperationDefinition' 8`] = `
+[
+  "Data Requirements",
+]
+`;
+
+exports[`Testing indexing resourceType 'OperationDefinition' 9`] = `
+[
+  "Returns the most current version of the canonical resource with the specified url available on the server.  It optionally also allows filtering to only expose the most current version with a particular status or set of statuses.
+
+Note that 'current' is determined by comparing version values using the specified versionAlgorithm, NOT by looking at lastUpdated.",
+]
+`;
+
+exports[`Testing indexing resourceType 'OperationDefinition' 10`] = `
+[
+  "CurrentCanonical",
+]
+`;
+
+exports[`Testing indexing resourceType 'OperationDefinition' 11`] = `
+[
+  "HL7 (FHIR Project)",
+]
+`;
+
+exports[`Testing indexing resourceType 'OperationDefinition' 12`] = `
+[
+  "Fetch the current version of a canonical resource (based on canonical versioning)",
+]
+`;
+
+exports[`Testing indexing resourceType 'OperationDefinition' 13`] = `
+[
+  "This operation asks the server to check that it implements all the resources, interactions, search parameters, and operations that the client provides in its capability statement. The client provides both capability statements by reference, and must ensure that all the referenced resources are available to the conformance server",
+]
+`;
+
+exports[`Testing indexing resourceType 'OperationDefinition' 14`] = `
+[
+  "Conforms",
+]
+`;
+
+exports[`Testing indexing resourceType 'OperationDefinition' 15`] = `
+[
+  "HL7 (FHIR Project)",
+]
+`;
+
+exports[`Testing indexing resourceType 'OperationDefinition' 16`] = `
+[
+  "Test if a server implements a client's required operations",
+]
+`;
+
+exports[`Testing indexing resourceType 'OperationDefinition' 17`] = `
+[
+  "This operation asks the server to check that it implements all the resources, interactions, search parameters, and operations that the client provides in its capability statement. The client provides its capability statement inline, or by referring the server to the canonical URL of its capability statement",
+]
+`;
+
+exports[`Testing indexing resourceType 'OperationDefinition' 18`] = `
+[
+  "Implements",
+]
+`;
+
+exports[`Testing indexing resourceType 'OperationDefinition' 19`] = `
+[
+  "HL7 (FHIR Project)",
+]
+`;
+
+exports[`Testing indexing resourceType 'OperationDefinition' 20`] = `
+[
+  "Test if a server implements a client's required operations",
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 1`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 2`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 4`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 5`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 6`] = `
+[
+  "Gastroenterology",
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 7`] = `
+[
+  "Gastroenterology",
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 8`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 9`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 10`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 11`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 12`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 13`] = `
+[
+  "XYZ Insurance",
+  "ABC Insurance",
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 14`] = `
+[
+  "XYZ Insurance",
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 15`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 16`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 17`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 18`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 19`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 20`] = `
+[
+  "Michigan Health",
+  "Michigan State Department of Health",
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 21`] = `
+[
+  "Michigan Health",
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 22`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 23`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 24`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 25`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 26`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 27`] = `
+[
+  "Burgers University Medical Center",
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 28`] = `
+[
+  "Burgers University Medical Center",
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 29`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 30`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 31`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 32`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 33`] = `[]`;
+
+exports[`Testing indexing resourceType 'Organization' 34`] = `
+[
+  "Burgers UMC Cardiology unit",
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 35`] = `
+[
+  "Burgers UMC Cardiology unit",
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 1`] = `
+[
+  {
+    "line": [
+      "2222 Home Street",
+    ],
+    "use": "home",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 2`] = `[]`;
+
+exports[`Testing indexing resourceType 'Patient' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'Patient' 4`] = `[]`;
+
+exports[`Testing indexing resourceType 'Patient' 5`] = `[]`;
+
+exports[`Testing indexing resourceType 'Patient' 6`] = `
+[
+  "Everywoman",
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 7`] = `
+[
+  "Eve",
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 8`] = `
+[
+  {
+    "family": "Everywoman",
+    "given": [
+      "Eve",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 9`] = `
+[
+  {
+    "family": "Everywoman",
+    "given": [
+      "Eve",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 10`] = `
+[
+  {
+    "line": [
+      "2222 Home Street",
+    ],
+    "use": "home",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 11`] = `[]`;
+
+exports[`Testing indexing resourceType 'Patient' 12`] = `[]`;
+
+exports[`Testing indexing resourceType 'Patient' 13`] = `[]`;
+
+exports[`Testing indexing resourceType 'Patient' 14`] = `[]`;
+
+exports[`Testing indexing resourceType 'Patient' 15`] = `
+[
+  "Everyman",
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 16`] = `
+[
+  "Adam",
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 17`] = `
+[
+  {
+    "family": "Everyman",
+    "given": [
+      "Adam",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 18`] = `
+[
+  {
+    "family": "Everyman",
+    "given": [
+      "Adam",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 19`] = `
+[
+  {
+    "line": [
+      "2222 Home Street",
+    ],
+    "use": "home",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 20`] = `[]`;
+
+exports[`Testing indexing resourceType 'Patient' 21`] = `[]`;
+
+exports[`Testing indexing resourceType 'Patient' 22`] = `[]`;
+
+exports[`Testing indexing resourceType 'Patient' 23`] = `[]`;
+
+exports[`Testing indexing resourceType 'Patient' 24`] = `
+[
+  "Kidd",
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 25`] = `
+[
+  "Kari",
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 26`] = `
+[
+  {
+    "family": "Kidd",
+    "given": [
+      "Kari",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 27`] = `
+[
+  {
+    "family": "Kidd",
+    "given": [
+      "Kari",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 28`] = `
+[
+  {
+    "line": [
+      "6666 Home Street",
+    ],
+    "use": "home",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 29`] = `[]`;
+
+exports[`Testing indexing resourceType 'Patient' 30`] = `[]`;
+
+exports[`Testing indexing resourceType 'Patient' 31`] = `[]`;
+
+exports[`Testing indexing resourceType 'Patient' 32`] = `[]`;
+
+exports[`Testing indexing resourceType 'Patient' 33`] = `
+[
+  "Nuclear",
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 34`] = `
+[
+  "Nancy",
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 35`] = `
+[
+  {
+    "family": "Nuclear",
+    "given": [
+      "Nancy",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 36`] = `
+[
+  {
+    "family": "Nuclear",
+    "given": [
+      "Nancy",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 37`] = `
+[
+  {
+    "line": [
+      "6666 Home Street",
+    ],
+    "use": "home",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 38`] = `[]`;
+
+exports[`Testing indexing resourceType 'Patient' 39`] = `[]`;
+
+exports[`Testing indexing resourceType 'Patient' 40`] = `[]`;
+
+exports[`Testing indexing resourceType 'Patient' 41`] = `[]`;
+
+exports[`Testing indexing resourceType 'Patient' 42`] = `
+[
+  "Nuclear",
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 43`] = `
+[
+  "Neville",
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 44`] = `
+[
+  {
+    "family": "Nuclear",
+    "given": [
+      "Neville",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Patient' 45`] = `
+[
+  {
+    "family": "Nuclear",
+    "given": [
+      "Neville",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'PaymentReconciliation' 1`] = `
+[
+  "2014 August mid-month settlement.",
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 1`] = `[]`;
+
+exports[`Testing indexing resourceType 'Person' 2`] = `[]`;
+
+exports[`Testing indexing resourceType 'Person' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'Person' 4`] = `[]`;
+
+exports[`Testing indexing resourceType 'Person' 5`] = `[]`;
+
+exports[`Testing indexing resourceType 'Person' 6`] = `
+[
+  {
+    "text": "Ariadne Bor-Jansma",
+    "use": "usual",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 7`] = `
+[
+  {
+    "text": "Ariadne Bor-Jansma",
+    "use": "usual",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 8`] = `[]`;
+
+exports[`Testing indexing resourceType 'Person' 9`] = `[]`;
+
+exports[`Testing indexing resourceType 'Person' 10`] = `[]`;
+
+exports[`Testing indexing resourceType 'Person' 11`] = `[]`;
+
+exports[`Testing indexing resourceType 'Person' 12`] = `[]`;
+
+exports[`Testing indexing resourceType 'Person' 13`] = `
+[
+  {
+    "family": "Notsowell",
+    "given": [
+      "Sandy",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 14`] = `
+[
+  {
+    "family": "Notsowell",
+    "given": [
+      "Sandy",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 15`] = `
+[
+  {
+    "city": "PleasantVille",
+    "line": [
+      "534 Erewhon St",
+    ],
+    "postalCode": "3999",
+    "state": "Vic",
+    "use": "home",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 16`] = `
+[
+  "PleasantVille",
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 17`] = `[]`;
+
+exports[`Testing indexing resourceType 'Person' 18`] = `
+[
+  "3999",
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 19`] = `
+[
+  "Vic",
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 20`] = `
+[
+  {
+    "family": "Chalmers",
+    "given": [
+      "Peter",
+      "James",
+    ],
+    "use": "official",
+  },
+  {
+    "given": [
+      "Jim",
+    ],
+    "use": "usual",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 21`] = `
+[
+  {
+    "family": "Chalmers",
+    "given": [
+      "Peter",
+      "James",
+    ],
+    "use": "official",
+  },
+  {
+    "given": [
+      "Jim",
+    ],
+    "use": "usual",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 22`] = `
+[
+  {
+    "city": "PleasantVille",
+    "line": [
+      "534 Erewhon St",
+    ],
+    "postalCode": "3999",
+    "state": "Vic",
+    "use": "home",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 23`] = `
+[
+  "PleasantVille",
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 24`] = `[]`;
+
+exports[`Testing indexing resourceType 'Person' 25`] = `
+[
+  "3999",
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 26`] = `
+[
+  "Vic",
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 27`] = `
+[
+  {
+    "family": "Chalmers",
+    "given": [
+      "Peter",
+      "James",
+    ],
+    "use": "official",
+  },
+  {
+    "given": [
+      "Jim",
+    ],
+    "use": "usual",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 28`] = `
+[
+  {
+    "family": "Chalmers",
+    "given": [
+      "Peter",
+      "James",
+    ],
+    "use": "official",
+  },
+  {
+    "given": [
+      "Jim",
+    ],
+    "use": "usual",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 29`] = `
+[
+  {
+    "city": "Sandusky",
+    "country": "USA",
+    "line": [
+      "2086 College St",
+    ],
+    "postalCode": "44870",
+    "state": "OH",
+    "use": "home",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 30`] = `
+[
+  "Sandusky",
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 31`] = `
+[
+  "USA",
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 32`] = `
+[
+  "44870",
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 33`] = `
+[
+  "OH",
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 34`] = `
+[
+  {
+    "family": "Everywoman",
+    "given": [
+      "Eve",
+      "Marie",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Person' 35`] = `
+[
+  {
+    "family": "Everywoman",
+    "given": [
+      "Eve",
+      "Marie",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'PlanDefinition' 1`] = `
+[
+  "Chlamydia Screening CDS Example Using Common",
+]
+`;
+
+exports[`Testing indexing resourceType 'PlanDefinition' 2`] = `
+[
+  "ChlamydiaScreeningCDSExampleUsingCommon",
+]
+`;
+
+exports[`Testing indexing resourceType 'PlanDefinition' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'PlanDefinition' 4`] = `
+[
+  "Chlamydia Screening CDS Example Using Common",
+]
+`;
+
+exports[`Testing indexing resourceType 'PlanDefinition' 5`] = `
+[
+  "The Cardiology chest pain (CP) and coronary artery disease (CAD) group of KNARTs are     intended to assist primary care providers in the management of adult patients with stable     chest pain (with or without known CAD); aid in determining when a cardiology consultation is     appropriate; provide guidance for initial noninvasive diagnostic orders (stress testing) and     provide a structured documentation template for the process. Stable patients with cardiac     chest pain require risk stratification, office-based workup, initiation of disease-specific     medications, and subspecialty referral to a cardiologist.",
+]
+`;
+
+exports[`Testing indexing resourceType 'PlanDefinition' 6`] = `
+[
+  "ChestPainCoronaryArteryDiseaseOrderSetKNART",
+]
+`;
+
+exports[`Testing indexing resourceType 'PlanDefinition' 7`] = `
+[
+  "Department of Veterans Affairs",
+]
+`;
+
+exports[`Testing indexing resourceType 'PlanDefinition' 8`] = `
+[
+  "Chest Pain (CP) - Coronary Artery Disease (CAD) Order Set KNART",
+]
+`;
+
+exports[`Testing indexing resourceType 'PlanDefinition' 9`] = `
+[
+  "Gemcitabine/CARBOplatin",
+]
+`;
+
+exports[`Testing indexing resourceType 'PlanDefinition' 10`] = `
+[
+  "GemcitabineCARBOplatin",
+]
+`;
+
+exports[`Testing indexing resourceType 'PlanDefinition' 11`] = `
+[
+  "National Comprehensive Cancer Network, Inc.",
+]
+`;
+
+exports[`Testing indexing resourceType 'PlanDefinition' 12`] = `
+[
+  "Gemcitabine/CARBOplatin",
+]
+`;
+
+exports[`Testing indexing resourceType 'PlanDefinition' 13`] = `
+[
+  "Orders to be applied to a patient characterized as low suicide risk.",
+]
+`;
+
+exports[`Testing indexing resourceType 'PlanDefinition' 14`] = `
+[
+  "LowSuicideRiskOrderSet",
+]
+`;
+
+exports[`Testing indexing resourceType 'PlanDefinition' 15`] = `
+[
+  "Motive Medical Intelligence",
+]
+`;
+
+exports[`Testing indexing resourceType 'PlanDefinition' 16`] = `
+[
+  "Low Suicide Risk Order Set",
+]
+`;
+
+exports[`Testing indexing resourceType 'PlanDefinition' 17`] = `
+[
+  "Exclusive breastfeeding intervention intended to improve outcomes for exclusive breastmilk feeding of newborns by ensuring that an appropriate breastfeeding readiness assessment order is created if necessary.",
+]
+`;
+
+exports[`Testing indexing resourceType 'PlanDefinition' 18`] = `
+[
+  "ExclusiveBreastfeedingIntervention01",
+]
+`;
+
+exports[`Testing indexing resourceType 'PlanDefinition' 19`] = `[]`;
+
+exports[`Testing indexing resourceType 'PlanDefinition' 20`] = `
+[
+  "Exclusive Breastfeeding Intervention-01",
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 1`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 2`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 4`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 5`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 6`] = `
+[
+  "Beverly",
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 7`] = `
+[
+  "Crusher",
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 8`] = `
+[
+  {
+    "family": "Beverly",
+    "given": [
+      "Crusher",
+    ],
+    "prefix": [
+      "Dr",
+    ],
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 9`] = `
+[
+  {
+    "family": "Beverly",
+    "given": [
+      "Crusher",
+    ],
+    "prefix": [
+      "Dr",
+    ],
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 10`] = `
+[
+  {
+    "line": [
+      "1002 Healthcare Drive",
+    ],
+    "use": "home",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 11`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 12`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 13`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 14`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 15`] = `
+[
+  "Seven",
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 16`] = `
+[
+  "Henry",
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 17`] = `
+[
+  {
+    "family": "Seven",
+    "given": [
+      "Henry",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 18`] = `
+[
+  {
+    "family": "Seven",
+    "given": [
+      "Henry",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 19`] = `
+[
+  {
+    "line": [
+      "1020 Healthcare Drive",
+    ],
+    "use": "home",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 20`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 21`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 22`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 23`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 24`] = `
+[
+  "Assigned",
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 25`] = `
+[
+  "Amanda",
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 26`] = `
+[
+  {
+    "family": "Assigned",
+    "given": [
+      "Amanda",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 27`] = `
+[
+  {
+    "family": "Assigned",
+    "given": [
+      "Amanda",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 28`] = `
+[
+  {
+    "line": [
+      "1003 Healthcare Drive",
+    ],
+    "use": "home",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 29`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 30`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 31`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 32`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 33`] = `
+[
+  "Hippocrates",
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 34`] = `
+[
+  "Harold",
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 35`] = `
+[
+  {
+    "family": "Hippocrates",
+    "given": [
+      "Harold",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 36`] = `
+[
+  {
+    "family": "Hippocrates",
+    "given": [
+      "Harold",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 37`] = `
+[
+  {
+    "line": [
+      "1004 Healthcare Drive",
+    ],
+    "use": "home",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 38`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 39`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 40`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 41`] = `[]`;
+
+exports[`Testing indexing resourceType 'Practitioner' 42`] = `
+[
+  "Primary",
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 43`] = `
+[
+  "Patricia",
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 44`] = `
+[
+  {
+    "family": "Primary",
+    "given": [
+      "Patricia",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Practitioner' 45`] = `
+[
+  {
+    "family": "Primary",
+    "given": [
+      "Patricia",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'Questionnaire' 1`] = `
+[
+  "Cancer Quality Forum Questionnaire 2012",
+]
+`;
+
+exports[`Testing indexing resourceType 'Questionnaire' 2`] = `
+[
+  "CancerQualityForumQuestionnaire2012",
+]
+`;
+
+exports[`Testing indexing resourceType 'Questionnaire' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'Questionnaire' 4`] = `
+[
+  "Cancer Quality Forum Questionnaire 2012",
+]
+`;
+
+exports[`Testing indexing resourceType 'Questionnaire' 5`] = `[]`;
+
+exports[`Testing indexing resourceType 'Questionnaire' 6`] = `[]`;
+
+exports[`Testing indexing resourceType 'Questionnaire' 7`] = `
+[
+  "Health Level Seven International (Patient Administration)",
+]
+`;
+
+exports[`Testing indexing resourceType 'Questionnaire' 8`] = `[]`;
+
+exports[`Testing indexing resourceType 'Questionnaire' 9`] = `[]`;
+
+exports[`Testing indexing resourceType 'Questionnaire' 10`] = `[]`;
+
+exports[`Testing indexing resourceType 'Questionnaire' 11`] = `
+[
+  "Health Level Seven International (Clinical Decision Support)",
+]
+`;
+
+exports[`Testing indexing resourceType 'Questionnaire' 12`] = `[]`;
+
+exports[`Testing indexing resourceType 'Questionnaire' 13`] = `[]`;
+
+exports[`Testing indexing resourceType 'Questionnaire' 14`] = `[]`;
+
+exports[`Testing indexing resourceType 'Questionnaire' 15`] = `
+[
+  "Health Level Seven International (FHIR Infrastructure)",
+]
+`;
+
+exports[`Testing indexing resourceType 'Questionnaire' 16`] = `[]`;
+
+exports[`Testing indexing resourceType 'Questionnaire' 17`] = `[]`;
+
+exports[`Testing indexing resourceType 'Questionnaire' 18`] = `[]`;
+
+exports[`Testing indexing resourceType 'Questionnaire' 19`] = `
+[
+  "HL7",
+]
+`;
+
+exports[`Testing indexing resourceType 'Questionnaire' 20`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 1`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 2`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 3`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 4`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 5`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 6`] = `
+[
+  {
+    "family": "Doe",
+    "given": [
+      "John",
+      "Father",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 7`] = `
+[
+  {
+    "family": "Doe",
+    "given": [
+      "John",
+      "Father",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 8`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 9`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 10`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 11`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 12`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 13`] = `
+[
+  {
+    "family": "Doe",
+    "given": [
+      "Jane",
+      "Mother",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 14`] = `
+[
+  {
+    "family": "Doe",
+    "given": [
+      "Jane",
+      "Mother",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 15`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 16`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 17`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 18`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 19`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 20`] = `
+[
+  {
+    "family": "Abels",
+    "given": [
+      "Sarah",
+    ],
+    "use": "usual",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 21`] = `
+[
+  {
+    "family": "Abels",
+    "given": [
+      "Sarah",
+    ],
+    "use": "usual",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 22`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 23`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 24`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 25`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 26`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 27`] = `
+[
+  {
+    "text": "Ariadne Bor-Jansma",
+    "use": "usual",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 28`] = `
+[
+  {
+    "text": "Ariadne Bor-Jansma",
+    "use": "usual",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 29`] = `
+[
+  {
+    "line": [
+      "2222 Home Street",
+    ],
+    "use": "home",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 30`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 31`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 32`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 33`] = `[]`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 34`] = `
+[
+  {
+    "family": "Everywoman",
+    "given": [
+      "Eve",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'RelatedPerson' 35`] = `
+[
+  {
+    "family": "Everywoman",
+    "given": [
+      "Eve",
+    ],
+    "use": "official",
+  },
+]
+`;
+
+exports[`Testing indexing resourceType 'ResearchStudy' 1`] = `
+[
+  "A Safety, Tolerability, and Pharmacokinetics Study of AP303 in Healthy Subjects",
+]
+`;
+
+exports[`Testing indexing resourceType 'SearchParameter' 1`] = `
+[
+  "Search on the narrative of the resource",
+]
+`;
+
+exports[`Testing indexing resourceType 'SearchParameter' 2`] = `
+[
+  "_text",
+]
+`;
+
+exports[`Testing indexing resourceType 'SearchParameter' 3`] = `
+[
+  "Health Level Seven International (FHIR Infrastructure)",
+]
+`;
+
+exports[`Testing indexing resourceType 'SearchParameter' 4`] = `
+[
+  "Search on the entire content of the resource",
+]
+`;
+
+exports[`Testing indexing resourceType 'SearchParameter' 5`] = `
+[
+  "_content",
+]
+`;
+
+exports[`Testing indexing resourceType 'SearchParameter' 6`] = `
+[
+  "Health Level Seven International (FHIR Infrastructure)",
+]
+`;
+
+exports[`Testing indexing resourceType 'SearchParameter' 7`] = `
+[
+  "Logical id of this artifact",
+]
+`;
+
+exports[`Testing indexing resourceType 'SearchParameter' 8`] = `
+[
+  "_id",
+]
+`;
+
+exports[`Testing indexing resourceType 'SearchParameter' 9`] = `
+[
+  "Health Level Seven International (FHIR Infrastructure)",
+]
+`;
+
+exports[`Testing indexing resourceType 'SearchParameter' 10`] = `
+[
+  "When the resource version last changed",
+]
+`;
+
+exports[`Testing indexing resourceType 'SearchParameter' 11`] = `
+[
+  "_lastUpdated",
+]
+`;
+
+exports[`Testing indexing resourceType 'SearchParameter' 12`] = `
+[
+  "Health Level Seven International (FHIR Infrastructure)",
+]
+`;
+
+exports[`Testing indexing resourceType 'SearchParameter' 13`] = `
+[
+  "Profiles this resource claims to conform to",
+]
+`;
+
+exports[`Testing indexing resourceType 'SearchParameter' 14`] = `
+[
+  "_profile",
+]
+`;
+
+exports[`Testing indexing resourceType 'SearchParameter' 15`] = `
+[
+  "Health Level Seven International (FHIR Infrastructure)",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureDefinition' 1`] = `
+[
+  "A financial tool for tracking value accrued for a particular purpose.  In the healthcare field, used to track charges for a patient, cost centers, etc.",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureDefinition' 2`] = `
+[
+  "Account",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureDefinition' 3`] = `
+[
+  "Health Level Seven International (Patient Administration)",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureDefinition' 4`] = `[]`;
+
+exports[`Testing indexing resourceType 'StructureDefinition' 5`] = `
+[
+  "This resource allows for the definition of some activity to be performed, independent of a particular patient, practitioner, or other performance context.",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureDefinition' 6`] = `
+[
+  "ActivityDefinition",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureDefinition' 7`] = `
+[
+  "Health Level Seven International (Clinical Decision Support)",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureDefinition' 8`] = `[]`;
+
+exports[`Testing indexing resourceType 'StructureDefinition' 9`] = `
+[
+  "The ActorDefinition resource is used to describe an actor - a human or an application that plays a role in data exchange, and that may have obligations associated with the role the actor plays.",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureDefinition' 10`] = `
+[
+  "ActorDefinition",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureDefinition' 11`] = `
+[
+  "Health Level Seven International (FHIR Infrastructure)",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureDefinition' 12`] = `[]`;
+
+exports[`Testing indexing resourceType 'StructureDefinition' 13`] = `
+[
+  "Enforces an enumerated group, rather than a definitional group",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureDefinition' 14`] = `
+[
+  "ActualGroup",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureDefinition' 15`] = `
+[
+  "HL7",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureDefinition' 16`] = `
+[
+  "Actual  Group",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureDefinition' 17`] = `
+[
+  "Base StructureDefinition for Address Type: An address expressed using postal conventions (as opposed to GPS or other location definition formats).  This data type may be used to convey addresses for use in delivering mail as well as for visiting locations which might not be valid for mail delivery.  There are a variety of postal address formats defined around the world.",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureDefinition' 18`] = `
+[
+  "Address",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureDefinition' 19`] = `
+[
+  "HL7 FHIR Standard",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureDefinition' 20`] = `[]`;
+
+exports[`Testing indexing resourceType 'StructureMap' 1`] = `
+[
+  "Example Structure Map",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureMap' 2`] = `
+[
+  "ExampleMap",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureMap' 3`] = `
+[
+  "HL7 FHIR Standard",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureMap' 4`] = `
+[
+  "Example Map",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureMap' 5`] = `
+[
+  "Transform from an ActivityDefinition to a SupplyRequest",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureMap' 6`] = `
+[
+  "TransformFromAnActivityDefinitionToASupplyRequest",
+]
+`;
+
+exports[`Testing indexing resourceType 'StructureMap' 7`] = `[]`;
+
+exports[`Testing indexing resourceType 'StructureMap' 8`] = `
+[
+  "Transform from an ActivityDefinition to a SupplyRequest",
+]
+`;
+
+exports[`Testing indexing resourceType 'Subscription' 1`] = `[]`;
+
+exports[`Testing indexing resourceType 'Subscription' 2`] = `[]`;
+
+exports[`Testing indexing resourceType 'TerminologyCapabilities' 1`] = `
+[
+  "This is the FHIR capability statement for the main EHR at ACME for the private interface - it does not describe the public interface",
+]
+`;
+
+exports[`Testing indexing resourceType 'TerminologyCapabilities' 2`] = `
+[
+  "ACMEEHR",
+]
+`;
+
+exports[`Testing indexing resourceType 'TerminologyCapabilities' 3`] = `
+[
+  "ACME Corporation",
+]
+`;
+
+exports[`Testing indexing resourceType 'TerminologyCapabilities' 4`] = `
+[
+  "ACME EHR capability statement",
+]
+`;
+
+exports[`Testing indexing resourceType 'TerminologyCapabilities' 5`] = `
+[
+  "ACME Terminology Service — Terminology Capabilities",
+]
+`;
+
+exports[`Testing indexing resourceType 'TerminologyCapabilities' 6`] = `
+[
+  "ACMETerminologyServiceTerminologyCapabilities",
+]
+`;
+
+exports[`Testing indexing resourceType 'TerminologyCapabilities' 7`] = `[]`;
+
+exports[`Testing indexing resourceType 'TerminologyCapabilities' 8`] = `
+[
+  "ACME Terminology Service — Terminology Capabilities",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestReport' 1`] = `
+[
+  "HL7 Execution Engine",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 1`] = `
+[
+  "TestScript example resource with setup to delete if present and create a new instance of a Patient then update that Patient to create a minimum history; and single test definition to get the history of that Patient with various asserts.",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 2`] = `
+[
+  "TestScriptExampleHistory",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 3`] = `
+[
+  "HL7",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 4`] = `
+[
+  "Patient Update, Delete and History (Instance) Operations",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 5`] = `
+[
+  "TestScript Example History",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 6`] = `
+[
+  "TestScript example resource showing use of origin and destination for multisystem support. The single origin will execute a Patient read against the two destination systems using user defined dynamic variables. The test engine will wait at each operation action with a defined origin and destination for the origin test system to send the expected FHIR operation to the destination test system. Once the expected request and response is observed, the test engine will continue with the test execution.",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 7`] = `
+[
+  "Testscriptexamplemultisystem",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 8`] = `
+[
+  "HL7",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 9`] = `
+[
+  "Patient Read Operation",
+  "Patient Read Operation",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 10`] = `
+[
+  "Multisystem Test Script",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 11`] = `
+[
+  "TestScript example resource with ported Sprinkler basic read tests R001, R002, R003, R004. The read tests will utilize user defined dynamic variables that will hold the Patient resource id values.",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 12`] = `
+[
+  "TestScript Example Read Test",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 13`] = `
+[
+  "HL7",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 14`] = `
+[
+  "Patient Read Operation",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 15`] = `[]`;
+
+exports[`Testing indexing resourceType 'TestScript' 16`] = `
+[
+  "TestScript example resource with simple Patient search test. The read tests will utilize user defined dynamic variables that will hold the Patient search parameter values.",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 17`] = `
+[
+  "TestScriptExampleSearch",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 18`] = `
+[
+  "HL7",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 19`] = `
+[
+  "Patient Search Operation",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 20`] = `
+[
+  "TestScript Example Search",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 21`] = `
+[
+  "TestScript example resource with setup to delete if present and create a new instance of a Patient; and single test definition to update that Patient with various asserts.",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 22`] = `
+[
+  "TestScriptExampleUpdate",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 23`] = `
+[
+  "HL7",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 24`] = `
+[
+  "Patient Update and Delete Operations",
+]
+`;
+
+exports[`Testing indexing resourceType 'TestScript' 25`] = `
+[
+  "TestScript Example Update",
+]
+`;
+
+exports[`Testing indexing resourceType 'ValueSet' 1`] = `
+[
+  "All published FHIR Versions.",
+]
+`;
+
+exports[`Testing indexing resourceType 'ValueSet' 2`] = `
+[
+  "FHIRVersion",
+]
+`;
+
+exports[`Testing indexing resourceType 'ValueSet' 3`] = `
+[
+  "HL7 (FHIR Project)",
+]
+`;
+
+exports[`Testing indexing resourceType 'ValueSet' 4`] = `
+[
+  "FHIRVersion",
+]
+`;
+
+exports[`Testing indexing resourceType 'ValueSet' 5`] = `
+[
+  "Indicates who is expected to pay a part of the account balance.",
+]
+`;
+
+exports[`Testing indexing resourceType 'ValueSet' 6`] = `
+[
+  "AccountAggregate",
+]
+`;
+
+exports[`Testing indexing resourceType 'ValueSet' 7`] = `
+[
+  "HL7 (FHIR Project)",
+]
+`;
+
+exports[`Testing indexing resourceType 'ValueSet' 8`] = `
+[
+  "Account Aggregate",
+]
+`;
+
+exports[`Testing indexing resourceType 'ValueSet' 9`] = `
+[
+  "Indicates the account balance's age.",
+]
+`;
+
+exports[`Testing indexing resourceType 'ValueSet' 10`] = `
+[
+  "AccountBalanceTerm",
+]
+`;
+
+exports[`Testing indexing resourceType 'ValueSet' 11`] = `
+[
+  "HL7 (FHIR Project)",
+]
+`;
+
+exports[`Testing indexing resourceType 'ValueSet' 12`] = `
+[
+  "Account Balance Term",
+]
+`;
+
+exports[`Testing indexing resourceType 'ValueSet' 13`] = `
+[
+  "Indicates whether the account is available to be used for billing purposes.",
+]
+`;
+
+exports[`Testing indexing resourceType 'ValueSet' 14`] = `
+[
+  "AccountBillingStatus",
+]
+`;
+
+exports[`Testing indexing resourceType 'ValueSet' 15`] = `
+[
+  "HL7 (FHIR Project)",
+]
+`;
+
+exports[`Testing indexing resourceType 'ValueSet' 16`] = `
+[
+  "Example Account Billing Statuses",
+]
+`;
+
+exports[`Testing indexing resourceType 'ValueSet' 17`] = `
+[
+  "Relationship between accounts",
+]
+`;
+
+exports[`Testing indexing resourceType 'ValueSet' 18`] = `
+[
+  "AccountRelationship",
+]
+`;
+
+exports[`Testing indexing resourceType 'ValueSet' 19`] = `
+[
+  "HL7 (FHIR Project)",
+]
+`;
+
+exports[`Testing indexing resourceType 'ValueSet' 20`] = `
+[
+  "Account Relationship",
+]
+`;
