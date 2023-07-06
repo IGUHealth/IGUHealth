@@ -17,6 +17,7 @@
     "./r4/types": "./r4/types.d.ts"
   },
   "devDependencies": {
+    "@genfhi/cli": "workspace:^",
     "typescript": "5.1.3"
   }
 }
