@@ -2,7 +2,7 @@ import { Command } from "commander";
 import { writeFileSync, mkdirSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { loadArtifacts } from "@genfhi/artifacts";
+import { loadArtifacts, generateIndexFile } from "@genfhi/artifacts";
 
 import { generateSets, generateTypes } from "@genfhi/codegen";
 
@@ -31,6 +31,21 @@ program
 
     writeFileSync(path.join(options.output, "types.d.ts"), generatedTypes);
     writeFileSync(path.join(options.output, "sets.ts"), generatedSets);
+  });
+
+program
+  .command("generate-index-file")
+  .description("Generate a FHIR npm package index file ")
+  .option("-p, --packagedir <packagedir>", "")
+  .option("-r, --resources <resources>", "")
+  .action((options) => {
+    const indexFile = generateIndexFile(options.packagedir, [
+      options.resources,
+    ]);
+    console.log("generating index file");
+    const indexLoc = path.join(options.packagedir, ".index.config.json");
+    writeFileSync(indexLoc, JSON.stringify(indexFile, null, 2));
+    console.log(`index generated and saved at '${indexLoc}'`);
   });
 
 program.parse();

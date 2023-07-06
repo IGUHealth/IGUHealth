@@ -2,7 +2,7 @@
   "name": "@genfhi/test-data",
   "version": "0.1.0",
   "scripts": {
-    "generate-index-file": "generate-index-file"
+    "generate-index-file": "yarn cli generate-index-file -p . -r examples-json"
   },
   "dependencies": {
     "@genfhi/cli": "workspace:^"
