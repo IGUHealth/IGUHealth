@@ -52,9 +52,18 @@ test.each([...resourceTypes.values()])(
     for (const resource of resources.slice(0, 5)) {
       for (const parameter of searchParameters) {
         if (parameter.expression) {
-          expect(
-            fhirpath.evaluate(parameter.expression, resource)
-          ).toMatchSnapshot();
+          try {
+            const evalResult = fhirpath.evaluate(
+              parameter.expression,
+              resource
+            );
+            expect([parameter.expression, evalResult]).toMatchSnapshot();
+          } catch (e) {
+            console.error(
+              `Expression failed to evaluate ${parameter.expression}`
+            );
+            throw e;
+          }
         }
       }
     }

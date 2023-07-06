@@ -214,7 +214,17 @@ const fp_functions: Record<
     }
     return endResult;
   },
+  // Type Functions
   ofType(ast, context, options) {
+    const parameters = ast.next;
+    const typeIdentifier = expressionToTypeIdentifier(parameters[0]);
+    return filterByType(typeIdentifier, context);
+  },
+  as(ast, context, options) {
+    assert(
+      context.length <= 1,
+      "as function must have a length of 1 for context."
+    );
     const parameters = ast.next;
     const typeIdentifier = expressionToTypeIdentifier(parameters[0]);
     return filterByType(typeIdentifier, context);
