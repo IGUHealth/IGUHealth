@@ -61,7 +61,5 @@ export default function generateIndexFile(
       ]);
     }
   }
-  console.log(index);
+  return index;
 }
-
-// generateIndexFile("./", ["./r4"]);
