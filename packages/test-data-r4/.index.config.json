@@ -7339,36 +7339,12 @@
       "resourceType": "StructureDefinition"
     },
     {
-      "filename": "examples-json/search-parameters.json",
-      "resourceType": "SearchParameter"
-    },
-    {
       "filename": "examples-json/search-set-bundle-questionnaire.json",
       "resourceType": "Questionnaire"
     },
     {
       "filename": "examples-json/search-set-bundle.profile.json",
       "resourceType": "StructureDefinition"
-    },
-    {
-      "filename": "examples-json/searchparameter-example-constraint.json",
-      "resourceType": "SearchParameter"
-    },
-    {
-      "filename": "examples-json/searchparameter-example-extension.json",
-      "resourceType": "SearchParameter"
-    },
-    {
-      "filename": "examples-json/searchparameter-example-reference.json",
-      "resourceType": "SearchParameter"
-    },
-    {
-      "filename": "examples-json/searchparameter-example.json",
-      "resourceType": "SearchParameter"
-    },
-    {
-      "filename": "examples-json/searchparameter-filter.json",
-      "resourceType": "SearchParameter"
     },
     {
       "filename": "examples-json/searchparameter-questionnaire.json",
