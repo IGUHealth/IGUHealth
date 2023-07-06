@@ -42,11 +42,10 @@ program
     const indexFile = generateIndexFile(options.packagedir, [
       options.resources,
     ]);
-    console.log(options);
-    writeFileSync(
-      path.join(options.packagedir, ".index.config.json"),
-      JSON.stringify(indexFile, null, 2)
-    );
+    console.log("generating index file");
+    const indexLoc = path.join(options.packagedir, ".index.config.json");
+    writeFileSync(indexLoc, JSON.stringify(indexFile, null, 2));
+    console.log(`index generated and saved at '${indexLoc}'`);
   });
 
 program.parse();
