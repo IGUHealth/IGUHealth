@@ -1,9 +1,5 @@
 import { evaluate, evaluateWithMeta } from "./index";
-import {
-  StructureDefinition,
-  code,
-  Patient,
-} from "@genfhi/fhir-types/r4/types";
+import { StructureDefinition, code } from "@genfhi/fhir-types/r4/types";
 import { expect, test } from "@jest/globals";
 import { loadArtifacts } from "@genfhi/artifacts";
 
