@@ -511,3 +511,21 @@ test("union operation", () => {
     )
   ).toEqual(["bob", "waterson"]);
 });
+
+test("resolve with is operation", () => {
+  expect(
+    evaluate(
+      "CarePlan.subject.where(resolve is Patient)",
+      {
+        resourceType: "CarePlan",
+        subject: [{ reference: "Patient/123" }],
+      },
+      {
+        meta: {
+          type: "CarePlan",
+          getSD,
+        },
+      }
+    )
+  ).toEqual([{ reference: "Patient/123" }]);
+});

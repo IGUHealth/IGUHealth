@@ -389,6 +389,16 @@ const equalityCheck: EvaledOperation = (
   );
 };
 
+function isType(v: MetaValueSingular<unknown>, type: string): boolean {
+  if (v.meta()?.type === "Reference" && type !== "Reference") {
+    return (v.valueOf() as Reference).reference?.split("/")[0] === type;
+  }
+  if (v.meta()?.type) {
+    return v.meta()?.type === type;
+  }
+  return (v.valueOf() as Resource | undefined)?.resourceType === type;
+}
+
 function filterByType<T>(type: string, context: MetaValueSingular<T>[]) {
   // Special handling for type 'Resource' and 'DomainResource' abstract types
   if (type === "Resource" || type === "DomainResource") {
@@ -397,14 +407,7 @@ function filterByType<T>(type: string, context: MetaValueSingular<T>[]) {
     );
   }
   return context.filter((v) => {
-    // Hack for references with resolve() function to check that they are of type.
-    if (v.meta()?.type === "Reference" && type !== "Reference") {
-      return (v.valueOf() as Reference).reference?.split("/")[0] === type;
-    }
-    if (v.meta()?.type) {
-      return v.meta()?.type === type;
-    }
-    return (v.valueOf() as Resource | undefined)?.resourceType === type;
+    return isType(v, type);
   });
 }
 
@@ -450,7 +453,7 @@ const fp_operations: Record<
     return context.map((c) => {
       return new MetaValueSingular(
         { ...options?.meta, type: "boolean" },
-        c.meta()?.type === typeIdentifier
+        isType(c, typeIdentifier)
       );
     });
   },
