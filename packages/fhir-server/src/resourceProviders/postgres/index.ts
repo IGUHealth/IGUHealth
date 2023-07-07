@@ -1,6 +1,6 @@
 import pg from "pg";
 import { v4 } from "uuid";
-import * as jsonpatch from "fast-json-patch";
+import jsonpatch, { Operation } from "fast-json-patch";
 
 import { FHIRURL, ParsedParameter } from "@genfhi/fhir-query";
 import {
@@ -211,7 +211,7 @@ async function patchResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
   resourceType: ResourceType,
   id: string,
-  patches: readonly jsonpatch.Operation[]
+  patches: Operation[]
 ): Promise<Resource> {
   try {
     await client.query("BEGIN");
