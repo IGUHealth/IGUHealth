@@ -1,4 +1,4 @@
-import { Resource } from "@genfhi/fhir-types/r4/types";
+import { Reference, Resource } from "@genfhi/fhir-types/r4/types";
 import {
   PartialMeta,
   MetaValueArray,
@@ -229,6 +229,10 @@ const fp_functions: Record<
     const typeIdentifier = expressionToTypeIdentifier(parameters[0]);
     return filterByType(typeIdentifier, context);
   },
+  resolve(ast, context, options) {
+    // console.warn("not supporting resolve just returning item");
+    return context;
+  },
 };
 
 function evaluateInvocation(
@@ -393,6 +397,10 @@ function filterByType<T>(type: string, context: MetaValueSingular<T>[]) {
     );
   }
   return context.filter((v) => {
+    // Hack for references with resolve() function to check that they are of type.
+    if (v.meta()?.type === "Reference" && type !== "Reference") {
+      return (v.valueOf() as Reference).reference?.split("/")[0] === type;
+    }
     if (v.meta()?.type) {
       return v.meta()?.type === type;
     }
@@ -427,10 +435,24 @@ const fp_operations: Record<
     const left = _evaluate(ast.left, context, options);
     if (left.length > 1)
       throw new Error(
-        "The 'is' operator left hand operand must be equal to length 1"
+        "The 'as' operator left hand operand must be equal to length 1"
       );
     const typeIdentifier = expressionToTypeIdentifier(ast.right);
     return filterByType(typeIdentifier, left);
+  },
+  is: (ast, context, options) => {
+    const left = _evaluate(ast.left, context, options);
+    if (left.length > 1)
+      throw new Error(
+        "The 'is' operator left hand operand must be equal to length 1"
+      );
+    const typeIdentifier = expressionToTypeIdentifier(ast.right);
+    return context.map((c) => {
+      return new MetaValueSingular(
+        { ...options?.meta, type: "boolean" },
+        c.meta()?.type === typeIdentifier
+      );
+    });
   },
   "-": op_prevaled((left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {

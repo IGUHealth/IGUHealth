@@ -149,17 +149,21 @@ function deriveNextMetaInformation(
         // so need to retrieve the SD.
         if (isResourceOrComplexType(type)) {
           const sd = meta.getSD && meta.getSD(type);
-          if (!sd) throw new Error(`Unknown type found '${type}'`);
+          if (!sd) {
+            throw new Error(`Could not retrieve sd of type '${type}'`);
+          }
           return {
             sd: sd,
             type: type,
             elementIndex: 0,
+            getSD: meta.getSD,
           };
         }
         return {
           sd: meta.sd,
           type: type,
           elementIndex: i,
+          getSD: meta.getSD,
         };
       }
       i++;

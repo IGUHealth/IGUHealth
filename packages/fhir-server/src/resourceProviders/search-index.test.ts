@@ -28,40 +28,43 @@ const memDatabase = createMemoryDatabase([
   ...resourceTypes.values(),
 ] as ResourceType[]);
 
-test.each([...resourceTypes.values()])(
+test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
   `Testing indexing resourceType '%s'`,
   (resourceType) => {
     const searchParameters = memDatabase.search_type({}, "SearchParameter", {
       resourceType: "SearchParameter",
       parameters: {
-        type: {
-          name: "type",
-          value: ["string"],
-        },
         base: {
           name: "base",
           value: [resourceType],
         },
       },
     });
-    const resources = memDatabase.search_type(
-      {},
-      resourceType as ResourceType,
-      { parameters: {} }
-    );
-    for (const resource of resources.slice(0, 5)) {
+    const resources = memDatabase
+      .search_type({}, resourceType as ResourceType, { parameters: {} })
+      .filter((r) => r.id)
+      .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)));
+    for (const resource of resources) {
       for (const parameter of searchParameters) {
         if (parameter.expression) {
           try {
             const evalResult = fhirpath.evaluate(
               parameter.expression,
-              resource
+              resource,
+              {
+                meta: {
+                  getSD: (type) => {
+                    return memDatabase.read({}, "StructureDefinition", type);
+                  },
+                },
+              }
             );
             expect([parameter.expression, evalResult]).toMatchSnapshot();
           } catch (e) {
             console.error(
               `Expression failed to evaluate ${parameter.expression}`
             );
+            console.error(e);
             throw e;
           }
         }
