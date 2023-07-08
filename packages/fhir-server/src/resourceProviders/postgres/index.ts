@@ -371,11 +371,40 @@ function buildParameters(
     const alias = `${searchParameter.type}${i++}`;
     const paramJoin = `JOIN ${search_table} ${alias} on ${alias}.r_version_id=resources.version_id AND ${alias}.parameter_url= $${index++}`;
     values = [...values, searchParameter.url];
-
-    let parameterClause = parameter.value
-      .map((value) => `${alias}.value = $${index++}`)
-      .join(" OR ");
-    values = [...values, ...parameter.value];
+    let parameterClause;
+    switch (searchParameter.type) {
+      case "token": {
+        parameterClause = parameter.value
+          .map((value) => {
+            const parts = value.toString().split("|");
+            if (parts.length === 1) {
+              values = [...values, value];
+              return `${alias}.value = $${index++}`;
+            }
+            if (parts.length === 2) {
+              if (parts[0] !== "" && parts[1] !== "") {
+                values = [...values, parts[0], parts[1]];
+                return `${alias}.system = $${index++} AND ${alias}.value = $${index++}`;
+              } else if (parts[0] !== "" && parts[1] === "") {
+                values = [...values, parts[0]];
+                return `${alias}.system = $${index++}`;
+              } else if (parts[0] === "" && parts[1] !== "") {
+                values = [...values, parts[1]];
+                return `${alias}.value = $${index++}`;
+              }
+            }
+            throw new Error(`Invalid token value found '${value}'`);
+          })
+          .join(" OR ");
+      }
+      case "number":
+      case "string:": {
+        parameterClause = parameter.value
+          .map((value) => `${alias}.value = $${index++}`)
+          .join(" OR ");
+        values = [...values, ...parameter.value];
+      }
+    }
 
     query.push(
       `${paramJoin} ${
