@@ -1,1 +1,1 @@
-drop table search_string;
+drop table string_idx;

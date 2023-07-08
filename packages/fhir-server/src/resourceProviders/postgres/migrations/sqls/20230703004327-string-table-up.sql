@@ -1,6 +1,6 @@
 /* Replace with your SQL commands */
 
-CREATE TABLE search_string (
+CREATE TABLE string_idx (
   id             SERIAL      NOT NULL PRIMARY KEY,
   workspace      UUID        NOT NULL, 
   r_id           TEXT        NOT NULL,
