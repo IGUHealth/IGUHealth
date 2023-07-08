@@ -32,6 +32,8 @@ function searchResources(
   return searchTypes;
 }
 
+const param_types_supported = ["string", "number"];
+
 async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
   resourceType?: ResourceType,
@@ -42,7 +44,7 @@ async function getAllParametersForResource<CTX extends FHIRServerCTX>(
     parameters: {
       type: {
         name: "type",
-        value: ["string"],
+        value: param_types_supported,
       },
       base: {
         name: "base",
@@ -110,7 +112,25 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
   evaluation: MetaValueSingular<NonNullable<unknown>>[]
 ) {
   switch (parameter.type) {
-    case "string":
+    case "number": {
+      evaluation.map((value) => {
+        console.log("value:", value);
+        client.query(
+          "INSERT INTO number_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, value) VALUES($1, $2, $3, $4, $5, $6)",
+          [
+            ctx.workspace,
+            resource.id,
+            resource.meta?.versionId,
+            parameter.name,
+            parameter.url,
+            value.valueOf(),
+          ]
+        );
+      });
+      return;
+    }
+
+    case "string": {
       await Promise.all(
         evaluation
           .map(toStringParameters)
@@ -130,6 +150,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           })
       );
       return;
+    }
     default:
       throw new Error(`Not implemented '${parameter.type}'`);
   }
@@ -140,7 +161,13 @@ async function removeIndices(
   _ctx: FHIRServerCTX,
   resource: Resource
 ) {
-  await client.query("DELETE FROM string_idx WHERE r_id = $1", [resource.id]);
+  await Promise.all(
+    param_types_supported.map((type) => {
+      return client.query(`DELETE FROM ${type}_idx WHERE r_id = $1`, [
+        resource.id,
+      ]);
+    })
+  );
 }
 
 async function indexResource<CTX extends FHIRServerCTX>(
