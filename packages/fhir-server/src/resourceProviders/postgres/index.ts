@@ -5,6 +5,7 @@ import jsonpatch, { Operation } from "fast-json-patch";
 import { FHIRURL, ParsedParameter } from "@genfhi/fhir-query";
 import {
   Address,
+  canonical,
   CodeableConcept,
   Coding,
   ContactPoint,
@@ -13,6 +14,7 @@ import {
   Resource,
   ResourceType,
   SearchParameter,
+  uri,
 } from "@genfhi/fhir-types/r4/types";
 import { evaluateWithMeta } from "@genfhi/fhirpath";
 
@@ -36,7 +38,7 @@ function searchResources(
   return searchTypes;
 }
 
-const param_types_supported = ["string", "number", "token"];
+const param_types_supported = ["string", "number", "token", "uri"];
 
 async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
@@ -166,6 +168,20 @@ function toTokenParameters(
   }
 }
 
+function toURIParameters(
+  value: MetaValueSingular<NonNullable<unknown>>
+): string[] {
+  switch (value.meta()?.type) {
+    case "uri":
+    case "canonical": {
+      const v: canonical | uri = value.valueOf() as canonical | uri;
+      return [v];
+    }
+    default:
+      throw new Error(`Unknown uri parameter of type '${value.meta()?.type}'`);
+  }
+}
+
 async function indexSearchParameter<CTX extends FHIRServerCTX>(
   client: pg.Client,
   ctx: CTX,
@@ -174,6 +190,27 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
   evaluation: MetaValueSingular<NonNullable<unknown>>[]
 ) {
   switch (parameter.type) {
+    case "uri": {
+      await Promise.all(
+        evaluation
+          .map(toURIParameters)
+          .flat()
+          .map(async (value) => {
+            await client.query(
+              "INSERT INTO token_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, value) VALUES($1, $2, $3, $4, $5, $6)",
+              [
+                ctx.workspace,
+                resource.id,
+                resource.meta?.versionId,
+                parameter.name,
+                parameter.url,
+                value,
+              ]
+            );
+          })
+      );
+      return;
+    }
     case "token": {
       await Promise.all(
         evaluation
@@ -401,6 +438,7 @@ function buildParameters(
           .join(" OR ");
         break;
       }
+      case "uri":
       case "number":
       case "string": {
         parameterClause = parameter.value
