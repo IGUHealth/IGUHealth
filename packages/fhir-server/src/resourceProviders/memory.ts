@@ -35,7 +35,8 @@ function fitsSearchCriteria(
       return criteria.value.indexOf(value) !== -1;
     }
     default:
-      throw new Error(`Not supported '${criteria.name}'`);
+      console.warn(`received unknown criteria for memory: '${criteria.name}'`);
+      return false;
   }
 }
 

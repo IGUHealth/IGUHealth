@@ -80,6 +80,8 @@ function toStringParameters(
   value: MetaValueSingular<NonNullable<unknown>>
 ): string[] {
   switch (value.meta()?.type) {
+    // Even though spec states won't encounter this it does. [ImplementationGuide.description]
+    case "markdown":
     case "string": {
       return [value.valueOf() as string];
     }
@@ -106,7 +108,7 @@ function toStringParameters(
       ].flat();
     }
     default:
-      throw new Error(`Unknown string parameter '${value.meta()?.type}}'`);
+      throw new Error(`Unknown string parameter '${value.meta()?.type}'`);
   }
 }
 
@@ -197,7 +199,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           .flat()
           .map(async (value) => {
             await client.query(
-              "INSERT INTO token_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, value) VALUES($1, $2, $3, $4, $5, $6)",
+              "INSERT INTO uri_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, value) VALUES($1, $2, $3, $4, $5, $6)",
               [
                 ctx.workspace,
                 resource.id,
@@ -346,7 +348,6 @@ async function getResource<CTX extends FHIRServerCTX>(
   const queryText =
     "SELECT resource FROM resources WHERE workspace = $1 AND resource_type = $2 AND id = $3 ORDER BY version_id DESC LIMIT 1";
   const res = await client.query(queryText, [ctx.workspace, resourceType, id]);
-  console.log(res);
   if (res.rows.length === 0) {
     throw new Error(`Resource not found`);
   }
