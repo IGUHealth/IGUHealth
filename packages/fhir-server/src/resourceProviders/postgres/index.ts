@@ -175,29 +175,31 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
 ) {
   switch (parameter.type) {
     case "token": {
-      evaluation
-        .map(toTokenParameters)
-        .flat()
-        .map(async (value) => {
-          client.query(
-            "INSERT INTO token_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, system, value) VALUES($1, $2, $3, $4, $5, $6, $7)",
-            [
-              ctx.workspace,
-              resource.id,
-              resource.meta?.versionId,
-              parameter.name,
-              parameter.url,
-              value.system,
-              value.code,
-            ]
-          );
-        });
+      await Promise.all(
+        evaluation
+          .map(toTokenParameters)
+          .flat()
+          .map(async (value) => {
+            await client.query(
+              "INSERT INTO token_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, system, value) VALUES($1, $2, $3, $4, $5, $6, $7)",
+              [
+                ctx.workspace,
+                resource.id,
+                resource.meta?.versionId,
+                parameter.name,
+                parameter.url,
+                value.system,
+                value.code,
+              ]
+            );
+          })
+      );
       return;
     }
     case "number": {
       await Promise.all(
         evaluation.map(async (value) => {
-          client.query(
+          await client.query(
             "INSERT INTO number_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, value) VALUES($1, $2, $3, $4, $5, $6)",
             [
               ctx.workspace,
@@ -219,7 +221,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           .map(toStringParameters)
           .flat()
           .map(async (value) => {
-            client.query(
+            await client.query(
               "INSERT INTO string_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, value) VALUES($1, $2, $3, $4, $5, $6)",
               [
                 ctx.workspace,
