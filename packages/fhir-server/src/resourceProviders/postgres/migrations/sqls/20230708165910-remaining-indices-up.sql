@@ -25,8 +25,8 @@ CREATE TABLE token_idx (
   parameter_name TEXT        NOT NULL,
   parameter_url  TEXT        NOT NULL,
 
-  uri            TEXT        NOT NULL,
-  value          TEXT        NOT NULL,
+  system         TEXT        ,
+  value          TEXT        ,
   
   -- When was indexed
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),

@@ -5,7 +5,11 @@ import jsonpatch, { Operation } from "fast-json-patch";
 import { FHIRURL, ParsedParameter } from "@genfhi/fhir-query";
 import {
   Address,
+  CodeableConcept,
+  Coding,
+  ContactPoint,
   HumanName,
+  Identifier,
   Resource,
   ResourceType,
   SearchParameter,
@@ -19,7 +23,7 @@ import {
   createMiddlewareAsync,
   MiddlewareAsync,
 } from "../../client/middleware/index.js";
-import { MetaValueSingular } from "@genfhi/meta-value";
+import { descend, MetaValueArray, MetaValueSingular } from "@genfhi/meta-value";
 import { SystemSearchRequest, TypeSearchRequest } from "../../client/types";
 
 function searchResources(
@@ -32,7 +36,7 @@ function searchResources(
   return searchTypes;
 }
 
-const param_types_supported = ["string", "number"];
+const param_types_supported = ["string", "number", "token"];
 
 async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
@@ -104,6 +108,64 @@ function toStringParameters(
   }
 }
 
+// Coding	Coding.system	Coding.code
+// CodeableConcept	CodeableConcept.coding.system	CodeableConcept.coding.code	Matches against any coding in the CodeableConcept
+// Identifier	Identifier.system	Identifier.value	Clients can search by type not system using the :of-type modifier, see below. To search on a CDA II.root - which may appear in either Identifier.system or Identifier.value, use the syntax identifier=|[root],[root]
+// ContactPoint		ContactPoint.value	At the discretion of the server, token searches on ContactPoint may use special handling, such as ignoring punctuation, performing partial searches etc.
+// code	(implicit)	code	the system is defined in the value set (though it's not usually needed)
+// boolean		boolean	The implicit system for boolean values is http://hl7.org/fhir/special-values but this is never actually used
+// uri		uri
+// string	n/a	string	Token is sometimes used for string to indicate that exact matching is the correct default search strategy
+
+function toTokenParameters(
+  value: MetaValueSingular<NonNullable<unknown>>
+): Array<{ system?: string; code?: string }> {
+  switch (value.meta()?.type) {
+    case "Coding": {
+      const coding: Coding = value.valueOf() as CodeableConcept;
+      return [{ system: coding.system, code: coding.code }];
+    }
+    case "CodeableConcept": {
+      const codings = descend(value, "coding");
+      if (codings instanceof MetaValueArray) {
+        return codings.toArray().map(toTokenParameters).flat();
+      }
+      return [];
+    }
+    case "Identifier": {
+      const identifier: Identifier = value.valueOf() as Identifier;
+      return [{ system: identifier.system, code: identifier.value }];
+    }
+    case "ContactPoint": {
+      const contactPoint: ContactPoint = value.valueOf() as ContactPoint;
+      return [{ code: contactPoint.value }];
+    }
+    case "code": {
+      return [{ code: value.valueOf() as string }];
+    }
+    case "boolean": {
+      return [
+        {
+          system: "http://hl7.org/fhir/special-values",
+          code: (value.valueOf() as boolean).toString(),
+        },
+      ];
+    }
+    case "http://hl7.org/fhirpath/System.String":
+    case "string": {
+      return [
+        {
+          code: (value.valueOf() as string).toString(),
+        },
+      ];
+    }
+    default:
+      throw new Error(
+        `Unknown token parameter of type '${value.meta()?.type}'`
+      );
+  }
+}
+
 async function indexSearchParameter<CTX extends FHIRServerCTX>(
   client: pg.Client,
   ctx: CTX,
@@ -112,20 +174,44 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
   evaluation: MetaValueSingular<NonNullable<unknown>>[]
 ) {
   switch (parameter.type) {
+    case "token": {
+      await Promise.all(
+        evaluation
+          .map(toTokenParameters)
+          .flat()
+          .map(async (value) => {
+            await client.query(
+              "INSERT INTO token_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, system, value) VALUES($1, $2, $3, $4, $5, $6, $7)",
+              [
+                ctx.workspace,
+                resource.id,
+                resource.meta?.versionId,
+                parameter.name,
+                parameter.url,
+                value.system,
+                value.code,
+              ]
+            );
+          })
+      );
+      return;
+    }
     case "number": {
-      evaluation.map((value) => {
-        client.query(
-          "INSERT INTO number_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, value) VALUES($1, $2, $3, $4, $5, $6)",
-          [
-            ctx.workspace,
-            resource.id,
-            resource.meta?.versionId,
-            parameter.name,
-            parameter.url,
-            value.valueOf(),
-          ]
-        );
-      });
+      await Promise.all(
+        evaluation.map(async (value) => {
+          await client.query(
+            "INSERT INTO number_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, value) VALUES($1, $2, $3, $4, $5, $6)",
+            [
+              ctx.workspace,
+              resource.id,
+              resource.meta?.versionId,
+              parameter.name,
+              parameter.url,
+              value.valueOf(),
+            ]
+          );
+        })
+      );
       return;
     }
 
@@ -135,7 +221,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           .map(toStringParameters)
           .flat()
           .map(async (value) => {
-            client.query(
+            await client.query(
               "INSERT INTO string_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, value) VALUES($1, $2, $3, $4, $5, $6)",
               [
                 ctx.workspace,
@@ -288,12 +374,42 @@ function buildParameters(
     const alias = `${searchParameter.type}${i++}`;
     const paramJoin = `JOIN ${search_table} ${alias} on ${alias}.r_version_id=resources.version_id AND ${alias}.parameter_url= $${index++}`;
     values = [...values, searchParameter.url];
-
-    let parameterClause = parameter.value
-      .map((value) => `${alias}.value = $${index++}`)
-      .join(" OR ");
-    values = [...values, ...parameter.value];
-
+    let parameterClause;
+    switch (searchParameter.type) {
+      case "token": {
+        parameterClause = parameter.value
+          .map((value) => {
+            const parts = value.toString().split("|");
+            if (parts.length === 1) {
+              values = [...values, value];
+              return `${alias}.value = $${index++}`;
+            }
+            if (parts.length === 2) {
+              if (parts[0] !== "" && parts[1] !== "") {
+                values = [...values, parts[0], parts[1]];
+                return `${alias}.system = $${index++} AND ${alias}.value = $${index++}`;
+              } else if (parts[0] !== "" && parts[1] === "") {
+                values = [...values, parts[0]];
+                return `${alias}.system = $${index++}`;
+              } else if (parts[0] === "" && parts[1] !== "") {
+                values = [...values, parts[1]];
+                return `${alias}.value = $${index++}`;
+              }
+            }
+            throw new Error(`Invalid token value found '${value}'`);
+          })
+          .join(" OR ");
+        break;
+      }
+      case "number":
+      case "string": {
+        parameterClause = parameter.value
+          .map((value) => `${alias}.value = $${index++}`)
+          .join(" OR ");
+        values = [...values, ...parameter.value];
+        break;
+      }
+    }
     query.push(
       `${paramJoin} ${
         parameter.value.length > 0 ? "AND" : ""
