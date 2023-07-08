@@ -151,16 +151,17 @@ function toTokenParameters(
         },
       ];
     }
+    case "http://hl7.org/fhirpath/System.String":
     case "string": {
       return [
         {
-          code: (value.valueOf() as boolean).toString(),
+          code: (value.valueOf() as string).toString(),
         },
       ];
     }
     default:
       throw new Error(
-        `Unknown token parameter of type '${value.meta()?.type}}'`
+        `Unknown token parameter of type '${value.meta()?.type}'`
       );
   }
 }
@@ -179,7 +180,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
         .flat()
         .map(async (value) => {
           client.query(
-            "INSERT INTO token_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, system, value) VALUES($1, $2, $3, $4, $5, $6)",
+            "INSERT INTO token_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, system, value) VALUES($1, $2, $3, $4, $5, $6, $7)",
             [
               ctx.workspace,
               resource.id,
@@ -396,6 +397,7 @@ function buildParameters(
             throw new Error(`Invalid token value found '${value}'`);
           })
           .join(" OR ");
+        break;
       }
       case "number":
       case "string:": {
@@ -403,6 +405,7 @@ function buildParameters(
           .map((value) => `${alias}.value = $${index++}`)
           .join(" OR ");
         values = [...values, ...parameter.value];
+        break;
       }
     }
 
