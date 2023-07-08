@@ -400,7 +400,7 @@ function buildParameters(
         break;
       }
       case "number":
-      case "string:": {
+      case "string": {
         parameterClause = parameter.value
           .map((value) => `${alias}.value = $${index++}`)
           .join(" OR ");
@@ -408,7 +408,6 @@ function buildParameters(
         break;
       }
     }
-
     query.push(
       `${paramJoin} ${
         parameter.value.length > 0 ? "AND" : ""
