@@ -114,7 +114,6 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
   switch (parameter.type) {
     case "number": {
       evaluation.map((value) => {
-        console.log("value:", value);
         client.query(
           "INSERT INTO number_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, value) VALUES($1, $2, $3, $4, $5, $6)",
           [
