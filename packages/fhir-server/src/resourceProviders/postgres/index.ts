@@ -262,7 +262,7 @@ function getPrecision(v: date | dateTime) {
 function toDateRange(
   value: MetaValueSingular<NonNullable<unknown>>
 ): { start: string; end: string }[] {
-  // Low VALUE 4713 BC, HIGH VAlue 294276 AD
+  // Low VALUE 4713 BC, HIGH VALUE 294276 AD
   switch (value.meta()?.type) {
     case "Period": {
       const period: Period = value.valueOf() as Period;
@@ -337,7 +337,7 @@ function toDateRange(
       }
     }
     default:
-      throw new Error(`Cannont index as date value '${value.meta()?.type}'`);
+      throw new Error(`Cannot index as date value '${value.meta()?.type}'`);
   }
 }
 
