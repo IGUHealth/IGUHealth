@@ -5665,6 +5665,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/koa__router", "npm:12.0.0"],\
             ["@types/pg", "npm:8.10.2"],\
             ["@types/uuid", "npm:9.0.2"],\
+            ["dayjs", "npm:1.11.9"],\
             ["db-migrate", "npm:1.0.0-beta.21"],\
             ["db-migrate-pg", "npm:1.3.0"],\
             ["dotenv", "npm:16.3.1"],\
