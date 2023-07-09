@@ -10,12 +10,15 @@ import {
   Coding,
   ContactPoint,
   HumanName,
+  id,
   Identifier,
+  Reference,
   Resource,
   ResourceType,
   SearchParameter,
   uri,
 } from "@genfhi/fhir-types/r4/types";
+import { resourceTypes } from "@genfhi/fhir-types/r4/sets";
 import { evaluateWithMeta } from "@genfhi/fhirpath";
 
 import { FHIRServerCTX } from "../../fhirServer.js";
@@ -38,7 +41,8 @@ function searchResources(
   return searchTypes;
 }
 
-const param_types_supported = ["string", "number", "token", "uri"];
+// Date/DateTime, Reference, Composite, Quantity, Special
+const param_types_supported = ["string", "number", "token", "uri", "reference"];
 
 async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
@@ -184,6 +188,32 @@ function toURIParameters(
   }
 }
 
+function toReference(
+  value: MetaValueSingular<NonNullable<unknown>>
+): Array<{ reference: Reference; resourceType?: ResourceType; id?: id }> {
+  switch (value.meta()?.type) {
+    case "Reference": {
+      const reference: Reference = value.valueOf() as Reference;
+      const [resourceType, id] = reference.reference?.split("/") || [];
+      if (resourceTypes.has(resourceType) && id) {
+        return [
+          {
+            reference: reference,
+            resourceType: resourceType as ResourceType,
+            id: id,
+          },
+        ];
+      } else {
+        return [{ reference: reference }];
+      }
+    }
+    default:
+      throw new Error(
+        `Unknown reference parameter of type '${value.meta()?.type}'`
+      );
+  }
+}
+
 async function indexSearchParameter<CTX extends FHIRServerCTX>(
   client: pg.Client,
   ctx: CTX,
@@ -192,6 +222,29 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
   evaluation: MetaValueSingular<NonNullable<unknown>>[]
 ) {
   switch (parameter.type) {
+    case "reference": {
+      await Promise.all(
+        evaluation
+          .map(toReference)
+          .flat()
+          .map(async ({ reference, resourceType, id }) => {
+            await client.query(
+              "INSERT INTO reference_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, reference, resource_type, resource_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
+              [
+                ctx.workspace,
+                resource.id,
+                resource.meta?.versionId,
+                parameter.name,
+                parameter.url,
+                reference,
+                resourceType,
+                id,
+              ]
+            );
+          })
+      );
+      return;
+    }
     case "uri": {
       await Promise.all(
         evaluation
@@ -448,6 +501,29 @@ function buildParameters(
         values = [...values, ...parameter.value];
         break;
       }
+      case "reference": {
+        parameterClause = parameter.value
+          .map((value) => {
+            const parts = value.toString().split("/");
+            if (parts.length === 1) {
+              values = [...values, parts[0]];
+              return `${alias}.resource_id = $${index++}`;
+            } else if (parts.length === 2) {
+              values = [...values, parts[0], parts[1]];
+              return `${alias}.resource_type = $${index++} AND ${alias}.resource_id = $${index++}`;
+            } else {
+              throw new Error(
+                `Invalid reference value '${value}' for search parameter '${searchParameter.name}'`
+              );
+            }
+          })
+          .join(" OR ");
+        break;
+      }
+      default:
+        throw new Error(
+          `Unsupported search parameter querying '${searchParameter.type}'`
+        );
     }
     query.push(
       `${paramJoin} ${
@@ -485,18 +561,24 @@ async function executeSearchQuery(
   index = parameterQuery.index;
 
   let queryText = `
-     SELECT DISTINCT resources.resource
+  SELECT * FROM (
+     SELECT resources.resource, deleted
      FROM resources 
      ${parameterQuery.query}
      WHERE 
   `;
 
+  // System vs type search filtering
   if (request.level === "type") {
     values.push(request.resourceType);
     queryText = `${queryText} resources.resource_type = $${index++}`;
   } else {
     queryText = `${queryText} resources.resource_type is not null`;
   }
+
+  // Ensure that only one versionid of resource is returned. Given we're using
+  // a giant table of resources with all versions.
+  queryText = `${queryText} ORDER BY version_id DESC LIMIT 1) as t WHERE t.deleted = false`;
 
   console.log(queryText, values);
 
