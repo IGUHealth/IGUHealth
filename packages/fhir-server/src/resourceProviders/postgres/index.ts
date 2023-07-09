@@ -12,10 +12,13 @@ import {
   HumanName,
   id,
   Identifier,
+  instant,
+  Period,
   Reference,
   Resource,
   ResourceType,
   SearchParameter,
+  Timing,
   uri,
 } from "@genfhi/fhir-types/r4/types";
 import { resourceTypes } from "@genfhi/fhir-types/r4/sets";
@@ -41,8 +44,15 @@ function searchResources(
   return searchTypes;
 }
 
-// Date/DateTime, Reference, Composite, Quantity, Special
-const param_types_supported = ["string", "number", "token", "uri", "reference"];
+// Composite, Quantity, Special
+const param_types_supported = [
+  "date",
+  "string",
+  "number",
+  "token",
+  "uri",
+  "reference",
+];
 
 async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
@@ -214,6 +224,49 @@ function toReference(
   }
 }
 
+const PG_LOW_INSTANT = "4713 BC";
+const PG_HIGH_INSTANT = "294276 AD";
+
+function toDateRange(
+  value: MetaValueSingular<NonNullable<unknown>>
+): { start: string; end: string }[] {
+  // Low VALUE 4713 BC, HIGH VAlue 294276 AD
+  switch (value.meta()?.type) {
+    case "Period": {
+      const period: Period = value.valueOf() as Period;
+      return [
+        {
+          start: period.start || PG_LOW_INSTANT,
+          end: period.end || PG_HIGH_INSTANT,
+        },
+      ];
+    }
+    case "Timing": {
+      const events = descend(value, "event");
+      if (events instanceof MetaValueArray) {
+        return events.toArray().map(toDateRange).flat();
+      }
+      return [];
+    }
+    case "instant": {
+      const instant: instant = value.valueOf() as instant;
+      return [
+        {
+          start: instant,
+          end: instant,
+        },
+      ];
+    }
+    // TODO: Handle date and dateTime
+    case "date": {
+    }
+    case "dateTime": {
+    }
+    default:
+      throw new Error(`Cannont index as date value '${value.meta()?.type}'`);
+  }
+}
+
 async function indexSearchParameter<CTX extends FHIRServerCTX>(
   client: pg.Client,
   ctx: CTX,
@@ -222,6 +275,29 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
   evaluation: MetaValueSingular<NonNullable<unknown>>[]
 ) {
   switch (parameter.type) {
+    case "date": {
+      await Promise.all(
+        evaluation
+          .map(toDateRange)
+          .flat()
+          .map(async (value) => {
+            await client.query(
+              "INSERT INTO reference_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, reference, resource_type, resource_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
+              [
+                ctx.workspace,
+                resource.id,
+                resource.meta?.versionId,
+                parameter.name,
+                parameter.url,
+                reference,
+                resourceType,
+                id,
+              ]
+            );
+          })
+      );
+      return;
+    }
     case "reference": {
       await Promise.all(
         evaluation
