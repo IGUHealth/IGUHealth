@@ -717,7 +717,7 @@ function buildParameters(
           const parts = value.toString().split("|");
           if (parts.length === 4) {
             throw new Error(
-              `prefix not supported yet for paramter '${searchParameter.name}' and value '${value}'`
+              `prefix not supported yet for parameter '${searchParameter.name}' and value '${value}'`
             );
           }
           if (parts.length === 3) {
