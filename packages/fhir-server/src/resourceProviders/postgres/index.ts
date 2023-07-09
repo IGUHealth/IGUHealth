@@ -1,6 +1,7 @@
 import pg from "pg";
 import { v4 } from "uuid";
 import jsonpatch, { Operation } from "fast-json-patch";
+import dayjs from "dayjs";
 
 import { FHIRURL, ParsedParameter } from "@genfhi/fhir-query";
 import {
@@ -9,13 +10,18 @@ import {
   CodeableConcept,
   Coding,
   ContactPoint,
+  date,
+  dateTime,
   HumanName,
   id,
   Identifier,
+  instant,
+  Period,
   Reference,
   Resource,
   ResourceType,
   SearchParameter,
+  Timing,
   uri,
 } from "@genfhi/fhir-types/r4/types";
 import { resourceTypes } from "@genfhi/fhir-types/r4/sets";
@@ -41,8 +47,15 @@ function searchResources(
   return searchTypes;
 }
 
-// Date/DateTime, Reference, Composite, Quantity, Special
-const param_types_supported = ["string", "number", "token", "uri", "reference"];
+// Composite, Quantity, Special
+const param_types_supported = [
+  "date",
+  "string",
+  "number",
+  "token",
+  "uri",
+  "reference",
+];
 
 async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
@@ -214,6 +227,120 @@ function toReference(
   }
 }
 
+const PG_LOW_INSTANT = "4713 BC";
+const PG_HIGH_INSTANT = "294276 AD";
+
+const dateRegex =
+  /^(?<year>[0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(?<month>0[1-9]|1[0-2])(-(?<day>0[1-9]|[1-2][0-9]|3[0-1]))?)?$/;
+
+const dateTimeRegex =
+  /^(?<year>[0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(?<month>0[1-9]|1[0-2])(-(?<day>0[1-9]|[1-2][0-9]|3[0-1])(T(?<hour>[01][0-9]|2[0-3]):(?<minute>[0-5][0-9]):(?<second>[0-5][0-9]|60)(?<ms>\.[0-9]{1,9})?)?)?(?<timezone>Z|(\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)?)?)?$/;
+
+const precisionLevels = [
+  "ms",
+  "second",
+  "minute",
+  "hour",
+  "day",
+  "month",
+  "year",
+];
+
+function getPrecision(v: date | dateTime) {
+  const match = v.match(dateTimeRegex);
+  if (match) {
+    for (const precision of precisionLevels) {
+      if (match.groups?.[precision]) {
+        return precision;
+      }
+    }
+    throw new Error(`could not determine precision level of '${v}'`);
+  }
+  throw new Error(`Invalid date or dateTime format '${v}'`);
+}
+
+function toDateRange(
+  value: MetaValueSingular<NonNullable<unknown>>
+): { start: string; end: string }[] {
+  // Low VALUE 4713 BC, HIGH VALUE 294276 AD
+  switch (value.meta()?.type) {
+    case "Period": {
+      const period: Period = value.valueOf() as Period;
+      return [
+        {
+          start: period.start || PG_LOW_INSTANT,
+          end: period.end || PG_HIGH_INSTANT,
+        },
+      ];
+    }
+    case "Timing": {
+      const events = descend(value, "event");
+      if (events instanceof MetaValueArray) {
+        return events.toArray().map(toDateRange).flat();
+      }
+      return [];
+    }
+    case "instant": {
+      const instant: instant = value.valueOf() as instant;
+      return [
+        {
+          start: instant,
+          end: instant,
+        },
+      ];
+    }
+    // TODO: Handle date and dateTime
+    case "date": {
+      const v: date = value.valueOf() as date;
+      const precision = getPrecision(v);
+      switch (precision) {
+        case "day":
+        case "month":
+        case "year": {
+          return [
+            {
+              start: dayjs(v, "YYYY-MM-DD").startOf(precision).toISOString(),
+              end: dayjs(v, "YYYY-MM-DD").endOf(precision).toISOString(),
+            },
+          ];
+        }
+        default:
+          throw new Error(`Unknown precision '${precision}'for date '${v}'`);
+      }
+    }
+    case "dateTime": {
+      const v: dateTime = value.valueOf() as dateTime;
+      const precision = getPrecision(v);
+      switch (precision) {
+        case "ms": {
+          return [{ start: v, end: v }];
+        }
+        case "second":
+        case "minute":
+        case "hour":
+        case "day":
+        case "month":
+        case "year": {
+          {
+            return [
+              {
+                start: dayjs(v, "YYYY-MM-DDThh:mm:ss+zz:zz")
+                  .startOf(precision)
+                  .toISOString(),
+                end: dayjs(v, "YYYY-MM-DDThh:mm:ss+zz:zz")
+                  .endOf(precision)
+                  .toISOString(),
+              },
+            ];
+          }
+        }
+      }
+    }
+    default:
+      throw new Error(`Cannot index as date value '${value.meta()?.type}'`);
+  }
+}
+
 async function indexSearchParameter<CTX extends FHIRServerCTX>(
   client: pg.Client,
   ctx: CTX,
@@ -222,6 +349,28 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
   evaluation: MetaValueSingular<NonNullable<unknown>>[]
 ) {
   switch (parameter.type) {
+    case "date": {
+      await Promise.all(
+        evaluation
+          .map(toDateRange)
+          .flat()
+          .map(async (value) => {
+            await client.query(
+              "INSERT INTO date_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, start_date, end_date) VALUES($1, $2, $3, $4, $5, $6, $7)",
+              [
+                ctx.workspace,
+                resource.id,
+                resource.meta?.versionId,
+                parameter.name,
+                parameter.url,
+                value.start,
+                value.end,
+              ]
+            );
+          })
+      );
+      return;
+    }
     case "reference": {
       await Promise.all(
         evaluation
@@ -492,6 +641,18 @@ function buildParameters(
           .join(" OR ");
         break;
       }
+      case "date": {
+        parameterClause = parameter.value.map((value) => {
+          const formattedDate = dayjs(
+            value,
+            "YYYY-MM-DDThh:mm:ss+zz:zz"
+          ).toISOString();
+          values = [...values, formattedDate, formattedDate];
+          // Check the range for date
+          return `${alias}.start_date <= $${index++} AND ${alias}.end_date >= $${index++}`;
+        });
+        break;
+      }
       case "uri":
       case "number":
       case "string": {
@@ -578,7 +739,7 @@ async function executeSearchQuery(
 
   // Ensure that only one versionid of resource is returned. Given we're using
   // a giant table of resources with all versions.
-  queryText = `${queryText} ORDER BY id, version_id DESC) as t WHERE t.deleted = false`;
+  queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC) as t WHERE t.deleted = false`;
 
   console.log(queryText, values);
 
