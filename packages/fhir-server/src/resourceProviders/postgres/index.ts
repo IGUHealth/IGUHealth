@@ -227,9 +227,6 @@ function toReference(
   }
 }
 
-const PG_LOW_INSTANT = "4713 BC";
-const PG_HIGH_INSTANT = "294276 AD";
-
 const dateRegex =
   /^(?<year>[0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(?<month>0[1-9]|1[0-2])(-(?<day>0[1-9]|[1-2][0-9]|3[0-1]))?)?$/;
 
@@ -268,8 +265,8 @@ function toDateRange(
       const period: Period = value.valueOf() as Period;
       return [
         {
-          start: period.start || PG_LOW_INSTANT,
-          end: period.end || PG_HIGH_INSTANT,
+          start: period.start || "-infinity",
+          end: period.end || "infinity",
         },
       ];
     }

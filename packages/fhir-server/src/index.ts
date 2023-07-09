@@ -105,7 +105,12 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
       source: memoryDatabase,
     },
     {
-      resourcesSupported: ["Patient", "RiskAssessment", "ImplementationGuide"],
+      resourcesSupported: [
+        "Patient",
+        "RiskAssessment",
+        "ImplementationGuide",
+        "Schedule",
+      ],
       interactionsSupported: [
         "read-request",
         "search-request",
