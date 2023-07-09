@@ -643,11 +643,11 @@ function buildParameters(
       }
       case "date": {
         parameterClause = parameter.value.map((value) => {
-          const formatedDate = dayjs(
+          const formattedDate = dayjs(
             value,
             "YYYY-MM-DDThh:mm:ss+zz:zz"
           ).toISOString();
-          values = [...values, formatedDate, formatedDate];
+          values = [...values, formattedDate, formattedDate];
           // Check the range for date
           return `${alias}.start_date <= $${index++} AND ${alias}.end_date >= $${index++}`;
         });
