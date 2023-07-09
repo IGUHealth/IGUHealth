@@ -562,7 +562,7 @@ async function executeSearchQuery(
 
   let queryText = `
   SELECT * FROM (
-     SELECT resources.resource, deleted
+     SELECT DISTINCT ON (resources.id) resources.resource, deleted
      FROM resources 
      ${parameterQuery.query}
      WHERE 
@@ -578,7 +578,7 @@ async function executeSearchQuery(
 
   // Ensure that only one versionid of resource is returned. Given we're using
   // a giant table of resources with all versions.
-  queryText = `${queryText} ORDER BY version_id DESC LIMIT 1) as t WHERE t.deleted = false`;
+  queryText = `${queryText} ORDER BY id, version_id DESC) as t WHERE t.deleted = false`;
 
   console.log(queryText, values);
 
