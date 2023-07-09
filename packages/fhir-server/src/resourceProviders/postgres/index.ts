@@ -712,6 +712,48 @@ function buildParameters(
           .join(" OR ");
         break;
       }
+      case "quantity": {
+        parameterClause = parameter.value.map((value) => {
+          const parts = value.toString().split("|");
+          if (parts.length === 4) {
+            throw new Error(
+              `prefix not supported yet for paramter '${searchParameter.name}' and value '${value}'`
+            );
+          }
+          if (parts.length === 3) {
+            const [value, system, code] = parts;
+            let clauses: string[] = [];
+            if (value !== "") {
+              values = [...values, value, value];
+              clauses = [
+                ...clauses,
+                `${alias}.start_value <= $${index++}`,
+                `${alias}.end_value >= $${index++}`,
+              ];
+            }
+            if (system !== "") {
+              values = [...values, system, system];
+              clauses = [
+                ...clauses,
+                `${alias}.start_system = $${index++}`,
+                `${alias}.end_system = $${index++}`,
+              ];
+            }
+            if (code != "") {
+              values = [...values, code, code];
+              clauses = [
+                ...clauses,
+                `${alias}.start_code = $${index++}`,
+                `${alias}.end_code = $${index++}`,
+              ];
+            }
+            return clauses.join(" AND ");
+          } else {
+            throw new Error("Must specify number|system|code for quantity");
+          }
+        });
+        break;
+      }
       case "date": {
         parameterClause = parameter.value.map((value) => {
           const formattedDate = dayjs(

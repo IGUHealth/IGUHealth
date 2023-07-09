@@ -110,6 +110,7 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
         "RiskAssessment",
         "ImplementationGuide",
         "Schedule",
+        "Observation",
       ],
       interactionsSupported: [
         "read-request",
