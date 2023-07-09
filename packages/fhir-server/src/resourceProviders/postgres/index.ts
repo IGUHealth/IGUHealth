@@ -17,11 +17,12 @@ import {
   Identifier,
   instant,
   Period,
+  Quantity,
+  Range,
   Reference,
   Resource,
   ResourceType,
   SearchParameter,
-  Timing,
   uri,
 } from "@genfhi/fhir-types/r4/types";
 import { resourceTypes } from "@genfhi/fhir-types/r4/sets";
@@ -47,8 +48,9 @@ function searchResources(
   return searchTypes;
 }
 
-// Composite, Quantity, Special
+// Composite,  Special
 const param_types_supported = [
+  "quantity",
   "date",
   "string",
   "number",
@@ -259,7 +261,6 @@ function getPrecision(v: date | dateTime) {
 function toDateRange(
   value: MetaValueSingular<NonNullable<unknown>>
 ): { start: string; end: string }[] {
-  // Low VALUE 4713 BC, HIGH VALUE 294276 AD
   switch (value.meta()?.type) {
     case "Period": {
       const period: Period = value.valueOf() as Period;
@@ -338,6 +339,57 @@ function toDateRange(
   }
 }
 
+type QuantityIndex = Omit<Quantity, "value"> & { value?: number | string };
+
+function toQuantityRange(
+  value: MetaValueSingular<NonNullable<unknown>>
+): { start?: QuantityIndex; end?: QuantityIndex }[] {
+  switch (value.meta()?.type) {
+    case "Range": {
+      const range: Range = value.valueOf() as Range;
+      // Need to have some bound here otherwise would be returning infinite in both dirs.
+      if (range.low?.value || range.high?.value) {
+        return [
+          {
+            start: range.low || { ...range.high, value: "-infinity" },
+            end: range.high || { ...range.low, value: "infinity" },
+          },
+        ];
+      }
+      return [];
+    }
+    case "Age":
+    case "Money":
+    case "Duration":
+    case "Quantity": {
+      const quantity: Quantity = value.valueOf() as Quantity;
+      // using decimalprecision subtract .5 of  decimal precision to get lower bound
+      // and add .5 of decimal precision to get upper bound
+      if (quantity.value) {
+        const decimalPrecision =
+          quantity.value?.toString().split(".")[1]?.length || 0;
+        return [
+          {
+            start: {
+              ...quantity,
+              value: quantity.value - 0.5 * 10 ** -decimalPrecision,
+            },
+            end: {
+              ...quantity,
+              value: quantity.value + 0.5 * 10 ** -decimalPrecision,
+            },
+          },
+        ];
+      }
+      return [];
+    }
+    default:
+      throw new Error(
+        `Unable to index as quantity value '${value.meta()?.type}'`
+      );
+  }
+}
+
 async function indexSearchParameter<CTX extends FHIRServerCTX>(
   client: pg.Client,
   ctx: CTX,
@@ -346,6 +398,28 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
   evaluation: MetaValueSingular<NonNullable<unknown>>[]
 ) {
   switch (parameter.type) {
+    case "quantity": {
+      await Promise.all(
+        evaluation
+          .map(toQuantityRange)
+          .flat()
+          .map(async (value) => {
+            await client.query(
+              "INSERT INTO quantity_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, start_quantity, end_quantity) VALUES($1, $2, $3, $4, $5, $6, $7)",
+              [
+                ctx.workspace,
+                resource.id,
+                resource.meta?.versionId,
+                parameter.name,
+                parameter.url,
+                value.start,
+                value.end,
+              ]
+            );
+          })
+      );
+      return;
+    }
     case "date": {
       await Promise.all(
         evaluation
