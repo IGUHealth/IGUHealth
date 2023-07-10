@@ -10,6 +10,7 @@ import {
   createMiddlewareSync,
   MiddlewareSync,
 } from "../client/middleware/index.js";
+import { OperationError, outcomeError } from "../operationOutcome/index.js";
 
 type InternalData<T extends ResourceType> = Partial<
   Record<T, Record<id, AResource<T> | undefined>>
@@ -92,7 +93,9 @@ function createMemoryMiddleware<
         case "update-request": {
           const resource = request.body;
           if (!resource.id)
-            throw new Error("Updated resource does not have an id.");
+            throw new OperationError(
+              outcomeError("invalid", "Updated resource must have an id.")
+            );
           args.state.data[resource.resourceType] = {
             ...args.state.data[resource.resourceType],
             [resource.id]: resource,
@@ -151,7 +154,12 @@ function createMemoryMiddleware<
           };
         }
         default:
-          throw new Error("Not implemented");
+          throw new OperationError(
+            outcomeError(
+              "not-supported",
+              `Request not supported '${request.type}'`
+            )
+          );
       }
     },
   ]);
