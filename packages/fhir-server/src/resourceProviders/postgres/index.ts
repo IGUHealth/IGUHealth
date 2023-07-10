@@ -37,6 +37,7 @@ import {
 } from "../../client/middleware/index.js";
 import { descend, MetaValueArray, MetaValueSingular } from "@genfhi/meta-value";
 import { SystemSearchRequest, TypeSearchRequest } from "../../client/types";
+import { OperationError, outcomeError } from "../../operationOutcome/index.js";
 
 function searchResources(
   resourceType?: ResourceType
@@ -255,7 +256,9 @@ function getPrecision(v: date | dateTime) {
     }
     throw new Error(`could not determine precision level of '${v}'`);
   }
-  throw new Error(`Invalid date or dateTime format '${v}'`);
+  throw new OperationError(
+    outcomeError("invalid", `Invalid date or dateTime format '${v}'`)
+  );
 }
 
 function toDateRange(
@@ -553,7 +556,12 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
       return;
     }
     default:
-      throw new Error(`Not implemented '${parameter.type}'`);
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `Parameters of type '${parameter.type}' are not yet supported.`
+        )
+      );
   }
 }
 
@@ -626,7 +634,12 @@ async function getResource<CTX extends FHIRServerCTX>(
     "SELECT resource FROM resources WHERE workspace = $1 AND resource_type = $2 AND id = $3 ORDER BY version_id DESC LIMIT 1";
   const res = await client.query(queryText, [ctx.workspace, resourceType, id]);
   if (res.rows.length === 0) {
-    throw new Error(`Resource not found`);
+    throw new OperationError(
+      outcomeError(
+        "not-found",
+        `'${resourceType}' with id '${id}' was not found`
+      )
+    );
   }
   return res.rows[0].resource as Resource;
 }
@@ -648,7 +661,12 @@ async function patchResource<CTX extends FHIRServerCTX>(
       newResource.resourceType !== resource.resourceType ||
       newResource.id !== resource.id
     ) {
-      throw new Error("Invalid Patch");
+      throw new OperationError(
+        outcomeError(
+          "invalid",
+          `Invalid patch, patches must maintain resourceType and id.`
+        )
+      );
     }
     const queryText =
       "INSERT INTO resources(workspace, author, resource, prev_version_id, patches) VALUES($1, $2, $3, $4, $5) RETURNING resource";
@@ -684,7 +702,9 @@ function buildParameters(
       (p) => p.name === parameter.name
     );
     if (searchParameter === undefined)
-      throw new Error(`Unknown parameter '${parameter.name}'`);
+      throw new OperationError(
+        outcomeError("invalid", `Unknown parameter '${parameter.name}'`)
+      );
     const search_table = `${searchParameter.type}_idx`;
     const alias = `${searchParameter.type}${i++}`;
     const paramJoin = `JOIN ${search_table} ${alias} on ${alias}.r_version_id=resources.version_id AND ${alias}.parameter_url= $${index++}`;
@@ -720,8 +740,11 @@ function buildParameters(
         parameterClause = parameter.value.map((value) => {
           const parts = value.toString().split("|");
           if (parts.length === 4) {
-            throw new Error(
-              `prefix not supported yet for parameter '${searchParameter.name}' and value '${value}'`
+            throw new OperationError(
+              outcomeError(
+                "not-supported",
+                `prefix not supported yet for parameter '${searchParameter.name}' and value '${value}'`
+              )
             );
           }
           if (parts.length === 3) {
@@ -753,7 +776,12 @@ function buildParameters(
             }
             return clauses.join(" AND ");
           } else {
-            throw new Error("Must specify number|system|code for quantity");
+            throw new OperationError(
+              outcomeError(
+                "invalid",
+                "Quantity search parameters must be specified as value|system|code"
+              )
+            );
           }
         });
         break;
@@ -799,8 +827,11 @@ function buildParameters(
         break;
       }
       default:
-        throw new Error(
-          `Unsupported search parameter querying '${searchParameter.type}'`
+        throw new OperationError(
+          outcomeError(
+            "not-supported",
+            `Parameter of type '${searchParameter.type}' is not yet supported.`
+          )
         );
     }
     query.push(
@@ -938,7 +969,9 @@ function createPostgresMiddleware<
             },
           };
         case "patch-request":
-          throw new Error("Not implemented");
+          throw new OperationError(
+            outcomeError("not-supported", `Patch is not yet supported.`)
+          );
         case "update-request": {
           const savedResource = await patchResource(
             client,
@@ -960,7 +993,12 @@ function createPostgresMiddleware<
           };
         }
         default:
-          throw new Error(`Not implemented ${request.type}`);
+          throw new OperationError(
+            outcomeError(
+              "not-supported",
+              `Requests of type '${request.type}' are not yet supported`
+            )
+          );
       }
     },
   ]);

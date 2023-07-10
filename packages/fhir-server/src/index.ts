@@ -20,6 +20,12 @@ import {
 import { createPostgresClient } from "./resourceProviders/postgres/index.js";
 import { FHIRResponse } from "./client/types";
 import { resourceTypes } from "@genfhi/fhir-types/r4/sets";
+import {
+  OperationError,
+  isOperationError,
+  issueSeverityToStatusCodes,
+  outcomeError,
+} from "./operationOutcome/index.js";
 
 dotEnv.config();
 
@@ -88,7 +94,12 @@ function fhirResponseToKoaResponse(
     case "capabilities-response":
     case "batch-response":
     case "transaction-response":
-      throw new Error("Not implemented");
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `could not convert response to http of type '${fhirResponse.type}'`
+        )
+      );
   }
 }
 
@@ -137,14 +148,24 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
 
   const router = new Router();
   router.all("/w/:workspace/api/fhir/r4/:fhirUrl*", async (ctx, next) => {
-    const fhirServerResponse = await fhirServer(ctx, ctx.request);
-    const koaResponse = fhirResponseToKoaResponse(fhirServerResponse);
-    Object.keys(koaResponse).map(
-      (k) =>
-        (ctx[k as keyof Koa.DefaultContext] =
-          koaResponse[k as keyof Partial<Koa.Response>])
-    );
-    next();
+    try {
+      const fhirServerResponse = await fhirServer(ctx, ctx.request);
+      const koaResponse = fhirResponseToKoaResponse(fhirServerResponse);
+      Object.keys(koaResponse).map(
+        (k) =>
+          (ctx[k as keyof Koa.DefaultContext] =
+            koaResponse[k as keyof Partial<Koa.Response>])
+      );
+      next();
+    } catch (e) {
+      if (isOperationError(e)) {
+        const operationOutcome = e.outcome;
+        ctx.status = operationOutcome.issue
+          .map((i) => issueSeverityToStatusCodes(i.severity))
+          .sort()[operationOutcome.issue.length - 1];
+        ctx.body = operationOutcome;
+      }
+    }
   });
 
   app

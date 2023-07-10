@@ -9,6 +9,7 @@ import {
 import { MiddlewareSync, MiddlewareAsync } from "./middleware/index.js";
 import { FHIRClientAsync, FHIRClientSync } from "./interface";
 import { FHIRRequest, FHIRResponse } from "./types";
+import { OperationError, outcomeError } from "../operationOutcome/index.js";
 
 export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   state: State;
@@ -79,7 +80,9 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     patches: any
   ): Promise<T> {
     if (resource.id === undefined)
-      throw new Error("Cannot patch resource without id");
+      throw new OperationError(
+        outcomeError("invalid", "Cannot patch resource without id")
+      );
     const response = await this.request(ctx, {
       type: "patch-request",
       level: "instance",

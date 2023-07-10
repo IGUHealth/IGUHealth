@@ -4,11 +4,11 @@ import parseQuery, { FHIRURL } from "@genfhi/fhir-query";
 import {
   CapabilityStatement,
   StructureDefinition,
-  ResourceType,
   Resource,
 } from "@genfhi/fhir-types/r4/types";
+import { OperationError, outcomeError } from "./operationOutcome/index.js";
 
-import { FHIRClient } from "./client/interface";
+import { FHIRClient } from "./client/interface.js";
 import {
   FHIRRequest,
   FHIRResponse,
@@ -48,7 +48,12 @@ function parseInstantRequest(
         ...fhirRequest,
       };
     default:
-      throw new Error(`Instance interaction '${request.method}' not supported`);
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `Instance interaction '${request.method}' not supported`
+        )
+      );
   }
 }
 
@@ -71,7 +76,12 @@ function parseTypeRequest(
         ...fhirRequest,
       };
     default:
-      throw new Error(`Type interaction '${request.method}' not supported`);
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `Type interaction '${request.method}' not supported`
+        )
+      );
   }
 }
 
@@ -88,7 +98,12 @@ function parseSystemRequest(
         ...fhirRequest,
       };
     default:
-      throw new Error(`Type interaction '${request.method}' not supported`);
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `System interaction '${request.method}' not supported`
+        )
+      );
   }
 }
 
@@ -102,15 +117,27 @@ function KoaRequestToFHIRRequest(
   switch (level) {
     case "instance":
       if (!fhirQuery.resourceType)
-        throw new Error("Invalid instance search no resourceType found");
-      if (!fhirQuery.id) throw new Error("Invalid instance search no ID found");
+        throw new OperationError(
+          outcomeError(
+            "invalid",
+            "Invalid instance search no resourceType found"
+          )
+        );
+      if (!fhirQuery.id)
+        throw new OperationError(
+          outcomeError("invalid", "Invalid instance search no ID found")
+        );
+
       return parseInstantRequest(request, fhirQuery, {
         level: "instance",
         id: fhirQuery.id,
         resourceType: fhirQuery.resourceType,
       });
     case "type":
-      if (!fhirQuery.resourceType) throw new Error("Invalid Type search");
+      if (!fhirQuery.resourceType)
+        throw new OperationError(
+          outcomeError("invalid", "Invalid Type search no resourceType found")
+        );
       return parseTypeRequest(request, fhirQuery, {
         level: "type",
         resourceType: fhirQuery.resourceType,
@@ -127,27 +154,6 @@ async function fhirRequestToFHIRResponse(
   request: FHIRRequest
 ): Promise<FHIRResponse> {
   return ctx.database.request(ctx, request);
-}
-
-function fhirResponseToKoaResponse(
-  fhirResponse: FHIRResponse
-): Partial<Koa.Response> {
-  switch (fhirResponse.level) {
-    case "system":
-      throw new Error("not Implemented");
-    case "type":
-      switch (fhirResponse.type) {
-        case "search-response":
-          return {
-            status: 200,
-            body: fhirResponse.body,
-          };
-        default:
-          throw new Error("not Implemented");
-      }
-    case "instance":
-      throw new Error("not Implemented");
-  }
 }
 
 export type FHIRServerCTX = {
