@@ -405,15 +405,19 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           .flat()
           .map(async (value) => {
             await client.query(
-              "INSERT INTO quantity_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, start_quantity, end_quantity) VALUES($1, $2, $3, $4, $5, $6, $7)",
+              "INSERT INTO quantity_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, start_value, start_system, start_code, end_value, end_system, end_code) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)",
               [
                 ctx.workspace,
                 resource.id,
                 resource.meta?.versionId,
                 parameter.name,
                 parameter.url,
-                value.start,
-                value.end,
+                value.start?.value,
+                value.start?.system,
+                value.start?.code,
+                value.end?.value,
+                value.end?.system,
+                value.end?.code,
               ]
             );
           })
