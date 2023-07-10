@@ -19,6 +19,7 @@ import {
 } from "@genfhi/fhir-types/r4/types";
 import { createPostgresClient } from "./resourceProviders/postgres/index.js";
 import { FHIRResponse } from "./client/types";
+import { resourceTypes } from "@genfhi/fhir-types/r4/sets";
 
 dotEnv.config();
 
@@ -91,6 +92,8 @@ function fhirResponseToKoaResponse(
   }
 }
 
+const MEMORY_TYPES = ["StructureDefinition", "SearchParameter"];
+
 function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
   const app = new Koa();
   const memoryDatabase = createMemoryDatabase([
@@ -100,18 +103,15 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
 
   const database = RouterDatabase([
     {
-      resourcesSupported: ["StructureDefinition", "SearchParameter"],
+      resourcesSupported: MEMORY_TYPES as ResourceType[],
       interactionsSupported: ["read-request", "search-request"],
       source: memoryDatabase,
     },
     {
-      resourcesSupported: [
-        "Patient",
-        "RiskAssessment",
-        "ImplementationGuide",
-        "Schedule",
-        "Observation",
-      ],
+      resourcesSupported: [...resourceTypes].filter(
+        (type) => MEMORY_TYPES.indexOf(type) === -1
+      ) as ResourceType[],
+
       interactionsSupported: [
         "read-request",
         "search-request",

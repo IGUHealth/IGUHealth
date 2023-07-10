@@ -834,12 +834,13 @@ async function executeSearchQuery(
   values = parameterQuery.values;
   index = parameterQuery.index;
 
+  values = [...values, ctx.workspace];
   let queryText = `
   SELECT * FROM (
      SELECT DISTINCT ON (resources.id) resources.resource, deleted
      FROM resources 
      ${parameterQuery.query}
-     WHERE 
+     WHERE resources.workspace = $${index++} AND
   `;
 
   // System vs type search filtering
