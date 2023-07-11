@@ -1,11 +1,11 @@
 import Koa from "koa";
 
-import parseQuery, { FHIRURL } from "@genfhi/fhir-query";
+import parseQuery, { FHIRURL } from "@iguhealth/fhir-query";
 import {
   CapabilityStatement,
   StructureDefinition,
   Resource,
-} from "@genfhi/fhir-types/r4/types";
+} from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "./operationOutcome/index.js";
 
 import { FHIRClient } from "./client/interface.js";

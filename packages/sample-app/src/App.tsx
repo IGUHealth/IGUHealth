@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { FhirApp, Integer } from "@genfhi/components";
-import "@genfhi/components/dist/output.css";
+import { FhirApp, Integer } from "@iguhealth/components";
+import "@iguhealth/components/dist/output.css";
 
 function App() {
   const [weight, setWeight] = useState(undefined as number | undefined);

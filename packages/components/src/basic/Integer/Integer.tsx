@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { InputNumber } from "antd";
-import type { integer } from "@genfhi/fhir-types/r4/types";
+import type { integer } from "@iguhealth/fhir-types/r4/types";
 import { FhirWidgetProps } from "../../types";
 
 type Props = FhirWidgetProps<integer>;

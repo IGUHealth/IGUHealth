@@ -1,10 +1,10 @@
-import { FHIRURL } from "@genfhi/fhir-query";
+import { FHIRURL } from "@iguhealth/fhir-query";
 import {
   Resource,
   id,
   ResourceType,
   AResource,
-} from "@genfhi/fhir-types/r4/types";
+} from "@iguhealth/fhir-types/r4/types";
 import { FHIRRequest, FHIRResponse } from "./types";
 
 type Async<F, Else = never> = F extends (...arg: infer A) => infer R

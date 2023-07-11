@@ -2,9 +2,9 @@ import { Command } from "commander";
 import { writeFileSync, mkdirSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { loadArtifacts, generateIndexFile } from "@genfhi/artifacts";
+import { loadArtifacts, generateIndexFile } from "@iguhealth/artifacts";
 
-import { generateSets, generateTypes } from "@genfhi/codegen";
+import { generateSets, generateTypes } from "@iguhealth/codegen";
 
 const program = new Command();
 program

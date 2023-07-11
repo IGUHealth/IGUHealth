@@ -1,5 +1,5 @@
 {
-  "name": "@genfhi/artifacts",
+  "name": "@iguhealth/artifacts",
   "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@genfhi/fhir-types": "workspace:^",
+    "@iguhealth/fhir-types": "workspace:^",
     "@types/node": "^20.4.0",
     "typescript": "5.1.3"
   }

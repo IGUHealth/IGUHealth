@@ -1,4 +1,4 @@
-import schema from "@genfhi/artifacts/r4/fhir.schema.json";
+import schema from "@iguhealth/artifacts/r4/fhir.schema.json";
 import draft6MetaSchema from "ajv/lib/refs/json-schema-draft-06.json";
 import Ajv from "ajv";
 // discriminator: true, strict: false

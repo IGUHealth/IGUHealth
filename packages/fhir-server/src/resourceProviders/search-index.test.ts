@@ -1,10 +1,10 @@
 import path from "path";
 
-import { ResourceType, Resource } from "@genfhi/fhir-types/r4/types";
-import { resourceTypes } from "@genfhi/fhir-types/r4/sets";
+import { ResourceType, Resource } from "@iguhealth/fhir-types/r4/types";
+import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { expect, test } from "@jest/globals";
-import { loadArtifacts } from "@genfhi/artifacts";
-import * as fhirpath from "@genfhi/fhirpath";
+import { loadArtifacts } from "@iguhealth/artifacts";
+import * as fhirpath from "@iguhealth/fhirpath";
 
 import MemoryDatabase from "./memory";
 import { FHIRClientSync } from "../client/interface";

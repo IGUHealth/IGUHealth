@@ -1,5 +1,5 @@
 {
-  "name": "@genfhi/fhirpath",
+  "name": "@iguhealth/fhirpath",
   "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
@@ -14,11 +14,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@genfhi/meta-value": "workspace:^"
+    "@iguhealth/meta-value": "workspace:^"
   },
   "devDependencies": {
-    "@genfhi/artifacts": "workspace:^",
-    "@genfhi/fhir-types": "workspace:^",
+    "@iguhealth/artifacts": "workspace:^",
+    "@iguhealth/fhir-types": "workspace:^",
     "@jest/globals": "^29.6.0",
     "@types/jest": "^29.5.2",
     "jest": "^29.5.0",
@@ -45,7 +45,7 @@
       "^(\\.{1,2}/.*)\\.js$": "$1"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!@genfhi)"
+      "node_modules/(?!@iguhealth)"
     ]
   }
 }

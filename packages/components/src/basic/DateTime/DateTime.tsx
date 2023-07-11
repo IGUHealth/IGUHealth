@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import dayjs from "dayjs";
 import { DatePicker } from "antd";
-import type { dateTime } from "@genfhi/fhir-types/r4/types";
+import type { dateTime } from "@iguhealth/fhir-types/r4/types";
 import { FhirWidgetProps } from "../../types";
 
 type Props = FhirWidgetProps<dateTime>;

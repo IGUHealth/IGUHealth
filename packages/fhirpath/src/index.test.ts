@@ -1,7 +1,7 @@
 import { evaluate, evaluateWithMeta } from "./index";
-import { StructureDefinition, code } from "@genfhi/fhir-types/r4/types";
+import { StructureDefinition, code } from "@iguhealth/fhir-types/r4/types";
 import { expect, test } from "@jest/globals";
-import { loadArtifacts } from "@genfhi/artifacts";
+import { loadArtifacts } from "@iguhealth/artifacts";
 
 const sds: StructureDefinition[] = loadArtifacts(
   "StructureDefinition",

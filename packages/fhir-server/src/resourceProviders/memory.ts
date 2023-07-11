@@ -1,10 +1,10 @@
-import { ParsedParameter } from "@genfhi/fhir-query";
+import { ParsedParameter } from "@iguhealth/fhir-query";
 import {
   ResourceType,
   AResource,
   Resource,
   id,
-} from "@genfhi/fhir-types/r4/types";
+} from "@iguhealth/fhir-types/r4/types";
 import { SynchronousClient } from "../client/index.js";
 import {
   createMiddlewareSync,

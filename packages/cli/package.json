@@ -1,13 +1,13 @@
 {
-  "name": "@genfhi/cli",
+  "name": "@iguhealth/cli",
   "bin": "lib/index.js",
   "types": "lib/index.d.ts",
   "target": "node",
   "type": "module",
   "dependencies": {
-    "@genfhi/artifacts": "workspace:^",
-    "@genfhi/codegen": "workspace:^",
-    "@genfhi/fhir-types": "workspace:^",
+    "@iguhealth/artifacts": "workspace:^",
+    "@iguhealth/codegen": "workspace:^",
+    "@iguhealth/fhir-types": "workspace:^",
     "@types/node": "^20.4.0",
     "commander": "^11.0.0"
   },

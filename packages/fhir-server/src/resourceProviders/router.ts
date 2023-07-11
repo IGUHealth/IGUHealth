@@ -1,4 +1,4 @@
-import { ResourceType } from "@genfhi/fhir-types/r4/types";
+import { ResourceType } from "@iguhealth/fhir-types/r4/types";
 import {
   FHIRRequest,
   FHIRResponse,

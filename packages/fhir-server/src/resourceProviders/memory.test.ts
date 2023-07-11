@@ -1,12 +1,12 @@
-import parseURL from "@genfhi/fhir-query";
-import { loadArtifacts } from "@genfhi/artifacts";
+import parseURL from "@iguhealth/fhir-query";
+import { loadArtifacts } from "@iguhealth/artifacts";
 import { expect, test } from "@jest/globals";
 import path from "path";
 
 import {
   SearchParameter,
   StructureDefinition,
-} from "@genfhi/fhir-types/r4/types";
+} from "@iguhealth/fhir-types/r4/types";
 import createMemoryDatabase from "./memory";
 
 const artifactParameters = loadArtifacts(

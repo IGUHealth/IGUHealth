@@ -1,10 +1,10 @@
-import { FHIRURL } from "@genfhi/fhir-query";
+import { FHIRURL } from "@iguhealth/fhir-query";
 import {
   AResource,
   Resource,
   ResourceType,
   id,
-} from "@genfhi/fhir-types/r4/types";
+} from "@iguhealth/fhir-types/r4/types";
 
 import { MiddlewareSync, MiddlewareAsync } from "./middleware/index.js";
 import { FHIRClientAsync, FHIRClientSync } from "./interface";

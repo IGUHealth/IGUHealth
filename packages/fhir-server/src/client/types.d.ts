@@ -3,8 +3,8 @@ import {
   Resource,
   Bundle,
   CapabilityStatement,
-} from "@genfhi/fhir-types/r4/types";
-import { FHIRURL } from "@genfhi/fhir-query";
+} from "@iguhealth/fhir-types/r4/types";
+import { FHIRURL } from "@iguhealth/fhir-query";
 
 export type RequestLevel = {
   instance: "instance";

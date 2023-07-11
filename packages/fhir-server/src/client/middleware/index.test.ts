@@ -1,4 +1,4 @@
-import { FHIRURL } from "@genfhi/fhir-query";
+import { FHIRURL } from "@iguhealth/fhir-query";
 import { createMiddlewareSync, createMiddlewareAsync } from "./index";
 
 test("Test middleware Sync", () => {

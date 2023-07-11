@@ -5,7 +5,7 @@ import path from "path";
 import dotEnv from "dotenv";
 import { fileURLToPath } from "url";
 
-import { loadArtifacts } from "@genfhi/artifacts";
+import { loadArtifacts } from "@iguhealth/artifacts";
 import MemoryDatabase from "./resourceProviders/memory.js";
 import RouterDatabase from "./resourceProviders/router.js";
 import { FHIRClientSync } from "./client/interface.js";
@@ -16,10 +16,10 @@ import {
   CapabilityStatement,
   ResourceType,
   Resource,
-} from "@genfhi/fhir-types/r4/types";
+} from "@iguhealth/fhir-types/r4/types";
 import { createPostgresClient } from "./resourceProviders/postgres/index.js";
 import { FHIRResponse } from "./client/types";
-import { resourceTypes } from "@genfhi/fhir-types/r4/sets";
+import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
   OperationError,
   isOperationError,

@@ -1,5 +1,5 @@
 {
-  "name": "@genfhi/fhir-server",
+  "name": "@iguhealth/fhir-server",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -12,10 +12,10 @@
     "watch": "yarn tsc-watch --onSuccess \"yarn node ./lib/index.js\""
   },
   "dependencies": {
-    "@genfhi/artifacts": "workspace:^",
-    "@genfhi/fhir-query": "workspace:^",
-    "@genfhi/fhirpath": "workspace:^",
-    "@genfhi/meta-value": "workspace:^",
+    "@iguhealth/artifacts": "workspace:^",
+    "@iguhealth/fhir-query": "workspace:^",
+    "@iguhealth/fhirpath": "workspace:^",
+    "@iguhealth/meta-value": "workspace:^",
     "@koa/router": "^12.0.0",
     "dayjs": "^1.11.9",
     "db-migrate": "1.0.0-beta.21",
@@ -28,8 +28,8 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@genfhi/fhir-types": "workspace:^",
-    "@genfhi/test-data": "workspace:^",
+    "@iguhealth/fhir-types": "workspace:^",
+    "@iguhealth/test-data": "workspace:^",
     "@jest/globals": "^29.6.1",
     "@types/jest": "^29.5.2",
     "@types/koa": "^2.13.6",
@@ -60,7 +60,7 @@
       "^(\\.{1,2}/.*)\\.js$": "$1"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!@genfhi)"
+      "node_modules/(?!@iguhealth)"
     ]
   }
 }

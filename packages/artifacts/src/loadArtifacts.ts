@@ -4,7 +4,7 @@ import {
   Bundle,
   ResourceType,
   AResource,
-} from "@genfhi/fhir-types/r4/types";
+} from "@iguhealth/fhir-types/r4/types";
 import { IndexFile, PackageJSON } from "./types";
 
 function isBundle(r: Resource): r is Bundle {

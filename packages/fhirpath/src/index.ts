@@ -1,11 +1,11 @@
-import { Reference, Resource } from "@genfhi/fhir-types/r4/types";
+import { Reference, Resource } from "@iguhealth/fhir-types/r4/types";
 import {
   PartialMeta,
   MetaValueArray,
   MetaValueSingular,
   descend,
   toMetaValueNodes,
-} from "@genfhi/meta-value";
+} from "@iguhealth/meta-value";
 import { parse } from "./parser.js";
 
 function flattenedDescend<T>(

@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "node:fs";
 
-import { Bundle } from "@genfhi/fhir-types/r4/types";
+import { Bundle } from "@iguhealth/fhir-types/r4/types";
 
 import { IndexFile } from "./types";
 

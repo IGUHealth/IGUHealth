@@ -4,8 +4,8 @@ import {
   ElementDefinition,
   code,
   Meta,
-} from "@genfhi/fhir-types/r4/types";
-import { complexTypes, resourceTypes } from "@genfhi/fhir-types/r4/sets";
+} from "@iguhealth/fhir-types/r4/types";
+import { complexTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 
 //
 function isResourceOrComplexType(type: string): boolean {

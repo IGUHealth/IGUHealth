@@ -1,5 +1,5 @@
 {
-  "name": "@genfhi/fhir-types",
+  "name": "@iguhealth/fhir-types",
   "version": "1.0.0",
   "description": "",
   "type": "module",
@@ -17,7 +17,7 @@
     "./r4/types": "./r4/types.d.ts"
   },
   "devDependencies": {
-    "@genfhi/cli": "workspace:^",
+    "@iguhealth/cli": "workspace:^",
     "typescript": "5.1.3"
   }
 }

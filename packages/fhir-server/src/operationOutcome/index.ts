@@ -1,4 +1,4 @@
-import { OperationOutcome } from "@genfhi/fhir-types/r4/types";
+import { OperationOutcome } from "@iguhealth/fhir-types/r4/types";
 
 export class OperationError extends Error {
   public readonly operationOutcome: OperationOutcome;

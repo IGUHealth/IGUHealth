@@ -1,7 +1,7 @@
 import {
   ElementDefinition,
   StructureDefinition,
-} from "@genfhi/fhir-types/r4/types";
+} from "@iguhealth/fhir-types/r4/types";
 import { traversalBottomUp } from "./sdTraversal.js";
 
 function fhirSystemTypePredicate(type: string) {
