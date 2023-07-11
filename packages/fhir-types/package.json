@@ -4,7 +4,7 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "generate": "bun cli generate-types-artifacts --output=./r4",
+    "generate": "yarn cli generate-types-artifacts --output=./r4",
     "build": "tsc",
     "test": "echo \"Error: no test specified\""
   },

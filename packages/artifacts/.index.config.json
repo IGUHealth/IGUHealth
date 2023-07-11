@@ -1,17 +1,17 @@
 {
-    "index-version": 1,
-    "files": [
-        {
-            "filename": "./r4/profiles-resources.json",
-            "resourceType": "StructureDefinition"
-        },
-        {
-            "filename": "./r4/profiles-types.json",
-            "resourceType": "StructureDefinition"
-        },
-        {
-            "filename": "./r4/search-parameters.json",
-            "resourceType": "SearchParameter"
-        }
-    ]
+  "index-version": 1,
+  "files": [
+    {
+      "filename": "./r4/hl7/profiles-resources.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "./r4/hl7/profiles-types.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "./r4/hl7/search-parameters.json",
+      "resourceType": "SearchParameter"
+    }
+  ]
 }
