@@ -161,7 +161,7 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
   });
 
   const router = new Router();
-  router.all("/w/:workspace/api/fhir/r4/:fhirUrl*", async (ctx, next) => {
+  router.all("/w/:workspace/api/v1/fhir/r4/:fhirUrl*", async (ctx, next) => {
     try {
       const fhirServerResponse = await fhirServer(ctx, ctx.request);
       const koaResponse = fhirResponseToKoaResponse(fhirServerResponse);
