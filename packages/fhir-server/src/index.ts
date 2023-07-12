@@ -1,9 +1,11 @@
-import Koa from "koa";
+import Koa, { DefaultContext, DefaultState, Middleware } from "koa";
 import Router from "@koa/router";
 import bodyParser from "koa-bodyparser";
 import path from "path";
 import dotEnv from "dotenv";
 import { fileURLToPath } from "url";
+import jwt from "koa-jwt";
+import jwksRsa from "jwks-rsa";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import MemoryDatabase from "./resourceProviders/memory.js";
@@ -105,6 +107,18 @@ function fhirResponseToKoaResponse(
 
 const MEMORY_TYPES = ["StructureDefinition", "SearchParameter"];
 
+const checkJWT: Middleware<DefaultState, DefaultContext, any> = jwt({
+  secret: jwksRsa.koaJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 2,
+    jwksUri: `https://iguhealth.us.auth0.com/.well-known/jwks.json`,
+  }),
+  audience: "https://api.iguhealth.com",
+  issuer: "https://iguhealth.us.auth0.com/",
+  algorithms: ["RS256"],
+}) as unknown as Middleware<DefaultState, DefaultContext, any>;
+
 function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
   const app = new Koa();
   const memoryDatabase = createMemoryDatabase([
@@ -182,6 +196,7 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
       const ms = Date.now() - start;
       ctx.set("X-Response-Time", `${ms}ms`);
     })
+    .use(checkJWT)
     .use(router.routes())
     .use(router.allowedMethods());
 
