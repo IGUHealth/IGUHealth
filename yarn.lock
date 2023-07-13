@@ -114,6 +114,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@auth0/auth0-react@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "@auth0/auth0-react@npm:2.1.1"
+  dependencies:
+    "@auth0/auth0-spa-js": ^2.0.8
+  peerDependencies:
+    react: ^16.11.0 || ^17 || ^18
+    react-dom: ^16.11.0 || ^17 || ^18
+  checksum: 37093c8ec5a4dc6bff4b04f8b8a3beba5aa378c223dd07ef00d8e0e624ee6eaa15ac6f2464b3d26b02bd272d5b569de9903b6256352c94939285310c877d9da2
+  languageName: node
+  linkType: hard
+
+"@auth0/auth0-spa-js@npm:^2.0.8":
+  version: 2.0.8
+  resolution: "@auth0/auth0-spa-js@npm:2.0.8"
+  checksum: 98a278aa0cc7ee81e8cdcc2c1684adb129461a54a197623d133a257b49961812354f07c962f8f40f5e62b2837dd291e62d61592ea7d7b7666c3ab9030794160d
+  languageName: node
+  linkType: hard
+
 "@aw-web-design/x-default-browser@npm:1.4.88":
   version: 1.4.88
   resolution: "@aw-web-design/x-default-browser@npm:1.4.88"
@@ -17898,6 +17917,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "sample-app@workspace:packages/sample-app"
   dependencies:
+    "@auth0/auth0-react": ^2.1.1
     "@iguhealth/components": "workspace:^"
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": ^13.4.0
