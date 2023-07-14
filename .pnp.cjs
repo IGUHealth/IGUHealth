@@ -5730,6 +5730,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/koa", "npm:2.13.6"],\
             ["@types/koa-bodyparser", "npm:4.3.10"],\
             ["@types/koa__router", "npm:12.0.0"],\
+            ["@types/oidc-provider", "npm:8.2.0"],\
             ["@types/pg", "npm:8.10.2"],\
             ["@types/uuid", "npm:9.0.2"],\
             ["dayjs", "npm:1.11.9"],\
@@ -10286,6 +10287,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-npmlog-npm-4.1.4-4b0dd7a2bf-740f7431cc.zip/node_modules/@types/npmlog/",\
           "packageDependencies": [\
             ["@types/npmlog", "npm:4.1.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/oidc-provider", [\
+        ["npm:8.2.0", {\
+          "packageLocation": "./.yarn/cache/@types-oidc-provider-npm-8.2.0-1292ff3df2-4c71ee0825.zip/node_modules/@types/oidc-provider/",\
+          "packageDependencies": [\
+            ["@types/oidc-provider", "npm:8.2.0"],\
+            ["@types/koa", "npm:2.13.6"]\
           ],\
           "linkType": "HARD"\
         }]\

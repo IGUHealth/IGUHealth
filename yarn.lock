@@ -2651,6 +2651,7 @@ __metadata:
     "@types/koa": ^2.13.6
     "@types/koa-bodyparser": ^4.3.10
     "@types/koa__router": ^12.0.0
+    "@types/oidc-provider": ^8.2.0
     "@types/pg": ^8.10.2
     "@types/uuid": 9.0.2
     dayjs: ^1.11.9
@@ -5725,6 +5726,15 @@ __metadata:
   version: 4.1.4
   resolution: "@types/npmlog@npm:4.1.4"
   checksum: 740f7431ccfc0e127aa8d162fe05c6ce8aa71290be020d179b2824806d19bd2c706c7e0c9a3c9963cefcdf2ceacb1dec6988c394c3694451387759dafe0aa927
+  languageName: node
+  linkType: hard
+
+"@types/oidc-provider@npm:^8.2.0":
+  version: 8.2.0
+  resolution: "@types/oidc-provider@npm:8.2.0"
+  dependencies:
+    "@types/koa": "*"
+  checksum: 4c71ee082555df313cc78e08ac05121daee29d4e56807f5ae38ac16f30e1ad547b08b5b57f53c187e3c496041b0626ff8f4569bec234d60b69c371d39f6aa7ec
   languageName: node
   linkType: hard
 
