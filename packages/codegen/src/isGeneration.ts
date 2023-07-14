@@ -16,6 +16,17 @@ export function generateSets(
   version: "r4",
   structureDefinitions: Readonly<Array<StructureDefinition>>
 ): string {
+  // Ignore templates for now during type generation.
+  structureDefinitions.map((sd) => console.log(sd.id, sd.kind, sd.derivation));
+  structureDefinitions = structureDefinitions.filter(
+    (sd) => sd.kind !== "logical" && sd.derivation === "specialization"
+  );
+
+  console.log(
+    "TESTING:",
+    structureDefinitions.map((sd) => sd.id)
+  );
+
   const primitiveTypes = structureDefinitions.filter(
     (sd) => sd.kind === "primitive-type"
   );

@@ -3104,6 +3104,9 @@ export type ResourceMap = {
   ValueSet: ValueSet;
   VerificationResult: VerificationResult;
   VisionPrescription: VisionPrescription;
+  ClientApplication: ClientApplication;
+  Connection: Connection;
+  Tenant: Tenant;
 }
 
 export type ResourceType = keyof ResourceMap
@@ -34664,4 +34667,46 @@ resourceType: "VisionPrescription"
    * Vision lens authorization
    */
   lensSpecification: Array<VisionPrescriptionLensSpecification>;
+}
+
+export interface ClientApplication {
+resourceType: "ClientApplication"
+  /** 
+   * Logical id of this artifact
+   */
+  id?: string;
+  /** 
+   * Metadata about the resource
+   */
+  meta?: Meta;
+  name: string;
+  description?: string;
+}
+
+export interface Connection {
+resourceType: "Connection"
+  /** 
+   * Logical id of this artifact
+   */
+  id?: string;
+  /** 
+   * Metadata about the resource
+   */
+  meta?: Meta;
+  name: string;
+  description?: string;
+}
+
+export interface Tenant {
+resourceType: "Tenant"
+  /** 
+   * Logical id of this artifact
+   */
+  id?: string;
+  /** 
+   * Metadata about the resource
+   */
+  meta?: Meta;
+  name: string;
+  description?: string;
 }
