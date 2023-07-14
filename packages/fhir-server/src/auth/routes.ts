@@ -38,14 +38,6 @@ const { SessionNotFound } = errors;
 
 export default (provider: Provider) => {
   const router = new Router();
-  console.log(bodyParser);
-
-  const body = bodyParser({
-    text: false,
-    json: false,
-    patchNode: true,
-    patchKoa: true,
-  });
 
   router.use(async (ctx, next) => {
     ctx.set("cache-control", "no-store");
@@ -113,7 +105,7 @@ export default (provider: Provider) => {
   //     return ctx.render("repost", { layout: false, upstream: "google", nonce });
   //   });
 
-  router.post("/interaction/:uid/login", body, async (ctx) => {
+  router.post("/interaction/:uid/login", async (ctx) => {
     const {
       prompt: { name },
     } = await provider.interactionDetails(ctx.req, ctx.res);
@@ -132,7 +124,7 @@ export default (provider: Provider) => {
     });
   });
 
-  router.post("/interaction/:uid/federated", body, async (ctx) => {
+  router.post("/interaction/:uid/federated", async (ctx) => {
     const {
       prompt: { name },
     } = await provider.interactionDetails(ctx.req, ctx.res);
@@ -194,7 +186,7 @@ export default (provider: Provider) => {
     }
   });
 
-  router.post("/interaction/:uid/confirm", body, async (ctx) => {
+  router.post("/interaction/:uid/confirm", async (ctx) => {
     const interactionDetails = await provider.interactionDetails(
       ctx.req,
       ctx.res
@@ -210,6 +202,8 @@ export default (provider: Provider) => {
 
     let { grantId } = interactionDetails;
     let grant;
+
+    console.log("GRANT:!", accountId);
 
     if (grantId) {
       // we'll be modifying existing grant in existing session

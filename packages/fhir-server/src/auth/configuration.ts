@@ -1,4 +1,4 @@
-import type { Configuration } from "oidc-provider";
+import type { Configuration, ResourceServer } from "oidc-provider";
 
 const configuration: Configuration = {
   clients: [
@@ -6,7 +6,8 @@ const configuration: Configuration = {
       client_id: "app",
       client_secret: "a_secret",
       grant_types: ["client_credentials"],
-      redirect_uris: [],
+      id_token_signed_response_alg: "RS256",
+      redirect_uris: ["http://localhost:8080"],
       response_types: [],
     },
     // {
@@ -51,6 +52,28 @@ const configuration: Configuration = {
     ],
   },
   features: {
+    resourceIndicators: {
+      enabled: true,
+      defaultResource(): string {
+        // This value is irrelevant, but is necessary to trigger the `getResourceServerInfo` call below,
+        // where it will be an input parameter in case the client provided no value.
+        // Note that an empty string is not a valid value.
+        return "http://example.com/";
+      },
+      // This call is necessary to force the OIDC library to return a JWT access token.
+      // See https://github.com/panva/node-oidc-provider/discussions/959#discussioncomment-524757
+      getResourceServerInfo: (): ResourceServer => ({
+        // The scopes of the Resource Server.
+        // These get checked when requesting client credentials.
+        scope: "openid profile",
+        audience: "https://iguhealth.com/api",
+        accessTokenFormat: "jwt",
+        jwt: {
+          sign: { alg: "RS256" },
+        },
+      }),
+    },
+    jwtResponseModes: { enabled: true }, // defaults to false
     devInteractions: { enabled: false }, // defaults to true
 
     deviceFlow: { enabled: true }, // defaults to false

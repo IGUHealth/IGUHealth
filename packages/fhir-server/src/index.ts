@@ -119,10 +119,10 @@ const checkJWT: Middleware<DefaultState, DefaultContext, any> = jwt({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 2,
-    jwksUri: `https://iguhealth.us.auth0.com/.well-known/jwks.json`,
+    jwksUri: `http://localhost:3000/jwks`,
   }),
-  audience: "https://api.iguhealth.com",
-  issuer: "https://iguhealth.us.auth0.com/",
+  audience: "https://iguhealth.com/api",
+  issuer: "http://localhost:3000",
   algorithms: ["RS256"],
 }) as unknown as Middleware<DefaultState, DefaultContext, any>;
 
@@ -197,7 +197,7 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
   const provider = new Provider(ISSUER, { ...configuration });
 
   app
-    //.use(bodyParser())
+    .use(bodyParser())
     .use(routes(provider).routes())
     .use(mount(provider.app))
 
