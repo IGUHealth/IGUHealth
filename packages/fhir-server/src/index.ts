@@ -1,35 +1,42 @@
 import Koa, { DefaultContext, DefaultState, Middleware } from "koa";
 import Router from "@koa/router";
-import bodyParser from "koa-bodyparser";
+import bodyParser from "@koa/bodyparser";
 import path from "path";
 import dotEnv from "dotenv";
 import { fileURLToPath } from "url";
 import jwt from "koa-jwt";
 import jwksRsa from "jwks-rsa";
-
-import { loadArtifacts } from "@iguhealth/artifacts";
-import MemoryDatabase from "./resourceProviders/memory.js";
-import RouterDatabase from "./resourceProviders/router.js";
-import { FHIRClientSync } from "./client/interface.js";
-
-import createFhirServer, { FHIRServerCTX } from "./fhirServer.js";
+import Provider from "oidc-provider";
+import mount from "koa-mount";
 import {
   Bundle,
   CapabilityStatement,
   ResourceType,
   Resource,
 } from "@iguhealth/fhir-types/r4/types";
+import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
+
+import { loadArtifacts } from "@iguhealth/artifacts";
+import MemoryDatabase from "./resourceProviders/memory.js";
+import RouterDatabase from "./resourceProviders/router.js";
+import { FHIRClientSync } from "./client/interface.js";
+import createFhirServer, { FHIRServerCTX } from "./fhirServer.js";
 import { createPostgresClient } from "./resourceProviders/postgres/index.js";
 import { FHIRResponse } from "./client/types";
-import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
   OperationError,
   isOperationError,
   issueSeverityToStatusCodes,
   outcomeError,
 } from "./operationOutcome/index.js";
+import Account from "./auth/accounts.js";
+import configuration from "./auth/configuration.js";
+import routes from "./auth/routes.js";
 
 dotEnv.config();
+
+const { PORT = 3000, ISSUER = `http://localhost:${PORT}` } = process.env;
+configuration.findAccount = Account.findAccount;
 
 function serverCapabilities(): CapabilityStatement {
   return {
@@ -181,6 +188,12 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
       }
     }
   });
+
+  // TODO Use an adapter  adapter,
+  const provider = new Provider(ISSUER, { ...configuration });
+
+  app.use(routes(provider).routes());
+  app.use(mount(provider.app));
 
   app
     .use(bodyParser())
