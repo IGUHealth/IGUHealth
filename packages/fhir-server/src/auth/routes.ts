@@ -5,7 +5,7 @@ import * as crypto from "node:crypto";
 import { inspect } from "node:util";
 
 import isEmpty from "lodash/isEmpty.js";
-import bodyParser from "koa-body";
+import { koaBody as bodyParser } from "koa-body";
 import Router from "@koa/router";
 
 import * as defaults from "./defaults.js"; // make your own, you'll need it anyway
@@ -38,6 +38,7 @@ const { SessionNotFound } = errors;
 
 export default (provider: Provider) => {
   const router = new Router();
+  console.log(bodyParser);
 
   const body = bodyParser({
     text: false,

@@ -1,5 +1,5 @@
 // import { nanoid } from "nanoid";
-import uuid from "uuid";
+import { v4 } from "uuid";
 import type {
   Account as AccountInterface,
   ClaimsParameterMember,
@@ -16,7 +16,7 @@ class Account implements AccountInterface {
   [key: string]: unknown;
 
   constructor(id: string | undefined, profile?: any) {
-    this.accountId = id || uuid.v4();
+    this.accountId = id || v4();
     this.profile = profile;
     store.set(this.accountId, this);
   }
