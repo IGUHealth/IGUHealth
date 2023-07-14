@@ -2,6 +2,13 @@ import type { Configuration } from "oidc-provider";
 
 const configuration: Configuration = {
   clients: [
+    {
+      client_id: "app",
+      client_secret: "a_secret",
+      grant_types: ["client_credentials"],
+      redirect_uris: [],
+      response_types: [],
+    },
     // {
     //   client_id: 'oidcCLIENT',
     //   client_secret: '...',
@@ -48,6 +55,9 @@ const configuration: Configuration = {
 
     deviceFlow: { enabled: true }, // defaults to false
     revocation: { enabled: true }, // defaults to false
+    clientCredentials: {
+      enabled: true,
+    },
   },
   jwks: {
     keys: [

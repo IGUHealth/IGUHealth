@@ -168,35 +168,39 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
   });
 
   const router = new Router();
-  router.all("/w/:workspace/api/v1/fhir/r4/:fhirUrl*", async (ctx, next) => {
-    try {
-      const fhirServerResponse = await fhirServer(ctx, ctx.request);
-      const koaResponse = fhirResponseToKoaResponse(fhirServerResponse);
-      Object.keys(koaResponse).map(
-        (k) =>
-          (ctx[k as keyof Koa.DefaultContext] =
-            koaResponse[k as keyof Partial<Koa.Response>])
-      );
-      next();
-    } catch (e) {
-      if (isOperationError(e)) {
-        const operationOutcome = e.outcome;
-        ctx.status = operationOutcome.issue
-          .map((i) => issueSeverityToStatusCodes(i.severity))
-          .sort()[operationOutcome.issue.length - 1];
-        ctx.body = operationOutcome;
+  router.all(
+    "/w/:workspace/api/v1/fhir/r4/:fhirUrl*",
+    checkJWT,
+    async (ctx, next) => {
+      try {
+        const fhirServerResponse = await fhirServer(ctx, ctx.request);
+        const koaResponse = fhirResponseToKoaResponse(fhirServerResponse);
+        Object.keys(koaResponse).map(
+          (k) =>
+            (ctx[k as keyof Koa.DefaultContext] =
+              koaResponse[k as keyof Partial<Koa.Response>])
+        );
+        next();
+      } catch (e) {
+        if (isOperationError(e)) {
+          const operationOutcome = e.outcome;
+          ctx.status = operationOutcome.issue
+            .map((i) => issueSeverityToStatusCodes(i.severity))
+            .sort()[operationOutcome.issue.length - 1];
+          ctx.body = operationOutcome;
+        }
       }
     }
-  });
+  );
 
   // TODO Use an adapter  adapter,
   const provider = new Provider(ISSUER, { ...configuration });
 
-  app.use(routes(provider).routes());
-  app.use(mount(provider.app));
-
   app
-    .use(bodyParser())
+    //.use(bodyParser())
+    .use(routes(provider).routes())
+    .use(mount(provider.app))
+
     .use(async (ctx, next) => {
       await next();
       const rt = ctx.response.get("X-Response-Time");
@@ -209,7 +213,6 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
       const ms = Date.now() - start;
       ctx.set("X-Response-Time", `${ms}ms`);
     })
-    .use(checkJWT)
     .use(router.routes())
     .use(router.allowedMethods());
 
