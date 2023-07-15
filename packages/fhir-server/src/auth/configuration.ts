@@ -58,20 +58,28 @@ const configuration: Configuration = {
         // This value is irrelevant, but is necessary to trigger the `getResourceServerInfo` call below,
         // where it will be an input parameter in case the client provided no value.
         // Note that an empty string is not a valid value.
-        return "http://example.com/";
+        return "https://iguhealth.com/api";
       },
       // This call is necessary to force the OIDC library to return a JWT access token.
       // See https://github.com/panva/node-oidc-provider/discussions/959#discussioncomment-524757
-      getResourceServerInfo: (): ResourceServer => ({
-        // The scopes of the Resource Server.
-        // These get checked when requesting client credentials.
-        scope: "openid profile",
-        audience: "https://iguhealth.com/api",
-        accessTokenFormat: "jwt",
-        jwt: {
-          sign: { alg: "RS256" },
-        },
-      }),
+      getResourceServerInfo: (
+        ctx,
+        resourceIndicator,
+        client
+      ): ResourceServer => {
+        if (resourceIndicator === "https://iguhealth.com/api")
+          return {
+            // The scopes of the Resource Server.
+            // These get checked when requesting client credentials.
+            scope: "openid profile",
+            audience: "https://iguhealth.com/api",
+            accessTokenFormat: "jwt",
+            jwt: {
+              sign: { alg: "RS256" },
+            },
+          };
+        throw new Error(`Unknown resource indicator ${resourceIndicator}`);
+      },
     },
     jwtResponseModes: { enabled: true }, // defaults to false
     devInteractions: { enabled: false }, // defaults to true
