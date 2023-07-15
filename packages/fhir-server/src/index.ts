@@ -1,35 +1,42 @@
 import Koa, { DefaultContext, DefaultState, Middleware } from "koa";
 import Router from "@koa/router";
-import bodyParser from "koa-bodyparser";
+import bodyParser from "@koa/bodyparser";
 import path from "path";
 import dotEnv from "dotenv";
 import { fileURLToPath } from "url";
 import jwt from "koa-jwt";
 import jwksRsa from "jwks-rsa";
-
-import { loadArtifacts } from "@iguhealth/artifacts";
-import MemoryDatabase from "./resourceProviders/memory.js";
-import RouterDatabase from "./resourceProviders/router.js";
-import { FHIRClientSync } from "./client/interface.js";
-
-import createFhirServer, { FHIRServerCTX } from "./fhirServer.js";
+import Provider from "oidc-provider";
+import mount from "koa-mount";
 import {
   Bundle,
   CapabilityStatement,
   ResourceType,
   Resource,
 } from "@iguhealth/fhir-types/r4/types";
+import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
+
+import { loadArtifacts } from "@iguhealth/artifacts";
+import MemoryDatabase from "./resourceProviders/memory.js";
+import RouterDatabase from "./resourceProviders/router.js";
+import { FHIRClientSync } from "./client/interface.js";
+import createFhirServer, { FHIRServerCTX } from "./fhirServer.js";
 import { createPostgresClient } from "./resourceProviders/postgres/index.js";
 import { FHIRResponse } from "./client/types";
-import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
   OperationError,
   isOperationError,
   issueSeverityToStatusCodes,
   outcomeError,
 } from "./operationOutcome/index.js";
+import Account from "./auth/accounts.js";
+import configuration from "./auth/configuration.js";
+import routes from "./auth/routes.js";
 
 dotEnv.config();
+
+const { PORT = 3000, ISSUER = `http://localhost:${PORT}` } = process.env;
+configuration.findAccount = Account.findAccount;
 
 function serverCapabilities(): CapabilityStatement {
   return {
@@ -112,10 +119,10 @@ const checkJWT: Middleware<DefaultState, DefaultContext, any> = jwt({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 2,
-    jwksUri: `https://iguhealth.us.auth0.com/.well-known/jwks.json`,
+    jwksUri: `http://localhost:3000/jwks`,
   }),
-  audience: "https://api.iguhealth.com",
-  issuer: "https://iguhealth.us.auth0.com/",
+  audience: "https://iguhealth.com/api",
+  issuer: "http://localhost:3000",
   algorithms: ["RS256"],
 }) as unknown as Middleware<DefaultState, DefaultContext, any>;
 
@@ -161,29 +168,39 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
   });
 
   const router = new Router();
-  router.all("/w/:workspace/api/v1/fhir/r4/:fhirUrl*", async (ctx, next) => {
-    try {
-      const fhirServerResponse = await fhirServer(ctx, ctx.request);
-      const koaResponse = fhirResponseToKoaResponse(fhirServerResponse);
-      Object.keys(koaResponse).map(
-        (k) =>
-          (ctx[k as keyof Koa.DefaultContext] =
-            koaResponse[k as keyof Partial<Koa.Response>])
-      );
-      next();
-    } catch (e) {
-      if (isOperationError(e)) {
-        const operationOutcome = e.outcome;
-        ctx.status = operationOutcome.issue
-          .map((i) => issueSeverityToStatusCodes(i.severity))
-          .sort()[operationOutcome.issue.length - 1];
-        ctx.body = operationOutcome;
+  router.all(
+    "/w/:workspace/api/v1/fhir/r4/:fhirUrl*",
+    checkJWT,
+    async (ctx, next) => {
+      try {
+        const fhirServerResponse = await fhirServer(ctx, ctx.request);
+        const koaResponse = fhirResponseToKoaResponse(fhirServerResponse);
+        Object.keys(koaResponse).map(
+          (k) =>
+            (ctx[k as keyof Koa.DefaultContext] =
+              koaResponse[k as keyof Partial<Koa.Response>])
+        );
+        next();
+      } catch (e) {
+        if (isOperationError(e)) {
+          const operationOutcome = e.outcome;
+          ctx.status = operationOutcome.issue
+            .map((i) => issueSeverityToStatusCodes(i.severity))
+            .sort()[operationOutcome.issue.length - 1];
+          ctx.body = operationOutcome;
+        }
       }
     }
-  });
+  );
+
+  // TODO Use an adapter  adapter,
+  const provider = new Provider(ISSUER, { ...configuration });
 
   app
     .use(bodyParser())
+    .use(routes(provider).routes())
+    .use(mount(provider.app))
+
     .use(async (ctx, next) => {
       await next();
       const rt = ctx.response.get("X-Response-Time");
@@ -196,7 +213,6 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
       const ms = Date.now() - start;
       ctx.set("X-Response-Time", `${ms}ms`);
     })
-    .use(checkJWT)
     .use(router.routes())
     .use(router.allowedMethods());
 
