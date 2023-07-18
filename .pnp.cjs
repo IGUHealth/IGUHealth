@@ -5741,6 +5741,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["dotenv", "npm:16.3.1"],\
             ["fast-json-patch", "npm:3.1.1"],\
             ["jest", "virtual:95acd521ad270141ccfbf50f9e178ed2e993b719f7a01b7f56f97673e930358da332dff4b0b0ca7717dc2c89eb53f5d20730d0698497ab79154b11d36496d84b#npm:29.6.0"],\
+            ["jose", "npm:4.14.4"],\
             ["jwks-rsa", "npm:3.0.1"],\
             ["koa", "npm:2.14.2"],\
             ["koa-body", "npm:6.0.1"],\

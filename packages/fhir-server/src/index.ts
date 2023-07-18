@@ -29,9 +29,10 @@ import {
   issueSeverityToStatusCodes,
   outcomeError,
 } from "./operationOutcome/index.js";
-import Account from "./auth/accounts.js";
-import configuration from "./auth/configuration.js";
-import routes from "./auth/routes.js";
+
+import Account from "./oidc-provider/accounts.js";
+import configuration from "./oidc-provider/configuration.js";
+import routes from "./oidc-provider/routes.js";
 
 dotEnv.config();
 
