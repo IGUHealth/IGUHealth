@@ -11,7 +11,10 @@ type Validator = (input: any) => Promise<void>;
 
 // Create a validator for a given fhir type and value
 
-function descend(path: string, field: string) {
+function descend(path: string, field: number | string) {
+  if (typeof field === "number") {
+    return `${path}[${field}]`;
+  }
   return `${path}.${field}`;
 }
 
@@ -45,7 +48,7 @@ function findType(element: ElementDefinition, value: any) {
 }
 
 function validateSingular(
-  resolveType: (string) => StructureDefinition,
+  resolveType: (type: string) => StructureDefinition,
   path: string,
   structureDefinition: StructureDefinition,
   elementIndex: number,
@@ -100,7 +103,7 @@ function validateSingular(
 }
 
 function validateElement(
-  resolveType: (string) => StructureDefinition,
+  resolveType: (type: string) => StructureDefinition,
   path: string,
   structureDefinition: StructureDefinition,
   elementIndex: number,
@@ -111,9 +114,8 @@ function validateElement(
     throw new OperationError(
       outcomeFatal(
         "structure",
-        `Element not found at ${elementIndex} for StructureDefinition ${structureDefinition.id}`[
-          path
-        ]
+        `Element not found at ${elementIndex} for StructureDefinition ${structureDefinition.id}`,
+        [path]
       )
     );
   }
@@ -134,7 +136,7 @@ function validateElement(
 
   if (isArray) {
     // Validate each element in the array
-    value.forEach((v, i) => {
+    value.forEach((v: any, i: number) => {
       validateSingular(
         resolveType,
         descend(path, i),
@@ -157,14 +159,14 @@ function validateElement(
 const cachedValidators: Record<string, Validator> = {};
 
 function createValidator(
-  resolveType: (string) => StructureDefinition,
+  resolveType: (type: string) => StructureDefinition,
   type: string,
   value: any
 ): Validator {
   const sd = resolveType(type);
   const indice = 0;
 
-  const validator = async (input) => {
+  const validator = async (input: any) => {
     validateElement(resolveType, "", sd, indice, input);
   };
 
