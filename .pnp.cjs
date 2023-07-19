@@ -56,6 +56,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/meta-value"\
       },\
       {\
+        "name": "operation-execution",\
+        "reference": "workspace:packages/operation-execution"\
+      },\
+      {\
         "name": "sample-app",\
         "reference": "workspace:packages/sample-app"\
       },\
@@ -79,6 +83,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@iguhealth/meta-value", ["workspace:packages/meta-value"]],\
       ["@iguhealth/test-data", ["workspace:packages/test-data-r4"]],\
       ["iguhealth-ts", ["workspace:."]],\
+      ["operation-execution", ["workspace:packages/operation-execution"]],\
       ["sample-app", ["workspace:packages/sample-app"]]\
     ],\
     "fallbackPool": [\
@@ -21502,6 +21507,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["oidc-token-hash", "npm:5.0.3"]\
           ],\
           "linkType": "HARD"\
+        }]\
+      ]],\
+      ["operation-execution", [\
+        ["workspace:packages/operation-execution", {\
+          "packageLocation": "./packages/operation-execution/",\
+          "packageDependencies": [\
+            ["operation-execution", "workspace:packages/operation-execution"],\
+            ["@iguhealth/fhir-types", "workspace:packages/fhir-types"]\
+          ],\
+          "linkType": "SOFT"\
         }]\
       ]],\
       ["optionator", [\
