@@ -5793,6 +5793,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/fhir-validation/",\
           "packageDependencies": [\
             ["@iguhealth/fhir-validation", "workspace:packages/fhir-validation"],\
+            ["@iguhealth/codegen", "workspace:packages/codegen"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
             ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"]\
           ],\

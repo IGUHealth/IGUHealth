@@ -1,6 +1,7 @@
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { ElementDefinition, StructureDefinition } from "@iguhealth/fhir-types";
 import { primitiveTypes } from "@iguhealth/fhir-types/r4/sets";
+import { traversalBottomUp } from "@iguhealth/codegen";
 
 type Validator = (input: any) => Promise<boolean>;
 
@@ -20,8 +21,8 @@ function validatePrimitive(path: string, type: string, value: any) {
 }
 
 function validateElement(
-  path: string,
   resolveType: (string) => StructureDefinition,
+  path: string,
   element: ElementDefinition,
   value: any
 ) {
@@ -47,6 +48,7 @@ function createValidator(
   value: any
 ): Validator {
   const sd = resolveType(type);
+  const indice = 0;
 
   const validator = async (input) => {
     return false;

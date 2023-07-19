@@ -2695,6 +2695,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@iguhealth/fhir-validation@workspace:packages/fhir-validation"
   dependencies:
+    "@iguhealth/codegen": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
     "@iguhealth/operation-outcomes": "workspace:^"
   languageName: unknown
