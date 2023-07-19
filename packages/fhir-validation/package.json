@@ -2,6 +2,7 @@
   "name": "@iguhealth/fhir-validation",
   "packageManager": "yarn@3.6.1",
   "dependencies": {
-    "@iguhealth/fhir-types": "workspace:^"
+    "@iguhealth/fhir-types": "workspace:^",
+    "@iguhealth/operation-outcomes": "workspace:^"
   }
 }

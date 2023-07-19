@@ -1,3 +1,4 @@
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { ElementDefinition, StructureDefinition } from "@iguhealth/fhir-types";
 import { primitiveTypes } from "@iguhealth/fhir-types/r4/sets";
 
@@ -6,10 +7,16 @@ type Validator = (input: any) => Promise<boolean>;
 // Create a validator for a given fhir type and value
 
 function validatePrimitive(path: string, type: string, value: any) {
-    switch(type){
-        default:
-            throw new 
-    }
+  switch (type) {
+    default:
+      throw new OperationError(
+        outcomeError(
+          "structure",
+          `Unknown primitive type '${type}' at path '${path}'`,
+          [path]
+        )
+      );
+  }
 }
 
 function validateElement(
@@ -25,7 +32,7 @@ function validateElement(
 
   const type = element.type?.[0].code as string;
   if (primitiveTypes.has(type)) {
-    return validatePrimitive(type, value);
+    return validatePrimitive(path, type, value);
   } else {
     const validator = createValidator(resolveType, type, value);
     return validator(value);
