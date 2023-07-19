@@ -9,7 +9,7 @@ import {
 import { MiddlewareSync, MiddlewareAsync } from "./middleware/index.js";
 import { FHIRClientAsync, FHIRClientSync } from "./interface";
 import { FHIRRequest, FHIRResponse } from "./types";
-import { OperationError, outcomeError } from "../operationOutcome/index.js";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   state: State;

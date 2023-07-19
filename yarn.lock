@@ -2644,6 +2644,7 @@ __metadata:
     "@iguhealth/fhir-types": "workspace:^"
     "@iguhealth/fhirpath": "workspace:^"
     "@iguhealth/meta-value": "workspace:^"
+    "@iguhealth/operation-outcomes": "workspace:^"
     "@iguhealth/test-data": "workspace:^"
     "@jest/globals": ^29.6.1
     "@koa/bodyparser": ^5.0.0
@@ -2690,6 +2691,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@iguhealth/fhir-validation@workspace:packages/fhir-validation":
+  version: 0.0.0-use.local
+  resolution: "@iguhealth/fhir-validation@workspace:packages/fhir-validation"
+  dependencies:
+    "@iguhealth/fhir-types": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
 "@iguhealth/fhirpath@workspace:^, @iguhealth/fhirpath@workspace:packages/fhirpath":
   version: 0.0.0-use.local
   resolution: "@iguhealth/fhirpath@workspace:packages/fhirpath"
@@ -2719,6 +2728,12 @@ __metadata:
     jest: ^29.5.0
     ts-jest: ^29.1.0
     typescript: ^5.1.3
+  languageName: unknown
+  linkType: soft
+
+"@iguhealth/operation-outcomes@workspace:^, @iguhealth/operation-outcomes@workspace:packages/operation-outcomes":
+  version: 0.0.0-use.local
+  resolution: "@iguhealth/operation-outcomes@workspace:packages/operation-outcomes"
   languageName: unknown
   linkType: soft
 

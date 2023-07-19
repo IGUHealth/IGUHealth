@@ -10,7 +10,7 @@ import {
   createMiddlewareSync,
   MiddlewareSync,
 } from "../client/middleware/index.js";
-import { OperationError, outcomeError } from "../operationOutcome/index.js";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 type InternalData<T extends ResourceType> = Partial<
   Record<T, Record<id, AResource<T> | undefined>>

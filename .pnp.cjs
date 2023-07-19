@@ -48,6 +48,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/fhir-types"\
       },\
       {\
+        "name": "@iguhealth/fhir-validation",\
+        "reference": "workspace:packages/fhir-validation"\
+      },\
+      {\
         "name": "@iguhealth/fhirpath",\
         "reference": "workspace:packages/fhirpath"\
       },\
@@ -58,6 +62,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       {\
         "name": "operation-execution",\
         "reference": "workspace:packages/operation-execution"\
+      },\
+      {\
+        "name": "@iguhealth/operation-outcomes",\
+        "reference": "workspace:packages/operation-outcomes"\
       },\
       {\
         "name": "sample-app",\
@@ -79,8 +87,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@iguhealth/fhir-query", ["workspace:packages/fhir-query"]],\
       ["@iguhealth/fhir-server", ["workspace:packages/fhir-server"]],\
       ["@iguhealth/fhir-types", ["workspace:packages/fhir-types"]],\
+      ["@iguhealth/fhir-validation", ["workspace:packages/fhir-validation"]],\
       ["@iguhealth/fhirpath", ["workspace:packages/fhirpath"]],\
       ["@iguhealth/meta-value", ["workspace:packages/meta-value"]],\
+      ["@iguhealth/operation-outcomes", ["workspace:packages/operation-outcomes"]],\
       ["@iguhealth/test-data", ["workspace:packages/test-data-r4"]],\
       ["iguhealth-ts", ["workspace:."]],\
       ["operation-execution", ["workspace:packages/operation-execution"]],\
@@ -5728,6 +5738,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
             ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
             ["@iguhealth/meta-value", "workspace:packages/meta-value"],\
+            ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
             ["@iguhealth/test-data", "workspace:packages/test-data-r4"],\
             ["@jest/globals", "npm:29.6.1"],\
             ["@koa/bodyparser", "npm:5.0.0"],\
@@ -5777,6 +5788,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT"\
         }]\
       ]],\
+      ["@iguhealth/fhir-validation", [\
+        ["workspace:packages/fhir-validation", {\
+          "packageLocation": "./packages/fhir-validation/",\
+          "packageDependencies": [\
+            ["@iguhealth/fhir-validation", "workspace:packages/fhir-validation"],\
+            ["@iguhealth/fhir-types", "workspace:packages/fhir-types"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
       ["@iguhealth/fhirpath", [\
         ["workspace:packages/fhirpath", {\
           "packageLocation": "./packages/fhirpath/",\
@@ -5809,6 +5830,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "virtual:95acd521ad270141ccfbf50f9e178ed2e993b719f7a01b7f56f97673e930358da332dff4b0b0ca7717dc2c89eb53f5d20730d0698497ab79154b11d36496d84b#npm:29.6.0"],\
             ["ts-jest", "virtual:95acd521ad270141ccfbf50f9e178ed2e993b719f7a01b7f56f97673e930358da332dff4b0b0ca7717dc2c89eb53f5d20730d0698497ab79154b11d36496d84b#npm:29.1.1"],\
             ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@iguhealth/operation-outcomes", [\
+        ["workspace:packages/operation-outcomes", {\
+          "packageLocation": "./packages/operation-outcomes/",\
+          "packageDependencies": [\
+            ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"]\
           ],\
           "linkType": "SOFT"\
         }]\

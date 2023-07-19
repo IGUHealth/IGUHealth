@@ -29,7 +29,7 @@ import {
   isOperationError,
   issueSeverityToStatusCodes,
   outcomeError,
-} from "./operationOutcome/index.js";
+} from "@iguhealth/operation-outcomes";
 
 import Account from "./oidc-provider/accounts.js";
 import configuration from "./oidc-provider/configuration.js";
