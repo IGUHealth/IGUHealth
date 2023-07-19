@@ -5,5 +5,9 @@
     "@iguhealth/codegen": "workspace:^",
     "@iguhealth/fhir-types": "workspace:^",
     "@iguhealth/operation-outcomes": "workspace:^"
+  },
+  "devDependencies": {
+    "@iguhealth/artifacts": "workspace:^",
+    "@iguhealth/test-data": "workspace:^"
   }
 }
