@@ -39,12 +39,8 @@ test("Testing validating resourceType 'Patient'", async () => {
     return sd;
   }, "Patient");
 
-  //   const patients = memDatabase.search_type({}, "Patient", {
-  //     resourceType: "Patient",
-  //     parameters: {},
-  //   });
-  try {
-    await validator({
+  expect(
+    validator({
       resourceType: "Patient",
       id: "5",
       identifier: [
@@ -52,44 +48,97 @@ test("Testing validating resourceType 'Patient'", async () => {
           system: 5,
         },
       ],
-    });
-  } catch (e) {
-    console.log("ERROR:");
-    console.error(JSON.stringify(e, null, 2));
-  }
+    })
+  ).toEqual([
+    {
+      severity: "error",
+      code: "structure",
+      diagnostics:
+        "Expected primitive type 'uri' at path '/identifier/0/system'",
+      expression: ["/identifier/0/system"],
+    },
+  ]);
 });
 
-// test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
-//   `Testing validating resourceType '%s'`,
-//   (resourceType) => {
-//     const structureDefinition = memDatabase.search_type(
-//       {},
-//       "StructureDefinition",
-//       {
-//         resourceType: "StructureDefinition",
-//         parameters: {
-//           base: {
-//             name: "type",
-//             value: [resourceType],
-//           },
-//         },
-//       }
-//     );
-//     const sd = structureDefinition[0];
+test("test typechoice checking", async () => {
+  const sd = memDatabase.read({}, "StructureDefinition", "Patient");
 
-//     const resources = memDatabase
-//       .search_type({}, resourceType as ResourceType, { parameters: {} })
-//       .filter((r) => r.id)
-//       .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
-//       .slice(0, 10);
-//     const validator = createValidator((type: string) => {
-//       const sd = memDatabase.read({}, "StructureDefinition", type);
-//       if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
-//       return sd;
-//     }, resourceType);
+  const validator = createValidator((type: string) => {
+    const sd = memDatabase.read({}, "StructureDefinition", type);
+    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
+    return sd;
+  }, "Patient");
 
-//     for (const resource of resources) {
-//       validator(resource);
-//     }
-//   }
-// );
+  expect(
+    validator({
+      resourceType: "Patient",
+      deceasedBoolean: "hello",
+      deceasedDate: "1980-01-01",
+    })
+  ).toEqual([
+    [
+      {
+        code: "structure",
+        diagnostics:
+          "Expected primitive type 'boolean' at path '/deceasedBoolean'",
+        expression: ["/deceasedBoolean"],
+        severity: "error",
+      },
+      {
+        code: "structure",
+        diagnostics: "Additional fields found at path '': 'deceasedDate'",
+        expression: [""],
+        severity: "error",
+      },
+    ],
+  ]);
+
+  expect(
+    validator({
+      resourceType: "Patient",
+      deceasedBoolean: true,
+    })
+  ).toEqual([]);
+
+  expect(
+    validator({
+      resourceType: "Patient",
+      deceasedDate: "1980-01-01",
+    })
+  ).toEqual([]);
+});
+
+test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
+  `Testing validating resourceType '%s'`,
+  (resourceType) => {
+    const structureDefinition = memDatabase.search_type(
+      {},
+      "StructureDefinition",
+      {
+        resourceType: "StructureDefinition",
+        parameters: {
+          base: {
+            name: "type",
+            value: [resourceType],
+          },
+        },
+      }
+    );
+    const sd = structureDefinition[0];
+
+    const resources = memDatabase
+      .search_type({}, resourceType as ResourceType, { parameters: {} })
+      .filter((r) => r.id)
+      .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
+      .slice(0, 10);
+    const validator = createValidator((type: string) => {
+      const sd = memDatabase.read({}, "StructureDefinition", type);
+      if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
+      return sd;
+    }, resourceType);
+
+    for (const resource of resources) {
+      validator(resource);
+    }
+  }
+);

@@ -2,18 +2,27 @@ import {
   OperationError,
   outcomeError,
   outcomeFatal,
+  issueError,
 } from "@iguhealth/operation-outcomes";
-import { ElementDefinition, StructureDefinition } from "@iguhealth/fhir-types";
+import {
+  ElementDefinition,
+  OperationOutcome,
+  StructureDefinition,
+} from "@iguhealth/fhir-types";
 import { primitiveTypes } from "@iguhealth/fhir-types/r4/sets";
 import { eleIndexToChildIndices } from "@iguhealth/codegen";
 import { descend, createPath } from "./path.js";
 import jsonpointer from "jsonpointer";
 
-type Validator = (input: any) => void;
+type Validator = (input: any) => OperationOutcome["issue"];
 
 // Create a validator for a given fhir type and value
 
-function validatePrimitive(root: any, path: string, type: string) {
+function validatePrimitive(
+  root: any,
+  path: string,
+  type: string
+): OperationOutcome["issue"] {
   const value = jsonpointer.get(root, path);
   switch (type) {
     case "http://hl7.org/fhirpath/System.String":
@@ -30,41 +39,41 @@ function validatePrimitive(root: any, path: string, type: string) {
     case "oid":
     case "url": {
       if (typeof value !== "string") {
-        throw new OperationError(
-          outcomeError(
+        return [
+          issueError(
             "structure",
             `Expected primitive type '${type}' at path '${path}'`,
             [path]
-          )
-        );
+          ),
+        ];
       }
-      break;
+      return [];
     }
 
     case "boolean": {
       if (typeof value !== "boolean") {
-        throw new OperationError(
-          outcomeError(
+        return [
+          issueError(
             "structure",
             `Expected primitive type '${type}' at path '${path}'`,
             [path]
-          )
-        );
+          ),
+        ];
       }
-      break;
+      return [];
     }
 
     case "code": {
       if (typeof value !== "string") {
-        throw new OperationError(
-          outcomeError(
+        return [
+          issueError(
             "structure",
             `Expected primitive type '${type}' at path '${path}'`,
             [path]
-          )
-        );
+          ),
+        ];
       }
-      break;
+      return [];
     }
 
     case "date":
@@ -72,15 +81,15 @@ function validatePrimitive(root: any, path: string, type: string) {
     case "time":
     case "instant": {
       if (typeof value !== "string") {
-        throw new OperationError(
-          outcomeError(
+        return [
+          issueError(
             "structure",
             `Expected primitive type '${type}' at path '${path}'`,
             [path]
-          )
-        );
+          ),
+        ];
       }
-      break;
+      return [];
     }
 
     case "integer":
@@ -88,15 +97,15 @@ function validatePrimitive(root: any, path: string, type: string) {
     case "unsignedInt":
     case "decimal": {
       if (typeof value !== "number") {
-        throw new OperationError(
-          outcomeError(
+        return [
+          issueError(
             "structure",
             `Expected primitive type '${type}' at path '${path}'`,
             [path]
-          )
-        );
+          ),
+        ];
       }
-      break;
+      return [];
     }
     default:
       throw new OperationError(
@@ -152,6 +161,20 @@ function determineTypeAndField(
     }
   }
 }
+function resolveContentReferenceIndex(
+  sd: StructureDefinition,
+  element: ElementDefinition
+): number {
+  const contentReference = element.contentReference?.split("#")[1];
+  const referenceElementIndex = sd.snapshot?.element.findIndex(
+    (element) => element.id === contentReference
+  );
+  if (!referenceElementIndex)
+    throw new Error(
+      "unable to resolve contentreference: '" + element.contentReference + "'"
+    );
+  return referenceElementIndex;
+}
 
 function validateSingular(
   resolveType: (type: string) => StructureDefinition,
@@ -160,7 +183,7 @@ function validateSingular(
   elementIndex: number,
   root: any,
   type: string
-) {
+): OperationOutcome["issue"] {
   const element = structureDefinition.snapshot?.element?.[
     elementIndex
   ] as ElementDefinition;
@@ -172,8 +195,20 @@ function validateSingular(
 
   // Leaf validation
   if (childrenIndices.length === 0) {
-    const type = element.type?.[0].code as string;
-    if (
+    if (element.contentReference) {
+      const referenceElementIndex = resolveContentReferenceIndex(
+        structureDefinition,
+        element
+      );
+      return validateSingular(
+        resolveType,
+        path,
+        structureDefinition,
+        referenceElementIndex,
+        root,
+        type
+      );
+    } else if (
       primitiveTypes.has(type) ||
       type === "http://hl7.org/fhirpath/System.String"
     ) {
@@ -197,41 +232,24 @@ function validateSingular(
       (i) => requiredElements.indexOf(i) === -1
     );
 
-    requiredElements.forEach((index) => {
-      const child = structureDefinition.snapshot?.element?.[index];
-      if (!child) throw new Error("Child not found");
+    let issues = requiredElements
+      .map((index) => {
+        const child = structureDefinition.snapshot?.element?.[index];
+        if (!child) throw new Error("Child not found");
 
-      const fieldType = determineTypeAndField(child, value);
-      if (!fieldType) {
-        throw new OperationError(
-          outcomeError(
-            "structure",
-            `Missing required field '${child.path}' at path '${path}'`,
-            [path]
-          )
-        );
-      }
-      const [field, type] = fieldType;
-      foundFields.push(field);
-      validateElement(
-        resolveType,
-        descend(path, field),
-        structureDefinition,
-        index,
-        root,
-        type
-      );
-    });
-
-    optionalElements.forEach((index) => {
-      const child = structureDefinition.snapshot?.element?.[index];
-      if (!child) throw new Error("Child not found");
-
-      const fieldType = determineTypeAndField(child, value);
-      if (fieldType) {
+        const fieldType = determineTypeAndField(child, value);
+        if (!fieldType) {
+          return [
+            issueError(
+              "structure",
+              `Missing required field '${child.path}' at path '${path}'`,
+              [path]
+            ),
+          ];
+        }
         const [field, type] = fieldType;
         foundFields.push(field);
-        validateElement(
+        return validateElement(
           resolveType,
           descend(path, field),
           structureDefinition,
@@ -239,8 +257,33 @@ function validateSingular(
           root,
           type
         );
-      }
-    });
+      })
+      .flat();
+
+    issues = [
+      ...issues,
+      ...optionalElements
+        .map((index) => {
+          const child = structureDefinition.snapshot?.element?.[index];
+          if (!child) throw new Error("Child not found");
+
+          const fieldType = determineTypeAndField(child, value);
+          if (fieldType) {
+            const [field, type] = fieldType;
+            foundFields.push(field);
+            return validateElement(
+              resolveType,
+              descend(path, field),
+              structureDefinition,
+              index,
+              root,
+              type
+            );
+          }
+          return [];
+        })
+        .flat(),
+    ];
 
     // Check for additional fields
     let additionalFields = Object.keys(value).filter(
@@ -252,16 +295,19 @@ function validateSingular(
     }
 
     if (additionalFields.length > 0) {
-      throw new OperationError(
-        outcomeError(
+      issues = [
+        ...issues,
+        issueError(
           "structure",
-          `Additional fields found at path '${path}': ${additionalFields.join(
+          `Additional fields found at path '${path}': '${additionalFields.join(
             ", "
-          )}`,
+          )}'`,
           [path]
-        )
-      );
+        ),
+      ];
     }
+
+    return issues;
   }
 }
 
@@ -272,7 +318,7 @@ function validateElement(
   elementIndex: number,
   root: any,
   type: string
-) {
+): OperationOutcome["issue"] {
   const value = jsonpointer.get(root, path);
   const element = structureDefinition.snapshot?.element?.[elementIndex];
 
@@ -290,32 +336,33 @@ function validateElement(
   // Validating cardinality
   // Cardinality set to * on root element so just ignore it.
   if (isArray != Array.isArray(value || []) && elementIndex !== 0) {
-    console.log(path, value);
-    throw new OperationError(
-      outcomeError(
+    return [
+      issueError(
         "structure",
         `Element at path '${path}' is expected to be ${
           isArray ? "an array " : "a singular value "
         }.`,
         [path]
-      )
-    );
+      ),
+    ];
   }
 
   if (isArray && Array.isArray(value || []) && elementIndex !== 0) {
     // Validate each element in the array
-    value.forEach((v: any, i: number) => {
-      validateSingular(
-        resolveType,
-        descend(path, i),
-        structureDefinition,
-        elementIndex,
-        root,
-        type
-      );
-    });
+    return value
+      .map((v: any, i: number) => {
+        return validateSingular(
+          resolveType,
+          descend(path, i),
+          structureDefinition,
+          elementIndex,
+          root,
+          type
+        );
+      })
+      .flat();
   } else {
-    validateSingular(
+    return validateSingular(
       resolveType,
       path,
       structureDefinition,
@@ -326,27 +373,30 @@ function validateElement(
   }
 }
 
-const cachedValidators: Record<string, Validator> = {};
-
 export default function createValidator(
   resolveType: (type: string) => StructureDefinition,
   type: string,
   path: string = createPath()
 ): Validator {
-  const sd = resolveType(type);
-  const indice = 0;
+  try {
+    const sd = resolveType(type);
+    const indice = 0;
 
-  const validator = (input: any) => {
-    validateElement(
-      resolveType,
-      path,
-      sd,
-      indice,
-      input,
-      // This should only be one at the root.
-      sd.snapshot?.element[indice].type?.[0].code as string
-    );
-  };
+    const validator = (input: any) => {
+      return validateElement(
+        resolveType,
+        path,
+        sd,
+        indice,
+        input,
+        // This should only be one at the root.
+        sd.snapshot?.element[indice].type?.[0].code as string
+      );
+    };
 
-  return validator;
+    return validator;
+  } catch (e) {
+    console.log(type, path);
+    throw e;
+  }
 }
