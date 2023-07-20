@@ -4,7 +4,7 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 type VisitorFunction<T> = (element: ElementDefinition, children: T[]) => T[];
 
-function eleIndexToChildIndices(
+export function eleIndexToChildIndices(
   elements: Array<ElementDefinition>,
   index?: number
 ): Array<number> {

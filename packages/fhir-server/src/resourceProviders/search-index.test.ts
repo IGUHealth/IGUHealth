@@ -15,7 +15,7 @@ function createMemoryDatabase(
   const database = MemoryDatabase<any>({});
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
-      loadArtifacts(resourceType, path.join(__dirname, "../"))
+      loadArtifacts(resourceType, path.join(__dirname, "../"), true)
     )
     .flat();
   for (const resource of artifactResources) {

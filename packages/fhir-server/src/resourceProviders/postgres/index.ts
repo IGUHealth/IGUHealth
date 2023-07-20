@@ -41,7 +41,7 @@ import {
   MetaValueSingular,
 } from "@iguhealth/meta-value";
 import { SystemSearchRequest, TypeSearchRequest } from "../../client/types";
-import { OperationError, outcomeError } from "../../operationOutcome/index.js";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 function searchResources(
   resourceType?: ResourceType

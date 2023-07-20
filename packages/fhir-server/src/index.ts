@@ -15,6 +15,7 @@ import {
   Resource,
 } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
+import * as jose from "jose";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import MemoryDatabase from "./resourceProviders/memory.js";
@@ -28,15 +29,34 @@ import {
   isOperationError,
   issueSeverityToStatusCodes,
   outcomeError,
-} from "./operationOutcome/index.js";
-import Account from "./auth/accounts.js";
-import configuration from "./auth/configuration.js";
-import routes from "./auth/routes.js";
+} from "@iguhealth/operation-outcomes";
+
+import Account from "./oidc-provider/accounts.js";
+import configuration from "./oidc-provider/configuration.js";
+import routes from "./oidc-provider/routes.js";
+import { loadJWKS } from "./auth/jwks.js";
 
 dotEnv.config();
 
 const { PORT = 3000, ISSUER = `http://localhost:${PORT}` } = process.env;
 configuration.findAccount = Account.findAccount;
+
+const { jwks, privateKey } = await loadJWKS(
+  path.join(fileURLToPath(import.meta.url), "../../certifications"),
+  "jwks"
+);
+
+const signedJWT = await new jose.SignJWT({ "urn:example:claim": true })
+  .setProtectedHeader({ alg: "RS256" })
+  .setIssuedAt()
+  .setIssuer("urn:example:issuer")
+  .setAudience("urn:example:audience")
+  .setExpirationTime("2h")
+  .sign(privateKey);
+
+// console.log(signedJWT);
+// console.log(jose.decodeJwt(signedJWT));
+// console.log(await jose.jwtVerify(signedJWT, jwks));
 
 function serverCapabilities(): CapabilityStatement {
   return {

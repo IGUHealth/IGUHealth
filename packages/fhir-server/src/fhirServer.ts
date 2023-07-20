@@ -6,7 +6,7 @@ import {
   StructureDefinition,
   Resource,
 } from "@iguhealth/fhir-types/r4/types";
-import { OperationError, outcomeError } from "./operationOutcome/index.js";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRClient } from "./client/interface.js";
 import {

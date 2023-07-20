@@ -38,7 +38,8 @@ function flattenOrInclude<T extends ResourceType>(
  */
 export default function loadArtifacts<T extends ResourceType>(
   resourceType: T,
-  location: string
+  location: string,
+  silence = false
 ): AResource<T>[] {
   const requirer = createRequire(location);
   const packageJson: PackageJSON = requirer("./package.json");
@@ -54,7 +55,8 @@ export default function loadArtifacts<T extends ResourceType>(
     })
     .map((d) => {
       try {
-        console.log(` '${d}' Checking package for .index.config.json`);
+        if (!silence)
+          console.log(` '${d}' Checking package for .index.config.json`);
         const indexFile: IndexFile | undefined = requirer(
           `${d}/.index.config.json`
         );
