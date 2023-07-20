@@ -42,9 +42,37 @@ function isTypeChoice(element: ElementDefinition) {
   return (element.type || []).length > 1;
 }
 
-function findType(element: ElementDefinition, value: any) {
-  const types = element.type?.map((type) => type.code);
-  Object.keys(element.type || {}).forEach((key) => {});
+function fieldName(elementDefinition: ElementDefinition, type?: string) {
+  const field = elementDefinition.path.split(".").pop() as string;
+  if (isTypeChoice(elementDefinition)) {
+    if (!type)
+      throw new Error("deriving field from typechoice requires a type");
+    return field.replace("[x]", capitalize(type));
+  }
+  return field;
+}
+
+function capitalize(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function determineTypeAndField(
+  element: ElementDefinition,
+  value: any
+): [string, string] | undefined {
+  if (isTypeChoice(element)) {
+    for (const type of element.type?.map((t) => t.code) || []) {
+      const field = fieldName(element, type);
+      if (value[field]) {
+        return [field, type];
+      }
+    }
+  } else {
+    const field = fieldName(element);
+    if (value[field]) {
+      return [field, element.type?.[0].code as string];
+    }
+  }
 }
 
 function validateSingular(
@@ -52,13 +80,14 @@ function validateSingular(
   path: string,
   structureDefinition: StructureDefinition,
   elementIndex: number,
-  value: any
+  root: any,
+  type: string
 ) {
   const element = structureDefinition.snapshot?.element?.[
     elementIndex
   ] as ElementDefinition;
-  const pieces = element.path.split(".");
-  const field = pieces[pieces.length - 1];
+
+  const field = fieldName(element, type);
   path = descend(path, field);
 
   const childrenIndices = eleIndexToChildIndices(
@@ -70,36 +99,77 @@ function validateSingular(
   if (childrenIndices.length === 0) {
     const type = element.type?.[0].code as string;
     if (primitiveTypes.has(type)) {
-      return validatePrimitive(path, type, value);
+      return validatePrimitive(path, type, root);
     } else {
-      const validator = createValidator(resolveType, type, value);
-      return validator(value);
+      const validator = createValidator(resolveType, type, root);
+      return validator(root);
+    }
+  } else {
+    // Validating root / backbone / element nested types here.
+    // Need to validate that only the _field for primitives
+    // And the typechoice check on each field.
+    // Found concatenate on found fields so can check at end whether their are additional and throw error.
+    const foundFields: string[] = [];
+
+    const requiredElements = childrenIndices.filter(
+      (index) => (structureDefinition.snapshot?.element?.[index].min || 0) > 0
+    );
+    const optionalElements = childrenIndices.filter(
+      (i) => requiredElements.indexOf(i) === -1
+    );
+
+    requiredElements.forEach((index) => {
+      const child = structureDefinition.snapshot?.element?.[index];
+      if (!child) throw new Error("Child not found");
+
+      const fieldType = determineTypeAndField(child, root);
+      if (!fieldType) {
+        throw new OperationError(
+          outcomeError(
+            "structure",
+            `Missing required field '${child.path}' at path '${path}'`,
+            [path]
+          )
+        );
+      }
+      foundFields.push(field);
+      const validator = createValidator(
+        resolveType,
+        fieldType[1],
+        root[fieldType[0]]
+      );
+      return validator(root[field]);
+    });
+
+    optionalElements.forEach((index) => {
+      const child = structureDefinition.snapshot?.element?.[index];
+      if (!child) throw new Error("Child not found");
+
+      const field = fieldName(child, type);
+      if (field in root) {
+        foundFields.push(field);
+        const validator = createValidator(
+          resolveType,
+          child.type?.[0].code as string,
+          root[field]
+        );
+        return validator(root[field]);
+      }
+    });
+
+    // Check for additional fields
+    const additionalFields = Object.keys(root).filter(
+      (field) => foundFields.indexOf(field) === -1
+    );
+
+    if (additionalFields.length > 0) {
+      throw new OperationError(
+        outcomeError("structure", `Additional fields found at path '${path}'`, [
+          path,
+        ])
+      );
     }
   }
-
-  // Validating complex fields.
-
-  const requiredElements = childrenIndices.filter(
-    (index) => (structureDefinition.snapshot?.element?.[index].min || 0) > 0
-  );
-  const optionalElements = childrenIndices.filter(
-    (i) => requiredElements.indexOf(i) === -1
-  );
-
-  requiredElements.forEach((childIndex) => {
-    const elementPath =
-      structureDefinition.snapshot?.element?.[childIndex]?.path;
-    const fields = elementPath?.split(".") || [];
-    const fieldPath = descend(path, fields[fields.length - 1]);
-
-    validateElement(
-      resolveType,
-      fieldPath,
-      structureDefinition,
-      childIndex,
-      value
-    );
-  });
 }
 
 function validateElement(
@@ -107,7 +177,8 @@ function validateElement(
   path: string,
   structureDefinition: StructureDefinition,
   elementIndex: number,
-  value: any
+  value: any,
+  type: string
 ) {
   const element = structureDefinition.snapshot?.element?.[elementIndex];
   if (!isElement(element)) {
@@ -142,7 +213,8 @@ function validateElement(
         descend(path, i),
         structureDefinition,
         elementIndex,
-        v
+        v,
+        type
       );
     });
   } else {
@@ -151,7 +223,8 @@ function validateElement(
       path,
       structureDefinition,
       elementIndex,
-      value
+      value,
+      type
     );
   }
 }
@@ -167,7 +240,15 @@ function createValidator(
   const indice = 0;
 
   const validator = async (input: any) => {
-    validateElement(resolveType, "", sd, indice, input);
+    validateElement(
+      resolveType,
+      "",
+      sd,
+      indice,
+      input,
+      // This should only be one at the root.
+      sd.snapshot?.element[indice].type?.[0].code as string
+    );
   };
 
   return validator;
