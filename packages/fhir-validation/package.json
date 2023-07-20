@@ -6,7 +6,8 @@
   },
   "dependencies": {
     "@iguhealth/codegen": "workspace:^",
-    "@iguhealth/operation-outcomes": "workspace:^"
+    "@iguhealth/operation-outcomes": "workspace:^",
+    "jsonpointer": "^5.0.1"
   },
   "devDependencies": {
     "@iguhealth/artifacts": "workspace:^",

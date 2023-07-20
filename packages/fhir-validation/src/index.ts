@@ -6,20 +6,97 @@ import {
 import { ElementDefinition, StructureDefinition } from "@iguhealth/fhir-types";
 import { primitiveTypes } from "@iguhealth/fhir-types/r4/sets";
 import { eleIndexToChildIndices } from "@iguhealth/codegen";
+import { descend, createPath } from "./path.js";
+import jsonpointer from "jsonpointer";
 
 type Validator = (input: any) => Promise<void>;
 
 // Create a validator for a given fhir type and value
 
-function descend(path: string, field: number | string) {
-  if (typeof field === "number") {
-    return `${path}[${field}]`;
-  }
-  return `${path}.${field}`;
-}
-
-function validatePrimitive(path: string, type: string, value: any) {
+function validatePrimitive(root: any, path: string, type: string) {
+  const value = jsonpointer.get(root, path);
   switch (type) {
+    case "id":
+    case "string":
+    case "xhtml":
+    case "markdown":
+
+    case "base64Binary":
+
+    case "uri":
+    case "uuid":
+    case "canonical":
+    case "oid":
+    case "url": {
+      if (typeof value !== "string") {
+        throw new OperationError(
+          outcomeError(
+            "structure",
+            `Expected primitive type '${type}' at path '${path}'`,
+            [path]
+          )
+        );
+      }
+      break;
+    }
+
+    case "boolean": {
+      if (typeof value !== "boolean") {
+        throw new OperationError(
+          outcomeError(
+            "structure",
+            `Expected primitive type '${type}' at path '${path}'`,
+            [path]
+          )
+        );
+      }
+      break;
+    }
+
+    case "code": {
+      if (typeof value !== "string") {
+        throw new OperationError(
+          outcomeError(
+            "structure",
+            `Expected primitive type '${type}' at path '${path}'`,
+            [path]
+          )
+        );
+      }
+      break;
+    }
+
+    case "date":
+    case "dateTime":
+    case "time":
+    case "instant": {
+      if (typeof value !== "string") {
+        throw new OperationError(
+          outcomeError(
+            "structure",
+            `Expected primitive type '${type}' at path '${path}'`,
+            [path]
+          )
+        );
+      }
+      break;
+    }
+
+    case "integer":
+    case "positiveInt":
+    case "unsignedInt":
+    case "decimal": {
+      if (typeof value !== "number") {
+        throw new OperationError(
+          outcomeError(
+            "structure",
+            `Expected primitive type '${type}' at path '${path}'`,
+            [path]
+          )
+        );
+      }
+      break;
+    }
     default:
       throw new OperationError(
         outcomeError(
@@ -87,9 +164,6 @@ function validateSingular(
     elementIndex
   ] as ElementDefinition;
 
-  const field = fieldName(element, type);
-  path = descend(path, field);
-
   const childrenIndices = eleIndexToChildIndices(
     structureDefinition.snapshot?.element || [],
     elementIndex
@@ -99,9 +173,9 @@ function validateSingular(
   if (childrenIndices.length === 0) {
     const type = element.type?.[0].code as string;
     if (primitiveTypes.has(type)) {
-      return validatePrimitive(path, type, root);
+      return validatePrimitive(root, path, type);
     } else {
-      const validator = createValidator(resolveType, type, root);
+      const validator = createValidator(resolveType, type, path);
       return validator(root);
     }
   } else {
@@ -132,28 +206,34 @@ function validateSingular(
           )
         );
       }
+      const [field, type] = fieldType;
       foundFields.push(field);
-      const validator = createValidator(
+      validateElement(
         resolveType,
-        fieldType[1],
-        root[fieldType[0]]
+        descend(path, field),
+        structureDefinition,
+        index,
+        root,
+        type
       );
-      return validator(root[field]);
     });
 
     optionalElements.forEach((index) => {
       const child = structureDefinition.snapshot?.element?.[index];
       if (!child) throw new Error("Child not found");
 
-      const field = fieldName(child, type);
-      if (field in root) {
+      const fieldType = determineTypeAndField(child, root);
+      if (fieldType) {
+        const [field, type] = fieldType;
         foundFields.push(field);
-        const validator = createValidator(
+        validateElement(
           resolveType,
-          child.type?.[0].code as string,
-          root[field]
+          descend(path, field),
+          structureDefinition,
+          index,
+          root,
+          type
         );
-        return validator(root[field]);
       }
     });
 
@@ -234,7 +314,7 @@ const cachedValidators: Record<string, Validator> = {};
 function createValidator(
   resolveType: (type: string) => StructureDefinition,
   type: string,
-  value: any
+  path: string = createPath()
 ): Validator {
   const sd = resolveType(type);
   const indice = 0;
@@ -242,7 +322,7 @@ function createValidator(
   const validator = async (input: any) => {
     validateElement(
       resolveType,
-      "",
+      path,
       sd,
       indice,
       input,
