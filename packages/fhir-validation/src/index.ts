@@ -150,13 +150,13 @@ function determineTypeAndField(
   if (isTypeChoice(element)) {
     for (const type of element.type?.map((t) => t.code) || []) {
       const field = fieldName(element, type);
-      if (value[field]) {
+      if (field in value) {
         return [field, type];
       }
     }
   } else {
     const field = fieldName(element);
-    if (value[field]) {
+    if (field in value) {
       return [field, element.type?.[0].code as string];
     }
   }

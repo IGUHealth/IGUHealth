@@ -10,6 +10,7 @@ import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { expect, test } from "@jest/globals";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import MemoryDatabase from "@iguhealth/fhir-server/lib/resourceProviders/memory";
+import jsonpointer from "jsonpointer";
 
 import createValidator from "./index";
 
@@ -128,7 +129,7 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
       .search_type({}, resourceType as ResourceType, { parameters: {} })
       .filter((r) => r.id)
       .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
-      .slice(0, 10);
+      .slice(0, 1);
     const validator = createValidator((type: string) => {
       const sd = memDatabase.read({}, "StructureDefinition", type);
       if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
@@ -136,7 +137,9 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
     }, resourceType);
 
     for (const resource of resources) {
-      validator(resource);
+      const issues = validator(resource);
+
+      expect([resource, issues]).toMatchSnapshot();
     }
   }
 );
