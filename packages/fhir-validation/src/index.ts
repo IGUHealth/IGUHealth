@@ -378,25 +378,20 @@ export default function createValidator(
   type: string,
   path: string = createPath()
 ): Validator {
-  try {
-    const sd = resolveType(type);
-    const indice = 0;
+  const sd = resolveType(type);
+  const indice = 0;
 
-    const validator = (input: any) => {
-      return validateElement(
-        resolveType,
-        path,
-        sd,
-        indice,
-        input,
-        // This should only be one at the root.
-        sd.snapshot?.element[indice].type?.[0].code as string
-      );
-    };
+  const validator = (input: any) => {
+    return validateElement(
+      resolveType,
+      path,
+      sd,
+      indice,
+      input,
+      // This should only be one at the root.
+      sd.snapshot?.element[indice].type?.[0].code as string
+    );
+  };
 
-    return validator;
-  } catch (e) {
-    console.log(type, path);
-    throw e;
-  }
+  return validator;
 }

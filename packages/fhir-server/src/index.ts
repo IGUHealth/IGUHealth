@@ -54,9 +54,9 @@ const signedJWT = await new jose.SignJWT({ "urn:example:claim": true })
   .setExpirationTime("2h")
   .sign(privateKey);
 
-console.log(signedJWT);
-console.log(jose.decodeJwt(signedJWT));
-console.log(await jose.jwtVerify(signedJWT, jwks));
+// console.log(signedJWT);
+// console.log(jose.decodeJwt(signedJWT));
+// console.log(await jose.jwtVerify(signedJWT, jwks));
 
 function serverCapabilities(): CapabilityStatement {
   return {
