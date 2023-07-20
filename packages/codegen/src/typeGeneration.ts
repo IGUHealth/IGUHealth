@@ -2,7 +2,7 @@ import {
   ElementDefinition,
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
-import { traversalBottomUp } from "./sdTraversal.js";
+import { traversalBottom } from "./sdTraversal.js";
 
 function fhirSystemTypePredicate(type: string) {
   switch (type) {
@@ -206,7 +206,7 @@ function resourceOrComplexFhirToTypescript(
   sd: StructureDefinition
 ): string | void {
   let typescriptTypes = "";
-  traversalBottomUp(sd, (element, children: string[]): string[] => {
+  traversalBottom(sd, (element, children: string[]): string[] => {
     if (children.length === 0) {
       return processLeaf(sd, element);
     } else {

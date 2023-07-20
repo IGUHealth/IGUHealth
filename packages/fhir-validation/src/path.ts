@@ -22,5 +22,5 @@ export function ascend(
 }
 
 export function createPath(...fields: string[]) {
-  return fields.reduce((acc, field) => descend(acc, field), "/");
+  return fields.reduce((acc, field) => descend(acc, field), "");
 }

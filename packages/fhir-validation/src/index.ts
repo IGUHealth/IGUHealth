@@ -9,13 +9,14 @@ import { eleIndexToChildIndices } from "@iguhealth/codegen";
 import { descend, createPath } from "./path.js";
 import jsonpointer from "jsonpointer";
 
-type Validator = (input: any) => Promise<void>;
+type Validator = (input: any) => void;
 
 // Create a validator for a given fhir type and value
 
 function validatePrimitive(root: any, path: string, type: string) {
   const value = jsonpointer.get(root, path);
   switch (type) {
+    case "http://hl7.org/fhirpath/System.String":
     case "id":
     case "string":
     case "xhtml":
@@ -172,7 +173,10 @@ function validateSingular(
   // Leaf validation
   if (childrenIndices.length === 0) {
     const type = element.type?.[0].code as string;
-    if (primitiveTypes.has(type)) {
+    if (
+      primitiveTypes.has(type) ||
+      type === "http://hl7.org/fhirpath/System.String"
+    ) {
       return validatePrimitive(root, path, type);
     } else {
       const validator = createValidator(resolveType, type, path);
@@ -184,6 +188,7 @@ function validateSingular(
     // And the typechoice check on each field.
     // Found concatenate on found fields so can check at end whether their are additional and throw error.
     const foundFields: string[] = [];
+    const value = jsonpointer.get(root, path);
 
     const requiredElements = childrenIndices.filter(
       (index) => (structureDefinition.snapshot?.element?.[index].min || 0) > 0
@@ -196,7 +201,7 @@ function validateSingular(
       const child = structureDefinition.snapshot?.element?.[index];
       if (!child) throw new Error("Child not found");
 
-      const fieldType = determineTypeAndField(child, root);
+      const fieldType = determineTypeAndField(child, value);
       if (!fieldType) {
         throw new OperationError(
           outcomeError(
@@ -222,7 +227,7 @@ function validateSingular(
       const child = structureDefinition.snapshot?.element?.[index];
       if (!child) throw new Error("Child not found");
 
-      const fieldType = determineTypeAndField(child, root);
+      const fieldType = determineTypeAndField(child, value);
       if (fieldType) {
         const [field, type] = fieldType;
         foundFields.push(field);
@@ -238,15 +243,23 @@ function validateSingular(
     });
 
     // Check for additional fields
-    const additionalFields = Object.keys(root).filter(
+    let additionalFields = Object.keys(value).filter(
       (field) => foundFields.indexOf(field) === -1
     );
 
+    if (elementIndex === 0 && structureDefinition.kind === "resource") {
+      additionalFields = additionalFields.filter((v) => v !== "resourceType");
+    }
+
     if (additionalFields.length > 0) {
       throw new OperationError(
-        outcomeError("structure", `Additional fields found at path '${path}'`, [
-          path,
-        ])
+        outcomeError(
+          "structure",
+          `Additional fields found at path '${path}': ${additionalFields.join(
+            ", "
+          )}`,
+          [path]
+        )
       );
     }
   }
@@ -257,10 +270,12 @@ function validateElement(
   path: string,
   structureDefinition: StructureDefinition,
   elementIndex: number,
-  value: any,
+  root: any,
   type: string
 ) {
+  const value = jsonpointer.get(root, path);
   const element = structureDefinition.snapshot?.element?.[elementIndex];
+
   if (!isElement(element)) {
     throw new OperationError(
       outcomeFatal(
@@ -273,7 +288,9 @@ function validateElement(
 
   const isArray = element.max === "*" || parseInt(element.max || "1") > 1;
   // Validating cardinality
-  if (isArray != Array.isArray(value)) {
+  // Cardinality set to * on root element so just ignore it.
+  if (isArray != Array.isArray(value || []) && elementIndex !== 0) {
+    console.log(path, value);
     throw new OperationError(
       outcomeError(
         "structure",
@@ -285,7 +302,7 @@ function validateElement(
     );
   }
 
-  if (isArray) {
+  if (isArray && Array.isArray(value || []) && elementIndex !== 0) {
     // Validate each element in the array
     value.forEach((v: any, i: number) => {
       validateSingular(
@@ -293,7 +310,7 @@ function validateElement(
         descend(path, i),
         structureDefinition,
         elementIndex,
-        v,
+        root,
         type
       );
     });
@@ -303,7 +320,7 @@ function validateElement(
       path,
       structureDefinition,
       elementIndex,
-      value,
+      root,
       type
     );
   }
@@ -311,7 +328,7 @@ function validateElement(
 
 const cachedValidators: Record<string, Validator> = {};
 
-function createValidator(
+export default function createValidator(
   resolveType: (type: string) => StructureDefinition,
   type: string,
   path: string = createPath()
@@ -319,7 +336,7 @@ function createValidator(
   const sd = resolveType(type);
   const indice = 0;
 
-  const validator = async (input: any) => {
+  const validator = (input: any) => {
     validateElement(
       resolveType,
       path,

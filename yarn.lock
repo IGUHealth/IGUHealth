@@ -2635,7 +2635,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@iguhealth/fhir-server@workspace:packages/fhir-server":
+"@iguhealth/fhir-server@workspace:^, @iguhealth/fhir-server@workspace:packages/fhir-server":
   version: 0.0.0-use.local
   resolution: "@iguhealth/fhir-server@workspace:packages/fhir-server"
   dependencies:
@@ -2697,6 +2697,7 @@ __metadata:
   dependencies:
     "@iguhealth/artifacts": "workspace:^"
     "@iguhealth/codegen": "workspace:^"
+    "@iguhealth/fhir-server": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
     "@iguhealth/operation-outcomes": "workspace:^"
     "@iguhealth/test-data": "workspace:^"
