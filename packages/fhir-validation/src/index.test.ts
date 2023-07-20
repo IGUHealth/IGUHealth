@@ -73,24 +73,22 @@ test("test typechoice checking", async () => {
     validator({
       resourceType: "Patient",
       deceasedBoolean: "hello",
-      deceasedDate: "1980-01-01",
+      deceasedDateTime: "1980-01-01",
     })
   ).toEqual([
-    [
-      {
-        code: "structure",
-        diagnostics:
-          "Expected primitive type 'boolean' at path '/deceasedBoolean'",
-        expression: ["/deceasedBoolean"],
-        severity: "error",
-      },
-      {
-        code: "structure",
-        diagnostics: "Additional fields found at path '': 'deceasedDate'",
-        expression: [""],
-        severity: "error",
-      },
-    ],
+    {
+      code: "structure",
+      diagnostics:
+        "Expected primitive type 'boolean' at path '/deceasedBoolean'",
+      expression: ["/deceasedBoolean"],
+      severity: "error",
+    },
+    {
+      code: "structure",
+      diagnostics: "Additional fields found at path '': 'deceasedDateTime'",
+      expression: [""],
+      severity: "error",
+    },
   ]);
 
   expect(
@@ -103,7 +101,7 @@ test("test typechoice checking", async () => {
   expect(
     validator({
       resourceType: "Patient",
-      deceasedDate: "1980-01-01",
+      deceasedDateTime: "1980-01-01",
     })
   ).toEqual([]);
 });

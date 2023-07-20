@@ -11,7 +11,8 @@ import createMemoryDatabase from "./memory";
 
 const artifactParameters = loadArtifacts(
   "SearchParameter",
-  path.join(__dirname, "../")
+  path.join(__dirname, "../"),
+  true
 );
 
 function generateParameter(
