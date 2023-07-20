@@ -335,7 +335,10 @@ function validateElement(
   const isArray = element.max === "*" || parseInt(element.max || "1") > 1;
   // Validating cardinality
   // Cardinality set to * on root element so just ignore it.
-  if (isArray != Array.isArray(value || []) && elementIndex !== 0) {
+  if (
+    isArray != Array.isArray(value === undefined ? [] : value) &&
+    elementIndex !== 0
+  ) {
     return [
       issueError(
         "structure",
@@ -347,9 +350,13 @@ function validateElement(
     ];
   }
 
-  if (isArray && Array.isArray(value || []) && elementIndex !== 0) {
+  if (
+    isArray &&
+    Array.isArray(value === undefined ? [] : value) &&
+    elementIndex !== 0
+  ) {
     // Validate each element in the array
-    return value
+    return (value || [])
       .map((v: any, i: number) => {
         return validateSingular(
           resolveType,
