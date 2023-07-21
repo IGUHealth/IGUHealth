@@ -215,7 +215,25 @@ function validateSingular(
       // Element Check.
       let issues: OperationOutcome["issue"] = [];
       const { parent, field } = ascend(path) || {};
-      const elementPath = descend(parent ? parent : "", `_${field}`);
+      if (field === undefined)
+        throw new Error(
+          `No field found on path ${path} for sd ${structureDefinition.id}`
+        );
+      let elementPath;
+      // Means array so descend up one more.
+      if (element.max !== "1") {
+        if (typeof parent !== "string")
+          throw new Error(
+            "Invalid parent when deriving element path for array primitives"
+          );
+        const upOne = ascend(parent);
+        elementPath = descend(
+          descend(upOne?.parent || "", `_${upOne?.field}`),
+          `${field}`
+        );
+      } else {
+        elementPath = descend(parent ? parent : "", `_${field}`);
+      }
       if (jsonpointer.get(root, elementPath)) {
         issues = issues.concat(
           createValidator(resolveType, "Element", elementPath)(root)
@@ -309,12 +327,6 @@ function validateSingular(
     }
 
     if (additionalFields.length > 0) {
-      console.log(
-        optionalElements
-          .concat(requiredElements)
-          .map((index) => structureDefinition.snapshot?.element?.[index].path)
-      );
-      console.log(JSON.stringify(structureDefinition, null, 2));
       issues = [
         ...issues,
         issueError(

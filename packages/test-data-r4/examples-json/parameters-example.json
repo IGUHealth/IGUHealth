@@ -1,5 +1,6 @@
 {
   "resourceType": "Parameters",
+  "id": "example",
   "parameter": [
     {
       "name": "exact",
@@ -27,10 +28,7 @@
           {
             "use": "official",
             "family": "Chalmers",
-            "given": [
-              "Peter",
-              "James"
-            ]
+            "given": ["Peter", "James"]
           }
         ]
       }

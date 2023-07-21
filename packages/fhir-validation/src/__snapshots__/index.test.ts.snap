@@ -4721,7 +4721,7 @@ exports[`Testing validating resourceType 'Organization' 1`] = `
 exports[`Testing validating resourceType 'Parameters' 1`] = `
 [
   {
-    "id": "96702294",
+    "id": "example",
     "parameter": [
       {
         "name": "exact",

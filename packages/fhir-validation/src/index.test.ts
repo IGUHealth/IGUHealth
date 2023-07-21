@@ -1,16 +1,10 @@
 import path from "path";
-
-import {
-  StructureDefinition,
-  Resource,
-  ResourceType,
-  code,
-} from "@iguhealth/fhir-types/r4/types";
-import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { expect, test } from "@jest/globals";
+
+import { Resource, ResourceType } from "@iguhealth/fhir-types/r4/types";
+import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import MemoryDatabase from "@iguhealth/fhir-server/lib/resourceProviders/memory";
-import jsonpointer from "jsonpointer";
 
 import createValidator from "./index";
 
@@ -160,6 +154,47 @@ test("Primitive Extensions", () => {
       diagnostics:
         "Expected primitive type 'http://hl7.org/fhirpath/System.String' at path '/identifier/0/_system/extension/0/url'",
       expression: ["/identifier/0/_system/extension/0/url"],
+      severity: "error",
+    },
+  ]);
+});
+
+test("Primitive extension testing", () => {
+  const sd = memDatabase.read({}, "StructureDefinition", "Patient");
+
+  const validator = createValidator((type: string) => {
+    const sd = memDatabase.read({}, "StructureDefinition", type);
+    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
+    return sd;
+  }, "Patient");
+
+  expect(
+    validator({
+      resourceType: "Patient",
+      name: [
+        {
+          given: ["Bob"],
+          _given: [{ id: "123" }],
+        },
+      ],
+    })
+  ).toEqual([]);
+  expect(
+    validator({
+      resourceType: "Patient",
+      name: [
+        {
+          given: ["Bob"],
+          _given: [{ id: 5 }],
+        },
+      ],
+    })
+  ).toEqual([
+    {
+      code: "structure",
+      diagnostics:
+        "Expected primitive type 'http://hl7.org/fhirpath/System.String' at path '/name/0/_given/0/id'",
+      expression: ["/name/0/_given/0/id"],
       severity: "error",
     },
   ]);

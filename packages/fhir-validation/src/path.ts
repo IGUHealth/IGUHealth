@@ -16,8 +16,9 @@ export function ascend(
 ): { parent: string; field: string } | undefined {
   const last = path.lastIndexOf("/");
   const parent = path.substring(0, last);
-  if (!parent) return undefined;
   const field = unescape(path.substring(last + 1));
+
+  if (!field) return undefined;
   return { parent, field };
 }
 
