@@ -30,9 +30,7 @@ function validatePrimitive(
     case "string":
     case "xhtml":
     case "markdown":
-
     case "base64Binary":
-
     case "uri":
     case "uuid":
     case "canonical":

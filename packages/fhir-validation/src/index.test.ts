@@ -376,6 +376,54 @@ test("Validate element with no primitive", () => {
   ]);
 });
 
+test("Observation nested case", () => {
+  const validator = createValidator((type: string) => {
+    const sd = memDatabase.read({}, "StructureDefinition", type);
+    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
+    return sd;
+  }, "Observation");
+
+  expect(
+    validator({
+      resourceType: "Observation",
+      code: {
+        coding: [
+          {
+            system: "http://loinc.org",
+            code: "15074-8",
+            display: "Glucose [Moles/volume] in Blood",
+          },
+        ],
+      },
+      status: "final",
+      _status: {
+        id: "1",
+        extension: [
+          {
+            url: "whatever",
+            valueString: "testing",
+            _valueString: {
+              extension: [
+                {
+                  url: 5,
+                },
+              ],
+            },
+          },
+        ],
+      },
+    })
+  ).toEqual([
+    {
+      severity: "error",
+      code: "structure",
+      diagnostics:
+        "Expected primitive type 'http://hl7.org/fhirpath/System.String' at path '/_status/extension/0/_valueString/extension/0/url'",
+      expression: ["/_status/extension/0/_valueString/extension/0/url"],
+    },
+  ]);
+});
+
 test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
   `Testing validating resourceType '%s'`,
   (resourceType) => {
