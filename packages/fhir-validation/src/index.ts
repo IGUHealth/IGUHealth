@@ -191,7 +191,7 @@ function determineTypesAndFields(
       if (`_${field}` in value) fields.push(primitiveElementField);
     }
   } else {
-    // Check for primitive extensions when non existant values
+    // Check for primitive extensions when non existent values
     const primitives =
       element.type?.filter((type) => isPrimitiveType(type.code)) || [];
     for (const primType of primitives) {
