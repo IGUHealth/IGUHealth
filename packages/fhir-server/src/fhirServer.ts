@@ -73,7 +73,8 @@ function createFHIRServer() {
             )
           );
         }
-        default:
+        default: {
+        }
       }
       if (!next) throw new Error("No next");
       return next(request, { state, ctx });
