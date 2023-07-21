@@ -214,6 +214,9 @@ function validateSingular(
     ) {
       return validatePrimitive(root, path, type);
     } else {
+      if (type === "Resource" || type === "DomainResource") {
+        type = jsonpointer.get(root, descend(path, "resourceType"));
+      }
       const validator = createValidator(resolveType, type, path);
       return validator(root);
     }

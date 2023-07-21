@@ -2389,216 +2389,7 @@ exports[`Testing validating resourceType 'Bundle' 1`] = `
     "resourceType": "Bundle",
     "type": "collection",
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/0/resource': 'identifier, status, code, subject, effectiveDateTime, issued, performer, result'",
-      "expression": [
-        "/entry/0/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/1/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/1/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/2/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/2/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/3/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/3/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/4/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/4/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/5/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/5/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/6/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/6/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/7/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/7/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/8/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/8/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/9/resource': 'status, code, subject, performer, valueQuantity, interpretation, referenceRange'",
-      "expression": [
-        "/entry/9/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/10/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/10/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/11/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/11/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/12/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/12/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/13/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/13/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/14/resource': 'status, code, subject, performer, valueQuantity, interpretation, referenceRange'",
-      "expression": [
-        "/entry/14/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/15/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/15/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/16/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/16/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/17/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/17/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/18/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/18/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/19/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/19/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/20/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/20/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/21/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/21/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/22/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/22/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/23/resource': 'status, code, subject, performer, valueQuantity, interpretation, referenceRange'",
-      "expression": [
-        "/entry/23/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/24/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/24/resource",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/entry/25/resource': 'status, code, subject, performer, valueQuantity, referenceRange'",
-      "expression": [
-        "/entry/25/resource",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -24822,16 +24613,7 @@ exports[`Testing validating resourceType 'CarePlan' 1`] = `
       "status": "additional",
     },
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/0': 'clinicalStatus, verificationStatus, code, subject'",
-      "expression": [
-        "/contained/0",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -24938,16 +24720,7 @@ exports[`Testing validating resourceType 'CareTeam' 1`] = `
       "status": "generated",
     },
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/0': 'name'",
-      "expression": [
-        "/contained/0",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -30477,16 +30250,7 @@ exports[`Testing validating resourceType 'HealthcareService' 1`] = `
       },
     ],
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/0': 'description, mode, form'",
-      "expression": [
-        "/contained/0",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -31723,16 +31487,7 @@ exports[`Testing validating resourceType 'MeasureReport' 1`] = `
     },
     "type": "subject-list",
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/0': 'status, mode, entry'",
-      "expression": [
-        "/contained/0",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -31821,16 +31576,7 @@ exports[`Testing validating resourceType 'Medication' 1`] = `
       "status": "generated",
     },
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/0': 'name'",
-      "expression": [
-        "/contained/0",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -31985,24 +31731,7 @@ exports[`Testing validating resourceType 'MedicationAdministration' 1`] = `
       "status": "generated",
     },
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/0': 'code'",
-      "expression": [
-        "/contained/0",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/1': 'target, recorded, agent, signature'",
-      "expression": [
-        "/contained/1",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -32102,16 +31831,7 @@ exports[`Testing validating resourceType 'MedicationDispense' 1`] = `
       "status": "generated",
     },
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/0': 'code'",
-      "expression": [
-        "/contained/0",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -32409,16 +32129,7 @@ exports[`Testing validating resourceType 'MedicationStatement' 1`] = `
       "status": "generated",
     },
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/0': 'code, doseForm, ingredient, batch'",
-      "expression": [
-        "/contained/0",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -33069,7 +32780,7 @@ exports[`Testing validating resourceType 'Observation' 1`] = `
   [
     {
       "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/0': 'identifier, active, name, gender, birthDate, _birthDate'",
+      "diagnostics": "Additional fields found at path '/contained/0': '_birthDate'",
       "expression": [
         "/contained/0",
       ],
@@ -33598,16 +33309,7 @@ exports[`Testing validating resourceType 'Parameters' 1`] = `
     ],
     "resourceType": "Parameters",
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/parameter/2/resource': 'name'",
-      "expression": [
-        "/parameter/2/resource",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -34950,32 +34652,7 @@ exports[`Testing validating resourceType 'QuestionnaireResponse' 1`] = `
       "status": "generated",
     },
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/0': 'identifier, gender, birthDate'",
-      "expression": [
-        "/contained/0",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/1': 'status, intent, subject, requester'",
-      "expression": [
-        "/contained/1",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/2': 'identifier'",
-      "expression": [
-        "/contained/2",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -36389,96 +36066,7 @@ exports[`Testing validating resourceType 'ResearchStudy' 1`] = `
     "title": "A Safety, Tolerability, and Pharmacokinetics Study of AP303 in Healthy Subjects",
     "url": "https://fevir.net/resources/ResearchStudy/112103",
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/0': 'name, title, status, description, useContext'",
-      "expression": [
-        "/contained/0",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/1': 'name, title, status, description, useContext'",
-      "expression": [
-        "/contained/1",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/2': 'name, title, status, description, useContext'",
-      "expression": [
-        "/contained/2",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/3': 'name, title, status, description, useContext'",
-      "expression": [
-        "/contained/3",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/4': 'name, title, status, description, useContext'",
-      "expression": [
-        "/contained/4",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/5': 'name, title, status, description, useContext'",
-      "expression": [
-        "/contained/5",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/6': 'name, title, status, description, useContext'",
-      "expression": [
-        "/contained/6",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/7': 'name, title, status, description, useContext'",
-      "expression": [
-        "/contained/7",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/8': 'name, telecom'",
-      "expression": [
-        "/contained/8",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/9': 'partOf, status, site, progressStatus'",
-      "expression": [
-        "/contained/9",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/10': 'name, address, position'",
-      "expression": [
-        "/contained/10",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -41866,32 +41454,7 @@ exports[`Testing validating resourceType 'SupplyDelivery' 1`] = `
       "text": "Blood Dispatch",
     },
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/0': 'productCode, identifier, biologicalSourceEvent, processingFacility, productStatus, expirationDate, property'",
-      "expression": [
-        "/contained/0",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/1': 'productCode, identifier, biologicalSourceEvent, processingFacility, productStatus, expirationDate, property'",
-      "expression": [
-        "/contained/1",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/2': 'productCode, identifier, biologicalSourceEvent, processingFacility, productStatus, expirationDate, property'",
-      "expression": [
-        "/contained/2",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
