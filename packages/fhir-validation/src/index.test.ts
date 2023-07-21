@@ -218,39 +218,39 @@ test("SearchParameter testing", () => {
   expect(validator(parameter)).toEqual([]);
 });
 
-// test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
-//   `Testing validating resourceType '%s'`,
-//   (resourceType) => {
-//     const structureDefinition = memDatabase.search_type(
-//       {},
-//       "StructureDefinition",
-//       {
-//         resourceType: "StructureDefinition",
-//         parameters: {
-//           base: {
-//             name: "type",
-//             value: [resourceType],
-//           },
-//         },
-//       }
-//     );
-//     const sd = structureDefinition[0];
+test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
+  `Testing validating resourceType '%s'`,
+  (resourceType) => {
+    const structureDefinition = memDatabase.search_type(
+      {},
+      "StructureDefinition",
+      {
+        resourceType: "StructureDefinition",
+        parameters: {
+          base: {
+            name: "type",
+            value: [resourceType],
+          },
+        },
+      }
+    );
+    const sd = structureDefinition[0];
 
-//     const resources = memDatabase
-//       .search_type({}, resourceType as ResourceType, { parameters: {} })
-//       .filter((r) => r.id)
-//       .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
-//       .slice(0, 1);
-//     const validator = createValidator((type: string) => {
-//       const sd = memDatabase.read({}, "StructureDefinition", type);
-//       if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
-//       return sd;
-//     }, resourceType);
+    const resources = memDatabase
+      .search_type({}, resourceType as ResourceType, { parameters: {} })
+      .filter((r) => r.id)
+      .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
+      .slice(0, 1);
+    const validator = createValidator((type: string) => {
+      const sd = memDatabase.read({}, "StructureDefinition", type);
+      if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
+      return sd;
+    }, resourceType);
 
-//     for (const resource of resources) {
-//       const issues = validator(resource);
+    for (const resource of resources) {
+      const issues = validator(resource);
 
-//       expect([resource, issues]).toMatchSnapshot();
-//     }
-//   }
-// );
+      expect([resource, issues]).toMatchSnapshot();
+    }
+  }
+);
