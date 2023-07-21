@@ -143,7 +143,11 @@ function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-function determineTypeAndField(
+function isPrimitiveType(type: string) {
+  return primitiveTypes.has(type);
+}
+
+function findBaseFieldAndType(
   element: ElementDefinition,
   value: any
 ): [string, string] | undefined {
@@ -160,6 +164,40 @@ function determineTypeAndField(
       return [field, element.type?.[0].code as string];
     }
   }
+}
+
+function determineTypesAndFields(
+  element: ElementDefinition,
+  value: any
+): [string, string][] {
+  let fields = [];
+  const base = findBaseFieldAndType(element, value);
+  if (base) fields.push(base);
+
+  if (base) {
+    const [field, type] = base;
+    if (isPrimitiveType(type)) {
+      const primElement: [string, string] = [`_${field}`, "Element"];
+      if (`_${field}` in value) fields.push(primElement);
+    }
+  } else {
+    // Check for primitive extensions when non existant values
+    for (const primType in element.type?.filter((type) =>
+      isPrimitiveType(type.code)
+    )) {
+      if (`_${fieldName(element, primType)}` in value) {
+        const primElement: [string, string] = [
+          `_${fieldName(element, primType)}`,
+          "Element",
+        ];
+        fields.push(primElement);
+        // Only return once
+        return fields;
+      }
+    }
+  }
+
+  return fields;
 }
 function resolveContentReferenceIndex(
   sd: StructureDefinition,
@@ -209,7 +247,7 @@ function validateSingular(
         type
       );
     } else if (
-      primitiveTypes.has(type) ||
+      isPrimitiveType(type) ||
       type === "http://hl7.org/fhirpath/System.String"
     ) {
       // Element Check.
@@ -219,26 +257,6 @@ function validateSingular(
         throw new Error(
           `No field found on path ${path} for sd ${structureDefinition.id}`
         );
-      let elementPath;
-      // Means array so descend up one more.
-      if (element.max !== "1") {
-        if (typeof parent !== "string")
-          throw new Error(
-            "Invalid parent when deriving element path for array primitives"
-          );
-        const upOne = ascend(parent);
-        elementPath = descend(
-          descend(upOne?.parent || "", `_${upOne?.field}`),
-          `${field}`
-        );
-      } else {
-        elementPath = descend(parent ? parent : "", `_${field}`);
-      }
-      if (jsonpointer.get(root, elementPath)) {
-        issues = issues.concat(
-          createValidator(resolveType, "Element", elementPath)(root)
-        );
-      }
       return issues.concat(validatePrimitive(root, path, type));
     } else {
       if (type === "Resource" || type === "DomainResource") {
@@ -252,7 +270,7 @@ function validateSingular(
     // Need to validate that only the _field for primitives
     // And the typechoice check on each field.
     // Found concatenate on found fields so can check at end whether their are additional and throw error.
-    const foundFields: string[] = [];
+    let foundFields: string[] = [];
     const value = jsonpointer.get(root, path);
 
     const requiredElements = childrenIndices.filter(
@@ -267,8 +285,8 @@ function validateSingular(
         const child = structureDefinition.snapshot?.element?.[index];
         if (!child) throw new Error("Child not found");
 
-        const fieldType = determineTypeAndField(child, value);
-        if (!fieldType) {
+        const fields = determineTypesAndFields(child, value);
+        if (fields.length === 0) {
           return [
             issueError(
               "structure",
@@ -277,17 +295,16 @@ function validateSingular(
             ),
           ];
         }
-        const [field, type] = fieldType;
-        if (primitiveTypes.has(type)) foundFields.push(`_${field}`);
-        foundFields.push(field);
-        return validateElement(
+        const { issues, fieldsFound } = checkFields(
           resolveType,
-          descend(path, field),
+          path,
           structureDefinition,
           index,
           root,
-          type
+          fields
         );
+        foundFields = foundFields.concat(fieldsFound);
+        return issues;
       })
       .flat();
 
@@ -298,21 +315,17 @@ function validateSingular(
           const child = structureDefinition.snapshot?.element?.[index];
           if (!child) throw new Error("Child not found");
 
-          const fieldType = determineTypeAndField(child, value);
-          if (fieldType) {
-            const [field, type] = fieldType;
-            if (primitiveTypes.has(type)) foundFields.push(`_${field}`);
-            foundFields.push(field);
-            return validateElement(
-              resolveType,
-              descend(path, field),
-              structureDefinition,
-              index,
-              root,
-              type
-            );
-          }
-          return [];
+          const fields = determineTypesAndFields(child, value);
+          const { issues, fieldsFound } = checkFields(
+            resolveType,
+            path,
+            structureDefinition,
+            index,
+            root,
+            fields
+          );
+          foundFields = foundFields.concat(fieldsFound);
+          return issues;
         })
         .flat(),
     ];
@@ -341,6 +354,35 @@ function validateSingular(
 
     return issues;
   }
+}
+function checkFields(
+  resolveType: (type: string) => StructureDefinition,
+  path: string,
+  structureDefinition: StructureDefinition,
+  index: number,
+  root: any,
+  fields: [string, string][]
+): {
+  fieldsFound: string[];
+  issues: OperationOutcome["issue"];
+} {
+  const fieldsFound: string[] = [];
+  const issues = fields
+    .map((fieldType) => {
+      const [field, type] = fieldType;
+      fieldsFound.push(field);
+      return validateElement(
+        resolveType,
+        descend(path, field),
+        structureDefinition,
+        index,
+        root,
+        type
+      );
+    })
+    .flat();
+
+  return { issues, fieldsFound };
 }
 
 function validateElement(
@@ -382,11 +424,7 @@ function validateElement(
     ];
   }
 
-  if (
-    isArray &&
-    Array.isArray(value === undefined ? [] : value) &&
-    elementIndex !== 0
-  ) {
+  if (Array.isArray(value === undefined ? [] : value)) {
     // Validate each element in the array
     return (value || [])
       .map((v: any, i: number) => {
