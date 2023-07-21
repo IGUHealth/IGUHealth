@@ -1,13 +1,8 @@
 import path from "path";
-
-import {
-  StructureDefinition,
-  Resource,
-  ResourceType,
-  code,
-} from "@iguhealth/fhir-types/r4/types";
-import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { expect, test } from "@jest/globals";
+
+import { Resource, ResourceType } from "@iguhealth/fhir-types/r4/types";
+import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import MemoryDatabase from "@iguhealth/fhir-server/lib/resourceProviders/memory";
 
@@ -106,6 +101,158 @@ test("test typechoice checking", async () => {
   ).toEqual([]);
 });
 
+test("Primitive Extensions", () => {
+  const sd = memDatabase.read({}, "StructureDefinition", "Patient");
+
+  const validator = createValidator((type: string) => {
+    const sd = memDatabase.read({}, "StructureDefinition", type);
+    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
+    return sd;
+  }, "Patient");
+
+  expect(
+    validator({
+      resourceType: "Patient",
+      id: "5",
+      identifier: [
+        {
+          system: "http://example.com",
+          _system: {
+            extension: [
+              {
+                url: "http://example.com",
+                valueCode: "test",
+              },
+            ],
+          },
+        },
+      ],
+    })
+  ).toEqual([]);
+
+  expect(
+    validator({
+      resourceType: "Patient",
+      id: "5",
+      identifier: [
+        {
+          system: "http://example.com",
+          _system: {
+            extension: [
+              {
+                url: 5,
+                valueCode: "test",
+              },
+            ],
+          },
+        },
+      ],
+    })
+  ).toEqual([
+    {
+      code: "structure",
+      diagnostics:
+        "Expected primitive type 'http://hl7.org/fhirpath/System.String' at path '/identifier/0/_system/extension/0/url'",
+      expression: ["/identifier/0/_system/extension/0/url"],
+      severity: "error",
+    },
+  ]);
+});
+
+test("Primitive extension testing", () => {
+  const sd = memDatabase.read({}, "StructureDefinition", "Patient");
+
+  const validator = createValidator((type: string) => {
+    const sd = memDatabase.read({}, "StructureDefinition", type);
+    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
+    return sd;
+  }, "Patient");
+
+  expect(
+    validator({
+      resourceType: "Patient",
+      name: [
+        {
+          given: ["Bob"],
+          _given: [{ id: "123" }],
+        },
+      ],
+    })
+  ).toEqual([]);
+  expect(
+    validator({
+      resourceType: "Patient",
+      name: [
+        {
+          given: ["Bob"],
+          _given: [{ id: 5 }],
+        },
+      ],
+    })
+  ).toEqual([
+    {
+      code: "structure",
+      diagnostics:
+        "Expected primitive type 'http://hl7.org/fhirpath/System.String' at path '/name/0/_given/0/id'",
+      expression: ["/name/0/_given/0/id"],
+      severity: "error",
+    },
+  ]);
+});
+
+test("SearchParameter testing", () => {
+  const parameter = {
+    base: ["Account"],
+    code: "identifier",
+    contact: [
+      {
+        telecom: [
+          {
+            system: "url",
+            value: "http://hl7.org/fhir",
+          },
+        ],
+      },
+      {
+        telecom: [
+          {
+            system: "url",
+            value: "http://www.hl7.org/Special/committees/pafm/index.cfm",
+          },
+        ],
+      },
+    ],
+    date: "2019-11-01T09:29:23+11:00",
+    description: "Account number",
+    experimental: false,
+    expression: "Account.identifier",
+    extension: [
+      {
+        url: "http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status",
+        valueCode: "trial-use",
+      },
+    ],
+    id: "Account-identifier",
+    name: "identifier",
+    publisher: "Health Level Seven International (Patient Administration)",
+    resourceType: "SearchParameter",
+    status: "draft",
+    type: "token",
+    url: "http://hl7.org/fhir/SearchParameter/Account-identifier",
+    version: "4.0.1",
+    xpath: "f:Account/f:identifier",
+    xpathUsage: "normal",
+  };
+
+  const validator = createValidator((type: string) => {
+    const sd = memDatabase.read({}, "StructureDefinition", type);
+    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
+    return sd;
+  }, "SearchParameter");
+
+  expect(validator(parameter)).toEqual([]);
+});
+
 test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
   `Testing validating resourceType '%s'`,
   (resourceType) => {
@@ -128,7 +275,7 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
       .search_type({}, resourceType as ResourceType, { parameters: {} })
       .filter((r) => r.id)
       .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
-      .slice(0, 10);
+      .slice(0, 1);
     const validator = createValidator((type: string) => {
       const sd = memDatabase.read({}, "StructureDefinition", type);
       if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
@@ -136,7 +283,9 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
     }, resourceType);
 
     for (const resource of resources) {
-      validator(resource);
+      const issues = validator(resource);
+
+      expect([resource, issues]).toMatchSnapshot();
     }
   }
 );

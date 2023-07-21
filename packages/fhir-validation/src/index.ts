@@ -11,7 +11,7 @@ import {
 } from "@iguhealth/fhir-types";
 import { primitiveTypes } from "@iguhealth/fhir-types/r4/sets";
 import { eleIndexToChildIndices } from "@iguhealth/codegen";
-import { descend, createPath } from "./path.js";
+import { descend, createPath, ascend } from "./path.js";
 import jsonpointer from "jsonpointer";
 
 type Validator = (input: any) => OperationOutcome["issue"];
@@ -150,13 +150,13 @@ function determineTypeAndField(
   if (isTypeChoice(element)) {
     for (const type of element.type?.map((t) => t.code) || []) {
       const field = fieldName(element, type);
-      if (value[field]) {
+      if (field in value) {
         return [field, type];
       }
     }
   } else {
     const field = fieldName(element);
-    if (value[field]) {
+    if (field in value) {
       return [field, element.type?.[0].code as string];
     }
   }
@@ -212,8 +212,38 @@ function validateSingular(
       primitiveTypes.has(type) ||
       type === "http://hl7.org/fhirpath/System.String"
     ) {
-      return validatePrimitive(root, path, type);
+      // Element Check.
+      let issues: OperationOutcome["issue"] = [];
+      const { parent, field } = ascend(path) || {};
+      if (field === undefined)
+        throw new Error(
+          `No field found on path ${path} for sd ${structureDefinition.id}`
+        );
+      let elementPath;
+      // Means array so descend up one more.
+      if (element.max !== "1") {
+        if (typeof parent !== "string")
+          throw new Error(
+            "Invalid parent when deriving element path for array primitives"
+          );
+        const upOne = ascend(parent);
+        elementPath = descend(
+          descend(upOne?.parent || "", `_${upOne?.field}`),
+          `${field}`
+        );
+      } else {
+        elementPath = descend(parent ? parent : "", `_${field}`);
+      }
+      if (jsonpointer.get(root, elementPath)) {
+        issues = issues.concat(
+          createValidator(resolveType, "Element", elementPath)(root)
+        );
+      }
+      return issues.concat(validatePrimitive(root, path, type));
     } else {
+      if (type === "Resource" || type === "DomainResource") {
+        type = jsonpointer.get(root, descend(path, "resourceType"));
+      }
       const validator = createValidator(resolveType, type, path);
       return validator(root);
     }
@@ -248,6 +278,7 @@ function validateSingular(
           ];
         }
         const [field, type] = fieldType;
+        if (primitiveTypes.has(type)) foundFields.push(`_${field}`);
         foundFields.push(field);
         return validateElement(
           resolveType,
@@ -270,6 +301,7 @@ function validateSingular(
           const fieldType = determineTypeAndField(child, value);
           if (fieldType) {
             const [field, type] = fieldType;
+            if (primitiveTypes.has(type)) foundFields.push(`_${field}`);
             foundFields.push(field);
             return validateElement(
               resolveType,
@@ -335,7 +367,10 @@ function validateElement(
   const isArray = element.max === "*" || parseInt(element.max || "1") > 1;
   // Validating cardinality
   // Cardinality set to * on root element so just ignore it.
-  if (isArray != Array.isArray(value || []) && elementIndex !== 0) {
+  if (
+    isArray != Array.isArray(value === undefined ? [] : value) &&
+    elementIndex !== 0
+  ) {
     return [
       issueError(
         "structure",
@@ -347,9 +382,13 @@ function validateElement(
     ];
   }
 
-  if (isArray && Array.isArray(value || []) && elementIndex !== 0) {
+  if (
+    isArray &&
+    Array.isArray(value === undefined ? [] : value) &&
+    elementIndex !== 0
+  ) {
     // Validate each element in the array
-    return value
+    return (value || [])
       .map((v: any, i: number) => {
         return validateSingular(
           resolveType,

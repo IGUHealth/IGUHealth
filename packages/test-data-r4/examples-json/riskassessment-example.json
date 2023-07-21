@@ -3,7 +3,7 @@
   "id": "genetic",
   "text": {
     "status": "generated",
-    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003cp\u003eProbability of developing breast cancer before the age indicated:\u003c/p\u003e\n      \u003ctable\u003e\n        \u003cthead\u003e\n          \u003ctr\u003e\n            \u003cth\u003eAge\u003c/th\u003e\n            \u003cth\u003eProbability (%)\u003c/th\u003e\n          \u003c/tr\u003e\n        \u003c/thead\u003e\n        \u003ctbody\u003e\n          \u003ctr\u003e\n            \u003ctd\u003ecurrent-53\u003c/td\u003e\n            \u003ctd\u003e0.0168\u003c/td\u003e\n          \u003c/tr\u003e\n          \u003ctr\u003e\n            \u003ctd\u003e54-57\u003c/td\u003e\n            \u003ctd\u003e0.0368\u003c/td\u003e\n          \u003c/tr\u003e\n          \u003ctr\u003e\n            \u003ctd\u003e58-62\u003c/td\u003e\n            \u003ctd\u003e0.0594\u003c/td\u003e\n          \u003c/tr\u003e\n          \u003ctr\u003e\n            \u003ctd\u003e63-67\u003c/td\u003e\n            \u003ctd\u003e0.0838\u003c/td\u003e\n          \u003c/tr\u003e\n          \u003ctr\u003e\n            \u003ctd\u003e68-72\u003c/td\u003e\n            \u003ctd\u003e0.1089\u003c/td\u003e\n          \u003c/tr\u003e\n          \u003ctr\u003e\n            \u003ctd\u003e73-77\u003c/td\u003e\n            \u003ctd\u003e0.1327\u003c/td\u003e\n          \u003c/tr\u003e\n          \u003ctr\u003e\n            \u003ctd\u003e78-82\u003c/td\u003e\n            \u003ctd\u003e0.1530\u003c/td\u003e\n          \u003c/tr\u003e\n          \u003ctr\u003e\n            \u003ctd\u003e83-87\u003c/td\u003e\n            \u003ctd\u003e0.1663\u003c/td\u003e\n          \u003c/tr\u003e\n        \u003c/tbody\u003e\n      \u003c/table\u003e\n    \u003c/div\u003e"
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>Probability of developing breast cancer before the age indicated:</p>\n      <table>\n        <thead>\n          <tr>\n            <th>Age</th>\n            <th>Probability (%)</th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr>\n            <td>current-53</td>\n            <td>0.0168</td>\n          </tr>\n          <tr>\n            <td>54-57</td>\n            <td>0.0368</td>\n          </tr>\n          <tr>\n            <td>58-62</td>\n            <td>0.0594</td>\n          </tr>\n          <tr>\n            <td>63-67</td>\n            <td>0.0838</td>\n          </tr>\n          <tr>\n            <td>68-72</td>\n            <td>0.1089</td>\n          </tr>\n          <tr>\n            <td>73-77</td>\n            <td>0.1327</td>\n          </tr>\n          <tr>\n            <td>78-82</td>\n            <td>0.1530</td>\n          </tr>\n          <tr>\n            <td>83-87</td>\n            <td>0.1663</td>\n          </tr>\n        </tbody>\n      </table>\n    </div>"
   },
   "status": "final",
   "method": {
@@ -182,14 +182,5 @@
     {
       "text": "High degree of certainty"
     }
-  ],
-  "meta": {
-    "tag": [
-      {
-        "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
-        "code": "HTEST",
-        "display": "test health data"
-      }
-    ]
-  }
+  ]
 }

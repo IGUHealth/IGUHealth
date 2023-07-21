@@ -3,9 +3,8 @@
   "id": "bb",
   "text": {
     "status": "generated",
-    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003cpre\u003e\n        Cathy Jones, female. Birth weight 3.25 kg at 44.3 cm. \n        Injection of Vitamin K given on 1972-11-30 (first dose) and 1972-12-11 (second dose)\n        Note: Was able to speak Chinese at birth.\n      \u003c/pre\u003e\n    \u003c/div\u003e"
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <pre>\n        Cathy Jones, female. Birth weight 3.25 kg at 44.3 cm. \n        Injection of Vitamin K given on 1972-11-30 (first dose) and 1972-12-11 (second dose)\n        Note: Was able to speak Chinese at birth.\n      </pre>\n    </div>"
   },
-  "questionnaire": "http://hl7.org/fhir/Questionnaire/bb",
   "status": "completed",
   "subject": {
     "reference": "http://hl7.org/fhir/Patient/1",
@@ -39,7 +38,7 @@
               "answer": [
                 {
                   "valueCoding": {
-                    "code": "F"
+                    "code": "f"
                   }
                 }
               ]
@@ -85,7 +84,7 @@
                           "text": "1st dose",
                           "answer": [
                             {
-                              "valueDateTime": "1972-11-30"
+                              "valueDate": "1972-11-30"
                             }
                           ]
                         },
@@ -94,7 +93,7 @@
                           "text": "2nd dose",
                           "answer": [
                             {
-                              "valueDateTime": "1972-12-11"
+                              "valueDate": "1972-12-11"
                             }
                           ]
                         }
@@ -137,14 +136,5 @@
         }
       ]
     }
-  ],
-  "meta": {
-    "tag": [
-      {
-        "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
-        "code": "HTEST",
-        "display": "test health data"
-      }
-    ]
-  }
+  ]
 }
