@@ -193,7 +193,7 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
   const router = new Router();
   router.all(
     "/w/:workspace/api/v1/fhir/r4/:fhirUrl*",
-    checkJWT,
+    //checkJWT,
     async (ctx, next) => {
       try {
         const serverCTX = {
