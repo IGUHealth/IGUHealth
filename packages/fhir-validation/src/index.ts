@@ -375,7 +375,7 @@ function validateElement(
       issueError(
         "structure",
         `Element at path '${path}' is expected to be ${
-          isArray ? "an array " : "a singular value "
+          isArray ? "an array" : "a singular value"
         }.`,
         [path]
       ),

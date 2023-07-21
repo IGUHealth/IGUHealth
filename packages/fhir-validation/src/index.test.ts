@@ -253,6 +253,65 @@ test("SearchParameter testing", () => {
   expect(validator(parameter)).toEqual([]);
 });
 
+test("Test cardinality ", () => {
+  const validator = createValidator((type: string) => {
+    const sd = memDatabase.read({}, "StructureDefinition", type);
+    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
+    return sd;
+  }, "Patient");
+
+  expect(
+    validator({
+      resourceType: "Patient",
+      id: "5",
+      name: [
+        {
+          given: "Bob",
+        },
+      ],
+    })
+  ).toEqual([
+    {
+      code: "structure",
+      diagnostics:
+        "Element at path '/name/0/given' is expected to be an array.",
+      expression: ["/name/0/given"],
+      severity: "error",
+    },
+  ]);
+});
+
+test("Test required ", () => {
+  const validator = createValidator((type: string) => {
+    const sd = memDatabase.read({}, "StructureDefinition", type);
+    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
+    return sd;
+  }, "Patient");
+
+  expect(
+    validator({
+      resourceType: "Patient",
+      id: "5",
+      link: [{}],
+    })
+  ).toEqual([
+    {
+      code: "structure",
+      diagnostics:
+        "Missing required field 'Patient.link.other' at path '/link/0'",
+      expression: ["/link/0"],
+      severity: "error",
+    },
+    {
+      code: "structure",
+      diagnostics:
+        "Missing required field 'Patient.link.type' at path '/link/0'",
+      expression: ["/link/0"],
+      severity: "error",
+    },
+  ]);
+});
+
 test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
   `Testing validating resourceType '%s'`,
   (resourceType) => {
