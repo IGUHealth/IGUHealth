@@ -6,7 +6,7 @@ import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import MemoryDatabase from "@iguhealth/fhir-server/lib/resourceProviders/memory";
 
-import createValidator from "./index";
+import { createValidator } from "./index";
 
 function createMemoryDatabase(resourceTypes: ResourceType[]) {
   const database = MemoryDatabase<any>({});

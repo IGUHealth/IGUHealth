@@ -2642,6 +2642,7 @@ __metadata:
     "@iguhealth/artifacts": "workspace:^"
     "@iguhealth/fhir-query": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
+    "@iguhealth/fhir-validation": "workspace:^"
     "@iguhealth/fhirpath": "workspace:^"
     "@iguhealth/meta-value": "workspace:^"
     "@iguhealth/operation-outcomes": "workspace:^"
@@ -2691,7 +2692,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@iguhealth/fhir-validation@workspace:packages/fhir-validation":
+"@iguhealth/fhir-validation@workspace:^, @iguhealth/fhir-validation@workspace:packages/fhir-validation":
   version: 0.0.0-use.local
   resolution: "@iguhealth/fhir-validation@workspace:packages/fhir-validation"
   dependencies:

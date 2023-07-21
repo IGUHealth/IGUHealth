@@ -21,7 +21,7 @@ import { loadArtifacts } from "@iguhealth/artifacts";
 import MemoryDatabase from "./resourceProviders/memory.js";
 import RouterDatabase from "./resourceProviders/router.js";
 import { FHIRClientSync } from "./client/interface.js";
-import createFhirServer, { FHIRServerCTX } from "./fhirServer.js";
+import createFHIRServer, { FHIRServerCTX } from "./fhirServer.js";
 import { createPostgresClient } from "./resourceProviders/postgres/index.js";
 import { FHIRResponse } from "./client/types";
 import {
@@ -35,6 +35,7 @@ import Account from "./oidc-provider/accounts.js";
 import configuration from "./oidc-provider/configuration.js";
 import routes from "./oidc-provider/routes.js";
 import { loadJWKS } from "./auth/jwks.js";
+import { KoaRequestToFHIRRequest } from "./koaToFHIR.js";
 
 dotEnv.config();
 
@@ -180,12 +181,14 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
     },
   ]);
 
-  const fhirServer = createFhirServer({
+  const services = {
     capabilities: serverCapabilities(),
     database: database,
-    resolveSD: (ctx, type: string) =>
+    resolveSD: (ctx: FHIRServerCTX, type: string) =>
       memoryDatabase.read(ctx, "StructureDefinition", type),
-  });
+  };
+
+  const fhirServer = createFHIRServer();
 
   const router = new Router();
   router.all(
@@ -193,8 +196,25 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
     checkJWT,
     async (ctx, next) => {
       try {
-        const fhirServerResponse = await fhirServer(ctx, ctx.request);
-        const koaResponse = fhirResponseToKoaResponse(fhirServerResponse);
+        const serverCTX = {
+          ...services,
+          workspace: ctx.params.workspace,
+          author: "Fake User",
+        };
+
+        const fhirServerResponse = await fhirServer(
+          KoaRequestToFHIRRequest(
+            `${ctx.params.fhirUrl || ""}?${ctx.request.querystring}`,
+            ctx.request
+          ),
+          {
+            state: undefined,
+            ctx: serverCTX,
+          }
+        );
+        const koaResponse = fhirResponseToKoaResponse(
+          fhirServerResponse.response
+        );
         Object.keys(koaResponse).map(
           (k) =>
             (ctx[k as keyof Koa.DefaultContext] =

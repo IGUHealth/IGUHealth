@@ -1,18 +1,11 @@
 import Koa from "koa";
 
 import parseQuery, { FHIRURL } from "@iguhealth/fhir-query";
-import {
-  CapabilityStatement,
-  StructureDefinition,
-  Resource,
-} from "@iguhealth/fhir-types/r4/types";
+import { Resource } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { createMiddlewareAsync } from "./client/middleware/index.js";
-import { FHIRClient } from "./client/interface.js";
 import {
   FHIRRequest,
-  FHIRResponse,
   RequestLevel,
   TypeLevelInteractions,
   InstanceLevelInteraction,
@@ -107,7 +100,7 @@ function parseSystemRequest(
   }
 }
 
-function KoaRequestToFHIRRequest(
+export function KoaRequestToFHIRRequest(
   url: string,
   request: Koa.Request
 ): FHIRRequest {
@@ -148,37 +141,3 @@ function KoaRequestToFHIRRequest(
       });
   }
 }
-
-async function fhirRequestToFHIRResponse(
-  ctx: FHIRServerCTX,
-  request: FHIRRequest
-): Promise<FHIRResponse> {
-  return ctx.database.request(ctx, request);
-}
-
-export type FHIRServerCTX = {
-  workspace: string;
-  author: string;
-
-  // Services setup
-  capabilities: CapabilityStatement;
-  database: FHIRClient<FHIRServerCTX>;
-  resolveSD: (
-    ctx: FHIRServerCTX,
-    type: string
-  ) => StructureDefinition | undefined;
-};
-
-function createFHIRServer() {
-  return createMiddlewareAsync<undefined, FHIRServerCTX>([
-    async (request, { state, ctx }, next) => {
-      return {
-        state,
-        ctx,
-        response: await fhirRequestToFHIRResponse(ctx, request),
-      };
-    },
-  ]);
-}
-
-export default createFHIRServer;

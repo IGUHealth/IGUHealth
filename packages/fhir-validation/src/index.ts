@@ -255,8 +255,7 @@ function validateSingular(
       if (type === "Resource" || type === "DomainResource") {
         type = jsonpointer.get(root, descend(path, "resourceType"));
       }
-      const validator = createValidator(resolveType, type, path);
-      return validator(root);
+      return validate(resolveType, type, root, path);
     }
   } else {
     // Validating root / backbone / element nested types here.
@@ -443,25 +442,32 @@ function validateElement(
   }
 }
 
-export default function createValidator(
+export default function validate(
+  resolveType: (type: string) => StructureDefinition,
+  type: string,
+  value: NonNullable<any>,
+  path: string = createPath()
+): OperationOutcome["issue"] {
+  const sd = resolveType(type);
+  const indice = 0;
+
+  return validateElement(
+    resolveType,
+    path,
+    sd,
+    indice,
+    value,
+    // This should only be one at the root.
+    sd.snapshot?.element[indice].type?.[0].code as string
+  );
+}
+
+export function createValidator(
   resolveType: (type: string) => StructureDefinition,
   type: string,
   path: string = createPath()
 ): Validator {
-  const sd = resolveType(type);
-  const indice = 0;
-
-  const validator = (input: any) => {
-    return validateElement(
-      resolveType,
-      path,
-      sd,
-      indice,
-      input,
-      // This should only be one at the root.
-      sd.snapshot?.element[indice].type?.[0].code as string
-    );
+  return (value: NonNullable<any>) => {
+    return validate(resolveType, type, value, path);
   };
-
-  return validator;
 }
