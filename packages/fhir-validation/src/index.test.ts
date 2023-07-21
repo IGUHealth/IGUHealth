@@ -107,6 +107,64 @@ test("test typechoice checking", async () => {
   ).toEqual([]);
 });
 
+test("Primitive Extensions", () => {
+  const sd = memDatabase.read({}, "StructureDefinition", "Patient");
+
+  const validator = createValidator((type: string) => {
+    const sd = memDatabase.read({}, "StructureDefinition", type);
+    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
+    return sd;
+  }, "Patient");
+
+  expect(
+    validator({
+      resourceType: "Patient",
+      id: "5",
+      identifier: [
+        {
+          system: "http://example.com",
+          _system: {
+            extension: [
+              {
+                url: "http://example.com",
+                valueCode: "test",
+              },
+            ],
+          },
+        },
+      ],
+    })
+  ).toEqual([]);
+
+  expect(
+    validator({
+      resourceType: "Patient",
+      id: "5",
+      identifier: [
+        {
+          system: "http://example.com",
+          _system: {
+            extension: [
+              {
+                url: 5,
+                valueCode: "test",
+              },
+            ],
+          },
+        },
+      ],
+    })
+  ).toEqual([
+    {
+      code: "structure",
+      diagnostics:
+        "Expected primitive type 'http://hl7.org/fhirpath/System.String' at path '/identifier/0/_system/extension/0/url'",
+      expression: ["/identifier/0/_system/extension/0/url"],
+      severity: "error",
+    },
+  ]);
+});
+
 test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
   `Testing validating resourceType '%s'`,
   (resourceType) => {

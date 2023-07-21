@@ -32777,16 +32777,7 @@ exports[`Testing validating resourceType 'Observation' 1`] = `
       "value": 10,
     },
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/contained/0': '_birthDate'",
-      "expression": [
-        "/contained/0",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -34759,16 +34750,7 @@ exports[`Testing validating resourceType 'RelatedPerson' 1`] = `
       "status": "generated",
     },
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '/name/0': '_family'",
-      "expression": [
-        "/name/0",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -42037,16 +42019,7 @@ exports[`Testing validating resourceType 'TestScript' 1`] = `
     ],
     "version": "1.0",
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Additional fields found at path '': '_profile'",
-      "expression": [
-        "",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 

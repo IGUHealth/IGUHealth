@@ -11,7 +11,7 @@ import {
 } from "@iguhealth/fhir-types";
 import { primitiveTypes } from "@iguhealth/fhir-types/r4/sets";
 import { eleIndexToChildIndices } from "@iguhealth/codegen";
-import { descend, createPath } from "./path.js";
+import { descend, createPath, ascend } from "./path.js";
 import jsonpointer from "jsonpointer";
 
 type Validator = (input: any) => OperationOutcome["issue"];
@@ -212,7 +212,16 @@ function validateSingular(
       primitiveTypes.has(type) ||
       type === "http://hl7.org/fhirpath/System.String"
     ) {
-      return validatePrimitive(root, path, type);
+      // Element Check.
+      let issues: OperationOutcome["issue"] = [];
+      const { parent, field } = ascend(path) || {};
+      const elementPath = descend(parent ? parent : "", `_${field}`);
+      if (jsonpointer.get(root, elementPath)) {
+        issues = issues.concat(
+          createValidator(resolveType, "Element", elementPath)(root)
+        );
+      }
+      return issues.concat(validatePrimitive(root, path, type));
     } else {
       if (type === "Resource" || type === "DomainResource") {
         type = jsonpointer.get(root, descend(path, "resourceType"));
@@ -251,6 +260,7 @@ function validateSingular(
           ];
         }
         const [field, type] = fieldType;
+        if (primitiveTypes.has(type)) foundFields.push(`_${field}`);
         foundFields.push(field);
         return validateElement(
           resolveType,
@@ -273,6 +283,7 @@ function validateSingular(
           const fieldType = determineTypeAndField(child, value);
           if (fieldType) {
             const [field, type] = fieldType;
+            if (primitiveTypes.has(type)) foundFields.push(`_${field}`);
             foundFields.push(field);
             return validateElement(
               resolveType,
