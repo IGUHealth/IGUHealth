@@ -312,6 +312,70 @@ test("Test required ", () => {
   ]);
 });
 
+test("Validate element with no primitive", () => {
+  const validator = createValidator((type: string) => {
+    const sd = memDatabase.read({}, "StructureDefinition", type);
+    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
+    return sd;
+  }, "Patient");
+
+  expect(
+    validator({
+      resourceType: "Patient",
+      id: "5",
+      name: [{ _given: [{ id: 5 }] }],
+    })
+  ).toEqual([
+    {
+      code: "structure",
+      diagnostics:
+        "Expected primitive type 'http://hl7.org/fhirpath/System.String' at path '/name/0/_given/0/id'",
+      expression: ["/name/0/_given/0/id"],
+      severity: "error",
+    },
+  ]);
+
+  expect(
+    validator({
+      resourceType: "Patient",
+      id: "5",
+      name: [{ _given: [{ id: "5" }] }],
+    })
+  ).toEqual([]);
+
+  expect(
+    validator({
+      resourceType: "Patient",
+      id: "5",
+      name: [{ _given: { id: "5" } }],
+    })
+  ).toEqual([
+    {
+      code: "structure",
+      diagnostics:
+        "Element at path '/name/0/_given' is expected to be an array.",
+      expression: ["/name/0/_given"],
+      severity: "error",
+    },
+  ]);
+
+  expect(
+    validator({
+      resourceType: "Patient",
+      id: "5",
+      _deceasedBoolean: [{ _given: { id: "5" } }],
+    })
+  ).toEqual([
+    {
+      code: "structure",
+      diagnostics:
+        "Element at path '/_deceasedBoolean' is expected to be a singular value.",
+      expression: ["/_deceasedBoolean"],
+      severity: "error",
+    },
+  ]);
+});
+
 test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
   `Testing validating resourceType '%s'`,
   (resourceType) => {
