@@ -147,58 +147,6 @@ function isPrimitiveType(type: string) {
   return primitiveTypes.has(type);
 }
 
-function findBaseFieldAndType(
-  element: ElementDefinition,
-  value: any
-): [string, string] | undefined {
-  if (isTypeChoice(element)) {
-    for (const type of element.type?.map((t) => t.code) || []) {
-      const field = fieldName(element, type);
-      if (field in value) {
-        return [field, type];
-      }
-    }
-  } else {
-    const field = fieldName(element);
-    if (field in value) {
-      return [field, element.type?.[0].code as string];
-    }
-  }
-}
-
-function determineTypesAndFields(
-  element: ElementDefinition,
-  value: any
-): [string, string][] {
-  let fields = [];
-  const base = findBaseFieldAndType(element, value);
-  if (base) fields.push(base);
-
-  if (base) {
-    const [field, type] = base;
-    if (isPrimitiveType(type)) {
-      const primElement: [string, string] = [`_${field}`, "Element"];
-      if (`_${field}` in value) fields.push(primElement);
-    }
-  } else {
-    // Check for primitive extensions when non existant values
-    for (const primType in element.type?.filter((type) =>
-      isPrimitiveType(type.code)
-    )) {
-      if (`_${fieldName(element, primType)}` in value) {
-        const primElement: [string, string] = [
-          `_${fieldName(element, primType)}`,
-          "Element",
-        ];
-        fields.push(primElement);
-        // Only return once
-        return fields;
-      }
-    }
-  }
-
-  return fields;
-}
 function resolveContentReferenceIndex(
   sd: StructureDefinition,
   element: ElementDefinition
@@ -212,6 +160,51 @@ function resolveContentReferenceIndex(
       "unable to resolve contentreference: '" + element.contentReference + "'"
     );
   return referenceElementIndex;
+}
+
+function findBaseFieldAndType(
+  element: ElementDefinition,
+  value: any
+): [string, string] | undefined {
+  if (element.contentReference) {
+    return [fieldName(element), element.type?.[0].code || ""];
+  }
+  for (const type of element.type?.map((t) => t.code) || []) {
+    const field = fieldName(element, type);
+    if (field in value) {
+      return [field, type];
+    }
+  }
+}
+
+function determineTypesAndFields(
+  element: ElementDefinition,
+  value: any
+): [string, string][] {
+  let fields: [string, string][] = [];
+  const base = findBaseFieldAndType(element, value);
+  if (base) {
+    fields.push(base);
+    const [field, type] = base;
+    if (isPrimitiveType(type)) {
+      const primitiveElementField: [string, string] = [`_${field}`, "Element"];
+      if (`_${field}` in value) fields.push(primitiveElementField);
+    }
+  } else {
+    // Check for primitive extensions when non existant values
+    const primitives =
+      element.type?.filter((type) => isPrimitiveType(type.code)) || [];
+    for (const primType of primitives) {
+      if (`_${fieldName(element, primType.code)}` in value) {
+        const primitiveElementField: [string, string] = [
+          `_${fieldName(element, primType.code)}`,
+          "Element",
+        ];
+        fields.push(primitiveElementField);
+      }
+    }
+  }
+  return fields;
 }
 
 function validateSingular(
