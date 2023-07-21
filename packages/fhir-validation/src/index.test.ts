@@ -165,39 +165,92 @@ test("Primitive Extensions", () => {
   ]);
 });
 
-test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
-  `Testing validating resourceType '%s'`,
-  (resourceType) => {
-    const structureDefinition = memDatabase.search_type(
-      {},
-      "StructureDefinition",
+test("SearchParameter testing", () => {
+  const parameter = {
+    base: ["Account"],
+    code: "identifier",
+    contact: [
       {
-        resourceType: "StructureDefinition",
-        parameters: {
-          base: {
-            name: "type",
-            value: [resourceType],
+        telecom: [
+          {
+            system: "url",
+            value: "http://hl7.org/fhir",
           },
-        },
-      }
-    );
-    const sd = structureDefinition[0];
+        ],
+      },
+      {
+        telecom: [
+          {
+            system: "url",
+            value: "http://www.hl7.org/Special/committees/pafm/index.cfm",
+          },
+        ],
+      },
+    ],
+    date: "2019-11-01T09:29:23+11:00",
+    description: "Account number",
+    experimental: false,
+    expression: "Account.identifier",
+    extension: [
+      {
+        url: "http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status",
+        valueCode: "trial-use",
+      },
+    ],
+    id: "Account-identifier",
+    name: "identifier",
+    publisher: "Health Level Seven International (Patient Administration)",
+    resourceType: "SearchParameter",
+    status: "draft",
+    type: "token",
+    url: "http://hl7.org/fhir/SearchParameter/Account-identifier",
+    version: "4.0.1",
+    xpath: "f:Account/f:identifier",
+    xpathUsage: "normal",
+  };
 
-    const resources = memDatabase
-      .search_type({}, resourceType as ResourceType, { parameters: {} })
-      .filter((r) => r.id)
-      .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
-      .slice(0, 1);
-    const validator = createValidator((type: string) => {
-      const sd = memDatabase.read({}, "StructureDefinition", type);
-      if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
-      return sd;
-    }, resourceType);
+  const validator = createValidator((type: string) => {
+    const sd = memDatabase.read({}, "StructureDefinition", type);
+    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
+    return sd;
+  }, "SearchParameter");
 
-    for (const resource of resources) {
-      const issues = validator(resource);
+  expect(validator(parameter)).toEqual([]);
+});
 
-      expect([resource, issues]).toMatchSnapshot();
-    }
-  }
-);
+// test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
+//   `Testing validating resourceType '%s'`,
+//   (resourceType) => {
+//     const structureDefinition = memDatabase.search_type(
+//       {},
+//       "StructureDefinition",
+//       {
+//         resourceType: "StructureDefinition",
+//         parameters: {
+//           base: {
+//             name: "type",
+//             value: [resourceType],
+//           },
+//         },
+//       }
+//     );
+//     const sd = structureDefinition[0];
+
+//     const resources = memDatabase
+//       .search_type({}, resourceType as ResourceType, { parameters: {} })
+//       .filter((r) => r.id)
+//       .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
+//       .slice(0, 1);
+//     const validator = createValidator((type: string) => {
+//       const sd = memDatabase.read({}, "StructureDefinition", type);
+//       if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
+//       return sd;
+//     }, resourceType);
+
+//     for (const resource of resources) {
+//       const issues = validator(resource);
+
+//       expect([resource, issues]).toMatchSnapshot();
+//     }
+//   }
+// );

@@ -3,7 +3,7 @@
   "id": "example",
   "text": {
     "status": "generated",
-    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      HACC Program for Peter James Chalmers at HL7 Healthcare 15 Sept 2014 - current\u003cbr/\u003e\n\t\t\twas on leave from 22 Sept - 24 Sept while in respite care\n    \u003c/div\u003e"
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      HACC Program for Peter James Chalmers at HL7 Healthcare 15 Sept 2014 - current<br/>\n\t\t\twas on leave from 22 Sept - 24 Sept while in respite care\n    </div>"
   },
   "identifier": [
     {
@@ -54,14 +54,10 @@
   ],
   "diagnosis": [
     {
-      "condition": [
-        {
-          "reference": {
-            "reference": "Condition/stroke"
-          }
-        }
-      ],
-      "use": {
+      "condition": {
+        "reference": "Condition/stroke"
+      },
+      "role": {
         "coding": [
           {
             "system": "http://terminology.hl7.org/CodeSystem/diagnosis-role",
@@ -69,7 +65,8 @@
             "display": "Chief complaint"
           }
         ]
-      }
+      },
+      "rank": 1
     }
   ],
   "patient": {
@@ -87,10 +84,10 @@
     }
   ],
   "careManager": {
-    "reference": "Practitioner/f204",
-    "display": "Carla Espinosa"
+    "reference": "Practitioner/14",
+    "display": "Amanda Assigned"
   },
-  "careTeam": [
+  "team": [
     {
       "reference": "CareTeam/example",
       "display": "example care team"
@@ -101,14 +98,5 @@
       "reference": "Account/example",
       "display": "example account"
     }
-  ],
-  "meta": {
-    "tag": [
-      {
-        "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
-        "code": "HTEST",
-        "display": "test health data"
-      }
-    ]
-  }
+  ]
 }

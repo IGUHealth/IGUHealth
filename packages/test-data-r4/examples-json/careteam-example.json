@@ -3,7 +3,7 @@
   "id": "example",
   "text": {
     "status": "generated",
-    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003eCare Team\u003c/div\u003e"
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Care Team</div>"
   },
   "contained": [
     {
@@ -36,28 +36,35 @@
       ]
     }
   ],
-  "name": "Peter James Charlmers Care Team for Inpatient Encounter",
+  "name": "Peter James Charlmers Care Plan for Inpatient Encounter",
   "subject": {
     "reference": "Patient/example",
     "display": "Peter James Chalmers"
+  },
+  "encounter": {
+    "reference": "Encounter/example"
   },
   "period": {
     "end": "2013-01-01"
   },
   "participant": [
     {
-      "role": {
-        "text": "responsiblePerson"
-      },
+      "role": [
+        {
+          "text": "responsiblePerson"
+        }
+      ],
       "member": {
         "reference": "Patient/example",
         "display": "Peter James Chalmers"
       }
     },
     {
-      "role": {
-        "text": "adviser"
-      },
+      "role": [
+        {
+          "text": "adviser"
+        }
+      ],
       "member": {
         "reference": "#pr1",
         "display": "Dorothy Dietition"
@@ -65,22 +72,8 @@
       "onBehalfOf": {
         "reference": "Organization/f001"
       },
-      "coverageTiming": {
-        "repeat": {
-          "boundsPeriod": {
-            "start": "2010-12-23",
-            "end": "2013-01-01"
-          },
-          "frequency": 1,
-          "period": 1,
-          "periodUnit": "d",
-          "dayOfWeek": [
-            "mon"
-          ],
-          "when": [
-            "MORN"
-          ]
-        }
+      "period": {
+        "end": "2013-01-01"
       }
     }
   ],
@@ -88,14 +81,5 @@
     {
       "reference": "Organization/f001"
     }
-  ],
-  "meta": {
-    "tag": [
-      {
-        "system": "http://terminology.hl7.org/CodeSystem/v3-ActReason",
-        "code": "HTEST",
-        "display": "test health data"
-      }
-    ]
-  }
+  ]
 }

@@ -309,6 +309,12 @@ function validateSingular(
     }
 
     if (additionalFields.length > 0) {
+      console.log(
+        optionalElements
+          .concat(requiredElements)
+          .map((index) => structureDefinition.snapshot?.element?.[index].path)
+      );
+      console.log(JSON.stringify(structureDefinition, null, 2));
       issues = [
         ...issues,
         issueError(
