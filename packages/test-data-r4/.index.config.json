@@ -254,20 +254,12 @@
       "resourceType": "Schedule"
     },
     {
-      "filename": "examples-json/searchparameter-example.json",
-      "resourceType": "SearchParameter"
-    },
-    {
       "filename": "examples-json/slot-example.json",
       "resourceType": "Slot"
     },
     {
       "filename": "examples-json/specimen-example.json",
       "resourceType": "Specimen"
-    },
-    {
-      "filename": "examples-json/structuredefinition-example-composition.json",
-      "resourceType": "StructureDefinition"
     },
     {
       "filename": "examples-json/structuremap-example.json",
