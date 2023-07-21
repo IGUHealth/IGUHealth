@@ -5736,6 +5736,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
             ["@iguhealth/fhir-query", "workspace:packages/fhir-query"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
+            ["@iguhealth/fhir-validation", "workspace:packages/fhir-validation"],\
             ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
             ["@iguhealth/meta-value", "workspace:packages/meta-value"],\
             ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
