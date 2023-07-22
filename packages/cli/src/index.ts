@@ -38,12 +38,13 @@ program
   .description("Generate a FHIR npm package index file ")
   .option("-p, --packagedir <packagedir>", "")
   .option("-r, --resources <resources>", "")
-  .option("-i, --ignore   <ignore>", "")
+  .option("-i, --ignore   [ignore...]", "")
   .action((options) => {
-    const indexFile = generateIndexFile(options.packagedir, [
-      options.resources,
-      options.ignore,
-    ]);
+    const indexFile = generateIndexFile(
+      options.packagedir,
+      [options.resources],
+      options.ignore
+    );
     console.log("generating index file");
     const indexLoc = path.join(options.packagedir, ".index.config.json");
     writeFileSync(indexLoc, JSON.stringify(indexFile, null, 2));
