@@ -150,6 +150,12 @@ function contentReference(sd: StructureDefinition, element: ElementDefinition) {
     }
     referenceTypescriptType = typeToTypescriptType(referenceElement, type);
   }
+
+  // Handle cardinality on reference type.
+  if (element.max !== "1") {
+    referenceTypescriptType = `Array<${referenceTypescriptType}>`;
+  }
+
   return [`${getElementField(element)}: ${referenceTypescriptType};`];
 }
 

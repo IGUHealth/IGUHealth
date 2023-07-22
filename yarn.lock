@@ -15102,6 +15102,7 @@ __metadata:
   dependencies:
     "@iguhealth/fhir-types": "workspace:^"
     "@iguhealth/fhir-validation": "workspace:^"
+    "@iguhealth/operation-outcomes": "workspace:^"
   languageName: unknown
   linkType: soft
 
