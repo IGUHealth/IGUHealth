@@ -15100,6 +15100,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "operation-execution@workspace:packages/operation-execution"
   dependencies:
+    "@iguhealth/artifacts": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
     "@iguhealth/fhir-validation": "workspace:^"
     "@iguhealth/operation-outcomes": "workspace:^"

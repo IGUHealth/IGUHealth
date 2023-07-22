@@ -27,7 +27,8 @@ function checkBundleResourceTypesAlign(b: Bundle): boolean {
 
 export default function generateIndexFile(
   root: string,
-  artifactLocations: string[]
+  artifactLocations: string[],
+  ignore: string[] = []
 ) {
   // Read artifactLocation and recursively walk the directory tree reading all files from root
   // For each file, read the contents and parse the JSON
@@ -38,7 +39,8 @@ export default function generateIndexFile(
     .map((loc) => path.join(root, loc))
     .map(getAllFiles)
     .flat()
-    .filter((f) => f.endsWith(".json"));
+    .filter((f) => f.endsWith(".json"))
+    .filter((f) => !ignore.includes(f));
 
   for (let file of files) {
     const fileContents = fs.readFileSync(file);

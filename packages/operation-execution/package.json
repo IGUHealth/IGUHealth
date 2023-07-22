@@ -8,6 +8,7 @@
     "@iguhealth/operation-outcomes": "workspace:^"
   },
   "devDependencies": {
+    "@iguhealth/artifacts": "workspace:^",
     "@jest/globals": "^29.5.0",
     "@types/jest": "^29.5.2",
     "jest": "^29.5.0",

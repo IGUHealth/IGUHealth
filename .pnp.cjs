@@ -21562,6 +21562,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/operation-execution/",\
           "packageDependencies": [\
             ["operation-execution", "workspace:packages/operation-execution"],\
+            ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
             ["@iguhealth/fhir-validation", "workspace:packages/fhir-validation"],\
             ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
