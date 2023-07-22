@@ -15101,6 +15101,7 @@ __metadata:
   resolution: "operation-execution@workspace:packages/operation-execution"
   dependencies:
     "@iguhealth/fhir-types": "workspace:^"
+    "@iguhealth/fhir-validation": "workspace:^"
   languageName: unknown
   linkType: soft
 
