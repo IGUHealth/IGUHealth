@@ -13,7 +13,40 @@ export function toParametersResource(
   };
 }
 
-function simplifiedObject(parameters: Parameters) {}
+function processParameter(
+  definition: ParameterDefinitions[number],
+  use: "out" | "in",
+  parameters: NonNullable<Parameters["parameter"]>
+) {
+  const isRequired = definition.min > 1;
+  const isArray = definition.max !== "1";
+  const isNested = definition.part !== undefined;
+
+  if(isRequired && parameters.length === 0) throw new OperationError()
+  definition.type;
+}
+
+function toSimplifiedObject(
+  operationDefinition: OperationDefinition,
+  use: "out" | "in",
+  parameters: Parameters
+) {
+  const paramDefinitions =
+    operationDefinition.parameter?.filter((param) => param.use === use) || [];
+
+  for (const paramDefinition of paramDefinitions) {
+    const curParameters =
+      parameters.parameter?.filter(
+        (param) => param.name === paramDefinition.name
+      ) || [];
+
+    const isRequired = paramDefinition.min > 1;
+    const isArray = paramDefinition.max !== "1";
+    const isNested = paramDefinition.part !== undefined;
+
+    paramDefinition.type;
+  }
+}
 
 function createValidator<ParamType>(
   parameter: ParameterDefinitions
@@ -44,7 +77,7 @@ function createOperationExecutable<CTX, Input, Output>(
     code: operation.code,
     operationDefinition: () => operation,
     validateInput: createValidator<Input>(inputDefinitions),
-    validateOutput: createValidator<Input>(outputDefinitions),
+    validateOutput: createValidator<Output>(outputDefinitions),
     execute: (ctx: CTX, input: Input) => {
       this.validateInput(input);
       const output = execute(input);
