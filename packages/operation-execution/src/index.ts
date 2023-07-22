@@ -16,7 +16,7 @@ export function toParametersResource(
   };
 }
 
-function parseParameters(
+function parseParameter(
   definition: ParameterDefinitions[number],
   use: "out" | "in",
   parameters: NonNullable<Parameters["parameter"]>
@@ -35,16 +35,22 @@ function parseParameters(
     );
   }
 
-  parameters.map((param) => {
+  function capitalize(string: string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  const parsedParameters = parameters.map((param) => {
     if (definition.type || definition.searchType) {
       // Means this is a primitive
       if (resourceTypes.has(definition.type || "")) {
-        param[definition.name] = param.resource;
+        return param.resource;
       } else {
         if (definition.searchType)
           throw new OperationError(
             outcomeError("not-supported", `SearchType not supported`)
           );
+        // @ts-ignore
+        return param[`value${capitalize(definition.type || "")}`];
       }
       // Means this is a primitive
     } else {
@@ -55,20 +61,29 @@ function parseParameters(
             `No type or part found on parameter definition ${definition.name}`
           )
         );
-      (definition.part || []).reduce((acc, paramDefinition) => {
-        acc[paramDefinition.name] = processParameter(
-          paramDefinition,
-          use,
-          param
-        );
-        return acc;
-      }, {});
+      return (definition.part || []).reduce(
+        (acc: Record<string, any>, paramDefinition) => {
+          acc[paramDefinition.name] = parseParameter(
+            paramDefinition,
+            use,
+            (param.part || []).filter(
+              (param) => param.name === paramDefinition.name
+            )
+          );
+          return acc;
+        },
+        {}
+      );
     }
   });
-  definition.type;
+
+  if (!isArray) {
+    return parsedParameters[0];
+  }
+  return parsedParameters;
 }
 
-function toSimplifiedObject(
+export function parseParameters(
   operationDefinition: OperationDefinition,
   use: "out" | "in",
   parameters: Parameters
@@ -76,18 +91,20 @@ function toSimplifiedObject(
   const paramDefinitions =
     operationDefinition.parameter?.filter((param) => param.use === use) || [];
 
+  const parsedParam: Record<string, any> = {};
   for (const paramDefinition of paramDefinitions) {
     const curParameters =
       parameters.parameter?.filter(
         (param) => param.name === paramDefinition.name
       ) || [];
-
-    const isRequired = paramDefinition.min > 1;
-    const isArray = paramDefinition.max !== "1";
-    const isNested = paramDefinition.part !== undefined;
-
-    paramDefinition.type;
+    parsedParam[paramDefinition.name] = parseParameter(
+      paramDefinition,
+      use,
+      curParameters
+    );
   }
+
+  return parsedParam;
 }
 
 function createValidator<ParamType>(
@@ -121,9 +138,9 @@ function createOperationExecutable<CTX, Input, Output>(
     validateInput: createValidator<Input>(inputDefinitions),
     validateOutput: createValidator<Output>(outputDefinitions),
     execute: (ctx: CTX, input: Input) => {
-      this.validateInput(input);
+      // this.validateInput(input);
       const output = execute(input);
-      this.validateOutput(output);
+      // this.validateOutput(output);
       return output;
     },
   };

@@ -21564,7 +21564,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["operation-execution", "workspace:packages/operation-execution"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
             ["@iguhealth/fhir-validation", "workspace:packages/fhir-validation"],\
-            ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"]\
+            ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
+            ["@jest/globals", "npm:29.6.0"],\
+            ["@types/jest", "npm:29.5.2"],\
+            ["jest", "virtual:95acd521ad270141ccfbf50f9e178ed2e993b719f7a01b7f56f97673e930358da332dff4b0b0ca7717dc2c89eb53f5d20730d0698497ab79154b11d36496d84b#npm:29.6.0"],\
+            ["ts-jest", "virtual:95acd521ad270141ccfbf50f9e178ed2e993b719f7a01b7f56f97673e930358da332dff4b0b0ca7717dc2c89eb53f5d20730d0698497ab79154b11d36496d84b#npm:29.1.1"],\
+            ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"]\
           ],\
           "linkType": "SOFT"\
         }]\
