@@ -14,7 +14,7 @@ const valueSetExpandOp = operationDefinitions.find(
 );
 
 if (!valueSetExpandOp)
-  throw new Error("cound not resolve valueset expand operation definition");
+  throw new Error("could not resolve valueset expand operation definition");
 
 test("parseParameters", () => {
   expect(
