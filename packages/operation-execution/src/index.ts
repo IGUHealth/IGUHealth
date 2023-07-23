@@ -16,6 +16,23 @@ export function toParametersResource(
   };
 }
 
+function validateNoExtraFields(
+  definitions: ParameterDefinitions,
+  parameters: NonNullable<Parameters["parameter"]>
+) {
+  const definitionNames = new Set(
+    definitions.map((definition) => definition.name)
+  );
+  const paramNames = new Set(parameters.map((param) => param.name));
+  paramNames.forEach((paramName) => {
+    if (!definitionNames.has(paramName)) {
+      throw new OperationError(
+        outcomeError("invalid", `Parameter ${paramName} not supported`)
+      );
+    }
+  });
+}
+
 function parseParameter(
   definition: ParameterDefinitions[number],
   use: "out" | "in",
@@ -52,6 +69,7 @@ function parseParameter(
               `No type or part found on parameter definition ${definition.name}`
             )
           );
+        validateNoExtraFields(definition.part, param.part || []);
         return (definition.part || []).reduce(
           (acc: Record<string, any>, paramDefinition) => {
             acc[paramDefinition.name] = parseParameter(
@@ -95,9 +113,8 @@ export function parseParameters(
 ) {
   const paramDefinitions =
     operationDefinition.parameter?.filter((param) => param.use === use) || [];
-
-  const parametersParsed: Record<string, any> = {};
-  return paramDefinitions.reduce(
+  validateNoExtraFields(paramDefinitions, parameters.parameter || []);
+  const parametersParsed: Record<string, any> = paramDefinitions.reduce(
     (parametersParsed: Record<string, any>, parameterDefinition) => {
       const curParameters =
         parameters.parameter?.filter(
@@ -115,6 +132,8 @@ export function parseParameters(
     },
     {}
   );
+
+  return parametersParsed;
 }
 
 function createValidator<ParamType>(

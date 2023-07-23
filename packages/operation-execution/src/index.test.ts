@@ -38,3 +38,23 @@ test("parseParameters", () => {
     valueSetVersion: "12",
   });
 });
+
+test("No Extra Parameters Allowed", () => {
+  expect(() => {
+    parseParameters(valueSetExpandOp, "in", {
+      resourceType: "Parameters",
+      parameter: [
+        { name: "extra parameter", valueString: "test" },
+        { name: "url", valueUri: "https://my-valueset.com" },
+        {
+          name: "valueSetVersion",
+          valueString: "12",
+        },
+        {
+          name: "filter",
+          valueString: "test",
+        },
+      ],
+    });
+  }).toThrow();
+});
