@@ -2,6 +2,9 @@
   "name": "operation-execution",
   "description": "Package to create operation definition executables.",
   "packageManager": "yarn@3.6.1",
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
     "@iguhealth/fhir-types": "workspace:^",
     "@iguhealth/fhir-validation": "workspace:^",

@@ -69,13 +69,17 @@ export default function loadArtifacts<T extends ResourceType>(
               )
             : indexFile.files;
           return fileInfos
-            .map((r) =>
-              flattenOrInclude(resourceType, requirer(`${d}/${r.filename}`))
-            )
+            .map((r) => {
+              return flattenOrInclude(
+                resourceType,
+                requirer(`${d}/${r.filename}`)
+              );
+            })
             .flat();
         }
         return [];
       } catch (e) {
+        console.error(e);
         return [];
       }
     })

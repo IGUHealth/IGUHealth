@@ -6,10 +6,6 @@
       "resourceType": "ConceptMap"
     },
     {
-      "filename": "r4/hl7/operations/valueset-expand.json",
-      "resourceType": "OperationDefinition"
-    },
-    {
       "filename": "r4/hl7/profiles-resources.json",
       "resourceType": "CapabilityStatement"
     },
