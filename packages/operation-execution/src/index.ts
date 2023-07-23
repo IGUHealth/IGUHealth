@@ -18,10 +18,13 @@ export function toParametersResource(
 
 function validateNoExtraFields(
   definitions: ParameterDefinitions,
+  use: "out" | "in",
   parameters: NonNullable<Parameters["parameter"]>
 ) {
   const definitionNames = new Set(
-    definitions.map((definition) => definition.name)
+    definitions
+      .filter((d) => d.use === use)
+      .map((definition) => definition.name)
   );
   const paramNames = new Set(parameters.map((param) => param.name));
   paramNames.forEach((paramName) => {
@@ -69,7 +72,7 @@ function parseParameter(
               `No type or part found on parameter definition ${definition.name}`
             )
           );
-        validateNoExtraFields(definition.part, param.part || []);
+        validateNoExtraFields(definition.part, use, param.part || []);
         return (definition.part || []).reduce(
           (acc: Record<string, any>, paramDefinition) => {
             const parsedParam = parseParameter(
@@ -115,7 +118,7 @@ export function parseParameters(
 ) {
   const paramDefinitions =
     operationDefinition.parameter?.filter((param) => param.use === use) || [];
-  validateNoExtraFields(paramDefinitions, parameters.parameter || []);
+  validateNoExtraFields(paramDefinitions, use, parameters.parameter || []);
   const parametersParsed: Record<string, any> = paramDefinitions.reduce(
     (parametersParsed: Record<string, any>, parameterDefinition) => {
       const curParameters =
@@ -146,13 +149,36 @@ function createValidator<ParamType>(
   };
 }
 
-type Operation<CTX, Input, Output> = {
+interface Operation<CTX, Input, Output> {
   code: string;
-  operationDefinition(): OperationDefinition;
+  get operationDefinition(): OperationDefinition;
   validateInput(input: any): input is Input;
   validateOutput(output: any): output is Output;
   execute(ctx: CTX, input: Input): Output;
-};
+}
+
+class OperationExecution<CTX, Input, Output>
+  implements Operation<CTX, Input, Output>
+{
+  private _operationDefinition: OperationDefinition;
+  code: string;
+  constructor(operationDefinition: OperationDefinition) {
+    this.code = operationDefinition.code;
+    this._operationDefinition = operationDefinition;
+  }
+  get operationDefinition(): OperationDefinition {
+    return this._operationDefinition;
+  }
+  validateInput(input: any): input is Input {
+    throw new Error();
+  }
+  validateOutput(output: any): output is Output {
+    throw new Error();
+  }
+  execute(ctx: CTX, input: Input): Output {
+    throw new Error();
+  }
+}
 
 function createOperationExecutable<CTX, Input, Output>(
   operation: OperationDefinition,
@@ -169,9 +195,9 @@ function createOperationExecutable<CTX, Input, Output>(
     validateInput: createValidator<Input>(inputDefinitions),
     validateOutput: createValidator<Output>(outputDefinitions),
     execute: (ctx: CTX, input: Input) => {
-      // this.validateInput(input);
+      this.validateInput(input);
       const output = execute(input);
-      // this.validateOutput(output);
+      this.validateOutput(output);
       return output;
     },
   };
