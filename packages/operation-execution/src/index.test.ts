@@ -3,6 +3,7 @@ import { expect, test } from "@jest/globals";
 
 import { parseParameters } from ".";
 import { loadArtifacts } from "@iguhealth/artifacts";
+import { OperationDefinition } from "@iguhealth/fhir-types";
 
 const operationDefinitions = loadArtifacts(
   "OperationDefinition",
@@ -57,4 +58,107 @@ test("No Extra Parameters Allowed", () => {
       ],
     });
   }).toThrow();
+});
+
+const operationTest: OperationDefinition = {
+  resourceType: "OperationDefinition",
+  id: "test",
+  status: "active",
+  kind: "operation",
+  name: "test",
+  code: "test",
+  system: true,
+  type: false,
+  instance: false,
+
+  parameter: [
+    {
+      name: "testOut",
+      type: "string",
+      use: "out",
+      min: 1,
+      max: "1",
+    },
+    {
+      name: "test",
+      type: "string",
+      use: "in",
+      min: 1,
+      max: "1",
+    },
+    {
+      name: "test2",
+      type: "integer",
+      use: "in",
+      min: 0,
+      max: "*",
+    },
+    {
+      name: "nested",
+      use: "in",
+      min: 0,
+      max: "*",
+      part: [
+        {
+          name: "nested1",
+          type: "string",
+          use: "in",
+          min: 1,
+          max: "1",
+        },
+        {
+          name: "nested2",
+          use: "in",
+          min: 1,
+          max: "1",
+          part: [
+            {
+              name: "nested3",
+              type: "string",
+              use: "in",
+              min: 1,
+              max: "*",
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+test("Test Operation 1", () => {
+  expect(
+    parseParameters(operationTest, "in", {
+      resourceType: "Parameters",
+      parameter: [
+        { name: "test", valueString: "value1" },
+        { name: "test2", valueInteger: 5 },
+        { name: "nested", part: [{ name: "nested1", valueString: "value2" }] },
+        {
+          name: "nested",
+          part: [
+            { name: "nested1", valueString: "value3" },
+            {
+              name: "nested2",
+              part: [{ name: "nested3", valueString: "value4" }],
+            },
+          ],
+        },
+      ],
+    })
+  ).toEqual({
+    test: "value1",
+    test2: [5],
+    nested: [
+      {
+        nested1: "value2",
+      },
+      {
+        nested1: "value3",
+        nested2: {
+          nested3: ["value4"],
+        },
+      },
+    ],
+  });
 });

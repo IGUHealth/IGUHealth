@@ -72,13 +72,15 @@ function parseParameter(
         validateNoExtraFields(definition.part, param.part || []);
         return (definition.part || []).reduce(
           (acc: Record<string, any>, paramDefinition) => {
-            acc[paramDefinition.name] = parseParameter(
+            const parsedParam = parseParameter(
               paramDefinition,
               use,
               (param.part || []).filter(
                 (param) => param.name === paramDefinition.name
               )
             );
+            if (parsedParam !== undefined)
+              acc[paramDefinition.name] = parsedParam;
             return acc;
           },
           {}
