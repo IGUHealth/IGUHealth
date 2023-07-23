@@ -4837,7 +4837,7 @@ export interface BundleEntry {
   /** 
    * Links related to this entry
    */
-  link?: BundleLink;
+  link?: Array<BundleLink>;
   /** 
    * URI for resource (Absolute URL server address or URI for UUID/OID)
    */
@@ -5203,11 +5203,11 @@ export interface CapabilityStatementRest {
   /** 
    * Search parameters for searching all resources
    */
-  searchParam?: CapabilityStatementRestResourceSearchParam;
+  searchParam?: Array<CapabilityStatementRestResourceSearchParam>;
   /** 
    * Definition of a system level operation
    */
-  operation?: CapabilityStatementRestResourceOperation;
+  operation?: Array<CapabilityStatementRestResourceOperation>;
   /** 
    * Compartments served/used by system
    */
@@ -6183,7 +6183,7 @@ export interface ChargeItemDefinitionPropertyGroup {
   /** 
    * Conditions under which the priceComponent is applicable
    */
-  applicability?: ChargeItemDefinitionApplicability;
+  applicability?: Array<ChargeItemDefinitionApplicability>;
   /** 
    * Components of total line item price
    */
@@ -7033,7 +7033,7 @@ export interface ClaimResponseItemDetailSubDetail {
   /** 
    * Subdetail level adjudication details
    */
-  adjudication?: ClaimResponseItemAdjudication;
+  adjudication?: Array<ClaimResponseItemAdjudication>;
 }
 export interface ClaimResponseItemDetail {
   /** 
@@ -7059,7 +7059,7 @@ export interface ClaimResponseItemDetail {
   /** 
    * Detail level adjudication details
    */
-  adjudication: ClaimResponseItemAdjudication;
+  adjudication: Array<ClaimResponseItemAdjudication>;
   /** 
    * Adjudication for claim sub-details
    */
@@ -7139,7 +7139,7 @@ export interface ClaimResponseAddItemDetailSubDetail {
   /** 
    * Added items detail adjudication
    */
-  adjudication: ClaimResponseItemAdjudication;
+  adjudication: Array<ClaimResponseItemAdjudication>;
 }
 export interface ClaimResponseAddItemDetail {
   /** 
@@ -7185,7 +7185,7 @@ export interface ClaimResponseAddItemDetail {
   /** 
    * Added items detail adjudication
    */
-  adjudication: ClaimResponseItemAdjudication;
+  adjudication: Array<ClaimResponseItemAdjudication>;
   /** 
    * Insurer added line items
    */
@@ -7283,7 +7283,7 @@ export interface ClaimResponseAddItem {
   /** 
    * Added items adjudication
    */
-  adjudication: ClaimResponseItemAdjudication;
+  adjudication: Array<ClaimResponseItemAdjudication>;
   /** 
    * Insurer added line details
    */
@@ -7548,7 +7548,7 @@ resourceType: "ClaimResponse"
   /** 
    * Header-level adjudication
    */
-  adjudication?: ClaimResponseItemAdjudication;
+  adjudication?: Array<ClaimResponseItemAdjudication>;
   /** 
    * Adjudication totals
    */
@@ -7923,7 +7923,7 @@ export interface CodeSystemConcept {
   /** 
    * Child Concepts (is-a/contains/categorizes)
    */
-  concept?: CodeSystemConcept;
+  concept?: Array<CodeSystemConcept>;
 }
 export interface CodeSystem {
 resourceType: "CodeSystem"
@@ -8621,7 +8621,7 @@ export interface CompositionSection {
   /** 
    * Nested Section
    */
-  section?: CompositionSection;
+  section?: Array<CompositionSection>;
 }
 export interface Composition {
 resourceType: "Composition"
@@ -8785,7 +8785,7 @@ export interface ConceptMapGroupElementTarget {
   /** 
    * Other concepts that this mapping also produces
    */
-  product?: ConceptMapGroupElementTargetDependsOn;
+  product?: Array<ConceptMapGroupElementTargetDependsOn>;
 }
 export interface ConceptMapGroupElement {
   /** 
@@ -9329,7 +9329,7 @@ export interface ConsentProvision {
   /** 
    * Nested Exception Rules
    */
-  provision?: ConsentProvision;
+  provision?: Array<ConsentProvision>;
 }
 export interface Consent {
 resourceType: "Consent"
@@ -9793,7 +9793,7 @@ export interface ContractTermAsset {
   /** 
    * Response to assets
    */
-  answer?: ContractTermOfferAnswer;
+  answer?: Array<ContractTermOfferAnswer>;
   /** 
    * Asset restriction numbers
    */
@@ -9995,7 +9995,7 @@ export interface ContractTerm {
   /** 
    * Nested Contract Term Group
    */
-  group?: ContractTerm;
+  group?: Array<ContractTerm>;
 }
 export interface ContractSigner {
   /** 
@@ -14115,7 +14115,7 @@ export interface ExampleScenarioProcessStepAlternative {
   /** 
    * What happens in each alternative option
    */
-  step?: ExampleScenarioProcessStep;
+  step?: Array<ExampleScenarioProcessStep>;
 }
 export interface ExampleScenarioProcessStep {
   /** 
@@ -14133,7 +14133,7 @@ export interface ExampleScenarioProcessStep {
   /** 
    * Nested process
    */
-  process?: ExampleScenarioProcess;
+  process?: Array<ExampleScenarioProcess>;
   /** 
    * If there is a pause in the flow
    */
@@ -14651,7 +14651,7 @@ export interface ExplanationOfBenefitItemDetailSubDetail {
   /** 
    * Subdetail level adjudication details
    */
-  adjudication?: ExplanationOfBenefitItemAdjudication;
+  adjudication?: Array<ExplanationOfBenefitItemAdjudication>;
 }
 export interface ExplanationOfBenefitItemDetail {
   /** 
@@ -14717,7 +14717,7 @@ export interface ExplanationOfBenefitItemDetail {
   /** 
    * Detail level adjudication details
    */
-  adjudication?: ExplanationOfBenefitItemAdjudication;
+  adjudication?: Array<ExplanationOfBenefitItemAdjudication>;
   /** 
    * Additional items
    */
@@ -14885,7 +14885,7 @@ export interface ExplanationOfBenefitAddItemDetailSubDetail {
   /** 
    * Added items adjudication
    */
-  adjudication?: ExplanationOfBenefitItemAdjudication;
+  adjudication?: Array<ExplanationOfBenefitItemAdjudication>;
 }
 export interface ExplanationOfBenefitAddItemDetail {
   /** 
@@ -14931,7 +14931,7 @@ export interface ExplanationOfBenefitAddItemDetail {
   /** 
    * Added items adjudication
    */
-  adjudication?: ExplanationOfBenefitItemAdjudication;
+  adjudication?: Array<ExplanationOfBenefitItemAdjudication>;
   /** 
    * Insurer added line items
    */
@@ -15029,7 +15029,7 @@ export interface ExplanationOfBenefitAddItem {
   /** 
    * Added items adjudication
    */
-  adjudication?: ExplanationOfBenefitItemAdjudication;
+  adjudication?: Array<ExplanationOfBenefitItemAdjudication>;
   /** 
    * Insurer added line items
    */
@@ -15386,7 +15386,7 @@ resourceType: "ExplanationOfBenefit"
   /** 
    * Header-level adjudication
    */
-  adjudication?: ExplanationOfBenefitItemAdjudication;
+  adjudication?: Array<ExplanationOfBenefitItemAdjudication>;
   /** 
    * Adjudication totals
    */
@@ -15895,7 +15895,7 @@ export interface GraphDefinitionLinkTarget {
   /** 
    * Additional links from target resource
    */
-  link?: GraphDefinitionLink;
+  link?: Array<GraphDefinitionLink>;
 }
 export interface GraphDefinitionLink {
   /** 
@@ -17379,7 +17379,7 @@ export interface ImplementationGuideDefinitionPage {
   /** 
    * Nested Pages / Sections
    */
-  page?: ImplementationGuideDefinitionPage;
+  page?: Array<ImplementationGuideDefinitionPage>;
 }
 export interface ImplementationGuideDefinitionParameter {
   /** 
@@ -18170,7 +18170,7 @@ resourceType: "Invoice"
   /** 
    * Components of Invoice total
    */
-  totalPriceComponent?: InvoiceLineItemPriceComponent;
+  totalPriceComponent?: Array<InvoiceLineItemPriceComponent>;
   /** 
    * Net total of this Invoice
    */
@@ -21141,7 +21141,7 @@ export interface MedicinalProductAuthorizationProcedure {
   /** 
    * Applcations submitted to obtain a marketing authorization
    */
-  application?: MedicinalProductAuthorizationProcedure;
+  application?: Array<MedicinalProductAuthorizationProcedure>;
 }
 export interface MedicinalProductAuthorization {
 resourceType: "MedicinalProductAuthorization"
@@ -21557,7 +21557,7 @@ export interface MedicinalProductIngredientSubstance {
   /** 
    * Quantity of the substance or specified substance present in the manufactured item or pharmaceutical product
    */
-  strength?: MedicinalProductIngredientSpecifiedSubstanceStrength;
+  strength?: Array<MedicinalProductIngredientSpecifiedSubstanceStrength>;
 }
 export interface MedicinalProductIngredient {
 resourceType: "MedicinalProductIngredient"
@@ -21835,7 +21835,7 @@ export interface MedicinalProductPackagedPackageItem {
   /** 
    * Allows containers within containers
    */
-  packageItem?: MedicinalProductPackagedPackageItem;
+  packageItem?: Array<MedicinalProductPackagedPackageItem>;
   /** 
    * Dimensions, color etc.
    */
@@ -23471,7 +23471,7 @@ export interface ObservationComponent {
   /** 
    * Provides guide for interpretation of component result
    */
-  referenceRange?: ObservationReferenceRange;
+  referenceRange?: Array<ObservationReferenceRange>;
 }
 export interface Observation {
 resourceType: "Observation"
@@ -23921,7 +23921,7 @@ export interface OperationDefinitionParameter {
   /** 
    * Parts of a nested Parameter
    */
-  part?: OperationDefinitionParameter;
+  part?: Array<OperationDefinitionParameter>;
 }
 export interface OperationDefinitionOverload {
   /** 
@@ -24577,7 +24577,7 @@ export interface ParametersParameter {
   /** 
    * Named part of a multi-part parameter
    */
-  part?: ParametersParameter;
+  part?: Array<ParametersParameter>;
 }
 export interface Parameters {
 resourceType: "Parameters"
@@ -25471,7 +25471,7 @@ export interface PlanDefinitionAction {
   /** 
    * A sub-action
    */
-  action?: PlanDefinitionAction;
+  action?: Array<PlanDefinitionAction>;
 }
 export interface PlanDefinition {
 resourceType: "PlanDefinition"
@@ -26153,7 +26153,7 @@ export interface ProvenanceEntity {
   /** 
    * Entity is attributed to this agent
    */
-  agent?: ProvenanceAgent;
+  agent?: Array<ProvenanceAgent>;
 }
 export interface Provenance {
 resourceType: "Provenance"
@@ -26477,7 +26477,7 @@ export interface QuestionnaireItem {
   /** 
    * Nested questionnaire items
    */
-  item?: QuestionnaireItem;
+  item?: Array<QuestionnaireItem>;
 }
 export interface Questionnaire {
 resourceType: "Questionnaire"
@@ -26667,7 +26667,7 @@ export interface QuestionnaireResponseItemAnswer {
   /** 
    * Nested groups and questions
    */
-  item?: QuestionnaireResponseItem;
+  item?: Array<QuestionnaireResponseItem>;
 }
 export interface QuestionnaireResponseItem {
   /** 
@@ -26701,7 +26701,7 @@ export interface QuestionnaireResponseItem {
   /** 
    * Nested questionnaire response items
    */
-  item?: QuestionnaireResponseItem;
+  item?: Array<QuestionnaireResponseItem>;
 }
 export interface QuestionnaireResponse {
 resourceType: "QuestionnaireResponse"
@@ -27049,7 +27049,7 @@ export interface RequestGroupAction {
   /** 
    * Sub action
    */
-  action?: RequestGroupAction;
+  action?: Array<RequestGroupAction>;
 }
 export interface RequestGroup {
 resourceType: "RequestGroup"
@@ -29913,7 +29913,7 @@ export interface StructureMapGroupRule {
   /** 
    * Rules contained in this rule
    */
-  rule?: StructureMapGroupRule;
+  rule?: Array<StructureMapGroupRule>;
   /** 
    * Which other rules to apply in the context of this rule
    */
@@ -31539,11 +31539,11 @@ export interface SubstanceSpecificationName {
   /** 
    * A synonym of this name
    */
-  synonym?: SubstanceSpecificationName;
+  synonym?: Array<SubstanceSpecificationName>;
   /** 
    * A translation for this name
    */
-  translation?: SubstanceSpecificationName;
+  translation?: Array<SubstanceSpecificationName>;
   /** 
    * Details of the official nature of this name
    */
@@ -31700,7 +31700,7 @@ resourceType: "SubstanceSpecification"
   /** 
    * The molecular weight or weight range (for proteins, polymers or nucleic acids)
    */
-  molecularWeight?: SubstanceSpecificationStructureIsotopeMolecularWeight;
+  molecularWeight?: Array<SubstanceSpecificationStructureIsotopeMolecularWeight>;
   /** 
    * A link between this substance and another, with details of the relationship
    */
@@ -34063,7 +34063,7 @@ export interface ValueSetCompose {
   /** 
    * Explicitly exclude codes from a code system or other value sets
    */
-  exclude?: ValueSetComposeInclude;
+  exclude?: Array<ValueSetComposeInclude>;
 }
 export interface ValueSetExpansionParameter {
   /** 
@@ -34151,11 +34151,11 @@ export interface ValueSetExpansionContains {
   /** 
    * Additional representations for this item
    */
-  designation?: ValueSetComposeIncludeConceptDesignation;
+  designation?: Array<ValueSetComposeIncludeConceptDesignation>;
   /** 
    * Codes contained under this entry
    */
-  contains?: ValueSetExpansionContains;
+  contains?: Array<ValueSetExpansionContains>;
 }
 export interface ValueSetExpansion {
   /** 

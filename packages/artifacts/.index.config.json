@@ -7,6 +7,18 @@
     },
     {
       "filename": "r4/hl7/profiles-resources.json",
+      "resourceType": "CapabilityStatement"
+    },
+    {
+      "filename": "r4/hl7/profiles-resources.json",
+      "resourceType": "CompartmentDefinition"
+    },
+    {
+      "filename": "r4/hl7/profiles-resources.json",
+      "resourceType": "OperationDefinition"
+    },
+    {
+      "filename": "r4/hl7/profiles-resources.json",
       "resourceType": "StructureDefinition"
     },
     {
@@ -22,12 +34,24 @@
       "resourceType": "ValueSet"
     },
     {
+      "filename": "r4/hl7/v2-tables.json",
+      "resourceType": "CodeSystem"
+    },
+    {
       "filename": "r4/hl7/v3-codesystems.json",
       "resourceType": "ValueSet"
     },
     {
+      "filename": "r4/hl7/v3-codesystems.json",
+      "resourceType": "CodeSystem"
+    },
+    {
       "filename": "r4/hl7/valuesets.json",
       "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "r4/hl7/valuesets.json",
+      "resourceType": "ValueSet"
     },
     {
       "filename": "r4/iguhealth/client-application.json",
