@@ -33,8 +33,6 @@ export default function generateIndexFile(
   // Read artifactLocation and recursively walk the directory tree reading all files from root
   // For each file, read the contents and parse the JSON
   // If the JSON has a "resourceType" property, add it to the index
-
-  console.log(artifactLocations, ignore);
   const index: IndexFile = { "index-version": "1", files: [] };
   const files = artifactLocations
     .map((loc) => path.join(root, loc))
@@ -42,7 +40,6 @@ export default function generateIndexFile(
     .flat()
     .filter((f) => f.endsWith(".json"))
     .filter((f) => ignore.indexOf(f) === -1);
-  console.log(files);
   for (let file of files) {
     const fileContents = fs.readFileSync(file);
     const json = JSON.parse(fileContents.toString("utf8"));
