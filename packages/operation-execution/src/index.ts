@@ -1,19 +1,76 @@
-import { OperationDefinition, Parameters } from "@iguhealth/fhir-types";
+import {
+  OperationDefinition,
+  Parameters,
+  StructureDefinition,
+} from "@iguhealth/fhir-types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import validate from "@iguhealth/fhir-validation";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 type ParameterDefinitions = NonNullable<OperationDefinition["parameter"]>;
 
+function capitalize(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+export function mapToParameter(
+  definition: NonNullable<ParameterDefinitions[number]>,
+  use: "out" | "in",
+  valueMap: any
+): NonNullable<Parameters["parameter"]> {
+  const isArray = definition.max !== "1";
+  let value = valueMap[definition.name];
+  if (!value) return [];
+
+  if (!isArray) value = [value];
+
+  const params: NonNullable<Parameters["parameter"]> = value.map(
+    (value: any): NonNullable<Parameters["parameter"]>[number] => {
+      if (definition.type) {
+        const fieldName = `value${capitalize(definition.type || "")}`;
+        return {
+          name: definition.name,
+          [fieldName]: value,
+        };
+      } else {
+        if (!definition.part)
+          throw new OperationError(
+            outcomeError(
+              "invalid",
+              `No type or part found on parameter definition ${definition.name}`
+            )
+          );
+      }
+
+      return {
+        name: definition.name,
+        part: definition.part
+          .map((partDefinition) => {
+            return mapToParameter(partDefinition, use, value);
+          })
+          .flat(),
+      };
+    }
+  );
+
+  return params;
+}
+
 export function toParametersResource(
   operationDefinition: OperationDefinition,
   use: "out" | "in",
-  parameters: Object
-) {
-  return {
+  value: Record<string, any>
+): Parameters {
+  const definitions =
+    operationDefinition.parameter?.filter((param) => param.use === use) || [];
+  const parameters: Parameters = {
     resourceType: "Parameters",
-    parameter: parameters,
+    parameter: definitions
+      .map((definition) => mapToParameter(definition, use, value))
+      .flat(),
   };
+
+  return parameters;
 }
 
 function validateNoExtraFields(
@@ -44,10 +101,6 @@ function parseParameter(
   const isRequired = definition.min > 1;
   const isArray = definition.max !== "1";
   const isNested = definition.part !== undefined;
-
-  function capitalize(string: string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
 
   const parsedParameters = parameters
     .map((param) => {
@@ -152,13 +205,20 @@ function createValidator<ParamType>(
 interface Operation<CTX, Input, Output> {
   code: string;
   get operationDefinition(): OperationDefinition;
-  validateInput(input: any): input is Input;
-  validateOutput(output: any): output is Output;
+  parseToObject<T extends Input | Output>(use: "in" | "out", input: any): T;
+  parseToParameters(use: "in" | "out", input: Input | Output): Parameters;
   execute(ctx: CTX, input: Input): Output;
 }
 
-class OperationExecution<CTX, Input, Output>
-  implements Operation<CTX, Input, Output>
+function isParameters(input: any): input is Parameters {
+  return input.resourceType === "Parameters";
+}
+
+export class OperationExecution<
+  CTX extends { resolveType: (type: string) => StructureDefinition },
+  Input,
+  Output
+> implements Operation<CTX, Input, Output>
 {
   private _operationDefinition: OperationDefinition;
   code: string;
@@ -169,36 +229,21 @@ class OperationExecution<CTX, Input, Output>
   get operationDefinition(): OperationDefinition {
     return this._operationDefinition;
   }
-  validateInput(input: any): input is Input {
+  parseToObject<T extends Input | Output>(
+    use: "in" | "out",
+    input: Parameters
+  ): T {
+    const output = parseParameters(this._operationDefinition, use, input);
+    return output as T;
+  }
+  parseToParameters(use: "in" | "out", input: Input | Output): Parameters {
+    return toParametersResource(
+      this._operationDefinition,
+      use,
+      input as Record<string, any>
+    );
+  }
+  execute(ctx: CTX, input: Input | Parameters): Output {
     throw new Error();
   }
-  validateOutput(output: any): output is Output {
-    throw new Error();
-  }
-  execute(ctx: CTX, input: Input): Output {
-    throw new Error();
-  }
-}
-
-function createOperationExecutable<CTX, Input, Output>(
-  operation: OperationDefinition,
-  execute: (input: Input | Parameters) => Output
-): Operation<CTX, Input, Output> {
-  const inputDefinitions =
-    operation.parameter?.filter((param) => param.use === "in") || [];
-  const outputDefinitions =
-    operation.parameter?.filter((param) => param.use === "out") || [];
-
-  return {
-    code: operation.code,
-    operationDefinition: () => operation,
-    validateInput: createValidator<Input>(inputDefinitions),
-    validateOutput: createValidator<Output>(outputDefinitions),
-    execute: (ctx: CTX, input: Input) => {
-      this.validateInput(input);
-      const output = execute(input);
-      this.validateOutput(output);
-      return output;
-    },
-  };
 }

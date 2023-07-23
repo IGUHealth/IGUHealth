@@ -1,9 +1,9 @@
 import path from "node:path";
 import { expect, test } from "@jest/globals";
 
-import { parseParameters } from ".";
+import { parseParameters, toParametersResource, OperationExecution } from ".";
 import { loadArtifacts } from "@iguhealth/artifacts";
-import { OperationDefinition } from "@iguhealth/fhir-types";
+import { OperationDefinition, Parameters } from "@iguhealth/fhir-types";
 
 const operationDefinitions = loadArtifacts(
   "OperationDefinition",
@@ -161,4 +161,29 @@ test("Test Operation 1", () => {
       },
     ],
   });
+});
+
+test("roundTrip", () => {
+  const operation = new OperationExecution(operationTest);
+  const parameters: Parameters = {
+    resourceType: "Parameters",
+    parameter: [
+      { name: "test", valueString: "value1" },
+      { name: "test2", valueInteger: 5 },
+      { name: "nested", part: [{ name: "nested1", valueString: "value2" }] },
+      {
+        name: "nested",
+        part: [
+          { name: "nested1", valueString: "value3" },
+          {
+            name: "nested2",
+            part: [{ name: "nested3", valueString: "value4" }],
+          },
+        ],
+      },
+    ],
+  };
+  expect(
+    operation.parseToParameters("in", operation.parseToObject("in", parameters))
+  ).toEqual(parameters);
 });
