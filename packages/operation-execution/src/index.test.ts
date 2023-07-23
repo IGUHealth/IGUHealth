@@ -9,14 +9,6 @@ const operationDefinitions = loadArtifacts(
   path.join(__dirname, "./")
 );
 
-// const sds = loadArtifacts(
-//   "StructureDefinition",
-//   path.join(__dirname, "./"),
-//   true
-// );
-
-console.log(operationDefinitions.length);
-
 const valueSetExpandOp = operationDefinitions.find(
   (op) => op.id === "ValueSet-expand"
 );
@@ -41,26 +33,8 @@ test("parseParameters", () => {
       ],
     })
   ).toEqual({
-    // activeOnly: undefined,
-    // "check-system-version": [],
-    // context: undefined,
-    // contextDirection: undefined,
-    // count: undefined,
-    // date: undefined,
-    // designation: [],
-    // displayLanguage: undefined,
-    // "exclude-system": [],
-    // excludeNested: undefined,
-    // excludeNotForUI: undefined,
-    // excludePostCoordinated: undefined,
-    // filter: undefined,
-    // "force-system-version": [],
-    // includeDefinition: undefined,
-    // includeDesignations: undefined,
-    // offset: undefined,
-    // "system-version": [],
-    // url: undefined,
-    // valueSet: undefined,
-    // valueSetVersion: undefined,
+    filter: "test",
+    url: "https://my-valueset.com",
+    valueSetVersion: "12",
   });
 });

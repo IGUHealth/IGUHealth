@@ -25,65 +25,67 @@ function parseParameter(
   const isArray = definition.max !== "1";
   const isNested = definition.part !== undefined;
 
-  if (isRequired && parameters.length === 0)
+  function capitalize(string: string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  const parsedParameters = parameters
+    .map((param) => {
+      if (definition.type || definition.searchType) {
+        // Means this is a primitive
+        if (resourceTypes.has(definition.type || "")) {
+          return param.resource;
+        } else {
+          if (definition.searchType)
+            throw new OperationError(
+              outcomeError("not-supported", `SearchType not supported`)
+            );
+          // @ts-ignore
+          return param[`value${capitalize(definition.type || "")}`];
+        }
+        // Means this is a primitive
+      } else {
+        if (!definition.part)
+          throw new OperationError(
+            outcomeError(
+              "invalid",
+              `No type or part found on parameter definition ${definition.name}`
+            )
+          );
+        return (definition.part || []).reduce(
+          (acc: Record<string, any>, paramDefinition) => {
+            acc[paramDefinition.name] = parseParameter(
+              paramDefinition,
+              use,
+              (param.part || []).filter(
+                (param) => param.name === paramDefinition.name
+              )
+            );
+            return acc;
+          },
+          {}
+        );
+      }
+    })
+    .filter((v) => v !== undefined);
+
+  if (isRequired && parsedParameters.length === 0)
     throw new OperationError(
       outcomeError("required", `Missing required parameter ${definition.name}`)
     );
-  if (definition.max !== "*" && parameters.length > parseInt(definition.max)) {
+  if (
+    definition.max !== "*" &&
+    parsedParameters.length > parseInt(definition.max)
+  ) {
     throw new OperationError(
       outcomeError("too-many", `Too many parameters ${definition.name}`)
     );
   }
 
-  function capitalize(string: string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-
-  const parsedParameters = parameters.map((param) => {
-    console.log(definition.type);
-    if (definition.type || definition.searchType) {
-      // Means this is a primitive
-      if (resourceTypes.has(definition.type || "")) {
-        return param.resource;
-      } else {
-        if (definition.searchType)
-          throw new OperationError(
-            outcomeError("not-supported", `SearchType not supported`)
-          );
-        // @ts-ignore
-        return param[`value${capitalize(definition.type || "")}`];
-      }
-      // Means this is a primitive
-    } else {
-      if (!definition.part)
-        throw new OperationError(
-          outcomeError(
-            "invalid",
-            `No type or part found on parameter definition ${definition.name}`
-          )
-        );
-      return (definition.part || []).reduce(
-        (acc: Record<string, any>, paramDefinition) => {
-          acc[paramDefinition.name] = parseParameter(
-            paramDefinition,
-            use,
-            (param.part || []).filter(
-              (param) => param.name === paramDefinition.name
-            )
-          );
-          return acc;
-        },
-        {}
-      );
-    }
-  });
-
-  console.log(parsedParameters, parameters);
-
   if (!isArray) {
     return parsedParameters[0];
   }
-  return parsedParameters;
+  return parsedParameters.length > 0 ? parsedParameters : undefined;
 }
 
 export function parseParameters(
@@ -94,21 +96,25 @@ export function parseParameters(
   const paramDefinitions =
     operationDefinition.parameter?.filter((param) => param.use === use) || [];
 
-  const parsedParam: Record<string, any> = {};
-  for (const paramDefinition of paramDefinitions) {
-    const curParameters =
-      parameters.parameter?.filter(
-        (param) => param.name === paramDefinition.name
-      ) || [];
-    console.log(curParameters, paramDefinition.name);
-    parsedParam[paramDefinition.name] = parseParameter(
-      paramDefinition,
-      use,
-      curParameters
-    );
-  }
-
-  return parsedParam;
+  const parametersParsed: Record<string, any> = {};
+  return paramDefinitions.reduce(
+    (parametersParsed: Record<string, any>, parameterDefinition) => {
+      const curParameters =
+        parameters.parameter?.filter(
+          (param) => param.name === parameterDefinition.name
+        ) || [];
+      const parsedParam = parseParameter(
+        parameterDefinition,
+        use,
+        curParameters
+      );
+      if (parsedParam !== undefined) {
+        parametersParsed[parameterDefinition.name] = parsedParam;
+      }
+      return parametersParsed;
+    },
+    {}
+  );
 }
 
 function createValidator<ParamType>(
