@@ -29,29 +29,14 @@ test("parseParameters", () => {
     parseParameters(valueSetExpandOp, "in", {
       resourceType: "Parameters",
       parameter: [
+        { name: "url", valueUri: "https://my-valueset.com" },
         {
-          name: "identifier",
-          valueIdentifier: {
-            system: "http://hl7.org/fhir/valueset-identifier-type",
-            value: "http://acme.org/fhir/ValueSet/identifier-type",
-          },
+          name: "valueSetVersion",
+          valueString: "12",
         },
         {
           name: "filter",
-          part: [
-            {
-              name: "property",
-              valueCode: "code",
-            },
-            {
-              name: "op",
-              valueCode: "is-a",
-            },
-            {
-              name: "value",
-              valueCode: "MR",
-            },
-          ],
+          valueString: "test",
         },
       ],
     })

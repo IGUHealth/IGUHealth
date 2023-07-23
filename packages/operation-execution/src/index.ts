@@ -40,6 +40,7 @@ function parseParameter(
   }
 
   const parsedParameters = parameters.map((param) => {
+    console.log(definition.type);
     if (definition.type || definition.searchType) {
       // Means this is a primitive
       if (resourceTypes.has(definition.type || "")) {
@@ -77,6 +78,8 @@ function parseParameter(
     }
   });
 
+  console.log(parsedParameters, parameters);
+
   if (!isArray) {
     return parsedParameters[0];
   }
@@ -97,6 +100,7 @@ export function parseParameters(
       parameters.parameter?.filter(
         (param) => param.name === paramDefinition.name
       ) || [];
+    console.log(curParameters, paramDefinition.name);
     parsedParam[paramDefinition.name] = parseParameter(
       paramDefinition,
       use,
