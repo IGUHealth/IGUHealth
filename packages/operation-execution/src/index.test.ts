@@ -164,7 +164,13 @@ test("Test Operation 1", () => {
 });
 
 test("roundTrip", () => {
-  const operation = new OperationExecution(operationTest, (ctx, input) => {});
+  const operation = new OperationExecution(
+    operationTest,
+    async (ctx, input: { v: "z" }) => {
+      console.log(input);
+      return { v: "5" };
+    }
+  );
   const parameters: Parameters = {
     resourceType: "Parameters",
     parameter: [

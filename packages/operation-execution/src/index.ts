@@ -325,7 +325,7 @@ interface Operation<CTX, I, O> {
   ): Parameters;
   execute(
     ctx: CTX,
-    input: Record<string, any> | Parameters
+    input: I | Record<string, any> | Parameters
   ): Promise<O | Parameters>;
 }
 
@@ -337,14 +337,14 @@ export class OperationExecution<
 {
   private _operationDefinition: OperationDefinition;
   code: string;
-  _execute: OperationExecution<CTX, I, O>["execute"];
+  _execute: (ctx: CTX, input: I) => O | Parameters;
   constructor(
     operationDefinition: OperationDefinition,
-    execute: OperationExecution<CTX, I, O>["execute"]
+    _execute: (ctx: CTX, input: I) => O | Parameters
   ) {
     this.code = operationDefinition.code;
     this._operationDefinition = operationDefinition;
-    this._execute = execute;
+    this._execute = _execute;
   }
   get operationDefinition(): OperationDefinition {
     return this._operationDefinition;
@@ -365,9 +365,9 @@ export class OperationExecution<
   }
   async execute(
     ctx: CTX,
-    input: Record<string, any> | Parameters
+    input: Record<string, any> | I | Parameters
   ): Promise<O | Parameters> {
-    let parsedInput: Record<string, any> = input;
+    let parsedInput: Record<string, any> | I | Parameters = input;
     if (isParameters(input)) {
       const parsedInput = parseParameters(
         this._operationDefinition,
