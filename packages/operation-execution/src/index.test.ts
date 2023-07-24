@@ -203,7 +203,6 @@ test("execution", async () => {
   const operation = new OperationExecution(
     operationTest,
     async (ctx, input: { test: string }) => {
-      console.log(input);
       return { testOut: input.test };
     }
   );
@@ -216,6 +215,18 @@ test("execution", async () => {
     },
   };
 
-  const output = await operation.execute(ctx, { test: "asdf" });
-  expect(output).toEqual({ testOut: "asdf" });
+  expect(operation.execute(ctx, { test: "asdf" })).resolves.toEqual({
+    testOut: "asdf",
+  });
+  expect(
+    operation.execute(ctx, { test: "asdf", bad: "test" })
+  ).rejects.toThrow();
+
+  const operation2 = new OperationExecution(
+    operationTest,
+    async (ctx, input: { test: string }) => {
+      return { testOut: input.test, z: 5 };
+    }
+  );
+  expect(operation2.execute(ctx, { test: "asdf" })).rejects.toThrow();
 });

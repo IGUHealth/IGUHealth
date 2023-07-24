@@ -341,7 +341,7 @@ export class OperationExecution<
 {
   private _operationDefinition: OperationDefinition;
   code: string;
-  _execute: (ctx: CTX, input: I) => O | Parameters;
+  private _execute: (ctx: CTX, input: I) => O | Parameters;
   constructor(
     operationDefinition: OperationDefinition,
     _execute: (ctx: CTX, input: I) => O | Parameters
