@@ -10,6 +10,11 @@ const operationDefinitions = loadArtifacts(
   path.join(__dirname, "./")
 );
 
+const structureDefinitions = loadArtifacts(
+  "StructureDefinition",
+  path.join(__dirname, "./")
+);
+
 const valueSetExpandOp = operationDefinitions.find(
   (op) => op.id === "ValueSet-expand"
 );
@@ -164,7 +169,13 @@ test("Test Operation 1", () => {
 });
 
 test("roundTrip", () => {
-  const operation = new OperationExecution(operationTest);
+  const operation = new OperationExecution(
+    operationTest,
+    async (ctx, input: { v: "z" }) => {
+      console.log(input);
+      return { v: "5" };
+    }
+  );
   const parameters: Parameters = {
     resourceType: "Parameters",
     parameter: [
@@ -186,4 +197,29 @@ test("roundTrip", () => {
   expect(
     operation.parseToParameters("in", operation.parseToObject("in", parameters))
   ).toEqual(parameters);
+});
+
+test("execution", async () => {
+  const operation = new OperationExecution(
+    operationTest,
+    async (ctx, input: { test: string }) => {
+      console.log(input);
+      return { testOut: input.test };
+    }
+  );
+
+  const ctx = {
+    resolveType: (type: string) => {
+      const sd = structureDefinitions.find((sd) => sd.type === type);
+      if (!sd) throw new Error(`Could not resolve type ${type}`);
+      return sd;
+    },
+  };
+  try {
+    const output = await operation.execute(ctx, { test: "asdf" });
+    expect(output).toEqual({ testOut: "asdf" });
+  } catch (e) {
+    console.error(JSON.stringify(e));
+    throw e;
+  }
 });
