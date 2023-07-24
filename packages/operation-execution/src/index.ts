@@ -208,20 +208,6 @@ function createValidator<ParamType>(
 
 type InputOutput<I, O> = { in: I; out: O };
 
-interface Operation<CTX, I, O> {
-  code: string;
-  get operationDefinition(): OperationDefinition;
-  parseToObject<Use extends "in" | "out">(
-    use: Use,
-    input: any
-  ): InputOutput<I, O>[Use];
-  parseToParameters<Use extends "in" | "out">(
-    use: Use,
-    input: InputOutput<I, O>[Use]
-  ): Parameters;
-  execute(ctx: CTX, input: Record<string, any> | Parameters): unknown;
-}
-
 function isParameters(input: any): input is Parameters {
   return input.resourceType === "Parameters";
 }
@@ -326,6 +312,23 @@ function validateParameters<I, O, Use extends "in" | "out">(
   return true;
 }
 
+interface Operation<CTX, I, O> {
+  code: string;
+  get operationDefinition(): OperationDefinition;
+  parseToObject<Use extends "in" | "out">(
+    use: Use,
+    input: any
+  ): InputOutput<I, O>[Use];
+  parseToParameters<Use extends "in" | "out">(
+    use: Use,
+    input: InputOutput<I, O>[Use]
+  ): Parameters;
+  execute(
+    ctx: CTX,
+    input: Record<string, any> | Parameters
+  ): Promise<O | Parameters>;
+}
+
 export class OperationExecution<
   CTX extends { resolveType: (type: string) => StructureDefinition },
   I,
@@ -334,10 +337,10 @@ export class OperationExecution<
 {
   private _operationDefinition: OperationDefinition;
   code: string;
-  _execute: (ctx: CTX, input: I) => O | Parameters;
+  _execute: OperationExecution<CTX, I, O>["execute"];
   constructor(
     operationDefinition: OperationDefinition,
-    execute: (ctx: CTX, input: I) => O | Parameters
+    execute: OperationExecution<CTX, I, O>["execute"]
   ) {
     this.code = operationDefinition.code;
     this._operationDefinition = operationDefinition;
@@ -360,7 +363,10 @@ export class OperationExecution<
       input as Record<string, any>
     );
   }
-  execute(ctx: CTX, input: Record<string, any> | Parameters): O | Parameters {
+  async execute(
+    ctx: CTX,
+    input: Record<string, any> | Parameters
+  ): Promise<O | Parameters> {
     let parsedInput: Record<string, any> = input;
     if (isParameters(input)) {
       const parsedInput = parseParameters(
