@@ -215,11 +215,7 @@ test("execution", async () => {
       return sd;
     },
   };
-  try {
-    const output = await operation.execute(ctx, { test: "asdf" });
-    expect(output).toEqual({ testOut: "asdf" });
-  } catch (e) {
-    console.error(JSON.stringify(e));
-    throw e;
-  }
+
+  const output = await operation.execute(ctx, { test: "asdf" });
+  expect(output).toEqual({ testOut: "asdf" });
 });
