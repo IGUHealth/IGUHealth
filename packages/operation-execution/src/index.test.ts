@@ -260,7 +260,63 @@ test("paramValidation", async () => {
     operation.execute(ctx, {
       test: "test",
       name: { given: ["Bob"] },
-      patient: { resourceType: "Patien", name: [{ given: [5] }] },
+      patient: { resourceType: "Patien", name: [{ given: ["Hello"] }] },
+    })
+  ).rejects.toThrow();
+
+  expect(
+    operation.execute(ctx, {
+      test: "test",
+      name: { given: ["Bob"] },
+      patient: { resourceType: "Patient", name: [{ given: ["Hello"] }] },
+    })
+  ).resolves.toEqual({ testOut: "test" });
+
+  expect(
+    operation.execute(ctx, {
+      test: "test",
+      name: { given: ["Bob"] },
+      patient: { resourceType: "Patient", name: [{ given: [4] }] },
+    })
+  ).rejects.toThrow();
+
+  expect(
+    operation.execute(ctx, {
+      test: "test",
+      name: { given: ["Bob"] },
+      patient: {
+        resourceType: "Patient",
+        name: [
+          {
+            _given: [
+              {
+                id: "123",
+                extension: [{ url: "testing", valueString: "Hello" }],
+              },
+            ],
+          },
+        ],
+      },
+    })
+  ).resolves.toEqual({ testOut: "test" });
+
+  expect(
+    operation.execute(ctx, {
+      test: "test",
+      name: { given: ["Bob"] },
+      patient: {
+        resourceType: "Patient",
+        name: [
+          {
+            _given: [
+              {
+                id: "123",
+                extension: [{ url: "testing", valueString: 4 }],
+              },
+            ],
+          },
+        ],
+      },
     })
   ).rejects.toThrow();
 });
