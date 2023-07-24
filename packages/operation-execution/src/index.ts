@@ -5,7 +5,11 @@ import {
 } from "@iguhealth/fhir-types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import validate from "@iguhealth/fhir-validation";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  outcome,
+  outcomeError,
+} from "@iguhealth/operation-outcomes";
 
 type ParameterDefinitions = NonNullable<OperationDefinition["parameter"]>;
 
@@ -202,48 +206,192 @@ function createValidator<ParamType>(
   };
 }
 
-interface Operation<CTX, Input, Output> {
+type InputOutput<I, O> = { in: I; out: O };
+
+interface Operation<CTX, I, O> {
   code: string;
   get operationDefinition(): OperationDefinition;
-  parseToObject<T extends Input | Output>(use: "in" | "out", input: any): T;
-  parseToParameters(use: "in" | "out", input: Input | Output): Parameters;
-  execute(ctx: CTX, input: Input): Output;
+  parseToObject<Use extends "in" | "out">(
+    use: Use,
+    input: any
+  ): InputOutput<I, O>[Use];
+  parseToParameters<Use extends "in" | "out">(
+    use: Use,
+    input: InputOutput<I, O>[Use]
+  ): Parameters;
+  execute(ctx: CTX, input: Record<string, any> | Parameters): unknown;
 }
 
 function isParameters(input: any): input is Parameters {
   return input.resourceType === "Parameters";
 }
 
+function isRecord(input: any): input is Record<string, any> {
+  return typeof input === "object" && input !== null;
+}
+
+function validateRequired(
+  definitions: NonNullable<OperationDefinition["parameter"]>,
+  value: Record<string, any>
+) {
+  definitions
+    .filter((d) => d.min > 0)
+    .forEach((d) => {
+      if (!(d.name in value))
+        throw new OperationError(
+          outcomeError("required", `Missing required parameter ${d.name}`)
+        );
+    });
+}
+
+function validateCardinalities(
+  definition: NonNullable<OperationDefinition["parameter"]>[number],
+  value: unknown[]
+) {
+  if (definition.min > value.length)
+    throw new OperationError(
+      outcomeError(
+        "required",
+        `Must have '${definition.min}' minimum for field ${definition.min}`
+      )
+    );
+  if (definition.max !== "*" && value.length > parseInt(definition.max))
+    throw new OperationError(
+      outcomeError("too-many", `Too many parameters ${definition.name}`)
+    );
+}
+
+function validateParameter<Use extends "in" | "out">(
+  resolveType: (type: string) => StructureDefinition,
+  paramDefinition: NonNullable<OperationDefinition["parameter"]>[number],
+  use: Use,
+  value: any
+) {
+  const isArray = paramDefinition.max !== "1";
+  value = isArray ? [value] : value;
+
+  validateCardinalities(paramDefinition, value);
+
+  value.forEach((v: unknown) => {
+    if (paramDefinition.type) {
+      const issues = validate(resolveType, paramDefinition.type, value);
+      if (issues.length > 0) throw new OperationError(outcome(issues));
+    } else {
+      if (!paramDefinition.part)
+        throw new OperationError(
+          outcomeError(
+            "invalid",
+            `Invalid definition '${paramDefinition.name}' must have either part or type`
+          )
+        );
+      validateRequired(paramDefinition.part, value);
+      paramDefinition.part.forEach((part) => {
+        if (!isRecord(value)) {
+          throw new OperationError(
+            outcomeError(
+              "invalid",
+              `Parameter ${part.name} must be an object found: '${value}'`
+            )
+          );
+        }
+        validateParameter(resolveType, part, use, value[part.name]);
+      });
+    }
+  });
+}
+
+function validateParameters<I, O, Use extends "in" | "out">(
+  resolveType: (type: string) => StructureDefinition,
+  operationDefinition: OperationDefinition,
+  use: Use,
+  value: unknown
+): value is InputOutput<I, O>[Use] {
+  const definitions = (operationDefinition.parameter || []).filter(
+    (p) => p.use === use
+  );
+  if (!isRecord(value))
+    throw new OperationError(
+      outcomeError("invalid", "Invalid input, input must be a Record")
+    );
+
+  validateRequired(definitions, value);
+  Object.keys(value).forEach((key: string) => {
+    const paramDefinition = definitions.find((d) => d.name === key);
+    if (paramDefinition === undefined)
+      throw new OperationError(
+        outcomeError("invalid", `Invalid parameter ${key}`)
+      );
+    validateParameter(resolveType, paramDefinition, use, value[key]);
+  });
+  return true;
+}
+
 export class OperationExecution<
   CTX extends { resolveType: (type: string) => StructureDefinition },
-  Input,
-  Output
-> implements Operation<CTX, Input, Output>
+  I,
+  O
+> implements Operation<CTX, I, O>
 {
   private _operationDefinition: OperationDefinition;
   code: string;
-  constructor(operationDefinition: OperationDefinition) {
+  _execute: (ctx: CTX, input: I) => O | Parameters;
+  constructor(
+    operationDefinition: OperationDefinition,
+    execute: (ctx: CTX, input: I) => O | Parameters
+  ) {
     this.code = operationDefinition.code;
     this._operationDefinition = operationDefinition;
+    this._execute = execute;
   }
   get operationDefinition(): OperationDefinition {
     return this._operationDefinition;
   }
-  parseToObject<T extends Input | Output>(
-    use: "in" | "out",
+  parseToObject<Use extends "in" | "out">(
+    use: Use,
     input: Parameters
-  ): T {
+  ): InputOutput<I, O>[Use] {
     const output = parseParameters(this._operationDefinition, use, input);
-    return output as T;
+    return output as InputOutput<I, O>[Use];
   }
-  parseToParameters(use: "in" | "out", input: Input | Output): Parameters {
+  parseToParameters(use: "in" | "out", input: I | O): Parameters {
     return toParametersResource(
       this._operationDefinition,
       use,
       input as Record<string, any>
     );
   }
-  execute(ctx: CTX, input: Input | Parameters): Output {
-    throw new Error();
+  execute(ctx: CTX, input: Record<string, any> | Parameters): O | Parameters {
+    let parsedInput: Record<string, any> = input;
+    if (isParameters(input)) {
+      const parsedInput = parseParameters(
+        this._operationDefinition,
+        "in",
+        input
+      );
+    }
+    if (
+      !validateParameters<I, O, "in">(
+        ctx.resolveType,
+        this._operationDefinition,
+        "in",
+        parsedInput
+      )
+    )
+      throw new OperationError(outcomeError("invalid", "Invalid input"));
+
+    const output = this._execute(ctx, parsedInput);
+
+    if (
+      !validateParameters<I, O, "out">(
+        ctx.resolveType,
+        this._operationDefinition,
+        "out",
+        output
+      )
+    )
+      throw new OperationError(outcomeError("invalid", "Invalid output"));
+
+    if (isParameters(input)) return this.parseToParameters("out", output);
+    return output;
   }
 }

@@ -164,7 +164,7 @@ test("Test Operation 1", () => {
 });
 
 test("roundTrip", () => {
-  const operation = new OperationExecution(operationTest);
+  const operation = new OperationExecution(operationTest, (ctx, input) => {});
   const parameters: Parameters = {
     resourceType: "Parameters",
     parameter: [
