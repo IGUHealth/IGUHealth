@@ -31,6 +31,9 @@ export function mapToParameter(
   const params: NonNullable<Parameters["parameter"]> = value.map(
     (value: any): NonNullable<Parameters["parameter"]>[number] => {
       if (definition.type) {
+        if (resourceTypes.has(definition.type)) {
+          return { name: definition.name, resource: value };
+        }
         const fieldName = `value${capitalize(definition.type || "")}`;
         return {
           name: definition.name,

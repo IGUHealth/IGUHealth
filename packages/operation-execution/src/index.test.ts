@@ -77,6 +77,8 @@ const operationTest: OperationDefinition = {
   instance: false,
 
   parameter: [
+    { name: "name", type: "HumanName", use: "in", min: 0, max: "1" },
+    { name: "patient", type: "Patient", use: "in", min: 0, max: "1" },
     {
       name: "testOut",
       type: "string",
@@ -229,4 +231,36 @@ test("execution", async () => {
     }
   );
   expect(operation2.execute(ctx, { test: "asdf" })).rejects.toThrow();
+});
+
+test("paramValidation", async () => {
+  const operation = new OperationExecution(
+    operationTest,
+    async (ctx, input: { test: string }) => {
+      return { testOut: input.test };
+    }
+  );
+
+  const ctx = {
+    resolveType: (type: string) => {
+      const sd = structureDefinitions.find((sd) => sd.type === type);
+      if (!sd) throw new Error(`Could not resolve type ${type}`);
+      return sd;
+    },
+  };
+
+  expect(
+    operation.execute(ctx, { test: "asdf", name: { given: "Bob" } })
+  ).rejects.toThrow();
+  expect(
+    operation.execute(ctx, { test: "test", name: { given: ["Bob"] } })
+  ).resolves.toEqual({ testOut: "test" });
+
+  expect(
+    operation.execute(ctx, {
+      test: "test",
+      name: { given: ["Bob"] },
+      patient: { resourceType: "Patien", name: [{ given: [5] }] },
+    })
+  ).rejects.toThrow();
 });
