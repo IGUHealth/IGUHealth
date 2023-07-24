@@ -241,10 +241,11 @@ function validateCardinalities(
         `Must have '${definition.min}' minimum for field ${definition.min}`
       )
     );
-  if (definition.max !== "*" && value.length > parseInt(definition.max))
+  if (definition.max !== "*" && value.length > parseInt(definition.max)) {
     throw new OperationError(
       outcomeError("too-many", `Too many parameters ${definition.name}`)
     );
+  }
 }
 
 function validateParameter<Use extends "in" | "out">(
@@ -253,14 +254,17 @@ function validateParameter<Use extends "in" | "out">(
   use: Use,
   value: any
 ) {
-  const isArray = paramDefinition.max !== "1";
-  value = isArray ? [value] : value;
-
+  let arr: Array<any> = (value = Array.isArray(value) ? value : [value]);
   validateCardinalities(paramDefinition, value);
 
-  value.forEach((v: unknown) => {
+  arr.forEach((_v: unknown, index) => {
     if (paramDefinition.type) {
-      const issues = validate(resolveType, paramDefinition.type, value);
+      const issues = validate(
+        resolveType,
+        paramDefinition.type,
+        arr,
+        `/${index}`
+      );
       if (issues.length > 0) throw new OperationError(outcome(issues));
     } else {
       if (!paramDefinition.part)
@@ -385,7 +389,7 @@ export class OperationExecution<
     )
       throw new OperationError(outcomeError("invalid", "Invalid input"));
 
-    const output = this._execute(ctx, parsedInput);
+    const output = await this._execute(ctx, parsedInput);
 
     if (
       !validateParameters<I, O, "out">(

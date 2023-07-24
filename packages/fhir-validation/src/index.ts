@@ -449,6 +449,8 @@ export default function validate(
   const sd = resolveType(type);
   const indice = 0;
 
+  if (primitiveTypes.has(type)) return validatePrimitive(value, path, type);
+
   return validateElement(
     resolveType,
     path,
