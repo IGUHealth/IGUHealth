@@ -109,7 +109,6 @@ function parseParameter(
 ) {
   const isRequired = definition.min > 1;
   const isArray = definition.max !== "1";
-  const isNested = definition.part !== undefined;
 
   const parsedParameters = parameters
     .map((param) => {
@@ -295,13 +294,16 @@ function validateParameter<Use extends "in" | "out">(
   });
 }
 
-function validateParameters<I, O, Use extends "in" | "out">(
+function validateParameters<
+  T extends IOperation<any, any>,
+  Use extends "in" | "out"
+>(
   resolveType: (type: string) => StructureDefinition,
-  operationDefinition: OperationDefinition,
+  op: T,
   use: Use,
   value: unknown
-): value is InputOutput<I, O>[Use] {
-  const definitions = (operationDefinition.parameter || []).filter(
+): value is Use extends "in" ? METADATA<T>["Input"] : METADATA<T>["Output"] {
+  const definitions = (op.operationDefinition.parameter || []).filter(
     (p) => p.use === use
   );
   if (!isRecord(value))
@@ -321,7 +323,9 @@ function validateParameters<I, O, Use extends "in" | "out">(
   return true;
 }
 
-export interface Operation<CTX, I, O> {
+type OpCTX = { resolveType: (type: string) => StructureDefinition };
+
+export interface IOperation<I, O> {
   code: string;
   get operationDefinition(): OperationDefinition;
   parseToObject<Use extends "in" | "out">(
@@ -332,72 +336,20 @@ export interface Operation<CTX, I, O> {
     use: Use,
     input: InputOutput<I, O>[Use]
   ): Parameters;
-  execute(
-    ctx: CTX,
-    input: I | Record<string, any> | Parameters
-  ): Promise<O | Parameters>;
 }
 
-type OpCTX = { resolveType: (type: string) => StructureDefinition };
+export type Executor<CTX, I, O> = (ctx: CTX, input: I) => Promise<O>;
 
-//export type Executor<CTX, I, O> = (ctx: CTX, input: I) => Promise<O>;
-
-type METADATA<O> = O extends Operation<infer CTX, infer Input, infer Output>
-  ? { Input: Input; Output: Output; CTX: CTX }
+type METADATA<O> = O extends IOperation<infer Input, infer Output>
+  ? { Input: Input; Output: Output }
   : never;
 
-export function invoke<T extends OperationExecution<any, any, any>>(
-  op: T,
-  executor: (
-    op: T,
-    ctx: METADATA<T>["CTX"],
-    input: METADATA<T>["Input"]
-  ) => Promise<Parameters | METADATA<T>["Output"]>
-): Promise<Parameters | METADATA<T>["Output"]> {
-  let parsedInput: Record<string, any> | METADATA<T>["Input"] | Parameters =
-    input;
-  if (isParameters(input)) {
-    const parsedInput = parseParameters(this._operationDefinition, "in", input);
-  }
-  if (
-    !validateParameters<I, O, "in">(
-      ctx.resolveType,
-      this._operationDefinition,
-      "in",
-      parsedInput
-    )
-  )
-    throw new OperationError(outcomeError("invalid", "Invalid input"));
-
-  const output = await this._execute(ctx, parsedInput);
-
-  if (
-    !validateParameters<I, O, "out">(
-      ctx.resolveType,
-      this._operationDefinition,
-      "out",
-      output
-    )
-  )
-    throw new OperationError(outcomeError("invalid", "Invalid output"));
-
-  if (isParameters(input)) return this.parseToParameters("out", output);
-  return output;
-}
-
-export class OperationExecution<CTX extends OpCTX, I, O>
-  implements Operation<CTX, I, O>
-{
+export class Operation<I, O> implements IOperation<I, O> {
   private _operationDefinition: OperationDefinition;
   code: string;
-  private _execute: Executor<CTX, I, O>;
-  constructor(
-    operationDefinition: OperationDefinition,
-    _execute: Executor<CTX, I, O>
-  ) {
+  constructor(operationDefinition: OperationDefinition) {
     this.code = operationDefinition.code;
     this._operationDefinition = operationDefinition;
-    this._execute = _execute;
   }
   get operationDefinition(): OperationDefinition {
     return this._operationDefinition;
@@ -416,41 +368,31 @@ export class OperationExecution<CTX extends OpCTX, I, O>
       input as Record<string, any>
     );
   }
-  async execute(
+}
+
+export async function invoke<T extends IOperation<any, any>, CTX extends OpCTX>(
+  op: T,
+  ctx: CTX,
+  input: METADATA<T>["Input"],
+  executor: (
+    op: T,
     ctx: CTX,
-    input: Record<string, any> | I | Parameters
-  ): Promise<O | Parameters> {
-    let parsedInput: Record<string, any> | I | Parameters = input;
-    if (isParameters(input)) {
-      const parsedInput = parseParameters(
-        this._operationDefinition,
-        "in",
-        input
-      );
-    }
-    if (
-      !validateParameters<I, O, "in">(
-        ctx.resolveType,
-        this._operationDefinition,
-        "in",
-        parsedInput
-      )
-    )
-      throw new OperationError(outcomeError("invalid", "Invalid input"));
-
-    const output = await this._execute(ctx, parsedInput);
-
-    if (
-      !validateParameters<I, O, "out">(
-        ctx.resolveType,
-        this._operationDefinition,
-        "out",
-        output
-      )
-    )
-      throw new OperationError(outcomeError("invalid", "Invalid output"));
-
-    if (isParameters(input)) return this.parseToParameters("out", output);
-    return output;
+    input: METADATA<T>["Input"]
+  ) => Promise<METADATA<T>["Output"]>
+): Promise<Parameters | METADATA<T>["Output"]> {
+  let parsedInput: Record<string, any> | METADATA<T>["Input"] | Parameters =
+    input;
+  if (isParameters(input)) {
+    const parsedInput = op.parseToObject("in", input);
   }
+  if (!validateParameters(ctx.resolveType, op, "in", parsedInput))
+    throw new OperationError(outcomeError("invalid", "Invalid input"));
+
+  const output = await executor(op, ctx, parsedInput);
+
+  if (!validateParameters(ctx.resolveType, op, "out", output))
+    throw new OperationError(outcomeError("invalid", "Invalid output"));
+
+  if (isParameters(input)) return op.parseToParameters("out", output);
+  return output;
 }
