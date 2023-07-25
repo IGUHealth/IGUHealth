@@ -39,7 +39,7 @@ program
   .description("Generate Operation types and classes")
   .option("-o, --output <output>", "output file")
   .option("-v, --version <version>", "FHIR Profiles to use", "r4")
-  .action((options) => {
+  .action(async (options) => {
     if (options.version !== "r4") {
       throw new Error("Currently only support r4");
     }
@@ -50,7 +50,10 @@ program
 
     mkdirSync(options.output, { recursive: true });
 
-    const generatedOpCode = generateOps(options.version, operationDefinitions);
+    const generatedOpCode = await generateOps(
+      options.version,
+      operationDefinitions
+    );
 
     writeFileSync(path.join(options.output, "ops.ts"), generatedOpCode);
   });

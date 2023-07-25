@@ -42,7 +42,7 @@ function generateCode(operation: OperationDefinition) {
   const name = getName(operation);
 
   return `
-  function CapabilityStatementExecutor<CTX>(
+  function Executor<CTX>(
     executor: CapabilityStatementImplements<CTX>["constructor"]["prototype"]["_execute"]
   ): CapabilityStatementImplements<CTX> {
     return new OperationExecution(
@@ -63,34 +63,41 @@ function generateCode(operation: OperationDefinition) {
 }
 
 export function generateOp(op: OperationDefinition): string {
-  const interfaceName = getName(op);
-  const inputName = `${interfaceName}Input`;
-  const outputName = `${interfaceName}Output`;
+  const namespace = getName(op);
+  const operationName = "Executor"
+  const inputName = `Input`;
+  const outputName = `Output`;
 
-  const inputType = `type ${inputName} = {${generateParameterType(
+  const inputType = `export type ${inputName} = {${generateParameterType(
     (op.parameter || []).filter((op) => op.use === "in")
   )}}`;
-  const outputType = `type ${outputName} = {${generateParameterType(
+  const outputType = `export type ${outputName} = {${generateParameterType(
     (op.parameter || []).filter((op) => op.use === "out")
   )}}`;
 
-  return [
+  const operationType = `export type ${operationName}<CTX> = Operation<CTX, ${inputName}, ${outputName}>`
+
+  return `export namespace ${namespace} {
+  ${[
     inputType,
     outputType,
-    `type ${interfaceName}<CTX> = Operation<CTX, ${inputName}, ${outputName}>`,
-  ].join("\n");
+    operationType,
+  ].join("\n")}}`
+
 }
 
 export default function operationGeneration(
   fhirVersion: string,
   operations: Readonly<Array<OperationDefinition>>
-) {
+): Promise<string> {
   if (fhirVersion !== "r4") throw new Error("Only support r4");
   const code = [
     `import type * as fhirTypes from "@iguhealth/fhir-types";`,
     `import type { Operation, Executor } from "@iguhealth/operation-execution";`,
     ...operations.map((op) => generateOp(op)),
   ].join("\n");
+
+
 
   return prettier.format(code, { parser: "typescript" });
 }
