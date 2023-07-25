@@ -9,7 +9,7 @@ import {
   OperationOutcome,
   StructureDefinition,
 } from "@iguhealth/fhir-types";
-import { primitiveTypes } from "@iguhealth/fhir-types/r4/sets";
+import { primitiveTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { eleIndexToChildIndices } from "@iguhealth/codegen";
 import { descend, createPath, ascend } from "./path.js";
 import jsonpointer from "jsonpointer";
@@ -326,6 +326,15 @@ function validateSingular(
     );
 
     if (elementIndex === 0 && structureDefinition.kind === "resource") {
+      if (value.resourceType !== structureDefinition.type) {
+        throw new OperationError(
+          outcomeError(
+            "structure",
+            `Expected resourceType '${structureDefinition.type}' at path '${path}'`,
+            [path]
+          )
+        );
+      }
       additionalFields = additionalFields.filter((v) => v !== "resourceType");
     }
 
