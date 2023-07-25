@@ -5,16 +5,18 @@ function generateParameterType(
 ): string {
   return parameters
     .map((p) => {
-      if (p.type) {
-        if (p.type === "Type") throw new Error("Cannot process 'Type'");
-        // Handle special Any type which correlates to any resource.
-        console.log(p.type);
-        const type = p.type === "Any" ? "Resource" : p.type;
-        return `"${p.name}": fhirTypes.${type}`;
-      } else {
-        if (!p.part) throw new Error("parameter has no type or part");
-        return `"${p.name}": {${generateParameterType(p.part)}}`;
-      }
+      const isArray = p.max !== "1";
+      const required = p.min > 0;
+
+      const fieldName = `"${p.name}"${required ? "" : "?"}`;
+      const type = p.type === "Any" ? "Resource" : p.type;
+
+      const singularValue = p.type
+        ? `fhirTypes.${type}`
+        : `{${generateParameterType(p.part || [])}}`;
+      const value = isArray ? `Array<${singularValue}>` : singularValue;
+
+      return `${fieldName}: ${value}`;
     })
     .join(",\n");
 }
@@ -23,14 +25,42 @@ function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-export function generateOp(op: OperationDefinition): string {
+function getName(op: OperationDefinition): string {
   if (!op.id) throw new Error("Must have id for generating operation");
-  const interfaceName = capitalize(
+  return capitalize(
     op.id
       .split("-")
       .map((s) => capitalize(s))
       .join("")
   );
+}
+
+function generateCode(operation: OperationDefinition) {
+  const name = getName(operation);
+
+  return `
+  function CapabilityStatementExecutor<CTX>(
+    executor: CapabilityStatementImplements<CTX>["constructor"]["prototype"]["_execute"]
+  ): CapabilityStatementImplements<CTX> {
+    return new OperationExecution(
+      {
+        resourceType: "OperationDefinition",
+        code: "blah",
+        name: "what",
+        system: false,
+        type: false,
+        instance: false,
+        status: "final",
+        kind: "resource",
+      },
+      executor
+    );
+  }
+  `;
+}
+
+export function generateOp(op: OperationDefinition): string {
+  const interfaceName = getName(op);
   const inputName = `${interfaceName}Input`;
   const outputName = `${interfaceName}Output`;
 
@@ -55,7 +85,7 @@ export default function operationGeneration(
   if (fhirVersion !== "r4") throw new Error("Only support r4");
   return [
     `import type * as fhirTypes from "@iguhealth/fhir-types";`,
-    `import type { Operation } from "@iguhealth/operation-execution";`,
+    `import type { Operation, Executor } from "@iguhealth/operation-execution";`,
     ...operations.map((op) => generateOp(op)),
   ].join("\n");
 }

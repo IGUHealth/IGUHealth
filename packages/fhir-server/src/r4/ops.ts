@@ -54,7 +54,7 @@ type CapabilityStatementImplements<CTX> = Operation<
   CapabilityStatementImplementsOutput
 >;
 function CapabilityStatementExecutor<CTX>(
-  executor: CapabilityStatementImplements<CTX>["execute"]
+  executor: CapabilityStatementImplements<CTX>["constructor"]["prototype"]["_execute"]
 ): CapabilityStatementImplements<CTX> {
   return new OperationExecution(
     {

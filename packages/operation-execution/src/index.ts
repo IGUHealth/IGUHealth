@@ -345,6 +345,7 @@ export interface Operation<CTX, I, O> {
     input: I | Record<string, any> | Parameters
   ): Promise<O | Parameters>;
 }
+export type Executor<CTX, I, O> = (ctx: CTX, input: I) => Promise<O>;
 
 export class OperationExecution<
   CTX extends { resolveType: (type: string) => StructureDefinition },
@@ -354,10 +355,10 @@ export class OperationExecution<
 {
   private _operationDefinition: OperationDefinition;
   code: string;
-  private _execute: (ctx: CTX, input: I) => O | Parameters;
+  private _execute: Executor<CTX, I, O>;
   constructor(
     operationDefinition: OperationDefinition,
-    _execute: (ctx: CTX, input: I) => O | Parameters
+    _execute: Executor<CTX, I, O>
   ) {
     this.code = operationDefinition.code;
     this._operationDefinition = operationDefinition;
