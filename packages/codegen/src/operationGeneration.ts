@@ -6,7 +6,11 @@ function generateParameterType(
   return parameters
     .map((p) => {
       if (p.type) {
-        return `"${p.name}": fhirTypes.${p.type}`;
+        if (p.type === "Type") throw new Error("Cannot process 'Type'");
+        // Handle special Any type which correlates to any resource.
+        console.log(p.type);
+        const type = p.type === "Any" ? "Resource" : p.type;
+        return `"${p.name}": fhirTypes.${type}`;
       } else {
         if (!p.part) throw new Error("parameter has no type or part");
         return `"${p.name}": {${generateParameterType(p.part)}}`;

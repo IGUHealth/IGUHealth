@@ -31,7 +31,9 @@ export function mapToParameter(
   const params: NonNullable<Parameters["parameter"]> = value.map(
     (value: any): NonNullable<Parameters["parameter"]>[number] => {
       if (definition.type) {
-        if (resourceTypes.has(definition.type)) {
+        if (definition.type === "Type")
+          throw new Error("Cannot process 'Type'");
+        if (definition.type === "Any" || resourceTypes.has(definition.type)) {
           return { name: definition.name, resource: value };
         }
         const fieldName = `value${capitalize(definition.type || "")}`;
@@ -113,13 +115,17 @@ function parseParameter(
     .map((param) => {
       if (definition.type || definition.searchType) {
         // Means this is a primitive
-        if (resourceTypes.has(definition.type || "")) {
+        if (
+          (definition.type === "Any", resourceTypes.has(definition.type || ""))
+        ) {
           return param.resource;
         } else {
           if (definition.searchType)
             throw new OperationError(
               outcomeError("not-supported", `SearchType not supported`)
             );
+          if (definition.type === "Type")
+            throw new Error("Cannot process 'Type'");
           // @ts-ignore
           return param[`value${capitalize(definition.type || "")}`];
         }
@@ -262,6 +268,10 @@ function validateParameter<Use extends "in" | "out">(
 
   arr.forEach((_v: unknown, index) => {
     if (paramDefinition.type) {
+      const type =
+        paramDefinition.type === "Any"
+          ? arr[index].resourceType
+          : paramDefinition.type;
       const issues = validate(
         resolveType,
         paramDefinition.type,
