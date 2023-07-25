@@ -1,5 +1,5 @@
 import { OperationDefinition } from "@iguhealth/fhir-types";
-import prettier from "prettier";
+
 
 
 
@@ -86,7 +86,7 @@ export function generateOp(op: OperationDefinition): string {
 
 }
 
-export default function operationGeneration(
+export default async function operationGeneration(
   fhirVersion: string,
   operations: Readonly<Array<OperationDefinition>>
 ): Promise<string> {
@@ -97,7 +97,7 @@ export default function operationGeneration(
     ...operations.map((op) => generateOp(op)),
   ].join("\n");
 
-
+  const prettier = await import("prettier");
 
   return prettier.format(code, { parser: "typescript" });
 }
