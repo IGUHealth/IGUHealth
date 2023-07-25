@@ -1,8 +1,5 @@
 import { OperationDefinition } from "@iguhealth/fhir-types";
 
-
-
-
 function generateParameterType(
   parameters: NonNullable<OperationDefinition["parameter"]>
 ): string {
@@ -64,7 +61,8 @@ function generateCode(operation: OperationDefinition) {
 
 export function generateOp(op: OperationDefinition): string {
   const namespace = getName(op);
-  const operationName = "Executor"
+  const interfaceName = "IOp"
+  const operationName = "Op"
   const inputName = `Input`;
   const outputName = `Output`;
 
@@ -75,13 +73,15 @@ export function generateOp(op: OperationDefinition): string {
     (op.parameter || []).filter((op) => op.use === "out")
   )}}`;
 
-  const operationType = `export type ${operationName}<CTX> = Operation<CTX, ${inputName}, ${outputName}>`
+  const operationType = `export type ${interfaceName} = IOperation<${inputName}, ${outputName}>`
+  const operationInstance = `export const ${operationName}: ${interfaceName} = new Operation<${inputName}, ${outputName}>(${JSON.stringify(op)})`
 
   return `export namespace ${namespace} {
   ${[
     inputType,
     outputType,
     operationType,
+    operationInstance,
   ].join("\n")}}`
 
 }
@@ -93,7 +93,7 @@ export default async function operationGeneration(
   if (fhirVersion !== "r4") throw new Error("Only support r4");
   const code = [
     `import type * as fhirTypes from "@iguhealth/fhir-types";`,
-    `import type { Operation, Executor } from "@iguhealth/operation-execution";`,
+    `import { Operation, IOperation, Executor } from "@iguhealth/operation-execution";`,
     ...operations.map((op) => generateOp(op)),
   ].join("\n");
 
