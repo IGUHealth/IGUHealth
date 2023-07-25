@@ -319,7 +319,7 @@ function validateParameters<I, O, Use extends "in" | "out">(
   return true;
 }
 
-interface Operation<CTX, I, O> {
+export interface Operation<CTX, I, O> {
   code: string;
   get operationDefinition(): OperationDefinition;
   parseToObject<Use extends "in" | "out">(

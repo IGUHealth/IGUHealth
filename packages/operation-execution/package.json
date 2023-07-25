@@ -1,5 +1,5 @@
 {
-  "name": "operation-execution",
+  "name": "@iguhealth/operation-execution",
   "description": "Package to create operation definition executables.",
   "packageManager": "yarn@3.6.1",
   "scripts": {

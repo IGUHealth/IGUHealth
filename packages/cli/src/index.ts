@@ -4,7 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { loadArtifacts, generateIndexFile } from "@iguhealth/artifacts";
 
-import { generateSets, generateTypes } from "@iguhealth/codegen";
+import { generateSets, generateTypes, generateOps } from "@iguhealth/codegen";
 
 const program = new Command();
 program
@@ -25,12 +25,34 @@ program
       "StructureDefinition",
       path.join(fileURLToPath(import.meta.url), "../../")
     );
+
     mkdirSync(options.output, { recursive: true });
     const generatedTypes = generateTypes(options.version, structureDefinitions);
     const generatedSets = generateSets(options.version, structureDefinitions);
 
     writeFileSync(path.join(options.output, "types.d.ts"), generatedTypes);
     writeFileSync(path.join(options.output, "sets.ts"), generatedSets);
+  });
+
+program
+  .command("generate-operations")
+  .description("Generate Operation types and classes")
+  .option("-o, --output <output>", "output file")
+  .option("-v, --version <version>", "FHIR Profiles to use", "r4")
+  .action((options) => {
+    if (options.version !== "r4") {
+      throw new Error("Currently only support r4");
+    }
+    const operationDefinitions = loadArtifacts(
+      "OperationDefinition",
+      path.join(fileURLToPath(import.meta.url), "../../")
+    );
+
+    mkdirSync(options.output, { recursive: true });
+
+    const generatedOpCode = generateOps(options.version, operationDefinitions);
+
+    writeFileSync(path.join(options.output, "ops.ts"), generatedOpCode);
   });
 
 program
