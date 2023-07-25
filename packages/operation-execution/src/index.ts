@@ -207,14 +207,6 @@ export function parseParameters(
   return parametersParsed;
 }
 
-function createValidator<ParamType>(
-  parameter: ParameterDefinitions
-): (input: any) => input is ParamType {
-  return (input): input is ParamType => {
-    return false;
-  };
-}
-
 type InputOutput<I, O> = { in: I; out: O };
 
 function isParameters(input: any): input is Parameters {
@@ -345,13 +337,25 @@ export interface Operation<CTX, I, O> {
     input: I | Record<string, any> | Parameters
   ): Promise<O | Parameters>;
 }
+
+type OpCTX = { resolveType: (type: string) => StructureDefinition };
+
 export type Executor<CTX, I, O> = (ctx: CTX, input: I) => Promise<O>;
 
-export class OperationExecution<
-  CTX extends { resolveType: (type: string) => StructureDefinition },
-  I,
-  O
-> implements Operation<CTX, I, O>
+type METADATA<O> = O extends Operation<infer CTX, infer Input, infer Output>
+  ? { Input: Input; Output: Output; CTX: CTX }
+  : never;
+
+export function invoke<T extends OperationExecution<any, any, any>>(
+  op: T,
+  ctx: METADATA<T>["CTX"],
+  input: METADATA<T>["Input"]
+): Promise<Parameters | METADATA<T>["Output"]> {
+  return op.execute(ctx, input);
+}
+
+export class OperationExecution<CTX extends OpCTX, I, O>
+  implements Operation<CTX, I, O>
 {
   private _operationDefinition: OperationDefinition;
   code: string;

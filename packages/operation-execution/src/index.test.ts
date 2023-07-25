@@ -1,7 +1,7 @@
 import path from "node:path";
 import { expect, test } from "@jest/globals";
 
-import { parseParameters, toParametersResource, OperationExecution } from ".";
+import { parseParameters, invoke, OperationExecution } from ".";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { OperationDefinition, Parameters } from "@iguhealth/fhir-types";
 
@@ -248,6 +248,8 @@ test("paramValidation", async () => {
       return sd;
     },
   };
+
+  const output = invoke(operation, ctx, { test: "asdf" });
 
   expect(
     operation.execute(ctx, { test: "asdf", name: { given: "Bob" } })
