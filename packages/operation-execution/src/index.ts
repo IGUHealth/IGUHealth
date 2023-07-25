@@ -340,7 +340,7 @@ export interface Operation<CTX, I, O> {
 
 type OpCTX = { resolveType: (type: string) => StructureDefinition };
 
-export type Executor<CTX, I, O> = (ctx: CTX, input: I) => Promise<O>;
+//export type Executor<CTX, I, O> = (ctx: CTX, input: I) => Promise<O>;
 
 type METADATA<O> = O extends Operation<infer CTX, infer Input, infer Output>
   ? { Input: Input; Output: Output; CTX: CTX }
@@ -348,10 +348,41 @@ type METADATA<O> = O extends Operation<infer CTX, infer Input, infer Output>
 
 export function invoke<T extends OperationExecution<any, any, any>>(
   op: T,
-  ctx: METADATA<T>["CTX"],
-  input: METADATA<T>["Input"]
+  executor: (
+    op: T,
+    ctx: METADATA<T>["CTX"],
+    input: METADATA<T>["Input"]
+  ) => Promise<Parameters | METADATA<T>["Output"]>
 ): Promise<Parameters | METADATA<T>["Output"]> {
-  return op.execute(ctx, input);
+  let parsedInput: Record<string, any> | METADATA<T>["Input"] | Parameters =
+    input;
+  if (isParameters(input)) {
+    const parsedInput = parseParameters(this._operationDefinition, "in", input);
+  }
+  if (
+    !validateParameters<I, O, "in">(
+      ctx.resolveType,
+      this._operationDefinition,
+      "in",
+      parsedInput
+    )
+  )
+    throw new OperationError(outcomeError("invalid", "Invalid input"));
+
+  const output = await this._execute(ctx, parsedInput);
+
+  if (
+    !validateParameters<I, O, "out">(
+      ctx.resolveType,
+      this._operationDefinition,
+      "out",
+      output
+    )
+  )
+    throw new OperationError(outcomeError("invalid", "Invalid output"));
+
+  if (isParameters(input)) return this.parseToParameters("out", output);
+  return output;
 }
 
 export class OperationExecution<CTX extends OpCTX, I, O>
