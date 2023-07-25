@@ -1,4 +1,7 @@
 import { OperationDefinition } from "@iguhealth/fhir-types";
+import prettier from "prettier";
+
+
 
 function generateParameterType(
   parameters: NonNullable<OperationDefinition["parameter"]>
@@ -83,9 +86,11 @@ export default function operationGeneration(
   operations: Readonly<Array<OperationDefinition>>
 ) {
   if (fhirVersion !== "r4") throw new Error("Only support r4");
-  return [
+  const code = [
     `import type * as fhirTypes from "@iguhealth/fhir-types";`,
     `import type { Operation, Executor } from "@iguhealth/operation-execution";`,
     ...operations.map((op) => generateOp(op)),
   ].join("\n");
+
+  return prettier.format(code, { parser: "typescript" });
 }

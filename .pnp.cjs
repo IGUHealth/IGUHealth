@@ -5631,6 +5631,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
             ["@types/node", "npm:20.3.3"],\
             ["commander", "npm:10.0.1"],\
+            ["prettier", "npm:3.0.0"],\
             ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"]\
           ],\
           "linkType": "SOFT"\
@@ -23965,6 +23966,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/prettier-npm-2.8.8-430828a36c-b49e409431.zip/node_modules/prettier/",\
           "packageDependencies": [\
             ["prettier", "npm:2.8.8"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:3.0.0", {\
+          "packageLocation": "./.yarn/cache/prettier-npm-3.0.0-7ffbcce680-6a832876a1.zip/node_modules/prettier/",\
+          "packageDependencies": [\
+            ["prettier", "npm:3.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
