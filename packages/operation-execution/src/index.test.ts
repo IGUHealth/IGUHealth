@@ -1,7 +1,12 @@
 import path from "node:path";
 import { expect, test } from "@jest/globals";
 
-import { parseParameters, toParametersResource, OperationExecution } from ".";
+import {
+  parseParameters,
+  invoke,
+  Operation,
+  IOperation,
+} from "@iguhealth/operation-execution";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { OperationDefinition, Parameters } from "@iguhealth/fhir-types";
 
@@ -77,6 +82,8 @@ const operationTest: OperationDefinition = {
   instance: false,
 
   parameter: [
+    { name: "name", type: "HumanName", use: "in", min: 0, max: "1" },
+    { name: "patient", type: "Patient", use: "in", min: 0, max: "1" },
     {
       name: "testOut",
       type: "string",
@@ -169,13 +176,9 @@ test("Test Operation 1", () => {
 });
 
 test("roundTrip", () => {
-  const operation = new OperationExecution(
-    operationTest,
-    async (ctx, input: { v: "z" }) => {
-      console.log(input);
-      return { v: "5" };
-    }
-  );
+  const operation: IOperation<{ test: string }, { testOut: string }> =
+    new Operation<{ test: string }, { testOut: string }>(operationTest);
+
   const parameters: Parameters = {
     resourceType: "Parameters",
     parameter: [
@@ -200,13 +203,8 @@ test("roundTrip", () => {
 });
 
 test("execution", async () => {
-  const operation = new OperationExecution(
-    operationTest,
-    async (ctx, input: { test: string }) => {
-      console.log(input);
-      return { testOut: input.test };
-    }
-  );
+  const operation: IOperation<{ test: string }, { testOut: string }> =
+    new Operation<{ test: string }, { testOut: string }>(operationTest);
 
   const ctx = {
     resolveType: (type: string) => {
@@ -215,11 +213,169 @@ test("execution", async () => {
       return sd;
     },
   };
-  try {
-    const output = await operation.execute(ctx, { test: "asdf" });
-    expect(output).toEqual({ testOut: "asdf" });
-  } catch (e) {
-    console.error(JSON.stringify(e));
-    throw e;
-  }
+
+  expect(
+    invoke(operation, ctx, { test: "asdf" }, async (op, ctx, input) => {
+      return { testOut: input.test };
+    })
+  ).resolves.toEqual({
+    testOut: "asdf",
+  });
+
+  expect(
+    invoke(
+      operation,
+      ctx,
+      // @ts-ignore
+      { test: "asdf", bad: "value" },
+      async (op, ctx, input) => {
+        return { testOut: input.test };
+      }
+    )
+  ).rejects.toThrow();
+
+  expect(
+    invoke(operation, ctx, { test: "asdf" }, async (op, ctx, input) => {
+      return { testOut: input.test, z: 5 };
+    })
+  ).rejects.toThrow();
+});
+
+test("paramValidation", async () => {
+  const operation: IOperation<
+    { test: string; [keyword: string]: any },
+    { testOut: string }
+  > = new Operation<
+    { test: string; [keyword: string]: any },
+    { testOut: string }
+  >(operationTest);
+
+  const ctx = {
+    resolveType: (type: string) => {
+      const sd = structureDefinitions.find((sd) => sd.type === type);
+      if (!sd) throw new Error(`Could not resolve type ${type}`);
+      return sd;
+    },
+  };
+
+  expect(
+    invoke(
+      operation,
+      ctx,
+      { test: "asdf", name: { given: "Bob" } },
+      async (op, ctx, input) => {
+        return { testOut: input.test };
+      }
+    )
+  ).rejects.toThrow();
+
+  expect(
+    invoke(
+      operation,
+      ctx,
+      { test: "test", name: { given: ["Bob"] } },
+      async (op, ctx, input) => {
+        return { testOut: input.test };
+      }
+    )
+  ).resolves.toEqual({ testOut: "test" });
+
+  expect(
+    invoke(
+      operation,
+      ctx,
+      {
+        test: "test",
+        name: { given: ["Bob"] },
+        patient: { resourceType: "Patien", name: [{ given: ["Hello"] }] },
+      },
+      async (op, ctx, input) => {
+        return { testOut: input.test };
+      }
+    )
+  ).rejects.toThrow();
+
+  expect(
+    invoke(
+      operation,
+      ctx,
+      {
+        test: "test",
+        name: { given: ["Bob"] },
+        patient: { resourceType: "Patient", name: [{ given: ["Hello"] }] },
+      },
+      async (op, ctx, input) => {
+        return { testOut: input.test };
+      }
+    )
+  ).resolves.toEqual({ testOut: "test" });
+
+  expect(
+    invoke(
+      operation,
+      ctx,
+      {
+        test: "test",
+        name: { given: ["Bob"] },
+        patient: { resourceType: "Patient", name: [{ given: [4] }] },
+      },
+      async (op, ctx, input) => {
+        return { testOut: input.test };
+      }
+    )
+  ).rejects.toThrow();
+
+  expect(
+    invoke(
+      operation,
+      ctx,
+      {
+        test: "test",
+        name: { given: ["Bob"] },
+        patient: {
+          resourceType: "Patient",
+          name: [
+            {
+              _given: [
+                {
+                  id: "123",
+                  extension: [{ url: "testing", valueString: "Hello" }],
+                },
+              ],
+            },
+          ],
+        },
+      },
+      async (op, ctx, input) => {
+        return { testOut: input.test };
+      }
+    )
+  ).resolves.toEqual({ testOut: "test" });
+
+  expect(
+    invoke(
+      operation,
+      ctx,
+      {
+        test: "test",
+        name: { given: ["Bob"] },
+        patient: {
+          resourceType: "Patient",
+          name: [
+            {
+              _given: [
+                {
+                  id: "123",
+                  extension: [{ url: "testing", valueString: 4 }],
+                },
+              ],
+            },
+          ],
+        },
+      },
+      async (op, ctx, input) => {
+        return { testOut: input.test };
+      }
+    )
+  ).rejects.toThrow();
 });

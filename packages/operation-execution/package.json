@@ -1,8 +1,12 @@
 {
-  "name": "operation-execution",
+  "name": "@iguhealth/operation-execution",
   "description": "Package to create operation definition executables.",
   "packageManager": "yarn@3.6.1",
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
+    "build": "tsc",
     "test": "jest"
   },
   "dependencies": {

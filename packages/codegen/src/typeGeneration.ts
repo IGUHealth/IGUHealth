@@ -66,9 +66,7 @@ function primitiveToTypescriptType(
     element.path.endsWith(".value")
   )[0]?.type?.[0]?.code;
   // Skip over these primitive types as already exist in typescript
-  if (primitiveSd.id === "string" || primitiveSd.id === "boolean") {
-    return;
-  } else if (primitiveValueType) {
+  if (primitiveValueType) {
     return `export type ${primitiveSd.id} = ${fhirSystemTypePredicate(
       primitiveValueType
     )};`;
