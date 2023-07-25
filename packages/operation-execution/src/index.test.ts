@@ -1,7 +1,12 @@
 import path from "node:path";
 import { expect, test } from "@jest/globals";
 
-import { parseParameters, invoke, Operation, IOperation } from ".";
+import {
+  parseParameters,
+  invoke,
+  Operation,
+  IOperation,
+} from "@iguhealth/operation-execution";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { OperationDefinition, Parameters } from "@iguhealth/fhir-types";
 
