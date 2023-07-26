@@ -125,18 +125,21 @@ export type SystemSearchRequest = SystemInteraction & {
 export type InvokeInstanceRequest = InstanceInteraction & {
   query: FHIRURL;
   type: RequestInteractionTypes["invoke"];
+  operation: string;
   body: Parameters;
 };
 
 export type InvokeTypeRequest = TypeInteraction & {
   query: FHIRURL;
   type: RequestInteractionTypes["invoke"];
+  operation: string;
   body: Parameters;
 };
 
-export type InvokeSystemRequest = InstanceInteraction & {
+export type InvokeSystemRequest = SystemInteraction & {
   query: FHIRURL;
   type: RequestInteractionTypes["invoke"];
+  operation: string;
   body: Parameters;
 };
 
@@ -234,18 +237,21 @@ export type SystemSearchResponse = SystemInteraction & {
 export type InvokeInstanceResponse = InstanceInteraction & {
   query: FHIRURL;
   type: ResponseInteractionTypes["invoke"];
+  operation: string;
   body: Parameters;
 };
 
 export type InvokeTypeResponse = TypeInteraction & {
   query: FHIRURL;
   type: ResponseInteractionTypes["invoke"];
+  operation: string;
   body: Parameters;
 };
 
-export type InvokeSystemResponse = InstanceInteraction & {
+export type InvokeSystemResponse = SystemInteraction & {
   query: FHIRURL;
   type: ResponseInteractionTypes["invoke"];
+  operation: string;
   body: Parameters;
 };
 

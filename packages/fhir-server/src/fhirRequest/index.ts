@@ -160,10 +160,27 @@ export function KoaRequestToFHIRRequest(
   const method = request.method;
   const urlPieces = url.split("/");
   if (urlPieces.length === 1) {
-    return {
-      type: "capabilities-request",
-      level: "system",
-    };
+    if (method === "GET") {
+      if (urlPieces[0] === "metadata")
+        return {
+          type: "capabilities-request",
+          level: "system",
+        };
+      if (urlPieces[0] === "_history") {
+        return {
+          type: "history-request",
+          level: "system",
+        };
+      }
+      if (urlPieces[0].startsWith("$")) {
+        return {
+          type: "invoke-request",
+          level: "system",
+          operation: urlPieces[0].slice(1),
+          body: request.body as Resource,
+        };
+      }
+    }
   } else if (urlPieces.length === 2) {
   } else if (urlPieces.length === 3) {
   } else if (urlPieces.length === 4) {
