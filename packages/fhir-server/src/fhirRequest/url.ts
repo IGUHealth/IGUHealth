@@ -1,20 +1,8 @@
-import { ResourceType } from "@iguhealth/fhir-types/r4/types";
-
-export type FHIRURL = {
-  resourceType?: ResourceType;
-  id?: string;
-  versionId?: string;
-  parameters: ParsedParameters<string | number>;
-  operation?: string;
-};
-
 export type ParsedParameter<T> = {
   name: string;
   value: T[];
   modifier?: string;
 };
-
-export type ParsedParameters<T> = Record<string, ParsedParameter<T>>;
 
 /*
  ** Given a query string create complex FHIR Query object.
