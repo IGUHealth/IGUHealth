@@ -1,31 +1,53 @@
 import path from "node:path";
 import { expect, test } from "@jest/globals";
-import { invoke } from "@iguhealth/operation-execution";
-import { ValueSetExpand } from "./ops";
+import { Invocation } from "@iguhealth/operation-execution";
+import { ValueSetExpand } from "./ops.js";
 import { ValueSet } from "@iguhealth/fhir-types";
 import { loadArtifacts } from "@iguhealth/artifacts";
 
 const sds = loadArtifacts("StructureDefinition", path.join(__dirname, "../"));
 
 test("Test ValueSet Expands", async () => {
-  invoke(
-    ValueSetExpand.Op,
-    {
-      resolveType: (type: string) => {
-        const sd = sds.find((sd) => sd.type === type);
-        if (!sd) throw new Error(`Could not resolve type ${type}`);
-        return sd;
-      },
+  const ctx = {
+    resolveType: (type: string) => {
+      const sd = sds.find((sd) => sd.type === type);
+      if (!sd) throw new Error(`Could not resolve type ${type}`);
+      return sd;
     },
-    { url: "asdf" },
-    async (op, ctx, input) => {
-      const valueSet: ValueSet = {
-        resourceType: "ValueSet",
-        status: "final",
-      };
-      return {
-        return: valueSet,
-      };
-    }
+  };
+  const valueSet: ValueSet = {
+    resourceType: "ValueSet",
+    status: "final",
+  };
+  const output = {
+    return: valueSet,
+  };
+
+  const invoke: Invocation = async (op, ctx, input) => {
+    op.validate(ctx, "in", input);
+
+    op.validate(ctx, "out", output);
+    return output;
+  };
+  expect(invoke(ValueSetExpand.Op, ctx, { url: "asdf" })).resolves.toEqual(
+    output
   );
+
+  expect(
+    invoke(
+      ValueSetExpand.Op,
+      ctx,
+      // @ts-ignore
+      { url: 5 }
+    )
+  ).rejects.toThrow();
+
+  const badOutput: Invocation = async (op, ctx, input) => {
+    op.validate(ctx, "in", input);
+    const output = { return: 5 };
+    op.validate(ctx, "out", output);
+    return { return: 5 };
+  };
+
+  expect(badOutput(ValueSetExpand.Op, ctx, { url: "asdf" })).rejects.toThrow();
 });

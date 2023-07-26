@@ -208,7 +208,7 @@ export function parseParameters(
 
 type InputOutput<I, O> = { in: I; out: O };
 
-function isParameters(input: any): input is Parameters {
+export function isParameters(input: any): input is Parameters {
   return input.resourceType === "Parameters";
 }
 
@@ -302,7 +302,9 @@ function validateParameters<
   op: T,
   use: Use,
   value: unknown
-): value is Use extends "in" ? METADATA<T>["Input"] : METADATA<T>["Output"] {
+): value is Use extends "in"
+  ? OPMetadata<T>["Input"]
+  : OPMetadata<T>["Output"] {
   const definitions = (op.operationDefinition.parameter || []).filter(
     (p) => p.use === use
   );
@@ -336,11 +338,16 @@ export interface IOperation<I, O> {
     use: Use,
     input: InputOutput<I, O>[Use]
   ): Parameters;
+  validate<Use extends "in" | "out">(
+    ctx: OpCTX,
+    use: Use,
+    value: unknown
+  ): value is InputOutput<I, O>[Use];
 }
 
 export type Executor<CTX, I, O> = (ctx: CTX, input: I) => Promise<O>;
 
-type METADATA<O> = O extends IOperation<infer Input, infer Output>
+type OPMetadata<O> = O extends IOperation<infer Input, infer Output>
   ? { Input: Input; Output: Output }
   : never;
 
@@ -368,31 +375,17 @@ export class Operation<I, O> implements IOperation<I, O> {
       input as Record<string, any>
     );
   }
+  validate<Use extends "in" | "out">(
+    ctx: OpCTX,
+    use: Use,
+    value: unknown
+  ): value is InputOutput<I, O>[Use] {
+    return validateParameters(ctx.resolveType, this, use, value);
+  }
 }
 
-export async function invoke<T extends IOperation<any, any>, CTX extends OpCTX>(
+export type Invocation = <T extends IOperation<any, any>, CTX extends OpCTX>(
   op: T,
   ctx: CTX,
-  input: METADATA<T>["Input"],
-  executor: (
-    op: T,
-    ctx: CTX,
-    input: METADATA<T>["Input"]
-  ) => Promise<METADATA<T>["Output"]>
-): Promise<Parameters | METADATA<T>["Output"]> {
-  let parsedInput: Record<string, any> | METADATA<T>["Input"] | Parameters =
-    input;
-  if (isParameters(input)) {
-    const parsedInput = op.parseToObject("in", input);
-  }
-  if (!validateParameters(ctx.resolveType, op, "in", parsedInput))
-    throw new OperationError(outcomeError("invalid", "Invalid input"));
-
-  const output = await executor(op, ctx, parsedInput);
-
-  if (!validateParameters(ctx.resolveType, op, "out", output))
-    throw new OperationError(outcomeError("invalid", "Invalid output"));
-
-  if (isParameters(input)) return op.parseToParameters("out", output);
-  return output;
-}
+  input: OPMetadata<T>["Input"]
+) => Promise<OPMetadata<T>["Input"]>;
