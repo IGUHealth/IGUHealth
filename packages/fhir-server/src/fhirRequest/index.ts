@@ -284,6 +284,5 @@ export function KoaRequestToFHIRRequest(
       };
     }
   }
-  console.log(urlPieces, method);
   throw new OperationError(outcomeError("invalid", "request is invalid"));
 }
