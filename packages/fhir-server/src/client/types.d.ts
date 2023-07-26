@@ -3,8 +3,10 @@ import {
   Resource,
   Bundle,
   CapabilityStatement,
+  ResourceType,
+  Parameters,
 } from "@iguhealth/fhir-types/r4/types";
-import { FHIRURL } from "@iguhealth/fhir-query";
+import { ParsedParameter } from "@iguhealth/fhir-query";
 
 export type RequestLevel = {
   instance: "instance";
@@ -91,7 +93,7 @@ export type CreateRequest = TypeInteraction & {
 };
 
 export type TypeSearchRequest = TypeInteraction & {
-  query: FHIRURL;
+  parameters: ParsedParameter<string | number>[];
   type: RequestInteractionTypes["search"];
 };
 
@@ -118,26 +120,23 @@ export type SystemHistoryRequest = SystemInteraction & {
 };
 
 export type SystemSearchRequest = SystemInteraction & {
-  query: FHIRURL;
+  parameters: ParsedParameter<string | number>[];
   type: RequestInteractionTypes["search"];
 };
 
 export type InvokeInstanceRequest = InstanceInteraction & {
-  query: FHIRURL;
   type: RequestInteractionTypes["invoke"];
   operation: string;
   body: Parameters;
 };
 
 export type InvokeTypeRequest = TypeInteraction & {
-  query: FHIRURL;
   type: RequestInteractionTypes["invoke"];
   operation: string;
   body: Parameters;
 };
 
 export type InvokeSystemRequest = SystemInteraction & {
-  query: FHIRURL;
   type: RequestInteractionTypes["invoke"];
   operation: string;
   body: Parameters;
@@ -198,7 +197,7 @@ export type CreateResponse = TypeInteraction & {
 };
 
 export type TypeSearchResponse = TypeInteraction & {
-  query: FHIRURL;
+  parameters: ParsedParameter<string | number>[];
   type: ResponseInteractionTypes["search"];
   body: Resource[];
 };
@@ -229,27 +228,24 @@ export type SystemHistoryResponse = SystemInteraction & {
 };
 
 export type SystemSearchResponse = SystemInteraction & {
-  query: FHIRURL;
+  parameters: ParsedParameter<string | number>[];
   type: ResponseInteractionTypes["search"];
   body: Resource[];
 };
 
 export type InvokeInstanceResponse = InstanceInteraction & {
-  query: FHIRURL;
   type: ResponseInteractionTypes["invoke"];
   operation: string;
   body: Parameters;
 };
 
 export type InvokeTypeResponse = TypeInteraction & {
-  query: FHIRURL;
   type: ResponseInteractionTypes["invoke"];
   operation: string;
   body: Parameters;
 };
 
 export type InvokeSystemResponse = SystemInteraction & {
-  query: FHIRURL;
   type: ResponseInteractionTypes["invoke"];
   operation: string;
   body: Parameters;

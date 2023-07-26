@@ -1,104 +1,13 @@
 import Koa from "koa";
 
-import { Resource } from "@iguhealth/fhir-types/r4/types";
-import parseQuery, { FHIRURL } from "./url.js";
+import { Bundle, Resource } from "@iguhealth/fhir-types/r4/types";
+import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
+import parseQuery from "./url.js";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import {
-  FHIRRequest,
-  RequestLevel,
-  TypeInteraction,
-  InstanceInteraction,
-  SystemInteraction,
-} from "../client/types";
-
-function getInteractionLevel(
-  fhirURL: FHIRURL
-): RequestLevel[keyof RequestLevel] {
-  if (fhirURL.resourceType && fhirURL.id) {
-    return "instance";
-  } else if (fhirURL.resourceType !== undefined) {
-    return "type";
-  }
-  return "system";
-}
-
-function parseInstantRequest(
-  request: Koa.Request,
-  fhirURL: FHIRURL,
-  fhirRequest: Pick<InstanceInteraction, "level" | "resourceType" | "id">
-): FHIRRequest {
-  switch (request.method) {
-    case "GET":
-      return {
-        type: "read-request",
-        ...fhirRequest,
-      };
-    case "PUT":
-      return {
-        type: "update-request",
-        body: request.body as Resource,
-        ...fhirRequest,
-      };
-    default:
-      throw new OperationError(
-        outcomeError(
-          "not-supported",
-          `Instance interaction '${request.method}' not supported`
-        )
-      );
-  }
-}
-
-function parseTypeRequest(
-  request: Koa.Request,
-  fhirURL: FHIRURL,
-  fhirRequest: Pick<TypeInteraction, "level" | "resourceType">
-): FHIRRequest {
-  switch (request.method) {
-    case "GET":
-      return {
-        query: fhirURL,
-        type: "search-request",
-        ...fhirRequest,
-      };
-    case "POST":
-      return {
-        type: "create-request",
-        body: request.body as Resource,
-        ...fhirRequest,
-      };
-    default:
-      throw new OperationError(
-        outcomeError(
-          "not-supported",
-          `Type interaction '${request.method}' not supported`
-        )
-      );
-  }
-}
-
-function parseSystemRequest(
-  request: Koa.Request,
-  fhirURL: FHIRURL,
-  fhirRequest: Pick<SystemInteraction, "level">
-): FHIRRequest {
-  switch (request.method) {
-    case "GET":
-      return {
-        query: fhirURL,
-        type: "search-request",
-        ...fhirRequest,
-      };
-    default:
-      throw new OperationError(
-        outcomeError(
-          "not-supported",
-          `System interaction '${request.method}' not supported`
-        )
-      );
-  }
-}
+import { FHIRRequest } from "../client/types";
+import parseParameters from "./url.js";
+import { Operation } from "@iguhealth/operation-execution";
 
 /*
  ** For Summary of types see:
@@ -150,73 +59,94 @@ vread            	  /[type]/[id]/_history/[vid]	        GET‡	N/A	N/A	N/A	N/A
  -----------------------------------------------------------------------------------------------------------------
 */
 
+function isBundle(v: unknown): v is Bundle {
+  if (
+    typeof v === "object" &&
+    v !== null &&
+    v.hasOwnProperty("resourceType") &&
+    (v as any).resourceType === "Bundle"
+  )
+    return true;
+  return false;
+}
+
 export function KoaRequestToFHIRRequest(
   url: string,
   request: Koa.Request
 ): FHIRRequest {
   const fhirQuery = parseQuery(url);
-  const level = getInteractionLevel(fhirQuery);
 
   const method = request.method;
   const urlPieces = url.split("/");
   if (urlPieces.length === 1) {
-    if (method === "GET") {
-      if (urlPieces[0] === "metadata")
+    if (urlPieces[0] === "") {
+      if (method === "POST") {
+        if (!isBundle(request.body)) {
+          throw new OperationError(
+            outcomeError("invalid", "POST request must be a bundle")
+          );
+        }
+        if (
+          request.body.type !== "transaction" &&
+          request.body.type !== "batch"
+        ) {
+          throw new OperationError(
+            outcomeError(
+              "invalid",
+              "POST request must be a transaction or batch"
+            )
+          );
+        }
         return {
-          type: "capabilities-request",
+          type:
+            request.body.type === "transaction"
+              ? "transaction-request"
+              : "batch-request",
           level: "system",
+          body: request.body,
         };
-      if (urlPieces[0] === "_history") {
+      } else if (method === "GET") {
         return {
-          type: "history-request",
+          type: "search-request",
           level: "system",
+          parameters: parseParameters(url),
         };
-      }
-      if (urlPieces[0].startsWith("$")) {
-        return {
-          type: "invoke-request",
-          level: "system",
-          operation: urlPieces[0].slice(1),
-          body: request.body as Resource,
-        };
+      } else
+        throw new OperationError(outcomeError("invalid", "request is invalid"));
+    } else {
+      if (method === "GET") {
+        if (urlPieces[0] === "metadata")
+          return {
+            type: "capabilities-request",
+            level: "system",
+          };
+        if (urlPieces[0] === "_history") {
+          return {
+            type: "history-request",
+            level: "system",
+          };
+        }
+        if (urlPieces[0].startsWith("$")) {
+          throw new OperationError(
+            outcomeError(
+              "not-supported",
+              "Operation get requests not yet supported"
+            )
+          );
+        }
+        if (resourceTypes.has(urlPieces[0])) {
+          return {
+            type: "search-request",
+            level: "type",
+            resourceType: urlPieces[0],
+            parameters: parseParameters(url),
+          };
+        }
       }
     }
   } else if (urlPieces.length === 2) {
   } else if (urlPieces.length === 3) {
   } else if (urlPieces.length === 4) {
   }
-
-  switch (level) {
-    case "instance":
-      if (!fhirQuery.resourceType)
-        throw new OperationError(
-          outcomeError(
-            "invalid",
-            "Invalid instance search no resourceType found"
-          )
-        );
-      if (!fhirQuery.id)
-        throw new OperationError(
-          outcomeError("invalid", "Invalid instance search no ID found")
-        );
-
-      return parseInstantRequest(request, fhirQuery, {
-        level: "instance",
-        id: fhirQuery.id,
-        resourceType: fhirQuery.resourceType,
-      });
-    case "type":
-      if (!fhirQuery.resourceType)
-        throw new OperationError(
-          outcomeError("invalid", "Invalid Type search no resourceType found")
-        );
-      return parseTypeRequest(request, fhirQuery, {
-        level: "type",
-        resourceType: fhirQuery.resourceType,
-      });
-    case "system":
-      return parseSystemRequest(request, fhirQuery, {
-        level: "system",
-      });
-  }
+  throw new OperationError(outcomeError("invalid", "request is invalid"));
 }
