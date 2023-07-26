@@ -325,7 +325,10 @@ function validateParameters<
   return true;
 }
 
-type OpCTX = { resolveType: (type: string) => StructureDefinition };
+export type OpCTX = {
+  resolveType: (type: string) => StructureDefinition;
+  level: "system" | "type" | "instance";
+};
 
 export interface IOperation<I, O> {
   code: string;

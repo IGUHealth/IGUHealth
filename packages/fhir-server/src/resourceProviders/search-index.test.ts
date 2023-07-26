@@ -31,17 +31,14 @@ const memDatabase = createMemoryDatabase([
 test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
   `Testing indexing resourceType '%s'`,
   (resourceType) => {
-    const searchParameters = memDatabase.search_type({}, "SearchParameter", {
-      resourceType: "SearchParameter",
-      parameters: {
-        base: {
-          name: "base",
-          value: [resourceType],
-        },
+    const searchParameters = memDatabase.search_type({}, "SearchParameter", [
+      {
+        name: "base",
+        value: [resourceType],
       },
-    });
+    ]);
     const resources = memDatabase
-      .search_type({}, resourceType as ResourceType, { parameters: {} })
+      .search_type({}, resourceType as ResourceType, [])
       .filter((r) => r.id)
       .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
       .slice(0, 10);

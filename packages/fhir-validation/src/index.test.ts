@@ -430,20 +430,17 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
     const structureDefinition = memDatabase.search_type(
       {},
       "StructureDefinition",
-      {
-        resourceType: "StructureDefinition",
-        parameters: {
-          base: {
-            name: "type",
-            value: [resourceType],
-          },
+      [
+        {
+          name: "type",
+          value: [resourceType],
         },
-      }
+      ]
     );
     const sd = structureDefinition[0];
 
     const resources = memDatabase
-      .search_type({}, resourceType as ResourceType, { parameters: {} })
+      .search_type({}, resourceType as ResourceType, [])
       .filter((r) => r.id)
       .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
       .slice(0, 1);

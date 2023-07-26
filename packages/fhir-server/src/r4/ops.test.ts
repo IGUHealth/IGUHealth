@@ -4,16 +4,18 @@ import { Invocation } from "@iguhealth/operation-execution";
 import { ValueSetExpand } from "./ops.js";
 import { ValueSet } from "@iguhealth/fhir-types";
 import { loadArtifacts } from "@iguhealth/artifacts";
+import { OpCTX } from "@iguhealth/operation-execution/src/index.js";
 
 const sds = loadArtifacts("StructureDefinition", path.join(__dirname, "../"));
 
 test("Test ValueSet Expands", async () => {
-  const ctx = {
+  const ctx: OpCTX = {
     resolveType: (type: string) => {
       const sd = sds.find((sd) => sd.type === type);
       if (!sd) throw new Error(`Could not resolve type ${type}`);
       return sd;
     },
+    level: "instance",
   };
   const valueSet: ValueSet = {
     resourceType: "ValueSet",

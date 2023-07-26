@@ -132,6 +132,7 @@ function createRouterMiddleware<
           return { state: args.state, ctx: args.ctx, response };
         }
         case "capabilities-request":
+        default:
           throw new Error(`Not supported '${request.type}'`);
       }
     },

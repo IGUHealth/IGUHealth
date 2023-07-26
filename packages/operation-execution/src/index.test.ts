@@ -1,7 +1,7 @@
 import path from "node:path";
 import { expect, test } from "@jest/globals";
 
-import { parseParameters, Operation, IOperation, Invocation } from ".";
+import { parseParameters, Operation, IOperation, Invocation, OpCTX } from ".";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { OperationDefinition, Parameters } from "@iguhealth/fhir-types";
 
@@ -201,12 +201,13 @@ test("execution", async () => {
   const operation: IOperation<{ test: string }, { testOut: string }> =
     new Operation<{ test: string }, { testOut: string }>(operationTest);
 
-  const ctx = {
+  const ctx: OpCTX = {
     resolveType: (type: string) => {
       const sd = structureDefinitions.find((sd) => sd.type === type);
       if (!sd) throw new Error(`Could not resolve type ${type}`);
       return sd;
     },
+    level: "instance",
   };
 
   const invoke: Invocation = async (op, ctx, input) => {
@@ -248,12 +249,13 @@ test("paramValidation", async () => {
     { testOut: string }
   >(operationTest);
 
-  const ctx = {
+  const ctx: OpCTX = {
     resolveType: (type: string) => {
       const sd = structureDefinitions.find((sd) => sd.type === type);
       if (!sd) throw new Error(`Could not resolve type ${type}`);
       return sd;
     },
+    level: "instance",
   };
 
   const invoke: Invocation = async (op, ctx, input) => {

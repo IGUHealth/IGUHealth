@@ -3,7 +3,7 @@ import { v4 } from "uuid";
 import jsonpatch, { Operation } from "fast-json-patch";
 import dayjs from "dayjs";
 
-import { FHIRURL, ParsedParameter } from "@iguhealth/fhir-query";
+import { ParsedParameter } from "../../fhirRequest/url.js";
 import {
   Address,
   canonical,
@@ -69,27 +69,18 @@ async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   resourceType?: ResourceType,
   names?: string[]
 ): Promise<SearchParameter[]> {
-  let parameters: FHIRURL = {
-    resourceType: "SearchParameter",
-    parameters: {
-      type: {
-        name: "type",
-        value: param_types_supported,
-      },
-      base: {
-        name: "base",
-        value: searchResources(resourceType),
-      },
+  let parameters = [
+    {
+      name: "type",
+      value: param_types_supported,
     },
-  };
+    {
+      name: "base",
+      value: searchResources(resourceType),
+    },
+  ];
   if (names) {
-    parameters = {
-      ...parameters,
-      parameters: {
-        ...parameters.parameters,
-        name: { name: "name", value: names },
-      },
-    };
+    parameters = [...parameters, { name: "name", value: names }];
   }
 
   return await ctx.database.search_type(ctx, "SearchParameter", parameters);
@@ -859,10 +850,10 @@ async function executeSearchQuery(
     request.level === "type"
       ? (request.resourceType as ResourceType)
       : undefined,
-    Object.keys(request.query.parameters)
+    request.parameters.map((p) => p.name)
   );
 
-  const parameters = Object.values(request.query.parameters);
+  const parameters = request.parameters;
   let parameterQuery = buildParameters(
     searchParameters,
     parameters,
@@ -936,7 +927,7 @@ function createPostgresMiddleware<
                 ctx: args.ctx,
                 response: {
                   type: "search-response",
-                  query: request.query,
+                  parameters: request.parameters,
                   level: "system",
                   body: result,
                 },
@@ -948,7 +939,7 @@ function createPostgresMiddleware<
                 ctx: args.ctx,
                 response: {
                   type: "search-response",
-                  query: request.query,
+                  parameters: request.parameters,
                   level: "type",
                   resourceType: request.resourceType,
                   body: result,

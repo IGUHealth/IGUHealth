@@ -1,4 +1,4 @@
-import { FHIRURL } from "@iguhealth/fhir-query";
+import { ParsedParameter } from "@iguhealth/fhir-query";
 import {
   Resource,
   id,
@@ -15,11 +15,14 @@ export type FHIRClient<CTX> = FHIRClientSync<CTX> | FHIRClientAsync<CTX>;
 
 export interface FHIRClientSync<CTX> {
   request(ctx: CTX, request: FHIRRequest): FHIRResponse;
-  search_system(ctx: CTX, query: FHIRURL): Resource[];
+  search_system(
+    ctx: CTX,
+    parameters: ParsedParameter<string | number>[]
+  ): Resource[];
   search_type<T extends ResourceType>(
     ctx: CTX,
     type: T,
-    query: FHIRURL
+    parameters: ParsedParameter<string | number>[]
   ): AResource<T>[];
   create<T extends Resource>(ctx: CTX, resource: T): T;
   update<T extends Resource>(ctx: CTX, resource: T): T;
@@ -51,11 +54,14 @@ export interface FHIRClientSync<CTX> {
 
 export interface FHIRClientAsync<CTX> {
   request(ctx: CTX, request: FHIRRequest): Promise<FHIRResponse>;
-  search_system(ctx: CTX, query: FHIRURL): Promise<Resource[]>;
+  search_system(
+    ctx: CTX,
+    parameters: ParsedParameter<string | number>[]
+  ): Promise<Resource[]>;
   search_type<T extends ResourceType>(
     ctx: CTX,
     type: T,
-    query: FHIRURL
+    parameters: ParsedParameter<string | number>[]
   ): Promise<AResource<T>[]>;
   create<T extends Resource>(ctx: CTX, resource: T): Promise<T>;
   update<T extends Resource>(ctx: CTX, resource: T): Promise<T>;

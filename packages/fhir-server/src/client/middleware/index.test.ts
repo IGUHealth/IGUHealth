@@ -1,5 +1,6 @@
-import { FHIRURL } from "@iguhealth/fhir-query";
+import { expect, test } from "@jest/globals";
 import { createMiddlewareSync, createMiddlewareAsync } from "./index";
+import { ParsedParameter } from "../../fhirRequest/url";
 
 test("Test middleware Sync", () => {
   const middleware = createMiddlewareSync<{}, {}>([
@@ -21,7 +22,11 @@ test("Test middleware Sync", () => {
         state: args.state,
         ctx: args.ctx,
         response: {
-          query: (request as any).query as FHIRURL,
+          parameters: (request as any).parameters
+            ? ((request as any).parameters as ParsedParameter<
+                string | number
+              >[])
+            : [],
           type: "search-response",
           level: "system",
           body: [],
@@ -34,7 +39,11 @@ test("Test middleware Sync", () => {
         state: args.state,
         ctx: args.ctx,
         response: {
-          query: (request as any).query as FHIRURL,
+          parameters: (request as any).parameters
+            ? ((request as any).parameters as ParsedParameter<
+                string | number
+              >[])
+            : [],
           type: "search-response",
           level: "system",
           body: body,
@@ -46,7 +55,7 @@ test("Test middleware Sync", () => {
     state: {},
     ctx: {},
     response: {
-      query: undefined,
+      parameters: [],
       type: "search-response",
       level: "system",
       body: [{ id: "123", resourceType: "Patient" }],
@@ -74,7 +83,11 @@ test("Test middleware Async", async () => {
         state: args.state,
         ctx: args.ctx,
         response: {
-          query: (request as any).query as FHIRURL,
+          parameters: (request as any).parameters
+            ? ((request as any).parameters as ParsedParameter<
+                string | number
+              >[])
+            : [],
           type: "search-response",
           level: "system",
           body: [],
@@ -86,7 +99,11 @@ test("Test middleware Async", async () => {
         state: args.state,
         ctx: args.ctx,
         response: {
-          query: (request as any).query as FHIRURL,
+          parameters: (request as any).parameters
+            ? ((request as any).parameters as ParsedParameter<
+                string | number
+              >[])
+            : [],
           type: "search-response",
           level: "system",
           body: [{ resourceType: "Patient" }],
@@ -100,7 +117,7 @@ test("Test middleware Async", async () => {
     state: {},
     ctx: {},
     response: {
-      query: undefined,
+      parameters: [],
       type: "search-response",
       level: "system",
       body: [{ id: "123", resourceType: "Patient" }],

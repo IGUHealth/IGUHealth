@@ -1,4 +1,4 @@
-import { FHIRURL } from "@iguhealth/fhir-query";
+import { ParsedParameter } from "../fhirRequest/url.js";
 import {
   AResource,
   Resource,
@@ -23,11 +23,14 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     this.state = res.state;
     return res.response;
   }
-  async search_system(ctx: CTX, fhirURL: FHIRURL): Promise<Resource[]> {
+  async search_system(
+    ctx: CTX,
+    parameters: ParsedParameter<string | number>[]
+  ): Promise<Resource[]> {
     const response = await this.request(ctx, {
       type: "search-request",
       level: "system",
-      query: fhirURL,
+      parameters: parameters,
     });
     if (response.type !== "search-response")
       throw new Error("Unexpected response type");
@@ -36,13 +39,13 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   async search_type<T extends ResourceType>(
     ctx: CTX,
     resourceType: T,
-    fhirURL: FHIRURL
+    parameters: ParsedParameter<string | number>[]
   ): Promise<AResource<T>[]> {
     const response = await this.request(ctx, {
       type: "search-request",
       level: "type",
       resourceType: resourceType,
-      query: fhirURL,
+      parameters: parameters,
     });
     if (response.type !== "search-response")
       throw new Error(`Unexpected response type '${response.type}'`);
@@ -187,11 +190,14 @@ export class SynchronousClient<State, CTX> implements FHIRClientSync<CTX> {
     this.state = res.state;
     return res.response;
   }
-  search_system(ctx: CTX, fhirURL: FHIRURL): Resource[] {
+  search_system(
+    ctx: CTX,
+    parameters: ParsedParameter<string | number>[]
+  ): Resource[] {
     const response = this.request(ctx, {
       type: "search-request",
       level: "system",
-      query: fhirURL,
+      parameters,
     });
     if (response.type !== "search-response")
       throw new Error("Unexpected response type");
@@ -200,13 +206,13 @@ export class SynchronousClient<State, CTX> implements FHIRClientSync<CTX> {
   search_type<T extends ResourceType>(
     ctx: CTX,
     resourceType: T,
-    fhirURL: FHIRURL
+    parameters: ParsedParameter<string | number>[]
   ): AResource<T>[] {
     const response = this.request(ctx, {
       type: "search-request",
       level: "type",
       resourceType: resourceType,
-      query: fhirURL,
+      parameters,
     });
     if (response.type !== "search-response")
       throw new Error("Unexpected response type");

@@ -15,7 +15,6 @@
   "dependencies": {
     "@iguhealth/artifacts": "workspace:^",
     "@iguhealth/cli": "workspace:^",
-    "@iguhealth/fhir-query": "workspace:^",
     "@iguhealth/fhir-validation": "workspace:^",
     "@iguhealth/fhirpath": "workspace:^",
     "@iguhealth/meta-value": "workspace:^",

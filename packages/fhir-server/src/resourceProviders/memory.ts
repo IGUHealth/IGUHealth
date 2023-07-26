@@ -1,4 +1,4 @@
-import { ParsedParameter } from "@iguhealth/fhir-query";
+import { ParsedParameter } from "../fhirRequest/url.js";
 import {
   ResourceType,
   AResource,
@@ -61,7 +61,7 @@ function createMemoryMiddleware<
                   .filter((v): v is Resource[] => v !== undefined)
                   .flat();
           const output = (resourceSet || []).filter((resource) => {
-            for (let param of Object.values(request.query.parameters)) {
+            for (let param of request.parameters) {
               if (!fitsSearchCriteria(param, resource)) return false;
             }
             return true;
@@ -72,7 +72,7 @@ function createMemoryMiddleware<
               ctx: args.ctx,
               response: {
                 level: request.level,
-                query: request.query,
+                parameters: request.parameters,
                 type: "search-response",
                 body: output,
               },
@@ -84,7 +84,7 @@ function createMemoryMiddleware<
             response: {
               resourceType: request.resourceType,
               level: "type",
-              query: request.query,
+              parameters: request.parameters,
               type: "search-response",
               body: output,
             },

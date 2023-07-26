@@ -3,8 +3,10 @@ import {
   Resource,
   Bundle,
   CapabilityStatement,
+  ResourceType,
+  Parameters,
 } from "@iguhealth/fhir-types/r4/types";
-import { FHIRURL } from "@iguhealth/fhir-query";
+import { ParsedParameter } from "@iguhealth/fhir-query";
 
 export type RequestLevel = {
   instance: "instance";
@@ -24,6 +26,7 @@ type RequestInteractionTypes = {
   capabilities: "capabilities-request";
   batch: "batch-request";
   transaction: "transaction-request";
+  invoke: "invoke-request";
 };
 
 type ResponseInteractionTypes = {
@@ -38,15 +41,16 @@ type ResponseInteractionTypes = {
   capabilities: "capabilities-response";
   batch: "batch-response";
   transaction: "transaction-response";
+  invoke: "invoke-response";
 };
 
-export type InstanceLevelInteraction = {
+export type InstanceInteraction = {
   level: RequestLevel["instance"];
   resourceType: string;
   id: id;
 };
 
-export type TypeLevelInteractions = {
+export type TypeInteraction = {
   level: RequestLevel["type"];
   resourceType: string;
 };
@@ -55,45 +59,45 @@ export type SystemInteraction = {
   level: RequestLevel["system"];
 };
 
-export type ReadRequest = InstanceLevelInteraction & {
+export type ReadRequest = InstanceInteraction & {
   type: RequestInteractionTypes["read"];
 };
 
-export type VersionReadRequest = InstanceLevelInteraction & {
+export type VersionReadRequest = InstanceInteraction & {
   type: RequestInteractionTypes["vread"];
   versionId: string;
 };
 
-export type UpdateRequest = InstanceLevelInteraction & {
+export type UpdateRequest = InstanceInteraction & {
   type: RequestInteractionTypes["update"];
   body: Resource;
 };
 
 // TODO - implement patch type
-export type PatchRequest = InstanceLevelInteraction & {
+export type PatchRequest = InstanceInteraction & {
   type: RequestInteractionTypes["patch"];
   body: Object;
 };
 
-export type DeleteRequest = InstanceLevelInteraction & {
+export type DeleteRequest = InstanceInteraction & {
   type: RequestInteractionTypes["delete"];
 };
 
-export type HistoryInstanceRequest = InstanceLevelInteraction & {
+export type HistoryInstanceRequest = InstanceInteraction & {
   type: RequestInteractionTypes["history"];
 };
 
-export type CreateRequest = TypeLevelInteractions & {
+export type CreateRequest = TypeInteraction & {
   type: RequestInteractionTypes["create"];
   body: Resource;
 };
 
-export type TypeSearchRequest = TypeLevelInteractions & {
-  query: FHIRURL;
+export type TypeSearchRequest = TypeInteraction & {
+  parameters: ParsedParameter<string | number>[];
   type: RequestInteractionTypes["search"];
 };
 
-export type TypeHistoryRequest = TypeLevelInteractions & {
+export type TypeHistoryRequest = TypeInteraction & {
   type: RequestInteractionTypes["history"];
 };
 
@@ -116,11 +120,32 @@ export type SystemHistoryRequest = SystemInteraction & {
 };
 
 export type SystemSearchRequest = SystemInteraction & {
-  query: FHIRURL;
+  parameters: ParsedParameter<string | number>[];
   type: RequestInteractionTypes["search"];
 };
 
+export type InvokeInstanceRequest = InstanceInteraction & {
+  type: RequestInteractionTypes["invoke"];
+  operation: string;
+  body: Parameters;
+};
+
+export type InvokeTypeRequest = TypeInteraction & {
+  type: RequestInteractionTypes["invoke"];
+  operation: string;
+  body: Parameters;
+};
+
+export type InvokeSystemRequest = SystemInteraction & {
+  type: RequestInteractionTypes["invoke"];
+  operation: string;
+  body: Parameters;
+};
+
 export type FHIRRequest =
+  | InvokeInstanceRequest
+  | InvokeTypeRequest
+  | InvokeSystemRequest
   | ReadRequest
   | VersionReadRequest
   | UpdateRequest
@@ -136,48 +161,48 @@ export type FHIRRequest =
   | SystemHistoryRequest
   | SystemSearchRequest;
 
-export type ReadResponse = InstanceLevelInteraction & {
+export type ReadResponse = InstanceInteraction & {
   type: ResponseInteractionTypes["read"];
   body: Resource;
 };
 
-export type VersionReadResponse = InstanceLevelInteraction & {
+export type VersionReadResponse = InstanceInteraction & {
   type: ResponseInteractionTypes["vread"];
   body: Resource;
 };
 
-export type UpdateResponse = InstanceLevelInteraction & {
+export type UpdateResponse = InstanceInteraction & {
   type: ResponseInteractionTypes["update"];
   body: Resource;
 };
 
 // TODO - implement patch type
-export type PatchResponse = InstanceLevelInteraction & {
+export type PatchResponse = InstanceInteraction & {
   type: ResponseInteractionTypes["patch"];
   body: Resource;
 };
 
-export type DeleteResponse = InstanceLevelInteraction & {
+export type DeleteResponse = InstanceInteraction & {
   type: ResponseInteractionTypes["delete"];
 };
 
-export type HistoryInstanceResponse = InstanceLevelInteraction & {
+export type HistoryInstanceResponse = InstanceInteraction & {
   type: ResponseInteractionTypes["history"];
   body: Resource[];
 };
 
-export type CreateResponse = TypeLevelInteractions & {
+export type CreateResponse = TypeInteraction & {
   type: ResponseInteractionTypes["create"];
   body: Resource;
 };
 
-export type TypeSearchResponse = TypeLevelInteractions & {
-  query: FHIRURL;
+export type TypeSearchResponse = TypeInteraction & {
+  parameters: ParsedParameter<string | number>[];
   type: ResponseInteractionTypes["search"];
   body: Resource[];
 };
 
-export type TypeHistoryResponse = TypeLevelInteractions & {
+export type TypeHistoryResponse = TypeInteraction & {
   type: ResponseInteractionTypes["history"];
   body: Resource[];
 };
@@ -203,12 +228,33 @@ export type SystemHistoryResponse = SystemInteraction & {
 };
 
 export type SystemSearchResponse = SystemInteraction & {
-  query: FHIRURL;
+  parameters: ParsedParameter<string | number>[];
   type: ResponseInteractionTypes["search"];
   body: Resource[];
 };
 
+export type InvokeInstanceResponse = InstanceInteraction & {
+  type: ResponseInteractionTypes["invoke"];
+  operation: string;
+  body: Parameters;
+};
+
+export type InvokeTypeResponse = TypeInteraction & {
+  type: ResponseInteractionTypes["invoke"];
+  operation: string;
+  body: Parameters;
+};
+
+export type InvokeSystemResponse = SystemInteraction & {
+  type: ResponseInteractionTypes["invoke"];
+  operation: string;
+  body: Parameters;
+};
+
 export type FHIRResponse =
+  | InvokeInstanceResponse
+  | InvokeTypeResponse
+  | InvokeSystemResponse
   | ReadResponse
   | VersionReadResponse
   | UpdateResponse

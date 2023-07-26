@@ -1,4 +1,4 @@
-import parseURL from "@iguhealth/fhir-query";
+import parseParameters from "../fhirRequest/url.js";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { expect, test } from "@jest/globals";
 import path from "path";
@@ -69,7 +69,7 @@ test("Creation and search", async () => {
     await memDb.search_type(
       {},
       "SearchParameter",
-      parseURL("SearchParameter?name=test")
+      parseParameters("SearchParameter?name=test")
     )
   ).toEqual([]);
 
@@ -77,7 +77,7 @@ test("Creation and search", async () => {
     await memDb.search_type(
       {},
       "SearchParameter",
-      parseURL("SearchParameter?name=test1")
+      parseParameters("SearchParameter?name=test1")
     )
   ).toEqual([
     generateParameter({
@@ -86,12 +86,7 @@ test("Creation and search", async () => {
     }),
   ]);
 
-  expect(
-    await memDb.search_type({}, "SearchParameter", {
-      resourceType: "SearchParameter",
-      parameters: {},
-    })
-  ).toEqual([
+  expect(await memDb.search_type({}, "SearchParameter", [])).toEqual([
     generateParameter({
       id: "test1",
       name: "test1",
@@ -102,16 +97,18 @@ test("Creation and search", async () => {
     }),
   ]);
 
-  expect(await memDb.search_system({}, parseURL("?name=test1"))).toEqual([
-    generateParameter({
-      id: "test1",
-      name: "test1",
-    }),
-    generateSD({
-      id: "test0",
-      name: "test1",
-    }),
-  ]);
+  expect(await memDb.search_system({}, parseParameters("?name=test1"))).toEqual(
+    [
+      generateParameter({
+        id: "test1",
+        name: "test1",
+      }),
+      generateSD({
+        id: "test0",
+        name: "test1",
+      }),
+    ]
+  );
 });
 
 test("artifactParameters", () => {
@@ -127,7 +124,7 @@ test("artifactParameters", () => {
     memDb.search_type(
       {},
       "SearchParameter",
-      parseURL("SearchParameter?base=Patient,Resource,DomainResource")
+      parseParameters("SearchParameter?base=Patient,Resource,DomainResource")
     ).length
   ).toEqual(32);
   expect(
@@ -135,7 +132,7 @@ test("artifactParameters", () => {
       .search_type(
         {},
         "SearchParameter",
-        parseURL("SearchParameter?base=DomainResource")
+        parseParameters("SearchParameter?base=DomainResource")
       )
       .map((s) => (s as SearchParameter).name)
   ).toEqual(["_text"]);
@@ -145,7 +142,7 @@ test("artifactParameters", () => {
       .search_type(
         {},
         "SearchParameter",
-        parseURL("SearchParameter?base=Resource")
+        parseParameters("SearchParameter?base=Resource")
       )
       .map((s) => (s as SearchParameter).name)
   ).toEqual([
@@ -164,7 +161,7 @@ test("artifactParameters", () => {
       .search_type(
         {},
         "SearchParameter",
-        parseURL("SearchParameter?base=Patient")
+        parseParameters("SearchParameter?base=Patient")
       )
       .map((s) => s.id)
   ).toMatchSnapshot();
@@ -174,7 +171,7 @@ test("artifactParameters", () => {
       .search_type(
         {},
         "SearchParameter",
-        parseURL(
+        parseParameters(
           "SearchParameter?base=Patient,Resource,DomainResource&type=string"
         )
       )
@@ -186,7 +183,7 @@ test("artifactParameters", () => {
       .search_type(
         {},
         "SearchParameter",
-        parseURL(
+        parseParameters(
           "SearchParameter?base=Patient,Resource,DomainResource&type=date"
         )
       )

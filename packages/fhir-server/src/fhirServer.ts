@@ -1,10 +1,6 @@
-import Koa from "koa";
-
-import parseQuery, { FHIRURL } from "@iguhealth/fhir-query";
 import {
   CapabilityStatement,
   StructureDefinition,
-  Resource,
 } from "@iguhealth/fhir-types/r4/types";
 import {
   OperationError,
