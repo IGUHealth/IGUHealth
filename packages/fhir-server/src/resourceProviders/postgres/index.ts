@@ -859,10 +859,10 @@ async function executeSearchQuery(
     request.level === "type"
       ? (request.resourceType as ResourceType)
       : undefined,
-    Object.keys(request.query.parameters)
+    request.parameters.map((p) => p.name)
   );
 
-  const parameters = Object.values(request.query.parameters);
+  const parameters = request.parameters;
   let parameterQuery = buildParameters(
     searchParameters,
     parameters,
@@ -936,7 +936,7 @@ function createPostgresMiddleware<
                 ctx: args.ctx,
                 response: {
                   type: "search-response",
-                  query: request.query,
+                  parameters: request.parameters,
                   level: "system",
                   body: result,
                 },
@@ -948,7 +948,7 @@ function createPostgresMiddleware<
                 ctx: args.ctx,
                 response: {
                   type: "search-response",
-                  query: request.query,
+                  parameters: request.parameters,
                   level: "type",
                   resourceType: request.resourceType,
                   body: result,

@@ -114,7 +114,40 @@ export function KoaRequestToFHIRRequest(
       } else
         throw new OperationError(outcomeError("invalid", "request is invalid"));
     } else {
-      if (method === "GET") {
+      if (urlPieces[0].startsWith("$")) {
+        if (method === "POST") {
+          return {
+            type: "invoke-request",
+            level: "system",
+            operation: urlPieces[0].slice(1),
+            body: request.body,
+          };
+        } else if (method === "GET") {
+          throw new OperationError(
+            outcomeError(
+              "not-supported",
+              "Operation GET requests not yet supported"
+            )
+          );
+        }
+        throw new OperationError(
+          outcomeError("invalid", `Invalid method for invocation '${method}'`)
+        );
+      }
+      if (method === "POST") {
+        if (resourceTypes.has(urlPieces[0])) {
+          return {
+            type: "create-request",
+            level: "type",
+            resourceType: urlPieces[0],
+            body: request.body,
+          };
+        } else if (urlPieces[0] === "_search") {
+          throw new OperationError(
+            outcomeError("not-supported", "Search via post not supported.")
+          );
+        }
+      } else if (method === "GET") {
         if (urlPieces[0] === "metadata")
           return {
             type: "capabilities-request",
@@ -126,14 +159,7 @@ export function KoaRequestToFHIRRequest(
             level: "system",
           };
         }
-        if (urlPieces[0].startsWith("$")) {
-          throw new OperationError(
-            outcomeError(
-              "not-supported",
-              "Operation get requests not yet supported"
-            )
-          );
-        }
+
         if (resourceTypes.has(urlPieces[0])) {
           return {
             type: "search-request",
@@ -145,8 +171,119 @@ export function KoaRequestToFHIRRequest(
       }
     }
   } else if (urlPieces.length === 2) {
+    if (urlPieces[1].startsWith("$")) {
+      if (method === "POST") {
+        return {
+          type: "invoke-request",
+          level: "type",
+          resourceType: urlPieces[0],
+          operation: urlPieces[1].slice(1),
+          body: request.body,
+        };
+      } else if (method === "GET") {
+        throw new OperationError(
+          outcomeError(
+            "not-supported",
+            "Operation GET requests not yet supported"
+          )
+        );
+      }
+      throw new OperationError(
+        outcomeError("invalid", `Invalid method for invocation '${method}'`)
+      );
+    } else if (method === "POST") {
+      if (urlPieces[1] === "_search") {
+        throw new OperationError(
+          outcomeError("not-supported", "Search via post not supported.")
+        );
+      }
+    } else if (method === "GET") {
+      if (urlPieces[1] === "_history") {
+        return {
+          type: "history-request",
+          level: "type",
+          resourceType: urlPieces[0],
+        };
+      } else if (resourceTypes.has(urlPieces[0])) {
+        return {
+          type: "read-request",
+          level: "instance",
+          resourceType: urlPieces[0],
+          id: urlPieces[1],
+        };
+      }
+    } else if (method === "PUT") {
+      if (resourceTypes.has(urlPieces[0])) {
+        return {
+          type: "update-request",
+          level: "instance",
+          resourceType: urlPieces[0],
+          id: urlPieces[1],
+          body: request.body as Resource,
+        };
+      }
+    } else if (method === "PATCH") {
+      if (resourceTypes.has(urlPieces[0])) {
+        return {
+          type: "patch-request",
+          level: "instance",
+          resourceType: urlPieces[0],
+          id: urlPieces[1],
+          body: request.body,
+        };
+      }
+    } else if (method === "DELETE") {
+      if (resourceTypes.has(urlPieces[0])) {
+        return {
+          type: "delete-request",
+          level: "instance",
+          resourceType: urlPieces[0],
+          id: urlPieces[1],
+        };
+      }
+    }
   } else if (urlPieces.length === 3) {
+    if (urlPieces[2].startsWith("$")) {
+      if (method === "POST") {
+        return {
+          type: "invoke-request",
+          level: "instance",
+          resourceType: urlPieces[0],
+          id: urlPieces[1],
+          operation: urlPieces[2].slice(1),
+          body: request.body,
+        };
+      } else if (method === "GET") {
+        throw new OperationError(
+          outcomeError(
+            "not-supported",
+            "Operation GET requests not yet supported"
+          )
+        );
+      }
+      throw new OperationError(
+        outcomeError("invalid", `Invalid method for invocation '${method}'`)
+      );
+    } else if (method === "GET") {
+      if (resourceTypes.has(urlPieces[0]) && urlPieces[2] === "_history") {
+        return {
+          type: "history-request",
+          level: "instance",
+          resourceType: urlPieces[0],
+          id: urlPieces[1],
+        };
+      }
+    }
   } else if (urlPieces.length === 4) {
+    if (resourceTypes.has(urlPieces[1]) && urlPieces[2] === "_history") {
+      return {
+        type: "vread-request",
+        level: "instance",
+        resourceType: urlPieces[0],
+        id: urlPieces[1],
+        versionId: urlPieces[3],
+      };
+    }
   }
   throw new OperationError(outcomeError("invalid", "request is invalid"));
 }
