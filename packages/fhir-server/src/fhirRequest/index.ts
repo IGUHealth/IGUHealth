@@ -7,7 +7,6 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRRequest } from "../client/types";
 import parseParameters from "./url.js";
-import { Operation } from "@iguhealth/operation-execution";
 
 /*
  ** For Summary of types see:
@@ -159,12 +158,12 @@ export function KoaRequestToFHIRRequest(
             level: "system",
           };
         }
-
-        if (resourceTypes.has(urlPieces[0])) {
+        // Split by Questionmark because of search parameters
+        if (resourceTypes.has(urlPieces[0].split("?")[0])) {
           return {
             type: "search-request",
             level: "type",
-            resourceType: urlPieces[0],
+            resourceType: urlPieces[0].split("?")[0],
             parameters: parseParameters(url),
           };
         }
@@ -285,5 +284,6 @@ export function KoaRequestToFHIRRequest(
       };
     }
   }
+  console.log(urlPieces, method);
   throw new OperationError(outcomeError("invalid", "request is invalid"));
 }

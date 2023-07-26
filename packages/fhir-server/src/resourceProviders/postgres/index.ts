@@ -3,7 +3,7 @@ import { v4 } from "uuid";
 import jsonpatch, { Operation } from "fast-json-patch";
 import dayjs from "dayjs";
 
-import { FHIRURL, ParsedParameter } from "@iguhealth/fhir-query";
+import { ParsedParameter } from "../../fhirRequest/url.js";
 import {
   Address,
   canonical,
@@ -69,27 +69,18 @@ async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   resourceType?: ResourceType,
   names?: string[]
 ): Promise<SearchParameter[]> {
-  let parameters: FHIRURL = {
-    resourceType: "SearchParameter",
-    parameters: {
-      type: {
-        name: "type",
-        value: param_types_supported,
-      },
-      base: {
-        name: "base",
-        value: searchResources(resourceType),
-      },
+  let parameters = [
+    {
+      name: "type",
+      value: param_types_supported,
     },
-  };
+    {
+      name: "base",
+      value: searchResources(resourceType),
+    },
+  ];
   if (names) {
-    parameters = {
-      ...parameters,
-      parameters: {
-        ...parameters.parameters,
-        name: { name: "name", value: names },
-      },
-    };
+    parameters = [...parameters, { name: "name", value: names }];
   }
 
   return await ctx.database.search_type(ctx, "SearchParameter", parameters);

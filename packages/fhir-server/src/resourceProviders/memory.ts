@@ -1,4 +1,4 @@
-import { ParsedParameter } from "@iguhealth/fhir-query";
+import { ParsedParameter } from "../fhirRequest/url.js";
 import {
   ResourceType,
   AResource,

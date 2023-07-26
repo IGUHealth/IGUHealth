@@ -35,7 +35,7 @@ import Account from "./oidc-provider/accounts.js";
 import configuration from "./oidc-provider/configuration.js";
 import routes from "./oidc-provider/routes.js";
 import { loadJWKS } from "./auth/jwks.js";
-import { KoaRequestToFHIRRequest } from "./fhirRequest";
+import { KoaRequestToFHIRRequest } from "./fhirRequest/index.js";
 
 dotEnv.config();
 
