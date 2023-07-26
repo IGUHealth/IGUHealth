@@ -36,10 +36,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/fhir-json-schema"\
       },\
       {\
-        "name": "@iguhealth/fhir-query",\
-        "reference": "workspace:packages/fhir-query"\
-      },\
-      {\
         "name": "@iguhealth/fhir-server",\
         "reference": "workspace:packages/fhir-server"\
       },\
@@ -84,7 +80,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@iguhealth/codegen", ["workspace:packages/codegen"]],\
       ["@iguhealth/components", ["virtual:f7bec7ac1756578cdaaf4ff5b0a99146ff9ff935d7239e7c43700f86fded968ef8f5ab1672eee437f5e8ee65db57721f4b43edc517ef5d13e94345cc37111ab8#workspace:packages/components", "workspace:packages/components"]],\
       ["@iguhealth/fhir-json-schema", ["workspace:packages/fhir-json-schema"]],\
-      ["@iguhealth/fhir-query", ["workspace:packages/fhir-query"]],\
       ["@iguhealth/fhir-server", ["workspace:packages/fhir-server"]],\
       ["@iguhealth/fhir-types", ["workspace:packages/fhir-types"]],\
       ["@iguhealth/fhir-validation", ["workspace:packages/fhir-validation"]],\
@@ -5715,20 +5710,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT"\
         }]\
       ]],\
-      ["@iguhealth/fhir-query", [\
-        ["workspace:packages/fhir-query", {\
-          "packageLocation": "./packages/fhir-query/",\
-          "packageDependencies": [\
-            ["@iguhealth/fhir-query", "workspace:packages/fhir-query"],\
-            ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
-            ["@types/jest", "npm:29.5.2"],\
-            ["jest", "virtual:95acd521ad270141ccfbf50f9e178ed2e993b719f7a01b7f56f97673e930358da332dff4b0b0ca7717dc2c89eb53f5d20730d0698497ab79154b11d36496d84b#npm:29.6.0"],\
-            ["ts-jest", "virtual:95acd521ad270141ccfbf50f9e178ed2e993b719f7a01b7f56f97673e930358da332dff4b0b0ca7717dc2c89eb53f5d20730d0698497ab79154b11d36496d84b#npm:29.1.1"],\
-            ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"]\
-          ],\
-          "linkType": "SOFT"\
-        }]\
-      ]],\
       ["@iguhealth/fhir-server", [\
         ["workspace:packages/fhir-server", {\
           "packageLocation": "./packages/fhir-server/",\
@@ -5736,7 +5717,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@iguhealth/fhir-server", "workspace:packages/fhir-server"],\
             ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
             ["@iguhealth/cli", "workspace:packages/cli"],\
-            ["@iguhealth/fhir-query", "workspace:packages/fhir-query"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
             ["@iguhealth/fhir-validation", "workspace:packages/fhir-validation"],\
             ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\

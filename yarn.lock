@@ -2624,25 +2624,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@iguhealth/fhir-query@workspace:^, @iguhealth/fhir-query@workspace:packages/fhir-query":
-  version: 0.0.0-use.local
-  resolution: "@iguhealth/fhir-query@workspace:packages/fhir-query"
-  dependencies:
-    "@iguhealth/fhir-types": "workspace:^"
-    "@types/jest": ^29.5.2
-    jest: ^29.5.0
-    ts-jest: ^29.1.0
-    typescript: ^5.1.3
-  languageName: unknown
-  linkType: soft
-
 "@iguhealth/fhir-server@workspace:^, @iguhealth/fhir-server@workspace:packages/fhir-server":
   version: 0.0.0-use.local
   resolution: "@iguhealth/fhir-server@workspace:packages/fhir-server"
   dependencies:
     "@iguhealth/artifacts": "workspace:^"
     "@iguhealth/cli": "workspace:^"
-    "@iguhealth/fhir-query": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
     "@iguhealth/fhir-validation": "workspace:^"
     "@iguhealth/fhirpath": "workspace:^"
