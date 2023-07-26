@@ -5,6 +5,7 @@ export type FHIRURL = {
   id?: string;
   versionId?: string;
   parameters: Parameters<string | number>;
+  operation?: string;
 };
 
 export type ParsedParameter<T> = {
@@ -21,6 +22,7 @@ export type Parameters<T> = Record<string, ParsedParameter<T>>;
 export default function parseURL(url: string): FHIRURL {
   const [path, queryParams] = url.split("?");
   const [resourceType, id, versionId] = path.split("/");
+
   const fhirURL: FHIRURL = {
     parameters: !queryParams
       ? []

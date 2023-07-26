@@ -1,4 +1,5 @@
-import parseFHIRSearch from "./index";
+import { test, expect } from "@jest/globals";
+import parseFHIRSearch from "./url.js";
 
 test("Test resource level", () => {
   expect(parseFHIRSearch("Patient?name:text=bob")).toEqual({

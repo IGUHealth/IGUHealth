@@ -1,7 +1,7 @@
 import Koa from "koa";
 
-import parseQuery, { FHIRURL } from "@iguhealth/fhir-query";
 import { Resource } from "@iguhealth/fhir-types/r4/types";
+import parseQuery, { FHIRURL } from "./url.js";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import {
@@ -10,7 +10,7 @@ import {
   TypeInteraction,
   InstanceInteraction,
   SystemInteraction,
-} from "./client/types";
+} from "../client/types";
 
 function getInteractionLevel(
   fhirURL: FHIRURL
@@ -99,6 +99,39 @@ function parseSystemRequest(
       );
   }
 }
+
+/*
+ ** For Summary of types see:
+ ** https://build.fhir.org/http.html#summary
+ **
+ -----------------------------------------------------------------------------------------------------------------
+read            	  /[type]/[id]	                      GET‡	N/A	N/A	N/A	O: If-Modified-Since, If-None-Match
+vread            	  /[type]/[id]/_history/[vid]	        GET‡	N/A	N/A	N/A	N/A
+update             	/[type]/[id]                      	PUT	R	Resource	O	O: If-Match
+patch        	      /[type]/[id]                      	PATCH	R (may be a patch type)	Patch	O	O: If-Match
+delete	            /[type]/[id]	                      DELETE	N/A	N/A	N/A	N/A
+create         	    /[type]                           	POST	R	Resource	O	O: If-None-Exist
+search-type	        /[type]?                           	GET	N/A	N/A	N/A	N/A
+                    /[type]/_search?	                  POST	application/x-www-form-urlencoded	form data	N/A	N/A
+search-system	?	                                        GET	N/A	N/A	N/A	N/A
+/_search	                                              POST	application/x-www-form-urlencoded	form data	N/A	N/A
+search-compartment	/[compartment]/[id]/*?	            GET	N/A	N/A	N/A	N/A
+                    /[compartment]/[id]/[type]?	        GET	N/A	N/A	N/A	N/A
+                    /[compartment]/[id]/_search?	      POST	application/x-www-form-urlencoded	form data	N/A	N/A
+                    /[compartment]/[id]/[type]/_search?	POST	application/x-www-form-urlencoded	form data	N/A	N/A
+capabilities	      /metadata	                          GET‡	N/A	N/A	N/A	N/A
+transaction	        /	                                  POST	R	Bundle	O	N/A
+batch	              /	                                  POST	R	Bundle	O	N/A
+history-instance	  /[type]/[id]/_history	              GET	N/A	N/A	N/A	N/A
+history-type	      /[type]/_history	                  GET	N/A	N/A	N/A	N/A
+history-system	    /_history	                          GET	N/A	N/A	N/A	N/A
+(operation)	        /$[name]
+                    /[type]/$[name]
+                    /[type]/[id]/$[name]	              POST	R	Parameters	N/A	N/A 
+                                                        GET	N/A	N/A	N/A	N/A
+                                                        POST	application/x-www-form-urlencoded	form data	N/A	N/A
+ -----------------------------------------------------------------------------------------------------------------
+*/
 
 export function KoaRequestToFHIRRequest(
   url: string,

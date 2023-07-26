@@ -35,7 +35,7 @@ import Account from "./oidc-provider/accounts.js";
 import configuration from "./oidc-provider/configuration.js";
 import routes from "./oidc-provider/routes.js";
 import { loadJWKS } from "./auth/jwks.js";
-import { KoaRequestToFHIRRequest } from "./koaToFHIR.js";
+import { KoaRequestToFHIRRequest } from "./fhirRequest";
 
 dotEnv.config();
 
@@ -129,6 +129,10 @@ function fhirResponseToKoaResponse(
           "not-supported",
           `could not convert response to http of type '${fhirResponse.type}'`
         )
+      );
+    default:
+      throw new Error(
+        `Could not convert response to http of type '${fhirResponse.type}'`
       );
   }
 }
