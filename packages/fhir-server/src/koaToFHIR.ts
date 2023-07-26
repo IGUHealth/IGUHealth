@@ -7,8 +7,8 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import {
   FHIRRequest,
   RequestLevel,
-  TypeLevelInteractions,
-  InstanceLevelInteraction,
+  TypeInteraction,
+  InstanceInteraction,
   SystemInteraction,
 } from "./client/types";
 
@@ -26,7 +26,7 @@ function getInteractionLevel(
 function parseInstantRequest(
   request: Koa.Request,
   fhirURL: FHIRURL,
-  fhirRequest: Pick<InstanceLevelInteraction, "level" | "resourceType" | "id">
+  fhirRequest: Pick<InstanceInteraction, "level" | "resourceType" | "id">
 ): FHIRRequest {
   switch (request.method) {
     case "GET":
@@ -53,7 +53,7 @@ function parseInstantRequest(
 function parseTypeRequest(
   request: Koa.Request,
   fhirURL: FHIRURL,
-  fhirRequest: Pick<TypeLevelInteractions, "level" | "resourceType">
+  fhirRequest: Pick<TypeInteraction, "level" | "resourceType">
 ): FHIRRequest {
   switch (request.method) {
     case "GET":
