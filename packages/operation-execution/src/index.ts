@@ -388,4 +388,4 @@ export type Invocation = <T extends IOperation<any, any>, CTX extends OpCTX>(
   op: T,
   ctx: CTX,
   input: OPMetadata<T>["Input"]
-) => Promise<OPMetadata<T>["Input"]>;
+) => Promise<OPMetadata<T>["Output"]>;
