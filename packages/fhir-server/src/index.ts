@@ -234,6 +234,8 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
             .map((i) => issueSeverityToStatusCodes(i.severity))
             .sort()[operationOutcome.issue.length - 1];
           ctx.body = operationOutcome;
+        } else {
+          throw e;
         }
       }
     }
