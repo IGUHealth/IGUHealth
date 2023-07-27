@@ -208,7 +208,9 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
 
         const fhirServerResponse = await fhirServer(
           KoaRequestToFHIRRequest(
-            `${ctx.params.fhirUrl || ""}?${ctx.request.querystring}`,
+            `${ctx.params.fhirUrl || ""}${ctx.request.querystring ? "?" : ""}${
+              ctx.request.querystring
+            }`,
             ctx.request
           ),
           {
