@@ -3,7 +3,7 @@
 import { Client } from "pg";
 
 interface Lock {
-  transact(lockId: string, body: () => Promise<void>): Promise<void>;
+  withLock(lockId: string, body: () => Promise<void>): Promise<void>;
 }
 
 function hash(str: string): number {
@@ -34,7 +34,7 @@ export class PostgresLock implements Lock {
     this.client = client;
   }
 
-  async transact(lockId: string, body: () => Promise<void>) {
+  async withLock(lockId: string, body: () => Promise<void>) {
     const id = hash(lockId);
     await this.client.query("BEGIN");
     console.log("Transacting");

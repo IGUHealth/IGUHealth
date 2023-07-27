@@ -28,7 +28,7 @@ test("Test PostgresLock", async () => {
   for (let i = 0; i < 10; i++) {
     // Test that synchronous code works
     promises.push(
-      lock.transact(lockId, async () => {
+      lock.withLock(lockId, async () => {
         console.log("[LOCKACQUIRED] ");
         console.log("START SharedValue is:", sharedValue);
         if (sharedValue !== 0) throw new Error("Failure");
