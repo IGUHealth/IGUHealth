@@ -20,7 +20,7 @@ async function fhirRequestToFHIRResponse(
   return ctx.database.request(ctx, request);
 }
 
-export type FHIRServerCTX = {
+export interface FHIRServerCTX {
   workspace: string;
   author: string;
 
@@ -31,7 +31,7 @@ export type FHIRServerCTX = {
     ctx: FHIRServerCTX,
     type: string
   ) => StructureDefinition | undefined;
-};
+}
 
 function createFHIRServer() {
   return createMiddlewareAsync<undefined, FHIRServerCTX>([
@@ -69,7 +69,7 @@ function createFHIRServer() {
             )
           );
         }
-        default: {
+        case "invoke-request": {
         }
       }
       if (!next) throw new Error("No next");
