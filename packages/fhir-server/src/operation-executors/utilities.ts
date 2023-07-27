@@ -1,5 +1,6 @@
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { OperationDefinition } from "@iguhealth/fhir-types";
+import { evaluate } from "@iguhealth/fhirpath";
 
 import { InvokeRequest } from "./types";
 import { FHIRServerCTX } from "../fhirServer";
@@ -31,4 +32,11 @@ export async function resolveOperationDefinition(
     );
 
   return operationDefinition[0];
+}
+
+export async function getCode(
+  ctx: FHIRServerCTX,
+  operation: OperationDefinition
+): Promise<string> {
+  throw new Error();
 }
