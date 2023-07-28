@@ -647,7 +647,7 @@ async function patchResource<CTX extends FHIRServerCTX>(
   patches: Operation[]
 ): Promise<Resource> {
   try {
-    await client.query("BEGIN");
+    await client.query("BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE");
     const resource = await getResource(client, ctx, resourceType, id);
     // [TODO] CHECK VALIDATION
     const newResource = jsonpatch.applyPatch(resource, patches)
