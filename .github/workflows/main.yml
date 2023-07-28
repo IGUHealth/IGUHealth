@@ -43,8 +43,10 @@ jobs:
         run: yarn
       - name: Compile
         run: yarn workspaces foreach -t run build
-        timeout-minutes: 10
-        env:
+      - name: Run tests and collect coverage
+        run: yarn workspaces foreach run test
+         timeout-minutes: 10
+         env:
           FHIR_DATABASE_NAME: tsgenfhi
           FHIR_DATABASE_HOST: localhost
           FHIR_DATABASE_PORT: 5432
@@ -56,8 +58,6 @@ jobs:
           POSTGRES_HOST: postgres
           # The default PostgreSQL port
           POSTGRES_PORT: 5432
-      - name: Run tests and collect coverage
-        run: yarn workspaces foreach run test
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
