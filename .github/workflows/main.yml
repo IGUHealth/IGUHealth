@@ -43,6 +43,7 @@ jobs:
         run: yarn
       - name: Compile
         run: yarn workspaces foreach -t run build
+        timeout-minutes: 10
         env:
           FHIR_DATABASE_NAME: tsgenfhi
           FHIR_DATABASE_HOST: localhost
