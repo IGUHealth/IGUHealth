@@ -1,6 +1,6 @@
 // Locking mechanisms
 
-import { Client } from "pg";
+import { Client, ClientConfig } from "pg";
 
 interface Lock {
   withLock(lockId: string, body: () => Promise<void>): Promise<void>;
@@ -21,17 +21,14 @@ function hash(str: string): number {
 }
 
 function pgLock(client: Client, id: number) {
-  return client.query(`SELECT pg_try_advisory_xact_lock($1)`, [id]);
-}
-
-function pgUnlock(client: Client, id: number) {
-  return client.query(`SELECT pg_advisory_xact_unlock($1)`, [id]);
+  return client.query(`SELECT pg_advisory_xact_lock($1)`, [id]);
 }
 
 export class PostgresLock implements Lock {
   private client: Client;
-  constructor(client: Client) {
-    this.client = client;
+  constructor(config: ClientConfig) {
+    this.client = new Client(config);
+    this.client.connect();
   }
 
   async withLock(lockId: string, body: () => Promise<void>) {
