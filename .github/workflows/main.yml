@@ -45,8 +45,8 @@ jobs:
         run: yarn workspaces foreach -t run build
       - name: Run tests and collect coverage
         run: yarn workspaces foreach run test
-         timeout-minutes: 10
-         env:
+        timeout-minutes: 10
+        env:
           FHIR_DATABASE_NAME: tsgenfhi
           FHIR_DATABASE_HOST: localhost
           FHIR_DATABASE_PORT: 5432
