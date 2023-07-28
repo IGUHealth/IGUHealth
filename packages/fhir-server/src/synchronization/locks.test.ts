@@ -53,7 +53,6 @@ test("redisLock", async () => {
   const promises: Promise<void>[] = [];
   for (let i = 0; i < 10; i++) {
     // Test that synchronous code works
-
     promises.push(
       redlock.using([lockId], 5000, async (signal) => {
         console.log("[LOCKACQUIRED] ");
