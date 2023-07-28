@@ -14,7 +14,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
         ports:
-          # Maps tcp port 6379 on service container to the host
+          # Maps port 6379 on service container to the host
           - 6379:6379
       postgres:
         # Docker Hub image
@@ -54,11 +54,11 @@ jobs:
         timeout-minutes: 10
         env:
           FHIR_DATABASE_NAME: postgres
-          FHIR_DATABASE_HOST: postgres
+          FHIR_DATABASE_HOST: localhost
           FHIR_DATABASE_PORT: 5432
           FHIR_DATABASE_PASSWORD: "postgres"
           FHIR_DATABASE_USERNAME: postgres
-          REDIS_HOST: redis
+          REDIS_HOST: localhost
           REDIS_PORT: 6379
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3

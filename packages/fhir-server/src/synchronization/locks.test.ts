@@ -10,10 +10,9 @@ function timeout(ms: number) {
 }
 
 test("redisLock", async () => {
-  console.log(process.env);
   const lock = new RedisLock({
     host: process.env.REDIS_HOST,
-    port: parseInt(process.env.REDIS_PORT || ""),
+    port: parseInt(process.env.REDIS_PORT || "6739"),
   });
 
   let sharedValue = 0;
