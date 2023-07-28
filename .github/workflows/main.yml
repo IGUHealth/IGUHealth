@@ -53,17 +53,13 @@ jobs:
         run: yarn workspaces foreach run test
         timeout-minutes: 10
         env:
-          FHIR_DATABASE_NAME: tsgenfhi
-          FHIR_DATABASE_HOST: localhost
+          FHIR_DATABASE_NAME: postgres
+          FHIR_DATABASE_HOST: postgres
           FHIR_DATABASE_PORT: 5432
           FHIR_DATABASE_PASSWORD: "postgres"
           FHIR_DATABASE_USERNAME: postgres
           REDIS_HOST: redis
           REDIS_PORT: 6379
-          # The hostname used to communicate with the PostgreSQL service container
-          POSTGRES_HOST: postgres
-          # The default PostgreSQL port
-          POSTGRES_PORT: 5432
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
