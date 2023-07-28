@@ -1,5 +1,6 @@
 import { expect, test } from "@jest/globals";
 import PostgresLock from "./postgres.lock.js";
+import Redis from "ioredis";
 import RedisLock from "./redis.lock.js";
 import dotEnv from "dotenv";
 
@@ -10,10 +11,11 @@ function timeout(ms: number) {
 }
 
 test("redisLock", async () => {
-  const lock = new RedisLock({
+  const redisClient = new Redis({
     host: process.env.REDIS_HOST,
     port: parseInt(process.env.REDIS_PORT || "6739"),
   });
+  const lock = new RedisLock(redisClient);
 
   let sharedValue = 0;
   const lockId = "test-lock";
@@ -38,6 +40,7 @@ test("redisLock", async () => {
     );
   }
   await Promise.all(promises);
+  redisClient.disconnect();
 });
 
 test("Test PostgresLock", async () => {

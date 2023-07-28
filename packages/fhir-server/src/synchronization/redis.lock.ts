@@ -30,12 +30,11 @@ const defaultSettings: Settings = {
 
 export default class RedisLock implements Lock<RedlockAbortSignal> {
   private _lock: Redlock;
-  constructor(config: RedisOptions, lockSettings: Settings = defaultSettings) {
-    const redisA = new Redis(config);
+  constructor(client: Redis, lockSettings: Settings = defaultSettings) {
     this._lock = new Redlock(
       // You should have one client for each independent redis node
       // or cluster.
-      [redisA],
+      [client],
       lockSettings
     );
 
