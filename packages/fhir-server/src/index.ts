@@ -37,7 +37,7 @@ import routes from "./oidc-provider/routes.js";
 import { loadJWKS } from "./auth/jwks.js";
 import { KoaRequestToFHIRRequest } from "./fhirRequest/index.js";
 import PostgresLock from "./synchronization/postgres.lock.js";
-import AWSExecutor from "./operation-executors/awsLambda.js";
+import LambdaExecutioner from "./operation-executors/awsLambda.js";
 
 dotEnv.config();
 
@@ -165,7 +165,7 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
     {
       resourcesSupported: [...resourceTypes] as ResourceType[],
       interactionsSupported: ["invoke-request"],
-      source: AWSExecutor,
+      source: LambdaExecutioner(),
     },
     {
       resourcesSupported: MEMORY_TYPES as ResourceType[],

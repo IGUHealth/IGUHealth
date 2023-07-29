@@ -6,10 +6,13 @@ import {
 } from "@aws-sdk/client-lambda";
 import { Operation, OpCTX, Invocation } from "@iguhealth/operation-execution";
 
+import { AsynchronousClient } from "../client/index.js";
+import { MiddlewareAsync, createMiddlewareAsync } from "../client/middleware";
 import { FHIRServerCTX } from "../fhirServer";
 import { Executioner, InvokeRequest, InvokeResponse } from "./types";
 import { resolveOperationDefinition, getOperationCode } from "./utilities";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
+import { FHIRRequest } from "../client/types";
 
 const client = new LambdaClient({
   region: "us-east-1",
@@ -116,68 +119,104 @@ async function createPayload(
   };
 }
 
-const executor: Executioner = async (
-  ctx: FHIRServerCTX,
-  request: InvokeRequest
-): Promise<InvokeResponse> => {
-  const operationDefinition = await resolveOperationDefinition(ctx, request);
-  const op = new Operation(operationDefinition);
-  const opCTX = getOpCTX(ctx, request);
+const executor: MiddlewareAsync<{}, FHIRServerCTX> = createMiddlewareAsync<
+  {},
+  FHIRServerCTX
+>([
+  async (request, { ctx, state }, next) => {
+    switch (request.type) {
+      case "invoke-request": {
+        const operationDefinition = await resolveOperationDefinition(
+          ctx,
+          request
+        );
+        const op = new Operation(operationDefinition);
+        const opCTX = getOpCTX(ctx, request);
 
-  const getFunction = new GetFunctionCommand({
-    FunctionName: getLambdaFunctionName(ctx, op),
-  });
+        const getFunction = new GetFunctionCommand({
+          FunctionName: getLambdaFunctionName(ctx, op),
+        });
 
-  const response = await client.send(getFunction);
-  if (!response) await createLambdaFunction(ctx, op);
+        const response = await client.send(getFunction);
+        if (!response) await createLambdaFunction(ctx, op);
 
-  const payload = await createPayload(ctx, op, request);
+        const payload = await createPayload(ctx, op, request);
 
-  const invoke = new InvokeCommand({
-    FunctionName: getLambdaFunctionName(ctx, op),
-    Payload: Buffer.from(JSON.stringify(payload)),
-  });
+        const invoke = new InvokeCommand({
+          FunctionName: getLambdaFunctionName(ctx, op),
+          Payload: Buffer.from(JSON.stringify(payload)),
+        });
 
-  const invokeResponse = await client.send(invoke);
-  const payloadString = invokeResponse.Payload?.toString();
-  if (!payloadString)
-    throw new OperationError(
-      outcomeFatal("invalid", "No payload returned from lambda invocation")
-    );
-  const output = JSON.parse(payloadString);
-  await op.validate(opCTX, "out", output);
+        const invokeResponse = await client.send(invoke);
+        const payloadString = invokeResponse.Payload?.toString();
+        if (!payloadString)
+          throw new OperationError(
+            outcomeFatal(
+              "invalid",
+              "No payload returned from lambda invocation"
+            )
+          );
+        const output = JSON.parse(payloadString);
+        await op.validate(opCTX, "out", output);
 
-  const outputParameters = op.parseToParameters("out", output);
+        const outputParameters = op.parseToParameters("out", output);
 
-  switch (request.level) {
-    case "instance": {
-      return {
-        operation: request.operation,
-        type: "invoke-response",
-        level: request.level,
-        body: outputParameters,
-        resourceType: request.resourceType,
-        id: request.id,
-      };
+        switch (request.level) {
+          case "instance": {
+            return {
+              ctx,
+              state,
+              response: {
+                operation: request.operation,
+                type: "invoke-response",
+                level: request.level,
+                body: outputParameters,
+                resourceType: request.resourceType,
+                id: request.id,
+              },
+            };
+          }
+          case "type": {
+            return {
+              ctx,
+              state,
+              response: {
+                operation: request.operation,
+                type: "invoke-response",
+                resourceType: request.resourceType,
+                level: request.level,
+                body: outputParameters,
+              },
+            };
+          }
+          case "system": {
+            return {
+              ctx,
+              state,
+              response: {
+                operation: request.operation,
+                type: "invoke-response",
+                level: request.level,
+                body: outputParameters,
+              },
+            };
+          }
+        }
+      }
+      default:
+        throw new OperationError(
+          outcomeFatal(
+            "invalid",
+            `Invocation client only supports invoke-request not '${request.type}'`
+          )
+        );
     }
-    case "type": {
-      return {
-        operation: request.operation,
-        type: "invoke-response",
-        resourceType: request.resourceType,
-        level: request.level,
-        body: outputParameters,
-      };
-    }
-    case "system": {
-      return {
-        operation: request.operation,
-        type: "invoke-response",
-        level: request.level,
-        body: outputParameters,
-      };
-    }
-  }
-};
+  },
+]);
 
-export default executor;
+export default function createLambdaExecutioner(): AsynchronousClient<
+  {},
+  FHIRServerCTX
+> {
+  return new AsynchronousClient<{}, FHIRServerCTX>({}, executor);
+}
