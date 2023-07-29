@@ -34,13 +34,17 @@ async function getLambda(
   ctx: FHIRServerCTX,
   operation: Operation<unknown, unknown>
 ) {
-  const getFunction = new GetFunctionCommand({
-    FunctionName: getLambdaFunctionName(ctx, operation),
-  });
+  try {
+    const getFunction = new GetFunctionCommand({
+      FunctionName: getLambdaFunctionName(ctx, operation),
+    });
 
-  const response = await client.send(getFunction);
+    const response = await client.send(getFunction);
 
-  return response;
+    return response;
+  } catch (e) {
+    return undefined;
+  }
 }
 
 async function createLambdaFunction(
@@ -49,7 +53,7 @@ async function createLambdaFunction(
   operation: Operation<unknown, unknown>
 ) {
   const lambdaName = getLambdaFunctionName(ctx, operation);
-  ctx.lock.withLock(lambdaName, async () => {
+  await ctx.lock.withLock(lambdaName, async () => {
     // Confirm lambda does not exist when lock taken.
     const lambda = await getLambda(client, ctx, operation);
     if (lambda) return;
@@ -67,13 +71,17 @@ async function createLambdaFunction(
     const createFunction = new CreateFunctionCommand({
       FunctionName: lambdaName,
       Role: process.env.AWS_LAMBDA_ROLE_ARN as string,
+      Tags: {
+        workspace: ctx.workspace,
+        id: operation.operationDefinition.id as string,
+        versionId: operation.operationDefinition.meta?.versionId as string,
+      },
       Code: {
         ZipFile: Buffer.from(operationCode),
       },
     });
 
     const response = await client.send(createFunction);
-    console.log(response);
 
     return;
   });
@@ -130,12 +138,8 @@ function createExecutor(
             const op = new Operation(operationDefinition);
             const opCTX = getOpCTX(ctx, request);
 
-            const getFunction = new GetFunctionCommand({
-              FunctionName: getLambdaFunctionName(ctx, op),
-            });
-
-            const response = await client.send(getFunction);
-            if (!response) await createLambdaFunction(client, ctx, op);
+            const lambda = await getLambda(client, ctx, op);
+            if (!lambda) await createLambdaFunction(client, ctx, op);
 
             const payload = await createPayload(ctx, op, request);
 
