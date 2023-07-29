@@ -19,7 +19,7 @@ import * as jose from "jose";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import MemoryDatabase from "./resourceProviders/memory.js";
-import RouterDatabase from "./resourceProviders/router.js";
+import RouterClient from "./resourceProviders/router.js";
 import { FHIRClientSync } from "./client/interface.js";
 import createFHIRServer, { FHIRServerCTX } from "./fhirServer.js";
 import { createPostgresClient } from "./resourceProviders/postgres/index.js";
@@ -160,8 +160,8 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
     "SearchParameter",
   ]);
 
-  const client = RouterDatabase([
-    // Execution
+  const client = RouterClient([
+    // OP INVOCATION
     {
       resourcesSupported: [...resourceTypes] as ResourceType[],
       interactionsSupported: ["invoke-request"],
@@ -176,7 +176,6 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
       resourcesSupported: [...resourceTypes].filter(
         (type) => MEMORY_TYPES.indexOf(type) === -1
       ) as ResourceType[],
-
       interactionsSupported: [
         "read-request",
         "search-request",

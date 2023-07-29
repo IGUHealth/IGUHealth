@@ -140,7 +140,7 @@ function createRouterMiddleware<
   ]);
 }
 
-export default function RouterDatabase<CTX extends FHIRServerCTX>(
+export default function RouterClient<CTX extends FHIRServerCTX>(
   sources: Sources<CTX>
 ): AsynchronousClient<{ sources: Sources<CTX> }, CTX> {
   return new AsynchronousClient<{ sources: Sources<CTX> }, CTX>(
