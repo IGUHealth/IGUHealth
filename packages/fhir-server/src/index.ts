@@ -132,10 +132,8 @@ function fhirResponseToKoaResponse(
           `could not convert response to http of type '${fhirResponse.type}'`
         )
       );
-    default:
-      throw new Error(
-        `Could not convert response to http of type '${fhirResponse.type}'`
-      );
+    case "invoke-response":
+      return { body: fhirResponse.body, status: 200 };
   }
 }
 

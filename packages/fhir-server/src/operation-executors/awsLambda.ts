@@ -154,7 +154,6 @@ function createExecutor(
 
             const invokeResponse = await client.send(invoke);
             const payloadString = invokeResponse.Payload?.transformToString();
-            console.log("payload:", payloadString);
             if (!payloadString)
               throw new OperationError(
                 outcomeFatal(
