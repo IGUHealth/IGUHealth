@@ -37,6 +37,7 @@ import routes from "./oidc-provider/routes.js";
 import { loadJWKS } from "./auth/jwks.js";
 import { KoaRequestToFHIRRequest } from "./fhirRequest/index.js";
 import PostgresLock from "./synchronization/postgres.lock.js";
+import AWSExecutor from "./operation-executors/awsLambda.js";
 
 dotEnv.config();
 
@@ -159,7 +160,13 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
     "SearchParameter",
   ]);
 
-  const database = RouterDatabase([
+  const client = RouterDatabase([
+    // Execution
+    {
+      resourcesSupported: [...resourceTypes] as ResourceType[],
+      interactionsSupported: ["invoke-request"],
+      source: AWSExecutor,
+    },
     {
       resourcesSupported: MEMORY_TYPES as ResourceType[],
       interactionsSupported: ["read-request", "search-request"],
@@ -188,7 +195,7 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
 
   const services = {
     capabilities: serverCapabilities(),
-    database: database,
+    client,
     resolveSD: (ctx: FHIRServerCTX, type: string) =>
       memoryDatabase.read(ctx, "StructureDefinition", type),
     lock: new PostgresLock({

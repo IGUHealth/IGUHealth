@@ -110,7 +110,8 @@ function createRouterMiddleware<
           return { state: args.state, ctx: args.ctx, response: responses[0] };
         }
 
-        // Mutations should only have one source
+        // Mutations and invocations should only have one source
+        case "invoke-request":
         case "batch-request":
         case "transaction-request":
         case "create-request":

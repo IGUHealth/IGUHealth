@@ -15,7 +15,7 @@ export async function resolveOperationDefinition(
 ): Promise<OperationDefinition> {
   const { operation } = request;
 
-  const operationDefinition = await ctx.database.search_type(
+  const operationDefinition = await ctx.client.search_type(
     ctx,
     "OperationDefinition",
     [{ name: "code", value: [operation] }]

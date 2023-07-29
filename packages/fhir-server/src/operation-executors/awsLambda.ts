@@ -116,7 +116,7 @@ async function createPayload(
   };
 }
 
-export const exector: Executioner = async (
+const executor: Executioner = async (
   ctx: FHIRServerCTX,
   request: InvokeRequest
 ): Promise<InvokeResponse> => {
@@ -179,3 +179,5 @@ export const exector: Executioner = async (
     }
   }
 };
+
+export default executor;

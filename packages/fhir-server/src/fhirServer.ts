@@ -18,7 +18,7 @@ async function fhirRequestToFHIRResponse(
   ctx: FHIRServerCTX,
   request: FHIRRequest
 ): Promise<FHIRResponse> {
-  return ctx.database.request(ctx, request);
+  return ctx.client.request(ctx, request);
 }
 
 export interface FHIRServerCTX {
@@ -27,7 +27,7 @@ export interface FHIRServerCTX {
 
   // Services setup
   capabilities: CapabilityStatement;
-  database: FHIRClient<FHIRServerCTX>;
+  client: FHIRClient<FHIRServerCTX>;
   lock: Lock<unknown>;
   resolveSD: (
     ctx: FHIRServerCTX,
