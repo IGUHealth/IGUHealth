@@ -1,9 +1,15 @@
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  outcomeError,
+  outcomeFatal,
+} from "@iguhealth/operation-outcomes";
 import { OperationDefinition } from "@iguhealth/fhir-types";
 import { evaluate } from "@iguhealth/fhirpath";
+import AdmZip from "adm-zip";
 
 import { InvokeRequest } from "./types";
 import { FHIRServerCTX } from "../fhirServer";
+import { Stream } from "stream";
 
 export async function resolveOperationDefinition(
   ctx: FHIRServerCTX,
@@ -11,7 +17,7 @@ export async function resolveOperationDefinition(
 ): Promise<OperationDefinition> {
   const { operation } = request;
 
-  const operationDefinition = await ctx.database.search_type(
+  const operationDefinition = await ctx.client.search_type(
     ctx,
     "OperationDefinition",
     [{ name: "code", value: [operation] }]
@@ -34,9 +40,34 @@ export async function resolveOperationDefinition(
   return operationDefinition[0];
 }
 
-export async function getCode(
+const EXT_URL =
+  "https://iguhealth.github.io/fhir-operation-definition/operation-code";
+
+export async function getOperationCode(
   ctx: FHIRServerCTX,
   operation: OperationDefinition
-): Promise<string> {
-  throw new Error();
+): Promise<Buffer | undefined> {
+  const code = evaluate(
+    "$this.extension.where(url=%codeUrl).valueString",
+    operation,
+    {
+      variables: {
+        codeUrl: EXT_URL,
+      },
+    }
+  );
+  if (code.length === 0) return undefined;
+  if (typeof code[0] !== "string")
+    throw new OperationError(
+      outcomeFatal(
+        "invalid",
+        "Expected code to be a string for operation '${operation.id}'"
+      )
+    );
+
+  const stream = new Stream.Writable();
+  const zip = new AdmZip();
+  zip.addFile("index.js", Buffer.alloc(code[0].length, code[0]), "executable");
+
+  return zip.toBuffer();
 }

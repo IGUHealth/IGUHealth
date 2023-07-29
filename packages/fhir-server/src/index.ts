@@ -19,7 +19,7 @@ import * as jose from "jose";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import MemoryDatabase from "./resourceProviders/memory.js";
-import RouterDatabase from "./resourceProviders/router.js";
+import RouterClient from "./resourceProviders/router.js";
 import { FHIRClientSync } from "./client/interface.js";
 import createFHIRServer, { FHIRServerCTX } from "./fhirServer.js";
 import { createPostgresClient } from "./resourceProviders/postgres/index.js";
@@ -36,6 +36,8 @@ import configuration from "./oidc-provider/configuration.js";
 import routes from "./oidc-provider/routes.js";
 import { loadJWKS } from "./auth/jwks.js";
 import { KoaRequestToFHIRRequest } from "./fhirRequest/index.js";
+import PostgresLock from "./synchronization/postgres.lock.js";
+import LambdaExecutioner from "./operation-executors/awsLambda.js";
 
 dotEnv.config();
 
@@ -130,10 +132,8 @@ function fhirResponseToKoaResponse(
           `could not convert response to http of type '${fhirResponse.type}'`
         )
       );
-    default:
-      throw new Error(
-        `Could not convert response to http of type '${fhirResponse.type}'`
-      );
+    case "invoke-response":
+      return { body: fhirResponse.body, status: 200 };
   }
 }
 
@@ -158,7 +158,19 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
     "SearchParameter",
   ]);
 
-  const database = RouterDatabase([
+  const client = RouterClient([
+    // OP INVOCATION
+    {
+      resourcesSupported: [...resourceTypes] as ResourceType[],
+      interactionsSupported: ["invoke-request"],
+      source: LambdaExecutioner({
+        AWS_REGION: process.env.AWS_REGION as string,
+        AWS_ACCESS_KEY_ID: process.env.AWS_LAMBDA_ACCESS_KEY_ID as string,
+        AWS_ACCESS_KEY_SECRET: process.env
+          .AWS_LAMBDA_ACCESS_KEY_SECRET as string,
+        LAMBDA_ROLE: process.env.AWS_LAMBDA_ROLE as string,
+      }),
+    },
     {
       resourcesSupported: MEMORY_TYPES as ResourceType[],
       interactionsSupported: ["read-request", "search-request"],
@@ -168,7 +180,6 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
       resourcesSupported: [...resourceTypes].filter(
         (type) => MEMORY_TYPES.indexOf(type) === -1
       ) as ResourceType[],
-
       interactionsSupported: [
         "read-request",
         "search-request",
@@ -187,9 +198,16 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
 
   const services = {
     capabilities: serverCapabilities(),
-    database: database,
+    client,
     resolveSD: (ctx: FHIRServerCTX, type: string) =>
       memoryDatabase.read(ctx, "StructureDefinition", type),
+    lock: new PostgresLock({
+      user: process.env["FHIR_DATABASE_USERNAME"],
+      password: process.env["FHIR_DATABASE_PASSWORD"],
+      host: process.env["FHIR_DATABASE_HOST"],
+      database: process.env["FHIR_DATABASE_NAME"],
+      port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
+    }),
   };
 
   const fhirServer = createFHIRServer();

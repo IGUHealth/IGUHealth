@@ -5,6 +5,7 @@ import {
   ResourceType,
   id,
 } from "@iguhealth/fhir-types/r4/types";
+import { OPMetadata, IOperation } from "@iguhealth/operation-execution";
 
 import { MiddlewareSync, MiddlewareAsync } from "./middleware/index.js";
 import { FHIRClientAsync, FHIRClientSync } from "./interface";
@@ -23,6 +24,65 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     this.state = res.state;
     return res.response;
   }
+  async invoke_system<Op extends IOperation<unknown, unknown>>(
+    op: Op,
+    ctx: CTX,
+    input: OPMetadata<Op>["Input"]
+  ): Promise<OPMetadata<Op>["Output"]> {
+    const response = await this.request(ctx, {
+      type: "invoke-request",
+      level: "system",
+      operation: op.code,
+      body: op.parseToParameters("in", input),
+    });
+    if (response.type !== "invoke-response")
+      throw new Error("Unexpected response type");
+    return op.parseToObject("out", response.body);
+  }
+  async invoke_type<
+    Op extends IOperation<unknown, unknown>,
+    T extends ResourceType
+  >(
+    op: Op,
+    ctx: CTX,
+    resourceType: T,
+    input: OPMetadata<Op>["Input"]
+  ): Promise<OPMetadata<Op>["Output"]> {
+    const response = await this.request(ctx, {
+      type: "invoke-request",
+      level: "type",
+      operation: op.code,
+      resourceType,
+      body: op.parseToParameters("in", input),
+    });
+    if (response.type !== "invoke-response")
+      throw new Error("Unexpected response type");
+    return op.parseToObject("out", response.body);
+  }
+
+  async invoke_instance<
+    Op extends IOperation<unknown, unknown>,
+    T extends ResourceType
+  >(
+    op: Op,
+    ctx: CTX,
+    resourceType: T,
+    id: id,
+    input: OPMetadata<Op>["Input"]
+  ): Promise<OPMetadata<Op>["Output"]> {
+    const response = await this.request(ctx, {
+      type: "invoke-request",
+      level: "instance",
+      operation: op.code,
+      resourceType,
+      id,
+      body: op.parseToParameters("in", input),
+    });
+    if (response.type !== "invoke-response")
+      throw new Error("Unexpected response type");
+    return op.parseToObject("out", response.body);
+  }
+
   async search_system(
     ctx: CTX,
     parameters: ParsedParameter<string | number>[]

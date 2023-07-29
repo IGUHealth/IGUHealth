@@ -110,7 +110,8 @@ function createRouterMiddleware<
           return { state: args.state, ctx: args.ctx, response: responses[0] };
         }
 
-        // Mutations should only have one source
+        // Mutations and invocations should only have one source
+        case "invoke-request":
         case "batch-request":
         case "transaction-request":
         case "create-request":
@@ -139,7 +140,7 @@ function createRouterMiddleware<
   ]);
 }
 
-export default function RouterDatabase<CTX extends FHIRServerCTX>(
+export default function RouterClient<CTX extends FHIRServerCTX>(
   sources: Sources<CTX>
 ): AsynchronousClient<{ sources: Sources<CTX> }, CTX> {
   return new AsynchronousClient<{ sources: Sources<CTX> }, CTX>(

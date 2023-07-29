@@ -350,7 +350,7 @@ export interface IOperation<I, O> {
 
 export type Executor<CTX, I, O> = (ctx: CTX, input: I) => Promise<O>;
 
-type OPMetadata<O> = O extends IOperation<infer Input, infer Output>
+export type OPMetadata<O> = O extends IOperation<infer Input, infer Output>
   ? { Input: Input; Output: Output }
   : never;
 

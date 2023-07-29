@@ -83,7 +83,7 @@ async function getAllParametersForResource<CTX extends FHIRServerCTX>(
     parameters = [...parameters, { name: "name", value: names }];
   }
 
-  return await ctx.database.search_type(ctx, "SearchParameter", parameters);
+  return await ctx.client.search_type(ctx, "SearchParameter", parameters);
 }
 // ---------------------------------------------------------
 // [DATA TYPE CONVERSIONS]
