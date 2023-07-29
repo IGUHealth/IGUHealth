@@ -34,7 +34,7 @@ export async function resolveOperationDefinition(
   return operationDefinition[0];
 }
 
-export async function getCode(
+export async function getOperationCode(
   ctx: FHIRServerCTX,
   operation: OperationDefinition
 ): Promise<string> {

@@ -12,6 +12,7 @@ import { createMiddlewareAsync } from "./client/middleware/index.js";
 import { FHIRClient } from "./client/interface.js";
 import { FHIRRequest, FHIRResponse } from "./client/types";
 import validate from "@iguhealth/fhir-validation";
+import { Lock } from "./synchronization/interfaces.js";
 
 async function fhirRequestToFHIRResponse(
   ctx: FHIRServerCTX,
@@ -27,6 +28,7 @@ export interface FHIRServerCTX {
   // Services setup
   capabilities: CapabilityStatement;
   database: FHIRClient<FHIRServerCTX>;
+  lock: Lock<unknown>;
   resolveSD: (
     ctx: FHIRServerCTX,
     type: string

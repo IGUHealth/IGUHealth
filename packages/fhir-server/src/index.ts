@@ -36,6 +36,7 @@ import configuration from "./oidc-provider/configuration.js";
 import routes from "./oidc-provider/routes.js";
 import { loadJWKS } from "./auth/jwks.js";
 import { KoaRequestToFHIRRequest } from "./fhirRequest/index.js";
+import PostgresLock from "./synchronization/postgres.lock.js";
 
 dotEnv.config();
 
@@ -190,6 +191,13 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
     database: database,
     resolveSD: (ctx: FHIRServerCTX, type: string) =>
       memoryDatabase.read(ctx, "StructureDefinition", type),
+    lock: new PostgresLock({
+      user: process.env["FHIR_DATABASE_USERNAME"],
+      password: process.env["FHIR_DATABASE_PASSWORD"],
+      host: process.env["FHIR_DATABASE_HOST"],
+      database: process.env["FHIR_DATABASE_NAME"],
+      port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
+    }),
   };
 
   const fhirServer = createFHIRServer();
