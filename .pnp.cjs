@@ -6299,6 +6299,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@jest/globals", "npm:29.6.1"],\
             ["@koa/bodyparser", "npm:5.0.0"],\
             ["@koa/router", "npm:12.0.0"],\
+            ["@types/adm-zip", "npm:0.5.0"],\
             ["@types/jest", "npm:29.5.2"],\
             ["@types/koa", "npm:2.13.6"],\
             ["@types/koa-mount", "npm:4.0.2"],\
@@ -6307,6 +6308,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/oidc-provider", "npm:8.2.0"],\
             ["@types/pg", "npm:8.10.2"],\
             ["@types/uuid", "npm:9.0.2"],\
+            ["adm-zip", "npm:0.5.10"],\
             ["dayjs", "npm:1.11.9"],\
             ["db-migrate", "npm:1.0.0-beta.21"],\
             ["db-migrate-pg", "npm:1.3.0"],\
@@ -10904,6 +10906,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@types/adm-zip", [\
+        ["npm:0.5.0", {\
+          "packageLocation": "./.yarn/cache/@types-adm-zip-npm-0.5.0-c475a24319-11dd013584.zip/node_modules/@types/adm-zip/",\
+          "packageDependencies": [\
+            ["@types/adm-zip", "npm:0.5.0"],\
+            ["@types/node", "npm:20.3.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@types/argparse", [\
         ["npm:1.0.38", {\
           "packageLocation": "./.yarn/cache/@types-argparse-npm-1.0.38-657c15204c-26ed7e3f1e.zip/node_modules/@types/argparse/",\
@@ -12526,6 +12538,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["adjust-sourcemap-loader", "npm:4.0.0"],\
             ["loader-utils", "npm:2.0.4"],\
             ["regex-parser", "npm:2.2.11"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["adm-zip", [\
+        ["npm:0.5.10", {\
+          "packageLocation": "./.yarn/cache/adm-zip-npm-0.5.10-17a872f2fd-07ed91cf64.zip/node_modules/adm-zip/",\
+          "packageDependencies": [\
+            ["adm-zip", "npm:0.5.10"]\
           ],\
           "linkType": "HARD"\
         }]\

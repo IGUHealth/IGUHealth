@@ -5,9 +5,11 @@ import {
 } from "@iguhealth/operation-outcomes";
 import { OperationDefinition } from "@iguhealth/fhir-types";
 import { evaluate } from "@iguhealth/fhirpath";
+import AdmZip from "adm-zip";
 
 import { InvokeRequest } from "./types";
 import { FHIRServerCTX } from "../fhirServer";
+import { Stream } from "stream";
 
 export async function resolveOperationDefinition(
   ctx: FHIRServerCTX,
@@ -44,7 +46,7 @@ const EXT_URL =
 export async function getOperationCode(
   ctx: FHIRServerCTX,
   operation: OperationDefinition
-): Promise<string | undefined> {
+): Promise<Buffer | undefined> {
   const code = evaluate(
     "$this.extension.where(url=%codeUrl).valueString",
     operation,
@@ -63,5 +65,9 @@ export async function getOperationCode(
       )
     );
 
-  return code[0];
+  const stream = new Stream.Writable();
+  const zip = new AdmZip();
+  zip.addFile("index.js", Buffer.alloc(code[0].length, code[0]), "executable");
+
+  return zip.toBuffer();
 }

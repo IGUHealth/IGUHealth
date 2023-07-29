@@ -49,6 +49,7 @@ async function getLambda(
 
 async function createLambdaFunction(
   client: LambdaClient,
+  role: string,
   ctx: FHIRServerCTX,
   operation: Operation<unknown, unknown>
 ) {
@@ -70,14 +71,16 @@ async function createLambdaFunction(
 
     const createFunction = new CreateFunctionCommand({
       FunctionName: lambdaName,
-      Role: process.env.AWS_LAMBDA_ROLE_ARN as string,
+      Runtime: "nodejs18.x",
+      Handler: "index.handler",
+      Role: role,
       Tags: {
         workspace: ctx.workspace,
         id: operation.operationDefinition.id as string,
         versionId: operation.operationDefinition.meta?.versionId as string,
       },
       Code: {
-        ZipFile: Buffer.from(operationCode),
+        ZipFile: operationCode,
       },
     });
 
@@ -124,6 +127,7 @@ async function createPayload(
 }
 
 function createExecutor(
+  role: string,
   client: LambdaClient
 ): MiddlewareAsync<{}, FHIRServerCTX> {
   return createMiddlewareAsync<{}, FHIRServerCTX>([
@@ -139,7 +143,7 @@ function createExecutor(
             const opCTX = getOpCTX(ctx, request);
 
             const lambda = await getLambda(client, ctx, op);
-            if (!lambda) await createLambdaFunction(client, ctx, op);
+            if (!lambda) await createLambdaFunction(client, role, ctx, op);
 
             const payload = await createPayload(ctx, op, request);
 
@@ -149,7 +153,8 @@ function createExecutor(
             });
 
             const invokeResponse = await client.send(invoke);
-            const payloadString = invokeResponse.Payload?.toString();
+            const payloadString = invokeResponse.Payload?.transformToString();
+            console.log("payload:", payloadString);
             if (!payloadString)
               throw new OperationError(
                 outcomeFatal(
@@ -224,10 +229,12 @@ type Config = {
   AWS_REGION: string;
   AWS_ACCESS_KEY_ID: string;
   AWS_ACCESS_KEY_SECRET: string;
+  LAMBDA_ROLE: string;
 };
 
 export default function createLambdaExecutioner({
   AWS_REGION,
+  LAMBDA_ROLE,
   AWS_ACCESS_KEY_ID,
   AWS_ACCESS_KEY_SECRET,
 }: Config): AsynchronousClient<{}, FHIRServerCTX> {
@@ -238,5 +245,8 @@ export default function createLambdaExecutioner({
       secretAccessKey: AWS_ACCESS_KEY_SECRET,
     },
   });
-  return new AsynchronousClient<{}, FHIRServerCTX>({}, createExecutor(client));
+  return new AsynchronousClient<{}, FHIRServerCTX>(
+    {},
+    createExecutor(LAMBDA_ROLE, client)
+  );
 }
