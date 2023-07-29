@@ -165,7 +165,12 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
     {
       resourcesSupported: [...resourceTypes] as ResourceType[],
       interactionsSupported: ["invoke-request"],
-      source: LambdaExecutioner(),
+      source: LambdaExecutioner({
+        AWS_REGION: process.env.AWS_REGION as string,
+        AWS_ACCESS_KEY_ID: process.env.AWS_LAMBDA_ACCESS_KEY_ID as string,
+        AWS_ACCESS_KEY_SECRET: process.env
+          .AWS_LAMBDA_ACCESS_KEY_SECRET as string,
+      }),
     },
     {
       resourcesSupported: MEMORY_TYPES as ResourceType[],
