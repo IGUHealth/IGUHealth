@@ -511,6 +511,51 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@aws-sdk/client-resource-groups-tagging-api", [\
+        ["npm:3.379.1", {\
+          "packageLocation": "./.yarn/cache/@aws-sdk-client-resource-groups-tagging-api-npm-3.379.1-43175fa17c-5eed509d57.zip/node_modules/@aws-sdk/client-resource-groups-tagging-api/",\
+          "packageDependencies": [\
+            ["@aws-sdk/client-resource-groups-tagging-api", "npm:3.379.1"],\
+            ["@aws-crypto/sha256-browser", "npm:3.0.0"],\
+            ["@aws-crypto/sha256-js", "npm:3.0.0"],\
+            ["@aws-sdk/client-sts", "npm:3.379.1"],\
+            ["@aws-sdk/credential-provider-node", "npm:3.379.1"],\
+            ["@aws-sdk/middleware-host-header", "npm:3.379.1"],\
+            ["@aws-sdk/middleware-logger", "npm:3.378.0"],\
+            ["@aws-sdk/middleware-recursion-detection", "npm:3.378.0"],\
+            ["@aws-sdk/middleware-signing", "npm:3.379.1"],\
+            ["@aws-sdk/middleware-user-agent", "npm:3.379.1"],\
+            ["@aws-sdk/types", "npm:3.378.0"],\
+            ["@aws-sdk/util-endpoints", "npm:3.378.0"],\
+            ["@aws-sdk/util-user-agent-browser", "npm:3.378.0"],\
+            ["@aws-sdk/util-user-agent-node", "virtual:a422c3c7b4ec8e978603560dcc69805075e19fb0ebc83ee02fd727041d95888c359c2d42411ca2e18cf55332bd4246a5c046351883f6e61f427d15ffa4f7414b#npm:3.378.0"],\
+            ["@smithy/config-resolver", "npm:2.0.1"],\
+            ["@smithy/fetch-http-handler", "npm:2.0.1"],\
+            ["@smithy/hash-node", "npm:2.0.1"],\
+            ["@smithy/invalid-dependency", "npm:2.0.1"],\
+            ["@smithy/middleware-content-length", "npm:2.0.1"],\
+            ["@smithy/middleware-endpoint", "npm:2.0.1"],\
+            ["@smithy/middleware-retry", "npm:2.0.1"],\
+            ["@smithy/middleware-serde", "npm:2.0.1"],\
+            ["@smithy/middleware-stack", "npm:2.0.0"],\
+            ["@smithy/node-config-provider", "npm:2.0.1"],\
+            ["@smithy/node-http-handler", "npm:2.0.1"],\
+            ["@smithy/protocol-http", "npm:2.0.1"],\
+            ["@smithy/smithy-client", "npm:2.0.1"],\
+            ["@smithy/types", "npm:2.0.2"],\
+            ["@smithy/url-parser", "npm:2.0.1"],\
+            ["@smithy/util-base64", "npm:2.0.0"],\
+            ["@smithy/util-body-length-browser", "npm:2.0.0"],\
+            ["@smithy/util-body-length-node", "npm:2.0.0"],\
+            ["@smithy/util-defaults-mode-browser", "npm:2.0.1"],\
+            ["@smithy/util-defaults-mode-node", "npm:2.0.1"],\
+            ["@smithy/util-retry", "npm:2.0.0"],\
+            ["@smithy/util-utf8", "npm:2.0.0"],\
+            ["tslib", "npm:2.6.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@aws-sdk/client-sso", [\
         ["npm:3.379.1", {\
           "packageLocation": "./.yarn/cache/@aws-sdk-client-sso-npm-3.379.1-a422c3c7b4-be2232c580.zip/node_modules/@aws-sdk/client-sso/",\
@@ -6241,6 +6286,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@iguhealth/fhir-server", "workspace:packages/fhir-server"],\
             ["@aws-sdk/client-lambda", "npm:3.379.1"],\
+            ["@aws-sdk/client-resource-groups-tagging-api", "npm:3.379.1"],\
             ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
             ["@iguhealth/cli", "workspace:packages/cli"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\

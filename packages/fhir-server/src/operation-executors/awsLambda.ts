@@ -26,7 +26,7 @@ function getLambdaFunctionName(
       outcomeFatal("invalid", "OperationDefinition.meta is required")
     );
 
-  return `${ctx.workspace}/${definition.meta.versionId}`;
+  return `${ctx.workspace}-${definition.meta.versionId}`;
 }
 
 async function getLambda(

@@ -260,6 +260,50 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@aws-sdk/client-resource-groups-tagging-api@npm:^3.379.1":
+  version: 3.379.1
+  resolution: "@aws-sdk/client-resource-groups-tagging-api@npm:3.379.1"
+  dependencies:
+    "@aws-crypto/sha256-browser": 3.0.0
+    "@aws-crypto/sha256-js": 3.0.0
+    "@aws-sdk/client-sts": 3.379.1
+    "@aws-sdk/credential-provider-node": 3.379.1
+    "@aws-sdk/middleware-host-header": 3.379.1
+    "@aws-sdk/middleware-logger": 3.378.0
+    "@aws-sdk/middleware-recursion-detection": 3.378.0
+    "@aws-sdk/middleware-signing": 3.379.1
+    "@aws-sdk/middleware-user-agent": 3.379.1
+    "@aws-sdk/types": 3.378.0
+    "@aws-sdk/util-endpoints": 3.378.0
+    "@aws-sdk/util-user-agent-browser": 3.378.0
+    "@aws-sdk/util-user-agent-node": 3.378.0
+    "@smithy/config-resolver": ^2.0.1
+    "@smithy/fetch-http-handler": ^2.0.1
+    "@smithy/hash-node": ^2.0.1
+    "@smithy/invalid-dependency": ^2.0.1
+    "@smithy/middleware-content-length": ^2.0.1
+    "@smithy/middleware-endpoint": ^2.0.1
+    "@smithy/middleware-retry": ^2.0.1
+    "@smithy/middleware-serde": ^2.0.1
+    "@smithy/middleware-stack": ^2.0.0
+    "@smithy/node-config-provider": ^2.0.1
+    "@smithy/node-http-handler": ^2.0.1
+    "@smithy/protocol-http": ^2.0.1
+    "@smithy/smithy-client": ^2.0.1
+    "@smithy/types": ^2.0.2
+    "@smithy/url-parser": ^2.0.1
+    "@smithy/util-base64": ^2.0.0
+    "@smithy/util-body-length-browser": ^2.0.0
+    "@smithy/util-body-length-node": ^2.0.0
+    "@smithy/util-defaults-mode-browser": ^2.0.1
+    "@smithy/util-defaults-mode-node": ^2.0.1
+    "@smithy/util-retry": ^2.0.0
+    "@smithy/util-utf8": ^2.0.0
+    tslib: ^2.5.0
+  checksum: 5eed509d574d4483a87d0292184678a01e855fb527b8ee3125a5bad12ac0d5b496ec1b884ffd254cdcadb30c5f24fce26afa3e921aba5f556e280740c9e8914a
+  languageName: node
+  linkType: hard
+
 "@aws-sdk/client-sso-oidc@npm:3.379.1":
   version: 3.379.1
   resolution: "@aws-sdk/client-sso-oidc@npm:3.379.1"
@@ -3117,6 +3161,7 @@ __metadata:
   resolution: "@iguhealth/fhir-server@workspace:packages/fhir-server"
   dependencies:
     "@aws-sdk/client-lambda": ^3.379.1
+    "@aws-sdk/client-resource-groups-tagging-api": ^3.379.1
     "@iguhealth/artifacts": "workspace:^"
     "@iguhealth/cli": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
