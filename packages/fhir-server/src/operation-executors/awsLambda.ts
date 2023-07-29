@@ -4,15 +4,17 @@ import {
   CreateFunctionCommand,
   InvokeCommand,
 } from "@aws-sdk/client-lambda";
-import { Operation, OpCTX, Invocation } from "@iguhealth/operation-execution";
+import { Operation, OpCTX } from "@iguhealth/operation-execution";
 
 import { AsynchronousClient } from "../client/index.js";
-import { MiddlewareAsync, createMiddlewareAsync } from "../client/middleware";
+import {
+  MiddlewareAsync,
+  createMiddlewareAsync,
+} from "../client/middleware/index.js";
 import { FHIRServerCTX } from "../fhirServer";
-import { Executioner, InvokeRequest, InvokeResponse } from "./types";
-import { resolveOperationDefinition, getOperationCode } from "./utilities";
+import { InvokeRequest } from "./types";
+import { resolveOperationDefinition, getOperationCode } from "./utilities.js";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
-import { FHIRRequest } from "../client/types";
 
 const client = new LambdaClient({
   region: "us-east-1",
