@@ -1,4 +1,8 @@
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  outcomeError,
+  outcomeFatal,
+} from "@iguhealth/operation-outcomes";
 import { OperationDefinition } from "@iguhealth/fhir-types";
 import { evaluate } from "@iguhealth/fhirpath";
 
@@ -34,9 +38,30 @@ export async function resolveOperationDefinition(
   return operationDefinition[0];
 }
 
+const EXT_URL =
+  "https://iguhealth.github.io/fhir-operation-definition/operation-code";
+
 export async function getOperationCode(
   ctx: FHIRServerCTX,
   operation: OperationDefinition
-): Promise<string> {
-  throw new Error();
+): Promise<string | undefined> {
+  const code = evaluate(
+    "$this.extension.where(url=%codeUrl).valueString",
+    operation,
+    {
+      variables: {
+        codeUrl: EXT_URL,
+      },
+    }
+  );
+  if (code.length === 0) return undefined;
+  if (typeof code[0] !== "string")
+    throw new OperationError(
+      outcomeFatal(
+        "invalid",
+        "Expected code to be a string for operation '${operation.id}'"
+      )
+    );
+
+  return code[0];
 }

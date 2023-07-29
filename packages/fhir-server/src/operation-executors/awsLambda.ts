@@ -4,11 +4,10 @@ import {
   CreateFunctionCommand,
   InvokeCommand,
 } from "@aws-sdk/client-lambda";
-import { OperationDefinition } from "@iguhealth/fhir-types";
 import { Operation, OpCTX, Invocation } from "@iguhealth/operation-execution";
 
 import { FHIRServerCTX } from "../fhirServer";
-import { Executioner, InvokeRequest } from "./types";
+import { Executioner, InvokeRequest, InvokeResponse } from "./types";
 import { resolveOperationDefinition, getOperationCode } from "./utilities";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
@@ -120,7 +119,7 @@ async function createPayload(
 export const exector: Executioner = async (
   ctx: FHIRServerCTX,
   request: InvokeRequest
-) => {
+): Promise<InvokeResponse> => {
   const operationDefinition = await resolveOperationDefinition(ctx, request);
   const op = new Operation(operationDefinition);
   const opCTX = getOpCTX(ctx, request);
@@ -148,5 +147,35 @@ export const exector: Executioner = async (
   const output = JSON.parse(payloadString);
   await op.validate(opCTX, "out", output);
 
-  return op.parseToParameters("out", output);
+  const outputParameters = op.parseToParameters("out", output);
+
+  switch (request.level) {
+    case "instance": {
+      return {
+        operation: request.operation,
+        type: "invoke-response",
+        level: request.level,
+        body: outputParameters,
+        resourceType: request.resourceType,
+        id: request.id,
+      };
+    }
+    case "type": {
+      return {
+        operation: request.operation,
+        type: "invoke-response",
+        resourceType: request.resourceType,
+        level: request.level,
+        body: outputParameters,
+      };
+    }
+    case "system": {
+      return {
+        operation: request.operation,
+        type: "invoke-response",
+        level: request.level,
+        body: outputParameters,
+      };
+    }
+  }
 };
