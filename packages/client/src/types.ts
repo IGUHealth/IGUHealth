@@ -3,10 +3,9 @@ import {
   Resource,
   Bundle,
   CapabilityStatement,
-  ResourceType,
   Parameters,
 } from "@iguhealth/fhir-types/r4/types";
-import { ParsedParameter } from "@iguhealth/fhir-query";
+import type { ParsedParameter } from "./url.js";
 
 export type RequestLevel = {
   instance: "instance";

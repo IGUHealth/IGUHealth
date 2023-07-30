@@ -1,5 +1,5 @@
 {
-  "name": "client",
+  "name": "@iguhealth/client",
   "packageManager": "yarn@3.6.1",
   "main": "./lib/index.js",
   "scripts": {

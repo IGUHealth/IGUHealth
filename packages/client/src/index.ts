@@ -5,10 +5,10 @@ import {
   ResourceType,
   id,
 } from "@iguhealth/fhir-types/r4/types";
-import { OPMetadata, IOperation } from "@iguhealth/operation-execution";
+import type { OPMetadata, IOperation } from "@iguhealth/operation-execution";
 
-import type { FHIRClientAsync, FHIRClientSync } from "./interface";
-import type { FHIRRequest, FHIRResponse } from "./types";
+import type { FHIRClientAsync, FHIRClientSync } from "./interface.js";
+import type { FHIRRequest, FHIRResponse } from "./types.js";
 import { MiddlewareSync, MiddlewareAsync } from "./middleware/index.js";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 

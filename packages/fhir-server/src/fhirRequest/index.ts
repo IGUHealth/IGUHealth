@@ -2,7 +2,7 @@ import Koa from "koa";
 
 import { Bundle, Resource } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
-import parseQuery from "./url.js";
+import parseQuery from "@iguhealth/client/url";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRRequest } from "../client/types";

@@ -6,7 +6,7 @@ import {
   AResource,
 } from "@iguhealth/fhir-types/r4/types";
 import type { FHIRRequest, FHIRResponse } from "./types";
-import type { OPMetadata } from "@igu-health/operation-execution";
+import type { OPMetadata, IOperation } from "@iguhealth/operation-execution";
 
 type Async<F, Else = never> = F extends (...arg: infer A) => infer R
   ? (...args: A) => Promise<R>

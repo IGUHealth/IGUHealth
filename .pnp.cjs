@@ -24,7 +24,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/cli"\
       },\
       {\
-        "name": "client",\
+        "name": "@iguhealth/client",\
         "reference": "workspace:packages/client"\
       },\
       {\
@@ -81,6 +81,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "fallbackExclusionList": [\
       ["@iguhealth/artifacts", ["workspace:packages/artifacts"]],\
       ["@iguhealth/cli", ["workspace:packages/cli"]],\
+      ["@iguhealth/client", ["workspace:packages/client"]],\
       ["@iguhealth/codegen", ["workspace:packages/codegen"]],\
       ["@iguhealth/components", ["virtual:f7bec7ac1756578cdaaf4ff5b0a99146ff9ff935d7239e7c43700f86fded968ef8f5ab1672eee437f5e8ee65db57721f4b43edc517ef5d13e94345cc37111ab8#workspace:packages/components", "workspace:packages/components"]],\
       ["@iguhealth/fhir-json-schema", ["workspace:packages/fhir-json-schema"]],\
@@ -92,7 +93,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@iguhealth/operation-execution", ["workspace:packages/operation-execution"]],\
       ["@iguhealth/operation-outcomes", ["workspace:packages/operation-outcomes"]],\
       ["@iguhealth/test-data", ["workspace:packages/test-data-r4"]],\
-      ["client", ["workspace:packages/client"]],\
       ["iguhealth-ts", ["workspace:."]],\
       ["sample-app", ["workspace:packages/sample-app"]]\
     ],\
@@ -6192,6 +6192,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT"\
         }]\
       ]],\
+      ["@iguhealth/client", [\
+        ["workspace:packages/client", {\
+          "packageLocation": "./packages/client/",\
+          "packageDependencies": [\
+            ["@iguhealth/client", "workspace:packages/client"],\
+            ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
+            ["@iguhealth/operation-execution", "workspace:packages/operation-execution"],\
+            ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
+            ["@jest/globals", "npm:29.6.1"],\
+            ["jest", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:29.6.0"],\
+            ["ts-jest", "virtual:1d211f1d1b74f1431d94dee6154efb618f2b240f78e3cd2c7bff89c06972575aa9d2987a2e98dff8bea49b83220f448caca9ce4fd28f1b7b9a1c020cfaf1de74#npm:29.1.1"],\
+            ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
       ["@iguhealth/codegen", [\
         ["workspace:packages/codegen", {\
           "packageLocation": "./packages/codegen/",\
@@ -6294,6 +6310,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@aws-sdk/client-resource-groups-tagging-api", "npm:3.379.1"],\
             ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
             ["@iguhealth/cli", "workspace:packages/cli"],\
+            ["@iguhealth/client", "workspace:packages/client"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
             ["@iguhealth/fhir-validation", "workspace:packages/fhir-validation"],\
             ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
@@ -14404,22 +14421,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["string-width", "npm:4.2.3"]\
           ],\
           "linkType": "HARD"\
-        }]\
-      ]],\
-      ["client", [\
-        ["workspace:packages/client", {\
-          "packageLocation": "./packages/client/",\
-          "packageDependencies": [\
-            ["client", "workspace:packages/client"],\
-            ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
-            ["@iguhealth/operation-execution", "workspace:packages/operation-execution"],\
-            ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
-            ["@jest/globals", "npm:29.6.1"],\
-            ["jest", "virtual:e797311fc8181beb3db668a19d88e51ed28963d231e2445bd71c3dc0fdd07aba76887313510045bcf81fbc840fb6bc3c4eb63d5e35fd555085d59108adb44e39#npm:29.6.0"],\
-            ["ts-jest", "virtual:658502eb4296e93abedc18b6aa9b26978f434f08d98e21ebb0e725354b8bb54b62db9c4a1893e460c694ff7500ff5cbafa4457b0dfd26b5838868666c861e990#npm:29.1.1"],\
-            ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"]\
-          ],\
-          "linkType": "SOFT"\
         }]\
       ]],\
       ["cliui", [\
@@ -30112,10 +30113,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:658502eb4296e93abedc18b6aa9b26978f434f08d98e21ebb0e725354b8bb54b62db9c4a1893e460c694ff7500ff5cbafa4457b0dfd26b5838868666c861e990#npm:29.1.1", {\
-          "packageLocation": "./.yarn/__virtual__/ts-jest-virtual-e6c0c65cea/0/cache/ts-jest-npm-29.1.1-04e888e48e-a8c9e284ed.zip/node_modules/ts-jest/",\
+        ["virtual:1d211f1d1b74f1431d94dee6154efb618f2b240f78e3cd2c7bff89c06972575aa9d2987a2e98dff8bea49b83220f448caca9ce4fd28f1b7b9a1c020cfaf1de74#npm:29.1.1", {\
+          "packageLocation": "./.yarn/__virtual__/ts-jest-virtual-3318b1924b/0/cache/ts-jest-npm-29.1.1-04e888e48e-a8c9e284ed.zip/node_modules/ts-jest/",\
           "packageDependencies": [\
-            ["ts-jest", "virtual:658502eb4296e93abedc18b6aa9b26978f434f08d98e21ebb0e725354b8bb54b62db9c4a1893e460c694ff7500ff5cbafa4457b0dfd26b5838868666c861e990#npm:29.1.1"],\
+            ["ts-jest", "virtual:1d211f1d1b74f1431d94dee6154efb618f2b240f78e3cd2c7bff89c06972575aa9d2987a2e98dff8bea49b83220f448caca9ce4fd28f1b7b9a1c020cfaf1de74#npm:29.1.1"],\
             ["@babel/core", null],\
             ["@jest/types", null],\
             ["@types/babel-jest", null],\
