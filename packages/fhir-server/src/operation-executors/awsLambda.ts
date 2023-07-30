@@ -5,6 +5,7 @@ import {
   InvokeCommand,
 } from "@aws-sdk/client-lambda";
 import { Operation, OpCTX } from "@iguhealth/operation-execution";
+import AdmZip from "adm-zip";
 
 import { AsynchronousClient } from "../client/index.js";
 import {
@@ -15,6 +16,8 @@ import { FHIRServerCTX } from "../fhirServer";
 import { InvokeRequest } from "./types";
 import { resolveOperationDefinition, getOperationCode } from "./utilities.js";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
+import { ResourceType, id } from "@iguhealth/fhir-types";
+import { FHIRRequest } from "../client/types.js";
 
 function getLambdaFunctionName(
   ctx: FHIRServerCTX,
@@ -47,6 +50,47 @@ async function getLambda(
   }
 }
 
+type Payload = {
+  ctx: {
+    workspace: FHIRServerCTX["workspace"];
+    level: FHIRRequest["level"];
+    resourceType?: ResourceType;
+    id?: id;
+  };
+  input: Record<string, any>;
+};
+
+// Used within lambda code for setup.
+async function handler(event: Payload, context: any) {
+  const userHandler = require("./user");
+  // Pass in token here and instantiate client. Later.
+
+  const ctx = {
+    workspace: event.ctx.workspace,
+    level: event.ctx.level,
+    resourceType: event.ctx.resourceType,
+    id: event.ctx.id,
+  };
+
+  const output = await userHandler.handler(ctx, event.input);
+  return output;
+}
+
+function createZipFile(code: string): Buffer {
+  const setupCode = `exports.handler = ${handler.toString()}`;
+
+  const zip = new AdmZip();
+
+  zip.addFile("user.js", Buffer.alloc(code.length, code), "usercode");
+  zip.addFile(
+    "index.js",
+    Buffer.alloc(setupCode.length, setupCode),
+    "executable"
+  );
+
+  return zip.toBuffer();
+}
+
 async function createLambdaFunction(
   client: LambdaClient,
   role: string,
@@ -69,6 +113,8 @@ async function createLambdaFunction(
         outcomeFatal("invalid", "Could not get operation code")
       );
 
+    const zip = createZipFile(operationCode);
+
     const createFunction = new CreateFunctionCommand({
       FunctionName: lambdaName,
       Runtime: "nodejs18.x",
@@ -80,7 +126,7 @@ async function createLambdaFunction(
         versionId: operation.operationDefinition.meta?.versionId as string,
       },
       Code: {
-        ZipFile: operationCode,
+        ZipFile: zip,
       },
     });
 
@@ -89,11 +135,6 @@ async function createLambdaFunction(
     return;
   });
 }
-
-type Payload = {
-  ctx: {};
-  input: unknown;
-};
 
 function getOpCTX(ctx: FHIRServerCTX, request: InvokeRequest): OpCTX {
   return {
@@ -111,7 +152,7 @@ function getOpCTX(ctx: FHIRServerCTX, request: InvokeRequest): OpCTX {
 
 async function createPayload(
   ctx: FHIRServerCTX,
-  op: Operation<unknown, unknown>,
+  op: Operation<Record<string, any>, Record<string, any>>,
   request: InvokeRequest
 ): Promise<Payload> {
   const parsedBody = op.parseToObject("in", request.body);
@@ -120,7 +161,13 @@ async function createPayload(
 
   return {
     ctx: {
-      // Include token here later to allow api calls.
+      workspace: ctx.workspace,
+      level: request.level,
+      resourceType:
+        request.level === "type" || request.level === "instance"
+          ? (request.resourceType as ResourceType)
+          : undefined,
+      id: request.level === "instance" ? request.resourceType : undefined,
     },
     input: parsedBody,
   };
