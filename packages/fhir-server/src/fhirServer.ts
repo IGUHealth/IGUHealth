@@ -42,7 +42,12 @@ function createFHIRServer() {
         case "update-request":
         case "create-request":
         case "batch-request":
+        case "invoke-request":
         case "transaction-request": {
+          const resourceType =
+            request.type === "invoke-request"
+              ? "Parameters"
+              : request.body.resourceType;
           const issues = validate(
             (type) => {
               const sd = ctx.resolveSD(ctx, type);
@@ -55,7 +60,7 @@ function createFHIRServer() {
                 );
               return sd;
             },
-            request.body.resourceType,
+            resourceType,
             request.body
           );
           if (issues.length > 0) {
