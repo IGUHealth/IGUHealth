@@ -126,6 +126,28 @@ async function createPayload(
   };
 }
 
+async function confirmLambdaExistsAndReady(
+  client: LambdaClient,
+  role: string,
+  ctx: FHIRServerCTX,
+  op: Operation<unknown, unknown>
+) {
+  let lambda = await getLambda(client, ctx, op);
+  // Setup creation if lambda does not exist.
+  if (!lambda) {
+    await createLambdaFunction(client, role, ctx, op);
+    lambda = await getLambda(client, ctx, op);
+  }
+
+  // Confirm state is not pending and then proceed to the invocation.
+  while (lambda?.Configuration?.State === "Pending") {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    lambda = await getLambda(client, ctx, op);
+  }
+
+  return lambda;
+}
+
 function createExecutor(
   role: string,
   client: LambdaClient
@@ -142,8 +164,12 @@ function createExecutor(
             const op = new Operation(operationDefinition);
             const opCTX = getOpCTX(ctx, request);
 
-            const lambda = await getLambda(client, ctx, op);
-            if (!lambda) await createLambdaFunction(client, role, ctx, op);
+            const lambda = await confirmLambdaExistsAndReady(
+              client,
+              role,
+              ctx,
+              op
+            );
 
             const payload = await createPayload(ctx, op, request);
 
