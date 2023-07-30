@@ -1,6 +1,6 @@
 import { expect, test } from "@jest/globals";
-import { createMiddlewareSync, createMiddlewareAsync } from "./index";
-import { ParsedParameter } from "../../fhirRequest/url";
+import { createMiddlewareSync, createMiddlewareAsync } from "./index.js";
+import type { ParsedParameter } from "../url";
 
 test("Test middleware Sync", () => {
   const middleware = createMiddlewareSync<{}, {}>([
