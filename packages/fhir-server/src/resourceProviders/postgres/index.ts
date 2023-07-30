@@ -3,7 +3,17 @@ import { v4 } from "uuid";
 import jsonpatch, { Operation } from "fast-json-patch";
 import dayjs from "dayjs";
 
-import { ParsedParameter } from "../../fhirRequest/url.js";
+import { ParsedParameter } from "@iguhealth/client/lib/url.js";
+import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
+import { AsynchronousClient } from "@iguhealth/client/lib/index.js";
+import {
+  createMiddlewareAsync,
+  MiddlewareAsync,
+} from "@iguhealth/client/lib/middleware/index.js";
+import {
+  SystemSearchRequest,
+  TypeSearchRequest,
+} from "@iguhealth/client/lib/types";
 import {
   Address,
   canonical,
@@ -27,21 +37,14 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
-
-import { FHIRServerCTX } from "../../fhirServer.js";
-import { FHIRClientAsync } from "../../client/interface";
-import { AsynchronousClient } from "../../client/index.js";
-import {
-  createMiddlewareAsync,
-  MiddlewareAsync,
-} from "../../client/middleware/index.js";
 import {
   descend,
   MetaValueArray,
   MetaValueSingular,
 } from "@iguhealth/meta-value";
-import { SystemSearchRequest, TypeSearchRequest } from "../../client/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+
+import { FHIRServerCTX } from "../../fhirServer.js";
 
 function searchResources(
   resourceType?: ResourceType

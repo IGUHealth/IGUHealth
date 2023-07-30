@@ -1,4 +1,4 @@
-import parseParameters from "../fhirRequest/url.js";
+import parseParameters from "@iguhealth/client/lib/url.js";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { expect, test } from "@jest/globals";
 import path from "path";

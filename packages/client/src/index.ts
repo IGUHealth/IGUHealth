@@ -1,15 +1,15 @@
-import { ParsedParameter } from "../fhirRequest/url.js";
+import type { ParsedParameter } from "./url";
 import {
   AResource,
   Resource,
   ResourceType,
   id,
 } from "@iguhealth/fhir-types/r4/types";
-import { OPMetadata, IOperation } from "@iguhealth/operation-execution";
+import type { OPMetadata, IOperation } from "@iguhealth/operation-execution";
 
+import type { FHIRClientAsync, FHIRClientSync } from "./interface.js";
+import type { FHIRRequest, FHIRResponse } from "./types.js";
 import { MiddlewareSync, MiddlewareAsync } from "./middleware/index.js";
-import { FHIRClientAsync, FHIRClientSync } from "./interface";
-import { FHIRRequest, FHIRResponse } from "./types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {

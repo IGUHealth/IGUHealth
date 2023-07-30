@@ -7,7 +7,7 @@ import { loadArtifacts } from "@iguhealth/artifacts";
 import * as fhirpath from "@iguhealth/fhirpath";
 
 import MemoryDatabase from "./memory";
-import { FHIRClientSync } from "../client/interface";
+import { FHIRClientSync } from "@iguhealth/client/lib/interface.js";
 
 function createMemoryDatabase(
   resourceTypes: ResourceType[]

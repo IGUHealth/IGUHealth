@@ -6,18 +6,18 @@ import {
 } from "@aws-sdk/client-lambda";
 import { Operation, OpCTX } from "@iguhealth/operation-execution";
 import AdmZip from "adm-zip";
-
-import { AsynchronousClient } from "../client/index.js";
+import { AsynchronousClient } from "@iguhealth/client/lib/index.js";
 import {
   MiddlewareAsync,
   createMiddlewareAsync,
-} from "../client/middleware/index.js";
+} from "@iguhealth/client/lib/middleware/index.js";
+import { FHIRRequest } from "@iguhealth/client/lib/types.js";
+
 import { FHIRServerCTX } from "../fhirServer";
 import { InvokeRequest } from "./types";
 import { resolveOperationDefinition, getOperationCode } from "./utilities.js";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 import { ResourceType, id } from "@iguhealth/fhir-types";
-import { FHIRRequest } from "../client/types.js";
 
 function getLambdaFunctionName(
   ctx: FHIRServerCTX,
