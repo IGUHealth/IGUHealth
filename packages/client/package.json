@@ -6,6 +6,12 @@
     "build": "tsc",
     "test": "jest"
   },
+  "exports": {
+    "./middleware": "./lib/middleware/index.js",
+    "./url": "./lib/url.js",
+    "./interface": "./lib/interface.js",
+    "./types": "./lib/types.js"
+  },
   "devDependencies": {
     "@iguhealth/fhir-types": "workspace:^",
     "@jest/globals": "^29.6.1",

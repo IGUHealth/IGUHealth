@@ -5,7 +5,7 @@ import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import parseQuery from "@iguhealth/client/url";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRRequest } from "../client/types";
+import { FHIRRequest } from "@iguhealth/client/types";
 import parseParameters from "./url.js";
 
 /*

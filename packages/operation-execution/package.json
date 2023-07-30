@@ -5,10 +5,6 @@
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "exports": {
-    "./middleware": "./lib/middleware/index.js",
-    "./url": "./lib/url.js"
-  },
   "scripts": {
     "build": "tsc",
     "test": "jest"
