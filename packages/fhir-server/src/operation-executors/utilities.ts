@@ -9,7 +9,6 @@ import AdmZip from "adm-zip";
 
 import { InvokeRequest } from "./types";
 import { FHIRServerCTX } from "../fhirServer";
-import { Stream } from "stream";
 
 export async function resolveOperationDefinition(
   ctx: FHIRServerCTX,
@@ -46,7 +45,7 @@ const EXT_URL =
 export async function getOperationCode(
   ctx: FHIRServerCTX,
   operation: OperationDefinition
-): Promise<Buffer | undefined> {
+): Promise<string | undefined> {
   const code = evaluate(
     "$this.extension.where(url=%codeUrl).valueString",
     operation,
@@ -65,9 +64,5 @@ export async function getOperationCode(
       )
     );
 
-  const stream = new Stream.Writable();
-  const zip = new AdmZip();
-  zip.addFile("index.js", Buffer.alloc(code[0].length, code[0]), "executable");
-
-  return zip.toBuffer();
+  return code[0];
 }
