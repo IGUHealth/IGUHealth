@@ -16,14 +16,14 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import * as jose from "jose";
+import { FHIRResponse } from "@iguhealth/client/lib/types";
+import { FHIRClientSync } from "@iguhealth/client/lib/interface.js";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import MemoryDatabase from "./resourceProviders/memory.js";
 import RouterClient from "./resourceProviders/router.js";
-import { FHIRClientSync } from "./client/interface.js";
 import createFHIRServer, { FHIRServerCTX } from "./fhirServer.js";
 import { createPostgresClient } from "./resourceProviders/postgres/index.js";
-import { FHIRResponse } from "./client/types";
 import {
   OperationError,
   isOperationError,

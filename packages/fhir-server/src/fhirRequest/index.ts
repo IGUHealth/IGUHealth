@@ -2,11 +2,10 @@ import Koa from "koa";
 
 import { Bundle, Resource } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
-import parseQuery from "@iguhealth/client/url";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import parseParameters from "@iguhealth/client/lib/url.js";
 
-import { FHIRRequest } from "@iguhealth/client/types";
-import parseParameters from "./url.js";
+import { FHIRRequest } from "@iguhealth/client/lib/types";
 
 /*
  ** For Summary of types see:
@@ -73,7 +72,7 @@ export function KoaRequestToFHIRRequest(
   url: string,
   request: Koa.Request
 ): FHIRRequest {
-  const fhirQuery = parseQuery(url);
+  const fhirQuery = parseParameters(url);
 
   const method = request.method;
   const urlPieces = url.split("/");

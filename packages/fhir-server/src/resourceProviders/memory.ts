@@ -1,15 +1,15 @@
-import { ParsedParameter } from "../fhirRequest/url.js";
 import {
   ResourceType,
   AResource,
   Resource,
   id,
 } from "@iguhealth/fhir-types/r4/types";
-import { SynchronousClient } from "../client/index.js";
+import { ParsedParameter } from "@iguhealth/client/lib/url.js";
+import { SynchronousClient } from "@iguhealth/client";
 import {
   createMiddlewareSync,
   MiddlewareSync,
-} from "../client/middleware/index.js";
+} from "@iguhealth/client/lib/middleware/index.js";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 type InternalData<T extends ResourceType> = Partial<

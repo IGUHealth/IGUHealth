@@ -7,11 +7,11 @@ import {
   outcome,
   outcomeError,
 } from "@iguhealth/operation-outcomes";
-
-import { createMiddlewareAsync } from "./client/middleware/index.js";
-import { FHIRClient } from "./client/interface.js";
-import { FHIRRequest, FHIRResponse } from "./client/types";
+import { createMiddlewareAsync } from "@iguhealth/client/lib/middleware/index.js";
+import { FHIRClient } from "@iguhealth/client/lib/interface.js";
+import { FHIRRequest, FHIRResponse } from "@iguhealth/client/lib/types";
 import validate from "@iguhealth/fhir-validation";
+
 import { Lock } from "./synchronization/interfaces.js";
 
 async function fhirRequestToFHIRResponse(

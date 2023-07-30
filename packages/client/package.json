@@ -2,15 +2,11 @@
   "name": "@iguhealth/client",
   "packageManager": "yarn@3.6.1",
   "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "test": "jest"
-  },
-  "exports": {
-    "./middleware": "./lib/middleware/index.js",
-    "./url": "./lib/url.js",
-    "./interface": "./lib/interface.js",
-    "./types": "./lib/types.js"
   },
   "devDependencies": {
     "@iguhealth/fhir-types": "workspace:^",

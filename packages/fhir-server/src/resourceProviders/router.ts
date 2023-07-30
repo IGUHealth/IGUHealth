@@ -7,13 +7,14 @@ import {
   TypeHistoryResponse,
   TypeSearchResponse,
   HistoryInstanceResponse,
-} from "../client/types";
-import { AsynchronousClient } from "../client/index.js";
+} from "@iguhealth/client/lib/types";
+import { AsynchronousClient } from "@iguhealth/client/lib/index.js";
 import {
   MiddlewareAsync,
   createMiddlewareAsync,
-} from "../client/middleware/index.js";
-import { FHIRClient } from "../client/interface";
+} from "@iguhealth/client/lib/middleware/index.js";
+import { FHIRClient } from "@iguhealth/client/lib/interface";
+
 import { FHIRServerCTX } from "../fhirServer.js";
 
 type InteractionSupported<T> = FHIRRequest["type"];
