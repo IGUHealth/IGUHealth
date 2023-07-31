@@ -15,7 +15,6 @@ fs.readdirSync(path.join(__dirname, "packages"))
         patch: "yarn version patch",
         minor: "yarn version minor",
         major: "yarn version major",
-        publish: "yarn build && yarn npm publish --access public",
       },
       files: packageJSONFILE.files ? packageJSONFILE.files : ["lib/**"],
     };

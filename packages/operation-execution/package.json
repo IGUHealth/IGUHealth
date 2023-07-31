@@ -47,7 +47,7 @@
       "node_modules/(?!@iguhealth)"
     ]
   },
-  "version": "0.0.6",
+  "version": "0.1.0",
   "files": [
     "lib/**"
   ]

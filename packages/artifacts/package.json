@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/artifacts",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -27,6 +27,8 @@
     "typescript": "5.1.3"
   },
   "files": [
-    "lib/**"
+    "lib/**",
+    "r4/**",
+    ".index.config.json"
   ]
 }

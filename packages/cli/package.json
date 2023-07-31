@@ -21,7 +21,7 @@
     "major": "yarn version major",
     "publish": "yarn build && yarn npm publish --access public"
   },
-  "version": "0.0.6",
+  "version": "0.1.0",
   "files": [
     "lib/**"
   ]
