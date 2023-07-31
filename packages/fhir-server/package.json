@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "start": "tsc -w",
+    "start": "yarn build && yarn node --enable-source-maps ./lib/index.js",
     "test": "jest --detectOpenHandles",
     "generate": "yarn cli generate-operations --output=./src/r4",
     "migrate": "db-migrate --sql-file -m src/resourceProviders/postgres/migrations",
