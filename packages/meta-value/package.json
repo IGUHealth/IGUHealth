@@ -1,13 +1,16 @@
 {
   "name": "@iguhealth/meta-value",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "patch": "yarn version patch",
+    "minor": "yarn version minor",
+    "major": "yarn version major"
   },
   "keywords": [],
   "author": "iguhealth",

@@ -1,13 +1,16 @@
 {
   "name": "@iguhealth/operation-outcomes",
   "packageManager": "yarn@3.6.1",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "patch": "yarn version patch",
+    "minor": "yarn version minor",
+    "major": "yarn version major"
   },
   "devDependencies": {
     "@iguhealth/fhir-types": "workspace:^",

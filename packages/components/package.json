@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/components",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "main": "./dist/iguhealth-ts.umd.js",
   "module": "./dist/iguhealth-ts.mjs",
   "types": "./dist/main.d.ts",
@@ -15,7 +15,10 @@
     "test": "echo \"Error: no test specified\"",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "build-tailwind": "tailwindcss -i ./src/index.css -o ./dist/output.css"
+    "build-tailwind": "tailwindcss -i ./src/index.css -o ./dist/output.css",
+    "patch": "yarn version patch",
+    "minor": "yarn version minor",
+    "major": "yarn version major"
   },
   "dependencies": {
     "antd": "^5.6.2",

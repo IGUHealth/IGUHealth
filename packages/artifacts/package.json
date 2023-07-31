@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/artifacts",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -8,7 +8,10 @@
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: no test specified\"",
-    "generate-index": "yarn cli generate-index-file -p . -r r4 --ignore r4/hl7/profiles-others.json r4/hl7/dataelements.json r4/hl7/extension-definitions.json"
+    "generate-index": "yarn cli generate-index-file -p . -r r4 --ignore r4/hl7/profiles-others.json r4/hl7/dataelements.json r4/hl7/extension-definitions.json",
+    "patch": "yarn version patch",
+    "minor": "yarn version minor",
+    "major": "yarn version major"
   },
   "fhirVersion": [
     "r4"

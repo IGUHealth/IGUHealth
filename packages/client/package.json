@@ -6,7 +6,10 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "patch": "yarn version patch",
+    "minor": "yarn version minor",
+    "major": "yarn version major"
   },
   "devDependencies": {
     "@iguhealth/fhir-types": "workspace:^",
@@ -39,5 +42,6 @@
     "transformIgnorePatterns": [
       "node_modules/(?!@iguhealth)"
     ]
-  }
+  },
+  "version": "0.0.2"
 }

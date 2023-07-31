@@ -1,12 +1,15 @@
 {
   "name": "@iguhealth/fhir-types",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "",
   "type": "module",
   "scripts": {
     "generate": "yarn cli generate-types-artifacts --output=./r4",
     "build": "tsc",
-    "test": "echo \"Error: no test specified\""
+    "test": "echo \"Error: no test specified\"",
+    "patch": "yarn version patch",
+    "minor": "yarn version minor",
+    "major": "yarn version major"
   },
   "types": "r4/types.d.ts",
   "keywords": [],

@@ -1,13 +1,16 @@
 {
   "name": "@iguhealth/codegen",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "generate-r4": "bun ts-node src/index.ts generate-types-artifacts --output ../fhir-types/r4"
+    "generate-r4": "bun ts-node src/index.ts generate-types-artifacts --output ../fhir-types/r4",
+    "patch": "yarn version patch",
+    "minor": "yarn version minor",
+    "major": "yarn version major"
   },
   "keywords": [],
   "author": "",

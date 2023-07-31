@@ -5,7 +5,7 @@
   "packageManager": "yarn@3.6.1",
   "main": "index.js",
   "scripts": {
-    "configure": "yarn node configure_packages.js"
+    "configure": "yarn node configure_packages.cjs"
   },
   "devDependencies": {
     "@types/node": "^20.3.1",
