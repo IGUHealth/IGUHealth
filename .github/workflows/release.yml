@@ -24,7 +24,13 @@ jobs:
       - name: Install dependencies
         run: yarn
 
+      - name: Configure NPM AUTH
+        run: |
+          yarn config set npmAuthToken $NPM_TOKEN
+          yarn config set npmPublishRegistry https://registry.npmjs.org
+          yarn config set npmAlwaysAuth true
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - run: yarn workspaces foreach -t run publish
         timeout-minutes: 10
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
