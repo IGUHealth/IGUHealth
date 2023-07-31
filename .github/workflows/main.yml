@@ -43,12 +43,27 @@ jobs:
         with:
           node-version: 19.6.0
           cache: "yarn"
+
       - name: EnableCorePack
         run: corepack enable
+
       - name: Install dependencies
         run: yarn
+
       - name: Compile
         run: yarn workspaces foreach -t run build
+
+      - name: start server
+        run: yarn workspace @iguhealth/fhir-server migrate up && yarn workspace @iguhealth/fhir-server start & node .github/workflows/wait_server.js http://localhost:3000/w/1704fc63-dd53-4d6c-8435-1a4b83ba27f7/api/v1/fhir/r4
+        env:
+          FHIR_DATABASE_NAME: postgres
+          FHIR_DATABASE_HOST: localhost
+          FHIR_DATABASE_PORT: 5432
+          FHIR_DATABASE_PASSWORD: "postgres"
+          FHIR_DATABASE_USERNAME: postgres
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+
       - name: Run tests and collect coverage
         run: yarn workspaces foreach run test
         timeout-minutes: 10

@@ -628,8 +628,9 @@ async function getResource<CTX extends FHIRServerCTX>(
   resourceType: ResourceType,
   id: string
 ): Promise<Resource> {
-  const queryText =
-    "SELECT resource FROM resources WHERE workspace = $1 AND resource_type = $2 AND id = $3 ORDER BY version_id DESC LIMIT 1";
+  const queryText = `SELECT * FROM 
+    (SELECT resource, deleted FROM resources WHERE workspace = $1 AND resource_type = $2 AND id = $3 ORDER BY version_id DESC LIMIT 1)
+     as t WHERE t.deleted = false;`;
   const res = await client.query(queryText, [ctx.workspace, resourceType, id]);
   if (res.rows.length === 0) {
     throw new OperationError(
@@ -685,6 +686,35 @@ async function patchResource<CTX extends FHIRServerCTX>(
     // Finally
     // client.release() when switching to pool
   }
+}
+
+async function deleteResource<CTX extends FHIRServerCTX>(
+  client: pg.Client,
+  ctx: CTX,
+  resourceType: ResourceType,
+  id: string
+) {
+  await client.query("BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE");
+  const resource = await getResource(client, ctx, resourceType, id);
+  if (!resource)
+    throw new OperationError(
+      outcomeError(
+        "not-found",
+        `'${resourceType}' with id '${id}' was not found`
+      )
+    );
+  const queryText =
+    "INSERT INTO resources(workspace, author, resource, prev_version_id, deleted) VALUES($1, $2, $3, $4, $5) RETURNING resource";
+
+  const res = await client.query(queryText, [
+    ctx.workspace,
+    ctx.author,
+    resource,
+    resource.meta?.versionId,
+    true,
+  ]);
+  await removeIndices(client, ctx, resource);
+  await client.query("END");
 }
 
 function buildParameters(
@@ -987,6 +1017,24 @@ function createPostgresMiddleware<
               id: request.id,
               type: "update-response",
               body: savedResource,
+            },
+          };
+        }
+        case "delete-request": {
+          await deleteResource(
+            client,
+            args.ctx,
+            request.resourceType as ResourceType,
+            request.id
+          );
+          return {
+            state: args.state,
+            ctx: args.ctx,
+            response: {
+              type: "delete-response",
+              level: "instance",
+              resourceType: request.resourceType,
+              id: request.id,
             },
           };
         }
