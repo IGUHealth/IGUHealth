@@ -628,8 +628,9 @@ async function getResource<CTX extends FHIRServerCTX>(
   resourceType: ResourceType,
   id: string
 ): Promise<Resource> {
-  const queryText =
-    "SELECT resource FROM resources WHERE workspace = $1 AND resource_type = $2 AND id = $3 ORDER BY version_id DESC LIMIT 1";
+  const queryText = `SELECT * FROM 
+    (SELECT resource, deleted FROM resources WHERE workspace = $1 AND resource_type = $2 AND id = $3 ORDER BY version_id DESC LIMIT 1)
+     as t WHERE t.deleted = false;`;
   const res = await client.query(queryText, [ctx.workspace, resourceType, id]);
   if (res.rows.length === 0) {
     throw new OperationError(

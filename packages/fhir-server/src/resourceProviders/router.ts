@@ -16,6 +16,7 @@ import {
 import { FHIRClient } from "@iguhealth/client/lib/interface";
 
 import { FHIRServerCTX } from "../fhirServer.js";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 type InteractionSupported<T> = FHIRRequest["type"];
 type InteractionsSupported<T> = InteractionSupported<T>[];
@@ -107,7 +108,9 @@ function createRouterMiddleware<
             (response): response is FHIRResponse => response !== undefined
           );
           if (responses.length !== 1)
-            throw new Error(`Could not perform request type '${request.type}'`);
+            throw new OperationError(
+              outcomeError("not-found", "Resource not found")
+            );
           return { state: args.state, ctx: args.ctx, response: responses[0] };
         }
 
