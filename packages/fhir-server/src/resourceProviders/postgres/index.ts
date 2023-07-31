@@ -668,7 +668,7 @@ async function patchResource<CTX extends FHIRServerCTX>(
       );
     }
     const queryText =
-      "INSERT INTO resources(workspace, author, resource, prev_version_id, patches, deleted) VALUES($1, $2, $3, $4, $5) RETURNING resource";
+      "INSERT INTO resources(workspace, author, resource, prev_version_id, patches) VALUES($1, $2, $3, $4, $5) RETURNING resource";
     const res = await client.query(queryText, [
       ctx.workspace,
       ctx.author,
