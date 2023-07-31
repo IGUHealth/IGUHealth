@@ -111,16 +111,16 @@ function toHTTPRequest(
         headers,
       };
     case "search-request": {
-      const querySring = parametersToQueryString(request.parameters);
+      const queryString = parametersToQueryString(request.parameters);
       let url;
       switch (request.level) {
         case "type":
           url = `${state.url}/${request.resourceType}${
-            querySring ? `?${querySring}` : ""
+            queryString ? `?${queryString}` : ""
           }`;
           break;
         case "system":
-          url = `${state.url}${querySring ? `?${querySring}` : ""}`;
+          url = `${state.url}${queryString ? `?${queryString}` : ""}`;
           break;
       }
 
