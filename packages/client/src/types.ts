@@ -167,6 +167,7 @@ export type ReadResponse = InstanceInteraction & {
 
 export type VersionReadResponse = InstanceInteraction & {
   type: ResponseInteractionTypes["vread"];
+  versionId: string;
   body: Resource;
 };
 
