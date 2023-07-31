@@ -15,6 +15,14 @@
     "typescript": "5.1.3"
   },
   "scripts": {
-    "build": "tsc && node executable.js ./lib/index.js && chmod +x ./lib/index.js"
-  }
+    "build": "tsc && node executable.js ./lib/index.js && chmod +x ./lib/index.js",
+    "patch": "yarn version patch",
+    "minor": "yarn version minor",
+    "major": "yarn version major",
+    "publish": "yarn build && yarn npm publish --access public"
+  },
+  "version": "0.0.6",
+  "files": [
+    "lib/**"
+  ]
 }

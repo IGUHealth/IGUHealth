@@ -38,6 +38,7 @@ jobs:
         # https://github.com/crate-ci/typos/blob/master/docs/github-action.md
         with:
           config: ./typos.config.toml
+
       - name: Set up Node 19
         uses: actions/setup-node@v3
         with:
@@ -75,6 +76,7 @@ jobs:
           FHIR_DATABASE_USERNAME: postgres
           REDIS_HOST: localhost
           REDIS_PORT: 6379
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:

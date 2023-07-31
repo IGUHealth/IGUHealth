@@ -1,11 +1,18 @@
 {
   "name": "@iguhealth/test-data",
-  "version": "0.1.0",
+  "version": "0.0.6",
   "fhirVersion": "r4",
   "scripts": {
-    "generate-index-file": "yarn cli generate-index-file -p . -r examples-json"
+    "generate-index-file": "yarn cli generate-index-file -p . -r examples-json",
+    "patch": "yarn version patch",
+    "minor": "yarn version minor",
+    "major": "yarn version major",
+    "publish": "yarn build && yarn npm publish --access public"
   },
   "dependencies": {
     "@iguhealth/cli": "workspace:^"
-  }
+  },
+  "files": [
+    "lib/**"
+  ]
 }

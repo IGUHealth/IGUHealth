@@ -1,6 +1,6 @@
 {
   "name": "sample-app",
-  "version": "0.1.0",
+  "version": "0.0.6",
   "private": true,
   "dependencies": {
     "@auth0/auth0-react": "^2.1.1",
@@ -22,7 +22,11 @@
     "start": "react-scripts start",
     "build-": "react-scripts build",
     "test": "react-scripts test --passWithNoTests --watchAll=false",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "patch": "yarn version patch",
+    "minor": "yarn version minor",
+    "major": "yarn version major",
+    "publish": "yarn build && yarn npm publish --access public"
   },
   "browserslist": {
     "production": [
@@ -35,5 +39,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "files": [
+    "lib/**"
+  ]
 }

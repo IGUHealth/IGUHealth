@@ -1,0 +1,16 @@
+undecided:
+  - iguhealth-ts
+  - "@iguhealth/artifacts"
+  - "@iguhealth/cli"
+  - "@iguhealth/client"
+  - "@iguhealth/codegen"
+  - "@iguhealth/components"
+  - "@iguhealth/fhir-json-schema"
+  - "@iguhealth/fhir-server"
+  - "@iguhealth/fhir-types"
+  - "@iguhealth/fhir-validation"
+  - "@iguhealth/fhirpath"
+  - "@iguhealth/meta-value"
+  - "@iguhealth/operation-execution"
+  - "@iguhealth/operation-outcomes"
+  - sample-app
