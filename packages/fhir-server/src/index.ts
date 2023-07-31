@@ -29,6 +29,7 @@ import {
   isOperationError,
   issueSeverityToStatusCodes,
   outcomeError,
+  outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
 import Account from "./oidc-provider/accounts.js";
@@ -253,7 +254,15 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
             .sort()[operationOutcome.issue.length - 1];
           ctx.body = operationOutcome;
         } else {
-          throw e;
+          console.error(e);
+          const operationOutcome = outcomeError(
+            "invalid",
+            "internal server error"
+          );
+          ctx.status = operationOutcome.issue
+            .map((i) => issueSeverityToStatusCodes(i.severity))
+            .sort()[operationOutcome.issue.length - 1];
+          ctx.body = operationOutcome;
         }
       }
     }

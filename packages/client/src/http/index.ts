@@ -31,7 +31,7 @@ function toHTTPRequest(
   body?: string;
 } {
   const headers = {
-    "Content-Type": "application/fhir+json",
+    "Content-Type": "application/json", //"application/fhir+json"
     Authorization: `Bearer ${state.token}`,
   };
   switch (request.type) {
@@ -153,16 +153,17 @@ function toHTTPRequest(
   }
 }
 
-function httpResponseToFHIRResponse(
+async function httpResponseToFHIRResponse(
   request: FHIRRequest,
   response: Response
-): FHIRResponse {
+): Promise<FHIRResponse> {
   if (response.status >= 400) {
     try {
       if (!response.body) throw new Error(response.statusText);
-      const oo = JSON.parse(response.body?.toString()) as OperationOutcome;
+      const oo = (await response.json()) as OperationOutcome;
       throw new OperationError(oo);
     } catch (e) {
+      console.error(e);
       throw e;
     }
   }
@@ -170,7 +171,7 @@ function httpResponseToFHIRResponse(
     case "invoke-request": {
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
-      const parameters = JSON.parse(response.body.toString()) as Parameters;
+      const parameters = (await response.json()) as Parameters;
       switch (request.level) {
         case "system": {
           return {
@@ -204,7 +205,7 @@ function httpResponseToFHIRResponse(
     case "read-request":
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
-      const resource = JSON.parse(response.body.toString()) as Resource;
+      const resource = (await response.json()) as Resource;
       return {
         level: "instance",
         type: "read-response",
@@ -216,7 +217,7 @@ function httpResponseToFHIRResponse(
     case "vread-request":
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
-      const vresource = JSON.parse(response.body.toString()) as Resource;
+      const vresource = (await response.json()) as Resource;
       return {
         level: "instance",
         type: "vread-response",
@@ -228,7 +229,7 @@ function httpResponseToFHIRResponse(
     case "update-request":
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
-      const uresource = JSON.parse(response.body.toString()) as Resource;
+      const uresource = (await response.json()) as Resource;
 
       return {
         type: "update-response",
@@ -240,7 +241,7 @@ function httpResponseToFHIRResponse(
     case "patch-request":
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
-      const presource = JSON.parse(response.body.toString()) as Resource;
+      const presource = (await response.json()) as Resource;
       return {
         type: "patch-response",
         level: "instance",
@@ -260,7 +261,7 @@ function httpResponseToFHIRResponse(
     case "history-request":
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
-      const hresource = JSON.parse(response.body.toString()) as Bundle;
+      const hresource = (await response.json()) as Bundle;
       const resources =
         hresource.entry
           ?.map((e) => e.resource)
@@ -295,7 +296,7 @@ function httpResponseToFHIRResponse(
     case "create-request":
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
-      const cresource = JSON.parse(response.body.toString()) as Resource;
+      const cresource = (await response.json()) as Resource;
       return {
         type: "create-response",
         level: "type",
@@ -306,7 +307,7 @@ function httpResponseToFHIRResponse(
     case "search-request": {
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
-      const bundle = JSON.parse(response.body.toString()) as Bundle;
+      const bundle = (await response.json()) as Bundle;
       const resources =
         bundle.entry
           ?.map((e) => e.resource)
@@ -335,9 +336,7 @@ function httpResponseToFHIRResponse(
     case "capabilities-request": {
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
-      const capabilities = JSON.parse(
-        response.body.toString()
-      ) as CapabilityStatement;
+      const capabilities = (await response.json()) as CapabilityStatement;
       return {
         level: "system",
         type: "capabilities-response",
@@ -348,7 +347,7 @@ function httpResponseToFHIRResponse(
     case "batch-request": {
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
-      const batch = JSON.parse(response.body.toString()) as Bundle;
+      const batch = (await response.json()) as Bundle;
       return {
         type: "batch-response",
         level: "system",
@@ -359,7 +358,7 @@ function httpResponseToFHIRResponse(
     case "transaction-request": {
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
-      const transaction = JSON.parse(response.body.toString()) as Bundle;
+      const transaction = (await response.json()) as Bundle;
       return {
         type: "batch-response",
         level: "system",
@@ -382,15 +381,18 @@ function httpMiddleware(): MiddlewareAsync<HTTPClientState, {}> {
       return {
         ctx: args.ctx,
         state: args.state,
-        response: httpResponseToFHIRResponse(request, response),
+        response: await httpResponseToFHIRResponse(request, response),
       };
     },
   ]);
 }
 
-export function createHTTPClient(
+export default function createHTTPClient(
   initialState: HTTPClientState
 ): AsynchronousClient<HTTPClientState, {}> {
+  // Removing trailing slash
+  if (initialState.url.endsWith("/"))
+    initialState.url = initialState.url.slice(0, -1);
   const middleware = httpMiddleware();
   return new AsynchronousClient<HTTPClientState, {}>(initialState, middleware);
 }

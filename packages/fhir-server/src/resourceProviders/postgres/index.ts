@@ -667,7 +667,7 @@ async function patchResource<CTX extends FHIRServerCTX>(
       );
     }
     const queryText =
-      "INSERT INTO resources(workspace, author, resource, prev_version_id, patches) VALUES($1, $2, $3, $4, $5) RETURNING resource";
+      "INSERT INTO resources(workspace, author, resource, prev_version_id, patches, deleted) VALUES($1, $2, $3, $4, $5) RETURNING resource";
     const res = await client.query(queryText, [
       ctx.workspace,
       ctx.author,
@@ -685,6 +685,35 @@ async function patchResource<CTX extends FHIRServerCTX>(
     // Finally
     // client.release() when switching to pool
   }
+}
+
+async function deleteResource<CTX extends FHIRServerCTX>(
+  client: pg.Client,
+  ctx: CTX,
+  resourceType: ResourceType,
+  id: string
+) {
+  await client.query("BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE");
+  const resource = await getResource(client, ctx, resourceType, id);
+  if (!resource)
+    throw new OperationError(
+      outcomeError(
+        "not-found",
+        `'${resourceType}' with id '${id}' was not found`
+      )
+    );
+  const queryText =
+    "INSERT INTO resources(workspace, author, resource, prev_version_id, deleted) VALUES($1, $2, $3, $4, $5) RETURNING resource";
+
+  const res = await client.query(queryText, [
+    ctx.workspace,
+    ctx.author,
+    resource,
+    resource.meta?.versionId,
+    true,
+  ]);
+  await removeIndices(client, ctx, resource);
+  await client.query("END");
 }
 
 function buildParameters(
@@ -987,6 +1016,24 @@ function createPostgresMiddleware<
               id: request.id,
               type: "update-response",
               body: savedResource,
+            },
+          };
+        }
+        case "delete-request": {
+          await deleteResource(
+            client,
+            args.ctx,
+            request.resourceType as ResourceType,
+            request.id
+          );
+          return {
+            state: args.state,
+            ctx: args.ctx,
+            response: {
+              type: "delete-response",
+              level: "instance",
+              resourceType: request.resourceType,
+              id: request.id,
             },
           };
         }

@@ -48,6 +48,7 @@ function createFHIRServer() {
             request.type === "invoke-request"
               ? "Parameters"
               : request.body.resourceType;
+          console.log("resourceType", resourceType, request);
           const issues = validate(
             (type) => {
               const sd = ctx.resolveSD(ctx, type);
