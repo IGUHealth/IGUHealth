@@ -15,6 +15,7 @@ fs.readdirSync(path.join(__dirname, "packages"))
         patch: "yarn version patch",
         minor: "yarn version minor",
         major: "yarn version major",
+        publish: "yarn build && yarn publish --access private",
       },
     };
     console.log(packageJSON);

@@ -13,7 +13,8 @@
     "watch": "yarn tsc-watch --onSuccess \"yarn node --enable-source-maps  ./lib/index.js\"",
     "patch": "yarn version patch",
     "minor": "yarn version minor",
-    "major": "yarn version major"
+    "major": "yarn version major",
+    "publish": "yarn build && yarn publish --access private"
   },
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.379.1",

@@ -6,7 +6,8 @@
     "generate-index-file": "yarn cli generate-index-file -p . -r examples-json",
     "patch": "yarn version patch",
     "minor": "yarn version minor",
-    "major": "yarn version major"
+    "major": "yarn version major",
+    "publish": "yarn build && yarn publish --access private"
   },
   "dependencies": {
     "@iguhealth/cli": "workspace:^"

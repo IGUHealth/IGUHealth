@@ -18,7 +18,8 @@
     "build-tailwind": "tailwindcss -i ./src/index.css -o ./dist/output.css",
     "patch": "yarn version patch",
     "minor": "yarn version minor",
-    "major": "yarn version major"
+    "major": "yarn version major",
+    "publish": "yarn build && yarn publish --access private"
   },
   "dependencies": {
     "antd": "^5.6.2",

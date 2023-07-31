@@ -1,0 +1,25 @@
+name: Publish Package to npmjs
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      # Setup .npmrc file to publish to npm
+      - name: Set up Node 19
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19.6.0
+          cache: "yarn"
+          registry-url: "https://registry.npmjs.org"
+
+      - run: yarn workspaces foreach run patch
+        timeout-minutes: 10
+
+      - run: yarn workspaces foreach -t run publish
+        timeout-minutes: 10
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

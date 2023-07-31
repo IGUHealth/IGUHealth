@@ -18,7 +18,8 @@
     "build": "tsc && node executable.js ./lib/index.js && chmod +x ./lib/index.js",
     "patch": "yarn version patch",
     "minor": "yarn version minor",
-    "major": "yarn version major"
+    "major": "yarn version major",
+    "publish": "yarn build && yarn publish --access private"
   },
   "version": "0.0.2"
 }

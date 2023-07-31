@@ -9,7 +9,8 @@
     "test": "jest",
     "patch": "yarn version patch",
     "minor": "yarn version minor",
-    "major": "yarn version major"
+    "major": "yarn version major",
+    "publish": "yarn build && yarn publish --access private"
   },
   "dependencies": {
     "@iguhealth/codegen": "workspace:^",

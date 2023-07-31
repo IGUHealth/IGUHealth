@@ -11,7 +11,8 @@
     "generate-index": "yarn cli generate-index-file -p . -r r4 --ignore r4/hl7/profiles-others.json r4/hl7/dataelements.json r4/hl7/extension-definitions.json",
     "patch": "yarn version patch",
     "minor": "yarn version minor",
-    "major": "yarn version major"
+    "major": "yarn version major",
+    "publish": "yarn build && yarn publish --access private"
   },
   "fhirVersion": [
     "r4"

@@ -11,7 +11,8 @@
     "generate": "peggy --plugin ./node_modules/ts-pegjs/dist/tspegjs.js -o src/parser.ts --cache src/grammar.pegjs",
     "patch": "yarn version patch",
     "minor": "yarn version minor",
-    "major": "yarn version major"
+    "major": "yarn version major",
+    "publish": "yarn build && yarn publish --access private"
   },
   "keywords": [],
   "author": "",
