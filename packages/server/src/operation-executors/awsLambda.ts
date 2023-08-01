@@ -18,6 +18,9 @@ import { InvokeRequest } from "./types";
 import { resolveOperationDefinition, getOperationCode } from "./utilities.js";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 import { ResourceType, id } from "@iguhealth/fhir-types";
+import { configDotenv } from "dotenv";
+
+configDotenv();
 
 function getLambdaFunctionName(
   ctx: FHIRServerCTX,
@@ -52,6 +55,8 @@ async function getLambda(
 
 type Payload = {
   ctx: {
+    SEC_TOKEN: string;
+    API_URL: string;
     workspace: FHIRServerCTX["workspace"];
     level: FHIRRequest["level"];
     resourceType?: ResourceType;
@@ -63,13 +68,19 @@ type Payload = {
 // Used within lambda code for setup.
 async function handler(event: Payload, context: any) {
   const userHandler = require("./user");
+  const client = await import("@iguhealth/client/lib/http/index.js");
   // Pass in token here and instantiate client. Later.
-
+  // @ts-ignore
+  const HTTPClient = new client.default({
+    token: event.ctx.SEC_TOKEN,
+    url: event.ctx.API_URL,
+  });
   const ctx = {
     workspace: event.ctx.workspace,
     level: event.ctx.level,
     resourceType: event.ctx.resourceType,
     id: event.ctx.id,
+    client: HTTPClient,
   };
 
   const output = await userHandler.handler(ctx, event.input);
@@ -93,6 +104,7 @@ function createZipFile(code: string): Buffer {
 
 async function createLambdaFunction(
   client: LambdaClient,
+  layers: string[],
   role: string,
   ctx: FHIRServerCTX,
   operation: Operation<unknown, unknown>
@@ -118,6 +130,7 @@ async function createLambdaFunction(
     const createFunction = new CreateFunctionCommand({
       FunctionName: lambdaName,
       Runtime: "nodejs18.x",
+      Layers: layers,
       Handler: "index.handler",
       Role: role,
       Tags: {
@@ -161,6 +174,8 @@ async function createPayload(
 
   return {
     ctx: {
+      SEC_TOKEN: "not-sec",
+      API_URL: `${process.env.API_URL}/w/${ctx.workspace}/api/v1/fhir/r4`,
       workspace: ctx.workspace,
       level: request.level,
       resourceType:
@@ -175,6 +190,7 @@ async function createPayload(
 
 async function confirmLambdaExistsAndReady(
   client: LambdaClient,
+  layers: string[],
   role: string,
   ctx: FHIRServerCTX,
   op: Operation<unknown, unknown>
@@ -182,7 +198,7 @@ async function confirmLambdaExistsAndReady(
   let lambda = await getLambda(client, ctx, op);
   // Setup creation if lambda does not exist.
   if (!lambda) {
-    await createLambdaFunction(client, role, ctx, op);
+    await createLambdaFunction(client, layers, role, ctx, op);
     lambda = await getLambda(client, ctx, op);
   }
 
@@ -196,6 +212,7 @@ async function confirmLambdaExistsAndReady(
 }
 
 function createExecutor(
+  layers: string[],
   role: string,
   client: LambdaClient
 ): MiddlewareAsync<{}, FHIRServerCTX> {
@@ -213,12 +230,15 @@ function createExecutor(
 
             const lambda = await confirmLambdaExistsAndReady(
               client,
+              layers,
               role,
               ctx,
               op
             );
 
             const payload = await createPayload(ctx, op, request);
+
+            console.log(payload);
 
             const invoke = new InvokeCommand({
               FunctionName: getLambdaFunctionName(ctx, op),
@@ -302,10 +322,12 @@ type Config = {
   AWS_ACCESS_KEY_ID: string;
   AWS_ACCESS_KEY_SECRET: string;
   LAMBDA_ROLE: string;
+  LAYERS: string[];
 };
 
 export default function createLambdaExecutioner({
   AWS_REGION,
+  LAYERS,
   LAMBDA_ROLE,
   AWS_ACCESS_KEY_ID,
   AWS_ACCESS_KEY_SECRET,
@@ -319,6 +341,6 @@ export default function createLambdaExecutioner({
   });
   return new AsynchronousClient<{}, FHIRServerCTX>(
     {},
-    createExecutor(LAMBDA_ROLE, client)
+    createExecutor(LAYERS, LAMBDA_ROLE, client)
   );
 }
