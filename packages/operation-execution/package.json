@@ -1,5 +1,6 @@
 {
   "name": "@iguhealth/operation-execution",
+  "version": "0.1.0",
   "description": "Package to create operation definition executables.",
   "packageManager": "yarn@3.6.1",
   "type": "module",
@@ -44,7 +45,6 @@
       "node_modules/(?!@iguhealth)"
     ]
   },
-  "version": "0.1.0",
   "files": [
     "lib/**"
   ]

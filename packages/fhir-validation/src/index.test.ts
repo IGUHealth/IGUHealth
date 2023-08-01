@@ -4,7 +4,7 @@ import { expect, test } from "@jest/globals";
 import { Resource, ResourceType } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { loadArtifacts } from "@iguhealth/artifacts";
-import MemoryDatabase from "@iguhealth/fhir-server/lib/resourceProviders/memory";
+import MemoryDatabase from "@iguhealth/server/lib/resourceProviders/memory";
 
 import { createValidator } from "./index";
 
