@@ -33,11 +33,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: typos-action
-        uses: crate-ci/typos@v1.15.0
-        # https://github.com/crate-ci/typos/blob/master/docs/github-action.md
         with:
-          config: ./typos.config.toml
+          fetch-depth: 0
+
+      # Ran into this issue [https://github.com/crate-ci/typos/issues/347]
+      # Because action appears to be diffing off main and overrides exclude extends
+      # It will trigger this. So we are disabling it for now.
+      # May move to different lib or just fork the action and alter logic later.
+
+      # - name: typos-action
+      #   uses: crate-ci/typos@bd033903f43a309e5226c11a04457034edefb115
+      #   # https://github.com/crate-ci/typos/blob/master/docs/github-action.md
+      #   with:
+      #     files: *.md
+      #     config: ./typos.config.toml
 
       - name: Set up Node 19
         uses: actions/setup-node@v3
@@ -47,6 +56,12 @@ jobs:
 
       - name: EnableCorePack
         run: corepack enable
+
+      - name: Yarn v3
+        run: corepack prepare yarn@3.6.1 --activate
+
+      - name: Version Check
+        run: yarn version check
 
       - name: Install dependencies
         run: yarn

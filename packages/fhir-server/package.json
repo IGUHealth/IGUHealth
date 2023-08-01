@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/fhir-server",
-  "version": "0.0.6",
+  "version": "0.0.5",
   "description": "",
   "main": "./lib/index.js",
   "type": "module",
@@ -11,10 +11,7 @@
     "generate": "yarn cli generate-operations --output=./src/r4",
     "migrate": "db-migrate --sql-file -m src/resourceProviders/postgres/migrations",
     "watch": "yarn tsc-watch --onSuccess \"yarn node --enable-source-maps  ./lib/index.js\"",
-    "patch": "yarn version patch",
-    "minor": "yarn version minor",
-    "major": "yarn version major",
-    "publish": "yarn build && yarn npm publish --access public"
+    "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.379.1",
@@ -92,6 +89,7 @@
     ]
   },
   "files": [
+    "database.json",
     "lib/**"
   ]
 }

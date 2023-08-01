@@ -21,6 +21,8 @@ async function fhirRequestToFHIRResponse(
   return ctx.client.request(ctx, request);
 }
 
+console.log();
+
 export interface FHIRServerCTX {
   workspace: string;
   author: string;

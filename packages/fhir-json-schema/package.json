@@ -1,15 +1,11 @@
 {
   "name": "@iguhealth/fhir-json-schema",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "description": "",
   "main": "./lib/r4.js",
   "types": "./lib/r4.d.ts",
   "scripts": {
-    "build": "tsc",
-    "patch": "yarn version patch",
-    "minor": "yarn version minor",
-    "major": "yarn version major",
-    "publish": "yarn build && yarn npm publish --access public"
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
