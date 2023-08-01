@@ -733,9 +733,11 @@ function buildParameters(
       throw new OperationError(
         outcomeError("invalid", `Unknown parameter '${parameter.name}'`)
       );
+
     const search_table = `${searchParameter.type}_idx`;
     const alias = `${searchParameter.type}${i++}`;
     const paramJoin = `JOIN ${search_table} ${alias} on ${alias}.r_version_id=resources.version_id AND ${alias}.parameter_url= $${index++}`;
+
     values = [...values, searchParameter.url];
     let parameterClause;
     switch (searchParameter.type) {
@@ -836,6 +838,12 @@ function buildParameters(
         break;
       }
       case "reference": {
+        // Need to handle chaining here.
+        // Steps would be as follows:
+        // 1. Pull in the references for given parameter.
+        // 2. If not Last chain pull in parameters filtered by results of previous chain and validate parameter is Reference.
+        // 3. If last chain perform normal search on parameter.
+
         parameterClause = parameter.value
           .map((value) => {
             const parts = value.toString().split("/");
@@ -899,11 +907,12 @@ async function executeSearchQuery(
 
   values = [...values, ctx.workspace];
   let queryText = `
-  SELECT * FROM (
-     SELECT DISTINCT ON (resources.id) resources.resource, deleted
+     SELECT DISTINCT ON (resources.id) resources.resource
      FROM resources 
      ${parameterQuery.query}
-     WHERE resources.workspace = $${index++} AND
+     WHERE resources.workspace = $${index++} 
+     AND resources.deleted = false
+     AND
   `;
 
   // System vs type search filtering
@@ -916,7 +925,8 @@ async function executeSearchQuery(
 
   // Ensure that only one versionid of resource is returned. Given we're using
   // a giant table of resources with all versions.
-  queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC) as t WHERE t.deleted = false`;
+  // Case where no parameters this becomes relevant.
+  queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC`;
 
   console.log(queryText, values);
 
