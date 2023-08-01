@@ -170,6 +170,7 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
         AWS_ACCESS_KEY_SECRET: process.env
           .AWS_LAMBDA_ACCESS_KEY_SECRET as string,
         LAMBDA_ROLE: process.env.AWS_LAMBDA_ROLE as string,
+        LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
       }),
     },
     {
