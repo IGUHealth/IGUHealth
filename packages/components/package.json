@@ -15,10 +15,7 @@
     "test": "echo \"Error: no test specified\"",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "build-tailwind": "tailwindcss -i ./src/index.css -o ./dist/output.css",
-    "patch": "yarn version patch",
-    "minor": "yarn version minor",
-    "major": "yarn version major"
+    "build-tailwind": "tailwindcss -i ./src/index.css -o ./dist/output.css"
   },
   "dependencies": {
     "antd": "^5.6.2",

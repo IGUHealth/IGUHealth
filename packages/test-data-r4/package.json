@@ -4,15 +4,13 @@
   "fhirVersion": "r4",
   "scripts": {
     "generate-index-file": "yarn cli generate-index-file -p . -r examples-json",
-    "patch": "yarn version patch",
-    "minor": "yarn version minor",
-    "major": "yarn version major",
     "publish": "yarn npm publish --access public"
   },
   "dependencies": {
     "@iguhealth/cli": "workspace:^"
   },
   "files": [
+    "lib/**",
     ".index.config.json",
     "examples-json/**"
   ]

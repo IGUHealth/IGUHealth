@@ -1,2 +1,11 @@
 [files]
-extend-exclude = ["*.json", "*.xml", "packages/fhir-types/*", "*lock*", "*test.ts.snap*", "ops.ts"]
+extend-exclude = [
+    "*.json",
+    "*.xml",
+    "packages/fhir-types/*",
+    "*lock*",
+    "*test.ts.snap*",
+    "ops.ts",
+    ".yarn/*",
+    ".yarn/install-state.gz",
+]
