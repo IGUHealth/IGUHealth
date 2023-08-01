@@ -2,6 +2,7 @@
   "name": "@iguhealth/cli",
   "bin": "lib/index.js",
   "types": "lib/index.d.ts",
+  "version": "0.1.0",
   "target": "node",
   "type": "module",
   "dependencies": {
@@ -18,7 +19,6 @@
     "build": "tsc && node executable.js ./lib/index.js && chmod +x ./lib/index.js",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
-  "version": "0.1.0",
   "files": [
     "lib/**"
   ]

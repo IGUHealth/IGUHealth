@@ -1,5 +1,6 @@
 {
   "name": "@iguhealth/fhir-validation",
+  "version": "0.1.0",
   "packageManager": "yarn@3.6.1",
   "type": "module",
   "main": "lib/index.js",
@@ -16,8 +17,8 @@
   },
   "devDependencies": {
     "@iguhealth/artifacts": "workspace:^",
-    "@iguhealth/fhir-server": "workspace:^",
     "@iguhealth/fhir-types": "workspace:^",
+    "@iguhealth/server": "workspace:^",
     "@iguhealth/test-data": "workspace:^",
     "@jest/globals": "^29.5.0",
     "@types/jest": "^29.5.2",
@@ -46,7 +47,6 @@
       "node_modules/(?!@iguhealth)"
     ]
   },
-  "version": "0.1.0",
   "files": [
     "lib/**"
   ]
