@@ -40,10 +40,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/fhir-json-schema"\
       },\
       {\
-        "name": "@iguhealth/server",\
-        "reference": "workspace:packages/fhir-server"\
-      },\
-      {\
         "name": "@iguhealth/fhir-types",\
         "reference": "workspace:packages/fhir-types"\
       },\
@@ -72,6 +68,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/sample-app"\
       },\
       {\
+        "name": "@iguhealth/server",\
+        "reference": "workspace:packages/server"\
+      },\
+      {\
         "name": "@iguhealth/test-data",\
         "reference": "workspace:packages/test-data-r4"\
       }\
@@ -91,7 +91,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@iguhealth/meta-value", ["workspace:packages/meta-value"]],\
       ["@iguhealth/operation-execution", ["workspace:packages/operation-execution"]],\
       ["@iguhealth/operation-outcomes", ["workspace:packages/operation-outcomes"]],\
-      ["@iguhealth/server", ["workspace:packages/fhir-server"]],\
+      ["@iguhealth/server", ["workspace:packages/server"]],\
       ["@iguhealth/test-data", ["workspace:packages/test-data-r4"]],\
       ["iguhealth-ts", ["workspace:."]],\
       ["sample-app", ["workspace:packages/sample-app"]]\
@@ -6321,7 +6321,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@iguhealth/codegen", "workspace:packages/codegen"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
             ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
-            ["@iguhealth/server", "workspace:packages/fhir-server"],\
+            ["@iguhealth/server", "workspace:packages/server"],\
             ["@iguhealth/test-data", "workspace:packages/test-data-r4"],\
             ["@jest/globals", "npm:29.6.0"],\
             ["@types/jest", "npm:29.5.2"],\
@@ -6403,10 +6403,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@iguhealth/server", [\
-        ["workspace:packages/fhir-server", {\
-          "packageLocation": "./packages/fhir-server/",\
+        ["workspace:packages/server", {\
+          "packageLocation": "./packages/server/",\
           "packageDependencies": [\
-            ["@iguhealth/server", "workspace:packages/fhir-server"],\
+            ["@iguhealth/server", "workspace:packages/server"],\
             ["@aws-sdk/client-lambda", "npm:3.379.1"],\
             ["@aws-sdk/client-resource-groups-tagging-api", "npm:3.379.1"],\
             ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
@@ -6451,10 +6451,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["openid-client", "npm:5.4.3"],\
             ["pg", "virtual:be2c7e9b4f3a6d0d1dcfc12b72ea51602a2f2526681fc8930452452be08fadb05fdfe879568f891fae9eaa13d90eca02ebb079c81e1105ccaf790ab4a6e929bb#npm:8.11.1"],\
             ["react", "npm:18.2.0"],\
-            ["react-dom", "virtual:d53c5149f81bfaab7a2f74d640f99d26116f4ec296f2d73b30b57b453f599c700cbae6a3099c004870753a3ec37ee9c0fb00b490fac49df767b5ac54b542e162#npm:18.2.0"],\
+            ["react-dom", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:18.2.0"],\
             ["redlock", "npm:5.0.0-beta2"],\
             ["ts-jest", "virtual:60d59201a81fdf9d844335582569d604f77c0cfb33012fc0d97d31d995c40a543914afd8f900018942c3e21e71ae879a5dcdf97d4008644edf9f0ce84a7e8664#npm:29.1.1"],\
-            ["tsc-watch", "virtual:d53c5149f81bfaab7a2f74d640f99d26116f4ec296f2d73b30b57b453f599c700cbae6a3099c004870753a3ec37ee9c0fb00b490fac49df767b5ac54b542e162#npm:6.0.4"],\
+            ["tsc-watch", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:6.0.4"],\
             ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"],\
             ["uuid", "npm:9.0.0"]\
           ],\
@@ -27636,10 +27636,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:d53c5149f81bfaab7a2f74d640f99d26116f4ec296f2d73b30b57b453f599c700cbae6a3099c004870753a3ec37ee9c0fb00b490fac49df767b5ac54b542e162#npm:18.2.0", {\
-          "packageLocation": "./.yarn/__virtual__/react-dom-virtual-a3ee6d2149/0/cache/react-dom-npm-18.2.0-dd675bca1c-7d323310be.zip/node_modules/react-dom/",\
+        ["virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:18.2.0", {\
+          "packageLocation": "./.yarn/__virtual__/react-dom-virtual-0fcc348eb3/0/cache/react-dom-npm-18.2.0-dd675bca1c-7d323310be.zip/node_modules/react-dom/",\
           "packageDependencies": [\
-            ["react-dom", "virtual:d53c5149f81bfaab7a2f74d640f99d26116f4ec296f2d73b30b57b453f599c700cbae6a3099c004870753a3ec37ee9c0fb00b490fac49df767b5ac54b542e162#npm:18.2.0"],\
+            ["react-dom", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:18.2.0"],\
             ["@types/react", null],\
             ["loose-envify", "npm:1.4.0"],\
             ["react", "npm:18.2.0"],\
@@ -30337,10 +30337,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:d53c5149f81bfaab7a2f74d640f99d26116f4ec296f2d73b30b57b453f599c700cbae6a3099c004870753a3ec37ee9c0fb00b490fac49df767b5ac54b542e162#npm:6.0.4", {\
-          "packageLocation": "./.yarn/__virtual__/tsc-watch-virtual-c149d22719/0/cache/tsc-watch-npm-6.0.4-ca8d5a229b-f7bf7eefbc.zip/node_modules/tsc-watch/",\
+        ["virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:6.0.4", {\
+          "packageLocation": "./.yarn/__virtual__/tsc-watch-virtual-6c7f5d8fe8/0/cache/tsc-watch-npm-6.0.4-ca8d5a229b-f7bf7eefbc.zip/node_modules/tsc-watch/",\
           "packageDependencies": [\
-            ["tsc-watch", "virtual:d53c5149f81bfaab7a2f74d640f99d26116f4ec296f2d73b30b57b453f599c700cbae6a3099c004870753a3ec37ee9c0fb00b490fac49df767b5ac54b542e162#npm:6.0.4"],\
+            ["tsc-watch", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:6.0.4"],\
             ["@types/typescript", null],\
             ["cross-spawn", "npm:7.0.3"],\
             ["node-cleanup", "npm:2.1.2"],\

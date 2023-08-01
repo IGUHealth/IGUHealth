@@ -3259,9 +3259,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@iguhealth/server@workspace:^, @iguhealth/server@workspace:packages/fhir-server":
+"@iguhealth/server@workspace:^, @iguhealth/server@workspace:packages/server":
   version: 0.0.0-use.local
-  resolution: "@iguhealth/server@workspace:packages/fhir-server"
+  resolution: "@iguhealth/server@workspace:packages/server"
   dependencies:
     "@aws-sdk/client-lambda": ^3.379.1
     "@aws-sdk/client-resource-groups-tagging-api": ^3.379.1
