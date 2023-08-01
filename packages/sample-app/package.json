@@ -22,10 +22,7 @@
     "start": "react-scripts start",
     "build-": "react-scripts build",
     "test": "react-scripts test --passWithNoTests --watchAll=false",
-    "eject": "react-scripts eject",
-    "patch": "yarn version patch",
-    "minor": "yarn version minor",
-    "major": "yarn version major"
+    "eject": "react-scripts eject"
   },
   "browserslist": {
     "production": [

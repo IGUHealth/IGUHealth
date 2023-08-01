@@ -1,6 +1,6 @@
 {
   "name": "iguhealth-ts",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "author": "",
   "packageManager": "yarn@3.6.1",
   "main": "index.js",

@@ -33,6 +33,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       - name: typos-action
         uses: crate-ci/typos@v1.15.0
         # https://github.com/crate-ci/typos/blob/master/docs/github-action.md
@@ -44,9 +47,14 @@ jobs:
         with:
           node-version: 19.6.0
           cache: "yarn"
-
       - name: EnableCorePack
         run: corepack enable
+
+      - name: Yarn v3
+        run: corepack prepare yarn@3.6.1 --activate
+
+      - name: Version Check
+        run: yarn version check
 
       - name: Install dependencies
         run: yarn
