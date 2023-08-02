@@ -75,7 +75,8 @@ export function KoaRequestToFHIRRequest(
   const fhirQuery = parseParameters(url);
 
   const method = request.method;
-  const urlPieces = url.split("/");
+  const urlPieces = url.split("?")[0].split("/");
+
   if (urlPieces.length === 1) {
     if (urlPieces[0] === "") {
       if (method === "POST") {
