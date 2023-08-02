@@ -736,6 +736,8 @@ function buildParametersSQL(
     const searchParameter = parameter.searchParameter;
     const search_table = `${searchParameter.type}_idx`;
     const alias = `${searchParameter.type}${i++}`;
+
+    const rootSelect = `SELECT r_version_id FROM ${search_table} ${alias} WHERE ${alias}.parameter_url = $${index++}`;
     const paramJoin = `JOIN ${search_table} ${alias} on ${alias}.r_version_id=resources.version_id AND ${alias}.parameter_url= $${index++}`;
 
     values = [...values, searchParameter.url];
