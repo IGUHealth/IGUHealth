@@ -45,6 +45,7 @@ import {
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../fhirServer.js";
+import { last } from "lodash";
 
 function searchResources(
   resourceTypes: ResourceType[]
@@ -840,9 +841,100 @@ function buildParameterSQL(
       // 3. If last chain perform normal search on parameter.
 
       // Example SQL
-      // select * from
-      // (select * from token_idx where r_id in (select resource_id from reference_idx where parameter_url = 'http://hl7.org/fhir/SearchParameter/Observation-subject')) as t
+      // select * from reference_idx where r_version_id in (select r_version_id from reference_idx UNION select r_version_id from token_idx);
       // where t.value = '123';
+
+      if (parameter.chainedParameters) {
+        const referenceParameters = [
+          [parameter.searchParameter],
+          ...parameter.chainedParameters.slice(0, -1),
+        ];
+
+        const referencesSQLChain = referenceParameters.reduce(
+          (
+            {
+              index,
+              values,
+              query,
+            }: { index: number; values: any[]; query: string[] },
+            parameters
+          ) => {
+            const res = parameters.reduce(
+              (
+                {
+                  index,
+                  values,
+                  query,
+                }: { index: number; values: any[]; query: string[] },
+                p
+              ) => {
+                const res = buildParameterSQL(
+                  {
+                    name: p.name,
+                    searchParameter: p,
+                    value: [],
+                  },
+                  index,
+                  values
+                );
+                return {
+                  index: res.index,
+                  values: res.values,
+                  query: [...query, res.query],
+                };
+              },
+              { index, values, query: [] }
+            );
+            return {
+              index: res.index,
+              values: res.values,
+              query: [...query, `(${res.query.join(" UNION ")})`],
+            };
+          },
+          { index, values, query: [] }
+        );
+
+        const referencesSQL = referencesSQLChain.query.reduce(
+          (acc: string, query: string) => {
+            return `(${acc} where r_version_id in ${query})`;
+          }
+        );
+        index = referencesSQLChain.index;
+        values = referencesSQLChain.values;
+
+        const lastParameters =
+          parameter.chainedParameters[parameter.chainedParameters.length - 1];
+        const lastResult = lastParameters.reduce(
+          (
+            {
+              index,
+              values,
+              query,
+            }: { index: number; values: any[]; query: string[] },
+            p
+          ) => {
+            const res = buildParameterSQL(
+              { ...parameter, searchParameter: p, chainedParameters: [] },
+              index,
+              values
+            );
+            return {
+              index: res.index,
+              values: res.values,
+              query: [...query, res.query],
+            };
+          },
+          { index, values, query: [] }
+        );
+
+        return {
+          query: `(SELECT r_version_id from ((${lastResult.query.join(
+            " Union "
+          )}) where r_version_id in ${referencesSQL}))`,
+          index: lastResult.index,
+          values: lastResult.values,
+        };
+      }
 
       parameterClause = parameter.value
         .map((value) => {
@@ -874,7 +966,7 @@ function buildParameterSQL(
   return {
     index,
     values,
-    query: `(${rootSelect} AND ${parameterClause})`,
+    query: `(${rootSelect} ${parameterClause ? `AND ${parameterClause}` : ""})`,
   };
 }
 
