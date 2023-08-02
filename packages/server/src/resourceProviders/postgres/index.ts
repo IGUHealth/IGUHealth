@@ -729,18 +729,16 @@ function buildParametersSQL(
   parameters: ParsedParaeterAssociatedSearchParameter[],
   index: number,
   values: any[]
-): { index: number; query: string; values: any[] } {
-  let query = [];
+): { index: number; queries: string[]; values: any[] } {
+  let queries = [];
   let i = 0;
   for (let parameter of parameters) {
     const searchParameter = parameter.searchParameter;
     const search_table = `${searchParameter.type}_idx`;
-    const alias = `${searchParameter.type}${i++}`;
 
-    const rootSelect = `SELECT r_version_id FROM ${search_table} ${alias} WHERE ${alias}.parameter_url = $${index++}`;
-    const paramJoin = `JOIN ${search_table} ${alias} on ${alias}.r_version_id=resources.version_id AND ${alias}.parameter_url= $${index++}`;
-
+    const rootSelect = `SELECT r_version_id FROM ${search_table} WHERE parameter_url = $${index++}`;
     values = [...values, searchParameter.url];
+
     let parameterClause;
     switch (searchParameter.type) {
       case "token": {
@@ -749,18 +747,18 @@ function buildParametersSQL(
             const parts = value.toString().split("|");
             if (parts.length === 1) {
               values = [...values, value];
-              return `${alias}.value = $${index++}`;
+              return `value = $${index++}`;
             }
             if (parts.length === 2) {
               if (parts[0] !== "" && parts[1] !== "") {
                 values = [...values, parts[0], parts[1]];
-                return `${alias}.system = $${index++} AND ${alias}.value = $${index++}`;
+                return `system = $${index++} AND value = $${index++}`;
               } else if (parts[0] !== "" && parts[1] === "") {
                 values = [...values, parts[0]];
-                return `${alias}.system = $${index++}`;
+                return `system = $${index++}`;
               } else if (parts[0] === "" && parts[1] !== "") {
                 values = [...values, parts[1]];
-                return `${alias}.value = $${index++}`;
+                return `value = $${index++}`;
               }
             }
             throw new Error(`Invalid token value found '${value}'`);
@@ -786,24 +784,24 @@ function buildParametersSQL(
               values = [...values, value, value];
               clauses = [
                 ...clauses,
-                `${alias}.start_value <= $${index++}`,
-                `${alias}.end_value >= $${index++}`,
+                `start_value <= $${index++}`,
+                `end_value >= $${index++}`,
               ];
             }
             if (system !== "") {
               values = [...values, system, system];
               clauses = [
                 ...clauses,
-                `${alias}.start_system = $${index++}`,
-                `${alias}.end_system = $${index++}`,
+                `start_system = $${index++}`,
+                `end_system = $${index++}`,
               ];
             }
             if (code != "") {
               values = [...values, code, code];
               clauses = [
                 ...clauses,
-                `${alias}.start_code = $${index++}`,
-                `${alias}.end_code = $${index++}`,
+                `start_code = $${index++}`,
+                `end_code = $${index++}`,
               ];
             }
             return clauses.join(" AND ");
@@ -826,7 +824,7 @@ function buildParametersSQL(
           ).toISOString();
           values = [...values, formattedDate, formattedDate];
           // Check the range for date
-          return `${alias}.start_date <= $${index++} AND ${alias}.end_date >= $${index++}`;
+          return `start_date <= $${index++} AND end_date >= $${index++}`;
         });
         break;
       }
@@ -834,7 +832,7 @@ function buildParametersSQL(
       case "number":
       case "string": {
         parameterClause = parameter.value
-          .map((value) => `${alias}.value = $${index++}`)
+          .map((value) => `value = $${index++}`)
           .join(" OR ");
         values = [...values, ...parameter.value];
         break;
@@ -856,10 +854,10 @@ function buildParametersSQL(
             const parts = value.toString().split("/");
             if (parts.length === 1) {
               values = [...values, parts[0]];
-              return `${alias}.resource_id = $${index++}`;
+              return `resource_id = $${index++}`;
             } else if (parts.length === 2) {
               values = [...values, parts[0], parts[1]];
-              return `${alias}.resource_type = $${index++} AND ${alias}.resource_id = $${index++}`;
+              return `resource_type = $${index++} AND resource_id = $${index++}`;
             } else {
               throw new Error(
                 `Invalid reference value '${value}' for search parameter '${searchParameter.name}'`
@@ -877,13 +875,13 @@ function buildParametersSQL(
           )
         );
     }
-    query.push(
-      `${paramJoin} ${
+    queries.push(
+      `(${rootSelect} ${
         parameter.value.length > 0 ? "AND" : ""
-      } ${parameterClause}`
+      } ${parameterClause})`
     );
   }
-  return { index, query: query.join("\n"), values };
+  return { index, queries, values };
 }
 
 async function associateChainedParameters<CTX extends FHIRServerCTX>(
@@ -1004,7 +1002,7 @@ async function executeSearchQuery(
     request.parameters
   );
 
-  console.log(JSON.stringify(parameters));
+  // console.log(JSON.stringify(parameters));
 
   let parameterQuery = buildParametersSQL(parameters, index, values);
 
@@ -1015,7 +1013,12 @@ async function executeSearchQuery(
   let queryText = `
      SELECT DISTINCT ON (resources.id) resources.resource
      FROM resources 
-     ${parameterQuery.query}
+     ${parameterQuery.queries
+       .map(
+         (q, i) =>
+           `JOIN ${q} as query${i} ON query${i}.r_version_id=resources.version_id`
+       )
+       .join(" ")}
      WHERE resources.workspace = $${index++} 
      AND resources.deleted = false
      AND
