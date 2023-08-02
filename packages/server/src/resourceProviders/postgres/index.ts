@@ -1018,11 +1018,10 @@ async function executeSearchQuery(
          (q, i) =>
            `JOIN ${q} as query${i} ON query${i}.r_version_id=resources.version_id`
        )
-       .join(" ")}
+       .join("\n     ")}
      WHERE resources.workspace = $${index++} 
      AND resources.deleted = false
-     AND
-  `;
+     AND`;
 
   // System vs type search filtering
   if (request.level === "type") {
@@ -1032,12 +1031,8 @@ async function executeSearchQuery(
     queryText = `${queryText} resources.resource_type is not null`;
   }
 
-  // Ensure that only one versionid of resource is returned. Given we're using
-  // a giant table of resources with all versions.
-  // Case where no parameters this becomes relevant.
-  queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC`;
-
-  console.log(queryText, values);
+  console.log(queryText);
+  console.log(values);
 
   const res = await client.query(queryText, values);
   return res.rows.map((row) => row.resource) as Resource[];
