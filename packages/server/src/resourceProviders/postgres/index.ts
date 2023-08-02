@@ -722,6 +722,7 @@ type ParsedParaeterAssociatedSearchParameter = ParsedParameter<
   string | number
 > & {
   searchParameter: SearchParameter;
+  chainedParameters?: SearchParameter[][];
 };
 
 function buildParametersSQL(
@@ -883,6 +884,60 @@ function buildParametersSQL(
   return { index, query: query.join("\n"), values };
 }
 
+async function associateChainedParameters<CTX extends FHIRServerCTX>(
+  ctx: CTX,
+  parsedParameter: ParsedParaeterAssociatedSearchParameter
+): Promise<ParsedParaeterAssociatedSearchParameter> {
+  if (!parsedParameter.chains) return parsedParameter;
+
+  // All middle chains should be references.
+  let last = [parsedParameter.searchParameter];
+  let chainedParameters: SearchParameter[][] = [];
+  for (const chain of parsedParameter.chains) {
+    const targets = last
+      .map((l) => {
+        if (l.type !== "reference")
+          throw new OperationError(
+            outcomeError(
+              "invalid",
+              `SearchParameter with name '${l.name}' is not a reference.`
+            )
+          );
+        return l.target || [];
+      })
+      .flat();
+    const chainParameter = await ctx.client.search_type(
+      ctx,
+      "SearchParameter",
+      [
+        { name: "name", value: [chain] },
+        {
+          name: "type",
+          value: param_types_supported,
+        },
+        {
+          name: "base",
+          value: searchResources(targets as ResourceType[]),
+        },
+      ]
+    );
+    if (chainParameter.length === 0)
+      throw new OperationError(
+        outcomeError(
+          "not-found",
+          `SearchParameter with name '${chain}' not found in chain.`
+        )
+      );
+    last = chainParameter;
+    chainedParameters.push(chainParameter);
+  }
+
+  return {
+    ...parsedParameter,
+    chainedParameters,
+  };
+}
+
 async function associateSearchParameter<CTX extends FHIRServerCTX>(
   ctx: CTX,
   resourceTypes: ResourceType[],
@@ -890,7 +945,7 @@ async function associateSearchParameter<CTX extends FHIRServerCTX>(
 ): Promise<ParsedParaeterAssociatedSearchParameter[]> {
   const result = await Promise.all(
     parameters.map(async (p) => {
-      const searchParameter = await ctx.client.search_type(
+      const searchParameters = await ctx.client.search_type(
         ctx,
         "SearchParameter",
         [
@@ -906,7 +961,7 @@ async function associateSearchParameter<CTX extends FHIRServerCTX>(
         ]
       );
 
-      if (searchParameter.length === 0)
+      if (searchParameters.length === 0)
         throw new OperationError(
           outcomeError(
             "not-found",
@@ -914,7 +969,7 @@ async function associateSearchParameter<CTX extends FHIRServerCTX>(
           )
         );
 
-      if (searchParameter.length > 1)
+      if (searchParameters.length > 1)
         throw new OperationError(
           outcomeError(
             "invalid",
@@ -922,10 +977,12 @@ async function associateSearchParameter<CTX extends FHIRServerCTX>(
           )
         );
 
-      return {
+      const searchParameter = searchParameters[0];
+      const param = {
         ...p,
-        searchParameter: searchParameter[0],
+        searchParameter: searchParameter,
       };
+      return associateChainedParameters(ctx, param);
     })
   );
 
@@ -944,6 +1001,8 @@ async function executeSearchQuery(
     request.level === "type" ? [request.resourceType as ResourceType] : [],
     request.parameters
   );
+
+  console.log(JSON.stringify(parameters));
 
   let parameterQuery = buildParametersSQL(parameters, index, values);
 
