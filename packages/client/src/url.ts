@@ -2,6 +2,7 @@ export type ParsedParameter<T> = {
   name: string;
   value: T[];
   modifier?: string;
+  chains?: string[];
 };
 
 /*
@@ -21,13 +22,19 @@ export default function parseParameters(
             parameters,
             [key, value]
           ): Record<string, ParsedParameter<string>> => {
-            let [name, modifier] = key.split(":");
-            let searchParam = {
+            const chains = key.split(".");
+
+            let [name, modifier] = chains[0].split(":");
+
+            let searchParam: ParsedParameter<string | number> = {
               name,
               modifier,
               value: value.split(","),
             };
+
+            if (chains.length > 1) searchParam.chains = chains.slice(1);
             if (modifier) searchParam.modifier = modifier;
+
             return { ...parameters, [searchParam.name]: searchParam };
           },
           {}

@@ -47,11 +47,11 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { FHIRServerCTX } from "../../fhirServer.js";
 
 function searchResources(
-  resourceType?: ResourceType
+  resourceTypes: ResourceType[]
 ): (ResourceType | string)[] {
   const searchTypes = ["Resource", "DomainResource"];
-  if (resourceType) {
-    searchTypes.push(resourceType);
+  if (resourceTypes.length > 0) {
+    return searchTypes.concat(resourceTypes);
   }
   return searchTypes;
 }
@@ -69,7 +69,7 @@ const param_types_supported = [
 
 async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
-  resourceType?: ResourceType,
+  resourceTypes: ResourceType[],
   names?: string[]
 ): Promise<SearchParameter[]> {
   let parameters = [
@@ -79,15 +79,17 @@ async function getAllParametersForResource<CTX extends FHIRServerCTX>(
     },
     {
       name: "base",
-      value: searchResources(resourceType),
+      value: searchResources(resourceTypes),
     },
   ];
+
   if (names) {
     parameters = [...parameters, { name: "name", value: names }];
   }
 
   return await ctx.client.search_type(ctx, "SearchParameter", parameters);
 }
+
 // ---------------------------------------------------------
 // [DATA TYPE CONVERSIONS]
 // ---------------------------------------------------------
@@ -583,10 +585,9 @@ async function indexResource<CTX extends FHIRServerCTX>(
   resource: Resource
 ) {
   await removeIndices(client, ctx, resource);
-  const searchParameters = await getAllParametersForResource(
-    ctx,
-    resource.resourceType
-  );
+  const searchParameters = await getAllParametersForResource(ctx, [
+    resource.resourceType,
+  ]);
   for (const searchParameter of searchParameters) {
     if (searchParameter.expression === undefined) continue;
     const evaluation = evaluateWithMeta(searchParameter.expression, resource, {
@@ -717,23 +718,21 @@ async function deleteResource<CTX extends FHIRServerCTX>(
   await client.query("END");
 }
 
-function buildParameters(
-  search_parameters: SearchParameter[],
-  parameters: ParsedParameter<string | number>[],
+type ParsedParaeterAssociatedSearchParameter = ParsedParameter<
+  string | number
+> & {
+  searchParameter: SearchParameter;
+};
+
+function buildParametersSQL(
+  parameters: ParsedParaeterAssociatedSearchParameter[],
   index: number,
   values: any[]
 ): { index: number; query: string; values: any[] } {
   let query = [];
   let i = 0;
   for (let parameter of parameters) {
-    const searchParameter = search_parameters.find(
-      (p) => p.name === parameter.name
-    );
-    if (searchParameter === undefined)
-      throw new OperationError(
-        outcomeError("invalid", `Unknown parameter '${parameter.name}'`)
-      );
-
+    const searchParameter = parameter.searchParameter;
     const search_table = `${searchParameter.type}_idx`;
     const alias = `${searchParameter.type}${i++}`;
     const paramJoin = `JOIN ${search_table} ${alias} on ${alias}.r_version_id=resources.version_id AND ${alias}.parameter_url= $${index++}`;
@@ -844,6 +843,11 @@ function buildParameters(
         // 2. If not Last chain pull in parameters filtered by results of previous chain and validate parameter is Reference.
         // 3. If last chain perform normal search on parameter.
 
+        // Example SQL
+        // select * from
+        // (select * from token_idx where r_id in (select resource_id from reference_idx where parameter_url = 'http://hl7.org/fhir/SearchParameter/Observation-subject')) as t
+        // where t.value = '123';
+
         parameterClause = parameter.value
           .map((value) => {
             const parts = value.toString().split("/");
@@ -879,6 +883,55 @@ function buildParameters(
   return { index, query: query.join("\n"), values };
 }
 
+async function associateSearchParameter<CTX extends FHIRServerCTX>(
+  ctx: CTX,
+  resourceTypes: ResourceType[],
+  parameters: ParsedParameter<string | number>[]
+): Promise<ParsedParaeterAssociatedSearchParameter[]> {
+  const result = await Promise.all(
+    parameters.map(async (p) => {
+      const searchParameter = await ctx.client.search_type(
+        ctx,
+        "SearchParameter",
+        [
+          { name: "name", value: [p.name] },
+          {
+            name: "type",
+            value: param_types_supported,
+          },
+          {
+            name: "base",
+            value: searchResources(resourceTypes),
+          },
+        ]
+      );
+
+      if (searchParameter.length === 0)
+        throw new OperationError(
+          outcomeError(
+            "not-found",
+            `SearchParameter with name '${p.name}' not found.`
+          )
+        );
+
+      if (searchParameter.length > 1)
+        throw new OperationError(
+          outcomeError(
+            "invalid",
+            `SearchParameter with name '${p.name}' found multiple parameters.`
+          )
+        );
+
+      return {
+        ...p,
+        searchParameter: searchParameter[0],
+      };
+    })
+  );
+
+  return result;
+}
+
 async function executeSearchQuery(
   client: pg.Client,
   request: SystemSearchRequest | TypeSearchRequest,
@@ -886,21 +939,13 @@ async function executeSearchQuery(
 ): Promise<Resource[]> {
   let values: any[] = [];
   let index = 1;
-  const searchParameters = await getAllParametersForResource(
+  const parameters = await associateSearchParameter(
     ctx,
-    request.level === "type"
-      ? (request.resourceType as ResourceType)
-      : undefined,
-    request.parameters.map((p) => p.name)
+    request.level === "type" ? [request.resourceType as ResourceType] : [],
+    request.parameters
   );
 
-  const parameters = request.parameters;
-  let parameterQuery = buildParameters(
-    searchParameters,
-    parameters,
-    index,
-    values
-  );
+  let parameterQuery = buildParametersSQL(parameters, index, values);
 
   values = parameterQuery.values;
   index = parameterQuery.index;
