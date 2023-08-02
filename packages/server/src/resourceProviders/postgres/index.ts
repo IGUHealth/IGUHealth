@@ -718,176 +718,186 @@ async function deleteResource<CTX extends FHIRServerCTX>(
   await client.query("END");
 }
 
-type ParsedParaeterAssociatedSearchParameter = ParsedParameter<
+type ParsedParameterAssociatedSearchParameter = ParsedParameter<
   string | number
 > & {
   searchParameter: SearchParameter;
   chainedParameters?: SearchParameter[][];
 };
 
+function buildParameterSQL(
+  parameter: ParsedParameterAssociatedSearchParameter,
+  index: number,
+  values: any[]
+): { index: number; query: string; values: any[] } {
+  const searchParameter = parameter.searchParameter;
+  const search_table = `${searchParameter.type}_idx`;
+  const rootSelect = `SELECT r_version_id FROM ${search_table} WHERE parameter_url = $${index++}`;
+  values = [...values, searchParameter.url];
+  let parameterClause;
+  switch (searchParameter.type) {
+    case "token": {
+      parameterClause = parameter.value
+        .map((value) => {
+          const parts = value.toString().split("|");
+          if (parts.length === 1) {
+            values = [...values, value];
+            return `value = $${index++}`;
+          }
+          if (parts.length === 2) {
+            if (parts[0] !== "" && parts[1] !== "") {
+              values = [...values, parts[0], parts[1]];
+              return `system = $${index++} AND value = $${index++}`;
+            } else if (parts[0] !== "" && parts[1] === "") {
+              values = [...values, parts[0]];
+              return `system = $${index++}`;
+            } else if (parts[0] === "" && parts[1] !== "") {
+              values = [...values, parts[1]];
+              return `value = $${index++}`;
+            }
+          }
+          throw new Error(`Invalid token value found '${value}'`);
+        })
+        .join(" OR ");
+      break;
+    }
+    case "quantity": {
+      parameterClause = parameter.value.map((value) => {
+        const parts = value.toString().split("|");
+        if (parts.length === 4) {
+          throw new OperationError(
+            outcomeError(
+              "not-supported",
+              `prefix not supported yet for parameter '${searchParameter.name}' and value '${value}'`
+            )
+          );
+        }
+        if (parts.length === 3) {
+          const [value, system, code] = parts;
+          let clauses: string[] = [];
+          if (value !== "") {
+            values = [...values, value, value];
+            clauses = [
+              ...clauses,
+              `start_value <= $${index++}`,
+              `end_value >= $${index++}`,
+            ];
+          }
+          if (system !== "") {
+            values = [...values, system, system];
+            clauses = [
+              ...clauses,
+              `start_system = $${index++}`,
+              `end_system = $${index++}`,
+            ];
+          }
+          if (code != "") {
+            values = [...values, code, code];
+            clauses = [
+              ...clauses,
+              `start_code = $${index++}`,
+              `end_code = $${index++}`,
+            ];
+          }
+          return clauses.join(" AND ");
+        } else {
+          throw new OperationError(
+            outcomeError(
+              "invalid",
+              "Quantity search parameters must be specified as value|system|code"
+            )
+          );
+        }
+      });
+      break;
+    }
+    case "date": {
+      parameterClause = parameter.value.map((value) => {
+        const formattedDate = dayjs(
+          value,
+          "YYYY-MM-DDThh:mm:ss+zz:zz"
+        ).toISOString();
+        values = [...values, formattedDate, formattedDate];
+        // Check the range for date
+        return `start_date <= $${index++} AND end_date >= $${index++}`;
+      });
+      break;
+    }
+    case "uri":
+    case "number":
+    case "string": {
+      parameterClause = parameter.value
+        .map((value) => `value = $${index++}`)
+        .join(" OR ");
+      values = [...values, ...parameter.value];
+      break;
+    }
+    case "reference": {
+      // Need to handle chaining here.
+      // Steps would be as follows:
+      // 1. Pull in the references for given parameter.
+      // 2. If not Last chain pull in parameters filtered by results of previous chain and validate parameter is Reference.
+      // 3. If last chain perform normal search on parameter.
+
+      // Example SQL
+      // select * from
+      // (select * from token_idx where r_id in (select resource_id from reference_idx where parameter_url = 'http://hl7.org/fhir/SearchParameter/Observation-subject')) as t
+      // where t.value = '123';
+
+      parameterClause = parameter.value
+        .map((value) => {
+          const parts = value.toString().split("/");
+          if (parts.length === 1) {
+            values = [...values, parts[0]];
+            return `resource_id = $${index++}`;
+          } else if (parts.length === 2) {
+            values = [...values, parts[0], parts[1]];
+            return `resource_type = $${index++} AND resource_id = $${index++}`;
+          } else {
+            throw new Error(
+              `Invalid reference value '${value}' for search parameter '${searchParameter.name}'`
+            );
+          }
+        })
+        .join(" OR ");
+      break;
+    }
+    default:
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `Parameter of type '${searchParameter.type}' is not yet supported.`
+        )
+      );
+  }
+
+  return {
+    index,
+    values,
+    query: `(${rootSelect} AND ${parameterClause})`,
+  };
+}
+
 function buildParametersSQL(
-  parameters: ParsedParaeterAssociatedSearchParameter[],
+  parameters: ParsedParameterAssociatedSearchParameter[],
   index: number,
   values: any[]
 ): { index: number; queries: string[]; values: any[] } {
   let queries = [];
   let i = 0;
   for (let parameter of parameters) {
-    const searchParameter = parameter.searchParameter;
-    const search_table = `${searchParameter.type}_idx`;
-
-    const rootSelect = `SELECT r_version_id FROM ${search_table} WHERE parameter_url = $${index++}`;
-    values = [...values, searchParameter.url];
-
-    let parameterClause;
-    switch (searchParameter.type) {
-      case "token": {
-        parameterClause = parameter.value
-          .map((value) => {
-            const parts = value.toString().split("|");
-            if (parts.length === 1) {
-              values = [...values, value];
-              return `value = $${index++}`;
-            }
-            if (parts.length === 2) {
-              if (parts[0] !== "" && parts[1] !== "") {
-                values = [...values, parts[0], parts[1]];
-                return `system = $${index++} AND value = $${index++}`;
-              } else if (parts[0] !== "" && parts[1] === "") {
-                values = [...values, parts[0]];
-                return `system = $${index++}`;
-              } else if (parts[0] === "" && parts[1] !== "") {
-                values = [...values, parts[1]];
-                return `value = $${index++}`;
-              }
-            }
-            throw new Error(`Invalid token value found '${value}'`);
-          })
-          .join(" OR ");
-        break;
-      }
-      case "quantity": {
-        parameterClause = parameter.value.map((value) => {
-          const parts = value.toString().split("|");
-          if (parts.length === 4) {
-            throw new OperationError(
-              outcomeError(
-                "not-supported",
-                `prefix not supported yet for parameter '${searchParameter.name}' and value '${value}'`
-              )
-            );
-          }
-          if (parts.length === 3) {
-            const [value, system, code] = parts;
-            let clauses: string[] = [];
-            if (value !== "") {
-              values = [...values, value, value];
-              clauses = [
-                ...clauses,
-                `start_value <= $${index++}`,
-                `end_value >= $${index++}`,
-              ];
-            }
-            if (system !== "") {
-              values = [...values, system, system];
-              clauses = [
-                ...clauses,
-                `start_system = $${index++}`,
-                `end_system = $${index++}`,
-              ];
-            }
-            if (code != "") {
-              values = [...values, code, code];
-              clauses = [
-                ...clauses,
-                `start_code = $${index++}`,
-                `end_code = $${index++}`,
-              ];
-            }
-            return clauses.join(" AND ");
-          } else {
-            throw new OperationError(
-              outcomeError(
-                "invalid",
-                "Quantity search parameters must be specified as value|system|code"
-              )
-            );
-          }
-        });
-        break;
-      }
-      case "date": {
-        parameterClause = parameter.value.map((value) => {
-          const formattedDate = dayjs(
-            value,
-            "YYYY-MM-DDThh:mm:ss+zz:zz"
-          ).toISOString();
-          values = [...values, formattedDate, formattedDate];
-          // Check the range for date
-          return `start_date <= $${index++} AND end_date >= $${index++}`;
-        });
-        break;
-      }
-      case "uri":
-      case "number":
-      case "string": {
-        parameterClause = parameter.value
-          .map((value) => `value = $${index++}`)
-          .join(" OR ");
-        values = [...values, ...parameter.value];
-        break;
-      }
-      case "reference": {
-        // Need to handle chaining here.
-        // Steps would be as follows:
-        // 1. Pull in the references for given parameter.
-        // 2. If not Last chain pull in parameters filtered by results of previous chain and validate parameter is Reference.
-        // 3. If last chain perform normal search on parameter.
-
-        // Example SQL
-        // select * from
-        // (select * from token_idx where r_id in (select resource_id from reference_idx where parameter_url = 'http://hl7.org/fhir/SearchParameter/Observation-subject')) as t
-        // where t.value = '123';
-
-        parameterClause = parameter.value
-          .map((value) => {
-            const parts = value.toString().split("/");
-            if (parts.length === 1) {
-              values = [...values, parts[0]];
-              return `resource_id = $${index++}`;
-            } else if (parts.length === 2) {
-              values = [...values, parts[0], parts[1]];
-              return `resource_type = $${index++} AND resource_id = $${index++}`;
-            } else {
-              throw new Error(
-                `Invalid reference value '${value}' for search parameter '${searchParameter.name}'`
-              );
-            }
-          })
-          .join(" OR ");
-        break;
-      }
-      default:
-        throw new OperationError(
-          outcomeError(
-            "not-supported",
-            `Parameter of type '${searchParameter.type}' is not yet supported.`
-          )
-        );
-    }
-    queries.push(
-      `(${rootSelect} ${
-        parameter.value.length > 0 ? "AND" : ""
-      } ${parameterClause})`
-    );
+    const res = buildParameterSQL(parameter, index, values);
+    index = res.index;
+    queries.push(res.query);
+    values = res.values;
   }
   return { index, queries, values };
 }
 
 async function associateChainedParameters<CTX extends FHIRServerCTX>(
   ctx: CTX,
-  parsedParameter: ParsedParaeterAssociatedSearchParameter
-): Promise<ParsedParaeterAssociatedSearchParameter> {
+  parsedParameter: ParsedParameterAssociatedSearchParameter
+): Promise<ParsedParameterAssociatedSearchParameter> {
   if (!parsedParameter.chains) return parsedParameter;
 
   // All middle chains should be references.
@@ -942,7 +952,7 @@ async function associateSearchParameter<CTX extends FHIRServerCTX>(
   ctx: CTX,
   resourceTypes: ResourceType[],
   parameters: ParsedParameter<string | number>[]
-): Promise<ParsedParaeterAssociatedSearchParameter[]> {
+): Promise<ParsedParameterAssociatedSearchParameter[]> {
   const result = await Promise.all(
     parameters.map(async (p) => {
       const searchParameters = await ctx.client.search_type(
