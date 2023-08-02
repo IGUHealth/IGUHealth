@@ -928,9 +928,9 @@ function buildParameterSQL(
         );
 
         return {
-          query: `(SELECT r_version_id from ((${lastResult.query.join(
+          query: `(${rootSelect} and r_version_id in ((${lastResult.query.join(
             " Union "
-          )}) where r_version_id in ${referencesSQL}))`,
+          )}) intersect ${referencesSQL}))`,
           index: lastResult.index,
           values: lastResult.values,
         };
@@ -1114,6 +1114,7 @@ async function executeSearchQuery(
   values = [...values, ctx.workspace];
   let queryText = `
      SELECT DISTINCT ON (resources.id) resources.resource
+     
      FROM resources 
      ${parameterQuery.queries
        .map(
@@ -1121,6 +1122,7 @@ async function executeSearchQuery(
            `JOIN ${q} as query${i} ON query${i}.r_version_id=resources.version_id`
        )
        .join("\n     ")}
+     
      WHERE resources.workspace = $${index++} 
      AND resources.deleted = false
      AND`;
@@ -1132,7 +1134,8 @@ async function executeSearchQuery(
   } else {
     queryText = `${queryText} resources.resource_type is not null`;
   }
-
+  // Neccessary to pull latest version of resource
+  queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC`;
   console.log(queryText);
   console.log(values);
 
