@@ -631,7 +631,7 @@ async function getResource<CTX extends FHIRServerCTX>(
   id: string
 ): Promise<Resource> {
   const queryText = `SELECT * FROM 
-    (SELECT resource, deleted FROM resources WHERE workspace = $1 AND reference_type = $2 AND id = $3 ORDER BY version_id DESC LIMIT 1)
+    (SELECT resource, deleted FROM resources WHERE workspace = $1 AND resource_type = $2 AND id = $3 ORDER BY version_id DESC LIMIT 1)
      as t WHERE t.deleted = false;`;
   const res = await client.query(queryText, [ctx.workspace, resourceType, id]);
   if (res.rows.length === 0) {
@@ -898,10 +898,10 @@ function buildParameterSQL(
           },
           { index, values, query: [] }
         );
-
+        console.log(referencesSQLChain);
         const referencesSQL = referencesSQLChain.query.reduce(
-          (acc: string, query: string) => {
-            return `(${acc} where r_id in ${query})`;
+          (acc: string, query: string, index: number) => {
+            return `select * from ${acc} where reference_id in ${query}`;
           }
         );
         index = referencesSQLChain.index;
