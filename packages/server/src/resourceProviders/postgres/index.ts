@@ -1145,8 +1145,10 @@ async function executeSearchQuery(
   } else {
     queryText = `${queryText} resources.resource_type is not null`;
   }
+
   // Neccessary to pull latest version of resource
-  queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC) as resources where resources.deleted = false;`;
+  // Afterwards check that the latest version is not deleted.
+  queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC) as latest_resources where latest_resources.deleted = false;`;
 
   // console.log(queryText);
   // console.log(values);
