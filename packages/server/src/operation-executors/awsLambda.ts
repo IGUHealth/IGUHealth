@@ -17,7 +17,7 @@ import { FHIRServerCTX } from "../fhirServer";
 import { InvokeRequest } from "./types";
 import { resolveOperationDefinition, getOperationCode } from "./utilities.js";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
-import { ResourceType, id } from "@iguhealth/fhir-types";
+import { AuditEvent, ResourceType, id } from "@iguhealth/fhir-types";
 import { configDotenv } from "dotenv";
 
 configDotenv();
@@ -238,8 +238,6 @@ function createExecutor(
 
             const payload = await createPayload(ctx, op, request);
 
-            console.log(payload);
-
             const invoke = new InvokeCommand({
               FunctionName: getLambdaFunctionName(ctx, op),
               Payload: Buffer.from(JSON.stringify(payload)),
@@ -255,6 +253,52 @@ function createExecutor(
                 )
               );
             const output = JSON.parse(payloadString);
+
+            if (invokeResponse.FunctionError) {
+              const auditEvent = await ctx.client.create(ctx, {
+                resourceType: "AuditEvent",
+                type: {
+                  system: "http://hl7.org/fhir/ValueSet/audit-event-type",
+                  code: "rest",
+                },
+                recorded: new Date().toISOString(),
+                outcome: "8",
+                outcomeDesc: output.trace
+                  ? output.trace.join("\n")
+                  : "No trace present.",
+                agent: [
+                  {
+                    altId: "AWS Lambda",
+                    name: "AWS Lambda",
+                    requestor: true,
+                  },
+                ],
+                source: {
+                  observer: {
+                    reference: "Organization/iguhealth",
+                    identifier: {
+                      system: "https://iguhealth.com",
+                      value: "server",
+                    },
+                  },
+                },
+                entity: [
+                  {
+                    what: {
+                      reference: `OperationDefinition/${operationDefinition.id}`,
+                    },
+                  },
+                ],
+              } as AuditEvent);
+
+              throw new OperationError(
+                outcomeFatal(
+                  "invalid",
+                  `Lambda function returned error: '${invokeResponse.FunctionError}' More info captured in AuditEvent/${auditEvent.id}`
+                )
+              );
+            }
+
             await op.validate(opCTX, "out", output);
 
             const outputParameters = op.parseToParameters("out", output);
