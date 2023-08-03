@@ -45,7 +45,6 @@ import {
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../fhirServer.js";
-import { last } from "lodash";
 
 function searchResources(
   resourceTypes: ResourceType[]
@@ -456,7 +455,11 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           .map(toReference)
           .flat()
           .map(async ({ reference, resourceType, id }) => {
-            await client.query(
+            if (!reference.reference) {
+              console.warn("Cannot index logical reference.");
+              return;
+            }
+            return await client.query(
               "INSERT INTO reference_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, reference, reference_type, reference_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
               [
                 ctx.workspace,
