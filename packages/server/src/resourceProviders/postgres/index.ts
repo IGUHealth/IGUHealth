@@ -940,9 +940,10 @@ function buildParameterSQL(
 
         const referencesSQL = [
           ...sqlCHAIN.query,
-          lastResult.query.join(" UNION "),
-        ].reduce((acc: string, query: string, index: number) => {
-          return `(select * from ${acc} as p where p.reference_id in (select r_id from ${query} as z))`;
+          `(${lastResult.query.join(" UNION ")})`,
+        ].reduce((previousResult: string, query: string, index: number) => {
+          console.log(previousResult, query);
+          return `(select * from ${previousResult} as p where p.reference_id in (select r_id from ${query} as chain${index}))`;
         });
 
         return {
