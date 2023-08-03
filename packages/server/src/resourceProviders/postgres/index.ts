@@ -850,7 +850,10 @@ function buildParameterSQL(
       //  as p where p.reference_id in
       // ((SELECT r_id  FROM reference_idx WHERE parameter_url = 'http://hl7.org/fhir/SearchParameter/Patient-general-practitioner' ));
 
-      if (parameter.chainedParameters) {
+      if (
+        parameter.chainedParameters &&
+        parameter.chainedParameters.length > 0
+      ) {
         const referenceParameters = [
           [parameter.searchParameter],
           ...parameter.chainedParameters.slice(0, -1),
@@ -906,6 +909,8 @@ function buildParameterSQL(
 
         const lastParameters =
           parameter.chainedParameters[parameter.chainedParameters.length - 1];
+        console.log(parameter);
+
         const lastResult = lastParameters.reduce(
           (
             {
