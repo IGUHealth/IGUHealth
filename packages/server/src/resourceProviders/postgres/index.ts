@@ -457,7 +457,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           .flat()
           .map(async ({ reference, resourceType, id }) => {
             await client.query(
-              "INSERT INTO reference_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, reference, resource_type, resource_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
+              "INSERT INTO reference_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, reference, reference_type, reference_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
               [
                 ctx.workspace,
                 resource.id,
@@ -631,7 +631,7 @@ async function getResource<CTX extends FHIRServerCTX>(
   id: string
 ): Promise<Resource> {
   const queryText = `SELECT * FROM 
-    (SELECT resource, deleted FROM resources WHERE workspace = $1 AND resource_type = $2 AND id = $3 ORDER BY version_id DESC LIMIT 1)
+    (SELECT resource, deleted FROM resources WHERE workspace = $1 AND reference_type = $2 AND id = $3 ORDER BY version_id DESC LIMIT 1)
      as t WHERE t.deleted = false;`;
   const res = await client.query(queryText, [ctx.workspace, resourceType, id]);
   if (res.rows.length === 0) {
@@ -736,7 +736,7 @@ function buildParameterSQL(
   const search_table = `${searchParameter.type}_idx`;
 
   const rootSelect = `SELECT ${columns.join(
-    " "
+    ", "
   )} FROM ${search_table} WHERE parameter_url = $${index++}`;
   values = [...values, searchParameter.url];
   let parameterClause;
@@ -880,7 +880,7 @@ function buildParameterSQL(
                   },
                   index,
                   values,
-                  ["resource_id", "r_id"]
+                  ["reference_id"]
                 );
                 return {
                   index: res.index,
@@ -901,7 +901,7 @@ function buildParameterSQL(
 
         const referencesSQL = referencesSQLChain.query.reduce(
           (acc: string, query: string) => {
-            return `(${acc} where resource_id in ${query})`;
+            return `(${acc} where r_id in ${query})`;
           }
         );
         index = referencesSQLChain.index;
@@ -934,7 +934,7 @@ function buildParameterSQL(
         );
 
         return {
-          query: `(${rootSelect} and resource_id in ((${lastResult.query.join(
+          query: `(${rootSelect} and reference_id in ((${lastResult.query.join(
             " Union "
           )}) intersect ${referencesSQL}))`,
           index: lastResult.index,
@@ -947,10 +947,10 @@ function buildParameterSQL(
           const parts = value.toString().split("/");
           if (parts.length === 1) {
             values = [...values, parts[0]];
-            return `resource_id = $${index++}`;
+            return `reference_id = $${index++}`;
           } else if (parts.length === 2) {
             values = [...values, parts[0], parts[1]];
-            return `resource_type = $${index++} AND resource_id = $${index++}`;
+            return `reference_type = $${index++} AND reference_id = $${index++}`;
           } else {
             throw new Error(
               `Invalid reference value '${value}' for search parameter '${searchParameter.name}'`
