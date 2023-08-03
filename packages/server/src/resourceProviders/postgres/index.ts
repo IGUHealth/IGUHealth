@@ -838,17 +838,8 @@ function buildParameterSQL(
       break;
     }
     case "reference": {
-      // Need to handle chaining here.
-      // Steps would be as follows:
-      // 1. Pull in the references for given parameter.
-      // 2. If not Last chain pull in parameters filtered by results of previous chain and validate parameter is Reference.
-      // 3. If last chain perform normal search on parameter.
-
-      // Example SQL
-      // select * from
-      // ((SELECT r_id, reference_id FROM reference_idx WHERE parameter_url = 'http://hl7.org/fhir/SearchParameter/clinical-patient' ))
-      //  as p where p.reference_id in
-      // ((SELECT r_id  FROM reference_idx WHERE parameter_url = 'http://hl7.org/fhir/SearchParameter/Patient-general-practitioner' ));
+      // SUPPORT FOR PARAMETER CHAINS
+      // Example: Observation?patient.general-practitioner.name=Adam
 
       if (
         parameter.chainedParameters &&
@@ -1133,7 +1124,8 @@ async function executeSearchQuery(
 
   values = [...values, ctx.workspace];
   let queryText = `
-     SELECT DISTINCT ON (resources.id) resources.resource
+  SELECT * FROM (
+     SELECT DISTINCT ON (resources.id) resources.resource, deleted
      
      FROM resources 
      ${parameterQuery.queries
@@ -1144,7 +1136,6 @@ async function executeSearchQuery(
        .join("\n     ")}
      
      WHERE resources.workspace = $${index++} 
-     AND resources.deleted = false
      AND`;
 
   // System vs type search filtering
@@ -1155,7 +1146,7 @@ async function executeSearchQuery(
     queryText = `${queryText} resources.resource_type is not null`;
   }
   // Neccessary to pull latest version of resource
-  queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC`;
+  queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC) as resources where resources.deleted = false;`;
 
   // console.log(queryText);
   // console.log(values);

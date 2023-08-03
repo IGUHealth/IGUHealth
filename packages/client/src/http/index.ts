@@ -17,7 +17,10 @@ function parametersToQueryString(
   parameters: ParsedParameter<string | number>[]
 ): string {
   return parameters
-    .map((p) => `${p.name}${p.modifier ? `:${p.modifier}` : ""}=${p.value}`)
+    .map((p) => {
+      const name = p.chains ? [p.name, ...p.chains].join(".") : p.name;
+      return `${name}${p.modifier ? `:${p.modifier}` : ""}=${p.value}`;
+    })
     .join("&");
 }
 
