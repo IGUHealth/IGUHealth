@@ -845,8 +845,10 @@ function buildParameterSQL(
       // 3. If last chain perform normal search on parameter.
 
       // Example SQL
-      // select * from reference_idx where r_version_id in (select r_version_id from reference_idx UNION select r_version_id from token_idx);
-      // where t.value = '123';
+      // select * from
+      // ((SELECT r_id, reference_id FROM reference_idx WHERE parameter_url = 'http://hl7.org/fhir/SearchParameter/clinical-patient' ))
+      //  as p where p.reference_id in
+      // ((SELECT r_id  FROM reference_idx WHERE parameter_url = 'http://hl7.org/fhir/SearchParameter/Patient-general-practitioner' ));
 
       if (parameter.chainedParameters) {
         const referenceParameters = [
@@ -854,7 +856,7 @@ function buildParameterSQL(
           ...parameter.chainedParameters.slice(0, -1),
         ];
 
-        const referencesSQLChain = referenceParameters.reduce(
+        const sqlCHAIN = referenceParameters.reduce(
           (
             {
               index,
@@ -880,7 +882,7 @@ function buildParameterSQL(
                   },
                   index,
                   values,
-                  ["reference_id"]
+                  ["r_id", "reference_id"]
                 );
                 return {
                   index: res.index,
@@ -898,14 +900,9 @@ function buildParameterSQL(
           },
           { index, values, query: [] }
         );
-        console.log(referencesSQLChain);
-        const referencesSQL = referencesSQLChain.query.reduce(
-          (acc: string, query: string, index: number) => {
-            return `select * from ${acc} where reference_id in ${query}`;
-          }
-        );
-        index = referencesSQLChain.index;
-        values = referencesSQLChain.values;
+
+        index = sqlCHAIN.index;
+        values = sqlCHAIN.values;
 
         const lastParameters =
           parameter.chainedParameters[parameter.chainedParameters.length - 1];
@@ -933,10 +930,18 @@ function buildParameterSQL(
           { index, values, query: [] }
         );
 
+        index = lastResult.index;
+        values = lastResult.values;
+
+        const referencesSQL = [
+          ...sqlCHAIN.query,
+          lastResult.query.join(" UNION "),
+        ].reduce((acc: string, query: string, index: number) => {
+          return `(select * from ${acc} as p where p.reference_id in (select r_id from ${query} as z))`;
+        });
+
         return {
-          query: `(${rootSelect} and reference_id in ((${lastResult.query.join(
-            " Union "
-          )}) intersect ${referencesSQL}))`,
+          query: `(${rootSelect} and reference_id in (select reference_id from ${referencesSQL} as z))`,
           index: lastResult.index,
           values: lastResult.values,
         };
@@ -1110,8 +1115,6 @@ async function executeSearchQuery(
     request.parameters
   );
 
-  // console.log(JSON.stringify(parameters));
-
   let parameterQuery = buildParametersSQL(parameters, index, values);
 
   values = parameterQuery.values;
@@ -1142,8 +1145,15 @@ async function executeSearchQuery(
   }
   // Neccessary to pull latest version of resource
   queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC`;
-  console.log(queryText);
-  console.log(values);
+  // console.log(queryText);
+  // console.log(values);
+
+  console.log(
+    "z",
+    values.reduce((queryText, value, index) => {
+      return queryText.replace(`$${index + 1}`, `'${value}'`);
+    }, queryText)
+  );
 
   const res = await client.query(queryText, values);
   return res.rows.map((row) => row.resource) as Resource[];
