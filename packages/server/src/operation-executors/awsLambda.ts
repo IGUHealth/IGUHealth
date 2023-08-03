@@ -264,7 +264,6 @@ function createExecutor(
                 { reference: `OperationDefinition/${operationDefinition.id}` },
                 output.trace ? output.trace.join("\n") : "No trace present."
               );
-
               throw new OperationError(
                 outcomeFatal(
                   "invalid",
