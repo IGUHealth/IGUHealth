@@ -2,4 +2,5 @@ releases:
   "@iguhealth/server": minor
 
 declined:
+  - iguhealth-ts
   - "@iguhealth/fhir-validation"
