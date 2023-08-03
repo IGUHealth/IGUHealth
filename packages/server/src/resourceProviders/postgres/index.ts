@@ -729,11 +729,15 @@ type ParsedParameterAssociatedSearchParameter = ParsedParameter<
 function buildParameterSQL(
   parameter: ParsedParameterAssociatedSearchParameter,
   index: number,
-  values: any[]
+  values: any[],
+  columns: string[] = ["r_version_id"]
 ): { index: number; query: string; values: any[] } {
   const searchParameter = parameter.searchParameter;
   const search_table = `${searchParameter.type}_idx`;
-  const rootSelect = `SELECT r_version_id FROM ${search_table} WHERE parameter_url = $${index++}`;
+
+  const rootSelect = `SELECT ${columns.join(
+    " "
+  )} FROM ${search_table} WHERE parameter_url = $${index++}`;
   values = [...values, searchParameter.url];
   let parameterClause;
   switch (searchParameter.type) {
@@ -875,7 +879,8 @@ function buildParameterSQL(
                     value: [],
                   },
                   index,
-                  values
+                  values,
+                  ["resource_id", "r_id"]
                 );
                 return {
                   index: res.index,
@@ -896,7 +901,7 @@ function buildParameterSQL(
 
         const referencesSQL = referencesSQLChain.query.reduce(
           (acc: string, query: string) => {
-            return `(${acc} where r_version_id in ${query})`;
+            return `(${acc} where resource_id in ${query})`;
           }
         );
         index = referencesSQLChain.index;
@@ -916,7 +921,8 @@ function buildParameterSQL(
             const res = buildParameterSQL(
               { ...parameter, searchParameter: p, chainedParameters: [] },
               index,
-              values
+              values,
+              ["r_id"]
             );
             return {
               index: res.index,
@@ -928,7 +934,7 @@ function buildParameterSQL(
         );
 
         return {
-          query: `(${rootSelect} and r_version_id in ((${lastResult.query.join(
+          query: `(${rootSelect} and resource_id in ((${lastResult.query.join(
             " Union "
           )}) intersect ${referencesSQL}))`,
           index: lastResult.index,
