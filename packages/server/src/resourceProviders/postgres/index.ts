@@ -909,7 +909,6 @@ function buildParameterSQL(
 
         const lastParameters =
           parameter.chainedParameters[parameter.chainedParameters.length - 1];
-        console.log(parameter);
 
         const lastResult = lastParameters.reduce(
           (
@@ -941,13 +940,19 @@ function buildParameterSQL(
         const referencesSQL = [
           ...sqlCHAIN.query,
           `(${lastResult.query.join(" UNION ")})`,
-        ].reduce((previousResult: string, query: string, index: number) => {
-          console.log(previousResult, query);
-          return `(select * from ${previousResult} as p where p.reference_id in (select r_id from ${query} as chain${index}))`;
-        });
+        ]
+          // Reverse as we want to start from initial value and then chain up to the last reference ID.
+          .reverse()
+          .reduce((previousResult: string, query: string, index: number) => {
+            const queryAlias = `query${index}`;
+            // Previous result should include the list of ids for next reference_id.
+            // Starting at the value this would be r_id
+            return `(select r_id from ${query} as ${queryAlias} where ${queryAlias}.reference_id in ${previousResult})`;
+            //return `(select * from ${previousResult} as p where p.reference_id in (select r_id from ${query} as chain${index}))`;
+          });
 
         return {
-          query: `(${rootSelect} and reference_id in (select reference_id from ${referencesSQL} as z))`,
+          query: `(${rootSelect} and reference_id in (select reference_id from ${referencesSQL} as referencechain))`,
           index: lastResult.index,
           values: lastResult.values,
         };
@@ -1151,15 +1156,14 @@ async function executeSearchQuery(
   }
   // Neccessary to pull latest version of resource
   queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC`;
+
   // console.log(queryText);
   // console.log(values);
-
-  console.log(
-    "z",
-    values.reduce((queryText, value, index) => {
-      return queryText.replace(`$${index + 1}`, `'${value}'`);
-    }, queryText)
-  );
+  // console.log(
+  //   values.reduce((queryText, value, index) => {
+  //     return queryText.replace(`$${index + 1}`, `'${value}'`);
+  //   }, queryText)
+  // );
 
   const res = await client.query(queryText, values);
   return res.rows.map((row) => row.resource) as Resource[];
