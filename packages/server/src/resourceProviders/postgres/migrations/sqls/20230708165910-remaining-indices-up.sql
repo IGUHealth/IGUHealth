@@ -46,8 +46,8 @@ CREATE TABLE reference_idx (
 
   reference      JSONB       NOT NULL,
   -- Should be generating off of these from reference type with procedure?
-  resource_type  TEXT        NOT NULL,
-  resource_id    TEXT        NOT NULL,
+  reference_type  TEXT        NOT NULL,
+  reference_id    TEXT        NOT NULL,
   
   -- When was indexed
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),

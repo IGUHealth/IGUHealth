@@ -45,6 +45,7 @@ import {
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../fhirServer.js";
+import { last } from "lodash";
 
 function searchResources(
   resourceTypes: ResourceType[]
@@ -456,7 +457,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           .flat()
           .map(async ({ reference, resourceType, id }) => {
             await client.query(
-              "INSERT INTO reference_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, reference, resource_type, resource_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
+              "INSERT INTO reference_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, reference, reference_type, reference_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
               [
                 ctx.workspace,
                 resource.id,
@@ -718,176 +719,290 @@ async function deleteResource<CTX extends FHIRServerCTX>(
   await client.query("END");
 }
 
-type ParsedParaeterAssociatedSearchParameter = ParsedParameter<
+type ParsedParameterAssociatedSearchParameter = ParsedParameter<
   string | number
 > & {
   searchParameter: SearchParameter;
   chainedParameters?: SearchParameter[][];
 };
 
+function buildParameterSQL(
+  parameter: ParsedParameterAssociatedSearchParameter,
+  index: number,
+  values: any[],
+  columns: string[] = ["r_version_id"]
+): { index: number; query: string; values: any[] } {
+  const searchParameter = parameter.searchParameter;
+  const search_table = `${searchParameter.type}_idx`;
+
+  const rootSelect = `SELECT ${columns.join(
+    ", "
+  )} FROM ${search_table} WHERE parameter_url = $${index++}`;
+  values = [...values, searchParameter.url];
+  let parameterClause;
+  switch (searchParameter.type) {
+    case "token": {
+      parameterClause = parameter.value
+        .map((value) => {
+          const parts = value.toString().split("|");
+          if (parts.length === 1) {
+            values = [...values, value];
+            return `value = $${index++}`;
+          }
+          if (parts.length === 2) {
+            if (parts[0] !== "" && parts[1] !== "") {
+              values = [...values, parts[0], parts[1]];
+              return `system = $${index++} AND value = $${index++}`;
+            } else if (parts[0] !== "" && parts[1] === "") {
+              values = [...values, parts[0]];
+              return `system = $${index++}`;
+            } else if (parts[0] === "" && parts[1] !== "") {
+              values = [...values, parts[1]];
+              return `value = $${index++}`;
+            }
+          }
+          throw new Error(`Invalid token value found '${value}'`);
+        })
+        .join(" OR ");
+      break;
+    }
+    case "quantity": {
+      parameterClause = parameter.value.map((value) => {
+        const parts = value.toString().split("|");
+        if (parts.length === 4) {
+          throw new OperationError(
+            outcomeError(
+              "not-supported",
+              `prefix not supported yet for parameter '${searchParameter.name}' and value '${value}'`
+            )
+          );
+        }
+        if (parts.length === 3) {
+          const [value, system, code] = parts;
+          let clauses: string[] = [];
+          if (value !== "") {
+            values = [...values, value, value];
+            clauses = [
+              ...clauses,
+              `start_value <= $${index++}`,
+              `end_value >= $${index++}`,
+            ];
+          }
+          if (system !== "") {
+            values = [...values, system, system];
+            clauses = [
+              ...clauses,
+              `start_system = $${index++}`,
+              `end_system = $${index++}`,
+            ];
+          }
+          if (code != "") {
+            values = [...values, code, code];
+            clauses = [
+              ...clauses,
+              `start_code = $${index++}`,
+              `end_code = $${index++}`,
+            ];
+          }
+          return clauses.join(" AND ");
+        } else {
+          throw new OperationError(
+            outcomeError(
+              "invalid",
+              "Quantity search parameters must be specified as value|system|code"
+            )
+          );
+        }
+      });
+      break;
+    }
+    case "date": {
+      parameterClause = parameter.value.map((value) => {
+        const formattedDate = dayjs(
+          value,
+          "YYYY-MM-DDThh:mm:ss+zz:zz"
+        ).toISOString();
+        values = [...values, formattedDate, formattedDate];
+        // Check the range for date
+        return `start_date <= $${index++} AND end_date >= $${index++}`;
+      });
+      break;
+    }
+    case "uri":
+    case "number":
+    case "string": {
+      parameterClause = parameter.value
+        .map((value) => `value = $${index++}`)
+        .join(" OR ");
+      values = [...values, ...parameter.value];
+      break;
+    }
+    case "reference": {
+      // SUPPORT FOR PARAMETER CHAINS
+      // Example: Observation?patient.general-practitioner.name=Adam
+
+      if (
+        parameter.chainedParameters &&
+        parameter.chainedParameters.length > 0
+      ) {
+        const referenceParameters = [
+          [parameter.searchParameter],
+          ...parameter.chainedParameters.slice(0, -1),
+        ];
+
+        const sqlCHAIN = referenceParameters.reduce(
+          (
+            {
+              index,
+              values,
+              query,
+            }: { index: number; values: any[]; query: string[] },
+            parameters
+          ) => {
+            const res = parameters.reduce(
+              (
+                {
+                  index,
+                  values,
+                  query,
+                }: { index: number; values: any[]; query: string[] },
+                p
+              ) => {
+                const res = buildParameterSQL(
+                  {
+                    name: p.name,
+                    searchParameter: p,
+                    value: [],
+                  },
+                  index,
+                  values,
+                  ["r_id", "reference_id"]
+                );
+                return {
+                  index: res.index,
+                  values: res.values,
+                  query: [...query, res.query],
+                };
+              },
+              { index, values, query: [] }
+            );
+            return {
+              index: res.index,
+              values: res.values,
+              query: [...query, `(${res.query.join(" UNION ")})`],
+            };
+          },
+          { index, values, query: [] }
+        );
+
+        index = sqlCHAIN.index;
+        values = sqlCHAIN.values;
+
+        const lastParameters =
+          parameter.chainedParameters[parameter.chainedParameters.length - 1];
+
+        const lastResult = lastParameters.reduce(
+          (
+            {
+              index,
+              values,
+              query,
+            }: { index: number; values: any[]; query: string[] },
+            p
+          ) => {
+            const res = buildParameterSQL(
+              { ...parameter, searchParameter: p, chainedParameters: [] },
+              index,
+              values,
+              ["r_id"]
+            );
+            return {
+              index: res.index,
+              values: res.values,
+              query: [...query, res.query],
+            };
+          },
+          { index, values, query: [] }
+        );
+
+        index = lastResult.index;
+        values = lastResult.values;
+
+        const referencesSQL = [
+          ...sqlCHAIN.query,
+          `(${lastResult.query.join(" UNION ")})`,
+        ]
+          // Reverse as we want to start from initial value and then chain up to the last reference ID.
+          .reverse()
+          .reduce((previousResult: string, query: string, index: number) => {
+            const queryAlias = `query${index}`;
+            // Previous result should include the list of ids for next reference_id.
+            // Starting at the value this would be r_id
+            return `(select r_id from ${query} as ${queryAlias} where ${queryAlias}.reference_id in ${previousResult})`;
+            //return `(select * from ${previousResult} as p where p.reference_id in (select r_id from ${query} as chain${index}))`;
+          });
+
+        return {
+          query: `(${rootSelect} and reference_id in (select reference_id from ${referencesSQL} as referencechain))`,
+          index: lastResult.index,
+          values: lastResult.values,
+        };
+      }
+
+      parameterClause = parameter.value
+        .map((value) => {
+          const parts = value.toString().split("/");
+          if (parts.length === 1) {
+            values = [...values, parts[0]];
+            return `reference_id = $${index++}`;
+          } else if (parts.length === 2) {
+            values = [...values, parts[0], parts[1]];
+            return `reference_type = $${index++} AND reference_id = $${index++}`;
+          } else {
+            throw new Error(
+              `Invalid reference value '${value}' for search parameter '${searchParameter.name}'`
+            );
+          }
+        })
+        .join(" OR ");
+      break;
+    }
+    default:
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `Parameter of type '${searchParameter.type}' is not yet supported.`
+        )
+      );
+  }
+
+  return {
+    index,
+    values,
+    query: `(${rootSelect} ${parameterClause ? `AND ${parameterClause}` : ""})`,
+  };
+}
+
 function buildParametersSQL(
-  parameters: ParsedParaeterAssociatedSearchParameter[],
+  parameters: ParsedParameterAssociatedSearchParameter[],
   index: number,
   values: any[]
 ): { index: number; queries: string[]; values: any[] } {
   let queries = [];
   let i = 0;
   for (let parameter of parameters) {
-    const searchParameter = parameter.searchParameter;
-    const search_table = `${searchParameter.type}_idx`;
-
-    const rootSelect = `SELECT r_version_id FROM ${search_table} WHERE parameter_url = $${index++}`;
-    values = [...values, searchParameter.url];
-
-    let parameterClause;
-    switch (searchParameter.type) {
-      case "token": {
-        parameterClause = parameter.value
-          .map((value) => {
-            const parts = value.toString().split("|");
-            if (parts.length === 1) {
-              values = [...values, value];
-              return `value = $${index++}`;
-            }
-            if (parts.length === 2) {
-              if (parts[0] !== "" && parts[1] !== "") {
-                values = [...values, parts[0], parts[1]];
-                return `system = $${index++} AND value = $${index++}`;
-              } else if (parts[0] !== "" && parts[1] === "") {
-                values = [...values, parts[0]];
-                return `system = $${index++}`;
-              } else if (parts[0] === "" && parts[1] !== "") {
-                values = [...values, parts[1]];
-                return `value = $${index++}`;
-              }
-            }
-            throw new Error(`Invalid token value found '${value}'`);
-          })
-          .join(" OR ");
-        break;
-      }
-      case "quantity": {
-        parameterClause = parameter.value.map((value) => {
-          const parts = value.toString().split("|");
-          if (parts.length === 4) {
-            throw new OperationError(
-              outcomeError(
-                "not-supported",
-                `prefix not supported yet for parameter '${searchParameter.name}' and value '${value}'`
-              )
-            );
-          }
-          if (parts.length === 3) {
-            const [value, system, code] = parts;
-            let clauses: string[] = [];
-            if (value !== "") {
-              values = [...values, value, value];
-              clauses = [
-                ...clauses,
-                `start_value <= $${index++}`,
-                `end_value >= $${index++}`,
-              ];
-            }
-            if (system !== "") {
-              values = [...values, system, system];
-              clauses = [
-                ...clauses,
-                `start_system = $${index++}`,
-                `end_system = $${index++}`,
-              ];
-            }
-            if (code != "") {
-              values = [...values, code, code];
-              clauses = [
-                ...clauses,
-                `start_code = $${index++}`,
-                `end_code = $${index++}`,
-              ];
-            }
-            return clauses.join(" AND ");
-          } else {
-            throw new OperationError(
-              outcomeError(
-                "invalid",
-                "Quantity search parameters must be specified as value|system|code"
-              )
-            );
-          }
-        });
-        break;
-      }
-      case "date": {
-        parameterClause = parameter.value.map((value) => {
-          const formattedDate = dayjs(
-            value,
-            "YYYY-MM-DDThh:mm:ss+zz:zz"
-          ).toISOString();
-          values = [...values, formattedDate, formattedDate];
-          // Check the range for date
-          return `start_date <= $${index++} AND end_date >= $${index++}`;
-        });
-        break;
-      }
-      case "uri":
-      case "number":
-      case "string": {
-        parameterClause = parameter.value
-          .map((value) => `value = $${index++}`)
-          .join(" OR ");
-        values = [...values, ...parameter.value];
-        break;
-      }
-      case "reference": {
-        // Need to handle chaining here.
-        // Steps would be as follows:
-        // 1. Pull in the references for given parameter.
-        // 2. If not Last chain pull in parameters filtered by results of previous chain and validate parameter is Reference.
-        // 3. If last chain perform normal search on parameter.
-
-        // Example SQL
-        // select * from
-        // (select * from token_idx where r_id in (select resource_id from reference_idx where parameter_url = 'http://hl7.org/fhir/SearchParameter/Observation-subject')) as t
-        // where t.value = '123';
-
-        parameterClause = parameter.value
-          .map((value) => {
-            const parts = value.toString().split("/");
-            if (parts.length === 1) {
-              values = [...values, parts[0]];
-              return `resource_id = $${index++}`;
-            } else if (parts.length === 2) {
-              values = [...values, parts[0], parts[1]];
-              return `resource_type = $${index++} AND resource_id = $${index++}`;
-            } else {
-              throw new Error(
-                `Invalid reference value '${value}' for search parameter '${searchParameter.name}'`
-              );
-            }
-          })
-          .join(" OR ");
-        break;
-      }
-      default:
-        throw new OperationError(
-          outcomeError(
-            "not-supported",
-            `Parameter of type '${searchParameter.type}' is not yet supported.`
-          )
-        );
-    }
-    queries.push(
-      `(${rootSelect} ${
-        parameter.value.length > 0 ? "AND" : ""
-      } ${parameterClause})`
-    );
+    const res = buildParameterSQL(parameter, index, values);
+    index = res.index;
+    queries.push(res.query);
+    values = res.values;
   }
   return { index, queries, values };
 }
 
 async function associateChainedParameters<CTX extends FHIRServerCTX>(
   ctx: CTX,
-  parsedParameter: ParsedParaeterAssociatedSearchParameter
-): Promise<ParsedParaeterAssociatedSearchParameter> {
+  parsedParameter: ParsedParameterAssociatedSearchParameter
+): Promise<ParsedParameterAssociatedSearchParameter> {
   if (!parsedParameter.chains) return parsedParameter;
 
   // All middle chains should be references.
@@ -942,7 +1057,7 @@ async function associateSearchParameter<CTX extends FHIRServerCTX>(
   ctx: CTX,
   resourceTypes: ResourceType[],
   parameters: ParsedParameter<string | number>[]
-): Promise<ParsedParaeterAssociatedSearchParameter[]> {
+): Promise<ParsedParameterAssociatedSearchParameter[]> {
   const result = await Promise.all(
     parameters.map(async (p) => {
       const searchParameters = await ctx.client.search_type(
@@ -1002,8 +1117,6 @@ async function executeSearchQuery(
     request.parameters
   );
 
-  // console.log(JSON.stringify(parameters));
-
   let parameterQuery = buildParametersSQL(parameters, index, values);
 
   values = parameterQuery.values;
@@ -1011,7 +1124,9 @@ async function executeSearchQuery(
 
   values = [...values, ctx.workspace];
   let queryText = `
-     SELECT DISTINCT ON (resources.id) resources.resource
+  SELECT * FROM (
+     SELECT DISTINCT ON (resources.id) resources.resource, deleted
+     
      FROM resources 
      ${parameterQuery.queries
        .map(
@@ -1019,8 +1134,8 @@ async function executeSearchQuery(
            `JOIN ${q} as query${i} ON query${i}.r_version_id=resources.version_id`
        )
        .join("\n     ")}
+     
      WHERE resources.workspace = $${index++} 
-     AND resources.deleted = false
      AND`;
 
   // System vs type search filtering
@@ -1031,8 +1146,17 @@ async function executeSearchQuery(
     queryText = `${queryText} resources.resource_type is not null`;
   }
 
-  console.log(queryText);
-  console.log(values);
+  // Neccessary to pull latest version of resource
+  // Afterwards check that the latest version is not deleted.
+  queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC) as latest_resources where latest_resources.deleted = false;`;
+
+  // console.log(queryText);
+  // console.log(values);
+  // console.log(
+  //   values.reduce((queryText, value, index) => {
+  //     return queryText.replace(`$${index + 1}`, `'${value}'`);
+  //   }, queryText)
+  // );
 
   const res = await client.query(queryText, values);
   return res.rows.map((row) => row.resource) as Resource[];
