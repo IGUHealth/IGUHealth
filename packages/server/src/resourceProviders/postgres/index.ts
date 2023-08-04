@@ -1070,6 +1070,8 @@ function isSearchResultParameter(parameter: ParsedParameter<string | number>) {
   switch (parameter.name) {
     case "_sort":
     case "_count":
+    // _offset not in param results so adding here.
+    case "_offset":
     case "_include":
     case "_revinclude":
     case "_summary":
@@ -1191,7 +1193,7 @@ async function executeSearchQuery(
 
   // Neccessary to pull latest version of resource
   // Afterwards check that the latest version is not deleted.
-  queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC) as latest_resources where latest_resources.deleted = false;`;
+  queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC) as latest_resources where latest_resources.deleted = false `;
 
   // console.log(queryText);
   // console.log(values);
@@ -1201,7 +1203,35 @@ async function executeSearchQuery(
   //   }, queryText)
   // );
 
-  const res = await client.query(queryText, values);
+  const countParam = parametersResult.find((p) => p.name === "_count");
+  const offsetParam = parametersResult.find((p) => p.name === "_offset");
+
+  const limit =
+    countParam &&
+    !isNaN(parseInt((countParam.value && countParam.value[0]).toString()))
+      ? Math.min(
+          Math.max(
+            parseInt((countParam.value && countParam.value[0]).toString()),
+            0
+          ),
+          50
+        )
+      : 50;
+
+  const offset =
+    offsetParam &&
+    !isNaN(parseInt((offsetParam.value && offsetParam.value[0]).toString()))
+      ? Math.max(
+          parseInt((offsetParam.value && offsetParam.value[0]).toString()),
+          0
+        )
+      : 0;
+
+  values = [...values, limit, offset];
+  const res = await client.query(
+    `${queryText} LIMIT $${index++} OFFSET $${index++}`,
+    values
+  );
   return res.rows.map((row) => row.resource) as Resource[];
 }
 
