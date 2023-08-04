@@ -5,3 +5,6 @@ releases:
   "@iguhealth/meta-value": patch
   "@iguhealth/operation-execution": patch
   "@iguhealth/server": patch
+
+declined:
+  - iguhealth-ts
