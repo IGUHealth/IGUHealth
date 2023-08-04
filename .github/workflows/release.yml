@@ -38,7 +38,7 @@ jobs:
           git switch main
 
       - name: Apply versioning
-        run: yarn version apply
+        run: yarn version apply -R --all
 
       - name: commit to main branch
         run: |
