@@ -321,6 +321,7 @@ async function httpResponseToFHIRResponse(
             type: "search-response",
             level: "system",
             parameters: request.parameters,
+            total: bundle.total,
             body: resources,
           };
         }
@@ -330,6 +331,7 @@ async function httpResponseToFHIRResponse(
             level: "type",
             parameters: request.parameters,
             resourceType: request.resourceType,
+            total: bundle.total,
             body: resources,
           };
         }

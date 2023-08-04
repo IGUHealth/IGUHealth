@@ -21,14 +21,14 @@ export async function resolveOperationDefinition(
     "OperationDefinition",
     [{ name: "code", value: [operation] }]
   );
-  if (operationDefinition.length === 0)
+  if (operationDefinition.resources.length === 0)
     throw new OperationError(
       outcomeError(
         "not-found",
         `Operation with code '${operation}' was not found.`
       )
     );
-  if (operationDefinition.length > 1)
+  if (operationDefinition.resources.length > 1)
     throw new OperationError(
       outcomeError(
         "invalid",
@@ -36,7 +36,7 @@ export async function resolveOperationDefinition(
       )
     );
 
-  return operationDefinition[0];
+  return operationDefinition.resources[0];
 }
 
 const EXT_URL =

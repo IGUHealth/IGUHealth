@@ -271,7 +271,7 @@ test("Parameter chains", async () => {
       }
     );
 
-    expect(observationSearch).toEqual(expectedResult);
+    expect(observationSearch.resources).toEqual(expectedResult);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
@@ -306,14 +306,16 @@ test("test offsets and count", async () => {
       { name: "code", value: ["test"] },
       { name: "_count", value: [5] },
     ]);
-    expect(observationSearch1.length).toEqual(5);
+    expect(observationSearch1.resources.length).toEqual(5);
     const observationSearch2 = await client.search_type({}, "Observation", [
       { name: "code", value: ["test"] },
       { name: "_count", value: [3] },
       { name: "_offset", value: [1] },
     ]);
-    expect(observationSearch1[1].id).toEqual(observationSearch2[0].id);
-    expect(observationSearch2.length).toEqual(3);
+    expect(observationSearch1.resources[1].id).toEqual(
+      observationSearch2.resources[0].id
+    );
+    expect(observationSearch2.resources.length).toEqual(3);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {

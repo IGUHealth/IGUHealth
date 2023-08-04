@@ -199,6 +199,7 @@ export type CreateResponse = TypeInteraction & {
 export type TypeSearchResponse = TypeInteraction & {
   parameters: ParsedParameter<string | number>[];
   type: ResponseInteractionTypes["search"];
+  total?: number;
   body: Resource[];
 };
 
@@ -230,6 +231,7 @@ export type SystemHistoryResponse = SystemInteraction & {
 export type SystemSearchResponse = SystemInteraction & {
   parameters: ParsedParameter<string | number>[];
   type: ResponseInteractionTypes["search"];
+  total?: number;
   body: Resource[];
 };
 

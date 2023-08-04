@@ -87,7 +87,8 @@ async function getAllParametersForResource<CTX extends FHIRServerCTX>(
     parameters = [...parameters, { name: "name", value: names }];
   }
 
-  return await ctx.client.search_type(ctx, "SearchParameter", parameters);
+  return (await ctx.client.search_type(ctx, "SearchParameter", parameters))
+    .resources;
 }
 
 // ---------------------------------------------------------
@@ -1045,15 +1046,15 @@ async function associateChainedParameters<CTX extends FHIRServerCTX>(
         },
       ]
     );
-    if (chainParameter.length === 0)
+    if (chainParameter.resources.length === 0)
       throw new OperationError(
         outcomeError(
           "not-found",
           `SearchParameter with name '${chain}' not found in chain.`
         )
       );
-    last = chainParameter;
-    chainedParameters.push(chainParameter);
+    last = chainParameter.resources;
+    chainedParameters.push(chainParameter.resources);
   }
 
   return {
@@ -1112,7 +1113,7 @@ async function paramWithMeta<CTX extends FHIRServerCTX>(
         ]
       );
 
-      if (searchParameters.length === 0)
+      if (searchParameters.resources.length === 0)
         throw new OperationError(
           outcomeError(
             "not-found",
@@ -1120,7 +1121,7 @@ async function paramWithMeta<CTX extends FHIRServerCTX>(
           )
         );
 
-      if (searchParameters.length > 1)
+      if (searchParameters.resources.length > 1)
         throw new OperationError(
           outcomeError(
             "invalid",
@@ -1128,7 +1129,7 @@ async function paramWithMeta<CTX extends FHIRServerCTX>(
           )
         );
 
-      const searchParameter = searchParameters[0];
+      const searchParameter = searchParameters.resources[0];
       const param: SearchParameterResource = {
         ...p,
         type: "resource",

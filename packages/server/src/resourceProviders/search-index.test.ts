@@ -36,10 +36,10 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
         name: "base",
         value: [resourceType],
       },
-    ]);
+    ]).resources;
     const resources = memDatabase
       .search_type({}, resourceType as ResourceType, [])
-      .filter((r) => r.id)
+      .resources.filter((r) => r.id)
       .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
       .slice(0, 10);
     for (const resource of resources) {

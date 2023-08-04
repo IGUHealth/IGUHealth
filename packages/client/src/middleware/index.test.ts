@@ -1,4 +1,5 @@
 import { expect, test } from "@jest/globals";
+import { Resource } from "@iguhealth/fhir-types";
 import { createMiddlewareSync, createMiddlewareAsync } from "./index.js";
 import type { ParsedParameter } from "../url";
 
@@ -34,7 +35,7 @@ test("Test middleware Sync", () => {
       };
     },
     (request, args, next) => {
-      const body = [{ resourceType: "Patient" }];
+      const body: Resource[] = [{ resourceType: "Patient" }];
       return {
         state: args.state,
         ctx: args.ctx,
