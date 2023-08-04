@@ -251,10 +251,6 @@ async function createTestData(seed: number) {
 
 test("Parameter chains", async () => {
   const resources = (await createTestData(1)).concat(await createTestData(2));
-  console.log(
-    resources.length,
-    resources.filter((r) => r.resourceType === "Observation")
-  );
   try {
     const observationSearch = await client.search_type({}, "Observation", [
       {
