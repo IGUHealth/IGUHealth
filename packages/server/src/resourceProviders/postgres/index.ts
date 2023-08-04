@@ -946,7 +946,7 @@ function buildParameterSQL(
           });
 
         return {
-          query: `(${rootSelect} and reference_id in (select reference_id from ${referencesSQL} as referencechain))`,
+          query: `(${rootSelect} and r_id in (select r_id from ${referencesSQL} as referencechain))`,
           index: lastResult.index,
           values: lastResult.values,
         };

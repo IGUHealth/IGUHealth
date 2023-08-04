@@ -78,7 +78,7 @@ function isRawPrimitive(v: unknown): v is RawPrimitive {
 }
 
 function isObject(value: unknown): value is { [key: string]: unknown } {
-  return value instanceof Object;
+  return value !== null && typeof value === "object";
 }
 
 function isArray<T>(v: T | T[]): v is T[] {

@@ -9,6 +9,7 @@ import {
 } from "@iguhealth/fhir-types";
 
 import HTTPClient from "@iguhealth/client/lib/http/index.js";
+import { evaluate } from "@iguhealth/fhirpath";
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/1704fc63-dd53-4d6c-8435-1a4b83ba27f7/api/v1/fhir/r4",
@@ -59,12 +60,9 @@ const patient: Patient = {
   },
 };
 
-const randomName = "Adam" + Math.random();
-
 const practitioner: Practitioner = {
   name: [
     {
-      given: [randomName],
       family: "Careful",
       prefix: ["Dr"],
     },
@@ -203,15 +201,34 @@ const observation: Observation = {
   },
 };
 
-let resources: Array<Resource> = [];
-beforeEach(async () => {
-  const practitionerResponse = await client.create({}, practitioner);
+const SEED_URL = "http://seed-id";
+
+async function createTestData(seed: number) {
+  let resources: Array<Resource> = [];
+  const ext = [
+    {
+      url: SEED_URL,
+      valueInteger: seed,
+    },
+  ];
+  const practitionerResponse = await client.create(
+    {},
+    {
+      ...practitioner,
+      name: [
+        {
+          given: [`Adam${seed}`],
+        },
+      ],
+    }
+  );
   resources.push(practitionerResponse);
 
   const patientResponse = await client.create(
     {},
     {
       ...patient,
+      extension: ext,
       generalPractitioner: [
         { reference: `Practitioner/${practitionerResponse.id}` },
       ],
@@ -223,30 +240,47 @@ beforeEach(async () => {
     {},
     {
       ...observation,
+      extension: ext,
       subject: { reference: `Patient/${patientResponse.id}` },
     }
   );
   resources.push(observationResponse);
-});
-afterEach(async () => {
-  await Promise.all(
-    resources.map(async ({ resourceType, id }) => {
-      return await client.delete({}, resourceType, id as string);
-    })
-  );
-  resources = [];
-});
+
+  return resources;
+}
 
 test("Parameter chains", async () => {
-  const observationSearch = await client.search_type({}, "Observation", [
-    {
-      name: "patient",
-      chains: ["general-practitioner", "name"],
-      value: [randomName],
-    },
-  ]);
-
-  expect(observationSearch).toEqual(
+  const resources = (await createTestData(1)).concat(await createTestData(2));
+  console.log(
+    resources.length,
     resources.filter((r) => r.resourceType === "Observation")
   );
+  try {
+    const observationSearch = await client.search_type({}, "Observation", [
+      {
+        name: "patient",
+        chains: ["general-practitioner", "name"],
+        value: [`Adam1`],
+      },
+    ]);
+
+    //and $this.extension.where(url=%seedUrl).value = '1'
+    const expectedResult = evaluate(
+      "$this.where(resourceType='Observation' and $this.extension.where(url=%seedUrl).value = 1)",
+      resources,
+      {
+        variables: {
+          seedUrl: SEED_URL,
+        },
+      }
+    );
+
+    expect(observationSearch).toEqual(expectedResult);
+  } finally {
+    await Promise.all(
+      resources.map(async ({ resourceType, id }) => {
+        return await client.delete({}, resourceType, id as string);
+      })
+    );
+  }
 });
