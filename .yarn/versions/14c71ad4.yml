@@ -1,6 +1,0 @@
-releases:
-  "@iguhealth/client": minor
-  "@iguhealth/fhir-validation": minor
-  "@iguhealth/operation-execution": minor
-  "@iguhealth/server": minor
-  iguhealth-ts: minor
