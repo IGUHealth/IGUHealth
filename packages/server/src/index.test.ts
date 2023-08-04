@@ -280,3 +280,45 @@ test("Parameter chains", async () => {
     );
   }
 });
+
+test("test offsets", async () => {
+  const resources: Resource[] = [];
+  try {
+    for (let i = 0; i < 10; i++) {
+      const observationResponse = await client.create(
+        {},
+        {
+          ...observation,
+          code: {
+            coding: [
+              {
+                code: "test",
+                system: "http://test.com",
+              },
+            ],
+          },
+        }
+      );
+      resources.push(observationResponse);
+    }
+
+    const observationSearch1 = await client.search_type({}, "Observation", [
+      { name: "code", value: ["test"] },
+      { name: "_count", value: [5] },
+    ]);
+    expect(observationSearch1.length).toEqual(5);
+    const observationSearch2 = await client.search_type({}, "Observation", [
+      { name: "code", value: ["test"] },
+      { name: "_count", value: [3] },
+      { name: "_offset", value: [1] },
+    ]);
+    expect(observationSearch1[1].id).toEqual(observationSearch2[0].id);
+    expect(observationSearch2.length).toEqual(3);
+  } finally {
+    await Promise.all(
+      resources.map(async ({ resourceType, id }) => {
+        return await client.delete({}, resourceType, id as string);
+      })
+    );
+  }
+});
