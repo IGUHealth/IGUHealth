@@ -324,3 +324,39 @@ test("test offsets and count", async () => {
     );
   }
 });
+
+test("test total accurate", async () => {
+  const resources: Resource[] = [];
+  try {
+    for (let i = 0; i < 10; i++) {
+      const observationResponse = await client.create(
+        {},
+        {
+          ...observation,
+          code: {
+            coding: [
+              {
+                code: "test",
+                system: "http://test.com",
+              },
+            ],
+          },
+        }
+      );
+      resources.push(observationResponse);
+    }
+
+    const observationSearch1 = await client.search_type({}, "Observation", [
+      { name: "code", value: ["test"] },
+      { name: "_count", value: [5] },
+      { name: "_total", value: ["accurate"] },
+    ]);
+    expect(observationSearch1.total).toEqual(10);
+  } finally {
+    await Promise.all(
+      resources.map(async ({ resourceType, id }) => {
+        return await client.delete({}, resourceType, id as string);
+      })
+    );
+  }
+});

@@ -1069,18 +1069,25 @@ function isSearchResultParameter(parameter: ParsedParameter<string | number>) {
   // List pulled from https://hl7.org/fhir/r4/search.htm
   // These parameters do not have associated search parameter and instead require hard logic.
   switch (parameter.name) {
-    case "_sort":
     case "_count":
     // _offset not in param results so adding here.
     case "_offset":
+    case "_total":
+      return true;
+    case "_sort":
     case "_include":
     case "_revinclude":
     case "_summary":
-    case "_total":
     case "_elements":
     case "_contained":
-    case "_containedType":
-      return true;
+    case "_containedType": {
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `Parameter of type '${parameter.name}' is not yet supported.`
+        )
+      );
+    }
     default:
       return false;
   }
@@ -1146,7 +1153,7 @@ async function executeSearchQuery(
   client: pg.Client,
   request: SystemSearchRequest | TypeSearchRequest,
   ctx: FHIRServerCTX
-): Promise<Resource[]> {
+): Promise<{ total?: number; resources: Resource[] }> {
   let values: any[] = [];
   let index = 1;
   const parameters = await paramWithMeta(
@@ -1206,6 +1213,7 @@ async function executeSearchQuery(
 
   const countParam = parametersResult.find((p) => p.name === "_count");
   const offsetParam = parametersResult.find((p) => p.name === "_offset");
+  const totalParam = parametersResult.find((p) => p.name === "_total");
 
   const limit =
     countParam &&
@@ -1228,12 +1236,48 @@ async function executeSearchQuery(
         )
       : 0;
 
-  values = [...values, limit, offset];
   const res = await client.query(
     `${queryText} LIMIT $${index++} OFFSET $${index++}`,
-    values
+    [...values, limit, offset]
   );
-  return res.rows.map((row) => row.resource) as Resource[];
+
+  return {
+    total: await calculateTotal(
+      client,
+      totalParam?.value[0] || "none",
+      queryText,
+      values
+    ),
+    resources: res.rows.map((row) => row.resource) as Resource[],
+  };
+}
+
+async function calculateTotal(
+  client: pg.Client,
+  totalType: string | number,
+  query: string,
+  values: any[]
+): Promise<number | undefined> {
+  switch (totalType) {
+    case "none":
+      return undefined;
+    case "accurate":
+    case "estimate":
+      // TODO SWITCH to count_estimate for estimate
+      const result = await client.query(
+        // Need to escape out quotations with double quote so can place as query text.
+        `SELECT COUNT(qresult.resource) FROM (${query}) as qresult`,
+        values
+      );
+      return parseInt(result.rows[0].count);
+    default:
+      throw new OperationError(
+        outcomeError(
+          "fatal",
+          "Unknown total type received must be 'none', 'estimate' or 'accurate'"
+        )
+      );
+  }
 }
 
 function createPostgresMiddleware<
@@ -1274,7 +1318,8 @@ function createPostgresMiddleware<
                   type: "search-response",
                   parameters: request.parameters,
                   level: "system",
-                  body: result,
+                  total: result.total,
+                  body: result.resources,
                 },
               };
             }
@@ -1287,7 +1332,8 @@ function createPostgresMiddleware<
                   parameters: request.parameters,
                   level: "type",
                   resourceType: request.resourceType,
-                  body: result,
+                  total: result.total,
+                  body: result.resources,
                 },
               };
             }
