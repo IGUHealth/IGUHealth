@@ -91,10 +91,15 @@ function createMemoryDatabase(
   return database;
 }
 
-function toBundle(bundleType: Bundle["type"], resources: Resource[]): Bundle {
+function toBundle(
+  bundleType: Bundle["type"],
+  total: number | undefined,
+  resources: Resource[]
+): Bundle {
   return {
     resourceType: "Bundle",
     type: bundleType,
+    total: total,
     entry: resources.map((resource) => ({ resource })),
   };
 }
@@ -114,14 +119,14 @@ function fhirResponseToKoaResponse(
     case "history-response":
       return {
         status: 200,
-        body: toBundle("history", fhirResponse.body),
+        body: toBundle("history", undefined, fhirResponse.body),
       };
     case "create-response":
       return { body: fhirResponse.body, status: 201 };
     case "search-response": {
       return {
         status: 200,
-        body: toBundle("searchset", fhirResponse.body),
+        body: toBundle("searchset", fhirResponse.total, fhirResponse.body),
       };
     }
     case "capabilities-response":

@@ -1,0 +1,1 @@
+DROP FUNCTION count_estimate;
