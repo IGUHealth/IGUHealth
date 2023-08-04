@@ -722,15 +722,20 @@ async function deleteResource<CTX extends FHIRServerCTX>(
   await client.query("END");
 }
 
-type ParsedParameterAssociatedSearchParameter = ParsedParameter<
-  string | number
-> & {
+type SearchParameterResource = ParsedParameter<string | number> & {
+  type: "resource";
   searchParameter: SearchParameter;
   chainedParameters?: SearchParameter[][];
 };
 
+type SearchParameterResult = ParsedParameter<string | number> & {
+  type: "result";
+};
+
+type ParameterType = SearchParameterResource | SearchParameterResult;
+
 function buildParameterSQL(
-  parameter: ParsedParameterAssociatedSearchParameter,
+  parameter: SearchParameterResource,
   index: number,
   values: any[],
   columns: string[] = ["r_version_id"]
@@ -873,6 +878,7 @@ function buildParameterSQL(
               ) => {
                 const res = buildParameterSQL(
                   {
+                    type: "resource",
                     name: p.name,
                     searchParameter: p,
                     value: [],
@@ -987,7 +993,7 @@ function buildParameterSQL(
 }
 
 function buildParametersSQL(
-  parameters: ParsedParameterAssociatedSearchParameter[],
+  parameters: SearchParameterResource[],
   index: number,
   values: any[]
 ): { index: number; queries: string[]; values: any[] } {
@@ -1004,8 +1010,8 @@ function buildParametersSQL(
 
 async function associateChainedParameters<CTX extends FHIRServerCTX>(
   ctx: CTX,
-  parsedParameter: ParsedParameterAssociatedSearchParameter
-): Promise<ParsedParameterAssociatedSearchParameter> {
+  parsedParameter: SearchParameterResource
+): Promise<SearchParameterResource> {
   if (!parsedParameter.chains) return parsedParameter;
 
   // All middle chains should be references.
@@ -1056,13 +1062,40 @@ async function associateChainedParameters<CTX extends FHIRServerCTX>(
   };
 }
 
-async function associateSearchParameter<CTX extends FHIRServerCTX>(
+//
+
+function isSearchResultParameter(parameter: ParsedParameter<string | number>) {
+  // List pulled from https://hl7.org/fhir/r4/search.htm
+  // These parameters do not have associated search parameter and instead require hard logic.
+  switch (parameter.name) {
+    case "_sort":
+    case "_count":
+    // _offset not in param results so adding here.
+    case "_offset":
+    case "_include":
+    case "_revinclude":
+    case "_summary":
+    case "_total":
+    case "_elements":
+    case "_contained":
+    case "_containedType":
+      return true;
+    default:
+      return false;
+  }
+}
+
+async function paramWithMeta<CTX extends FHIRServerCTX>(
   ctx: CTX,
   resourceTypes: ResourceType[],
   parameters: ParsedParameter<string | number>[]
-): Promise<ParsedParameterAssociatedSearchParameter[]> {
+): Promise<ParameterType[]> {
   const result = await Promise.all(
     parameters.map(async (p) => {
+      if (isSearchResultParameter(p)) {
+        const param: SearchParameterResult = { ...p, type: "result" };
+        return param;
+      }
       const searchParameters = await ctx.client.search_type(
         ctx,
         "SearchParameter",
@@ -1096,8 +1129,9 @@ async function associateSearchParameter<CTX extends FHIRServerCTX>(
         );
 
       const searchParameter = searchParameters[0];
-      const param = {
+      const param: SearchParameterResource = {
         ...p,
+        type: "resource",
         searchParameter: searchParameter,
       };
       return associateChainedParameters(ctx, param);
@@ -1114,13 +1148,21 @@ async function executeSearchQuery(
 ): Promise<Resource[]> {
   let values: any[] = [];
   let index = 1;
-  const parameters = await associateSearchParameter(
+  const parameters = await paramWithMeta(
     ctx,
     request.level === "type" ? [request.resourceType as ResourceType] : [],
     request.parameters
   );
+  // Standard parameters
+  const resourceParameters = parameters.filter(
+    (v): v is SearchParameterResource => v.type === "resource"
+  );
 
-  let parameterQuery = buildParametersSQL(parameters, index, values);
+  const parametersResult = parameters.filter(
+    (v): v is SearchParameterResult => v.type === "result"
+  );
+
+  let parameterQuery = buildParametersSQL(resourceParameters, index, values);
 
   values = parameterQuery.values;
   index = parameterQuery.index;
@@ -1138,7 +1180,7 @@ async function executeSearchQuery(
        )
        .join("\n     ")}
      
-     WHERE resources.workspace = $${index++} 
+     WHERE resources.workspace = $${index++}
      AND`;
 
   // System vs type search filtering
@@ -1151,7 +1193,7 @@ async function executeSearchQuery(
 
   // Neccessary to pull latest version of resource
   // Afterwards check that the latest version is not deleted.
-  queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC) as latest_resources where latest_resources.deleted = false;`;
+  queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC) as latest_resources where latest_resources.deleted = false `;
 
   // console.log(queryText);
   // console.log(values);
@@ -1161,7 +1203,35 @@ async function executeSearchQuery(
   //   }, queryText)
   // );
 
-  const res = await client.query(queryText, values);
+  const countParam = parametersResult.find((p) => p.name === "_count");
+  const offsetParam = parametersResult.find((p) => p.name === "_offset");
+
+  const limit =
+    countParam &&
+    !isNaN(parseInt((countParam.value && countParam.value[0]).toString()))
+      ? Math.min(
+          Math.max(
+            parseInt((countParam.value && countParam.value[0]).toString()),
+            0
+          ),
+          50
+        )
+      : 50;
+
+  const offset =
+    offsetParam &&
+    !isNaN(parseInt((offsetParam.value && offsetParam.value[0]).toString()))
+      ? Math.max(
+          parseInt((offsetParam.value && offsetParam.value[0]).toString()),
+          0
+        )
+      : 0;
+
+  values = [...values, limit, offset];
+  const res = await client.query(
+    `${queryText} LIMIT $${index++} OFFSET $${index++}`,
+    values
+  );
   return res.rows.map((row) => row.resource) as Resource[];
 }
 
