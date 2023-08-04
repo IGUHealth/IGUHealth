@@ -33,7 +33,6 @@ export default class PostgresLock implements Lock<PostgresLock> {
     await client.connect();
     await client.query("BEGIN");
     const lock = await pgLock(client, id);
-    const res = await client.query("select * from pg_locks");
     try {
       await body(this);
     } finally {
