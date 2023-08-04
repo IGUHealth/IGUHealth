@@ -1205,11 +1205,11 @@ async function executeSearchQuery(
 
   // console.log(queryText);
   // console.log(values);
-  console.log(
-    values.reduce((queryText, value, index) => {
-      return queryText.replace(`$${index + 1}`, `'${value}'`);
-    }, queryText)
-  );
+  // console.log(
+  //   values.reduce((queryText, value, index) => {
+  //     return queryText.replace(`$${index + 1}`, `'${value}'`);
+  //   }, queryText)
+  // );
 
   const countParam = parametersResult.find((p) => p.name === "_count");
   const offsetParam = parametersResult.find((p) => p.name === "_offset");
