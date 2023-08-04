@@ -281,7 +281,7 @@ test("Parameter chains", async () => {
   }
 });
 
-test("test offsets", async () => {
+test("test offsets and count", async () => {
   const resources: Resource[] = [];
   try {
     for (let i = 0; i < 10; i++) {
