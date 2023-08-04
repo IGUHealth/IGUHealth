@@ -1266,10 +1266,10 @@ async function calculateTotal(
       // TODO SWITCH to count_estimate for estimate
       const result = await client.query(
         // Need to escape out quotations with double quote so can place as query text.
-        `select count(qresult.resource) from (${query}) as qresult`,
+        `SELECT COUNT(qresult.resource) FROM (${query}) as qresult`,
         values
       );
-      return result.rows[0].count;
+      return parseInt(result.rows[0].count);
     default:
       throw new OperationError(
         outcomeError(
