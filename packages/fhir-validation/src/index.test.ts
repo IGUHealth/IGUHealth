@@ -436,12 +436,12 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
           value: [resourceType],
         },
       ]
-    );
+    ).resources;
     const sd = structureDefinition[0];
 
     const resources = memDatabase
       .search_type({}, resourceType as ResourceType, [])
-      .filter((r) => r.id)
+      .resources.filter((r) => r.id)
       .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
       .slice(0, 1);
     const validator = createValidator((type: string) => {

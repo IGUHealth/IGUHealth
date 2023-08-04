@@ -19,12 +19,12 @@ export interface FHIRClientSync<CTX> {
   search_system(
     ctx: CTX,
     parameters: ParsedParameter<string | number>[]
-  ): Resource[];
+  ): { total?: number; resources: Resource[] };
   search_type<T extends ResourceType>(
     ctx: CTX,
     type: T,
     parameters: ParsedParameter<string | number>[]
-  ): AResource<T>[];
+  ): { total?: number; resources: AResource<T>[] };
   create<T extends Resource>(ctx: CTX, resource: T): T;
   update<T extends Resource>(ctx: CTX, resource: T): T;
   // [ADD JSON PATCH TYPES]
@@ -58,12 +58,12 @@ export interface FHIRClientAsync<CTX> {
   search_system(
     ctx: CTX,
     parameters: ParsedParameter<string | number>[]
-  ): Promise<Resource[]>;
+  ): Promise<{ total?: number; resources: Resource[] }>;
   search_type<T extends ResourceType>(
     ctx: CTX,
     type: T,
     parameters: ParsedParameter<string | number>[]
-  ): Promise<AResource<T>[]>;
+  ): Promise<{ total?: number; resources: AResource<T>[] }>;
   create<T extends Resource>(ctx: CTX, resource: T): Promise<T>;
   update<T extends Resource>(ctx: CTX, resource: T): Promise<T>;
   patch<T extends Resource>(ctx: CTX, resource: T, patches: any): Promise<T>;
