@@ -21,7 +21,7 @@ import { FHIRServerCTX } from "../fhirServer";
 import { InvokeRequest } from "./types";
 import { resolveOperationDefinition, getOperationCode } from "./utilities.js";
 
-import logAuditEvent, { MAJOR_FAILURE } from "../logging/auditEvents.js";
+import logAuditEvent, { MINOR_FAILURE } from "../logging/auditEvents.js";
 
 configDotenv();
 
@@ -260,7 +260,7 @@ function createExecutor(
             if (invokeResponse.FunctionError) {
               const auditEvent = await logAuditEvent(
                 ctx,
-                MAJOR_FAILURE,
+                MINOR_FAILURE,
                 { reference: `OperationDefinition/${operationDefinition.id}` },
                 output.trace ? output.trace.join("\n") : "No trace present."
               );
