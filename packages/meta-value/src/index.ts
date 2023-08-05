@@ -19,6 +19,21 @@ function isResourceOrComplexType(type: string): boolean {
   );
 }
 
+function resolveContentReferenceIndex(
+  sd: StructureDefinition,
+  element: ElementDefinition
+): number {
+  const contentReference = element.contentReference?.split("#")[1];
+  const referenceElementIndex = sd.snapshot?.element.findIndex(
+    (element) => element.id === contentReference
+  );
+  if (!referenceElementIndex)
+    throw new Error(
+      "unable to resolve contentreference: '" + element.contentReference + "'"
+    );
+  return referenceElementIndex;
+}
+
 type MetaInformation = {
   sd: StructureDefinition;
   elementIndex: number;
@@ -119,6 +134,28 @@ function isElementDefinitionWithType(
   return undefined;
 }
 
+function pathMatchesElement(
+  element: ElementDefinition,
+  path: string,
+  expectedType?: string
+): boolean {
+  if (element.path === path) return true;
+  if (
+    element.type &&
+    element.type?.length > 1 &&
+    path.startsWith(element.path.replace("[x]", ""))
+  ) {
+    for (let type of element.type) {
+      // Because type pulled from typechoice will be capitalized and it may or may not be
+      // on the actual type for example HumanName vs boolean
+      // Just lowercase both and compare.
+      if (type.code.toLocaleLowerCase() === expectedType?.toLocaleLowerCase())
+        return true;
+    }
+  }
+  return false;
+}
+
 /*
  ** Given Metainformation and field derive the next metainformation.
  ** This could mean pulling in a new StructureDefinition (IE in case of complex type or resource)
@@ -134,37 +171,59 @@ function deriveNextMetaInformation(
     const nextElementPath = `${curElement?.path}.${field.toString()}`;
     let i = meta.elementIndex + 1;
     while (i < (meta.sd.snapshot?.element.length || 0)) {
-      const elementToCheck = meta.sd.snapshot?.element[i];
-      // Comparison returns the type of the field to element if valid.
-      const type =
+      let elementToCheck = meta.sd.snapshot?.element[i];
+      if (
         elementToCheck &&
-        isElementDefinitionWithType(
-          elementToCheck,
-          nextElementPath,
-          expectedType
-        );
-
-      if (type) {
-        // In this case pull in the SD means it's a complex or resource type
-        // so need to retrieve the SD.
-        if (isResourceOrComplexType(type)) {
-          const sd = meta.getSD && meta.getSD(type);
-          if (!sd) {
-            throw new Error(`Could not retrieve sd of type '${type}'`);
-          }
+        pathMatchesElement(elementToCheck, nextElementPath, expectedType)
+      ) {
+        // Handle content references.
+        if (elementToCheck?.contentReference) {
+          const referenceElementIndex = resolveContentReferenceIndex(
+            meta.sd,
+            elementToCheck
+          );
+          const referenceElement =
+            meta.sd.snapshot?.element[referenceElementIndex];
+          const type = referenceElement?.type?.[0].code;
+          if (!type) return undefined;
           return {
-            sd: sd,
+            sd: meta.sd,
+            type,
+            elementIndex: referenceElementIndex,
+            getSD: meta.getSD,
+          };
+        } else {
+          const type =
+            elementToCheck &&
+            isElementDefinitionWithType(
+              elementToCheck,
+              nextElementPath,
+              expectedType
+            );
+          if (!type) return undefined;
+          // In this case pull in the SD means it's a complex or resource type
+          // so need to retrieve the SD.
+          if (isResourceOrComplexType(type)) {
+            const sd = meta.getSD && meta.getSD(type);
+            if (!sd) {
+              throw new Error(`Could not retrieve sd of type '${type}'`);
+            }
+            return {
+              sd: sd,
+              type: type,
+              elementIndex: 0,
+              getSD: meta.getSD,
+            };
+          }
+
+          return {
+            sd: meta.sd,
             type: type,
-            elementIndex: 0,
+            // Check for content reference and resolve to that indice.
+            elementIndex: i,
             getSD: meta.getSD,
           };
         }
-        return {
-          sd: meta.sd,
-          type: type,
-          elementIndex: i,
-          getSD: meta.getSD,
-        };
       }
       i++;
     }

@@ -143,6 +143,7 @@ function toStringParameters(
 // string	n/a	string	Token is sometimes used for string to indicate that exact matching is the correct default search strategy
 
 function toTokenParameters(
+  parameter: SearchParameter,
   value: MetaValueSingular<NonNullable<unknown>>
 ): Array<{ system?: string; code?: string }> {
   switch (value.meta()?.type) {
@@ -153,7 +154,10 @@ function toTokenParameters(
     case "CodeableConcept": {
       const codings = descend(value, "coding");
       if (codings instanceof MetaValueArray) {
-        return codings.toArray().map(toTokenParameters).flat();
+        return codings
+          .toArray()
+          .map((v) => toTokenParameters(parameter, v))
+          .flat();
       }
       return [];
     }
@@ -176,6 +180,8 @@ function toTokenParameters(
         },
       ];
     }
+
+    case "id":
     case "http://hl7.org/fhirpath/System.String":
     case "string": {
       return [
@@ -186,26 +192,36 @@ function toTokenParameters(
     }
     default:
       throw new Error(
-        `Unknown token parameter of type '${value.meta()?.type}'`
+        `Unknown token parameter of type '${
+          value.meta()?.type
+        }' '${value.valueOf()}' indexing '${parameter.url}'`
       );
   }
 }
 
 function toURIParameters(
+  param: SearchParameter,
   value: MetaValueSingular<NonNullable<unknown>>
 ): string[] {
   switch (value.meta()?.type) {
     case "uri":
+    case "url":
+    case "uuid":
     case "canonical": {
       const v: canonical | uri = value.valueOf() as canonical | uri;
       return [v];
     }
     default:
-      throw new Error(`Unknown uri parameter of type '${value.meta()?.type}'`);
+      throw new Error(
+        `Unknown uri parameter of type '${
+          value.meta()?.type
+        }' '${value.valueOf()}' indexing '${param.url}'`
+      );
   }
 }
 
 function toReference(
+  parameter: SearchParameter,
   value: MetaValueSingular<NonNullable<unknown>>
 ): Array<{ reference: Reference; resourceType?: ResourceType; id?: id }> {
   switch (value.meta()?.type) {
@@ -221,12 +237,22 @@ function toReference(
           },
         ];
       } else {
-        return [{ reference: reference }];
+        // Need to determine how to handle identifier style references.
+        return [];
+        //return [{ reference: reference }];
       }
     }
+    case "uri":
+    case "canonical": {
+      console.warn("Not supporting canonical or uri reference parameters yet.");
+      return [];
+    }
+
     default:
       throw new Error(
-        `Unknown reference parameter of type '${value.meta()?.type}'`
+        `Unknown reference parameter of type '${
+          value.meta()?.type
+        }' indexing '${parameter.url}'`
       );
   }
 }
@@ -453,7 +479,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
     case "reference": {
       await Promise.all(
         evaluation
-          .map(toReference)
+          .map((v) => toReference(parameter, v))
           .flat()
           .map(async ({ reference, resourceType, id }) => {
             if (!reference.reference) {
@@ -480,7 +506,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
     case "uri": {
       await Promise.all(
         evaluation
-          .map(toURIParameters)
+          .map((v) => toURIParameters(parameter, v))
           .flat()
           .map(async (value) => {
             await client.query(
@@ -501,7 +527,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
     case "token": {
       await Promise.all(
         evaluation
-          .map(toTokenParameters)
+          .map((v) => toTokenParameters(parameter, v))
           .flat()
           .map(async (value) => {
             await client.query(
@@ -736,6 +762,7 @@ type SearchParameterResult = ParsedParameter<string | number> & {
 type ParameterType = SearchParameterResource | SearchParameterResult;
 
 function buildParameterSQL(
+  ctx: FHIRServerCTX,
   parameter: SearchParameterResource,
   index: number,
   values: any[],
@@ -746,7 +773,7 @@ function buildParameterSQL(
 
   const rootSelect = `SELECT ${columns.join(
     ", "
-  )} FROM ${search_table} WHERE parameter_url = $${index++}`;
+  )} FROM ${search_table} WHERE parameter_url = $${index++} `;
   values = [...values, searchParameter.url];
   let parameterClause;
   switch (searchParameter.type) {
@@ -878,6 +905,7 @@ function buildParameterSQL(
                 p
               ) => {
                 const res = buildParameterSQL(
+                  ctx,
                   {
                     type: "resource",
                     name: p.name,
@@ -921,6 +949,7 @@ function buildParameterSQL(
             p
           ) => {
             const res = buildParameterSQL(
+              ctx,
               { ...parameter, searchParameter: p, chainedParameters: [] },
               index,
               values,
@@ -953,9 +982,9 @@ function buildParameterSQL(
           });
 
         return {
-          query: `(${rootSelect} and r_id in (select r_id from ${referencesSQL} as referencechain))`,
+          query: `(${rootSelect} AND workspace=$${lastResult.index++} and r_id in (select r_id from ${referencesSQL} as referencechain))`,
           index: lastResult.index,
-          values: lastResult.values,
+          values: [...lastResult.values, ctx.workspace],
         };
       }
 
@@ -986,14 +1015,20 @@ function buildParameterSQL(
       );
   }
 
+  let query = `(${rootSelect} AND workspace=$${index++} ${
+    parameterClause ? `AND ${parameterClause}` : ""
+  })`;
+
+  values = [...values, ctx.workspace];
   return {
     index,
     values,
-    query: `(${rootSelect} ${parameterClause ? `AND ${parameterClause}` : ""})`,
+    query,
   };
 }
 
 function buildParametersSQL(
+  ctx: FHIRServerCTX,
   parameters: SearchParameterResource[],
   index: number,
   values: any[]
@@ -1001,7 +1036,7 @@ function buildParametersSQL(
   let queries = [];
   let i = 0;
   for (let parameter of parameters) {
-    const res = buildParameterSQL(parameter, index, values);
+    const res = buildParameterSQL(ctx, parameter, index, values);
     index = res.index;
     queries.push(res.query);
     values = res.values;
@@ -1170,7 +1205,12 @@ async function executeSearchQuery(
     (v): v is SearchParameterResult => v.type === "result"
   );
 
-  let parameterQuery = buildParametersSQL(resourceParameters, index, values);
+  let parameterQuery = buildParametersSQL(
+    ctx,
+    resourceParameters,
+    index,
+    values
+  );
 
   values = parameterQuery.values;
   index = parameterQuery.index;
@@ -1203,8 +1243,6 @@ async function executeSearchQuery(
   // Afterwards check that the latest version is not deleted.
   queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC) as latest_resources where latest_resources.deleted = false `;
 
-  // console.log(queryText);
-  // console.log(values);
   // console.log(
   //   values.reduce((queryText, value, index) => {
   //     return queryText.replace(`$${index + 1}`, `'${value}'`);
