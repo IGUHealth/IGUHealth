@@ -211,6 +211,7 @@ function toURIParameters(
 }
 
 function toReference(
+  parameter: SearchParameter,
   value: MetaValueSingular<NonNullable<unknown>>
 ): Array<{ reference: Reference; resourceType?: ResourceType; id?: id }> {
   switch (value.meta()?.type) {
@@ -239,7 +240,9 @@ function toReference(
 
     default:
       throw new Error(
-        `Unknown reference parameter of type '${value.meta()?.type}'`
+        `Unknown reference parameter of type '${
+          value.meta()?.type
+        }' indexing '${parameter.url}'`
       );
   }
 }
@@ -466,7 +469,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
     case "reference": {
       await Promise.all(
         evaluation
-          .map(toReference)
+          .map((v) => toReference(parameter, v))
           .flat()
           .map(async ({ reference, resourceType, id }) => {
             if (!reference.reference) {

@@ -88,6 +88,10 @@ test("ConceptMap test", () => {
     status: "final",
     group: [
       {
+        unmapped: {
+          mode: "other-map",
+          url: "test",
+        },
         element: [
           {
             target: [
@@ -131,4 +135,12 @@ test("ConceptMap test", () => {
   expect(cur[0]?.meta()?.type).toEqual("BackboneElement");
   cur = flattenedDescend(cur[0], "property");
   expect(cur[0]?.meta()?.type).toEqual("uri");
+
+  // Test unmapped
+  cur = flattenedDescend(myValue, "group");
+  expect(cur[0]?.meta()?.type).toEqual("BackboneElement");
+  cur = flattenedDescend(cur[0], "unmapped");
+  expect(cur[0]?.meta()?.type).toEqual("BackboneElement");
+  cur = flattenedDescend(cur[0], "url");
+  expect(cur[0]?.meta()?.type).toEqual("canonical");
 });
