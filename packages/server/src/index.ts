@@ -289,7 +289,6 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
       console.log(`${ctx.method} ${ctx.url} - ${rt}`);
     })
     .use(async (ctx, next) => {
-      console.log(ctx.URL);
       const start = Date.now();
       await next();
       const ms = Date.now() - start;
