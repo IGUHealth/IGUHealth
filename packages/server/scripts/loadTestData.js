@@ -11,7 +11,11 @@ const client = createHTTPClient({
 });
 
 const resourceTypesToCheck = [...resourceTypes].filter(
-  (v) => v !== "CodeSystem" && v !== "ValueSet"
+  (v) =>
+    v !== "CodeSystem" &&
+    v !== "ValueSet" &&
+    v !== "StructureDefinition" &&
+    v !== "SearchParameter"
 );
 
 async function loadTestData() {
@@ -23,7 +27,13 @@ async function loadTestData() {
     );
 
     for (const resource of resources) {
-      await client.create(resourceType, resource);
+      try {
+        await client.create(resourceType, resource);
+      } catch (e) {
+        console.error(JSON.stringify(e));
+        console.error(JSON.stringify(resource, null, 2));
+        throw e;
+      }
     }
   }
 }

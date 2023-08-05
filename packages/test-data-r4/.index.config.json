@@ -34,10 +34,6 @@
       "resourceType": "BodyStructure"
     },
     {
-      "filename": "examples-json/bundle-questionnaire.json",
-      "resourceType": "Questionnaire"
-    },
-    {
       "filename": "examples-json/capabilitystatement-example.json",
       "resourceType": "CapabilityStatement"
     },
@@ -96,6 +92,10 @@
     {
       "filename": "examples-json/diagnosticreport-example.json",
       "resourceType": "DiagnosticReport"
+    },
+    {
+      "filename": "examples-json/diagnosticreport-example.json",
+      "resourceType": "Observation"
     },
     {
       "filename": "examples-json/documentreference-example.json",
