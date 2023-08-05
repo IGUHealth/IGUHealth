@@ -192,6 +192,7 @@ function toTokenParameters(
 }
 
 function toURIParameters(
+  param: SearchParameter,
   value: MetaValueSingular<NonNullable<unknown>>
 ): string[] {
   switch (value.meta()?.type) {
@@ -201,7 +202,11 @@ function toURIParameters(
       return [v];
     }
     default:
-      throw new Error(`Unknown uri parameter of type '${value.meta()?.type}'`);
+      throw new Error(
+        `Unknown uri parameter of type '${
+          value.meta()?.type
+        }' '${value.valueOf()}' indexing '${param.url}'`
+      );
   }
 }
 
@@ -221,9 +226,17 @@ function toReference(
           },
         ];
       } else {
-        return [{ reference: reference }];
+        // Need to determine how to handle identifier style references.
+        return [];
+        //return [{ reference: reference }];
       }
     }
+    case "uri":
+    case "canonical": {
+      console.warn("Not supporting canonical or uri reference parameters yet.");
+      return [];
+    }
+
     default:
       throw new Error(
         `Unknown reference parameter of type '${value.meta()?.type}'`
@@ -480,7 +493,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
     case "uri": {
       await Promise.all(
         evaluation
-          .map(toURIParameters)
+          .map((v) => toURIParameters(parameter, v))
           .flat()
           .map(async (value) => {
             await client.query(

@@ -1,6 +1,10 @@
-import { MetaValueSingular, descend } from "./index";
+import { MetaValueSingular, MetaValueArray, descend } from "./index";
 import { loadArtifacts } from "@iguhealth/artifacts";
-import { StructureDefinition, Patient } from "@iguhealth/fhir-types/r4/types";
+import {
+  StructureDefinition,
+  Patient,
+  ConceptMap,
+} from "@iguhealth/fhir-types/r4/types";
 // import { evaluate } from "@iguhealth/fhirpath";
 import { expect, test } from "@jest/globals";
 import path from "path";
@@ -13,6 +17,16 @@ const sds: StructureDefinition[] = loadArtifacts(
 const patientSD = sds.find(
   (sd) => sd.type === "Patient"
 ) as StructureDefinition;
+
+function flattenedDescend<T>(
+  node: MetaValueSingular<T>,
+  field: string
+): MetaValueSingular<unknown>[] {
+  const v = descend(node, field);
+  if (v instanceof MetaValueArray) return v.toArray();
+  if (v instanceof MetaValueSingular) return [v];
+  return [];
+}
 
 test("Untyped", () => {
   const patient: Patient = {
@@ -66,4 +80,55 @@ test("Simple Type test", () => {
     output = v.toArray().map((v) => descend(v, "system")?.meta()?.type);
   }
   expect(output).toEqual(["uri"]);
+});
+
+test("ConceptMap test", () => {
+  const cm: ConceptMap = {
+    resourceType: "ConceptMap",
+    status: "final",
+    group: [
+      {
+        element: [
+          {
+            target: [
+              {
+                equivalence: "equal",
+                dependsOn: [
+                  { property: "system", value: "http://snomed.info/sct" },
+                ],
+                product: [
+                  {
+                    property: "code",
+                    system: "http://snomed.info/sct",
+                    value: "123",
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  const myValue = new MetaValueSingular(
+    {
+      type: "ConceptMap",
+      getSD: (type: string) => {
+        const foundSD = sds.find((sd) => sd.type === type);
+        return foundSD;
+      },
+    },
+    cm
+  ) as any;
+  //ConceptMap.group.element.target.product.property
+  let cur = flattenedDescend(myValue, "group");
+  expect(cur[0]?.meta()?.type).toEqual("BackboneElement");
+  cur = flattenedDescend(cur[0], "element");
+  expect(cur[0]?.meta()?.type).toEqual("BackboneElement");
+  cur = flattenedDescend(cur[0], "target");
+  expect(cur[0]?.meta()?.type).toEqual("BackboneElement");
+  cur = flattenedDescend(cur[0], "product");
+  expect(cur[0]?.meta()?.type).toEqual("BackboneElement");
+  cur = flattenedDescend(cur[0], "property");
+  expect(cur[0]?.meta()?.type).toEqual("uri");
 });
