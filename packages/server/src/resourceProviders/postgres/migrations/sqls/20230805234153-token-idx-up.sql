@@ -1,0 +1,1 @@
+CREATE INDEX idx_token_idx on token_idx(workspace, parameter_url, value);
