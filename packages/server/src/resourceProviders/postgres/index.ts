@@ -766,7 +766,7 @@ function buildParameterSQL(
   parameter: SearchParameterResource,
   index: number,
   values: any[],
-  columns: string[] = ["r_version_id"]
+  columns: string[] = ["DISTINCT(r_version_id)"]
 ): { index: number; query: string; values: any[] } {
   const searchParameter = parameter.searchParameter;
   const search_table = `${searchParameter.type}_idx`;
