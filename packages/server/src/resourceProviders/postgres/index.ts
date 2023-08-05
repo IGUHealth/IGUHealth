@@ -736,6 +736,7 @@ type SearchParameterResult = ParsedParameter<string | number> & {
 type ParameterType = SearchParameterResource | SearchParameterResult;
 
 function buildParameterSQL(
+  ctx: FHIRServerCTX,
   parameter: SearchParameterResource,
   index: number,
   values: any[],
@@ -746,7 +747,7 @@ function buildParameterSQL(
 
   const rootSelect = `SELECT ${columns.join(
     ", "
-  )} FROM ${search_table} WHERE parameter_url = $${index++}`;
+  )} FROM ${search_table} WHERE parameter_url = $${index++} `;
   values = [...values, searchParameter.url];
   let parameterClause;
   switch (searchParameter.type) {
@@ -878,6 +879,7 @@ function buildParameterSQL(
                 p
               ) => {
                 const res = buildParameterSQL(
+                  ctx,
                   {
                     type: "resource",
                     name: p.name,
@@ -921,6 +923,7 @@ function buildParameterSQL(
             p
           ) => {
             const res = buildParameterSQL(
+              ctx,
               { ...parameter, searchParameter: p, chainedParameters: [] },
               index,
               values,
@@ -953,9 +956,9 @@ function buildParameterSQL(
           });
 
         return {
-          query: `(${rootSelect} and r_id in (select r_id from ${referencesSQL} as referencechain))`,
+          query: `(${rootSelect} AND workspace=$${lastResult.index++} and r_id in (select r_id from ${referencesSQL} as referencechain))`,
           index: lastResult.index,
-          values: lastResult.values,
+          values: [...lastResult.values, ctx.workspace],
         };
       }
 
@@ -986,14 +989,20 @@ function buildParameterSQL(
       );
   }
 
+  let query = `(${rootSelect} AND workspace=$${index++} ${
+    parameterClause ? `AND ${parameterClause}` : ""
+  })`;
+
+  values = [...values, ctx.workspace];
   return {
     index,
     values,
-    query: `(${rootSelect} ${parameterClause ? `AND ${parameterClause}` : ""})`,
+    query,
   };
 }
 
 function buildParametersSQL(
+  ctx: FHIRServerCTX,
   parameters: SearchParameterResource[],
   index: number,
   values: any[]
@@ -1001,7 +1010,7 @@ function buildParametersSQL(
   let queries = [];
   let i = 0;
   for (let parameter of parameters) {
-    const res = buildParameterSQL(parameter, index, values);
+    const res = buildParameterSQL(ctx, parameter, index, values);
     index = res.index;
     queries.push(res.query);
     values = res.values;
@@ -1170,7 +1179,12 @@ async function executeSearchQuery(
     (v): v is SearchParameterResult => v.type === "result"
   );
 
-  let parameterQuery = buildParametersSQL(resourceParameters, index, values);
+  let parameterQuery = buildParametersSQL(
+    ctx,
+    resourceParameters,
+    index,
+    values
+  );
 
   values = parameterQuery.values;
   index = parameterQuery.index;
