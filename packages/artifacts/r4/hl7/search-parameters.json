@@ -18091,7 +18091,7 @@
         "code": "source-reference",
         "base": ["Consent"],
         "type": "reference",
-        "expression": "Consent.source",
+        "expression": "Consent.source.ofType(Reference)",
         "xpath": "f:Consent/f:sourceAttachment | f:Consent/f:sourceReference",
         "xpathUsage": "normal",
         "target": [

@@ -143,6 +143,7 @@ function toStringParameters(
 // string	n/a	string	Token is sometimes used for string to indicate that exact matching is the correct default search strategy
 
 function toTokenParameters(
+  parameter: SearchParameter,
   value: MetaValueSingular<NonNullable<unknown>>
 ): Array<{ system?: string; code?: string }> {
   switch (value.meta()?.type) {
@@ -153,7 +154,10 @@ function toTokenParameters(
     case "CodeableConcept": {
       const codings = descend(value, "coding");
       if (codings instanceof MetaValueArray) {
-        return codings.toArray().map(toTokenParameters).flat();
+        return codings
+          .toArray()
+          .map((v) => toTokenParameters(parameter, v))
+          .flat();
       }
       return [];
     }
@@ -176,6 +180,8 @@ function toTokenParameters(
         },
       ];
     }
+
+    case "id":
     case "http://hl7.org/fhirpath/System.String":
     case "string": {
       return [
@@ -186,7 +192,9 @@ function toTokenParameters(
     }
     default:
       throw new Error(
-        `Unknown token parameter of type '${value.meta()?.type}'`
+        `Unknown token parameter of type '${
+          value.meta()?.type
+        }' '${value.valueOf()}' indexing '${parameter.url}'`
       );
   }
 }
@@ -197,6 +205,8 @@ function toURIParameters(
 ): string[] {
   switch (value.meta()?.type) {
     case "uri":
+    case "url":
+    case "uuid":
     case "canonical": {
       const v: canonical | uri = value.valueOf() as canonical | uri;
       return [v];
@@ -517,7 +527,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
     case "token": {
       await Promise.all(
         evaluation
-          .map(toTokenParameters)
+          .map((v) => toTokenParameters(parameter, v))
           .flat()
           .map(async (value) => {
             await client.query(
