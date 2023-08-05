@@ -8770,12 +8770,8 @@ exports[`Testing indexing resourceType 'Consent' 13`] = `
 
 exports[`Testing indexing resourceType 'Consent' 14`] = `
 [
-  "Consent.source",
-  [
-    {
-      "title": "The terms of the consent in lawyer speak.",
-    },
-  ],
+  "Consent.source.ofType(Reference)",
+  [],
 ]
 `;
 
@@ -14200,6 +14196,4726 @@ exports[`Testing indexing resourceType 'Observation' 76`] = `
 ]
 `;
 
+exports[`Testing indexing resourceType 'Observation' 77`] = `
+[
+  "AllergyIntolerance.code | AllergyIntolerance.reaction.substance | Condition.code | (DeviceRequest.code.ofType(CodeableConcept)) | DiagnosticReport.code | FamilyMemberHistory.condition.code | List.code | Medication.code | (MedicationAdministration.medication.ofType(CodeableConcept)) | (MedicationDispense.medication.ofType(CodeableConcept)) | (MedicationRequest.medication.ofType(CodeableConcept)) | (MedicationStatement.medication.ofType(CodeableConcept)) | Observation.code | Procedure.code | ServiceRequest.code",
+  [
+    {
+      "coding": [
+        {
+          "code": "718-7",
+          "display": "Hemoglobin [Mass/volume] in Blood",
+          "system": "http://loinc.org",
+        },
+      ],
+      "text": "Haemoglobin",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 78`] = `
+[
+  "AllergyIntolerance.recordedDate | CarePlan.period | CareTeam.period | ClinicalImpression.date | Composition.date | Consent.dateTime | DiagnosticReport.effective | Encounter.period | EpisodeOfCare.period | FamilyMemberHistory.date | Flag.period | Immunization.occurrence | List.date | Observation.effective | Procedure.performed | (RiskAssessment.occurrence.ofType(dateTime)) | SupplyRequest.authoredOn",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 79`] = `
+[
+  "AllergyIntolerance.identifier | CarePlan.identifier | CareTeam.identifier | Composition.identifier | Condition.identifier | Consent.identifier | DetectedIssue.identifier | DeviceRequest.identifier | DiagnosticReport.identifier | DocumentManifest.masterIdentifier | DocumentManifest.identifier | DocumentReference.masterIdentifier | DocumentReference.identifier | Encounter.identifier | EpisodeOfCare.identifier | FamilyMemberHistory.identifier | Goal.identifier | ImagingStudy.identifier | Immunization.identifier | List.identifier | MedicationAdministration.identifier | MedicationDispense.identifier | MedicationRequest.identifier | MedicationStatement.identifier | NutritionOrder.identifier | Observation.identifier | Procedure.identifier | RiskAssessment.identifier | ServiceRequest.identifier | SupplyDelivery.identifier | SupplyRequest.identifier | VisionPrescription.identifier",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 80`] = `
+[
+  "AllergyIntolerance.patient | CarePlan.subject.where(resolve() is Patient) | CareTeam.subject.where(resolve() is Patient) | ClinicalImpression.subject.where(resolve() is Patient) | Composition.subject.where(resolve() is Patient) | Condition.subject.where(resolve() is Patient) | Consent.patient | DetectedIssue.patient | DeviceRequest.subject.where(resolve() is Patient) | DeviceUseStatement.subject | DiagnosticReport.subject.where(resolve() is Patient) | DocumentManifest.subject.where(resolve() is Patient) | DocumentReference.subject.where(resolve() is Patient) | Encounter.subject.where(resolve() is Patient) | EpisodeOfCare.patient | FamilyMemberHistory.patient | Flag.subject.where(resolve() is Patient) | Goal.subject.where(resolve() is Patient) | ImagingStudy.subject.where(resolve() is Patient) | Immunization.patient | List.subject.where(resolve() is Patient) | MedicationAdministration.subject.where(resolve() is Patient) | MedicationDispense.subject.where(resolve() is Patient) | MedicationRequest.subject.where(resolve() is Patient) | MedicationStatement.subject.where(resolve() is Patient) | NutritionOrder.patient | Observation.subject.where(resolve() is Patient) | Procedure.subject.where(resolve() is Patient) | RiskAssessment.subject.where(resolve() is Patient) | ServiceRequest.subject.where(resolve() is Patient) | SupplyDelivery.patient | VisionPrescription.patient",
+  [
+    {
+      "reference": "Patient/pat2",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 81`] = `
+[
+  "Composition.encounter | DeviceRequest.encounter | DiagnosticReport.encounter | DocumentReference.context.encounter | Flag.encounter | List.encounter | NutritionOrder.encounter | Observation.encounter | Procedure.encounter | RiskAssessment.encounter | ServiceRequest.encounter | VisionPrescription.encounter",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 82`] = `
+[
+  "Observation.basedOn",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 83`] = `
+[
+  "Observation.category",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 84`] = `
+[
+  "Observation.code | Observation.component.code",
+  [
+    {
+      "coding": [
+        {
+          "code": "718-7",
+          "display": "Hemoglobin [Mass/volume] in Blood",
+          "system": "http://loinc.org",
+        },
+      ],
+      "text": "Haemoglobin",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 85`] = `
+[
+  "Observation.dataAbsentReason | Observation.component.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 86`] = `
+[
+  "(Observation.value.ofType(CodeableConcept)) | (Observation.component.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 87`] = `
+[
+  "(Observation.value.ofType(Quantity)) | (Observation.value.ofType(SampledData)) | (Observation.component.value.ofType(Quantity)) | (Observation.component.value.ofType(SampledData))",
+  [
+    {
+      "code": "g/L",
+      "system": "http://unitsofmeasure.org",
+      "unit": "g/L",
+      "value": 176,
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 88`] = `
+[
+  "Observation.component.code",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 89`] = `
+[
+  "Observation.component.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 90`] = `
+[
+  "(Observation.component.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 91`] = `
+[
+  "(Observation.component.value.ofType(Quantity)) | (Observation.component.value.ofType(SampledData))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 92`] = `
+[
+  "Observation.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 93`] = `
+[
+  "Observation.derivedFrom",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 94`] = `
+[
+  "Observation.device",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 95`] = `
+[
+  "Observation.focus",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 96`] = `
+[
+  "Observation.hasMember",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 97`] = `
+[
+  "Observation.method",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 98`] = `
+[
+  "Observation.partOf",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 99`] = `
+[
+  "Observation.performer",
+  [
+    {
+      "display": "Acme Laboratory, Inc",
+      "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 100`] = `
+[
+  "Observation.specimen",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 101`] = `
+[
+  "Observation.status",
+  [
+    "final",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 102`] = `
+[
+  "Observation.subject",
+  [
+    {
+      "reference": "Patient/pat2",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 103`] = `
+[
+  "(Observation.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 104`] = `
+[
+  "(Observation.value.ofType(dateTime)) | (Observation.value.ofType(Period))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 105`] = `
+[
+  "(Observation.value.ofType(Quantity)) | (Observation.value.ofType(SampledData))",
+  [
+    {
+      "code": "g/L",
+      "system": "http://unitsofmeasure.org",
+      "unit": "g/L",
+      "value": 176,
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 106`] = `
+[
+  "(Observation.value.ofType(string)) | (Observation.value.ofType(CodeableConcept)).text",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 107`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "718-7",
+            "display": "Hemoglobin [Mass/volume] in Blood",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Haemoglobin",
+      },
+      "id": "r1",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "g/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "g/L",
+            "value": 180,
+          },
+          "low": {
+            "code": "g/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "g/L",
+            "value": 135,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r1</p><p><b>status</b>: final</p><p><b>code</b>: Haemoglobin <span>(Details : {LOINC code '718-7' = 'Hemoglobin [Mass/volume] in Blood', given as 'Hemoglobin [Mass/volume] in Blood'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 176 g/L<span> (Details: UCUM code g/L = 'g/L')</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>135 g/L<span> (Details: UCUM code g/L = 'g/L')</span></td><td>180 g/L<span> (Details: UCUM code g/L = 'g/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "g/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "g/L",
+        "value": 176,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 108`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "718-7",
+            "display": "Hemoglobin [Mass/volume] in Blood",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Haemoglobin",
+      },
+      "id": "r1",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "g/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "g/L",
+            "value": 180,
+          },
+          "low": {
+            "code": "g/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "g/L",
+            "value": 135,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r1</p><p><b>status</b>: final</p><p><b>code</b>: Haemoglobin <span>(Details : {LOINC code '718-7' = 'Hemoglobin [Mass/volume] in Blood', given as 'Hemoglobin [Mass/volume] in Blood'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 176 g/L<span> (Details: UCUM code g/L = 'g/L')</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>135 g/L<span> (Details: UCUM code g/L = 'g/L')</span></td><td>180 g/L<span> (Details: UCUM code g/L = 'g/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "g/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "g/L",
+        "value": 176,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 109`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "718-7",
+            "display": "Hemoglobin [Mass/volume] in Blood",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Haemoglobin",
+      },
+      "id": "r1",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "g/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "g/L",
+            "value": 180,
+          },
+          "low": {
+            "code": "g/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "g/L",
+            "value": 135,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r1</p><p><b>status</b>: final</p><p><b>code</b>: Haemoglobin <span>(Details : {LOINC code '718-7' = 'Hemoglobin [Mass/volume] in Blood', given as 'Hemoglobin [Mass/volume] in Blood'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 176 g/L<span> (Details: UCUM code g/L = 'g/L')</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>135 g/L<span> (Details: UCUM code g/L = 'g/L')</span></td><td>180 g/L<span> (Details: UCUM code g/L = 'g/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "g/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "g/L",
+        "value": 176,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 110`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "718-7",
+            "display": "Hemoglobin [Mass/volume] in Blood",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Haemoglobin",
+      },
+      "id": "r1",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "g/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "g/L",
+            "value": 180,
+          },
+          "low": {
+            "code": "g/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "g/L",
+            "value": 135,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r1</p><p><b>status</b>: final</p><p><b>code</b>: Haemoglobin <span>(Details : {LOINC code '718-7' = 'Hemoglobin [Mass/volume] in Blood', given as 'Hemoglobin [Mass/volume] in Blood'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 176 g/L<span> (Details: UCUM code g/L = 'g/L')</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>135 g/L<span> (Details: UCUM code g/L = 'g/L')</span></td><td>180 g/L<span> (Details: UCUM code g/L = 'g/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "g/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "g/L",
+        "value": 176,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 111`] = `
+[
+  "Observation | Observation.component",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "718-7",
+            "display": "Hemoglobin [Mass/volume] in Blood",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Haemoglobin",
+      },
+      "id": "r1",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "g/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "g/L",
+            "value": 180,
+          },
+          "low": {
+            "code": "g/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "g/L",
+            "value": 135,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r1</p><p><b>status</b>: final</p><p><b>code</b>: Haemoglobin <span>(Details : {LOINC code '718-7' = 'Hemoglobin [Mass/volume] in Blood', given as 'Hemoglobin [Mass/volume] in Blood'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 176 g/L<span> (Details: UCUM code g/L = 'g/L')</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>135 g/L<span> (Details: UCUM code g/L = 'g/L')</span></td><td>180 g/L<span> (Details: UCUM code g/L = 'g/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "g/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "g/L",
+        "value": 176,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 112`] = `
+[
+  "Observation | Observation.component",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "718-7",
+            "display": "Hemoglobin [Mass/volume] in Blood",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Haemoglobin",
+      },
+      "id": "r1",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "g/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "g/L",
+            "value": 180,
+          },
+          "low": {
+            "code": "g/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "g/L",
+            "value": 135,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r1</p><p><b>status</b>: final</p><p><b>code</b>: Haemoglobin <span>(Details : {LOINC code '718-7' = 'Hemoglobin [Mass/volume] in Blood', given as 'Hemoglobin [Mass/volume] in Blood'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 176 g/L<span> (Details: UCUM code g/L = 'g/L')</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>135 g/L<span> (Details: UCUM code g/L = 'g/L')</span></td><td>180 g/L<span> (Details: UCUM code g/L = 'g/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "g/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "g/L",
+        "value": 176,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 113`] = `
+[
+  "Observation.component",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 114`] = `
+[
+  "Observation.component",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 115`] = `
+[
+  "AllergyIntolerance.code | AllergyIntolerance.reaction.substance | Condition.code | (DeviceRequest.code.ofType(CodeableConcept)) | DiagnosticReport.code | FamilyMemberHistory.condition.code | List.code | Medication.code | (MedicationAdministration.medication.ofType(CodeableConcept)) | (MedicationDispense.medication.ofType(CodeableConcept)) | (MedicationRequest.medication.ofType(CodeableConcept)) | (MedicationStatement.medication.ofType(CodeableConcept)) | Observation.code | Procedure.code | ServiceRequest.code",
+  [
+    {
+      "coding": [
+        {
+          "code": "736-9",
+          "display": "Lymphocytes/100 leukocytes in Blood by Automated count",
+          "system": "http://loinc.org",
+        },
+      ],
+      "text": "Lymphocytes",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 116`] = `
+[
+  "AllergyIntolerance.recordedDate | CarePlan.period | CareTeam.period | ClinicalImpression.date | Composition.date | Consent.dateTime | DiagnosticReport.effective | Encounter.period | EpisodeOfCare.period | FamilyMemberHistory.date | Flag.period | Immunization.occurrence | List.date | Observation.effective | Procedure.performed | (RiskAssessment.occurrence.ofType(dateTime)) | SupplyRequest.authoredOn",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 117`] = `
+[
+  "AllergyIntolerance.identifier | CarePlan.identifier | CareTeam.identifier | Composition.identifier | Condition.identifier | Consent.identifier | DetectedIssue.identifier | DeviceRequest.identifier | DiagnosticReport.identifier | DocumentManifest.masterIdentifier | DocumentManifest.identifier | DocumentReference.masterIdentifier | DocumentReference.identifier | Encounter.identifier | EpisodeOfCare.identifier | FamilyMemberHistory.identifier | Goal.identifier | ImagingStudy.identifier | Immunization.identifier | List.identifier | MedicationAdministration.identifier | MedicationDispense.identifier | MedicationRequest.identifier | MedicationStatement.identifier | NutritionOrder.identifier | Observation.identifier | Procedure.identifier | RiskAssessment.identifier | ServiceRequest.identifier | SupplyDelivery.identifier | SupplyRequest.identifier | VisionPrescription.identifier",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 118`] = `
+[
+  "AllergyIntolerance.patient | CarePlan.subject.where(resolve() is Patient) | CareTeam.subject.where(resolve() is Patient) | ClinicalImpression.subject.where(resolve() is Patient) | Composition.subject.where(resolve() is Patient) | Condition.subject.where(resolve() is Patient) | Consent.patient | DetectedIssue.patient | DeviceRequest.subject.where(resolve() is Patient) | DeviceUseStatement.subject | DiagnosticReport.subject.where(resolve() is Patient) | DocumentManifest.subject.where(resolve() is Patient) | DocumentReference.subject.where(resolve() is Patient) | Encounter.subject.where(resolve() is Patient) | EpisodeOfCare.patient | FamilyMemberHistory.patient | Flag.subject.where(resolve() is Patient) | Goal.subject.where(resolve() is Patient) | ImagingStudy.subject.where(resolve() is Patient) | Immunization.patient | List.subject.where(resolve() is Patient) | MedicationAdministration.subject.where(resolve() is Patient) | MedicationDispense.subject.where(resolve() is Patient) | MedicationRequest.subject.where(resolve() is Patient) | MedicationStatement.subject.where(resolve() is Patient) | NutritionOrder.patient | Observation.subject.where(resolve() is Patient) | Procedure.subject.where(resolve() is Patient) | RiskAssessment.subject.where(resolve() is Patient) | ServiceRequest.subject.where(resolve() is Patient) | SupplyDelivery.patient | VisionPrescription.patient",
+  [
+    {
+      "reference": "Patient/pat2",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 119`] = `
+[
+  "Composition.encounter | DeviceRequest.encounter | DiagnosticReport.encounter | DocumentReference.context.encounter | Flag.encounter | List.encounter | NutritionOrder.encounter | Observation.encounter | Procedure.encounter | RiskAssessment.encounter | ServiceRequest.encounter | VisionPrescription.encounter",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 120`] = `
+[
+  "Observation.basedOn",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 121`] = `
+[
+  "Observation.category",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 122`] = `
+[
+  "Observation.code | Observation.component.code",
+  [
+    {
+      "coding": [
+        {
+          "code": "736-9",
+          "display": "Lymphocytes/100 leukocytes in Blood by Automated count",
+          "system": "http://loinc.org",
+        },
+      ],
+      "text": "Lymphocytes",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 123`] = `
+[
+  "Observation.dataAbsentReason | Observation.component.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 124`] = `
+[
+  "(Observation.value.ofType(CodeableConcept)) | (Observation.component.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 125`] = `
+[
+  "(Observation.value.ofType(Quantity)) | (Observation.value.ofType(SampledData)) | (Observation.component.value.ofType(Quantity)) | (Observation.component.value.ofType(SampledData))",
+  [
+    {
+      "code": "%",
+      "system": "http://unitsofmeasure.org",
+      "unit": "%",
+      "value": 20,
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 126`] = `
+[
+  "Observation.component.code",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 127`] = `
+[
+  "Observation.component.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 128`] = `
+[
+  "(Observation.component.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 129`] = `
+[
+  "(Observation.component.value.ofType(Quantity)) | (Observation.component.value.ofType(SampledData))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 130`] = `
+[
+  "Observation.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 131`] = `
+[
+  "Observation.derivedFrom",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 132`] = `
+[
+  "Observation.device",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 133`] = `
+[
+  "Observation.focus",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 134`] = `
+[
+  "Observation.hasMember",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 135`] = `
+[
+  "Observation.method",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 136`] = `
+[
+  "Observation.partOf",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 137`] = `
+[
+  "Observation.performer",
+  [
+    {
+      "display": "Acme Laboratory, Inc",
+      "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 138`] = `
+[
+  "Observation.specimen",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 139`] = `
+[
+  "Observation.status",
+  [
+    "final",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 140`] = `
+[
+  "Observation.subject",
+  [
+    {
+      "reference": "Patient/pat2",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 141`] = `
+[
+  "(Observation.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 142`] = `
+[
+  "(Observation.value.ofType(dateTime)) | (Observation.value.ofType(Period))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 143`] = `
+[
+  "(Observation.value.ofType(Quantity)) | (Observation.value.ofType(SampledData))",
+  [
+    {
+      "code": "%",
+      "system": "http://unitsofmeasure.org",
+      "unit": "%",
+      "value": 20,
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 144`] = `
+[
+  "(Observation.value.ofType(string)) | (Observation.value.ofType(CodeableConcept)).text",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 145`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "736-9",
+            "display": "Lymphocytes/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Lymphocytes",
+      },
+      "id": "r10",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r10</p><p><b>status</b>: final</p><p><b>code</b>: Lymphocytes <span>(Details : {LOINC code '736-9' = 'Lymphocytes/100 leukocytes in Blood by Automated count', given as 'Lymphocytes/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 146`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "736-9",
+            "display": "Lymphocytes/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Lymphocytes",
+      },
+      "id": "r10",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r10</p><p><b>status</b>: final</p><p><b>code</b>: Lymphocytes <span>(Details : {LOINC code '736-9' = 'Lymphocytes/100 leukocytes in Blood by Automated count', given as 'Lymphocytes/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 147`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "736-9",
+            "display": "Lymphocytes/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Lymphocytes",
+      },
+      "id": "r10",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r10</p><p><b>status</b>: final</p><p><b>code</b>: Lymphocytes <span>(Details : {LOINC code '736-9' = 'Lymphocytes/100 leukocytes in Blood by Automated count', given as 'Lymphocytes/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 148`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "736-9",
+            "display": "Lymphocytes/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Lymphocytes",
+      },
+      "id": "r10",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r10</p><p><b>status</b>: final</p><p><b>code</b>: Lymphocytes <span>(Details : {LOINC code '736-9' = 'Lymphocytes/100 leukocytes in Blood by Automated count', given as 'Lymphocytes/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 149`] = `
+[
+  "Observation | Observation.component",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "736-9",
+            "display": "Lymphocytes/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Lymphocytes",
+      },
+      "id": "r10",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r10</p><p><b>status</b>: final</p><p><b>code</b>: Lymphocytes <span>(Details : {LOINC code '736-9' = 'Lymphocytes/100 leukocytes in Blood by Automated count', given as 'Lymphocytes/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 150`] = `
+[
+  "Observation | Observation.component",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "736-9",
+            "display": "Lymphocytes/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Lymphocytes",
+      },
+      "id": "r10",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r10</p><p><b>status</b>: final</p><p><b>code</b>: Lymphocytes <span>(Details : {LOINC code '736-9' = 'Lymphocytes/100 leukocytes in Blood by Automated count', given as 'Lymphocytes/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 151`] = `
+[
+  "Observation.component",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 152`] = `
+[
+  "Observation.component",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 153`] = `
+[
+  "AllergyIntolerance.code | AllergyIntolerance.reaction.substance | Condition.code | (DeviceRequest.code.ofType(CodeableConcept)) | DiagnosticReport.code | FamilyMemberHistory.condition.code | List.code | Medication.code | (MedicationAdministration.medication.ofType(CodeableConcept)) | (MedicationDispense.medication.ofType(CodeableConcept)) | (MedicationRequest.medication.ofType(CodeableConcept)) | (MedicationStatement.medication.ofType(CodeableConcept)) | Observation.code | Procedure.code | ServiceRequest.code",
+  [
+    {
+      "coding": [
+        {
+          "code": "731-0",
+          "display": "Lymphocytes [#/volume] in Blood by Automated count",
+          "system": "http://loinc.org",
+        },
+      ],
+      "text": "Lymphocytes",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 154`] = `
+[
+  "AllergyIntolerance.recordedDate | CarePlan.period | CareTeam.period | ClinicalImpression.date | Composition.date | Consent.dateTime | DiagnosticReport.effective | Encounter.period | EpisodeOfCare.period | FamilyMemberHistory.date | Flag.period | Immunization.occurrence | List.date | Observation.effective | Procedure.performed | (RiskAssessment.occurrence.ofType(dateTime)) | SupplyRequest.authoredOn",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 155`] = `
+[
+  "AllergyIntolerance.identifier | CarePlan.identifier | CareTeam.identifier | Composition.identifier | Condition.identifier | Consent.identifier | DetectedIssue.identifier | DeviceRequest.identifier | DiagnosticReport.identifier | DocumentManifest.masterIdentifier | DocumentManifest.identifier | DocumentReference.masterIdentifier | DocumentReference.identifier | Encounter.identifier | EpisodeOfCare.identifier | FamilyMemberHistory.identifier | Goal.identifier | ImagingStudy.identifier | Immunization.identifier | List.identifier | MedicationAdministration.identifier | MedicationDispense.identifier | MedicationRequest.identifier | MedicationStatement.identifier | NutritionOrder.identifier | Observation.identifier | Procedure.identifier | RiskAssessment.identifier | ServiceRequest.identifier | SupplyDelivery.identifier | SupplyRequest.identifier | VisionPrescription.identifier",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 156`] = `
+[
+  "AllergyIntolerance.patient | CarePlan.subject.where(resolve() is Patient) | CareTeam.subject.where(resolve() is Patient) | ClinicalImpression.subject.where(resolve() is Patient) | Composition.subject.where(resolve() is Patient) | Condition.subject.where(resolve() is Patient) | Consent.patient | DetectedIssue.patient | DeviceRequest.subject.where(resolve() is Patient) | DeviceUseStatement.subject | DiagnosticReport.subject.where(resolve() is Patient) | DocumentManifest.subject.where(resolve() is Patient) | DocumentReference.subject.where(resolve() is Patient) | Encounter.subject.where(resolve() is Patient) | EpisodeOfCare.patient | FamilyMemberHistory.patient | Flag.subject.where(resolve() is Patient) | Goal.subject.where(resolve() is Patient) | ImagingStudy.subject.where(resolve() is Patient) | Immunization.patient | List.subject.where(resolve() is Patient) | MedicationAdministration.subject.where(resolve() is Patient) | MedicationDispense.subject.where(resolve() is Patient) | MedicationRequest.subject.where(resolve() is Patient) | MedicationStatement.subject.where(resolve() is Patient) | NutritionOrder.patient | Observation.subject.where(resolve() is Patient) | Procedure.subject.where(resolve() is Patient) | RiskAssessment.subject.where(resolve() is Patient) | ServiceRequest.subject.where(resolve() is Patient) | SupplyDelivery.patient | VisionPrescription.patient",
+  [
+    {
+      "reference": "Patient/pat2",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 157`] = `
+[
+  "Composition.encounter | DeviceRequest.encounter | DiagnosticReport.encounter | DocumentReference.context.encounter | Flag.encounter | List.encounter | NutritionOrder.encounter | Observation.encounter | Procedure.encounter | RiskAssessment.encounter | ServiceRequest.encounter | VisionPrescription.encounter",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 158`] = `
+[
+  "Observation.basedOn",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 159`] = `
+[
+  "Observation.category",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 160`] = `
+[
+  "Observation.code | Observation.component.code",
+  [
+    {
+      "coding": [
+        {
+          "code": "731-0",
+          "display": "Lymphocytes [#/volume] in Blood by Automated count",
+          "system": "http://loinc.org",
+        },
+      ],
+      "text": "Lymphocytes",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 161`] = `
+[
+  "Observation.dataAbsentReason | Observation.component.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 162`] = `
+[
+  "(Observation.value.ofType(CodeableConcept)) | (Observation.component.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 163`] = `
+[
+  "(Observation.value.ofType(Quantity)) | (Observation.value.ofType(SampledData)) | (Observation.component.value.ofType(Quantity)) | (Observation.component.value.ofType(SampledData))",
+  [
+    {
+      "code": "10*9/L",
+      "system": "http://unitsofmeasure.org",
+      "unit": "x10*9/L",
+      "value": 0.9,
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 164`] = `
+[
+  "Observation.component.code",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 165`] = `
+[
+  "Observation.component.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 166`] = `
+[
+  "(Observation.component.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 167`] = `
+[
+  "(Observation.component.value.ofType(Quantity)) | (Observation.component.value.ofType(SampledData))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 168`] = `
+[
+  "Observation.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 169`] = `
+[
+  "Observation.derivedFrom",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 170`] = `
+[
+  "Observation.device",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 171`] = `
+[
+  "Observation.focus",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 172`] = `
+[
+  "Observation.hasMember",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 173`] = `
+[
+  "Observation.method",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 174`] = `
+[
+  "Observation.partOf",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 175`] = `
+[
+  "Observation.performer",
+  [
+    {
+      "display": "Acme Laboratory, Inc",
+      "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 176`] = `
+[
+  "Observation.specimen",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 177`] = `
+[
+  "Observation.status",
+  [
+    "final",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 178`] = `
+[
+  "Observation.subject",
+  [
+    {
+      "reference": "Patient/pat2",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 179`] = `
+[
+  "(Observation.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 180`] = `
+[
+  "(Observation.value.ofType(dateTime)) | (Observation.value.ofType(Period))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 181`] = `
+[
+  "(Observation.value.ofType(Quantity)) | (Observation.value.ofType(SampledData))",
+  [
+    {
+      "code": "10*9/L",
+      "system": "http://unitsofmeasure.org",
+      "unit": "x10*9/L",
+      "value": 0.9,
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 182`] = `
+[
+  "(Observation.value.ofType(string)) | (Observation.value.ofType(CodeableConcept)).text",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 183`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "731-0",
+            "display": "Lymphocytes [#/volume] in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Lymphocytes",
+      },
+      "id": "r11",
+      "interpretation": [
+        {
+          "coding": [
+            {
+              "code": "L",
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+            },
+          ],
+        },
+      ],
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 4,
+          },
+          "low": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 1.1,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r11</p><p><b>status</b>: final</p><p><b>code</b>: Lymphocytes <span>(Details : {LOINC code '731-0' = 'Lymphocytes [#/volume] in Blood by Automated count', given as 'Lymphocytes [#/volume] in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 0.9 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></p><p><b>interpretation</b>: Low <span>(Details : {http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation code 'L' = 'Low)</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>1.1 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td><td>4.0 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "10*9/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "x10*9/L",
+        "value": 0.9,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 184`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "731-0",
+            "display": "Lymphocytes [#/volume] in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Lymphocytes",
+      },
+      "id": "r11",
+      "interpretation": [
+        {
+          "coding": [
+            {
+              "code": "L",
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+            },
+          ],
+        },
+      ],
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 4,
+          },
+          "low": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 1.1,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r11</p><p><b>status</b>: final</p><p><b>code</b>: Lymphocytes <span>(Details : {LOINC code '731-0' = 'Lymphocytes [#/volume] in Blood by Automated count', given as 'Lymphocytes [#/volume] in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 0.9 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></p><p><b>interpretation</b>: Low <span>(Details : {http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation code 'L' = 'Low)</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>1.1 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td><td>4.0 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "10*9/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "x10*9/L",
+        "value": 0.9,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 185`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "731-0",
+            "display": "Lymphocytes [#/volume] in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Lymphocytes",
+      },
+      "id": "r11",
+      "interpretation": [
+        {
+          "coding": [
+            {
+              "code": "L",
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+            },
+          ],
+        },
+      ],
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 4,
+          },
+          "low": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 1.1,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r11</p><p><b>status</b>: final</p><p><b>code</b>: Lymphocytes <span>(Details : {LOINC code '731-0' = 'Lymphocytes [#/volume] in Blood by Automated count', given as 'Lymphocytes [#/volume] in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 0.9 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></p><p><b>interpretation</b>: Low <span>(Details : {http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation code 'L' = 'Low)</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>1.1 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td><td>4.0 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "10*9/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "x10*9/L",
+        "value": 0.9,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 186`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "731-0",
+            "display": "Lymphocytes [#/volume] in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Lymphocytes",
+      },
+      "id": "r11",
+      "interpretation": [
+        {
+          "coding": [
+            {
+              "code": "L",
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+            },
+          ],
+        },
+      ],
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 4,
+          },
+          "low": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 1.1,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r11</p><p><b>status</b>: final</p><p><b>code</b>: Lymphocytes <span>(Details : {LOINC code '731-0' = 'Lymphocytes [#/volume] in Blood by Automated count', given as 'Lymphocytes [#/volume] in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 0.9 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></p><p><b>interpretation</b>: Low <span>(Details : {http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation code 'L' = 'Low)</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>1.1 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td><td>4.0 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "10*9/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "x10*9/L",
+        "value": 0.9,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 187`] = `
+[
+  "Observation | Observation.component",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "731-0",
+            "display": "Lymphocytes [#/volume] in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Lymphocytes",
+      },
+      "id": "r11",
+      "interpretation": [
+        {
+          "coding": [
+            {
+              "code": "L",
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+            },
+          ],
+        },
+      ],
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 4,
+          },
+          "low": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 1.1,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r11</p><p><b>status</b>: final</p><p><b>code</b>: Lymphocytes <span>(Details : {LOINC code '731-0' = 'Lymphocytes [#/volume] in Blood by Automated count', given as 'Lymphocytes [#/volume] in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 0.9 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></p><p><b>interpretation</b>: Low <span>(Details : {http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation code 'L' = 'Low)</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>1.1 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td><td>4.0 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "10*9/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "x10*9/L",
+        "value": 0.9,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 188`] = `
+[
+  "Observation | Observation.component",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "731-0",
+            "display": "Lymphocytes [#/volume] in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Lymphocytes",
+      },
+      "id": "r11",
+      "interpretation": [
+        {
+          "coding": [
+            {
+              "code": "L",
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+            },
+          ],
+        },
+      ],
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 4,
+          },
+          "low": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 1.1,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r11</p><p><b>status</b>: final</p><p><b>code</b>: Lymphocytes <span>(Details : {LOINC code '731-0' = 'Lymphocytes [#/volume] in Blood by Automated count', given as 'Lymphocytes [#/volume] in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 0.9 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></p><p><b>interpretation</b>: Low <span>(Details : {http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation code 'L' = 'Low)</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>1.1 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td><td>4.0 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "10*9/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "x10*9/L",
+        "value": 0.9,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 189`] = `
+[
+  "Observation.component",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 190`] = `
+[
+  "Observation.component",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 191`] = `
+[
+  "AllergyIntolerance.code | AllergyIntolerance.reaction.substance | Condition.code | (DeviceRequest.code.ofType(CodeableConcept)) | DiagnosticReport.code | FamilyMemberHistory.condition.code | List.code | Medication.code | (MedicationAdministration.medication.ofType(CodeableConcept)) | (MedicationDispense.medication.ofType(CodeableConcept)) | (MedicationRequest.medication.ofType(CodeableConcept)) | (MedicationStatement.medication.ofType(CodeableConcept)) | Observation.code | Procedure.code | ServiceRequest.code",
+  [
+    {
+      "coding": [
+        {
+          "code": "5905-5",
+          "display": "Monocytes/100 leukocytes in Blood by Automated count",
+          "system": "http://loinc.org",
+        },
+      ],
+      "text": "Monocytes",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 192`] = `
+[
+  "AllergyIntolerance.recordedDate | CarePlan.period | CareTeam.period | ClinicalImpression.date | Composition.date | Consent.dateTime | DiagnosticReport.effective | Encounter.period | EpisodeOfCare.period | FamilyMemberHistory.date | Flag.period | Immunization.occurrence | List.date | Observation.effective | Procedure.performed | (RiskAssessment.occurrence.ofType(dateTime)) | SupplyRequest.authoredOn",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 193`] = `
+[
+  "AllergyIntolerance.identifier | CarePlan.identifier | CareTeam.identifier | Composition.identifier | Condition.identifier | Consent.identifier | DetectedIssue.identifier | DeviceRequest.identifier | DiagnosticReport.identifier | DocumentManifest.masterIdentifier | DocumentManifest.identifier | DocumentReference.masterIdentifier | DocumentReference.identifier | Encounter.identifier | EpisodeOfCare.identifier | FamilyMemberHistory.identifier | Goal.identifier | ImagingStudy.identifier | Immunization.identifier | List.identifier | MedicationAdministration.identifier | MedicationDispense.identifier | MedicationRequest.identifier | MedicationStatement.identifier | NutritionOrder.identifier | Observation.identifier | Procedure.identifier | RiskAssessment.identifier | ServiceRequest.identifier | SupplyDelivery.identifier | SupplyRequest.identifier | VisionPrescription.identifier",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 194`] = `
+[
+  "AllergyIntolerance.patient | CarePlan.subject.where(resolve() is Patient) | CareTeam.subject.where(resolve() is Patient) | ClinicalImpression.subject.where(resolve() is Patient) | Composition.subject.where(resolve() is Patient) | Condition.subject.where(resolve() is Patient) | Consent.patient | DetectedIssue.patient | DeviceRequest.subject.where(resolve() is Patient) | DeviceUseStatement.subject | DiagnosticReport.subject.where(resolve() is Patient) | DocumentManifest.subject.where(resolve() is Patient) | DocumentReference.subject.where(resolve() is Patient) | Encounter.subject.where(resolve() is Patient) | EpisodeOfCare.patient | FamilyMemberHistory.patient | Flag.subject.where(resolve() is Patient) | Goal.subject.where(resolve() is Patient) | ImagingStudy.subject.where(resolve() is Patient) | Immunization.patient | List.subject.where(resolve() is Patient) | MedicationAdministration.subject.where(resolve() is Patient) | MedicationDispense.subject.where(resolve() is Patient) | MedicationRequest.subject.where(resolve() is Patient) | MedicationStatement.subject.where(resolve() is Patient) | NutritionOrder.patient | Observation.subject.where(resolve() is Patient) | Procedure.subject.where(resolve() is Patient) | RiskAssessment.subject.where(resolve() is Patient) | ServiceRequest.subject.where(resolve() is Patient) | SupplyDelivery.patient | VisionPrescription.patient",
+  [
+    {
+      "reference": "Patient/pat2",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 195`] = `
+[
+  "Composition.encounter | DeviceRequest.encounter | DiagnosticReport.encounter | DocumentReference.context.encounter | Flag.encounter | List.encounter | NutritionOrder.encounter | Observation.encounter | Procedure.encounter | RiskAssessment.encounter | ServiceRequest.encounter | VisionPrescription.encounter",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 196`] = `
+[
+  "Observation.basedOn",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 197`] = `
+[
+  "Observation.category",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 198`] = `
+[
+  "Observation.code | Observation.component.code",
+  [
+    {
+      "coding": [
+        {
+          "code": "5905-5",
+          "display": "Monocytes/100 leukocytes in Blood by Automated count",
+          "system": "http://loinc.org",
+        },
+      ],
+      "text": "Monocytes",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 199`] = `
+[
+  "Observation.dataAbsentReason | Observation.component.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 200`] = `
+[
+  "(Observation.value.ofType(CodeableConcept)) | (Observation.component.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 201`] = `
+[
+  "(Observation.value.ofType(Quantity)) | (Observation.value.ofType(SampledData)) | (Observation.component.value.ofType(Quantity)) | (Observation.component.value.ofType(SampledData))",
+  [
+    {
+      "code": "%",
+      "system": "http://unitsofmeasure.org",
+      "unit": "%",
+      "value": 20,
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 202`] = `
+[
+  "Observation.component.code",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 203`] = `
+[
+  "Observation.component.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 204`] = `
+[
+  "(Observation.component.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 205`] = `
+[
+  "(Observation.component.value.ofType(Quantity)) | (Observation.component.value.ofType(SampledData))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 206`] = `
+[
+  "Observation.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 207`] = `
+[
+  "Observation.derivedFrom",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 208`] = `
+[
+  "Observation.device",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 209`] = `
+[
+  "Observation.focus",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 210`] = `
+[
+  "Observation.hasMember",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 211`] = `
+[
+  "Observation.method",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 212`] = `
+[
+  "Observation.partOf",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 213`] = `
+[
+  "Observation.performer",
+  [
+    {
+      "display": "Acme Laboratory, Inc",
+      "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 214`] = `
+[
+  "Observation.specimen",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 215`] = `
+[
+  "Observation.status",
+  [
+    "final",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 216`] = `
+[
+  "Observation.subject",
+  [
+    {
+      "reference": "Patient/pat2",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 217`] = `
+[
+  "(Observation.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 218`] = `
+[
+  "(Observation.value.ofType(dateTime)) | (Observation.value.ofType(Period))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 219`] = `
+[
+  "(Observation.value.ofType(Quantity)) | (Observation.value.ofType(SampledData))",
+  [
+    {
+      "code": "%",
+      "system": "http://unitsofmeasure.org",
+      "unit": "%",
+      "value": 20,
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 220`] = `
+[
+  "(Observation.value.ofType(string)) | (Observation.value.ofType(CodeableConcept)).text",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 221`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "5905-5",
+            "display": "Monocytes/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Monocytes",
+      },
+      "id": "r12",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r12</p><p><b>status</b>: final</p><p><b>code</b>: Monocytes <span>(Details : {LOINC code '5905-5' = 'Monocytes/100 leukocytes in Blood by Automated count', given as 'Monocytes/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 222`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "5905-5",
+            "display": "Monocytes/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Monocytes",
+      },
+      "id": "r12",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r12</p><p><b>status</b>: final</p><p><b>code</b>: Monocytes <span>(Details : {LOINC code '5905-5' = 'Monocytes/100 leukocytes in Blood by Automated count', given as 'Monocytes/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 223`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "5905-5",
+            "display": "Monocytes/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Monocytes",
+      },
+      "id": "r12",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r12</p><p><b>status</b>: final</p><p><b>code</b>: Monocytes <span>(Details : {LOINC code '5905-5' = 'Monocytes/100 leukocytes in Blood by Automated count', given as 'Monocytes/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 224`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "5905-5",
+            "display": "Monocytes/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Monocytes",
+      },
+      "id": "r12",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r12</p><p><b>status</b>: final</p><p><b>code</b>: Monocytes <span>(Details : {LOINC code '5905-5' = 'Monocytes/100 leukocytes in Blood by Automated count', given as 'Monocytes/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 225`] = `
+[
+  "Observation | Observation.component",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "5905-5",
+            "display": "Monocytes/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Monocytes",
+      },
+      "id": "r12",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r12</p><p><b>status</b>: final</p><p><b>code</b>: Monocytes <span>(Details : {LOINC code '5905-5' = 'Monocytes/100 leukocytes in Blood by Automated count', given as 'Monocytes/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 226`] = `
+[
+  "Observation | Observation.component",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "5905-5",
+            "display": "Monocytes/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Monocytes",
+      },
+      "id": "r12",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r12</p><p><b>status</b>: final</p><p><b>code</b>: Monocytes <span>(Details : {LOINC code '5905-5' = 'Monocytes/100 leukocytes in Blood by Automated count', given as 'Monocytes/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 227`] = `
+[
+  "Observation.component",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 228`] = `
+[
+  "Observation.component",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 229`] = `
+[
+  "AllergyIntolerance.code | AllergyIntolerance.reaction.substance | Condition.code | (DeviceRequest.code.ofType(CodeableConcept)) | DiagnosticReport.code | FamilyMemberHistory.condition.code | List.code | Medication.code | (MedicationAdministration.medication.ofType(CodeableConcept)) | (MedicationDispense.medication.ofType(CodeableConcept)) | (MedicationRequest.medication.ofType(CodeableConcept)) | (MedicationStatement.medication.ofType(CodeableConcept)) | Observation.code | Procedure.code | ServiceRequest.code",
+  [
+    {
+      "coding": [
+        {
+          "code": "742-7",
+          "display": "Monocytes [#/volume] in Blood by Automated count",
+          "system": "http://loinc.org",
+        },
+      ],
+      "text": "Monocytes",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 230`] = `
+[
+  "AllergyIntolerance.recordedDate | CarePlan.period | CareTeam.period | ClinicalImpression.date | Composition.date | Consent.dateTime | DiagnosticReport.effective | Encounter.period | EpisodeOfCare.period | FamilyMemberHistory.date | Flag.period | Immunization.occurrence | List.date | Observation.effective | Procedure.performed | (RiskAssessment.occurrence.ofType(dateTime)) | SupplyRequest.authoredOn",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 231`] = `
+[
+  "AllergyIntolerance.identifier | CarePlan.identifier | CareTeam.identifier | Composition.identifier | Condition.identifier | Consent.identifier | DetectedIssue.identifier | DeviceRequest.identifier | DiagnosticReport.identifier | DocumentManifest.masterIdentifier | DocumentManifest.identifier | DocumentReference.masterIdentifier | DocumentReference.identifier | Encounter.identifier | EpisodeOfCare.identifier | FamilyMemberHistory.identifier | Goal.identifier | ImagingStudy.identifier | Immunization.identifier | List.identifier | MedicationAdministration.identifier | MedicationDispense.identifier | MedicationRequest.identifier | MedicationStatement.identifier | NutritionOrder.identifier | Observation.identifier | Procedure.identifier | RiskAssessment.identifier | ServiceRequest.identifier | SupplyDelivery.identifier | SupplyRequest.identifier | VisionPrescription.identifier",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 232`] = `
+[
+  "AllergyIntolerance.patient | CarePlan.subject.where(resolve() is Patient) | CareTeam.subject.where(resolve() is Patient) | ClinicalImpression.subject.where(resolve() is Patient) | Composition.subject.where(resolve() is Patient) | Condition.subject.where(resolve() is Patient) | Consent.patient | DetectedIssue.patient | DeviceRequest.subject.where(resolve() is Patient) | DeviceUseStatement.subject | DiagnosticReport.subject.where(resolve() is Patient) | DocumentManifest.subject.where(resolve() is Patient) | DocumentReference.subject.where(resolve() is Patient) | Encounter.subject.where(resolve() is Patient) | EpisodeOfCare.patient | FamilyMemberHistory.patient | Flag.subject.where(resolve() is Patient) | Goal.subject.where(resolve() is Patient) | ImagingStudy.subject.where(resolve() is Patient) | Immunization.patient | List.subject.where(resolve() is Patient) | MedicationAdministration.subject.where(resolve() is Patient) | MedicationDispense.subject.where(resolve() is Patient) | MedicationRequest.subject.where(resolve() is Patient) | MedicationStatement.subject.where(resolve() is Patient) | NutritionOrder.patient | Observation.subject.where(resolve() is Patient) | Procedure.subject.where(resolve() is Patient) | RiskAssessment.subject.where(resolve() is Patient) | ServiceRequest.subject.where(resolve() is Patient) | SupplyDelivery.patient | VisionPrescription.patient",
+  [
+    {
+      "reference": "Patient/pat2",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 233`] = `
+[
+  "Composition.encounter | DeviceRequest.encounter | DiagnosticReport.encounter | DocumentReference.context.encounter | Flag.encounter | List.encounter | NutritionOrder.encounter | Observation.encounter | Procedure.encounter | RiskAssessment.encounter | ServiceRequest.encounter | VisionPrescription.encounter",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 234`] = `
+[
+  "Observation.basedOn",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 235`] = `
+[
+  "Observation.category",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 236`] = `
+[
+  "Observation.code | Observation.component.code",
+  [
+    {
+      "coding": [
+        {
+          "code": "742-7",
+          "display": "Monocytes [#/volume] in Blood by Automated count",
+          "system": "http://loinc.org",
+        },
+      ],
+      "text": "Monocytes",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 237`] = `
+[
+  "Observation.dataAbsentReason | Observation.component.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 238`] = `
+[
+  "(Observation.value.ofType(CodeableConcept)) | (Observation.component.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 239`] = `
+[
+  "(Observation.value.ofType(Quantity)) | (Observation.value.ofType(SampledData)) | (Observation.component.value.ofType(Quantity)) | (Observation.component.value.ofType(SampledData))",
+  [
+    {
+      "code": "10*9/L",
+      "system": "http://unitsofmeasure.org",
+      "unit": "x10*9/L",
+      "value": 0.9,
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 240`] = `
+[
+  "Observation.component.code",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 241`] = `
+[
+  "Observation.component.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 242`] = `
+[
+  "(Observation.component.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 243`] = `
+[
+  "(Observation.component.value.ofType(Quantity)) | (Observation.component.value.ofType(SampledData))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 244`] = `
+[
+  "Observation.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 245`] = `
+[
+  "Observation.derivedFrom",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 246`] = `
+[
+  "Observation.device",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 247`] = `
+[
+  "Observation.focus",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 248`] = `
+[
+  "Observation.hasMember",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 249`] = `
+[
+  "Observation.method",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 250`] = `
+[
+  "Observation.partOf",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 251`] = `
+[
+  "Observation.performer",
+  [
+    {
+      "display": "Acme Laboratory, Inc",
+      "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 252`] = `
+[
+  "Observation.specimen",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 253`] = `
+[
+  "Observation.status",
+  [
+    "final",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 254`] = `
+[
+  "Observation.subject",
+  [
+    {
+      "reference": "Patient/pat2",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 255`] = `
+[
+  "(Observation.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 256`] = `
+[
+  "(Observation.value.ofType(dateTime)) | (Observation.value.ofType(Period))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 257`] = `
+[
+  "(Observation.value.ofType(Quantity)) | (Observation.value.ofType(SampledData))",
+  [
+    {
+      "code": "10*9/L",
+      "system": "http://unitsofmeasure.org",
+      "unit": "x10*9/L",
+      "value": 0.9,
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 258`] = `
+[
+  "(Observation.value.ofType(string)) | (Observation.value.ofType(CodeableConcept)).text",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 259`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "742-7",
+            "display": "Monocytes [#/volume] in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Monocytes",
+      },
+      "id": "r13",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 1,
+          },
+          "low": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 0.2,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r13</p><p><b>status</b>: final</p><p><b>code</b>: Monocytes <span>(Details : {LOINC code '742-7' = 'Monocytes [#/volume] in Blood by Automated count', given as 'Monocytes [#/volume] in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 0.9 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>0.2 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td><td>1.0 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "10*9/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "x10*9/L",
+        "value": 0.9,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 260`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "742-7",
+            "display": "Monocytes [#/volume] in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Monocytes",
+      },
+      "id": "r13",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 1,
+          },
+          "low": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 0.2,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r13</p><p><b>status</b>: final</p><p><b>code</b>: Monocytes <span>(Details : {LOINC code '742-7' = 'Monocytes [#/volume] in Blood by Automated count', given as 'Monocytes [#/volume] in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 0.9 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>0.2 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td><td>1.0 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "10*9/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "x10*9/L",
+        "value": 0.9,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 261`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "742-7",
+            "display": "Monocytes [#/volume] in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Monocytes",
+      },
+      "id": "r13",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 1,
+          },
+          "low": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 0.2,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r13</p><p><b>status</b>: final</p><p><b>code</b>: Monocytes <span>(Details : {LOINC code '742-7' = 'Monocytes [#/volume] in Blood by Automated count', given as 'Monocytes [#/volume] in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 0.9 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>0.2 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td><td>1.0 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "10*9/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "x10*9/L",
+        "value": 0.9,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 262`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "742-7",
+            "display": "Monocytes [#/volume] in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Monocytes",
+      },
+      "id": "r13",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 1,
+          },
+          "low": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 0.2,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r13</p><p><b>status</b>: final</p><p><b>code</b>: Monocytes <span>(Details : {LOINC code '742-7' = 'Monocytes [#/volume] in Blood by Automated count', given as 'Monocytes [#/volume] in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 0.9 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>0.2 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td><td>1.0 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "10*9/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "x10*9/L",
+        "value": 0.9,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 263`] = `
+[
+  "Observation | Observation.component",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "742-7",
+            "display": "Monocytes [#/volume] in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Monocytes",
+      },
+      "id": "r13",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 1,
+          },
+          "low": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 0.2,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r13</p><p><b>status</b>: final</p><p><b>code</b>: Monocytes <span>(Details : {LOINC code '742-7' = 'Monocytes [#/volume] in Blood by Automated count', given as 'Monocytes [#/volume] in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 0.9 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>0.2 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td><td>1.0 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "10*9/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "x10*9/L",
+        "value": 0.9,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 264`] = `
+[
+  "Observation | Observation.component",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "742-7",
+            "display": "Monocytes [#/volume] in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Monocytes",
+      },
+      "id": "r13",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 1,
+          },
+          "low": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 0.2,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r13</p><p><b>status</b>: final</p><p><b>code</b>: Monocytes <span>(Details : {LOINC code '742-7' = 'Monocytes [#/volume] in Blood by Automated count', given as 'Monocytes [#/volume] in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 0.9 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>0.2 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td><td>1.0 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "10*9/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "x10*9/L",
+        "value": 0.9,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 265`] = `
+[
+  "Observation.component",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 266`] = `
+[
+  "Observation.component",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 267`] = `
+[
+  "AllergyIntolerance.code | AllergyIntolerance.reaction.substance | Condition.code | (DeviceRequest.code.ofType(CodeableConcept)) | DiagnosticReport.code | FamilyMemberHistory.condition.code | List.code | Medication.code | (MedicationAdministration.medication.ofType(CodeableConcept)) | (MedicationDispense.medication.ofType(CodeableConcept)) | (MedicationRequest.medication.ofType(CodeableConcept)) | (MedicationStatement.medication.ofType(CodeableConcept)) | Observation.code | Procedure.code | ServiceRequest.code",
+  [
+    {
+      "coding": [
+        {
+          "code": "713-8",
+          "display": "Eosinophils/100 leukocytes in Blood by Automated count",
+          "system": "http://loinc.org",
+        },
+      ],
+      "text": "Eosinophils",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 268`] = `
+[
+  "AllergyIntolerance.recordedDate | CarePlan.period | CareTeam.period | ClinicalImpression.date | Composition.date | Consent.dateTime | DiagnosticReport.effective | Encounter.period | EpisodeOfCare.period | FamilyMemberHistory.date | Flag.period | Immunization.occurrence | List.date | Observation.effective | Procedure.performed | (RiskAssessment.occurrence.ofType(dateTime)) | SupplyRequest.authoredOn",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 269`] = `
+[
+  "AllergyIntolerance.identifier | CarePlan.identifier | CareTeam.identifier | Composition.identifier | Condition.identifier | Consent.identifier | DetectedIssue.identifier | DeviceRequest.identifier | DiagnosticReport.identifier | DocumentManifest.masterIdentifier | DocumentManifest.identifier | DocumentReference.masterIdentifier | DocumentReference.identifier | Encounter.identifier | EpisodeOfCare.identifier | FamilyMemberHistory.identifier | Goal.identifier | ImagingStudy.identifier | Immunization.identifier | List.identifier | MedicationAdministration.identifier | MedicationDispense.identifier | MedicationRequest.identifier | MedicationStatement.identifier | NutritionOrder.identifier | Observation.identifier | Procedure.identifier | RiskAssessment.identifier | ServiceRequest.identifier | SupplyDelivery.identifier | SupplyRequest.identifier | VisionPrescription.identifier",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 270`] = `
+[
+  "AllergyIntolerance.patient | CarePlan.subject.where(resolve() is Patient) | CareTeam.subject.where(resolve() is Patient) | ClinicalImpression.subject.where(resolve() is Patient) | Composition.subject.where(resolve() is Patient) | Condition.subject.where(resolve() is Patient) | Consent.patient | DetectedIssue.patient | DeviceRequest.subject.where(resolve() is Patient) | DeviceUseStatement.subject | DiagnosticReport.subject.where(resolve() is Patient) | DocumentManifest.subject.where(resolve() is Patient) | DocumentReference.subject.where(resolve() is Patient) | Encounter.subject.where(resolve() is Patient) | EpisodeOfCare.patient | FamilyMemberHistory.patient | Flag.subject.where(resolve() is Patient) | Goal.subject.where(resolve() is Patient) | ImagingStudy.subject.where(resolve() is Patient) | Immunization.patient | List.subject.where(resolve() is Patient) | MedicationAdministration.subject.where(resolve() is Patient) | MedicationDispense.subject.where(resolve() is Patient) | MedicationRequest.subject.where(resolve() is Patient) | MedicationStatement.subject.where(resolve() is Patient) | NutritionOrder.patient | Observation.subject.where(resolve() is Patient) | Procedure.subject.where(resolve() is Patient) | RiskAssessment.subject.where(resolve() is Patient) | ServiceRequest.subject.where(resolve() is Patient) | SupplyDelivery.patient | VisionPrescription.patient",
+  [
+    {
+      "reference": "Patient/pat2",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 271`] = `
+[
+  "Composition.encounter | DeviceRequest.encounter | DiagnosticReport.encounter | DocumentReference.context.encounter | Flag.encounter | List.encounter | NutritionOrder.encounter | Observation.encounter | Procedure.encounter | RiskAssessment.encounter | ServiceRequest.encounter | VisionPrescription.encounter",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 272`] = `
+[
+  "Observation.basedOn",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 273`] = `
+[
+  "Observation.category",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 274`] = `
+[
+  "Observation.code | Observation.component.code",
+  [
+    {
+      "coding": [
+        {
+          "code": "713-8",
+          "display": "Eosinophils/100 leukocytes in Blood by Automated count",
+          "system": "http://loinc.org",
+        },
+      ],
+      "text": "Eosinophils",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 275`] = `
+[
+  "Observation.dataAbsentReason | Observation.component.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 276`] = `
+[
+  "(Observation.value.ofType(CodeableConcept)) | (Observation.component.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 277`] = `
+[
+  "(Observation.value.ofType(Quantity)) | (Observation.value.ofType(SampledData)) | (Observation.component.value.ofType(Quantity)) | (Observation.component.value.ofType(SampledData))",
+  [
+    {
+      "code": "%",
+      "system": "http://unitsofmeasure.org",
+      "unit": "%",
+      "value": 20,
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 278`] = `
+[
+  "Observation.component.code",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 279`] = `
+[
+  "Observation.component.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 280`] = `
+[
+  "(Observation.component.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 281`] = `
+[
+  "(Observation.component.value.ofType(Quantity)) | (Observation.component.value.ofType(SampledData))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 282`] = `
+[
+  "Observation.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 283`] = `
+[
+  "Observation.derivedFrom",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 284`] = `
+[
+  "Observation.device",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 285`] = `
+[
+  "Observation.focus",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 286`] = `
+[
+  "Observation.hasMember",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 287`] = `
+[
+  "Observation.method",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 288`] = `
+[
+  "Observation.partOf",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 289`] = `
+[
+  "Observation.performer",
+  [
+    {
+      "display": "Acme Laboratory, Inc",
+      "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 290`] = `
+[
+  "Observation.specimen",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 291`] = `
+[
+  "Observation.status",
+  [
+    "final",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 292`] = `
+[
+  "Observation.subject",
+  [
+    {
+      "reference": "Patient/pat2",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 293`] = `
+[
+  "(Observation.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 294`] = `
+[
+  "(Observation.value.ofType(dateTime)) | (Observation.value.ofType(Period))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 295`] = `
+[
+  "(Observation.value.ofType(Quantity)) | (Observation.value.ofType(SampledData))",
+  [
+    {
+      "code": "%",
+      "system": "http://unitsofmeasure.org",
+      "unit": "%",
+      "value": 20,
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 296`] = `
+[
+  "(Observation.value.ofType(string)) | (Observation.value.ofType(CodeableConcept)).text",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 297`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "713-8",
+            "display": "Eosinophils/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Eosinophils",
+      },
+      "id": "r14",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r14</p><p><b>status</b>: final</p><p><b>code</b>: Eosinophils <span>(Details : {LOINC code '713-8' = 'Eosinophils/100 leukocytes in Blood by Automated count', given as 'Eosinophils/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 298`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "713-8",
+            "display": "Eosinophils/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Eosinophils",
+      },
+      "id": "r14",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r14</p><p><b>status</b>: final</p><p><b>code</b>: Eosinophils <span>(Details : {LOINC code '713-8' = 'Eosinophils/100 leukocytes in Blood by Automated count', given as 'Eosinophils/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 299`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "713-8",
+            "display": "Eosinophils/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Eosinophils",
+      },
+      "id": "r14",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r14</p><p><b>status</b>: final</p><p><b>code</b>: Eosinophils <span>(Details : {LOINC code '713-8' = 'Eosinophils/100 leukocytes in Blood by Automated count', given as 'Eosinophils/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 300`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "713-8",
+            "display": "Eosinophils/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Eosinophils",
+      },
+      "id": "r14",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r14</p><p><b>status</b>: final</p><p><b>code</b>: Eosinophils <span>(Details : {LOINC code '713-8' = 'Eosinophils/100 leukocytes in Blood by Automated count', given as 'Eosinophils/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 301`] = `
+[
+  "Observation | Observation.component",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "713-8",
+            "display": "Eosinophils/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Eosinophils",
+      },
+      "id": "r14",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r14</p><p><b>status</b>: final</p><p><b>code</b>: Eosinophils <span>(Details : {LOINC code '713-8' = 'Eosinophils/100 leukocytes in Blood by Automated count', given as 'Eosinophils/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 302`] = `
+[
+  "Observation | Observation.component",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "713-8",
+            "display": "Eosinophils/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Eosinophils",
+      },
+      "id": "r14",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r14</p><p><b>status</b>: final</p><p><b>code</b>: Eosinophils <span>(Details : {LOINC code '713-8' = 'Eosinophils/100 leukocytes in Blood by Automated count', given as 'Eosinophils/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 303`] = `
+[
+  "Observation.component",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 304`] = `
+[
+  "Observation.component",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 305`] = `
+[
+  "AllergyIntolerance.code | AllergyIntolerance.reaction.substance | Condition.code | (DeviceRequest.code.ofType(CodeableConcept)) | DiagnosticReport.code | FamilyMemberHistory.condition.code | List.code | Medication.code | (MedicationAdministration.medication.ofType(CodeableConcept)) | (MedicationDispense.medication.ofType(CodeableConcept)) | (MedicationRequest.medication.ofType(CodeableConcept)) | (MedicationStatement.medication.ofType(CodeableConcept)) | Observation.code | Procedure.code | ServiceRequest.code",
+  [
+    {
+      "coding": [
+        {
+          "code": "711-2",
+          "display": "Eosinophils [#/volume] in Blood by Automated count",
+          "system": "http://loinc.org",
+        },
+      ],
+      "text": "Eosinophils",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 306`] = `
+[
+  "AllergyIntolerance.recordedDate | CarePlan.period | CareTeam.period | ClinicalImpression.date | Composition.date | Consent.dateTime | DiagnosticReport.effective | Encounter.period | EpisodeOfCare.period | FamilyMemberHistory.date | Flag.period | Immunization.occurrence | List.date | Observation.effective | Procedure.performed | (RiskAssessment.occurrence.ofType(dateTime)) | SupplyRequest.authoredOn",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 307`] = `
+[
+  "AllergyIntolerance.identifier | CarePlan.identifier | CareTeam.identifier | Composition.identifier | Condition.identifier | Consent.identifier | DetectedIssue.identifier | DeviceRequest.identifier | DiagnosticReport.identifier | DocumentManifest.masterIdentifier | DocumentManifest.identifier | DocumentReference.masterIdentifier | DocumentReference.identifier | Encounter.identifier | EpisodeOfCare.identifier | FamilyMemberHistory.identifier | Goal.identifier | ImagingStudy.identifier | Immunization.identifier | List.identifier | MedicationAdministration.identifier | MedicationDispense.identifier | MedicationRequest.identifier | MedicationStatement.identifier | NutritionOrder.identifier | Observation.identifier | Procedure.identifier | RiskAssessment.identifier | ServiceRequest.identifier | SupplyDelivery.identifier | SupplyRequest.identifier | VisionPrescription.identifier",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 308`] = `
+[
+  "AllergyIntolerance.patient | CarePlan.subject.where(resolve() is Patient) | CareTeam.subject.where(resolve() is Patient) | ClinicalImpression.subject.where(resolve() is Patient) | Composition.subject.where(resolve() is Patient) | Condition.subject.where(resolve() is Patient) | Consent.patient | DetectedIssue.patient | DeviceRequest.subject.where(resolve() is Patient) | DeviceUseStatement.subject | DiagnosticReport.subject.where(resolve() is Patient) | DocumentManifest.subject.where(resolve() is Patient) | DocumentReference.subject.where(resolve() is Patient) | Encounter.subject.where(resolve() is Patient) | EpisodeOfCare.patient | FamilyMemberHistory.patient | Flag.subject.where(resolve() is Patient) | Goal.subject.where(resolve() is Patient) | ImagingStudy.subject.where(resolve() is Patient) | Immunization.patient | List.subject.where(resolve() is Patient) | MedicationAdministration.subject.where(resolve() is Patient) | MedicationDispense.subject.where(resolve() is Patient) | MedicationRequest.subject.where(resolve() is Patient) | MedicationStatement.subject.where(resolve() is Patient) | NutritionOrder.patient | Observation.subject.where(resolve() is Patient) | Procedure.subject.where(resolve() is Patient) | RiskAssessment.subject.where(resolve() is Patient) | ServiceRequest.subject.where(resolve() is Patient) | SupplyDelivery.patient | VisionPrescription.patient",
+  [
+    {
+      "reference": "Patient/pat2",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 309`] = `
+[
+  "Composition.encounter | DeviceRequest.encounter | DiagnosticReport.encounter | DocumentReference.context.encounter | Flag.encounter | List.encounter | NutritionOrder.encounter | Observation.encounter | Procedure.encounter | RiskAssessment.encounter | ServiceRequest.encounter | VisionPrescription.encounter",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 310`] = `
+[
+  "Observation.basedOn",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 311`] = `
+[
+  "Observation.category",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 312`] = `
+[
+  "Observation.code | Observation.component.code",
+  [
+    {
+      "coding": [
+        {
+          "code": "711-2",
+          "display": "Eosinophils [#/volume] in Blood by Automated count",
+          "system": "http://loinc.org",
+        },
+      ],
+      "text": "Eosinophils",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 313`] = `
+[
+  "Observation.dataAbsentReason | Observation.component.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 314`] = `
+[
+  "(Observation.value.ofType(CodeableConcept)) | (Observation.component.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 315`] = `
+[
+  "(Observation.value.ofType(Quantity)) | (Observation.value.ofType(SampledData)) | (Observation.component.value.ofType(Quantity)) | (Observation.component.value.ofType(SampledData))",
+  [
+    {
+      "code": "10*9/L",
+      "system": "http://unitsofmeasure.org",
+      "unit": "x10*9/L",
+      "value": 0.92,
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 316`] = `
+[
+  "Observation.component.code",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 317`] = `
+[
+  "Observation.component.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 318`] = `
+[
+  "(Observation.component.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 319`] = `
+[
+  "(Observation.component.value.ofType(Quantity)) | (Observation.component.value.ofType(SampledData))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 320`] = `
+[
+  "Observation.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 321`] = `
+[
+  "Observation.derivedFrom",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 322`] = `
+[
+  "Observation.device",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 323`] = `
+[
+  "Observation.focus",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 324`] = `
+[
+  "Observation.hasMember",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 325`] = `
+[
+  "Observation.method",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 326`] = `
+[
+  "Observation.partOf",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 327`] = `
+[
+  "Observation.performer",
+  [
+    {
+      "display": "Acme Laboratory, Inc",
+      "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 328`] = `
+[
+  "Observation.specimen",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 329`] = `
+[
+  "Observation.status",
+  [
+    "final",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 330`] = `
+[
+  "Observation.subject",
+  [
+    {
+      "reference": "Patient/pat2",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 331`] = `
+[
+  "(Observation.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 332`] = `
+[
+  "(Observation.value.ofType(dateTime)) | (Observation.value.ofType(Period))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 333`] = `
+[
+  "(Observation.value.ofType(Quantity)) | (Observation.value.ofType(SampledData))",
+  [
+    {
+      "code": "10*9/L",
+      "system": "http://unitsofmeasure.org",
+      "unit": "x10*9/L",
+      "value": 0.92,
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 334`] = `
+[
+  "(Observation.value.ofType(string)) | (Observation.value.ofType(CodeableConcept)).text",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 335`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "711-2",
+            "display": "Eosinophils [#/volume] in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Eosinophils",
+      },
+      "id": "r15",
+      "interpretation": [
+        {
+          "coding": [
+            {
+              "code": "HH",
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+            },
+          ],
+        },
+      ],
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 0.4,
+          },
+          "low": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 0.04,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r15</p><p><b>status</b>: final</p><p><b>code</b>: Eosinophils <span>(Details : {LOINC code '711-2' = 'Eosinophils [#/volume] in Blood by Automated count', given as 'Eosinophils [#/volume] in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 0.92 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></p><p><b>interpretation</b>: Critical high <span>(Details : {http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation code 'HH' = 'Critical high)</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>0.04 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td><td>0.40 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "10*9/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "x10*9/L",
+        "value": 0.92,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 336`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "711-2",
+            "display": "Eosinophils [#/volume] in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Eosinophils",
+      },
+      "id": "r15",
+      "interpretation": [
+        {
+          "coding": [
+            {
+              "code": "HH",
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+            },
+          ],
+        },
+      ],
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 0.4,
+          },
+          "low": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 0.04,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r15</p><p><b>status</b>: final</p><p><b>code</b>: Eosinophils <span>(Details : {LOINC code '711-2' = 'Eosinophils [#/volume] in Blood by Automated count', given as 'Eosinophils [#/volume] in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 0.92 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></p><p><b>interpretation</b>: Critical high <span>(Details : {http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation code 'HH' = 'Critical high)</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>0.04 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td><td>0.40 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "10*9/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "x10*9/L",
+        "value": 0.92,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 337`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "711-2",
+            "display": "Eosinophils [#/volume] in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Eosinophils",
+      },
+      "id": "r15",
+      "interpretation": [
+        {
+          "coding": [
+            {
+              "code": "HH",
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+            },
+          ],
+        },
+      ],
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 0.4,
+          },
+          "low": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 0.04,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r15</p><p><b>status</b>: final</p><p><b>code</b>: Eosinophils <span>(Details : {LOINC code '711-2' = 'Eosinophils [#/volume] in Blood by Automated count', given as 'Eosinophils [#/volume] in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 0.92 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></p><p><b>interpretation</b>: Critical high <span>(Details : {http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation code 'HH' = 'Critical high)</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>0.04 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td><td>0.40 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "10*9/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "x10*9/L",
+        "value": 0.92,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 338`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "711-2",
+            "display": "Eosinophils [#/volume] in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Eosinophils",
+      },
+      "id": "r15",
+      "interpretation": [
+        {
+          "coding": [
+            {
+              "code": "HH",
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+            },
+          ],
+        },
+      ],
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 0.4,
+          },
+          "low": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 0.04,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r15</p><p><b>status</b>: final</p><p><b>code</b>: Eosinophils <span>(Details : {LOINC code '711-2' = 'Eosinophils [#/volume] in Blood by Automated count', given as 'Eosinophils [#/volume] in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 0.92 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></p><p><b>interpretation</b>: Critical high <span>(Details : {http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation code 'HH' = 'Critical high)</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>0.04 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td><td>0.40 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "10*9/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "x10*9/L",
+        "value": 0.92,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 339`] = `
+[
+  "Observation | Observation.component",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "711-2",
+            "display": "Eosinophils [#/volume] in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Eosinophils",
+      },
+      "id": "r15",
+      "interpretation": [
+        {
+          "coding": [
+            {
+              "code": "HH",
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+            },
+          ],
+        },
+      ],
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 0.4,
+          },
+          "low": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 0.04,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r15</p><p><b>status</b>: final</p><p><b>code</b>: Eosinophils <span>(Details : {LOINC code '711-2' = 'Eosinophils [#/volume] in Blood by Automated count', given as 'Eosinophils [#/volume] in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 0.92 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></p><p><b>interpretation</b>: Critical high <span>(Details : {http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation code 'HH' = 'Critical high)</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>0.04 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td><td>0.40 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "10*9/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "x10*9/L",
+        "value": 0.92,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 340`] = `
+[
+  "Observation | Observation.component",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "711-2",
+            "display": "Eosinophils [#/volume] in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Eosinophils",
+      },
+      "id": "r15",
+      "interpretation": [
+        {
+          "coding": [
+            {
+              "code": "HH",
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+            },
+          ],
+        },
+      ],
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "referenceRange": [
+        {
+          "high": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 0.4,
+          },
+          "low": {
+            "code": "10*9/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "x10*9/L",
+            "value": 0.04,
+          },
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r15</p><p><b>status</b>: final</p><p><b>code</b>: Eosinophils <span>(Details : {LOINC code '711-2' = 'Eosinophils [#/volume] in Blood by Automated count', given as 'Eosinophils [#/volume] in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 0.92 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></p><p><b>interpretation</b>: Critical high <span>(Details : {http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation code 'HH' = 'Critical high)</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>0.04 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td><td>0.40 x10*9/L<span> (Details: UCUM code 10*9/L = '10*9/L')</span></td></tr></table></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "10*9/L",
+        "system": "http://unitsofmeasure.org",
+        "unit": "x10*9/L",
+        "value": 0.92,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 341`] = `
+[
+  "Observation.component",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 342`] = `
+[
+  "Observation.component",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 343`] = `
+[
+  "AllergyIntolerance.code | AllergyIntolerance.reaction.substance | Condition.code | (DeviceRequest.code.ofType(CodeableConcept)) | DiagnosticReport.code | FamilyMemberHistory.condition.code | List.code | Medication.code | (MedicationAdministration.medication.ofType(CodeableConcept)) | (MedicationDispense.medication.ofType(CodeableConcept)) | (MedicationRequest.medication.ofType(CodeableConcept)) | (MedicationStatement.medication.ofType(CodeableConcept)) | Observation.code | Procedure.code | ServiceRequest.code",
+  [
+    {
+      "coding": [
+        {
+          "code": "706-2",
+          "display": "Basophils/100 leukocytes in Blood by Automated count",
+          "system": "http://loinc.org",
+        },
+      ],
+      "text": "Basophils",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 344`] = `
+[
+  "AllergyIntolerance.recordedDate | CarePlan.period | CareTeam.period | ClinicalImpression.date | Composition.date | Consent.dateTime | DiagnosticReport.effective | Encounter.period | EpisodeOfCare.period | FamilyMemberHistory.date | Flag.period | Immunization.occurrence | List.date | Observation.effective | Procedure.performed | (RiskAssessment.occurrence.ofType(dateTime)) | SupplyRequest.authoredOn",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 345`] = `
+[
+  "AllergyIntolerance.identifier | CarePlan.identifier | CareTeam.identifier | Composition.identifier | Condition.identifier | Consent.identifier | DetectedIssue.identifier | DeviceRequest.identifier | DiagnosticReport.identifier | DocumentManifest.masterIdentifier | DocumentManifest.identifier | DocumentReference.masterIdentifier | DocumentReference.identifier | Encounter.identifier | EpisodeOfCare.identifier | FamilyMemberHistory.identifier | Goal.identifier | ImagingStudy.identifier | Immunization.identifier | List.identifier | MedicationAdministration.identifier | MedicationDispense.identifier | MedicationRequest.identifier | MedicationStatement.identifier | NutritionOrder.identifier | Observation.identifier | Procedure.identifier | RiskAssessment.identifier | ServiceRequest.identifier | SupplyDelivery.identifier | SupplyRequest.identifier | VisionPrescription.identifier",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 346`] = `
+[
+  "AllergyIntolerance.patient | CarePlan.subject.where(resolve() is Patient) | CareTeam.subject.where(resolve() is Patient) | ClinicalImpression.subject.where(resolve() is Patient) | Composition.subject.where(resolve() is Patient) | Condition.subject.where(resolve() is Patient) | Consent.patient | DetectedIssue.patient | DeviceRequest.subject.where(resolve() is Patient) | DeviceUseStatement.subject | DiagnosticReport.subject.where(resolve() is Patient) | DocumentManifest.subject.where(resolve() is Patient) | DocumentReference.subject.where(resolve() is Patient) | Encounter.subject.where(resolve() is Patient) | EpisodeOfCare.patient | FamilyMemberHistory.patient | Flag.subject.where(resolve() is Patient) | Goal.subject.where(resolve() is Patient) | ImagingStudy.subject.where(resolve() is Patient) | Immunization.patient | List.subject.where(resolve() is Patient) | MedicationAdministration.subject.where(resolve() is Patient) | MedicationDispense.subject.where(resolve() is Patient) | MedicationRequest.subject.where(resolve() is Patient) | MedicationStatement.subject.where(resolve() is Patient) | NutritionOrder.patient | Observation.subject.where(resolve() is Patient) | Procedure.subject.where(resolve() is Patient) | RiskAssessment.subject.where(resolve() is Patient) | ServiceRequest.subject.where(resolve() is Patient) | SupplyDelivery.patient | VisionPrescription.patient",
+  [
+    {
+      "reference": "Patient/pat2",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 347`] = `
+[
+  "Composition.encounter | DeviceRequest.encounter | DiagnosticReport.encounter | DocumentReference.context.encounter | Flag.encounter | List.encounter | NutritionOrder.encounter | Observation.encounter | Procedure.encounter | RiskAssessment.encounter | ServiceRequest.encounter | VisionPrescription.encounter",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 348`] = `
+[
+  "Observation.basedOn",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 349`] = `
+[
+  "Observation.category",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 350`] = `
+[
+  "Observation.code | Observation.component.code",
+  [
+    {
+      "coding": [
+        {
+          "code": "706-2",
+          "display": "Basophils/100 leukocytes in Blood by Automated count",
+          "system": "http://loinc.org",
+        },
+      ],
+      "text": "Basophils",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 351`] = `
+[
+  "Observation.dataAbsentReason | Observation.component.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 352`] = `
+[
+  "(Observation.value.ofType(CodeableConcept)) | (Observation.component.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 353`] = `
+[
+  "(Observation.value.ofType(Quantity)) | (Observation.value.ofType(SampledData)) | (Observation.component.value.ofType(Quantity)) | (Observation.component.value.ofType(SampledData))",
+  [
+    {
+      "code": "%",
+      "system": "http://unitsofmeasure.org",
+      "unit": "%",
+      "value": 20,
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 354`] = `
+[
+  "Observation.component.code",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 355`] = `
+[
+  "Observation.component.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 356`] = `
+[
+  "(Observation.component.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 357`] = `
+[
+  "(Observation.component.value.ofType(Quantity)) | (Observation.component.value.ofType(SampledData))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 358`] = `
+[
+  "Observation.dataAbsentReason",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 359`] = `
+[
+  "Observation.derivedFrom",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 360`] = `
+[
+  "Observation.device",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 361`] = `
+[
+  "Observation.focus",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 362`] = `
+[
+  "Observation.hasMember",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 363`] = `
+[
+  "Observation.method",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 364`] = `
+[
+  "Observation.partOf",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 365`] = `
+[
+  "Observation.performer",
+  [
+    {
+      "display": "Acme Laboratory, Inc",
+      "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 366`] = `
+[
+  "Observation.specimen",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 367`] = `
+[
+  "Observation.status",
+  [
+    "final",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 368`] = `
+[
+  "Observation.subject",
+  [
+    {
+      "reference": "Patient/pat2",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 369`] = `
+[
+  "(Observation.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 370`] = `
+[
+  "(Observation.value.ofType(dateTime)) | (Observation.value.ofType(Period))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 371`] = `
+[
+  "(Observation.value.ofType(Quantity)) | (Observation.value.ofType(SampledData))",
+  [
+    {
+      "code": "%",
+      "system": "http://unitsofmeasure.org",
+      "unit": "%",
+      "value": 20,
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 372`] = `
+[
+  "(Observation.value.ofType(string)) | (Observation.value.ofType(CodeableConcept)).text",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 373`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "706-2",
+            "display": "Basophils/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Basophils",
+      },
+      "id": "r16",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r16</p><p><b>status</b>: final</p><p><b>code</b>: Basophils <span>(Details : {LOINC code '706-2' = 'Basophils/100 leukocytes in Blood by Automated count', given as 'Basophils/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 374`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "706-2",
+            "display": "Basophils/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Basophils",
+      },
+      "id": "r16",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r16</p><p><b>status</b>: final</p><p><b>code</b>: Basophils <span>(Details : {LOINC code '706-2' = 'Basophils/100 leukocytes in Blood by Automated count', given as 'Basophils/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 375`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "706-2",
+            "display": "Basophils/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Basophils",
+      },
+      "id": "r16",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r16</p><p><b>status</b>: final</p><p><b>code</b>: Basophils <span>(Details : {LOINC code '706-2' = 'Basophils/100 leukocytes in Blood by Automated count', given as 'Basophils/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 376`] = `
+[
+  "Observation",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "706-2",
+            "display": "Basophils/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Basophils",
+      },
+      "id": "r16",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r16</p><p><b>status</b>: final</p><p><b>code</b>: Basophils <span>(Details : {LOINC code '706-2' = 'Basophils/100 leukocytes in Blood by Automated count', given as 'Basophils/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 377`] = `
+[
+  "Observation | Observation.component",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "706-2",
+            "display": "Basophils/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Basophils",
+      },
+      "id": "r16",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r16</p><p><b>status</b>: final</p><p><b>code</b>: Basophils <span>(Details : {LOINC code '706-2' = 'Basophils/100 leukocytes in Blood by Automated count', given as 'Basophils/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 378`] = `
+[
+  "Observation | Observation.component",
+  [
+    {
+      "code": {
+        "coding": [
+          {
+            "code": "706-2",
+            "display": "Basophils/100 leukocytes in Blood by Automated count",
+            "system": "http://loinc.org",
+          },
+        ],
+        "text": "Basophils",
+      },
+      "id": "r16",
+      "performer": [
+        {
+          "display": "Acme Laboratory, Inc",
+          "reference": "Organization/1832473e-2fe0-452d-abe9-3cdb9879522f",
+        },
+      ],
+      "resourceType": "Observation",
+      "status": "final",
+      "subject": {
+        "reference": "Patient/pat2",
+      },
+      "text": {
+        "div": "<div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: r16</p><p><b>status</b>: final</p><p><b>code</b>: Basophils <span>(Details : {LOINC code '706-2' = 'Basophils/100 leukocytes in Blood by Automated count', given as 'Basophils/100 leukocytes in Blood by Automated count'})</span></p><p><b>subject</b>: <a>Patient/pat2</a></p><p><b>performer</b>: <a>Acme Laboratory, Inc</a></p><p><b>value</b>: 20 %<span> (Details: UCUM code % = '%')</span></p></div>",
+        "status": "generated",
+      },
+      "valueQuantity": {
+        "code": "%",
+        "system": "http://unitsofmeasure.org",
+        "unit": "%",
+        "value": 20,
+      },
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 379`] = `
+[
+  "Observation.component",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Observation' 380`] = `
+[
+  "Observation.component",
+  [],
+]
+`;
+
 exports[`Testing indexing resourceType 'OperationDefinition' 1`] = `
 [
   "(CapabilityStatement.useContext.value.ofType(CodeableConcept)) | (CodeSystem.useContext.value.ofType(CodeableConcept)) | (CompartmentDefinition.useContext.value.ofType(CodeableConcept)) | (ConceptMap.useContext.value.ofType(CodeableConcept)) | (GraphDefinition.useContext.value.ofType(CodeableConcept)) | (ImplementationGuide.useContext.value.ofType(CodeableConcept)) | (MessageDefinition.useContext.value.ofType(CodeableConcept)) | (NamingSystem.useContext.value.ofType(CodeableConcept)) | (OperationDefinition.useContext.value.ofType(CodeableConcept)) | (SearchParameter.useContext.value.ofType(CodeableConcept)) | (StructureDefinition.useContext.value.ofType(CodeableConcept)) | (StructureMap.useContext.value.ofType(CodeableConcept)) | (TerminologyCapabilities.useContext.value.ofType(CodeableConcept)) | (ValueSet.useContext.value.ofType(CodeableConcept))",
@@ -17248,151 +21964,6 @@ exports[`Testing indexing resourceType 'Questionnaire' 18`] = `
 `;
 
 exports[`Testing indexing resourceType 'Questionnaire' 19`] = `
-[
-  "Questionnaire.useContext",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'Questionnaire' 20`] = `
-[
-  "Questionnaire.item.code",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'Questionnaire' 21`] = `
-[
-  "(Questionnaire.useContext.value.ofType(CodeableConcept))",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'Questionnaire' 22`] = `
-[
-  "(Questionnaire.useContext.value.ofType(Quantity)) | (Questionnaire.useContext.value.ofType(Range))",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'Questionnaire' 23`] = `
-[
-  "Questionnaire.useContext.code",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'Questionnaire' 24`] = `
-[
-  "Questionnaire.date",
-  [
-    "2019-02-21T15:59:19+11:00",
-  ],
-]
-`;
-
-exports[`Testing indexing resourceType 'Questionnaire' 25`] = `
-[
-  "Questionnaire.item.definition",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'Questionnaire' 26`] = `
-[
-  "Questionnaire.description",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'Questionnaire' 27`] = `
-[
-  "Questionnaire.effectivePeriod",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'Questionnaire' 28`] = `
-[
-  "Questionnaire.identifier",
-  [
-    {
-      "system": "urn:ietf:rfc:3986",
-    },
-  ],
-]
-`;
-
-exports[`Testing indexing resourceType 'Questionnaire' 29`] = `
-[
-  "Questionnaire.jurisdiction",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'Questionnaire' 30`] = `
-[
-  "Questionnaire.name",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'Questionnaire' 31`] = `
-[
-  "Questionnaire.publisher",
-  [
-    "Health Level Seven International (FHIR Infrastructure)",
-  ],
-]
-`;
-
-exports[`Testing indexing resourceType 'Questionnaire' 32`] = `
-[
-  "Questionnaire.status",
-  [
-    "active",
-  ],
-]
-`;
-
-exports[`Testing indexing resourceType 'Questionnaire' 33`] = `
-[
-  "Questionnaire.subjectType",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'Questionnaire' 34`] = `
-[
-  "Questionnaire.title",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'Questionnaire' 35`] = `
-[
-  "Questionnaire.url",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'Questionnaire' 36`] = `
-[
-  "Questionnaire.version",
-  [
-    "4.0.0",
-  ],
-]
-`;
-
-exports[`Testing indexing resourceType 'Questionnaire' 37`] = `
-[
-  "Questionnaire.useContext",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'Questionnaire' 38`] = `
 [
   "Questionnaire.useContext",
   [],
