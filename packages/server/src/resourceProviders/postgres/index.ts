@@ -1243,11 +1243,15 @@ async function executeSearchQuery(
   // Afterwards check that the latest version is not deleted.
   queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC) as latest_resources where latest_resources.deleted = false `;
 
-  // console.log(
-  //   values.reduce((queryText, value, index) => {
-  //     return queryText.replace(`$${index + 1}`, `'${value}'`);
-  //   }, queryText)
-  // );
+  if (process.env.LOG_SQL) {
+    console.log(
+      values.reduce((queryText, value, index) => {
+        return queryText.replace(`$${index + 1}`, `'${value}'`);
+      }, queryText)
+    );
+  }
+
+  const sortBy = parametersResult.find((p) => p.name === "_sort");
 
   const countParam = parametersResult.find((p) => p.name === "_count");
   const offsetParam = parametersResult.find((p) => p.name === "_offset");
