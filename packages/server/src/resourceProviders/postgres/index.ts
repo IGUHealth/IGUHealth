@@ -1266,8 +1266,8 @@ async function applySorts(
       const table = searchParameterToTableName(parameter);
       const sort_table_name = `sort_${sortOrder}`;
       const column_name = getParameterSortColumn(direction, parameter);
-      const query = ` LEFT JOIN (SELECT r_id, ${column_name} as ${sort_table_name} FROM ${table} where parameter_url=$${index++}) as ${sort_table_name} on ${sort_table_name}.r_id = ${resourceQueryAlias}.id`;
-      values = [...values, parameter.url];
+      const query = ` LEFT JOIN (SELECT r_id, ${column_name} as ${sort_table_name} FROM ${table} where workspace = $${index++} AND parameter_url=$${index++}) as ${sort_table_name} on ${sort_table_name}.r_id = ${resourceQueryAlias}.id`;
+      values = [...values, ctx.workspace, parameter.url];
 
       return query;
     }
