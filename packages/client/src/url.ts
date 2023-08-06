@@ -1,3 +1,5 @@
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+
 export type ParsedParameter<T> = {
   name: string;
   value: T[];
@@ -11,7 +13,10 @@ export type ParsedParameter<T> = {
 export default function parseParameters(
   url: string
 ): ParsedParameter<string | number>[] {
-  const [_, queryParams] = url.split("?");
+  const chunks = url.split("?");
+  if (chunks.length > 2)
+    throw new OperationError(outcomeError("invalid", "Invalid query string"));
+  const [_, queryParams] = chunks;
   const parameters = !queryParams
     ? {}
     : queryParams

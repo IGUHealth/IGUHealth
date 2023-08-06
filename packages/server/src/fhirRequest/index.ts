@@ -46,14 +46,6 @@ history-type	      /[type]/_history	                  GET	N/A	N/A	N/A	N/A
 history-instance	  /[type]/[id]/_history	              GET	N/A	N/A	N/A	N/A
 
 vread            	  /[type]/[id]/_history/[vid]	        GET‡	N/A	N/A	N/A	N/A
-
-
-
-
-
-
-
-
  -----------------------------------------------------------------------------------------------------------------
 */
 
