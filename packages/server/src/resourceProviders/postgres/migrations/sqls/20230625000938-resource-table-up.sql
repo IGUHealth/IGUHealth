@@ -44,7 +44,7 @@ CREATE FUNCTION proc_update_resource_meta() RETURNS trigger AS $proc_update_reso
         END IF;
 	
         NEW.resource := jsonb_set(NEW.resource, '{meta,versionId}',   to_jsonb(CAST(NEW.version_id as TEXT)));
-	NEW.resource := jsonb_set(NEW.resource, '{meta,lastUpdated}', to_jsonb(generate_fhir_instant_string(NEW.created_at)));
+	    NEW.resource := jsonb_set(NEW.resource, '{meta,lastUpdated}', to_jsonb(generate_fhir_instant_string(NEW.created_at)));
         RETURN NEW;
     END;
 $proc_update_resource_meta$ LANGUAGE plpgsql;

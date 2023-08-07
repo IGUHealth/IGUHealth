@@ -371,6 +371,15 @@ function toDateRange(
 
 type QuantityIndex = Omit<Quantity, "value"> & { value?: number | string };
 
+// Number and quantity dependent on the precision for indexing.
+function getRange(value: number): { start: number; end: number } {
+  const decimalPrecision = value.toString().split(".")[1]?.length || 0;
+  return {
+    start: value - 0.5 * 10 ** -decimalPrecision,
+    end: value + 0.5 * 10 ** -decimalPrecision,
+  };
+}
+
 function toQuantityRange(
   value: MetaValueSingular<NonNullable<unknown>>
 ): { start?: QuantityIndex; end?: QuantityIndex }[] {
@@ -396,17 +405,16 @@ function toQuantityRange(
       // using decimalprecision subtract .5 of  decimal precision to get lower bound
       // and add .5 of decimal precision to get upper bound
       if (quantity.value) {
-        const decimalPrecision =
-          quantity.value?.toString().split(".")[1]?.length || 0;
+        const range = getRange(quantity.value);
         return [
           {
             start: {
               ...quantity,
-              value: quantity.value - 0.5 * 10 ** -decimalPrecision,
+              value: range.start,
             },
             end: {
               ...quantity,
-              value: quantity.value + 0.5 * 10 ** -decimalPrecision,
+              value: range.end,
             },
           },
         ];
@@ -870,11 +878,32 @@ function buildParameterSQL(
     }
     case "uri":
     case "number":
-    case "string": {
       parameterClause = parameter.value
         .map((value) => `value = $${index++}`)
         .join(" OR ");
       values = [...values, ...parameter.value];
+      break;
+    case "string": {
+      switch (parameter.modifier) {
+        case "exact":
+          parameterClause = parameter.value
+            .map((value) => `value = $${index++}`)
+            .join(" OR ");
+          values = [...values, ...parameter.value];
+          break;
+        case "contains":
+          parameterClause = parameter.value
+            .map((value) => `value ilike $${index++}`)
+            .join(" OR ");
+          values = [...values, ...parameter.value.map((v) => `%${v}%`)];
+          break;
+        default:
+          parameterClause = parameter.value
+            .map((value) => `value ilike $${index++}`)
+            .join(" OR ");
+          values = [...values, ...parameter.value.map((v) => `${v}%`)];
+          break;
+      }
       break;
     }
     case "reference": {
@@ -1207,7 +1236,7 @@ function getParameterSortColumn(
   return `${direction === "descending" ? "-" : ""}${parameter.name}`;
 }
 
-async function applySorts(
+async function deriveSortQuery(
   ctx: FHIRServerCTX,
   resourceTypes: ResourceType[],
   sortParameter: SearchParameterResult,
@@ -1350,20 +1379,6 @@ async function executeSearchQuery(
   queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC) as latest_resources where latest_resources.deleted = false `;
 
   const sortBy = parametersResult.find((p) => p.name === "_sort");
-  if (sortBy) {
-    const sorts = await applySorts(
-      ctx,
-      request.level === "type" ? [request.resourceType as ResourceType] : [],
-      sortBy,
-      queryText,
-      index,
-      values
-    );
-    queryText = sorts.query;
-    index = sorts.index;
-    values = sorts.values;
-  }
-
   const countParam = parametersResult.find((p) => p.name === "_count");
   const offsetParam = parametersResult.find((p) => p.name === "_offset");
   const totalParam = parametersResult.find((p) => p.name === "_total");
@@ -1397,18 +1412,35 @@ async function executeSearchQuery(
     );
   }
 
+  // Placing total before sort clauses for perf.
+  const total = await calculateTotal(
+    client,
+    totalParam?.value[0] || "none",
+    queryText,
+    values
+  );
+
+  if (sortBy) {
+    const res = await deriveSortQuery(
+      ctx,
+      request.level === "type" ? [request.resourceType as ResourceType] : [],
+      sortBy,
+      queryText,
+      index,
+      values
+    );
+    queryText = res.query;
+    index = res.index;
+    values = res.values;
+  }
+
   const res = await client.query(
     `${queryText} LIMIT $${index++} OFFSET $${index++}`,
     [...values, limit, offset]
   );
 
   return {
-    total: await calculateTotal(
-      client,
-      totalParam?.value[0] || "none",
-      queryText,
-      values
-    ),
+    total,
     resources: res.rows.map((row) => row.resource) as Resource[],
   };
 }
