@@ -1236,7 +1236,7 @@ function getParameterSortColumn(
   return `${direction === "descending" ? "-" : ""}${parameter.name}`;
 }
 
-async function applySorts(
+async function deriveSortQuery(
   ctx: FHIRServerCTX,
   resourceTypes: ResourceType[],
   sortParameter: SearchParameterResult,
@@ -1379,20 +1379,6 @@ async function executeSearchQuery(
   queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC) as latest_resources where latest_resources.deleted = false `;
 
   const sortBy = parametersResult.find((p) => p.name === "_sort");
-  if (sortBy) {
-    const sorts = await applySorts(
-      ctx,
-      request.level === "type" ? [request.resourceType as ResourceType] : [],
-      sortBy,
-      queryText,
-      index,
-      values
-    );
-    queryText = sorts.query;
-    index = sorts.index;
-    values = sorts.values;
-  }
-
   const countParam = parametersResult.find((p) => p.name === "_count");
   const offsetParam = parametersResult.find((p) => p.name === "_offset");
   const totalParam = parametersResult.find((p) => p.name === "_total");
@@ -1426,18 +1412,35 @@ async function executeSearchQuery(
     );
   }
 
+  // Placing total before sort clauses for perf.
+  const total = await calculateTotal(
+    client,
+    totalParam?.value[0] || "none",
+    queryText,
+    values
+  );
+
+  if (sortBy) {
+    const res = await deriveSortQuery(
+      ctx,
+      request.level === "type" ? [request.resourceType as ResourceType] : [],
+      sortBy,
+      queryText,
+      index,
+      values
+    );
+    queryText = res.query;
+    index = res.index;
+    values = res.values;
+  }
+
   const res = await client.query(
     `${queryText} LIMIT $${index++} OFFSET $${index++}`,
     [...values, limit, offset]
   );
 
   return {
-    total: await calculateTotal(
-      client,
-      totalParam?.value[0] || "none",
-      queryText,
-      values
-    ),
+    total,
     resources: res.rows.map((row) => row.resource) as Resource[],
   };
 }
