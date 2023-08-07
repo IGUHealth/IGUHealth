@@ -1267,7 +1267,7 @@ async function applySorts(
       const sort_table_name = `sort_${sortOrder}`;
       const column_name = getParameterSortColumn(direction, parameter);
       const query = ` LEFT JOIN 
-      (SELECT r_id, MAX(${column_name}) AS ${sort_table_name} FROM ${table} WHERE workspace = $${index++} AND parameter_url=$${index++} GROUP BY r_id)
+      (SELECT r_id, MIN(${column_name}) AS ${sort_table_name} FROM ${table} WHERE workspace = $${index++} AND parameter_url=$${index++} GROUP BY r_id)
       AS ${sort_table_name} 
       ON ${sort_table_name}.r_id = ${resourceQueryAlias}.id`;
       values = [...values, ctx.workspace, parameter.url];
