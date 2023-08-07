@@ -47,7 +47,11 @@ function createFHIRServer() {
           const resourceType =
             request.type === "invoke-request"
               ? "Parameters"
+              : request.type === "transaction-request" ||
+                request.type === "batch-request"
+              ? "Bundle"
               : request.body.resourceType;
+
           const issues = validate(
             (type) => {
               const sd = ctx.resolveSD(ctx, type);

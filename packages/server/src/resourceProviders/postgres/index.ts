@@ -761,6 +761,10 @@ type SearchParameterResult = ParsedParameter<string | number> & {
 
 type ParameterType = SearchParameterResource | SearchParameterResult;
 
+function searchParameterToTableName(searchParameter: SearchParameter) {
+  return `${searchParameter.type}_idx`;
+}
+
 function buildParameterSQL(
   ctx: FHIRServerCTX,
   parameter: SearchParameterResource,
@@ -769,7 +773,7 @@ function buildParameterSQL(
   columns: string[] = ["DISTINCT(r_version_id)"]
 ): { index: number; query: string; values: any[] } {
   const searchParameter = parameter.searchParameter;
-  const search_table = `${searchParameter.type}_idx`;
+  const search_table = searchParameterToTableName(searchParameter);
 
   const rootSelect = `SELECT ${columns.join(
     ", "
@@ -1108,8 +1112,8 @@ function isSearchResultParameter(parameter: ParsedParameter<string | number>) {
     // _offset not in param results so adding here.
     case "_offset":
     case "_total":
-      return true;
     case "_sort":
+      return true;
     case "_include":
     case "_revinclude":
     case "_summary":
@@ -1184,6 +1188,108 @@ async function paramWithMeta<CTX extends FHIRServerCTX>(
   return result;
 }
 
+type SORT_DIRECTION = "ascending" | "descending";
+
+function getParameterSortColumn(
+  direction: SORT_DIRECTION,
+  parameter: SearchParameter
+): string {
+  switch (parameter.type) {
+    case "quantity":
+      return direction === "ascending" ? "end_value" : "start_value";
+    case "date":
+      return direction === "ascending" ? "end_date" : "start_date";
+    case "reference":
+      return "reference_id";
+    default:
+      return "value";
+  }
+  return `${direction === "descending" ? "-" : ""}${parameter.name}`;
+}
+
+async function applySorts(
+  ctx: FHIRServerCTX,
+  resourceTypes: ResourceType[],
+  sortParameter: SearchParameterResult,
+  query: string,
+  index: number,
+  values: any[]
+) {
+  const sortInformation = await Promise.all(
+    sortParameter.value.map(
+      async (
+        paramName
+      ): Promise<{
+        direction: SORT_DIRECTION;
+        parameter: SearchParameter;
+      }> => {
+        let direction: SORT_DIRECTION = "ascending";
+        if (paramName.toString().startsWith("-")) {
+          paramName = paramName.toString().substring(1);
+          direction = "descending";
+        }
+        const searchParameter = await ctx.client.search_type(
+          ctx,
+          "SearchParameter",
+          [
+            { name: "name", value: [paramName] },
+            {
+              name: "type",
+              value: param_types_supported,
+            },
+            {
+              name: "base",
+              value: searchResources(resourceTypes),
+            },
+          ]
+        );
+        if (searchParameter.resources.length === 0)
+          throw new OperationError(
+            outcomeError(
+              "not-found",
+              `SearchParameter with name '${paramName}' not found.`
+            )
+          );
+        return {
+          direction,
+          parameter: searchParameter.resources[0],
+        };
+      }
+    )
+  );
+
+  const resourceQueryAlias = "resource_result";
+
+  // Need to create LEFT JOINS on the queries so we can orderby postgres.
+  const sortQueries = sortInformation.map(
+    ({ direction, parameter }, sortOrder: number) => {
+      const table = searchParameterToTableName(parameter);
+      const sort_table_name = `sort_${sortOrder}`;
+      const column_name = getParameterSortColumn(direction, parameter);
+      const query = ` LEFT JOIN 
+      (SELECT r_id, MIN(${column_name}) AS ${sort_table_name} FROM ${table} WHERE workspace = $${index++} AND parameter_url=$${index++} GROUP BY r_id)
+      AS ${sort_table_name} 
+      ON ${sort_table_name}.r_id = ${resourceQueryAlias}.id`;
+      values = [...values, ctx.workspace, parameter.url];
+
+      return query;
+    }
+  );
+
+  const sortQuery = `
+  SELECT * FROM (
+    (${query}) as ${resourceQueryAlias} ${sortQueries.join("\n")}
+  )
+  ORDER BY ${sortInformation
+    .map(
+      ({ direction }, i) =>
+        `sort_${i} ${direction === "ascending" ? "ASC" : "DESC"} `
+    )
+    .join(",")}`;
+
+  return { query: sortQuery, index, values };
+}
+
 async function executeSearchQuery(
   client: pg.Client,
   request: SystemSearchRequest | TypeSearchRequest,
@@ -1218,7 +1324,7 @@ async function executeSearchQuery(
   values = [...values, ctx.workspace];
   let queryText = `
   SELECT * FROM (
-     SELECT DISTINCT ON (resources.id) resources.resource, deleted
+     SELECT DISTINCT ON (resources.id) resources.id, resources.resource, deleted
      
      FROM resources 
      ${parameterQuery.queries
@@ -1243,11 +1349,20 @@ async function executeSearchQuery(
   // Afterwards check that the latest version is not deleted.
   queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC) as latest_resources where latest_resources.deleted = false `;
 
-  // console.log(
-  //   values.reduce((queryText, value, index) => {
-  //     return queryText.replace(`$${index + 1}`, `'${value}'`);
-  //   }, queryText)
-  // );
+  const sortBy = parametersResult.find((p) => p.name === "_sort");
+  if (sortBy) {
+    const sorts = await applySorts(
+      ctx,
+      request.level === "type" ? [request.resourceType as ResourceType] : [],
+      sortBy,
+      queryText,
+      index,
+      values
+    );
+    queryText = sorts.query;
+    index = sorts.index;
+    values = sorts.values;
+  }
 
   const countParam = parametersResult.find((p) => p.name === "_count");
   const offsetParam = parametersResult.find((p) => p.name === "_offset");
@@ -1273,6 +1388,14 @@ async function executeSearchQuery(
           0
         )
       : 0;
+
+  if (process.env.LOG_SQL) {
+    console.log(
+      values.reduce((queryText, value, index) => {
+        return queryText.replace(`$${index + 1}`, `'${value}'`);
+      }, queryText)
+    );
+  }
 
   const res = await client.query(
     `${queryText} LIMIT $${index++} OFFSET $${index++}`,

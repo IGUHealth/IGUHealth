@@ -12,7 +12,7 @@ import HTTPClient from "@iguhealth/client/lib/http/index.js";
 import { evaluate } from "@iguhealth/fhirpath";
 
 const client = HTTPClient({
-  url: "http://localhost:3000/w/1704fc63-dd53-4d6c-8435-1a4b83ba27f7/api/v1/fhir/r4",
+  url: "http://localhost:3000/w/1704fc63-dd53-4d6c-8435-1a4b83ba27f1/api/v1/fhir/r4",
   token: "blah",
 });
 
@@ -137,22 +137,6 @@ const observation: Observation = {
   },
   issued: "2013-04-03T15:30:10+01:00",
   status: "final",
-  //   _status: {
-  //     id: "1",
-  //     extension: [
-  //       {
-  //         url: "whatever",
-  //         valueString: "testing",
-  //         _valueString: {
-  //           extension: [
-  //             {
-  //               url: "asdf",
-  //             },
-  //           ],
-  //         },
-  //       },
-  //     ],
-  //   },
   identifier: [
     {
       use: "official",
@@ -352,6 +336,104 @@ test("test total accurate", async () => {
       { name: "_total", value: ["accurate"] },
     ]);
     expect(observationSearch1.total).toEqual(10);
+  } finally {
+    await Promise.all(
+      resources.map(async ({ resourceType, id }) => {
+        return await client.delete({}, resourceType, id as string);
+      })
+    );
+  }
+});
+
+test("Test sort ", async () => {
+  const resources: Resource[] = [];
+  try {
+    for (let i = 0; i < 10; i++) {
+      const patientResponse = await client.create(
+        {},
+        {
+          resourceType: "Patient",
+          name: [
+            {
+              given: [String.fromCharCode(65 + i)],
+              family: String.fromCharCode(65 + i),
+            },
+          ],
+        }
+      );
+      const patientResponse2 = await client.create(
+        {},
+        {
+          resourceType: "Patient",
+          name: [
+            {
+              given: [String.fromCharCode(65 + i)],
+              family: String.fromCharCode(65 + i + 1),
+            },
+          ],
+        }
+      );
+      resources.push(patientResponse);
+      resources.push(patientResponse2);
+    }
+
+    const patientSearch = await client.search_type({}, "Patient", [
+      { name: "_sort", value: ["name"] },
+    ]);
+
+    expect(
+      patientSearch.resources.map((v) => evaluate("$this.name.given", v)[0])[0]
+    ).toEqual("A");
+
+    const patientSearch2 = await client.search_type({}, "Patient", [
+      { name: "_sort", value: ["-name"] },
+    ]);
+
+    expect(
+      patientSearch2.resources.map((v) => evaluate("$this.name.given", v)[0])[0]
+    ).toEqual("J");
+
+    const mutliSort1 = await client.search_type({}, "Patient", [
+      { name: "_sort", value: ["-name", "-family"] },
+    ]);
+
+    const resmultiSort1 = mutliSort1.resources.map(
+      (v) => evaluate("$this.name.family", v)[0]
+    );
+
+    expect([resmultiSort1[0], resmultiSort1[1]]).toEqual(["K", "J"]);
+
+    const mutliSort2 = await client.search_type({}, "Patient", [
+      { name: "_sort", value: ["name", "-family"] },
+    ]);
+
+    const resmutliSort2 = mutliSort2.resources.map((v) => [
+      evaluate("$this.name.given", v)[0],
+      evaluate("$this.name.family", v)[0],
+    ]);
+
+    expect(resmutliSort2).toEqual([
+      ["A", "B"],
+      ["A", "A"],
+      ["B", "C"],
+      ["B", "B"],
+      ["C", "D"],
+      ["C", "C"],
+      ["D", "E"],
+      ["D", "D"],
+      ["E", "F"],
+      ["E", "E"],
+      ["F", "G"],
+      ["F", "F"],
+      ["G", "H"],
+      ["G", "G"],
+      ["H", "I"],
+      ["H", "H"],
+      ["I", "J"],
+      ["I", "I"],
+      ["J", "K"],
+      ["J", "J"],
+    ]);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
