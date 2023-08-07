@@ -12,7 +12,7 @@ import HTTPClient from "@iguhealth/client/lib/http/index.js";
 import { evaluate } from "@iguhealth/fhirpath";
 
 const client = HTTPClient({
-  url: "http://localhost:3000/w/1704fc63-dd53-4d6c-8435-1a4b83ba27f2/api/v1/fhir/r4",
+  url: "http://localhost:3000/w/1704fc63-dd53-4d6c-8435-1a4b83ba27f1/api/v1/fhir/r4",
   token: "blah",
 });
 
@@ -137,22 +137,6 @@ const observation: Observation = {
   },
   issued: "2013-04-03T15:30:10+01:00",
   status: "final",
-  //   _status: {
-  //     id: "1",
-  //     extension: [
-  //       {
-  //         url: "whatever",
-  //         valueString: "testing",
-  //         _valueString: {
-  //           extension: [
-  //             {
-  //               url: "asdf",
-  //             },
-  //           ],
-  //         },
-  //       },
-  //     ],
-  //   },
   identifier: [
     {
       use: "official",
@@ -420,12 +404,36 @@ test("Test sort ", async () => {
     expect([resmultiSort1[0], resmultiSort1[1]]).toEqual(["K", "J"]);
 
     const mutliSort2 = await client.search_type({}, "Patient", [
-      { name: "_sort", value: ["-name", "family"] },
+      { name: "_sort", value: ["name", "-family"] },
     ]);
-    const resmutliSort2 = patientSearch.resources.map(
-      (v) => evaluate("$this.name.family", v)[0]
-    );
-    expect([resmutliSort2[0], resmutliSort2[1]]).toEqual(["A", "B"]);
+
+    const resmutliSort2 = mutliSort2.resources.map((v) => [
+      evaluate("$this.name.given", v)[0],
+      evaluate("$this.name.family", v)[0],
+    ]);
+
+    expect(resmutliSort2).toEqual([
+      ["A", "B"],
+      ["A", "A"],
+      ["B", "C"],
+      ["B", "B"],
+      ["C", "D"],
+      ["C", "C"],
+      ["D", "E"],
+      ["D", "D"],
+      ["E", "F"],
+      ["E", "E"],
+      ["F", "G"],
+      ["F", "F"],
+      ["G", "H"],
+      ["G", "G"],
+      ["H", "I"],
+      ["H", "H"],
+      ["I", "J"],
+      ["I", "I"],
+      ["J", "K"],
+      ["J", "J"],
+    ]);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
