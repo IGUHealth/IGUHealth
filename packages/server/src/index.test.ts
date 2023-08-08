@@ -6,6 +6,7 @@ import {
   Practitioner,
   Resource,
   ResourceType,
+  RiskAssessment,
 } from "@iguhealth/fhir-types";
 
 import HTTPClient from "@iguhealth/client/lib/http/index.js";
@@ -510,6 +511,47 @@ test("Testing custom extension added to resources", async () => {
         "https://test.com",
       ].sort()
     );
+  } finally {
+    await Promise.all(
+      resources.map(async ({ resourceType, id }) => {
+        return await client.delete({}, resourceType, id as string);
+      })
+    );
+  }
+});
+
+test("Number range", async () => {
+  const resources: Resource[] = [];
+  try {
+    const RiskAssessment: RiskAssessment = await client.create(
+      {},
+      {
+        status: "final",
+        subject: {
+          reference: "Patient/b248b1b2-1686-4b94-9936-37d7a5f94b51",
+        },
+        prediction: [
+          {
+            probabilityDecimal: 1.1327,
+          },
+        ],
+        resourceType: "RiskAssessment",
+        occurrenceDateTime: "2006-01-13T23:01:00Z",
+      }
+    );
+    resources.push(RiskAssessment);
+
+    const searchLow = await client.search_type({}, "RiskAssessment", [
+      { name: "probability", value: [1.13265] },
+    ]);
+
+    expect(searchLow.resources[0].id).toEqual(RiskAssessment.id);
+
+    const searchHigh = await client.search_type({}, "RiskAssessment", [
+      { name: "probability", value: [1.13275] },
+    ]);
+
+    expect(searchHigh.resources[0].id).toEqual(RiskAssessment.id);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
