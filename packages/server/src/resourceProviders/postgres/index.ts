@@ -371,9 +371,14 @@ function toDateRange(
 
 type QuantityIndex = Omit<Quantity, "value"> & { value?: number | string };
 
+function getDecimalPrecision(value: number): number {
+  const decimalPrecision = value.toString().split(".")[1]?.length || 0;
+  return decimalPrecision;
+}
+
 // Number and quantity dependent on the precision for indexing.
 function getRange(value: number): { start: number; end: number } {
-  const decimalPrecision = value.toString().split(".")[1]?.length || 0;
+  const decimalPrecision = getDecimalPrecision(value);
   return {
     start: value - 0.5 * 10 ** -decimalPrecision,
     end: value + 0.5 * 10 ** -decimalPrecision,
@@ -556,22 +561,19 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
     }
     case "number": {
       await Promise.all(
-        evaluation
-          .map((v) => getRange(v.valueOf() as number))
-          .map(async ({ start, end }) => {
-            await client.query(
-              "INSERT INTO number_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, start_value, end_value) VALUES($1, $2, $3, $4, $5, $6, $7)",
-              [
-                ctx.workspace,
-                resource.id,
-                resource.meta?.versionId,
-                parameter.name,
-                parameter.url,
-                start,
-                end,
-              ]
-            );
-          })
+        evaluation.map(async (v) => {
+          await client.query(
+            "INSERT INTO number_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, value) VALUES($1, $2, $3, $4, $5, $6)",
+            [
+              ctx.workspace,
+              resource.id,
+              resource.meta?.versionId,
+              parameter.name,
+              parameter.url,
+              v.valueOf(),
+            ]
+          );
+        })
       );
       return;
     }
@@ -883,8 +885,26 @@ function buildParameterSQL(
     case "number":
       parameterClause = parameter.value
         .map((value) => {
-          values = [...values, value, value];
-          return `start_value <= $${index++} AND end_value >= $${index++}`;
+          const numberValue = parseFloat(value.toString());
+          if (isNaN(numberValue)) {
+            throw new OperationError(
+              outcomeError(
+                "invalid",
+                `Invalid number value '${parameter.value}' for parameter '${searchParameter.name}'`
+              )
+            );
+          }
+
+          const decimalPrecision = getDecimalPrecision(numberValue);
+
+          values = [
+            ...values,
+            -decimalPrecision,
+            numberValue,
+            -decimalPrecision,
+            numberValue,
+          ];
+          return `(value - 0.5 * 10 ^ $${index++})  <= $${index++} AND (value + 0.5 * 10 ^ $${index++}) >= $${index++}`;
         })
         .join(" OR ");
 
