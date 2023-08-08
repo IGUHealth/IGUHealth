@@ -128,7 +128,7 @@ test("artifactParameters", () => {
       "SearchParameter",
       parseParameters("SearchParameter?base=Patient,Resource,DomainResource")
     ).resources.length
-  ).toEqual(32);
+  ).toEqual(34);
   expect(
     memDb
       .search_type(
@@ -156,6 +156,8 @@ test("artifactParameters", () => {
     "_security",
     "_source",
     "_tag",
+    "_iguhealth-version-seq",
+    "_iguhealth-author",
   ]);
 
   expect(
