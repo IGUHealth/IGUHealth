@@ -229,7 +229,7 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
         const serverCTX = {
           ...services,
           workspace: ctx.params.workspace,
-          author: "Fake User",
+          author: "fake-user",
         };
 
         const fhirServerResponse = await fhirServer(

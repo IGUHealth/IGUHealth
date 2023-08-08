@@ -62,6 +62,10 @@
       "resourceType": "StructureDefinition"
     },
     {
+      "filename": "r4/iguhealth/parameters.json",
+      "resourceType": "SearchParameter"
+    },
+    {
       "filename": "r4/iguhealth/tenant.json",
       "resourceType": "StructureDefinition"
     }
