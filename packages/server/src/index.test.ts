@@ -443,7 +443,7 @@ test("Test sort ", async () => {
   }
 });
 
-test("Test sort ", async () => {
+test("Testing custom extension added to resources", async () => {
   const resources: Resource[] = [];
   try {
     const p1 = await client.create(
