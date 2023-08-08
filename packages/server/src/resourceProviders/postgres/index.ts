@@ -946,16 +946,24 @@ function buildParameterSQL(
               return `(value - 0.5 * 10 ^ $${index++})  > $${index++} OR (value + 0.5 * 10 ^ $${index++}) < $${index++}`;
             // the range above the search value intersects (i.e. overlaps) with the range of the target value
             case "gt":
+              // Start at lowerbound to exclude the intersection.
               values = [...values, -decimalPrecision, numberValue];
-              return `(value + 0.5 * 10 ^ $${index++}) > $${index++}`;
+              return `(value - 0.5 * 10 ^ $${index++}) > $${index++}`;
             //	the value for the parameter in the resource is less than the provided value
             case "lt":
+              // Start at upperbound to exclude the intersection.
               values = [...values, -decimalPrecision, numberValue];
-              return `(value - 0.5 * 10 ^ $${index++}) < $${index++}`;
+              return `(value + 0.5 * 10 ^ $${index++}) < $${index++}`;
             // the range above the search value intersects (i.e. overlaps) with the range of the target value,
             // or the range of the search value fully contains the range of the target value
             case "ge":
+              // Perform search as GT but use >= and start on upperbound.
+              values = [...values, -decimalPrecision, numberValue];
+              return `(value + 0.5 * 10 ^ $${index++}) >= $${index++}`;
             case "le":
+              // Perform search as lt but use <= and start on lowerbound
+              values = [...values, -decimalPrecision, numberValue];
+              return `(value - 0.5 * 10 ^ $${index++}) <= $${index++}`;
             case "sa":
             case "eb":
             case "ap":
