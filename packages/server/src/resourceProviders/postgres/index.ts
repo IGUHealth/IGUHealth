@@ -556,19 +556,22 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
     }
     case "number": {
       await Promise.all(
-        evaluation.map(async (value) => {
-          await client.query(
-            "INSERT INTO number_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, value) VALUES($1, $2, $3, $4, $5, $6)",
-            [
-              ctx.workspace,
-              resource.id,
-              resource.meta?.versionId,
-              parameter.name,
-              parameter.url,
-              value.valueOf(),
-            ]
-          );
-        })
+        evaluation
+          .map((v) => getRange(v.valueOf() as number))
+          .map(async ({ start, end }) => {
+            await client.query(
+              "INSERT INTO number_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, start_value, end_value) VALUES($1, $2, $3, $4, $5, $6, $7)",
+              [
+                ctx.workspace,
+                resource.id,
+                resource.meta?.versionId,
+                parameter.name,
+                parameter.url,
+                start,
+                end,
+              ]
+            );
+          })
       );
       return;
     }
@@ -879,9 +882,12 @@ function buildParameterSQL(
     case "uri":
     case "number":
       parameterClause = parameter.value
-        .map((value) => `value = $${index++}`)
+        .map((value) => {
+          values = [...values, value, value];
+          return `start_value <= $${index++} AND end_value >= $${index++}`;
+        })
         .join(" OR ");
-      values = [...values, ...parameter.value];
+
       break;
     case "string": {
       switch (parameter.modifier) {
