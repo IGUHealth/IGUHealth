@@ -888,7 +888,7 @@ function buildParameterSQL(
           const result = value
             .toString()
             .match(
-              /^(?<prefix>eq|ne|gt|lt|ge|le|sa|eb|ap)?(?<value>[0-9]+(.[0-9]*)?)$/
+              /^(?<prefix>eq|ne|gt|lt|ge|le|sa|eb|ap)?(?<value>(-)?[0-9]+(.[0-9]*)?)$/
             );
 
           if (!result) {
@@ -923,7 +923,7 @@ function buildParameterSQL(
 
           const decimalPrecision = getDecimalPrecision(numberValue);
           switch (prefix) {
-            // the value for the parameter in the resource is equal to the provided value
+            // the range of the search value fully contains the range of the target value
             case "eq":
             case undefined:
               values = [
@@ -934,7 +934,7 @@ function buildParameterSQL(
                 numberValue,
               ];
               return `(value - 0.5 * 10 ^ $${index++})  <= $${index++} AND (value + 0.5 * 10 ^ $${index++}) >= $${index++}`;
-            // the value for the parameter in the resource is not equal to the provided value
+            // 	the range of the search value does not fully contain the range of the target value
             case "ne":
               values = [
                 ...values,
@@ -944,8 +944,16 @@ function buildParameterSQL(
                 numberValue,
               ];
               return `(value - 0.5 * 10 ^ $${index++})  > $${index++} OR (value + 0.5 * 10 ^ $${index++}) < $${index++}`;
+            // the range above the search value intersects (i.e. overlaps) with the range of the target value
             case "gt":
+              values = [...values, -decimalPrecision, numberValue];
+              return `(value + 0.5 * 10 ^ $${index++}) > $${index++}`;
+            //	the value for the parameter in the resource is less than the provided value
             case "lt":
+              values = [...values, -decimalPrecision, numberValue];
+              return `(value - 0.5 * 10 ^ $${index++}) < $${index++}`;
+            // the range above the search value intersects (i.e. overlaps) with the range of the target value,
+            // or the range of the search value fully contains the range of the target value
             case "ge":
             case "le":
             case "sa":

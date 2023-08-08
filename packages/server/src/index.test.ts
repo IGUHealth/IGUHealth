@@ -560,3 +560,104 @@ test("Number range", async () => {
     );
   }
 });
+
+test("Number prefixes", async () => {
+  const resources: Resource[] = [];
+  try {
+    const RiskAssessment: RiskAssessment = await client.create(
+      {},
+      {
+        status: "final",
+        subject: {
+          reference: "Patient/b248b1b2-1686-4b94-9936-37d7a5f94b51",
+        },
+        prediction: [
+          {
+            probabilityDecimal: 1.1327,
+          },
+        ],
+        resourceType: "RiskAssessment",
+        occurrenceDateTime: "2006-01-13T23:01:00Z",
+      }
+    );
+    resources.push(RiskAssessment);
+
+    expect(
+      (
+        await client.search_type({}, "RiskAssessment", [
+          { name: "probability", value: ["gt1"] },
+        ])
+      ).resources[0].id
+    ).toEqual(RiskAssessment.id);
+
+    expect(
+      (
+        await client.search_type({}, "RiskAssessment", [
+          { name: "probability", value: ["gt1.14"] },
+        ])
+      ).resources.length
+    ).toEqual(0);
+
+    expect(
+      (
+        await client.search_type({}, "RiskAssessment", [
+          { name: "probability", value: ["gt-1"] },
+        ])
+      ).resources[0].id
+    ).toEqual(RiskAssessment.id);
+
+    expect(
+      (
+        await client.search_type({}, "RiskAssessment", [
+          { name: "probability", value: ["lt1.14"] },
+        ])
+      ).resources[0].id
+    ).toEqual(RiskAssessment.id);
+
+    expect(
+      (
+        await client.search_type({}, "RiskAssessment", [
+          { name: "probability", value: ["lt1.133"] },
+        ])
+      ).resources.length
+    ).toEqual(0);
+
+    expect(
+      (
+        await client.search_type({}, "RiskAssessment", [
+          { name: "probability", value: ["lt1.130"] },
+        ])
+      ).resources[0].id
+    ).toEqual(RiskAssessment.id);
+
+    expect(
+      (
+        await client.search_type({}, "RiskAssessment", [
+          { name: "probability", value: ["ne1.13"] },
+        ])
+      ).resources.length
+    ).toEqual(0);
+
+    expect(
+      (
+        await client.search_type({}, "RiskAssessment", [
+          { name: "probability", value: ["eq1.13"] },
+        ])
+      ).resources[0].id
+    ).toEqual(RiskAssessment.id);
+
+    expect(
+      (
+        await client.search_type({}, "RiskAssessment", [
+          { name: "probability", value: ["1.13"] },
+        ])
+      ).resources[0].id
+    ).toEqual(RiskAssessment.id);
+  } finally {
+    await Promise.all(
+      resources.map(async ({ resourceType, id }) => {
+        return await client.delete({}, resourceType, id as string);
+      })
+    );
+  }
+});
