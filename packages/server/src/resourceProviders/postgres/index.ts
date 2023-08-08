@@ -923,6 +923,7 @@ function buildParameterSQL(
 
           const decimalPrecision = getDecimalPrecision(numberValue);
           switch (prefix) {
+            // the value for the parameter in the resource is equal to the provided value
             case "eq":
             case undefined:
               values = [
@@ -933,6 +934,23 @@ function buildParameterSQL(
                 numberValue,
               ];
               return `(value - 0.5 * 10 ^ $${index++})  <= $${index++} AND (value + 0.5 * 10 ^ $${index++}) >= $${index++}`;
+            // the value for the parameter in the resource is not equal to the provided value
+            case "ne":
+              values = [
+                ...values,
+                -decimalPrecision,
+                numberValue,
+                -decimalPrecision,
+                numberValue,
+              ];
+              return `(value - 0.5 * 10 ^ $${index++})  > $${index++} OR (value + 0.5 * 10 ^ $${index++}) < $${index++}`;
+            case "gt":
+            case "lt":
+            case "ge":
+            case "le":
+            case "sa":
+            case "eb":
+            case "ap":
             default:
               throw new OperationError(
                 outcomeError(
