@@ -541,17 +541,37 @@ test("Number range", async () => {
     );
     resources.push(RiskAssessment);
 
-    const searchLow = await client.search_type({}, "RiskAssessment", [
-      { name: "probability", value: [1.13265] },
-    ]);
+    expect(
+      (
+        await client.search_type({}, "RiskAssessment", [
+          { name: "probability", value: [1.133] },
+        ])
+      ).resources[0].id
+    ).toEqual(RiskAssessment.id);
 
-    expect(searchLow.resources[0].id).toEqual(RiskAssessment.id);
+    expect(
+      (
+        await client.search_type({}, "RiskAssessment", [
+          { name: "probability", value: [1.134] },
+        ])
+      ).resources.length
+    ).toEqual(0);
 
-    const searchHigh = await client.search_type({}, "RiskAssessment", [
-      { name: "probability", value: [1.13275] },
-    ]);
+    expect(
+      (
+        await client.search_type({}, "RiskAssessment", [
+          { name: "probability", value: [1.13] },
+        ])
+      ).resources[0].id
+    ).toEqual(RiskAssessment.id);
 
-    expect(searchHigh.resources[0].id).toEqual(RiskAssessment.id);
+    expect(
+      (
+        await client.search_type({}, "RiskAssessment", [
+          { name: "probability", value: [1.14] },
+        ])
+      ).resources.length
+    ).toEqual(0);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
@@ -582,10 +602,19 @@ test("Number prefixes", async () => {
     );
     resources.push(RiskAssessment);
 
+    // Because range is off it will not match on generic
     expect(
       (
         await client.search_type({}, "RiskAssessment", [
           { name: "probability", value: ["gt1"] },
+        ])
+      ).resources.length
+    ).toEqual(0);
+
+    expect(
+      (
+        await client.search_type({}, "RiskAssessment", [
+          { name: "probability", value: ["gt1.12"] },
         ])
       ).resources[0].id
     ).toEqual(RiskAssessment.id);
@@ -593,10 +622,18 @@ test("Number prefixes", async () => {
     expect(
       (
         await client.search_type({}, "RiskAssessment", [
-          { name: "probability", value: ["gt1.14"] },
+          { name: "probability", value: ["gt1.13"] },
         ])
       ).resources.length
     ).toEqual(0);
+
+    expect(
+      (
+        await client.search_type({}, "RiskAssessment", [
+          { name: "probability", value: ["ge1.13"] },
+        ])
+      ).resources[0].id
+    ).toEqual(RiskAssessment.id);
 
     expect(
       (
@@ -625,10 +662,18 @@ test("Number prefixes", async () => {
     expect(
       (
         await client.search_type({}, "RiskAssessment", [
-          { name: "probability", value: ["lt1.130"] },
+          { name: "probability", value: ["le1.133"] },
         ])
       ).resources[0].id
     ).toEqual(RiskAssessment.id);
+
+    expect(
+      (
+        await client.search_type({}, "RiskAssessment", [
+          { name: "probability", value: ["lt1.130"] },
+        ])
+      ).resources.length
+    ).toEqual(0);
 
     expect(
       (
