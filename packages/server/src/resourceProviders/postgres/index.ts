@@ -885,7 +885,33 @@ function buildParameterSQL(
     case "number":
       parameterClause = parameter.value
         .map((value) => {
-          const numberValue = parseFloat(value.toString());
+          const result = value
+            .toString()
+            .match(
+              /^(?<prefix>eq|ne|gt|lt|ge|le|sa|eb|ap)?(?<value>[0-9]+(.[0-9]*)?)$/
+            );
+
+          if (!result) {
+            throw new OperationError(
+              outcomeError(
+                "invalid",
+                `Invalid input value '${parameter.value}' for parameter '${searchParameter.name}'`
+              )
+            );
+          }
+          const numericPortion = result?.groups?.value;
+          const prefix = result?.groups?.prefix;
+
+          if (!numericPortion) {
+            throw new OperationError(
+              outcomeError(
+                "invalid",
+                `A Number must be provided for parameter '${searchParameter.name}'`
+              )
+            );
+          }
+
+          const numberValue = parseFloat(numericPortion);
           if (isNaN(numberValue)) {
             throw new OperationError(
               outcomeError(
@@ -896,15 +922,25 @@ function buildParameterSQL(
           }
 
           const decimalPrecision = getDecimalPrecision(numberValue);
-
-          values = [
-            ...values,
-            -decimalPrecision,
-            numberValue,
-            -decimalPrecision,
-            numberValue,
-          ];
-          return `(value - 0.5 * 10 ^ $${index++})  <= $${index++} AND (value + 0.5 * 10 ^ $${index++}) >= $${index++}`;
+          switch (prefix) {
+            case "eq":
+            case undefined:
+              values = [
+                ...values,
+                -decimalPrecision,
+                numberValue,
+                -decimalPrecision,
+                numberValue,
+              ];
+              return `(value - 0.5 * 10 ^ $${index++})  <= $${index++} AND (value + 0.5 * 10 ^ $${index++}) >= $${index++}`;
+            default:
+              throw new OperationError(
+                outcomeError(
+                  "not-supported",
+                  `Prefix '${prefix}' not supported for parameter '${searchParameter.name}'`
+                )
+              );
+          }
         })
         .join(" OR ");
 
