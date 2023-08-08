@@ -1410,14 +1410,6 @@ async function executeSearchQuery(
         )
       : 0;
 
-  if (process.env.LOG_SQL) {
-    console.log(
-      values.reduce((queryText, value, index) => {
-        return queryText.replace(`$${index + 1}`, `'${value}'`);
-      }, queryText)
-    );
-  }
-
   // Placing total before sort clauses for perf.
   const total = await calculateTotal(
     client,
@@ -1438,6 +1430,14 @@ async function executeSearchQuery(
     queryText = res.query;
     index = res.index;
     values = res.values;
+  }
+
+  if (process.env.LOG_SQL) {
+    console.log(
+      values.reduce((queryText, value, index) => {
+        return queryText.replace(`$${index + 1}`, `'${value}'`);
+      }, queryText)
+    );
   }
 
   const res = await client.query(
