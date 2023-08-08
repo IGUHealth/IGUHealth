@@ -45,9 +45,6 @@ CREATE OR REPLACE FUNCTION igu_fhir_extensions (version_id INTEGER, author Text,
               filter_fhir_extensions(ext_sequence_url, extensions))  ||
           new_ext_sequence ||
           new_ext_author;
-        RAISE NOTICE 'Value: %', new_ext_sequence;
-        RAISE NOTICE 'Value: %', new_ext_author;
-        RAISE NOTICE 'extensions: %', extensions;
 
         return extensions;
      END;

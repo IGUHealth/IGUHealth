@@ -442,3 +442,79 @@ test("Test sort ", async () => {
     );
   }
 });
+
+test("Test sort ", async () => {
+  const resources: Resource[] = [];
+  try {
+    const p1 = await client.create(
+      {},
+      {
+        resourceType: "Patient",
+      }
+    );
+    resources.push(p1);
+    expect(evaluate("$this.meta.extension.url", p1).sort()).toEqual(
+      [
+        "https://iguhealth.app/version-sequence",
+        "https://iguhealth.app/author",
+      ].sort()
+    );
+    const existingExtensions = await client.create(
+      {},
+      {
+        meta: {
+          extension: [
+            { url: "https://iguhealth.app/author", valueString: "test" },
+            {
+              url: "https://iguhealth.app/version-sequence",
+              valueInteger: 1,
+            },
+          ],
+        },
+        resourceType: "Patient",
+      }
+    );
+    resources.push(existingExtensions);
+    expect(
+      evaluate("$this.meta.extension.url", existingExtensions).sort()
+    ).toEqual(
+      [
+        "https://iguhealth.app/version-sequence",
+        "https://iguhealth.app/author",
+      ].sort()
+    );
+
+    const preserveExtensions = await client.create(
+      {},
+      {
+        meta: {
+          extension: [
+            { url: "https://test.com", valueString: "test" },
+            { url: "https://iguhealth.app/author", valueString: "test" },
+            {
+              url: "https://iguhealth.app/version-sequence",
+              valueInteger: 1,
+            },
+          ],
+        },
+        resourceType: "Patient",
+      }
+    );
+    resources.push(preserveExtensions);
+    expect(
+      evaluate("$this.meta.extension.url", preserveExtensions).sort()
+    ).toEqual(
+      [
+        "https://iguhealth.app/version-sequence",
+        "https://iguhealth.app/author",
+        "https://test.com",
+      ].sort()
+    );
+  } finally {
+    await Promise.all(
+      resources.map(async ({ resourceType, id }) => {
+        return await client.delete({}, resourceType, id as string);
+      })
+    );
+  }
+});
