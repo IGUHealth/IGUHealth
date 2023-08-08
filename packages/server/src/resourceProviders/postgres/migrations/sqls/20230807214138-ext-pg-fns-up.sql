@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION proc_update_resource_meta() RETURNS trigger AS $proc_
 
         NEW.resource := jsonb_set(NEW.resource, '{meta,extension}',   igu_fhir_extensions(NEW.version_id, NEW.author, NEW.resource -> 'meta' -> 'extension'));
         NEW.resource := jsonb_set(NEW.resource, '{meta,versionId}',   to_jsonb(CAST(NEW.version_id as TEXT)));
-	    NEW.resource := jsonb_set(NEW.resource, '{meta,lastUpdated}', to_jsonb(generate_fhir_instant_string(NEW.created_at)));
+        NEW.resource := jsonb_set(NEW.resource, '{meta,lastUpdated}', to_jsonb(generate_fhir_instant_string(NEW.created_at)));
 
         RETURN NEW;
     END;
