@@ -371,9 +371,14 @@ function toDateRange(
 
 type QuantityIndex = Omit<Quantity, "value"> & { value?: number | string };
 
+function getDecimalPrecision(value: number): number {
+  const decimalPrecision = value.toString().split(".")[1]?.length || 0;
+  return decimalPrecision;
+}
+
 // Number and quantity dependent on the precision for indexing.
 function getRange(value: number): { start: number; end: number } {
-  const decimalPrecision = value.toString().split(".")[1]?.length || 0;
+  const decimalPrecision = getDecimalPrecision(value);
   return {
     start: value - 0.5 * 10 ** -decimalPrecision,
     end: value + 0.5 * 10 ** -decimalPrecision,
@@ -556,22 +561,19 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
     }
     case "number": {
       await Promise.all(
-        evaluation
-          .map((v) => getRange(v.valueOf() as number))
-          .map(async ({ start, end }) => {
-            await client.query(
-              "INSERT INTO number_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, start_value, end_value) VALUES($1, $2, $3, $4, $5, $6, $7)",
-              [
-                ctx.workspace,
-                resource.id,
-                resource.meta?.versionId,
-                parameter.name,
-                parameter.url,
-                start,
-                end,
-              ]
-            );
-          })
+        evaluation.map(async (v) => {
+          await client.query(
+            "INSERT INTO number_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, value) VALUES($1, $2, $3, $4, $5, $6)",
+            [
+              ctx.workspace,
+              resource.id,
+              resource.meta?.versionId,
+              parameter.name,
+              parameter.url,
+              v.valueOf(),
+            ]
+          );
+        })
       );
       return;
     }
@@ -883,8 +885,96 @@ function buildParameterSQL(
     case "number":
       parameterClause = parameter.value
         .map((value) => {
-          values = [...values, value, value];
-          return `start_value <= $${index++} AND end_value >= $${index++}`;
+          const result = value
+            .toString()
+            .match(
+              /^(?<prefix>eq|ne|gt|lt|ge|le|sa|eb|ap)?(?<value>(-)?[0-9]+(.[0-9]*)?)$/
+            );
+
+          if (!result) {
+            throw new OperationError(
+              outcomeError(
+                "invalid",
+                `Invalid input value '${parameter.value}' for parameter '${searchParameter.name}'`
+              )
+            );
+          }
+          const numericPortion = result?.groups?.value;
+          const prefix = result?.groups?.prefix;
+
+          if (!numericPortion) {
+            throw new OperationError(
+              outcomeError(
+                "invalid",
+                `A Number must be provided for parameter '${searchParameter.name}'`
+              )
+            );
+          }
+
+          const numberValue = parseFloat(numericPortion);
+          if (isNaN(numberValue)) {
+            throw new OperationError(
+              outcomeError(
+                "invalid",
+                `Invalid number value '${parameter.value}' for parameter '${searchParameter.name}'`
+              )
+            );
+          }
+
+          const decimalPrecision = getDecimalPrecision(numberValue);
+          switch (prefix) {
+            // the range of the search value fully contains the range of the target value
+            case "eq":
+            case undefined:
+              values = [
+                ...values,
+                -decimalPrecision,
+                numberValue,
+                -decimalPrecision,
+                numberValue,
+              ];
+              return `(value - 0.5 * 10 ^ $${index++})  <= $${index++} AND (value + 0.5 * 10 ^ $${index++}) >= $${index++}`;
+            // 	the range of the search value does not fully contain the range of the target value
+            case "ne":
+              values = [
+                ...values,
+                -decimalPrecision,
+                numberValue,
+                -decimalPrecision,
+                numberValue,
+              ];
+              return `(value - 0.5 * 10 ^ $${index++})  > $${index++} OR (value + 0.5 * 10 ^ $${index++}) < $${index++}`;
+            // the range above the search value intersects (i.e. overlaps) with the range of the target value
+            case "gt":
+              // Start at lowerbound to exclude the intersection.
+              values = [...values, -decimalPrecision, numberValue];
+              return `(value - 0.5 * 10 ^ $${index++}) > $${index++}`;
+            //	the value for the parameter in the resource is less than the provided value
+            case "lt":
+              // Start at upperbound to exclude the intersection.
+              values = [...values, -decimalPrecision, numberValue];
+              return `(value + 0.5 * 10 ^ $${index++}) < $${index++}`;
+            // the range above the search value intersects (i.e. overlaps) with the range of the target value,
+            // or the range of the search value fully contains the range of the target value
+            case "ge":
+              // Perform search as GT but use >= and start on upperbound.
+              values = [...values, -decimalPrecision, numberValue];
+              return `(value + 0.5 * 10 ^ $${index++}) >= $${index++}`;
+            case "le":
+              // Perform search as lt but use <= and start on lowerbound
+              values = [...values, -decimalPrecision, numberValue];
+              return `(value - 0.5 * 10 ^ $${index++}) <= $${index++}`;
+            case "sa":
+            case "eb":
+            case "ap":
+            default:
+              throw new OperationError(
+                outcomeError(
+                  "not-supported",
+                  `Prefix '${prefix}' not supported for parameter '${searchParameter.name}'`
+                )
+              );
+          }
         })
         .join(" OR ");
 
