@@ -64,6 +64,7 @@ function buildParameterSQL(
                   )
                 );
               }
+              // Currently only supporting false for now. (which means value must exist)
               return `value IS NOT NULL`;
             })
             .join(" OR ");
