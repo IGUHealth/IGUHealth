@@ -1,4 +1,4 @@
-import { ResourceType } from "@iguhealth/fhir-types";
+import { ResourceType, SearchParameter } from "@iguhealth/fhir-types";
 
 export function searchResources(
   resourceTypes: ResourceType[]
@@ -13,4 +13,8 @@ export function searchResources(
 export function getDecimalPrecision(value: number): number {
   const decimalPrecision = value.toString().split(".")[1]?.length || 0;
   return decimalPrecision;
+}
+
+export function searchParameterToTableName(searchParameter: SearchParameter) {
+  return `${searchParameter.type}_idx`;
 }
