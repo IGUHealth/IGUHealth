@@ -609,6 +609,16 @@ async function calculateTotal(
   }
 }
 
+// OLD METHOD FOR Filters to the latest value used on end user search query
+// Note for subscription we avoid this as all values should be pushed through
+// Note this matters for empty resourcetype queries otherwise parameters would only pick the latest.
+// MIGRATED TO USE _id:missing=false as a filter instead.
+function filterToLatest(query: string): string {
+  return `SELECT * FROM (SELECT DISTINCT ON (id) id, * FROM (${query}) as all_resources 
+       ORDER BY all_resources.id, all_resources.version_id DESC) 
+       as latest_resources where latest_resources.deleted = false`;
+}
+
 export async function executeSearchQuery(
   client: pg.Client,
   request: SystemSearchRequest | TypeSearchRequest,
@@ -627,12 +637,11 @@ export async function executeSearchQuery(
   let resourceParameters = parameters.filter(
     (v): v is SearchParameterResource => v.type === "resource"
   );
-
   // Scenarios where you search for a resource type but no parameters are provided
   // This scenario need to filter to ensure only the latest is included.
   // Approach I take is to use _id parameter which all resources would have
   // that are current.
-  if (onlyLatest && resourceParameters.length === 0) {
+  if (onlyLatest) {
     const idParameter = (
       await paramWithMeta(
         ctx,
