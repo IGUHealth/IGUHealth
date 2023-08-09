@@ -44,28 +44,47 @@ function buildParameterSQL(
   let parameterClause;
   switch (searchParameter.type) {
     case "token": {
-      parameterClause = parameter.value
-        .map((value) => {
-          const parts = value.toString().split("|");
-          if (parts.length === 1) {
-            values = [...values, value];
-            return `value = $${index++}`;
-          }
-          if (parts.length === 2) {
-            if (parts[0] !== "" && parts[1] !== "") {
-              values = [...values, parts[0], parts[1]];
-              return `system = $${index++} AND value = $${index++}`;
-            } else if (parts[0] !== "" && parts[1] === "") {
-              values = [...values, parts[0]];
-              return `system = $${index++}`;
-            } else if (parts[0] === "" && parts[1] !== "") {
-              values = [...values, parts[1]];
-              return `value = $${index++}`;
-            }
-          }
-          throw new Error(`Invalid token value found '${value}'`);
-        })
-        .join(" OR ");
+      switch (parameter.modifier) {
+        case "missing":
+          parameterClause = parameter.value
+            .map((value) => {
+              if (value !== "true" && value !== "false") {
+                throw new OperationError(
+                  outcomeError(
+                    "invalid",
+                    `Invalid value for modifier 'missing' must be 'true' or 'false'`
+                  )
+                );
+              }
+              return `value IS ${value === "true" ? "NULL" : "NOT NULL"}`;
+            })
+            .join(" OR ");
+          break;
+        default:
+          parameterClause = parameter.value
+            .map((value) => {
+              const parts = value.toString().split("|");
+              if (parts.length === 1) {
+                values = [...values, value];
+                return `value = $${index++}`;
+              }
+              if (parts.length === 2) {
+                if (parts[0] !== "" && parts[1] !== "") {
+                  values = [...values, parts[0], parts[1]];
+                  return `system = $${index++} AND value = $${index++}`;
+                } else if (parts[0] !== "" && parts[1] === "") {
+                  values = [...values, parts[0]];
+                  return `system = $${index++}`;
+                } else if (parts[0] === "" && parts[1] !== "") {
+                  values = [...values, parts[1]];
+                  return `value = $${index++}`;
+                }
+              }
+              throw new Error(`Invalid token value found '${value}'`);
+            })
+            .join(" OR ");
+          break;
+      }
       break;
     }
     case "quantity": {
@@ -590,29 +609,39 @@ async function calculateTotal(
   }
 }
 
-// Filters to the latest value used on end user search query
-// Note for subscription we avoid this as all values should be pushed through
-function filterToLatest(query: string): string {
-  return `(SELECT DISTINCT ON (id) id, * FROM (${query}) as all_resources 
-     ORDER BY all_resources.id, all_resources.version_id DESC)`;
-}
-
 export async function executeSearchQuery(
   client: pg.Client,
   request: SystemSearchRequest | TypeSearchRequest,
-  ctx: FHIRServerCTX
+  ctx: FHIRServerCTX,
+  onlyLatest: boolean = true
 ): Promise<{ total?: number; resources: Resource[] }> {
   let values: any[] = [];
   let index = 1;
+
   const parameters = await paramWithMeta(
     ctx,
     request.level === "type" ? [request.resourceType as ResourceType] : [],
     request.parameters
   );
   // Standard parameters
-  const resourceParameters = parameters.filter(
+  let resourceParameters = parameters.filter(
     (v): v is SearchParameterResource => v.type === "resource"
   );
+
+  // Scenarios where you search for a resource type but no parameters are provided
+  // This scenario need to filter to ensure only the latest is included.
+  // Approach I take is to use _id parameter which all resources would have
+  // that are current.
+  if (onlyLatest && resourceParameters.length === 0) {
+    const idParameter = (
+      await paramWithMeta(
+        ctx,
+        request.level === "type" ? [request.resourceType as ResourceType] : [],
+        [{ name: "_id", modifier: "missing", value: ["false"] }]
+      )
+    ).filter((v): v is SearchParameterResource => v.type === "resource");
+    resourceParameters = resourceParameters.concat(idParameter);
+  }
 
   const parametersResult = parameters.filter(
     (v): v is SearchParameterResult => v.type === "result"
@@ -630,9 +659,7 @@ export async function executeSearchQuery(
 
   values = [...values, ctx.workspace];
   let queryText = `
-    SELECT * FROM (
-       SELECT DISTINCT ON (id) id, resource, deleted
-       
+       SELECT * 
        FROM resources 
        ${parameterQuery.queries
          .map(
@@ -653,7 +680,6 @@ export async function executeSearchQuery(
 
   // Neccessary to pull latest version of resource
   // Afterwards check that the latest version is not deleted.
-  queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC) as latest_resources where latest_resources.deleted = false `;
 
   const sortBy = parametersResult.find((p) => p.name === "_sort");
   const countParam = parametersResult.find((p) => p.name === "_count");
