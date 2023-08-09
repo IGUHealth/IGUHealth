@@ -56,7 +56,15 @@ function buildParameterSQL(
                   )
                 );
               }
-              return `value IS ${value === "true" ? "NULL" : "NOT NULL"}`;
+              if (value === "true") {
+                throw new OperationError(
+                  outcomeError(
+                    "not-supported",
+                    "For mnodifier 'missing' value of 'true' is not yet supported"
+                  )
+                );
+              }
+              return `value IS NOT NULL`;
             })
             .join(" OR ");
           break;
