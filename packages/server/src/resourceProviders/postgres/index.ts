@@ -1329,7 +1329,6 @@ function getParameterSortColumn(
     default:
       return "value";
   }
-  return `${direction === "descending" ? "-" : ""}${parameter.name}`;
 }
 
 async function deriveSortQuery(
