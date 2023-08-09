@@ -590,6 +590,13 @@ async function calculateTotal(
   }
 }
 
+// Filters to the latest value used on end user search query
+// Note for subscription we avoid this as all values should be pushed through
+function filterToLatest(query: string): string {
+  return `(SELECT DISTINCT ON (id) id, * FROM (${query}) as all_resources 
+     ORDER BY all_resources.id, all_resources.version_id DESC)`;
+}
+
 export async function executeSearchQuery(
   client: pg.Client,
   request: SystemSearchRequest | TypeSearchRequest,
@@ -624,7 +631,7 @@ export async function executeSearchQuery(
   values = [...values, ctx.workspace];
   let queryText = `
     SELECT * FROM (
-       SELECT DISTINCT ON (resources.id) resources.id, resources.resource, deleted
+       SELECT DISTINCT ON (id) id, resource, deleted
        
        FROM resources 
        ${parameterQuery.queries
@@ -635,15 +642,14 @@ export async function executeSearchQuery(
          .join("\n     ")}
        
        WHERE resources.workspace = $${index++}
-       AND`;
-
-  // System vs type search filtering
-  if (request.level === "type") {
-    values.push(request.resourceType);
-    queryText = `${queryText} resources.resource_type = $${index++}`;
-  } else {
-    queryText = `${queryText} resources.resource_type is not null`;
-  }
+       AND resources.resource_type ${
+         request.level === "type"
+           ? (() => {
+               values = [...values, request.resourceType];
+               return `= $${index++}`;
+             })()
+           : `is not null`
+       } `;
 
   // Neccessary to pull latest version of resource
   // Afterwards check that the latest version is not deleted.
