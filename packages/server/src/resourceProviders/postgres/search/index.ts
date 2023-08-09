@@ -15,23 +15,17 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../fhirServer.js";
 import { param_types_supported } from "../constants.js";
-import { searchResources, getDecimalPrecision } from "../utilities.js";
-
-type SearchParameterResource = ParsedParameter<string | number> & {
-  type: "resource";
-  searchParameter: SearchParameter;
-  chainedParameters?: SearchParameter[][];
-};
-
-type SearchParameterResult = ParsedParameter<string | number> & {
-  type: "result";
-};
-
-type ParameterType = SearchParameterResource | SearchParameterResult;
-
-function searchParameterToTableName(searchParameter: SearchParameter) {
-  return `${searchParameter.type}_idx`;
-}
+import {
+  searchResources,
+  getDecimalPrecision,
+  searchParameterToTableName,
+} from "../utilities.js";
+import type {
+  SearchParameterResource,
+  SearchParameterResult,
+  ParameterType,
+} from "./types.js";
+import { deriveSortQuery } from "./sort.js";
 
 function buildParameterSQL(
   ctx: FHIRServerCTX,
@@ -50,28 +44,56 @@ function buildParameterSQL(
   let parameterClause;
   switch (searchParameter.type) {
     case "token": {
-      parameterClause = parameter.value
-        .map((value) => {
-          const parts = value.toString().split("|");
-          if (parts.length === 1) {
-            values = [...values, value];
-            return `value = $${index++}`;
-          }
-          if (parts.length === 2) {
-            if (parts[0] !== "" && parts[1] !== "") {
-              values = [...values, parts[0], parts[1]];
-              return `system = $${index++} AND value = $${index++}`;
-            } else if (parts[0] !== "" && parts[1] === "") {
-              values = [...values, parts[0]];
-              return `system = $${index++}`;
-            } else if (parts[0] === "" && parts[1] !== "") {
-              values = [...values, parts[1]];
-              return `value = $${index++}`;
-            }
-          }
-          throw new Error(`Invalid token value found '${value}'`);
-        })
-        .join(" OR ");
+      switch (parameter.modifier) {
+        case "missing":
+          parameterClause = parameter.value
+            .map((value) => {
+              if (value !== "true" && value !== "false") {
+                throw new OperationError(
+                  outcomeError(
+                    "invalid",
+                    `Invalid value for modifier 'missing' must be 'true' or 'false'`
+                  )
+                );
+              }
+              if (value === "true") {
+                throw new OperationError(
+                  outcomeError(
+                    "not-supported",
+                    "For mnodifier 'missing' value of 'true' is not yet supported"
+                  )
+                );
+              }
+              // Currently only supporting false for now. (which means value must exist)
+              return `value IS NOT NULL`;
+            })
+            .join(" OR ");
+          break;
+        default:
+          parameterClause = parameter.value
+            .map((value) => {
+              const parts = value.toString().split("|");
+              if (parts.length === 1) {
+                values = [...values, value];
+                return `value = $${index++}`;
+              }
+              if (parts.length === 2) {
+                if (parts[0] !== "" && parts[1] !== "") {
+                  values = [...values, parts[0], parts[1]];
+                  return `system = $${index++} AND value = $${index++}`;
+                } else if (parts[0] !== "" && parts[1] === "") {
+                  values = [...values, parts[0]];
+                  return `system = $${index++}`;
+                } else if (parts[0] === "" && parts[1] !== "") {
+                  values = [...values, parts[1]];
+                  return `value = $${index++}`;
+                }
+              }
+              throw new Error(`Invalid token value found '${value}'`);
+            })
+            .join(" OR ");
+          break;
+      }
       break;
     }
     case "quantity": {
@@ -568,107 +590,6 @@ async function paramWithMeta<CTX extends FHIRServerCTX>(
   return result;
 }
 
-type SORT_DIRECTION = "ascending" | "descending";
-
-function getParameterSortColumn(
-  direction: SORT_DIRECTION,
-  parameter: SearchParameter
-): string {
-  switch (parameter.type) {
-    case "quantity":
-      return direction === "ascending" ? "end_value" : "start_value";
-    case "date":
-      return direction === "ascending" ? "end_date" : "start_date";
-    case "reference":
-      return "reference_id";
-    default:
-      return "value";
-  }
-}
-
-async function deriveSortQuery(
-  ctx: FHIRServerCTX,
-  resourceTypes: ResourceType[],
-  sortParameter: SearchParameterResult,
-  query: string,
-  index: number,
-  values: any[]
-) {
-  const sortInformation = await Promise.all(
-    sortParameter.value.map(
-      async (
-        paramName
-      ): Promise<{
-        direction: SORT_DIRECTION;
-        parameter: SearchParameter;
-      }> => {
-        let direction: SORT_DIRECTION = "ascending";
-        if (paramName.toString().startsWith("-")) {
-          paramName = paramName.toString().substring(1);
-          direction = "descending";
-        }
-        const searchParameter = await ctx.client.search_type(
-          ctx,
-          "SearchParameter",
-          [
-            { name: "name", value: [paramName] },
-            {
-              name: "type",
-              value: param_types_supported,
-            },
-            {
-              name: "base",
-              value: searchResources(resourceTypes),
-            },
-          ]
-        );
-        if (searchParameter.resources.length === 0)
-          throw new OperationError(
-            outcomeError(
-              "not-found",
-              `SearchParameter with name '${paramName}' not found.`
-            )
-          );
-        return {
-          direction,
-          parameter: searchParameter.resources[0],
-        };
-      }
-    )
-  );
-
-  const resourceQueryAlias = "resource_result";
-
-  // Need to create LEFT JOINS on the queries so we can orderby postgres.
-  const sortQueries = sortInformation.map(
-    ({ direction, parameter }, sortOrder: number) => {
-      const table = searchParameterToTableName(parameter);
-      const sort_table_name = `sort_${sortOrder}`;
-      const column_name = getParameterSortColumn(direction, parameter);
-      const query = ` LEFT JOIN 
-        (SELECT r_id, MIN(${column_name}) AS ${sort_table_name} FROM ${table} WHERE workspace = $${index++} AND parameter_url=$${index++} GROUP BY r_id)
-        AS ${sort_table_name} 
-        ON ${sort_table_name}.r_id = ${resourceQueryAlias}.id`;
-      values = [...values, ctx.workspace, parameter.url];
-
-      return query;
-    }
-  );
-
-  const sortQuery = `
-    SELECT * FROM (
-      (${query}) as ${resourceQueryAlias} ${sortQueries.join("\n")}
-    )
-    ORDER BY ${sortInformation
-      .map(
-        ({ direction }, i) =>
-          `sort_${i} ${direction === "ascending" ? "ASC" : "DESC"} `
-      )
-      .join(",")}`;
-
-  return { query: sortQuery, index, values };
-}
-
 async function calculateTotal(
   client: pg.Client,
   totalType: string | number,
@@ -697,22 +618,48 @@ async function calculateTotal(
   }
 }
 
+// OLD METHOD FOR Filters to the latest value used on end user search query
+// Note for subscription we avoid this as all values should be pushed through
+// Note this matters for empty resourcetype queries otherwise parameters would only pick the latest.
+// MIGRATED TO USE _id:missing=false as a filter instead.
+function filterToLatest(query: string): string {
+  return `SELECT * FROM (SELECT DISTINCT ON (id) id, * FROM (${query}) as all_resources 
+       ORDER BY all_resources.id, all_resources.version_id DESC) 
+       as latest_resources where latest_resources.deleted = false`;
+}
+
 export async function executeSearchQuery(
   client: pg.Client,
   request: SystemSearchRequest | TypeSearchRequest,
-  ctx: FHIRServerCTX
+  ctx: FHIRServerCTX,
+  onlyLatest: boolean = true
 ): Promise<{ total?: number; resources: Resource[] }> {
   let values: any[] = [];
   let index = 1;
+
   const parameters = await paramWithMeta(
     ctx,
     request.level === "type" ? [request.resourceType as ResourceType] : [],
     request.parameters
   );
   // Standard parameters
-  const resourceParameters = parameters.filter(
+  let resourceParameters = parameters.filter(
     (v): v is SearchParameterResource => v.type === "resource"
   );
+  // Scenarios where you search for a resource type but no parameters are provided
+  // This scenario need to filter to ensure only the latest is included.
+  // Approach I take is to use _id parameter which all resources would have
+  // that are current.
+  if (onlyLatest) {
+    const idParameter = (
+      await paramWithMeta(
+        ctx,
+        request.level === "type" ? [request.resourceType as ResourceType] : [],
+        [{ name: "_id", modifier: "missing", value: ["false"] }]
+      )
+    ).filter((v): v is SearchParameterResource => v.type === "resource");
+    resourceParameters = resourceParameters.concat(idParameter);
+  }
 
   const parametersResult = parameters.filter(
     (v): v is SearchParameterResult => v.type === "result"
@@ -730,9 +677,7 @@ export async function executeSearchQuery(
 
   values = [...values, ctx.workspace];
   let queryText = `
-    SELECT * FROM (
-       SELECT DISTINCT ON (resources.id) resources.id, resources.resource, deleted
-       
+       SELECT * 
        FROM resources 
        ${parameterQuery.queries
          .map(
@@ -742,19 +687,17 @@ export async function executeSearchQuery(
          .join("\n     ")}
        
        WHERE resources.workspace = $${index++}
-       AND`;
-
-  // System vs type search filtering
-  if (request.level === "type") {
-    values.push(request.resourceType);
-    queryText = `${queryText} resources.resource_type = $${index++}`;
-  } else {
-    queryText = `${queryText} resources.resource_type is not null`;
-  }
+       AND resources.resource_type ${
+         request.level === "type"
+           ? (() => {
+               values = [...values, request.resourceType];
+               return `= $${index++}`;
+             })()
+           : `is not null`
+       } `;
 
   // Neccessary to pull latest version of resource
   // Afterwards check that the latest version is not deleted.
-  queryText = `${queryText} ORDER BY resources.id, resources.version_id DESC) as latest_resources where latest_resources.deleted = false `;
 
   const sortBy = parametersResult.find((p) => p.name === "_sort");
   const countParam = parametersResult.find((p) => p.name === "_count");
