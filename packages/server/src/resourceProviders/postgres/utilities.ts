@@ -1,4 +1,6 @@
 import { ResourceType, SearchParameter } from "@iguhealth/fhir-types";
+import { param_types_supported } from "./constants.js";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 export function searchResources(
   resourceTypes: ResourceType[]
@@ -16,5 +18,13 @@ export function getDecimalPrecision(value: number): number {
 }
 
 export function searchParameterToTableName(searchParameter: SearchParameter) {
-  return `${searchParameter.type}_idx`;
+  if (param_types_supported.includes(searchParameter.type)) {
+    return `${searchParameter.type}_idx`;
+  }
+  throw new OperationError(
+    outcomeError(
+      "not-supported",
+      `Search Parameter of type '${searchParameter.type}' is not supported`
+    )
+  );
 }
