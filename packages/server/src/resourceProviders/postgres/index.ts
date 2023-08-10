@@ -733,6 +733,23 @@ async function deleteResource<CTX extends FHIRServerCTX>(
   }
 }
 
+async function retryFailedTransactions<ReturnType>(
+  execute: () => Promise<ReturnType>
+): Promise<ReturnType> {
+  while (true) {
+    try {
+      const res = await execute();
+      return res;
+    } catch (e) {
+      if (!(e instanceof pg.DatabaseError)) throw e;
+      // Only going to retry on failed transactions
+      if (e.code !== "40001") {
+        throw e;
+      }
+    }
+  }
+}
+
 function createPostgresMiddleware<
   State extends { pool: pg.Pool },
   CTX extends FHIRServerCTX
@@ -803,10 +820,13 @@ function createPostgresMiddleware<
         case "create-request":
           const client = await args.state.pool.connect();
           try {
-            const savedResource = await saveResource(client, args.ctx, {
-              ...request.body,
-              id: v4(),
-            });
+            const savedResource = await retryFailedTransactions(
+              async () =>
+                await saveResource(client, args.ctx, {
+                  ...request.body,
+                  id: v4(),
+                })
+            );
             return {
               state: args.state,
               ctx: args.ctx,
@@ -827,12 +847,15 @@ function createPostgresMiddleware<
         case "update-request": {
           const client = await args.state.pool.connect();
           try {
-            const savedResource = await patchResource(
-              client,
-              args.ctx,
-              request.resourceType as ResourceType,
-              request.id,
-              [{ op: "replace", path: "", value: request.body }]
+            const savedResource = await retryFailedTransactions(
+              async () =>
+                await patchResource(
+                  client,
+                  args.ctx,
+                  request.resourceType as ResourceType,
+                  request.id,
+                  [{ op: "replace", path: "", value: request.body }]
+                )
             );
             return {
               state: args.state,
@@ -852,12 +875,15 @@ function createPostgresMiddleware<
         case "delete-request": {
           const client = await args.state.pool.connect();
           try {
-            await deleteResource(
-              client,
-              args.ctx,
-              request.resourceType as ResourceType,
-              request.id
-            );
+            await retryFailedTransactions(async () => {
+              await deleteResource(
+                client,
+                args.ctx,
+                request.resourceType as ResourceType,
+                request.id
+              );
+            });
+
             return {
               state: args.state,
               ctx: args.ctx,
