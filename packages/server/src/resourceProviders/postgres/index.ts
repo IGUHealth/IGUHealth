@@ -633,9 +633,6 @@ async function saveResource<CTX extends FHIRServerCTX>(
   } catch (e) {
     await client.query("ROLLBACK");
     throw e;
-  } finally {
-    // Finally
-    // client.release() when switching to pool
   }
 }
 
@@ -699,9 +696,6 @@ async function patchResource<CTX extends FHIRServerCTX>(
   } catch (e) {
     await client.query("ROLLBACK");
     throw e;
-  } finally {
-    // Finally
-    // client.release() when switching to pool
   }
 }
 
@@ -711,27 +705,32 @@ async function deleteResource<CTX extends FHIRServerCTX>(
   resourceType: ResourceType,
   id: string
 ) {
-  await client.query("BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE");
-  const resource = await getResource(client, ctx, resourceType, id);
-  if (!resource)
-    throw new OperationError(
-      outcomeError(
-        "not-found",
-        `'${resourceType}' with id '${id}' was not found`
-      )
-    );
-  const queryText =
-    "INSERT INTO resources(workspace, author, resource, prev_version_id, deleted) VALUES($1, $2, $3, $4, $5) RETURNING resource";
+  try {
+    await client.query("BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE");
+    const resource = await getResource(client, ctx, resourceType, id);
+    if (!resource)
+      throw new OperationError(
+        outcomeError(
+          "not-found",
+          `'${resourceType}' with id '${id}' was not found`
+        )
+      );
+    const queryText =
+      "INSERT INTO resources(workspace, author, resource, prev_version_id, deleted) VALUES($1, $2, $3, $4, $5) RETURNING resource";
 
-  const res = await client.query(queryText, [
-    ctx.workspace,
-    ctx.author,
-    resource,
-    resource.meta?.versionId,
-    true,
-  ]);
-  await removeIndices(client, ctx, resource);
-  await client.query("END");
+    const res = await client.query(queryText, [
+      ctx.workspace,
+      ctx.author,
+      resource,
+      resource.meta?.versionId,
+      true,
+    ]);
+    await removeIndices(client, ctx, resource);
+    await client.query("END");
+  } catch (e) {
+    await client.query("ROLLBACK");
+    throw e;
+  }
 }
 
 function createPostgresMiddleware<
