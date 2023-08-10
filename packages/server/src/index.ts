@@ -29,7 +29,6 @@ import {
   isOperationError,
   issueSeverityToStatusCodes,
   outcomeError,
-  outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
 import Account from "./oidc-provider/accounts.js";

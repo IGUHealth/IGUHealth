@@ -11,7 +11,7 @@ import HTTPClient from "@iguhealth/client/lib/http/index.js";
 import { evaluate } from "@iguhealth/fhirpath";
 
 const client = HTTPClient({
-  url: "http://localhost:3000/w/1704fc63-dd53-4d6c-8435-1a4b83ba27f1/api/v1/fhir/r4",
+  url: "http://localhost:3000/w/1704fc63-dd53-4d6c-8435-1a4b83ba27f0/api/v1/fhir/r4",
   token: "blah",
 });
 

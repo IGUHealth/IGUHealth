@@ -406,7 +406,7 @@ function toQuantityRange(
 }
 
 async function indexSearchParameter<CTX extends FHIRServerCTX>(
-  client: pg.Client,
+  client: pg.PoolClient,
   ctx: CTX,
   parameter: SearchParameter,
   resource: Resource,
@@ -582,7 +582,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
 }
 
 async function removeIndices(
-  client: pg.Client,
+  client: pg.PoolClient,
   _ctx: FHIRServerCTX,
   resource: Resource
 ) {
@@ -596,7 +596,7 @@ async function removeIndices(
 }
 
 async function indexResource<CTX extends FHIRServerCTX>(
-  client: pg.Client,
+  client: pg.PoolClient,
   ctx: CTX,
   resource: Resource
 ) {
@@ -614,7 +614,7 @@ async function indexResource<CTX extends FHIRServerCTX>(
 }
 
 async function saveResource<CTX extends FHIRServerCTX>(
-  client: pg.Client,
+  client: pg.PoolClient,
   ctx: CTX,
   resource: Resource
 ): Promise<Resource> {
@@ -633,14 +633,11 @@ async function saveResource<CTX extends FHIRServerCTX>(
   } catch (e) {
     await client.query("ROLLBACK");
     throw e;
-  } finally {
-    // Finally
-    // client.release() when switching to pool
   }
 }
 
 async function getResource<CTX extends FHIRServerCTX>(
-  client: pg.Client,
+  client: pg.PoolClient,
   ctx: CTX,
   resourceType: ResourceType,
   id: string
@@ -661,7 +658,7 @@ async function getResource<CTX extends FHIRServerCTX>(
 }
 
 async function patchResource<CTX extends FHIRServerCTX>(
-  client: pg.Client,
+  client: pg.PoolClient,
   ctx: CTX,
   resourceType: ResourceType,
   id: string,
@@ -699,70 +696,97 @@ async function patchResource<CTX extends FHIRServerCTX>(
   } catch (e) {
     await client.query("ROLLBACK");
     throw e;
-  } finally {
-    // Finally
-    // client.release() when switching to pool
   }
 }
 
 async function deleteResource<CTX extends FHIRServerCTX>(
-  client: pg.Client,
+  client: pg.PoolClient,
   ctx: CTX,
   resourceType: ResourceType,
   id: string
 ) {
-  await client.query("BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE");
-  const resource = await getResource(client, ctx, resourceType, id);
-  if (!resource)
-    throw new OperationError(
-      outcomeError(
-        "not-found",
-        `'${resourceType}' with id '${id}' was not found`
-      )
-    );
-  const queryText =
-    "INSERT INTO resources(workspace, author, resource, prev_version_id, deleted) VALUES($1, $2, $3, $4, $5) RETURNING resource";
+  try {
+    await client.query("BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE");
+    const resource = await getResource(client, ctx, resourceType, id);
+    if (!resource)
+      throw new OperationError(
+        outcomeError(
+          "not-found",
+          `'${resourceType}' with id '${id}' was not found`
+        )
+      );
+    const queryText =
+      "INSERT INTO resources(workspace, author, resource, prev_version_id, deleted) VALUES($1, $2, $3, $4, $5) RETURNING resource";
 
-  const res = await client.query(queryText, [
-    ctx.workspace,
-    ctx.author,
-    resource,
-    resource.meta?.versionId,
-    true,
-  ]);
-  await removeIndices(client, ctx, resource);
-  await client.query("END");
+    const res = await client.query(queryText, [
+      ctx.workspace,
+      ctx.author,
+      resource,
+      resource.meta?.versionId,
+      true,
+    ]);
+    await removeIndices(client, ctx, resource);
+    await client.query("END");
+  } catch (e) {
+    await client.query("ROLLBACK");
+    throw e;
+  }
+}
+
+async function retryFailedTransactions<ReturnType>(
+  execute: () => Promise<ReturnType>
+): Promise<ReturnType> {
+  while (true) {
+    try {
+      const res = await execute();
+      return res;
+    } catch (e) {
+      if (!(e instanceof pg.DatabaseError)) throw e;
+      // Only going to retry on failed transactions
+      if (e.code !== "40001") {
+        throw e;
+      }
+    }
+  }
 }
 
 function createPostgresMiddleware<
-  State extends { client: pg.Client },
+  State extends { pool: pg.Pool },
   CTX extends FHIRServerCTX
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
     async (request, args, next) => {
-      const client = args.state.client;
       switch (request.type) {
         case "read-request": {
-          const resource = await getResource(
-            client,
-            args.ctx,
-            request.resourceType as ResourceType,
-            request.id
-          );
-          return {
-            state: args.state,
-            ctx: args.ctx,
-            response: {
-              level: "instance",
-              type: "read-response",
-              resourceType: request.resourceType,
-              id: request.id,
-              body: resource,
-            },
-          };
+          const client = await args.state.pool.connect();
+          try {
+            const resource = await getResource(
+              client,
+              args.ctx,
+              request.resourceType as ResourceType,
+              request.id
+            );
+            return {
+              state: args.state,
+              ctx: args.ctx,
+              response: {
+                level: "instance",
+                type: "read-response",
+                resourceType: request.resourceType,
+                id: request.id,
+                body: resource,
+              },
+            };
+          } finally {
+            client.release();
+          }
         }
         case "search-request": {
-          const result = await executeSearchQuery(client, request, args.ctx);
+          const result = await executeSearchQuery(
+            args.state.pool,
+            request,
+            args.ctx
+          );
           switch (request.level) {
             case "system": {
               return {
@@ -793,62 +817,87 @@ function createPostgresMiddleware<
             }
           }
         }
-        case "create-request":
-          const savedResource = await saveResource(client, args.ctx, {
-            ...request.body,
-            id: v4(),
-          });
-          return {
-            state: args.state,
-            ctx: args.ctx,
-            response: {
-              level: "type",
-              resourceType: request.resourceType,
-              type: "create-response",
-              body: savedResource,
-            },
-          };
+        case "create-request": {
+          const client = await args.state.pool.connect();
+          try {
+            const savedResource = await retryFailedTransactions(
+              async () =>
+                await saveResource(client, args.ctx, {
+                  ...request.body,
+                  id: v4(),
+                })
+            );
+            return {
+              state: args.state,
+              ctx: args.ctx,
+              response: {
+                level: "type",
+                resourceType: request.resourceType,
+                type: "create-response",
+                body: savedResource,
+              },
+            };
+          } finally {
+            client.release();
+          }
+        }
         case "patch-request":
           throw new OperationError(
             outcomeError("not-supported", `Patch is not yet supported.`)
           );
         case "update-request": {
-          const savedResource = await patchResource(
-            client,
-            args.ctx,
-            request.resourceType as ResourceType,
-            request.id,
-            [{ op: "replace", path: "", value: request.body }]
-          );
-          return {
-            state: args.state,
-            ctx: args.ctx,
-            response: {
-              level: "instance",
-              resourceType: request.resourceType,
-              id: request.id,
-              type: "update-response",
-              body: savedResource,
-            },
-          };
+          const client = await args.state.pool.connect();
+          try {
+            const savedResource = await retryFailedTransactions(
+              async () =>
+                await patchResource(
+                  client,
+                  args.ctx,
+                  request.resourceType as ResourceType,
+                  request.id,
+                  [{ op: "replace", path: "", value: request.body }]
+                )
+            );
+            return {
+              state: args.state,
+              ctx: args.ctx,
+              response: {
+                level: "instance",
+                resourceType: request.resourceType,
+                id: request.id,
+                type: "update-response",
+                body: savedResource,
+              },
+            };
+          } finally {
+            client.release();
+          }
         }
         case "delete-request": {
-          await deleteResource(
-            client,
-            args.ctx,
-            request.resourceType as ResourceType,
-            request.id
-          );
-          return {
-            state: args.state,
-            ctx: args.ctx,
-            response: {
-              type: "delete-response",
-              level: "instance",
-              resourceType: request.resourceType,
-              id: request.id,
-            },
-          };
+          const client = await args.state.pool.connect();
+          try {
+            await retryFailedTransactions(async () => {
+              await deleteResource(
+                client,
+                args.ctx,
+                request.resourceType as ResourceType,
+                request.id
+              );
+            });
+
+            return {
+              state: args.state,
+              ctx: args.ctx,
+              response: {
+                type: "delete-response",
+                level: "instance",
+                resourceType: request.resourceType,
+                id: request.id,
+              },
+            };
+          } finally {
+            client.release();
+          }
         }
         default:
           throw new OperationError(
@@ -863,12 +912,12 @@ function createPostgresMiddleware<
 }
 
 export function createPostgresClient<CTX extends FHIRServerCTX>(
-  config: pg.ClientConfig
+  config: pg.PoolConfig
 ): FHIRClientAsync<CTX> {
-  const client = new pg.Client(config);
-  client.connect();
-  return new AsynchronousClient<{ client: pg.Client }, CTX>(
-    { client: client },
+  const pool = new pg.Pool(config);
+  pool.connect();
+  return new AsynchronousClient<{ pool: pg.Pool }, CTX>(
+    { pool },
     createPostgresMiddleware()
   );
 }
