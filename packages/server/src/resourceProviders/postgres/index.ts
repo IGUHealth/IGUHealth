@@ -817,7 +817,7 @@ function createPostgresMiddleware<
             }
           }
         }
-        case "create-request":
+        case "create-request": {
           const client = await args.state.pool.connect();
           try {
             const savedResource = await retryFailedTransactions(
@@ -840,6 +840,7 @@ function createPostgresMiddleware<
           } finally {
             client.release();
           }
+        }
         case "patch-request":
           throw new OperationError(
             outcomeError("not-supported", `Patch is not yet supported.`)
