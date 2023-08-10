@@ -591,7 +591,7 @@ async function paramWithMeta<CTX extends FHIRServerCTX>(
 }
 
 async function calculateTotal(
-  client: pg.Client,
+  client: pg.Pool,
   totalType: string | number,
   query: string,
   values: any[]
@@ -629,7 +629,7 @@ function filterToLatest(query: string): string {
 }
 
 export async function executeSearchQuery(
-  client: pg.Client,
+  client: pg.Pool,
   request: SystemSearchRequest | TypeSearchRequest,
   ctx: FHIRServerCTX,
   onlyLatest: boolean = true

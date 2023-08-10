@@ -406,7 +406,7 @@ function toQuantityRange(
 }
 
 async function indexSearchParameter<CTX extends FHIRServerCTX>(
-  client: pg.Client,
+  client: pg.Pool,
   ctx: CTX,
   parameter: SearchParameter,
   resource: Resource,
@@ -582,7 +582,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
 }
 
 async function removeIndices(
-  client: pg.Client,
+  client: pg.Pool,
   _ctx: FHIRServerCTX,
   resource: Resource
 ) {
@@ -596,7 +596,7 @@ async function removeIndices(
 }
 
 async function indexResource<CTX extends FHIRServerCTX>(
-  client: pg.Client,
+  client: pg.Pool,
   ctx: CTX,
   resource: Resource
 ) {
@@ -614,7 +614,7 @@ async function indexResource<CTX extends FHIRServerCTX>(
 }
 
 async function saveResource<CTX extends FHIRServerCTX>(
-  client: pg.Client,
+  client: pg.Pool,
   ctx: CTX,
   resource: Resource
 ): Promise<Resource> {
@@ -640,7 +640,7 @@ async function saveResource<CTX extends FHIRServerCTX>(
 }
 
 async function getResource<CTX extends FHIRServerCTX>(
-  client: pg.Client,
+  client: pg.Pool,
   ctx: CTX,
   resourceType: ResourceType,
   id: string
@@ -661,7 +661,7 @@ async function getResource<CTX extends FHIRServerCTX>(
 }
 
 async function patchResource<CTX extends FHIRServerCTX>(
-  client: pg.Client,
+  client: pg.Pool,
   ctx: CTX,
   resourceType: ResourceType,
   id: string,
@@ -706,7 +706,7 @@ async function patchResource<CTX extends FHIRServerCTX>(
 }
 
 async function deleteResource<CTX extends FHIRServerCTX>(
-  client: pg.Client,
+  client: pg.Pool,
   ctx: CTX,
   resourceType: ResourceType,
   id: string
@@ -735,7 +735,7 @@ async function deleteResource<CTX extends FHIRServerCTX>(
 }
 
 function createPostgresMiddleware<
-  State extends { client: pg.Client },
+  State extends { client: pg.Pool },
   CTX extends FHIRServerCTX
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
@@ -863,11 +863,11 @@ function createPostgresMiddleware<
 }
 
 export function createPostgresClient<CTX extends FHIRServerCTX>(
-  config: pg.ClientConfig
+  config: pg.PoolConfig
 ): FHIRClientAsync<CTX> {
-  const client = new pg.Client(config);
+  const client = new pg.Pool(config);
   client.connect();
-  return new AsynchronousClient<{ client: pg.Client }, CTX>(
+  return new AsynchronousClient<{ client: pg.Pool }, CTX>(
     { client: client },
     createPostgresMiddleware()
   );
