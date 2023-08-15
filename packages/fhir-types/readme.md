@@ -56,10 +56,11 @@ const patient: Patient = {
 Sets can be used to determine whether a type is a resource, primitive or complex type.
 These are utilities that can be useful
 
-| name | description |
-|resourceTypes| String set of FHIR resource types |
-|complexTypes | String set of FHIR complex types (HumanName, Identifier etc...). |
-|primitiveTypes| String set of FHIR primitive types (string, id, decimal etc...). |
+| name           | description                                                      |
+| -------------- | ---------------------------------------------------------------- |
+| resourceTypes  | String set of FHIR resource types                                |
+| complexTypes   | String set of FHIR complex types (HumanName, Identifier etc...). |
+| primitiveTypes | String set of FHIR primitive types (string, id, decimal etc...). |
 
 ### Usage
 
@@ -77,10 +78,11 @@ function isResourceType(type: string) {
 
 Various utility types generally used for Typescript generic functions.
 
-| Name | Description |
-|ResourceType | One of the resourcetypes, ie "Patient" | "Observation"|
-| AResource | Generic type with an argument of ResourceType, when passed in, returns an instance of ResourceType IE AResource<"Patient"> = Patient|
-| Resource | An instance of one of the resource types |
+| Name         | Description                                                                                                                          |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ------------- |
+| ResourceType | One of the resourcetypes, ie "Patient"                                                                                               | "Observation" |
+| AResource    | Generic type with an argument of ResourceType, when passed in, returns an instance of ResourceType IE AResource<"Patient"> = Patient |
+| Resource     | An instance of one of the resource types                                                                                             |
 
 ### Example
 
