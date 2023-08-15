@@ -10,8 +10,8 @@ Code is organized as separate packages in /packages.
 
 ### Prerequisite
 
-Running postgres that has a database with same name specified in environment variables.
-Running instance of redis.
+- Running postgres that has a database with same name specified in environment variables.
+- Running instance of redis.
 
 ### Command
 
