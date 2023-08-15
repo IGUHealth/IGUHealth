@@ -1,0 +1,17 @@
+releases:
+  "@iguhealth/fhir-types": patch
+  "@iguhealth/fhirpath": patch
+
+declined:
+  - iguhealth-ts
+  - "@iguhealth/artifacts"
+  - "@iguhealth/cli"
+  - "@iguhealth/client"
+  - "@iguhealth/codegen"
+  - "@iguhealth/components"
+  - "@iguhealth/fhir-json-schema"
+  - "@iguhealth/fhir-validation"
+  - "@iguhealth/meta-value"
+  - "@iguhealth/operation-execution"
+  - "@iguhealth/operation-outcomes"
+  - "@iguhealth/server"
