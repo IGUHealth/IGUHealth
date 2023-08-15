@@ -8,4 +8,4 @@
 
 ## Reporting a Vulnerability
 
-Open an issue on this repository tagged with security.
+Open an issue on this repository labeled with security.
