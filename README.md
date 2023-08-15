@@ -6,7 +6,7 @@ FHIR development environment. Code is written in typescript
 
 Code is organized as separate packages in /packages.
 
-## Staring Local Server
+## Starting Local Server
 
 ### Prerequisite
 
