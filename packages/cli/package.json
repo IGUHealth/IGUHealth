@@ -1,0 +1,25 @@
+{
+  "name": "@iguhealth/cli",
+  "bin": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "version": "0.1.1",
+  "target": "node",
+  "type": "module",
+  "dependencies": {
+    "@iguhealth/artifacts": "workspace:^",
+    "@iguhealth/codegen": "workspace:^",
+    "@iguhealth/fhir-types": "workspace:^",
+    "@types/node": "^20.4.0",
+    "commander": "^11.0.0"
+  },
+  "devDependencies": {
+    "typescript": "5.1.3"
+  },
+  "scripts": {
+    "build": "tsc && node executable.js ./lib/index.js && chmod +x ./lib/index.js",
+    "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
+  },
+  "files": [
+    "lib/**"
+  ]
+}

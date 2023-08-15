@@ -1,0 +1,47 @@
+{
+  "name": "@iguhealth/components",
+  "version": "0.1.1",
+  "main": "./dist/iguhealth-ts.umd.js",
+  "module": "./dist/iguhealth-ts.mjs",
+  "types": "./dist/main.d.ts",
+  "files": [
+    "lib/**"
+  ],
+  "scripts": {
+    "tailwind": "bun build-tailwind --watch",
+    "build-": "tsc && bun build-tailwind && vite build --emptyOutDir false",
+    "watch": "vite build --watch --emptyOutDir false",
+    "build-vite": "vite build",
+    "test": "echo \"Error: no test specified\"",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "build-tailwind": "tailwindcss -i ./src/index.css -o ./dist/output.css"
+  },
+  "dependencies": {
+    "antd": "^5.6.2",
+    "dayjs": "^1.11.8",
+    "vite-plugin-dts": "3.0.0-beta.1"
+  },
+  "peerDependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@iguhealth/fhir-types": "workspace:^",
+    "@storybook/addon-essentials": "^7.0.22",
+    "@storybook/addon-interactions": "^7.0.22",
+    "@storybook/addon-links": "^7.0.22",
+    "@storybook/blocks": "^7.0.22",
+    "@storybook/react": "^7.0.22",
+    "@storybook/react-vite": "^7.0.22",
+    "@storybook/testing-library": "^0.0.14-next.2",
+    "@types/react": "^18.0.37",
+    "@types/react-dom": "^18.0.11",
+    "@vitejs/plugin-react-swc": "^3.0.0",
+    "prop-types": "^15.8.1",
+    "storybook": "^7.0.22",
+    "tailwindcss": "^3.3.2",
+    "typescript": "^5.0.2",
+    "vite": "^4.3.9"
+  }
+}

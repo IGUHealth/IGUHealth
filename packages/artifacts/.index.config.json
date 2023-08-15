@@ -1,0 +1,73 @@
+{
+  "index-version": "1",
+  "files": [
+    {
+      "filename": "r4/hl7/conceptmaps.json",
+      "resourceType": "ConceptMap"
+    },
+    {
+      "filename": "r4/hl7/profiles-resources.json",
+      "resourceType": "CapabilityStatement"
+    },
+    {
+      "filename": "r4/hl7/profiles-resources.json",
+      "resourceType": "CompartmentDefinition"
+    },
+    {
+      "filename": "r4/hl7/profiles-resources.json",
+      "resourceType": "OperationDefinition"
+    },
+    {
+      "filename": "r4/hl7/profiles-resources.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "r4/hl7/profiles-types.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "r4/hl7/search-parameters.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "r4/hl7/v2-tables.json",
+      "resourceType": "ValueSet"
+    },
+    {
+      "filename": "r4/hl7/v2-tables.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "r4/hl7/v3-codesystems.json",
+      "resourceType": "ValueSet"
+    },
+    {
+      "filename": "r4/hl7/v3-codesystems.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "r4/hl7/valuesets.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "r4/hl7/valuesets.json",
+      "resourceType": "ValueSet"
+    },
+    {
+      "filename": "r4/iguhealth/client-application.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "r4/iguhealth/connection.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "r4/iguhealth/parameters.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "r4/iguhealth/tenant.json",
+      "resourceType": "StructureDefinition"
+    }
+  ]
+}

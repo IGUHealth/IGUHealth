@@ -1,0 +1,29 @@
+{
+  "name": "@iguhealth/codegen",
+  "version": "0.1.1",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "generate-r4": "bun ts-node src/index.ts generate-types-artifacts --output ../fhir-types/r4",
+    "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.3.1",
+    "prettier": "^3.0.0",
+    "typescript": "^5.1.3"
+  },
+  "dependencies": {
+    "@iguhealth/artifacts": "workspace:^",
+    "@iguhealth/fhir-types": "workspace:^",
+    "commander": "^10.0.1"
+  },
+  "files": [
+    "lib/**"
+  ]
+}

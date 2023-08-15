@@ -1,0 +1,98 @@
+name: Workflow for Codecov example-javascript
+on: [push, pull_request]
+jobs:
+  server-tests:
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        # Docker Hub image
+        image: redis
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps port 6379 on service container to the host
+          - 6379:6379
+      postgres:
+        # Docker Hub image
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Provide the password for postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      # Ran into this issue [https://github.com/crate-ci/typos/issues/347]
+      # Because action appears to be diffing off main and overrides exclude extends
+      # It will trigger this. So we are disabling it for now.
+      # May move to different lib or just fork the action and alter logic later.
+
+      # - name: typos-action
+      #   uses: crate-ci/typos@bd033903f43a309e5226c11a04457034edefb115
+      #   # https://github.com/crate-ci/typos/blob/master/docs/github-action.md
+      #   with:
+      #     files: *.md
+      #     config: ./typos.config.toml
+
+      - name: Set up Node 19
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19.6.0
+          cache: "yarn"
+
+      - name: EnableCorePack
+        run: corepack enable
+
+      - name: Yarn v3
+        run: corepack prepare yarn@3.6.1 --activate
+
+      - name: Version Check
+        run: yarn version check
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Compile
+        run: yarn workspaces foreach -t run build
+
+      - name: start server
+        run: yarn workspace @iguhealth/server migrate up && yarn workspace @iguhealth/server start & node .github/workflows/wait_server.js http://localhost:3000/w/1704fc63-dd53-4d6c-8435-1a4b83ba27f7/api/v1/fhir/r4
+        env:
+          FHIR_DATABASE_NAME: postgres
+          FHIR_DATABASE_HOST: localhost
+          FHIR_DATABASE_PORT: 5432
+          FHIR_DATABASE_PASSWORD: "postgres"
+          FHIR_DATABASE_USERNAME: postgres
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+
+      - name: Run tests and collect coverage
+        run: yarn workspaces foreach run test
+        timeout-minutes: 10
+        env:
+          FHIR_DATABASE_NAME: postgres
+          FHIR_DATABASE_HOST: localhost
+          FHIR_DATABASE_PORT: 5432
+          FHIR_DATABASE_PASSWORD: "postgres"
+          FHIR_DATABASE_USERNAME: postgres
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
