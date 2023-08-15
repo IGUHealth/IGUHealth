@@ -136,7 +136,7 @@ export interface FHIRClientAsync<CTX> {
 import { expect, test } from "@jest/globals";
 import { OperationDefinition } from "@iguhealth/fhir-types";
 
-import HTTPClient from "./index.js";
+import HTTPClient from "@iguhealth/client/lib/http/index.js";
 
 const client = HTTPClient({
   url: "FHIR_API_ROOT_URL",
