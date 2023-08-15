@@ -1,6 +1,0 @@
-releases:
-  "@iguhealth/client": patch
-
-declined:
-  - iguhealth-ts
-  - "@iguhealth/server"
