@@ -1,8 +1,0 @@
-releases:
-  "@iguhealth/client": patch
-  "@iguhealth/fhirpath": patch
-
-declined:
-  - iguhealth-ts
-  - "@iguhealth/meta-value"
-  - "@iguhealth/server"
