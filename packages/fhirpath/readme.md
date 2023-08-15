@@ -4,6 +4,8 @@
 
 ### evaluate
 
+Returns a JS object/primitive based on the evaluation.
+
 ```typescript
 evaluate(
   expression: string,
@@ -13,6 +15,8 @@ evaluate(
 ```
 
 ### evaluateWithMeta
+
+Returns a @iguhealth/meta-value singular value which contains data along with metadata about the evaluation.
 
 ```typescript
 function evaluateWithMeta(
