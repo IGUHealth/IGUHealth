@@ -79,8 +79,8 @@ function isResourceType(type: string) {
 Various utility types generally used for Typescript generic functions.
 
 | Name         | Description                                                                                                                          |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ------------- |
-| ResourceType | One of the resourcetypes, ie "Patient"                                                                                               | "Observation" |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| ResourceType | One of the resourcetypes, ie "Patient", "Observation".                                                                               |
 | AResource    | Generic type with an argument of ResourceType, when passed in, returns an instance of ResourceType IE AResource<"Patient"> = Patient |
 | Resource     | An instance of one of the resource types                                                                                             |
 
