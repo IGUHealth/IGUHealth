@@ -73,43 +73,60 @@ We provide an HTTP client by default that allows you to call FHIR servers via AP
 Supports all the method calls within the AsynchronousClient interface:
 
 ```typescript
-export interface FHIRClientSync<CTX> {
-  request(ctx: CTX, request: FHIRRequest): FHIRResponse;
+export interface FHIRClientAsync<CTX> {
+  request(ctx: CTX, request: FHIRRequest): Promise<FHIRResponse>;
   search_system(
     ctx: CTX,
     parameters: ParsedParameter<string | number>[]
-  ): { total?: number; resources: Resource[] };
+  ): Promise<{ total?: number; resources: Resource[] }>;
   search_type<T extends ResourceType>(
     ctx: CTX,
     type: T,
     parameters: ParsedParameter<string | number>[]
-  ): { total?: number; resources: AResource<T>[] };
-  create<T extends Resource>(ctx: CTX, resource: T): T;
-  update<T extends Resource>(ctx: CTX, resource: T): T;
-  // [ADD JSON PATCH TYPES]
-  patch<T extends Resource>(ctx: CTX, resource: T, patches: any): T;
+  ): Promise<{ total?: number; resources: AResource<T>[] }>;
+  create<T extends Resource>(ctx: CTX, resource: T): Promise<T>;
+  update<T extends Resource>(ctx: CTX, resource: T): Promise<T>;
+  patch<T extends Resource>(ctx: CTX, resource: T, patches: any): Promise<T>;
   read<T extends ResourceType>(
     ctx: CTX,
     resourceType: T,
     id: id
-  ): AResource<T> | undefined;
+  ): Promise<AResource<T> | undefined>;
   vread<T extends ResourceType>(
     ctx: CTX,
     resourceType: T,
     id: id,
     versionId: id
-  ): AResource<T> | undefined;
-  delete(ctx: CTX, resourceType: ResourceType, id: id): void;
-  historySystem(ctx: CTX): Resource[];
+  ): Promise<AResource<T> | undefined>;
+  delete(ctx: CTX, resourceType: ResourceType, id: id): Promise<void>;
+  historySystem(ctx: CTX): Promise<Resource[]>;
   historyType<T extends ResourceType>(
     ctx: CTX,
     resourceType: T
-  ): AResource<T>[];
+  ): Promise<AResource<T>[]>;
   historyInstance<T extends ResourceType>(
     ctx: CTX,
     resourceType: T,
     id: id
-  ): AResource<T>[];
+  ): Promise<AResource<T>[]>;
+  invoke_system<Op extends IOperation<any, any>>(
+    op: Op,
+    ctx: CTX,
+    input: OPMetadata<Op>["Input"]
+  ): Promise<OPMetadata<Op>["Output"]>;
+  invoke_type<Op extends IOperation<any, any>, Type extends ResourceType>(
+    op: Op,
+    ctx: CTX,
+    resourceType: Type,
+    input: OPMetadata<Op>["Input"]
+  ): Promise<OPMetadata<Op>["Output"]>;
+  invoke_instance<Op extends IOperation<any, any>, Type extends ResourceType>(
+    op: Op,
+    ctx: CTX,
+    resourceType: Type,
+    id: id,
+    input: OPMetadata<Op>["Input"]
+  ): Promise<OPMetadata<Op>["Output"]>;
 }
 ```
 
