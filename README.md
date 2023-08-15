@@ -6,21 +6,35 @@ FHIR development environment. Code is written in typescript
 
 Code is organized as separate packages in /packages.
 
-## Staring server
+## Staring Local Server
+
+### Prerequisite
+
+Running postgres that has a database with same name specified in environment variables.
+Running instance of redis.
+
+### Command
+
+```bash
+cd packages/server
+# If not present .env
+mv .env.defaults .env
+yarn watch
+```
 
 ### Environment Variables
 
 #### Data layer
 
-| name                   | description             | required |
-| ---------------------- | ----------------------- | -------- |
-| FHIR_DATABASE_NAME     | Postgres database name. | true     |
-| FHIR_DATABASE_HOST     | Postgres host           | true     |
-| FHIR_DATABASE_PORT     | Postgres port           | true     |
-| FHIR_DATABASE_PASSWORD | Postgres password       | true     |
-| FHIR_DATABASE_USERNAME | Postgres username       | true     |
-| REDIS_HOST             | Redis Host              | true     |
-| REDIS_PORT             | Redis port              | true     |
+| name                   | description             | required | defaults  |
+| ---------------------- | ----------------------- | -------- | --------- |
+| FHIR_DATABASE_NAME     | Postgres database name. | true     | iguhealth |
+| FHIR_DATABASE_HOST     | Postgres host           | true     | localhost |
+| FHIR_DATABASE_PORT     | Postgres port           | true     | 5432      |
+| FHIR_DATABASE_PASSWORD | Postgres password       | true     | ""        |
+| FHIR_DATABASE_USERNAME | Postgres username       | true     | postgres  |
+| REDIS_HOST             | Redis Host              | true     | 127.0.0.1 |
+| REDIS_PORT             | Redis port              | true     | 6379      |
 
 #### Meta Information
 

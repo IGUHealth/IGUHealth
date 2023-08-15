@@ -10,7 +10,7 @@
     "test": "jest --detectOpenHandles",
     "generate": "yarn cli generate-operations --output=./src/r4",
     "migrate": "db-migrate --sql-file -m src/resourceProviders/postgres/migrations",
-    "watch": "yarn tsc-watch --onSuccess \"yarn node --enable-source-maps  ./lib/index.js\"",
+    "watch": "yarn migrate up && yarn tsc-watch --onSuccess \"yarn node --enable-source-maps  ./lib/index.js\"",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "dependencies": {
