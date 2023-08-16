@@ -70,7 +70,7 @@ jobs:
         run: yarn workspaces foreach -t run build
 
       - name: start server
-        run: yarn workspace @iguhealth/server migrate up && yarn workspace @iguhealth/server start & node .github/workflows/wait_server.js http://localhost:3000/w/1704fc63-dd53-4d6c-8435-1a4b83ba27f7/api/v1/fhir/r4
+        run: yarn workspace @iguhealth/server migrate up && yarn workspace @iguhealth/server start & node .github/workflows/wait_server.js http://localhost:3000/w/system/api/v1/fhir/r4
         env:
           FHIR_DATABASE_NAME: postgres
           FHIR_DATABASE_HOST: localhost

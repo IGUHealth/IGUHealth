@@ -4,7 +4,7 @@ import { OperationDefinition } from "@iguhealth/fhir-types";
 import HTTPClient from "./index.js";
 
 const client = HTTPClient({
-  url: "http://localhost:3000/w/1704fc63-dd53-4d6c-8435-1a4b83ba27f7/api/v1/fhir/r4",
+  url: "http://localhost:3000/w/system/api/v1/fhir/r4",
   token: "blah",
 });
 
