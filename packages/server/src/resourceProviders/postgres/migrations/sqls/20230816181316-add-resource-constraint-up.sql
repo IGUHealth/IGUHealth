@@ -1,0 +1,1 @@
+ALTER TABLE resources ADD CONSTRAINT workspace_constraint FOREIGN KEY (workspace)  REFERENCES workspaces(id);

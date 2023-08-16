@@ -1,0 +1,1 @@
+ALTER TABLE resources DROP CONSTRAINT workspace_constraint;

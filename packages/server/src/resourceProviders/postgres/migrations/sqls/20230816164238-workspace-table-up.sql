@@ -9,3 +9,5 @@ CREATE TABLE workspaces (
 );
 
 INSERT INTO workspaces (id, workspace) VALUES ('system', '{"id": "system", "name": "IGUHealth System"}'::jsonb);
+
+ALTER TABLE resources ALTER COLUMN workspace SET DATA TYPE TEXT;
