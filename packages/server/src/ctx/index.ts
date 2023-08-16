@@ -27,7 +27,7 @@ function createMemoryDatabase(
     .map((resourceType) =>
       loadArtifacts(
         resourceType,
-        path.join(fileURLToPath(import.meta.url), "../../")
+        path.join(fileURLToPath(import.meta.url), "../../../")
       )
     )
     .flat();

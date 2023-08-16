@@ -5,9 +5,7 @@ import { FHIRServerCTX } from "../fhirServer";
 
 dotEnv.config();
 
-function executeTick() {
-    
-}
+function executeTick() {}
 
 export default async function createWorker(loopInterval = 100) {
   const client = new pg.Pool({
