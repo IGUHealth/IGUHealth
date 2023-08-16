@@ -1,3 +1,4 @@
+import * as jose from "jose";
 import Koa, { DefaultContext, DefaultState, Middleware } from "koa";
 import Router from "@koa/router";
 import bodyParser from "@koa/bodyparser";
@@ -8,36 +9,23 @@ import jwt from "koa-jwt";
 import jwksRsa from "jwks-rsa";
 import Provider from "oidc-provider";
 import mount from "koa-mount";
-import {
-  Bundle,
-  CapabilityStatement,
-  ResourceType,
-  Resource,
-} from "@iguhealth/fhir-types/r4/types";
-import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
-import * as jose from "jose";
-import { FHIRResponse } from "@iguhealth/client/lib/types";
-import { FHIRClientSync } from "@iguhealth/client/lib/interface.js";
 
-import { loadArtifacts } from "@iguhealth/artifacts";
-import MemoryDatabase from "./resourceProviders/memory.js";
-import RouterClient from "./resourceProviders/router.js";
-import createFHIRServer, { FHIRServerCTX } from "./fhirServer.js";
-import { createPostgresClient } from "./resourceProviders/postgres/index.js";
+import { Bundle, Resource } from "@iguhealth/fhir-types/r4/types";
 import {
   OperationError,
   isOperationError,
   issueSeverityToStatusCodes,
   outcomeError,
 } from "@iguhealth/operation-outcomes";
+import { FHIRResponse } from "@iguhealth/client/lib/types";
 
+import createServiceCTX from "./ctx/index.js";
+import createFHIRServer from "./fhirServer.js";
 import Account from "./oidc-provider/accounts.js";
 import configuration from "./oidc-provider/configuration.js";
 import routes from "./oidc-provider/routes.js";
 import { loadJWKS } from "./auth/jwks.js";
 import { KoaRequestToFHIRRequest } from "./fhirRequest/index.js";
-import PostgresLock from "./synchronization/postgres.lock.js";
-import LambdaExecutioner from "./operation-executors/awsLambda.js";
 
 dotEnv.config();
 
@@ -60,35 +48,6 @@ const signedJWT = await new jose.SignJWT({ "urn:example:claim": true })
 // console.log(signedJWT);
 // console.log(jose.decodeJwt(signedJWT));
 // console.log(await jose.jwtVerify(signedJWT, jwks));
-
-function serverCapabilities(): CapabilityStatement {
-  return {
-    resourceType: "CapabilityStatement",
-    status: "active",
-    date: new Date().toDateString(),
-    fhirVersion: "r4",
-    kind: "capability",
-    format: ["json"],
-  };
-}
-
-function createMemoryDatabase(
-  resourceTypes: ResourceType[]
-): FHIRClientSync<any> {
-  const database = MemoryDatabase<any>({});
-  const artifactResources: Resource[] = resourceTypes
-    .map((resourceType) =>
-      loadArtifacts(
-        resourceType,
-        path.join(fileURLToPath(import.meta.url), "../../")
-      )
-    )
-    .flat();
-  for (const resource of artifactResources) {
-    database.create({}, resource);
-  }
-  return database;
-}
 
 function toBundle(
   bundleType: Bundle["type"],
@@ -142,8 +101,6 @@ function fhirResponseToKoaResponse(
   }
 }
 
-const MEMORY_TYPES = ["StructureDefinition", "SearchParameter"];
-
 const checkJWT: Middleware<DefaultState, DefaultContext, any> = jwt({
   secret: jwksRsa.koaJwtSecret({
     cache: true,
@@ -158,68 +115,12 @@ const checkJWT: Middleware<DefaultState, DefaultContext, any> = jwt({
 
 function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
   const app = new Koa();
-  const memoryDatabase = createMemoryDatabase([
-    "StructureDefinition",
-    "SearchParameter",
-  ]);
-
-  const client = RouterClient([
-    // OP INVOCATION
-    {
-      resourcesSupported: [...resourceTypes] as ResourceType[],
-      interactionsSupported: ["invoke-request"],
-      source: LambdaExecutioner({
-        AWS_REGION: process.env.AWS_REGION as string,
-        AWS_ACCESS_KEY_ID: process.env.AWS_LAMBDA_ACCESS_KEY_ID as string,
-        AWS_ACCESS_KEY_SECRET: process.env
-          .AWS_LAMBDA_ACCESS_KEY_SECRET as string,
-        LAMBDA_ROLE: process.env.AWS_LAMBDA_ROLE as string,
-        LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
-      }),
-    },
-    {
-      resourcesSupported: MEMORY_TYPES as ResourceType[],
-      interactionsSupported: ["read-request", "search-request"],
-      source: memoryDatabase,
-    },
-    {
-      resourcesSupported: [...resourceTypes].filter(
-        (type) => MEMORY_TYPES.indexOf(type) === -1
-      ) as ResourceType[],
-      interactionsSupported: [
-        "read-request",
-        "search-request",
-        "create-request",
-        "update-request",
-        "delete-request",
-      ],
-      source: createPostgresClient({
-        user: process.env["FHIR_DATABASE_USERNAME"],
-        password: process.env["FHIR_DATABASE_PASSWORD"],
-        host: process.env["FHIR_DATABASE_HOST"],
-        database: process.env["FHIR_DATABASE_NAME"],
-        port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
-      }),
-    },
-  ]);
-
-  const services = {
-    capabilities: serverCapabilities(),
-    client,
-    resolveSD: (ctx: FHIRServerCTX, type: string) =>
-      memoryDatabase.read(ctx, "StructureDefinition", type),
-    lock: new PostgresLock({
-      user: process.env["FHIR_DATABASE_USERNAME"],
-      password: process.env["FHIR_DATABASE_PASSWORD"],
-      host: process.env["FHIR_DATABASE_HOST"],
-      database: process.env["FHIR_DATABASE_NAME"],
-      port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
-    }),
-  };
 
   const fhirServer = createFHIRServer();
 
   const router = new Router();
+  const services = createServiceCTX();
+
   router.all(
     "/w/:workspace/api/v1/fhir/r4/:fhirUrl*",
     //checkJWT,
