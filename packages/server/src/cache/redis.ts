@@ -18,7 +18,7 @@ export default class RedisCache<CTX extends { workspace: string }>
     return value;
   }
   async set(ctx: CTX, key: string, value: string | number) {
-    if (typeof value !== "string" || typeof value !== "number") {
+    if (typeof value !== "string" && typeof value !== "number") {
       throw new Error(
         `Saving to redis cache must be of type 'string' or 'number' not ${typeof value}`
       );
