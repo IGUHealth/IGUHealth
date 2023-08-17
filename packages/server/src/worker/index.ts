@@ -2,9 +2,7 @@
 import dotEnv from "dotenv";
 import pg from "pg";
 
-import createServiceCTX from "../ctx/index.js";
-import logAuditEvent, { SERIOUS_FAILURE } from "../logging/auditEvents.js";
-import { KoaRequestToFHIRRequest } from "../fhirRequest/index.js";
+import { Resource } from "@iguhealth/fhir-types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import {
   SystemSearchResponse,
@@ -12,7 +10,30 @@ import {
 } from "@iguhealth/client/lib/types.js";
 import { evaluate } from "@iguhealth/fhirpath";
 
+import createServiceCTX from "../ctx/index.js";
+import logAuditEvent, { SERIOUS_FAILURE } from "../logging/auditEvents.js";
+import { KoaRequestToFHIRRequest } from "../fhirRequest/index.js";
+import { strictEqual } from "assert";
+
 dotEnv.config();
+
+function getVersionSequence(resource: Resource): number {
+  const evaluation = evaluate(
+    "$this.extension.where(url=%sequenceUrl).value",
+    resource,
+    {
+      variables: {
+        sequenceUrl: "https://iguhealth.app/version-sequence",
+      },
+    }
+  )[0];
+
+  if (typeof evaluation !== "number") {
+    throw new Error("No version sequence found.");
+  }
+
+  return evaluation;
+}
 
 async function subWorker(loopInterval = 100) {
   // Using a pool directly because need to query up workspaces.
@@ -78,15 +99,7 @@ async function subWorker(loopInterval = 100) {
           getLatestVersionIdForSub = getLatestVersionIdForSub
             ? getLatestVersionIdForSub
             : // If latest isn't there then use the subscription version when created.
-              (evaluate(
-                "$this.extension.where(url=%sequenceUrl).value",
-                subscription,
-                {
-                  variables: {
-                    sequenceUrl: "https://iguhealth.app/version-sequence",
-                  },
-                }
-              )[0] as string);
+              getVersionSequence(subscription);
 
           request.parameters = request.parameters.concat([
             {
@@ -99,7 +112,16 @@ async function subWorker(loopInterval = 100) {
             | TypeSearchResponse
             | SystemSearchResponse;
 
-          for (const resource of result.body) {
+          if (result.body[0]) {
+            await services.cache.set(
+              ctx,
+              `${subscription.id}_latest`,
+              getVersionSequence(result.body[0])
+            );
+          }
+
+          for (const resource of result.body.reverse()) {
+            console.log(`versionID: '${resource.meta?.versionId}'`);
           }
         } catch (e) {
           console.error(e);
