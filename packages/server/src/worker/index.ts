@@ -19,7 +19,7 @@ dotEnv.config();
 
 function getVersionSequence(resource: Resource): number {
   const evaluation = evaluate(
-    "$this.extension.where(url=%sequenceUrl).value",
+    "$this.meta.extension.where(url=%sequenceUrl).value",
     resource,
     {
       variables: {
@@ -54,7 +54,7 @@ async function subWorker(loopInterval = 100) {
 
     for (const workspace of activeWorkspaces) {
       const ctx = { ...services, workspace, author: "system" };
-      console.log(`Processing '${workspace}' subscriptions`);
+      // console.log(`Processing '${workspace}' subscriptions`);
       const activeSubscriptions = await services.client.search_type(
         ctx,
         "Subscription",
@@ -62,7 +62,7 @@ async function subWorker(loopInterval = 100) {
       );
       for (const subscription of activeSubscriptions.resources) {
         try {
-          console.log("process:", subscription.criteria);
+          console.log(`checking criteria: '${subscription.criteria}'`);
           const request = KoaRequestToFHIRRequest(subscription.criteria, {
             method: "GET",
           });
@@ -121,7 +121,9 @@ async function subWorker(loopInterval = 100) {
           }
 
           for (const resource of result.body.reverse()) {
-            console.log(`versionID: '${resource.meta?.versionId}'`);
+            console.log(
+              `subscription: '${subscription.id}', versionID: '${resource.meta?.versionId}'`
+            );
           }
         } catch (e) {
           console.error(e);
