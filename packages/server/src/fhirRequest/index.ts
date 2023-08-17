@@ -62,7 +62,7 @@ function isBundle(v: unknown): v is Bundle {
 
 export function KoaRequestToFHIRRequest(
   url: string,
-  request: Koa.Request
+  request: Pick<Koa.Request, "method" | "body">
 ): FHIRRequest {
   const method = request.method;
   const urlPieces = url.split("?")[0].split("/");
