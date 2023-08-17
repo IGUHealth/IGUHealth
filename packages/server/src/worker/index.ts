@@ -131,7 +131,7 @@ async function subWorker(loopInterval = 100) {
             ctx,
             SERIOUS_FAILURE,
             { reference: `Subscription/${subscription.id}` },
-            "error processing subscription"
+            "Subscription failed to process"
           );
           await services.client.update(ctx, {
             ...subscription,
