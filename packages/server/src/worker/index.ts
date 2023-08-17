@@ -10,6 +10,7 @@ import {
   SystemSearchResponse,
   TypeSearchResponse,
 } from "@iguhealth/client/lib/types.js";
+import { evaluate } from "@iguhealth/fhirpath";
 
 dotEnv.config();
 
@@ -65,18 +66,40 @@ async function subWorker(loopInterval = 100) {
             );
           }
 
-          const getLatestVersionIdForSub = await services.cache.get(
+          request.parameters = request.parameters.concat([
+            { name: "_sort", value: ["_iguhealth-version-seq"] },
+          ]);
+
+          let getLatestVersionIdForSub = await services.cache.get(
             ctx,
             `${subscription.id}_latest`
           );
 
-          if (getLatestVersionIdForSub) {
-            const result = (await services.client.request(ctx, request)) as
-              | TypeSearchResponse
-              | SystemSearchResponse;
+          getLatestVersionIdForSub = getLatestVersionIdForSub
+            ? getLatestVersionIdForSub
+            : // If latest isn't there then use the subscription version when created.
+              (evaluate(
+                "$this.extension.where(url=%sequenceUrl).value",
+                subscription,
+                {
+                  variables: {
+                    sequenceUrl: "https://iguhealth.app/version-sequence",
+                  },
+                }
+              )[0] as string);
 
-            for (const resource of result.body) {
-            }
+          request.parameters = request.parameters.concat([
+            {
+              name: "_iguhealth-version-seq",
+              value: [`gt${getLatestVersionIdForSub}`],
+            },
+          ]);
+
+          const result = (await services.client.request(ctx, request)) as
+            | TypeSearchResponse
+            | SystemSearchResponse;
+
+          for (const resource of result.body) {
           }
         } catch (e) {
           console.error(e);
