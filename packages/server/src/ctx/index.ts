@@ -16,6 +16,7 @@ import MemoryDatabase from "../resourceProviders/memory.js";
 import RouterClient from "../resourceProviders/router.js";
 import PostgresLock from "../synchronization/postgres.lock.js";
 import LambdaExecutioner from "../operation-executors/awsLambda.js";
+import RedisCache from "../cache/redis.js";
 
 const MEMORY_TYPES = ["StructureDefinition", "SearchParameter"];
 
@@ -50,7 +51,7 @@ function serverCapabilities(): CapabilityStatement {
 
 export default function createServiceCTX(): Pick<
   FHIRServerCTX,
-  "lock" | "client" | "resolveSD" | "capabilities"
+  "lock" | "client" | "resolveSD" | "capabilities" | "cache"
 > {
   const memoryDatabase = createMemoryDatabase([
     "StructureDefinition",
@@ -100,6 +101,10 @@ export default function createServiceCTX(): Pick<
   const services = {
     capabilities: serverCapabilities(),
     client,
+    cache: new RedisCache({
+      host: process.env.REDIS_HOST,
+      port: parseInt(process.env.REDIS_PORT || "6739"),
+    }),
     resolveSD: (ctx: FHIRServerCTX, type: string) =>
       memoryDatabase.read(ctx, "StructureDefinition", type),
     lock: new PostgresLock({

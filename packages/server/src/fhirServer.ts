@@ -13,6 +13,7 @@ import { FHIRRequest, FHIRResponse } from "@iguhealth/client/lib/types";
 import validate from "@iguhealth/fhir-validation";
 
 import { Lock } from "./synchronization/interfaces.js";
+import { IOCache } from "./cache/interface.js";
 
 async function fhirRequestToFHIRResponse(
   ctx: FHIRServerCTX,
@@ -27,6 +28,7 @@ export interface FHIRServerCTX {
 
   // Services setup
   capabilities: CapabilityStatement;
+  cache: IOCache<FHIRServerCTX>;
   client: FHIRClient<FHIRServerCTX>;
   lock: Lock<unknown>;
   resolveSD: (

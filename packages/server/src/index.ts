@@ -176,12 +176,12 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
   );
 
   // TODO Use an adapter  adapter,
-  const provider = new Provider(ISSUER, { ...configuration });
+  //const provider = new Provider(ISSUER, { ...configuration });
 
   app
     .use(bodyParser())
-    .use(routes(provider).routes())
-    .use(mount(provider.app))
+    // .use(routes(provider).routes())
+    // .use(mount(provider.app))
 
     .use(async (ctx, next) => {
       await next();
