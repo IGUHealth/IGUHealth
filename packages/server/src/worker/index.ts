@@ -62,7 +62,9 @@ async function subWorker(loopInterval = 100) {
       );
       for (const subscription of activeSubscriptions.resources) {
         try {
-          console.log(`checking criteria: '${subscription.criteria}'`);
+          console.log(
+            `${ctx.workspace} checking criteria: '${subscription.criteria}'`
+          );
           const request = KoaRequestToFHIRRequest(subscription.criteria, {
             method: "GET",
           });
@@ -122,7 +124,7 @@ async function subWorker(loopInterval = 100) {
 
           for (const resource of result.body.reverse()) {
             console.log(
-              `subscription: '${subscription.id}', versionID: '${resource.meta?.versionId}'`
+              `workspace: '${ctx.workspace}' subscription: '${subscription.id}', versionID: '${resource.meta?.versionId}'`
             );
           }
         } catch (e) {
