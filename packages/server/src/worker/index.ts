@@ -64,7 +64,7 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
         await ctx.lock.withLock(
           `${ctx.workspace}:${subscription.id}`,
           async () => {
-            console.log(
+            ctx.logger.info(
               `worker '${workerID}' has lock '${ctx.workspace}:${subscription.id}'`
             );
             try {
