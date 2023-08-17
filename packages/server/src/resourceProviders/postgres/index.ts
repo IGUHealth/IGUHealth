@@ -198,6 +198,7 @@ function toURIParameters(
 }
 
 function toReference(
+  ctx: FHIRServerCTX,
   parameter: SearchParameter,
   value: MetaValueSingular<NonNullable<unknown>>
 ): Array<{ reference: Reference; resourceType?: ResourceType; id?: id }> {
@@ -221,7 +222,9 @@ function toReference(
     }
     case "uri":
     case "canonical": {
-      console.warn("Not supporting canonical or uri reference parameters yet.");
+      ctx.logger.warn(
+        "Not supporting canonical or uri reference parameters yet."
+      );
       return [];
     }
 
@@ -464,11 +467,11 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
     case "reference": {
       await Promise.all(
         evaluation
-          .map((v) => toReference(parameter, v))
+          .map((v) => toReference(ctx, parameter, v))
           .flat()
           .map(async ({ reference, resourceType, id }) => {
             if (!reference.reference) {
-              console.warn("Cannot index logical reference.");
+              ctx.logger.warn("Cannot index logical reference.");
               return;
             }
             return await client.query(

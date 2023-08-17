@@ -1,5 +1,6 @@
 import path from "path";
 import { fileURLToPath } from "url";
+import createLogger from "pino";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
@@ -51,7 +52,7 @@ function serverCapabilities(): CapabilityStatement {
 
 export default function createServiceCTX(): Pick<
   FHIRServerCTX,
-  "lock" | "client" | "resolveSD" | "capabilities" | "cache"
+  "lock" | "client" | "resolveSD" | "capabilities" | "cache" | "logger"
 > {
   const memoryDatabase = createMemoryDatabase([
     "StructureDefinition",
@@ -99,6 +100,7 @@ export default function createServiceCTX(): Pick<
   ]);
 
   const services = {
+    logger: createLogger(),
     capabilities: serverCapabilities(),
     client,
     cache: new RedisCache({

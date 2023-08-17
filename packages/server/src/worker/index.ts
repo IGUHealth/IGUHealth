@@ -14,6 +14,7 @@ import createServiceCTX from "../ctx/index.js";
 import logAuditEvent, { SERIOUS_FAILURE } from "../logging/auditEvents.js";
 import { KoaRequestToFHIRRequest } from "../fhirRequest/index.js";
 import { strictEqual } from "assert";
+import { randomUUID } from "crypto";
 
 dotEnv.config();
 
@@ -35,7 +36,7 @@ function getVersionSequence(resource: Resource): number {
   return evaluation;
 }
 
-async function subWorker(loopInterval = 100) {
+async function subWorker(workerID = randomUUID(), loopInterval = 500) {
   // Using a pool directly because need to query up workspaces.
   const services = createServiceCTX();
 
@@ -54,7 +55,6 @@ async function subWorker(loopInterval = 100) {
 
     for (const workspace of activeWorkspaces) {
       const ctx = { ...services, workspace, author: "system" };
-      // console.log(`Processing '${workspace}' subscriptions`);
       const activeSubscriptions = await services.client.search_type(
         ctx,
         "Subscription",
@@ -62,9 +62,12 @@ async function subWorker(loopInterval = 100) {
       );
       for (const subscription of activeSubscriptions.resources) {
         try {
-          console.log(
-            `${ctx.workspace} checking criteria: '${subscription.criteria}'`
-          );
+          ctx.logger.info({
+            worker: workerID,
+            workspace: ctx.workspace,
+            criteria: subscription.criteria,
+          });
+
           const request = KoaRequestToFHIRRequest(subscription.criteria, {
             method: "GET",
           });
@@ -123,12 +126,15 @@ async function subWorker(loopInterval = 100) {
           }
 
           for (const resource of result.body.reverse()) {
-            console.log(
-              `workspace: '${ctx.workspace}' subscription: '${subscription.id}', versionID: '${resource.meta?.versionId}'`
-            );
+            ctx.logger.info({
+              worker: workerID,
+              workspace: ctx.workspace,
+              subscription: subscription.id,
+              versionId: resource.meta?.versionId,
+            });
           }
         } catch (e) {
-          console.error(e);
+          ctx.logger.error(e);
           await logAuditEvent(
             ctx,
             SERIOUS_FAILURE,
@@ -146,4 +152,4 @@ async function subWorker(loopInterval = 100) {
   }
 }
 
-subWorker(500);
+subWorker();

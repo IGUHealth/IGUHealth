@@ -327,7 +327,7 @@ function createExecutor(
             );
         }
       } catch (e) {
-        console.error(e);
+        ctx.logger.error(e);
         throw e;
       }
     },

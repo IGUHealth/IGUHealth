@@ -99,7 +99,7 @@ function createRouterMiddleware<
                 try {
                   return await source.source.request(args.ctx, request);
                 } catch (e) {
-                  console.error(e);
+                  args.ctx.logger.error(e);
                   return undefined;
                 }
               })
