@@ -61,91 +61,98 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
         [{ name: "status", value: ["active"] }]
       );
       for (const subscription of activeSubscriptions.resources) {
-        try {
-          ctx.logger.info({
-            worker: workerID,
-            workspace: ctx.workspace,
-            criteria: subscription.criteria,
-          });
-
-          const request = KoaRequestToFHIRRequest(subscription.criteria, {
-            method: "GET",
-          });
-          if (request.type !== "search-request") {
-            throw new OperationError(
-              outcomeError(
-                "invalid",
-                `Criteria must be a search request but found ${request.type}`
-              )
+        await ctx.lock.withLock(
+          `${ctx.workspace}:${subscription.id}`,
+          async () => {
+            console.log(
+              `worker '${workerID}' has lock '${ctx.workspace}:${subscription.id}'`
             );
+            try {
+              //   ctx.logger.info({
+              //     worker: workerID,
+              //     workspace: ctx.workspace,
+              //     criteria: subscription.criteria,
+              //   });
+              const request = KoaRequestToFHIRRequest(subscription.criteria, {
+                method: "GET",
+              });
+              if (request.type !== "search-request") {
+                throw new OperationError(
+                  outcomeError(
+                    "invalid",
+                    `Criteria must be a search request but found ${request.type}`
+                  )
+                );
+              }
+              const sortParameter = request.parameters.find(
+                (p) => p.name === "_sort"
+              );
+
+              if (sortParameter) {
+                throw new OperationError(
+                  outcomeError(
+                    "invalid",
+                    `Criteria cannot include _sort. Sorting must be based order resource was updated.`
+                  )
+                );
+              }
+
+              request.parameters = request.parameters.concat([
+                { name: "_sort", value: ["_iguhealth-version-seq"] },
+              ]);
+
+              let getLatestVersionIdForSub = await services.cache.get(
+                ctx,
+                `${subscription.id}_latest`
+              );
+
+              getLatestVersionIdForSub = getLatestVersionIdForSub
+                ? getLatestVersionIdForSub
+                : // If latest isn't there then use the subscription version when created.
+                  getVersionSequence(subscription);
+
+              request.parameters = request.parameters.concat([
+                {
+                  name: "_iguhealth-version-seq",
+                  value: [`gt${getLatestVersionIdForSub}`],
+                },
+              ]);
+
+              const result = (await services.client.request(ctx, request)) as
+                | TypeSearchResponse
+                | SystemSearchResponse;
+
+              if (result.body.length !== 0) {
+                await services.cache.set(
+                  ctx,
+                  `${subscription.id}_latest`,
+                  getVersionSequence(result.body[result.body.length - 1])
+                );
+              }
+
+              for (const resource of result.body) {
+                ctx.logger.info({
+                  worker: workerID,
+                  workspace: ctx.workspace,
+                  subscription: subscription.id,
+                  versionId: resource.meta?.versionId,
+                });
+              }
+            } catch (e) {
+              ctx.logger.error(e);
+              await logAuditEvent(
+                ctx,
+                SERIOUS_FAILURE,
+                { reference: `Subscription/${subscription.id}` },
+                "Subscription failed to process"
+              );
+              await services.client.update(ctx, {
+                ...subscription,
+                status: "error",
+              });
+            }
           }
-          const sortParameter = request.parameters.find(
-            (p) => p.name === "_sort"
-          );
-
-          if (sortParameter) {
-            throw new OperationError(
-              outcomeError(
-                "invalid",
-                `Criteria cannot include _sort. Sorting must be based order resource was updated.`
-              )
-            );
-          }
-
-          request.parameters = request.parameters.concat([
-            { name: "_sort", value: ["_iguhealth-version-seq"] },
-          ]);
-
-          let getLatestVersionIdForSub = await services.cache.get(
-            ctx,
-            `${subscription.id}_latest`
-          );
-
-          getLatestVersionIdForSub = getLatestVersionIdForSub
-            ? getLatestVersionIdForSub
-            : // If latest isn't there then use the subscription version when created.
-              getVersionSequence(subscription);
-
-          request.parameters = request.parameters.concat([
-            {
-              name: "_iguhealth-version-seq",
-              value: [`gt${getLatestVersionIdForSub}`],
-            },
-          ]);
-
-          const result = (await services.client.request(ctx, request)) as
-            | TypeSearchResponse
-            | SystemSearchResponse;
-
-          if (result.body[0]) {
-            await services.cache.set(
-              ctx,
-              `${subscription.id}_latest`,
-              getVersionSequence(result.body[0])
-            );
-          }
-
-          for (const resource of result.body.reverse()) {
-            ctx.logger.info({
-              worker: workerID,
-              workspace: ctx.workspace,
-              subscription: subscription.id,
-              versionId: resource.meta?.versionId,
-            });
-          }
-        } catch (e) {
-          ctx.logger.error(e);
-          await logAuditEvent(
-            ctx,
-            SERIOUS_FAILURE,
-            { reference: `Subscription/${subscription.id}` },
-            "Subscription failed to process"
-          );
-          await services.client.update(ctx, {
-            ...subscription,
-            status: "error",
-          });
-        }
+        );
       }
     }
     await new Promise((resolve) => setTimeout(resolve, loopInterval));
