@@ -748,7 +748,7 @@ export async function executeSearchQuery(
   }
 
   if (process.env.LOG_SQL) {
-    console.log(
+    ctx.logger.info(
       values.reduce((queryText, value, index) => {
         return queryText.replace(`$${index + 1}`, `'${value}'`);
       }, queryText)

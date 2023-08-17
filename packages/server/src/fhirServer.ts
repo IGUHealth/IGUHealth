@@ -1,3 +1,5 @@
+import type { Logger } from "pino";
+
 import {
   CapabilityStatement,
   StructureDefinition,
@@ -27,6 +29,7 @@ export interface FHIRServerCTX {
   author: string;
 
   // Services setup
+  logger: Logger<unknown>;
   capabilities: CapabilityStatement;
   cache: IOCache<FHIRServerCTX>;
   client: FHIRClient<FHIRServerCTX>;

@@ -62,9 +62,12 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
       );
       for (const subscription of activeSubscriptions.resources) {
         try {
-          console.log(
-            `'${workerID}' workspace: '${ctx.workspace}' checking criteria: '${subscription.criteria}'`
-          );
+          ctx.logger.info({
+            worker: workerID,
+            workspace: ctx.workspace,
+            criteria: subscription.criteria,
+          });
+
           const request = KoaRequestToFHIRRequest(subscription.criteria, {
             method: "GET",
           });
@@ -123,12 +126,15 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
           }
 
           for (const resource of result.body.reverse()) {
-            console.log(
-              `'${workerID}' workspace: '${ctx.workspace}' subscription: '${subscription.id}', versionID: '${resource.meta?.versionId}'`
-            );
+            ctx.logger.info({
+              worker: workerID,
+              workspace: ctx.workspace,
+              subscription: subscription.id,
+              versionId: resource.meta?.versionId,
+            });
           }
         } catch (e) {
-          console.error(e);
+          ctx.logger.error(e);
           await logAuditEvent(
             ctx,
             SERIOUS_FAILURE,

@@ -161,7 +161,7 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
             .sort()[operationOutcome.issue.length - 1];
           ctx.body = operationOutcome;
         } else {
-          console.error(e);
+          services.logger.error(e);
           const operationOutcome = outcomeError(
             "invalid",
             "internal server error"
@@ -186,7 +186,7 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
     .use(async (ctx, next) => {
       await next();
       const rt = ctx.response.get("X-Response-Time");
-      console.log(`${ctx.method} ${ctx.url} - ${rt}`);
+      services.logger.info(`${ctx.method} ${ctx.url} - ${rt}`);
     })
     .use(async (ctx, next) => {
       const start = Date.now();
@@ -197,7 +197,7 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
     .use(router.routes())
     .use(router.allowedMethods());
 
-  console.log("Running app");
+  services.logger.info("Running app");
   app.listen(port);
 
   return app;
