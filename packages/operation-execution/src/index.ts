@@ -260,15 +260,12 @@ function validateParameter<Use extends "in" | "out">(
   arr.forEach((_v: unknown, index) => {
     if (paramDefinition.type) {
       const type =
-        paramDefinition.type === "Any"
+        paramDefinition.type === "Any" ||
+        paramDefinition.type === "Resource" ||
+        paramDefinition.type === "DomainResource"
           ? arr[index].resourceType
           : paramDefinition.type;
-      const issues = validate(
-        resolveType,
-        paramDefinition.type,
-        arr,
-        `/${index}`
-      );
+      const issues = validate(resolveType, type, arr, `/${index}`);
       if (issues.length > 0) throw new OperationError(outcome(issues));
     } else {
       if (!paramDefinition.part)
