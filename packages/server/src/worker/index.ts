@@ -54,7 +54,7 @@ async function handleSubscriptionPayload(
   payload: Resource[]
 ): Promise<void> {
   const channelType = evaluate(
-    "$this.channel.type || $this.channel.type.extension.where(url=%typeUrl).value",
+    "$this.channel.type | $this.channel.type.extension.where(url=%typeUrl).value",
     subscription,
     {
       variables: {
@@ -62,6 +62,16 @@ async function handleSubscriptionPayload(
       },
     }
   )[0];
+
+  console.log(
+    evaluate("$this.channel.type.extension", subscription, {
+      variables: {
+        typeUrl: "https://iguhealth.app/Subscription/channel-type",
+      },
+    }),
+    JSON.stringify(subscription.channel)
+  );
+
   switch (channelType) {
     case "operation": {
       const OPERATION_URL = "https://iguhealth.app/Subscription/operation-code";
@@ -95,12 +105,13 @@ async function handleSubscriptionPayload(
           payload,
         }
       );
+      console.log(output);
     }
     default:
       throw new OperationError(
         outcomeError(
           `not-supported`,
-          `'${subscription.channel.type}' is not supported for subscription.`
+          `'${channelType}' is not supported for subscription.`
         )
       );
   }
@@ -138,11 +149,11 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
               `worker '${workerID}' has lock '${ctx.workspace}:${subscription.id}'`
             );
             try {
-              //   ctx.logger.info({
-              //     worker: workerID,
-              //     workspace: ctx.workspace,
-              //     criteria: subscription.criteria,
-              //   });
+              ctx.logger.info({
+                worker: workerID,
+                workspace: ctx.workspace,
+                criteria: subscription.criteria,
+              });
               const request = KoaRequestToFHIRRequest(subscription.criteria, {
                 method: "GET",
               });
@@ -199,7 +210,7 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
                   getVersionSequence(result.body[result.body.length - 1])
                 );
               }
-              handleSubscriptionPayload(ctx, subscription, result.body);
+              await handleSubscriptionPayload(ctx, subscription, result.body);
             } catch (e) {
               ctx.logger.error(e);
               await logAuditEvent(
