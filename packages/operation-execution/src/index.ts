@@ -225,7 +225,7 @@ function validateRequired(
     .forEach((d) => {
       if (!(d.name in value))
         throw new OperationError(
-          outcomeError("required", `Missing required parameter ${d.name}`)
+          outcomeError("required", `Missing required parameter '${d.name}'`)
         );
     });
 }

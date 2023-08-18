@@ -163,6 +163,7 @@ async function createPayload(
 ): Promise<Payload> {
   const parsedBody = op.parseToObject("in", request.body);
   const opCTX = getOpCTX(ctx, request);
+
   await op.validate(opCTX, "in", parsedBody);
 
   return {
