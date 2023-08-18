@@ -95,7 +95,7 @@ async function handleSubscriptionPayload(
           payload,
         }
       );
-      console.log(output);
+
       return;
     }
     default:
