@@ -63,15 +63,6 @@ async function handleSubscriptionPayload(
     }
   )[0];
 
-  console.log(
-    evaluate("$this.channel.type.extension", subscription, {
-      variables: {
-        typeUrl: "https://iguhealth.app/Subscription/channel-type",
-      },
-    }),
-    JSON.stringify(subscription.channel)
-  );
-
   switch (channelType) {
     case "operation": {
       const OPERATION_URL = "https://iguhealth.app/Subscription/operation-code";
@@ -97,7 +88,6 @@ async function handleSubscriptionPayload(
         ctx,
         operation
       );
-
       const output = await ctx.client.invoke_system(
         new Operation(operationDefinition),
         ctx,
@@ -106,6 +96,7 @@ async function handleSubscriptionPayload(
         }
       );
       console.log(output);
+      return;
     }
     default:
       throw new OperationError(
@@ -209,8 +200,8 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
                   `${subscription.id}_latest`,
                   getVersionSequence(result.body[result.body.length - 1])
                 );
+                await handleSubscriptionPayload(ctx, subscription, result.body);
               }
-              await handleSubscriptionPayload(ctx, subscription, result.body);
             } catch (e) {
               ctx.logger.error(e);
               await logAuditEvent(
