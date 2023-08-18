@@ -10,7 +10,7 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 import { createMiddlewareAsync } from "@iguhealth/client/lib/middleware/index.js";
-import { FHIRClient } from "@iguhealth/client/lib/interface.js";
+import { FHIRClientAsync } from "@iguhealth/client/lib/interface.js";
 import { FHIRRequest, FHIRResponse } from "@iguhealth/client/lib/types";
 import validate from "@iguhealth/fhir-validation";
 
@@ -32,7 +32,7 @@ export interface FHIRServerCTX {
   logger: Logger<unknown>;
   capabilities: CapabilityStatement;
   cache: IOCache<FHIRServerCTX>;
-  client: FHIRClient<FHIRServerCTX>;
+  client: FHIRClientAsync<FHIRServerCTX>;
   lock: Lock<unknown>;
   resolveSD: (
     ctx: FHIRServerCTX,

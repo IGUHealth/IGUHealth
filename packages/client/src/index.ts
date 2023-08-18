@@ -248,6 +248,61 @@ export class SynchronousClient<State, CTX> implements FHIRClientSync<CTX> {
     this.state = initialState;
     this.middleware = middleware;
   }
+  invoke_system<Op extends IOperation<unknown, unknown>>(
+    op: Op,
+    ctx: CTX,
+    input: OPMetadata<Op>["Input"]
+  ): OPMetadata<Op>["Output"] {
+    const response = this.request(ctx, {
+      type: "invoke-request",
+      level: "system",
+      operation: op.code,
+      body: op.parseToParameters("in", input),
+    });
+    if (response.type !== "invoke-response")
+      throw new Error("Unexpected response type");
+    return op.parseToObject("out", response.body);
+  }
+  invoke_type<Op extends IOperation<unknown, unknown>, T extends ResourceType>(
+    op: Op,
+    ctx: CTX,
+    resourceType: T,
+    input: OPMetadata<Op>["Input"]
+  ): OPMetadata<Op>["Output"] {
+    const response = this.request(ctx, {
+      type: "invoke-request",
+      level: "type",
+      operation: op.code,
+      resourceType,
+      body: op.parseToParameters("in", input),
+    });
+    if (response.type !== "invoke-response")
+      throw new Error("Unexpected response type");
+    return op.parseToObject("out", response.body);
+  }
+
+  invoke_instance<
+    Op extends IOperation<unknown, unknown>,
+    T extends ResourceType
+  >(
+    op: Op,
+    ctx: CTX,
+    resourceType: T,
+    id: id,
+    input: OPMetadata<Op>["Input"]
+  ): OPMetadata<Op>["Output"] {
+    const response = this.request(ctx, {
+      type: "invoke-request",
+      level: "instance",
+      operation: op.code,
+      resourceType,
+      id,
+      body: op.parseToParameters("in", input),
+    });
+    if (response.type !== "invoke-response")
+      throw new Error("Unexpected response type");
+    return op.parseToObject("out", response.body);
+  }
   request(ctx: CTX, request: FHIRRequest): FHIRResponse {
     const res = this.middleware(request, { ctx, state: this.state });
     this.state = res.state;
