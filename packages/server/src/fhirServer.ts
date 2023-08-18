@@ -59,7 +59,6 @@ function createFHIRServer() {
 
           const issues = validate(
             (type) => {
-              console.log(type);
               const sd = ctx.resolveSD(ctx, type);
               if (!sd)
                 throw new OperationError(
