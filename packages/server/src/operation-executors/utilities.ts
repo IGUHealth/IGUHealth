@@ -6,33 +6,32 @@ import {
 import { OperationDefinition } from "@iguhealth/fhir-types";
 import { evaluate } from "@iguhealth/fhirpath";
 import AdmZip from "adm-zip";
+import { OpCTX } from "@iguhealth/operation-execution";
 
 import { InvokeRequest } from "./types";
 import { FHIRServerCTX } from "../fhirServer";
 
 export async function resolveOperationDefinition(
   ctx: FHIRServerCTX,
-  request: InvokeRequest
+  operationCode: string
 ): Promise<OperationDefinition> {
-  const { operation } = request;
-
   const operationDefinition = await ctx.client.search_type(
     ctx,
     "OperationDefinition",
-    [{ name: "code", value: [operation] }]
+    [{ name: "code", value: [operationCode] }]
   );
   if (operationDefinition.resources.length === 0)
     throw new OperationError(
       outcomeError(
         "not-found",
-        `Operation with code '${operation}' was not found.`
+        `Operation with code '${operationCode}' was not found.`
       )
     );
   if (operationDefinition.resources.length > 1)
     throw new OperationError(
       outcomeError(
         "invalid",
-        `Operation with code '${operation}' had several operation definitions present.`
+        `Operation with code '${operationCode}' had several operation definitions present.`
       )
     );
 
@@ -65,4 +64,18 @@ export async function getOperationCode(
     );
 
   return code[0];
+}
+
+export function getOpCTX(ctx: FHIRServerCTX, request: InvokeRequest): OpCTX {
+  return {
+    level: request.level,
+    resolveType: (type: string) => {
+      const sd = ctx.resolveSD(ctx, type);
+      if (!sd)
+        throw new OperationError(
+          outcomeFatal("invalid", `Unknown type '${type}'`)
+        );
+      return sd;
+    },
+  };
 }

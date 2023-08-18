@@ -7,7 +7,7 @@ import {
 import { configDotenv } from "dotenv";
 import AdmZip from "adm-zip";
 
-import { Operation, OpCTX } from "@iguhealth/operation-execution";
+import { Operation } from "@iguhealth/operation-execution";
 import { AsynchronousClient } from "@iguhealth/client/lib/index.js";
 import {
   MiddlewareAsync,
@@ -19,7 +19,11 @@ import { AuditEvent, ResourceType, id } from "@iguhealth/fhir-types";
 
 import { FHIRServerCTX } from "../fhirServer";
 import { InvokeRequest } from "./types";
-import { resolveOperationDefinition, getOperationCode } from "./utilities.js";
+import {
+  resolveOperationDefinition,
+  getOperationCode,
+  getOpCTX,
+} from "./utilities.js";
 
 import logAuditEvent, { MINOR_FAILURE } from "../logging/auditEvents.js";
 
@@ -152,20 +156,6 @@ async function createLambdaFunction(
   });
 }
 
-function getOpCTX(ctx: FHIRServerCTX, request: InvokeRequest): OpCTX {
-  return {
-    level: request.level,
-    resolveType: (type: string) => {
-      const sd = ctx.resolveSD(ctx, type);
-      if (!sd)
-        throw new OperationError(
-          outcomeFatal("invalid", `Unknown type '${type}'`)
-        );
-      return sd;
-    },
-  };
-}
-
 async function createPayload(
   ctx: FHIRServerCTX,
   op: Operation<Record<string, any>, Record<string, any>>,
@@ -226,7 +216,7 @@ function createExecutor(
           case "invoke-request": {
             const operationDefinition = await resolveOperationDefinition(
               ctx,
-              request
+              request.operation
             );
             const op = new Operation(operationDefinition);
             const opCTX = getOpCTX(ctx, request);

@@ -15,6 +15,10 @@ import type {
 } from "@iguhealth/client/lib/types.js";
 import { evaluate } from "@iguhealth/fhirpath";
 
+import {
+  getOpCTX,
+  resolveOperationDefinition,
+} from "../operation-executors/utilities.js";
 import createServiceCTX from "../ctx/index.js";
 import logAuditEvent, {
   MAJOR_FAILURE,
@@ -22,6 +26,7 @@ import logAuditEvent, {
 } from "../logging/auditEvents.js";
 import { KoaRequestToFHIRRequest } from "../fhirRequest/index.js";
 import { FHIRServerCTX } from "../fhirServer.js";
+import { Operation } from "@iguhealth/operation-execution";
 
 dotEnv.config();
 
@@ -69,7 +74,7 @@ async function handleSubscriptionPayload(
           },
         }
       )[0];
-      if (!operation) {
+      if (typeof operation !== "string") {
         logAuditEvent(
           ctx,
           MAJOR_FAILURE,
@@ -78,7 +83,18 @@ async function handleSubscriptionPayload(
         );
         throw new Error("Failure");
       }
-      ctx.client.invoke_instance()
+      const operationDefinition = await resolveOperationDefinition(
+        ctx,
+        operation
+      );
+
+      const output = await ctx.client.invoke_system(
+        new Operation(operationDefinition),
+        ctx,
+        {
+          payload,
+        }
+      );
     }
     default:
       throw new OperationError(
