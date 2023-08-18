@@ -18,7 +18,7 @@ export function generateSets(
 ): string {
   // Ignore templates for now during type generation.
   structureDefinitions = structureDefinitions.filter(
-    (sd) => sd.kind !== "logical" && sd.derivation === "specialization"
+    (sd) => sd.kind !== "logical"
   );
 
   const primitiveTypes = structureDefinitions.filter(

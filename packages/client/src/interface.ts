@@ -51,6 +51,24 @@ export interface FHIRClientSync<CTX> {
     resourceType: T,
     id: id
   ): AResource<T>[];
+  invoke_system<Op extends IOperation<any, any>>(
+    op: Op,
+    ctx: CTX,
+    input: OPMetadata<Op>["Input"]
+  ): OPMetadata<Op>["Output"];
+  invoke_type<Op extends IOperation<any, any>, Type extends ResourceType>(
+    op: Op,
+    ctx: CTX,
+    resourceType: Type,
+    input: OPMetadata<Op>["Input"]
+  ): OPMetadata<Op>["Output"];
+  invoke_instance<Op extends IOperation<any, any>, Type extends ResourceType>(
+    op: Op,
+    ctx: CTX,
+    resourceType: Type,
+    id: id,
+    input: OPMetadata<Op>["Input"]
+  ): OPMetadata<Op>["Output"];
 }
 
 export interface FHIRClientAsync<CTX> {

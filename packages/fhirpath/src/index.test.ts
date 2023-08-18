@@ -529,3 +529,71 @@ test("resolve with is operation", () => {
     )
   ).toEqual([{ reference: "Patient/123" }]);
 });
+
+test("Subscription extension test", () => {
+  const sub = {
+    id: "71298a23-1f35-486d-8d5a-27838966df8f",
+    end: "2021-01-01T00:00:00Z",
+    meta: {
+      extension: [
+        {
+          url: "https://iguhealth.app/version-sequence",
+          valueInteger: 4700,
+        },
+        {
+          url: "https://iguhealth.app/author",
+          valueString: "fake-user",
+        },
+      ],
+      versionId: "4700",
+      lastUpdated: "2023-08-17T18:40:14.396+00:00",
+    },
+    text: {
+      div: '<div xmlns="http://www.w3.org/1999/xhtml">[Put rendering here]</div>',
+      status: "generated",
+    },
+    reason: "Monitor new neonatal function",
+    status: "active",
+    channel: {
+      _type: {
+        extension: [
+          {
+            url: "https://iguhealth.app/Subscription/channel-type",
+            valueCode: "operation",
+          },
+          {
+            url: "https://iguhealth.app/Subscription/operation-code",
+            valueCode: "test-1",
+          },
+        ],
+      },
+      header: ["Authorization: Bearer secret-token-abc-123"],
+      payload: "application/fhir+json",
+      endpoint: "https://biliwatch.com/customers/mount-auburn-miu/on-result",
+    },
+    contact: [
+      {
+        value: "ext 4123",
+        system: "phone",
+      },
+    ],
+    criteria: "Observation?code=29463-7",
+    resourceType: "Subscription",
+  };
+
+  expect(
+    evaluate("$this.channel.type.extension.where(url=%typeUrl).value", sub, {
+      variables: {
+        typeUrl: "https://iguhealth.app/Subscription/channel-type",
+      },
+    })
+  ).toEqual(["operation"]);
+
+  expect(
+    evaluate("$this.channel.type.extension.where(url=%typeUrl).value", sub, {
+      variables: {
+        typeUrl: "https://iguhealth.app/Subscription/operation-code",
+      },
+    })
+  ).toEqual(["test-1"]);
+});

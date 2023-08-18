@@ -105,7 +105,12 @@ function getField<T extends { [key: string]: unknown }>(
   field: string
 ): string | undefined {
   if (value.hasOwnProperty(field)) return field;
-  return Object.keys(value).find((k) => k.startsWith(field.toString()));
+  const foundField = Object.keys(value).find(
+    (k) =>
+      k.startsWith(field.toString()) || k.startsWith(`_${field.toString()}`)
+  );
+
+  return foundField?.startsWith("_") ? foundField.substring(1) : foundField;
 }
 
 /*
@@ -261,7 +266,7 @@ export function descend<T>(
     const computedField = getField(internalValue, field);
     if (computedField) {
       let v = internalValue[computedField];
-      let extension = internalValue[`_${computedField}`] as
+      let element = internalValue[`_${computedField}`] as
         | Element[]
         | Element
         | undefined;
@@ -271,7 +276,7 @@ export function descend<T>(
         computedField.replace(field, "")
       );
 
-      return toMetaValueNodes(nextMeta, v, extension);
+      return toMetaValueNodes(nextMeta, v, element);
     }
   }
   return undefined;
@@ -281,8 +286,11 @@ export class MetaValueSingular<T> implements MetaValue<T> {
   private _value: T | FHIRPathPrimitive<RawPrimitive>;
   private _meta: MetaInformation | undefined;
   constructor(meta: PartialMeta | undefined, value: T, element?: Element) {
-    if (isRawPrimitive(value)) {
-      this._value = toFPPrimitive(value, element);
+    if (isRawPrimitive(value) || element !== undefined) {
+      this._value = toFPPrimitive(
+        isRawPrimitive(value) ? value : undefined,
+        element
+      );
     } else {
       this._value = value;
     }
