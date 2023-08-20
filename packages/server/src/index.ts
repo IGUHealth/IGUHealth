@@ -37,13 +37,13 @@ const { jwks, privateKey } = await loadJWKS(
   "jwks"
 );
 
-const signedJWT = await new jose.SignJWT({ "urn:example:claim": true })
-  .setProtectedHeader({ alg: "RS256" })
-  .setIssuedAt()
-  .setIssuer("urn:example:issuer")
-  .setAudience("urn:example:audience")
-  .setExpirationTime("2h")
-  .sign(privateKey);
+// const signedJWT = await new jose.SignJWT({ "urn:example:claim": true })
+//   .setProtectedHeader({ alg: "RS256" })
+//   .setIssuedAt()
+//   .setIssuer("urn:example:issuer")
+//   .setAudience("urn:example:audience")
+//   .setExpirationTime("2h")
+//   .sign(privateKey);
 
 // console.log(signedJWT);
 // console.log(jose.decodeJwt(signedJWT));
