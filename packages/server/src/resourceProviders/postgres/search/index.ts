@@ -128,9 +128,6 @@ function chainSQL(
     { index, values, query: [] }
   );
 
-  index = lastResult.index;
-  values = lastResult.values;
-
   const referencesSQL = [
     ...sqlCHAIN.query,
     `(${lastResult.query.join(" UNION ")})`,
