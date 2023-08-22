@@ -3,6 +3,8 @@ import {
   Observation,
   Patient,
   Practitioner,
+  Questionnaire,
+  QuestionnaireResponse,
   Resource,
   RiskAssessment,
 } from "@iguhealth/fhir-types";
@@ -696,6 +698,92 @@ test("Number prefixes", async () => {
         ])
       ).resources[0].id
     ).toEqual(RiskAssessment.id);
+  } finally {
+    await Promise.all(
+      resources.map(async ({ resourceType, id }) => {
+        return await client.delete({}, resourceType, id as string);
+      })
+    );
+  }
+});
+
+test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
+  const questionnaireTemplate: Questionnaire = {
+    url: "https://genfhi.com/PREPARE",
+    title: "TEST QUESTIONNAIRE",
+    status: "active",
+    resourceType: "Questionnaire",
+  };
+  const qrTemplate: QuestionnaireResponse = {
+    status: "in-progress",
+    resourceType: "QuestionnaireResponse",
+    questionnaire: "https://genfhi.com/PREPARE",
+  };
+  const resources: Resource[] = [];
+  try {
+    const q = await client.create({}, questionnaireTemplate);
+    resources.push(q);
+    const qr = await client.create({}, qrTemplate);
+    resources.push(qr);
+
+    expect(
+      await client.search_type({}, "QuestionnaireResponse", [
+        { name: "questionnaire", value: [q.id as string] },
+      ])
+    ).toEqual({
+      resources: [qr],
+    });
+
+    expect(
+      await client.search_type({}, "Questionnaire", [
+        { name: "url", value: ["https://genfhi.com/PREPARE"] },
+      ])
+    ).toEqual({
+      resources: [q],
+    });
+  } finally {
+    await Promise.all(
+      resources.map(async ({ resourceType, id }) => {
+        return await client.delete({}, resourceType, id as string);
+      })
+    );
+  }
+});
+
+test("Type filter", async () => {
+  const questionnaireTemplate: Questionnaire = {
+    url: "https://genfhi.com/PREPARE",
+    title: "TEST QUESTIONNAIRE",
+    status: "active",
+    resourceType: "Questionnaire",
+  };
+  const qrTemplate: QuestionnaireResponse = {
+    status: "in-progress",
+    resourceType: "QuestionnaireResponse",
+    questionnaire: "https://genfhi.com/PREPARE",
+  };
+  const resources: Resource[] = [];
+  try {
+    const q = await client.create({}, questionnaireTemplate);
+    resources.push(q);
+    const qr = await client.create({}, qrTemplate);
+    resources.push(qr);
+
+    expect(
+      await client.search_system({}, [
+        { name: "_type", value: ["QuestionnaireResponse"] },
+      ])
+    ).toEqual({
+      resources: [qr],
+    });
+
+    expect(
+      await client.search_system({}, [
+        { name: "_type", value: ["Questionnaire"] },
+      ])
+    ).toEqual({
+      resources: [q],
+    });
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {

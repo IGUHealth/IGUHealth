@@ -37,7 +37,11 @@ import {
   MetaValueArray,
   MetaValueSingular,
 } from "@iguhealth/meta-value";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  outcome,
+  outcomeError,
+} from "@iguhealth/operation-outcomes";
 
 import { param_types_supported } from "./constants.js";
 import { searchResources, getDecimalPrecision } from "./utilities.js";
@@ -197,11 +201,13 @@ function toURIParameters(
   }
 }
 
-function toReference(
+async function toReference(
   ctx: FHIRServerCTX,
   parameter: SearchParameter,
   value: MetaValueSingular<NonNullable<unknown>>
-): Array<{ reference: Reference; resourceType?: ResourceType; id?: id }> {
+): Promise<
+  Array<{ reference: Reference; resourceType?: ResourceType; id?: id }>
+> {
   switch (value.meta()?.type) {
     case "Reference": {
       const reference: Reference = value.valueOf() as Reference;
@@ -222,10 +228,25 @@ function toReference(
     }
     case "uri":
     case "canonical": {
-      ctx.logger.warn(
-        "Not supporting canonical or uri reference parameters yet."
-      );
-      return [];
+      const results = await ctx.client.search_system(ctx, [
+        { name: "_type", value: parameter.target || [] },
+        { name: "url", value: [value.valueOf() as canonical | uri] },
+      ]);
+      if (results.resources.length !== 1) {
+        ctx.logger.warn(
+          `Expected one resource for canonical or uri reference parameter '${parameter.url}' but found '${results.resources.length}' so could not resolve.`
+        );
+        return [];
+      }
+      return [
+        {
+          reference: {
+            reference: `${results.resources[0].resourceType}/${results.resources[0].id}`,
+          },
+          resourceType: results.resources[0].resourceType,
+          id: results.resources[0].id,
+        },
+      ];
     }
 
     default:
@@ -464,30 +485,32 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
       );
       return;
     }
+
     case "reference": {
+      const references = (
+        await Promise.all(evaluation.map((v) => toReference(ctx, parameter, v)))
+      ).flat();
+
       await Promise.all(
-        evaluation
-          .map((v) => toReference(ctx, parameter, v))
-          .flat()
-          .map(async ({ reference, resourceType, id }) => {
-            if (!reference.reference) {
-              ctx.logger.warn("Cannot index logical reference.");
-              return;
-            }
-            return await client.query(
-              "INSERT INTO reference_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, reference, reference_type, reference_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
-              [
-                ctx.workspace,
-                resource.id,
-                resource.meta?.versionId,
-                parameter.name,
-                parameter.url,
-                reference,
-                resourceType,
-                id,
-              ]
-            );
-          })
+        references.map(async ({ reference, resourceType, id }) => {
+          if (!reference.reference) {
+            ctx.logger.warn("Cannot index logical reference.");
+            return;
+          }
+          return await client.query(
+            "INSERT INTO reference_idx(workspace, r_id, r_version_id, parameter_name, parameter_url, reference, reference_type, reference_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
+            [
+              ctx.workspace,
+              resource.id,
+              resource.meta?.versionId,
+              parameter.name,
+              parameter.url,
+              reference,
+              resourceType,
+              id,
+            ]
+          );
+        })
       );
       return;
     }

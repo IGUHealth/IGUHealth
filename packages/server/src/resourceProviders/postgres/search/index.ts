@@ -158,7 +158,13 @@ function buildParameterSQL(
       });
       break;
     }
-    case "uri":
+    case "uri": {
+      parameterClause = parameter.value.map((value) => {
+        values = [...values, value];
+        return `value = $${index++}`;
+      });
+      break;
+    }
     case "number":
       parameterClause = parameter.value
         .map((value) => {
@@ -628,6 +634,16 @@ function filterToLatest(query: string): string {
        as latest_resources where latest_resources.deleted = false`;
 }
 
+// Returns the resourceType from request on type level else uses the _type parameter or empty specifying no filter on specific resource.
+function deriveResourceTypeFilter(
+  request: SystemSearchRequest | TypeSearchRequest
+): ResourceType[] {
+  if (request.level === "type") return [request.resourceType as ResourceType];
+  const _typeParameter = request.parameters.find((p) => p.name === "_type");
+  if (_typeParameter) return _typeParameter.value as ResourceType[];
+  return [];
+}
+
 export async function executeSearchQuery(
   client: pg.Pool,
   request: SystemSearchRequest | TypeSearchRequest,
@@ -637,9 +653,13 @@ export async function executeSearchQuery(
   let values: any[] = [];
   let index = 1;
 
+  const resourceTypes = deriveResourceTypeFilter(request);
+  // Remove _type as using on derived resourceTypeFilter
+  request.parameters = request.parameters.filter((p) => p.name !== "_type");
+
   const parameters = await paramWithMeta(
     ctx,
-    request.level === "type" ? [request.resourceType as ResourceType] : [],
+    resourceTypes,
     request.parameters
   );
   // Standard parameters
@@ -652,11 +672,9 @@ export async function executeSearchQuery(
   // that are current.
   if (onlyLatest) {
     const idParameter = (
-      await paramWithMeta(
-        ctx,
-        request.level === "type" ? [request.resourceType as ResourceType] : [],
-        [{ name: "_id", modifier: "missing", value: ["false"] }]
-      )
+      await paramWithMeta(ctx, resourceTypes, [
+        { name: "_id", modifier: "missing", value: ["false"] },
+      ])
     ).filter((v): v is SearchParameterResource => v.type === "resource");
     resourceParameters = resourceParameters.concat(idParameter);
   }
@@ -688,10 +706,12 @@ export async function executeSearchQuery(
        
        WHERE resources.workspace = $${index++}
        AND resources.resource_type ${
-         request.level === "type"
+         resourceTypes.length > 0
            ? (() => {
-               values = [...values, request.resourceType];
-               return `= $${index++}`;
+               values = [...values, ...resourceTypes];
+               return `in (${resourceTypes
+                 .map((t) => `$${index++}`)
+                 .join(", ")})`;
              })()
            : `is not null`
        } `;
@@ -736,7 +756,7 @@ export async function executeSearchQuery(
   if (sortBy) {
     const res = await deriveSortQuery(
       ctx,
-      request.level === "type" ? [request.resourceType as ResourceType] : [],
+      resourceTypes,
       sortBy,
       queryText,
       index,
