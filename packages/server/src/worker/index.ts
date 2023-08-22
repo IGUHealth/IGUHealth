@@ -6,7 +6,7 @@ import { randomUUID } from "crypto";
 import { Resource, Subscription } from "@iguhealth/fhir-types";
 import {
   OperationError,
-  outcome,
+  isOperationError,
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 import type {
@@ -15,10 +15,7 @@ import type {
 } from "@iguhealth/client/lib/types.js";
 import { evaluate } from "@iguhealth/fhirpath";
 
-import {
-  getOpCTX,
-  resolveOperationDefinition,
-} from "../operation-executors/utilities.js";
+import { resolveOperationDefinition } from "../operation-executors/utilities.js";
 import createServiceCTX from "../ctx/index.js";
 import logAuditEvent, {
   MAJOR_FAILURE,
@@ -82,7 +79,9 @@ async function handleSubscriptionPayload(
           { reference: `Subscription/${subscription.id}` },
           `No Operation was specified, specifiy via extension '${OPERATION_URL}' with valueCode of operation code.`
         );
-        throw new Error("Failure");
+        throw new OperationError(
+          outcomeError("invalid", "Subscription contained invalid operation")
+        );
       }
       const operationDefinition = await resolveOperationDefinition(
         ctx,
@@ -204,6 +203,12 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
               }
             } catch (e) {
               ctx.logger.error(e);
+              let errorDescription = "Subscription failed to process";
+              if (isOperationError(e)) {
+                errorDescription = e.outcome.issue
+                  .map((i) => i.details)
+                  .join(". ");
+              }
               await logAuditEvent(
                 ctx,
                 SERIOUS_FAILURE,
