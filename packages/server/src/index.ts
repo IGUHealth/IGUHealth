@@ -9,6 +9,7 @@ import jwt from "koa-jwt";
 import jwksRsa from "jwks-rsa";
 import Provider from "oidc-provider";
 import mount from "koa-mount";
+import cors from "@koa/cors";
 
 import { Bundle, Resource } from "@iguhealth/fhir-types/r4/types";
 import {
@@ -179,6 +180,7 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
   //const provider = new Provider(ISSUER, { ...configuration });
 
   app
+    .use(cors())
     .use(bodyParser())
     // .use(routes(provider).routes())
     // .use(mount(provider.app))

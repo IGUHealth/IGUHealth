@@ -3277,11 +3277,13 @@ __metadata:
     "@iguhealth/test-data": "workspace:^"
     "@jest/globals": ^29.6.1
     "@koa/bodyparser": ^5.0.0
+    "@koa/cors": ^4.0.0
     "@koa/router": ^12.0.0
     "@types/adm-zip": ^0.5.0
     "@types/jest": ^29.5.2
     "@types/koa": ^2.13.6
     "@types/koa-mount": ^4.0.2
+    "@types/koa__cors": ^4.0.0
     "@types/koa__router": ^12.0.0
     "@types/lodash": ^4.14.195
     "@types/oidc-provider": ^8.2.0
@@ -6747,6 +6749,15 @@ __metadata:
     "@types/koa-compose": "*"
     "@types/node": "*"
   checksum: a4061c2e29cd4ccb65a704fe3ef6868eac82558856c7c00a5bcc0f9fdf18c595e0156c52508eb8ba926a9108d9cf5c9a1a1b73cccf50e29b37ea1154323d0b26
+  languageName: node
+  linkType: hard
+
+"@types/koa__cors@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@types/koa__cors@npm:4.0.0"
+  dependencies:
+    "@types/koa": "*"
+  checksum: 0a7f8c2ab9b957befbbe31b9293af05a95282fb984b8468b0c0a0a0101beefe2663ce716ca56fbf4e5ec5ca2d89193ee7d635ee84bb8b5d718df01149286f4d2
   languageName: node
   linkType: hard
 

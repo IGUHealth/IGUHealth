@@ -6421,11 +6421,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@iguhealth/test-data", "workspace:packages/test-data-r4"],\
             ["@jest/globals", "npm:29.6.1"],\
             ["@koa/bodyparser", "npm:5.0.0"],\
+            ["@koa/cors", "npm:4.0.0"],\
             ["@koa/router", "npm:12.0.0"],\
             ["@types/adm-zip", "npm:0.5.0"],\
             ["@types/jest", "npm:29.5.2"],\
             ["@types/koa", "npm:2.13.6"],\
             ["@types/koa-mount", "npm:4.0.2"],\
+            ["@types/koa__cors", "npm:4.0.0"],\
             ["@types/koa__router", "npm:12.0.0"],\
             ["@types/lodash", "npm:4.14.195"],\
             ["@types/oidc-provider", "npm:8.2.0"],\
@@ -11398,6 +11400,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-koa-mount-npm-4.0.2-1f20290a94-6f376035ae.zip/node_modules/@types/koa-mount/",\
           "packageDependencies": [\
             ["@types/koa-mount", "npm:4.0.2"],\
+            ["@types/koa", "npm:2.13.6"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/koa__cors", [\
+        ["npm:4.0.0", {\
+          "packageLocation": "./.yarn/cache/@types-koa__cors-npm-4.0.0-9268e86c9f-0a7f8c2ab9.zip/node_modules/@types/koa__cors/",\
+          "packageDependencies": [\
+            ["@types/koa__cors", "npm:4.0.0"],\
             ["@types/koa", "npm:2.13.6"]\
           ],\
           "linkType": "HARD"\
