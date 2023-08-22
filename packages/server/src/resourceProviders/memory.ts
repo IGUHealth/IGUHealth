@@ -36,7 +36,7 @@ function fitsSearchCriteria(
       return criteria.value.indexOf(value) !== -1;
     }
     default:
-      console.warn(`received unknown criteria for memory: '${criteria.name}'`);
+      //console.warn(`received unknown criteria for memory: '${criteria.name}'`);
       return false;
   }
 }

@@ -80,7 +80,7 @@ export async function deriveSortQuery(
   // Need to create LEFT JOINS on the queries so we can orderby postgres.
   const sortQueries = sortInformation.map(
     ({ direction, parameter }, sortOrder: number) => {
-      const table = searchParameterToTableName(parameter);
+      const table = searchParameterToTableName(parameter.type);
       const sort_table_name = `sort_${sortOrder}`;
       const column_name = getParameterSortColumn(direction, parameter);
       const query = ` LEFT JOIN 

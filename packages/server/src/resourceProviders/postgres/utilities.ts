@@ -17,14 +17,16 @@ export function getDecimalPrecision(value: number): number {
   return decimalPrecision;
 }
 
-export function searchParameterToTableName(searchParameter: SearchParameter) {
-  if (param_types_supported.includes(searchParameter.type)) {
-    return `${searchParameter.type}_idx`;
+export function searchParameterToTableName(
+  searchparameter_type: SearchParameter["type"]
+) {
+  if (param_types_supported.includes(searchparameter_type)) {
+    return `${searchparameter_type}_idx`;
   }
   throw new OperationError(
     outcomeError(
       "not-supported",
-      `Search Parameter of type '${searchParameter.type}' is not supported`
+      `Search Parameter of type '${searchparameter_type}' is not supported`
     )
   );
 }
