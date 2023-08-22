@@ -41,7 +41,7 @@ function generateCanonicalReferenceSearch(
     })
     .join(",")})`;
   return {
-    query: `(SELECT DISTINCT ON (r_id) r_id FROM ${uriTablename} WHERE resource_type in ${targets} workspace=$${index++} AND value = $${index++})`,
+    query: `(SELECT DISTINCT ON (r_id) r_id FROM ${uriTablename} WHERE resource_type in ${targets} AND workspace=$${index++} AND value = $${index++})`,
     index,
     values: [...values, ctx.workspace, parameter.value[0]],
   };
