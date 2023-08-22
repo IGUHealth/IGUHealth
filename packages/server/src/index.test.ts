@@ -704,3 +704,46 @@ test("Number prefixes", async () => {
     );
   }
 });
+
+test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
+  const questionnaireTemplate = {
+    url: "https://genfhi.com/PREPARE",
+    title: "TEST QUESTIONNAIRE",
+    status: "active",
+    resourceType: "Questionnaire",
+  };
+  const qrTemplate = {
+    status: "in-progress",
+    resourceType: "QuestionnaireResponse",
+    questionnaire: "https://genfhi.com/PREPARE",
+  };
+  const resources: Resource[] = [];
+  try {
+    const q = await client.create(questionnaireTemplate);
+    resources.push(q);
+    const qr = await client.create(qrTemplate);
+    resources.push(qr);
+
+    expect(
+      await client.search_type({}, "QuestionnaireResponse", [
+        { name: "questionnaire", value: [q.id] },
+      ])
+    ).toEqual({
+      resources: [qr],
+    });
+
+    expect(
+      await client.search_type({}, "Questionnaire", [
+        { name: "url", value: ["https://genfhi.com/PREPARE"] },
+      ])
+    ).toEqual({
+      resources: [q],
+    });
+  } finally {
+    await Promise.all(
+      resources.map(async ({ resourceType, id }) => {
+        return await client.delete({}, resourceType, id as string);
+      })
+    );
+  }
+});
