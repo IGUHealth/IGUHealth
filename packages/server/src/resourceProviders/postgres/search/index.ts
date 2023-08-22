@@ -27,6 +27,20 @@ import type {
 } from "./types.js";
 import { deriveSortQuery } from "./sort.js";
 
+function generateCanonicalReferenceSearch(
+  ctx: FHIRServerCTX,
+  parameter: SearchParameterResource,
+  values: any[],
+  index: number
+) {
+  const uriTablename = searchParameterToTableName("uri");
+  return {
+    query: `(SELECT DISTINCT ON (r_id) r_id FROM ${uriTablename} WHERE workspace=$${index++} AND value = $${index++}) AND `,
+    index,
+    values: [...values, ctx.workspace, parameter.value[0]],
+  };
+}
+
 function isChainParameter(
   parameter: SearchParameterResource
 ): parameter is SearchParameterResource & {
@@ -157,7 +171,7 @@ function buildParameterSQL(
   columns: string[] = ["DISTINCT(r_version_id)"]
 ): { index: number; query: string; values: any[] } {
   const searchParameter = parameter.searchParameter;
-  const search_table = searchParameterToTableName(searchParameter);
+  const search_table = searchParameterToTableName(searchParameter.type);
 
   const rootSelect = `SELECT ${columns.join(
     ", "
@@ -419,7 +433,8 @@ function buildParameterSQL(
       } else {
         parameterClause = parameter.value
           .map((value) => {
-            const parts = value.toString().split("/");
+            const referenceValue = value.toString();
+            const parts = referenceValue.split("/");
             if (parts.length === 1) {
               values = [...values, parts[0]];
               return `reference_id = $${index++}`;
