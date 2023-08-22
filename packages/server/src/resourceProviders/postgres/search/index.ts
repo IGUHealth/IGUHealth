@@ -158,7 +158,13 @@ function buildParameterSQL(
       });
       break;
     }
-    case "uri":
+    case "uri": {
+      parameterClause = parameter.value.map((value) => {
+        values = [...values, value];
+        return `value = $${index++}`;
+      });
+      break;
+    }
     case "number":
       parameterClause = parameter.value
         .map((value) => {
@@ -647,9 +653,15 @@ export async function executeSearchQuery(
   let values: any[] = [];
   let index = 1;
 
-  const types = deriveResourceTypeFilter(request);
+  const resourceTypes = deriveResourceTypeFilter(request);
+  // Remove _type as using on derived resourceTypeFilter
+  request.parameters = request.parameters.filter((p) => p.name !== "_type");
 
-  const parameters = await paramWithMeta(ctx, types, request.parameters);
+  const parameters = await paramWithMeta(
+    ctx,
+    resourceTypes,
+    request.parameters
+  );
   // Standard parameters
   let resourceParameters = parameters.filter(
     (v): v is SearchParameterResource => v.type === "resource"
@@ -660,7 +672,7 @@ export async function executeSearchQuery(
   // that are current.
   if (onlyLatest) {
     const idParameter = (
-      await paramWithMeta(ctx, types, [
+      await paramWithMeta(ctx, resourceTypes, [
         { name: "_id", modifier: "missing", value: ["false"] },
       ])
     ).filter((v): v is SearchParameterResource => v.type === "resource");
@@ -694,10 +706,10 @@ export async function executeSearchQuery(
        
        WHERE resources.workspace = $${index++}
        AND resources.resource_type in ${
-         types.length > 0
+         resourceTypes.length > 0
            ? (() => {
-               values = [...values, ...types];
-               return `(${types.map((t) => `$${index++}`).join(", ")})`;
+               values = [...values, ...resourceTypes];
+               return `(${resourceTypes.map((t) => `$${index++}`).join(", ")})`;
              })()
            : `is not null`
        } `;
@@ -742,7 +754,7 @@ export async function executeSearchQuery(
   if (sortBy) {
     const res = await deriveSortQuery(
       ctx,
-      types,
+      resourceTypes,
       sortBy,
       queryText,
       index,

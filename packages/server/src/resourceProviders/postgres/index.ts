@@ -228,10 +228,13 @@ async function toReference(
     }
     case "uri":
     case "canonical": {
+      console.log("CANONICAL", value.valueOf());
       const results = await ctx.client.search_system(ctx, [
         { name: "_type", value: parameter.target || [] },
         { name: "url", value: [value.valueOf() as canonical | uri] },
       ]);
+
+      console.log(results);
       if (results.resources.length !== 1) {
         ctx.logger.warn(
           `Expected one resource for canonical or uri reference parameter '${parameter.url}' but found '${results.resources.length}' so could not resolve.`
@@ -487,6 +490,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
     }
 
     case "reference": {
+      console.log(evaluation);
       const references = (
         await Promise.all(evaluation.map((v) => toReference(ctx, parameter, v)))
       ).flat();
