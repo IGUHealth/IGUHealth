@@ -705,11 +705,13 @@ export async function executeSearchQuery(
          .join("\n     ")}
        
        WHERE resources.workspace = $${index++}
-       AND resources.resource_type in ${
+       AND resources.resource_type ${
          resourceTypes.length > 0
            ? (() => {
                values = [...values, ...resourceTypes];
-               return `(${resourceTypes.map((t) => `$${index++}`).join(", ")})`;
+               return `in (${resourceTypes
+                 .map((t) => `$${index++}`)
+                 .join(", ")})`;
              })()
            : `is not null`
        } `;
