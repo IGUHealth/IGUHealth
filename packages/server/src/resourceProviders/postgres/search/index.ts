@@ -148,7 +148,7 @@ function chainSQL(
   return {
     query: `r_id in (select r_id from ${referencesSQL} as referencechain)`,
     index: lastResult.index,
-    values: [...lastResult.values, ctx.workspace],
+    values: lastResult.values,
   };
 }
 
