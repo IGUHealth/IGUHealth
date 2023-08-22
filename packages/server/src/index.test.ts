@@ -719,9 +719,9 @@ test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
   };
   const resources: Resource[] = [];
   try {
-    const q = await client.create(questionnaireTemplate);
+    const q = await client.create({}, questionnaireTemplate);
     resources.push(q);
-    const qr = await client.create(qrTemplate);
+    const qr = await client.create({}, qrTemplate);
     resources.push(qr);
 
     expect(
