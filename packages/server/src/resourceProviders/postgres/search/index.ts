@@ -34,8 +34,14 @@ function generateCanonicalReferenceSearch(
   index: number
 ) {
   const uriTablename = searchParameterToTableName("uri");
+  const targets = `(${(parameter.searchParameter.target || [])
+    .map((target) => {
+      values = [...values, target];
+      return `$${index++}`;
+    })
+    .join(",")})`;
   return {
-    query: `(SELECT DISTINCT ON (r_id) r_id FROM ${uriTablename} WHERE workspace=$${index++} AND value = $${index++}) AND `,
+    query: `(SELECT DISTINCT ON (r_id) r_id FROM ${uriTablename} WHERE resource_type in ${targets} workspace=$${index++} AND value = $${index++})`,
     index,
     values: [...values, ctx.workspace, parameter.value[0]],
   };
@@ -433,18 +439,26 @@ function buildParameterSQL(
       } else {
         parameterClause = parameter.value
           .map((value) => {
+            const canonicalSQL = generateCanonicalReferenceSearch(
+              ctx,
+              parameter,
+              values,
+              index
+            );
+            values = canonicalSQL.values;
+            index = canonicalSQL.index;
+            const referenceSQL = `reference_id in ${canonicalSQL.query}`;
+
             const referenceValue = value.toString();
             const parts = referenceValue.split("/");
             if (parts.length === 1) {
               values = [...values, parts[0]];
-              return `reference_id = $${index++}`;
+              return `${referenceSQL} OR reference_id = $${index++}`;
             } else if (parts.length === 2) {
               values = [...values, parts[0], parts[1]];
-              return `reference_type = $${index++} AND reference_id = $${index++}`;
+              return `${referenceSQL} OR (reference_type = $${index++} AND reference_id = $${index++})`;
             } else {
-              throw new Error(
-                `Invalid reference value '${value}' for search parameter '${searchParameter.name}'`
-              );
+              return referenceSQL;
             }
           })
           .join(" OR ");
