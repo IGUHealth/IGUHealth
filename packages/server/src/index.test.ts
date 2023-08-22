@@ -735,6 +735,14 @@ test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
     });
 
     expect(
+      await client.search_type({}, "QuestionnaireResponse", [
+        { name: "questionnaire", value: [q.url as string] },
+      ])
+    ).toEqual({
+      resources: [qr],
+    });
+
+    expect(
       await client.search_type({}, "Questionnaire", [
         { name: "url", value: ["https://genfhi.com/PREPARE"] },
       ])
