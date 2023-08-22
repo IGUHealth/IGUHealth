@@ -628,6 +628,16 @@ function filterToLatest(query: string): string {
        as latest_resources where latest_resources.deleted = false`;
 }
 
+// Returns the resourceType from request on type level else uses the _type parameter or empty specifying no filter on specific resource.
+function deriveResourceTypeFilter(
+  request: SystemSearchRequest | TypeSearchRequest
+): ResourceType[] {
+  if (request.level === "type") return [request.resourceType as ResourceType];
+  const _typeParameter = request.parameters.find((p) => p.name === "_type");
+  if (_typeParameter) return _typeParameter.value as ResourceType[];
+  return [];
+}
+
 export async function executeSearchQuery(
   client: pg.Pool,
   request: SystemSearchRequest | TypeSearchRequest,
@@ -637,11 +647,9 @@ export async function executeSearchQuery(
   let values: any[] = [];
   let index = 1;
 
-  const parameters = await paramWithMeta(
-    ctx,
-    request.level === "type" ? [request.resourceType as ResourceType] : [],
-    request.parameters
-  );
+  const types = deriveResourceTypeFilter(request);
+
+  const parameters = await paramWithMeta(ctx, types, request.parameters);
   // Standard parameters
   let resourceParameters = parameters.filter(
     (v): v is SearchParameterResource => v.type === "resource"
@@ -652,11 +660,9 @@ export async function executeSearchQuery(
   // that are current.
   if (onlyLatest) {
     const idParameter = (
-      await paramWithMeta(
-        ctx,
-        request.level === "type" ? [request.resourceType as ResourceType] : [],
-        [{ name: "_id", modifier: "missing", value: ["false"] }]
-      )
+      await paramWithMeta(ctx, types, [
+        { name: "_id", modifier: "missing", value: ["false"] },
+      ])
     ).filter((v): v is SearchParameterResource => v.type === "resource");
     resourceParameters = resourceParameters.concat(idParameter);
   }
@@ -687,11 +693,11 @@ export async function executeSearchQuery(
          .join("\n     ")}
        
        WHERE resources.workspace = $${index++}
-       AND resources.resource_type ${
-         request.level === "type"
+       AND resources.resource_type in ${
+         types.length > 0
            ? (() => {
-               values = [...values, request.resourceType];
-               return `= $${index++}`;
+               values = [...values, ...types];
+               return `(${types.map((t) => `$${index++}`).join(", ")})`;
              })()
            : `is not null`
        } `;
@@ -736,7 +742,7 @@ export async function executeSearchQuery(
   if (sortBy) {
     const res = await deriveSortQuery(
       ctx,
-      request.level === "type" ? [request.resourceType as ResourceType] : [],
+      types,
       sortBy,
       queryText,
       index,
