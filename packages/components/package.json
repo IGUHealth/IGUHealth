@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/components",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "./dist/iguhealth-ts.umd.js",
   "module": "./dist/iguhealth-ts.mjs",
   "types": "./dist/main.d.ts",
