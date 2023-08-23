@@ -24,13 +24,6 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Configure NPM AUTH
-        run: |
-          yarn config set npmAuthToken $NPM_TOKEN
-          yarn config set npmPublishRegistry https://registry.npmjs.org
-          yarn config set npmAlwaysAuth true
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Configure git
         run: |
           git config --global user.email "runner@iguhealth"
@@ -45,5 +38,14 @@ jobs:
           git add .
           git commit -m "chore: publish packages"
           git push
+
+      - name: Configure NPM AUTH
+        run: |
+          yarn config set npmAuthToken $NPM_TOKEN
+          yarn config set npmPublishRegistry https://registry.npmjs.org
+          yarn config set npmAlwaysAuth true
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - run: yarn workspaces foreach -t run publish
         timeout-minutes: 10
