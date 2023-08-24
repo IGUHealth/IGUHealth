@@ -13,8 +13,8 @@ import { MiddlewareSync, MiddlewareAsync } from "./middleware/index.js";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
-  state: State;
-  middleware: MiddlewareAsync<State, CTX>;
+  private state: State;
+  private middleware: MiddlewareAsync<State, CTX>;
   constructor(initialState: State, middleware: MiddlewareAsync<State, CTX>) {
     this.state = initialState;
     this.middleware = middleware;
@@ -242,8 +242,8 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
 }
 
 export class SynchronousClient<State, CTX> implements FHIRClientSync<CTX> {
-  state: State;
-  middleware: MiddlewareSync<State, CTX>;
+  private state: State;
+  private middleware: MiddlewareSync<State, CTX>;
   constructor(initialState: State, middleware: MiddlewareSync<State, CTX>) {
     this.state = initialState;
     this.middleware = middleware;
