@@ -140,7 +140,9 @@ import HTTPClient from "@iguhealth/client/lib/http/index.js";
 
 const client = HTTPClient({
   url: "FHIR_API_ROOT_URL",
-  token: "API TOKEN",
+  getAccessToken: async function () {
+    return "API TOKEN";
+  },
 });
 
 const operationDefinition: OperationDefinition = {

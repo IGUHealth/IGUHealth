@@ -6,7 +6,9 @@ import { loadArtifacts } from "@iguhealth/artifacts";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 
 const client = createHTTPClient({
-  token: "fake",
+  getAccessToken: async function () {
+    return "fake";
+  },
   url: "http://localhost:3000/w/1704fc63-dd53-4d6c-8435-1a4b83ba27f7/api/v1/fhir/r4",
 });
 

@@ -79,7 +79,9 @@ async function handler(event: Payload, context: any) {
   // Pass in token here and instantiate client. Later.
   // @ts-ignore
   const HTTPClient = new client.default({
-    token: event.ctx.SEC_TOKEN,
+    getAccessToken: async function () {
+      return event.ctx.SEC_TOKEN;
+    },
     url: event.ctx.API_URL,
   });
   const ctx = {

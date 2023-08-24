@@ -5,7 +5,9 @@ import HTTPClient from "./index.js";
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system/api/v1/fhir/r4",
-  token: "blah",
+  getAccessToken: async function () {
+    return "fake_token";
+  },
 });
 
 test("Test creating and destroying with HTTP Client", async () => {
