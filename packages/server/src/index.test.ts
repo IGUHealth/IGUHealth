@@ -14,7 +14,9 @@ import { evaluate } from "@iguhealth/fhirpath";
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system/api/v1/fhir/r4",
-  token: "blah",
+  getAccessToken: async function () {
+    return "blah";
+  },
 });
 
 const patient: Patient = {

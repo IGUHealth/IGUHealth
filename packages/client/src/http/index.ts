@@ -11,7 +11,7 @@ import {
   Resource,
 } from "@iguhealth/fhir-types";
 
-type HTTPClientState = { token: string; url: string };
+type HTTPClientState = { getAccessToken: () => Promise<string>; url: string };
 
 function parametersToQueryString(
   parameters: ParsedParameter<string | number>[]
@@ -24,18 +24,18 @@ function parametersToQueryString(
     .join("&");
 }
 
-function toHTTPRequest(
+async function toHTTPRequest(
   state: HTTPClientState,
   request: FHIRRequest
-): {
+): Promise<{
   url: string;
   headers?: Record<string, string>;
   method: string;
   body?: string;
-} {
+}> {
   const headers = {
     "Content-Type": "application/json", //"application/fhir+json"
-    Authorization: `Bearer ${state.token}`,
+    Authorization: `Bearer ${await state.getAccessToken()}`,
   };
   switch (request.type) {
     case "capabilities-request":
@@ -376,7 +376,7 @@ async function httpResponseToFHIRResponse(
 function httpMiddleware(): MiddlewareAsync<HTTPClientState, {}> {
   return createMiddlewareAsync<HTTPClientState, {}>([
     async (request, args, next) => {
-      const httpRequest = toHTTPRequest(args.state, request);
+      const httpRequest = await toHTTPRequest(args.state, request);
       const response = await fetch(httpRequest.url, {
         method: httpRequest.method,
         headers: httpRequest.headers,
