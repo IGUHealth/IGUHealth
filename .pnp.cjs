@@ -12,7 +12,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     ],\
     "dependencyTreeRoots": [\
       {\
-        "name": "iguhealth-ts",\
+        "name": "iguhealth-workspace",\
         "reference": "workspace:."\
       },\
       {\
@@ -98,7 +98,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@iguhealth/operation-outcomes", ["workspace:packages/operation-outcomes"]],\
       ["@iguhealth/server", ["workspace:packages/server"]],\
       ["@iguhealth/test-data", ["workspace:packages/test-data-r4"]],\
-      ["iguhealth-ts", ["workspace:."]],\
+      ["iguhealth-workspace", ["workspace:."]],\
       ["sample-app", ["workspace:packages/sample-app"]]\
     ],\
     "fallbackPool": [\
@@ -109,7 +109,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["@types/node", "npm:20.3.3"],\
-            ["ts-node", "virtual:393a8b9269b0549b8ae9435070a859970d4e6c36238307575dd8545550a73511afc8142dd258dbae9242dceff9a2edef486528d6c1979c35929bc4e34e7c28b3#npm:10.9.1"],\
+            ["ts-node", "virtual:8d17c50eb88455676a20a42874a329bdbf37fafa21671ef96f08bc6271c80782d2895ac1d28f19caa364ebdecd7582efa226e4642d10eea9ac478c6f49881b86#npm:10.9.1"],\
             ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"]\
           ],\
           "linkType": "SOFT"\
@@ -18955,13 +18955,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["iguhealth-ts", [\
+      ["iguhealth-workspace", [\
         ["workspace:.", {\
           "packageLocation": "./",\
           "packageDependencies": [\
-            ["iguhealth-ts", "workspace:."],\
+            ["iguhealth-workspace", "workspace:."],\
             ["@types/node", "npm:20.3.3"],\
-            ["ts-node", "virtual:393a8b9269b0549b8ae9435070a859970d4e6c36238307575dd8545550a73511afc8142dd258dbae9242dceff9a2edef486528d6c1979c35929bc4e34e7c28b3#npm:10.9.1"],\
+            ["ts-node", "virtual:8d17c50eb88455676a20a42874a329bdbf37fafa21671ef96f08bc6271c80782d2895ac1d28f19caa364ebdecd7582efa226e4642d10eea9ac478c6f49881b86#npm:10.9.1"],\
             ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"]\
           ],\
           "linkType": "SOFT"\
@@ -30722,10 +30722,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:393a8b9269b0549b8ae9435070a859970d4e6c36238307575dd8545550a73511afc8142dd258dbae9242dceff9a2edef486528d6c1979c35929bc4e34e7c28b3#npm:10.9.1", {\
-          "packageLocation": "./.yarn/__virtual__/ts-node-virtual-245efe203e/0/cache/ts-node-npm-10.9.1-6c268be7f4-090adff130.zip/node_modules/ts-node/",\
+        ["virtual:8d17c50eb88455676a20a42874a329bdbf37fafa21671ef96f08bc6271c80782d2895ac1d28f19caa364ebdecd7582efa226e4642d10eea9ac478c6f49881b86#npm:10.9.1", {\
+          "packageLocation": "./.yarn/__virtual__/ts-node-virtual-8e8613c40b/0/cache/ts-node-npm-10.9.1-6c268be7f4-090adff130.zip/node_modules/ts-node/",\
           "packageDependencies": [\
-            ["ts-node", "virtual:393a8b9269b0549b8ae9435070a859970d4e6c36238307575dd8545550a73511afc8142dd258dbae9242dceff9a2edef486528d6c1979c35929bc4e34e7c28b3#npm:10.9.1"],\
+            ["ts-node", "virtual:8d17c50eb88455676a20a42874a329bdbf37fafa21671ef96f08bc6271c80782d2895ac1d28f19caa364ebdecd7582efa226e4642d10eea9ac478c6f49881b86#npm:10.9.1"],\
             ["@cspotcode/source-map-support", "npm:0.8.1"],\
             ["@swc/core", null],\
             ["@swc/wasm", null],\

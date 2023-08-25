@@ -1,6 +1,5 @@
 {
-  "name": "iguhealth-ts",
-  "version": "0.2.2",
+  "name": "iguhealth-workspace",
   "author": "",
   "packageManager": "yarn@3.6.1",
   "main": "index.js",
