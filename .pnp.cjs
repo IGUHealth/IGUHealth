@@ -52,6 +52,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/fhirpath"\
       },\
       {\
+        "name": "generated-ops",\
+        "reference": "workspace:packages/generated-ops"\
+      },\
+      {\
         "name": "@iguhealth/meta-value",\
         "reference": "workspace:packages/meta-value"\
       },\
@@ -93,6 +97,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@iguhealth/operation-outcomes", ["workspace:packages/operation-outcomes"]],\
       ["@iguhealth/server", ["workspace:packages/server"]],\
       ["@iguhealth/test-data", ["workspace:packages/test-data-r4"]],\
+      ["generated-ops", ["workspace:packages/generated-ops"]],\
       ["iguhealth-ts", ["workspace:."]],\
       ["sample-app", ["workspace:packages/sample-app"]]\
     ],\
@@ -17932,6 +17937,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["wide-align", "npm:1.1.5"]\
           ],\
           "linkType": "HARD"\
+        }]\
+      ]],\
+      ["generated-ops", [\
+        ["workspace:packages/generated-ops", {\
+          "packageLocation": "./packages/generated-ops/",\
+          "packageDependencies": [\
+            ["generated-ops", "workspace:packages/generated-ops"],\
+            ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
+            ["@iguhealth/cli", "workspace:packages/cli"],\
+            ["@iguhealth/operation-execution", "workspace:packages/operation-execution"],\
+            ["jest", "virtual:60d59201a81fdf9d844335582569d604f77c0cfb33012fc0d97d31d995c40a543914afd8f900018942c3e21e71ae879a5dcdf97d4008644edf9f0ce84a7e8664#npm:29.6.0"],\
+            ["ts-jest", "virtual:1d211f1d1b74f1431d94dee6154efb618f2b240f78e3cd2c7bff89c06972575aa9d2987a2e98dff8bea49b83220f448caca9ce4fd28f1b7b9a1c020cfaf1de74#npm:29.1.1"],\
+            ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"]\
+          ],\
+          "linkType": "SOFT"\
         }]\
       ]],\
       ["gensync", [\
