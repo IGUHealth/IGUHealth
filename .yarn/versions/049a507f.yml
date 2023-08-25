@@ -1,7 +1,0 @@
-releases:
-  "@iguhealth/client": patch
-  "@iguhealth/fhir-validation": patch
-  "@iguhealth/operation-execution": minor
-  "@iguhealth/server": patch
-  generated-ops: patch
-  iguhealth-ts: patch
