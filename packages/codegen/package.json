@@ -20,8 +20,7 @@
   "dependencies": {
     "@iguhealth/artifacts": "workspace:^",
     "@iguhealth/fhir-types": "workspace:^",
-    "commander": "^10.0.1",
-    "prettier": "^3.0.0"
+    "commander": "^10.0.1"
   },
   "files": [
     "lib/**"

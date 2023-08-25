@@ -97,7 +97,6 @@ export default async function operationGeneration(
     ...operations.map((op) => generateOp(op)),
   ].join("\n");
 
-  const prettier = await import("prettier");
 
-  return prettier.format(code, { parser: "typescript" });
+  return code
 }

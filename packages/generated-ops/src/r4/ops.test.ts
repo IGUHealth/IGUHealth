@@ -33,7 +33,7 @@ test("Test ValueSet Expands", async () => {
     return output;
   };
   expect(invoke(ValueSetExpand.Op, ctx, { url: "asdf" })).resolves.toEqual(
-    output
+    output,
   );
 
   expect(
@@ -41,8 +41,8 @@ test("Test ValueSet Expands", async () => {
       ValueSetExpand.Op,
       ctx,
       // @ts-ignore
-      { url: 5 }
-    )
+      { url: 5 },
+    ),
   ).rejects.toThrow();
 
   const badOutput: Invocation = async (op, ctx, input) => {
