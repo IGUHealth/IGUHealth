@@ -1,5 +1,6 @@
 import type { ParsedParameter } from "./url";
 import {
+  Bundle,
   AResource,
   Resource,
   ResourceType,
@@ -238,6 +239,40 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       throw new Error("Unexpected response type");
     return response.body as AResource<T>[];
   }
+  async transaction(ctx: CTX, bundle: Bundle): Promise<Bundle> {
+    if (bundle.type !== "transaction")
+      throw new OperationError(
+        outcomeError("invalid", "Bundle must be of type 'transaction'")
+      );
+    const response = await this.request(ctx, {
+      type: "transaction-request",
+      level: "system",
+      body: bundle,
+    });
+    if (response.type !== "transaction-response") {
+      throw new OperationError(
+        outcomeError("invalid", "response type must be transaction-response")
+      );
+    }
+    return response.body;
+  }
+  async batch(ctx: CTX, bundle: Bundle): Promise<Bundle> {
+    if (bundle.type !== "batch")
+      throw new OperationError(
+        outcomeError("invalid", "Bundle must be of type 'batch'")
+      );
+    const response = await this.request(ctx, {
+      type: "batch-request",
+      level: "system",
+      body: bundle,
+    });
+    if (response.type !== "batch-response") {
+      throw new OperationError(
+        outcomeError("invalid", "response type must be batch-response")
+      );
+    }
+    return response.body;
+  }
 }
 
 export class SynchronousClient<State, CTX> implements FHIRClientSync<CTX> {
@@ -456,5 +491,39 @@ export class SynchronousClient<State, CTX> implements FHIRClientSync<CTX> {
     if (response.type !== "history-response")
       throw new Error("Unexpected response type");
     return response.body as AResource<T>[];
+  }
+  transaction(ctx: CTX, bundle: Bundle): Bundle {
+    if (bundle.type !== "transaction")
+      throw new OperationError(
+        outcomeError("invalid", "Bundle must be of type 'transaction'")
+      );
+    const response = this.request(ctx, {
+      type: "transaction-request",
+      level: "system",
+      body: bundle,
+    });
+    if (response.type !== "transaction-response") {
+      throw new OperationError(
+        outcomeError("invalid", "response type must be transaction-response")
+      );
+    }
+    return response.body;
+  }
+  batch(ctx: CTX, bundle: Bundle): Bundle {
+    if (bundle.type !== "batch")
+      throw new OperationError(
+        outcomeError("invalid", "Bundle must be of type 'batch'")
+      );
+    const response = this.request(ctx, {
+      type: "batch-request",
+      level: "system",
+      body: bundle,
+    });
+    if (response.type !== "batch-response") {
+      throw new OperationError(
+        outcomeError("invalid", "response type must be batch-response")
+      );
+    }
+    return response.body;
   }
 }

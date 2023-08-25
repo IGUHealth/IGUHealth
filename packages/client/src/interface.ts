@@ -4,6 +4,8 @@ import {
   id,
   ResourceType,
   AResource,
+  Bundle,
+  BundleEntry,
 } from "@iguhealth/fhir-types/r4/types";
 import type { FHIRRequest, FHIRResponse } from "./types";
 import type { OPMetadata, IOperation } from "@iguhealth/operation-execution";
@@ -69,6 +71,8 @@ export interface FHIRClientSync<CTX> {
     id: id,
     input: OPMetadata<Op>["Input"]
   ): OPMetadata<Op>["Output"];
+  transaction(ctx: CTX, bundle: Bundle): Bundle;
+  batch(ctx: CTX, bundle: Bundle): Bundle;
 }
 
 export interface FHIRClientAsync<CTX> {
@@ -125,4 +129,6 @@ export interface FHIRClientAsync<CTX> {
     id: id,
     input: OPMetadata<Op>["Input"]
   ): Promise<OPMetadata<Op>["Output"]>;
+  transaction(ctx: CTX, bundle: Bundle): Promise<Bundle>;
+  batch(ctx: CTX, bundle: Bundle): Promise<Bundle>;
 }
