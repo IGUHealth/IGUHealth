@@ -3215,6 +3215,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@iguhealth/generated-ops@workspace:packages/generated-ops":
+  version: 0.0.0-use.local
+  resolution: "@iguhealth/generated-ops@workspace:packages/generated-ops"
+  dependencies:
+    "@iguhealth/artifacts": "workspace:^"
+    "@iguhealth/cli": "workspace:^"
+    "@iguhealth/fhir-types": "workspace:^"
+    "@iguhealth/operation-execution": "workspace:^"
+    "@jest/globals": ^29.6.4
+    jest: ^29.5.0
+    ts-jest: ^29.1.0
+    typescript: ^5.1.3
+  languageName: unknown
+  linkType: soft
+
 "@iguhealth/meta-value@workspace:^, @iguhealth/meta-value@workspace:packages/meta-value":
   version: 0.0.0-use.local
   resolution: "@iguhealth/meta-value@workspace:packages/meta-value"
@@ -12084,21 +12099,6 @@ __metadata:
   checksum: 788b6bfe52f1dd8e263cda800c26ac0ca2ff6de0b6eee2fe0d9e3abf15e149b651bd27bf5226be10e6e3edb5c4e5d5985a5a1a98137e7a892f75eff76467ad2d
   languageName: node
   linkType: hard
-
-"generated-ops@workspace:packages/generated-ops":
-  version: 0.0.0-use.local
-  resolution: "generated-ops@workspace:packages/generated-ops"
-  dependencies:
-    "@iguhealth/artifacts": "workspace:^"
-    "@iguhealth/cli": "workspace:^"
-    "@iguhealth/fhir-types": "workspace:^"
-    "@iguhealth/operation-execution": "workspace:^"
-    "@jest/globals": ^29.6.4
-    jest: ^29.5.0
-    ts-jest: ^29.1.0
-    typescript: ^5.1.3
-  languageName: unknown
-  linkType: soft
 
 "gensync@npm:^1.0.0-beta.2":
   version: 1.0.0-beta.2
