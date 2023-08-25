@@ -1,6 +1,8 @@
 {
   "name": "generated-ops",
   "packageManager": "yarn@3.6.1",
+  "main": "./lib/index.js",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "test": "jest --detectOpenHandles",
