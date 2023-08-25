@@ -249,10 +249,10 @@ function validateCardinalities(
 }
 
 function validateParameter<Use extends "in" | "out">(
-  resolveType: (type: string) => StructureDefinition,
   paramDefinition: NonNullable<OperationDefinition["parameter"]>[number],
   use: Use,
-  value: any
+  value: any,
+  resolveType?: (type: string) => StructureDefinition
 ) {
   let arr: Array<any> = (value = Array.isArray(value) ? value : [value]);
   validateCardinalities(paramDefinition, value);
@@ -265,8 +265,10 @@ function validateParameter<Use extends "in" | "out">(
         paramDefinition.type === "DomainResource"
           ? arr[index].resourceType
           : paramDefinition.type;
-      const issues = validate(resolveType, type, arr, `/${index}`);
-      if (issues.length > 0) throw new OperationError(outcome(issues));
+      if (resolveType) {
+        const issues = validate(resolveType, type, arr, `/${index}`);
+        if (issues.length > 0) throw new OperationError(outcome(issues));
+      }
     } else {
       if (!paramDefinition.part)
         throw new OperationError(
@@ -285,7 +287,7 @@ function validateParameter<Use extends "in" | "out">(
             )
           );
         }
-        validateParameter(resolveType, part, use, value[part.name]);
+        validateParameter(part, use, value[part.name], resolveType);
       });
     }
   });
@@ -295,10 +297,10 @@ function validateParameters<
   T extends IOperation<any, any>,
   Use extends "in" | "out"
 >(
-  resolveType: (type: string) => StructureDefinition,
   op: T,
   use: Use,
-  value: unknown
+  value: unknown,
+  resolveType?: (type: string) => StructureDefinition
 ): value is Use extends "in"
   ? OPMetadata<T>["Input"]
   : OPMetadata<T>["Output"] {
@@ -317,13 +319,13 @@ function validateParameters<
       throw new OperationError(
         outcomeError("invalid", `Invalid parameter ${key}`)
       );
-    validateParameter(resolveType, paramDefinition, use, value[key]);
+    validateParameter(paramDefinition, use, value[key], resolveType);
   });
   return true;
 }
 
 export type OpCTX = {
-  resolveType: (type: string) => StructureDefinition;
+  resolveType?: (type: string) => StructureDefinition;
   level: "system" | "type" | "instance";
 };
 
@@ -380,7 +382,7 @@ export class Operation<I, O> implements IOperation<I, O> {
     use: Use,
     value: unknown
   ): value is InputOutput<I, O>[Use] {
-    return validateParameters(ctx.resolveType, this, use, value);
+    return validateParameters(this, use, value, ctx.resolveType);
   }
 }
 
