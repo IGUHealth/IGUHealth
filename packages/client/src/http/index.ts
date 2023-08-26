@@ -365,7 +365,7 @@ async function httpResponseToFHIRResponse(
         throw new OperationError(outcomeError("exception", "No response body"));
       const transaction = (await response.json()) as Bundle;
       return {
-        type: "batch-response",
+        type: "transaction-response",
         level: "system",
         body: transaction,
       };
