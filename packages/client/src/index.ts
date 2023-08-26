@@ -251,7 +251,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     });
     if (response.type !== "transaction-response") {
       throw new OperationError(
-        outcomeError("invalid", "response type must be transaction-response")
+        outcomeError("invalid", "response type must be 'transaction-response'")
       );
     }
     return response.body;
@@ -268,7 +268,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     });
     if (response.type !== "batch-response") {
       throw new OperationError(
-        outcomeError("invalid", "response type must be batch-response")
+        outcomeError("invalid", "response type must be 'batch-response'")
       );
     }
     return response.body;
