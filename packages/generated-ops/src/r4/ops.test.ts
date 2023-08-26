@@ -22,9 +22,7 @@ test("Test ValueSet Expands", async () => {
     resourceType: "ValueSet",
     status: "final",
   };
-  const output = {
-    return: valueSet,
-  };
+  const output = valueSet;
 
   const invoke: Invocation = async (op, ctx, input) => {
     op.validate(ctx, "in", input);

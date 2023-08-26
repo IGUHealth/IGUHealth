@@ -362,6 +362,12 @@ function isStrictlyReturn(op: OperationDefinition): boolean {
   return false;
 }
 
+function isResource(value: unknown): value is Resource {
+  if (typeof value === "object")
+    return (value as Resource).resourceType !== undefined;
+  return false;
+}
+
 export type Executor<CTX, I, O> = (ctx: CTX, input: I) => Promise<O>;
 
 export type OPMetadata<O> = O extends IOperation<infer Input, infer Output>
@@ -409,6 +415,23 @@ export class Operation<I, O> implements IOperation<I, O> {
     use: Use,
     value: unknown
   ): value is InputOutput<I, O>[Use] {
+    if (isStrictlyReturn(this.operationDefinition) && use === "out") {
+      const type =
+        this.operationDefinition.parameter?.find((p) => p.use === "out")
+          ?.type || "Resource";
+      const fhirtype = type === "Any" ? "Resource" : type;
+      if (ctx.resolveType) {
+        const issues = validate(ctx.resolveType, fhirtype, value);
+        if (issues.length > 0) return false;
+        return true;
+      }
+
+      return isResource(value)
+        ? fhirtype === "Resource"
+          ? value?.resourceType !== undefined
+          : value?.resourceType === fhirtype
+        : false;
+    }
     return validateParameters(this, use, value, ctx.resolveType);
   }
 }
