@@ -1,6 +1,6 @@
 {
   "name": "sample-app",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "dependencies": {
     "@auth0/auth0-react": "^2.1.1",
