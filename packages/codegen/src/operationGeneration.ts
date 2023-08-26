@@ -1,4 +1,5 @@
 import { OperationDefinition } from "@iguhealth/fhir-types";
+import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 
 function generateParameterType(
   parameters: NonNullable<OperationDefinition["parameter"]>
@@ -35,55 +36,48 @@ function getName(op: OperationDefinition): string {
   );
 }
 
-function generateCode(operation: OperationDefinition) {
-  const name = getName(operation);
-
-  return `
-  function Executor<CTX>(
-    executor: CapabilityStatementImplements<CTX>["constructor"]["prototype"]["_execute"]
-  ): CapabilityStatementImplements<CTX> {
-    return new OperationExecution(
-      {
-        resourceType: "OperationDefinition",
-        code: "blah",
-        name: "what",
-        system: false,
-        type: false,
-        instance: false,
-        status: "final",
-        kind: "resource",
-      },
-      executor
-    );
+function generateOutput(
+  parameters: NonNullable<OperationDefinition["parameter"]>
+): string {
+  if (
+    parameters.length === 1 &&
+    parameters[0].name === "return" &&
+    (parameters[0].type === "Any" ||
+      resourceTypes.has(parameters[0].type || ""))
+  ) {
+    return `fhirTypes.${
+      parameters[0].type === "Any" ? "Resource" : parameters[0].type
+    }`;
   }
-  `;
+  return `{${generateParameterType(parameters)}}`;
 }
 
 export function generateOp(op: OperationDefinition): string {
   const namespace = getName(op);
-  const interfaceName = "IOp"
-  const operationName = "Op"
+  const interfaceName = "IOp";
+  const operationName = "Op";
   const inputName = `Input`;
   const outputName = `Output`;
+  const inputParameters = (op.parameter || []).filter((op) => op.use === "in");
+  const outputParameters = (op.parameter || []).filter(
+    (op) => op.use === "out"
+  );
 
   const inputType = `export type ${inputName} = {${generateParameterType(
-    (op.parameter || []).filter((op) => op.use === "in")
-  )}}`;
-  const outputType = `export type ${outputName} = {${generateParameterType(
-    (op.parameter || []).filter((op) => op.use === "out")
+    inputParameters
   )}}`;
 
-  const operationType = `export type ${interfaceName} = IOperation<${inputName}, ${outputName}>`
-  const operationInstance = `export const ${operationName}: ${interfaceName} = new Operation<${inputName}, ${outputName}>(${JSON.stringify(op)})`
+  const outputType = `export type ${outputName} = ${generateOutput(
+    outputParameters
+  )}`;
+
+  const operationType = `export type ${interfaceName} = IOperation<${inputName}, ${outputName}>`;
+  const operationInstance = `export const ${operationName}: ${interfaceName} = new Operation<${inputName}, ${outputName}>(${JSON.stringify(
+    op
+  )})`;
 
   return `export namespace ${namespace} {
-  ${[
-    inputType,
-    outputType,
-    operationType,
-    operationInstance,
-  ].join("\n")}}`
-
+  ${[inputType, outputType, operationType, operationInstance].join("\n")}}`;
 }
 
 export default async function operationGeneration(
@@ -97,6 +91,5 @@ export default async function operationGeneration(
     ...operations.map((op) => generateOp(op)),
   ].join("\n");
 
-
-  return code
+  return code;
 }

@@ -1,6 +1,7 @@
 import {
   OperationDefinition,
   Parameters,
+  Resource,
   StructureDefinition,
 } from "@iguhealth/fhir-types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
@@ -347,6 +348,20 @@ export interface IOperation<I, O> {
   ): value is InputOutput<I, O>[Use];
 }
 
+function isStrictlyReturn(op: OperationDefinition): boolean {
+  const outputParameters = op.parameter?.filter((p) => p.use === "out") || [];
+  if (outputParameters.length === 1) {
+    return (
+      outputParameters[0].name === "return" &&
+      outputParameters[0].max === "1" &&
+      outputParameters[0].min === 1 &&
+      (outputParameters[0].type === "Any" ||
+        resourceTypes.has(outputParameters[0].type || ""))
+    );
+  }
+  return false;
+}
+
 export type Executor<CTX, I, O> = (ctx: CTX, input: I) => Promise<O>;
 
 export type OPMetadata<O> = O extends IOperation<infer Input, infer Output>
@@ -365,8 +380,20 @@ export class Operation<I, O> implements IOperation<I, O> {
   }
   parseToObject<Use extends "in" | "out">(
     use: Use,
-    input: Parameters
+    input: Parameters | Resource
   ): InputOutput<I, O>[Use] {
+    if (
+      use === "out" &&
+      !isParameters(input) &&
+      isStrictlyReturn(this.operationDefinition)
+    ) {
+      return input as InputOutput<I, O>[Use];
+    }
+    if (!isParameters(input)) {
+      throw new OperationError(
+        outcomeError("invalid", "Invalid input, input must be a Parameters")
+      );
+    }
     const output = parseParameters(this._operationDefinition, use, input);
     return output as InputOutput<I, O>[Use];
   }

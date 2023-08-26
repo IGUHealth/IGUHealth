@@ -17,7 +17,7 @@ export namespace ActivityDefinitionApply {
     setting?: fhirTypes.CodeableConcept;
     settingContext?: fhirTypes.CodeableConcept;
   };
-  export type Output = { return: fhirTypes.Resource };
+  export type Output = fhirTypes.Resource;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -166,7 +166,7 @@ export namespace ActivityDefinitionApply {
 }
 export namespace ActivityDefinitionDataRequirements {
   export type Input = {};
-  export type Output = { return: fhirTypes.Library };
+  export type Output = fhirTypes.Library;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -340,7 +340,7 @@ export namespace CapabilityStatementImplements {
     client?: fhirTypes.canonical;
     resource?: fhirTypes.CapabilityStatement;
   };
-  export type Output = { return: fhirTypes.OperationOutcome };
+  export type Output = fhirTypes.OperationOutcome;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -427,7 +427,7 @@ export namespace CapabilityStatementSubset {
     server?: fhirTypes.uri;
     resource: Array<fhirTypes.code>;
   };
-  export type Output = { return: fhirTypes.CapabilityStatement };
+  export type Output = fhirTypes.CapabilityStatement;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -574,7 +574,7 @@ export namespace ChargeItemDefinitionApply {
     chargeItem: fhirTypes.Reference;
     account?: fhirTypes.Reference;
   };
-  export type Output = { return: fhirTypes.Resource };
+  export type Output = fhirTypes.Resource;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -652,7 +652,7 @@ export namespace ChargeItemDefinitionApply {
 }
 export namespace ClaimSubmit {
   export type Input = { resource: fhirTypes.Resource };
-  export type Output = { return: fhirTypes.Resource };
+  export type Output = fhirTypes.Resource;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -1781,7 +1781,7 @@ export namespace ConceptMapClosure {
     concept?: Array<fhirTypes.Coding>;
     version?: fhirTypes.string;
   };
-  export type Output = { return: fhirTypes.ConceptMap };
+  export type Output = fhirTypes.ConceptMap;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -2151,7 +2151,7 @@ export namespace ConceptMapTranslate {
 }
 export namespace CoverageEligibilityRequestSubmit {
   export type Input = { resource: fhirTypes.Resource };
-  export type Output = { return: fhirTypes.Resource };
+  export type Output = fhirTypes.Resource;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -2221,7 +2221,7 @@ export namespace EncounterEverything {
     _type?: Array<fhirTypes.code>;
     _count?: fhirTypes.integer;
   };
-  export type Output = { return: fhirTypes.Bundle };
+  export type Output = fhirTypes.Bundle;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -2312,7 +2312,7 @@ export namespace GroupEverything {
     _type?: Array<fhirTypes.code>;
     _count?: fhirTypes.integer;
   };
-  export type Output = { return: fhirTypes.Bundle };
+  export type Output = fhirTypes.Bundle;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -2415,7 +2415,7 @@ export namespace GroupEverything {
 }
 export namespace LibraryDataRequirements {
   export type Input = { target?: fhirTypes.string };
-  export type Output = { return: fhirTypes.Library };
+  export type Output = fhirTypes.Library;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -2553,7 +2553,7 @@ export namespace MeasureCareGaps {
     topic: fhirTypes.string;
     subject: fhirTypes.string;
   };
-  export type Output = { return: fhirTypes.Bundle };
+  export type Output = fhirTypes.Bundle;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -2787,7 +2787,7 @@ export namespace MeasureDataRequirements {
     periodStart: fhirTypes.date;
     periodEnd: fhirTypes.date;
   };
-  export type Output = { return: fhirTypes.Library };
+  export type Output = fhirTypes.Library;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -2872,7 +2872,7 @@ export namespace MeasureEvaluateMeasure {
     practitioner?: fhirTypes.string;
     lastReceivedOn?: fhirTypes.dateTime;
   };
-  export type Output = { return: fhirTypes.MeasureReport };
+  export type Output = fhirTypes.MeasureReport;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -3070,7 +3070,7 @@ export namespace MedicinalProductEverything {
     _since?: fhirTypes.instant;
     _count?: fhirTypes.integer;
   };
-  export type Output = { return: fhirTypes.Bundle };
+  export type Output = fhirTypes.Bundle;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -3150,7 +3150,7 @@ export namespace MessageHeaderProcessMessage {
     async?: fhirTypes.boolean;
     "response-url"?: fhirTypes.url;
   };
-  export type Output = { return?: fhirTypes.Bundle };
+  export type Output = fhirTypes.Bundle;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -3315,7 +3315,7 @@ export namespace NamingSystemPreferredId {
 }
 export namespace ObservationLastn {
   export type Input = { max?: fhirTypes.positiveInt };
-  export type Output = { return: fhirTypes.Bundle };
+  export type Output = fhirTypes.Bundle;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -3550,7 +3550,7 @@ export namespace PatientEverything {
     _type?: Array<fhirTypes.code>;
     _count?: fhirTypes.integer;
   };
-  export type Output = { return: fhirTypes.Bundle };
+  export type Output = fhirTypes.Bundle;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -3657,7 +3657,7 @@ export namespace PatientMatch {
     onlyCertainMatches?: fhirTypes.boolean;
     count?: fhirTypes.integer;
   };
-  export type Output = { return: fhirTypes.Bundle };
+  export type Output = fhirTypes.Bundle;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -3754,7 +3754,7 @@ export namespace PlanDefinitionApply {
     setting?: fhirTypes.CodeableConcept;
     settingContext?: fhirTypes.CodeableConcept;
   };
-  export type Output = { return: fhirTypes.CarePlan };
+  export type Output = fhirTypes.CarePlan;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -3903,7 +3903,7 @@ export namespace PlanDefinitionApply {
 }
 export namespace PlanDefinitionDataRequirements {
   export type Input = {};
-  export type Output = { return: fhirTypes.Library };
+  export type Output = fhirTypes.Library;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -4344,7 +4344,7 @@ export namespace ResourceValidate {
     mode?: fhirTypes.code;
     profile?: fhirTypes.uri;
   };
-  export type Output = { return: fhirTypes.OperationOutcome };
+  export type Output = fhirTypes.OperationOutcome;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -4442,7 +4442,7 @@ export namespace StructureDefinitionQuestionnaire {
     url?: fhirTypes.canonical;
     supportedOnly?: fhirTypes.boolean;
   };
-  export type Output = { return: fhirTypes.Questionnaire };
+  export type Output = fhirTypes.Questionnaire;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -4547,7 +4547,7 @@ export namespace StructureDefinitionSnapshot {
     definition?: fhirTypes.StructureDefinition;
     url?: fhirTypes.string;
   };
-  export type Output = { return: fhirTypes.StructureDefinition };
+  export type Output = fhirTypes.StructureDefinition;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -4622,7 +4622,7 @@ export namespace StructureDefinitionSnapshot {
 }
 export namespace StructureMapTransform {
   export type Input = { source?: fhirTypes.uri; content: fhirTypes.Resource };
-  export type Output = { return: fhirTypes.Resource };
+  export type Output = fhirTypes.Resource;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -4719,7 +4719,7 @@ export namespace ValueSetExpand {
     "check-system-version"?: Array<fhirTypes.canonical>;
     "force-system-version"?: Array<fhirTypes.canonical>;
   };
-  export type Output = { return: fhirTypes.ValueSet };
+  export type Output = fhirTypes.ValueSet;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
