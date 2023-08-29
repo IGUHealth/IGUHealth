@@ -1,12 +1,25 @@
 import React, { FC } from "react";
 
-type Props = {
+export interface StringProps {
+  /**
+   * The value of the input.
+   */
   value: string;
-  onChange: (value: string) => void;
-};
+  /**
+   * Call back triggered when input changes.
+   */
+  onChange?: (value: string) => void;
+}
 
-const String: FC<Props> = ({ onChange, value }) => {
-  return <input value={value} onChange={(e) => onChange(e.target.value)} />;
+export const String = ({ onChange, value }: StringProps) => {
+  return (
+    <input
+      value={value}
+      onChange={(e) => {
+        if (onChange) {
+          onChange(e.target.value);
+        }
+      }}
+    />
+  );
 };
-
-export default String;

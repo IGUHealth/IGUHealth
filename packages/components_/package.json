@@ -1,5 +1,5 @@
 {
-  "name": "components_",
+  "name": "@iguhealth/components",
   "packageManager": "yarn@3.6.3",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",

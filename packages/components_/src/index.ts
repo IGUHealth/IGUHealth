@@ -1,3 +1,3 @@
-import String from "./types/string.js";
+import { String } from "./types/string.js";
 
 export { String };
