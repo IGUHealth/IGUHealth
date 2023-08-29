@@ -1,2 +1,1 @@
-export { FhirApp } from './FhirApp'
-export * from './basic'
+export * from "./basic";
