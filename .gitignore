@@ -5,6 +5,7 @@ tsconfig.tsbuildinfo
 .env
 packages/admin-app/build/
 storybook-static/
+.docusaurus
 
 ## Below comes from the react-storybook gitignore
 
