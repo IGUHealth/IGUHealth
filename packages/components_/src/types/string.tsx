@@ -14,6 +14,7 @@ export interface StringProps {
 export const String = ({ onChange, value }: StringProps) => {
   return (
     <input
+      className="border rounded p-1 border-slate-300 text-slate-800"
       value={value}
       onChange={(e) => {
         if (onChange) {
