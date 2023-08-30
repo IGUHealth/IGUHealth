@@ -3197,9 +3197,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@iguhealth/components@workspace:^, @iguhealth/components@workspace:packages/components_":
+"@iguhealth/components@workspace:^, @iguhealth/components@workspace:packages/components":
   version: 0.0.0-use.local
-  resolution: "@iguhealth/components@workspace:packages/components_"
+  resolution: "@iguhealth/components@workspace:packages/components"
   dependencies:
     "@babel/preset-env": ^7.22.10
     "@babel/preset-react": ^7.22.5
