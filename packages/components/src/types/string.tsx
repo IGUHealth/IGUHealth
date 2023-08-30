@@ -9,20 +9,20 @@ export interface StringProps {
   /**
    * The value of the input.
    */
-  error?: string;
+  issue?: string;
   /**
    * Call back triggered when input changes.
    */
   onChange?: (value: string) => void;
 }
 
-export const String = ({ onChange, value, error }: StringProps) => {
+export const String = ({ onChange, value, issue }: StringProps) => {
   return (
     <>
       <input
         className={classNames("border", "rounded", "p-1", "text-slate-800", {
-          "border-slate-300": error ? false : true,
-          "border-error": error ? true : false,
+          "border-slate-300": issue ? false : true,
+          "border-error": issue ? true : false,
         })}
         value={value}
         onChange={(e) => {
@@ -31,7 +31,7 @@ export const String = ({ onChange, value, error }: StringProps) => {
           }
         }}
       />
-      {error && <div className="text-sm mt-1 text-error">{error}</div>}
+      {issue && <div className="text-sm mt-1 text-error">{issue}</div>}
     </>
   );
 };
