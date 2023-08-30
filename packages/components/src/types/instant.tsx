@@ -4,11 +4,11 @@ import classNames from "classnames";
 
 export interface DateTimeProps {
   /**
-   * String datetime value.
+   * String instant value.
    */
   value?: string;
   /**
-   * onChange returns datetime string based on outputFormat.
+   * onChange returns instant string.
    */
   onChange: (value: string) => void;
   /**
