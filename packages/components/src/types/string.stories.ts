@@ -25,9 +25,10 @@ export const Primary: Story = {
   },
 };
 
-export const Secondary: Story = {
+export const Error: Story = {
   args: {
     value: "test",
+    error: "Bad value",
     onChange: (value: string) => console.log(value),
   },
 };

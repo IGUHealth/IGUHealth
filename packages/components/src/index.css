@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .text-error {
+      @apply text-red-500
+    }
+    .border-error {
+      @apply border-red-500 focus:border-red-500 focus:outline-none
+    }
+}
