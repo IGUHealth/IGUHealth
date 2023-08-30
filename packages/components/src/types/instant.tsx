@@ -25,7 +25,7 @@ export const Instant = ({ onChange, value, issue }: DateTimeProps) => {
   useEffect(() => {
     const issues: string[] = [];
     if (value && !instantRegex.test(value)) {
-      issues.push(`Invalid date format.`);
+      issues.push(`Invalid date format`);
     }
     if (issue) issues.push(issue);
     setIssues(issues);
@@ -36,7 +36,7 @@ export const Instant = ({ onChange, value, issue }: DateTimeProps) => {
       <input
         type="datetime-local"
         className={classNames("border rounded p-1 text-slate-800", {
-          "border-slate-300": issues.length === 0 ? true : false,
+          "border-slate-700": issues.length === 0 ? true : false,
           "text-error": issues.length !== 0 ? true : false,
           "border-error": issues.length !== 0 ? true : false,
         })}
@@ -53,7 +53,7 @@ export const Instant = ({ onChange, value, issue }: DateTimeProps) => {
         }}
       />
       {issues.length !== 0 && (
-        <div className="text-sm mt-1 text-error">{issues.join(".")}</div>
+        <div className="text-sm mt-1 text-error">{issues.join(".\n")}</div>
       )}
     </>
   );

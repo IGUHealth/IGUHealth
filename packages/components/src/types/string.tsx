@@ -21,7 +21,7 @@ export const String = ({ onChange, value, issue }: StringProps) => {
     <>
       <input
         className={classNames("border", "rounded", "p-1", "text-slate-800", {
-          "border-slate-300": issue ? false : true,
+          "border-slate-700": issue ? false : true,
           "border-error": issue ? true : false,
         })}
         value={value}

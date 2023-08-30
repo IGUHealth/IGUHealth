@@ -15,25 +15,16 @@ export interface TimeProps {
    * Error issue string.
    */
   issue?: string;
-  /**
-   * String output format defaults to hh:mm:ss.
-   */
-  outputFormat?: string;
 }
 
 const timeRegex = /^([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?$/;
 
-export const Time = ({
-  onChange,
-  value,
-  issue,
-  outputFormat = "hh:mm:ss",
-}: TimeProps) => {
+export const Time = ({ onChange, value, issue }: TimeProps) => {
   const [issues, setIssues] = useState<string[]>([]);
   useEffect(() => {
     const issues: string[] = [];
     if (value && !timeRegex.test(value)) {
-      issues.push(`Invalid date format.`);
+      issues.push(`Invalid date format`);
     }
     if (issue) issues.push(issue);
 
@@ -46,7 +37,7 @@ export const Time = ({
         step="1"
         type="time"
         className={classNames("border rounded p-1 text-slate-800", {
-          "border-slate-300": issues.length === 0 ? true : false,
+          "border-slate-700": issues.length === 0 ? true : false,
           "text-error": issues.length !== 0 ? true : false,
           "border-error": issues.length !== 0 ? true : false,
         })}
@@ -58,7 +49,7 @@ export const Time = ({
         }}
       />
       {issues.length !== 0 && (
-        <div className="text-sm mt-1 text-error">{issues.join(".")}</div>
+        <div className="text-sm mt-1 text-error">{issues.join(".\n")}</div>
       )}
     </>
   );
