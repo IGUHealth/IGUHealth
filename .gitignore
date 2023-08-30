@@ -3,6 +3,7 @@ packages/**/lib
 coverage
 tsconfig.tsbuildinfo
 .env
+packages/docs/build
 packages/admin-app/build/
 storybook-static/
 .docusaurus
