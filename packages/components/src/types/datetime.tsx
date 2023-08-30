@@ -34,7 +34,7 @@ export const DateTime = ({
   useEffect(() => {
     const issues: string[] = [];
     if (value && !datetimeRegex.test(value)) {
-      issues.push(`Invalid date format.`);
+      issues.push(`Invalid date format`);
     }
     if (issue) issues.push(issue);
     setIssues(issues);
@@ -45,7 +45,7 @@ export const DateTime = ({
       <input
         type="datetime-local"
         className={classNames("border rounded p-1 text-slate-800", {
-          "border-slate-300": issues.length === 0 ? true : false,
+          "border-slate-700": issues.length === 0 ? true : false,
           "text-error": issues.length !== 0 ? true : false,
           "border-error": issues.length !== 0 ? true : false,
         })}
@@ -58,7 +58,7 @@ export const DateTime = ({
         }}
       />
       {issues.length !== 0 && (
-        <div className="text-sm mt-1 text-error">{issues.join(".")}</div>
+        <div className="text-sm mt-1 text-error">{issues.join(".\n")}</div>
       )}
     </>
   );

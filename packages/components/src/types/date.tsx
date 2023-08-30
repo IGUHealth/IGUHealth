@@ -34,7 +34,7 @@ export const Date = ({
   useEffect(() => {
     const issues: string[] = [];
     if (value && !dateRegex.test(value)) {
-      issues.push(`Invalid date format.`);
+      issues.push(`Invalid date format`);
     }
     if (issue) issues.push(issue);
 
@@ -46,7 +46,7 @@ export const Date = ({
       <input
         type="date"
         className={classNames("border rounded p-1 text-slate-800", {
-          "border-slate-300": issues.length === 0 ? true : false,
+          "border-slate-700": issues.length === 0 ? true : false,
           "text-error": issues.length !== 0 ? true : false,
           "border-error": issues.length !== 0 ? true : false,
         })}
@@ -59,7 +59,7 @@ export const Date = ({
         }}
       />
       {issues.length !== 0 && (
-        <div className="text-sm mt-1 text-error">{issues.join(".")}</div>
+        <div className="text-sm mt-1 text-error">{issues.join(".\n")}</div>
       )}
     </>
   );

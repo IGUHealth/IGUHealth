@@ -9,4 +9,16 @@
     .border-error {
       @apply border-red-500 focus:border-red-500 focus:outline-none
     }
+    .btn {
+        @apply px-4 py-2 rounded-md inline-block cursor-pointer
+    }
+    .btn-primary {
+        @apply text-white bg-blue-500 hover:bg-blue-600
+    }
+    .btn-secondary {
+        @apply hover:text-slate-800
+    }
+    .btn-error {
+        @apply  text-white bg-red-500 hover:bg-red-600
+    }
 }

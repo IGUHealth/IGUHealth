@@ -4,6 +4,7 @@ coverage
 tsconfig.tsbuildinfo
 .env
 packages/admin-app/build/
+storybook-static/
 
 ## Below comes from the react-storybook gitignore
 
