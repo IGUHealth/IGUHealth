@@ -1,0 +1,32 @@
+import type { Meta, StoryObj } from "@storybook/react";
+
+import { Base64Binary } from "./base64";
+
+// More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
+const meta = {
+  title: "Primitives/base64",
+  component: Base64Binary,
+  parameters: {
+    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
+    layout: "centered",
+  },
+  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
+  tags: ["autodocs"],
+} satisfies Meta<typeof Base64Binary>;
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const ExistingData: Story = {
+  args: {
+    value: "test data",
+    onChange: (value: string) => console.log(value),
+  },
+};
+
+export const EmptyData: Story = {
+  args: {
+    onChange: (value: string) => console.log(value),
+  },
+};
