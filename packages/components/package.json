@@ -46,6 +46,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@iguhealth/client": "workspace:^",
     "@iguhealth/generated-ops": "workspace:^",
