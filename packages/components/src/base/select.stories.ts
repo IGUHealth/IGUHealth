@@ -1,21 +1,38 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { ComboBox } from "./combobox";
+import { Select } from "./select";
 
 const meta = {
-  title: "Base/Combobox",
-  component: ComboBox,
+  title: "Base/Select",
+  component: Select,
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
   tags: ["autodocs"],
   parameters: {
     // More on how to position stories at: https://storybook.js.org/docs/react/configure/story-layout
     layout: "centered",
   },
-} satisfies Meta<typeof ComboBox>;
+} satisfies Meta<typeof Select>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  args: {},
+  args: {
+    onChange: (value) => console.log(value),
+    value: "option1",
+    options: [
+      {
+        label: "Option 1",
+        value: "option1",
+      },
+      {
+        label: "Option 2",
+        value: "option2",
+      },
+      {
+        label: "Option 3",
+        value: "option3",
+      },
+    ],
+  },
 };
