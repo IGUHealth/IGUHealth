@@ -1,5 +1,6 @@
 import React, { FC } from "react";
-import classNames from "classnames";
+
+import { LabelContainer } from "../base/labelContainer";
 
 export interface StringProps {
   /**
@@ -14,16 +15,17 @@ export interface StringProps {
    * Call back triggered when input changes.
    */
   onChange?: (value: string) => void;
+  /**
+   * Label string.
+   */
+  label?: string;
 }
 
-export const String = ({ onChange, value, issue }: StringProps) => {
+export const String = ({ onChange, value, issue, label }: StringProps) => {
   return (
-    <>
+    <LabelContainer label={label} issues={issue ? [issue] : []}>
       <input
-        className={classNames("border", "rounded", "p-1", "text-slate-800", {
-          "border-slate-700": issue ? false : true,
-          "border-error": issue ? true : false,
-        })}
+        type="text"
         value={value}
         onChange={(e) => {
           if (onChange) {
@@ -31,7 +33,6 @@ export const String = ({ onChange, value, issue }: StringProps) => {
           }
         }}
       />
-      {issue && <div className="text-sm mt-1 text-error">{issue}</div>}
-    </>
+    </LabelContainer>
   );
 };

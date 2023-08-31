@@ -27,6 +27,8 @@ export interface Base64BinaryProps {
   label: string;
 }
 
+const base64Regex = /^(\s*([0-9a-zA-Z\+\=]){4}\s*)+$/;
+
 export const Base64Binary = ({
   value,
   onChange,

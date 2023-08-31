@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
-import classNames from "classnames";
+
+import { LabelContainer } from "../base/labelContainer";
 
 export interface DateTimeProps {
   /**
@@ -19,6 +20,10 @@ export interface DateTimeProps {
    * String output format defaults to YYYY-MM-DDThh:mm:ss+zz:zz.
    */
   outputFormat?: string;
+  /**
+   * Label string.
+   */
+  label?: string;
 }
 
 const datetimeRegex =
@@ -29,6 +34,7 @@ export const DateTime = ({
   value,
   issue,
   outputFormat = "YYYY-MM-DDThh:mm:ssZ",
+  label,
 }: DateTimeProps) => {
   const [issues, setIssues] = useState<string[]>([]);
   useEffect(() => {
@@ -41,14 +47,9 @@ export const DateTime = ({
   }, [value, issue]);
 
   return (
-    <>
+    <LabelContainer label={label} issues={issues}>
       <input
         type="datetime-local"
-        className={classNames("border rounded p-1 text-slate-800", {
-          "border-slate-700": issues.length === 0 ? true : false,
-          "text-error": issues.length !== 0 ? true : false,
-          "border-error": issues.length !== 0 ? true : false,
-        })}
         value={dayjs(value).format("YYYY-MM-DDThh:mm:ss")}
         onChange={(e) => {
           if (onChange) {
@@ -57,9 +58,6 @@ export const DateTime = ({
           }
         }}
       />
-      {issues.length !== 0 && (
-        <div className="text-sm mt-1 text-error">{issues.join(".\n")}</div>
-      )}
-    </>
+    </LabelContainer>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import dayjs from "dayjs";
+
 import classNames from "classnames";
+import { LabelContainer } from "../base/labelContainer";
 
 export interface TimeProps {
   /**
@@ -15,11 +16,15 @@ export interface TimeProps {
    * Error issue string.
    */
   issue?: string;
+  /**
+   * Label string.
+   */
+  label?: string;
 }
 
 const timeRegex = /^([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?$/;
 
-export const Time = ({ onChange, value, issue }: TimeProps) => {
+export const Time = ({ onChange, value, issue, label }: TimeProps) => {
   const [issues, setIssues] = useState<string[]>([]);
   useEffect(() => {
     const issues: string[] = [];
@@ -32,15 +37,10 @@ export const Time = ({ onChange, value, issue }: TimeProps) => {
   }, [value, issue]);
 
   return (
-    <>
+    <LabelContainer label={label} issues={issues}>
       <input
         step="1"
         type="time"
-        className={classNames("border rounded p-1 text-slate-800", {
-          "border-slate-700": issues.length === 0 ? true : false,
-          "text-error": issues.length !== 0 ? true : false,
-          "border-error": issues.length !== 0 ? true : false,
-        })}
         value={value}
         onChange={(e) => {
           if (onChange) {
@@ -48,9 +48,6 @@ export const Time = ({ onChange, value, issue }: TimeProps) => {
           }
         }}
       />
-      {issues.length !== 0 && (
-        <div className="text-sm mt-1 text-error">{issues.join(".\n")}</div>
-      )}
-    </>
+    </LabelContainer>
   );
 };
