@@ -46,6 +46,8 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@iguhealth/client": "workspace:^",
+    "@iguhealth/generated-ops": "workspace:^",
     "classnames": "^2.3.2",
     "dayjs": "^1.11.9",
     "js-file-download": "^0.4.12"
