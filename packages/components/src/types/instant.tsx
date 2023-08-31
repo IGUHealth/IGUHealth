@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
-import classNames from "classnames";
+
+import { LabelContainer } from "../base/labelContainer";
 
 export interface DateTimeProps {
   /**
@@ -15,12 +16,16 @@ export interface DateTimeProps {
    * Error issue string.
    */
   issue?: string;
+  /**
+   * Label string.
+   */
+  label?: string;
 }
 
 const instantRegex =
   /^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?(Z|(\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))$/;
 
-export const Instant = ({ onChange, value, issue }: DateTimeProps) => {
+export const Instant = ({ onChange, value, issue, label }: DateTimeProps) => {
   const [issues, setIssues] = useState<string[]>([]);
   useEffect(() => {
     const issues: string[] = [];
@@ -32,14 +37,10 @@ export const Instant = ({ onChange, value, issue }: DateTimeProps) => {
   }, [value, issue]);
 
   return (
-    <>
+    <LabelContainer label={label} issues={issues}>
       <input
+        className="outline-none"
         type="datetime-local"
-        className={classNames("border rounded p-1 text-slate-800", {
-          "border-slate-700": issues.length === 0 ? true : false,
-          "text-error": issues.length !== 0 ? true : false,
-          "border-error": issues.length !== 0 ? true : false,
-        })}
         value={dayjs(value, "YYYY-MM-DDThh:mm:ss.SSSZ").format(
           "YYYY-MM-DDThh:mm:ss.SSS"
         )}
@@ -52,9 +53,6 @@ export const Instant = ({ onChange, value, issue }: DateTimeProps) => {
           }
         }}
       />
-      {issues.length !== 0 && (
-        <div className="text-sm mt-1 text-error">{issues.join(".\n")}</div>
-      )}
-    </>
+    </LabelContainer>
   );
 };

@@ -1,8 +1,8 @@
-import React, { FC } from "react";
+import React from "react";
 
 import { LabelContainer } from "../base/labelContainer";
 
-export interface StringProps {
+export interface UrlProps {
   /**
    * The value of the input.
    */
@@ -21,7 +21,7 @@ export interface StringProps {
   label?: string;
 }
 
-export const String = ({ onChange, value, issue, label }: StringProps) => {
+export const Url = ({ onChange, value, issue, label }: UrlProps) => {
   return (
     <LabelContainer label={label} issues={issue ? [issue] : []}>
       <input
