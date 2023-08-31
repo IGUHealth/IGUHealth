@@ -23,7 +23,7 @@ export interface Base64BinaryProps {
   value?: string;
   onChange: (value: string) => void;
   issue?: string;
-  label: string;
+  label?: string;
 }
 
 const base64Regex = /^(\s*([0-9a-zA-Z\+\=]){4}\s*)+$/;
@@ -48,6 +48,7 @@ export const Base64Binary = ({
     <LabelContainer label={label} issues={issues}>
       <>
         <input
+          className="outline-none"
           type="file"
           onChange={(e) => {
             const file = e.target?.files?.[0];

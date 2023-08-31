@@ -39,6 +39,7 @@ export const Time = ({ onChange, value, issue, label }: TimeProps) => {
   return (
     <LabelContainer label={label} issues={issues}>
       <input
+        className="outline-none"
         step="1"
         type="time"
         value={value}

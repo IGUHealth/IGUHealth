@@ -39,6 +39,7 @@ export const Instant = ({ onChange, value, issue, label }: DateTimeProps) => {
   return (
     <LabelContainer label={label} issues={issues}>
       <input
+        className="outline-none"
         type="datetime-local"
         value={dayjs(value, "YYYY-MM-DDThh:mm:ss.SSSZ").format(
           "YYYY-MM-DDThh:mm:ss.SSS"

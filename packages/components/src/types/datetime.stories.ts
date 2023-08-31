@@ -15,7 +15,7 @@ const meta = {
   argTypes: {
     value: { control: "text" },
   },
-} satisfies Meta<typeof Date>;
+} satisfies Meta<typeof DateTime>;
 
 export default meta;
 

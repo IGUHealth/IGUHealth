@@ -49,6 +49,7 @@ export const DateTime = ({
   return (
     <LabelContainer label={label} issues={issues}>
       <input
+        className="outline-none"
         type="datetime-local"
         value={dayjs(value).format("YYYY-MM-DDThh:mm:ss")}
         onChange={(e) => {

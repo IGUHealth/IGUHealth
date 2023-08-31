@@ -25,6 +25,7 @@ export const String = ({ onChange, value, issue, label }: StringProps) => {
   return (
     <LabelContainer label={label} issues={issue ? [issue] : []}>
       <input
+        className="outline-none"
         type="text"
         value={value}
         onChange={(e) => {

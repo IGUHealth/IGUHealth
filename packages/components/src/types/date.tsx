@@ -50,6 +50,7 @@ export const Date = ({
   return (
     <LabelContainer label={label} issues={issues}>
       <input
+        className="outline-none"
         type="date"
         value={dayjs(value).format("YYYY-MM-DD")}
         onChange={(e) => {

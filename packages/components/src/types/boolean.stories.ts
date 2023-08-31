@@ -1,37 +1,33 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Decimal } from "./decimal";
+import { Boolean } from "./boolean";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
-  title: "Primitives/decimal",
-  component: Decimal,
+  title: "Primitives/boolean",
+  component: Boolean,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
     layout: "centered",
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
   tags: ["autodocs"],
-  argTypes: {
-    value: { control: "number" },
-  },
-} satisfies Meta<typeof Decimal>;
+} satisfies Meta<typeof Boolean>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = {
+export const ExistingData: Story = {
   args: {
-    value: 22.2,
-    onChange: (value: number) => console.log(value),
+    value: true,
+    onChange: (value: boolean) => console.log(value),
   },
 };
 
 export const Error: Story = {
   args: {
-    value: 55,
     issue: "Bad value",
-    onChange: (value: number) => console.log(value),
+    onChange: (value: boolean) => console.log(value),
   },
 };
