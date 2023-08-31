@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import fileDownload from "js-file-download";
-import classNames from "classnames";
 
 import { LabelContainer } from "../base/labelContainer";
 import { Button } from "../base/button";
@@ -35,8 +34,18 @@ export const Base64Binary = ({
   issue,
   label,
 }: Base64BinaryProps) => {
+  const [issues, setIssues] = useState<string[]>([]);
+  useEffect(() => {
+    const issues: string[] = [];
+    if (value && !base64Regex.test(value)) {
+      issues.push(`Invalid base64 format`);
+    }
+    if (issue) issues.push(issue);
+
+    setIssues(issues);
+  }, [value, issue]);
   return (
-    <LabelContainer label={label} issues={issue ? [issue] : []}>
+    <LabelContainer label={label} issues={issues}>
       <>
         <input
           type="file"
