@@ -11,7 +11,11 @@ import {
   Resource,
 } from "@iguhealth/fhir-types";
 
-type HTTPClientState = { getAccessToken: () => Promise<string>; url: string };
+type HTTPClientState = {
+  getAccessToken?: () => Promise<string>;
+  url: string;
+  headers?: Record<string, string>;
+};
 
 function parametersToQueryString(
   parameters: ParsedParameter<string | number>[]
@@ -33,10 +37,14 @@ async function toHTTPRequest(
   method: string;
   body?: string;
 }> {
-  const headers = {
+  const headers: Record<string, any> = {
     "Content-Type": "application/json", //"application/fhir+json"
-    Authorization: `Bearer ${await state.getAccessToken()}`,
+    ...state.headers,
   };
+  if (state.getAccessToken) {
+    const token = await state.getAccessToken();
+    headers["Authorization"] = `Bearer ${token}`;
+  }
   switch (request.type) {
     case "capabilities-request":
       return { url: `${state.url}/metadata`, method: "GET" };
