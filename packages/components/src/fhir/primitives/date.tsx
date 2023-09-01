@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
 
-import { LabelContainer } from "../base/labelContainer";
+import { LabelContainer } from "../../base/labelContainer";
 
 export interface DateProps {
   /**

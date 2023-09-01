@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import fileDownload from "js-file-download";
 
-import { LabelContainer } from "../base/labelContainer";
-import { Button } from "../base/button";
+import { LabelContainer } from "../../base/labelContainer";
+import { Button } from "../../base/button";
 
 const convertFileToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {

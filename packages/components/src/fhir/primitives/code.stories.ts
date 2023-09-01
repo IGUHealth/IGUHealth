@@ -30,6 +30,7 @@ export const Primary: Story = {
   args: {
     value: "test",
     onChange: (value: string | undefined) => console.log(value),
+    system: "http://hl7.org/fhir/ValueSet/gender-identity",
     expand: async (_url) => {
       return {
         resourceType: "ValueSet",

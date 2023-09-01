@@ -1,4 +1,4 @@
 // import "./index.css";
-import { String } from "./types/string.js";
+import { String } from "./fhir/string.js";
 
 export { String };

@@ -27,6 +27,7 @@ export const LabelContainer = ({
 
     <div
       className={classNames(
+        "overflow-hidden",
         "relative",
         "px-3 py-2",
         "bg-white border shadow-sm placeholder-slate-400 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200",

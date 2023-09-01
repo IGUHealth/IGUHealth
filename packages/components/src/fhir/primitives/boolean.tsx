@@ -1,5 +1,5 @@
 import React from "react";
-import { LabelContainer } from "../base/labelContainer";
+import { LabelContainer } from "../../base/labelContainer";
 
 export interface BooleanProps {
   value?: boolean;

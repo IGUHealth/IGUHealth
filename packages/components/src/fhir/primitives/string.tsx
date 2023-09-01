@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 
-import { LabelContainer } from "../base/labelContainer";
+import { LabelContainer } from "../../base/labelContainer";
 
 export interface StringProps {
   /**

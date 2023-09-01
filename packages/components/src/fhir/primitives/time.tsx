@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import classNames from "classnames";
-import { LabelContainer } from "../base/labelContainer";
+import { LabelContainer } from "../../base/labelContainer";
 
 export interface TimeProps {
   /**
