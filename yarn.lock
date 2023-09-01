@@ -4298,6 +4298,7 @@ __metadata:
     "@headlessui/react": ^1.7.17
     "@heroicons/react": ^2.0.18
     "@iguhealth/client": "workspace:^"
+    "@iguhealth/fhir-types": "workspace:^"
     "@iguhealth/generated-ops": "workspace:^"
     "@rollup/plugin-commonjs": ^25.0.4
     "@rollup/plugin-node-resolve": ^15.2.1

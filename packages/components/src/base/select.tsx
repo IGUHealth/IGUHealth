@@ -5,7 +5,7 @@ import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { LabelContainer } from "./labelContainer";
 import classNames from "classnames";
 
-type Option = { value: string | number; label: string };
+export type Option = { value: string | number; label: string };
 export interface SelectProps {
   value?: string | number;
   options: Array<Option>;
