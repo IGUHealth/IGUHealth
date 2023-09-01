@@ -59,37 +59,73 @@ export interface Address {
    */
   use?: code;
   /** 
+   * home | work | temp | old | billing - purpose of this address
+   */
+  _use?: Element
+  /** 
    * postal | physical | both
    */
   type?: code;
+  /** 
+   * postal | physical | both
+   */
+  _type?: Element
   /** 
    * Text representation of the address
    */
   text?: string;
   /** 
+   * Text representation of the address
+   */
+  _text?: Element
+  /** 
    * Street name, number, direction & P.O. Box etc.
    */
   line?: Array<string>;
+  /** 
+   * Street name, number, direction & P.O. Box etc.
+   */
+  _line?: Array<Element>
   /** 
    * Name of city, town etc.
    */
   city?: string;
   /** 
+   * Name of city, town etc.
+   */
+  _city?: Element
+  /** 
    * District name (aka county)
    */
   district?: string;
+  /** 
+   * District name (aka county)
+   */
+  _district?: Element
   /** 
    * Sub-unit of country (abbreviations ok)
    */
   state?: string;
   /** 
+   * Sub-unit of country (abbreviations ok)
+   */
+  _state?: Element
+  /** 
    * Postal code for area
    */
   postalCode?: string;
   /** 
+   * Postal code for area
+   */
+  _postalCode?: Element
+  /** 
    * Country (e.g. can be ISO 3166 2 or 3 letter code)
    */
   country?: string;
+  /** 
+   * Country (e.g. can be ISO 3166 2 or 3 letter code)
+   */
+  _country?: Element
   /** 
    * Time period when address was/is in use
    */
@@ -110,21 +146,41 @@ export interface Age {
    */
   value?: decimal;
   /** 
+   * Numerical value (with implicit precision)
+   */
+  _value?: Element
+  /** 
    * < | <= | >= | > - how to understand the value
    */
   comparator?: code;
+  /** 
+   * < | <= | >= | > - how to understand the value
+   */
+  _comparator?: Element
   /** 
    * Unit representation
    */
   unit?: string;
   /** 
+   * Unit representation
+   */
+  _unit?: Element
+  /** 
    * System that defines coded unit form
    */
   system?: uri;
   /** 
+   * System that defines coded unit form
+   */
+  _system?: Element
+  /** 
    * Coded form of the unit
    */
   code?: code;
+  /** 
+   * Coded form of the unit
+   */
+  _code?: Element
 }
 
 export interface Annotation {
@@ -145,13 +201,25 @@ export interface Annotation {
    */
   authorString?: string;
   /** 
+   * Individual responsible for the annotation
+   */
+  _authorString?: Element
+  /** 
    * When the annotation was made
    */
   time?: dateTime;
   /** 
+   * When the annotation was made
+   */
+  _time?: Element
+  /** 
    * The annotation  - text content (as markdown)
    */
   text: markdown;
+  /** 
+   * The annotation  - text content (as markdown)
+   */
+  _text?: Element
 }
 
 export interface Attachment {
@@ -168,33 +236,65 @@ export interface Attachment {
    */
   contentType?: code;
   /** 
+   * Mime type of the content, with charset etc.
+   */
+  _contentType?: Element
+  /** 
    * Human language of the content (BCP-47)
    */
   language?: code;
+  /** 
+   * Human language of the content (BCP-47)
+   */
+  _language?: Element
   /** 
    * Data inline, base64ed
    */
   data?: base64Binary;
   /** 
+   * Data inline, base64ed
+   */
+  _data?: Element
+  /** 
    * Uri where the data can be found
    */
   url?: url;
+  /** 
+   * Uri where the data can be found
+   */
+  _url?: Element
   /** 
    * Number of bytes of content (if url provided)
    */
   size?: unsignedInt;
   /** 
+   * Number of bytes of content (if url provided)
+   */
+  _size?: Element
+  /** 
    * Hash of the data (sha-1, base64ed)
    */
   hash?: base64Binary;
+  /** 
+   * Hash of the data (sha-1, base64ed)
+   */
+  _hash?: Element
   /** 
    * Label to display in place of the data
    */
   title?: string;
   /** 
+   * Label to display in place of the data
+   */
+  _title?: Element
+  /** 
    * Date attachment was first created
    */
   creation?: dateTime;
+  /** 
+   * Date attachment was first created
+   */
+  _creation?: Element
 }
 
 export interface CodeableConcept {
@@ -214,6 +314,10 @@ export interface CodeableConcept {
    * Plain text representation of the concept
    */
   text?: string;
+  /** 
+   * Plain text representation of the concept
+   */
+  _text?: Element
 }
 
 export interface Coding {
@@ -230,21 +334,41 @@ export interface Coding {
    */
   system?: uri;
   /** 
+   * Identity of the terminology system
+   */
+  _system?: Element
+  /** 
    * Version of the system - if relevant
    */
   version?: string;
+  /** 
+   * Version of the system - if relevant
+   */
+  _version?: Element
   /** 
    * Symbol in syntax defined by the system
    */
   code?: code;
   /** 
+   * Symbol in syntax defined by the system
+   */
+  _code?: Element
+  /** 
    * Representation defined by the system
    */
   display?: string;
   /** 
+   * Representation defined by the system
+   */
+  _display?: Element
+  /** 
    * If this coding was chosen directly by the user
    */
   userSelected?: boolean;
+  /** 
+   * If this coding was chosen directly by the user
+   */
+  _userSelected?: Element
 }
 
 export interface ContactDetail {
@@ -260,6 +384,10 @@ export interface ContactDetail {
    * Name of an individual to contact
    */
   name?: string;
+  /** 
+   * Name of an individual to contact
+   */
+  _name?: Element
   /** 
    * Contact details for individual or organization
    */
@@ -280,17 +408,33 @@ export interface ContactPoint {
    */
   system?: code;
   /** 
+   * phone | fax | email | pager | url | sms | other
+   */
+  _system?: Element
+  /** 
    * The actual contact point details
    */
   value?: string;
+  /** 
+   * The actual contact point details
+   */
+  _value?: Element
   /** 
    * home | work | temp | old | mobile - purpose of this contact point
    */
   use?: code;
   /** 
+   * home | work | temp | old | mobile - purpose of this contact point
+   */
+  _use?: Element
+  /** 
    * Specify preferred order of use (1 = highest)
    */
   rank?: positiveInt;
+  /** 
+   * Specify preferred order of use (1 = highest)
+   */
+  _rank?: Element
   /** 
    * Time period when the contact point was/is in use
    */
@@ -311,9 +455,17 @@ export interface Contributor {
    */
   type: code;
   /** 
+   * author | editor | reviewer | endorser
+   */
+  _type?: Element
+  /** 
    * Who contributed the content
    */
   name: string;
+  /** 
+   * Who contributed the content
+   */
+  _name?: Element
   /** 
    * Contact details of the contributor
    */
@@ -334,21 +486,41 @@ export interface Count {
    */
   value?: decimal;
   /** 
+   * Numerical value (with implicit precision)
+   */
+  _value?: Element
+  /** 
    * < | <= | >= | > - how to understand the value
    */
   comparator?: code;
+  /** 
+   * < | <= | >= | > - how to understand the value
+   */
+  _comparator?: Element
   /** 
    * Unit representation
    */
   unit?: string;
   /** 
+   * Unit representation
+   */
+  _unit?: Element
+  /** 
    * System that defines coded unit form
    */
   system?: uri;
   /** 
+   * System that defines coded unit form
+   */
+  _system?: Element
+  /** 
    * Coded form of the unit
    */
   code?: code;
+  /** 
+   * Coded form of the unit
+   */
+  _code?: Element
 }
 
 export interface DataRequirementCodeFilter {
@@ -365,13 +537,25 @@ export interface DataRequirementCodeFilter {
    */
   path?: string;
   /** 
+   * A code-valued attribute to filter on
+   */
+  _path?: Element
+  /** 
    * A coded (token) parameter to search on
    */
   searchParam?: string;
   /** 
+   * A coded (token) parameter to search on
+   */
+  _searchParam?: Element
+  /** 
    * Valueset for the filter
    */
   valueSet?: canonical;
+  /** 
+   * Valueset for the filter
+   */
+  _valueSet?: Element
   /** 
    * What code is expected
    */
@@ -391,13 +575,25 @@ export interface DataRequirementDateFilter {
    */
   path?: string;
   /** 
+   * A date-valued attribute to filter on
+   */
+  _path?: Element
+  /** 
    * A date valued parameter to search on
    */
   searchParam?: string;
   /** 
+   * A date valued parameter to search on
+   */
+  _searchParam?: Element
+  /** 
    * The value of the filter, as a Period, DateTime, or Duration value
    */
   valueDateTime?: dateTime;
+  /** 
+   * The value of the filter, as a Period, DateTime, or Duration value
+   */
+  _valueDateTime?: Element
   /** 
    * The value of the filter, as a Period, DateTime, or Duration value
    */
@@ -421,9 +617,17 @@ export interface DataRequirementSort {
    */
   path: string;
   /** 
+   * The name of the attribute to perform the sort
+   */
+  _path?: Element
+  /** 
    * ascending | descending
    */
   direction: code;
+  /** 
+   * ascending | descending
+   */
+  _direction?: Element
 }
 export interface DataRequirement {
   /** 
@@ -439,9 +643,17 @@ export interface DataRequirement {
    */
   type: code;
   /** 
+   * The type of the required data
+   */
+  _type?: Element
+  /** 
    * The profile of the required data
    */
   profile?: Array<canonical>;
+  /** 
+   * The profile of the required data
+   */
+  _profile?: Array<Element>
   /** 
    * E.g. Patient, Practitioner, RelatedPerson, Organization, Location, Device
    */
@@ -455,6 +667,10 @@ export interface DataRequirement {
    */
   mustSupport?: Array<string>;
   /** 
+   * Indicates specific structure elements that are referenced by the knowledge module
+   */
+  _mustSupport?: Array<Element>
+  /** 
    * What codes are expected
    */
   codeFilter?: Array<DataRequirementCodeFilter>;
@@ -466,6 +682,10 @@ export interface DataRequirement {
    * Number of results
    */
   limit?: positiveInt;
+  /** 
+   * Number of results
+   */
+  _limit?: Element
   /** 
    * Order of the results
    */
@@ -486,21 +706,41 @@ export interface Distance {
    */
   value?: decimal;
   /** 
+   * Numerical value (with implicit precision)
+   */
+  _value?: Element
+  /** 
    * < | <= | >= | > - how to understand the value
    */
   comparator?: code;
+  /** 
+   * < | <= | >= | > - how to understand the value
+   */
+  _comparator?: Element
   /** 
    * Unit representation
    */
   unit?: string;
   /** 
+   * Unit representation
+   */
+  _unit?: Element
+  /** 
    * System that defines coded unit form
    */
   system?: uri;
   /** 
+   * System that defines coded unit form
+   */
+  _system?: Element
+  /** 
    * Coded form of the unit
    */
   code?: code;
+  /** 
+   * Coded form of the unit
+   */
+  _code?: Element
 }
 
 export interface DosageDoseAndRate {
@@ -555,9 +795,17 @@ export interface Dosage {
    */
   sequence?: integer;
   /** 
+   * The order of the dosage instructions
+   */
+  _sequence?: Element
+  /** 
    * Free text dosage instructions e.g. SIG
    */
   text?: string;
+  /** 
+   * Free text dosage instructions e.g. SIG
+   */
+  _text?: Element
   /** 
    * Supplemental instruction or warnings to the patient - e.g. "with meals", "may cause drowsiness"
    */
@@ -567,6 +815,10 @@ export interface Dosage {
    */
   patientInstruction?: string;
   /** 
+   * Patient or consumer oriented instructions
+   */
+  _patientInstruction?: Element
+  /** 
    * When medication should be administered
    */
   timing?: Timing;
@@ -574,6 +826,10 @@ export interface Dosage {
    * Take "as needed" (for x)
    */
   asNeededBoolean?: boolean;
+  /** 
+   * Take "as needed" (for x)
+   */
+  _asNeededBoolean?: Element
   /** 
    * Take "as needed" (for x)
    */
@@ -622,21 +878,41 @@ export interface Duration {
    */
   value?: decimal;
   /** 
+   * Numerical value (with implicit precision)
+   */
+  _value?: Element
+  /** 
    * < | <= | >= | > - how to understand the value
    */
   comparator?: code;
+  /** 
+   * < | <= | >= | > - how to understand the value
+   */
+  _comparator?: Element
   /** 
    * Unit representation
    */
   unit?: string;
   /** 
+   * Unit representation
+   */
+  _unit?: Element
+  /** 
    * System that defines coded unit form
    */
   system?: uri;
   /** 
+   * System that defines coded unit form
+   */
+  _system?: Element
+  /** 
    * Coded form of the unit
    */
   code?: code;
+  /** 
+   * Coded form of the unit
+   */
+  _code?: Element
 }
 
 export interface ElementDefinitionSlicingDiscriminator {
@@ -653,9 +929,17 @@ export interface ElementDefinitionSlicingDiscriminator {
    */
   type: code;
   /** 
+   * value | exists | pattern | type | profile
+   */
+  _type?: Element
+  /** 
    * Path to element value
    */
   path: string;
+  /** 
+   * Path to element value
+   */
+  _path?: Element
 }
 export interface ElementDefinitionSlicing {
   /** 
@@ -675,13 +959,25 @@ export interface ElementDefinitionSlicing {
    */
   description?: string;
   /** 
+   * Text description of how slicing works (or not)
+   */
+  _description?: Element
+  /** 
    * If elements must be in same order as slices
    */
   ordered?: boolean;
   /** 
+   * If elements must be in same order as slices
+   */
+  _ordered?: Element
+  /** 
    * closed | open | openAtEnd
    */
   rules: code;
+  /** 
+   * closed | open | openAtEnd
+   */
+  _rules?: Element
 }
 export interface ElementDefinitionBase {
   /** 
@@ -697,13 +993,25 @@ export interface ElementDefinitionBase {
    */
   path: string;
   /** 
+   * Path that identifies the base element
+   */
+  _path?: Element
+  /** 
    * Min cardinality of the base element
    */
   min: unsignedInt;
   /** 
+   * Min cardinality of the base element
+   */
+  _min?: Element
+  /** 
    * Max cardinality of the base element
    */
   max: string;
+  /** 
+   * Max cardinality of the base element
+   */
+  _max?: Element
 }
 export interface ElementDefinitionType {
   /** 
@@ -719,21 +1027,41 @@ export interface ElementDefinitionType {
    */
   code: uri;
   /** 
+   * Data type or Resource (reference to definition)
+   */
+  _code?: Element
+  /** 
    * Profiles (StructureDefinition or IG) - one must apply
    */
   profile?: Array<canonical>;
+  /** 
+   * Profiles (StructureDefinition or IG) - one must apply
+   */
+  _profile?: Array<Element>
   /** 
    * Profile (StructureDefinition or IG) on the Reference/canonical target - one must apply
    */
   targetProfile?: Array<canonical>;
   /** 
+   * Profile (StructureDefinition or IG) on the Reference/canonical target - one must apply
+   */
+  _targetProfile?: Array<Element>
+  /** 
    * contained | referenced | bundled - how aggregated
    */
   aggregation?: Array<code>;
   /** 
+   * contained | referenced | bundled - how aggregated
+   */
+  _aggregation?: Array<Element>
+  /** 
    * either | independent | specific
    */
   versioning?: code;
+  /** 
+   * either | independent | specific
+   */
+  _versioning?: Element
 }
 export interface ElementDefinitionExample {
   /** 
@@ -749,9 +1077,17 @@ export interface ElementDefinitionExample {
    */
   label: string;
   /** 
+   * Describes the purpose of this example
+   */
+  _label?: Element
+  /** 
    * Value of Example (one of allowed types)
    */
   valueBase64Binary?: base64Binary;
+  /** 
+   * Value of Example (one of allowed types)
+   */
+  _valueBase64Binary?: Element
   /** 
    * Value of Example (one of allowed types)
    */
@@ -759,7 +1095,15 @@ export interface ElementDefinitionExample {
   /** 
    * Value of Example (one of allowed types)
    */
+  _valueBoolean?: Element
+  /** 
+   * Value of Example (one of allowed types)
+   */
   valueCanonical?: canonical;
+  /** 
+   * Value of Example (one of allowed types)
+   */
+  _valueCanonical?: Element
   /** 
    * Value of Example (one of allowed types)
    */
@@ -767,7 +1111,15 @@ export interface ElementDefinitionExample {
   /** 
    * Value of Example (one of allowed types)
    */
+  _valueCode?: Element
+  /** 
+   * Value of Example (one of allowed types)
+   */
   valueDate?: date;
+  /** 
+   * Value of Example (one of allowed types)
+   */
+  _valueDate?: Element
   /** 
    * Value of Example (one of allowed types)
    */
@@ -775,7 +1127,15 @@ export interface ElementDefinitionExample {
   /** 
    * Value of Example (one of allowed types)
    */
+  _valueDateTime?: Element
+  /** 
+   * Value of Example (one of allowed types)
+   */
   valueDecimal?: decimal;
+  /** 
+   * Value of Example (one of allowed types)
+   */
+  _valueDecimal?: Element
   /** 
    * Value of Example (one of allowed types)
    */
@@ -783,7 +1143,15 @@ export interface ElementDefinitionExample {
   /** 
    * Value of Example (one of allowed types)
    */
+  _valueId?: Element
+  /** 
+   * Value of Example (one of allowed types)
+   */
   valueInstant?: instant;
+  /** 
+   * Value of Example (one of allowed types)
+   */
+  _valueInstant?: Element
   /** 
    * Value of Example (one of allowed types)
    */
@@ -791,7 +1159,15 @@ export interface ElementDefinitionExample {
   /** 
    * Value of Example (one of allowed types)
    */
+  _valueInteger?: Element
+  /** 
+   * Value of Example (one of allowed types)
+   */
   valueMarkdown?: markdown;
+  /** 
+   * Value of Example (one of allowed types)
+   */
+  _valueMarkdown?: Element
   /** 
    * Value of Example (one of allowed types)
    */
@@ -799,7 +1175,15 @@ export interface ElementDefinitionExample {
   /** 
    * Value of Example (one of allowed types)
    */
+  _valueOid?: Element
+  /** 
+   * Value of Example (one of allowed types)
+   */
   valuePositiveInt?: positiveInt;
+  /** 
+   * Value of Example (one of allowed types)
+   */
+  _valuePositiveInt?: Element
   /** 
    * Value of Example (one of allowed types)
    */
@@ -807,7 +1191,15 @@ export interface ElementDefinitionExample {
   /** 
    * Value of Example (one of allowed types)
    */
+  _valueString?: Element
+  /** 
+   * Value of Example (one of allowed types)
+   */
   valueTime?: time;
+  /** 
+   * Value of Example (one of allowed types)
+   */
+  _valueTime?: Element
   /** 
    * Value of Example (one of allowed types)
    */
@@ -815,7 +1207,15 @@ export interface ElementDefinitionExample {
   /** 
    * Value of Example (one of allowed types)
    */
+  _valueUnsignedInt?: Element
+  /** 
+   * Value of Example (one of allowed types)
+   */
   valueUri?: uri;
+  /** 
+   * Value of Example (one of allowed types)
+   */
+  _valueUri?: Element
   /** 
    * Value of Example (one of allowed types)
    */
@@ -823,7 +1223,15 @@ export interface ElementDefinitionExample {
   /** 
    * Value of Example (one of allowed types)
    */
+  _valueUrl?: Element
+  /** 
+   * Value of Example (one of allowed types)
+   */
   valueUuid?: uuid;
+  /** 
+   * Value of Example (one of allowed types)
+   */
+  _valueUuid?: Element
   /** 
    * Value of Example (one of allowed types)
    */
@@ -963,29 +1371,57 @@ export interface ElementDefinitionConstraint {
    */
   key: id;
   /** 
+   * Target of 'condition' reference above
+   */
+  _key?: Element
+  /** 
    * Why this constraint is necessary or appropriate
    */
   requirements?: string;
+  /** 
+   * Why this constraint is necessary or appropriate
+   */
+  _requirements?: Element
   /** 
    * error | warning
    */
   severity: code;
   /** 
+   * error | warning
+   */
+  _severity?: Element
+  /** 
    * Human description of constraint
    */
   human: string;
+  /** 
+   * Human description of constraint
+   */
+  _human?: Element
   /** 
    * FHIRPath expression of constraint
    */
   expression?: string;
   /** 
+   * FHIRPath expression of constraint
+   */
+  _expression?: Element
+  /** 
    * XPath expression of constraint
    */
   xpath?: string;
   /** 
+   * XPath expression of constraint
+   */
+  _xpath?: Element
+  /** 
    * Reference to original source of constraint
    */
   source?: canonical;
+  /** 
+   * Reference to original source of constraint
+   */
+  _source?: Element
 }
 export interface ElementDefinitionBinding {
   /** 
@@ -1001,13 +1437,25 @@ export interface ElementDefinitionBinding {
    */
   strength: code;
   /** 
+   * required | extensible | preferred | example
+   */
+  _strength?: Element
+  /** 
    * Human explanation of the value set
    */
   description?: string;
   /** 
+   * Human explanation of the value set
+   */
+  _description?: Element
+  /** 
    * Source of value set
    */
   valueSet?: canonical;
+  /** 
+   * Source of value set
+   */
+  _valueSet?: Element
 }
 export interface ElementDefinitionMapping {
   /** 
@@ -1023,17 +1471,33 @@ export interface ElementDefinitionMapping {
    */
   identity: id;
   /** 
+   * Reference to mapping declaration
+   */
+  _identity?: Element
+  /** 
    * Computable language of mapping
    */
   language?: code;
+  /** 
+   * Computable language of mapping
+   */
+  _language?: Element
   /** 
    * Details of the mapping
    */
   map: string;
   /** 
+   * Details of the mapping
+   */
+  _map?: Element
+  /** 
    * Comments about the mapping or its use
    */
   comment?: string;
+  /** 
+   * Comments about the mapping or its use
+   */
+  _comment?: Element
 }
 export interface ElementDefinition {
   /** 
@@ -1053,21 +1517,41 @@ export interface ElementDefinition {
    */
   path: string;
   /** 
+   * Path of the element in the hierarchy of elements
+   */
+  _path?: Element
+  /** 
    * xmlAttr | xmlText | typeAttr | cdaText | xhtml
    */
   representation?: Array<code>;
+  /** 
+   * xmlAttr | xmlText | typeAttr | cdaText | xhtml
+   */
+  _representation?: Array<Element>
   /** 
    * Name for this particular element (in a set of slices)
    */
   sliceName?: string;
   /** 
+   * Name for this particular element (in a set of slices)
+   */
+  _sliceName?: Element
+  /** 
    * If this slice definition constrains an inherited slice definition (or not)
    */
   sliceIsConstraining?: boolean;
   /** 
+   * If this slice definition constrains an inherited slice definition (or not)
+   */
+  _sliceIsConstraining?: Element
+  /** 
    * Name for element to display with or prompt for element
    */
   label?: string;
+  /** 
+   * Name for element to display with or prompt for element
+   */
+  _label?: Element
   /** 
    * Corresponding codes in terminologies
    */
@@ -1081,29 +1565,57 @@ export interface ElementDefinition {
    */
   short?: string;
   /** 
+   * Concise definition for space-constrained presentation
+   */
+  _short?: Element
+  /** 
    * Full formal definition as narrative text
    */
   definition?: markdown;
+  /** 
+   * Full formal definition as narrative text
+   */
+  _definition?: Element
   /** 
    * Comments about the use of this element
    */
   comment?: markdown;
   /** 
+   * Comments about the use of this element
+   */
+  _comment?: Element
+  /** 
    * Why this resource has been created
    */
   requirements?: markdown;
+  /** 
+   * Why this resource has been created
+   */
+  _requirements?: Element
   /** 
    * Other names
    */
   alias?: Array<string>;
   /** 
+   * Other names
+   */
+  _alias?: Array<Element>
+  /** 
    * Minimum Cardinality
    */
   min?: unsignedInt;
   /** 
+   * Minimum Cardinality
+   */
+  _min?: Element
+  /** 
    * Maximum Cardinality (a number or *)
    */
   max?: string;
+  /** 
+   * Maximum Cardinality (a number or *)
+   */
+  _max?: Element
   /** 
    * Base definition information for tools
    */
@@ -1112,6 +1624,10 @@ export interface ElementDefinition {
    * Reference to definition of content for the element
    */
   contentReference?: uri;
+  /** 
+   * Reference to definition of content for the element
+   */
+  _contentReference?: Element
   /** 
    * Data type and Profile for this element
    */
@@ -1123,7 +1639,15 @@ export interface ElementDefinition {
   /** 
    * Specified value if missing from instance
    */
+  _defaultValueBase64Binary?: Element
+  /** 
+   * Specified value if missing from instance
+   */
   defaultValueBoolean?: boolean;
+  /** 
+   * Specified value if missing from instance
+   */
+  _defaultValueBoolean?: Element
   /** 
    * Specified value if missing from instance
    */
@@ -1131,7 +1655,15 @@ export interface ElementDefinition {
   /** 
    * Specified value if missing from instance
    */
+  _defaultValueCanonical?: Element
+  /** 
+   * Specified value if missing from instance
+   */
   defaultValueCode?: code;
+  /** 
+   * Specified value if missing from instance
+   */
+  _defaultValueCode?: Element
   /** 
    * Specified value if missing from instance
    */
@@ -1139,7 +1671,15 @@ export interface ElementDefinition {
   /** 
    * Specified value if missing from instance
    */
+  _defaultValueDate?: Element
+  /** 
+   * Specified value if missing from instance
+   */
   defaultValueDateTime?: dateTime;
+  /** 
+   * Specified value if missing from instance
+   */
+  _defaultValueDateTime?: Element
   /** 
    * Specified value if missing from instance
    */
@@ -1147,7 +1687,15 @@ export interface ElementDefinition {
   /** 
    * Specified value if missing from instance
    */
+  _defaultValueDecimal?: Element
+  /** 
+   * Specified value if missing from instance
+   */
   defaultValueId?: id;
+  /** 
+   * Specified value if missing from instance
+   */
+  _defaultValueId?: Element
   /** 
    * Specified value if missing from instance
    */
@@ -1155,7 +1703,15 @@ export interface ElementDefinition {
   /** 
    * Specified value if missing from instance
    */
+  _defaultValueInstant?: Element
+  /** 
+   * Specified value if missing from instance
+   */
   defaultValueInteger?: integer;
+  /** 
+   * Specified value if missing from instance
+   */
+  _defaultValueInteger?: Element
   /** 
    * Specified value if missing from instance
    */
@@ -1163,7 +1719,15 @@ export interface ElementDefinition {
   /** 
    * Specified value if missing from instance
    */
+  _defaultValueMarkdown?: Element
+  /** 
+   * Specified value if missing from instance
+   */
   defaultValueOid?: oid;
+  /** 
+   * Specified value if missing from instance
+   */
+  _defaultValueOid?: Element
   /** 
    * Specified value if missing from instance
    */
@@ -1171,7 +1735,15 @@ export interface ElementDefinition {
   /** 
    * Specified value if missing from instance
    */
+  _defaultValuePositiveInt?: Element
+  /** 
+   * Specified value if missing from instance
+   */
   defaultValueString?: string;
+  /** 
+   * Specified value if missing from instance
+   */
+  _defaultValueString?: Element
   /** 
    * Specified value if missing from instance
    */
@@ -1179,7 +1751,15 @@ export interface ElementDefinition {
   /** 
    * Specified value if missing from instance
    */
+  _defaultValueTime?: Element
+  /** 
+   * Specified value if missing from instance
+   */
   defaultValueUnsignedInt?: unsignedInt;
+  /** 
+   * Specified value if missing from instance
+   */
+  _defaultValueUnsignedInt?: Element
   /** 
    * Specified value if missing from instance
    */
@@ -1187,11 +1767,23 @@ export interface ElementDefinition {
   /** 
    * Specified value if missing from instance
    */
+  _defaultValueUri?: Element
+  /** 
+   * Specified value if missing from instance
+   */
   defaultValueUrl?: url;
   /** 
    * Specified value if missing from instance
    */
+  _defaultValueUrl?: Element
+  /** 
+   * Specified value if missing from instance
+   */
   defaultValueUuid?: uuid;
+  /** 
+   * Specified value if missing from instance
+   */
+  _defaultValueUuid?: Element
   /** 
    * Specified value if missing from instance
    */
@@ -1321,9 +1913,17 @@ export interface ElementDefinition {
    */
   meaningWhenMissing?: markdown;
   /** 
+   * Implicit meaning when this element is missing
+   */
+  _meaningWhenMissing?: Element
+  /** 
    * What the order of the elements means
    */
   orderMeaning?: string;
+  /** 
+   * What the order of the elements means
+   */
+  _orderMeaning?: Element
   /** 
    * Value must be exactly this
    */
@@ -1331,7 +1931,15 @@ export interface ElementDefinition {
   /** 
    * Value must be exactly this
    */
+  _fixedBase64Binary?: Element
+  /** 
+   * Value must be exactly this
+   */
   fixedBoolean?: boolean;
+  /** 
+   * Value must be exactly this
+   */
+  _fixedBoolean?: Element
   /** 
    * Value must be exactly this
    */
@@ -1339,7 +1947,15 @@ export interface ElementDefinition {
   /** 
    * Value must be exactly this
    */
+  _fixedCanonical?: Element
+  /** 
+   * Value must be exactly this
+   */
   fixedCode?: code;
+  /** 
+   * Value must be exactly this
+   */
+  _fixedCode?: Element
   /** 
    * Value must be exactly this
    */
@@ -1347,7 +1963,15 @@ export interface ElementDefinition {
   /** 
    * Value must be exactly this
    */
+  _fixedDate?: Element
+  /** 
+   * Value must be exactly this
+   */
   fixedDateTime?: dateTime;
+  /** 
+   * Value must be exactly this
+   */
+  _fixedDateTime?: Element
   /** 
    * Value must be exactly this
    */
@@ -1355,7 +1979,15 @@ export interface ElementDefinition {
   /** 
    * Value must be exactly this
    */
+  _fixedDecimal?: Element
+  /** 
+   * Value must be exactly this
+   */
   fixedId?: id;
+  /** 
+   * Value must be exactly this
+   */
+  _fixedId?: Element
   /** 
    * Value must be exactly this
    */
@@ -1363,7 +1995,15 @@ export interface ElementDefinition {
   /** 
    * Value must be exactly this
    */
+  _fixedInstant?: Element
+  /** 
+   * Value must be exactly this
+   */
   fixedInteger?: integer;
+  /** 
+   * Value must be exactly this
+   */
+  _fixedInteger?: Element
   /** 
    * Value must be exactly this
    */
@@ -1371,7 +2011,15 @@ export interface ElementDefinition {
   /** 
    * Value must be exactly this
    */
+  _fixedMarkdown?: Element
+  /** 
+   * Value must be exactly this
+   */
   fixedOid?: oid;
+  /** 
+   * Value must be exactly this
+   */
+  _fixedOid?: Element
   /** 
    * Value must be exactly this
    */
@@ -1379,7 +2027,15 @@ export interface ElementDefinition {
   /** 
    * Value must be exactly this
    */
+  _fixedPositiveInt?: Element
+  /** 
+   * Value must be exactly this
+   */
   fixedString?: string;
+  /** 
+   * Value must be exactly this
+   */
+  _fixedString?: Element
   /** 
    * Value must be exactly this
    */
@@ -1387,7 +2043,15 @@ export interface ElementDefinition {
   /** 
    * Value must be exactly this
    */
+  _fixedTime?: Element
+  /** 
+   * Value must be exactly this
+   */
   fixedUnsignedInt?: unsignedInt;
+  /** 
+   * Value must be exactly this
+   */
+  _fixedUnsignedInt?: Element
   /** 
    * Value must be exactly this
    */
@@ -1395,11 +2059,23 @@ export interface ElementDefinition {
   /** 
    * Value must be exactly this
    */
+  _fixedUri?: Element
+  /** 
+   * Value must be exactly this
+   */
   fixedUrl?: url;
   /** 
    * Value must be exactly this
    */
+  _fixedUrl?: Element
+  /** 
+   * Value must be exactly this
+   */
   fixedUuid?: uuid;
+  /** 
+   * Value must be exactly this
+   */
+  _fixedUuid?: Element
   /** 
    * Value must be exactly this
    */
@@ -1531,7 +2207,15 @@ export interface ElementDefinition {
   /** 
    * Value must have at least these property values
    */
+  _patternBase64Binary?: Element
+  /** 
+   * Value must have at least these property values
+   */
   patternBoolean?: boolean;
+  /** 
+   * Value must have at least these property values
+   */
+  _patternBoolean?: Element
   /** 
    * Value must have at least these property values
    */
@@ -1539,7 +2223,15 @@ export interface ElementDefinition {
   /** 
    * Value must have at least these property values
    */
+  _patternCanonical?: Element
+  /** 
+   * Value must have at least these property values
+   */
   patternCode?: code;
+  /** 
+   * Value must have at least these property values
+   */
+  _patternCode?: Element
   /** 
    * Value must have at least these property values
    */
@@ -1547,7 +2239,15 @@ export interface ElementDefinition {
   /** 
    * Value must have at least these property values
    */
+  _patternDate?: Element
+  /** 
+   * Value must have at least these property values
+   */
   patternDateTime?: dateTime;
+  /** 
+   * Value must have at least these property values
+   */
+  _patternDateTime?: Element
   /** 
    * Value must have at least these property values
    */
@@ -1555,7 +2255,15 @@ export interface ElementDefinition {
   /** 
    * Value must have at least these property values
    */
+  _patternDecimal?: Element
+  /** 
+   * Value must have at least these property values
+   */
   patternId?: id;
+  /** 
+   * Value must have at least these property values
+   */
+  _patternId?: Element
   /** 
    * Value must have at least these property values
    */
@@ -1563,7 +2271,15 @@ export interface ElementDefinition {
   /** 
    * Value must have at least these property values
    */
+  _patternInstant?: Element
+  /** 
+   * Value must have at least these property values
+   */
   patternInteger?: integer;
+  /** 
+   * Value must have at least these property values
+   */
+  _patternInteger?: Element
   /** 
    * Value must have at least these property values
    */
@@ -1571,7 +2287,15 @@ export interface ElementDefinition {
   /** 
    * Value must have at least these property values
    */
+  _patternMarkdown?: Element
+  /** 
+   * Value must have at least these property values
+   */
   patternOid?: oid;
+  /** 
+   * Value must have at least these property values
+   */
+  _patternOid?: Element
   /** 
    * Value must have at least these property values
    */
@@ -1579,7 +2303,15 @@ export interface ElementDefinition {
   /** 
    * Value must have at least these property values
    */
+  _patternPositiveInt?: Element
+  /** 
+   * Value must have at least these property values
+   */
   patternString?: string;
+  /** 
+   * Value must have at least these property values
+   */
+  _patternString?: Element
   /** 
    * Value must have at least these property values
    */
@@ -1587,7 +2319,15 @@ export interface ElementDefinition {
   /** 
    * Value must have at least these property values
    */
+  _patternTime?: Element
+  /** 
+   * Value must have at least these property values
+   */
   patternUnsignedInt?: unsignedInt;
+  /** 
+   * Value must have at least these property values
+   */
+  _patternUnsignedInt?: Element
   /** 
    * Value must have at least these property values
    */
@@ -1595,11 +2335,23 @@ export interface ElementDefinition {
   /** 
    * Value must have at least these property values
    */
+  _patternUri?: Element
+  /** 
+   * Value must have at least these property values
+   */
   patternUrl?: url;
   /** 
    * Value must have at least these property values
    */
+  _patternUrl?: Element
+  /** 
+   * Value must have at least these property values
+   */
   patternUuid?: uuid;
+  /** 
+   * Value must have at least these property values
+   */
+  _patternUuid?: Element
   /** 
    * Value must have at least these property values
    */
@@ -1735,7 +2487,15 @@ export interface ElementDefinition {
   /** 
    * Minimum Allowed Value (for some types)
    */
+  _minValueDate?: Element
+  /** 
+   * Minimum Allowed Value (for some types)
+   */
   minValueDateTime?: dateTime;
+  /** 
+   * Minimum Allowed Value (for some types)
+   */
+  _minValueDateTime?: Element
   /** 
    * Minimum Allowed Value (for some types)
    */
@@ -1743,7 +2503,15 @@ export interface ElementDefinition {
   /** 
    * Minimum Allowed Value (for some types)
    */
+  _minValueInstant?: Element
+  /** 
+   * Minimum Allowed Value (for some types)
+   */
   minValueTime?: time;
+  /** 
+   * Minimum Allowed Value (for some types)
+   */
+  _minValueTime?: Element
   /** 
    * Minimum Allowed Value (for some types)
    */
@@ -1751,7 +2519,15 @@ export interface ElementDefinition {
   /** 
    * Minimum Allowed Value (for some types)
    */
+  _minValueDecimal?: Element
+  /** 
+   * Minimum Allowed Value (for some types)
+   */
   minValueInteger?: integer;
+  /** 
+   * Minimum Allowed Value (for some types)
+   */
+  _minValueInteger?: Element
   /** 
    * Minimum Allowed Value (for some types)
    */
@@ -1759,7 +2535,15 @@ export interface ElementDefinition {
   /** 
    * Minimum Allowed Value (for some types)
    */
+  _minValuePositiveInt?: Element
+  /** 
+   * Minimum Allowed Value (for some types)
+   */
   minValueUnsignedInt?: unsignedInt;
+  /** 
+   * Minimum Allowed Value (for some types)
+   */
+  _minValueUnsignedInt?: Element
   /** 
    * Minimum Allowed Value (for some types)
    */
@@ -1771,7 +2555,15 @@ export interface ElementDefinition {
   /** 
    * Maximum Allowed Value (for some types)
    */
+  _maxValueDate?: Element
+  /** 
+   * Maximum Allowed Value (for some types)
+   */
   maxValueDateTime?: dateTime;
+  /** 
+   * Maximum Allowed Value (for some types)
+   */
+  _maxValueDateTime?: Element
   /** 
    * Maximum Allowed Value (for some types)
    */
@@ -1779,7 +2571,15 @@ export interface ElementDefinition {
   /** 
    * Maximum Allowed Value (for some types)
    */
+  _maxValueInstant?: Element
+  /** 
+   * Maximum Allowed Value (for some types)
+   */
   maxValueTime?: time;
+  /** 
+   * Maximum Allowed Value (for some types)
+   */
+  _maxValueTime?: Element
   /** 
    * Maximum Allowed Value (for some types)
    */
@@ -1787,7 +2587,15 @@ export interface ElementDefinition {
   /** 
    * Maximum Allowed Value (for some types)
    */
+  _maxValueDecimal?: Element
+  /** 
+   * Maximum Allowed Value (for some types)
+   */
   maxValueInteger?: integer;
+  /** 
+   * Maximum Allowed Value (for some types)
+   */
+  _maxValueInteger?: Element
   /** 
    * Maximum Allowed Value (for some types)
    */
@@ -1795,7 +2603,15 @@ export interface ElementDefinition {
   /** 
    * Maximum Allowed Value (for some types)
    */
+  _maxValuePositiveInt?: Element
+  /** 
+   * Maximum Allowed Value (for some types)
+   */
   maxValueUnsignedInt?: unsignedInt;
+  /** 
+   * Maximum Allowed Value (for some types)
+   */
+  _maxValueUnsignedInt?: Element
   /** 
    * Maximum Allowed Value (for some types)
    */
@@ -1805,9 +2621,17 @@ export interface ElementDefinition {
    */
   maxLength?: integer;
   /** 
+   * Max length for strings
+   */
+  _maxLength?: Element
+  /** 
    * Reference to invariant about presence
    */
   condition?: Array<id>;
+  /** 
+   * Reference to invariant about presence
+   */
+  _condition?: Array<Element>
   /** 
    * Condition that must evaluate to true
    */
@@ -1817,17 +2641,33 @@ export interface ElementDefinition {
    */
   mustSupport?: boolean;
   /** 
+   * If the element must be supported
+   */
+  _mustSupport?: Element
+  /** 
    * If this modifies the meaning of other elements
    */
   isModifier?: boolean;
+  /** 
+   * If this modifies the meaning of other elements
+   */
+  _isModifier?: Element
   /** 
    * Reason that this element is marked as a modifier
    */
   isModifierReason?: string;
   /** 
+   * Reason that this element is marked as a modifier
+   */
+  _isModifierReason?: Element
+  /** 
    * Include when _summary = true?
    */
   isSummary?: boolean;
+  /** 
+   * Include when _summary = true?
+   */
+  _isSummary?: Element
   /** 
    * ValueSet details if this is coded
    */
@@ -1852,21 +2692,41 @@ export interface Expression {
    */
   description?: string;
   /** 
+   * Natural language description of the condition
+   */
+  _description?: Element
+  /** 
    * Short name assigned to expression for reuse
    */
   name?: id;
+  /** 
+   * Short name assigned to expression for reuse
+   */
+  _name?: Element
   /** 
    * text/cql | text/fhirpath | application/x-fhir-query | etc.
    */
   language: code;
   /** 
+   * text/cql | text/fhirpath | application/x-fhir-query | etc.
+   */
+  _language?: Element
+  /** 
    * Expression in specified language
    */
   expression?: string;
   /** 
+   * Expression in specified language
+   */
+  _expression?: Element
+  /** 
    * Where the expression is found
    */
   reference?: uri;
+  /** 
+   * Where the expression is found
+   */
+  _reference?: Element
 }
 
 export interface Extension {
@@ -1889,7 +2749,15 @@ export interface Extension {
   /** 
    * Value of extension
    */
+  _valueBase64Binary?: Element
+  /** 
+   * Value of extension
+   */
   valueBoolean?: boolean;
+  /** 
+   * Value of extension
+   */
+  _valueBoolean?: Element
   /** 
    * Value of extension
    */
@@ -1897,7 +2765,15 @@ export interface Extension {
   /** 
    * Value of extension
    */
+  _valueCanonical?: Element
+  /** 
+   * Value of extension
+   */
   valueCode?: code;
+  /** 
+   * Value of extension
+   */
+  _valueCode?: Element
   /** 
    * Value of extension
    */
@@ -1905,7 +2781,15 @@ export interface Extension {
   /** 
    * Value of extension
    */
+  _valueDate?: Element
+  /** 
+   * Value of extension
+   */
   valueDateTime?: dateTime;
+  /** 
+   * Value of extension
+   */
+  _valueDateTime?: Element
   /** 
    * Value of extension
    */
@@ -1913,7 +2797,15 @@ export interface Extension {
   /** 
    * Value of extension
    */
+  _valueDecimal?: Element
+  /** 
+   * Value of extension
+   */
   valueId?: id;
+  /** 
+   * Value of extension
+   */
+  _valueId?: Element
   /** 
    * Value of extension
    */
@@ -1921,7 +2813,15 @@ export interface Extension {
   /** 
    * Value of extension
    */
+  _valueInstant?: Element
+  /** 
+   * Value of extension
+   */
   valueInteger?: integer;
+  /** 
+   * Value of extension
+   */
+  _valueInteger?: Element
   /** 
    * Value of extension
    */
@@ -1929,7 +2829,15 @@ export interface Extension {
   /** 
    * Value of extension
    */
+  _valueMarkdown?: Element
+  /** 
+   * Value of extension
+   */
   valueOid?: oid;
+  /** 
+   * Value of extension
+   */
+  _valueOid?: Element
   /** 
    * Value of extension
    */
@@ -1937,7 +2845,15 @@ export interface Extension {
   /** 
    * Value of extension
    */
+  _valuePositiveInt?: Element
+  /** 
+   * Value of extension
+   */
   valueString?: string;
+  /** 
+   * Value of extension
+   */
+  _valueString?: Element
   /** 
    * Value of extension
    */
@@ -1945,7 +2861,15 @@ export interface Extension {
   /** 
    * Value of extension
    */
+  _valueTime?: Element
+  /** 
+   * Value of extension
+   */
   valueUnsignedInt?: unsignedInt;
+  /** 
+   * Value of extension
+   */
+  _valueUnsignedInt?: Element
   /** 
    * Value of extension
    */
@@ -1953,11 +2877,23 @@ export interface Extension {
   /** 
    * Value of extension
    */
+  _valueUri?: Element
+  /** 
+   * Value of extension
+   */
   valueUrl?: url;
   /** 
    * Value of extension
    */
+  _valueUrl?: Element
+  /** 
+   * Value of extension
+   */
   valueUuid?: uuid;
+  /** 
+   * Value of extension
+   */
+  _valueUuid?: Element
   /** 
    * Value of extension
    */
@@ -2098,25 +3034,49 @@ export interface HumanName {
    */
   use?: code;
   /** 
+   * usual | official | temp | nickname | anonymous | old | maiden
+   */
+  _use?: Element
+  /** 
    * Text representation of the full name
    */
   text?: string;
+  /** 
+   * Text representation of the full name
+   */
+  _text?: Element
   /** 
    * Family name (often called 'Surname')
    */
   family?: string;
   /** 
+   * Family name (often called 'Surname')
+   */
+  _family?: Element
+  /** 
    * Given names (not always 'first'). Includes middle names
    */
   given?: Array<string>;
+  /** 
+   * Given names (not always 'first'). Includes middle names
+   */
+  _given?: Array<Element>
   /** 
    * Parts that come before the name
    */
   prefix?: Array<string>;
   /** 
+   * Parts that come before the name
+   */
+  _prefix?: Array<Element>
+  /** 
    * Parts that come after the name
    */
   suffix?: Array<string>;
+  /** 
+   * Parts that come after the name
+   */
+  _suffix?: Array<Element>
   /** 
    * Time period when name was/is in use
    */
@@ -2137,6 +3097,10 @@ export interface Identifier {
    */
   use?: code;
   /** 
+   * usual | official | temp | secondary | old (If known)
+   */
+  _use?: Element
+  /** 
    * Description of identifier
    */
   type?: CodeableConcept;
@@ -2145,9 +3109,17 @@ export interface Identifier {
    */
   system?: uri;
   /** 
+   * The namespace for the identifier value
+   */
+  _system?: Element
+  /** 
    * The value that is unique
    */
   value?: string;
+  /** 
+   * The value that is unique
+   */
+  _value?: Element
   /** 
    * Time period when id is/was valid for use
    */
@@ -2191,6 +3163,10 @@ export interface MarketingStatus {
    * The date when the Medicinal Product is placed on the market by the Marketing Authorisation Holder (or where applicable, the manufacturer/distributor) in a country and/or jurisdiction shall be provided A complete date consisting of day, month and year shall be specified using the ISO 8601 date format NOTE “Placed on the market” refers to the release of the Medicinal Product into the distribution chain
    */
   restoreDate?: dateTime;
+  /** 
+   * The date when the Medicinal Product is placed on the market by the Marketing Authorisation Holder (or where applicable, the manufacturer/distributor) in a country and/or jurisdiction shall be provided A complete date consisting of day, month and year shall be specified using the ISO 8601 date format NOTE “Placed on the market” refers to the release of the Medicinal Product into the distribution chain
+   */
+  _restoreDate?: Element
 }
 
 export interface Meta {
@@ -2207,17 +3183,33 @@ export interface Meta {
    */
   versionId?: id;
   /** 
+   * Version specific identifier
+   */
+  _versionId?: Element
+  /** 
    * When the resource version last changed
    */
   lastUpdated?: instant;
+  /** 
+   * When the resource version last changed
+   */
+  _lastUpdated?: Element
   /** 
    * Identifies where the resource comes from
    */
   source?: uri;
   /** 
+   * Identifies where the resource comes from
+   */
+  _source?: Element
+  /** 
    * Profiles this resource claims to conform to
    */
   profile?: Array<canonical>;
+  /** 
+   * Profiles this resource claims to conform to
+   */
+  _profile?: Array<Element>
   /** 
    * Security Labels applied to this resource
    */
@@ -2242,9 +3234,17 @@ export interface Money {
    */
   value?: decimal;
   /** 
+   * Numerical value (with implicit precision)
+   */
+  _value?: Element
+  /** 
    * ISO 4217 Currency Code
    */
   currency?: code;
+  /** 
+   * ISO 4217 Currency Code
+   */
+  _currency?: Element
 }
 
 export interface Narrative {
@@ -2261,9 +3261,17 @@ export interface Narrative {
    */
   status: code;
   /** 
+   * generated | extensions | additional | empty
+   */
+  _status?: Element
+  /** 
    * Limited xhtml content
    */
   div: xhtml;
+  /** 
+   * Limited xhtml content
+   */
+  _div?: Element
 }
 
 export interface ParameterDefinition {
@@ -2280,29 +3288,57 @@ export interface ParameterDefinition {
    */
   name?: code;
   /** 
+   * Name used to access the parameter value
+   */
+  _name?: Element
+  /** 
    * in | out
    */
   use: code;
+  /** 
+   * in | out
+   */
+  _use?: Element
   /** 
    * Minimum cardinality
    */
   min?: integer;
   /** 
+   * Minimum cardinality
+   */
+  _min?: Element
+  /** 
    * Maximum cardinality (a number of *)
    */
   max?: string;
+  /** 
+   * Maximum cardinality (a number of *)
+   */
+  _max?: Element
   /** 
    * A brief description of the parameter
    */
   documentation?: string;
   /** 
+   * A brief description of the parameter
+   */
+  _documentation?: Element
+  /** 
    * What type of value
    */
   type: code;
   /** 
+   * What type of value
+   */
+  _type?: Element
+  /** 
    * What profile the value is expected to be
    */
   profile?: canonical;
+  /** 
+   * What profile the value is expected to be
+   */
+  _profile?: Element
 }
 
 export interface Period {
@@ -2319,9 +3355,17 @@ export interface Period {
    */
   start?: dateTime;
   /** 
+   * Starting time with inclusive boundary
+   */
+  _start?: Element
+  /** 
    * End time with inclusive boundary, if not ongoing
    */
   end?: dateTime;
+  /** 
+   * End time with inclusive boundary, if not ongoing
+   */
+  _end?: Element
 }
 
 export interface Population {
@@ -2401,13 +3445,25 @@ export interface ProdCharacteristic {
    */
   shape?: string;
   /** 
+   * Where applicable, the shape can be specified An appropriate controlled vocabulary shall be used The term and the term identifier shall be used
+   */
+  _shape?: Element
+  /** 
    * Where applicable, the color can be specified An appropriate controlled vocabulary shall be used The term and the term identifier shall be used
    */
   color?: Array<string>;
   /** 
+   * Where applicable, the color can be specified An appropriate controlled vocabulary shall be used The term and the term identifier shall be used
+   */
+  _color?: Array<Element>
+  /** 
    * Where applicable, the imprint can be specified as text
    */
   imprint?: Array<string>;
+  /** 
+   * Where applicable, the imprint can be specified as text
+   */
+  _imprint?: Array<Element>
   /** 
    * Where applicable, the image can be provided The format of the image attachment shall be specified by regional implementations
    */
@@ -2463,21 +3519,41 @@ export interface Quantity {
    */
   value?: decimal;
   /** 
+   * Numerical value (with implicit precision)
+   */
+  _value?: Element
+  /** 
    * < | <= | >= | > - how to understand the value
    */
   comparator?: code;
+  /** 
+   * < | <= | >= | > - how to understand the value
+   */
+  _comparator?: Element
   /** 
    * Unit representation
    */
   unit?: string;
   /** 
+   * Unit representation
+   */
+  _unit?: Element
+  /** 
    * System that defines coded unit form
    */
   system?: uri;
   /** 
+   * System that defines coded unit form
+   */
+  _system?: Element
+  /** 
    * Coded form of the unit
    */
   code?: code;
+  /** 
+   * Coded form of the unit
+   */
+  _code?: Element
 }
 
 export interface Range {
@@ -2532,9 +3608,17 @@ export interface Reference {
    */
   reference?: string;
   /** 
+   * Literal reference, Relative, internal or absolute URL
+   */
+  _reference?: Element
+  /** 
    * Type the reference refers to (e.g. "Patient")
    */
   type?: uri;
+  /** 
+   * Type the reference refers to (e.g. "Patient")
+   */
+  _type?: Element
   /** 
    * Logical reference, when literal reference is not known
    */
@@ -2543,6 +3627,10 @@ export interface Reference {
    * Text alternative for the resource
    */
   display?: string;
+  /** 
+   * Text alternative for the resource
+   */
+  _display?: Element
 }
 
 export interface RelatedArtifact {
@@ -2559,21 +3647,41 @@ export interface RelatedArtifact {
    */
   type: code;
   /** 
+   * documentation | justification | citation | predecessor | successor | derived-from | depends-on | composed-of
+   */
+  _type?: Element
+  /** 
    * Short label
    */
   label?: string;
+  /** 
+   * Short label
+   */
+  _label?: Element
   /** 
    * Brief description of the related artifact
    */
   display?: string;
   /** 
+   * Brief description of the related artifact
+   */
+  _display?: Element
+  /** 
    * Bibliographic citation for the artifact
    */
   citation?: markdown;
   /** 
+   * Bibliographic citation for the artifact
+   */
+  _citation?: Element
+  /** 
    * Where the artifact can be accessed
    */
   url?: url;
+  /** 
+   * Where the artifact can be accessed
+   */
+  _url?: Element
   /** 
    * What document is being referenced
    */
@@ -2582,6 +3690,10 @@ export interface RelatedArtifact {
    * What resource is being referenced
    */
   resource?: canonical;
+  /** 
+   * What resource is being referenced
+   */
+  _resource?: Element
 }
 
 export interface SampledData {
@@ -2602,25 +3714,49 @@ export interface SampledData {
    */
   period: decimal;
   /** 
+   * Number of milliseconds between samples
+   */
+  _period?: Element
+  /** 
    * Multiply data by this before adding to origin
    */
   factor?: decimal;
+  /** 
+   * Multiply data by this before adding to origin
+   */
+  _factor?: Element
   /** 
    * Lower limit of detection
    */
   lowerLimit?: decimal;
   /** 
+   * Lower limit of detection
+   */
+  _lowerLimit?: Element
+  /** 
    * Upper limit of detection
    */
   upperLimit?: decimal;
+  /** 
+   * Upper limit of detection
+   */
+  _upperLimit?: Element
   /** 
    * Number of sample points at each time point
    */
   dimensions: positiveInt;
   /** 
+   * Number of sample points at each time point
+   */
+  _dimensions?: Element
+  /** 
    * Decimal values with spaces, or "E" | "U" | "L"
    */
   data?: string;
+  /** 
+   * Decimal values with spaces, or "E" | "U" | "L"
+   */
+  _data?: Element
 }
 
 export interface Signature {
@@ -2641,6 +3777,10 @@ export interface Signature {
    */
   when: instant;
   /** 
+   * When the signature was created
+   */
+  _when?: Element
+  /** 
    * Who signed
    */
   who: Reference;
@@ -2653,13 +3793,25 @@ export interface Signature {
    */
   targetFormat?: code;
   /** 
+   * The technical format of the signed resources
+   */
+  _targetFormat?: Element
+  /** 
    * The technical format of the signature
    */
   sigFormat?: code;
   /** 
+   * The technical format of the signature
+   */
+  _sigFormat?: Element
+  /** 
    * The actual signature content (XML DigSig. JWS, picture, etc.)
    */
   data?: base64Binary;
+  /** 
+   * The actual signature content (XML DigSig. JWS, picture, etc.)
+   */
+  _data?: Element
 }
 
 export interface SubstanceAmountReferenceRange {
@@ -2706,6 +3858,10 @@ export interface SubstanceAmount {
    */
   amountString?: string;
   /** 
+   * Used to capture quantitative values for a variety of elements. If only limits are given, the arithmetic mean would be the average. If only a single definite value for a given element is given, it would be captured in this field
+   */
+  _amountString?: Element
+  /** 
    * Most elements that require a quantitative value will also have a field called amount type. Amount type should always be specified because the actual value of the amount is often dependent on it. EXAMPLE: In capturing the actual relative amounts of substances or molecular fragments it is essential to indicate whether the amount refers to a mole ratio or weight ratio. For any given element an effort should be made to use same the amount type for all related definitional elements
    */
   amountType?: CodeableConcept;
@@ -2713,6 +3869,10 @@ export interface SubstanceAmount {
    * A textual comment on a numeric value
    */
   amountText?: string;
+  /** 
+   * A textual comment on a numeric value
+   */
+  _amountText?: Element
   /** 
    * Reference range of possible or expected values
    */
@@ -2745,57 +3905,113 @@ export interface TimingRepeat {
    */
   count?: positiveInt;
   /** 
+   * Number of times to repeat
+   */
+  _count?: Element
+  /** 
    * Maximum number of times to repeat
    */
   countMax?: positiveInt;
+  /** 
+   * Maximum number of times to repeat
+   */
+  _countMax?: Element
   /** 
    * How long when it happens
    */
   duration?: decimal;
   /** 
+   * How long when it happens
+   */
+  _duration?: Element
+  /** 
    * How long when it happens (Max)
    */
   durationMax?: decimal;
+  /** 
+   * How long when it happens (Max)
+   */
+  _durationMax?: Element
   /** 
    * s | min | h | d | wk | mo | a - unit of time (UCUM)
    */
   durationUnit?: code;
   /** 
+   * s | min | h | d | wk | mo | a - unit of time (UCUM)
+   */
+  _durationUnit?: Element
+  /** 
    * Event occurs frequency times per period
    */
   frequency?: positiveInt;
+  /** 
+   * Event occurs frequency times per period
+   */
+  _frequency?: Element
   /** 
    * Event occurs up to frequencyMax times per period
    */
   frequencyMax?: positiveInt;
   /** 
+   * Event occurs up to frequencyMax times per period
+   */
+  _frequencyMax?: Element
+  /** 
    * Event occurs frequency times per period
    */
   period?: decimal;
+  /** 
+   * Event occurs frequency times per period
+   */
+  _period?: Element
   /** 
    * Upper limit of period (3-4 hours)
    */
   periodMax?: decimal;
   /** 
+   * Upper limit of period (3-4 hours)
+   */
+  _periodMax?: Element
+  /** 
    * s | min | h | d | wk | mo | a - unit of time (UCUM)
    */
   periodUnit?: code;
+  /** 
+   * s | min | h | d | wk | mo | a - unit of time (UCUM)
+   */
+  _periodUnit?: Element
   /** 
    * mon | tue | wed | thu | fri | sat | sun
    */
   dayOfWeek?: Array<code>;
   /** 
+   * mon | tue | wed | thu | fri | sat | sun
+   */
+  _dayOfWeek?: Array<Element>
+  /** 
    * Time of day for action
    */
   timeOfDay?: Array<time>;
+  /** 
+   * Time of day for action
+   */
+  _timeOfDay?: Array<Element>
   /** 
    * Code for time period of occurrence
    */
   when?: Array<code>;
   /** 
+   * Code for time period of occurrence
+   */
+  _when?: Array<Element>
+  /** 
    * Minutes from event (before or after)
    */
   offset?: unsignedInt;
+  /** 
+   * Minutes from event (before or after)
+   */
+  _offset?: Element
 }
 export interface Timing {
   /** 
@@ -2814,6 +4030,10 @@ export interface Timing {
    * When the event occurs
    */
   event?: Array<dateTime>;
+  /** 
+   * When the event occurs
+   */
+  _event?: Array<Element>
   /** 
    * When the event is to occur
    */
@@ -2838,9 +4058,17 @@ export interface TriggerDefinition {
    */
   type: code;
   /** 
+   * named-event | periodic | data-changed | data-added | data-modified | data-removed | data-accessed | data-access-ended
+   */
+  _type?: Element
+  /** 
    * Name or URI that identifies the event
    */
   name?: string;
+  /** 
+   * Name or URI that identifies the event
+   */
+  _name?: Element
   /** 
    * Timing of the event
    */
@@ -2856,7 +4084,15 @@ export interface TriggerDefinition {
   /** 
    * Timing of the event
    */
+  _timingDate?: Element
+  /** 
+   * Timing of the event
+   */
   timingDateTime?: dateTime;
+  /** 
+   * Timing of the event
+   */
+  _timingDateTime?: Element
   /** 
    * Triggering data of the event (multiple = 'and')
    */
@@ -2912,21 +4148,41 @@ export interface Quantity {
    */
   value?: decimal;
   /** 
+   * Numerical value (with implicit precision)
+   */
+  _value?: Element
+  /** 
    * < | <= | >= | > - how to understand the value
    */
   comparator?: code;
+  /** 
+   * < | <= | >= | > - how to understand the value
+   */
+  _comparator?: Element
   /** 
    * Unit representation
    */
   unit?: string;
   /** 
+   * Unit representation
+   */
+  _unit?: Element
+  /** 
    * System that defines coded unit form
    */
   system?: uri;
   /** 
+   * System that defines coded unit form
+   */
+  _system?: Element
+  /** 
    * Coded form of the unit
    */
   code?: code;
+  /** 
+   * Coded form of the unit
+   */
+  _code?: Element
 }
 
 export interface Quantity {
@@ -2943,21 +4199,41 @@ export interface Quantity {
    */
   value?: decimal;
   /** 
+   * Numerical value (with implicit precision)
+   */
+  _value?: Element
+  /** 
    * < | <= | >= | > - how to understand the value
    */
   comparator?: code;
+  /** 
+   * < | <= | >= | > - how to understand the value
+   */
+  _comparator?: Element
   /** 
    * Unit representation
    */
   unit?: string;
   /** 
+   * Unit representation
+   */
+  _unit?: Element
+  /** 
    * System that defines coded unit form
    */
   system?: uri;
   /** 
+   * System that defines coded unit form
+   */
+  _system?: Element
+  /** 
    * Coded form of the unit
    */
   code?: code;
+  /** 
+   * Coded form of the unit
+   */
+  _code?: Element
 }
 export type ResourceMap = {
   Account: Account;
@@ -3138,6 +4414,10 @@ export interface AccountCoverage {
    * The priority of the coverage in the context of this account
    */
   priority?: positiveInt;
+  /** 
+   * The priority of the coverage in the context of this account
+   */
+  _priority?: Element
 }
 export interface AccountGuarantor {
   /** 
@@ -3161,6 +4441,10 @@ export interface AccountGuarantor {
    */
   onHold?: boolean;
   /** 
+   * Credit or other hold applied
+   */
+  _onHold?: Element
+  /** 
    * Guarantee account during
    */
   period?: Period;
@@ -3180,9 +4464,17 @@ resourceType: "Account"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -3208,6 +4500,10 @@ resourceType: "Account"
    */
   status: code;
   /** 
+   * active | inactive | entered-in-error | on-hold | unknown
+   */
+  _status?: Element
+  /** 
    * E.g. patient, expense, depreciation
    */
   type?: CodeableConcept;
@@ -3215,6 +4511,10 @@ resourceType: "Account"
    * Human-readable label
    */
   name?: string;
+  /** 
+   * Human-readable label
+   */
+  _name?: Element
   /** 
    * The entity that caused the expenses
    */
@@ -3235,6 +4535,10 @@ resourceType: "Account"
    * Explanation of purpose/use
    */
   description?: string;
+  /** 
+   * Explanation of purpose/use
+   */
+  _description?: Element
   /** 
    * The parties ultimately responsible for balancing the Account
    */
@@ -3263,6 +4567,10 @@ export interface ActivityDefinitionParticipant {
    */
   type: code;
   /** 
+   * patient | practitioner | related-person | device
+   */
+  _type?: Element
+  /** 
    * E.g. Nurse, Surgeon, Parent, etc.
    */
   role?: CodeableConcept;
@@ -3285,6 +4593,10 @@ export interface ActivityDefinitionDynamicValue {
    */
   path: string;
   /** 
+   * The path to the element to be set dynamically
+   */
+  _path?: Element
+  /** 
    * An expression that provides the dynamic value for the customization
    */
   expression: Expression;
@@ -3304,9 +4616,17 @@ resourceType: "ActivityDefinition"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -3328,6 +4648,10 @@ resourceType: "ActivityDefinition"
    */
   url?: uri;
   /** 
+   * Canonical identifier for this activity definition, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Additional identifier for the activity definition
    */
   identifier?: Array<Identifier>;
@@ -3336,25 +4660,49 @@ resourceType: "ActivityDefinition"
    */
   version?: string;
   /** 
+   * Business version of the activity definition
+   */
+  _version?: Element
+  /** 
    * Name for this activity definition (computer friendly)
    */
   name?: string;
+  /** 
+   * Name for this activity definition (computer friendly)
+   */
+  _name?: Element
   /** 
    * Name for this activity definition (human friendly)
    */
   title?: string;
   /** 
+   * Name for this activity definition (human friendly)
+   */
+  _title?: Element
+  /** 
    * Subordinate title of the activity definition
    */
   subtitle?: string;
+  /** 
+   * Subordinate title of the activity definition
+   */
+  _subtitle?: Element
   /** 
    * draft | active | retired | unknown
    */
   status: code;
   /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
+  /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
+  /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
   /** 
    * Type of individual the activity definition is intended for
    */
@@ -3368,9 +4716,17 @@ resourceType: "ActivityDefinition"
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -3379,6 +4735,10 @@ resourceType: "ActivityDefinition"
    * Natural language description of the activity definition
    */
   description?: markdown;
+  /** 
+   * Natural language description of the activity definition
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -3392,21 +4752,41 @@ resourceType: "ActivityDefinition"
    */
   purpose?: markdown;
   /** 
+   * Why this activity definition is defined
+   */
+  _purpose?: Element
+  /** 
    * Describes the clinical usage of the activity definition
    */
   usage?: string;
+  /** 
+   * Describes the clinical usage of the activity definition
+   */
+  _usage?: Element
   /** 
    * Use and/or publishing restrictions
    */
   copyright?: markdown;
   /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
+  /** 
    * When the activity definition was approved by publisher
    */
   approvalDate?: date;
   /** 
+   * When the activity definition was approved by publisher
+   */
+  _approvalDate?: Element
+  /** 
    * When the activity definition was last reviewed
    */
   lastReviewDate?: date;
+  /** 
+   * When the activity definition was last reviewed
+   */
+  _lastReviewDate?: Element
   /** 
    * When the activity definition is expected to be used
    */
@@ -3440,13 +4820,25 @@ resourceType: "ActivityDefinition"
    */
   library?: Array<canonical>;
   /** 
+   * Logic used by the activity definition
+   */
+  _library?: Array<Element>
+  /** 
    * Kind of resource
    */
   kind?: code;
   /** 
+   * Kind of resource
+   */
+  _kind?: Element
+  /** 
    * What profile the resource needs to conform to
    */
   profile?: canonical;
+  /** 
+   * What profile the resource needs to conform to
+   */
+  _profile?: Element
   /** 
    * Detail type of activity
    */
@@ -3456,13 +4848,25 @@ resourceType: "ActivityDefinition"
    */
   intent?: code;
   /** 
+   * proposal | plan | directive | order | original-order | reflex-order | filler-order | instance-order | option
+   */
+  _intent?: Element
+  /** 
    * routine | urgent | asap | stat
    */
   priority?: code;
   /** 
+   * routine | urgent | asap | stat
+   */
+  _priority?: Element
+  /** 
    * True if the activity should not be performed
    */
   doNotPerform?: boolean;
+  /** 
+   * True if the activity should not be performed
+   */
+  _doNotPerform?: Element
   /** 
    * When activity is to occur
    */
@@ -3471,6 +4875,10 @@ resourceType: "ActivityDefinition"
    * When activity is to occur
    */
   timingDateTime?: dateTime;
+  /** 
+   * When activity is to occur
+   */
+  _timingDateTime?: Element
   /** 
    * When activity is to occur
    */
@@ -3532,6 +4940,10 @@ resourceType: "ActivityDefinition"
    */
   transform?: canonical;
   /** 
+   * Transform to apply the template
+   */
+  _transform?: Element
+  /** 
    * Dynamic aspects of the definition
    */
   dynamicValue?: Array<ActivityDefinitionDynamicValue>;
@@ -3558,6 +4970,10 @@ export interface AdverseEventSuspectEntityCausality {
    * AdverseEvent.suspectEntity.causalityProductRelatedness
    */
   productRelatedness?: string;
+  /** 
+   * AdverseEvent.suspectEntity.causalityProductRelatedness
+   */
+  _productRelatedness?: Element
   /** 
    * AdverseEvent.suspectEntity.causalityAuthor
    */
@@ -3604,9 +5020,17 @@ resourceType: "AdverseEvent"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -3632,6 +5056,10 @@ resourceType: "AdverseEvent"
    */
   actuality: code;
   /** 
+   * actual | potential
+   */
+  _actuality?: Element
+  /** 
    * product-problem | product-quality | product-use-error | wrong-dose | incorrect-prescribing-information | wrong-technique | wrong-route-of-administration | wrong-rate | wrong-duration | wrong-time | expired-drug | medical-device-use-error | problem-different-manufacturer | unsafe-physical-environment
    */
   category?: Array<CodeableConcept>;
@@ -3652,13 +5080,25 @@ resourceType: "AdverseEvent"
    */
   date?: dateTime;
   /** 
+   * When the event occurred
+   */
+  _date?: Element
+  /** 
    * When the event was detected
    */
   detected?: dateTime;
   /** 
+   * When the event was detected
+   */
+  _detected?: Element
+  /** 
    * When the event was recorded
    */
   recordedDate?: dateTime;
+  /** 
+   * When the event was recorded
+   */
+  _recordedDate?: Element
   /** 
    * Effect on the subject due to this event
    */
@@ -3731,13 +5171,25 @@ export interface AllergyIntoleranceReaction {
    */
   description?: string;
   /** 
+   * Description of the event as a whole
+   */
+  _description?: Element
+  /** 
    * Date(/time) when manifestations showed
    */
   onset?: dateTime;
   /** 
+   * Date(/time) when manifestations showed
+   */
+  _onset?: Element
+  /** 
    * mild | moderate | severe (of event as a whole)
    */
   severity?: code;
+  /** 
+   * mild | moderate | severe (of event as a whole)
+   */
+  _severity?: Element
   /** 
    * How the subject was exposed to the substance
    */
@@ -3762,9 +5214,17 @@ resourceType: "AllergyIntolerance"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -3798,13 +5258,25 @@ resourceType: "AllergyIntolerance"
    */
   type?: code;
   /** 
+   * allergy | intolerance - Underlying mechanism (if known)
+   */
+  _type?: Element
+  /** 
    * food | medication | environment | biologic
    */
   category?: Array<code>;
   /** 
+   * food | medication | environment | biologic
+   */
+  _category?: Array<Element>
+  /** 
    * low | high | unable-to-assess
    */
   criticality?: code;
+  /** 
+   * low | high | unable-to-assess
+   */
+  _criticality?: Element
   /** 
    * Code that identifies the allergy or intolerance
    */
@@ -3824,6 +5296,10 @@ resourceType: "AllergyIntolerance"
   /** 
    * When allergy or intolerance was identified
    */
+  _onsetDateTime?: Element
+  /** 
+   * When allergy or intolerance was identified
+   */
   onsetAge?: Age;
   /** 
    * When allergy or intolerance was identified
@@ -3838,9 +5314,17 @@ resourceType: "AllergyIntolerance"
    */
   onsetString?: string;
   /** 
+   * When allergy or intolerance was identified
+   */
+  _onsetString?: Element
+  /** 
    * Date first version of the resource instance was recorded
    */
   recordedDate?: dateTime;
+  /** 
+   * Date first version of the resource instance was recorded
+   */
+  _recordedDate?: Element
   /** 
    * Who recorded the sensitivity
    */
@@ -3853,6 +5337,10 @@ resourceType: "AllergyIntolerance"
    * Date(/time) of last known occurrence of a reaction
    */
   lastOccurrence?: dateTime;
+  /** 
+   * Date(/time) of last known occurrence of a reaction
+   */
+  _lastOccurrence?: Element
   /** 
    * Additional text not captured in other fields
    */
@@ -3889,9 +5377,17 @@ export interface AppointmentParticipant {
    */
   required?: code;
   /** 
+   * required | optional | information-only
+   */
+  _required?: Element
+  /** 
    * accepted | declined | tentative | needs-action
    */
   status: code;
+  /** 
+   * accepted | declined | tentative | needs-action
+   */
+  _status?: Element
   /** 
    * Participation period of the actor
    */
@@ -3912,9 +5408,17 @@ resourceType: "Appointment"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -3939,6 +5443,10 @@ resourceType: "Appointment"
    * proposed | pending | booked | arrived | fulfilled | cancelled | noshow | entered-in-error | checked-in | waitlist
    */
   status: code;
+  /** 
+   * proposed | pending | booked | arrived | fulfilled | cancelled | noshow | entered-in-error | checked-in | waitlist
+   */
+  _status?: Element
   /** 
    * The coded reason for the appointment being cancelled
    */
@@ -3972,9 +5480,17 @@ resourceType: "Appointment"
    */
   priority?: unsignedInt;
   /** 
+   * Used to make informed decisions if needing to re-prioritize
+   */
+  _priority?: Element
+  /** 
    * Shown on a subject line in a meeting request, or appointment list
    */
   description?: string;
+  /** 
+   * Shown on a subject line in a meeting request, or appointment list
+   */
+  _description?: Element
   /** 
    * Additional information to support the appointment
    */
@@ -3984,13 +5500,25 @@ resourceType: "Appointment"
    */
   start?: instant;
   /** 
+   * When appointment is to take place
+   */
+  _start?: Element
+  /** 
    * When appointment is to conclude
    */
   end?: instant;
   /** 
+   * When appointment is to conclude
+   */
+  _end?: Element
+  /** 
    * Can be less than start/end (e.g. estimate)
    */
   minutesDuration?: positiveInt;
+  /** 
+   * Can be less than start/end (e.g. estimate)
+   */
+  _minutesDuration?: Element
   /** 
    * The slots that this appointment is filling
    */
@@ -4000,13 +5528,25 @@ resourceType: "Appointment"
    */
   created?: dateTime;
   /** 
+   * The date that this appointment was initially created
+   */
+  _created?: Element
+  /** 
    * Additional comments
    */
   comment?: string;
   /** 
+   * Additional comments
+   */
+  _comment?: Element
+  /** 
    * Detailed information and instructions for the patient
    */
   patientInstruction?: string;
+  /** 
+   * Detailed information and instructions for the patient
+   */
+  _patientInstruction?: Element
   /** 
    * The service request this appointment is allocated to assess
    */
@@ -4036,9 +5576,17 @@ resourceType: "AppointmentResponse"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -4068,9 +5616,17 @@ resourceType: "AppointmentResponse"
    */
   start?: instant;
   /** 
+   * Time from appointment, or requested new start time
+   */
+  _start?: Element
+  /** 
    * Time from appointment, or requested new end time
    */
   end?: instant;
+  /** 
+   * Time from appointment, or requested new end time
+   */
+  _end?: Element
   /** 
    * Role of participant in the appointment
    */
@@ -4084,9 +5640,17 @@ resourceType: "AppointmentResponse"
    */
   participantStatus: code;
   /** 
+   * accepted | declined | tentative | needs-action
+   */
+  _participantStatus?: Element
+  /** 
    * Additional comments
    */
   comment?: string;
+  /** 
+   * Additional comments
+   */
+  _comment?: Element
 }
 
 export interface AuditEventAgentNetwork {
@@ -4107,9 +5671,17 @@ export interface AuditEventAgentNetwork {
    */
   address?: string;
   /** 
+   * Identifier for the network access point of the user device
+   */
+  _address?: Element
+  /** 
    * The type of network access point
    */
   type?: code;
+  /** 
+   * The type of network access point
+   */
+  _type?: Element
 }
 export interface AuditEventAgent {
   /** 
@@ -4141,13 +5713,25 @@ export interface AuditEventAgent {
    */
   altId?: string;
   /** 
+   * Alternative User identity
+   */
+  _altId?: Element
+  /** 
    * Human friendly name for the agent
    */
   name?: string;
   /** 
+   * Human friendly name for the agent
+   */
+  _name?: Element
+  /** 
    * Whether user is initiator
    */
   requestor: boolean;
+  /** 
+   * Whether user is initiator
+   */
+  _requestor?: Element
   /** 
    * Where
    */
@@ -4156,6 +5740,10 @@ export interface AuditEventAgent {
    * Policy that authorized event
    */
   policy?: Array<uri>;
+  /** 
+   * Policy that authorized event
+   */
+  _policy?: Array<Element>
   /** 
    * Type of media
    */
@@ -4187,6 +5775,10 @@ export interface AuditEventSource {
    */
   site?: string;
   /** 
+   * Logical source location within the enterprise
+   */
+  _site?: Element
+  /** 
    * The identity of source detecting the event
    */
   observer: Reference;
@@ -4213,13 +5805,25 @@ export interface AuditEventEntityDetail {
    */
   type: string;
   /** 
+   * Name of the property
+   */
+  _type?: Element
+  /** 
    * Property value
    */
   valueString?: string;
   /** 
    * Property value
    */
+  _valueString?: Element
+  /** 
+   * Property value
+   */
   valueBase64Binary?: base64Binary;
+  /** 
+   * Property value
+   */
+  _valueBase64Binary?: Element
 }
 export interface AuditEventEntity {
   /** 
@@ -4259,13 +5863,25 @@ export interface AuditEventEntity {
    */
   name?: string;
   /** 
+   * Descriptor for entity
+   */
+  _name?: Element
+  /** 
    * Descriptive text
    */
   description?: string;
   /** 
+   * Descriptive text
+   */
+  _description?: Element
+  /** 
    * Query parameters
    */
   query?: base64Binary;
+  /** 
+   * Query parameters
+   */
+  _query?: Element
   /** 
    * Additional Information about the entity
    */
@@ -4286,9 +5902,17 @@ resourceType: "AuditEvent"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -4318,6 +5942,10 @@ resourceType: "AuditEvent"
    */
   action?: code;
   /** 
+   * Type of action performed during the event
+   */
+  _action?: Element
+  /** 
    * When the activity occurred
    */
   period?: Period;
@@ -4326,13 +5954,25 @@ resourceType: "AuditEvent"
    */
   recorded: instant;
   /** 
+   * Time when the event was recorded
+   */
+  _recorded?: Element
+  /** 
    * Whether the event succeeded or failed
    */
   outcome?: code;
   /** 
+   * Whether the event succeeded or failed
+   */
+  _outcome?: Element
+  /** 
    * Description of the event outcome
    */
   outcomeDesc?: string;
+  /** 
+   * Description of the event outcome
+   */
+  _outcomeDesc?: Element
   /** 
    * The purposeOfUse of the event
    */
@@ -4366,9 +6006,17 @@ resourceType: "Basic"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -4402,6 +6050,10 @@ resourceType: "Basic"
    */
   created?: date;
   /** 
+   * When created
+   */
+  _created?: Element
+  /** 
    * Who created
    */
   author?: Reference;
@@ -4422,13 +6074,25 @@ resourceType: "Binary"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
   /** 
+   * Language of the resource content
+   */
+  _language?: Element
+  /** 
    * MimeType of the binary content
    */
   contentType: code;
+  /** 
+   * MimeType of the binary content
+   */
+  _contentType?: Element
   /** 
    * Identifies another resource to use as proxy when enforcing access control
    */
@@ -4437,6 +6101,10 @@ resourceType: "Binary"
    * The actual content
    */
   data?: base64Binary;
+  /** 
+   * The actual content
+   */
+  _data?: Element
 }
 
 export interface BiologicallyDerivedProductCollection {
@@ -4467,6 +6135,10 @@ export interface BiologicallyDerivedProductCollection {
   /** 
    * Time of product collection
    */
+  _collectedDateTime?: Element
+  /** 
+   * Time of product collection
+   */
   collectedPeriod?: Period;
 }
 export interface BiologicallyDerivedProductProcessing {
@@ -4487,6 +6159,10 @@ export interface BiologicallyDerivedProductProcessing {
    */
   description?: string;
   /** 
+   * Description of of processing
+   */
+  _description?: Element
+  /** 
    * Procesing code
    */
   procedure?: CodeableConcept;
@@ -4498,6 +6174,10 @@ export interface BiologicallyDerivedProductProcessing {
    * Time of processing
    */
   timeDateTime?: dateTime;
+  /** 
+   * Time of processing
+   */
+  _timeDateTime?: Element
   /** 
    * Time of processing
    */
@@ -4521,9 +6201,17 @@ export interface BiologicallyDerivedProductManipulation {
    */
   description?: string;
   /** 
+   * Description of manipulation
+   */
+  _description?: Element
+  /** 
    * Time of manipulation
    */
   timeDateTime?: dateTime;
+  /** 
+   * Time of manipulation
+   */
+  _timeDateTime?: Element
   /** 
    * Time of manipulation
    */
@@ -4547,13 +6235,25 @@ export interface BiologicallyDerivedProductStorage {
    */
   description?: string;
   /** 
+   * Description of storage
+   */
+  _description?: Element
+  /** 
    * Storage temperature
    */
   temperature?: decimal;
   /** 
+   * Storage temperature
+   */
+  _temperature?: Element
+  /** 
    * farenheit | celsius | kelvin
    */
   scale?: code;
+  /** 
+   * farenheit | celsius | kelvin
+   */
+  _scale?: Element
   /** 
    * Storage timeperiod
    */
@@ -4574,9 +6274,17 @@ resourceType: "BiologicallyDerivedProduct"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -4602,6 +6310,10 @@ resourceType: "BiologicallyDerivedProduct"
    */
   productCategory?: code;
   /** 
+   * organ | tissue | fluid | cells | biologicalAgent
+   */
+  _productCategory?: Element
+  /** 
    * What this biologically derived product is
    */
   productCode?: CodeableConcept;
@@ -4610,6 +6322,10 @@ resourceType: "BiologicallyDerivedProduct"
    */
   status?: code;
   /** 
+   * available | unavailable
+   */
+  _status?: Element
+  /** 
    * Procedure request
    */
   request?: Array<Reference>;
@@ -4617,6 +6333,10 @@ resourceType: "BiologicallyDerivedProduct"
    * The amount of this biologically derived product
    */
   quantity?: integer;
+  /** 
+   * The amount of this biologically derived product
+   */
+  _quantity?: Element
   /** 
    * BiologicallyDerivedProduct parent
    */
@@ -4654,9 +6374,17 @@ resourceType: "BodyStructure"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -4682,6 +6410,10 @@ resourceType: "BodyStructure"
    */
   active?: boolean;
   /** 
+   * Whether this record is in active use
+   */
+  _active?: Element
+  /** 
    * Kind of Structure
    */
   morphology?: CodeableConcept;
@@ -4697,6 +6429,10 @@ resourceType: "BodyStructure"
    * Text description
    */
   description?: string;
+  /** 
+   * Text description
+   */
+  _description?: Element
   /** 
    * Attached images
    */
@@ -4725,9 +6461,17 @@ export interface BundleLink {
    */
   relation: string;
   /** 
+   * See http://www.iana.org/assignments/link-relations/link-relations.xhtml#link-relations-1
+   */
+  _relation?: Element
+  /** 
    * Reference details for the link
    */
   url: uri;
+  /** 
+   * Reference details for the link
+   */
+  _url?: Element
 }
 export interface BundleEntrySearch {
   /** 
@@ -4747,9 +6491,17 @@ export interface BundleEntrySearch {
    */
   mode?: code;
   /** 
+   * match | include | outcome - why this is in the result set
+   */
+  _mode?: Element
+  /** 
    * Search ranking (between 0 and 1)
    */
   score?: decimal;
+  /** 
+   * Search ranking (between 0 and 1)
+   */
+  _score?: Element
 }
 export interface BundleEntryRequest {
   /** 
@@ -4769,9 +6521,17 @@ export interface BundleEntryRequest {
    */
   method: code;
   /** 
+   * GET | HEAD | POST | PUT | DELETE | PATCH
+   */
+  _method?: Element
+  /** 
    * URL for HTTP equivalent of this entry
    */
   url: uri;
+  /** 
+   * URL for HTTP equivalent of this entry
+   */
+  _url?: Element
   /** 
    * For managing cache currency
    */
@@ -4779,15 +6539,31 @@ export interface BundleEntryRequest {
   /** 
    * For managing cache currency
    */
+  _ifNoneMatch?: Element
+  /** 
+   * For managing cache currency
+   */
   ifModifiedSince?: instant;
+  /** 
+   * For managing cache currency
+   */
+  _ifModifiedSince?: Element
   /** 
    * For managing update contention
    */
   ifMatch?: string;
   /** 
+   * For managing update contention
+   */
+  _ifMatch?: Element
+  /** 
    * For conditional creates
    */
   ifNoneExist?: string;
+  /** 
+   * For conditional creates
+   */
+  _ifNoneExist?: Element
 }
 export interface BundleEntryResponse {
   /** 
@@ -4807,17 +6583,33 @@ export interface BundleEntryResponse {
    */
   status: string;
   /** 
+   * Status response code (text optional)
+   */
+  _status?: Element
+  /** 
    * The location (if the operation returns a location)
    */
   location?: uri;
+  /** 
+   * The location (if the operation returns a location)
+   */
+  _location?: Element
   /** 
    * The Etag for the resource (if relevant)
    */
   etag?: string;
   /** 
+   * The Etag for the resource (if relevant)
+   */
+  _etag?: Element
+  /** 
    * Server's date time modified
    */
   lastModified?: instant;
+  /** 
+   * Server's date time modified
+   */
+  _lastModified?: Element
   /** 
    * OperationOutcome with hints and warnings (for batch/transaction)
    */
@@ -4844,6 +6636,10 @@ export interface BundleEntry {
    * URI for resource (Absolute URL server address or URI for UUID/OID)
    */
   fullUrl?: uri;
+  /** 
+   * URI for resource (Absolute URL server address or URI for UUID/OID)
+   */
+  _fullUrl?: Element
   /** 
    * A resource in the bundle
    */
@@ -4876,9 +6672,17 @@ resourceType: "Bundle"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Persistent identifier for the bundle
    */
@@ -4888,13 +6692,25 @@ resourceType: "Bundle"
    */
   type: code;
   /** 
+   * document | message | transaction | transaction-response | batch | batch-response | history | searchset | collection
+   */
+  _type?: Element
+  /** 
    * When the bundle was assembled
    */
   timestamp?: instant;
   /** 
+   * When the bundle was assembled
+   */
+  _timestamp?: Element
+  /** 
    * If search, the total number of matches
    */
   total?: unsignedInt;
+  /** 
+   * If search, the total number of matches
+   */
+  _total?: Element
   /** 
    * Links related to this Bundle
    */
@@ -4927,13 +6743,25 @@ export interface CapabilityStatementSoftware {
    */
   name: string;
   /** 
+   * A name the software is known by
+   */
+  _name?: Element
+  /** 
    * Version covered by this statement
    */
   version?: string;
   /** 
+   * Version covered by this statement
+   */
+  _version?: Element
+  /** 
    * Date this version was released
    */
   releaseDate?: dateTime;
+  /** 
+   * Date this version was released
+   */
+  _releaseDate?: Element
 }
 export interface CapabilityStatementImplementation {
   /** 
@@ -4953,9 +6781,17 @@ export interface CapabilityStatementImplementation {
    */
   description: string;
   /** 
+   * Describes this specific instance
+   */
+  _description?: Element
+  /** 
    * Base URL for the installation
    */
   url?: url;
+  /** 
+   * Base URL for the installation
+   */
+  _url?: Element
   /** 
    * Organization that manages the data
    */
@@ -4979,6 +6815,10 @@ export interface CapabilityStatementRestSecurity {
    */
   cors?: boolean;
   /** 
+   * Adds CORS Headers (http://enable-cors.org/)
+   */
+  _cors?: Element
+  /** 
    * OAuth | SMART-on-FHIR | NTLM | Basic | Kerberos | Certificates
    */
   service?: Array<CodeableConcept>;
@@ -4986,6 +6826,10 @@ export interface CapabilityStatementRestSecurity {
    * General description of how security works
    */
   description?: markdown;
+  /** 
+   * General description of how security works
+   */
+  _description?: Element
 }
 export interface CapabilityStatementRestResourceInteraction {
   /** 
@@ -5005,9 +6849,17 @@ export interface CapabilityStatementRestResourceInteraction {
    */
   code: code;
   /** 
+   * read | vread | update | patch | delete | history-instance | history-type | create | search-type
+   */
+  _code?: Element
+  /** 
    * Anything special about operation behavior
    */
   documentation?: markdown;
+  /** 
+   * Anything special about operation behavior
+   */
+  _documentation?: Element
 }
 export interface CapabilityStatementRestResourceSearchParam {
   /** 
@@ -5027,17 +6879,33 @@ export interface CapabilityStatementRestResourceSearchParam {
    */
   name: string;
   /** 
+   * Name of search parameter
+   */
+  _name?: Element
+  /** 
    * Source of definition for parameter
    */
   definition?: canonical;
+  /** 
+   * Source of definition for parameter
+   */
+  _definition?: Element
   /** 
    * number | date | string | token | reference | composite | quantity | uri | special
    */
   type: code;
   /** 
+   * number | date | string | token | reference | composite | quantity | uri | special
+   */
+  _type?: Element
+  /** 
    * Server-specific usage
    */
   documentation?: markdown;
+  /** 
+   * Server-specific usage
+   */
+  _documentation?: Element
 }
 export interface CapabilityStatementRestResourceOperation {
   /** 
@@ -5057,13 +6925,25 @@ export interface CapabilityStatementRestResourceOperation {
    */
   name: string;
   /** 
+   * Name by which the operation/query is invoked
+   */
+  _name?: Element
+  /** 
    * The defined operation/query
    */
   definition: canonical;
   /** 
+   * The defined operation/query
+   */
+  _definition?: Element
+  /** 
    * Specific details about operation behavior
    */
   documentation?: markdown;
+  /** 
+   * Specific details about operation behavior
+   */
+  _documentation?: Element
 }
 export interface CapabilityStatementRestResource {
   /** 
@@ -5083,17 +6963,33 @@ export interface CapabilityStatementRestResource {
    */
   type: code;
   /** 
+   * A resource type that is supported
+   */
+  _type?: Element
+  /** 
    * Base System profile for all uses of resource
    */
   profile?: canonical;
+  /** 
+   * Base System profile for all uses of resource
+   */
+  _profile?: Element
   /** 
    * Profiles for use cases supported
    */
   supportedProfile?: Array<canonical>;
   /** 
+   * Profiles for use cases supported
+   */
+  _supportedProfile?: Array<Element>
+  /** 
    * Additional information about the use of the resource type
    */
   documentation?: markdown;
+  /** 
+   * Additional information about the use of the resource type
+   */
+  _documentation?: Element
   /** 
    * What operations are supported?
    */
@@ -5103,41 +6999,81 @@ export interface CapabilityStatementRestResource {
    */
   versioning?: code;
   /** 
+   * no-version | versioned | versioned-update
+   */
+  _versioning?: Element
+  /** 
    * Whether vRead can return past versions
    */
   readHistory?: boolean;
+  /** 
+   * Whether vRead can return past versions
+   */
+  _readHistory?: Element
   /** 
    * If update can commit to a new identity
    */
   updateCreate?: boolean;
   /** 
+   * If update can commit to a new identity
+   */
+  _updateCreate?: Element
+  /** 
    * If allows/uses conditional create
    */
   conditionalCreate?: boolean;
+  /** 
+   * If allows/uses conditional create
+   */
+  _conditionalCreate?: Element
   /** 
    * not-supported | modified-since | not-match | full-support
    */
   conditionalRead?: code;
   /** 
+   * not-supported | modified-since | not-match | full-support
+   */
+  _conditionalRead?: Element
+  /** 
    * If allows/uses conditional update
    */
   conditionalUpdate?: boolean;
+  /** 
+   * If allows/uses conditional update
+   */
+  _conditionalUpdate?: Element
   /** 
    * not-supported | single | multiple - how conditional delete is supported
    */
   conditionalDelete?: code;
   /** 
+   * not-supported | single | multiple - how conditional delete is supported
+   */
+  _conditionalDelete?: Element
+  /** 
    * literal | logical | resolves | enforced | local
    */
   referencePolicy?: Array<code>;
+  /** 
+   * literal | logical | resolves | enforced | local
+   */
+  _referencePolicy?: Array<Element>
   /** 
    * _include values supported by the server
    */
   searchInclude?: Array<string>;
   /** 
+   * _include values supported by the server
+   */
+  _searchInclude?: Array<Element>
+  /** 
    * _revinclude values supported by the server
    */
   searchRevInclude?: Array<string>;
+  /** 
+   * _revinclude values supported by the server
+   */
+  _searchRevInclude?: Array<Element>
   /** 
    * Search parameters supported by implementation
    */
@@ -5165,9 +7101,17 @@ export interface CapabilityStatementRestInteraction {
    */
   code: code;
   /** 
+   * transaction | batch | search-system | history-system
+   */
+  _code?: Element
+  /** 
    * Anything special about operation behavior
    */
   documentation?: markdown;
+  /** 
+   * Anything special about operation behavior
+   */
+  _documentation?: Element
 }
 export interface CapabilityStatementRest {
   /** 
@@ -5187,9 +7131,17 @@ export interface CapabilityStatementRest {
    */
   mode: code;
   /** 
+   * client | server
+   */
+  _mode?: Element
+  /** 
    * General description of implementation
    */
   documentation?: markdown;
+  /** 
+   * General description of implementation
+   */
+  _documentation?: Element
   /** 
    * Information about security of implementation
    */
@@ -5214,6 +7166,10 @@ export interface CapabilityStatementRest {
    * Compartments served/used by system
    */
   compartment?: Array<canonical>;
+  /** 
+   * Compartments served/used by system
+   */
+  _compartment?: Array<Element>
 }
 export interface CapabilityStatementMessagingEndpoint {
   /** 
@@ -5236,6 +7192,10 @@ export interface CapabilityStatementMessagingEndpoint {
    * Network address or identifier of the end-point
    */
   address: url;
+  /** 
+   * Network address or identifier of the end-point
+   */
+  _address?: Element
 }
 export interface CapabilityStatementMessagingSupportedMessage {
   /** 
@@ -5255,9 +7215,17 @@ export interface CapabilityStatementMessagingSupportedMessage {
    */
   mode: code;
   /** 
+   * sender | receiver
+   */
+  _mode?: Element
+  /** 
    * Message supported by this system
    */
   definition: canonical;
+  /** 
+   * Message supported by this system
+   */
+  _definition?: Element
 }
 export interface CapabilityStatementMessaging {
   /** 
@@ -5281,9 +7249,17 @@ export interface CapabilityStatementMessaging {
    */
   reliableCache?: unsignedInt;
   /** 
+   * Reliable Message Cache Length (min)
+   */
+  _reliableCache?: Element
+  /** 
    * Messaging interface behavior details
    */
   documentation?: markdown;
+  /** 
+   * Messaging interface behavior details
+   */
+  _documentation?: Element
   /** 
    * Messages supported by this system
    */
@@ -5307,13 +7283,25 @@ export interface CapabilityStatementDocument {
    */
   mode: code;
   /** 
+   * producer | consumer
+   */
+  _mode?: Element
+  /** 
    * Description of document support
    */
   documentation?: markdown;
   /** 
+   * Description of document support
+   */
+  _documentation?: Element
+  /** 
    * Constraint on the resources used in the document
    */
   profile: canonical;
+  /** 
+   * Constraint on the resources used in the document
+   */
+  _profile?: Element
 }
 export interface CapabilityStatement {
 resourceType: "CapabilityStatement"
@@ -5330,9 +7318,17 @@ resourceType: "CapabilityStatement"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -5354,33 +7350,65 @@ resourceType: "CapabilityStatement"
    */
   url?: uri;
   /** 
+   * Canonical identifier for this capability statement, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Business version of the capability statement
    */
   version?: string;
+  /** 
+   * Business version of the capability statement
+   */
+  _version?: Element
   /** 
    * Name for this capability statement (computer friendly)
    */
   name?: string;
   /** 
+   * Name for this capability statement (computer friendly)
+   */
+  _name?: Element
+  /** 
    * Name for this capability statement (human friendly)
    */
   title?: string;
+  /** 
+   * Name for this capability statement (human friendly)
+   */
+  _title?: Element
   /** 
    * draft | active | retired | unknown
    */
   status: code;
   /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
+  /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
+  /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
   /** 
    * Date last changed
    */
   date: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -5389,6 +7417,10 @@ resourceType: "CapabilityStatement"
    * Natural language description of the capability statement
    */
   description?: markdown;
+  /** 
+   * Natural language description of the capability statement
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -5402,21 +7434,41 @@ resourceType: "CapabilityStatement"
    */
   purpose?: markdown;
   /** 
+   * Why this capability statement is defined
+   */
+  _purpose?: Element
+  /** 
    * Use and/or publishing restrictions
    */
   copyright?: markdown;
+  /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
   /** 
    * instance | capability | requirements
    */
   kind: code;
   /** 
+   * instance | capability | requirements
+   */
+  _kind?: Element
+  /** 
    * Canonical URL of another capability statement this implements
    */
   instantiates?: Array<canonical>;
   /** 
+   * Canonical URL of another capability statement this implements
+   */
+  _instantiates?: Array<Element>
+  /** 
    * Canonical URL of another capability statement this adds to
    */
   imports?: Array<canonical>;
+  /** 
+   * Canonical URL of another capability statement this adds to
+   */
+  _imports?: Array<Element>
   /** 
    * Software that is covered by this capability statement
    */
@@ -5430,17 +7482,33 @@ resourceType: "CapabilityStatement"
    */
   fhirVersion: code;
   /** 
+   * FHIR Version the system supports
+   */
+  _fhirVersion?: Element
+  /** 
    * formats supported (xml | json | ttl | mime type)
    */
   format: Array<code>;
+  /** 
+   * formats supported (xml | json | ttl | mime type)
+   */
+  _format?: Array<Element>
   /** 
    * Patch formats supported
    */
   patchFormat?: Array<code>;
   /** 
+   * Patch formats supported
+   */
+  _patchFormat?: Array<Element>
+  /** 
    * Implementation guides supported
    */
   implementationGuide?: Array<canonical>;
+  /** 
+   * Implementation guides supported
+   */
+  _implementationGuide?: Array<Element>
   /** 
    * If the endpoint is a RESTful one
    */
@@ -5473,13 +7541,25 @@ export interface CarePlanActivityDetail {
    */
   kind?: code;
   /** 
+   * Appointment | CommunicationRequest | DeviceRequest | MedicationRequest | NutritionOrder | Task | ServiceRequest | VisionPrescription
+   */
+  _kind?: Element
+  /** 
    * Instantiates FHIR protocol or definition
    */
   instantiatesCanonical?: Array<canonical>;
   /** 
+   * Instantiates FHIR protocol or definition
+   */
+  _instantiatesCanonical?: Array<Element>
+  /** 
    * Instantiates external protocol or definition
    */
   instantiatesUri?: Array<uri>;
+  /** 
+   * Instantiates external protocol or definition
+   */
+  _instantiatesUri?: Array<Element>
   /** 
    * Detail type of activity
    */
@@ -5501,6 +7581,10 @@ export interface CarePlanActivityDetail {
    */
   status: code;
   /** 
+   * not-started | scheduled | in-progress | on-hold | completed | cancelled | stopped | unknown | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Reason for current status
    */
   statusReason?: CodeableConcept;
@@ -5508,6 +7592,10 @@ export interface CarePlanActivityDetail {
    * If true, activity is prohibiting action
    */
   doNotPerform?: boolean;
+  /** 
+   * If true, activity is prohibiting action
+   */
+  _doNotPerform?: Element
   /** 
    * When activity is to occur
    */
@@ -5520,6 +7608,10 @@ export interface CarePlanActivityDetail {
    * When activity is to occur
    */
   scheduledString?: string;
+  /** 
+   * When activity is to occur
+   */
+  _scheduledString?: Element
   /** 
    * Where it should happen
    */
@@ -5548,6 +7640,10 @@ export interface CarePlanActivityDetail {
    * Extra info describing activity to perform
    */
   description?: string;
+  /** 
+   * Extra info describing activity to perform
+   */
+  _description?: Element
 }
 export interface CarePlanActivity {
   /** 
@@ -5598,9 +7694,17 @@ resourceType: "CarePlan"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -5626,9 +7730,17 @@ resourceType: "CarePlan"
    */
   instantiatesCanonical?: Array<canonical>;
   /** 
+   * Instantiates FHIR protocol or definition
+   */
+  _instantiatesCanonical?: Array<Element>
+  /** 
    * Instantiates external protocol or definition
    */
   instantiatesUri?: Array<uri>;
+  /** 
+   * Instantiates external protocol or definition
+   */
+  _instantiatesUri?: Array<Element>
   /** 
    * Fulfills CarePlan
    */
@@ -5646,9 +7758,17 @@ resourceType: "CarePlan"
    */
   status: code;
   /** 
+   * draft | active | on-hold | revoked | completed | entered-in-error | unknown
+   */
+  _status?: Element
+  /** 
    * proposal | plan | order | option
    */
   intent: code;
+  /** 
+   * proposal | plan | order | option
+   */
+  _intent?: Element
   /** 
    * Type of plan
    */
@@ -5658,9 +7778,17 @@ resourceType: "CarePlan"
    */
   title?: string;
   /** 
+   * Human-friendly name for the care plan
+   */
+  _title?: Element
+  /** 
    * Summary of nature of plan
    */
   description?: string;
+  /** 
+   * Summary of nature of plan
+   */
+  _description?: Element
   /** 
    * Who the care plan is for
    */
@@ -5677,6 +7805,10 @@ resourceType: "CarePlan"
    * Date record was first recorded
    */
   created?: dateTime;
+  /** 
+   * Date record was first recorded
+   */
+  _created?: Element
   /** 
    * Who is the designated responsible party
    */
@@ -5756,9 +7888,17 @@ resourceType: "CareTeam"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -5784,6 +7924,10 @@ resourceType: "CareTeam"
    */
   status?: code;
   /** 
+   * proposed | active | suspended | inactive | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Type of team
    */
   category?: Array<CodeableConcept>;
@@ -5791,6 +7935,10 @@ resourceType: "CareTeam"
    * Name of the team, such as crisis assessment team
    */
   name?: string;
+  /** 
+   * Name of the team, such as crisis assessment team
+   */
+  _name?: Element
   /** 
    * Who care team is for
    */
@@ -5847,6 +7995,10 @@ export interface CatalogEntryRelatedEntry {
    */
   relationtype: code;
   /** 
+   * triggers | is-replaced-by
+   */
+  _relationtype?: Element
+  /** 
    * The reference to the related item
    */
   item: Reference;
@@ -5866,9 +8018,17 @@ resourceType: "CatalogEntry"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -5898,6 +8058,10 @@ resourceType: "CatalogEntry"
    */
   orderable: boolean;
   /** 
+   * Whether the entry represents an orderable item
+   */
+  _orderable?: Element
+  /** 
    * The item that is being defined
    */
   referencedItem: Reference;
@@ -5914,6 +8078,10 @@ resourceType: "CatalogEntry"
    */
   status?: code;
   /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
+  /** 
    * The time period in which this catalog entry is expected to be active
    */
   validityPeriod?: Period;
@@ -5922,9 +8090,17 @@ resourceType: "CatalogEntry"
    */
   validTo?: dateTime;
   /** 
+   * The date until which this catalog entry is expected to be active
+   */
+  _validTo?: Element
+  /** 
    * When was this catalog last updated
    */
   lastUpdated?: dateTime;
+  /** 
+   * When was this catalog last updated
+   */
+  _lastUpdated?: Element
   /** 
    * Additional characteristics of the catalog entry
    */
@@ -5976,9 +8152,17 @@ resourceType: "ChargeItem"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -6004,13 +8188,25 @@ resourceType: "ChargeItem"
    */
   definitionUri?: Array<uri>;
   /** 
+   * Defining information about the code of this charge item
+   */
+  _definitionUri?: Array<Element>
+  /** 
    * Resource defining the code of this ChargeItem
    */
   definitionCanonical?: Array<canonical>;
   /** 
+   * Resource defining the code of this ChargeItem
+   */
+  _definitionCanonical?: Array<Element>
+  /** 
    * planned | billable | not-billable | aborted | billed | entered-in-error | unknown
    */
   status: code;
+  /** 
+   * planned | billable | not-billable | aborted | billed | entered-in-error | unknown
+   */
+  _status?: Element
   /** 
    * Part of referenced ChargeItem
    */
@@ -6031,6 +8227,10 @@ resourceType: "ChargeItem"
    * When the charged service was applied
    */
   occurrenceDateTime?: dateTime;
+  /** 
+   * When the charged service was applied
+   */
+  _occurrenceDateTime?: Element
   /** 
    * When the charged service was applied
    */
@@ -6068,6 +8268,10 @@ resourceType: "ChargeItem"
    */
   factorOverride?: decimal;
   /** 
+   * Factor overriding the associated rules
+   */
+  _factorOverride?: Element
+  /** 
    * Price overriding the associated rules
    */
   priceOverride?: Money;
@@ -6076,6 +8280,10 @@ resourceType: "ChargeItem"
    */
   overrideReason?: string;
   /** 
+   * Reason for overriding the list price/factor
+   */
+  _overrideReason?: Element
+  /** 
    * Individual who was entering
    */
   enterer?: Reference;
@@ -6083,6 +8291,10 @@ resourceType: "ChargeItem"
    * Date the charge item was entered
    */
   enteredDate?: dateTime;
+  /** 
+   * Date the charge item was entered
+   */
+  _enteredDate?: Element
   /** 
    * Why was the charged  service rendered?
    */
@@ -6131,13 +8343,25 @@ export interface ChargeItemDefinitionApplicability {
    */
   description?: string;
   /** 
+   * Natural language description of the condition
+   */
+  _description?: Element
+  /** 
    * Language of the expression
    */
   language?: string;
   /** 
+   * Language of the expression
+   */
+  _language?: Element
+  /** 
    * Boolean-valued expression
    */
   expression?: string;
+  /** 
+   * Boolean-valued expression
+   */
+  _expression?: Element
 }
 export interface ChargeItemDefinitionPropertyGroupPriceComponent {
   /** 
@@ -6157,6 +8381,10 @@ export interface ChargeItemDefinitionPropertyGroupPriceComponent {
    */
   type: code;
   /** 
+   * base | surcharge | deduction | discount | tax | informational
+   */
+  _type?: Element
+  /** 
    * Code identifying the specific component
    */
   code?: CodeableConcept;
@@ -6164,6 +8392,10 @@ export interface ChargeItemDefinitionPropertyGroupPriceComponent {
    * Factor used for calculating this component
    */
   factor?: decimal;
+  /** 
+   * Factor used for calculating this component
+   */
+  _factor?: Element
   /** 
    * Monetary amount associated with this component
    */
@@ -6206,9 +8438,17 @@ resourceType: "ChargeItemDefinition"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -6230,6 +8470,10 @@ resourceType: "ChargeItemDefinition"
    */
   url: uri;
   /** 
+   * Canonical identifier for this charge item definition, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Additional identifier for the charge item definition
    */
   identifier?: Array<Identifier>;
@@ -6238,37 +8482,73 @@ resourceType: "ChargeItemDefinition"
    */
   version?: string;
   /** 
+   * Business version of the charge item definition
+   */
+  _version?: Element
+  /** 
    * Name for this charge item definition (human friendly)
    */
   title?: string;
+  /** 
+   * Name for this charge item definition (human friendly)
+   */
+  _title?: Element
   /** 
    * Underlying externally-defined charge item definition
    */
   derivedFromUri?: Array<uri>;
   /** 
+   * Underlying externally-defined charge item definition
+   */
+  _derivedFromUri?: Array<Element>
+  /** 
    * A larger definition of which this particular definition is a component or step
    */
   partOf?: Array<canonical>;
+  /** 
+   * A larger definition of which this particular definition is a component or step
+   */
+  _partOf?: Array<Element>
   /** 
    * Completed or terminated request(s) whose function is taken by this new request
    */
   replaces?: Array<canonical>;
   /** 
+   * Completed or terminated request(s) whose function is taken by this new request
+   */
+  _replaces?: Array<Element>
+  /** 
    * draft | active | retired | unknown
    */
   status: code;
+  /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
   /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
   /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
+  /** 
    * Date last changed
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -6277,6 +8557,10 @@ resourceType: "ChargeItemDefinition"
    * Natural language description of the charge item definition
    */
   description?: markdown;
+  /** 
+   * Natural language description of the charge item definition
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -6290,13 +8574,25 @@ resourceType: "ChargeItemDefinition"
    */
   copyright?: markdown;
   /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
+  /** 
    * When the charge item definition was approved by publisher
    */
   approvalDate?: date;
   /** 
+   * When the charge item definition was approved by publisher
+   */
+  _approvalDate?: Element
+  /** 
    * When the charge item definition was last reviewed
    */
   lastReviewDate?: date;
+  /** 
+   * When the charge item definition was last reviewed
+   */
+  _lastReviewDate?: Element
   /** 
    * When the charge item definition is expected to be used
    */
@@ -6385,6 +8681,10 @@ export interface ClaimCareTeam {
    */
   sequence: positiveInt;
   /** 
+   * Order of care team
+   */
+  _sequence?: Element
+  /** 
    * Practitioner or organization
    */
   provider: Reference;
@@ -6392,6 +8692,10 @@ export interface ClaimCareTeam {
    * Indicator of the lead practitioner
    */
   responsible?: boolean;
+  /** 
+   * Indicator of the lead practitioner
+   */
+  _responsible?: Element
   /** 
    * Function within the team
    */
@@ -6419,6 +8723,10 @@ export interface ClaimSupportingInfo {
    */
   sequence: positiveInt;
   /** 
+   * Information instance identifier
+   */
+  _sequence?: Element
+  /** 
    * Classification of the supplied information
    */
   category: CodeableConcept;
@@ -6433,6 +8741,10 @@ export interface ClaimSupportingInfo {
   /** 
    * When it occurred
    */
+  _timingDate?: Element
+  /** 
+   * When it occurred
+   */
   timingPeriod?: Period;
   /** 
    * Data to be provided
@@ -6441,7 +8753,15 @@ export interface ClaimSupportingInfo {
   /** 
    * Data to be provided
    */
+  _valueBoolean?: Element
+  /** 
+   * Data to be provided
+   */
   valueString?: string;
+  /** 
+   * Data to be provided
+   */
+  _valueString?: Element
   /** 
    * Data to be provided
    */
@@ -6476,6 +8796,10 @@ export interface ClaimDiagnosis {
    * Diagnosis instance identifier
    */
   sequence: positiveInt;
+  /** 
+   * Diagnosis instance identifier
+   */
+  _sequence?: Element
   /** 
    * Nature of illness or problem
    */
@@ -6515,6 +8839,10 @@ export interface ClaimProcedure {
    */
   sequence: positiveInt;
   /** 
+   * Procedure instance identifier
+   */
+  _sequence?: Element
+  /** 
    * Category of Procedure
    */
   type?: Array<CodeableConcept>;
@@ -6522,6 +8850,10 @@ export interface ClaimProcedure {
    * When the procedure was performed
    */
   date?: dateTime;
+  /** 
+   * When the procedure was performed
+   */
+  _date?: Element
   /** 
    * Specific clinical procedure
    */
@@ -6553,9 +8885,17 @@ export interface ClaimInsurance {
    */
   sequence: positiveInt;
   /** 
+   * Insurance instance identifier
+   */
+  _sequence?: Element
+  /** 
    * Coverage to be used for adjudication
    */
   focal: boolean;
+  /** 
+   * Coverage to be used for adjudication
+   */
+  _focal?: Element
   /** 
    * Pre-assigned Claim number
    */
@@ -6569,9 +8909,17 @@ export interface ClaimInsurance {
    */
   businessArrangement?: string;
   /** 
+   * Additional provider contract number
+   */
+  _businessArrangement?: Element
+  /** 
    * Prior authorization reference number
    */
   preAuthRef?: Array<string>;
+  /** 
+   * Prior authorization reference number
+   */
+  _preAuthRef?: Array<Element>
   /** 
    * Adjudication results
    */
@@ -6594,6 +8942,10 @@ export interface ClaimAccident {
    * When the incident occurred
    */
   date: date;
+  /** 
+   * When the incident occurred
+   */
+  _date?: Element
   /** 
    * The nature of the accident
    */
@@ -6625,6 +8977,10 @@ export interface ClaimItemDetailSubDetail {
    */
   sequence: positiveInt;
   /** 
+   * Item instance identifier
+   */
+  _sequence?: Element
+  /** 
    * Revenue or cost center code
    */
   revenue?: CodeableConcept;
@@ -6656,6 +9012,10 @@ export interface ClaimItemDetailSubDetail {
    * Price scaling factor
    */
   factor?: decimal;
+  /** 
+   * Price scaling factor
+   */
+  _factor?: Element
   /** 
    * Total item cost
    */
@@ -6683,6 +9043,10 @@ export interface ClaimItemDetail {
    */
   sequence: positiveInt;
   /** 
+   * Item instance identifier
+   */
+  _sequence?: Element
+  /** 
    * Revenue or cost center code
    */
   revenue?: CodeableConcept;
@@ -6714,6 +9078,10 @@ export interface ClaimItemDetail {
    * Price scaling factor
    */
   factor?: decimal;
+  /** 
+   * Price scaling factor
+   */
+  _factor?: Element
   /** 
    * Total item cost
    */
@@ -6745,21 +9113,41 @@ export interface ClaimItem {
    */
   sequence: positiveInt;
   /** 
+   * Item instance identifier
+   */
+  _sequence?: Element
+  /** 
    * Applicable careTeam members
    */
   careTeamSequence?: Array<positiveInt>;
+  /** 
+   * Applicable careTeam members
+   */
+  _careTeamSequence?: Array<Element>
   /** 
    * Applicable diagnoses
    */
   diagnosisSequence?: Array<positiveInt>;
   /** 
+   * Applicable diagnoses
+   */
+  _diagnosisSequence?: Array<Element>
+  /** 
    * Applicable procedures
    */
   procedureSequence?: Array<positiveInt>;
   /** 
+   * Applicable procedures
+   */
+  _procedureSequence?: Array<Element>
+  /** 
    * Applicable exception and supporting information
    */
   informationSequence?: Array<positiveInt>;
+  /** 
+   * Applicable exception and supporting information
+   */
+  _informationSequence?: Array<Element>
   /** 
    * Revenue or cost center code
    */
@@ -6784,6 +9172,10 @@ export interface ClaimItem {
    * Date or dates of service or product delivery
    */
   servicedDate?: date;
+  /** 
+   * Date or dates of service or product delivery
+   */
+  _servicedDate?: Element
   /** 
    * Date or dates of service or product delivery
    */
@@ -6812,6 +9204,10 @@ export interface ClaimItem {
    * Price scaling factor
    */
   factor?: decimal;
+  /** 
+   * Price scaling factor
+   */
+  _factor?: Element
   /** 
    * Total item cost
    */
@@ -6852,9 +9248,17 @@ resourceType: "Claim"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -6880,6 +9284,10 @@ resourceType: "Claim"
    */
   status: code;
   /** 
+   * active | cancelled | draft | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Category or discipline
    */
   type: CodeableConcept;
@@ -6892,6 +9300,10 @@ resourceType: "Claim"
    */
   use: code;
   /** 
+   * claim | preauthorization | predetermination
+   */
+  _use?: Element
+  /** 
    * The recipient of the products and services
    */
   patient: Reference;
@@ -6903,6 +9315,10 @@ resourceType: "Claim"
    * Resource creation date
    */
   created: dateTime;
+  /** 
+   * Resource creation date
+   */
+  _created?: Element
   /** 
    * Author of the claim
    */
@@ -7010,6 +9426,10 @@ export interface ClaimResponseItemAdjudication {
    * Non-monetary value
    */
   value?: decimal;
+  /** 
+   * Non-monetary value
+   */
+  _value?: Element
 }
 export interface ClaimResponseItemDetailSubDetail {
   /** 
@@ -7029,9 +9449,17 @@ export interface ClaimResponseItemDetailSubDetail {
    */
   subDetailSequence: positiveInt;
   /** 
+   * Claim sub-detail instance identifier
+   */
+  _subDetailSequence?: Element
+  /** 
    * Applicable note numbers
    */
   noteNumber?: Array<positiveInt>;
+  /** 
+   * Applicable note numbers
+   */
+  _noteNumber?: Array<Element>
   /** 
    * Subdetail level adjudication details
    */
@@ -7055,9 +9483,17 @@ export interface ClaimResponseItemDetail {
    */
   detailSequence: positiveInt;
   /** 
+   * Claim detail instance identifier
+   */
+  _detailSequence?: Element
+  /** 
    * Applicable note numbers
    */
   noteNumber?: Array<positiveInt>;
+  /** 
+   * Applicable note numbers
+   */
+  _noteNumber?: Array<Element>
   /** 
    * Detail level adjudication details
    */
@@ -7085,9 +9521,17 @@ export interface ClaimResponseItem {
    */
   itemSequence: positiveInt;
   /** 
+   * Claim item instance identifier
+   */
+  _itemSequence?: Element
+  /** 
    * Applicable note numbers
    */
   noteNumber?: Array<positiveInt>;
+  /** 
+   * Applicable note numbers
+   */
+  _noteNumber?: Array<Element>
   /** 
    * Adjudication details
    */
@@ -7131,6 +9575,10 @@ export interface ClaimResponseAddItemDetailSubDetail {
    */
   factor?: decimal;
   /** 
+   * Price scaling factor
+   */
+  _factor?: Element
+  /** 
    * Total item cost
    */
   net?: Money;
@@ -7138,6 +9586,10 @@ export interface ClaimResponseAddItemDetailSubDetail {
    * Applicable note numbers
    */
   noteNumber?: Array<positiveInt>;
+  /** 
+   * Applicable note numbers
+   */
+  _noteNumber?: Array<Element>
   /** 
    * Added items detail adjudication
    */
@@ -7177,6 +9629,10 @@ export interface ClaimResponseAddItemDetail {
    */
   factor?: decimal;
   /** 
+   * Price scaling factor
+   */
+  _factor?: Element
+  /** 
    * Total item cost
    */
   net?: Money;
@@ -7184,6 +9640,10 @@ export interface ClaimResponseAddItemDetail {
    * Applicable note numbers
    */
   noteNumber?: Array<positiveInt>;
+  /** 
+   * Applicable note numbers
+   */
+  _noteNumber?: Array<Element>
   /** 
    * Added items detail adjudication
    */
@@ -7211,13 +9671,25 @@ export interface ClaimResponseAddItem {
    */
   itemSequence?: Array<positiveInt>;
   /** 
+   * Item sequence number
+   */
+  _itemSequence?: Array<Element>
+  /** 
    * Detail sequence number
    */
   detailSequence?: Array<positiveInt>;
   /** 
+   * Detail sequence number
+   */
+  _detailSequence?: Array<Element>
+  /** 
    * Subdetail sequence number
    */
   subdetailSequence?: Array<positiveInt>;
+  /** 
+   * Subdetail sequence number
+   */
+  _subdetailSequence?: Array<Element>
   /** 
    * Authorized providers
    */
@@ -7238,6 +9710,10 @@ export interface ClaimResponseAddItem {
    * Date or dates of service or product delivery
    */
   servicedDate?: date;
+  /** 
+   * Date or dates of service or product delivery
+   */
+  _servicedDate?: Element
   /** 
    * Date or dates of service or product delivery
    */
@@ -7267,6 +9743,10 @@ export interface ClaimResponseAddItem {
    */
   factor?: decimal;
   /** 
+   * Price scaling factor
+   */
+  _factor?: Element
+  /** 
    * Total item cost
    */
   net?: Money;
@@ -7282,6 +9762,10 @@ export interface ClaimResponseAddItem {
    * Applicable note numbers
    */
   noteNumber?: Array<positiveInt>;
+  /** 
+   * Applicable note numbers
+   */
+  _noteNumber?: Array<Element>
   /** 
    * Added items adjudication
    */
@@ -7343,6 +9827,10 @@ export interface ClaimResponsePayment {
    */
   date?: date;
   /** 
+   * Expected date of payment
+   */
+  _date?: Element
+  /** 
    * Payable amount after adjustment
    */
   amount: Money;
@@ -7369,13 +9857,25 @@ export interface ClaimResponseProcessNote {
    */
   number?: positiveInt;
   /** 
+   * Note instance identifier
+   */
+  _number?: Element
+  /** 
    * display | print | printoper
    */
   type?: code;
   /** 
+   * display | print | printoper
+   */
+  _type?: Element
+  /** 
    * Note explanatory text
    */
   text: string;
+  /** 
+   * Note explanatory text
+   */
+  _text?: Element
   /** 
    * Language of the text
    */
@@ -7399,9 +9899,17 @@ export interface ClaimResponseInsurance {
    */
   sequence: positiveInt;
   /** 
+   * Insurance instance identifier
+   */
+  _sequence?: Element
+  /** 
    * Coverage to be used for adjudication
    */
   focal: boolean;
+  /** 
+   * Coverage to be used for adjudication
+   */
+  _focal?: Element
   /** 
    * Insurance information
    */
@@ -7410,6 +9918,10 @@ export interface ClaimResponseInsurance {
    * Additional provider contract number
    */
   businessArrangement?: string;
+  /** 
+   * Additional provider contract number
+   */
+  _businessArrangement?: Element
   /** 
    * Adjudication results
    */
@@ -7433,13 +9945,25 @@ export interface ClaimResponseError {
    */
   itemSequence?: positiveInt;
   /** 
+   * Item sequence number
+   */
+  _itemSequence?: Element
+  /** 
    * Detail sequence number
    */
   detailSequence?: positiveInt;
   /** 
+   * Detail sequence number
+   */
+  _detailSequence?: Element
+  /** 
    * Subdetail sequence number
    */
   subDetailSequence?: positiveInt;
+  /** 
+   * Subdetail sequence number
+   */
+  _subDetailSequence?: Element
   /** 
    * Error code detailing processing issues
    */
@@ -7460,9 +9984,17 @@ resourceType: "ClaimResponse"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -7488,6 +10020,10 @@ resourceType: "ClaimResponse"
    */
   status: code;
   /** 
+   * active | cancelled | draft | entered-in-error
+   */
+  _status?: Element
+  /** 
    * More granular claim type
    */
   type: CodeableConcept;
@@ -7500,6 +10036,10 @@ resourceType: "ClaimResponse"
    */
   use: code;
   /** 
+   * claim | preauthorization | predetermination
+   */
+  _use?: Element
+  /** 
    * The recipient of the products and services
    */
   patient: Reference;
@@ -7507,6 +10047,10 @@ resourceType: "ClaimResponse"
    * Response creation date
    */
   created: dateTime;
+  /** 
+   * Response creation date
+   */
+  _created?: Element
   /** 
    * Party responsible for reimbursement
    */
@@ -7524,13 +10068,25 @@ resourceType: "ClaimResponse"
    */
   outcome: code;
   /** 
+   * queued | complete | error | partial
+   */
+  _outcome?: Element
+  /** 
    * Disposition Message
    */
   disposition?: string;
   /** 
+   * Disposition Message
+   */
+  _disposition?: Element
+  /** 
    * Preauthorization reference
    */
   preAuthRef?: string;
+  /** 
+   * Preauthorization reference
+   */
+  _preAuthRef?: Element
   /** 
    * Preauthorization reference effective period
    */
@@ -7636,6 +10192,10 @@ export interface ClinicalImpressionFinding {
    * Which investigations support finding
    */
   basis?: string;
+  /** 
+   * Which investigations support finding
+   */
+  _basis?: Element
 }
 export interface ClinicalImpression {
 resourceType: "ClinicalImpression"
@@ -7652,9 +10212,17 @@ resourceType: "ClinicalImpression"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -7680,6 +10248,10 @@ resourceType: "ClinicalImpression"
    */
   status: code;
   /** 
+   * in-progress | completed | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Reason for current status
    */
   statusReason?: CodeableConcept;
@@ -7691,6 +10263,10 @@ resourceType: "ClinicalImpression"
    * Why/how the assessment was performed
    */
   description?: string;
+  /** 
+   * Why/how the assessment was performed
+   */
+  _description?: Element
   /** 
    * Patient or group assessed
    */
@@ -7706,11 +10282,19 @@ resourceType: "ClinicalImpression"
   /** 
    * Time of assessment
    */
+  _effectiveDateTime?: Element
+  /** 
+   * Time of assessment
+   */
   effectivePeriod?: Period;
   /** 
    * When the assessment was documented
    */
   date?: dateTime;
+  /** 
+   * When the assessment was documented
+   */
+  _date?: Element
   /** 
    * The clinician performing the assessment
    */
@@ -7732,9 +10316,17 @@ resourceType: "ClinicalImpression"
    */
   protocol?: Array<uri>;
   /** 
+   * Clinical Protocol followed
+   */
+  _protocol?: Array<Element>
+  /** 
    * Summary of the assessment
    */
   summary?: string;
+  /** 
+   * Summary of the assessment
+   */
+  _summary?: Element
   /** 
    * Possible or likely findings and diagnoses
    */
@@ -7775,17 +10367,33 @@ export interface CodeSystemFilter {
    */
   code: code;
   /** 
+   * Code that identifies the filter
+   */
+  _code?: Element
+  /** 
    * How or why the filter is used
    */
   description?: string;
+  /** 
+   * How or why the filter is used
+   */
+  _description?: Element
   /** 
    * = | is-a | descendent-of | is-not-a | regex | in | not-in | generalizes | exists
    */
   operator: Array<code>;
   /** 
+   * = | is-a | descendent-of | is-not-a | regex | in | not-in | generalizes | exists
+   */
+  _operator?: Array<Element>
+  /** 
    * What to use for the value
    */
   value: string;
+  /** 
+   * What to use for the value
+   */
+  _value?: Element
 }
 export interface CodeSystemProperty {
   /** 
@@ -7805,17 +10413,33 @@ export interface CodeSystemProperty {
    */
   code: code;
   /** 
+   * Identifies the property on the concepts, and when referred to in operations
+   */
+  _code?: Element
+  /** 
    * Formal identifier for the property
    */
   uri?: uri;
+  /** 
+   * Formal identifier for the property
+   */
+  _uri?: Element
   /** 
    * Why the property is defined, and/or what it conveys
    */
   description?: string;
   /** 
+   * Why the property is defined, and/or what it conveys
+   */
+  _description?: Element
+  /** 
    * code | Coding | string | integer | boolean | dateTime | decimal
    */
   type: code;
+  /** 
+   * code | Coding | string | integer | boolean | dateTime | decimal
+   */
+  _type?: Element
 }
 export interface CodeSystemConceptDesignation {
   /** 
@@ -7835,6 +10459,10 @@ export interface CodeSystemConceptDesignation {
    */
   language?: code;
   /** 
+   * Human language of the designation
+   */
+  _language?: Element
+  /** 
    * Details how this designation would be used
    */
   use?: Coding;
@@ -7842,6 +10470,10 @@ export interface CodeSystemConceptDesignation {
    * The text value for this designation
    */
   value: string;
+  /** 
+   * The text value for this designation
+   */
+  _value?: Element
 }
 export interface CodeSystemConceptProperty {
   /** 
@@ -7861,9 +10493,17 @@ export interface CodeSystemConceptProperty {
    */
   code: code;
   /** 
+   * Reference to CodeSystem.property.code
+   */
+  _code?: Element
+  /** 
    * Value of the property for this concept
    */
   valueCode?: code;
+  /** 
+   * Value of the property for this concept
+   */
+  _valueCode?: Element
   /** 
    * Value of the property for this concept
    */
@@ -7875,7 +10515,15 @@ export interface CodeSystemConceptProperty {
   /** 
    * Value of the property for this concept
    */
+  _valueString?: Element
+  /** 
+   * Value of the property for this concept
+   */
   valueInteger?: integer;
+  /** 
+   * Value of the property for this concept
+   */
+  _valueInteger?: Element
   /** 
    * Value of the property for this concept
    */
@@ -7883,11 +10531,23 @@ export interface CodeSystemConceptProperty {
   /** 
    * Value of the property for this concept
    */
+  _valueBoolean?: Element
+  /** 
+   * Value of the property for this concept
+   */
   valueDateTime?: dateTime;
   /** 
    * Value of the property for this concept
    */
+  _valueDateTime?: Element
+  /** 
+   * Value of the property for this concept
+   */
   valueDecimal?: decimal;
+  /** 
+   * Value of the property for this concept
+   */
+  _valueDecimal?: Element
 }
 export interface CodeSystemConcept {
   /** 
@@ -7907,13 +10567,25 @@ export interface CodeSystemConcept {
    */
   code: code;
   /** 
+   * Code that identifies concept
+   */
+  _code?: Element
+  /** 
    * Text to display to the user
    */
   display?: string;
   /** 
+   * Text to display to the user
+   */
+  _display?: Element
+  /** 
    * Formal definition
    */
   definition?: string;
+  /** 
+   * Formal definition
+   */
+  _definition?: Element
   /** 
    * Additional representations for the concept
    */
@@ -7942,9 +10614,17 @@ resourceType: "CodeSystem"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -7966,6 +10646,10 @@ resourceType: "CodeSystem"
    */
   url?: uri;
   /** 
+   * Canonical identifier for this code system, represented as a URI (globally unique) (Coding.system)
+   */
+  _url?: Element
+  /** 
    * Additional identifier for the code system (business identifier)
    */
   identifier?: Array<Identifier>;
@@ -7974,29 +10658,57 @@ resourceType: "CodeSystem"
    */
   version?: string;
   /** 
+   * Business version of the code system (Coding.version)
+   */
+  _version?: Element
+  /** 
    * Name for this code system (computer friendly)
    */
   name?: string;
+  /** 
+   * Name for this code system (computer friendly)
+   */
+  _name?: Element
   /** 
    * Name for this code system (human friendly)
    */
   title?: string;
   /** 
+   * Name for this code system (human friendly)
+   */
+  _title?: Element
+  /** 
    * draft | active | retired | unknown
    */
   status: code;
+  /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
   /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
   /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
+  /** 
    * Date last changed
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -8005,6 +10717,10 @@ resourceType: "CodeSystem"
    * Natural language description of the code system
    */
   description?: markdown;
+  /** 
+   * Natural language description of the code system
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -8018,41 +10734,81 @@ resourceType: "CodeSystem"
    */
   purpose?: markdown;
   /** 
+   * Why this code system is defined
+   */
+  _purpose?: Element
+  /** 
    * Use and/or publishing restrictions
    */
   copyright?: markdown;
+  /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
   /** 
    * If code comparison is case sensitive
    */
   caseSensitive?: boolean;
   /** 
+   * If code comparison is case sensitive
+   */
+  _caseSensitive?: Element
+  /** 
    * Canonical reference to the value set with entire code system
    */
   valueSet?: canonical;
+  /** 
+   * Canonical reference to the value set with entire code system
+   */
+  _valueSet?: Element
   /** 
    * grouped-by | is-a | part-of | classified-with
    */
   hierarchyMeaning?: code;
   /** 
+   * grouped-by | is-a | part-of | classified-with
+   */
+  _hierarchyMeaning?: Element
+  /** 
    * If code system defines a compositional grammar
    */
   compositional?: boolean;
+  /** 
+   * If code system defines a compositional grammar
+   */
+  _compositional?: Element
   /** 
    * If definitions are not stable
    */
   versionNeeded?: boolean;
   /** 
+   * If definitions are not stable
+   */
+  _versionNeeded?: Element
+  /** 
    * not-present | example | fragment | complete | supplement
    */
   content: code;
+  /** 
+   * not-present | example | fragment | complete | supplement
+   */
+  _content?: Element
   /** 
    * Canonical URL of Code System this adds designations and properties to
    */
   supplements?: canonical;
   /** 
+   * Canonical URL of Code System this adds designations and properties to
+   */
+  _supplements?: Element
+  /** 
    * Total concepts in the code system
    */
   count?: unsignedInt;
+  /** 
+   * Total concepts in the code system
+   */
+  _count?: Element
   /** 
    * Filter that can be used in a value set
    */
@@ -8087,6 +10843,10 @@ export interface CommunicationPayload {
   /** 
    * Message part content
    */
+  _contentString?: Element
+  /** 
+   * Message part content
+   */
   contentAttachment?: Attachment;
   /** 
    * Message part content
@@ -8108,9 +10868,17 @@ resourceType: "Communication"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -8136,9 +10904,17 @@ resourceType: "Communication"
    */
   instantiatesCanonical?: Array<canonical>;
   /** 
+   * Instantiates FHIR protocol or definition
+   */
+  _instantiatesCanonical?: Array<Element>
+  /** 
    * Instantiates external protocol or definition
    */
   instantiatesUri?: Array<uri>;
+  /** 
+   * Instantiates external protocol or definition
+   */
+  _instantiatesUri?: Array<Element>
   /** 
    * Request fulfilled by this communication
    */
@@ -8156,6 +10932,10 @@ resourceType: "Communication"
    */
   status: code;
   /** 
+   * preparation | in-progress | not-done | on-hold | stopped | completed | entered-in-error | unknown
+   */
+  _status?: Element
+  /** 
    * Reason for current status
    */
   statusReason?: CodeableConcept;
@@ -8167,6 +10947,10 @@ resourceType: "Communication"
    * routine | urgent | asap | stat
    */
   priority?: code;
+  /** 
+   * routine | urgent | asap | stat
+   */
+  _priority?: Element
   /** 
    * A channel of communication
    */
@@ -8192,9 +10976,17 @@ resourceType: "Communication"
    */
   sent?: dateTime;
   /** 
+   * When sent
+   */
+  _sent?: Element
+  /** 
    * When received
    */
   received?: dateTime;
+  /** 
+   * When received
+   */
+  _received?: Element
   /** 
    * Message recipient
    */
@@ -8241,6 +11033,10 @@ export interface CommunicationRequestPayload {
   /** 
    * Message part content
    */
+  _contentString?: Element
+  /** 
+   * Message part content
+   */
   contentAttachment?: Attachment;
   /** 
    * Message part content
@@ -8262,9 +11058,17 @@ resourceType: "CommunicationRequest"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -8302,6 +11106,10 @@ resourceType: "CommunicationRequest"
    */
   status: code;
   /** 
+   * draft | active | on-hold | revoked | completed | entered-in-error | unknown
+   */
+  _status?: Element
+  /** 
    * Reason for current status
    */
   statusReason?: CodeableConcept;
@@ -8314,9 +11122,17 @@ resourceType: "CommunicationRequest"
    */
   priority?: code;
   /** 
+   * routine | urgent | asap | stat
+   */
+  _priority?: Element
+  /** 
    * True if request is prohibiting action
    */
   doNotPerform?: boolean;
+  /** 
+   * True if request is prohibiting action
+   */
+  _doNotPerform?: Element
   /** 
    * A channel of communication
    */
@@ -8344,11 +11160,19 @@ resourceType: "CommunicationRequest"
   /** 
    * When scheduled
    */
+  _occurrenceDateTime?: Element
+  /** 
+   * When scheduled
+   */
   occurrencePeriod?: Period;
   /** 
    * When request transitioned to being actionable
    */
   authoredOn?: dateTime;
+  /** 
+   * When request transitioned to being actionable
+   */
+  _authoredOn?: Element
   /** 
    * Who/what is requesting service
    */
@@ -8393,13 +11217,25 @@ export interface CompartmentDefinitionResource {
    */
   code: code;
   /** 
+   * Name of resource type
+   */
+  _code?: Element
+  /** 
    * Search Parameter Name, or chained parameters
    */
   param?: Array<string>;
   /** 
+   * Search Parameter Name, or chained parameters
+   */
+  _param?: Array<Element>
+  /** 
    * Additional documentation about the resource and compartment
    */
   documentation?: string;
+  /** 
+   * Additional documentation about the resource and compartment
+   */
+  _documentation?: Element
 }
 export interface CompartmentDefinition {
 resourceType: "CompartmentDefinition"
@@ -8416,9 +11252,17 @@ resourceType: "CompartmentDefinition"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -8440,29 +11284,57 @@ resourceType: "CompartmentDefinition"
    */
   url: uri;
   /** 
+   * Canonical identifier for this compartment definition, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Business version of the compartment definition
    */
   version?: string;
+  /** 
+   * Business version of the compartment definition
+   */
+  _version?: Element
   /** 
    * Name for this compartment definition (computer friendly)
    */
   name: string;
   /** 
+   * Name for this compartment definition (computer friendly)
+   */
+  _name?: Element
+  /** 
    * draft | active | retired | unknown
    */
   status: code;
+  /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
   /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
   /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
+  /** 
    * Date last changed
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -8472,6 +11344,10 @@ resourceType: "CompartmentDefinition"
    */
   description?: markdown;
   /** 
+   * Natural language description of the compartment definition
+   */
+  _description?: Element
+  /** 
    * The context that the content is intended to support
    */
   useContext?: Array<UsageContext>;
@@ -8480,13 +11356,25 @@ resourceType: "CompartmentDefinition"
    */
   purpose?: markdown;
   /** 
+   * Why this compartment definition is defined
+   */
+  _purpose?: Element
+  /** 
    * Patient | Encounter | RelatedPerson | Practitioner | Device
    */
   code: code;
   /** 
+   * Patient | Encounter | RelatedPerson | Practitioner | Device
+   */
+  _code?: Element
+  /** 
    * Whether the search syntax is supported
    */
   search: boolean;
+  /** 
+   * Whether the search syntax is supported
+   */
+  _search?: Element
   /** 
    * How a resource is related to the compartment
    */
@@ -8511,9 +11399,17 @@ export interface CompositionAttester {
    */
   mode: code;
   /** 
+   * personal | professional | legal | official
+   */
+  _mode?: Element
+  /** 
    * When the composition was attested
    */
   time?: dateTime;
+  /** 
+   * When the composition was attested
+   */
+  _time?: Element
   /** 
    * Who attested the composition
    */
@@ -8536,6 +11432,10 @@ export interface CompositionRelatesTo {
    * replaces | transforms | signs | appends
    */
   code: code;
+  /** 
+   * replaces | transforms | signs | appends
+   */
+  _code?: Element
   /** 
    * Target of the relationship
    */
@@ -8589,6 +11489,10 @@ export interface CompositionSection {
    */
   title?: string;
   /** 
+   * Label for section (e.g. for ToC)
+   */
+  _title?: Element
+  /** 
    * Classification of section (recommended)
    */
   code?: CodeableConcept;
@@ -8608,6 +11512,10 @@ export interface CompositionSection {
    * working | snapshot | changes
    */
   mode?: code;
+  /** 
+   * working | snapshot | changes
+   */
+  _mode?: Element
   /** 
    * Order of section entries
    */
@@ -8640,9 +11548,17 @@ resourceType: "Composition"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -8668,6 +11584,10 @@ resourceType: "Composition"
    */
   status: code;
   /** 
+   * preliminary | final | amended | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Kind of composition (LOINC if possible)
    */
   type: CodeableConcept;
@@ -8688,6 +11608,10 @@ resourceType: "Composition"
    */
   date: dateTime;
   /** 
+   * Composition editing time
+   */
+  _date?: Element
+  /** 
    * Who and/or what authored the composition
    */
   author: Array<Reference>;
@@ -8696,9 +11620,17 @@ resourceType: "Composition"
    */
   title: string;
   /** 
+   * Human Readable name/title
+   */
+  _title?: Element
+  /** 
    * As defined by affinity domain
    */
   confidentiality?: code;
+  /** 
+   * As defined by affinity domain
+   */
+  _confidentiality?: Element
   /** 
    * Attests to accuracy of composition
    */
@@ -8739,17 +11671,33 @@ export interface ConceptMapGroupElementTargetDependsOn {
    */
   property: uri;
   /** 
+   * Reference to property mapping depends on
+   */
+  _property?: Element
+  /** 
    * Code System (if necessary)
    */
   system?: canonical;
+  /** 
+   * Code System (if necessary)
+   */
+  _system?: Element
   /** 
    * Value of the referenced element
    */
   value: string;
   /** 
+   * Value of the referenced element
+   */
+  _value?: Element
+  /** 
    * Display for the code (if value is a code)
    */
   display?: string;
+  /** 
+   * Display for the code (if value is a code)
+   */
+  _display?: Element
 }
 export interface ConceptMapGroupElementTarget {
   /** 
@@ -8769,17 +11717,33 @@ export interface ConceptMapGroupElementTarget {
    */
   code?: code;
   /** 
+   * Code that identifies the target element
+   */
+  _code?: Element
+  /** 
    * Display for the code
    */
   display?: string;
+  /** 
+   * Display for the code
+   */
+  _display?: Element
   /** 
    * relatedto | equivalent | equal | wider | subsumes | narrower | specializes | inexact | unmatched | disjoint
    */
   equivalence: code;
   /** 
+   * relatedto | equivalent | equal | wider | subsumes | narrower | specializes | inexact | unmatched | disjoint
+   */
+  _equivalence?: Element
+  /** 
    * Description of status/issues in mapping
    */
   comment?: string;
+  /** 
+   * Description of status/issues in mapping
+   */
+  _comment?: Element
   /** 
    * Other elements required for this mapping (from context)
    */
@@ -8807,9 +11771,17 @@ export interface ConceptMapGroupElement {
    */
   code?: code;
   /** 
+   * Identifies element being mapped
+   */
+  _code?: Element
+  /** 
    * Display for the code
    */
   display?: string;
+  /** 
+   * Display for the code
+   */
+  _display?: Element
   /** 
    * Concept in target system for element
    */
@@ -8833,17 +11805,33 @@ export interface ConceptMapGroupUnmapped {
    */
   mode: code;
   /** 
+   * provided | fixed | other-map
+   */
+  _mode?: Element
+  /** 
    * Fixed code when mode = fixed
    */
   code?: code;
+  /** 
+   * Fixed code when mode = fixed
+   */
+  _code?: Element
   /** 
    * Display for the code
    */
   display?: string;
   /** 
+   * Display for the code
+   */
+  _display?: Element
+  /** 
    * canonical reference to an additional ConceptMap to use for mapping if the source concept is unmapped
    */
   url?: canonical;
+  /** 
+   * canonical reference to an additional ConceptMap to use for mapping if the source concept is unmapped
+   */
+  _url?: Element
 }
 export interface ConceptMapGroup {
   /** 
@@ -8863,17 +11851,33 @@ export interface ConceptMapGroup {
    */
   source?: uri;
   /** 
+   * Source system where concepts to be mapped are defined
+   */
+  _source?: Element
+  /** 
    * Specific version of the  code system
    */
   sourceVersion?: string;
+  /** 
+   * Specific version of the  code system
+   */
+  _sourceVersion?: Element
   /** 
    * Target system that the concepts are to be mapped to
    */
   target?: uri;
   /** 
+   * Target system that the concepts are to be mapped to
+   */
+  _target?: Element
+  /** 
    * Specific version of the  code system
    */
   targetVersion?: string;
+  /** 
+   * Specific version of the  code system
+   */
+  _targetVersion?: Element
   /** 
    * Mappings for a concept from the source set
    */
@@ -8898,9 +11902,17 @@ resourceType: "ConceptMap"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -8922,6 +11934,10 @@ resourceType: "ConceptMap"
    */
   url?: uri;
   /** 
+   * Canonical identifier for this concept map, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Additional identifier for the concept map
    */
   identifier?: Identifier;
@@ -8930,29 +11946,57 @@ resourceType: "ConceptMap"
    */
   version?: string;
   /** 
+   * Business version of the concept map
+   */
+  _version?: Element
+  /** 
    * Name for this concept map (computer friendly)
    */
   name?: string;
+  /** 
+   * Name for this concept map (computer friendly)
+   */
+  _name?: Element
   /** 
    * Name for this concept map (human friendly)
    */
   title?: string;
   /** 
+   * Name for this concept map (human friendly)
+   */
+  _title?: Element
+  /** 
    * draft | active | retired | unknown
    */
   status: code;
+  /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
   /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
   /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
+  /** 
    * Date last changed
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -8961,6 +12005,10 @@ resourceType: "ConceptMap"
    * Natural language description of the concept map
    */
   description?: markdown;
+  /** 
+   * Natural language description of the concept map
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -8974,9 +12022,17 @@ resourceType: "ConceptMap"
    */
   purpose?: markdown;
   /** 
+   * Why this concept map is defined
+   */
+  _purpose?: Element
+  /** 
    * Use and/or publishing restrictions
    */
   copyright?: markdown;
+  /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
   /** 
    * The source value set that contains the concepts that are being mapped
    */
@@ -8984,7 +12040,15 @@ resourceType: "ConceptMap"
   /** 
    * The source value set that contains the concepts that are being mapped
    */
+  _sourceUri?: Element
+  /** 
+   * The source value set that contains the concepts that are being mapped
+   */
   sourceCanonical?: canonical;
+  /** 
+   * The source value set that contains the concepts that are being mapped
+   */
+  _sourceCanonical?: Element
   /** 
    * The target value set which provides context for the mappings
    */
@@ -8992,7 +12056,15 @@ resourceType: "ConceptMap"
   /** 
    * The target value set which provides context for the mappings
    */
+  _targetUri?: Element
+  /** 
+   * The target value set which provides context for the mappings
+   */
   targetCanonical?: canonical;
+  /** 
+   * The target value set which provides context for the mappings
+   */
+  _targetCanonical?: Element
   /** 
    * Same source and target systems
    */
@@ -9062,9 +12134,17 @@ resourceType: "Condition"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -9124,6 +12204,10 @@ resourceType: "Condition"
   /** 
    * Estimated or actual date,  date-time, or age
    */
+  _onsetDateTime?: Element
+  /** 
+   * Estimated or actual date,  date-time, or age
+   */
   onsetAge?: Age;
   /** 
    * Estimated or actual date,  date-time, or age
@@ -9138,9 +12222,17 @@ resourceType: "Condition"
    */
   onsetString?: string;
   /** 
+   * Estimated or actual date,  date-time, or age
+   */
+  _onsetString?: Element
+  /** 
    * When in resolution/remission
    */
   abatementDateTime?: dateTime;
+  /** 
+   * When in resolution/remission
+   */
+  _abatementDateTime?: Element
   /** 
    * When in resolution/remission
    */
@@ -9158,9 +12250,17 @@ resourceType: "Condition"
    */
   abatementString?: string;
   /** 
+   * When in resolution/remission
+   */
+  _abatementString?: Element
+  /** 
    * Date record was first recorded
    */
   recordedDate?: dateTime;
+  /** 
+   * Date record was first recorded
+   */
+  _recordedDate?: Element
   /** 
    * Who recorded the condition
    */
@@ -9201,9 +12301,17 @@ export interface ConsentPolicy {
    */
   authority?: uri;
   /** 
+   * Enforcement source for policy
+   */
+  _authority?: Element
+  /** 
    * Specific policy covered by this consent
    */
   uri?: uri;
+  /** 
+   * Specific policy covered by this consent
+   */
+  _uri?: Element
 }
 export interface ConsentVerification {
   /** 
@@ -9223,6 +12331,10 @@ export interface ConsentVerification {
    */
   verified: boolean;
   /** 
+   * Has been verified
+   */
+  _verified?: Element
+  /** 
    * Person who verified
    */
   verifiedWith?: Reference;
@@ -9230,6 +12342,10 @@ export interface ConsentVerification {
    * When consent verified
    */
   verificationDate?: dateTime;
+  /** 
+   * When consent verified
+   */
+  _verificationDate?: Element
 }
 export interface ConsentProvisionActor {
   /** 
@@ -9271,6 +12387,10 @@ export interface ConsentProvisionData {
    */
   meaning: code;
   /** 
+   * instance | related | dependents | authoredby
+   */
+  _meaning?: Element
+  /** 
    * The actual data reference
    */
   reference: Reference;
@@ -9292,6 +12412,10 @@ export interface ConsentProvision {
    * deny | permit
    */
   type?: code;
+  /** 
+   * deny | permit
+   */
+  _type?: Element
   /** 
    * Timeframe for this rule
    */
@@ -9348,9 +12472,17 @@ resourceType: "Consent"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -9376,6 +12508,10 @@ resourceType: "Consent"
    */
   status: code;
   /** 
+   * draft | proposed | active | rejected | inactive | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Which of the four areas this resource covers (extensible)
    */
   scope: CodeableConcept;
@@ -9391,6 +12527,10 @@ resourceType: "Consent"
    * When this Consent was created or indexed
    */
   dateTime?: dateTime;
+  /** 
+   * When this Consent was created or indexed
+   */
+  _dateTime?: Element
   /** 
    * Who is agreeing to the policy and rules
    */
@@ -9455,13 +12595,25 @@ export interface ContractContentDefinition {
    */
   publicationDate?: dateTime;
   /** 
+   * When published
+   */
+  _publicationDate?: Element
+  /** 
    * amended | appended | cancelled | disputed | entered-in-error | executable | executed | negotiable | offered | policy | rejected | renewed | revoked | resolved | terminated
    */
   publicationStatus: code;
   /** 
+   * amended | appended | cancelled | disputed | entered-in-error | executable | executed | negotiable | offered | policy | rejected | renewed | revoked | resolved | terminated
+   */
+  _publicationStatus?: Element
+  /** 
    * Publication Ownership
    */
   copyright?: markdown;
+  /** 
+   * Publication Ownership
+   */
+  _copyright?: Element
 }
 export interface ContractTermSecurityLabel {
   /** 
@@ -9480,6 +12632,10 @@ export interface ContractTermSecurityLabel {
    * Link to Security Labels
    */
   number?: Array<unsignedInt>;
+  /** 
+   * Link to Security Labels
+   */
+  _number?: Array<Element>
   /** 
    * Confidentiality Protection
    */
@@ -9535,7 +12691,15 @@ export interface ContractTermOfferAnswer {
   /** 
    * The actual answer response
    */
+  _valueBoolean?: Element
+  /** 
+   * The actual answer response
+   */
   valueDecimal?: decimal;
+  /** 
+   * The actual answer response
+   */
+  _valueDecimal?: Element
   /** 
    * The actual answer response
    */
@@ -9543,7 +12707,15 @@ export interface ContractTermOfferAnswer {
   /** 
    * The actual answer response
    */
+  _valueInteger?: Element
+  /** 
+   * The actual answer response
+   */
   valueDate?: date;
+  /** 
+   * The actual answer response
+   */
+  _valueDate?: Element
   /** 
    * The actual answer response
    */
@@ -9551,7 +12723,15 @@ export interface ContractTermOfferAnswer {
   /** 
    * The actual answer response
    */
+  _valueDateTime?: Element
+  /** 
+   * The actual answer response
+   */
   valueTime?: time;
+  /** 
+   * The actual answer response
+   */
+  _valueTime?: Element
   /** 
    * The actual answer response
    */
@@ -9559,7 +12739,15 @@ export interface ContractTermOfferAnswer {
   /** 
    * The actual answer response
    */
+  _valueString?: Element
+  /** 
+   * The actual answer response
+   */
   valueUri?: uri;
+  /** 
+   * The actual answer response
+   */
+  _valueUri?: Element
   /** 
    * The actual answer response
    */
@@ -9623,13 +12811,25 @@ export interface ContractTermOffer {
    */
   text?: string;
   /** 
+   * Human readable offer text
+   */
+  _text?: Element
+  /** 
    * Pointer to text
    */
   linkId?: Array<string>;
   /** 
+   * Pointer to text
+   */
+  _linkId?: Array<Element>
+  /** 
    * Offer restriction numbers
    */
   securityLabelNumber?: Array<unsignedInt>;
+  /** 
+   * Offer restriction numbers
+   */
+  _securityLabelNumber?: Array<Element>
 }
 export interface ContractTermAssetContext {
   /** 
@@ -9656,6 +12856,10 @@ export interface ContractTermAssetContext {
    * Context description
    */
   text?: string;
+  /** 
+   * Context description
+   */
+  _text?: Element
 }
 export interface ContractTermAssetValuedItem {
   /** 
@@ -9687,6 +12891,10 @@ export interface ContractTermAssetValuedItem {
    */
   effectiveTime?: dateTime;
   /** 
+   * Contract Valued Item Effective Tiem
+   */
+  _effectiveTime?: Element
+  /** 
    * Count of Contract Valued Items
    */
   quantity?: Quantity;
@@ -9699,9 +12907,17 @@ export interface ContractTermAssetValuedItem {
    */
   factor?: decimal;
   /** 
+   * Contract Valued Item Price Scaling Factor
+   */
+  _factor?: Element
+  /** 
    * Contract Valued Item Difficulty Scaling Factor
    */
   points?: decimal;
+  /** 
+   * Contract Valued Item Difficulty Scaling Factor
+   */
+  _points?: Element
   /** 
    * Total Contract Valued Item Value
    */
@@ -9711,9 +12927,17 @@ export interface ContractTermAssetValuedItem {
    */
   payment?: string;
   /** 
+   * Terms of valuation
+   */
+  _payment?: Element
+  /** 
    * When payment is due
    */
   paymentDate?: dateTime;
+  /** 
+   * When payment is due
+   */
+  _paymentDate?: Element
   /** 
    * Who will make payment
    */
@@ -9727,9 +12951,17 @@ export interface ContractTermAssetValuedItem {
    */
   linkId?: Array<string>;
   /** 
+   * Pointer to specific item
+   */
+  _linkId?: Array<Element>
+  /** 
    * Security Labels that define affected terms
    */
   securityLabelNumber?: Array<unsignedInt>;
+  /** 
+   * Security Labels that define affected terms
+   */
+  _securityLabelNumber?: Array<Element>
 }
 export interface ContractTermAsset {
   /** 
@@ -9773,6 +13005,10 @@ export interface ContractTermAsset {
    */
   condition?: string;
   /** 
+   * Quality desctiption of asset
+   */
+  _condition?: Element
+  /** 
    * Asset availability types
    */
   periodType?: Array<CodeableConcept>;
@@ -9789,9 +13025,17 @@ export interface ContractTermAsset {
    */
   text?: string;
   /** 
+   * Asset clause or question text
+   */
+  _text?: Element
+  /** 
    * Pointer to asset text
    */
   linkId?: Array<string>;
+  /** 
+   * Pointer to asset text
+   */
+  _linkId?: Array<Element>
   /** 
    * Response to assets
    */
@@ -9800,6 +13044,10 @@ export interface ContractTermAsset {
    * Asset restriction numbers
    */
   securityLabelNumber?: Array<unsignedInt>;
+  /** 
+   * Asset restriction numbers
+   */
+  _securityLabelNumber?: Array<Element>
   /** 
    * Contract Valued Item List
    */
@@ -9845,6 +13093,10 @@ export interface ContractTermAction {
    */
   doNotPerform?: boolean;
   /** 
+   * True if the term prohibits the  action
+   */
+  _doNotPerform?: Element
+  /** 
    * Type or form of the action
    */
   type: CodeableConcept;
@@ -9861,6 +13113,10 @@ export interface ContractTermAction {
    */
   linkId?: Array<string>;
   /** 
+   * Pointer to specific item
+   */
+  _linkId?: Array<Element>
+  /** 
    * State of the action
    */
   status: CodeableConcept;
@@ -9873,9 +13129,17 @@ export interface ContractTermAction {
    */
   contextLinkId?: Array<string>;
   /** 
+   * Pointer to specific item
+   */
+  _contextLinkId?: Array<Element>
+  /** 
    * When action happens
    */
   occurrenceDateTime?: dateTime;
+  /** 
+   * When action happens
+   */
+  _occurrenceDateTime?: Element
   /** 
    * When action happens
    */
@@ -9893,6 +13157,10 @@ export interface ContractTermAction {
    */
   requesterLinkId?: Array<string>;
   /** 
+   * Pointer to specific item
+   */
+  _requesterLinkId?: Array<Element>
+  /** 
    * Kind of service performer
    */
   performerType?: Array<CodeableConcept>;
@@ -9909,6 +13177,10 @@ export interface ContractTermAction {
    */
   performerLinkId?: Array<string>;
   /** 
+   * Pointer to specific item
+   */
+  _performerLinkId?: Array<Element>
+  /** 
    * Why is action (not) needed?
    */
   reasonCode?: Array<CodeableConcept>;
@@ -9921,9 +13193,17 @@ export interface ContractTermAction {
    */
   reason?: Array<string>;
   /** 
+   * Why action is to be performed
+   */
+  _reason?: Array<Element>
+  /** 
    * Pointer to specific item
    */
   reasonLinkId?: Array<string>;
+  /** 
+   * Pointer to specific item
+   */
+  _reasonLinkId?: Array<Element>
   /** 
    * Comments about the action
    */
@@ -9932,6 +13212,10 @@ export interface ContractTermAction {
    * Action restriction numbers
    */
   securityLabelNumber?: Array<unsignedInt>;
+  /** 
+   * Action restriction numbers
+   */
+  _securityLabelNumber?: Array<Element>
 }
 export interface ContractTerm {
   /** 
@@ -9954,6 +13238,10 @@ export interface ContractTerm {
    * Contract Term Issue Date Time
    */
   issued?: dateTime;
+  /** 
+   * Contract Term Issue Date Time
+   */
+  _issued?: Element
   /** 
    * Contract Term Effective Time
    */
@@ -9978,6 +13266,10 @@ export interface ContractTerm {
    * Term Statement
    */
   text?: string;
+  /** 
+   * Term Statement
+   */
+  _text?: Element
   /** 
    * Protection for the Term
    */
@@ -10106,9 +13398,17 @@ resourceType: "Contract"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -10134,13 +13434,25 @@ resourceType: "Contract"
    */
   url?: uri;
   /** 
+   * Basal definition
+   */
+  _url?: Element
+  /** 
    * Business edition
    */
   version?: string;
   /** 
+   * Business edition
+   */
+  _version?: Element
+  /** 
    * amended | appended | cancelled | disputed | entered-in-error | executable | executed | negotiable | offered | policy | rejected | renewed | revoked | resolved | terminated
    */
   status?: code;
+  /** 
+   * amended | appended | cancelled | disputed | entered-in-error | executable | executed | negotiable | offered | policy | rejected | renewed | revoked | resolved | terminated
+   */
+  _status?: Element
   /** 
    * Negotiation status
    */
@@ -10154,6 +13466,10 @@ resourceType: "Contract"
    */
   instantiatesUri?: uri;
   /** 
+   * External Contract Definition
+   */
+  _instantiatesUri?: Element
+  /** 
    * Content derived from the basal information
    */
   contentDerivative?: CodeableConcept;
@@ -10161,6 +13477,10 @@ resourceType: "Contract"
    * When this Contract was issued
    */
   issued?: dateTime;
+  /** 
+   * When this Contract was issued
+   */
+  _issued?: Element
   /** 
    * Effective time
    */
@@ -10190,17 +13510,33 @@ resourceType: "Contract"
    */
   name?: string;
   /** 
+   * Computer friendly designation
+   */
+  _name?: Element
+  /** 
    * Human Friendly name
    */
   title?: string;
+  /** 
+   * Human Friendly name
+   */
+  _title?: Element
   /** 
    * Subordinate Friendly name
    */
   subtitle?: string;
   /** 
+   * Subordinate Friendly name
+   */
+  _subtitle?: Element
+  /** 
    * Acronym or short name
    */
   alias?: Array<string>;
+  /** 
+   * Acronym or short name
+   */
+  _alias?: Array<Element>
   /** 
    * Source of Contract
    */
@@ -10289,9 +13625,17 @@ export interface CoverageClass {
    */
   value: string;
   /** 
+   * Value associated with the type
+   */
+  _value?: Element
+  /** 
    * Human readable description of the type and value
    */
   name?: string;
+  /** 
+   * Human readable description of the type and value
+   */
+  _name?: Element
 }
 export interface CoverageCostToBeneficiaryException {
   /** 
@@ -10360,9 +13704,17 @@ resourceType: "Coverage"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -10388,6 +13740,10 @@ resourceType: "Coverage"
    */
   status: code;
   /** 
+   * active | cancelled | draft | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Coverage category such as medical or accident
    */
   type?: CodeableConcept;
@@ -10404,6 +13760,10 @@ resourceType: "Coverage"
    */
   subscriberId?: string;
   /** 
+   * ID assigned to the subscriber
+   */
+  _subscriberId?: Element
+  /** 
    * Plan beneficiary
    */
   beneficiary: Reference;
@@ -10411,6 +13771,10 @@ resourceType: "Coverage"
    * Dependent number
    */
   dependent?: string;
+  /** 
+   * Dependent number
+   */
+  _dependent?: Element
   /** 
    * Beneficiary relationship to the subscriber
    */
@@ -10432,9 +13796,17 @@ resourceType: "Coverage"
    */
   order?: positiveInt;
   /** 
+   * Relative order of the coverage
+   */
+  _order?: Element
+  /** 
    * Insurer network
    */
   network?: string;
+  /** 
+   * Insurer network
+   */
+  _network?: Element
   /** 
    * Patient payments for services/products
    */
@@ -10443,6 +13815,10 @@ resourceType: "Coverage"
    * Reimbursement to insurer
    */
   subrogation?: boolean;
+  /** 
+   * Reimbursement to insurer
+   */
+  _subrogation?: Element
   /** 
    * Contract details
    */
@@ -10467,6 +13843,10 @@ export interface CoverageEligibilityRequestSupportingInfo {
    */
   sequence: positiveInt;
   /** 
+   * Information instance identifier
+   */
+  _sequence?: Element
+  /** 
    * Data to be provided
    */
   information: Reference;
@@ -10474,6 +13854,10 @@ export interface CoverageEligibilityRequestSupportingInfo {
    * Applies to all items
    */
   appliesToAll?: boolean;
+  /** 
+   * Applies to all items
+   */
+  _appliesToAll?: Element
 }
 export interface CoverageEligibilityRequestInsurance {
   /** 
@@ -10493,6 +13877,10 @@ export interface CoverageEligibilityRequestInsurance {
    */
   focal?: boolean;
   /** 
+   * Applicable coverage
+   */
+  _focal?: Element
+  /** 
    * Insurance information
    */
   coverage: Reference;
@@ -10500,6 +13888,10 @@ export interface CoverageEligibilityRequestInsurance {
    * Additional provider contract number
    */
   businessArrangement?: string;
+  /** 
+   * Additional provider contract number
+   */
+  _businessArrangement?: Element
 }
 export interface CoverageEligibilityRequestItemDiagnosis {
   /** 
@@ -10540,6 +13932,10 @@ export interface CoverageEligibilityRequestItem {
    * Applicable exception or supporting information
    */
   supportingInfoSequence?: Array<positiveInt>;
+  /** 
+   * Applicable exception or supporting information
+   */
+  _supportingInfoSequence?: Array<Element>
   /** 
    * Benefit classification
    */
@@ -10592,9 +13988,17 @@ resourceType: "CoverageEligibilityRequest"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -10620,6 +14024,10 @@ resourceType: "CoverageEligibilityRequest"
    */
   status: code;
   /** 
+   * active | cancelled | draft | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Desired processing priority
    */
   priority?: CodeableConcept;
@@ -10627,6 +14035,10 @@ resourceType: "CoverageEligibilityRequest"
    * auth-requirements | benefits | discovery | validation
    */
   purpose: Array<code>;
+  /** 
+   * auth-requirements | benefits | discovery | validation
+   */
+  _purpose?: Array<Element>
   /** 
    * Intended recipient of products and services
    */
@@ -10638,11 +14050,19 @@ resourceType: "CoverageEligibilityRequest"
   /** 
    * Estimated date or dates of service
    */
+  _servicedDate?: Element
+  /** 
+   * Estimated date or dates of service
+   */
   servicedPeriod?: Period;
   /** 
    * Creation date
    */
   created: dateTime;
+  /** 
+   * Creation date
+   */
+  _created?: Element
   /** 
    * Author
    */
@@ -10697,7 +14117,15 @@ export interface CoverageEligibilityResponseInsuranceItemBenefit {
   /** 
    * Benefits allowed
    */
+  _allowedUnsignedInt?: Element
+  /** 
+   * Benefits allowed
+   */
   allowedString?: string;
+  /** 
+   * Benefits allowed
+   */
+  _allowedString?: Element
   /** 
    * Benefits allowed
    */
@@ -10709,7 +14137,15 @@ export interface CoverageEligibilityResponseInsuranceItemBenefit {
   /** 
    * Benefits used
    */
+  _usedUnsignedInt?: Element
+  /** 
+   * Benefits used
+   */
   usedString?: string;
+  /** 
+   * Benefits used
+   */
+  _usedString?: Element
   /** 
    * Benefits used
    */
@@ -10749,13 +14185,25 @@ export interface CoverageEligibilityResponseInsuranceItem {
    */
   excluded?: boolean;
   /** 
+   * Excluded from the plan
+   */
+  _excluded?: Element
+  /** 
    * Short name for the benefit
    */
   name?: string;
   /** 
+   * Short name for the benefit
+   */
+  _name?: Element
+  /** 
    * Description of the benefit or services covered
    */
   description?: string;
+  /** 
+   * Description of the benefit or services covered
+   */
+  _description?: Element
   /** 
    * In or out of network
    */
@@ -10777,6 +14225,10 @@ export interface CoverageEligibilityResponseInsuranceItem {
    */
   authorizationRequired?: boolean;
   /** 
+   * Authorization required flag
+   */
+  _authorizationRequired?: Element
+  /** 
    * Type of required supporting materials
    */
   authorizationSupporting?: Array<CodeableConcept>;
@@ -10784,6 +14236,10 @@ export interface CoverageEligibilityResponseInsuranceItem {
    * Preauthorization requirements endpoint
    */
   authorizationUrl?: uri;
+  /** 
+   * Preauthorization requirements endpoint
+   */
+  _authorizationUrl?: Element
 }
 export interface CoverageEligibilityResponseInsurance {
   /** 
@@ -10806,6 +14262,10 @@ export interface CoverageEligibilityResponseInsurance {
    * Coverage inforce indicator
    */
   inforce?: boolean;
+  /** 
+   * Coverage inforce indicator
+   */
+  _inforce?: Element
   /** 
    * When the benefits are applicable
    */
@@ -10848,9 +14308,17 @@ resourceType: "CoverageEligibilityResponse"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -10876,9 +14344,17 @@ resourceType: "CoverageEligibilityResponse"
    */
   status: code;
   /** 
+   * active | cancelled | draft | entered-in-error
+   */
+  _status?: Element
+  /** 
    * auth-requirements | benefits | discovery | validation
    */
   purpose: Array<code>;
+  /** 
+   * auth-requirements | benefits | discovery | validation
+   */
+  _purpose?: Array<Element>
   /** 
    * Intended recipient of products and services
    */
@@ -10890,11 +14366,19 @@ resourceType: "CoverageEligibilityResponse"
   /** 
    * Estimated date or dates of service
    */
+  _servicedDate?: Element
+  /** 
+   * Estimated date or dates of service
+   */
   servicedPeriod?: Period;
   /** 
    * Response creation date
    */
   created: dateTime;
+  /** 
+   * Response creation date
+   */
+  _created?: Element
   /** 
    * Party responsible for the request
    */
@@ -10908,9 +14392,17 @@ resourceType: "CoverageEligibilityResponse"
    */
   outcome: code;
   /** 
+   * queued | complete | error | partial
+   */
+  _outcome?: Element
+  /** 
    * Disposition Message
    */
   disposition?: string;
+  /** 
+   * Disposition Message
+   */
+  _disposition?: Element
   /** 
    * Coverage issuer
    */
@@ -10923,6 +14415,10 @@ resourceType: "CoverageEligibilityResponse"
    * Preauthorization reference
    */
   preAuthRef?: string;
+  /** 
+   * Preauthorization reference
+   */
+  _preAuthRef?: Element
   /** 
    * Printed form identifier
    */
@@ -10977,6 +14473,10 @@ export interface DetectedIssueMitigation {
    */
   date?: dateTime;
   /** 
+   * Date committed
+   */
+  _date?: Element
+  /** 
    * Who is committing?
    */
   author?: Reference;
@@ -10996,9 +14496,17 @@ resourceType: "DetectedIssue"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -11024,6 +14532,10 @@ resourceType: "DetectedIssue"
    */
   status: code;
   /** 
+   * registered | preliminary | final | amended +
+   */
+  _status?: Element
+  /** 
    * Issue Category, e.g. drug-drug, duplicate therapy, etc.
    */
   code?: CodeableConcept;
@@ -11032,6 +14544,10 @@ resourceType: "DetectedIssue"
    */
   severity?: code;
   /** 
+   * high | moderate | low
+   */
+  _severity?: Element
+  /** 
    * Associated patient
    */
   patient?: Reference;
@@ -11039,6 +14555,10 @@ resourceType: "DetectedIssue"
    * When identified
    */
   identifiedDateTime?: dateTime;
+  /** 
+   * When identified
+   */
+  _identifiedDateTime?: Element
   /** 
    * When identified
    */
@@ -11060,9 +14580,17 @@ resourceType: "DetectedIssue"
    */
   detail?: string;
   /** 
+   * Description and context
+   */
+  _detail?: Element
+  /** 
    * Authority for issue
    */
   reference?: uri;
+  /** 
+   * Authority for issue
+   */
+  _reference?: Element
   /** 
    * Step taken to address
    */
@@ -11087,25 +14615,49 @@ export interface DeviceUdiCarrier {
    */
   deviceIdentifier?: string;
   /** 
+   * Mandatory fixed portion of UDI
+   */
+  _deviceIdentifier?: Element
+  /** 
    * UDI Issuing Organization
    */
   issuer?: uri;
+  /** 
+   * UDI Issuing Organization
+   */
+  _issuer?: Element
   /** 
    * Regional UDI authority
    */
   jurisdiction?: uri;
   /** 
+   * Regional UDI authority
+   */
+  _jurisdiction?: Element
+  /** 
    * UDI Machine Readable Barcode String
    */
   carrierAIDC?: base64Binary;
+  /** 
+   * UDI Machine Readable Barcode String
+   */
+  _carrierAIDC?: Element
   /** 
    * UDI Human Readable Barcode String
    */
   carrierHRF?: string;
   /** 
+   * UDI Human Readable Barcode String
+   */
+  _carrierHRF?: Element
+  /** 
    * barcode | rfid | manual +
    */
   entryType?: code;
+  /** 
+   * barcode | rfid | manual +
+   */
+  _entryType?: Element
 }
 export interface DeviceDeviceName {
   /** 
@@ -11125,9 +14677,17 @@ export interface DeviceDeviceName {
    */
   name: string;
   /** 
+   * The name of the device
+   */
+  _name?: Element
+  /** 
    * udi-label-name | user-friendly-name | patient-reported-name | manufacturer-name | model-name | other
    */
   type: code;
+  /** 
+   * udi-label-name | user-friendly-name | patient-reported-name | manufacturer-name | model-name | other
+   */
+  _type?: Element
 }
 export interface DeviceSpecialization {
   /** 
@@ -11150,6 +14710,10 @@ export interface DeviceSpecialization {
    * The version of the standard that is used to operate and communicate
    */
   version?: string;
+  /** 
+   * The version of the standard that is used to operate and communicate
+   */
+  _version?: Element
 }
 export interface DeviceVersion {
   /** 
@@ -11176,6 +14740,10 @@ export interface DeviceVersion {
    * The version text
    */
   value: string;
+  /** 
+   * The version text
+   */
+  _value?: Element
 }
 export interface DeviceProperty {
   /** 
@@ -11218,9 +14786,17 @@ resourceType: "Device"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -11254,6 +14830,10 @@ resourceType: "Device"
    */
   status?: code;
   /** 
+   * active | inactive | entered-in-error | unknown
+   */
+  _status?: Element
+  /** 
    * online | paused | standby | offline | not-ready | transduc-discon | hw-discon | off
    */
   statusReason?: Array<CodeableConcept>;
@@ -11262,25 +14842,49 @@ resourceType: "Device"
    */
   distinctIdentifier?: string;
   /** 
+   * The distinct identification string
+   */
+  _distinctIdentifier?: Element
+  /** 
    * Name of device manufacturer
    */
   manufacturer?: string;
+  /** 
+   * Name of device manufacturer
+   */
+  _manufacturer?: Element
   /** 
    * Date when the device was made
    */
   manufactureDate?: dateTime;
   /** 
+   * Date when the device was made
+   */
+  _manufactureDate?: Element
+  /** 
    * Date and time of expiry of this device (if applicable)
    */
   expirationDate?: dateTime;
+  /** 
+   * Date and time of expiry of this device (if applicable)
+   */
+  _expirationDate?: Element
   /** 
    * Lot number of manufacture
    */
   lotNumber?: string;
   /** 
+   * Lot number of manufacture
+   */
+  _lotNumber?: Element
+  /** 
    * Serial number assigned by the manufacturer
    */
   serialNumber?: string;
+  /** 
+   * Serial number assigned by the manufacturer
+   */
+  _serialNumber?: Element
   /** 
    * The name of the device as given by the manufacturer
    */
@@ -11290,9 +14894,17 @@ resourceType: "Device"
    */
   modelNumber?: string;
   /** 
+   * The model number for the device
+   */
+  _modelNumber?: Element
+  /** 
    * The part number of the device
    */
   partNumber?: string;
+  /** 
+   * The part number of the device
+   */
+  _partNumber?: Element
   /** 
    * The kind or type of device
    */
@@ -11330,6 +14942,10 @@ resourceType: "Device"
    */
   url?: uri;
   /** 
+   * Network address to contact device
+   */
+  _url?: Element
+  /** 
    * Device notes and comments
    */
   note?: Array<Annotation>;
@@ -11361,13 +14977,25 @@ export interface DeviceDefinitionUdiDeviceIdentifier {
    */
   deviceIdentifier: string;
   /** 
+   * The identifier that is to be associated with every Device that references this DeviceDefintiion for the issuer and jurisdication porvided in the DeviceDefinition.udiDeviceIdentifier
+   */
+  _deviceIdentifier?: Element
+  /** 
    * The organization that assigns the identifier algorithm
    */
   issuer: uri;
   /** 
+   * The organization that assigns the identifier algorithm
+   */
+  _issuer?: Element
+  /** 
    * The jurisdiction to which the deviceIdentifier applies
    */
   jurisdiction: uri;
+  /** 
+   * The jurisdiction to which the deviceIdentifier applies
+   */
+  _jurisdiction?: Element
 }
 export interface DeviceDefinitionDeviceName {
   /** 
@@ -11387,9 +15015,17 @@ export interface DeviceDefinitionDeviceName {
    */
   name: string;
   /** 
+   * The name of the device
+   */
+  _name?: Element
+  /** 
    * udi-label-name | user-friendly-name | patient-reported-name | manufacturer-name | model-name | other
    */
   type: code;
+  /** 
+   * udi-label-name | user-friendly-name | patient-reported-name | manufacturer-name | model-name | other
+   */
+  _type?: Element
 }
 export interface DeviceDefinitionSpecialization {
   /** 
@@ -11409,9 +15045,17 @@ export interface DeviceDefinitionSpecialization {
    */
   systemType: string;
   /** 
+   * The standard that is used to operate and communicate
+   */
+  _systemType?: Element
+  /** 
    * The version of the standard that is used to operate and communicate
    */
   version?: string;
+  /** 
+   * The version of the standard that is used to operate and communicate
+   */
+  _version?: Element
 }
 export interface DeviceDefinitionCapability {
   /** 
@@ -11483,9 +15127,17 @@ export interface DeviceDefinitionMaterial {
    */
   alternate?: boolean;
   /** 
+   * Indicates an alternative material of the device
+   */
+  _alternate?: Element
+  /** 
    * Whether the substance is a known or suspected allergen
    */
   allergenicIndicator?: boolean;
+  /** 
+   * Whether the substance is a known or suspected allergen
+   */
+  _allergenicIndicator?: Element
 }
 export interface DeviceDefinition {
 resourceType: "DeviceDefinition"
@@ -11502,9 +15154,17 @@ resourceType: "DeviceDefinition"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -11536,6 +15196,10 @@ resourceType: "DeviceDefinition"
   /** 
    * Name of device manufacturer
    */
+  _manufacturerString?: Element
+  /** 
+   * Name of device manufacturer
+   */
   manufacturerReference?: Reference;
   /** 
    * A name given to the device to identify it
@@ -11545,6 +15209,10 @@ resourceType: "DeviceDefinition"
    * The model number for the device
    */
   modelNumber?: string;
+  /** 
+   * The model number for the device
+   */
+  _modelNumber?: Element
   /** 
    * What kind of device or device system this is
    */
@@ -11557,6 +15225,10 @@ resourceType: "DeviceDefinition"
    * Available versions
    */
   version?: Array<string>;
+  /** 
+   * Available versions
+   */
+  _version?: Array<Element>
   /** 
    * Safety characteristics of the device
    */
@@ -11594,9 +15266,17 @@ resourceType: "DeviceDefinition"
    */
   url?: uri;
   /** 
+   * Network address to contact device
+   */
+  _url?: Element
+  /** 
    * Access to on-line information
    */
   onlineInformation?: uri;
+  /** 
+   * Access to on-line information
+   */
+  _onlineInformation?: Element
   /** 
    * Device notes and comments
    */
@@ -11633,13 +15313,25 @@ export interface DeviceMetricCalibration {
    */
   type?: code;
   /** 
+   * unspecified | offset | gain | two-point
+   */
+  _type?: Element
+  /** 
    * not-calibrated | calibration-required | calibrated | unspecified
    */
   state?: code;
   /** 
+   * not-calibrated | calibration-required | calibrated | unspecified
+   */
+  _state?: Element
+  /** 
    * Describes the time last calibration has been performed
    */
   time?: instant;
+  /** 
+   * Describes the time last calibration has been performed
+   */
+  _time?: Element
 }
 export interface DeviceMetric {
 resourceType: "DeviceMetric"
@@ -11656,9 +15348,17 @@ resourceType: "DeviceMetric"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -11700,13 +15400,25 @@ resourceType: "DeviceMetric"
    */
   operationalStatus?: code;
   /** 
+   * on | off | standby | entered-in-error
+   */
+  _operationalStatus?: Element
+  /** 
    * black | red | green | yellow | blue | magenta | cyan | white
    */
   color?: code;
   /** 
+   * black | red | green | yellow | blue | magenta | cyan | white
+   */
+  _color?: Element
+  /** 
    * measurement | setting | calculation | unspecified
    */
   category: code;
+  /** 
+   * measurement | setting | calculation | unspecified
+   */
+  _category?: Element
   /** 
    * Describes the measurement repetition time
    */
@@ -11750,6 +15462,10 @@ export interface DeviceRequestParameter {
    * Value of detail
    */
   valueBoolean?: boolean;
+  /** 
+   * Value of detail
+   */
+  _valueBoolean?: Element
 }
 export interface DeviceRequest {
 resourceType: "DeviceRequest"
@@ -11766,9 +15482,17 @@ resourceType: "DeviceRequest"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -11794,9 +15518,17 @@ resourceType: "DeviceRequest"
    */
   instantiatesCanonical?: Array<canonical>;
   /** 
+   * Instantiates FHIR protocol or definition
+   */
+  _instantiatesCanonical?: Array<Element>
+  /** 
    * Instantiates external protocol or definition
    */
   instantiatesUri?: Array<uri>;
+  /** 
+   * Instantiates external protocol or definition
+   */
+  _instantiatesUri?: Array<Element>
   /** 
    * What request fulfills
    */
@@ -11814,13 +15546,25 @@ resourceType: "DeviceRequest"
    */
   status?: code;
   /** 
+   * draft | active | on-hold | revoked | completed | entered-in-error | unknown
+   */
+  _status?: Element
+  /** 
    * proposal | plan | directive | order | original-order | reflex-order | filler-order | instance-order | option
    */
   intent: code;
   /** 
+   * proposal | plan | directive | order | original-order | reflex-order | filler-order | instance-order | option
+   */
+  _intent?: Element
+  /** 
    * routine | urgent | asap | stat
    */
   priority?: code;
+  /** 
+   * routine | urgent | asap | stat
+   */
+  _priority?: Element
   /** 
    * Device requested
    */
@@ -11848,6 +15592,10 @@ resourceType: "DeviceRequest"
   /** 
    * Desired time or schedule for use
    */
+  _occurrenceDateTime?: Element
+  /** 
+   * Desired time or schedule for use
+   */
   occurrencePeriod?: Period;
   /** 
    * Desired time or schedule for use
@@ -11857,6 +15605,10 @@ resourceType: "DeviceRequest"
    * When recorded
    */
   authoredOn?: dateTime;
+  /** 
+   * When recorded
+   */
+  _authoredOn?: Element
   /** 
    * Who/what is requesting diagnostics
    */
@@ -11910,9 +15662,17 @@ resourceType: "DeviceUseStatement"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -11942,6 +15702,10 @@ resourceType: "DeviceUseStatement"
    */
   status: code;
   /** 
+   * active | completed | entered-in-error +
+   */
+  _status?: Element
+  /** 
    * Patient using device
    */
   subject: Reference;
@@ -11962,9 +15726,17 @@ resourceType: "DeviceUseStatement"
    */
   timingDateTime?: dateTime;
   /** 
+   * How often  the device was used
+   */
+  _timingDateTime?: Element
+  /** 
    * When statement was recorded
    */
   recordedOn?: dateTime;
+  /** 
+   * When statement was recorded
+   */
+  _recordedOn?: Element
   /** 
    * Who made the statement
    */
@@ -12009,6 +15781,10 @@ export interface DiagnosticReportMedia {
    */
   comment?: string;
   /** 
+   * Comment about the image (e.g. explanation)
+   */
+  _comment?: Element
+  /** 
    * Reference to the image source
    */
   link: Reference;
@@ -12028,9 +15804,17 @@ resourceType: "DiagnosticReport"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -12060,6 +15844,10 @@ resourceType: "DiagnosticReport"
    */
   status: code;
   /** 
+   * registered | partial | preliminary | final +
+   */
+  _status?: Element
+  /** 
    * Service category
    */
   category?: Array<CodeableConcept>;
@@ -12082,11 +15870,19 @@ resourceType: "DiagnosticReport"
   /** 
    * Clinically relevant time/time-period for report
    */
+  _effectiveDateTime?: Element
+  /** 
+   * Clinically relevant time/time-period for report
+   */
   effectivePeriod?: Period;
   /** 
    * DateTime this version was made
    */
   issued?: instant;
+  /** 
+   * DateTime this version was made
+   */
+  _issued?: Element
   /** 
    * Responsible Diagnostic Service
    */
@@ -12115,6 +15911,10 @@ resourceType: "DiagnosticReport"
    * Clinical conclusion (interpretation) of test results
    */
   conclusion?: string;
+  /** 
+   * Clinical conclusion (interpretation) of test results
+   */
+  _conclusion?: Element
   /** 
    * Codes for the clinical conclusion of test results
    */
@@ -12162,9 +15962,17 @@ resourceType: "DocumentManifest"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -12194,6 +16002,10 @@ resourceType: "DocumentManifest"
    */
   status: code;
   /** 
+   * current | superseded | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Kind of document set
    */
   type?: CodeableConcept;
@@ -12205,6 +16017,10 @@ resourceType: "DocumentManifest"
    * When this document manifest created
    */
   created?: dateTime;
+  /** 
+   * When this document manifest created
+   */
+  _created?: Element
   /** 
    * Who and/or what authored the DocumentManifest
    */
@@ -12218,9 +16034,17 @@ resourceType: "DocumentManifest"
    */
   source?: uri;
   /** 
+   * The source system/application/software
+   */
+  _source?: Element
+  /** 
    * Human-readable description (title)
    */
   description?: string;
+  /** 
+   * Human-readable description (title)
+   */
+  _description?: Element
   /** 
    * Items in manifest
    */
@@ -12248,6 +16072,10 @@ export interface DocumentReferenceRelatesTo {
    * replaces | transforms | signs | appends
    */
   code: code;
+  /** 
+   * replaces | transforms | signs | appends
+   */
+  _code?: Element
   /** 
    * Target of the relationship
    */
@@ -12332,9 +16160,17 @@ resourceType: "DocumentReference"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -12364,9 +16200,17 @@ resourceType: "DocumentReference"
    */
   status: code;
   /** 
+   * current | superseded | entered-in-error
+   */
+  _status?: Element
+  /** 
    * preliminary | final | amended | entered-in-error
    */
   docStatus?: code;
+  /** 
+   * preliminary | final | amended | entered-in-error
+   */
+  _docStatus?: Element
   /** 
    * Kind of document (LOINC if possible)
    */
@@ -12383,6 +16227,10 @@ resourceType: "DocumentReference"
    * When this document reference was created
    */
   date?: instant;
+  /** 
+   * When this document reference was created
+   */
+  _date?: Element
   /** 
    * Who and/or what authored the document
    */
@@ -12403,6 +16251,10 @@ resourceType: "DocumentReference"
    * Human-readable description
    */
   description?: string;
+  /** 
+   * Human-readable description
+   */
+  _description?: Element
   /** 
    * Document security-tags
    */
@@ -12435,13 +16287,25 @@ export interface EffectEvidenceSynthesisSampleSize {
    */
   description?: string;
   /** 
+   * Description of sample size
+   */
+  _description?: Element
+  /** 
    * How many studies?
    */
   numberOfStudies?: integer;
   /** 
+   * How many studies?
+   */
+  _numberOfStudies?: Element
+  /** 
    * How many participants?
    */
   numberOfParticipants?: integer;
+  /** 
+   * How many participants?
+   */
+  _numberOfParticipants?: Element
 }
 export interface EffectEvidenceSynthesisResultsByExposure {
   /** 
@@ -12461,9 +16325,17 @@ export interface EffectEvidenceSynthesisResultsByExposure {
    */
   description?: string;
   /** 
+   * Description of results by exposure
+   */
+  _description?: Element
+  /** 
    * exposure | exposure-alternative
    */
   exposureState?: code;
+  /** 
+   * exposure | exposure-alternative
+   */
+  _exposureState?: Element
   /** 
    * Variant exposure states
    */
@@ -12495,13 +16367,25 @@ export interface EffectEvidenceSynthesisEffectEstimatePrecisionEstimate {
    */
   level?: decimal;
   /** 
+   * Level of confidence interval
+   */
+  _level?: Element
+  /** 
    * Lower bound
    */
   from?: decimal;
   /** 
+   * Lower bound
+   */
+  _from?: Element
+  /** 
    * Upper bound
    */
   to?: decimal;
+  /** 
+   * Upper bound
+   */
+  _to?: Element
 }
 export interface EffectEvidenceSynthesisEffectEstimate {
   /** 
@@ -12521,6 +16405,10 @@ export interface EffectEvidenceSynthesisEffectEstimate {
    */
   description?: string;
   /** 
+   * Description of effect estimate
+   */
+  _description?: Element
+  /** 
    * Type of efffect estimate
    */
   type?: CodeableConcept;
@@ -12532,6 +16420,10 @@ export interface EffectEvidenceSynthesisEffectEstimate {
    * Point estimate
    */
   value?: decimal;
+  /** 
+   * Point estimate
+   */
+  _value?: Element
   /** 
    * What unit is the outcome described in?
    */
@@ -12608,9 +16500,17 @@ resourceType: "EffectEvidenceSynthesis"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -12632,6 +16532,10 @@ resourceType: "EffectEvidenceSynthesis"
    */
   url?: uri;
   /** 
+   * Canonical identifier for this effect evidence synthesis, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Additional identifier for the effect evidence synthesis
    */
   identifier?: Array<Identifier>;
@@ -12640,25 +16544,49 @@ resourceType: "EffectEvidenceSynthesis"
    */
   version?: string;
   /** 
+   * Business version of the effect evidence synthesis
+   */
+  _version?: Element
+  /** 
    * Name for this effect evidence synthesis (computer friendly)
    */
   name?: string;
+  /** 
+   * Name for this effect evidence synthesis (computer friendly)
+   */
+  _name?: Element
   /** 
    * Name for this effect evidence synthesis (human friendly)
    */
   title?: string;
   /** 
+   * Name for this effect evidence synthesis (human friendly)
+   */
+  _title?: Element
+  /** 
    * draft | active | retired | unknown
    */
   status: code;
+  /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
   /** 
    * Date last changed
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -12667,6 +16595,10 @@ resourceType: "EffectEvidenceSynthesis"
    * Natural language description of the effect evidence synthesis
    */
   description?: markdown;
+  /** 
+   * Natural language description of the effect evidence synthesis
+   */
+  _description?: Element
   /** 
    * Used for footnotes or explanatory notes
    */
@@ -12684,13 +16616,25 @@ resourceType: "EffectEvidenceSynthesis"
    */
   copyright?: markdown;
   /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
+  /** 
    * When the effect evidence synthesis was approved by publisher
    */
   approvalDate?: date;
   /** 
+   * When the effect evidence synthesis was approved by publisher
+   */
+  _approvalDate?: Element
+  /** 
    * When the effect evidence synthesis was last reviewed
    */
   lastReviewDate?: date;
+  /** 
+   * When the effect evidence synthesis was last reviewed
+   */
+  _lastReviewDate?: Element
   /** 
    * When the effect evidence synthesis is expected to be used
    */
@@ -12779,6 +16723,10 @@ export interface EncounterStatusHistory {
    */
   status: code;
   /** 
+   * planned | arrived | triaged | in-progress | onleave | finished | cancelled +
+   */
+  _status?: Element
+  /** 
    * The time that the episode was in the specified status
    */
   period: Period;
@@ -12856,6 +16804,10 @@ export interface EncounterDiagnosis {
    * Ranking of the diagnosis (for each role type)
    */
   rank?: positiveInt;
+  /** 
+   * Ranking of the diagnosis (for each role type)
+   */
+  _rank?: Element
 }
 export interface EncounterHospitalization {
   /** 
@@ -12929,6 +16881,10 @@ export interface EncounterLocation {
    */
   status?: code;
   /** 
+   * planned | active | reserved | completed
+   */
+  _status?: Element
+  /** 
    * The physical type of the location (usually the level in the location hierachy - bed room ward etc.)
    */
   physicalType?: CodeableConcept;
@@ -12952,9 +16908,17 @@ resourceType: "Encounter"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -12979,6 +16943,10 @@ resourceType: "Encounter"
    * planned | arrived | triaged | in-progress | onleave | finished | cancelled +
    */
   status: code;
+  /** 
+   * planned | arrived | triaged | in-progress | onleave | finished | cancelled +
+   */
+  _status?: Element
   /** 
    * List of past encounter statuses
    */
@@ -13080,9 +17048,17 @@ resourceType: "Endpoint"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -13108,6 +17084,10 @@ resourceType: "Endpoint"
    */
   status: code;
   /** 
+   * active | suspended | error | off | entered-in-error | test
+   */
+  _status?: Element
+  /** 
    * Protocol/Profile/Standard to be used with this endpoint connection
    */
   connectionType: Coding;
@@ -13115,6 +17095,10 @@ resourceType: "Endpoint"
    * A name that this endpoint can be identified by
    */
   name?: string;
+  /** 
+   * A name that this endpoint can be identified by
+   */
+  _name?: Element
   /** 
    * Organization that manages this endpoint (might not be the organization that exposes the endpoint)
    */
@@ -13136,13 +17120,25 @@ resourceType: "Endpoint"
    */
   payloadMimeType?: Array<code>;
   /** 
+   * Mimetype to send. If not specified, the content could be anything (including no payload, if the connectionType defined this)
+   */
+  _payloadMimeType?: Array<Element>
+  /** 
    * The technical base address for connecting to this endpoint
    */
   address: url;
   /** 
+   * The technical base address for connecting to this endpoint
+   */
+  _address?: Element
+  /** 
    * Usage depends on the channel type
    */
   header?: Array<string>;
+  /** 
+   * Usage depends on the channel type
+   */
+  _header?: Array<Element>
 }
 
 export interface EnrollmentRequest {
@@ -13160,9 +17156,17 @@ resourceType: "EnrollmentRequest"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -13188,9 +17192,17 @@ resourceType: "EnrollmentRequest"
    */
   status?: code;
   /** 
+   * active | cancelled | draft | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Creation date
    */
   created?: dateTime;
+  /** 
+   * Creation date
+   */
+  _created?: Element
   /** 
    * Target
    */
@@ -13224,9 +17236,17 @@ resourceType: "EnrollmentResponse"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -13252,6 +17272,10 @@ resourceType: "EnrollmentResponse"
    */
   status?: code;
   /** 
+   * active | cancelled | draft | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Claim reference
    */
   request?: Reference;
@@ -13260,13 +17284,25 @@ resourceType: "EnrollmentResponse"
    */
   outcome?: code;
   /** 
+   * queued | complete | error | partial
+   */
+  _outcome?: Element
+  /** 
    * Disposition Message
    */
   disposition?: string;
   /** 
+   * Disposition Message
+   */
+  _disposition?: Element
+  /** 
    * Creation date
    */
   created?: dateTime;
+  /** 
+   * Creation date
+   */
+  _created?: Element
   /** 
    * Insurer
    */
@@ -13294,6 +17330,10 @@ export interface EpisodeOfCareStatusHistory {
    * planned | waitlist | active | onhold | finished | cancelled | entered-in-error
    */
   status: code;
+  /** 
+   * planned | waitlist | active | onhold | finished | cancelled | entered-in-error
+   */
+  _status?: Element
   /** 
    * Duration the EpisodeOfCare was in the specified status
    */
@@ -13324,6 +17364,10 @@ export interface EpisodeOfCareDiagnosis {
    * Ranking of the diagnosis (for each role type)
    */
   rank?: positiveInt;
+  /** 
+   * Ranking of the diagnosis (for each role type)
+   */
+  _rank?: Element
 }
 export interface EpisodeOfCare {
 resourceType: "EpisodeOfCare"
@@ -13340,9 +17384,17 @@ resourceType: "EpisodeOfCare"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -13367,6 +17419,10 @@ resourceType: "EpisodeOfCare"
    * planned | waitlist | active | onhold | finished | cancelled | entered-in-error
    */
   status: code;
+  /** 
+   * planned | waitlist | active | onhold | finished | cancelled | entered-in-error
+   */
+  _status?: Element
   /** 
    * Past list of status codes (the current status may be included to cover the start date of the status)
    */
@@ -13424,9 +17480,17 @@ resourceType: "EventDefinition"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -13448,6 +17512,10 @@ resourceType: "EventDefinition"
    */
   url?: uri;
   /** 
+   * Canonical identifier for this event definition, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Additional identifier for the event definition
    */
   identifier?: Array<Identifier>;
@@ -13456,25 +17524,49 @@ resourceType: "EventDefinition"
    */
   version?: string;
   /** 
+   * Business version of the event definition
+   */
+  _version?: Element
+  /** 
    * Name for this event definition (computer friendly)
    */
   name?: string;
+  /** 
+   * Name for this event definition (computer friendly)
+   */
+  _name?: Element
   /** 
    * Name for this event definition (human friendly)
    */
   title?: string;
   /** 
+   * Name for this event definition (human friendly)
+   */
+  _title?: Element
+  /** 
    * Subordinate title of the event definition
    */
   subtitle?: string;
+  /** 
+   * Subordinate title of the event definition
+   */
+  _subtitle?: Element
   /** 
    * draft | active | retired | unknown
    */
   status: code;
   /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
+  /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
+  /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
   /** 
    * Type of individual the event definition is focused on
    */
@@ -13488,9 +17580,17 @@ resourceType: "EventDefinition"
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -13499,6 +17599,10 @@ resourceType: "EventDefinition"
    * Natural language description of the event definition
    */
   description?: markdown;
+  /** 
+   * Natural language description of the event definition
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -13512,21 +17616,41 @@ resourceType: "EventDefinition"
    */
   purpose?: markdown;
   /** 
+   * Why this event definition is defined
+   */
+  _purpose?: Element
+  /** 
    * Describes the clinical usage of the event definition
    */
   usage?: string;
+  /** 
+   * Describes the clinical usage of the event definition
+   */
+  _usage?: Element
   /** 
    * Use and/or publishing restrictions
    */
   copyright?: markdown;
   /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
+  /** 
    * When the event definition was approved by publisher
    */
   approvalDate?: date;
   /** 
+   * When the event definition was approved by publisher
+   */
+  _approvalDate?: Element
+  /** 
    * When the event definition was last reviewed
    */
   lastReviewDate?: date;
+  /** 
+   * When the event definition was last reviewed
+   */
+  _lastReviewDate?: Element
   /** 
    * When the event definition is expected to be used
    */
@@ -13576,9 +17700,17 @@ resourceType: "Evidence"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -13600,6 +17732,10 @@ resourceType: "Evidence"
    */
   url?: uri;
   /** 
+   * Canonical identifier for this evidence, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Additional identifier for the evidence
    */
   identifier?: Array<Identifier>;
@@ -13608,33 +17744,65 @@ resourceType: "Evidence"
    */
   version?: string;
   /** 
+   * Business version of the evidence
+   */
+  _version?: Element
+  /** 
    * Name for this evidence (computer friendly)
    */
   name?: string;
+  /** 
+   * Name for this evidence (computer friendly)
+   */
+  _name?: Element
   /** 
    * Name for this evidence (human friendly)
    */
   title?: string;
   /** 
+   * Name for this evidence (human friendly)
+   */
+  _title?: Element
+  /** 
    * Title for use in informal contexts
    */
   shortTitle?: string;
+  /** 
+   * Title for use in informal contexts
+   */
+  _shortTitle?: Element
   /** 
    * Subordinate title of the Evidence
    */
   subtitle?: string;
   /** 
+   * Subordinate title of the Evidence
+   */
+  _subtitle?: Element
+  /** 
    * draft | active | retired | unknown
    */
   status: code;
+  /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
   /** 
    * Date last changed
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -13643,6 +17811,10 @@ resourceType: "Evidence"
    * Natural language description of the evidence
    */
   description?: markdown;
+  /** 
+   * Natural language description of the evidence
+   */
+  _description?: Element
   /** 
    * Used for footnotes or explanatory notes
    */
@@ -13660,13 +17832,25 @@ resourceType: "Evidence"
    */
   copyright?: markdown;
   /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
+  /** 
    * When the evidence was approved by publisher
    */
   approvalDate?: date;
   /** 
+   * When the evidence was approved by publisher
+   */
+  _approvalDate?: Element
+  /** 
    * When the evidence was last reviewed
    */
   lastReviewDate?: date;
+  /** 
+   * When the evidence was last reviewed
+   */
+  _lastReviewDate?: Element
   /** 
    * When the evidence is expected to be used
    */
@@ -13727,6 +17911,10 @@ export interface EvidenceVariableCharacteristic {
    */
   description?: string;
   /** 
+   * Natural language description of the characteristic
+   */
+  _description?: Element
+  /** 
    * What code or expression defines members?
    */
   definitionReference?: Reference;
@@ -13734,6 +17922,10 @@ export interface EvidenceVariableCharacteristic {
    * What code or expression defines members?
    */
   definitionCanonical?: canonical;
+  /** 
+   * What code or expression defines members?
+   */
+  _definitionCanonical?: Element
   /** 
    * What code or expression defines members?
    */
@@ -13759,9 +17951,17 @@ export interface EvidenceVariableCharacteristic {
    */
   exclude?: boolean;
   /** 
+   * Whether the characteristic includes or excludes members
+   */
+  _exclude?: Element
+  /** 
    * What time period do participants cover
    */
   participantEffectiveDateTime?: dateTime;
+  /** 
+   * What time period do participants cover
+   */
+  _participantEffectiveDateTime?: Element
   /** 
    * What time period do participants cover
    */
@@ -13782,6 +17982,10 @@ export interface EvidenceVariableCharacteristic {
    * mean | median | mean-of-mean | mean-of-median | median-of-mean | median-of-median
    */
   groupMeasure?: code;
+  /** 
+   * mean | median | mean-of-mean | mean-of-median | median-of-mean | median-of-median
+   */
+  _groupMeasure?: Element
 }
 export interface EvidenceVariable {
 resourceType: "EvidenceVariable"
@@ -13798,9 +18002,17 @@ resourceType: "EvidenceVariable"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -13822,6 +18034,10 @@ resourceType: "EvidenceVariable"
    */
   url?: uri;
   /** 
+   * Canonical identifier for this evidence variable, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Additional identifier for the evidence variable
    */
   identifier?: Array<Identifier>;
@@ -13830,33 +18046,65 @@ resourceType: "EvidenceVariable"
    */
   version?: string;
   /** 
+   * Business version of the evidence variable
+   */
+  _version?: Element
+  /** 
    * Name for this evidence variable (computer friendly)
    */
   name?: string;
+  /** 
+   * Name for this evidence variable (computer friendly)
+   */
+  _name?: Element
   /** 
    * Name for this evidence variable (human friendly)
    */
   title?: string;
   /** 
+   * Name for this evidence variable (human friendly)
+   */
+  _title?: Element
+  /** 
    * Title for use in informal contexts
    */
   shortTitle?: string;
+  /** 
+   * Title for use in informal contexts
+   */
+  _shortTitle?: Element
   /** 
    * Subordinate title of the EvidenceVariable
    */
   subtitle?: string;
   /** 
+   * Subordinate title of the EvidenceVariable
+   */
+  _subtitle?: Element
+  /** 
    * draft | active | retired | unknown
    */
   status: code;
+  /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
   /** 
    * Date last changed
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -13865,6 +18113,10 @@ resourceType: "EvidenceVariable"
    * Natural language description of the evidence variable
    */
   description?: markdown;
+  /** 
+   * Natural language description of the evidence variable
+   */
+  _description?: Element
   /** 
    * Used for footnotes or explanatory notes
    */
@@ -13882,13 +18134,25 @@ resourceType: "EvidenceVariable"
    */
   copyright?: markdown;
   /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
+  /** 
    * When the evidence variable was approved by publisher
    */
   approvalDate?: date;
   /** 
+   * When the evidence variable was approved by publisher
+   */
+  _approvalDate?: Element
+  /** 
    * When the evidence variable was last reviewed
    */
   lastReviewDate?: date;
+  /** 
+   * When the evidence variable was last reviewed
+   */
+  _lastReviewDate?: Element
   /** 
    * When the evidence variable is expected to be used
    */
@@ -13922,6 +18186,10 @@ resourceType: "EvidenceVariable"
    */
   type?: code;
   /** 
+   * dichotomous | continuous | descriptive
+   */
+  _type?: Element
+  /** 
    * What defines the members of the evidence element
    */
   characteristic: Array<EvidenceVariableCharacteristic>;
@@ -13945,17 +18213,33 @@ export interface ExampleScenarioActor {
    */
   actorId: string;
   /** 
+   * ID or acronym of the actor
+   */
+  _actorId?: Element
+  /** 
    * person | entity
    */
   type: code;
+  /** 
+   * person | entity
+   */
+  _type?: Element
   /** 
    * The name of the actor as shown in the page
    */
   name?: string;
   /** 
+   * The name of the actor as shown in the page
+   */
+  _name?: Element
+  /** 
    * The description of the actor
    */
   description?: markdown;
+  /** 
+   * The description of the actor
+   */
+  _description?: Element
 }
 export interface ExampleScenarioInstanceVersion {
   /** 
@@ -13975,9 +18259,17 @@ export interface ExampleScenarioInstanceVersion {
    */
   versionId: string;
   /** 
+   * The identifier of a specific version of a resource
+   */
+  _versionId?: Element
+  /** 
    * The description of the resource version
    */
   description: markdown;
+  /** 
+   * The description of the resource version
+   */
+  _description?: Element
 }
 export interface ExampleScenarioInstanceContainedInstance {
   /** 
@@ -13997,9 +18289,17 @@ export interface ExampleScenarioInstanceContainedInstance {
    */
   resourceId: string;
   /** 
+   * Each resource contained in the instance
+   */
+  _resourceId?: Element
+  /** 
    * A specific version of a resource contained in the instance
    */
   versionId?: string;
+  /** 
+   * A specific version of a resource contained in the instance
+   */
+  _versionId?: Element
 }
 export interface ExampleScenarioInstance {
   /** 
@@ -14019,17 +18319,33 @@ export interface ExampleScenarioInstance {
    */
   resourceId: string;
   /** 
+   * The id of the resource for referencing
+   */
+  _resourceId?: Element
+  /** 
    * The type of the resource
    */
   resourceType: code;
+  /** 
+   * The type of the resource
+   */
+  _resourceType?: Element
   /** 
    * A short name for the resource instance
    */
   name?: string;
   /** 
+   * A short name for the resource instance
+   */
+  _name?: Element
+  /** 
    * Human-friendly description of the resource instance
    */
   description?: markdown;
+  /** 
+   * Human-friendly description of the resource instance
+   */
+  _description?: Element
   /** 
    * A specific version of the resource
    */
@@ -14057,33 +18373,65 @@ export interface ExampleScenarioProcessStepOperation {
    */
   number: string;
   /** 
+   * The sequential number of the interaction
+   */
+  _number?: Element
+  /** 
    * The type of operation - CRUD
    */
   type?: string;
+  /** 
+   * The type of operation - CRUD
+   */
+  _type?: Element
   /** 
    * The human-friendly name of the interaction
    */
   name?: string;
   /** 
+   * The human-friendly name of the interaction
+   */
+  _name?: Element
+  /** 
    * Who starts the transaction
    */
   initiator?: string;
+  /** 
+   * Who starts the transaction
+   */
+  _initiator?: Element
   /** 
    * Who receives the transaction
    */
   receiver?: string;
   /** 
+   * Who receives the transaction
+   */
+  _receiver?: Element
+  /** 
    * A comment to be inserted in the diagram
    */
   description?: markdown;
+  /** 
+   * A comment to be inserted in the diagram
+   */
+  _description?: Element
   /** 
    * Whether the initiator is deactivated right after the transaction
    */
   initiatorActive?: boolean;
   /** 
+   * Whether the initiator is deactivated right after the transaction
+   */
+  _initiatorActive?: Element
+  /** 
    * Whether the receiver is deactivated right after the transaction
    */
   receiverActive?: boolean;
+  /** 
+   * Whether the receiver is deactivated right after the transaction
+   */
+  _receiverActive?: Element
   /** 
    * Each resource instance used by the initiator
    */
@@ -14111,9 +18459,17 @@ export interface ExampleScenarioProcessStepAlternative {
    */
   title: string;
   /** 
+   * Label for alternative
+   */
+  _title?: Element
+  /** 
    * A human-readable description of each option
    */
   description?: markdown;
+  /** 
+   * A human-readable description of each option
+   */
+  _description?: Element
   /** 
    * What happens in each alternative option
    */
@@ -14141,6 +18497,10 @@ export interface ExampleScenarioProcessStep {
    */
   pause?: boolean;
   /** 
+   * If there is a pause in the flow
+   */
+  _pause?: Element
+  /** 
    * Each interaction or action
    */
   operation?: ExampleScenarioProcessStepOperation;
@@ -14167,17 +18527,33 @@ export interface ExampleScenarioProcess {
    */
   title: string;
   /** 
+   * The diagram title of the group of operations
+   */
+  _title?: Element
+  /** 
    * A longer description of the group of operations
    */
   description?: markdown;
+  /** 
+   * A longer description of the group of operations
+   */
+  _description?: Element
   /** 
    * Description of initial status before the process starts
    */
   preConditions?: markdown;
   /** 
+   * Description of initial status before the process starts
+   */
+  _preConditions?: Element
+  /** 
    * Description of final status after the process ends
    */
   postConditions?: markdown;
+  /** 
+   * Description of final status after the process ends
+   */
+  _postConditions?: Element
   /** 
    * Each step of the process
    */
@@ -14198,9 +18574,17 @@ resourceType: "ExampleScenario"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -14222,6 +18606,10 @@ resourceType: "ExampleScenario"
    */
   url?: uri;
   /** 
+   * Canonical identifier for this example scenario, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Additional identifier for the example scenario
    */
   identifier?: Array<Identifier>;
@@ -14230,25 +18618,49 @@ resourceType: "ExampleScenario"
    */
   version?: string;
   /** 
+   * Business version of the example scenario
+   */
+  _version?: Element
+  /** 
    * Name for this example scenario (computer friendly)
    */
   name?: string;
+  /** 
+   * Name for this example scenario (computer friendly)
+   */
+  _name?: Element
   /** 
    * draft | active | retired | unknown
    */
   status: code;
   /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
+  /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
+  /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
   /** 
    * Date last changed
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -14266,9 +18678,17 @@ resourceType: "ExampleScenario"
    */
   copyright?: markdown;
   /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
+  /** 
    * The purpose of the example, e.g. to illustrate a scenario
    */
   purpose?: markdown;
+  /** 
+   * The purpose of the example, e.g. to illustrate a scenario
+   */
+  _purpose?: Element
   /** 
    * Actor participating in the resource
    */
@@ -14285,6 +18705,10 @@ resourceType: "ExampleScenario"
    * Another nested workflow
    */
   workflow?: Array<canonical>;
+  /** 
+   * Another nested workflow
+   */
+  _workflow?: Array<Element>
 }
 
 export interface ExplanationOfBenefitRelated {
@@ -14353,6 +18777,10 @@ export interface ExplanationOfBenefitCareTeam {
    */
   sequence: positiveInt;
   /** 
+   * Order of care team
+   */
+  _sequence?: Element
+  /** 
    * Practitioner or organization
    */
   provider: Reference;
@@ -14360,6 +18788,10 @@ export interface ExplanationOfBenefitCareTeam {
    * Indicator of the lead practitioner
    */
   responsible?: boolean;
+  /** 
+   * Indicator of the lead practitioner
+   */
+  _responsible?: Element
   /** 
    * Function within the team
    */
@@ -14387,6 +18819,10 @@ export interface ExplanationOfBenefitSupportingInfo {
    */
   sequence: positiveInt;
   /** 
+   * Information instance identifier
+   */
+  _sequence?: Element
+  /** 
    * Classification of the supplied information
    */
   category: CodeableConcept;
@@ -14401,6 +18837,10 @@ export interface ExplanationOfBenefitSupportingInfo {
   /** 
    * When it occurred
    */
+  _timingDate?: Element
+  /** 
+   * When it occurred
+   */
   timingPeriod?: Period;
   /** 
    * Data to be provided
@@ -14409,7 +18849,15 @@ export interface ExplanationOfBenefitSupportingInfo {
   /** 
    * Data to be provided
    */
+  _valueBoolean?: Element
+  /** 
+   * Data to be provided
+   */
   valueString?: string;
+  /** 
+   * Data to be provided
+   */
+  _valueString?: Element
   /** 
    * Data to be provided
    */
@@ -14444,6 +18892,10 @@ export interface ExplanationOfBenefitDiagnosis {
    * Diagnosis instance identifier
    */
   sequence: positiveInt;
+  /** 
+   * Diagnosis instance identifier
+   */
+  _sequence?: Element
   /** 
    * Nature of illness or problem
    */
@@ -14483,6 +18935,10 @@ export interface ExplanationOfBenefitProcedure {
    */
   sequence: positiveInt;
   /** 
+   * Procedure instance identifier
+   */
+  _sequence?: Element
+  /** 
    * Category of Procedure
    */
   type?: Array<CodeableConcept>;
@@ -14490,6 +18946,10 @@ export interface ExplanationOfBenefitProcedure {
    * When the procedure was performed
    */
   date?: dateTime;
+  /** 
+   * When the procedure was performed
+   */
+  _date?: Element
   /** 
    * Specific clinical procedure
    */
@@ -14521,6 +18981,10 @@ export interface ExplanationOfBenefitInsurance {
    */
   focal: boolean;
   /** 
+   * Coverage to be used for adjudication
+   */
+  _focal?: Element
+  /** 
    * Insurance information
    */
   coverage: Reference;
@@ -14528,6 +18992,10 @@ export interface ExplanationOfBenefitInsurance {
    * Prior authorization reference number
    */
   preAuthRef?: Array<string>;
+  /** 
+   * Prior authorization reference number
+   */
+  _preAuthRef?: Array<Element>
 }
 export interface ExplanationOfBenefitAccident {
   /** 
@@ -14546,6 +19014,10 @@ export interface ExplanationOfBenefitAccident {
    * When the incident occurred
    */
   date?: date;
+  /** 
+   * When the incident occurred
+   */
+  _date?: Element
   /** 
    * The nature of the accident
    */
@@ -14588,6 +19060,10 @@ export interface ExplanationOfBenefitItemAdjudication {
    * Non-monitary value
    */
   value?: decimal;
+  /** 
+   * Non-monitary value
+   */
+  _value?: Element
 }
 export interface ExplanationOfBenefitItemDetailSubDetail {
   /** 
@@ -14606,6 +19082,10 @@ export interface ExplanationOfBenefitItemDetailSubDetail {
    * Product or service provided
    */
   sequence: positiveInt;
+  /** 
+   * Product or service provided
+   */
+  _sequence?: Element
   /** 
    * Revenue or cost center code
    */
@@ -14639,6 +19119,10 @@ export interface ExplanationOfBenefitItemDetailSubDetail {
    */
   factor?: decimal;
   /** 
+   * Price scaling factor
+   */
+  _factor?: Element
+  /** 
    * Total item cost
    */
   net?: Money;
@@ -14650,6 +19134,10 @@ export interface ExplanationOfBenefitItemDetailSubDetail {
    * Applicable note numbers
    */
   noteNumber?: Array<positiveInt>;
+  /** 
+   * Applicable note numbers
+   */
+  _noteNumber?: Array<Element>
   /** 
    * Subdetail level adjudication details
    */
@@ -14673,6 +19161,10 @@ export interface ExplanationOfBenefitItemDetail {
    */
   sequence: positiveInt;
   /** 
+   * Product or service provided
+   */
+  _sequence?: Element
+  /** 
    * Revenue or cost center code
    */
   revenue?: CodeableConcept;
@@ -14705,6 +19197,10 @@ export interface ExplanationOfBenefitItemDetail {
    */
   factor?: decimal;
   /** 
+   * Price scaling factor
+   */
+  _factor?: Element
+  /** 
    * Total item cost
    */
   net?: Money;
@@ -14716,6 +19212,10 @@ export interface ExplanationOfBenefitItemDetail {
    * Applicable note numbers
    */
   noteNumber?: Array<positiveInt>;
+  /** 
+   * Applicable note numbers
+   */
+  _noteNumber?: Array<Element>
   /** 
    * Detail level adjudication details
    */
@@ -14743,21 +19243,41 @@ export interface ExplanationOfBenefitItem {
    */
   sequence: positiveInt;
   /** 
+   * Item instance identifier
+   */
+  _sequence?: Element
+  /** 
    * Applicable care team members
    */
   careTeamSequence?: Array<positiveInt>;
+  /** 
+   * Applicable care team members
+   */
+  _careTeamSequence?: Array<Element>
   /** 
    * Applicable diagnoses
    */
   diagnosisSequence?: Array<positiveInt>;
   /** 
+   * Applicable diagnoses
+   */
+  _diagnosisSequence?: Array<Element>
+  /** 
    * Applicable procedures
    */
   procedureSequence?: Array<positiveInt>;
   /** 
+   * Applicable procedures
+   */
+  _procedureSequence?: Array<Element>
+  /** 
    * Applicable exception and supporting information
    */
   informationSequence?: Array<positiveInt>;
+  /** 
+   * Applicable exception and supporting information
+   */
+  _informationSequence?: Array<Element>
   /** 
    * Revenue or cost center code
    */
@@ -14782,6 +19302,10 @@ export interface ExplanationOfBenefitItem {
    * Date or dates of service or product delivery
    */
   servicedDate?: date;
+  /** 
+   * Date or dates of service or product delivery
+   */
+  _servicedDate?: Element
   /** 
    * Date or dates of service or product delivery
    */
@@ -14811,6 +19335,10 @@ export interface ExplanationOfBenefitItem {
    */
   factor?: decimal;
   /** 
+   * Price scaling factor
+   */
+  _factor?: Element
+  /** 
    * Total item cost
    */
   net?: Money;
@@ -14834,6 +19362,10 @@ export interface ExplanationOfBenefitItem {
    * Applicable note numbers
    */
   noteNumber?: Array<positiveInt>;
+  /** 
+   * Applicable note numbers
+   */
+  _noteNumber?: Array<Element>
   /** 
    * Adjudication details
    */
@@ -14877,6 +19409,10 @@ export interface ExplanationOfBenefitAddItemDetailSubDetail {
    */
   factor?: decimal;
   /** 
+   * Price scaling factor
+   */
+  _factor?: Element
+  /** 
    * Total item cost
    */
   net?: Money;
@@ -14884,6 +19420,10 @@ export interface ExplanationOfBenefitAddItemDetailSubDetail {
    * Applicable note numbers
    */
   noteNumber?: Array<positiveInt>;
+  /** 
+   * Applicable note numbers
+   */
+  _noteNumber?: Array<Element>
   /** 
    * Added items adjudication
    */
@@ -14923,6 +19463,10 @@ export interface ExplanationOfBenefitAddItemDetail {
    */
   factor?: decimal;
   /** 
+   * Price scaling factor
+   */
+  _factor?: Element
+  /** 
    * Total item cost
    */
   net?: Money;
@@ -14930,6 +19474,10 @@ export interface ExplanationOfBenefitAddItemDetail {
    * Applicable note numbers
    */
   noteNumber?: Array<positiveInt>;
+  /** 
+   * Applicable note numbers
+   */
+  _noteNumber?: Array<Element>
   /** 
    * Added items adjudication
    */
@@ -14957,13 +19505,25 @@ export interface ExplanationOfBenefitAddItem {
    */
   itemSequence?: Array<positiveInt>;
   /** 
+   * Item sequence number
+   */
+  _itemSequence?: Array<Element>
+  /** 
    * Detail sequence number
    */
   detailSequence?: Array<positiveInt>;
   /** 
+   * Detail sequence number
+   */
+  _detailSequence?: Array<Element>
+  /** 
    * Subdetail sequence number
    */
   subDetailSequence?: Array<positiveInt>;
+  /** 
+   * Subdetail sequence number
+   */
+  _subDetailSequence?: Array<Element>
   /** 
    * Authorized providers
    */
@@ -14984,6 +19544,10 @@ export interface ExplanationOfBenefitAddItem {
    * Date or dates of service or product delivery
    */
   servicedDate?: date;
+  /** 
+   * Date or dates of service or product delivery
+   */
+  _servicedDate?: Element
   /** 
    * Date or dates of service or product delivery
    */
@@ -15013,6 +19577,10 @@ export interface ExplanationOfBenefitAddItem {
    */
   factor?: decimal;
   /** 
+   * Price scaling factor
+   */
+  _factor?: Element
+  /** 
    * Total item cost
    */
   net?: Money;
@@ -15028,6 +19596,10 @@ export interface ExplanationOfBenefitAddItem {
    * Applicable note numbers
    */
   noteNumber?: Array<positiveInt>;
+  /** 
+   * Applicable note numbers
+   */
+  _noteNumber?: Array<Element>
   /** 
    * Added items adjudication
    */
@@ -15089,6 +19661,10 @@ export interface ExplanationOfBenefitPayment {
    */
   date?: date;
   /** 
+   * Expected date of payment
+   */
+  _date?: Element
+  /** 
    * Payable amount after adjustment
    */
   amount?: Money;
@@ -15115,13 +19691,25 @@ export interface ExplanationOfBenefitProcessNote {
    */
   number?: positiveInt;
   /** 
+   * Note instance identifier
+   */
+  _number?: Element
+  /** 
    * display | print | printoper
    */
   type?: code;
   /** 
+   * display | print | printoper
+   */
+  _type?: Element
+  /** 
    * Note explanatory text
    */
   text?: string;
+  /** 
+   * Note explanatory text
+   */
+  _text?: Element
   /** 
    * Language of the text
    */
@@ -15151,7 +19739,15 @@ export interface ExplanationOfBenefitBenefitBalanceFinancial {
   /** 
    * Benefits allowed
    */
+  _allowedUnsignedInt?: Element
+  /** 
+   * Benefits allowed
+   */
   allowedString?: string;
+  /** 
+   * Benefits allowed
+   */
+  _allowedString?: Element
   /** 
    * Benefits allowed
    */
@@ -15160,6 +19756,10 @@ export interface ExplanationOfBenefitBenefitBalanceFinancial {
    * Benefits used
    */
   usedUnsignedInt?: unsignedInt;
+  /** 
+   * Benefits used
+   */
+  _usedUnsignedInt?: Element
   /** 
    * Benefits used
    */
@@ -15187,13 +19787,25 @@ export interface ExplanationOfBenefitBenefitBalance {
    */
   excluded?: boolean;
   /** 
+   * Excluded from the plan
+   */
+  _excluded?: Element
+  /** 
    * Short name for the benefit
    */
   name?: string;
   /** 
+   * Short name for the benefit
+   */
+  _name?: Element
+  /** 
    * Description of the benefit or services covered
    */
   description?: string;
+  /** 
+   * Description of the benefit or services covered
+   */
+  _description?: Element
   /** 
    * In or out of network
    */
@@ -15226,9 +19838,17 @@ resourceType: "ExplanationOfBenefit"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -15254,6 +19874,10 @@ resourceType: "ExplanationOfBenefit"
    */
   status: code;
   /** 
+   * active | cancelled | draft | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Category or discipline
    */
   type: CodeableConcept;
@@ -15266,6 +19890,10 @@ resourceType: "ExplanationOfBenefit"
    */
   use: code;
   /** 
+   * claim | preauthorization | predetermination
+   */
+  _use?: Element
+  /** 
    * The recipient of the products and services
    */
   patient: Reference;
@@ -15277,6 +19905,10 @@ resourceType: "ExplanationOfBenefit"
    * Response creation date
    */
   created: dateTime;
+  /** 
+   * Response creation date
+   */
+  _created?: Element
   /** 
    * Author of the claim
    */
@@ -15338,13 +19970,25 @@ resourceType: "ExplanationOfBenefit"
    */
   outcome: code;
   /** 
+   * queued | complete | error | partial
+   */
+  _outcome?: Element
+  /** 
    * Disposition Message
    */
   disposition?: string;
   /** 
+   * Disposition Message
+   */
+  _disposition?: Element
+  /** 
    * Preauthorization reference
    */
   preAuthRef?: Array<string>;
+  /** 
+   * Preauthorization reference
+   */
+  _preAuthRef?: Array<Element>
   /** 
    * Preauthorization in-effect period
    */
@@ -15369,6 +20013,10 @@ resourceType: "ExplanationOfBenefit"
    * Precedence (primary, secondary, etc.)
    */
   precedence?: positiveInt;
+  /** 
+   * Precedence (primary, secondary, etc.)
+   */
+  _precedence?: Element
   /** 
    * Patient insurance information
    */
@@ -15445,6 +20093,10 @@ export interface FamilyMemberHistoryCondition {
    */
   contributedToDeath?: boolean;
   /** 
+   * Whether the condition contributed to the cause of death
+   */
+  _contributedToDeath?: Element
+  /** 
    * When condition first manifested
    */
   onsetAge?: Age;
@@ -15460,6 +20112,10 @@ export interface FamilyMemberHistoryCondition {
    * When condition first manifested
    */
   onsetString?: string;
+  /** 
+   * When condition first manifested
+   */
+  _onsetString?: Element
   /** 
    * Extra information about condition
    */
@@ -15480,9 +20136,17 @@ resourceType: "FamilyMemberHistory"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -15508,13 +20172,25 @@ resourceType: "FamilyMemberHistory"
    */
   instantiatesCanonical?: Array<canonical>;
   /** 
+   * Instantiates FHIR protocol or definition
+   */
+  _instantiatesCanonical?: Array<Element>
+  /** 
    * Instantiates external protocol or definition
    */
   instantiatesUri?: Array<uri>;
   /** 
+   * Instantiates external protocol or definition
+   */
+  _instantiatesUri?: Array<Element>
+  /** 
    * partial | completed | entered-in-error | health-unknown
    */
   status: code;
+  /** 
+   * partial | completed | entered-in-error | health-unknown
+   */
+  _status?: Element
   /** 
    * subject-unknown | withheld | unable-to-obtain | deferred
    */
@@ -15528,9 +20204,17 @@ resourceType: "FamilyMemberHistory"
    */
   date?: dateTime;
   /** 
+   * When history was recorded or last updated
+   */
+  _date?: Element
+  /** 
    * The family member described
    */
   name?: string;
+  /** 
+   * The family member described
+   */
+  _name?: Element
   /** 
    * Relationship to the subject
    */
@@ -15550,7 +20234,15 @@ resourceType: "FamilyMemberHistory"
   /** 
    * (approximate) date of birth
    */
+  _bornDate?: Element
+  /** 
+   * (approximate) date of birth
+   */
   bornString?: string;
+  /** 
+   * (approximate) date of birth
+   */
+  _bornString?: Element
   /** 
    * (approximate) age
    */
@@ -15564,13 +20256,25 @@ resourceType: "FamilyMemberHistory"
    */
   ageString?: string;
   /** 
+   * (approximate) age
+   */
+  _ageString?: Element
+  /** 
    * Age is estimated?
    */
   estimatedAge?: boolean;
   /** 
+   * Age is estimated?
+   */
+  _estimatedAge?: Element
+  /** 
    * Dead? How old/when?
    */
   deceasedBoolean?: boolean;
+  /** 
+   * Dead? How old/when?
+   */
+  _deceasedBoolean?: Element
   /** 
    * Dead? How old/when?
    */
@@ -15586,7 +20290,15 @@ resourceType: "FamilyMemberHistory"
   /** 
    * Dead? How old/when?
    */
+  _deceasedDate?: Element
+  /** 
+   * Dead? How old/when?
+   */
   deceasedString?: string;
+  /** 
+   * Dead? How old/when?
+   */
+  _deceasedString?: Element
   /** 
    * Why was family member history performed?
    */
@@ -15620,9 +20332,17 @@ resourceType: "Flag"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -15647,6 +20367,10 @@ resourceType: "Flag"
    * active | inactive | entered-in-error
    */
   status: code;
+  /** 
+   * active | inactive | entered-in-error
+   */
+  _status?: Element
   /** 
    * Clinical, administrative, etc.
    */
@@ -15709,11 +20433,23 @@ export interface GoalTarget {
   /** 
    * The target value to be achieved
    */
+  _detailString?: Element
+  /** 
+   * The target value to be achieved
+   */
   detailBoolean?: boolean;
   /** 
    * The target value to be achieved
    */
+  _detailBoolean?: Element
+  /** 
+   * The target value to be achieved
+   */
   detailInteger?: integer;
+  /** 
+   * The target value to be achieved
+   */
+  _detailInteger?: Element
   /** 
    * The target value to be achieved
    */
@@ -15722,6 +20458,10 @@ export interface GoalTarget {
    * Reach goal on or before
    */
   dueDate?: date;
+  /** 
+   * Reach goal on or before
+   */
+  _dueDate?: Element
   /** 
    * Reach goal on or before
    */
@@ -15742,9 +20482,17 @@ resourceType: "Goal"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -15769,6 +20517,10 @@ resourceType: "Goal"
    * proposed | planned | accepted | active | on-hold | completed | cancelled | entered-in-error | rejected
    */
   lifecycleStatus: code;
+  /** 
+   * proposed | planned | accepted | active | on-hold | completed | cancelled | entered-in-error | rejected
+   */
+  _lifecycleStatus?: Element
   /** 
    * in-progress | improving | worsening | no-change | achieved | sustaining | not-achieved | no-progress | not-attainable
    */
@@ -15796,6 +20548,10 @@ resourceType: "Goal"
   /** 
    * When goal pursuit begins
    */
+  _startDate?: Element
+  /** 
+   * When goal pursuit begins
+   */
   startCodeableConcept?: CodeableConcept;
   /** 
    * Target outcome for the goal
@@ -15806,9 +20562,17 @@ resourceType: "Goal"
    */
   statusDate?: date;
   /** 
+   * When goal status took effect
+   */
+  _statusDate?: Element
+  /** 
    * Reason for current status
    */
   statusReason?: string;
+  /** 
+   * Reason for current status
+   */
+  _statusReason?: Element
   /** 
    * Who's responsible for creating Goal?
    */
@@ -15849,21 +20613,41 @@ export interface GraphDefinitionLinkTargetCompartment {
    */
   use: code;
   /** 
+   * condition | requirement
+   */
+  _use?: Element
+  /** 
    * Patient | Encounter | RelatedPerson | Practitioner | Device
    */
   code: code;
+  /** 
+   * Patient | Encounter | RelatedPerson | Practitioner | Device
+   */
+  _code?: Element
   /** 
    * identical | matching | different | custom
    */
   rule: code;
   /** 
+   * identical | matching | different | custom
+   */
+  _rule?: Element
+  /** 
    * Custom rule, as a FHIRPath expression
    */
   expression?: string;
   /** 
+   * Custom rule, as a FHIRPath expression
+   */
+  _expression?: Element
+  /** 
    * Documentation for FHIRPath expression
    */
   description?: string;
+  /** 
+   * Documentation for FHIRPath expression
+   */
+  _description?: Element
 }
 export interface GraphDefinitionLinkTarget {
   /** 
@@ -15883,13 +20667,25 @@ export interface GraphDefinitionLinkTarget {
    */
   type: code;
   /** 
+   * Type of resource this link refers to
+   */
+  _type?: Element
+  /** 
    * Criteria for reverse lookup
    */
   params?: string;
   /** 
+   * Criteria for reverse lookup
+   */
+  _params?: Element
+  /** 
    * Profile for the target resource
    */
   profile?: canonical;
+  /** 
+   * Profile for the target resource
+   */
+  _profile?: Element
   /** 
    * Compartment Consistency Rules
    */
@@ -15917,21 +20713,41 @@ export interface GraphDefinitionLink {
    */
   path?: string;
   /** 
+   * Path in the resource that contains the link
+   */
+  _path?: Element
+  /** 
    * Which slice (if profiled)
    */
   sliceName?: string;
+  /** 
+   * Which slice (if profiled)
+   */
+  _sliceName?: Element
   /** 
    * Minimum occurrences for this link
    */
   min?: integer;
   /** 
+   * Minimum occurrences for this link
+   */
+  _min?: Element
+  /** 
    * Maximum occurrences for this link
    */
   max?: string;
   /** 
+   * Maximum occurrences for this link
+   */
+  _max?: Element
+  /** 
    * Why this link is specified
    */
   description?: string;
+  /** 
+   * Why this link is specified
+   */
+  _description?: Element
   /** 
    * Potential target for the link
    */
@@ -15952,9 +20768,17 @@ resourceType: "GraphDefinition"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -15976,29 +20800,57 @@ resourceType: "GraphDefinition"
    */
   url?: uri;
   /** 
+   * Canonical identifier for this graph definition, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Business version of the graph definition
    */
   version?: string;
+  /** 
+   * Business version of the graph definition
+   */
+  _version?: Element
   /** 
    * Name for this graph definition (computer friendly)
    */
   name: string;
   /** 
+   * Name for this graph definition (computer friendly)
+   */
+  _name?: Element
+  /** 
    * draft | active | retired | unknown
    */
   status: code;
+  /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
   /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
   /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
+  /** 
    * Date last changed
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -16007,6 +20859,10 @@ resourceType: "GraphDefinition"
    * Natural language description of the graph definition
    */
   description?: markdown;
+  /** 
+   * Natural language description of the graph definition
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -16020,13 +20876,25 @@ resourceType: "GraphDefinition"
    */
   purpose?: markdown;
   /** 
+   * Why this graph definition is defined
+   */
+  _purpose?: Element
+  /** 
    * Type of resource at which the graph starts
    */
   start: code;
   /** 
+   * Type of resource at which the graph starts
+   */
+  _start?: Element
+  /** 
    * Profile on base resource
    */
   profile?: canonical;
+  /** 
+   * Profile on base resource
+   */
+  _profile?: Element
   /** 
    * Links this graph makes rules about
    */
@@ -16061,6 +20929,10 @@ export interface GroupCharacteristic {
   /** 
    * Value held by characteristic
    */
+  _valueBoolean?: Element
+  /** 
+   * Value held by characteristic
+   */
   valueQuantity?: Quantity;
   /** 
    * Value held by characteristic
@@ -16074,6 +20946,10 @@ export interface GroupCharacteristic {
    * Group includes or excludes
    */
   exclude: boolean;
+  /** 
+   * Group includes or excludes
+   */
+  _exclude?: Element
   /** 
    * Period over which characteristic is tested
    */
@@ -16104,6 +20980,10 @@ export interface GroupMember {
    * If member is no longer in group
    */
   inactive?: boolean;
+  /** 
+   * If member is no longer in group
+   */
+  _inactive?: Element
 }
 export interface Group {
 resourceType: "Group"
@@ -16120,9 +21000,17 @@ resourceType: "Group"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -16148,13 +21036,25 @@ resourceType: "Group"
    */
   active?: boolean;
   /** 
+   * Whether this group's record is in active use
+   */
+  _active?: Element
+  /** 
    * person | animal | practitioner | device | medication | substance
    */
   type: code;
   /** 
+   * person | animal | practitioner | device | medication | substance
+   */
+  _type?: Element
+  /** 
    * Descriptive or actual
    */
   actual: boolean;
+  /** 
+   * Descriptive or actual
+   */
+  _actual?: Element
   /** 
    * Kind of Group members
    */
@@ -16164,9 +21064,17 @@ resourceType: "Group"
    */
   name?: string;
   /** 
+   * Label for Group
+   */
+  _name?: Element
+  /** 
    * Number of members
    */
   quantity?: unsignedInt;
+  /** 
+   * Number of members
+   */
+  _quantity?: Element
   /** 
    * Entity that is the custodian of the Group's definition
    */
@@ -16196,9 +21104,17 @@ resourceType: "GuidanceResponse"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -16230,7 +21146,15 @@ resourceType: "GuidanceResponse"
   /** 
    * What guidance was requested
    */
+  _moduleUri?: Element
+  /** 
+   * What guidance was requested
+   */
   moduleCanonical?: canonical;
+  /** 
+   * What guidance was requested
+   */
+  _moduleCanonical?: Element
   /** 
    * What guidance was requested
    */
@@ -16239,6 +21163,10 @@ resourceType: "GuidanceResponse"
    * success | data-requested | data-required | in-progress | failure | entered-in-error
    */
   status: code;
+  /** 
+   * success | data-requested | data-required | in-progress | failure | entered-in-error
+   */
+  _status?: Element
   /** 
    * Patient the request was performed for
    */
@@ -16251,6 +21179,10 @@ resourceType: "GuidanceResponse"
    * When the guidance response was processed
    */
   occurrenceDateTime?: dateTime;
+  /** 
+   * When the guidance response was processed
+   */
+  _occurrenceDateTime?: Element
   /** 
    * Device returning the guidance
    */
@@ -16306,6 +21238,10 @@ export interface HealthcareServiceEligibility {
    * Describes the eligibility conditions for the service
    */
   comment?: markdown;
+  /** 
+   * Describes the eligibility conditions for the service
+   */
+  _comment?: Element
 }
 export interface HealthcareServiceAvailableTime {
   /** 
@@ -16325,17 +21261,33 @@ export interface HealthcareServiceAvailableTime {
    */
   daysOfWeek?: Array<code>;
   /** 
+   * mon | tue | wed | thu | fri | sat | sun
+   */
+  _daysOfWeek?: Array<Element>
+  /** 
    * Always available? e.g. 24 hour service
    */
   allDay?: boolean;
+  /** 
+   * Always available? e.g. 24 hour service
+   */
+  _allDay?: Element
   /** 
    * Opening time of day (ignored if allDay = true)
    */
   availableStartTime?: time;
   /** 
+   * Opening time of day (ignored if allDay = true)
+   */
+  _availableStartTime?: Element
+  /** 
    * Closing time of day (ignored if allDay = true)
    */
   availableEndTime?: time;
+  /** 
+   * Closing time of day (ignored if allDay = true)
+   */
+  _availableEndTime?: Element
 }
 export interface HealthcareServiceNotAvailable {
   /** 
@@ -16354,6 +21306,10 @@ export interface HealthcareServiceNotAvailable {
    * Reason presented to the user explaining why time not available
    */
   description: string;
+  /** 
+   * Reason presented to the user explaining why time not available
+   */
+  _description?: Element
   /** 
    * Service not available from this date
    */
@@ -16374,9 +21330,17 @@ resourceType: "HealthcareService"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -16402,6 +21366,10 @@ resourceType: "HealthcareService"
    */
   active?: boolean;
   /** 
+   * Whether this HealthcareService record is in active use
+   */
+  _active?: Element
+  /** 
    * Organization that provides this service
    */
   providedBy?: Reference;
@@ -16426,13 +21394,25 @@ resourceType: "HealthcareService"
    */
   name?: string;
   /** 
+   * Description of service as presented to a consumer while searching
+   */
+  _name?: Element
+  /** 
    * Additional description and/or any specific issues not covered elsewhere
    */
   comment?: string;
   /** 
+   * Additional description and/or any specific issues not covered elsewhere
+   */
+  _comment?: Element
+  /** 
    * Extra details about the service that can't be placed in the other fields
    */
   extraDetails?: markdown;
+  /** 
+   * Extra details about the service that can't be placed in the other fields
+   */
+  _extraDetails?: Element
   /** 
    * Facilitates quick identification of the service
    */
@@ -16474,6 +21454,10 @@ resourceType: "HealthcareService"
    */
   appointmentRequired?: boolean;
   /** 
+   * If an appointment is required for access to this service
+   */
+  _appointmentRequired?: Element
+  /** 
    * Times the Service Site is available
    */
   availableTime?: Array<HealthcareServiceAvailableTime>;
@@ -16485,6 +21469,10 @@ resourceType: "HealthcareService"
    * Description of availability exceptions
    */
   availabilityExceptions?: string;
+  /** 
+   * Description of availability exceptions
+   */
+  _availabilityExceptions?: Element
   /** 
    * Technical endpoints providing access to electronic services operated for the healthcare service
    */
@@ -16531,6 +21519,10 @@ export interface ImagingStudySeriesInstance {
    */
   uid: id;
   /** 
+   * DICOM SOP Instance UID
+   */
+  _uid?: Element
+  /** 
    * DICOM class type
    */
   sopClass: Coding;
@@ -16539,9 +21531,17 @@ export interface ImagingStudySeriesInstance {
    */
   number?: unsignedInt;
   /** 
+   * The number of this instance in the series
+   */
+  _number?: Element
+  /** 
    * Description of instance
    */
   title?: string;
+  /** 
+   * Description of instance
+   */
+  _title?: Element
 }
 export interface ImagingStudySeries {
   /** 
@@ -16561,9 +21561,17 @@ export interface ImagingStudySeries {
    */
   uid: id;
   /** 
+   * DICOM Series Instance UID for the series
+   */
+  _uid?: Element
+  /** 
    * Numeric identifier of this series
    */
   number?: unsignedInt;
+  /** 
+   * Numeric identifier of this series
+   */
+  _number?: Element
   /** 
    * The modality of the instances in the series
    */
@@ -16573,9 +21581,17 @@ export interface ImagingStudySeries {
    */
   description?: string;
   /** 
+   * A short human readable summary of the series
+   */
+  _description?: Element
+  /** 
    * Number of Series Related Instances
    */
   numberOfInstances?: unsignedInt;
+  /** 
+   * Number of Series Related Instances
+   */
+  _numberOfInstances?: Element
   /** 
    * Series access endpoint
    */
@@ -16596,6 +21612,10 @@ export interface ImagingStudySeries {
    * When the series started
    */
   started?: dateTime;
+  /** 
+   * When the series started
+   */
+  _started?: Element
   /** 
    * Who performed the series
    */
@@ -16620,9 +21640,17 @@ resourceType: "ImagingStudy"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -16648,6 +21676,10 @@ resourceType: "ImagingStudy"
    */
   status: code;
   /** 
+   * registered | available | cancelled | entered-in-error | unknown
+   */
+  _status?: Element
+  /** 
    * All series modality if actual acquisition modalities
    */
   modality?: Array<Coding>;
@@ -16663,6 +21695,10 @@ resourceType: "ImagingStudy"
    * When the study was started
    */
   started?: dateTime;
+  /** 
+   * When the study was started
+   */
+  _started?: Element
   /** 
    * Request fulfilled
    */
@@ -16684,9 +21720,17 @@ resourceType: "ImagingStudy"
    */
   numberOfSeries?: unsignedInt;
   /** 
+   * Number of Study Related Series
+   */
+  _numberOfSeries?: Element
+  /** 
    * Number of Study Related Instances
    */
   numberOfInstances?: unsignedInt;
+  /** 
+   * Number of Study Related Instances
+   */
+  _numberOfInstances?: Element
   /** 
    * The performed Procedure reference
    */
@@ -16715,6 +21759,10 @@ resourceType: "ImagingStudy"
    * Institution-generated description
    */
   description?: string;
+  /** 
+   * Institution-generated description
+   */
+  _description?: Element
   /** 
    * Each study has one or more series of instances
    */
@@ -16761,17 +21809,33 @@ export interface ImmunizationEducation {
    */
   documentType?: string;
   /** 
+   * Educational material document identifier
+   */
+  _documentType?: Element
+  /** 
    * Educational material reference pointer
    */
   reference?: uri;
+  /** 
+   * Educational material reference pointer
+   */
+  _reference?: Element
   /** 
    * Educational material publication date
    */
   publicationDate?: dateTime;
   /** 
+   * Educational material publication date
+   */
+  _publicationDate?: Element
+  /** 
    * Educational material presentation date
    */
   presentationDate?: dateTime;
+  /** 
+   * Educational material presentation date
+   */
+  _presentationDate?: Element
 }
 export interface ImmunizationReaction {
   /** 
@@ -16791,6 +21855,10 @@ export interface ImmunizationReaction {
    */
   date?: dateTime;
   /** 
+   * When reaction started
+   */
+  _date?: Element
+  /** 
    * Additional information on reaction
    */
   detail?: Reference;
@@ -16798,6 +21866,10 @@ export interface ImmunizationReaction {
    * Indicates self-reported reaction
    */
   reported?: boolean;
+  /** 
+   * Indicates self-reported reaction
+   */
+  _reported?: Element
 }
 export interface ImmunizationProtocolApplied {
   /** 
@@ -16817,6 +21889,10 @@ export interface ImmunizationProtocolApplied {
    */
   series?: string;
   /** 
+   * Name of vaccine series
+   */
+  _series?: Element
+  /** 
    * Who is responsible for publishing the recommendations
    */
   authority?: Reference;
@@ -16831,7 +21907,15 @@ export interface ImmunizationProtocolApplied {
   /** 
    * Dose number within series
    */
+  _doseNumberPositiveInt?: Element
+  /** 
+   * Dose number within series
+   */
   doseNumberString?: string;
+  /** 
+   * Dose number within series
+   */
+  _doseNumberString?: Element
   /** 
    * Recommended number of doses for immunity
    */
@@ -16839,7 +21923,15 @@ export interface ImmunizationProtocolApplied {
   /** 
    * Recommended number of doses for immunity
    */
+  _seriesDosesPositiveInt?: Element
+  /** 
+   * Recommended number of doses for immunity
+   */
   seriesDosesString?: string;
+  /** 
+   * Recommended number of doses for immunity
+   */
+  _seriesDosesString?: Element
 }
 export interface Immunization {
 resourceType: "Immunization"
@@ -16856,9 +21948,17 @@ resourceType: "Immunization"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -16884,6 +21984,10 @@ resourceType: "Immunization"
    */
   status: code;
   /** 
+   * completed | entered-in-error | not-done
+   */
+  _status?: Element
+  /** 
    * Reason not done
    */
   statusReason?: CodeableConcept;
@@ -16906,15 +22010,31 @@ resourceType: "Immunization"
   /** 
    * Vaccine administration date
    */
+  _occurrenceDateTime?: Element
+  /** 
+   * Vaccine administration date
+   */
   occurrenceString?: string;
+  /** 
+   * Vaccine administration date
+   */
+  _occurrenceString?: Element
   /** 
    * When the immunization was first captured in the subject's record
    */
   recorded?: dateTime;
   /** 
+   * When the immunization was first captured in the subject's record
+   */
+  _recorded?: Element
+  /** 
    * Indicates context the data was recorded in
    */
   primarySource?: boolean;
+  /** 
+   * Indicates context the data was recorded in
+   */
+  _primarySource?: Element
   /** 
    * Indicates the source of a secondarily reported record
    */
@@ -16932,9 +22052,17 @@ resourceType: "Immunization"
    */
   lotNumber?: string;
   /** 
+   * Vaccine lot number
+   */
+  _lotNumber?: Element
+  /** 
    * Vaccine expiration date
    */
   expirationDate?: date;
+  /** 
+   * Vaccine expiration date
+   */
+  _expirationDate?: Element
   /** 
    * Body site vaccine  was administered
    */
@@ -16967,6 +22095,10 @@ resourceType: "Immunization"
    * Dose potency
    */
   isSubpotent?: boolean;
+  /** 
+   * Dose potency
+   */
+  _isSubpotent?: Element
   /** 
    * Reason for being subpotent
    */
@@ -17008,9 +22140,17 @@ resourceType: "ImmunizationEvaluation"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -17036,6 +22176,10 @@ resourceType: "ImmunizationEvaluation"
    */
   status: code;
   /** 
+   * completed | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Who this evaluation is for
    */
   patient: Reference;
@@ -17043,6 +22187,10 @@ resourceType: "ImmunizationEvaluation"
    * Date evaluation was performed
    */
   date?: dateTime;
+  /** 
+   * Date evaluation was performed
+   */
+  _date?: Element
   /** 
    * Who is responsible for publishing the recommendations
    */
@@ -17068,9 +22216,17 @@ resourceType: "ImmunizationEvaluation"
    */
   description?: string;
   /** 
+   * Evaluation notes
+   */
+  _description?: Element
+  /** 
    * Name of vaccine series
    */
   series?: string;
+  /** 
+   * Name of vaccine series
+   */
+  _series?: Element
   /** 
    * Dose number within series
    */
@@ -17078,7 +22234,15 @@ resourceType: "ImmunizationEvaluation"
   /** 
    * Dose number within series
    */
+  _doseNumberPositiveInt?: Element
+  /** 
+   * Dose number within series
+   */
   doseNumberString?: string;
+  /** 
+   * Dose number within series
+   */
+  _doseNumberString?: Element
   /** 
    * Recommended number of doses for immunity
    */
@@ -17086,7 +22250,15 @@ resourceType: "ImmunizationEvaluation"
   /** 
    * Recommended number of doses for immunity
    */
+  _seriesDosesPositiveInt?: Element
+  /** 
+   * Recommended number of doses for immunity
+   */
   seriesDosesString?: string;
+  /** 
+   * Recommended number of doses for immunity
+   */
+  _seriesDosesString?: Element
 }
 
 export interface ImmunizationRecommendationRecommendationDateCriterion {
@@ -17110,6 +22282,10 @@ export interface ImmunizationRecommendationRecommendationDateCriterion {
    * Recommended date
    */
   value: dateTime;
+  /** 
+   * Recommended date
+   */
+  _value?: Element
 }
 export interface ImmunizationRecommendationRecommendation {
   /** 
@@ -17153,9 +22329,17 @@ export interface ImmunizationRecommendationRecommendation {
    */
   description?: string;
   /** 
+   * Protocol details
+   */
+  _description?: Element
+  /** 
    * Name of vaccination series
    */
   series?: string;
+  /** 
+   * Name of vaccination series
+   */
+  _series?: Element
   /** 
    * Recommended dose number within series
    */
@@ -17163,7 +22347,15 @@ export interface ImmunizationRecommendationRecommendation {
   /** 
    * Recommended dose number within series
    */
+  _doseNumberPositiveInt?: Element
+  /** 
+   * Recommended dose number within series
+   */
   doseNumberString?: string;
+  /** 
+   * Recommended dose number within series
+   */
+  _doseNumberString?: Element
   /** 
    * Recommended number of doses for immunity
    */
@@ -17171,7 +22363,15 @@ export interface ImmunizationRecommendationRecommendation {
   /** 
    * Recommended number of doses for immunity
    */
+  _seriesDosesPositiveInt?: Element
+  /** 
+   * Recommended number of doses for immunity
+   */
   seriesDosesString?: string;
+  /** 
+   * Recommended number of doses for immunity
+   */
+  _seriesDosesString?: Element
   /** 
    * Past immunizations supporting recommendation
    */
@@ -17196,9 +22396,17 @@ resourceType: "ImmunizationRecommendation"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -17228,6 +22436,10 @@ resourceType: "ImmunizationRecommendation"
    */
   date: dateTime;
   /** 
+   * Date recommendation(s) created
+   */
+  _date?: Element
+  /** 
    * Who is responsible for protocol
    */
   authority?: Reference;
@@ -17255,13 +22467,25 @@ export interface ImplementationGuideDependsOn {
    */
   uri: canonical;
   /** 
+   * Identity of the IG that this depends on
+   */
+  _uri?: Element
+  /** 
    * NPM Package name for IG this depends on
    */
   packageId?: id;
   /** 
+   * NPM Package name for IG this depends on
+   */
+  _packageId?: Element
+  /** 
    * Version of the IG
    */
   version?: string;
+  /** 
+   * Version of the IG
+   */
+  _version?: Element
 }
 export interface ImplementationGuideGlobal {
   /** 
@@ -17281,9 +22505,17 @@ export interface ImplementationGuideGlobal {
    */
   type: code;
   /** 
+   * Type this profile applies to
+   */
+  _type?: Element
+  /** 
    * Profile that all resources must conform to
    */
   profile: canonical;
+  /** 
+   * Profile that all resources must conform to
+   */
+  _profile?: Element
 }
 export interface ImplementationGuideDefinitionGrouping {
   /** 
@@ -17303,9 +22535,17 @@ export interface ImplementationGuideDefinitionGrouping {
    */
   name: string;
   /** 
+   * Descriptive name for the package
+   */
+  _name?: Element
+  /** 
    * Human readable text describing the package
    */
   description?: string;
+  /** 
+   * Human readable text describing the package
+   */
+  _description?: Element
 }
 export interface ImplementationGuideDefinitionResource {
   /** 
@@ -17329,13 +22569,25 @@ export interface ImplementationGuideDefinitionResource {
    */
   fhirVersion?: Array<code>;
   /** 
+   * Versions this applies to (if different to IG)
+   */
+  _fhirVersion?: Array<Element>
+  /** 
    * Human Name for the resource
    */
   name?: string;
   /** 
+   * Human Name for the resource
+   */
+  _name?: Element
+  /** 
    * Reason why included in guide
    */
   description?: string;
+  /** 
+   * Reason why included in guide
+   */
+  _description?: Element
   /** 
    * Is an example/What is this an example of?
    */
@@ -17343,11 +22595,23 @@ export interface ImplementationGuideDefinitionResource {
   /** 
    * Is an example/What is this an example of?
    */
+  _exampleBoolean?: Element
+  /** 
+   * Is an example/What is this an example of?
+   */
   exampleCanonical?: canonical;
+  /** 
+   * Is an example/What is this an example of?
+   */
+  _exampleCanonical?: Element
   /** 
    * Grouping this is part of
    */
   groupingId?: id;
+  /** 
+   * Grouping this is part of
+   */
+  _groupingId?: Element
 }
 export interface ImplementationGuideDefinitionPage {
   /** 
@@ -17369,15 +22633,27 @@ export interface ImplementationGuideDefinitionPage {
   /** 
    * Where to find that page
    */
+  _nameUrl?: Element
+  /** 
+   * Where to find that page
+   */
   nameReference?: Reference;
   /** 
    * Short title shown for navigational assistance
    */
   title: string;
   /** 
+   * Short title shown for navigational assistance
+   */
+  _title?: Element
+  /** 
    * html | markdown | xml | generated
    */
   generation: code;
+  /** 
+   * html | markdown | xml | generated
+   */
+  _generation?: Element
   /** 
    * Nested Pages / Sections
    */
@@ -17401,9 +22677,17 @@ export interface ImplementationGuideDefinitionParameter {
    */
   code: code;
   /** 
+   * apply | path-resource | path-pages | path-tx-cache | expansion-parameter | rule-broken-links | generate-xml | generate-json | generate-turtle | html-template
+   */
+  _code?: Element
+  /** 
    * Value for named type
    */
   value: string;
+  /** 
+   * Value for named type
+   */
+  _value?: Element
 }
 export interface ImplementationGuideDefinitionTemplate {
   /** 
@@ -17423,13 +22707,25 @@ export interface ImplementationGuideDefinitionTemplate {
    */
   code: code;
   /** 
+   * Type of template specified
+   */
+  _code?: Element
+  /** 
    * The source location for the template
    */
   source: string;
   /** 
+   * The source location for the template
+   */
+  _source?: Element
+  /** 
    * The scope in which the template applies
    */
   scope?: string;
+  /** 
+   * The scope in which the template applies
+   */
+  _scope?: Element
 }
 export interface ImplementationGuideDefinition {
   /** 
@@ -17489,11 +22785,23 @@ export interface ImplementationGuideManifestResource {
   /** 
    * Is an example/What is this an example of?
    */
+  _exampleBoolean?: Element
+  /** 
+   * Is an example/What is this an example of?
+   */
   exampleCanonical?: canonical;
+  /** 
+   * Is an example/What is this an example of?
+   */
+  _exampleCanonical?: Element
   /** 
    * Relative path for page in IG
    */
   relativePath?: url;
+  /** 
+   * Relative path for page in IG
+   */
+  _relativePath?: Element
 }
 export interface ImplementationGuideManifestPage {
   /** 
@@ -17513,13 +22821,25 @@ export interface ImplementationGuideManifestPage {
    */
   name: string;
   /** 
+   * HTML page name
+   */
+  _name?: Element
+  /** 
    * Title of the page, for references
    */
   title?: string;
   /** 
+   * Title of the page, for references
+   */
+  _title?: Element
+  /** 
    * Anchor available on the page
    */
   anchor?: Array<string>;
+  /** 
+   * Anchor available on the page
+   */
+  _anchor?: Array<Element>
 }
 export interface ImplementationGuideManifest {
   /** 
@@ -17539,6 +22859,10 @@ export interface ImplementationGuideManifest {
    */
   rendering?: url;
   /** 
+   * Location of rendered implementation guide
+   */
+  _rendering?: Element
+  /** 
    * Resource in the implementation guide
    */
   resource: Array<ImplementationGuideManifestResource>;
@@ -17551,9 +22875,17 @@ export interface ImplementationGuideManifest {
    */
   image?: Array<string>;
   /** 
+   * Image within the IG
+   */
+  _image?: Array<Element>
+  /** 
    * Additional linkable file in IG
    */
   other?: Array<string>;
+  /** 
+   * Additional linkable file in IG
+   */
+  _other?: Array<Element>
 }
 export interface ImplementationGuide {
 resourceType: "ImplementationGuide"
@@ -17570,9 +22902,17 @@ resourceType: "ImplementationGuide"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -17594,33 +22934,65 @@ resourceType: "ImplementationGuide"
    */
   url: uri;
   /** 
+   * Canonical identifier for this implementation guide, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Business version of the implementation guide
    */
   version?: string;
+  /** 
+   * Business version of the implementation guide
+   */
+  _version?: Element
   /** 
    * Name for this implementation guide (computer friendly)
    */
   name: string;
   /** 
+   * Name for this implementation guide (computer friendly)
+   */
+  _name?: Element
+  /** 
    * Name for this implementation guide (human friendly)
    */
   title?: string;
+  /** 
+   * Name for this implementation guide (human friendly)
+   */
+  _title?: Element
   /** 
    * draft | active | retired | unknown
    */
   status: code;
   /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
+  /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
+  /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
   /** 
    * Date last changed
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -17629,6 +23001,10 @@ resourceType: "ImplementationGuide"
    * Natural language description of the implementation guide
    */
   description?: markdown;
+  /** 
+   * Natural language description of the implementation guide
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -17642,17 +23018,33 @@ resourceType: "ImplementationGuide"
    */
   copyright?: markdown;
   /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
+  /** 
    * NPM Package name for IG
    */
   packageId: id;
+  /** 
+   * NPM Package name for IG
+   */
+  _packageId?: Element
   /** 
    * SPDX license code for this IG (or not-open-source)
    */
   license?: code;
   /** 
+   * SPDX license code for this IG (or not-open-source)
+   */
+  _license?: Element
+  /** 
    * FHIR Version(s) this Implementation Guide targets
    */
   fhirVersion: Array<code>;
+  /** 
+   * FHIR Version(s) this Implementation Guide targets
+   */
+  _fhirVersion?: Array<Element>
   /** 
    * Another Implementation guide this depends on
    */
@@ -17745,6 +23137,10 @@ export interface InsurancePlanCoverageBenefit {
    */
   requirement?: string;
   /** 
+   * Referral requirements
+   */
+  _requirement?: Element
+  /** 
    * Benefit limits
    */
   limit?: Array<InsurancePlanCoverageBenefitLimit>;
@@ -17797,6 +23193,10 @@ export interface InsurancePlanPlanGeneralCost {
    */
   groupSize?: positiveInt;
   /** 
+   * Number of enrollees
+   */
+  _groupSize?: Element
+  /** 
    * Cost value
    */
   cost?: Money;
@@ -17804,6 +23204,10 @@ export interface InsurancePlanPlanGeneralCost {
    * Additional cost information
    */
   comment?: string;
+  /** 
+   * Additional cost information
+   */
+  _comment?: Element
 }
 export interface InsurancePlanPlanSpecificCostBenefitCost {
   /** 
@@ -17932,9 +23336,17 @@ resourceType: "InsurancePlan"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -17960,6 +23372,10 @@ resourceType: "InsurancePlan"
    */
   status?: code;
   /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
+  /** 
    * Kind of product
    */
   type?: Array<CodeableConcept>;
@@ -17968,9 +23384,17 @@ resourceType: "InsurancePlan"
    */
   name?: string;
   /** 
+   * Official name
+   */
+  _name?: Element
+  /** 
    * Alternate names
    */
   alias?: Array<string>;
+  /** 
+   * Alternate names
+   */
+  _alias?: Array<Element>
   /** 
    * When the product is available
    */
@@ -18049,6 +23473,10 @@ export interface InvoiceLineItemPriceComponent {
    */
   type: code;
   /** 
+   * base | surcharge | deduction | discount | tax | informational
+   */
+  _type?: Element
+  /** 
    * Code identifying the specific component
    */
   code?: CodeableConcept;
@@ -18056,6 +23484,10 @@ export interface InvoiceLineItemPriceComponent {
    * Factor used for calculating this component
    */
   factor?: decimal;
+  /** 
+   * Factor used for calculating this component
+   */
+  _factor?: Element
   /** 
    * Monetary amount associated with this component
    */
@@ -18078,6 +23510,10 @@ export interface InvoiceLineItem {
    * Sequence number of line item
    */
   sequence?: positiveInt;
+  /** 
+   * Sequence number of line item
+   */
+  _sequence?: Element
   /** 
    * Reference to ChargeItem containing details of this line item or an inline billing code
    */
@@ -18106,9 +23542,17 @@ resourceType: "Invoice"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -18134,9 +23578,17 @@ resourceType: "Invoice"
    */
   status: code;
   /** 
+   * draft | issued | balanced | cancelled | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Reason for cancellation of this Invoice
    */
   cancelledReason?: string;
+  /** 
+   * Reason for cancellation of this Invoice
+   */
+  _cancelledReason?: Element
   /** 
    * Type of Invoice
    */
@@ -18153,6 +23605,10 @@ resourceType: "Invoice"
    * Invoice date / posting date
    */
   date?: dateTime;
+  /** 
+   * Invoice date / posting date
+   */
+  _date?: Element
   /** 
    * Participant in creation of this Invoice
    */
@@ -18186,6 +23642,10 @@ resourceType: "Invoice"
    */
   paymentTerms?: markdown;
   /** 
+   * Payment details
+   */
+  _paymentTerms?: Element
+  /** 
    * Comments made about the invoice
    */
   note?: Array<Annotation>;
@@ -18206,9 +23666,17 @@ resourceType: "Library"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -18230,6 +23698,10 @@ resourceType: "Library"
    */
   url?: uri;
   /** 
+   * Canonical identifier for this library, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Additional identifier for the library
    */
   identifier?: Array<Identifier>;
@@ -18238,25 +23710,49 @@ resourceType: "Library"
    */
   version?: string;
   /** 
+   * Business version of the library
+   */
+  _version?: Element
+  /** 
    * Name for this library (computer friendly)
    */
   name?: string;
+  /** 
+   * Name for this library (computer friendly)
+   */
+  _name?: Element
   /** 
    * Name for this library (human friendly)
    */
   title?: string;
   /** 
+   * Name for this library (human friendly)
+   */
+  _title?: Element
+  /** 
    * Subordinate title of the library
    */
   subtitle?: string;
+  /** 
+   * Subordinate title of the library
+   */
+  _subtitle?: Element
   /** 
    * draft | active | retired | unknown
    */
   status: code;
   /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
+  /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
+  /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
   /** 
    * logic-library | model-definition | asset-collection | module-definition
    */
@@ -18274,9 +23770,17 @@ resourceType: "Library"
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -18285,6 +23789,10 @@ resourceType: "Library"
    * Natural language description of the library
    */
   description?: markdown;
+  /** 
+   * Natural language description of the library
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -18298,21 +23806,41 @@ resourceType: "Library"
    */
   purpose?: markdown;
   /** 
+   * Why this library is defined
+   */
+  _purpose?: Element
+  /** 
    * Describes the clinical usage of the library
    */
   usage?: string;
+  /** 
+   * Describes the clinical usage of the library
+   */
+  _usage?: Element
   /** 
    * Use and/or publishing restrictions
    */
   copyright?: markdown;
   /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
+  /** 
    * When the library was approved by publisher
    */
   approvalDate?: date;
   /** 
+   * When the library was approved by publisher
+   */
+  _approvalDate?: Element
+  /** 
    * When the library was last reviewed
    */
   lastReviewDate?: date;
+  /** 
+   * When the library was last reviewed
+   */
+  _lastReviewDate?: Element
   /** 
    * When the library is expected to be used
    */
@@ -18373,6 +23901,10 @@ export interface LinkageItem {
    */
   type: code;
   /** 
+   * source | alternate | historical
+   */
+  _type?: Element
+  /** 
    * Resource being linked
    */
   resource: Reference;
@@ -18392,9 +23924,17 @@ resourceType: "Linkage"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -18415,6 +23955,10 @@ resourceType: "Linkage"
    * Whether this linkage assertion is active or not
    */
   active?: boolean;
+  /** 
+   * Whether this linkage assertion is active or not
+   */
+  _active?: Element
   /** 
    * Who is responsible for linkages
    */
@@ -18447,9 +23991,17 @@ export interface ListEntry {
    */
   deleted?: boolean;
   /** 
+   * If this item is actually marked as deleted
+   */
+  _deleted?: Element
+  /** 
    * When item added to list
    */
   date?: dateTime;
+  /** 
+   * When item added to list
+   */
+  _date?: Element
   /** 
    * Actual entry
    */
@@ -18470,9 +24022,17 @@ resourceType: "List"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -18498,13 +24058,25 @@ resourceType: "List"
    */
   status: code;
   /** 
+   * current | retired | entered-in-error
+   */
+  _status?: Element
+  /** 
    * working | snapshot | changes
    */
   mode: code;
   /** 
+   * working | snapshot | changes
+   */
+  _mode?: Element
+  /** 
    * Descriptive name for the list
    */
   title?: string;
+  /** 
+   * Descriptive name for the list
+   */
+  _title?: Element
   /** 
    * What the purpose of this list is
    */
@@ -18521,6 +24093,10 @@ resourceType: "List"
    * When the list was prepared
    */
   date?: dateTime;
+  /** 
+   * When the list was prepared
+   */
+  _date?: Element
   /** 
    * Who and/or what defined the list contents (aka Author)
    */
@@ -18561,13 +24137,25 @@ export interface LocationPosition {
    */
   longitude: decimal;
   /** 
+   * Longitude with WGS84 datum
+   */
+  _longitude?: Element
+  /** 
    * Latitude with WGS84 datum
    */
   latitude: decimal;
   /** 
+   * Latitude with WGS84 datum
+   */
+  _latitude?: Element
+  /** 
    * Altitude with WGS84 datum
    */
   altitude?: decimal;
+  /** 
+   * Altitude with WGS84 datum
+   */
+  _altitude?: Element
 }
 export interface LocationHoursOfOperation {
   /** 
@@ -18587,17 +24175,33 @@ export interface LocationHoursOfOperation {
    */
   daysOfWeek?: Array<code>;
   /** 
+   * mon | tue | wed | thu | fri | sat | sun
+   */
+  _daysOfWeek?: Array<Element>
+  /** 
    * The Location is open all day
    */
   allDay?: boolean;
+  /** 
+   * The Location is open all day
+   */
+  _allDay?: Element
   /** 
    * Time that the Location opens
    */
   openingTime?: time;
   /** 
+   * Time that the Location opens
+   */
+  _openingTime?: Element
+  /** 
    * Time that the Location closes
    */
   closingTime?: time;
+  /** 
+   * Time that the Location closes
+   */
+  _closingTime?: Element
 }
 export interface Location {
 resourceType: "Location"
@@ -18614,9 +24218,17 @@ resourceType: "Location"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -18642,6 +24254,10 @@ resourceType: "Location"
    */
   status?: code;
   /** 
+   * active | suspended | inactive
+   */
+  _status?: Element
+  /** 
    * The operational status of the location (typically only for a bed/room)
    */
   operationalStatus?: Coding;
@@ -18650,17 +24266,33 @@ resourceType: "Location"
    */
   name?: string;
   /** 
+   * Name of the location as used by humans
+   */
+  _name?: Element
+  /** 
    * A list of alternate names that the location is known as, or was known as, in the past
    */
   alias?: Array<string>;
+  /** 
+   * A list of alternate names that the location is known as, or was known as, in the past
+   */
+  _alias?: Array<Element>
   /** 
    * Additional details about the location that could be displayed as further information to identify the location beyond its name
    */
   description?: string;
   /** 
+   * Additional details about the location that could be displayed as further information to identify the location beyond its name
+   */
+  _description?: Element
+  /** 
    * instance | kind
    */
   mode?: code;
+  /** 
+   * instance | kind
+   */
+  _mode?: Element
   /** 
    * Type of function performed
    */
@@ -18698,6 +24330,10 @@ resourceType: "Location"
    */
   availabilityExceptions?: string;
   /** 
+   * Description of availability exceptions
+   */
+  _availabilityExceptions?: Element
+  /** 
    * Technical endpoints providing access to services operated for the location
    */
   endpoint?: Array<Reference>;
@@ -18725,6 +24361,10 @@ export interface MeasureGroupPopulation {
    */
   description?: string;
   /** 
+   * The human readable description of this population criteria
+   */
+  _description?: Element
+  /** 
    * The criteria that defines this population
    */
   criteria: Expression;
@@ -18751,6 +24391,10 @@ export interface MeasureGroupStratifierComponent {
    */
   description?: string;
   /** 
+   * The human readable description of this stratifier component
+   */
+  _description?: Element
+  /** 
    * Component of how the measure should be stratified
    */
   criteria: Expression;
@@ -18776,6 +24420,10 @@ export interface MeasureGroupStratifier {
    * The human readable description of this stratifier
    */
   description?: string;
+  /** 
+   * The human readable description of this stratifier
+   */
+  _description?: Element
   /** 
    * How the measure should be stratified
    */
@@ -18806,6 +24454,10 @@ export interface MeasureGroup {
    * Summary description
    */
   description?: string;
+  /** 
+   * Summary description
+   */
+  _description?: Element
   /** 
    * Population criteria
    */
@@ -18841,6 +24493,10 @@ export interface MeasureSupplementalData {
    */
   description?: string;
   /** 
+   * The human readable description of this supplemental data
+   */
+  _description?: Element
+  /** 
    * Expression describing additional data to be reported
    */
   criteria: Expression;
@@ -18860,9 +24516,17 @@ resourceType: "Measure"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -18884,6 +24548,10 @@ resourceType: "Measure"
    */
   url?: uri;
   /** 
+   * Canonical identifier for this measure, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Additional identifier for the measure
    */
   identifier?: Array<Identifier>;
@@ -18892,25 +24560,49 @@ resourceType: "Measure"
    */
   version?: string;
   /** 
+   * Business version of the measure
+   */
+  _version?: Element
+  /** 
    * Name for this measure (computer friendly)
    */
   name?: string;
+  /** 
+   * Name for this measure (computer friendly)
+   */
+  _name?: Element
   /** 
    * Name for this measure (human friendly)
    */
   title?: string;
   /** 
+   * Name for this measure (human friendly)
+   */
+  _title?: Element
+  /** 
    * Subordinate title of the measure
    */
   subtitle?: string;
+  /** 
+   * Subordinate title of the measure
+   */
+  _subtitle?: Element
   /** 
    * draft | active | retired | unknown
    */
   status: code;
   /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
+  /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
+  /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
   /** 
    * E.g. Patient, Practitioner, RelatedPerson, Organization, Location, Device
    */
@@ -18924,9 +24616,17 @@ resourceType: "Measure"
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -18935,6 +24635,10 @@ resourceType: "Measure"
    * Natural language description of the measure
    */
   description?: markdown;
+  /** 
+   * Natural language description of the measure
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -18948,21 +24652,41 @@ resourceType: "Measure"
    */
   purpose?: markdown;
   /** 
+   * Why this measure is defined
+   */
+  _purpose?: Element
+  /** 
    * Describes the clinical usage of the measure
    */
   usage?: string;
+  /** 
+   * Describes the clinical usage of the measure
+   */
+  _usage?: Element
   /** 
    * Use and/or publishing restrictions
    */
   copyright?: markdown;
   /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
+  /** 
    * When the measure was approved by publisher
    */
   approvalDate?: date;
   /** 
+   * When the measure was approved by publisher
+   */
+  _approvalDate?: Element
+  /** 
    * When the measure was last reviewed
    */
   lastReviewDate?: date;
+  /** 
+   * When the measure was last reviewed
+   */
+  _lastReviewDate?: Element
   /** 
    * When the measure is expected to be used
    */
@@ -18996,9 +24720,17 @@ resourceType: "Measure"
    */
   library?: Array<canonical>;
   /** 
+   * Logic used by the measure
+   */
+  _library?: Array<Element>
+  /** 
    * Disclaimer for use of the measure or its referenced content
    */
   disclaimer?: markdown;
+  /** 
+   * Disclaimer for use of the measure or its referenced content
+   */
+  _disclaimer?: Element
   /** 
    * proportion | ratio | continuous-variable | cohort
    */
@@ -19016,17 +24748,33 @@ resourceType: "Measure"
    */
   riskAdjustment?: string;
   /** 
+   * How risk adjustment is applied for this measure
+   */
+  _riskAdjustment?: Element
+  /** 
    * How is rate aggregation performed for this measure
    */
   rateAggregation?: string;
+  /** 
+   * How is rate aggregation performed for this measure
+   */
+  _rateAggregation?: Element
   /** 
    * Detailed description of why the measure exists
    */
   rationale?: markdown;
   /** 
+   * Detailed description of why the measure exists
+   */
+  _rationale?: Element
+  /** 
    * Summary of clinical guidelines
    */
   clinicalRecommendationStatement?: markdown;
+  /** 
+   * Summary of clinical guidelines
+   */
+  _clinicalRecommendationStatement?: Element
   /** 
    * increase | decrease
    */
@@ -19036,9 +24784,17 @@ resourceType: "Measure"
    */
   definition?: Array<markdown>;
   /** 
+   * Defined terms used in the measure documentation
+   */
+  _definition?: Array<Element>
+  /** 
    * Additional guidance for implementers
    */
   guidance?: markdown;
+  /** 
+   * Additional guidance for implementers
+   */
+  _guidance?: Element
   /** 
    * Population criteria group
    */
@@ -19070,6 +24826,10 @@ export interface MeasureReportGroupPopulation {
    * Size of the population
    */
   count?: integer;
+  /** 
+   * Size of the population
+   */
+  _count?: Element
   /** 
    * For subject-list reports, the subject results in this population
    */
@@ -19118,6 +24878,10 @@ export interface MeasureReportGroupStratifierStratumPopulation {
    * Size of the population
    */
   count?: integer;
+  /** 
+   * Size of the population
+   */
+  _count?: Element
   /** 
    * For subject-list reports, the subject results in this population
    */
@@ -19220,9 +24984,17 @@ resourceType: "MeasureReport"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -19248,13 +25020,25 @@ resourceType: "MeasureReport"
    */
   status: code;
   /** 
+   * complete | pending | error
+   */
+  _status?: Element
+  /** 
    * individual | subject-list | summary | data-collection
    */
   type: code;
   /** 
+   * individual | subject-list | summary | data-collection
+   */
+  _type?: Element
+  /** 
    * What measure was calculated
    */
   measure: canonical;
+  /** 
+   * What measure was calculated
+   */
+  _measure?: Element
   /** 
    * What individual(s) the report is for
    */
@@ -19263,6 +25047,10 @@ resourceType: "MeasureReport"
    * When the report was generated
    */
   date?: dateTime;
+  /** 
+   * When the report was generated
+   */
+  _date?: Element
   /** 
    * Who is reporting the data
    */
@@ -19300,9 +25088,17 @@ resourceType: "Media"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -19336,6 +25132,10 @@ resourceType: "Media"
    */
   status: code;
   /** 
+   * preparation | in-progress | not-done | on-hold | stopped | completed | entered-in-error | unknown
+   */
+  _status?: Element
+  /** 
    * Classification of media as image, video, or audio
    */
   type?: CodeableConcept;
@@ -19362,11 +25162,19 @@ resourceType: "Media"
   /** 
    * When Media was collected
    */
+  _createdDateTime?: Element
+  /** 
+   * When Media was collected
+   */
   createdPeriod?: Period;
   /** 
    * Date/Time this version was made available
    */
   issued?: instant;
+  /** 
+   * Date/Time this version was made available
+   */
+  _issued?: Element
   /** 
    * The person who generated the image
    */
@@ -19384,6 +25192,10 @@ resourceType: "Media"
    */
   deviceName?: string;
   /** 
+   * Name of the device/manufacturer
+   */
+  _deviceName?: Element
+  /** 
    * Observing Device
    */
   device?: Reference;
@@ -19392,17 +25204,33 @@ resourceType: "Media"
    */
   height?: positiveInt;
   /** 
+   * Height of the image in pixels (photo/video)
+   */
+  _height?: Element
+  /** 
    * Width of the image in pixels (photo/video)
    */
   width?: positiveInt;
+  /** 
+   * Width of the image in pixels (photo/video)
+   */
+  _width?: Element
   /** 
    * Number of frames if > 1 (photo)
    */
   frames?: positiveInt;
   /** 
+   * Number of frames if > 1 (photo)
+   */
+  _frames?: Element
+  /** 
    * Length in seconds (audio / video)
    */
   duration?: decimal;
+  /** 
+   * Length in seconds (audio / video)
+   */
+  _duration?: Element
   /** 
    * Actual Media - reference or data
    */
@@ -19439,6 +25267,10 @@ export interface MedicationIngredient {
    */
   isActive?: boolean;
   /** 
+   * Active ingredient indicator
+   */
+  _isActive?: Element
+  /** 
    * Quantity of ingredient present
    */
   strength?: Ratio;
@@ -19461,9 +25293,17 @@ export interface MedicationBatch {
    */
   lotNumber?: string;
   /** 
+   * Identifier assigned to batch
+   */
+  _lotNumber?: Element
+  /** 
    * When batch will expire
    */
   expirationDate?: dateTime;
+  /** 
+   * When batch will expire
+   */
+  _expirationDate?: Element
 }
 export interface Medication {
 resourceType: "Medication"
@@ -19480,9 +25320,17 @@ resourceType: "Medication"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -19511,6 +25359,10 @@ resourceType: "Medication"
    * active | inactive | entered-in-error
    */
   status?: code;
+  /** 
+   * active | inactive | entered-in-error
+   */
+  _status?: Element
   /** 
    * Manufacturer of the item
    */
@@ -19573,6 +25425,10 @@ export interface MedicationAdministrationDosage {
    */
   text?: string;
   /** 
+   * Free text dosage instructions e.g. SIG
+   */
+  _text?: Element
+  /** 
    * Body site administered to
    */
   site?: CodeableConcept;
@@ -19612,9 +25468,17 @@ resourceType: "MedicationAdministration"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -19640,6 +25504,10 @@ resourceType: "MedicationAdministration"
    */
   instantiates?: Array<uri>;
   /** 
+   * Instantiates protocol or definition
+   */
+  _instantiates?: Array<Element>
+  /** 
    * Part of referenced event
    */
   partOf?: Array<Reference>;
@@ -19647,6 +25515,10 @@ resourceType: "MedicationAdministration"
    * in-progress | not-done | on-hold | completed | entered-in-error | stopped | unknown
    */
   status: code;
+  /** 
+   * in-progress | not-done | on-hold | completed | entered-in-error | stopped | unknown
+   */
+  _status?: Element
   /** 
    * Reason administration not performed
    */
@@ -19679,6 +25551,10 @@ resourceType: "MedicationAdministration"
    * Start and end time of administration
    */
   effectiveDateTime?: dateTime;
+  /** 
+   * Start and end time of administration
+   */
+  _effectiveDateTime?: Element
   /** 
    * Start and end time of administration
    */
@@ -19757,6 +25633,10 @@ export interface MedicationDispenseSubstitution {
    */
   wasSubstituted: boolean;
   /** 
+   * Whether a substitution was or was not performed on the dispense
+   */
+  _wasSubstituted?: Element
+  /** 
    * Code signifying whether a different drug was dispensed from what was prescribed
    */
   type?: CodeableConcept;
@@ -19784,9 +25664,17 @@ resourceType: "MedicationDispense"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -19815,6 +25703,10 @@ resourceType: "MedicationDispense"
    * preparation | in-progress | cancelled | on-hold | completed | entered-in-error | stopped | declined | unknown
    */
   status: code;
+  /** 
+   * preparation | in-progress | cancelled | on-hold | completed | entered-in-error | stopped | declined | unknown
+   */
+  _status?: Element
   /** 
    * Why a dispense was not performed
    */
@@ -19876,9 +25768,17 @@ resourceType: "MedicationDispense"
    */
   whenPrepared?: dateTime;
   /** 
+   * When product was packaged and reviewed
+   */
+  _whenPrepared?: Element
+  /** 
    * When product was given out
    */
   whenHandedOver?: dateTime;
+  /** 
+   * When product was given out
+   */
+  _whenHandedOver?: Element
   /** 
    * Where the medication was sent
    */
@@ -19979,6 +25879,10 @@ export interface MedicationKnowledgeIngredient {
    */
   isActive?: boolean;
   /** 
+   * Active ingredient indicator
+   */
+  _isActive?: Element
+  /** 
    * Quantity of ingredient present
    */
   strength?: Ratio;
@@ -20005,6 +25909,10 @@ export interface MedicationKnowledgeCost {
    */
   source?: string;
   /** 
+   * The source or owner for the price information
+   */
+  _source?: Element
+  /** 
    * The price of the medication
    */
   cost: Money;
@@ -20030,6 +25938,10 @@ export interface MedicationKnowledgeMonitoringProgram {
    * Name of the reviewing program
    */
   name?: string;
+  /** 
+   * Name of the reviewing program
+   */
+  _name?: Element
 }
 export interface MedicationKnowledgeAdministrationGuidelinesDosage {
   /** 
@@ -20078,6 +25990,10 @@ export interface MedicationKnowledgeAdministrationGuidelinesPatientCharacteristi
    * The specific characteristic
    */
   value?: Array<string>;
+  /** 
+   * The specific characteristic
+   */
+  _value?: Array<Element>
 }
 export interface MedicationKnowledgeAdministrationGuidelines {
   /** 
@@ -20181,11 +26097,19 @@ export interface MedicationKnowledgeDrugCharacteristic {
   /** 
    * Description of the characteristic
    */
+  _valueString?: Element
+  /** 
+   * Description of the characteristic
+   */
   valueQuantity?: Quantity;
   /** 
    * Description of the characteristic
    */
   valueBase64Binary?: base64Binary;
+  /** 
+   * Description of the characteristic
+   */
+  _valueBase64Binary?: Element
 }
 export interface MedicationKnowledgeRegulatorySubstitution {
   /** 
@@ -20208,6 +26132,10 @@ export interface MedicationKnowledgeRegulatorySubstitution {
    * Specifies if regulation allows for changes in the medication when dispensing
    */
   allowed: boolean;
+  /** 
+   * Specifies if regulation allows for changes in the medication when dispensing
+   */
+  _allowed?: Element
 }
 export interface MedicationKnowledgeRegulatorySchedule {
   /** 
@@ -20320,9 +26248,17 @@ resourceType: "MedicationKnowledge"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -20348,6 +26284,10 @@ resourceType: "MedicationKnowledge"
    */
   status?: code;
   /** 
+   * active | inactive | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Manufacturer of the item
    */
   manufacturer?: Reference;
@@ -20363,6 +26303,10 @@ resourceType: "MedicationKnowledge"
    * Additional names for a medication
    */
   synonym?: Array<string>;
+  /** 
+   * Additional names for a medication
+   */
+  _synonym?: Array<Element>
   /** 
    * Associated or related medication information
    */
@@ -20387,6 +26331,10 @@ resourceType: "MedicationKnowledge"
    * The instructions for preparing the medication
    */
   preparationInstruction?: markdown;
+  /** 
+   * The instructions for preparing the medication
+   */
+  _preparationInstruction?: Element
   /** 
    * The intended or approved route of administration
    */
@@ -20481,6 +26429,10 @@ export interface MedicationRequestDispenseRequest {
    */
   numberOfRepeatsAllowed?: unsignedInt;
   /** 
+   * Number of refills authorized
+   */
+  _numberOfRepeatsAllowed?: Element
+  /** 
    * Amount of medication to supply per dispense
    */
   quantity?: Quantity;
@@ -20513,6 +26465,10 @@ export interface MedicationRequestSubstitution {
   /** 
    * Whether substitution is allowed or not
    */
+  _allowedBoolean?: Element
+  /** 
+   * Whether substitution is allowed or not
+   */
   allowedCodeableConcept?: CodeableConcept;
   /** 
    * Why should (not) substitution be made
@@ -20534,9 +26490,17 @@ resourceType: "MedicationRequest"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -20562,6 +26526,10 @@ resourceType: "MedicationRequest"
    */
   status: code;
   /** 
+   * active | on-hold | cancelled | completed | entered-in-error | stopped | draft | unknown
+   */
+  _status?: Element
+  /** 
    * Reason for current status
    */
   statusReason?: CodeableConcept;
@@ -20569,6 +26537,10 @@ resourceType: "MedicationRequest"
    * proposal | plan | order | original-order | reflex-order | filler-order | instance-order | option
    */
   intent: code;
+  /** 
+   * proposal | plan | order | original-order | reflex-order | filler-order | instance-order | option
+   */
+  _intent?: Element
   /** 
    * Type of medication usage
    */
@@ -20578,13 +26550,25 @@ resourceType: "MedicationRequest"
    */
   priority?: code;
   /** 
+   * routine | urgent | asap | stat
+   */
+  _priority?: Element
+  /** 
    * True if request is prohibiting action
    */
   doNotPerform?: boolean;
   /** 
+   * True if request is prohibiting action
+   */
+  _doNotPerform?: Element
+  /** 
    * Reported rather than primary record
    */
   reportedBoolean?: boolean;
+  /** 
+   * Reported rather than primary record
+   */
+  _reportedBoolean?: Element
   /** 
    * Reported rather than primary record
    */
@@ -20614,6 +26598,10 @@ resourceType: "MedicationRequest"
    */
   authoredOn?: dateTime;
   /** 
+   * When request was initially authored
+   */
+  _authoredOn?: Element
+  /** 
    * Who/What requested the Request
    */
   requester?: Reference;
@@ -20642,9 +26630,17 @@ resourceType: "MedicationRequest"
    */
   instantiatesCanonical?: Array<canonical>;
   /** 
+   * Instantiates FHIR protocol or definition
+   */
+  _instantiatesCanonical?: Array<Element>
+  /** 
    * Instantiates external protocol or definition
    */
   instantiatesUri?: Array<uri>;
+  /** 
+   * Instantiates external protocol or definition
+   */
+  _instantiatesUri?: Array<Element>
   /** 
    * What request fulfills
    */
@@ -20706,9 +26702,17 @@ resourceType: "MedicationStatement"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -20742,6 +26746,10 @@ resourceType: "MedicationStatement"
    */
   status: code;
   /** 
+   * active | completed | entered-in-error | intended | stopped | on-hold | unknown | not-taken
+   */
+  _status?: Element
+  /** 
    * Reason for current status
    */
   statusReason?: Array<CodeableConcept>;
@@ -20772,11 +26780,19 @@ resourceType: "MedicationStatement"
   /** 
    * The date/time or interval when the medication is/was/will be taken
    */
+  _effectiveDateTime?: Element
+  /** 
+   * The date/time or interval when the medication is/was/will be taken
+   */
   effectivePeriod?: Period;
   /** 
    * When the statement was asserted?
    */
   dateAsserted?: dateTime;
+  /** 
+   * When the statement was asserted?
+   */
+  _dateAsserted?: Element
   /** 
    * Person or organization that provided the information about the taking of this medication
    */
@@ -20820,6 +26836,10 @@ export interface MedicinalProductNameNamePart {
    * A fragment of a product name
    */
   part: string;
+  /** 
+   * A fragment of a product name
+   */
+  _part?: Element
   /** 
    * Idenifying type for this part of the name (e.g. strength part)
    */
@@ -20869,6 +26889,10 @@ export interface MedicinalProductName {
    */
   productName: string;
   /** 
+   * The full product name
+   */
+  _productName?: Element
+  /** 
    * Coding words or phrases of the name
    */
   namePart?: Array<MedicinalProductNameNamePart>;
@@ -20902,6 +26926,10 @@ export interface MedicinalProductManufacturingBusinessOperation {
    * Regulatory authorization date
    */
   effectiveDate?: dateTime;
+  /** 
+   * Regulatory authorization date
+   */
+  _effectiveDate?: Element
   /** 
    * To indicate if this proces is commercially confidential
    */
@@ -20957,6 +26985,10 @@ export interface MedicinalProductSpecialDesignation {
    */
   date?: dateTime;
   /** 
+   * Date when the designation was granted
+   */
+  _date?: Element
+  /** 
    * Animal species for which this applies
    */
   species?: CodeableConcept;
@@ -20976,9 +27008,17 @@ resourceType: "MedicinalProduct"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -21023,6 +27063,10 @@ resourceType: "MedicinalProduct"
    * Whether the Medicinal Product is subject to special measures for regulatory reasons
    */
   specialMeasures?: Array<string>;
+  /** 
+   * Whether the Medicinal Product is subject to special measures for regulatory reasons
+   */
+  _specialMeasures?: Array<Element>
   /** 
    * If authorised for use in children
    */
@@ -21141,6 +27185,10 @@ export interface MedicinalProductAuthorizationProcedure {
    */
   dateDateTime?: dateTime;
   /** 
+   * Date of procedure
+   */
+  _dateDateTime?: Element
+  /** 
    * Applcations submitted to obtain a marketing authorization
    */
   application?: Array<MedicinalProductAuthorizationProcedure>;
@@ -21160,9 +27208,17 @@ resourceType: "MedicinalProductAuthorization"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -21204,9 +27260,17 @@ resourceType: "MedicinalProductAuthorization"
    */
   statusDate?: dateTime;
   /** 
+   * The date at which the given status has become applicable
+   */
+  _statusDate?: Element
+  /** 
    * The date when a suspended the marketing or the marketing authorization of the product is anticipated to be restored
    */
   restoreDate?: dateTime;
+  /** 
+   * The date when a suspended the marketing or the marketing authorization of the product is anticipated to be restored
+   */
+  _restoreDate?: Element
   /** 
    * The beginning of the time period in which the marketing authorization is in the specific status shall be specified A complete date consisting of day, month and year shall be specified using the ISO 8601 date format
    */
@@ -21220,9 +27284,17 @@ resourceType: "MedicinalProductAuthorization"
    */
   dateOfFirstAuthorization?: dateTime;
   /** 
+   * The date when the first authorization was granted by a Medicines Regulatory Agency
+   */
+  _dateOfFirstAuthorization?: Element
+  /** 
    * Date of first marketing authorization for a company's new medicinal product in any country in the World
    */
   internationalBirthDate?: dateTime;
+  /** 
+   * Date of first marketing authorization for a company's new medicinal product in any country in the World
+   */
+  _internationalBirthDate?: Element
   /** 
    * The legal framework against which this authorization is granted
    */
@@ -21286,9 +27358,17 @@ resourceType: "MedicinalProductContraindication"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -21376,9 +27456,17 @@ resourceType: "MedicinalProductIndication"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -21463,6 +27551,10 @@ export interface MedicinalProductIngredientSpecifiedSubstanceStrengthReferenceSt
    */
   measurementPoint?: string;
   /** 
+   * For when strength is measured at a particular point or distance
+   */
+  _measurementPoint?: Element
+  /** 
    * The country or countries for which the strength range applies
    */
   country?: Array<CodeableConcept>;
@@ -21500,6 +27592,10 @@ export interface MedicinalProductIngredientSpecifiedSubstanceStrength {
    * For when strength is measured at a particular point or distance
    */
   measurementPoint?: string;
+  /** 
+   * For when strength is measured at a particular point or distance
+   */
+  _measurementPoint?: Element
   /** 
    * The country or countries for which the strength range applies
    */
@@ -21576,9 +27672,17 @@ resourceType: "MedicinalProductIngredient"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -21607,6 +27711,10 @@ resourceType: "MedicinalProductIngredient"
    * If the ingredient is a known or suspected allergen
    */
   allergenicIndicator?: boolean;
+  /** 
+   * If the ingredient is a known or suspected allergen
+   */
+  _allergenicIndicator?: Element
   /** 
    * Manufacturer of this Ingredient
    */
@@ -21658,9 +27766,17 @@ resourceType: "MedicinalProductInteraction"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -21685,6 +27801,10 @@ resourceType: "MedicinalProductInteraction"
    * The interaction described
    */
   description?: string;
+  /** 
+   * The interaction described
+   */
+  _description?: Element
   /** 
    * The specific medication, food or laboratory test that interacts
    */
@@ -21722,9 +27842,17 @@ resourceType: "MedicinalProductManufactured"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -21870,9 +27998,17 @@ resourceType: "MedicinalProductPackaged"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -21901,6 +28037,10 @@ resourceType: "MedicinalProductPackaged"
    * Textual description
    */
   description?: string;
+  /** 
+   * Textual description
+   */
+  _description?: Element
   /** 
    * The legal status of supply of the medicinal product as classified by the regulator
    */
@@ -21974,6 +28114,10 @@ export interface MedicinalProductPharmaceuticalRouteOfAdministrationTargetSpecie
    * Extra information about the withdrawal period
    */
   supportingInformation?: string;
+  /** 
+   * Extra information about the withdrawal period
+   */
+  _supportingInformation?: Element
 }
 export interface MedicinalProductPharmaceuticalRouteOfAdministrationTargetSpecies {
   /** 
@@ -22054,9 +28198,17 @@ resourceType: "MedicinalProductPharmaceutical"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -22118,9 +28270,17 @@ resourceType: "MedicinalProductUndesirableEffect"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -22177,17 +28337,33 @@ export interface MessageDefinitionFocus {
    */
   code: code;
   /** 
+   * Type of resource
+   */
+  _code?: Element
+  /** 
    * Profile that must be adhered to by focus
    */
   profile?: canonical;
+  /** 
+   * Profile that must be adhered to by focus
+   */
+  _profile?: Element
   /** 
    * Minimum number of focuses of this type
    */
   min: unsignedInt;
   /** 
+   * Minimum number of focuses of this type
+   */
+  _min?: Element
+  /** 
    * Maximum number of focuses of this type
    */
   max?: string;
+  /** 
+   * Maximum number of focuses of this type
+   */
+  _max?: Element
 }
 export interface MessageDefinitionAllowedResponse {
   /** 
@@ -22207,9 +28383,17 @@ export interface MessageDefinitionAllowedResponse {
    */
   message: canonical;
   /** 
+   * Reference to allowed message definition response
+   */
+  _message?: Element
+  /** 
    * When should this response be used
    */
   situation?: markdown;
+  /** 
+   * When should this response be used
+   */
+  _situation?: Element
 }
 export interface MessageDefinition {
 resourceType: "MessageDefinition"
@@ -22226,9 +28410,17 @@ resourceType: "MessageDefinition"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -22250,6 +28442,10 @@ resourceType: "MessageDefinition"
    */
   url?: uri;
   /** 
+   * Business Identifier for a given MessageDefinition
+   */
+  _url?: Element
+  /** 
    * Primary key for the message definition on a given server
    */
   identifier?: Array<Identifier>;
@@ -22258,33 +28454,65 @@ resourceType: "MessageDefinition"
    */
   version?: string;
   /** 
+   * Business version of the message definition
+   */
+  _version?: Element
+  /** 
    * Name for this message definition (computer friendly)
    */
   name?: string;
+  /** 
+   * Name for this message definition (computer friendly)
+   */
+  _name?: Element
   /** 
    * Name for this message definition (human friendly)
    */
   title?: string;
   /** 
+   * Name for this message definition (human friendly)
+   */
+  _title?: Element
+  /** 
    * Takes the place of
    */
   replaces?: Array<canonical>;
+  /** 
+   * Takes the place of
+   */
+  _replaces?: Array<Element>
   /** 
    * draft | active | retired | unknown
    */
   status: code;
   /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
+  /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
+  /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
   /** 
    * Date last changed
    */
   date: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -22293,6 +28521,10 @@ resourceType: "MessageDefinition"
    * Natural language description of the message definition
    */
   description?: markdown;
+  /** 
+   * Natural language description of the message definition
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -22306,17 +28538,33 @@ resourceType: "MessageDefinition"
    */
   purpose?: markdown;
   /** 
+   * Why this message definition is defined
+   */
+  _purpose?: Element
+  /** 
    * Use and/or publishing restrictions
    */
   copyright?: markdown;
+  /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
   /** 
    * Definition this one is based on
    */
   base?: canonical;
   /** 
+   * Definition this one is based on
+   */
+  _base?: Element
+  /** 
    * Protocol/workflow this is part of
    */
   parent?: Array<canonical>;
+  /** 
+   * Protocol/workflow this is part of
+   */
+  _parent?: Array<Element>
   /** 
    * Event code  or link to the EventDefinition
    */
@@ -22326,9 +28574,17 @@ resourceType: "MessageDefinition"
    */
   eventUri?: uri;
   /** 
+   * Event code  or link to the EventDefinition
+   */
+  _eventUri?: Element
+  /** 
    * consequence | currency | notification
    */
   category?: code;
+  /** 
+   * consequence | currency | notification
+   */
+  _category?: Element
   /** 
    * Resource(s) that are the subject of the event
    */
@@ -22338,6 +28594,10 @@ resourceType: "MessageDefinition"
    */
   responseRequired?: code;
   /** 
+   * always | on-error | never | on-success
+   */
+  _responseRequired?: Element
+  /** 
    * Responses to this message
    */
   allowedResponse?: Array<MessageDefinitionAllowedResponse>;
@@ -22345,6 +28605,10 @@ resourceType: "MessageDefinition"
    * Canonical reference to a GraphDefinition
    */
   graph?: Array<canonical>;
+  /** 
+   * Canonical reference to a GraphDefinition
+   */
+  _graph?: Array<Element>
 }
 
 export interface MessageHeaderDestination {
@@ -22365,6 +28629,10 @@ export interface MessageHeaderDestination {
    */
   name?: string;
   /** 
+   * Name of system
+   */
+  _name?: Element
+  /** 
    * Particular delivery destination within the destination
    */
   target?: Reference;
@@ -22372,6 +28640,10 @@ export interface MessageHeaderDestination {
    * Actual destination address or id
    */
   endpoint: url;
+  /** 
+   * Actual destination address or id
+   */
+  _endpoint?: Element
   /** 
    * Intended "real-world" recipient for the data
    */
@@ -22395,13 +28667,25 @@ export interface MessageHeaderSource {
    */
   name?: string;
   /** 
+   * Name of system
+   */
+  _name?: Element
+  /** 
    * Name of software running the system
    */
   software?: string;
   /** 
+   * Name of software running the system
+   */
+  _software?: Element
+  /** 
    * Version of software running
    */
   version?: string;
+  /** 
+   * Version of software running
+   */
+  _version?: Element
   /** 
    * Human contact for problems
    */
@@ -22410,6 +28694,10 @@ export interface MessageHeaderSource {
    * Actual message source address or id
    */
   endpoint: url;
+  /** 
+   * Actual message source address or id
+   */
+  _endpoint?: Element
 }
 export interface MessageHeaderResponse {
   /** 
@@ -22429,9 +28717,17 @@ export interface MessageHeaderResponse {
    */
   identifier: id;
   /** 
+   * Id of original message
+   */
+  _identifier?: Element
+  /** 
    * ok | transient-error | fatal-error
    */
   code: code;
+  /** 
+   * ok | transient-error | fatal-error
+   */
+  _code?: Element
   /** 
    * Specific list of hints/warnings/errors
    */
@@ -22452,9 +28748,17 @@ resourceType: "MessageHeader"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -22479,6 +28783,10 @@ resourceType: "MessageHeader"
    * Code for the event this message represents or link to event definition
    */
   eventUri?: uri;
+  /** 
+   * Code for the event this message represents or link to event definition
+   */
+  _eventUri?: Element
   /** 
    * Message destination application(s)
    */
@@ -22519,6 +28827,10 @@ resourceType: "MessageHeader"
    * Link to the definition for this message
    */
   definition?: canonical;
+  /** 
+   * Link to the definition for this message
+   */
+  _definition?: Element
 }
 
 export interface MolecularSequenceReferenceSeq {
@@ -22543,9 +28855,17 @@ export interface MolecularSequenceReferenceSeq {
    */
   genomeBuild?: string;
   /** 
+   * The Genome Build used for reference, following GRCh build versions e.g. 'GRCh 37'
+   */
+  _genomeBuild?: Element
+  /** 
    * sense | antisense
    */
   orientation?: code;
+  /** 
+   * sense | antisense
+   */
+  _orientation?: Element
   /** 
    * Reference identifier
    */
@@ -22559,17 +28879,33 @@ export interface MolecularSequenceReferenceSeq {
    */
   referenceSeqString?: string;
   /** 
+   * A string to represent reference sequence
+   */
+  _referenceSeqString?: Element
+  /** 
    * watson | crick
    */
   strand?: code;
+  /** 
+   * watson | crick
+   */
+  _strand?: Element
   /** 
    * Start position of the window on the  reference sequence
    */
   windowStart?: integer;
   /** 
+   * Start position of the window on the  reference sequence
+   */
+  _windowStart?: Element
+  /** 
    * End position of the window on the reference sequence
    */
   windowEnd?: integer;
+  /** 
+   * End position of the window on the reference sequence
+   */
+  _windowEnd?: Element
 }
 export interface MolecularSequenceVariant {
   /** 
@@ -22589,21 +28925,41 @@ export interface MolecularSequenceVariant {
    */
   start?: integer;
   /** 
+   * Start position of the variant on the  reference sequence
+   */
+  _start?: Element
+  /** 
    * End position of the variant on the reference sequence
    */
   end?: integer;
+  /** 
+   * End position of the variant on the reference sequence
+   */
+  _end?: Element
   /** 
    * Allele that was observed
    */
   observedAllele?: string;
   /** 
+   * Allele that was observed
+   */
+  _observedAllele?: Element
+  /** 
    * Allele in the reference sequence
    */
   referenceAllele?: string;
   /** 
+   * Allele in the reference sequence
+   */
+  _referenceAllele?: Element
+  /** 
    * Extended CIGAR string for aligning the sequence with reference bases
    */
   cigar?: string;
+  /** 
+   * Extended CIGAR string for aligning the sequence with reference bases
+   */
+  _cigar?: Element
   /** 
    * Pointer to observed variant information
    */
@@ -22627,29 +28983,57 @@ export interface MolecularSequenceQualityRoc {
    */
   score?: Array<integer>;
   /** 
+   * Genotype quality score
+   */
+  _score?: Array<Element>
+  /** 
    * Roc score true positive numbers
    */
   numTP?: Array<integer>;
+  /** 
+   * Roc score true positive numbers
+   */
+  _numTP?: Array<Element>
   /** 
    * Roc score false positive numbers
    */
   numFP?: Array<integer>;
   /** 
+   * Roc score false positive numbers
+   */
+  _numFP?: Array<Element>
+  /** 
    * Roc score false negative numbers
    */
   numFN?: Array<integer>;
+  /** 
+   * Roc score false negative numbers
+   */
+  _numFN?: Array<Element>
   /** 
    * Precision of the GQ score
    */
   precision?: Array<decimal>;
   /** 
+   * Precision of the GQ score
+   */
+  _precision?: Array<Element>
+  /** 
    * Sensitivity of the GQ score
    */
   sensitivity?: Array<decimal>;
   /** 
+   * Sensitivity of the GQ score
+   */
+  _sensitivity?: Array<Element>
+  /** 
    * FScore of the GQ score
    */
   fMeasure?: Array<decimal>;
+  /** 
+   * FScore of the GQ score
+   */
+  _fMeasure?: Array<Element>
 }
 export interface MolecularSequenceQuality {
   /** 
@@ -22669,6 +29053,10 @@ export interface MolecularSequenceQuality {
    */
   type: code;
   /** 
+   * indel | snp | unknown
+   */
+  _type?: Element
+  /** 
    * Standard sequence for comparison
    */
   standardSequence?: CodeableConcept;
@@ -22677,9 +29065,17 @@ export interface MolecularSequenceQuality {
    */
   start?: integer;
   /** 
+   * Start position of the sequence
+   */
+  _start?: Element
+  /** 
    * End position of the sequence
    */
   end?: integer;
+  /** 
+   * End position of the sequence
+   */
+  _end?: Element
   /** 
    * Quality score for the comparison
    */
@@ -22693,33 +29089,65 @@ export interface MolecularSequenceQuality {
    */
   truthTP?: decimal;
   /** 
+   * True positives from the perspective of the truth data
+   */
+  _truthTP?: Element
+  /** 
    * True positives from the perspective of the query data
    */
   queryTP?: decimal;
+  /** 
+   * True positives from the perspective of the query data
+   */
+  _queryTP?: Element
   /** 
    * False negatives
    */
   truthFN?: decimal;
   /** 
+   * False negatives
+   */
+  _truthFN?: Element
+  /** 
    * False positives
    */
   queryFP?: decimal;
+  /** 
+   * False positives
+   */
+  _queryFP?: Element
   /** 
    * False positives where the non-REF alleles in the Truth and Query Call Sets match
    */
   gtFP?: decimal;
   /** 
+   * False positives where the non-REF alleles in the Truth and Query Call Sets match
+   */
+  _gtFP?: Element
+  /** 
    * Precision of comparison
    */
   precision?: decimal;
+  /** 
+   * Precision of comparison
+   */
+  _precision?: Element
   /** 
    * Recall of comparison
    */
   recall?: decimal;
   /** 
+   * Recall of comparison
+   */
+  _recall?: Element
+  /** 
    * F-score
    */
   fScore?: decimal;
+  /** 
+   * F-score
+   */
+  _fScore?: Element
   /** 
    * Receiver Operator Characteristic (ROC) Curve
    */
@@ -22743,25 +29171,49 @@ export interface MolecularSequenceRepository {
    */
   type: code;
   /** 
+   * directlink | openapi | login | oauth | other
+   */
+  _type?: Element
+  /** 
    * URI of the repository
    */
   url?: uri;
+  /** 
+   * URI of the repository
+   */
+  _url?: Element
   /** 
    * Repository's name
    */
   name?: string;
   /** 
+   * Repository's name
+   */
+  _name?: Element
+  /** 
    * Id of the dataset that used to call for dataset in repository
    */
   datasetId?: string;
+  /** 
+   * Id of the dataset that used to call for dataset in repository
+   */
+  _datasetId?: Element
   /** 
    * Id of the variantset that used to call for variantset in repository
    */
   variantsetId?: string;
   /** 
+   * Id of the variantset that used to call for variantset in repository
+   */
+  _variantsetId?: Element
+  /** 
    * Id of the read
    */
   readsetId?: string;
+  /** 
+   * Id of the read
+   */
+  _readsetId?: Element
 }
 export interface MolecularSequenceStructureVariantOuter {
   /** 
@@ -22781,9 +29233,17 @@ export interface MolecularSequenceStructureVariantOuter {
    */
   start?: integer;
   /** 
+   * Structural variant outer start
+   */
+  _start?: Element
+  /** 
    * Structural variant outer end
    */
   end?: integer;
+  /** 
+   * Structural variant outer end
+   */
+  _end?: Element
 }
 export interface MolecularSequenceStructureVariantInner {
   /** 
@@ -22803,9 +29263,17 @@ export interface MolecularSequenceStructureVariantInner {
    */
   start?: integer;
   /** 
+   * Structural variant inner start
+   */
+  _start?: Element
+  /** 
    * Structural variant inner end
    */
   end?: integer;
+  /** 
+   * Structural variant inner end
+   */
+  _end?: Element
 }
 export interface MolecularSequenceStructureVariant {
   /** 
@@ -22829,9 +29297,17 @@ export interface MolecularSequenceStructureVariant {
    */
   exact?: boolean;
   /** 
+   * Does the structural variant have base pair resolution breakpoints?
+   */
+  _exact?: Element
+  /** 
    * Structural variant length
    */
   length?: integer;
+  /** 
+   * Structural variant length
+   */
+  _length?: Element
   /** 
    * Structural variant outer
    */
@@ -22856,9 +29332,17 @@ resourceType: "MolecularSequence"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -22884,9 +29368,17 @@ resourceType: "MolecularSequence"
    */
   type?: code;
   /** 
+   * aa | dna | rna
+   */
+  _type?: Element
+  /** 
    * Base number of coordinate system (0 for 0-based numbering or coordinates, inclusive start, exclusive end, 1 for 1-based numbering, inclusive start, inclusive end)
    */
   coordinateSystem: integer;
+  /** 
+   * Base number of coordinate system (0 for 0-based numbering or coordinates, inclusive start, exclusive end, 1 for 1-based numbering, inclusive start, inclusive end)
+   */
+  _coordinateSystem?: Element
   /** 
    * Who and/or what this is about
    */
@@ -22920,6 +29412,10 @@ resourceType: "MolecularSequence"
    */
   observedSeq?: string;
   /** 
+   * Sequence that was observed
+   */
+  _observedSeq?: Element
+  /** 
    * An set of value as quality of sequence
    */
   quality?: Array<MolecularSequenceQuality>;
@@ -22927,6 +29423,10 @@ resourceType: "MolecularSequence"
    * Average number of reads representing a given nucleotide in the reconstructed sequence
    */
   readCoverage?: integer;
+  /** 
+   * Average number of reads representing a given nucleotide in the reconstructed sequence
+   */
+  _readCoverage?: Element
   /** 
    * External repository which contains detailed report related with observedSeq in this resource
    */
@@ -22959,17 +29459,33 @@ export interface NamingSystemUniqueId {
    */
   type: code;
   /** 
+   * oid | uuid | uri | other
+   */
+  _type?: Element
+  /** 
    * The unique identifier
    */
   value: string;
+  /** 
+   * The unique identifier
+   */
+  _value?: Element
   /** 
    * Is this the id that should be used for this type
    */
   preferred?: boolean;
   /** 
+   * Is this the id that should be used for this type
+   */
+  _preferred?: Element
+  /** 
    * Notes about identifier usage
    */
   comment?: string;
+  /** 
+   * Notes about identifier usage
+   */
+  _comment?: Element
   /** 
    * When is identifier valid?
    */
@@ -22990,9 +29506,17 @@ resourceType: "NamingSystem"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -23014,21 +29538,41 @@ resourceType: "NamingSystem"
    */
   name: string;
   /** 
+   * Name for this naming system (computer friendly)
+   */
+  _name?: Element
+  /** 
    * draft | active | retired | unknown
    */
   status: code;
+  /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
   /** 
    * codesystem | identifier | root
    */
   kind: code;
   /** 
+   * codesystem | identifier | root
+   */
+  _kind?: Element
+  /** 
    * Date last changed
    */
   date: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -23038,6 +29582,10 @@ resourceType: "NamingSystem"
    */
   responsible?: string;
   /** 
+   * Who maintains system namespace?
+   */
+  _responsible?: Element
+  /** 
    * e.g. driver,  provider,  patient, bank etc.
    */
   type?: CodeableConcept;
@@ -23045,6 +29593,10 @@ resourceType: "NamingSystem"
    * Natural language description of the naming system
    */
   description?: markdown;
+  /** 
+   * Natural language description of the naming system
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -23057,6 +29609,10 @@ resourceType: "NamingSystem"
    * How/where is it used
    */
   usage?: string;
+  /** 
+   * How/where is it used
+   */
+  _usage?: Element
   /** 
    * Unique identifiers used for system
    */
@@ -23144,6 +29700,10 @@ export interface NutritionOrderOralDiet {
    * Instructions or additional information about the oral diet
    */
   instruction?: string;
+  /** 
+   * Instructions or additional information about the oral diet
+   */
+  _instruction?: Element
 }
 export interface NutritionOrderSupplement {
   /** 
@@ -23167,6 +29727,10 @@ export interface NutritionOrderSupplement {
    */
   productName?: string;
   /** 
+   * Product or brand name of the nutritional supplement
+   */
+  _productName?: Element
+  /** 
    * Scheduled frequency of supplement
    */
   schedule?: Array<Timing>;
@@ -23178,6 +29742,10 @@ export interface NutritionOrderSupplement {
    * Instructions or additional information about the oral supplement
    */
   instruction?: string;
+  /** 
+   * Instructions or additional information about the oral supplement
+   */
+  _instruction?: Element
 }
 export interface NutritionOrderEnteralFormulaAdministration {
   /** 
@@ -23231,6 +29799,10 @@ export interface NutritionOrderEnteralFormula {
    */
   baseFormulaProductName?: string;
   /** 
+   * Product or brand name of the enteral or infant formula
+   */
+  _baseFormulaProductName?: Element
+  /** 
    * Type of modular component to add to the feeding
    */
   additiveType?: CodeableConcept;
@@ -23238,6 +29810,10 @@ export interface NutritionOrderEnteralFormula {
    * Product or brand name of the modular additive
    */
   additiveProductName?: string;
+  /** 
+   * Product or brand name of the modular additive
+   */
+  _additiveProductName?: Element
   /** 
    * Amount of energy per specified volume that is required
    */
@@ -23258,6 +29834,10 @@ export interface NutritionOrderEnteralFormula {
    * Formula feeding instructions expressed as text
    */
   administrationInstruction?: string;
+  /** 
+   * Formula feeding instructions expressed as text
+   */
+  _administrationInstruction?: Element
 }
 export interface NutritionOrder {
 resourceType: "NutritionOrder"
@@ -23274,9 +29854,17 @@ resourceType: "NutritionOrder"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -23302,21 +29890,41 @@ resourceType: "NutritionOrder"
    */
   instantiatesCanonical?: Array<canonical>;
   /** 
+   * Instantiates FHIR protocol or definition
+   */
+  _instantiatesCanonical?: Array<Element>
+  /** 
    * Instantiates external protocol or definition
    */
   instantiatesUri?: Array<uri>;
+  /** 
+   * Instantiates external protocol or definition
+   */
+  _instantiatesUri?: Array<Element>
   /** 
    * Instantiates protocol or definition
    */
   instantiates?: Array<uri>;
   /** 
+   * Instantiates protocol or definition
+   */
+  _instantiates?: Array<Element>
+  /** 
    * draft | active | on-hold | revoked | completed | entered-in-error | unknown
    */
   status: code;
   /** 
+   * draft | active | on-hold | revoked | completed | entered-in-error | unknown
+   */
+  _status?: Element
+  /** 
    * proposal | plan | directive | order | original-order | reflex-order | filler-order | instance-order | option
    */
   intent: code;
+  /** 
+   * proposal | plan | directive | order | original-order | reflex-order | filler-order | instance-order | option
+   */
+  _intent?: Element
   /** 
    * The person who requires the diet, formula or nutritional supplement
    */
@@ -23329,6 +29937,10 @@ resourceType: "NutritionOrder"
    * Date and time the nutrition order was requested
    */
   dateTime: dateTime;
+  /** 
+   * Date and time the nutrition order was requested
+   */
+  _dateTime?: Element
   /** 
    * Who ordered the diet, formula or nutritional supplement
    */
@@ -23400,6 +30012,10 @@ export interface ObservationReferenceRange {
    * Text based reference range in an observation
    */
   text?: string;
+  /** 
+   * Text based reference range in an observation
+   */
+  _text?: Element
 }
 export interface ObservationComponent {
   /** 
@@ -23433,11 +30049,23 @@ export interface ObservationComponent {
   /** 
    * Actual component result
    */
+  _valueString?: Element
+  /** 
+   * Actual component result
+   */
   valueBoolean?: boolean;
   /** 
    * Actual component result
    */
+  _valueBoolean?: Element
+  /** 
+   * Actual component result
+   */
   valueInteger?: integer;
+  /** 
+   * Actual component result
+   */
+  _valueInteger?: Element
   /** 
    * Actual component result
    */
@@ -23457,7 +30085,15 @@ export interface ObservationComponent {
   /** 
    * Actual component result
    */
+  _valueTime?: Element
+  /** 
+   * Actual component result
+   */
   valueDateTime?: dateTime;
+  /** 
+   * Actual component result
+   */
+  _valueDateTime?: Element
   /** 
    * Actual component result
    */
@@ -23490,9 +30126,17 @@ resourceType: "Observation"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -23526,6 +30170,10 @@ resourceType: "Observation"
    */
   status: code;
   /** 
+   * registered | preliminary | final | amended +
+   */
+  _status?: Element
+  /** 
    * Classification of  type of observation
    */
   category?: Array<CodeableConcept>;
@@ -23552,6 +30200,10 @@ resourceType: "Observation"
   /** 
    * Clinically relevant time/time-period for observation
    */
+  _effectiveDateTime?: Element
+  /** 
+   * Clinically relevant time/time-period for observation
+   */
   effectivePeriod?: Period;
   /** 
    * Clinically relevant time/time-period for observation
@@ -23562,9 +30214,17 @@ resourceType: "Observation"
    */
   effectiveInstant?: instant;
   /** 
+   * Clinically relevant time/time-period for observation
+   */
+  _effectiveInstant?: Element
+  /** 
    * Date/Time this version was made available
    */
   issued?: instant;
+  /** 
+   * Date/Time this version was made available
+   */
+  _issued?: Element
   /** 
    * Who is responsible for the observation
    */
@@ -23584,11 +30244,23 @@ resourceType: "Observation"
   /** 
    * Actual result
    */
+  _valueString?: Element
+  /** 
+   * Actual result
+   */
   valueBoolean?: boolean;
   /** 
    * Actual result
    */
+  _valueBoolean?: Element
+  /** 
+   * Actual result
+   */
   valueInteger?: integer;
+  /** 
+   * Actual result
+   */
+  _valueInteger?: Element
   /** 
    * Actual result
    */
@@ -23608,7 +30280,15 @@ resourceType: "Observation"
   /** 
    * Actual result
    */
+  _valueTime?: Element
+  /** 
+   * Actual result
+   */
   valueDateTime?: dateTime;
+  /** 
+   * Actual result
+   */
+  _valueDateTime?: Element
   /** 
    * Actual result
    */
@@ -23685,9 +30365,17 @@ export interface ObservationDefinitionQuantitativeDetails {
    */
   conversionFactor?: decimal;
   /** 
+   * SI to Customary unit conversion factor
+   */
+  _conversionFactor?: Element
+  /** 
    * Decimal precision of observation quantitative results
    */
   decimalPrecision?: integer;
+  /** 
+   * Decimal precision of observation quantitative results
+   */
+  _decimalPrecision?: Element
 }
 export interface ObservationDefinitionQualifiedInterval {
   /** 
@@ -23707,6 +30395,10 @@ export interface ObservationDefinitionQualifiedInterval {
    */
   category?: code;
   /** 
+   * reference | critical | absolute
+   */
+  _category?: Element
+  /** 
    * The interval itself, for continuous or ordinal observations
    */
   range?: Range;
@@ -23723,6 +30415,10 @@ export interface ObservationDefinitionQualifiedInterval {
    */
   gender?: code;
   /** 
+   * male | female | other | unknown
+   */
+  _gender?: Element
+  /** 
    * Applicable age range, if relevant
    */
   age?: Range;
@@ -23734,6 +30430,10 @@ export interface ObservationDefinitionQualifiedInterval {
    * Condition associated with the reference range
    */
   condition?: string;
+  /** 
+   * Condition associated with the reference range
+   */
+  _condition?: Element
 }
 export interface ObservationDefinition {
 resourceType: "ObservationDefinition"
@@ -23750,9 +30450,17 @@ resourceType: "ObservationDefinition"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -23786,9 +30494,17 @@ resourceType: "ObservationDefinition"
    */
   permittedDataType?: Array<code>;
   /** 
+   * Quantity | CodeableConcept | string | boolean | integer | Range | Ratio | SampledData | time | dateTime | Period
+   */
+  _permittedDataType?: Array<Element>
+  /** 
    * Multiple results allowed
    */
   multipleResultsAllowed?: boolean;
+  /** 
+   * Multiple results allowed
+   */
+  _multipleResultsAllowed?: Element
   /** 
    * Method used to produce the observation
    */
@@ -23797,6 +30513,10 @@ resourceType: "ObservationDefinition"
    * Preferred report name
    */
   preferredReportName?: string;
+  /** 
+   * Preferred report name
+   */
+  _preferredReportName?: Element
   /** 
    * Characteristics of quantitative results
    */
@@ -23841,9 +30561,17 @@ export interface OperationDefinitionParameterBinding {
    */
   strength: code;
   /** 
+   * required | extensible | preferred | example
+   */
+  _strength?: Element
+  /** 
    * Source of value set
    */
   valueSet: canonical;
+  /** 
+   * Source of value set
+   */
+  _valueSet?: Element
 }
 export interface OperationDefinitionParameterReferencedFrom {
   /** 
@@ -23863,9 +30591,17 @@ export interface OperationDefinitionParameterReferencedFrom {
    */
   source: string;
   /** 
+   * Referencing parameter
+   */
+  _source?: Element
+  /** 
    * Element id of reference
    */
   sourceId?: string;
+  /** 
+   * Element id of reference
+   */
+  _sourceId?: Element
 }
 export interface OperationDefinitionParameter {
   /** 
@@ -23885,33 +30621,65 @@ export interface OperationDefinitionParameter {
    */
   name: code;
   /** 
+   * Name in Parameters.parameter.name or in URL
+   */
+  _name?: Element
+  /** 
    * in | out
    */
   use: code;
+  /** 
+   * in | out
+   */
+  _use?: Element
   /** 
    * Minimum Cardinality
    */
   min: integer;
   /** 
+   * Minimum Cardinality
+   */
+  _min?: Element
+  /** 
    * Maximum Cardinality (a number or *)
    */
   max: string;
+  /** 
+   * Maximum Cardinality (a number or *)
+   */
+  _max?: Element
   /** 
    * Description of meaning/use
    */
   documentation?: string;
   /** 
+   * Description of meaning/use
+   */
+  _documentation?: Element
+  /** 
    * What type this parameter has
    */
   type?: code;
+  /** 
+   * What type this parameter has
+   */
+  _type?: Element
   /** 
    * If type is Reference | canonical, allowed targets
    */
   targetProfile?: Array<canonical>;
   /** 
+   * If type is Reference | canonical, allowed targets
+   */
+  _targetProfile?: Array<Element>
+  /** 
    * number | date | string | token | reference | composite | quantity | uri | special
    */
   searchType?: code;
+  /** 
+   * number | date | string | token | reference | composite | quantity | uri | special
+   */
+  _searchType?: Element
   /** 
    * ValueSet details if this is coded
    */
@@ -23943,9 +30711,17 @@ export interface OperationDefinitionOverload {
    */
   parameterName?: Array<string>;
   /** 
+   * Name of parameter to include in overload
+   */
+  _parameterName?: Array<Element>
+  /** 
    * Comments to go on overload
    */
   comment?: string;
+  /** 
+   * Comments to go on overload
+   */
+  _comment?: Element
 }
 export interface OperationDefinition {
 resourceType: "OperationDefinition"
@@ -23962,9 +30738,17 @@ resourceType: "OperationDefinition"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -23986,37 +30770,73 @@ resourceType: "OperationDefinition"
    */
   url?: uri;
   /** 
+   * Canonical identifier for this operation definition, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Business version of the operation definition
    */
   version?: string;
+  /** 
+   * Business version of the operation definition
+   */
+  _version?: Element
   /** 
    * Name for this operation definition (computer friendly)
    */
   name: string;
   /** 
+   * Name for this operation definition (computer friendly)
+   */
+  _name?: Element
+  /** 
    * Name for this operation definition (human friendly)
    */
   title?: string;
+  /** 
+   * Name for this operation definition (human friendly)
+   */
+  _title?: Element
   /** 
    * draft | active | retired | unknown
    */
   status: code;
   /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
+  /** 
    * operation | query
    */
   kind: code;
+  /** 
+   * operation | query
+   */
+  _kind?: Element
   /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
   /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
+  /** 
    * Date last changed
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -24025,6 +30845,10 @@ resourceType: "OperationDefinition"
    * Natural language description of the operation definition
    */
   description?: markdown;
+  /** 
+   * Natural language description of the operation definition
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -24038,45 +30862,89 @@ resourceType: "OperationDefinition"
    */
   purpose?: markdown;
   /** 
+   * Why this operation definition is defined
+   */
+  _purpose?: Element
+  /** 
    * Whether content is changed by the operation
    */
   affectsState?: boolean;
+  /** 
+   * Whether content is changed by the operation
+   */
+  _affectsState?: Element
   /** 
    * Name used to invoke the operation
    */
   code: code;
   /** 
+   * Name used to invoke the operation
+   */
+  _code?: Element
+  /** 
    * Additional information about use
    */
   comment?: markdown;
+  /** 
+   * Additional information about use
+   */
+  _comment?: Element
   /** 
    * Marks this as a profile of the base
    */
   base?: canonical;
   /** 
+   * Marks this as a profile of the base
+   */
+  _base?: Element
+  /** 
    * Types this operation applies to
    */
   resource?: Array<code>;
+  /** 
+   * Types this operation applies to
+   */
+  _resource?: Array<Element>
   /** 
    * Invoke at the system level?
    */
   system: boolean;
   /** 
+   * Invoke at the system level?
+   */
+  _system?: Element
+  /** 
    * Invoke at the type level?
    */
   type: boolean;
+  /** 
+   * Invoke at the type level?
+   */
+  _type?: Element
   /** 
    * Invoke on an instance?
    */
   instance: boolean;
   /** 
+   * Invoke on an instance?
+   */
+  _instance?: Element
+  /** 
    * Validation information for in parameters
    */
   inputProfile?: canonical;
   /** 
+   * Validation information for in parameters
+   */
+  _inputProfile?: Element
+  /** 
    * Validation information for out parameters
    */
   outputProfile?: canonical;
+  /** 
+   * Validation information for out parameters
+   */
+  _outputProfile?: Element
   /** 
    * Parameters for the operation/query
    */
@@ -24105,9 +30973,17 @@ export interface OperationOutcomeIssue {
    */
   severity: code;
   /** 
+   * fatal | error | warning | information
+   */
+  _severity?: Element
+  /** 
    * Error or warning code
    */
   code: code;
+  /** 
+   * Error or warning code
+   */
+  _code?: Element
   /** 
    * Additional details about the error
    */
@@ -24117,13 +30993,25 @@ export interface OperationOutcomeIssue {
    */
   diagnostics?: string;
   /** 
+   * Additional diagnostic information about the issue
+   */
+  _diagnostics?: Element
+  /** 
    * Deprecated: Path of element(s) related to issue
    */
   location?: Array<string>;
   /** 
+   * Deprecated: Path of element(s) related to issue
+   */
+  _location?: Array<Element>
+  /** 
    * FHIRPath of element(s) related to issue
    */
   expression?: Array<string>;
+  /** 
+   * FHIRPath of element(s) related to issue
+   */
+  _expression?: Array<Element>
 }
 export interface OperationOutcome {
 resourceType: "OperationOutcome"
@@ -24140,9 +31028,17 @@ resourceType: "OperationOutcome"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -24210,9 +31106,17 @@ resourceType: "Organization"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -24238,6 +31142,10 @@ resourceType: "Organization"
    */
   active?: boolean;
   /** 
+   * Whether the organization's record is still in active use
+   */
+  _active?: Element
+  /** 
    * Kind of organization
    */
   type?: Array<CodeableConcept>;
@@ -24246,9 +31154,17 @@ resourceType: "Organization"
    */
   name?: string;
   /** 
+   * Name used for the organization
+   */
+  _name?: Element
+  /** 
    * A list of alternate names that the organization is known as, or was known as in the past
    */
   alias?: Array<string>;
+  /** 
+   * A list of alternate names that the organization is known as, or was known as in the past
+   */
+  _alias?: Array<Element>
   /** 
    * A contact detail for the organization
    */
@@ -24286,9 +31202,17 @@ resourceType: "OrganizationAffiliation"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -24313,6 +31237,10 @@ resourceType: "OrganizationAffiliation"
    * Whether this organization affiliation record is in active use
    */
   active?: boolean;
+  /** 
+   * Whether this organization affiliation record is in active use
+   */
+  _active?: Element
   /** 
    * The period during which the participatingOrganization is affiliated with the primary organization
    */
@@ -24373,9 +31301,17 @@ export interface ParametersParameter {
    */
   name: string;
   /** 
+   * Name from the definition
+   */
+  _name?: Element
+  /** 
    * If parameter is a data type
    */
   valueBase64Binary?: base64Binary;
+  /** 
+   * If parameter is a data type
+   */
+  _valueBase64Binary?: Element
   /** 
    * If parameter is a data type
    */
@@ -24383,7 +31319,15 @@ export interface ParametersParameter {
   /** 
    * If parameter is a data type
    */
+  _valueBoolean?: Element
+  /** 
+   * If parameter is a data type
+   */
   valueCanonical?: canonical;
+  /** 
+   * If parameter is a data type
+   */
+  _valueCanonical?: Element
   /** 
    * If parameter is a data type
    */
@@ -24391,7 +31335,15 @@ export interface ParametersParameter {
   /** 
    * If parameter is a data type
    */
+  _valueCode?: Element
+  /** 
+   * If parameter is a data type
+   */
   valueDate?: date;
+  /** 
+   * If parameter is a data type
+   */
+  _valueDate?: Element
   /** 
    * If parameter is a data type
    */
@@ -24399,7 +31351,15 @@ export interface ParametersParameter {
   /** 
    * If parameter is a data type
    */
+  _valueDateTime?: Element
+  /** 
+   * If parameter is a data type
+   */
   valueDecimal?: decimal;
+  /** 
+   * If parameter is a data type
+   */
+  _valueDecimal?: Element
   /** 
    * If parameter is a data type
    */
@@ -24407,7 +31367,15 @@ export interface ParametersParameter {
   /** 
    * If parameter is a data type
    */
+  _valueId?: Element
+  /** 
+   * If parameter is a data type
+   */
   valueInstant?: instant;
+  /** 
+   * If parameter is a data type
+   */
+  _valueInstant?: Element
   /** 
    * If parameter is a data type
    */
@@ -24415,7 +31383,15 @@ export interface ParametersParameter {
   /** 
    * If parameter is a data type
    */
+  _valueInteger?: Element
+  /** 
+   * If parameter is a data type
+   */
   valueMarkdown?: markdown;
+  /** 
+   * If parameter is a data type
+   */
+  _valueMarkdown?: Element
   /** 
    * If parameter is a data type
    */
@@ -24423,7 +31399,15 @@ export interface ParametersParameter {
   /** 
    * If parameter is a data type
    */
+  _valueOid?: Element
+  /** 
+   * If parameter is a data type
+   */
   valuePositiveInt?: positiveInt;
+  /** 
+   * If parameter is a data type
+   */
+  _valuePositiveInt?: Element
   /** 
    * If parameter is a data type
    */
@@ -24431,7 +31415,15 @@ export interface ParametersParameter {
   /** 
    * If parameter is a data type
    */
+  _valueString?: Element
+  /** 
+   * If parameter is a data type
+   */
   valueTime?: time;
+  /** 
+   * If parameter is a data type
+   */
+  _valueTime?: Element
   /** 
    * If parameter is a data type
    */
@@ -24439,7 +31431,15 @@ export interface ParametersParameter {
   /** 
    * If parameter is a data type
    */
+  _valueUnsignedInt?: Element
+  /** 
+   * If parameter is a data type
+   */
   valueUri?: uri;
+  /** 
+   * If parameter is a data type
+   */
+  _valueUri?: Element
   /** 
    * If parameter is a data type
    */
@@ -24447,7 +31447,15 @@ export interface ParametersParameter {
   /** 
    * If parameter is a data type
    */
+  _valueUrl?: Element
+  /** 
+   * If parameter is a data type
+   */
   valueUuid?: uuid;
+  /** 
+   * If parameter is a data type
+   */
+  _valueUuid?: Element
   /** 
    * If parameter is a data type
    */
@@ -24596,9 +31604,17 @@ resourceType: "Parameters"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Operation Parameter
    */
@@ -24639,6 +31655,10 @@ export interface PatientContact {
    */
   gender?: code;
   /** 
+   * male | female | other | unknown
+   */
+  _gender?: Element
+  /** 
    * Organization that is associated with the contact
    */
   organization?: Reference;
@@ -24668,6 +31688,10 @@ export interface PatientCommunication {
    * Language preference indicator
    */
   preferred?: boolean;
+  /** 
+   * Language preference indicator
+   */
+  _preferred?: Element
 }
 export interface PatientLink {
   /** 
@@ -24690,6 +31714,10 @@ export interface PatientLink {
    * replaced-by | replaces | refer | seealso
    */
   type: code;
+  /** 
+   * replaced-by | replaces | refer | seealso
+   */
+  _type?: Element
 }
 export interface Patient {
 resourceType: "Patient"
@@ -24706,9 +31734,17 @@ resourceType: "Patient"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -24734,6 +31770,10 @@ resourceType: "Patient"
    */
   active?: boolean;
   /** 
+   * Whether this patient's record is in active use
+   */
+  _active?: Element
+  /** 
    * A name associated with the patient
    */
   name?: Array<HumanName>;
@@ -24746,9 +31786,17 @@ resourceType: "Patient"
    */
   gender?: code;
   /** 
+   * male | female | other | unknown
+   */
+  _gender?: Element
+  /** 
    * The date of birth for the individual
    */
   birthDate?: date;
+  /** 
+   * The date of birth for the individual
+   */
+  _birthDate?: Element
   /** 
    * Indicates if the individual is deceased or not
    */
@@ -24756,7 +31804,15 @@ resourceType: "Patient"
   /** 
    * Indicates if the individual is deceased or not
    */
+  _deceasedBoolean?: Element
+  /** 
+   * Indicates if the individual is deceased or not
+   */
   deceasedDateTime?: dateTime;
+  /** 
+   * Indicates if the individual is deceased or not
+   */
+  _deceasedDateTime?: Element
   /** 
    * An address for the individual
    */
@@ -24772,7 +31828,15 @@ resourceType: "Patient"
   /** 
    * Whether patient is part of a multiple birth
    */
+  _multipleBirthBoolean?: Element
+  /** 
+   * Whether patient is part of a multiple birth
+   */
   multipleBirthInteger?: integer;
+  /** 
+   * Whether patient is part of a multiple birth
+   */
+  _multipleBirthInteger?: Element
   /** 
    * Image of the patient
    */
@@ -24814,9 +31878,17 @@ resourceType: "PaymentNotice"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -24842,6 +31914,10 @@ resourceType: "PaymentNotice"
    */
   status: code;
   /** 
+   * active | cancelled | draft | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Request reference
    */
   request?: Reference;
@@ -24854,6 +31930,10 @@ resourceType: "PaymentNotice"
    */
   created: dateTime;
   /** 
+   * Creation date
+   */
+  _created?: Element
+  /** 
    * Responsible practitioner
    */
   provider?: Reference;
@@ -24865,6 +31945,10 @@ resourceType: "PaymentNotice"
    * Payment or clearing date
    */
   paymentDate?: date;
+  /** 
+   * Payment or clearing date
+   */
+  _paymentDate?: Element
   /** 
    * Party being paid
    */
@@ -24925,6 +32009,10 @@ export interface PaymentReconciliationDetail {
    */
   date?: date;
   /** 
+   * Date of commitment to pay
+   */
+  _date?: Element
+  /** 
    * Contact for the response
    */
   responsible?: Reference;
@@ -24955,9 +32043,17 @@ export interface PaymentReconciliationProcessNote {
    */
   type?: code;
   /** 
+   * display | print | printoper
+   */
+  _type?: Element
+  /** 
    * Note explanatory text
    */
   text?: string;
+  /** 
+   * Note explanatory text
+   */
+  _text?: Element
 }
 export interface PaymentReconciliation {
 resourceType: "PaymentReconciliation"
@@ -24974,9 +32070,17 @@ resourceType: "PaymentReconciliation"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -25002,6 +32106,10 @@ resourceType: "PaymentReconciliation"
    */
   status: code;
   /** 
+   * active | cancelled | draft | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Period covered
    */
   period?: Period;
@@ -25009,6 +32117,10 @@ resourceType: "PaymentReconciliation"
    * Creation date
    */
   created: dateTime;
+  /** 
+   * Creation date
+   */
+  _created?: Element
   /** 
    * Party generating payment
    */
@@ -25026,13 +32138,25 @@ resourceType: "PaymentReconciliation"
    */
   outcome?: code;
   /** 
+   * queued | complete | error | partial
+   */
+  _outcome?: Element
+  /** 
    * Disposition message
    */
   disposition?: string;
   /** 
+   * Disposition message
+   */
+  _disposition?: Element
+  /** 
    * When payment issued
    */
   paymentDate: date;
+  /** 
+   * When payment issued
+   */
+  _paymentDate?: Element
   /** 
    * Total amount of Payment
    */
@@ -25076,6 +32200,10 @@ export interface PersonLink {
    * level1 | level2 | level3 | level4
    */
   assurance?: code;
+  /** 
+   * level1 | level2 | level3 | level4
+   */
+  _assurance?: Element
 }
 export interface Person {
 resourceType: "Person"
@@ -25092,9 +32220,17 @@ resourceType: "Person"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -25128,9 +32264,17 @@ resourceType: "Person"
    */
   gender?: code;
   /** 
+   * male | female | other | unknown
+   */
+  _gender?: Element
+  /** 
    * The date on which the person was born
    */
   birthDate?: date;
+  /** 
+   * The date on which the person was born
+   */
+  _birthDate?: Element
   /** 
    * One or more addresses for the person
    */
@@ -25147,6 +32291,10 @@ resourceType: "Person"
    * This person's record is in active use
    */
   active?: boolean;
+  /** 
+   * This person's record is in active use
+   */
+  _active?: Element
   /** 
    * Link to a resource that concerns the same actual person
    */
@@ -25247,6 +32395,10 @@ export interface PlanDefinitionActionCondition {
    */
   kind: code;
   /** 
+   * applicability | start | stop
+   */
+  _kind?: Element
+  /** 
    * Boolean-valued expression
    */
   expression?: Expression;
@@ -25269,9 +32421,17 @@ export interface PlanDefinitionActionRelatedAction {
    */
   actionId: id;
   /** 
+   * What action is this related to
+   */
+  _actionId?: Element
+  /** 
    * before-start | before | before-end | concurrent-with-start | concurrent | concurrent-with-end | after-start | after | after-end
    */
   relationship: code;
+  /** 
+   * before-start | before | before-end | concurrent-with-start | concurrent | concurrent-with-end | after-start | after | after-end
+   */
+  _relationship?: Element
   /** 
    * Time offset for the relationship
    */
@@ -25299,6 +32459,10 @@ export interface PlanDefinitionActionParticipant {
    */
   type: code;
   /** 
+   * patient | practitioner | related-person | device
+   */
+  _type?: Element
+  /** 
    * E.g. Nurse, Surgeon, Parent
    */
   role?: CodeableConcept;
@@ -25320,6 +32484,10 @@ export interface PlanDefinitionActionDynamicValue {
    * The path to the element to be set dynamically
    */
   path?: string;
+  /** 
+   * The path to the element to be set dynamically
+   */
+  _path?: Element
   /** 
    * An expression that provides the dynamic value for the customization
    */
@@ -25343,21 +32511,41 @@ export interface PlanDefinitionAction {
    */
   prefix?: string;
   /** 
+   * User-visible prefix for the action (e.g. 1. or A.)
+   */
+  _prefix?: Element
+  /** 
    * User-visible title
    */
   title?: string;
+  /** 
+   * User-visible title
+   */
+  _title?: Element
   /** 
    * Brief description of the action
    */
   description?: string;
   /** 
+   * Brief description of the action
+   */
+  _description?: Element
+  /** 
    * Static text equivalent of the action, used if the dynamic aspects cannot be interpreted by the receiving system
    */
   textEquivalent?: string;
   /** 
+   * Static text equivalent of the action, used if the dynamic aspects cannot be interpreted by the receiving system
+   */
+  _textEquivalent?: Element
+  /** 
    * routine | urgent | asap | stat
    */
   priority?: code;
+  /** 
+   * routine | urgent | asap | stat
+   */
+  _priority?: Element
   /** 
    * Code representing the meaning of the action or sub-actions
    */
@@ -25374,6 +32562,10 @@ export interface PlanDefinitionAction {
    * What goals this action supports
    */
   goalId?: Array<id>;
+  /** 
+   * What goals this action supports
+   */
+  _goalId?: Array<Element>
   /** 
    * Type of individual the action is focused on
    */
@@ -25409,6 +32601,10 @@ export interface PlanDefinitionAction {
   /** 
    * When the action should take place
    */
+  _timingDateTime?: Element
+  /** 
+   * When the action should take place
+   */
   timingAge?: Age;
   /** 
    * When the action should take place
@@ -25439,21 +32635,41 @@ export interface PlanDefinitionAction {
    */
   groupingBehavior?: code;
   /** 
+   * visual-group | logical-group | sentence-group
+   */
+  _groupingBehavior?: Element
+  /** 
    * any | all | all-or-none | exactly-one | at-most-one | one-or-more
    */
   selectionBehavior?: code;
+  /** 
+   * any | all | all-or-none | exactly-one | at-most-one | one-or-more
+   */
+  _selectionBehavior?: Element
   /** 
    * must | could | must-unless-documented
    */
   requiredBehavior?: code;
   /** 
+   * must | could | must-unless-documented
+   */
+  _requiredBehavior?: Element
+  /** 
    * yes | no
    */
   precheckBehavior?: code;
   /** 
+   * yes | no
+   */
+  _precheckBehavior?: Element
+  /** 
    * single | multiple
    */
   cardinalityBehavior?: code;
+  /** 
+   * single | multiple
+   */
+  _cardinalityBehavior?: Element
   /** 
    * Description of the activity to be performed
    */
@@ -25461,11 +32677,23 @@ export interface PlanDefinitionAction {
   /** 
    * Description of the activity to be performed
    */
+  _definitionCanonical?: Element
+  /** 
+   * Description of the activity to be performed
+   */
   definitionUri?: uri;
+  /** 
+   * Description of the activity to be performed
+   */
+  _definitionUri?: Element
   /** 
    * Transform to apply the template
    */
   transform?: canonical;
+  /** 
+   * Transform to apply the template
+   */
+  _transform?: Element
   /** 
    * Dynamic aspects of the definition
    */
@@ -25490,9 +32718,17 @@ resourceType: "PlanDefinition"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -25514,6 +32750,10 @@ resourceType: "PlanDefinition"
    */
   url?: uri;
   /** 
+   * Canonical identifier for this plan definition, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Additional identifier for the plan definition
    */
   identifier?: Array<Identifier>;
@@ -25522,17 +32762,33 @@ resourceType: "PlanDefinition"
    */
   version?: string;
   /** 
+   * Business version of the plan definition
+   */
+  _version?: Element
+  /** 
    * Name for this plan definition (computer friendly)
    */
   name?: string;
+  /** 
+   * Name for this plan definition (computer friendly)
+   */
+  _name?: Element
   /** 
    * Name for this plan definition (human friendly)
    */
   title?: string;
   /** 
+   * Name for this plan definition (human friendly)
+   */
+  _title?: Element
+  /** 
    * Subordinate title of the plan definition
    */
   subtitle?: string;
+  /** 
+   * Subordinate title of the plan definition
+   */
+  _subtitle?: Element
   /** 
    * order-set | clinical-protocol | eca-rule | workflow-definition
    */
@@ -25542,9 +32798,17 @@ resourceType: "PlanDefinition"
    */
   status: code;
   /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
+  /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
+  /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
   /** 
    * Type of individual the plan definition is focused on
    */
@@ -25558,9 +32822,17 @@ resourceType: "PlanDefinition"
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -25569,6 +32841,10 @@ resourceType: "PlanDefinition"
    * Natural language description of the plan definition
    */
   description?: markdown;
+  /** 
+   * Natural language description of the plan definition
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -25582,21 +32858,41 @@ resourceType: "PlanDefinition"
    */
   purpose?: markdown;
   /** 
+   * Why this plan definition is defined
+   */
+  _purpose?: Element
+  /** 
    * Describes the clinical usage of the plan
    */
   usage?: string;
+  /** 
+   * Describes the clinical usage of the plan
+   */
+  _usage?: Element
   /** 
    * Use and/or publishing restrictions
    */
   copyright?: markdown;
   /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
+  /** 
    * When the plan definition was approved by publisher
    */
   approvalDate?: date;
   /** 
+   * When the plan definition was approved by publisher
+   */
+  _approvalDate?: Element
+  /** 
    * When the plan definition was last reviewed
    */
   lastReviewDate?: date;
+  /** 
+   * When the plan definition was last reviewed
+   */
+  _lastReviewDate?: Element
   /** 
    * When the plan definition is expected to be used
    */
@@ -25629,6 +32925,10 @@ resourceType: "PlanDefinition"
    * Logic used by the plan definition
    */
   library?: Array<canonical>;
+  /** 
+   * Logic used by the plan definition
+   */
+  _library?: Array<Element>
   /** 
    * What the plan is trying to accomplish
    */
@@ -25684,9 +32984,17 @@ resourceType: "Practitioner"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -25712,6 +33020,10 @@ resourceType: "Practitioner"
    */
   active?: boolean;
   /** 
+   * Whether this practitioner's record is in active use
+   */
+  _active?: Element
+  /** 
    * The name(s) associated with the practitioner
    */
   name?: Array<HumanName>;
@@ -25728,9 +33040,17 @@ resourceType: "Practitioner"
    */
   gender?: code;
   /** 
+   * male | female | other | unknown
+   */
+  _gender?: Element
+  /** 
    * The date  on which the practitioner was born
    */
   birthDate?: date;
+  /** 
+   * The date  on which the practitioner was born
+   */
+  _birthDate?: Element
   /** 
    * Image of the person
    */
@@ -25763,17 +33083,33 @@ export interface PractitionerRoleAvailableTime {
    */
   daysOfWeek?: Array<code>;
   /** 
+   * mon | tue | wed | thu | fri | sat | sun
+   */
+  _daysOfWeek?: Array<Element>
+  /** 
    * Always available? e.g. 24 hour service
    */
   allDay?: boolean;
+  /** 
+   * Always available? e.g. 24 hour service
+   */
+  _allDay?: Element
   /** 
    * Opening time of day (ignored if allDay = true)
    */
   availableStartTime?: time;
   /** 
+   * Opening time of day (ignored if allDay = true)
+   */
+  _availableStartTime?: Element
+  /** 
    * Closing time of day (ignored if allDay = true)
    */
   availableEndTime?: time;
+  /** 
+   * Closing time of day (ignored if allDay = true)
+   */
+  _availableEndTime?: Element
 }
 export interface PractitionerRoleNotAvailable {
   /** 
@@ -25792,6 +33128,10 @@ export interface PractitionerRoleNotAvailable {
    * Reason presented to the user explaining why time not available
    */
   description: string;
+  /** 
+   * Reason presented to the user explaining why time not available
+   */
+  _description?: Element
   /** 
    * Service not available from this date
    */
@@ -25812,9 +33152,17 @@ resourceType: "PractitionerRole"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -25839,6 +33187,10 @@ resourceType: "PractitionerRole"
    * Whether this practitioner role record is in active use
    */
   active?: boolean;
+  /** 
+   * Whether this practitioner role record is in active use
+   */
+  _active?: Element
   /** 
    * The period during which the practitioner is authorized to perform in these role(s)
    */
@@ -25883,6 +33235,10 @@ resourceType: "PractitionerRole"
    * Description of availability exceptions
    */
   availabilityExceptions?: string;
+  /** 
+   * Description of availability exceptions
+   */
+  _availabilityExceptions?: Element
   /** 
    * Technical endpoints providing access to services operated for the practitioner with this role
    */
@@ -25952,9 +33308,17 @@ resourceType: "Procedure"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -25980,9 +33344,17 @@ resourceType: "Procedure"
    */
   instantiatesCanonical?: Array<canonical>;
   /** 
+   * Instantiates FHIR protocol or definition
+   */
+  _instantiatesCanonical?: Array<Element>
+  /** 
    * Instantiates external protocol or definition
    */
   instantiatesUri?: Array<uri>;
+  /** 
+   * Instantiates external protocol or definition
+   */
+  _instantiatesUri?: Array<Element>
   /** 
    * A request for this procedure
    */
@@ -25995,6 +33367,10 @@ resourceType: "Procedure"
    * preparation | in-progress | not-done | on-hold | stopped | completed | entered-in-error | unknown
    */
   status: code;
+  /** 
+   * preparation | in-progress | not-done | on-hold | stopped | completed | entered-in-error | unknown
+   */
+  _status?: Element
   /** 
    * Reason for current status
    */
@@ -26022,11 +33398,19 @@ resourceType: "Procedure"
   /** 
    * When the procedure was performed
    */
+  _performedDateTime?: Element
+  /** 
+   * When the procedure was performed
+   */
   performedPeriod?: Period;
   /** 
    * When the procedure was performed
    */
   performedString?: string;
+  /** 
+   * When the procedure was performed
+   */
+  _performedString?: Element
   /** 
    * When the procedure was performed
    */
@@ -26149,6 +33533,10 @@ export interface ProvenanceEntity {
    */
   role: code;
   /** 
+   * derivation | revision | quotation | source | removal
+   */
+  _role?: Element
+  /** 
    * Identity of entity
    */
   what: Reference;
@@ -26172,9 +33560,17 @@ resourceType: "Provenance"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -26204,13 +33600,25 @@ resourceType: "Provenance"
    */
   occurredDateTime?: dateTime;
   /** 
+   * When the activity occurred
+   */
+  _occurredDateTime?: Element
+  /** 
    * When the activity was recorded / updated
    */
   recorded: instant;
   /** 
+   * When the activity was recorded / updated
+   */
+  _recorded?: Element
+  /** 
    * Policy or plan the activity was defined by
    */
   policy?: Array<uri>;
+  /** 
+   * Policy or plan the activity was defined by
+   */
+  _policy?: Array<Element>
   /** 
    * Where the activity occurred, if relevant
    */
@@ -26255,9 +33663,17 @@ export interface QuestionnaireItemEnableWhen {
    */
   question: string;
   /** 
+   * Question that determines whether item is enabled
+   */
+  _question?: Element
+  /** 
    * exists | = | != | > | < | >= | <=
    */
   operator: code;
+  /** 
+   * exists | = | != | > | < | >= | <=
+   */
+  _operator?: Element
   /** 
    * Value for question comparison based on operator
    */
@@ -26265,7 +33681,15 @@ export interface QuestionnaireItemEnableWhen {
   /** 
    * Value for question comparison based on operator
    */
+  _answerBoolean?: Element
+  /** 
+   * Value for question comparison based on operator
+   */
   answerDecimal?: decimal;
+  /** 
+   * Value for question comparison based on operator
+   */
+  _answerDecimal?: Element
   /** 
    * Value for question comparison based on operator
    */
@@ -26273,7 +33697,15 @@ export interface QuestionnaireItemEnableWhen {
   /** 
    * Value for question comparison based on operator
    */
+  _answerInteger?: Element
+  /** 
+   * Value for question comparison based on operator
+   */
   answerDate?: date;
+  /** 
+   * Value for question comparison based on operator
+   */
+  _answerDate?: Element
   /** 
    * Value for question comparison based on operator
    */
@@ -26281,11 +33713,23 @@ export interface QuestionnaireItemEnableWhen {
   /** 
    * Value for question comparison based on operator
    */
+  _answerDateTime?: Element
+  /** 
+   * Value for question comparison based on operator
+   */
   answerTime?: time;
   /** 
    * Value for question comparison based on operator
    */
+  _answerTime?: Element
+  /** 
+   * Value for question comparison based on operator
+   */
   answerString?: string;
+  /** 
+   * Value for question comparison based on operator
+   */
+  _answerString?: Element
   /** 
    * Value for question comparison based on operator
    */
@@ -26319,7 +33763,15 @@ export interface QuestionnaireItemAnswerOption {
   /** 
    * Answer value
    */
+  _valueInteger?: Element
+  /** 
+   * Answer value
+   */
   valueDate?: date;
+  /** 
+   * Answer value
+   */
+  _valueDate?: Element
   /** 
    * Answer value
    */
@@ -26327,7 +33779,15 @@ export interface QuestionnaireItemAnswerOption {
   /** 
    * Answer value
    */
+  _valueTime?: Element
+  /** 
+   * Answer value
+   */
   valueString?: string;
+  /** 
+   * Answer value
+   */
+  _valueString?: Element
   /** 
    * Answer value
    */
@@ -26340,6 +33800,10 @@ export interface QuestionnaireItemAnswerOption {
    * Whether option is selected by default
    */
   initialSelected?: boolean;
+  /** 
+   * Whether option is selected by default
+   */
+  _initialSelected?: Element
 }
 export interface QuestionnaireItemInitial {
   /** 
@@ -26361,7 +33825,15 @@ export interface QuestionnaireItemInitial {
   /** 
    * Actual value for initializing the question
    */
+  _valueBoolean?: Element
+  /** 
+   * Actual value for initializing the question
+   */
   valueDecimal?: decimal;
+  /** 
+   * Actual value for initializing the question
+   */
+  _valueDecimal?: Element
   /** 
    * Actual value for initializing the question
    */
@@ -26369,7 +33841,15 @@ export interface QuestionnaireItemInitial {
   /** 
    * Actual value for initializing the question
    */
+  _valueInteger?: Element
+  /** 
+   * Actual value for initializing the question
+   */
   valueDate?: date;
+  /** 
+   * Actual value for initializing the question
+   */
+  _valueDate?: Element
   /** 
    * Actual value for initializing the question
    */
@@ -26377,7 +33857,15 @@ export interface QuestionnaireItemInitial {
   /** 
    * Actual value for initializing the question
    */
+  _valueDateTime?: Element
+  /** 
+   * Actual value for initializing the question
+   */
   valueTime?: time;
+  /** 
+   * Actual value for initializing the question
+   */
+  _valueTime?: Element
   /** 
    * Actual value for initializing the question
    */
@@ -26385,7 +33873,15 @@ export interface QuestionnaireItemInitial {
   /** 
    * Actual value for initializing the question
    */
+  _valueString?: Element
+  /** 
+   * Actual value for initializing the question
+   */
   valueUri?: uri;
+  /** 
+   * Actual value for initializing the question
+   */
+  _valueUri?: Element
   /** 
    * Actual value for initializing the question
    */
@@ -26421,9 +33917,17 @@ export interface QuestionnaireItem {
    */
   linkId: string;
   /** 
+   * Unique id for item in questionnaire
+   */
+  _linkId?: Element
+  /** 
    * ElementDefinition - details for the item
    */
   definition?: uri;
+  /** 
+   * ElementDefinition - details for the item
+   */
+  _definition?: Element
   /** 
    * Corresponding concept for this item in a terminology
    */
@@ -26433,13 +33937,25 @@ export interface QuestionnaireItem {
    */
   prefix?: string;
   /** 
+   * E.g. "1(a)", "2.5.3"
+   */
+  _prefix?: Element
+  /** 
    * Primary text for the item
    */
   text?: string;
   /** 
+   * Primary text for the item
+   */
+  _text?: Element
+  /** 
    * group | display | boolean | decimal | integer | date | dateTime +
    */
   type: code;
+  /** 
+   * group | display | boolean | decimal | integer | date | dateTime +
+   */
+  _type?: Element
   /** 
    * Only allow data when
    */
@@ -26449,25 +33965,49 @@ export interface QuestionnaireItem {
    */
   enableBehavior?: code;
   /** 
+   * all | any
+   */
+  _enableBehavior?: Element
+  /** 
    * Whether the item must be included in data results
    */
   required?: boolean;
+  /** 
+   * Whether the item must be included in data results
+   */
+  _required?: Element
   /** 
    * Whether the item may repeat
    */
   repeats?: boolean;
   /** 
+   * Whether the item may repeat
+   */
+  _repeats?: Element
+  /** 
    * Don't allow human editing
    */
   readOnly?: boolean;
+  /** 
+   * Don't allow human editing
+   */
+  _readOnly?: Element
   /** 
    * No more than this many characters
    */
   maxLength?: integer;
   /** 
+   * No more than this many characters
+   */
+  _maxLength?: Element
+  /** 
    * Valueset containing permitted answers
    */
   answerValueSet?: canonical;
+  /** 
+   * Valueset containing permitted answers
+   */
+  _answerValueSet?: Element
   /** 
    * Permitted answer
    */
@@ -26496,9 +34036,17 @@ resourceType: "Questionnaire"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -26520,6 +34068,10 @@ resourceType: "Questionnaire"
    */
   url?: uri;
   /** 
+   * Canonical identifier for this questionnaire, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Additional identifier for the questionnaire
    */
   identifier?: Array<Identifier>;
@@ -26528,37 +34080,73 @@ resourceType: "Questionnaire"
    */
   version?: string;
   /** 
+   * Business version of the questionnaire
+   */
+  _version?: Element
+  /** 
    * Name for this questionnaire (computer friendly)
    */
   name?: string;
+  /** 
+   * Name for this questionnaire (computer friendly)
+   */
+  _name?: Element
   /** 
    * Name for this questionnaire (human friendly)
    */
   title?: string;
   /** 
+   * Name for this questionnaire (human friendly)
+   */
+  _title?: Element
+  /** 
    * Instantiates protocol or definition
    */
   derivedFrom?: Array<canonical>;
+  /** 
+   * Instantiates protocol or definition
+   */
+  _derivedFrom?: Array<Element>
   /** 
    * draft | active | retired | unknown
    */
   status: code;
   /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
+  /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
+  /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
   /** 
    * Resource that can be subject of QuestionnaireResponse
    */
   subjectType?: Array<code>;
   /** 
+   * Resource that can be subject of QuestionnaireResponse
+   */
+  _subjectType?: Array<Element>
+  /** 
    * Date last changed
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -26567,6 +34155,10 @@ resourceType: "Questionnaire"
    * Natural language description of the questionnaire
    */
   description?: markdown;
+  /** 
+   * Natural language description of the questionnaire
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -26580,17 +34172,33 @@ resourceType: "Questionnaire"
    */
   purpose?: markdown;
   /** 
+   * Why this questionnaire is defined
+   */
+  _purpose?: Element
+  /** 
    * Use and/or publishing restrictions
    */
   copyright?: markdown;
+  /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
   /** 
    * When the questionnaire was approved by publisher
    */
   approvalDate?: date;
   /** 
+   * When the questionnaire was approved by publisher
+   */
+  _approvalDate?: Element
+  /** 
    * When the questionnaire was last reviewed
    */
   lastReviewDate?: date;
+  /** 
+   * When the questionnaire was last reviewed
+   */
+  _lastReviewDate?: Element
   /** 
    * When the questionnaire is expected to be used
    */
@@ -26625,7 +34233,15 @@ export interface QuestionnaireResponseItemAnswer {
   /** 
    * Single-valued answer to the question
    */
+  _valueBoolean?: Element
+  /** 
+   * Single-valued answer to the question
+   */
   valueDecimal?: decimal;
+  /** 
+   * Single-valued answer to the question
+   */
+  _valueDecimal?: Element
   /** 
    * Single-valued answer to the question
    */
@@ -26633,7 +34249,15 @@ export interface QuestionnaireResponseItemAnswer {
   /** 
    * Single-valued answer to the question
    */
+  _valueInteger?: Element
+  /** 
+   * Single-valued answer to the question
+   */
   valueDate?: date;
+  /** 
+   * Single-valued answer to the question
+   */
+  _valueDate?: Element
   /** 
    * Single-valued answer to the question
    */
@@ -26641,7 +34265,15 @@ export interface QuestionnaireResponseItemAnswer {
   /** 
    * Single-valued answer to the question
    */
+  _valueDateTime?: Element
+  /** 
+   * Single-valued answer to the question
+   */
   valueTime?: time;
+  /** 
+   * Single-valued answer to the question
+   */
+  _valueTime?: Element
   /** 
    * Single-valued answer to the question
    */
@@ -26649,7 +34281,15 @@ export interface QuestionnaireResponseItemAnswer {
   /** 
    * Single-valued answer to the question
    */
+  _valueString?: Element
+  /** 
+   * Single-valued answer to the question
+   */
   valueUri?: uri;
+  /** 
+   * Single-valued answer to the question
+   */
+  _valueUri?: Element
   /** 
    * Single-valued answer to the question
    */
@@ -26689,13 +34329,25 @@ export interface QuestionnaireResponseItem {
    */
   linkId: string;
   /** 
+   * Pointer to specific item from Questionnaire
+   */
+  _linkId?: Element
+  /** 
    * ElementDefinition - details for the item
    */
   definition?: uri;
   /** 
+   * ElementDefinition - details for the item
+   */
+  _definition?: Element
+  /** 
    * Name for group or question text
    */
   text?: string;
+  /** 
+   * Name for group or question text
+   */
+  _text?: Element
   /** 
    * The response(s) to the question
    */
@@ -26720,9 +34372,17 @@ resourceType: "QuestionnaireResponse"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -26756,9 +34416,17 @@ resourceType: "QuestionnaireResponse"
    */
   questionnaire?: canonical;
   /** 
+   * Form being answered
+   */
+  _questionnaire?: Element
+  /** 
    * in-progress | completed | amended | entered-in-error | stopped
    */
   status: code;
+  /** 
+   * in-progress | completed | amended | entered-in-error | stopped
+   */
+  _status?: Element
   /** 
    * The subject of the questions
    */
@@ -26771,6 +34439,10 @@ resourceType: "QuestionnaireResponse"
    * Date the answers were gathered
    */
   authored?: dateTime;
+  /** 
+   * Date the answers were gathered
+   */
+  _authored?: Element
   /** 
    * Person who received and recorded the answers
    */
@@ -26806,6 +34478,10 @@ export interface RelatedPersonCommunication {
    * Language preference indicator
    */
   preferred?: boolean;
+  /** 
+   * Language preference indicator
+   */
+  _preferred?: Element
 }
 export interface RelatedPerson {
 resourceType: "RelatedPerson"
@@ -26822,9 +34498,17 @@ resourceType: "RelatedPerson"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -26850,6 +34534,10 @@ resourceType: "RelatedPerson"
    */
   active?: boolean;
   /** 
+   * Whether this related person's record is in active use
+   */
+  _active?: Element
+  /** 
    * The patient this person is related to
    */
   patient: Reference;
@@ -26870,9 +34558,17 @@ resourceType: "RelatedPerson"
    */
   gender?: code;
   /** 
+   * male | female | other | unknown
+   */
+  _gender?: Element
+  /** 
    * The date on which the related person was born
    */
   birthDate?: date;
+  /** 
+   * The date on which the related person was born
+   */
+  _birthDate?: Element
   /** 
    * Address where the related person can be contacted or visited
    */
@@ -26909,6 +34605,10 @@ export interface RequestGroupActionCondition {
    */
   kind: code;
   /** 
+   * applicability | start | stop
+   */
+  _kind?: Element
+  /** 
    * Boolean-valued expression
    */
   expression?: Expression;
@@ -26931,9 +34631,17 @@ export interface RequestGroupActionRelatedAction {
    */
   actionId: id;
   /** 
+   * What action this is related to
+   */
+  _actionId?: Element
+  /** 
    * before-start | before | before-end | concurrent-with-start | concurrent | concurrent-with-end | after-start | after | after-end
    */
   relationship: code;
+  /** 
+   * before-start | before | before-end | concurrent-with-start | concurrent | concurrent-with-end | after-start | after | after-end
+   */
+  _relationship?: Element
   /** 
    * Time offset for the relationship
    */
@@ -26961,21 +34669,41 @@ export interface RequestGroupAction {
    */
   prefix?: string;
   /** 
+   * User-visible prefix for the action (e.g. 1. or A.)
+   */
+  _prefix?: Element
+  /** 
    * User-visible title
    */
   title?: string;
+  /** 
+   * User-visible title
+   */
+  _title?: Element
   /** 
    * Short description of the action
    */
   description?: string;
   /** 
+   * Short description of the action
+   */
+  _description?: Element
+  /** 
    * Static text equivalent of the action, used if the dynamic aspects cannot be interpreted by the receiving system
    */
   textEquivalent?: string;
   /** 
+   * Static text equivalent of the action, used if the dynamic aspects cannot be interpreted by the receiving system
+   */
+  _textEquivalent?: Element
+  /** 
    * routine | urgent | asap | stat
    */
   priority?: code;
+  /** 
+   * routine | urgent | asap | stat
+   */
+  _priority?: Element
   /** 
    * Code representing the meaning of the action or sub-actions
    */
@@ -26996,6 +34724,10 @@ export interface RequestGroupAction {
    * When the action should take place
    */
   timingDateTime?: dateTime;
+  /** 
+   * When the action should take place
+   */
+  _timingDateTime?: Element
   /** 
    * When the action should take place
    */
@@ -27029,21 +34761,41 @@ export interface RequestGroupAction {
    */
   groupingBehavior?: code;
   /** 
+   * visual-group | logical-group | sentence-group
+   */
+  _groupingBehavior?: Element
+  /** 
    * any | all | all-or-none | exactly-one | at-most-one | one-or-more
    */
   selectionBehavior?: code;
+  /** 
+   * any | all | all-or-none | exactly-one | at-most-one | one-or-more
+   */
+  _selectionBehavior?: Element
   /** 
    * must | could | must-unless-documented
    */
   requiredBehavior?: code;
   /** 
+   * must | could | must-unless-documented
+   */
+  _requiredBehavior?: Element
+  /** 
    * yes | no
    */
   precheckBehavior?: code;
   /** 
+   * yes | no
+   */
+  _precheckBehavior?: Element
+  /** 
    * single | multiple
    */
   cardinalityBehavior?: code;
+  /** 
+   * single | multiple
+   */
+  _cardinalityBehavior?: Element
   /** 
    * The target of the action
    */
@@ -27068,9 +34820,17 @@ resourceType: "RequestGroup"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -27096,9 +34856,17 @@ resourceType: "RequestGroup"
    */
   instantiatesCanonical?: Array<canonical>;
   /** 
+   * Instantiates FHIR protocol or definition
+   */
+  _instantiatesCanonical?: Array<Element>
+  /** 
    * Instantiates external protocol or definition
    */
   instantiatesUri?: Array<uri>;
+  /** 
+   * Instantiates external protocol or definition
+   */
+  _instantiatesUri?: Array<Element>
   /** 
    * Fulfills plan, proposal, or order
    */
@@ -27116,13 +34884,25 @@ resourceType: "RequestGroup"
    */
   status: code;
   /** 
+   * draft | active | on-hold | revoked | completed | entered-in-error | unknown
+   */
+  _status?: Element
+  /** 
    * proposal | plan | directive | order | original-order | reflex-order | filler-order | instance-order | option
    */
   intent: code;
   /** 
+   * proposal | plan | directive | order | original-order | reflex-order | filler-order | instance-order | option
+   */
+  _intent?: Element
+  /** 
    * routine | urgent | asap | stat
    */
   priority?: code;
+  /** 
+   * routine | urgent | asap | stat
+   */
+  _priority?: Element
   /** 
    * What's being requested/ordered
    */
@@ -27139,6 +34919,10 @@ resourceType: "RequestGroup"
    * When the request group was authored
    */
   authoredOn?: dateTime;
+  /** 
+   * When the request group was authored
+   */
+  _authoredOn?: Element
   /** 
    * Device or practitioner that authored the request group
    */
@@ -27176,9 +34960,17 @@ resourceType: "ResearchDefinition"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -27200,6 +34992,10 @@ resourceType: "ResearchDefinition"
    */
   url?: uri;
   /** 
+   * Canonical identifier for this research definition, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Additional identifier for the research definition
    */
   identifier?: Array<Identifier>;
@@ -27208,29 +35004,57 @@ resourceType: "ResearchDefinition"
    */
   version?: string;
   /** 
+   * Business version of the research definition
+   */
+  _version?: Element
+  /** 
    * Name for this research definition (computer friendly)
    */
   name?: string;
+  /** 
+   * Name for this research definition (computer friendly)
+   */
+  _name?: Element
   /** 
    * Name for this research definition (human friendly)
    */
   title?: string;
   /** 
+   * Name for this research definition (human friendly)
+   */
+  _title?: Element
+  /** 
    * Title for use in informal contexts
    */
   shortTitle?: string;
+  /** 
+   * Title for use in informal contexts
+   */
+  _shortTitle?: Element
   /** 
    * Subordinate title of the ResearchDefinition
    */
   subtitle?: string;
   /** 
+   * Subordinate title of the ResearchDefinition
+   */
+  _subtitle?: Element
+  /** 
    * draft | active | retired | unknown
    */
   status: code;
   /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
+  /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
+  /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
   /** 
    * E.g. Patient, Practitioner, RelatedPerson, Organization, Location, Device
    */
@@ -27244,9 +35068,17 @@ resourceType: "ResearchDefinition"
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -27256,9 +35088,17 @@ resourceType: "ResearchDefinition"
    */
   description?: markdown;
   /** 
+   * Natural language description of the research definition
+   */
+  _description?: Element
+  /** 
    * Used for footnotes or explanatory notes
    */
   comment?: Array<string>;
+  /** 
+   * Used for footnotes or explanatory notes
+   */
+  _comment?: Array<Element>
   /** 
    * The context that the content is intended to support
    */
@@ -27272,21 +35112,41 @@ resourceType: "ResearchDefinition"
    */
   purpose?: markdown;
   /** 
+   * Why this research definition is defined
+   */
+  _purpose?: Element
+  /** 
    * Describes the clinical usage of the ResearchDefinition
    */
   usage?: string;
+  /** 
+   * Describes the clinical usage of the ResearchDefinition
+   */
+  _usage?: Element
   /** 
    * Use and/or publishing restrictions
    */
   copyright?: markdown;
   /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
+  /** 
    * When the research definition was approved by publisher
    */
   approvalDate?: date;
   /** 
+   * When the research definition was approved by publisher
+   */
+  _approvalDate?: Element
+  /** 
    * When the research definition was last reviewed
    */
   lastReviewDate?: date;
+  /** 
+   * When the research definition was last reviewed
+   */
+  _lastReviewDate?: Element
   /** 
    * When the research definition is expected to be used
    */
@@ -27319,6 +35179,10 @@ resourceType: "ResearchDefinition"
    * Logic used by the ResearchDefinition
    */
   library?: Array<canonical>;
+  /** 
+   * Logic used by the ResearchDefinition
+   */
+  _library?: Array<Element>
   /** 
    * What population?
    */
@@ -27361,6 +35225,10 @@ export interface ResearchElementDefinitionCharacteristic {
   /** 
    * What code or expression defines members?
    */
+  _definitionCanonical?: Element
+  /** 
+   * What code or expression defines members?
+   */
   definitionExpression?: Expression;
   /** 
    * What code or expression defines members?
@@ -27375,6 +35243,10 @@ export interface ResearchElementDefinitionCharacteristic {
    */
   exclude?: boolean;
   /** 
+   * Whether the characteristic includes or excludes members
+   */
+  _exclude?: Element
+  /** 
    * What unit is the outcome described in?
    */
   unitOfMeasure?: CodeableConcept;
@@ -27385,7 +35257,15 @@ export interface ResearchElementDefinitionCharacteristic {
   /** 
    * What time period does the study cover
    */
+  _studyEffectiveDescription?: Element
+  /** 
+   * What time period does the study cover
+   */
   studyEffectiveDateTime?: dateTime;
+  /** 
+   * What time period does the study cover
+   */
+  _studyEffectiveDateTime?: Element
   /** 
    * What time period does the study cover
    */
@@ -27407,13 +35287,25 @@ export interface ResearchElementDefinitionCharacteristic {
    */
   studyEffectiveGroupMeasure?: code;
   /** 
+   * mean | median | mean-of-mean | mean-of-median | median-of-mean | median-of-median
+   */
+  _studyEffectiveGroupMeasure?: Element
+  /** 
    * What time period do participants cover
    */
   participantEffectiveDescription?: string;
   /** 
    * What time period do participants cover
    */
+  _participantEffectiveDescription?: Element
+  /** 
+   * What time period do participants cover
+   */
   participantEffectiveDateTime?: dateTime;
+  /** 
+   * What time period do participants cover
+   */
+  _participantEffectiveDateTime?: Element
   /** 
    * What time period do participants cover
    */
@@ -27434,6 +35326,10 @@ export interface ResearchElementDefinitionCharacteristic {
    * mean | median | mean-of-mean | mean-of-median | median-of-mean | median-of-median
    */
   participantEffectiveGroupMeasure?: code;
+  /** 
+   * mean | median | mean-of-mean | mean-of-median | median-of-mean | median-of-median
+   */
+  _participantEffectiveGroupMeasure?: Element
 }
 export interface ResearchElementDefinition {
 resourceType: "ResearchElementDefinition"
@@ -27450,9 +35346,17 @@ resourceType: "ResearchElementDefinition"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -27474,6 +35378,10 @@ resourceType: "ResearchElementDefinition"
    */
   url?: uri;
   /** 
+   * Canonical identifier for this research element definition, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Additional identifier for the research element definition
    */
   identifier?: Array<Identifier>;
@@ -27482,29 +35390,57 @@ resourceType: "ResearchElementDefinition"
    */
   version?: string;
   /** 
+   * Business version of the research element definition
+   */
+  _version?: Element
+  /** 
    * Name for this research element definition (computer friendly)
    */
   name?: string;
+  /** 
+   * Name for this research element definition (computer friendly)
+   */
+  _name?: Element
   /** 
    * Name for this research element definition (human friendly)
    */
   title?: string;
   /** 
+   * Name for this research element definition (human friendly)
+   */
+  _title?: Element
+  /** 
    * Title for use in informal contexts
    */
   shortTitle?: string;
+  /** 
+   * Title for use in informal contexts
+   */
+  _shortTitle?: Element
   /** 
    * Subordinate title of the ResearchElementDefinition
    */
   subtitle?: string;
   /** 
+   * Subordinate title of the ResearchElementDefinition
+   */
+  _subtitle?: Element
+  /** 
    * draft | active | retired | unknown
    */
   status: code;
   /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
+  /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
+  /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
   /** 
    * E.g. Patient, Practitioner, RelatedPerson, Organization, Location, Device
    */
@@ -27518,9 +35454,17 @@ resourceType: "ResearchElementDefinition"
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -27530,9 +35474,17 @@ resourceType: "ResearchElementDefinition"
    */
   description?: markdown;
   /** 
+   * Natural language description of the research element definition
+   */
+  _description?: Element
+  /** 
    * Used for footnotes or explanatory notes
    */
   comment?: Array<string>;
+  /** 
+   * Used for footnotes or explanatory notes
+   */
+  _comment?: Array<Element>
   /** 
    * The context that the content is intended to support
    */
@@ -27546,21 +35498,41 @@ resourceType: "ResearchElementDefinition"
    */
   purpose?: markdown;
   /** 
+   * Why this research element definition is defined
+   */
+  _purpose?: Element
+  /** 
    * Describes the clinical usage of the ResearchElementDefinition
    */
   usage?: string;
+  /** 
+   * Describes the clinical usage of the ResearchElementDefinition
+   */
+  _usage?: Element
   /** 
    * Use and/or publishing restrictions
    */
   copyright?: markdown;
   /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
+  /** 
    * When the research element definition was approved by publisher
    */
   approvalDate?: date;
   /** 
+   * When the research element definition was approved by publisher
+   */
+  _approvalDate?: Element
+  /** 
    * When the research element definition was last reviewed
    */
   lastReviewDate?: date;
+  /** 
+   * When the research element definition was last reviewed
+   */
+  _lastReviewDate?: Element
   /** 
    * When the research element definition is expected to be used
    */
@@ -27594,13 +35566,25 @@ resourceType: "ResearchElementDefinition"
    */
   library?: Array<canonical>;
   /** 
+   * Logic used by the ResearchElementDefinition
+   */
+  _library?: Array<Element>
+  /** 
    * population | exposure | outcome
    */
   type: code;
   /** 
+   * population | exposure | outcome
+   */
+  _type?: Element
+  /** 
    * dichotomous | continuous | descriptive
    */
   variableType?: code;
+  /** 
+   * dichotomous | continuous | descriptive
+   */
+  _variableType?: Element
   /** 
    * What defines the members of the research element
    */
@@ -27625,6 +35609,10 @@ export interface ResearchStudyArm {
    */
   name: string;
   /** 
+   * Label for study arm
+   */
+  _name?: Element
+  /** 
    * Categorization of study arm
    */
   type?: CodeableConcept;
@@ -27632,6 +35620,10 @@ export interface ResearchStudyArm {
    * Short explanation of study path
    */
   description?: string;
+  /** 
+   * Short explanation of study path
+   */
+  _description?: Element
 }
 export interface ResearchStudyObjective {
   /** 
@@ -27650,6 +35642,10 @@ export interface ResearchStudyObjective {
    * Label for the objective
    */
   name?: string;
+  /** 
+   * Label for the objective
+   */
+  _name?: Element
   /** 
    * primary | secondary | exploratory
    */
@@ -27670,9 +35666,17 @@ resourceType: "ResearchStudy"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -27698,6 +35702,10 @@ resourceType: "ResearchStudy"
    */
   title?: string;
   /** 
+   * Name for this study
+   */
+  _title?: Element
+  /** 
    * Steps followed in executing study
    */
   protocol?: Array<Reference>;
@@ -27709,6 +35717,10 @@ resourceType: "ResearchStudy"
    * active | administratively-completed | approved | closed-to-accrual | closed-to-accrual-and-intervention | completed | disapproved | in-review | temporarily-closed-to-accrual | temporarily-closed-to-accrual-and-intervention | withdrawn
    */
   status: code;
+  /** 
+   * active | administratively-completed | approved | closed-to-accrual | closed-to-accrual-and-intervention | completed | disapproved | in-review | temporarily-closed-to-accrual | temporarily-closed-to-accrual-and-intervention | withdrawn
+   */
+  _status?: Element
   /** 
    * treatment | prevention | diagnostic | supportive-care | screening | health-services-research | basic-science | device-feasibility
    */
@@ -27749,6 +35761,10 @@ resourceType: "ResearchStudy"
    * What this is study doing
    */
   description?: markdown;
+  /** 
+   * What this is study doing
+   */
+  _description?: Element
   /** 
    * Inclusion & exclusion criteria
    */
@@ -27802,9 +35818,17 @@ resourceType: "ResearchSubject"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -27830,6 +35854,10 @@ resourceType: "ResearchSubject"
    */
   status: code;
   /** 
+   * candidate | eligible | follow-up | ineligible | not-registered | off-study | on-study | on-study-intervention | on-study-observation | pending-on-study | potential-candidate | screening | withdrawn
+   */
+  _status?: Element
+  /** 
    * Start and end of participation
    */
   period?: Period;
@@ -27846,9 +35874,17 @@ resourceType: "ResearchSubject"
    */
   assignedArm?: string;
   /** 
+   * What path should be followed
+   */
+  _assignedArm?: Element
+  /** 
    * What path was followed
    */
   actualArm?: string;
+  /** 
+   * What path was followed
+   */
+  _actualArm?: Element
   /** 
    * Agreement to participate in study
    */
@@ -27879,6 +35915,10 @@ export interface RiskAssessmentPrediction {
   /** 
    * Likelihood of specified outcome
    */
+  _probabilityDecimal?: Element
+  /** 
+   * Likelihood of specified outcome
+   */
   probabilityRange?: Range;
   /** 
    * Likelihood of specified outcome as a qualitative value
@@ -27888,6 +35928,10 @@ export interface RiskAssessmentPrediction {
    * Relative likelihood
    */
   relativeRisk?: decimal;
+  /** 
+   * Relative likelihood
+   */
+  _relativeRisk?: Element
   /** 
    * Timeframe or age range
    */
@@ -27900,6 +35944,10 @@ export interface RiskAssessmentPrediction {
    * Explanation of prediction
    */
   rationale?: string;
+  /** 
+   * Explanation of prediction
+   */
+  _rationale?: Element
 }
 export interface RiskAssessment {
 resourceType: "RiskAssessment"
@@ -27916,9 +35964,17 @@ resourceType: "RiskAssessment"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -27952,6 +36008,10 @@ resourceType: "RiskAssessment"
    */
   status: code;
   /** 
+   * registered | preliminary | final | amended +
+   */
+  _status?: Element
+  /** 
    * Evaluation mechanism
    */
   method?: CodeableConcept;
@@ -27971,6 +36031,10 @@ resourceType: "RiskAssessment"
    * When was assessment made?
    */
   occurrenceDateTime?: dateTime;
+  /** 
+   * When was assessment made?
+   */
+  _occurrenceDateTime?: Element
   /** 
    * When was assessment made?
    */
@@ -28004,6 +36068,10 @@ resourceType: "RiskAssessment"
    */
   mitigation?: string;
   /** 
+   * How to reduce risk
+   */
+  _mitigation?: Element
+  /** 
    * Comments on the risk assessment
    */
   note?: Array<Annotation>;
@@ -28027,13 +36095,25 @@ export interface RiskEvidenceSynthesisSampleSize {
    */
   description?: string;
   /** 
+   * Description of sample size
+   */
+  _description?: Element
+  /** 
    * How many studies?
    */
   numberOfStudies?: integer;
   /** 
+   * How many studies?
+   */
+  _numberOfStudies?: Element
+  /** 
    * How many participants?
    */
   numberOfParticipants?: integer;
+  /** 
+   * How many participants?
+   */
+  _numberOfParticipants?: Element
 }
 export interface RiskEvidenceSynthesisRiskEstimatePrecisionEstimate {
   /** 
@@ -28057,13 +36137,25 @@ export interface RiskEvidenceSynthesisRiskEstimatePrecisionEstimate {
    */
   level?: decimal;
   /** 
+   * Level of confidence interval
+   */
+  _level?: Element
+  /** 
    * Lower bound
    */
   from?: decimal;
   /** 
+   * Lower bound
+   */
+  _from?: Element
+  /** 
    * Upper bound
    */
   to?: decimal;
+  /** 
+   * Upper bound
+   */
+  _to?: Element
 }
 export interface RiskEvidenceSynthesisRiskEstimate {
   /** 
@@ -28083,6 +36175,10 @@ export interface RiskEvidenceSynthesisRiskEstimate {
    */
   description?: string;
   /** 
+   * Description of risk estimate
+   */
+  _description?: Element
+  /** 
    * Type of risk estimate
    */
   type?: CodeableConcept;
@@ -28090,6 +36186,10 @@ export interface RiskEvidenceSynthesisRiskEstimate {
    * Point estimate
    */
   value?: decimal;
+  /** 
+   * Point estimate
+   */
+  _value?: Element
   /** 
    * What unit is the outcome described in?
    */
@@ -28099,9 +36199,17 @@ export interface RiskEvidenceSynthesisRiskEstimate {
    */
   denominatorCount?: integer;
   /** 
+   * Sample size for group measured
+   */
+  _denominatorCount?: Element
+  /** 
    * Number with the outcome
    */
   numeratorCount?: integer;
+  /** 
+   * Number with the outcome
+   */
+  _numeratorCount?: Element
   /** 
    * How precise the estimate is
    */
@@ -28174,9 +36282,17 @@ resourceType: "RiskEvidenceSynthesis"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -28198,6 +36314,10 @@ resourceType: "RiskEvidenceSynthesis"
    */
   url?: uri;
   /** 
+   * Canonical identifier for this risk evidence synthesis, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Additional identifier for the risk evidence synthesis
    */
   identifier?: Array<Identifier>;
@@ -28206,25 +36326,49 @@ resourceType: "RiskEvidenceSynthesis"
    */
   version?: string;
   /** 
+   * Business version of the risk evidence synthesis
+   */
+  _version?: Element
+  /** 
    * Name for this risk evidence synthesis (computer friendly)
    */
   name?: string;
+  /** 
+   * Name for this risk evidence synthesis (computer friendly)
+   */
+  _name?: Element
   /** 
    * Name for this risk evidence synthesis (human friendly)
    */
   title?: string;
   /** 
+   * Name for this risk evidence synthesis (human friendly)
+   */
+  _title?: Element
+  /** 
    * draft | active | retired | unknown
    */
   status: code;
+  /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
   /** 
    * Date last changed
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -28233,6 +36377,10 @@ resourceType: "RiskEvidenceSynthesis"
    * Natural language description of the risk evidence synthesis
    */
   description?: markdown;
+  /** 
+   * Natural language description of the risk evidence synthesis
+   */
+  _description?: Element
   /** 
    * Used for footnotes or explanatory notes
    */
@@ -28250,13 +36398,25 @@ resourceType: "RiskEvidenceSynthesis"
    */
   copyright?: markdown;
   /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
+  /** 
    * When the risk evidence synthesis was approved by publisher
    */
   approvalDate?: date;
   /** 
+   * When the risk evidence synthesis was approved by publisher
+   */
+  _approvalDate?: Element
+  /** 
    * When the risk evidence synthesis was last reviewed
    */
   lastReviewDate?: date;
+  /** 
+   * When the risk evidence synthesis was last reviewed
+   */
+  _lastReviewDate?: Element
   /** 
    * When the risk evidence synthesis is expected to be used
    */
@@ -28334,9 +36494,17 @@ resourceType: "Schedule"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -28362,6 +36530,10 @@ resourceType: "Schedule"
    */
   active?: boolean;
   /** 
+   * Whether this schedule is in active use
+   */
+  _active?: Element
+  /** 
    * High-level category
    */
   serviceCategory?: Array<CodeableConcept>;
@@ -28385,6 +36557,10 @@ resourceType: "Schedule"
    * Comments on availability
    */
   comment?: string;
+  /** 
+   * Comments on availability
+   */
+  _comment?: Element
 }
 
 export interface SearchParameterComponent {
@@ -28405,9 +36581,17 @@ export interface SearchParameterComponent {
    */
   definition: canonical;
   /** 
+   * Defines how the part works
+   */
+  _definition?: Element
+  /** 
    * Subexpression relative to main expression
    */
   expression: string;
+  /** 
+   * Subexpression relative to main expression
+   */
+  _expression?: Element
 }
 export interface SearchParameter {
 resourceType: "SearchParameter"
@@ -28424,9 +36608,17 @@ resourceType: "SearchParameter"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -28448,33 +36640,65 @@ resourceType: "SearchParameter"
    */
   url: uri;
   /** 
+   * Canonical identifier for this search parameter, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Business version of the search parameter
    */
   version?: string;
+  /** 
+   * Business version of the search parameter
+   */
+  _version?: Element
   /** 
    * Name for this search parameter (computer friendly)
    */
   name: string;
   /** 
+   * Name for this search parameter (computer friendly)
+   */
+  _name?: Element
+  /** 
    * Original definition for the search parameter
    */
   derivedFrom?: canonical;
+  /** 
+   * Original definition for the search parameter
+   */
+  _derivedFrom?: Element
   /** 
    * draft | active | retired | unknown
    */
   status: code;
   /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
+  /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
+  /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
   /** 
    * Date last changed
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -28483,6 +36707,10 @@ resourceType: "SearchParameter"
    * Natural language description of the search parameter
    */
   description: markdown;
+  /** 
+   * Natural language description of the search parameter
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -28496,53 +36724,105 @@ resourceType: "SearchParameter"
    */
   purpose?: markdown;
   /** 
+   * Why this search parameter is defined
+   */
+  _purpose?: Element
+  /** 
    * Code used in URL
    */
   code: code;
+  /** 
+   * Code used in URL
+   */
+  _code?: Element
   /** 
    * The resource type(s) this search parameter applies to
    */
   base: Array<code>;
   /** 
+   * The resource type(s) this search parameter applies to
+   */
+  _base?: Array<Element>
+  /** 
    * number | date | string | token | reference | composite | quantity | uri | special
    */
   type: code;
+  /** 
+   * number | date | string | token | reference | composite | quantity | uri | special
+   */
+  _type?: Element
   /** 
    * FHIRPath expression that extracts the values
    */
   expression?: string;
   /** 
+   * FHIRPath expression that extracts the values
+   */
+  _expression?: Element
+  /** 
    * XPath that extracts the values
    */
   xpath?: string;
+  /** 
+   * XPath that extracts the values
+   */
+  _xpath?: Element
   /** 
    * normal | phonetic | nearby | distance | other
    */
   xpathUsage?: code;
   /** 
+   * normal | phonetic | nearby | distance | other
+   */
+  _xpathUsage?: Element
+  /** 
    * Types of resource (if a resource reference)
    */
   target?: Array<code>;
+  /** 
+   * Types of resource (if a resource reference)
+   */
+  _target?: Array<Element>
   /** 
    * Allow multiple values per parameter (or)
    */
   multipleOr?: boolean;
   /** 
+   * Allow multiple values per parameter (or)
+   */
+  _multipleOr?: Element
+  /** 
    * Allow multiple parameters (and)
    */
   multipleAnd?: boolean;
+  /** 
+   * Allow multiple parameters (and)
+   */
+  _multipleAnd?: Element
   /** 
    * eq | ne | gt | lt | ge | le | sa | eb | ap
    */
   comparator?: Array<code>;
   /** 
+   * eq | ne | gt | lt | ge | le | sa | eb | ap
+   */
+  _comparator?: Array<Element>
+  /** 
    * missing | exact | contains | not | text | in | not-in | below | above | type | identifier | ofType
    */
   modifier?: Array<code>;
   /** 
+   * missing | exact | contains | not | text | in | not-in | below | above | type | identifier | ofType
+   */
+  _modifier?: Array<Element>
+  /** 
    * Chained names supported
    */
   chain?: Array<string>;
+  /** 
+   * Chained names supported
+   */
+  _chain?: Array<Element>
   /** 
    * For Composite resources to define the parts
    */
@@ -28564,9 +36844,17 @@ resourceType: "ServiceRequest"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -28592,9 +36880,17 @@ resourceType: "ServiceRequest"
    */
   instantiatesCanonical?: Array<canonical>;
   /** 
+   * Instantiates FHIR protocol or definition
+   */
+  _instantiatesCanonical?: Array<Element>
+  /** 
    * Instantiates external protocol or definition
    */
   instantiatesUri?: Array<uri>;
+  /** 
+   * Instantiates external protocol or definition
+   */
+  _instantiatesUri?: Array<Element>
   /** 
    * What request fulfills
    */
@@ -28612,9 +36908,17 @@ resourceType: "ServiceRequest"
    */
   status: code;
   /** 
+   * draft | active | on-hold | revoked | completed | entered-in-error | unknown
+   */
+  _status?: Element
+  /** 
    * proposal | plan | directive | order | original-order | reflex-order | filler-order | instance-order | option
    */
   intent: code;
+  /** 
+   * proposal | plan | directive | order | original-order | reflex-order | filler-order | instance-order | option
+   */
+  _intent?: Element
   /** 
    * Classification of service
    */
@@ -28624,9 +36928,17 @@ resourceType: "ServiceRequest"
    */
   priority?: code;
   /** 
+   * routine | urgent | asap | stat
+   */
+  _priority?: Element
+  /** 
    * True if service/procedure should not be performed
    */
   doNotPerform?: boolean;
+  /** 
+   * True if service/procedure should not be performed
+   */
+  _doNotPerform?: Element
   /** 
    * What is being requested/ordered
    */
@@ -28662,6 +36974,10 @@ resourceType: "ServiceRequest"
   /** 
    * When service should occur
    */
+  _occurrenceDateTime?: Element
+  /** 
+   * When service should occur
+   */
   occurrencePeriod?: Period;
   /** 
    * When service should occur
@@ -28674,11 +36990,19 @@ resourceType: "ServiceRequest"
   /** 
    * Preconditions for service
    */
+  _asNeededBoolean?: Element
+  /** 
+   * Preconditions for service
+   */
   asNeededCodeableConcept?: CodeableConcept;
   /** 
    * Date request signed
    */
   authoredOn?: dateTime;
+  /** 
+   * Date request signed
+   */
+  _authoredOn?: Element
   /** 
    * Who/what is requesting service
    */
@@ -28732,6 +37056,10 @@ resourceType: "ServiceRequest"
    */
   patientInstruction?: string;
   /** 
+   * Patient or consumer-oriented instructions
+   */
+  _patientInstruction?: Element
+  /** 
    * Request provenance
    */
   relevantHistory?: Array<Reference>;
@@ -28752,9 +37080,17 @@ resourceType: "Slot"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -28800,21 +37136,41 @@ resourceType: "Slot"
    */
   status: code;
   /** 
+   * busy | free | busy-unavailable | busy-tentative | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Date/Time that the slot is to begin
    */
   start: instant;
+  /** 
+   * Date/Time that the slot is to begin
+   */
+  _start?: Element
   /** 
    * Date/Time that the slot is to conclude
    */
   end: instant;
   /** 
+   * Date/Time that the slot is to conclude
+   */
+  _end?: Element
+  /** 
    * This slot has already been overbooked, appointments are unlikely to be accepted for this time
    */
   overbooked?: boolean;
   /** 
+   * This slot has already been overbooked, appointments are unlikely to be accepted for this time
+   */
+  _overbooked?: Element
+  /** 
    * Comments on the slot to describe any extended information. Such as custom constraints on the slot
    */
   comment?: string;
+  /** 
+   * Comments on the slot to describe any extended information. Such as custom constraints on the slot
+   */
+  _comment?: Element
 }
 
 export interface SpecimenCollection {
@@ -28838,6 +37194,10 @@ export interface SpecimenCollection {
    * Collection time
    */
   collectedDateTime?: dateTime;
+  /** 
+   * Collection time
+   */
+  _collectedDateTime?: Element
   /** 
    * Collection time
    */
@@ -28885,6 +37245,10 @@ export interface SpecimenProcessing {
    */
   description?: string;
   /** 
+   * Textual description of procedure
+   */
+  _description?: Element
+  /** 
    * Indicates the treatment step  applied to the specimen
    */
   procedure?: CodeableConcept;
@@ -28896,6 +37260,10 @@ export interface SpecimenProcessing {
    * Date and time of specimen processing
    */
   timeDateTime?: dateTime;
+  /** 
+   * Date and time of specimen processing
+   */
+  _timeDateTime?: Element
   /** 
    * Date and time of specimen processing
    */
@@ -28922,6 +37290,10 @@ export interface SpecimenContainer {
    * Textual description of the container
    */
   description?: string;
+  /** 
+   * Textual description of the container
+   */
+  _description?: Element
   /** 
    * Kind of container directly associated with specimen
    */
@@ -28958,9 +37330,17 @@ resourceType: "Specimen"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -28990,6 +37370,10 @@ resourceType: "Specimen"
    */
   status?: code;
   /** 
+   * available | unavailable | unsatisfactory | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Kind of material that forms the specimen
    */
   type?: CodeableConcept;
@@ -29001,6 +37385,10 @@ resourceType: "Specimen"
    * The time when specimen was received for processing
    */
   receivedTime?: dateTime;
+  /** 
+   * The time when specimen was received for processing
+   */
+  _receivedTime?: Element
   /** 
    * Specimen from which this specimen originated
    */
@@ -29083,6 +37471,10 @@ export interface SpecimenDefinitionTypeTestedContainer {
    */
   description?: string;
   /** 
+   * Container description
+   */
+  _description?: Element
+  /** 
    * Container capacity
    */
   capacity?: Quantity;
@@ -29095,6 +37487,10 @@ export interface SpecimenDefinitionTypeTestedContainer {
    */
   minimumVolumeString?: string;
   /** 
+   * Minimum volume
+   */
+  _minimumVolumeString?: Element
+  /** 
    * Additive associated with container
    */
   additive?: Array<SpecimenDefinitionTypeTestedContainerAdditive>;
@@ -29102,6 +37498,10 @@ export interface SpecimenDefinitionTypeTestedContainer {
    * Specimen container preparation
    */
   preparation?: string;
+  /** 
+   * Specimen container preparation
+   */
+  _preparation?: Element
 }
 export interface SpecimenDefinitionTypeTestedHandling {
   /** 
@@ -29132,6 +37532,10 @@ export interface SpecimenDefinitionTypeTestedHandling {
    * Preservation instruction
    */
   instruction?: string;
+  /** 
+   * Preservation instruction
+   */
+  _instruction?: Element
 }
 export interface SpecimenDefinitionTypeTested {
   /** 
@@ -29151,6 +37555,10 @@ export interface SpecimenDefinitionTypeTested {
    */
   isDerived?: boolean;
   /** 
+   * Primary or secondary specimen
+   */
+  _isDerived?: Element
+  /** 
    * Type of intended specimen
    */
   type?: CodeableConcept;
@@ -29159,6 +37567,10 @@ export interface SpecimenDefinitionTypeTested {
    */
   preference: code;
   /** 
+   * preferred | alternate
+   */
+  _preference?: Element
+  /** 
    * The specimen's container
    */
   container?: SpecimenDefinitionTypeTestedContainer;
@@ -29166,6 +37578,10 @@ export interface SpecimenDefinitionTypeTested {
    * Specimen requirements
    */
   requirement?: string;
+  /** 
+   * Specimen requirements
+   */
+  _requirement?: Element
   /** 
    * Specimen retention time
    */
@@ -29194,9 +37610,17 @@ resourceType: "SpecimenDefinition"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -29230,6 +37654,10 @@ resourceType: "SpecimenDefinition"
    */
   timeAspect?: string;
   /** 
+   * Time aspect for collection
+   */
+  _timeAspect?: Element
+  /** 
    * Specimen collection procedure
    */
   collection?: Array<CodeableConcept>;
@@ -29257,17 +37685,33 @@ export interface StructureDefinitionMapping {
    */
   identity: id;
   /** 
+   * Internal id when this mapping is used
+   */
+  _identity?: Element
+  /** 
    * Identifies what this mapping refers to
    */
   uri?: uri;
+  /** 
+   * Identifies what this mapping refers to
+   */
+  _uri?: Element
   /** 
    * Names what this mapping refers to
    */
   name?: string;
   /** 
+   * Names what this mapping refers to
+   */
+  _name?: Element
+  /** 
    * Versions, Issues, Scope limitations etc.
    */
   comment?: string;
+  /** 
+   * Versions, Issues, Scope limitations etc.
+   */
+  _comment?: Element
 }
 export interface StructureDefinitionContext {
   /** 
@@ -29287,9 +37731,17 @@ export interface StructureDefinitionContext {
    */
   type: code;
   /** 
+   * fhirpath | element | extension
+   */
+  _type?: Element
+  /** 
    * Where the extension can be used in instances
    */
   expression: string;
+  /** 
+   * Where the extension can be used in instances
+   */
+  _expression?: Element
 }
 export interface StructureDefinitionSnapshot {
   /** 
@@ -29342,9 +37794,17 @@ resourceType: "StructureDefinition"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -29366,6 +37826,10 @@ resourceType: "StructureDefinition"
    */
   url: uri;
   /** 
+   * Canonical identifier for this structure definition, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Additional identifier for the structure definition
    */
   identifier?: Array<Identifier>;
@@ -29374,29 +37838,57 @@ resourceType: "StructureDefinition"
    */
   version?: string;
   /** 
+   * Business version of the structure definition
+   */
+  _version?: Element
+  /** 
    * Name for this structure definition (computer friendly)
    */
   name: string;
+  /** 
+   * Name for this structure definition (computer friendly)
+   */
+  _name?: Element
   /** 
    * Name for this structure definition (human friendly)
    */
   title?: string;
   /** 
+   * Name for this structure definition (human friendly)
+   */
+  _title?: Element
+  /** 
    * draft | active | retired | unknown
    */
   status: code;
+  /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
   /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
   /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
+  /** 
    * Date last changed
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -29405,6 +37897,10 @@ resourceType: "StructureDefinition"
    * Natural language description of the structure definition
    */
   description?: markdown;
+  /** 
+   * Natural language description of the structure definition
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -29418,9 +37914,17 @@ resourceType: "StructureDefinition"
    */
   purpose?: markdown;
   /** 
+   * Why this structure definition is defined
+   */
+  _purpose?: Element
+  /** 
    * Use and/or publishing restrictions
    */
   copyright?: markdown;
+  /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
   /** 
    * Assist with indexing and finding
    */
@@ -29430,6 +37934,10 @@ resourceType: "StructureDefinition"
    */
   fhirVersion?: code;
   /** 
+   * FHIR Version this StructureDefinition targets
+   */
+  _fhirVersion?: Element
+  /** 
    * External specification that the content is mapped to
    */
   mapping?: Array<StructureDefinitionMapping>;
@@ -29438,9 +37946,17 @@ resourceType: "StructureDefinition"
    */
   kind: code;
   /** 
+   * primitive-type | complex-type | resource | logical
+   */
+  _kind?: Element
+  /** 
    * Whether the structure is abstract
    */
   abstract: boolean;
+  /** 
+   * Whether the structure is abstract
+   */
+  _abstract?: Element
   /** 
    * If an extension, where it can be used in instances
    */
@@ -29450,17 +37966,33 @@ resourceType: "StructureDefinition"
    */
   contextInvariant?: Array<string>;
   /** 
+   * FHIRPath invariants - when the extension can be used
+   */
+  _contextInvariant?: Array<Element>
+  /** 
    * Type defined or constrained by this structure
    */
   type: uri;
+  /** 
+   * Type defined or constrained by this structure
+   */
+  _type?: Element
   /** 
    * Definition that this type is constrained/specialized from
    */
   baseDefinition?: canonical;
   /** 
+   * Definition that this type is constrained/specialized from
+   */
+  _baseDefinition?: Element
+  /** 
    * specialization | constraint - How relates to base definition
    */
   derivation?: code;
+  /** 
+   * specialization | constraint - How relates to base definition
+   */
+  _derivation?: Element
   /** 
    * Snapshot view of the structure
    */
@@ -29489,17 +38021,33 @@ export interface StructureMapStructure {
    */
   url: canonical;
   /** 
+   * Canonical reference to structure definition
+   */
+  _url?: Element
+  /** 
    * source | queried | target | produced
    */
   mode: code;
+  /** 
+   * source | queried | target | produced
+   */
+  _mode?: Element
   /** 
    * Name for type in this map
    */
   alias?: string;
   /** 
+   * Name for type in this map
+   */
+  _alias?: Element
+  /** 
    * Documentation on use of structure
    */
   documentation?: string;
+  /** 
+   * Documentation on use of structure
+   */
+  _documentation?: Element
 }
 export interface StructureMapGroupInput {
   /** 
@@ -29519,17 +38067,33 @@ export interface StructureMapGroupInput {
    */
   name: id;
   /** 
+   * Name for this instance of data
+   */
+  _name?: Element
+  /** 
    * Type for this instance of data
    */
   type?: string;
+  /** 
+   * Type for this instance of data
+   */
+  _type?: Element
   /** 
    * source | target
    */
   mode: code;
   /** 
+   * source | target
+   */
+  _mode?: Element
+  /** 
    * Documentation for this instance of data
    */
   documentation?: string;
+  /** 
+   * Documentation for this instance of data
+   */
+  _documentation?: Element
 }
 export interface StructureMapGroupRuleSource {
   /** 
@@ -29549,17 +38113,33 @@ export interface StructureMapGroupRuleSource {
    */
   context: id;
   /** 
+   * Type or variable this rule applies to
+   */
+  _context?: Element
+  /** 
    * Specified minimum cardinality
    */
   min?: integer;
+  /** 
+   * Specified minimum cardinality
+   */
+  _min?: Element
   /** 
    * Specified maximum cardinality (number or *)
    */
   max?: string;
   /** 
+   * Specified maximum cardinality (number or *)
+   */
+  _max?: Element
+  /** 
    * Rule only applies if source has this type
    */
   type?: string;
+  /** 
+   * Rule only applies if source has this type
+   */
+  _type?: Element
   /** 
    * Default value if no value exists
    */
@@ -29567,7 +38147,15 @@ export interface StructureMapGroupRuleSource {
   /** 
    * Default value if no value exists
    */
+  _defaultValueBase64Binary?: Element
+  /** 
+   * Default value if no value exists
+   */
   defaultValueBoolean?: boolean;
+  /** 
+   * Default value if no value exists
+   */
+  _defaultValueBoolean?: Element
   /** 
    * Default value if no value exists
    */
@@ -29575,7 +38163,15 @@ export interface StructureMapGroupRuleSource {
   /** 
    * Default value if no value exists
    */
+  _defaultValueCanonical?: Element
+  /** 
+   * Default value if no value exists
+   */
   defaultValueCode?: code;
+  /** 
+   * Default value if no value exists
+   */
+  _defaultValueCode?: Element
   /** 
    * Default value if no value exists
    */
@@ -29583,7 +38179,15 @@ export interface StructureMapGroupRuleSource {
   /** 
    * Default value if no value exists
    */
+  _defaultValueDate?: Element
+  /** 
+   * Default value if no value exists
+   */
   defaultValueDateTime?: dateTime;
+  /** 
+   * Default value if no value exists
+   */
+  _defaultValueDateTime?: Element
   /** 
    * Default value if no value exists
    */
@@ -29591,7 +38195,15 @@ export interface StructureMapGroupRuleSource {
   /** 
    * Default value if no value exists
    */
+  _defaultValueDecimal?: Element
+  /** 
+   * Default value if no value exists
+   */
   defaultValueId?: id;
+  /** 
+   * Default value if no value exists
+   */
+  _defaultValueId?: Element
   /** 
    * Default value if no value exists
    */
@@ -29599,7 +38211,15 @@ export interface StructureMapGroupRuleSource {
   /** 
    * Default value if no value exists
    */
+  _defaultValueInstant?: Element
+  /** 
+   * Default value if no value exists
+   */
   defaultValueInteger?: integer;
+  /** 
+   * Default value if no value exists
+   */
+  _defaultValueInteger?: Element
   /** 
    * Default value if no value exists
    */
@@ -29607,7 +38227,15 @@ export interface StructureMapGroupRuleSource {
   /** 
    * Default value if no value exists
    */
+  _defaultValueMarkdown?: Element
+  /** 
+   * Default value if no value exists
+   */
   defaultValueOid?: oid;
+  /** 
+   * Default value if no value exists
+   */
+  _defaultValueOid?: Element
   /** 
    * Default value if no value exists
    */
@@ -29615,7 +38243,15 @@ export interface StructureMapGroupRuleSource {
   /** 
    * Default value if no value exists
    */
+  _defaultValuePositiveInt?: Element
+  /** 
+   * Default value if no value exists
+   */
   defaultValueString?: string;
+  /** 
+   * Default value if no value exists
+   */
+  _defaultValueString?: Element
   /** 
    * Default value if no value exists
    */
@@ -29623,7 +38259,15 @@ export interface StructureMapGroupRuleSource {
   /** 
    * Default value if no value exists
    */
+  _defaultValueTime?: Element
+  /** 
+   * Default value if no value exists
+   */
   defaultValueUnsignedInt?: unsignedInt;
+  /** 
+   * Default value if no value exists
+   */
+  _defaultValueUnsignedInt?: Element
   /** 
    * Default value if no value exists
    */
@@ -29631,11 +38275,23 @@ export interface StructureMapGroupRuleSource {
   /** 
    * Default value if no value exists
    */
+  _defaultValueUri?: Element
+  /** 
+   * Default value if no value exists
+   */
   defaultValueUrl?: url;
   /** 
    * Default value if no value exists
    */
+  _defaultValueUrl?: Element
+  /** 
+   * Default value if no value exists
+   */
   defaultValueUuid?: uuid;
+  /** 
+   * Default value if no value exists
+   */
+  _defaultValueUuid?: Element
   /** 
    * Default value if no value exists
    */
@@ -29765,25 +38421,49 @@ export interface StructureMapGroupRuleSource {
    */
   element?: string;
   /** 
+   * Optional field for this source
+   */
+  _element?: Element
+  /** 
    * first | not_first | last | not_last | only_one
    */
   listMode?: code;
+  /** 
+   * first | not_first | last | not_last | only_one
+   */
+  _listMode?: Element
   /** 
    * Named context for field, if a field is specified
    */
   variable?: id;
   /** 
+   * Named context for field, if a field is specified
+   */
+  _variable?: Element
+  /** 
    * FHIRPath expression  - must be true or the rule does not apply
    */
   condition?: string;
+  /** 
+   * FHIRPath expression  - must be true or the rule does not apply
+   */
+  _condition?: Element
   /** 
    * FHIRPath expression  - must be true or the mapping engine throws an error instead of completing
    */
   check?: string;
   /** 
+   * FHIRPath expression  - must be true or the mapping engine throws an error instead of completing
+   */
+  _check?: Element
+  /** 
    * Message to put in log if source exists (FHIRPath)
    */
   logMessage?: string;
+  /** 
+   * Message to put in log if source exists (FHIRPath)
+   */
+  _logMessage?: Element
 }
 export interface StructureMapGroupRuleTargetParameter {
   /** 
@@ -29805,7 +38485,15 @@ export interface StructureMapGroupRuleTargetParameter {
   /** 
    * Parameter value - variable or literal
    */
+  _valueId?: Element
+  /** 
+   * Parameter value - variable or literal
+   */
   valueString?: string;
+  /** 
+   * Parameter value - variable or literal
+   */
+  _valueString?: Element
   /** 
    * Parameter value - variable or literal
    */
@@ -29813,11 +38501,23 @@ export interface StructureMapGroupRuleTargetParameter {
   /** 
    * Parameter value - variable or literal
    */
+  _valueBoolean?: Element
+  /** 
+   * Parameter value - variable or literal
+   */
   valueInteger?: integer;
   /** 
    * Parameter value - variable or literal
    */
+  _valueInteger?: Element
+  /** 
+   * Parameter value - variable or literal
+   */
   valueDecimal?: decimal;
+  /** 
+   * Parameter value - variable or literal
+   */
+  _valueDecimal?: Element
 }
 export interface StructureMapGroupRuleTarget {
   /** 
@@ -29837,29 +38537,57 @@ export interface StructureMapGroupRuleTarget {
    */
   context?: id;
   /** 
+   * Type or variable this rule applies to
+   */
+  _context?: Element
+  /** 
    * type | variable
    */
   contextType?: code;
+  /** 
+   * type | variable
+   */
+  _contextType?: Element
   /** 
    * Field to create in the context
    */
   element?: string;
   /** 
+   * Field to create in the context
+   */
+  _element?: Element
+  /** 
    * Named context for field, if desired, and a field is specified
    */
   variable?: id;
+  /** 
+   * Named context for field, if desired, and a field is specified
+   */
+  _variable?: Element
   /** 
    * first | share | last | collate
    */
   listMode?: Array<code>;
   /** 
+   * first | share | last | collate
+   */
+  _listMode?: Array<Element>
+  /** 
    * Internal rule reference for shared list items
    */
   listRuleId?: id;
   /** 
+   * Internal rule reference for shared list items
+   */
+  _listRuleId?: Element
+  /** 
    * create | copy +
    */
   transform?: code;
+  /** 
+   * create | copy +
+   */
+  _transform?: Element
   /** 
    * Parameters to the transform
    */
@@ -29883,9 +38611,17 @@ export interface StructureMapGroupRuleDependent {
    */
   name: id;
   /** 
+   * Name of a rule or group to apply
+   */
+  _name?: Element
+  /** 
    * Variable to pass to the rule or group
    */
   variable: Array<string>;
+  /** 
+   * Variable to pass to the rule or group
+   */
+  _variable?: Array<Element>
 }
 export interface StructureMapGroupRule {
   /** 
@@ -29904,6 +38640,10 @@ export interface StructureMapGroupRule {
    * Name of the rule for internal references
    */
   name: id;
+  /** 
+   * Name of the rule for internal references
+   */
+  _name?: Element
   /** 
    * Source inputs to the mapping
    */
@@ -29924,6 +38664,10 @@ export interface StructureMapGroupRule {
    * Documentation for this instance of data
    */
   documentation?: string;
+  /** 
+   * Documentation for this instance of data
+   */
+  _documentation?: Element
 }
 export interface StructureMapGroup {
   /** 
@@ -29943,17 +38687,33 @@ export interface StructureMapGroup {
    */
   name: id;
   /** 
+   * Human-readable label
+   */
+  _name?: Element
+  /** 
    * Another group that this group adds rules to
    */
   extends?: id;
+  /** 
+   * Another group that this group adds rules to
+   */
+  _extends?: Element
   /** 
    * none | types | type-and-types
    */
   typeMode: code;
   /** 
+   * none | types | type-and-types
+   */
+  _typeMode?: Element
+  /** 
    * Additional description/explanation for group
    */
   documentation?: string;
+  /** 
+   * Additional description/explanation for group
+   */
+  _documentation?: Element
   /** 
    * Named instance provided when invoking the map
    */
@@ -29978,9 +38738,17 @@ resourceType: "StructureMap"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -30002,6 +38770,10 @@ resourceType: "StructureMap"
    */
   url: uri;
   /** 
+   * Canonical identifier for this structure map, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Additional identifier for the structure map
    */
   identifier?: Array<Identifier>;
@@ -30010,29 +38782,57 @@ resourceType: "StructureMap"
    */
   version?: string;
   /** 
+   * Business version of the structure map
+   */
+  _version?: Element
+  /** 
    * Name for this structure map (computer friendly)
    */
   name: string;
+  /** 
+   * Name for this structure map (computer friendly)
+   */
+  _name?: Element
   /** 
    * Name for this structure map (human friendly)
    */
   title?: string;
   /** 
+   * Name for this structure map (human friendly)
+   */
+  _title?: Element
+  /** 
    * draft | active | retired | unknown
    */
   status: code;
+  /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
   /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
   /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
+  /** 
    * Date last changed
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -30041,6 +38841,10 @@ resourceType: "StructureMap"
    * Natural language description of the structure map
    */
   description?: markdown;
+  /** 
+   * Natural language description of the structure map
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -30054,9 +38858,17 @@ resourceType: "StructureMap"
    */
   purpose?: markdown;
   /** 
+   * Why this structure map is defined
+   */
+  _purpose?: Element
+  /** 
    * Use and/or publishing restrictions
    */
   copyright?: markdown;
+  /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
   /** 
    * Structure Definition used by this map
    */
@@ -30065,6 +38877,10 @@ resourceType: "StructureMap"
    * Other maps used by this map (canonical URLs)
    */
   import?: Array<canonical>;
+  /** 
+   * Other maps used by this map (canonical URLs)
+   */
+  _import?: Array<Element>
   /** 
    * Named sections for reader convenience
    */
@@ -30089,17 +38905,33 @@ export interface SubscriptionChannel {
    */
   type: code;
   /** 
+   * rest-hook | websocket | email | sms | message
+   */
+  _type?: Element
+  /** 
    * Where the channel points to
    */
   endpoint?: url;
+  /** 
+   * Where the channel points to
+   */
+  _endpoint?: Element
   /** 
    * MIME type to send, or omit for no payload
    */
   payload?: code;
   /** 
+   * MIME type to send, or omit for no payload
+   */
+  _payload?: Element
+  /** 
    * Usage depends on the channel type
    */
   header?: Array<string>;
+  /** 
+   * Usage depends on the channel type
+   */
+  _header?: Array<Element>
 }
 export interface Subscription {
 resourceType: "Subscription"
@@ -30116,9 +38948,17 @@ resourceType: "Subscription"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -30140,6 +38980,10 @@ resourceType: "Subscription"
    */
   status: code;
   /** 
+   * requested | active | error | off
+   */
+  _status?: Element
+  /** 
    * Contact details for source (e.g. troubleshooting)
    */
   contact?: Array<ContactPoint>;
@@ -30148,17 +38992,33 @@ resourceType: "Subscription"
    */
   end?: instant;
   /** 
+   * When to automatically delete the subscription
+   */
+  _end?: Element
+  /** 
    * Description of why this subscription was created
    */
   reason: string;
+  /** 
+   * Description of why this subscription was created
+   */
+  _reason?: Element
   /** 
    * Rule for server push
    */
   criteria: string;
   /** 
+   * Rule for server push
+   */
+  _criteria?: Element
+  /** 
    * Latest error note
    */
   error?: string;
+  /** 
+   * Latest error note
+   */
+  _error?: Element
   /** 
    * The channel on which to report matches to the criteria
    */
@@ -30186,6 +39046,10 @@ export interface SubstanceInstance {
    * When no longer valid to use
    */
   expiry?: dateTime;
+  /** 
+   * When no longer valid to use
+   */
+  _expiry?: Element
   /** 
    * Amount of substance in the package
    */
@@ -30232,9 +39096,17 @@ resourceType: "Substance"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -30260,6 +39132,10 @@ resourceType: "Substance"
    */
   status?: code;
   /** 
+   * active | inactive | entered-in-error
+   */
+  _status?: Element
+  /** 
    * What class/type of substance this is
    */
   category?: Array<CodeableConcept>;
@@ -30271,6 +39147,10 @@ resourceType: "Substance"
    * Textual description of the substance, comments
    */
   description?: string;
+  /** 
+   * Textual description of the substance, comments
+   */
+  _description?: Element
   /** 
    * If this describes a specific package/container of the substance
    */
@@ -30299,6 +39179,10 @@ export interface SubstanceNucleicAcidSubunitLinkage {
    */
   connectivity?: string;
   /** 
+   * The entity that links the sugar residues together should also be captured for nearly all naturally occurring nucleic acid the linkage is a phosphate group. For many synthetic oligonucleotides phosphorothioate linkages are often seen. Linkage connectivity is assumed to be 3’-5’. If the linkage is either 3’-3’ or 5’-5’ this should be specified
+   */
+  _connectivity?: Element
+  /** 
    * Each linkage will be registered as a fragment and have an ID
    */
   identifier?: Identifier;
@@ -30307,9 +39191,17 @@ export interface SubstanceNucleicAcidSubunitLinkage {
    */
   name?: string;
   /** 
+   * Each linkage will be registered as a fragment and have at least one name. A single name shall be assigned to each linkage
+   */
+  _name?: Element
+  /** 
    * Residues shall be captured as described in 5.3.6.8.3
    */
   residueSite?: string;
+  /** 
+   * Residues shall be captured as described in 5.3.6.8.3
+   */
+  _residueSite?: Element
 }
 export interface SubstanceNucleicAcidSubunitSugar {
   /** 
@@ -30333,9 +39225,17 @@ export interface SubstanceNucleicAcidSubunitSugar {
    */
   name?: string;
   /** 
+   * The name of the sugar or sugar-like component that make up the nucleotide
+   */
+  _name?: Element
+  /** 
    * The residues that contain a given sugar will be captured. The order of given residues will be captured in the 5‘-3‘direction consistent with the base sequences listed above
    */
   residueSite?: string;
+  /** 
+   * The residues that contain a given sugar will be captured. The order of given residues will be captured in the 5‘-3‘direction consistent with the base sequences listed above
+   */
+  _residueSite?: Element
 }
 export interface SubstanceNucleicAcidSubunit {
   /** 
@@ -30355,13 +39255,25 @@ export interface SubstanceNucleicAcidSubunit {
    */
   subunit?: integer;
   /** 
+   * Index of linear sequences of nucleic acids in order of decreasing length. Sequences of the same length will be ordered by molecular weight. Subunits that have identical sequences will be repeated and have sequential subscripts
+   */
+  _subunit?: Element
+  /** 
    * Actual nucleotide sequence notation from 5' to 3' end using standard single letter codes. In addition to the base sequence, sugar and type of phosphate or non-phosphate linkage should also be captured
    */
   sequence?: string;
   /** 
+   * Actual nucleotide sequence notation from 5' to 3' end using standard single letter codes. In addition to the base sequence, sugar and type of phosphate or non-phosphate linkage should also be captured
+   */
+  _sequence?: Element
+  /** 
    * The length of the sequence shall be captured
    */
   length?: integer;
+  /** 
+   * The length of the sequence shall be captured
+   */
+  _length?: Element
   /** 
    * (TBC)
    */
@@ -30398,9 +39310,17 @@ resourceType: "SubstanceNucleicAcid"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -30426,9 +39346,17 @@ resourceType: "SubstanceNucleicAcid"
    */
   numberOfSubunits?: integer;
   /** 
+   * The number of linear sequences of nucleotides linked through phosphodiester bonds shall be described. Subunits would be strands of nucleic acids that are tightly associated typically through Watson-Crick base pairing. NOTE: If not specified in the reference source, the assumption is that there is 1 subunit
+   */
+  _numberOfSubunits?: Element
+  /** 
    * The area of hybridisation shall be described if applicable for double stranded RNA or DNA. The number associated with the subunit followed by the number associated to the residue shall be specified in increasing order. The underscore “” shall be used as separator as follows: “Subunitnumber Residue”
    */
   areaOfHybridisation?: string;
+  /** 
+   * The area of hybridisation shall be described if applicable for double stranded RNA or DNA. The number associated with the subunit followed by the number associated to the residue shall be specified in increasing order. The underscore “” shall be used as separator as follows: “Subunitnumber Residue”
+   */
+  _areaOfHybridisation?: Element
   /** 
    * (TBC)
    */
@@ -30464,6 +39392,10 @@ export interface SubstancePolymerMonomerSetStartingMaterial {
    * Todo
    */
   isDefining?: boolean;
+  /** 
+   * Todo
+   */
+  _isDefining?: Element
   /** 
    * Todo
    */
@@ -30537,6 +39469,10 @@ export interface SubstancePolymerRepeatRepeatUnitStructuralRepresentation {
   /** 
    * Todo
    */
+  _representation?: Element
+  /** 
+   * Todo
+   */
   attachment?: Attachment;
 }
 export interface SubstancePolymerRepeatRepeatUnit {
@@ -30560,6 +39496,10 @@ export interface SubstancePolymerRepeatRepeatUnit {
    * Todo
    */
   repeatUnit?: string;
+  /** 
+   * Todo
+   */
+  _repeatUnit?: Element
   /** 
    * Todo
    */
@@ -30593,7 +39533,15 @@ export interface SubstancePolymerRepeat {
   /** 
    * Todo
    */
+  _numberOfUnits?: Element
+  /** 
+   * Todo
+   */
   averageMolecularFormula?: string;
+  /** 
+   * Todo
+   */
+  _averageMolecularFormula?: Element
   /** 
    * Todo
    */
@@ -30618,9 +39566,17 @@ resourceType: "SubstancePolymer"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -30656,6 +39612,10 @@ resourceType: "SubstancePolymer"
   /** 
    * Todo
    */
+  _modification?: Array<Element>
+  /** 
+   * Todo
+   */
   monomerSet?: Array<SubstancePolymerMonomerSet>;
   /** 
    * Todo
@@ -30681,13 +39641,25 @@ export interface SubstanceProteinSubunit {
    */
   subunit?: integer;
   /** 
+   * Index of primary sequences of amino acids linked through peptide bonds in order of decreasing length. Sequences of the same length will be ordered by molecular weight. Subunits that have identical sequences will be repeated and have sequential subscripts
+   */
+  _subunit?: Element
+  /** 
    * The sequence information shall be provided enumerating the amino acids from N- to C-terminal end using standard single-letter amino acid codes. Uppercase shall be used for L-amino acids and lowercase for D-amino acids. Transcribed SubstanceProteins will always be described using the translated sequence; for synthetic peptide containing amino acids that are not represented with a single letter code an X should be used within the sequence. The modified amino acids will be distinguished by their position in the sequence
    */
   sequence?: string;
   /** 
+   * The sequence information shall be provided enumerating the amino acids from N- to C-terminal end using standard single-letter amino acid codes. Uppercase shall be used for L-amino acids and lowercase for D-amino acids. Transcribed SubstanceProteins will always be described using the translated sequence; for synthetic peptide containing amino acids that are not represented with a single letter code an X should be used within the sequence. The modified amino acids will be distinguished by their position in the sequence
+   */
+  _sequence?: Element
+  /** 
    * Length of linear sequences of amino acids contained in the subunit
    */
   length?: integer;
+  /** 
+   * Length of linear sequences of amino acids contained in the subunit
+   */
+  _length?: Element
   /** 
    * The sequence information shall be provided enumerating the amino acids from N- to C-terminal end using standard single-letter amino acid codes. Uppercase shall be used for L-amino acids and lowercase for D-amino acids. Transcribed SubstanceProteins will always be described using the translated sequence; for synthetic peptide containing amino acids that are not represented with a single letter code an X should be used within the sequence. The modified amino acids will be distinguished by their position in the sequence
    */
@@ -30701,6 +39673,10 @@ export interface SubstanceProteinSubunit {
    */
   nTerminalModification?: string;
   /** 
+   * The name of the fragment modified at the N-terminal of the SubstanceProtein shall be specified
+   */
+  _nTerminalModification?: Element
+  /** 
    * Unique identifier for molecular fragment modification based on the ISO 11238 Substance ID
    */
   cTerminalModificationId?: Identifier;
@@ -30708,6 +39684,10 @@ export interface SubstanceProteinSubunit {
    * The modification at the C-terminal shall be specified
    */
   cTerminalModification?: string;
+  /** 
+   * The modification at the C-terminal shall be specified
+   */
+  _cTerminalModification?: Element
 }
 export interface SubstanceProtein {
 resourceType: "SubstanceProtein"
@@ -30724,9 +39704,17 @@ resourceType: "SubstanceProtein"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -30752,9 +39740,17 @@ resourceType: "SubstanceProtein"
    */
   numberOfSubunits?: integer;
   /** 
+   * Number of linear sequences of amino acids linked through peptide bonds. The number of subunits constituting the SubstanceProtein shall be described. It is possible that the number of subunits can be variable
+   */
+  _numberOfSubunits?: Element
+  /** 
    * The disulphide bond between two cysteine residues either on the same subunit or on two different subunits shall be described. The position of the disulfide bonds in the SubstanceProtein shall be listed in increasing order of subunit number and position within subunit followed by the abbreviation of the amino acids involved. The disulfide linkage positions shall actually contain the amino acid Cysteine at the respective positions
    */
   disulfideLinkage?: Array<string>;
+  /** 
+   * The disulphide bond between two cysteine residues either on the same subunit or on two different subunits shall be described. The position of the disulfide bonds in the SubstanceProtein shall be listed in increasing order of subunit number and position within subunit followed by the abbreviation of the amino acids involved. The disulfide linkage positions shall actually contain the amino acid Cysteine at the respective positions
+   */
+  _disulfideLinkage?: Array<Element>
   /** 
    * This subclause refers to the description of each subunit constituting the SubstanceProtein. A subunit is a linear sequence of amino acids linked through peptide bonds. The Subunit information shall be provided when the finished SubstanceProtein is a complex of multiple sequences; subunits are not used to delineate domains within a single sequence. Subunits are listed in order of decreasing length; sequences of the same length will be ordered by decreasing molecular weight; subunits that have identical sequences will be repeated multiple times
    */
@@ -30891,6 +39887,10 @@ export interface SubstanceReferenceInformationTarget {
   /** 
    * Todo
    */
+  _amountString?: Element
+  /** 
+   * Todo
+   */
   amountType?: CodeableConcept;
   /** 
    * Todo
@@ -30912,9 +39912,17 @@ resourceType: "SubstanceReferenceInformation"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -30935,6 +39943,10 @@ resourceType: "SubstanceReferenceInformation"
    * Todo
    */
   comment?: string;
+  /** 
+   * Todo
+   */
+  _comment?: Element
   /** 
    * Todo
    */
@@ -30971,6 +39983,10 @@ export interface SubstanceSourceMaterialFractionDescription {
    */
   fraction?: string;
   /** 
+   * This element is capturing information about the fraction of a plant part, or human plasma for fractionation
+   */
+  _fraction?: Element
+  /** 
    * The specific type of the material constituting the component. For Herbal preparations the particulars of the extracts (liquid/dry) is described in Specified Substance Group 1
    */
   materialType?: CodeableConcept;
@@ -30996,6 +40012,10 @@ export interface SubstanceSourceMaterialOrganismAuthor {
    * The author of an organism species shall be specified. The author year of an organism shall also be specified when applicable; refers to the year in which the first author(s) published the infraspecific plant/animal name (of any rank)
    */
   authorDescription?: string;
+  /** 
+   * The author of an organism species shall be specified. The author year of an organism shall also be specified when applicable; refers to the year in which the first author(s) published the infraspecific plant/animal name (of any rank)
+   */
+  _authorDescription?: Element
 }
 export interface SubstanceSourceMaterialOrganismHybrid {
   /** 
@@ -31015,17 +40035,33 @@ export interface SubstanceSourceMaterialOrganismHybrid {
    */
   maternalOrganismId?: string;
   /** 
+   * The identifier of the maternal species constituting the hybrid organism shall be specified based on a controlled vocabulary. For plants, the parents aren’t always known, and it is unlikely that it will be known which is maternal and which is paternal
+   */
+  _maternalOrganismId?: Element
+  /** 
    * The name of the maternal species constituting the hybrid organism shall be specified. For plants, the parents aren’t always known, and it is unlikely that it will be known which is maternal and which is paternal
    */
   maternalOrganismName?: string;
+  /** 
+   * The name of the maternal species constituting the hybrid organism shall be specified. For plants, the parents aren’t always known, and it is unlikely that it will be known which is maternal and which is paternal
+   */
+  _maternalOrganismName?: Element
   /** 
    * The identifier of the paternal species constituting the hybrid organism shall be specified based on a controlled vocabulary
    */
   paternalOrganismId?: string;
   /** 
+   * The identifier of the paternal species constituting the hybrid organism shall be specified based on a controlled vocabulary
+   */
+  _paternalOrganismId?: Element
+  /** 
    * The name of the paternal species constituting the hybrid organism shall be specified
    */
   paternalOrganismName?: string;
+  /** 
+   * The name of the paternal species constituting the hybrid organism shall be specified
+   */
+  _paternalOrganismName?: Element
   /** 
    * The hybrid type of an organism shall be specified
    */
@@ -31095,6 +40131,10 @@ export interface SubstanceSourceMaterialOrganism {
    */
   intraspecificDescription?: string;
   /** 
+   * The intraspecific description of an organism shall be specified based on a controlled vocabulary. For Influenza Vaccine, the intraspecific description shall contain the syntax of the antigen in line with the WHO convention
+   */
+  _intraspecificDescription?: Element
+  /** 
    * 4.9.13.6.1 Author type (Conditional)
    */
   author?: Array<SubstanceSourceMaterialOrganismAuthor>;
@@ -31144,9 +40184,17 @@ resourceType: "SubstanceSourceMaterial"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -31184,6 +40232,10 @@ resourceType: "SubstanceSourceMaterial"
    */
   organismName?: string;
   /** 
+   * The organism accepted Scientific name shall be provided based on the organism taxonomy
+   */
+  _organismName?: Element
+  /** 
    * The parent of the herbal drug Ginkgo biloba, Leaf is the substance ID of the substance (fresh) of Ginkgo biloba L. or Ginkgo biloba L. (Whole plant)
    */
   parentSubstanceId?: Array<Identifier>;
@@ -31192,6 +40244,10 @@ resourceType: "SubstanceSourceMaterial"
    */
   parentSubstanceName?: Array<string>;
   /** 
+   * The parent substance of the Herbal Drug, or Herbal preparation
+   */
+  _parentSubstanceName?: Array<Element>
+  /** 
    * The country where the plant material is harvested or the countries where the plasma is sourced from as laid down in accordance with the Plasma Master File. For “Plasma-derived substances” the attribute country of origin provides information about the countries used for the manufacturing of the Cryopoor plama or Crioprecipitate
    */
   countryOfOrigin?: Array<CodeableConcept>;
@@ -31199,6 +40255,10 @@ resourceType: "SubstanceSourceMaterial"
    * The place/region where the plant is harvested or the places/regions where the animal source material has its habitat
    */
   geographicalLocation?: Array<string>;
+  /** 
+   * The place/region where the plant is harvested or the places/regions where the animal source material has its habitat
+   */
+  _geographicalLocation?: Array<Element>
   /** 
    * Stage of life for animals, plants, insects and microorganisms. This information shall be provided only when the substance is significantly different in these stages (e.g. foetal bovine serum)
    */
@@ -31243,6 +40303,10 @@ export interface SubstanceSpecificationMoiety {
    */
   name?: string;
   /** 
+   * Textual name for this moiety substance
+   */
+  _name?: Element
+  /** 
    * Stereochemistry type
    */
   stereochemistry?: CodeableConcept;
@@ -31255,6 +40319,10 @@ export interface SubstanceSpecificationMoiety {
    */
   molecularFormula?: string;
   /** 
+   * Molecular formula
+   */
+  _molecularFormula?: Element
+  /** 
    * Quantitative value for this moiety
    */
   amountQuantity?: Quantity;
@@ -31262,6 +40330,10 @@ export interface SubstanceSpecificationMoiety {
    * Quantitative value for this moiety
    */
   amountString?: string;
+  /** 
+   * Quantitative value for this moiety
+   */
+  _amountString?: Element
 }
 export interface SubstanceSpecificationProperty {
   /** 
@@ -31289,6 +40361,10 @@ export interface SubstanceSpecificationProperty {
    */
   parameters?: string;
   /** 
+   * Parameters that were used in the measurement of a property (e.g. for viscosity: measured at 20C with a pH of 7.1)
+   */
+  _parameters?: Element
+  /** 
    * A substance upon which a defining property depends (e.g. for solubility: in water, in alcohol)
    */
   definingSubstanceReference?: Reference;
@@ -31304,6 +40380,10 @@ export interface SubstanceSpecificationProperty {
    * Quantitative value for this property
    */
   amountString?: string;
+  /** 
+   * Quantitative value for this property
+   */
+  _amountString?: Element
 }
 export interface SubstanceSpecificationStructureIsotopeMolecularWeight {
   /** 
@@ -31387,6 +40467,10 @@ export interface SubstanceSpecificationStructureRepresentation {
    */
   representation?: string;
   /** 
+   * The structural representation as text string in a format e.g. InChI, SMILES, MOLFILE, CDX
+   */
+  _representation?: Element
+  /** 
    * An attached file with the structural representation
    */
   attachment?: Attachment;
@@ -31417,9 +40501,17 @@ export interface SubstanceSpecificationStructure {
    */
   molecularFormula?: string;
   /** 
+   * Molecular formula
+   */
+  _molecularFormula?: Element
+  /** 
    * Specified per moiety according to the Hill system, i.e. first C, then H, then alphabetical, each moiety separated by a dot
    */
   molecularFormulaByMoiety?: string;
+  /** 
+   * Specified per moiety according to the Hill system, i.e. first C, then H, then alphabetical, each moiety separated by a dot
+   */
+  _molecularFormulaByMoiety?: Element
   /** 
    * Applicable for single substances that contain a radionuclide or a non-natural isotopic ratio
    */
@@ -31463,9 +40555,17 @@ export interface SubstanceSpecificationCode {
    */
   statusDate?: dateTime;
   /** 
+   * The date at which the code status is changed as part of the terminology maintenance
+   */
+  _statusDate?: Element
+  /** 
    * Any comment can be provided in this field, if necessary
    */
   comment?: string;
+  /** 
+   * Any comment can be provided in this field, if necessary
+   */
+  _comment?: Element
   /** 
    * Supporting literature
    */
@@ -31496,6 +40596,10 @@ export interface SubstanceSpecificationNameOfficial {
    * Date of official name change
    */
   date?: dateTime;
+  /** 
+   * Date of official name change
+   */
+  _date?: Element
 }
 export interface SubstanceSpecificationName {
   /** 
@@ -31515,6 +40619,10 @@ export interface SubstanceSpecificationName {
    */
   name: string;
   /** 
+   * The actual name
+   */
+  _name?: Element
+  /** 
    * Name type
    */
   type?: CodeableConcept;
@@ -31526,6 +40634,10 @@ export interface SubstanceSpecificationName {
    * If this is the preferred name for this substance
    */
   preferred?: boolean;
+  /** 
+   * If this is the preferred name for this substance
+   */
+  _preferred?: Element
   /** 
    * Language of the name
    */
@@ -31585,6 +40697,10 @@ export interface SubstanceSpecificationRelationship {
    */
   isDefining?: boolean;
   /** 
+   * For example where an enzyme strongly bonds with a particular substance, this is a defining relationship for that enzyme, out of several possible substance relationships
+   */
+  _isDefining?: Element
+  /** 
    * A numeric factor for the relationship, for instance to express that the salt of a substance has some percentage of the active substance in relation to some other
    */
   amountQuantity?: Quantity;
@@ -31600,6 +40716,10 @@ export interface SubstanceSpecificationRelationship {
    * A numeric factor for the relationship, for instance to express that the salt of a substance has some percentage of the active substance in relation to some other
    */
   amountString?: string;
+  /** 
+   * A numeric factor for the relationship, for instance to express that the salt of a substance has some percentage of the active substance in relation to some other
+   */
+  _amountString?: Element
   /** 
    * For use when the numeric
    */
@@ -31628,9 +40748,17 @@ resourceType: "SubstanceSpecification"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -31668,6 +40796,10 @@ resourceType: "SubstanceSpecification"
    */
   description?: string;
   /** 
+   * Textual description of the substance
+   */
+  _description?: Element
+  /** 
    * Supporting literature
    */
   source?: Array<Reference>;
@@ -31675,6 +40807,10 @@ resourceType: "SubstanceSpecification"
    * Textual comment about this record of a substance
    */
   comment?: string;
+  /** 
+   * Textual comment about this record of a substance
+   */
+  _comment?: Element
   /** 
    * Moiety, for structural modifications
    */
@@ -31766,9 +40902,17 @@ resourceType: "SupplyDelivery"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -31802,6 +40946,10 @@ resourceType: "SupplyDelivery"
    */
   status?: code;
   /** 
+   * in-progress | completed | abandoned | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Patient for whom the item is supplied
    */
   patient?: Reference;
@@ -31817,6 +40965,10 @@ resourceType: "SupplyDelivery"
    * When event occurred
    */
   occurrenceDateTime?: dateTime;
+  /** 
+   * When event occurred
+   */
+  _occurrenceDateTime?: Element
   /** 
    * When event occurred
    */
@@ -31872,6 +41024,10 @@ export interface SupplyRequestParameter {
    * Value of detail
    */
   valueBoolean?: boolean;
+  /** 
+   * Value of detail
+   */
+  _valueBoolean?: Element
 }
 export interface SupplyRequest {
 resourceType: "SupplyRequest"
@@ -31888,9 +41044,17 @@ resourceType: "SupplyRequest"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -31916,6 +41080,10 @@ resourceType: "SupplyRequest"
    */
   status?: code;
   /** 
+   * draft | active | suspended +
+   */
+  _status?: Element
+  /** 
    * The kind of supply (central, non-stock, etc.)
    */
   category?: CodeableConcept;
@@ -31923,6 +41091,10 @@ resourceType: "SupplyRequest"
    * routine | urgent | asap | stat
    */
   priority?: code;
+  /** 
+   * routine | urgent | asap | stat
+   */
+  _priority?: Element
   /** 
    * Medication, Substance, or Device requested to be supplied
    */
@@ -31946,6 +41118,10 @@ resourceType: "SupplyRequest"
   /** 
    * When the request should be fulfilled
    */
+  _occurrenceDateTime?: Element
+  /** 
+   * When the request should be fulfilled
+   */
   occurrencePeriod?: Period;
   /** 
    * When the request should be fulfilled
@@ -31955,6 +41131,10 @@ resourceType: "SupplyRequest"
    * When the request was made
    */
   authoredOn?: dateTime;
+  /** 
+   * When the request was made
+   */
+  _authoredOn?: Element
   /** 
    * Individual making the request
    */
@@ -31999,6 +41179,10 @@ export interface TaskRestriction {
    */
   repetitions?: positiveInt;
   /** 
+   * How many times to repeat
+   */
+  _repetitions?: Element
+  /** 
    * When fulfillment sought
    */
   period?: Period;
@@ -32031,7 +41215,15 @@ export interface TaskInput {
   /** 
    * Content to use in performing the task
    */
+  _valueBase64Binary?: Element
+  /** 
+   * Content to use in performing the task
+   */
   valueBoolean?: boolean;
+  /** 
+   * Content to use in performing the task
+   */
+  _valueBoolean?: Element
   /** 
    * Content to use in performing the task
    */
@@ -32039,7 +41231,15 @@ export interface TaskInput {
   /** 
    * Content to use in performing the task
    */
+  _valueCanonical?: Element
+  /** 
+   * Content to use in performing the task
+   */
   valueCode?: code;
+  /** 
+   * Content to use in performing the task
+   */
+  _valueCode?: Element
   /** 
    * Content to use in performing the task
    */
@@ -32047,7 +41247,15 @@ export interface TaskInput {
   /** 
    * Content to use in performing the task
    */
+  _valueDate?: Element
+  /** 
+   * Content to use in performing the task
+   */
   valueDateTime?: dateTime;
+  /** 
+   * Content to use in performing the task
+   */
+  _valueDateTime?: Element
   /** 
    * Content to use in performing the task
    */
@@ -32055,7 +41263,15 @@ export interface TaskInput {
   /** 
    * Content to use in performing the task
    */
+  _valueDecimal?: Element
+  /** 
+   * Content to use in performing the task
+   */
   valueId?: id;
+  /** 
+   * Content to use in performing the task
+   */
+  _valueId?: Element
   /** 
    * Content to use in performing the task
    */
@@ -32063,7 +41279,15 @@ export interface TaskInput {
   /** 
    * Content to use in performing the task
    */
+  _valueInstant?: Element
+  /** 
+   * Content to use in performing the task
+   */
   valueInteger?: integer;
+  /** 
+   * Content to use in performing the task
+   */
+  _valueInteger?: Element
   /** 
    * Content to use in performing the task
    */
@@ -32071,7 +41295,15 @@ export interface TaskInput {
   /** 
    * Content to use in performing the task
    */
+  _valueMarkdown?: Element
+  /** 
+   * Content to use in performing the task
+   */
   valueOid?: oid;
+  /** 
+   * Content to use in performing the task
+   */
+  _valueOid?: Element
   /** 
    * Content to use in performing the task
    */
@@ -32079,7 +41311,15 @@ export interface TaskInput {
   /** 
    * Content to use in performing the task
    */
+  _valuePositiveInt?: Element
+  /** 
+   * Content to use in performing the task
+   */
   valueString?: string;
+  /** 
+   * Content to use in performing the task
+   */
+  _valueString?: Element
   /** 
    * Content to use in performing the task
    */
@@ -32087,7 +41327,15 @@ export interface TaskInput {
   /** 
    * Content to use in performing the task
    */
+  _valueTime?: Element
+  /** 
+   * Content to use in performing the task
+   */
   valueUnsignedInt?: unsignedInt;
+  /** 
+   * Content to use in performing the task
+   */
+  _valueUnsignedInt?: Element
   /** 
    * Content to use in performing the task
    */
@@ -32095,11 +41343,23 @@ export interface TaskInput {
   /** 
    * Content to use in performing the task
    */
+  _valueUri?: Element
+  /** 
+   * Content to use in performing the task
+   */
   valueUrl?: url;
   /** 
    * Content to use in performing the task
    */
+  _valueUrl?: Element
+  /** 
+   * Content to use in performing the task
+   */
   valueUuid?: uuid;
+  /** 
+   * Content to use in performing the task
+   */
+  _valueUuid?: Element
   /** 
    * Content to use in performing the task
    */
@@ -32249,7 +41509,15 @@ export interface TaskOutput {
   /** 
    * Result of output
    */
+  _valueBase64Binary?: Element
+  /** 
+   * Result of output
+   */
   valueBoolean?: boolean;
+  /** 
+   * Result of output
+   */
+  _valueBoolean?: Element
   /** 
    * Result of output
    */
@@ -32257,7 +41525,15 @@ export interface TaskOutput {
   /** 
    * Result of output
    */
+  _valueCanonical?: Element
+  /** 
+   * Result of output
+   */
   valueCode?: code;
+  /** 
+   * Result of output
+   */
+  _valueCode?: Element
   /** 
    * Result of output
    */
@@ -32265,7 +41541,15 @@ export interface TaskOutput {
   /** 
    * Result of output
    */
+  _valueDate?: Element
+  /** 
+   * Result of output
+   */
   valueDateTime?: dateTime;
+  /** 
+   * Result of output
+   */
+  _valueDateTime?: Element
   /** 
    * Result of output
    */
@@ -32273,7 +41557,15 @@ export interface TaskOutput {
   /** 
    * Result of output
    */
+  _valueDecimal?: Element
+  /** 
+   * Result of output
+   */
   valueId?: id;
+  /** 
+   * Result of output
+   */
+  _valueId?: Element
   /** 
    * Result of output
    */
@@ -32281,7 +41573,15 @@ export interface TaskOutput {
   /** 
    * Result of output
    */
+  _valueInstant?: Element
+  /** 
+   * Result of output
+   */
   valueInteger?: integer;
+  /** 
+   * Result of output
+   */
+  _valueInteger?: Element
   /** 
    * Result of output
    */
@@ -32289,7 +41589,15 @@ export interface TaskOutput {
   /** 
    * Result of output
    */
+  _valueMarkdown?: Element
+  /** 
+   * Result of output
+   */
   valueOid?: oid;
+  /** 
+   * Result of output
+   */
+  _valueOid?: Element
   /** 
    * Result of output
    */
@@ -32297,7 +41605,15 @@ export interface TaskOutput {
   /** 
    * Result of output
    */
+  _valuePositiveInt?: Element
+  /** 
+   * Result of output
+   */
   valueString?: string;
+  /** 
+   * Result of output
+   */
+  _valueString?: Element
   /** 
    * Result of output
    */
@@ -32305,7 +41621,15 @@ export interface TaskOutput {
   /** 
    * Result of output
    */
+  _valueTime?: Element
+  /** 
+   * Result of output
+   */
   valueUnsignedInt?: unsignedInt;
+  /** 
+   * Result of output
+   */
+  _valueUnsignedInt?: Element
   /** 
    * Result of output
    */
@@ -32313,11 +41637,23 @@ export interface TaskOutput {
   /** 
    * Result of output
    */
+  _valueUri?: Element
+  /** 
+   * Result of output
+   */
   valueUrl?: url;
   /** 
    * Result of output
    */
+  _valueUrl?: Element
+  /** 
+   * Result of output
+   */
   valueUuid?: uuid;
+  /** 
+   * Result of output
+   */
+  _valueUuid?: Element
   /** 
    * Result of output
    */
@@ -32458,9 +41794,17 @@ resourceType: "Task"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -32488,7 +41832,15 @@ resourceType: "Task"
   /** 
    * Formal definition of task
    */
+  _instantiatesCanonical?: Element
+  /** 
+   * Formal definition of task
+   */
   instantiatesUri?: uri;
+  /** 
+   * Formal definition of task
+   */
+  _instantiatesUri?: Element
   /** 
    * Request fulfilled by this task
    */
@@ -32506,6 +41858,10 @@ resourceType: "Task"
    */
   status: code;
   /** 
+   * draft | requested | received | accepted | +
+   */
+  _status?: Element
+  /** 
    * Reason for current status
    */
   statusReason?: CodeableConcept;
@@ -32518,9 +41874,17 @@ resourceType: "Task"
    */
   intent: code;
   /** 
+   * unknown | proposal | plan | order | original-order | reflex-order | filler-order | instance-order | option
+   */
+  _intent?: Element
+  /** 
    * routine | urgent | asap | stat
    */
   priority?: code;
+  /** 
+   * routine | urgent | asap | stat
+   */
+  _priority?: Element
   /** 
    * Task Type
    */
@@ -32529,6 +41893,10 @@ resourceType: "Task"
    * Human-readable explanation of task
    */
   description?: string;
+  /** 
+   * Human-readable explanation of task
+   */
+  _description?: Element
   /** 
    * What task is acting on
    */
@@ -32550,9 +41918,17 @@ resourceType: "Task"
    */
   authoredOn?: dateTime;
   /** 
+   * Task Creation Date
+   */
+  _authoredOn?: Element
+  /** 
    * Task Last Modified Date
    */
   lastModified?: dateTime;
+  /** 
+   * Task Last Modified Date
+   */
+  _lastModified?: Element
   /** 
    * Who is asking for task to be done
    */
@@ -32621,9 +41997,17 @@ export interface TerminologyCapabilitiesSoftware {
    */
   name: string;
   /** 
+   * A name the software is known by
+   */
+  _name?: Element
+  /** 
    * Version covered by this statement
    */
   version?: string;
+  /** 
+   * Version covered by this statement
+   */
+  _version?: Element
 }
 export interface TerminologyCapabilitiesImplementation {
   /** 
@@ -32643,9 +42027,17 @@ export interface TerminologyCapabilitiesImplementation {
    */
   description: string;
   /** 
+   * Describes this specific instance
+   */
+  _description?: Element
+  /** 
    * Base URL for the implementation
    */
   url?: url;
+  /** 
+   * Base URL for the implementation
+   */
+  _url?: Element
 }
 export interface TerminologyCapabilitiesCodeSystemVersionFilter {
   /** 
@@ -32665,9 +42057,17 @@ export interface TerminologyCapabilitiesCodeSystemVersionFilter {
    */
   code: code;
   /** 
+   * Code of the property supported
+   */
+  _code?: Element
+  /** 
    * Operations supported for the property
    */
   op: Array<code>;
+  /** 
+   * Operations supported for the property
+   */
+  _op?: Array<Element>
 }
 export interface TerminologyCapabilitiesCodeSystemVersion {
   /** 
@@ -32687,17 +42087,33 @@ export interface TerminologyCapabilitiesCodeSystemVersion {
    */
   code?: string;
   /** 
+   * Version identifier for this version
+   */
+  _code?: Element
+  /** 
    * If this is the default version for this code system
    */
   isDefault?: boolean;
+  /** 
+   * If this is the default version for this code system
+   */
+  _isDefault?: Element
   /** 
    * If compositional grammar is supported
    */
   compositional?: boolean;
   /** 
+   * If compositional grammar is supported
+   */
+  _compositional?: Element
+  /** 
    * Language Displays supported
    */
   language?: Array<code>;
+  /** 
+   * Language Displays supported
+   */
+  _language?: Array<Element>
   /** 
    * Filter Properties supported
    */
@@ -32706,6 +42122,10 @@ export interface TerminologyCapabilitiesCodeSystemVersion {
    * Properties supported for $lookup
    */
   property?: Array<code>;
+  /** 
+   * Properties supported for $lookup
+   */
+  _property?: Array<Element>
 }
 export interface TerminologyCapabilitiesCodeSystem {
   /** 
@@ -32725,6 +42145,10 @@ export interface TerminologyCapabilitiesCodeSystem {
    */
   uri?: canonical;
   /** 
+   * URI for the Code System
+   */
+  _uri?: Element
+  /** 
    * Version of Code System supported
    */
   version?: Array<TerminologyCapabilitiesCodeSystemVersion>;
@@ -32732,6 +42156,10 @@ export interface TerminologyCapabilitiesCodeSystem {
    * Whether subsumption is supported
    */
   subsumption?: boolean;
+  /** 
+   * Whether subsumption is supported
+   */
+  _subsumption?: Element
 }
 export interface TerminologyCapabilitiesExpansionParameter {
   /** 
@@ -32751,9 +42179,17 @@ export interface TerminologyCapabilitiesExpansionParameter {
    */
   name: code;
   /** 
+   * Expansion Parameter name
+   */
+  _name?: Element
+  /** 
    * Description of support for parameter
    */
   documentation?: string;
+  /** 
+   * Description of support for parameter
+   */
+  _documentation?: Element
 }
 export interface TerminologyCapabilitiesExpansion {
   /** 
@@ -32773,13 +42209,25 @@ export interface TerminologyCapabilitiesExpansion {
    */
   hierarchical?: boolean;
   /** 
+   * Whether the server can return nested value sets
+   */
+  _hierarchical?: Element
+  /** 
    * Whether the server supports paging on expansion
    */
   paging?: boolean;
   /** 
+   * Whether the server supports paging on expansion
+   */
+  _paging?: Element
+  /** 
    * Allow request for incomplete expansions?
    */
   incomplete?: boolean;
+  /** 
+   * Allow request for incomplete expansions?
+   */
+  _incomplete?: Element
   /** 
    * Supported expansion parameter
    */
@@ -32788,6 +42236,10 @@ export interface TerminologyCapabilitiesExpansion {
    * Documentation about text searching works
    */
   textFilter?: markdown;
+  /** 
+   * Documentation about text searching works
+   */
+  _textFilter?: Element
 }
 export interface TerminologyCapabilitiesValidateCode {
   /** 
@@ -32806,6 +42258,10 @@ export interface TerminologyCapabilitiesValidateCode {
    * Whether translations are validated
    */
   translations: boolean;
+  /** 
+   * Whether translations are validated
+   */
+  _translations?: Element
 }
 export interface TerminologyCapabilitiesTranslation {
   /** 
@@ -32824,6 +42280,10 @@ export interface TerminologyCapabilitiesTranslation {
    * Whether the client must identify the map
    */
   needsMap: boolean;
+  /** 
+   * Whether the client must identify the map
+   */
+  _needsMap?: Element
 }
 export interface TerminologyCapabilitiesClosure {
   /** 
@@ -32842,6 +42302,10 @@ export interface TerminologyCapabilitiesClosure {
    * If cross-system closure is supported
    */
   translation?: boolean;
+  /** 
+   * If cross-system closure is supported
+   */
+  _translation?: Element
 }
 export interface TerminologyCapabilities {
 resourceType: "TerminologyCapabilities"
@@ -32858,9 +42322,17 @@ resourceType: "TerminologyCapabilities"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -32882,33 +42354,65 @@ resourceType: "TerminologyCapabilities"
    */
   url?: uri;
   /** 
+   * Canonical identifier for this terminology capabilities, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Business version of the terminology capabilities
    */
   version?: string;
+  /** 
+   * Business version of the terminology capabilities
+   */
+  _version?: Element
   /** 
    * Name for this terminology capabilities (computer friendly)
    */
   name?: string;
   /** 
+   * Name for this terminology capabilities (computer friendly)
+   */
+  _name?: Element
+  /** 
    * Name for this terminology capabilities (human friendly)
    */
   title?: string;
+  /** 
+   * Name for this terminology capabilities (human friendly)
+   */
+  _title?: Element
   /** 
    * draft | active | retired | unknown
    */
   status: code;
   /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
+  /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
+  /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
   /** 
    * Date last changed
    */
   date: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -32917,6 +42421,10 @@ resourceType: "TerminologyCapabilities"
    * Natural language description of the terminology capabilities
    */
   description?: markdown;
+  /** 
+   * Natural language description of the terminology capabilities
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -32930,13 +42438,25 @@ resourceType: "TerminologyCapabilities"
    */
   purpose?: markdown;
   /** 
+   * Why this terminology capabilities is defined
+   */
+  _purpose?: Element
+  /** 
    * Use and/or publishing restrictions
    */
   copyright?: markdown;
   /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
+  /** 
    * instance | capability | requirements
    */
   kind: code;
+  /** 
+   * instance | capability | requirements
+   */
+  _kind?: Element
   /** 
    * Software that is covered by this terminology capability statement
    */
@@ -32950,6 +42470,10 @@ resourceType: "TerminologyCapabilities"
    */
   lockedDate?: boolean;
   /** 
+   * Whether lockedDate is supported
+   */
+  _lockedDate?: Element
+  /** 
    * A code system supported by the server
    */
   codeSystem?: Array<TerminologyCapabilitiesCodeSystem>;
@@ -32961,6 +42485,10 @@ resourceType: "TerminologyCapabilities"
    * explicit | all
    */
   codeSearch?: code;
+  /** 
+   * explicit | all
+   */
+  _codeSearch?: Element
   /** 
    * Information about the [ValueSet/$validate-code](valueset-operation-validate-code.html) operation
    */
@@ -32993,13 +42521,25 @@ export interface TestReportParticipant {
    */
   type: code;
   /** 
+   * test-engine | client | server
+   */
+  _type?: Element
+  /** 
    * The uri of the participant. An absolute URL is preferred
    */
   uri: uri;
   /** 
+   * The uri of the participant. An absolute URL is preferred
+   */
+  _uri?: Element
+  /** 
    * The display name of the participant
    */
   display?: string;
+  /** 
+   * The display name of the participant
+   */
+  _display?: Element
 }
 export interface TestReportSetupActionOperation {
   /** 
@@ -33019,13 +42559,25 @@ export interface TestReportSetupActionOperation {
    */
   result: code;
   /** 
+   * pass | skip | fail | warning | error
+   */
+  _result?: Element
+  /** 
    * A message associated with the result
    */
   message?: markdown;
   /** 
+   * A message associated with the result
+   */
+  _message?: Element
+  /** 
    * A link to further details on the result
    */
   detail?: uri;
+  /** 
+   * A link to further details on the result
+   */
+  _detail?: Element
 }
 export interface TestReportSetupActionAssert {
   /** 
@@ -33045,13 +42597,25 @@ export interface TestReportSetupActionAssert {
    */
   result: code;
   /** 
+   * pass | skip | fail | warning | error
+   */
+  _result?: Element
+  /** 
    * A message associated with the result
    */
   message?: markdown;
   /** 
+   * A message associated with the result
+   */
+  _message?: Element
+  /** 
    * A link to further details on the result
    */
   detail?: string;
+  /** 
+   * A link to further details on the result
+   */
+  _detail?: Element
 }
 export interface TestReportSetupAction {
   /** 
@@ -33133,9 +42697,17 @@ export interface TestReportTest {
    */
   name?: string;
   /** 
+   * Tracking/logging name of this test
+   */
+  _name?: Element
+  /** 
    * Tracking/reporting short description of the test
    */
   description?: string;
+  /** 
+   * Tracking/reporting short description of the test
+   */
+  _description?: Element
   /** 
    * A test operation or assert that was performed
    */
@@ -33192,9 +42764,17 @@ resourceType: "TestReport"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -33220,9 +42800,17 @@ resourceType: "TestReport"
    */
   name?: string;
   /** 
+   * Informal name of the executed TestScript
+   */
+  _name?: Element
+  /** 
    * completed | in-progress | waiting | stopped | entered-in-error
    */
   status: code;
+  /** 
+   * completed | in-progress | waiting | stopped | entered-in-error
+   */
+  _status?: Element
   /** 
    * Reference to the  version-specific TestScript that was executed to produce this TestReport
    */
@@ -33232,17 +42820,33 @@ resourceType: "TestReport"
    */
   result: code;
   /** 
+   * pass | fail | pending
+   */
+  _result?: Element
+  /** 
    * The final score (percentage of tests passed) resulting from the execution of the TestScript
    */
   score?: decimal;
+  /** 
+   * The final score (percentage of tests passed) resulting from the execution of the TestScript
+   */
+  _score?: Element
   /** 
    * Name of the tester producing this report (Organization or individual)
    */
   tester?: string;
   /** 
+   * Name of the tester producing this report (Organization or individual)
+   */
+  _tester?: Element
+  /** 
    * When the TestScript was executed and this TestReport was generated
    */
   issued?: dateTime;
+  /** 
+   * When the TestScript was executed and this TestReport was generated
+   */
+  _issued?: Element
   /** 
    * A participant in the test execution, either the execution engine, a client, or a server
    */
@@ -33279,6 +42883,10 @@ export interface TestScriptOrigin {
    */
   index: integer;
   /** 
+   * The index of the abstract origin server starting at 1
+   */
+  _index?: Element
+  /** 
    * FHIR-Client | FHIR-SDC-FormFiller
    */
   profile: Coding;
@@ -33300,6 +42908,10 @@ export interface TestScriptDestination {
    * The index of the abstract destination server starting at 1
    */
   index: integer;
+  /** 
+   * The index of the abstract destination server starting at 1
+   */
+  _index?: Element
   /** 
    * FHIR-Server | FHIR-SDC-FormManager | FHIR-SDC-FormReceiver | FHIR-SDC-FormProcessor
    */
@@ -33323,9 +42935,17 @@ export interface TestScriptMetadataLink {
    */
   url: uri;
   /** 
+   * URL to the specification
+   */
+  _url?: Element
+  /** 
    * Short description
    */
   description?: string;
+  /** 
+   * Short description
+   */
+  _description?: Element
 }
 export interface TestScriptMetadataCapability {
   /** 
@@ -33345,29 +42965,57 @@ export interface TestScriptMetadataCapability {
    */
   required: boolean;
   /** 
+   * Are the capabilities required?
+   */
+  _required?: Element
+  /** 
    * Are the capabilities validated?
    */
   validated: boolean;
+  /** 
+   * Are the capabilities validated?
+   */
+  _validated?: Element
   /** 
    * The expected capabilities of the server
    */
   description?: string;
   /** 
+   * The expected capabilities of the server
+   */
+  _description?: Element
+  /** 
    * Which origin server these requirements apply to
    */
   origin?: Array<integer>;
+  /** 
+   * Which origin server these requirements apply to
+   */
+  _origin?: Array<Element>
   /** 
    * Which server these requirements apply to
    */
   destination?: integer;
   /** 
+   * Which server these requirements apply to
+   */
+  _destination?: Element
+  /** 
    * Links to the FHIR specification
    */
   link?: Array<uri>;
   /** 
+   * Links to the FHIR specification
+   */
+  _link?: Array<Element>
+  /** 
    * Required Capability Statement
    */
   capabilities: canonical;
+  /** 
+   * Required Capability Statement
+   */
+  _capabilities?: Element
 }
 export interface TestScriptMetadata {
   /** 
@@ -33409,9 +43057,17 @@ export interface TestScriptFixture {
    */
   autocreate: boolean;
   /** 
+   * Whether or not to implicitly create the fixture during setup
+   */
+  _autocreate?: Element
+  /** 
    * Whether or not to implicitly delete the fixture during teardown
    */
   autodelete: boolean;
+  /** 
+   * Whether or not to implicitly delete the fixture during teardown
+   */
+  _autodelete?: Element
   /** 
    * Reference of the resource
    */
@@ -33435,33 +43091,65 @@ export interface TestScriptVariable {
    */
   name: string;
   /** 
+   * Descriptive name for this variable
+   */
+  _name?: Element
+  /** 
    * Default, hard-coded, or user-defined value for this variable
    */
   defaultValue?: string;
+  /** 
+   * Default, hard-coded, or user-defined value for this variable
+   */
+  _defaultValue?: Element
   /** 
    * Natural language description of the variable
    */
   description?: string;
   /** 
+   * Natural language description of the variable
+   */
+  _description?: Element
+  /** 
    * The FHIRPath expression against the fixture body
    */
   expression?: string;
+  /** 
+   * The FHIRPath expression against the fixture body
+   */
+  _expression?: Element
   /** 
    * HTTP header field name for source
    */
   headerField?: string;
   /** 
+   * HTTP header field name for source
+   */
+  _headerField?: Element
+  /** 
    * Hint help text for default value to enter
    */
   hint?: string;
+  /** 
+   * Hint help text for default value to enter
+   */
+  _hint?: Element
   /** 
    * XPath or JSONPath against the fixture body
    */
   path?: string;
   /** 
+   * XPath or JSONPath against the fixture body
+   */
+  _path?: Element
+  /** 
    * Fixture Id of source expression or headerField within this variable
    */
   sourceId?: id;
+  /** 
+   * Fixture Id of source expression or headerField within this variable
+   */
+  _sourceId?: Element
 }
 export interface TestScriptSetupActionOperationRequestHeader {
   /** 
@@ -33481,9 +43169,17 @@ export interface TestScriptSetupActionOperationRequestHeader {
    */
   field: string;
   /** 
+   * HTTP header field name
+   */
+  _field?: Element
+  /** 
    * HTTP headerfield value
    */
   value: string;
+  /** 
+   * HTTP headerfield value
+   */
+  _value?: Element
 }
 export interface TestScriptSetupActionOperation {
   /** 
@@ -33507,41 +43203,81 @@ export interface TestScriptSetupActionOperation {
    */
   resource?: code;
   /** 
+   * Resource type
+   */
+  _resource?: Element
+  /** 
    * Tracking/logging operation label
    */
   label?: string;
+  /** 
+   * Tracking/logging operation label
+   */
+  _label?: Element
   /** 
    * Tracking/reporting operation description
    */
   description?: string;
   /** 
+   * Tracking/reporting operation description
+   */
+  _description?: Element
+  /** 
    * Mime type to accept in the payload of the response, with charset etc.
    */
   accept?: code;
+  /** 
+   * Mime type to accept in the payload of the response, with charset etc.
+   */
+  _accept?: Element
   /** 
    * Mime type of the request payload contents, with charset etc.
    */
   contentType?: code;
   /** 
+   * Mime type of the request payload contents, with charset etc.
+   */
+  _contentType?: Element
+  /** 
    * Server responding to the request
    */
   destination?: integer;
+  /** 
+   * Server responding to the request
+   */
+  _destination?: Element
   /** 
    * Whether or not to send the request url in encoded format
    */
   encodeRequestUrl: boolean;
   /** 
+   * Whether or not to send the request url in encoded format
+   */
+  _encodeRequestUrl?: Element
+  /** 
    * delete | get | options | patch | post | put | head
    */
   method?: code;
+  /** 
+   * delete | get | options | patch | post | put | head
+   */
+  _method?: Element
   /** 
    * Server initiating the request
    */
   origin?: integer;
   /** 
+   * Server initiating the request
+   */
+  _origin?: Element
+  /** 
    * Explicitly defined path parameters
    */
   params?: string;
+  /** 
+   * Explicitly defined path parameters
+   */
+  _params?: Element
   /** 
    * Each operation can have one or more header elements
    */
@@ -33551,21 +43287,41 @@ export interface TestScriptSetupActionOperation {
    */
   requestId?: id;
   /** 
+   * Fixture Id of mapped request
+   */
+  _requestId?: Element
+  /** 
    * Fixture Id of mapped response
    */
   responseId?: id;
+  /** 
+   * Fixture Id of mapped response
+   */
+  _responseId?: Element
   /** 
    * Fixture Id of body for PUT and POST requests
    */
   sourceId?: id;
   /** 
+   * Fixture Id of body for PUT and POST requests
+   */
+  _sourceId?: Element
+  /** 
    * Id of fixture used for extracting the [id],  [type], and [vid] for GET requests
    */
   targetId?: id;
   /** 
+   * Id of fixture used for extracting the [id],  [type], and [vid] for GET requests
+   */
+  _targetId?: Element
+  /** 
    * Request URL
    */
   url?: string;
+  /** 
+   * Request URL
+   */
+  _url?: Element
 }
 export interface TestScriptSetupActionAssert {
   /** 
@@ -33585,89 +43341,177 @@ export interface TestScriptSetupActionAssert {
    */
   label?: string;
   /** 
+   * Tracking/logging assertion label
+   */
+  _label?: Element
+  /** 
    * Tracking/reporting assertion description
    */
   description?: string;
+  /** 
+   * Tracking/reporting assertion description
+   */
+  _description?: Element
   /** 
    * response | request
    */
   direction?: code;
   /** 
+   * response | request
+   */
+  _direction?: Element
+  /** 
    * Id of the source fixture to be evaluated
    */
   compareToSourceId?: string;
+  /** 
+   * Id of the source fixture to be evaluated
+   */
+  _compareToSourceId?: Element
   /** 
    * The FHIRPath expression to evaluate against the source fixture
    */
   compareToSourceExpression?: string;
   /** 
+   * The FHIRPath expression to evaluate against the source fixture
+   */
+  _compareToSourceExpression?: Element
+  /** 
    * XPath or JSONPath expression to evaluate against the source fixture
    */
   compareToSourcePath?: string;
+  /** 
+   * XPath or JSONPath expression to evaluate against the source fixture
+   */
+  _compareToSourcePath?: Element
   /** 
    * Mime type to compare against the 'Content-Type' header
    */
   contentType?: code;
   /** 
+   * Mime type to compare against the 'Content-Type' header
+   */
+  _contentType?: Element
+  /** 
    * The FHIRPath expression to be evaluated
    */
   expression?: string;
+  /** 
+   * The FHIRPath expression to be evaluated
+   */
+  _expression?: Element
   /** 
    * HTTP header field name
    */
   headerField?: string;
   /** 
+   * HTTP header field name
+   */
+  _headerField?: Element
+  /** 
    * Fixture Id of minimum content resource
    */
   minimumId?: string;
+  /** 
+   * Fixture Id of minimum content resource
+   */
+  _minimumId?: Element
   /** 
    * Perform validation on navigation links?
    */
   navigationLinks?: boolean;
   /** 
+   * Perform validation on navigation links?
+   */
+  _navigationLinks?: Element
+  /** 
    * equals | notEquals | in | notIn | greaterThan | lessThan | empty | notEmpty | contains | notContains | eval
    */
   operator?: code;
+  /** 
+   * equals | notEquals | in | notIn | greaterThan | lessThan | empty | notEmpty | contains | notContains | eval
+   */
+  _operator?: Element
   /** 
    * XPath or JSONPath expression
    */
   path?: string;
   /** 
+   * XPath or JSONPath expression
+   */
+  _path?: Element
+  /** 
    * delete | get | options | patch | post | put | head
    */
   requestMethod?: code;
+  /** 
+   * delete | get | options | patch | post | put | head
+   */
+  _requestMethod?: Element
   /** 
    * Request URL comparison value
    */
   requestURL?: string;
   /** 
+   * Request URL comparison value
+   */
+  _requestURL?: Element
+  /** 
    * Resource type
    */
   resource?: code;
+  /** 
+   * Resource type
+   */
+  _resource?: Element
   /** 
    * okay | created | noContent | notModified | bad | forbidden | notFound | methodNotAllowed | conflict | gone | preconditionFailed | unprocessable
    */
   response?: code;
   /** 
+   * okay | created | noContent | notModified | bad | forbidden | notFound | methodNotAllowed | conflict | gone | preconditionFailed | unprocessable
+   */
+  _response?: Element
+  /** 
    * HTTP response code to test
    */
   responseCode?: string;
+  /** 
+   * HTTP response code to test
+   */
+  _responseCode?: Element
   /** 
    * Fixture Id of source expression or headerField
    */
   sourceId?: id;
   /** 
+   * Fixture Id of source expression or headerField
+   */
+  _sourceId?: Element
+  /** 
    * Profile Id of validation profile reference
    */
   validateProfileId?: id;
+  /** 
+   * Profile Id of validation profile reference
+   */
+  _validateProfileId?: Element
   /** 
    * The value to compare to
    */
   value?: string;
   /** 
+   * The value to compare to
+   */
+  _value?: Element
+  /** 
    * Will this assert produce a warning only on error?
    */
   warningOnly: boolean;
+  /** 
+   * Will this assert produce a warning only on error?
+   */
+  _warningOnly?: Element
 }
 export interface TestScriptSetupAction {
   /** 
@@ -33749,9 +43593,17 @@ export interface TestScriptTest {
    */
   name?: string;
   /** 
+   * Tracking/logging name of this test
+   */
+  _name?: Element
+  /** 
    * Tracking/reporting short description of the test
    */
   description?: string;
+  /** 
+   * Tracking/reporting short description of the test
+   */
+  _description?: Element
   /** 
    * A test operation or assert to perform
    */
@@ -33808,9 +43660,17 @@ resourceType: "TestScript"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -33832,6 +43692,10 @@ resourceType: "TestScript"
    */
   url: uri;
   /** 
+   * Canonical identifier for this test script, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Additional identifier for the test script
    */
   identifier?: Identifier;
@@ -33840,29 +43704,57 @@ resourceType: "TestScript"
    */
   version?: string;
   /** 
+   * Business version of the test script
+   */
+  _version?: Element
+  /** 
    * Name for this test script (computer friendly)
    */
   name: string;
+  /** 
+   * Name for this test script (computer friendly)
+   */
+  _name?: Element
   /** 
    * Name for this test script (human friendly)
    */
   title?: string;
   /** 
+   * Name for this test script (human friendly)
+   */
+  _title?: Element
+  /** 
    * draft | active | retired | unknown
    */
   status: code;
+  /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
   /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
   /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
+  /** 
    * Date last changed
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -33871,6 +43763,10 @@ resourceType: "TestScript"
    * Natural language description of the test script
    */
   description?: markdown;
+  /** 
+   * Natural language description of the test script
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -33884,9 +43780,17 @@ resourceType: "TestScript"
    */
   purpose?: markdown;
   /** 
+   * Why this test script is defined
+   */
+  _purpose?: Element
+  /** 
    * Use and/or publishing restrictions
    */
   copyright?: markdown;
+  /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
   /** 
    * An abstract server representing a client or sender in a message exchange
    */
@@ -33943,6 +43847,10 @@ export interface ValueSetComposeIncludeConceptDesignation {
    */
   language?: code;
   /** 
+   * Human language of the designation
+   */
+  _language?: Element
+  /** 
    * Types of uses of designations
    */
   use?: Coding;
@@ -33950,6 +43858,10 @@ export interface ValueSetComposeIncludeConceptDesignation {
    * The text value for this designation
    */
   value: string;
+  /** 
+   * The text value for this designation
+   */
+  _value?: Element
 }
 export interface ValueSetComposeIncludeConcept {
   /** 
@@ -33969,9 +43881,17 @@ export interface ValueSetComposeIncludeConcept {
    */
   code: code;
   /** 
+   * Code or expression from system
+   */
+  _code?: Element
+  /** 
    * Text to display for this code for this value set in this valueset
    */
   display?: string;
+  /** 
+   * Text to display for this code for this value set in this valueset
+   */
+  _display?: Element
   /** 
    * Additional representations for this concept
    */
@@ -33995,13 +43915,25 @@ export interface ValueSetComposeIncludeFilter {
    */
   property: code;
   /** 
+   * A property/filter defined by the code system
+   */
+  _property?: Element
+  /** 
    * = | is-a | descendent-of | is-not-a | regex | in | not-in | generalizes | exists
    */
   op: code;
   /** 
+   * = | is-a | descendent-of | is-not-a | regex | in | not-in | generalizes | exists
+   */
+  _op?: Element
+  /** 
    * Code from the system, or regex criteria, or boolean value for exists
    */
   value: string;
+  /** 
+   * Code from the system, or regex criteria, or boolean value for exists
+   */
+  _value?: Element
 }
 export interface ValueSetComposeInclude {
   /** 
@@ -34021,9 +43953,17 @@ export interface ValueSetComposeInclude {
    */
   system?: uri;
   /** 
+   * The system the codes come from
+   */
+  _system?: Element
+  /** 
    * Specific version of the code system referred to
    */
   version?: string;
+  /** 
+   * Specific version of the code system referred to
+   */
+  _version?: Element
   /** 
    * A concept defined in the system
    */
@@ -34036,6 +43976,10 @@ export interface ValueSetComposeInclude {
    * Select the contents included in this value set
    */
   valueSet?: Array<canonical>;
+  /** 
+   * Select the contents included in this value set
+   */
+  _valueSet?: Array<Element>
 }
 export interface ValueSetCompose {
   /** 
@@ -34055,9 +43999,17 @@ export interface ValueSetCompose {
    */
   lockedDate?: date;
   /** 
+   * Fixed date for references with no specified version (transitive)
+   */
+  _lockedDate?: Element
+  /** 
    * Whether inactive codes are in the value set
    */
   inactive?: boolean;
+  /** 
+   * Whether inactive codes are in the value set
+   */
+  _inactive?: Element
   /** 
    * Include one or more codes from a code system or other value set(s)
    */
@@ -34085,9 +44037,17 @@ export interface ValueSetExpansionParameter {
    */
   name: string;
   /** 
+   * Name as assigned by the client or server
+   */
+  _name?: Element
+  /** 
    * Value of the named parameter
    */
   valueString?: string;
+  /** 
+   * Value of the named parameter
+   */
+  _valueString?: Element
   /** 
    * Value of the named parameter
    */
@@ -34095,7 +44055,15 @@ export interface ValueSetExpansionParameter {
   /** 
    * Value of the named parameter
    */
+  _valueBoolean?: Element
+  /** 
+   * Value of the named parameter
+   */
   valueInteger?: integer;
+  /** 
+   * Value of the named parameter
+   */
+  _valueInteger?: Element
   /** 
    * Value of the named parameter
    */
@@ -34103,7 +44071,15 @@ export interface ValueSetExpansionParameter {
   /** 
    * Value of the named parameter
    */
+  _valueDecimal?: Element
+  /** 
+   * Value of the named parameter
+   */
   valueUri?: uri;
+  /** 
+   * Value of the named parameter
+   */
+  _valueUri?: Element
   /** 
    * Value of the named parameter
    */
@@ -34111,7 +44087,15 @@ export interface ValueSetExpansionParameter {
   /** 
    * Value of the named parameter
    */
+  _valueCode?: Element
+  /** 
+   * Value of the named parameter
+   */
   valueDateTime?: dateTime;
+  /** 
+   * Value of the named parameter
+   */
+  _valueDateTime?: Element
 }
 export interface ValueSetExpansionContains {
   /** 
@@ -34131,25 +44115,49 @@ export interface ValueSetExpansionContains {
    */
   system?: uri;
   /** 
+   * System value for the code
+   */
+  _system?: Element
+  /** 
    * If user cannot select this entry
    */
   abstract?: boolean;
+  /** 
+   * If user cannot select this entry
+   */
+  _abstract?: Element
   /** 
    * If concept is inactive in the code system
    */
   inactive?: boolean;
   /** 
+   * If concept is inactive in the code system
+   */
+  _inactive?: Element
+  /** 
    * Version in which this code/display is defined
    */
   version?: string;
+  /** 
+   * Version in which this code/display is defined
+   */
+  _version?: Element
   /** 
    * Code - if blank, this is not a selectable code
    */
   code?: code;
   /** 
+   * Code - if blank, this is not a selectable code
+   */
+  _code?: Element
+  /** 
    * User display for the concept
    */
   display?: string;
+  /** 
+   * User display for the concept
+   */
+  _display?: Element
   /** 
    * Additional representations for this item
    */
@@ -34177,17 +44185,33 @@ export interface ValueSetExpansion {
    */
   identifier?: uri;
   /** 
+   * Identifies the value set expansion (business identifier)
+   */
+  _identifier?: Element
+  /** 
    * Time ValueSet expansion happened
    */
   timestamp: dateTime;
+  /** 
+   * Time ValueSet expansion happened
+   */
+  _timestamp?: Element
   /** 
    * Total number of codes in the expansion
    */
   total?: integer;
   /** 
+   * Total number of codes in the expansion
+   */
+  _total?: Element
+  /** 
    * Offset at which this resource starts
    */
   offset?: integer;
+  /** 
+   * Offset at which this resource starts
+   */
+  _offset?: Element
   /** 
    * Parameter that controlled the expansion process
    */
@@ -34212,9 +44236,17 @@ resourceType: "ValueSet"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -34236,6 +44268,10 @@ resourceType: "ValueSet"
    */
   url?: uri;
   /** 
+   * Canonical identifier for this value set, represented as a URI (globally unique)
+   */
+  _url?: Element
+  /** 
    * Additional identifier for the value set (business identifier)
    */
   identifier?: Array<Identifier>;
@@ -34244,29 +44280,57 @@ resourceType: "ValueSet"
    */
   version?: string;
   /** 
+   * Business version of the value set
+   */
+  _version?: Element
+  /** 
    * Name for this value set (computer friendly)
    */
   name?: string;
+  /** 
+   * Name for this value set (computer friendly)
+   */
+  _name?: Element
   /** 
    * Name for this value set (human friendly)
    */
   title?: string;
   /** 
+   * Name for this value set (human friendly)
+   */
+  _title?: Element
+  /** 
    * draft | active | retired | unknown
    */
   status: code;
+  /** 
+   * draft | active | retired | unknown
+   */
+  _status?: Element
   /** 
    * For testing purposes, not real usage
    */
   experimental?: boolean;
   /** 
+   * For testing purposes, not real usage
+   */
+  _experimental?: Element
+  /** 
    * Date last changed
    */
   date?: dateTime;
   /** 
+   * Date last changed
+   */
+  _date?: Element
+  /** 
    * Name of the publisher (organization or individual)
    */
   publisher?: string;
+  /** 
+   * Name of the publisher (organization or individual)
+   */
+  _publisher?: Element
   /** 
    * Contact details for the publisher
    */
@@ -34275,6 +44339,10 @@ resourceType: "ValueSet"
    * Natural language description of the value set
    */
   description?: markdown;
+  /** 
+   * Natural language description of the value set
+   */
+  _description?: Element
   /** 
    * The context that the content is intended to support
    */
@@ -34288,13 +44356,25 @@ resourceType: "ValueSet"
    */
   immutable?: boolean;
   /** 
+   * Indicates whether or not any change to the content logical definition may occur
+   */
+  _immutable?: Element
+  /** 
    * Why this value set is defined
    */
   purpose?: markdown;
   /** 
+   * Why this value set is defined
+   */
+  _purpose?: Element
+  /** 
    * Use and/or publishing restrictions
    */
   copyright?: markdown;
+  /** 
+   * Use and/or publishing restrictions
+   */
+  _copyright?: Element
   /** 
    * Content logical definition of the value set (CLD)
    */
@@ -34339,6 +44419,10 @@ export interface VerificationResultPrimarySource {
    */
   validationDate?: dateTime;
   /** 
+   * When the target was validated against the primary source
+   */
+  _validationDate?: Element
+  /** 
    * yes | no | undetermined
    */
   canPushUpdates?: CodeableConcept;
@@ -34377,13 +44461,25 @@ export interface VerificationResultAttestation {
    */
   date?: date;
   /** 
+   * The date the information was attested to
+   */
+  _date?: Element
+  /** 
    * A digital identity certificate associated with the attestation source
    */
   sourceIdentityCertificate?: string;
   /** 
+   * A digital identity certificate associated with the attestation source
+   */
+  _sourceIdentityCertificate?: Element
+  /** 
    * A digital identity certificate associated with the proxy entity submitting attested information on behalf of the attestation source
    */
   proxyIdentityCertificate?: string;
+  /** 
+   * A digital identity certificate associated with the proxy entity submitting attested information on behalf of the attestation source
+   */
+  _proxyIdentityCertificate?: Element
   /** 
    * Proxy signature
    */
@@ -34415,6 +44511,10 @@ export interface VerificationResultValidator {
    */
   identityCertificate?: string;
   /** 
+   * A digital identity certificate associated with the validator
+   */
+  _identityCertificate?: Element
+  /** 
    * Validator signature
    */
   attestationSignature?: Signature;
@@ -34434,9 +44534,17 @@ resourceType: "VerificationResult"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -34462,6 +44570,10 @@ resourceType: "VerificationResult"
    */
   targetLocation?: Array<string>;
   /** 
+   * The fhirpath location(s) within the resource that was validated
+   */
+  _targetLocation?: Array<Element>
+  /** 
    * none | initial | periodic
    */
   need?: CodeableConcept;
@@ -34470,9 +44582,17 @@ resourceType: "VerificationResult"
    */
   status: code;
   /** 
+   * attested | validated | in-process | req-revalid | val-fail | reval-fail
+   */
+  _status?: Element
+  /** 
    * When the validation status was updated
    */
   statusDate?: dateTime;
+  /** 
+   * When the validation status was updated
+   */
+  _statusDate?: Element
   /** 
    * nothing | primary | multiple
    */
@@ -34490,9 +44610,17 @@ resourceType: "VerificationResult"
    */
   lastPerformed?: dateTime;
   /** 
+   * The date/time validation was last completed (including failed validations)
+   */
+  _lastPerformed?: Element
+  /** 
    * The date when target is next validated, if appropriate
    */
   nextScheduled?: date;
+  /** 
+   * The date when target is next validated, if appropriate
+   */
+  _nextScheduled?: Element
   /** 
    * fatal | warn | rec-only | none
    */
@@ -34529,9 +44657,17 @@ export interface VisionPrescriptionLensSpecificationPrism {
    */
   amount: decimal;
   /** 
+   * Amount of adjustment
+   */
+  _amount?: Element
+  /** 
    * up | down | in | out
    */
   base: code;
+  /** 
+   * up | down | in | out
+   */
+  _base?: Element
 }
 export interface VisionPrescriptionLensSpecification {
   /** 
@@ -34555,17 +44691,33 @@ export interface VisionPrescriptionLensSpecification {
    */
   eye: code;
   /** 
+   * right | left
+   */
+  _eye?: Element
+  /** 
    * Power of the lens
    */
   sphere?: decimal;
+  /** 
+   * Power of the lens
+   */
+  _sphere?: Element
   /** 
    * Lens power for astigmatism
    */
   cylinder?: decimal;
   /** 
+   * Lens power for astigmatism
+   */
+  _cylinder?: Element
+  /** 
    * Lens meridian which contain no power for astigmatism
    */
   axis?: integer;
+  /** 
+   * Lens meridian which contain no power for astigmatism
+   */
+  _axis?: Element
   /** 
    * Eye alignment compensation
    */
@@ -34575,17 +44727,33 @@ export interface VisionPrescriptionLensSpecification {
    */
   add?: decimal;
   /** 
+   * Added power for multifocal levels
+   */
+  _add?: Element
+  /** 
    * Contact lens power
    */
   power?: decimal;
+  /** 
+   * Contact lens power
+   */
+  _power?: Element
   /** 
    * Contact lens back curvature
    */
   backCurve?: decimal;
   /** 
+   * Contact lens back curvature
+   */
+  _backCurve?: Element
+  /** 
    * Contact lens diameter
    */
   diameter?: decimal;
+  /** 
+   * Contact lens diameter
+   */
+  _diameter?: Element
   /** 
    * Lens wear duration
    */
@@ -34595,9 +44763,17 @@ export interface VisionPrescriptionLensSpecification {
    */
   color?: string;
   /** 
+   * Color required
+   */
+  _color?: Element
+  /** 
    * Brand required
    */
   brand?: string;
+  /** 
+   * Brand required
+   */
+  _brand?: Element
   /** 
    * Notes for coatings
    */
@@ -34618,9 +44794,17 @@ resourceType: "VisionPrescription"
    */
   implicitRules?: uri;
   /** 
+   * A set of rules under which this content was created
+   */
+  _implicitRules?: Element
+  /** 
    * Language of the resource content
    */
   language?: code;
+  /** 
+   * Language of the resource content
+   */
+  _language?: Element
   /** 
    * Text summary of the resource, for human interpretation
    */
@@ -34646,9 +44830,17 @@ resourceType: "VisionPrescription"
    */
   status: code;
   /** 
+   * active | cancelled | draft | entered-in-error
+   */
+  _status?: Element
+  /** 
    * Response creation date
    */
   created: dateTime;
+  /** 
+   * Response creation date
+   */
+  _created?: Element
   /** 
    * Who prescription is for
    */
@@ -34661,6 +44853,10 @@ resourceType: "VisionPrescription"
    * When prescription was authorized
    */
   dateWritten: dateTime;
+  /** 
+   * When prescription was authorized
+   */
+  _dateWritten?: Element
   /** 
    * Who authorized the vision prescription
    */
@@ -34682,7 +44878,9 @@ resourceType: "ClientApplication"
    */
   meta?: Meta;
   name: string;
+  _name?: Element
   description?: string;
+  _description?: Element
 }
 
 export interface Connection {
@@ -34696,7 +44894,9 @@ resourceType: "Connection"
    */
   meta?: Meta;
   name: string;
+  _name?: Element
   description?: string;
+  _description?: Element
 }
 
 export interface Tenant {
@@ -34710,5 +44910,7 @@ resourceType: "Tenant"
    */
   meta?: Meta;
   name: string;
+  _name?: Element
   description?: string;
+  _description?: Element
 }

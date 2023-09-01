@@ -4,6 +4,29 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 import { traversalBottomUp } from "./sdTraversal.js";
 
+export const primitiveTypes: Set<string> = new Set([
+  "base64Binary",
+  "boolean",
+  "canonical",
+  "code",
+  "date",
+  "dateTime",
+  "decimal",
+  "id",
+  "instant",
+  "integer",
+  "markdown",
+  "oid",
+  "positiveInt",
+  "string",
+  "time",
+  "unsignedInt",
+  "uri",
+  "url",
+  "uuid",
+  "xhtml",
+]);
+
 function fhirSystemTypePredicate(type: string) {
   switch (type) {
     case "http://hl7.org/fhirpath/System.Boolean": {
@@ -56,7 +79,7 @@ function getElementField(element: ElementDefinition, type?: string) {
   if (!isRequired || type) {
     field = field + "?";
   }
-  return `${documentation(element)}  ${field}`;
+  return `${field}`;
 }
 
 function primitiveToTypescriptType(
@@ -154,27 +177,50 @@ function contentReference(sd: StructureDefinition, element: ElementDefinition) {
     referenceTypescriptType = `Array<${referenceTypescriptType}>`;
   }
 
-  return [`${getElementField(element)}: ${referenceTypescriptType};`];
+  return [
+    `${documentation(element)}  ${getElementField(
+      element
+    )}: ${referenceTypescriptType};`,
+  ];
+}
+
+function getPrimitiveExtension(element: ElementDefinition, type: string) {
+  return `${documentation(element)}  _${getElementField(
+    { ...element, min: 0 },
+    type
+  )}: ${typeToTypescriptType(element, "Element")}`;
 }
 
 function processLeaf(sd: StructureDefinition, element: ElementDefinition) {
   if (element.contentReference) {
     return contentReference(sd, element);
   } else if (element.type?.length && element.type?.length > 1) {
-    return element.type?.map(
-      (type) =>
-        `${getElementField(element, type.code)}: ${typeToTypescriptType(
-          element,
-          type.code
-        )};`
+    return element.type
+      ?.map((type) => {
+        const fields = [
+          `${documentation(element)}  ${getElementField(
+            element,
+            type.code
+          )}: ${typeToTypescriptType(element, type.code)};`,
+        ];
+        if (primitiveTypes.has(type.code)) {
+          fields.push(getPrimitiveExtension(element, type.code));
+        }
+        return fields;
+      })
+      .flat();
+  }
+  const fields = [
+    `${documentation(element)}  ${getElementField(
+      element
+    )}: ${typeToTypescriptType(element, element.type?.[0]?.code as string)};`,
+  ];
+  if (primitiveTypes.has(element.type?.[0]?.code as string)) {
+    fields.push(
+      getPrimitiveExtension(element, element.type?.[0]?.code as string)
     );
   }
-  return [
-    `${getElementField(element)}: ${typeToTypescriptType(
-      element,
-      element.type?.[0]?.code as string
-    )};`,
-  ];
+  return fields;
 }
 
 interface ComplexTypeOutput {
@@ -198,10 +244,9 @@ function processComplexToTypescript(
 ${children.join("\n")}
 }`,
     field: [
-      `${getElementField(element)}: ${wrapAsCollection(
-        element,
-        interfaceName
-      )};`,
+      `${documentation(element)}  ${getElementField(
+        element
+      )}: ${wrapAsCollection(element, interfaceName)};`,
     ],
   };
 }
