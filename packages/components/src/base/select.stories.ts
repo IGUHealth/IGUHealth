@@ -16,7 +16,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = {
+export const ClosedSelect: Story = {
   args: {
     onChange: (value) => console.log(value),
     value: "option1",
