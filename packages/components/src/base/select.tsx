@@ -37,7 +37,12 @@ export const Select = ({
   return (
     <Combobox
       value={
-        options.filter((o) => o.value === value)[0] || { value, label: value }
+        value
+          ? options.filter((o) => o.value === value)[0] || {
+              value,
+              label: value,
+            }
+          : undefined
       }
       onChange={onChange}
       nullable
