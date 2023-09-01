@@ -27,20 +27,22 @@ export const LabelContainer = ({
 
     <div
       className={classNames(
-        "focus-within:border-blue-800",
-        "focus-within:shadow-md",
-        "border rounded p-1 text-slate-800",
+        "relative",
+        "px-3 py-2",
+        "bg-white border shadow-sm placeholder-slate-400 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200",
+        "focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1",
+        "invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500 disabled:shadow-none",
         {
-          "border-slate-700": issues.length === 0 ? true : false,
-          "text-error": issues.length !== 0 ? true : false,
-          "border-error": issues.length !== 0 ? true : false,
+          "border-slate-300": issues.length === 0 ? true : false,
+          "text-pink-500": issues.length !== 0 ? true : false,
+          "border-pink-500": issues.length !== 0 ? true : false,
         }
       )}
     >
       {children}
     </div>
     {issues.length !== 0 && (
-      <div className="text-sm mt-1 text-error">{issues.join(".\n")}</div>
+      <div className="text-sm mt-1 text-pink-600">{issues.join(".\n")}</div>
     )}
   </div>
 );
