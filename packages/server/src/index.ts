@@ -107,11 +107,13 @@ const checkJWT: Middleware<DefaultState, DefaultContext, any> = jwt({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 2,
-    jwksUri: process.env.JWK_URI as string, // `http://localhost:3000/jwks`,
+    jwksUri: process.env.AUTH_JWK_URI as string,
   }),
-  audience: process.env.JWT_AUDIENCE, // "https://iguhealth.com/api",
-  issuer: process.env.JWT_ISSUER, // "http://localhost:3000",
-  algorithms: [process.env.JWT_ALGORITHM ? process.env.JWT_ALGORITHM : "RS256"],
+  audience: process.env.AUTH_JWT_AUDIENCE,
+  issuer: process.env.AUTH_JWT_ISSUER,
+  algorithms: [
+    process.env.AUTH_JWT_ALGORITHM ? process.env.AUTH_JWT_ALGORITHM : "RS256",
+  ],
 }) as unknown as Middleware<DefaultState, DefaultContext, any>;
 
 function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
@@ -125,16 +127,15 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
   router.all(
     "/w/:workspace/api/v1/fhir/r4/:fhirUrl*",
     checkJWT,
-    async(ctx, next) => {
-      console.log(ctx.state);
-      next()
+    async (ctx, next) => {
+      await next();
     },
     async (ctx, next) => {
       try {
         const serverCTX = {
           ...services,
           workspace: ctx.params.workspace,
-          author: ,
+          author: ctx.state.sub,
         };
 
         const fhirServerResponse = await fhirServer(
@@ -157,7 +158,7 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
             (ctx[k as keyof Koa.DefaultContext] =
               koaResponse[k as keyof Partial<Koa.Response>])
         );
-        next();
+        await next();
       } catch (e) {
         if (isOperationError(e)) {
           const operationOutcome = e.outcome;
