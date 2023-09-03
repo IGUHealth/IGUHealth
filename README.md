@@ -53,3 +53,16 @@ Optional depending on whether you are executing custom code for operations
 | AWS_LAMBDA_ACCESS_KEY_ID     | Access key id for lambda (must have permission to invoke and create lambda functions)       | false    |
 | AWS_LAMBDA_ACCESS_KEY_SECRET | Access key secret for lambda (must have permission to invoke and create lambda functions).  | false    |
 | AWS_LAMBDA_LAYER_ARN         | ARN Layer for lambda (current expectation is layer installed with all @iguhealth packages). | false    |
+
+#### AUTHENTICATION
+AUTH_JWK_URI="http://localhost:3000/jwks"
+AUTH_JWT_AUDIENCE="https://iguhealth.com/api"
+AUTH_JWT_ISSUER="http://localhost:3000"
+AUTH_JWT_ALGORITHM="RS256"
+
+| name               | description                             | required | defaults                  |
+|--------------------|-----------------------------------------|----------|---------------------------|
+| AUTH_JWK_URI       | JWK remote url to pull JSON WEB Key Set | true     |                           |
+| AUTH_JWT_AUDIENCE  | String representing audience for jwt    | false    | https://iguhealth.app/api |
+| AUTH_JWT_ISSUER    | Issuer of the JWT.                      | true     |                           |
+| AUTH_JWT_ALGORITHM |                                         | false    | RS256                     |
