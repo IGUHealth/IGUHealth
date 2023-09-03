@@ -102,34 +102,33 @@ function fhirResponseToKoaResponse(
   }
 }
 
-const checkJWT: Middleware<DefaultState, DefaultContext, any> = jwt({
-  secret: jwksRsa.koaJwtSecret({
-    cache: true,
-    rateLimit: true,
-    jwksRequestsPerMinute: 2,
-    jwksUri: process.env.AUTH_JWK_URI as string,
-  }),
-  audience: process.env.AUTH_JWT_AUDIENCE,
-  issuer: process.env.AUTH_JWT_ISSUER,
-  algorithms: [
-    process.env.AUTH_JWT_ALGORITHM ? process.env.AUTH_JWT_ALGORITHM : "RS256",
-  ],
-}) as unknown as Middleware<DefaultState, DefaultContext, any>;
+const createCheckJWT = () =>
+  jwt({
+    secret: jwksRsa.koaJwtSecret({
+      cache: true,
+      rateLimit: true,
+      jwksRequestsPerMinute: 2,
+      jwksUri: process.env.AUTH_JWK_URI as string,
+    }),
+    audience: process.env.AUTH_JWT_AUDIENCE,
+    issuer: process.env.AUTH_JWT_ISSUER,
+    algorithms: [
+      process.env.AUTH_JWT_ALGORITHM ? process.env.AUTH_JWT_ALGORITHM : "RS256",
+    ],
+  }) as unknown as Middleware<DefaultState, DefaultContext, any>;
 
-function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
-  const app = new Koa();
-
+function workspaceMiddleware(
+  services: ReturnType<typeof createServiceCTX>
+): Router.Middleware<Koa.DefaultState, Koa.DefaultContext, unknown>[] {
   const fhirServer = createFHIRServer();
 
-  const router = new Router();
-  const services = createServiceCTX();
-
-  router.all(
-    "/w/:workspace/api/v1/fhir/r4/:fhirUrl*",
-    checkJWT,
-    async (ctx, next) => {
-      await next();
-    },
+  return [
+    process.env.AUTH_JWT_ISSUER
+      ? createCheckJWT()
+      : async (ctx, next) => {
+          services.logger.warn("[WARNING] Server is publicly accessible.");
+          await next();
+        },
     async (ctx, next) => {
       try {
         const serverCTX = {
@@ -178,7 +177,19 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
           ctx.body = operationOutcome;
         }
       }
-    }
+    },
+  ];
+}
+
+function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
+  const app = new Koa();
+
+  const router = new Router();
+  const services = createServiceCTX();
+
+  router.all(
+    "/w/:workspace/api/v1/fhir/r4/:fhirUrl*",
+    ...workspaceMiddleware(services)
   );
 
   // TODO Use an adapter  adapter,
