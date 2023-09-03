@@ -127,6 +127,7 @@ function workspaceMiddleware(
       ? createCheckJWT()
       : async (ctx, next) => {
           services.logger.warn("[WARNING] Server is publicly accessible.");
+          ctx.state = { ...ctx.state, sub: "public-user" };
           await next();
         },
     async (ctx, next) => {
