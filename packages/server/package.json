@@ -92,6 +92,7 @@
     ]
   },
   "files": [
+    "src/**",
     "database.json",
     "lib/**"
   ]
