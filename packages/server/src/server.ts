@@ -1,15 +1,17 @@
-import * as jose from "jose";
 import Koa, { DefaultContext, DefaultState, Middleware } from "koa";
 import Router from "@koa/router";
 import bodyParser from "@koa/bodyparser";
-import path from "path";
+
 import dotEnv from "dotenv";
-import { fileURLToPath } from "url";
+
 import jwt from "koa-jwt";
 import jwksRsa from "jwks-rsa";
-import Provider from "oidc-provider";
-import mount from "koa-mount";
 import cors from "@koa/cors";
+// import * as jose from "jose";
+// import path from "path";
+// import { fileURLToPath } from "url";
+// import Provider from "oidc-provider";
+// import mount from "koa-mount";
 
 import { Bundle, Resource } from "@iguhealth/fhir-types/r4/types";
 import {
@@ -22,21 +24,21 @@ import { FHIRResponse } from "@iguhealth/client/lib/types";
 
 import createServiceCTX from "./ctx/index.js";
 import createFHIRServer from "./fhirServer.js";
-import Account from "./oidc-provider/accounts.js";
-import configuration from "./oidc-provider/configuration.js";
-import routes from "./oidc-provider/routes.js";
-import { loadJWKS } from "./auth/jwks.js";
+// import Account from "./oidc-provider/accounts.js";
+// import configuration from "./oidc-provider/configuration.js";
+// import routes from "./oidc-provider/routes.js";
+// import { loadJWKS } from "./auth/jwks.js";
 import { KoaRequestToFHIRRequest } from "./fhirRequest/index.js";
 
 dotEnv.config();
 
-const { PORT = 3000, ISSUER = `http://localhost:${PORT}` } = process.env;
-configuration.findAccount = Account.findAccount;
+// const { PORT = 3000, ISSUER = `http://localhost:${PORT}` } = process.env;
+// configuration.findAccount = Account.findAccount;
 
-const { jwks, privateKey } = await loadJWKS(
-  path.join(fileURLToPath(import.meta.url), "../../certifications"),
-  "jwks"
-);
+// const { jwks, privateKey } = await loadJWKS(
+//   path.join(fileURLToPath(import.meta.url), "../../certifications"),
+//   "jwks"
+// );
 
 // const signedJWT = await new jose.SignJWT({ "urn:example:claim": true })
 //   .setProtectedHeader({ alg: "RS256" })
