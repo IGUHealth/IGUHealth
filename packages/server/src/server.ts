@@ -182,7 +182,9 @@ function workspaceMiddleware(
   ];
 }
 
-function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
+export default function createServer(
+  port: number
+): Koa<Koa.DefaultState, Koa.DefaultContext> {
   const app = new Koa();
 
   const router = new Router();
@@ -221,5 +223,3 @@ function createServer(port: number): Koa<Koa.DefaultState, Koa.DefaultContext> {
 
   return app;
 }
-
-createServer(3000);

@@ -2,15 +2,15 @@
   "name": "@iguhealth/server",
   "version": "0.3.8",
   "description": "",
-  "main": "./lib/index.js",
+  "main": "./lib/server.js",
   "type": "module",
   "scripts": {
     "build": "tsc && yarn copyfiles  -u 1 \"./src/**/*.sql\" lib",
-    "start": "yarn build && yarn node --enable-source-maps ./lib/index.js",
+    "start": "yarn build && yarn node --enable-source-maps ./lib/local.js",
     "test": "jest --detectOpenHandles",
     "migrate": "db-migrate --sql-file -m src/resourceProviders/postgres/migrations",
-    "watch": "yarn migrate up && yarn tsc-watch --onSuccess \"yarn node --enable-source-maps  ./lib/index.js\"",
-    "watch-worker": "yarn migrate up && yarn tsc-watch --onSuccess \"yarn node --enable-source-maps  ./lib/worker/index.js\"",
+    "watch": "yarn migrate up && yarn tsc-watch --onSuccess \"yarn node --enable-source-maps  ./lib/local.js\"",
+    "watch-worker": "yarn migrate up && yarn tsc-watch --onSuccess \"yarn node --enable-source-maps  ./lib/worker/local.js\"",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "dependencies": {
