@@ -26,15 +26,16 @@ yarn watch
 
 #### Data layer
 
-| name                   | description             | required | defaults  |
-| ---------------------- | ----------------------- | -------- | --------- |
-| FHIR_DATABASE_NAME     | Postgres database name. | true     | iguhealth |
-| FHIR_DATABASE_HOST     | Postgres host           | true     | localhost |
-| FHIR_DATABASE_PORT     | Postgres port           | true     | 5432      |
-| FHIR_DATABASE_PASSWORD | Postgres password       | true     | ""        |
-| FHIR_DATABASE_USERNAME | Postgres username       | true     | postgres  |
-| REDIS_HOST             | Redis Host              | true     | 127.0.0.1 |
-| REDIS_PORT             | Redis port              | true     | 6379      |
+| name                   | description                        | required | defaults  |
+| ---------------------- | ---------------------------------- | -------- | --------- |
+| FHIR_DATABASE_NAME     | Postgres database name.            | true     | iguhealth |
+| FHIR_DATABASE_HOST     | Postgres host                      | true     | localhost |
+| FHIR_DATABASE_PORT     | Postgres port                      | true     | 5432      |
+| FHIR_DATABASE_PASSWORD | Postgres password                  | true     | ""        |
+| FHIR_DATABASE_USERNAME | Postgres username                  | true     | postgres  |
+| FHIR_DATABASE_SSL      | Whether Postgres connection is SSL | false    | false     |
+| REDIS_HOST             | Redis Host                         | true     | 127.0.0.1 |
+| REDIS_PORT             | Redis port                         | true     | 6379      |
 
 #### Meta Information
 
