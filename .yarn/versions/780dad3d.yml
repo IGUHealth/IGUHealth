@@ -1,5 +1,0 @@
-releases:
-  "@iguhealth/server": minor
-
-declined:
-  - "@iguhealth/fhir-validation"
