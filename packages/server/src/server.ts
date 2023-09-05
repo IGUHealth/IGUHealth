@@ -129,7 +129,7 @@ function workspaceMiddleware(
       ? createCheckJWT()
       : async (ctx, next) => {
           services.logger.warn("[WARNING] Server is publicly accessible.");
-          ctx.state = { ...ctx.state, sub: "public-user" };
+          ctx.state = { ...ctx.state, user: { sub: "public-user" } };
           await next();
         },
     async (ctx, next) => {
@@ -137,7 +137,7 @@ function workspaceMiddleware(
         const serverCTX = {
           ...services,
           workspace: ctx.params.workspace,
-          author: ctx.state.sub,
+          author: ctx.state.user.sub,
         };
 
         const fhirServerResponse = await fhirServer(
