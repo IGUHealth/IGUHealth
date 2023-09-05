@@ -263,6 +263,16 @@ function validateSingular(
     let foundFields: string[] = [];
     const value = jsonpointer.get(root, path);
 
+    if (typeof value !== "object") {
+      return [
+        issueError(
+          "structure",
+          `Invalid type '${typeof value}' at path '${path}`,
+          [path]
+        ),
+      ];
+    }
+
     const requiredElements = childrenIndices.filter(
       (index) => (structureDefinition.snapshot?.element?.[index].min || 0) > 0
     );
