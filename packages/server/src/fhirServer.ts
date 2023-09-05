@@ -40,6 +40,27 @@ export interface FHIRServerCTX {
   ) => StructureDefinition | undefined;
 }
 
+function getResourceTypeToValidate(request: FHIRRequest) {
+  switch (request.type) {
+    case "create-request":
+      return request.resourceType || request.body.resourceType;
+    case "update-request":
+      return request.resourceType;
+    case "invoke-request":
+      return "Parameters";
+    case "transaction-request":
+    case "batch-request":
+      return "Bundle";
+    default:
+      throw new OperationError(
+        outcomeError(
+          "invalid",
+          `cannot validate resource type '${request.type}'`
+        )
+      );
+  }
+}
+
 function createFHIRServer() {
   return createMiddlewareAsync<undefined, FHIRServerCTX>([
     async (request, { state, ctx }, next) => {
@@ -49,14 +70,7 @@ function createFHIRServer() {
         case "batch-request":
         case "invoke-request":
         case "transaction-request": {
-          const resourceType =
-            request.type === "invoke-request"
-              ? "Parameters"
-              : request.type === "transaction-request" ||
-                request.type === "batch-request"
-              ? "Bundle"
-              : request.body.resourceType;
-
+          const resourceType = getResourceTypeToValidate(request);
           const issues = validate(
             (type) => {
               const sd = ctx.resolveSD(ctx, type);
@@ -64,7 +78,7 @@ function createFHIRServer() {
                 throw new OperationError(
                   outcomeError(
                     "invalid",
-                    `Could not validate type of ${request.body.resourceType}`
+                    `Could not validate type of ${resourceType}`
                   )
                 );
               return sd;
@@ -84,8 +98,6 @@ function createFHIRServer() {
               `Operation '${request.type}' not supported`
             )
           );
-        }
-        case "invoke-request": {
         }
       }
       if (!next) throw new Error("No next");

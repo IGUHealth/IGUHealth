@@ -457,3 +457,25 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
     }
   }
 );
+
+test("Patient with primitive on name", () => {
+  const validator = createValidator((type: string) => {
+    const sd = memDatabase.read({}, "StructureDefinition", type);
+    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
+    return sd;
+  }, "Patient");
+
+  expect(
+    validator({
+      resourceType: "Patient",
+      name: [1],
+    })
+  ).toEqual([
+    {
+      code: "structure",
+      diagnostics: "Invalid type 'number' at path '/name/0",
+      expression: ["/name/0"],
+      severity: "error",
+    },
+  ]);
+});
