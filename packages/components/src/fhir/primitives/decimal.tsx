@@ -1,5 +1,6 @@
 import React from "react";
 import { LabelContainer } from "../../base/labelContainer";
+import { Input } from "../../base/input";
 
 export interface DecimalProps {
   value?: number;
@@ -11,8 +12,7 @@ export interface DecimalProps {
 export const Decimal = ({ value, onChange, issue, label }: DecimalProps) => {
   return (
     <LabelContainer label={label} issues={issue ? [issue] : []}>
-      <input
-        className="outline-none"
+      <Input
         type="number"
         value={value}
         step="0.1"

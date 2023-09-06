@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
 
 import { LabelContainer } from "../../base/labelContainer";
+import { Input } from "../../base/input";
 
 export interface DateTimeProps {
   /**
@@ -38,8 +39,7 @@ export const Instant = ({ onChange, value, issue, label }: DateTimeProps) => {
 
   return (
     <LabelContainer label={label} issues={issues}>
-      <input
-        className="outline-none"
+      <Input
         type="datetime-local"
         value={dayjs(value, "YYYY-MM-DDThh:mm:ss.SSSZ").format(
           "YYYY-MM-DDThh:mm:ss.SSS"

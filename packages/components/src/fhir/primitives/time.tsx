@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import classNames from "classnames";
 import { LabelContainer } from "../../base/labelContainer";
+import { Input } from "../../base/input";
 
 export interface TimeProps {
   /**
@@ -38,8 +39,7 @@ export const Time = ({ onChange, value, issue, label }: TimeProps) => {
 
   return (
     <LabelContainer label={label} issues={issues}>
-      <input
-        className="outline-none"
+      <Input
         step="1"
         type="time"
         value={value}

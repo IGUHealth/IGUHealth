@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { LabelContainer } from "../../base/labelContainer";
+import { Input } from "../../base/input";
 
 export interface UnsignedIntegerProps {
   value?: number;
@@ -29,8 +30,7 @@ export const UnsignedInteger = ({
 
   return (
     <LabelContainer label={label} issues={issues}>
-      <input
-        className="outline-none"
+      <Input
         type="number"
         min="0"
         value={value ? Math.round(value) : value}

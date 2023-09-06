@@ -1,4 +1,7 @@
-// import "./index.css";
-import { String } from "./fhir/primitives/string.js";
+import * as FHIR from "./fhir";
+import * as Layout from "./layout";
+import * as Base from "./base";
 
-export { String };
+export { FHIR };
+export { Layout };
+export { Base };

@@ -24,8 +24,8 @@ export default [
       },
     ],
     plugins: [
+      // postcss({ config: { path: "./postcss.config.js" } }),
       peerDepsExternal(),
-      postcss(),
       resolve(),
       commonjs(),
       typescript({ tsconfig: "./tsconfig.json" }),

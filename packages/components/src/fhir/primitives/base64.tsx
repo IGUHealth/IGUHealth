@@ -3,6 +3,7 @@ import fileDownload from "js-file-download";
 
 import { LabelContainer } from "../../base/labelContainer";
 import { Button } from "../../base/button";
+import { Input } from "../../base/input";
 
 const convertFileToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -47,8 +48,7 @@ export const Base64Binary = ({
   return (
     <LabelContainer label={label} issues={issues}>
       <>
-        <input
-          className="outline-none"
+        <Input
           type="file"
           onChange={(e) => {
             const file = e.target?.files?.[0];

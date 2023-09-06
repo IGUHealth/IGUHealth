@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 
 import { LabelContainer } from "../../base/labelContainer";
+import { Input } from "../../base/input";
 
 export interface StringProps {
   /**
@@ -24,8 +25,7 @@ export interface StringProps {
 export const String = ({ onChange, value, issue, label }: StringProps) => {
   return (
     <LabelContainer label={label} issues={issue ? [issue] : []}>
-      <input
-        className="outline-none"
+      <Input
         type="text"
         value={value}
         onChange={(e) => {

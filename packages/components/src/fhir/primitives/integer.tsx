@@ -1,5 +1,6 @@
 import React from "react";
 import { LabelContainer } from "../../base/labelContainer";
+import { Input } from "../../base/input";
 
 export interface IntegerProps {
   value?: number;
@@ -11,8 +12,7 @@ export interface IntegerProps {
 export const Integer = ({ value, onChange, issue, label }: IntegerProps) => {
   return (
     <LabelContainer label={label} issues={issue ? [issue] : []}>
-      <input
-        className="outline-none"
+      <Input
         type="number"
         value={value ? Math.round(value) : value}
         step="0.1"

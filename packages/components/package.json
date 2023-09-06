@@ -5,7 +5,7 @@
   "module": "dist/esm/index.js",
   "types": "dist/types.d.ts",
   "scripts": {
-    "build": "rollup -c --bundleConfigAsCjs",
+    "build": "rollup -c --bundleConfigAsCjs && yarn postcss --config postcss.config.js -o dist/index.css src/index.css",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -34,6 +34,7 @@
     "@types/react": "^18.2.21",
     "autoprefixer": "^10.4.15",
     "postcss": "^8.4.29",
+    "postcss-cli": "^10.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rollup": "^3.28.1",

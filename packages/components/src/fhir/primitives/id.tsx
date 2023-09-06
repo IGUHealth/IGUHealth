@@ -1,6 +1,7 @@
 import React from "react";
 
 import { LabelContainer } from "../../base/labelContainer";
+import { Input } from "../../base/input";
 
 export interface IdProps {
   /**
@@ -36,8 +37,7 @@ export const Id = ({ onChange, value, issue, label }: IdProps) => {
 
   return (
     <LabelContainer label={label} issues={issues}>
-      <input
-        className="outline-none"
+      <Input
         type="text"
         value={value}
         onChange={(e) => {
