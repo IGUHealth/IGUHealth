@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
 
 import { LabelContainer } from "../../base/labelContainer";
+import { Input } from "../../base/input";
 
 export interface DateProps {
   /**
@@ -49,8 +50,7 @@ export const Date = ({
 
   return (
     <LabelContainer label={label} issues={issues}>
-      <input
-        className="outline-none"
+      <Input
         type="date"
         value={dayjs(value).format("YYYY-MM-DD")}
         onChange={(e) => {

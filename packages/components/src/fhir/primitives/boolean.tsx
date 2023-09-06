@@ -1,5 +1,6 @@
 import React from "react";
 import { LabelContainer } from "../../base/labelContainer";
+import { Input } from "../../base/input";
 
 export interface BooleanProps {
   value?: boolean;
@@ -15,8 +16,7 @@ export const Boolean = ({ value, onChange, label, issue }: BooleanProps) => {
       label={label}
       issues={issue ? [issue] : []}
     >
-      <input
-        className="outline-none"
+      <Input
         type="checkbox"
         checked={value}
         onChange={(e) => {

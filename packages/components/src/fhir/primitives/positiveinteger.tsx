@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { LabelContainer } from "../../base/labelContainer";
+import { Input } from "../../base/input";
 
 export interface PositiveIntegerProps {
   value?: number;
@@ -26,8 +27,7 @@ export const PositiveInteger = ({
 
   return (
     <LabelContainer label={label} issues={issues}>
-      <input
-        className="outline-none"
+      <Input
         type="number"
         min="0"
         value={value ? Math.round(value) : value}

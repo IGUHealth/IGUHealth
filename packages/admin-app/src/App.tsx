@@ -1,18 +1,18 @@
 import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+
 import { Resource } from "@iguhealth/fhir-types";
-import { String } from "@iguhealth/components";
+import { Layout } from "@iguhealth/components";
+import "@iguhealth/components/dist/index.css";
 
 function App() {
   return (
     <div className="App">
-      <String value="test" />
+      <Layout.Navigation
+        active="Dashboard"
+        navigation={[{ name: "Dashboard" }, { name: "Resources" }]}
+        userNavigation={[{ name: "Settings" }, { name: "Sign out" }]}
+      />
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
         <a
           className="App-link"
           href="https://reactjs.org"

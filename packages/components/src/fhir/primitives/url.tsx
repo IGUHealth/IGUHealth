@@ -1,6 +1,7 @@
 import React from "react";
 
 import { LabelContainer } from "../../base/labelContainer";
+import { Input } from "../../base/input";
 
 export interface UrlProps {
   /**
@@ -24,8 +25,7 @@ export interface UrlProps {
 export const Url = ({ onChange, value, issue, label }: UrlProps) => {
   return (
     <LabelContainer label={label} issues={issue ? [issue] : []}>
-      <input
-        className="outline-none"
+      <Input
         type="text"
         value={value}
         onChange={(e) => {
