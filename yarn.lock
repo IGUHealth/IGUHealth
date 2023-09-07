@@ -231,6 +231,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@auth0/auth0-react@npm:^2.2.1":
+  version: 2.2.1
+  resolution: "@auth0/auth0-react@npm:2.2.1"
+  dependencies:
+    "@auth0/auth0-spa-js": ^2.1.2
+  peerDependencies:
+    react: ^16.11.0 || ^17 || ^18
+    react-dom: ^16.11.0 || ^17 || ^18
+  checksum: a0fa04741e9556a8e2248406cf7185ca3be5e96d5df26ea3b91d92e60af4e3b4ca677d8eadf10a0bd210303e8b1c728065715561c756f0993eb13279c285b1bb
+  languageName: node
+  linkType: hard
+
+"@auth0/auth0-spa-js@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "@auth0/auth0-spa-js@npm:2.1.2"
+  checksum: b376f4f2e7cbc7ae6197603b05dbef1c919887412b68e2dbc1c054296f2c50ea3bd9028b077d7f256365703e478d96135c3f81cf090157820debf31cc42e4a36
+  languageName: node
+  linkType: hard
+
 "@aw-web-design/x-default-browser@npm:1.4.126":
   version: 1.4.126
   resolution: "@aw-web-design/x-default-browser@npm:1.4.126"
@@ -9950,6 +9969,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "admin-app@workspace:packages/admin-app"
   dependencies:
+    "@auth0/auth0-react": ^2.2.1
     "@iguhealth/components": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
     "@testing-library/jest-dom": ^5.14.1

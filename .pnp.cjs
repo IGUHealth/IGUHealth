@@ -445,6 +445,42 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@auth0/auth0-react", [\
+        ["npm:2.2.1", {\
+          "packageLocation": "./.yarn/cache/@auth0-auth0-react-npm-2.2.1-e137d4f9d4-a0fa04741e.zip/node_modules/@auth0/auth0-react/",\
+          "packageDependencies": [\
+            ["@auth0/auth0-react", "npm:2.2.1"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#npm:2.2.1", {\
+          "packageLocation": "./.yarn/__virtual__/@auth0-auth0-react-virtual-e4d6e6aaa8/0/cache/@auth0-auth0-react-npm-2.2.1-e137d4f9d4-a0fa04741e.zip/node_modules/@auth0/auth0-react/",\
+          "packageDependencies": [\
+            ["@auth0/auth0-react", "virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#npm:2.2.1"],\
+            ["@auth0/auth0-spa-js", "npm:2.1.2"],\
+            ["@types/react", "npm:18.2.21"],\
+            ["@types/react-dom", "npm:18.2.6"],\
+            ["react", "npm:18.2.0"],\
+            ["react-dom", "virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#npm:18.2.0"]\
+          ],\
+          "packagePeers": [\
+            "@types/react-dom",\
+            "@types/react",\
+            "react-dom",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@auth0/auth0-spa-js", [\
+        ["npm:2.1.2", {\
+          "packageLocation": "./.yarn/cache/@auth0-auth0-spa-js-npm-2.1.2-2777a3c49e-b376f4f2e7.zip/node_modules/@auth0/auth0-spa-js/",\
+          "packageDependencies": [\
+            ["@auth0/auth0-spa-js", "npm:2.1.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@aw-web-design/x-default-browser", [\
         ["npm:1.4.126", {\
           "packageLocation": "./.yarn/cache/@aw-web-design-x-default-browser-npm-1.4.126-91a892f901-f63b68a0ff.zip/node_modules/@aw-web-design/x-default-browser/",\
@@ -16944,6 +16980,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/admin-app/",\
           "packageDependencies": [\
             ["admin-app", "workspace:packages/admin-app"],\
+            ["@auth0/auth0-react", "virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#npm:2.2.1"],\
             ["@iguhealth/components", "virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#workspace:packages/components"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
             ["@testing-library/jest-dom", "npm:5.17.0"],\

@@ -3,6 +3,7 @@
   "version": "0.1.1",
   "private": true,
   "dependencies": {
+    "@auth0/auth0-react": "^2.2.1",
     "@iguhealth/components": "workspace:^",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
