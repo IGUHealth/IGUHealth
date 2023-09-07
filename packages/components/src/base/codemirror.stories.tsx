@@ -8,12 +8,14 @@ const BasicCodeMirror = ({
   value,
   autoFocus,
   theme,
-}: Pick<CodeMirrorProps, "value" | "autoFocus" | "theme">) => {
+  onChange,
+}: Pick<CodeMirrorProps, "value" | "autoFocus" | "theme" | "onChange">) => {
   return (
     <CodeMirror
       value={value}
       autoFocus={autoFocus}
       theme={theme}
+      onChange={onChange}
       extensions={[basicSetup]}
     />
   );
@@ -34,6 +36,7 @@ type Story = StoryObj<typeof meta>;
 export const BasicSetup: Story = {
   args: {
     value: "primary",
+    onChange: (value: string, update) => console.log(value),
     autoFocus: true,
     theme: {
       "&": {
