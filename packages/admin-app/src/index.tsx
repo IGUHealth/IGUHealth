@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import {
@@ -7,7 +7,7 @@ import {
   TableCellsIcon,
   ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/outline";
-import { RecoilRoot, useSetRecoilState } from "recoil";
+import { RecoilRoot, useRecoilState, useRecoilValue } from "recoil";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import createHTTPClient from "@iguhealth/client/lib/http";
@@ -23,32 +23,42 @@ import "./index.css";
 function LoginWrapper({ children }: { children: React.ReactNode }) {
   const auth0Info = useAuth0();
   const initiateAuth = !auth0Info.isAuthenticated && !auth0Info.isLoading;
-  if (initiateAuth) {
-    auth0Info.loginWithRedirect({
-      appState: {
-        returnTo: window.location.pathname,
-      },
-    });
-  }
 
-  return <>{children}</>;
+  useEffect(() => {
+    if (initiateAuth) {
+      auth0Info.loginWithRedirect({
+        appState: {
+          returnTo: window.location.pathname,
+        },
+      });
+    }
+  }, [initiateAuth]);
+
+  console.log(auth0Info.isLoading);
+
+  return (
+    <>{auth0Info.isLoading ? <div> Loading...</div> : <div>{children}</div>}</>
+  );
 }
 
 function ServiceSetup({ children }: { children: React.ReactNode }) {
-  const setClient = useSetRecoilState(getClient);
+  console.log("PREHOOKS");
   const auth0 = useAuth0();
+  console.log("AUTHINFO:", auth0);
+  const [c, setClient] = useRecoilState(getClient);
+
+  console.log("TESTING", c);
 
   React.useEffect(() => {
-    if (auth0.isAuthenticated) {
-      setClient(
-        createHTTPClient({
-          getAccessToken: () => auth0.getAccessTokenSilently(),
-          url: process.env.REACT_APP_FHIR_BASE_URL || "",
-        })
-      );
-    }
-  }, []);
-  return <>{children}</>;
+    setClient(
+      createHTTPClient({
+        getAccessToken: () => auth0.getAccessTokenSilently(),
+        url: process.env.REACT_APP_FHIR_BASE_URL || "",
+      })
+    );
+  }, [setClient]);
+
+  return <>{c ? <>{children}</> : undefined}</>;
 }
 
 const router = createBrowserRouter([
@@ -106,15 +116,14 @@ function App() {
       domain={process.env.REACT_APP_AUTH0_DOMAIN || ""}
       clientId={process.env.REACT_APP_AUTH0_CLIENT_ID || ""}
       authorizationParams={{
+        audience: "https://iguhealth.com/api",
         redirect_uri: window.location.origin,
       }}
     >
       <LoginWrapper>
-        <RecoilRoot>
-          <ServiceSetup>
-            <Root />
-          </ServiceSetup>
-        </RecoilRoot>
+        <ServiceSetup>
+          <Root />
+        </ServiceSetup>
       </LoginWrapper>
     </Auth0Provider>
   );
@@ -128,7 +137,9 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <App />
+    <RecoilRoot>
+      <App />
+    </RecoilRoot>
   </React.StrictMode>
 );
 
