@@ -7,7 +7,10 @@ import {
   TableCellsIcon,
   ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/outline";
+import { useSetRecoilState } from "recoil";
 
+import createHTTPClient from "@iguhealth/client/lib/http";
+import { client } from "./data/client";
 import { Resource } from "@iguhealth/fhir-types";
 import { Layout } from "@iguhealth/components";
 import "@iguhealth/components/dist/index.css";
@@ -29,6 +32,21 @@ function LoginWrapper({ children }: { children: React.ReactNode }) {
   }
 
   return <>{children}</>;
+}
+
+function SetupServices({ children }: { children: React.ReactNode }) {
+  const setClient = useSetRecoilState(client);
+  const auth0 = useAuth0();
+  React.useEffect(() => {
+    if (auth0.isAuthenticated) {
+      setClient(
+        createHTTPClient({
+          getAccessToken: () => auth0.getAccessTokenSilently(),
+          url: process.env.REACT_APP_FHIR_BASE_URL || "",
+        })
+      );
+    }
+  }, []);
 }
 
 function Root() {
