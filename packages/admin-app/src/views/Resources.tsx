@@ -10,6 +10,7 @@ import { getClient } from "../data/client";
 export default function Resources() {
   const navigate = useNavigate();
   const c = useRecoilValue(getClient);
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [data, setData] = React.useState<Resource[]>([]);
 
   useEffect(() => {
@@ -17,6 +18,7 @@ export default function Resources() {
       { name: "_count", value: [10] },
       { name: "_sort", value: ["-_lastUpdated"] },
     ]).then((response) => {
+      setIsLoading(false);
       setData(response.resources);
     });
   }, []);
@@ -24,6 +26,7 @@ export default function Resources() {
     <>
       <h2 className="text-2xl font-semibold">Latest Resources</h2>
       <Base.Table
+        isLoading={isLoading}
         data={data}
         onRowClick={(row: Resource) => {
           navigate(`resources/${row.resourceType}/${row.id}`);
