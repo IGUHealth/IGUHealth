@@ -32,8 +32,11 @@ function Root() {
     <Layout.SideBar.SidebarLayout
       sidebar={
         <Layout.SideBar.SideBar>
-          <Layout.SideBar.SideBarItem logo={<TableCellsIcon />}>
+          <Layout.SideBar.SideBarItem active logo={<TableCellsIcon />}>
             Resources
+          </Layout.SideBar.SideBarItem>
+          <Layout.SideBar.SideBarItem logo={<TableCellsIcon />}>
+            Test
           </Layout.SideBar.SideBarItem>
           <div className="mt-auto">
             <Layout.SideBar.SideBarItem logo={<ArrowLeftOnRectangleIcon />}>

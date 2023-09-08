@@ -14,8 +14,8 @@ export function SideBarItem({
     <li>
       <div
         className={classNames(
-          "cursor-pointer flex items-center p-2 group rounded-lg hover:text-indigo-50 group hover:bg-indigo-700",
-          { "text-white": !active, "text-indigo-50  bg-indigo-700": active }
+          "cursor-pointer flex items-center p-2 group rounded-lg hover:text-white group hover:bg-indigo-700",
+          { "text-indigo-100": !active, "text-white  bg-indigo-700": active }
         )}
       >
         <div className="w-5 h-5 text-white transition duration-75  group-hover:text-indigo-50 ">
