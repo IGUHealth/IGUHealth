@@ -89,12 +89,12 @@ export const CodeMirror = ({
 }: CodeMirrorProps) => {
   const [view, setView] = useState<EditorView>();
   const [state, setState] = useState<EditorState>();
-  const root = useRef(null);
+  const root = useRef<HTMLDivElement | null>(null);
 
   // Initial view set up.
   useEffect(() => {
-    console.log(root, view, state, setView, setState);
     if (root.current) {
+      root.current.innerHTML = "";
       const state = EditorState.create({
         doc: value || "",
         extensions: createExtensions({ extensions, theme, onChange }),
