@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import classNames from "classnames";
 
-export function SideBarItem({
-  active = false,
-  logo,
-  children,
-}: {
+export interface SideBarItemProps
+  extends React.DetailedHTMLProps<
+    React.LiHTMLAttributes<HTMLLIElement>,
+    HTMLLIElement
+  > {
   active?: boolean;
   logo?: React.ReactNode;
   children: React.ReactNode;
-}) {
+}
+
+export function SideBarItem(props: SideBarItemProps) {
+  const { active = false, logo, children } = props;
   return (
-    <li>
+    <li {...props}>
       <div
         className={classNames(
           "cursor-pointer flex items-center p-2 group rounded-lg hover:text-white group hover:bg-indigo-700",
@@ -23,6 +26,23 @@ export function SideBarItem({
         </div>
         <span className="flex-1 ml-3 whitespace-nowrap">{children}</span>
       </div>
+    </li>
+  );
+}
+
+export interface SideBarItemGroupProps
+  extends React.DetailedHTMLProps<
+    React.LiHTMLAttributes<HTMLLIElement>,
+    HTMLLIElement
+  > {
+  label?: string;
+}
+
+export function SideBarItemGroup(props: SideBarItemGroupProps) {
+  return (
+    <li {...props}>
+      <div className="px-2 text-indigo-100 text-xs">{props.label}</div>
+      <ul>{props.children}</ul>
     </li>
   );
 }
@@ -44,7 +64,7 @@ export function SideBar({
       aria-label="Sidebar"
     >
       <nav className="flex flex-1 px-3 py-4 overflow-y-auto bg-indigo-600">
-        <ul role="list" className="flex flex-1 flex-col font-medium">
+        <ul role="list" className="gap-y-2 flex flex-1 flex-col font-medium">
           {children}
         </ul>
       </nav>

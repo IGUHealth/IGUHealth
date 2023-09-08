@@ -3,6 +3,8 @@ import React from "react";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 
 import {
+  CodeBracketSquareIcon,
+  Cog6ToothIcon,
   TableCellsIcon,
   ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/outline";
@@ -35,14 +37,17 @@ function Root() {
           <Layout.SideBar.SideBarItem active logo={<TableCellsIcon />}>
             Resources
           </Layout.SideBar.SideBarItem>
-          <Layout.SideBar.SideBarItem logo={<TableCellsIcon />}>
-            Test
+          <Layout.SideBar.SideBarItem logo={<CodeBracketSquareIcon />}>
+            Custom Operations
           </Layout.SideBar.SideBarItem>
-          <div className="mt-auto">
+          <Layout.SideBar.SideBarItemGroup className="mt-auto" label="User">
+            <Layout.SideBar.SideBarItem logo={<Cog6ToothIcon />}>
+              Settings
+            </Layout.SideBar.SideBarItem>
             <Layout.SideBar.SideBarItem logo={<ArrowLeftOnRectangleIcon />}>
               Sign out
             </Layout.SideBar.SideBarItem>
-          </div>
+          </Layout.SideBar.SideBarItemGroup>
         </Layout.SideBar.SideBar>
       }
     >
@@ -57,7 +62,7 @@ function Root() {
           navigation={[{ name: "Dashboard" }, { name: "Resources" }]}
           userNavigation={[{ name: "Settings" }, { name: "Sign out" }]}
         />
-        <div className="container">
+        <div className="p-4">
           <span>Testing</span>
         </div>
       </>

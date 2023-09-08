@@ -41,7 +41,7 @@ export const Navigation = ({
   },
 }: NavigationProps) => {
   return (
-    <Disclosure as="nav" className="bg-white border border-b-0 shadow-md">
+    <Disclosure as="nav" className="bg-white border-b">
       {({ open }) => (
         <>
           <div className="mx-auto px-4 sm:px-6 lg:px-8">
