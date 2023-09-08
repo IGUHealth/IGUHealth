@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 import createHTTPClient from "@iguhealth/client/lib/http";
 
-export const client = atom<ReturnType<typeof createHTTPClient>>({
+export const getClient = atom<ReturnType<typeof createHTTPClient>>({
   key: "client",
 });

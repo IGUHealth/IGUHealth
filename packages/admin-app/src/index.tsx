@@ -7,18 +7,18 @@ import {
   TableCellsIcon,
   ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/outline";
-import { useSetRecoilState } from "recoil";
+import { RecoilRoot, useSetRecoilState } from "recoil";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import createHTTPClient from "@iguhealth/client/lib/http";
-import { client } from "./data/client";
-import { Resource } from "@iguhealth/fhir-types";
 import { Layout } from "@iguhealth/components";
 import "@iguhealth/components/dist/index.css";
 
+import { getClient } from "./data/client";
+import Resources from "./views/Resources";
+
 import reportWebVitals from "./reportWebVitals";
 import "./index.css";
-
-Layout.SideBar.SidebarLayout;
 
 function LoginWrapper({ children }: { children: React.ReactNode }) {
   const auth0Info = useAuth0();
@@ -34,9 +34,10 @@ function LoginWrapper({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-function SetupServices({ children }: { children: React.ReactNode }) {
-  const setClient = useSetRecoilState(client);
+function ServiceSetup({ children }: { children: React.ReactNode }) {
+  const setClient = useSetRecoilState(getClient);
   const auth0 = useAuth0();
+
   React.useEffect(() => {
     if (auth0.isAuthenticated) {
       setClient(
@@ -47,7 +48,15 @@ function SetupServices({ children }: { children: React.ReactNode }) {
       );
     }
   }, []);
+  return <>{children}</>;
 }
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Resources />,
+  },
+]);
 
 function Root() {
   const auth0Info = useAuth0();
@@ -84,7 +93,7 @@ function Root() {
           userNavigation={[{ name: "Settings" }, { name: "Sign out" }]}
         />
         <div className="p-4">
-          <span>Testing</span>
+          <RouterProvider router={router} />
         </div>
       </>
     </Layout.SideBar.SidebarLayout>
@@ -101,7 +110,11 @@ function App() {
       }}
     >
       <LoginWrapper>
-        <Root />
+        <RecoilRoot>
+          <ServiceSetup>
+            <Root />
+          </ServiceSetup>
+        </RecoilRoot>
       </LoginWrapper>
     </Auth0Provider>
   );
