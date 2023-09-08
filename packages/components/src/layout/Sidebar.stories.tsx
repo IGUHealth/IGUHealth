@@ -13,7 +13,9 @@ const LayoutExample = () => (
     sidebar={
       <SideBar>
         <>
-          <SideBarItem logo={<Square3Stack3DIcon />}>Dashboard</SideBarItem>
+          <SideBarItem active logo={<Square3Stack3DIcon />}>
+            Dashboard
+          </SideBarItem>
           <SideBarItem logo={<Squares2X2Icon />}>Pro</SideBarItem>
           <SideBarItem logo={<InboxArrowDownIcon />}>
             <div className="flex">

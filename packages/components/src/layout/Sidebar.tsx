@@ -2,15 +2,22 @@ import React, { useState } from "react";
 import classNames from "classnames";
 
 export function SideBarItem({
+  active = false,
   logo,
   children,
 }: {
+  active?: boolean;
   logo: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
     <li>
-      <div className="cursor-pointer flex items-center p-2 text-white rounded-lg hover:text-indigo-50 group hover:bg-indigo-700">
+      <div
+        className={classNames(
+          "cursor-pointer flex items-center p-2 group rounded-lg hover:text-indigo-50 group hover:bg-indigo-700",
+          { "text-white": !active, "text-indigo-50  bg-indigo-700": active }
+        )}
+      >
         <div className="w-5 h-5 text-white transition duration-75  group-hover:text-indigo-50 ">
           {logo}
         </div>
