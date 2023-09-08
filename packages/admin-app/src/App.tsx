@@ -2,6 +2,10 @@ import React from "react";
 
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 
+import {
+  TableCellsIcon,
+  ArrowLeftOnRectangleIcon,
+} from "@heroicons/react/24/outline";
 import { Resource } from "@iguhealth/fhir-types";
 import { Layout } from "@iguhealth/components";
 import "@iguhealth/components/dist/index.css";
@@ -28,7 +32,14 @@ function Root() {
     <Layout.SideBar.SidebarLayout
       sidebar={
         <Layout.SideBar.SideBar>
-          <Layout.SideBar.SideBarItem>Resources</Layout.SideBar.SideBarItem>
+          <Layout.SideBar.SideBarItem logo={<TableCellsIcon />}>
+            Resources
+          </Layout.SideBar.SideBarItem>
+          <div className="mt-auto">
+            <Layout.SideBar.SideBarItem logo={<ArrowLeftOnRectangleIcon />}>
+              Sign out
+            </Layout.SideBar.SideBarItem>
+          </div>
         </Layout.SideBar.SideBar>
       }
     >

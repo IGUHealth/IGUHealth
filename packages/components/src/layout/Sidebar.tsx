@@ -38,14 +38,16 @@ export function SideBar({
     <aside
       id="sidebar-multi-level-sidebar"
       className={classNames(
-        "fixed top-0 left-0 z-40 w-64 h-screen transition-transform",
+        "flex fixed top-0 left-0 z-40 w-64 h-screen transition-transform",
         { "translate-x-0": isOpen, "-translate-x-full": !isOpen }
       )}
       aria-label="Sidebar"
     >
-      <div className="h-full px-3 py-4 overflow-y-auto bg-indigo-600">
-        <ul className="space-y-2 font-medium">{children}</ul>
-      </div>
+      <nav className="flex flex-1 px-3 py-4 overflow-y-auto bg-indigo-600">
+        <ul role="list" className="flex flex-1 flex-col font-medium">
+          {children}
+        </ul>
+      </nav>
     </aside>
   );
 }
