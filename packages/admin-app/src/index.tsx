@@ -16,6 +16,7 @@ import "@iguhealth/components/dist/index.css";
 
 import { getClient } from "./data/client";
 import Resources from "./views/Resources";
+import ResourceEditor from "./views/ResourceEditor";
 
 import reportWebVitals from "./reportWebVitals";
 import "./index.css";
@@ -34,20 +35,14 @@ function LoginWrapper({ children }: { children: React.ReactNode }) {
     }
   }, [initiateAuth]);
 
-  console.log(auth0Info.isLoading);
-
   return (
     <>{auth0Info.isLoading ? <div> Loading...</div> : <div>{children}</div>}</>
   );
 }
 
 function ServiceSetup({ children }: { children: React.ReactNode }) {
-  console.log("PREHOOKS");
   const auth0 = useAuth0();
-  console.log("AUTHINFO:", auth0);
   const [c, setClient] = useRecoilState(getClient);
-
-  console.log("TESTING", c);
 
   React.useEffect(() => {
     setClient(
@@ -65,6 +60,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Resources />,
+  },
+  {
+    path: "/resources/:resourceType/:id",
+    element: <ResourceEditor />,
   },
 ]);
 

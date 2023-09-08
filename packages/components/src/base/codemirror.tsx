@@ -93,6 +93,7 @@ export const CodeMirror = ({
 
   // Initial view set up.
   useEffect(() => {
+    console.log(root, view, state, setView, setState);
     if (root.current) {
       const state = EditorState.create({
         doc: value || "",

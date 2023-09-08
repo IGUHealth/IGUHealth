@@ -12,6 +12,7 @@ export interface Columns {
 export interface TableProps {
   columns: Columns[];
   data: any[];
+  onRowClick?: (row: any) => void;
 }
 
 function extract(
@@ -28,7 +29,7 @@ function extract(
   }
 }
 
-export function Table({ columns, data }: TableProps) {
+export function Table({ columns, data, onRowClick = () => {} }: TableProps) {
   return (
     <table className="table-auto min-w-full text-left text-sm font-light">
       <thead className="border-b font-medium">
@@ -39,11 +40,14 @@ export function Table({ columns, data }: TableProps) {
         </tr>
       </thead>
       <tbody>
-        {data.map((data) => (
-          <tr className="border-b dark:border-neutral-500">
+        {data.map((row) => (
+          <tr
+            className="border-b cursor-pointer hover:bg-slate-100"
+            onClick={(e) => onRowClick(row)}
+          >
             {columns.map((column) => (
               <td className="whitespace-nowrap px-6 py-4 font-medium">
-                {extract(data, column.selector, column.selectorType)}
+                {extract(row, column.selector, column.selectorType)}
               </td>
             ))}
           </tr>
