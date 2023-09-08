@@ -58,7 +58,6 @@ export const SidebarLayout = ({
   sidebar: React.ReactNode;
 }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  console.log(sidebarOpen);
   return (
     <>
       {/* <button
