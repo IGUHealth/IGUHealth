@@ -16,7 +16,7 @@
         @apply text-white bg-indigo-500 hover:bg-indigo-600
     }
     .btn-secondary {
-        @apply hover:text-slate-800
+        @apply hover:text-slate-800 text-slate-700 hover:bg-gray-50
     }
     .btn-error {
         @apply  text-white bg-red-500 hover:bg-red-600
