@@ -6,6 +6,8 @@ import { Resource } from "@iguhealth/fhir-types";
 import { Layout } from "@iguhealth/components";
 import "@iguhealth/components/dist/index.css";
 
+Layout.SideBar.SidebarLayout;
+
 function LoginWrapper({ children }: { children: React.ReactNode }) {
   const auth0Info = useAuth0();
   const initiateAuth = !auth0Info.isAuthenticated && !auth0Info.isLoading;
@@ -23,28 +25,29 @@ function LoginWrapper({ children }: { children: React.ReactNode }) {
 function Root() {
   const auth0Info = useAuth0();
   return (
-    <>
-      <Layout.Navigation
-        active="Dashboard"
-        user={{
-          email: auth0Info.user?.email,
-          name: auth0Info.user?.name,
-          imageUrl: auth0Info.user?.picture,
-        }}
-        navigation={[{ name: "Dashboard" }, { name: "Resources" }]}
-        userNavigation={[{ name: "Settings" }, { name: "Sign out" }]}
-      />
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </>
+    <Layout.SideBar.SidebarLayout
+      sidebar={
+        <Layout.SideBar.SideBar>
+          <Layout.SideBar.SideBarItem>Resources</Layout.SideBar.SideBarItem>
+        </Layout.SideBar.SideBar>
+      }
+    >
+      <>
+        <Layout.Navigation
+          active="Dashboard"
+          user={{
+            email: auth0Info.user?.email,
+            name: auth0Info.user?.name,
+            imageUrl: auth0Info.user?.picture,
+          }}
+          navigation={[{ name: "Dashboard" }, { name: "Resources" }]}
+          userNavigation={[{ name: "Settings" }, { name: "Sign out" }]}
+        />
+        <div className="container">
+          <span>Testing</span>
+        </div>
+      </>
+    </Layout.SideBar.SidebarLayout>
   );
 }
 
