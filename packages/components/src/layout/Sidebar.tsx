@@ -10,8 +10,10 @@ export function SideBarItem({
 }) {
   return (
     <li>
-      <div className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-        {logo}
+      <div className="cursor-pointer flex items-center p-2 text-white rounded-lg hover:text-indigo-50 group hover:bg-indigo-700">
+        <div className="w-5 h-5 text-white transition duration-75  group-hover:text-indigo-50 ">
+          {logo}
+        </div>
         <span className="flex-1 ml-3 whitespace-nowrap">{children}</span>
       </div>
     </li>
@@ -34,7 +36,7 @@ export function SideBar({
       )}
       aria-label="Sidebar"
     >
-      <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+      <div className="h-full px-3 py-4 overflow-y-auto bg-indigo-600">
         <ul className="space-y-2 font-medium">{children}</ul>
       </div>
     </aside>
