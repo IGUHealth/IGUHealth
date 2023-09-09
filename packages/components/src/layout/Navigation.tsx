@@ -129,7 +129,7 @@ export const Navigation = ({
                   </Menu>
                 </div>
               </div>
-              <div className="-mr-2 flex md:hidden">
+              <div className="-mr-2 md:hidden">
                 {/* Mobile menu button */}
                 <Disclosure.Button className="relative rounded-full p-1  focus:ring-offset-indigo-800 text-indigo-700 hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2">
                   <span className="absolute -inset-0.5" />

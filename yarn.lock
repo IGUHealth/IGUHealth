@@ -3224,7 +3224,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codemirror/language@npm:^6.0.0":
+"@codemirror/lang-javascript@npm:^6.2.1":
+  version: 6.2.1
+  resolution: "@codemirror/lang-javascript@npm:6.2.1"
+  dependencies:
+    "@codemirror/autocomplete": ^6.0.0
+    "@codemirror/language": ^6.6.0
+    "@codemirror/lint": ^6.0.0
+    "@codemirror/state": ^6.0.0
+    "@codemirror/view": ^6.17.0
+    "@lezer/common": ^1.0.0
+    "@lezer/javascript": ^1.0.0
+  checksum: 3df38c4cced06195283a9a2a9365aaa7c8c1b157852b331bc3a118403f774bbba57d2a392de52f5e28d2b344a323bc0146bcf7c8ef8be2473f167d815e4a37cd
+  languageName: node
+  linkType: hard
+
+"@codemirror/lang-json@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "@codemirror/lang-json@npm:6.0.1"
+  dependencies:
+    "@codemirror/language": ^6.0.0
+    "@lezer/json": ^1.0.0
+  checksum: e9e87d50ff7b81bd56a6ab50740b1dd54e9a93f1be585e1d59d0642e2148842ea1528ac7b7221eb4ddc7fe84bbc28065144cc3ab86f6e06c6aeb2d4b4e62acf1
+  languageName: node
+  linkType: hard
+
+"@codemirror/language@npm:^6.0.0, @codemirror/language@npm:^6.6.0":
   version: 6.9.0
   resolution: "@codemirror/language@npm:6.9.0"
   dependencies:
@@ -3267,7 +3292,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codemirror/view@npm:^6.0.0, @codemirror/view@npm:^6.18.0, @codemirror/view@npm:^6.6.0":
+"@codemirror/view@npm:^6.0.0, @codemirror/view@npm:^6.17.0, @codemirror/view@npm:^6.18.0, @codemirror/view@npm:^6.6.0":
   version: 6.18.0
   resolution: "@codemirror/view@npm:6.18.0"
   dependencies:
@@ -4439,6 +4464,9 @@ __metadata:
     tslib: ^2.6.2
     typescript: ^5.2.2
   peerDependencies:
+    "@codemirror/state": ">=6.0.0"
+    "@codemirror/theme-one-dark": ">=6.0.0"
+    "@codemirror/view": ">=6.0.0"
     react: ^18.2.0
   languageName: unknown
   linkType: soft
@@ -5494,7 +5522,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lezer/highlight@npm:^1.0.0":
+"@lezer/highlight@npm:^1.0.0, @lezer/highlight@npm:^1.1.3":
   version: 1.1.6
   resolution: "@lezer/highlight@npm:1.1.6"
   dependencies:
@@ -5503,7 +5531,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lezer/lr@npm:^1.0.0":
+"@lezer/javascript@npm:^1.0.0":
+  version: 1.4.7
+  resolution: "@lezer/javascript@npm:1.4.7"
+  dependencies:
+    "@lezer/highlight": ^1.1.3
+    "@lezer/lr": ^1.3.0
+  checksum: 37c05793e0e45280fa5d7b845a3132a84596105d48b7d2c195abea0a198477ea6719b07d1c8967679e80fc466388151956901fd6962479c130ffda64a6d09591
+  languageName: node
+  linkType: hard
+
+"@lezer/json@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "@lezer/json@npm:1.0.1"
+  dependencies:
+    "@lezer/highlight": ^1.0.0
+    "@lezer/lr": ^1.0.0
+  checksum: fcd17178f6a58e71c83e08fdc047e3708528b28591ba8f08ed35268f370d1ec9b63af0afa9d82a77fec26e9eb477ab3cfdc31c951e080d118ef607f9f9bb52e3
+  languageName: node
+  linkType: hard
+
+"@lezer/lr@npm:^1.0.0, @lezer/lr@npm:^1.3.0":
   version: 1.3.10
   resolution: "@lezer/lr@npm:1.3.10"
   dependencies:
@@ -9978,6 +10026,8 @@ __metadata:
   resolution: "admin-app@workspace:packages/admin-app"
   dependencies:
     "@auth0/auth0-react": ^2.2.1
+    "@codemirror/lang-javascript": ^6.2.1
+    "@codemirror/lang-json": ^6.0.1
     "@heroicons/react": ^2.0.18
     "@iguhealth/client": "workspace:^"
     "@iguhealth/components": "workspace:^"
@@ -9989,6 +10039,7 @@ __metadata:
     "@types/node": ^16.7.13
     "@types/react": ^18.0.0
     "@types/react-dom": ^18.0.0
+    codemirror: ^6.0.1
     react: ^18.2.0
     react-dom: ^18.2.0
     react-router-dom: ^6.15.0

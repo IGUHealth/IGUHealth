@@ -7905,10 +7905,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:a317bb67bb21c0ce693b65783e290534a848810f7e87a1af21dc3769a0a6b203466460f5dee1b86fc5593da51f4dbe606ec73f89b97466b579228c3be476d102#npm:6.9.0", {\
-          "packageLocation": "./.yarn/__virtual__/@codemirror-autocomplete-virtual-8888047e66/0/cache/@codemirror-autocomplete-npm-6.9.0-e0548fbe32-a5f661944c.zip/node_modules/@codemirror/autocomplete/",\
+        ["virtual:3766e1fa75f49227bf313bdcf56c560d82e41ca8a5cb6c24a4487baa8e9ec8812ed4fb081cde507050bec54b127e22ad0305cc5c60c12e238d9a08ece5601418#npm:6.9.0", {\
+          "packageLocation": "./.yarn/__virtual__/@codemirror-autocomplete-virtual-7dbb7f1f53/0/cache/@codemirror-autocomplete-npm-6.9.0-e0548fbe32-a5f661944c.zip/node_modules/@codemirror/autocomplete/",\
           "packageDependencies": [\
-            ["@codemirror/autocomplete", "virtual:a317bb67bb21c0ce693b65783e290534a848810f7e87a1af21dc3769a0a6b203466460f5dee1b86fc5593da51f4dbe606ec73f89b97466b579228c3be476d102#npm:6.9.0"],\
+            ["@codemirror/autocomplete", "virtual:3766e1fa75f49227bf313bdcf56c560d82e41ca8a5cb6c24a4487baa8e9ec8812ed4fb081cde507050bec54b127e22ad0305cc5c60c12e238d9a08ece5601418#npm:6.9.0"],\
             ["@codemirror/language", "npm:6.9.0"],\
             ["@codemirror/state", "npm:6.2.1"],\
             ["@codemirror/view", "npm:6.18.0"],\
@@ -7922,6 +7922,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             "@codemirror/language",\
             "@codemirror/state",\
             "@codemirror/view",\
+            "@lezer/common",\
             "@types/codemirror__language",\
             "@types/codemirror__state",\
             "@types/codemirror__view",\
@@ -7939,6 +7940,33 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@codemirror/state", "npm:6.2.1"],\
             ["@codemirror/view", "npm:6.18.0"],\
             ["@lezer/common", "npm:1.0.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@codemirror/lang-javascript", [\
+        ["npm:6.2.1", {\
+          "packageLocation": "./.yarn/cache/@codemirror-lang-javascript-npm-6.2.1-3766e1fa75-3df38c4cce.zip/node_modules/@codemirror/lang-javascript/",\
+          "packageDependencies": [\
+            ["@codemirror/lang-javascript", "npm:6.2.1"],\
+            ["@codemirror/autocomplete", "virtual:3766e1fa75f49227bf313bdcf56c560d82e41ca8a5cb6c24a4487baa8e9ec8812ed4fb081cde507050bec54b127e22ad0305cc5c60c12e238d9a08ece5601418#npm:6.9.0"],\
+            ["@codemirror/language", "npm:6.9.0"],\
+            ["@codemirror/lint", "npm:6.4.1"],\
+            ["@codemirror/state", "npm:6.2.1"],\
+            ["@codemirror/view", "npm:6.18.0"],\
+            ["@lezer/common", "npm:1.0.4"],\
+            ["@lezer/javascript", "npm:1.4.7"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@codemirror/lang-json", [\
+        ["npm:6.0.1", {\
+          "packageLocation": "./.yarn/cache/@codemirror-lang-json-npm-6.0.1-ffd8179ab1-e9e87d50ff.zip/node_modules/@codemirror/lang-json/",\
+          "packageDependencies": [\
+            ["@codemirror/lang-json", "npm:6.0.1"],\
+            ["@codemirror/language", "npm:6.9.0"],\
+            ["@lezer/json", "npm:1.0.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -9990,6 +10018,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-react", "virtual:5c2bf852363bd44ad9f0933fc81dcbe58d53ad6610b46d8eeca8a0825846f0546cc3282eb03f66584af67b1493682863c6b60d7b17e992ecf4c9bf0d1ec00a38#npm:7.22.5"],\
             ["@babel/preset-typescript", "virtual:5c2bf852363bd44ad9f0933fc81dcbe58d53ad6610b46d8eeca8a0825846f0546cc3282eb03f66584af67b1493682863c6b60d7b17e992ecf4c9bf0d1ec00a38#npm:7.22.11"],\
             ["@codemirror/state", "npm:6.2.1"],\
+            ["@codemirror/theme-one-dark", null],\
             ["@codemirror/view", "npm:6.18.0"],\
             ["@headlessui/react", "virtual:5c2bf852363bd44ad9f0933fc81dcbe58d53ad6610b46d8eeca8a0825846f0546cc3282eb03f66584af67b1493682863c6b60d7b17e992ecf4c9bf0d1ec00a38#npm:1.7.17"],\
             ["@heroicons/react", "virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#npm:2.0.18"],\
@@ -10011,6 +10040,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@storybook/react-webpack5", "virtual:5c2bf852363bd44ad9f0933fc81dcbe58d53ad6610b46d8eeca8a0825846f0546cc3282eb03f66584af67b1493682863c6b60d7b17e992ecf4c9bf0d1ec00a38#npm:7.4.0"],\
             ["@storybook/testing-library", "npm:0.2.0"],\
             ["@storybook/theming", "virtual:5c2bf852363bd44ad9f0933fc81dcbe58d53ad6610b46d8eeca8a0825846f0546cc3282eb03f66584af67b1493682863c6b60d7b17e992ecf4c9bf0d1ec00a38#npm:7.4.0"],\
+            ["@types/codemirror__state", null],\
+            ["@types/codemirror__theme-one-dark", null],\
+            ["@types/codemirror__view", null],\
             ["@types/react", "npm:18.2.21"],\
             ["autoprefixer", "virtual:5c2bf852363bd44ad9f0933fc81dcbe58d53ad6610b46d8eeca8a0825846f0546cc3282eb03f66584af67b1493682863c6b60d7b17e992ecf4c9bf0d1ec00a38#npm:10.4.15"],\
             ["classnames", "npm:2.3.2"],\
@@ -10032,6 +10064,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["typescript", "patch:typescript@npm%3A5.2.2#~builtin<compat/typescript>::version=5.2.2&hash=f3b441"]\
           ],\
           "packagePeers": [\
+            "@codemirror/theme-one-dark",\
+            "@types/codemirror__state",\
+            "@types/codemirror__theme-one-dark",\
+            "@types/codemirror__view",\
             "@types/react",\
             "react"\
           ],\
@@ -11216,6 +11252,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@lezer/highlight", "npm:1.1.6"],\
             ["@lezer/common", "npm:1.0.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@lezer/javascript", [\
+        ["npm:1.4.7", {\
+          "packageLocation": "./.yarn/cache/@lezer-javascript-npm-1.4.7-1342e97078-37c05793e0.zip/node_modules/@lezer/javascript/",\
+          "packageDependencies": [\
+            ["@lezer/javascript", "npm:1.4.7"],\
+            ["@lezer/highlight", "npm:1.1.6"],\
+            ["@lezer/lr", "npm:1.3.10"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@lezer/json", [\
+        ["npm:1.0.1", {\
+          "packageLocation": "./.yarn/cache/@lezer-json-npm-1.0.1-d6599b7fc8-fcd17178f6.zip/node_modules/@lezer/json/",\
+          "packageDependencies": [\
+            ["@lezer/json", "npm:1.0.1"],\
+            ["@lezer/highlight", "npm:1.1.6"],\
+            ["@lezer/lr", "npm:1.3.10"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -16992,6 +17050,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["admin-app", "workspace:packages/admin-app"],\
             ["@auth0/auth0-react", "virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#npm:2.2.1"],\
+            ["@codemirror/lang-javascript", "npm:6.2.1"],\
+            ["@codemirror/lang-json", "npm:6.0.1"],\
             ["@heroicons/react", "virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#npm:2.0.18"],\
             ["@iguhealth/client", "workspace:packages/client"],\
             ["@iguhealth/components", "virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#workspace:packages/components"],\
@@ -17003,6 +17063,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:16.18.46"],\
             ["@types/react", "npm:18.2.21"],\
             ["@types/react-dom", "npm:18.2.6"],\
+            ["codemirror", "npm:6.0.1"],\
             ["react", "npm:18.2.0"],\
             ["react-dom", "virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#npm:18.2.0"],\
             ["react-router-dom", "virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#npm:6.15.0"],\
@@ -19285,7 +19346,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/codemirror-npm-6.0.1-a317bb67bb-1a78f7077a.zip/node_modules/codemirror/",\
           "packageDependencies": [\
             ["codemirror", "npm:6.0.1"],\
-            ["@codemirror/autocomplete", "virtual:a317bb67bb21c0ce693b65783e290534a848810f7e87a1af21dc3769a0a6b203466460f5dee1b86fc5593da51f4dbe606ec73f89b97466b579228c3be476d102#npm:6.9.0"],\
+            ["@codemirror/autocomplete", "virtual:3766e1fa75f49227bf313bdcf56c560d82e41ca8a5cb6c24a4487baa8e9ec8812ed4fb081cde507050bec54b127e22ad0305cc5c60c12e238d9a08ece5601418#npm:6.9.0"],\
             ["@codemirror/commands", "npm:6.2.5"],\
             ["@codemirror/language", "npm:6.9.0"],\
             ["@codemirror/lint", "npm:6.4.1"],\

@@ -35,8 +35,16 @@ function LoginWrapper({ children }: { children: React.ReactNode }) {
     }
   }, [initiateAuth]);
 
+  console.log(auth0Info);
+
   return (
-    <>{auth0Info.isLoading ? <div> Loading...</div> : <div>{children}</div>}</>
+    <>
+      {auth0Info.isLoading ? (
+        <div> Loading...</div>
+      ) : (
+        <div className="h-screen flex">{children}</div>
+      )}
+    </>
   );
 }
 
@@ -101,7 +109,7 @@ function Root() {
           navigation={[{ name: "Dashboard" }, { name: "Resources" }]}
           userNavigation={[{ name: "Settings" }, { name: "Sign out" }]}
         />
-        <div className="p-4">
+        <div className="p-4 flex flex-1">
           <RouterProvider router={router} />
         </div>
       </>

@@ -23,7 +23,7 @@ export default function Resources() {
     });
   }, []);
   return (
-    <>
+    <div className="flex flex-col flex-1">
       <h2 className="text-2xl font-semibold">Latest Resources</h2>
       <Base.Table
         isLoading={isLoading}
@@ -50,6 +50,6 @@ export default function Resources() {
           },
         ]}
       />
-    </>
+    </div>
   );
 }

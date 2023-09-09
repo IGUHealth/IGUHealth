@@ -95,6 +95,11 @@ export const CodeMirror = ({
   useEffect(() => {
     if (root.current) {
       root.current.innerHTML = "";
+      console.log(
+        "extensions:",
+        createExtensions({ extensions, theme, onChange })
+      );
+
       const state = EditorState.create({
         doc: value || "",
         extensions: createExtensions({ extensions, theme, onChange }),
@@ -128,5 +133,5 @@ export const CodeMirror = ({
     }
   }, [view, extensions, theme, onChange]);
 
-  return <div className="border" ref={root} />;
+  return <div className="flex border flex-grow" ref={root} />;
 };
