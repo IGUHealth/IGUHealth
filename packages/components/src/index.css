@@ -10,10 +10,10 @@
       @apply border-red-500 focus:border-red-500 focus:outline-none
     }
     .btn {
-        @apply px-4 py-2 rounded-md inline-block cursor-pointer
+        @apply px-4 py-2 rounded-md inline-block cursor-pointer shadow-sm ring-1 ring-slate-700/10
     }
     .btn-primary {
-        @apply text-white bg-indigo-500 hover:bg-indigo-600
+        @apply text-white bg-indigo-500 hover:bg-indigo-600 
     }
     .btn-secondary {
         @apply hover:text-slate-800 text-slate-700 hover:bg-gray-50

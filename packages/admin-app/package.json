@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@auth0/auth0-react": "^2.2.1",
+    "@heroicons/react": "^2.0.18",
+    "@iguhealth/client": "workspace:^",
     "@iguhealth/components": "workspace:^",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
@@ -16,6 +18,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.15.0",
     "react-scripts": "5.0.1",
+    "recoil": "^0.7.7",
     "typescript": "^4.4.2",
     "web-vitals": "^2.1.0"
   },
@@ -37,6 +40,7 @@
     ]
   },
   "devDependencies": {
-    "@iguhealth/fhir-types": "workspace:^"
+    "@iguhealth/fhir-types": "workspace:^",
+    "tailwindcss": "^3.3.3"
   }
 }

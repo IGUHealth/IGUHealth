@@ -1,21 +1,24 @@
 import React, { useState } from "react";
 import classNames from "classnames";
 
-export function SideBarItem({
-  active = false,
-  logo,
-  children,
-}: {
+export interface SideBarItemProps
+  extends React.DetailedHTMLProps<
+    React.LiHTMLAttributes<HTMLLIElement>,
+    HTMLLIElement
+  > {
   active?: boolean;
-  logo: React.ReactNode;
+  logo?: React.ReactNode;
   children: React.ReactNode;
-}) {
+}
+
+export function SideBarItem(props: SideBarItemProps) {
+  const { active = false, logo, children } = props;
   return (
-    <li>
+    <li {...props}>
       <div
         className={classNames(
-          "cursor-pointer flex items-center p-2 group rounded-lg hover:text-indigo-50 group hover:bg-indigo-700",
-          { "text-white": !active, "text-indigo-50  bg-indigo-700": active }
+          "cursor-pointer flex items-center p-2 group rounded-lg hover:text-white group hover:bg-indigo-700",
+          { "text-indigo-100": !active, "text-white  bg-indigo-700": active }
         )}
       >
         <div className="w-5 h-5 text-white transition duration-75  group-hover:text-indigo-50 ">
@@ -23,6 +26,23 @@ export function SideBarItem({
         </div>
         <span className="flex-1 ml-3 whitespace-nowrap">{children}</span>
       </div>
+    </li>
+  );
+}
+
+export interface SideBarItemGroupProps
+  extends React.DetailedHTMLProps<
+    React.LiHTMLAttributes<HTMLLIElement>,
+    HTMLLIElement
+  > {
+  label?: string;
+}
+
+export function SideBarItemGroup(props: SideBarItemGroupProps) {
+  return (
+    <li {...props}>
+      <div className="px-2 text-indigo-100 text-xs">{props.label}</div>
+      <ul>{props.children}</ul>
     </li>
   );
 }
@@ -38,14 +58,16 @@ export function SideBar({
     <aside
       id="sidebar-multi-level-sidebar"
       className={classNames(
-        "fixed top-0 left-0 z-40 w-64 h-screen transition-transform",
+        "flex fixed top-0 left-0 z-40 w-64 h-screen transition-transform",
         { "translate-x-0": isOpen, "-translate-x-full": !isOpen }
       )}
       aria-label="Sidebar"
     >
-      <div className="h-full px-3 py-4 overflow-y-auto bg-indigo-600">
-        <ul className="space-y-2 font-medium">{children}</ul>
-      </div>
+      <nav className="flex flex-1 px-3 py-4 overflow-y-auto bg-indigo-600">
+        <ul role="list" className="gap-y-2 flex flex-1 flex-col font-medium">
+          {children}
+        </ul>
+      </nav>
     </aside>
   );
 }
@@ -83,7 +105,7 @@ export const SidebarLayout = ({
         </svg>
       </button> */}
       {sidebar}
-      <div className="p-4 sm:ml-64">{children}</div>
+      <div className="sm:ml-64">{children}</div>
     </>
   );
 };

@@ -41,13 +41,10 @@ export const Navigation = ({
   },
 }: NavigationProps) => {
   return (
-    <Disclosure
-      as="nav"
-      className="bg-white border border-t-0 border-l-0 border-r-0"
-    >
+    <Disclosure as="nav" className="bg-white border-b">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 items-center justify-between">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
