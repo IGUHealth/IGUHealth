@@ -8,7 +8,12 @@ import {
   ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import { RecoilRoot, useRecoilState, useRecoilValue } from "recoil";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  Outlet,
+  createBrowserRouter,
+  RouterProvider,
+  useNavigate,
+} from "react-router-dom";
 
 import createHTTPClient from "@iguhealth/client/lib/http";
 import { Layout } from "@iguhealth/components";
@@ -67,21 +72,31 @@ function ServiceSetup({ children }: { children: React.ReactNode }) {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Resources />,
-  },
-  {
-    path: "/resources/:resourceType/:id",
-    element: <ResourceEditor />,
+    element: <Root />,
+    children: [
+      { path: "/", element: <Resources /> },
+      {
+        path: "/resources/:resourceType/:id",
+        element: <ResourceEditor />,
+      },
+    ],
   },
 ]);
 
 function Root() {
   const auth0Info = useAuth0();
+  const navigate = useNavigate();
   return (
     <Layout.SideBar.SidebarLayout
       sidebar={
         <Layout.SideBar.SideBar>
-          <Layout.SideBar.SideBarItem active logo={<TableCellsIcon />}>
+          <Layout.SideBar.SideBarItem
+            active
+            logo={<TableCellsIcon />}
+            onClick={() => {
+              navigate("/");
+            }}
+          >
             Resources
           </Layout.SideBar.SideBarItem>
           <Layout.SideBar.SideBarItem logo={<CodeBracketSquareIcon />}>
@@ -110,7 +125,7 @@ function Root() {
           userNavigation={[{ name: "Settings" }, { name: "Sign out" }]}
         />
         <div className="p-4 flex flex-1">
-          <RouterProvider router={router} />
+          <Outlet />
         </div>
       </>
     </Layout.SideBar.SidebarLayout>
@@ -129,7 +144,7 @@ function App() {
     >
       <LoginWrapper>
         <ServiceSetup>
-          <Root />
+          <RouterProvider router={router} />
         </ServiceSetup>
       </LoginWrapper>
     </Auth0Provider>
