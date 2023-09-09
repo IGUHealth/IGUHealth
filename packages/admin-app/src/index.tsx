@@ -7,7 +7,8 @@ import {
   TableCellsIcon,
   ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/outline";
-import { RecoilRoot, useRecoilState, useRecoilValue } from "recoil";
+import { Base } from "@iguhealth/components";
+import { RecoilRoot, useRecoilState } from "recoil";
 import {
   Outlet,
   createBrowserRouter,
@@ -125,6 +126,7 @@ function Root() {
           userNavigation={[{ name: "Settings" }, { name: "Sign out" }]}
         />
         <div className="p-4 flex flex-1">
+          <Base.Toaster.Toaster />
           <Outlet />
         </div>
       </>
