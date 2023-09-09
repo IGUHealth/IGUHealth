@@ -28,7 +28,10 @@ export default [
       peerDepsExternal(),
       resolve(),
       commonjs(),
-      typescript({ tsconfig: "./tsconfig.json" }),
+      typescript({
+        tsconfig: "./tsconfig.json",
+        exclude: ["**/__tests__", "**/*.test.ts"],
+      }),
       terser(),
     ],
     external: ["react", "react-dom", "styled-components"],

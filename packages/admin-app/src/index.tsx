@@ -7,7 +7,7 @@ import {
   TableCellsIcon,
   ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/outline";
-import { RecoilRoot, useRecoilState, useRecoilValue } from "recoil";
+import { RecoilRoot, useRecoilState } from "recoil";
 import {
   Outlet,
   createBrowserRouter,
@@ -16,7 +16,7 @@ import {
 } from "react-router-dom";
 
 import createHTTPClient from "@iguhealth/client/lib/http";
-import { Layout } from "@iguhealth/components";
+import { Layout, Base } from "@iguhealth/components";
 import "@iguhealth/components/dist/index.css";
 
 import { getClient } from "./data/client";
@@ -45,7 +45,10 @@ function LoginWrapper({ children }: { children: React.ReactNode }) {
   return (
     <>
       {auth0Info.isLoading ? (
-        <div> Loading...</div>
+        <div className="h-screen flex flex-1 justify-center items-center flex-col">
+          <Base.Loading />
+          <div className="mt-1 ">Loading...</div>
+        </div>
       ) : (
         <div className="h-screen flex">{children}</div>
       )}
@@ -125,6 +128,7 @@ function Root() {
           userNavigation={[{ name: "Settings" }, { name: "Sign out" }]}
         />
         <div className="p-4 flex flex-1">
+          <Base.Toaster.Toaster />
           <Outlet />
         </div>
       </>
