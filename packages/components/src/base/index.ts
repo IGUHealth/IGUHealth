@@ -4,7 +4,7 @@ import { Select } from "./select";
 import { LabelContainer } from "./labelContainer";
 import { Table } from "./table";
 import { CodeMirror } from "./codemirror";
-//export { Loading } from "./loading";
+import { Loading } from "./loading";
 import * as Toaster from "./toaster";
 
 export {
@@ -14,6 +14,6 @@ export {
   LabelContainer,
   Table,
   CodeMirror,
-  //Loading,
+  Loading,
   Toaster,
 };
