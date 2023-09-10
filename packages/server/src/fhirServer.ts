@@ -21,6 +21,13 @@ async function fhirRequestToFHIRResponse(
   ctx: FHIRServerCTX,
   request: FHIRRequest
 ): Promise<FHIRResponse> {
+  if (request.type === "capabilities-request") {
+    return {
+      level: "system",
+      type: "capabilities-response",
+      body: ctx.capabilities,
+    };
+  }
   return ctx.client.request(ctx, request);
 }
 

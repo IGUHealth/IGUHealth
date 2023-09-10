@@ -91,6 +91,10 @@ function fhirResponseToKoaResponse(
       };
     }
     case "capabilities-response":
+      return {
+        status: 200,
+        body: fhirResponse.body,
+      };
     case "batch-response":
     case "transaction-response":
       throw new OperationError(
