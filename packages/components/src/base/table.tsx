@@ -26,7 +26,7 @@ function extract(
 ): string {
   switch (selectorType) {
     case "fhirpath": {
-      return fhirpath.evaluate(selector, data).join(",");
+      return fhirpath.evaluate(selector, data).join(", ");
     }
     default:
       throw new Error(`Unknown selector type: ${selectorType}`);
@@ -40,18 +40,18 @@ export function Table({
   isLoading = false,
 }: TableProps) {
   return (
-    <table className="table-auto min-w-full text-left text-sm font-light">
+    <table className="table-auto min-w-full text-left text-xs font-light">
       <thead className="border-b font-medium">
         <tr>
           {columns.map((column) => (
-            <th className="px-6 py-4">{column.name}</th>
+            <th className="px-2 py-2">{column.name}</th>
           ))}
         </tr>
       </thead>
       <tbody>
         {isLoading ? (
           <tr>
-            <td className="p-4" colSpan={columns.length}>
+            <td className="p-2" colSpan={columns.length}>
               <div className="flex justify-center items-center flex-col">
                 <Loading />
                 <div className="mt-1 font-medium text-indigo-700">
@@ -68,7 +68,7 @@ export function Table({
                 onClick={(e) => onRowClick(row)}
               >
                 {columns.map((column) => (
-                  <td className="whitespace-nowrap px-6 py-4 font-medium">
+                  <td className="whitespace-nowrap px-2 py-2 font-medium">
                     {extract(row, column.selector, column.selectorType)}
                   </td>
                 ))}

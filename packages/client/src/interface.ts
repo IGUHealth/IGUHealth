@@ -5,6 +5,7 @@ import {
   ResourceType,
   AResource,
   Bundle,
+  CapabilityStatement,
   BundleEntry,
 } from "@iguhealth/fhir-types/r4/types";
 import type { FHIRRequest, FHIRResponse } from "./types";
@@ -18,6 +19,7 @@ export type FHIRClient<CTX> = FHIRClientSync<CTX> | FHIRClientAsync<CTX>;
 
 export interface FHIRClientSync<CTX> {
   request(ctx: CTX, request: FHIRRequest): FHIRResponse;
+  capabilities(ctx: CTX): CapabilityStatement;
   search_system(
     ctx: CTX,
     parameters: ParsedParameter<string | number>[]
@@ -77,6 +79,7 @@ export interface FHIRClientSync<CTX> {
 
 export interface FHIRClientAsync<CTX> {
   request(ctx: CTX, request: FHIRRequest): Promise<FHIRResponse>;
+  capabilities(ctx: CTX): Promise<CapabilityStatement>;
   search_system(
     ctx: CTX,
     parameters: ParsedParameter<string | number>[]

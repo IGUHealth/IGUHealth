@@ -26,7 +26,7 @@ export default function ResourceTypeView() {
   }, []);
   return (
     <div className="flex flex-col flex-1">
-      <h2 className="text-2xl font-semibold">Latest {params.resourceType}</h2>
+      <h2 className="text-2xl font-semibold mb-4">{params.resourceType}</h2>
       <Base.Table
         isLoading={isLoading}
         data={data}
@@ -34,6 +34,11 @@ export default function ResourceTypeView() {
           navigate(`/resources/${row.resourceType}/${row.id}`);
         }}
         columns={[
+          {
+            name: "Id",
+            selector: "$this.id",
+            selectorType: "fhirpath",
+          },
           {
             name: "Resource Type",
             selector: "$this.resourceType",

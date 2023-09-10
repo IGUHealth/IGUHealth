@@ -5,6 +5,7 @@ import {
   Resource,
   ResourceType,
   id,
+  CapabilityStatement,
 } from "@iguhealth/fhir-types/r4/types";
 import type { OPMetadata, IOperation } from "@iguhealth/operation-execution";
 
@@ -19,6 +20,15 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   constructor(initialState: State, middleware: MiddlewareAsync<State, CTX>) {
     this.state = initialState;
     this.middleware = middleware;
+  }
+  async capabilities(ctx: CTX): Promise<CapabilityStatement> {
+    const response = await this.request(ctx, {
+      type: "capabilities-request",
+      level: "system",
+    });
+    if (response.type !== "capabilities-response")
+      throw new Error("Unexpected response type");
+    return response.body;
   }
   async request(ctx: CTX, request: FHIRRequest): Promise<FHIRResponse> {
     const res = await this.middleware(request, { ctx, state: this.state });
@@ -281,6 +291,15 @@ export class SynchronousClient<State, CTX> implements FHIRClientSync<CTX> {
   constructor(initialState: State, middleware: MiddlewareSync<State, CTX>) {
     this.state = initialState;
     this.middleware = middleware;
+  }
+  capabilities(ctx: CTX): CapabilityStatement {
+    const response = this.request(ctx, {
+      type: "capabilities-request",
+      level: "system",
+    });
+    if (response.type !== "capabilities-response")
+      throw new Error("Unexpected response type");
+    return response.body;
   }
   invoke_system<Op extends IOperation<unknown, unknown>>(
     op: Op,

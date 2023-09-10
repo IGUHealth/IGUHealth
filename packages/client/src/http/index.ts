@@ -47,7 +47,7 @@ async function toHTTPRequest(
   }
   switch (request.type) {
     case "capabilities-request":
-      return { url: `${state.url}/metadata`, method: "GET" };
+      return { headers, url: `${state.url}/metadata`, method: "GET" };
 
     case "create-request":
       return {
