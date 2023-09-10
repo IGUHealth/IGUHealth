@@ -26,7 +26,7 @@ export default function ResourceTypeView() {
   }, []);
   return (
     <div className="flex flex-col flex-1">
-      <h2 className="text-2xl font-semibold">{params.resourceType}</h2>
+      <h2 className="text-2xl font-semibold mb-4">{params.resourceType}</h2>
       <Base.Table
         isLoading={isLoading}
         data={data}
