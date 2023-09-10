@@ -8,6 +8,8 @@ import {
   ResourceType,
   Resource,
   CapabilityStatement,
+  CapabilityStatementRestResource,
+  StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIRClientSync } from "@iguhealth/client/lib/interface.js";
 
@@ -47,6 +49,91 @@ function serverCapabilities(): CapabilityStatement {
     fhirVersion: "r4",
     kind: "capability",
     format: ["json"],
+  };
+}
+
+async function createResourceRestCapabilities(
+  memdb: ReturnType<typeof createMemoryDatabase>,
+  sd: StructureDefinition
+): Promise<CapabilityStatementRestResource> {
+  const resourceParameters = memdb.search_type({}, "SearchParameter", [
+    {
+      name: "base",
+      value: ["Resource", "DomainResource", sd.type],
+    },
+  ]);
+
+  return {
+    type: sd.type,
+    profile: sd.url,
+    interaction: [
+      { code: "read" },
+      { code: "update" },
+      { code: "delete" },
+      { code: "search-type" },
+      { code: "create" },
+    ],
+    versioning: "versioned",
+    updateCreate: false,
+    searchParam: resourceParameters.resources.map((resource) => ({
+      name: resource.name,
+      definition: resource.url,
+      type: resource.type,
+      documentation: resource.description,
+    })),
+  };
+}
+
+async function createCapabilityStatement(
+  memdb: ReturnType<typeof createMemoryDatabase>
+): Promise<CapabilityStatement> {
+  const sds = memdb
+    .search_type({}, "StructureDefinition", [])
+    .resources.filter((sd) => sd.abstract === false && sd.kind === "resource");
+
+  const rootParameters = memdb.search_type({}, "SearchParameter", [
+    {
+      name: "base",
+      value: ["Resource", "DomainResource"],
+    },
+  ]);
+  return {
+    resourceType: "CapabilityStatement",
+    status: "active",
+    fhirVersion: "4.0",
+    date: new Date().toISOString(),
+    kind: "capability",
+    format: ["json"],
+    rest: [
+      {
+        mode: "server",
+        security: {
+          cors: true,
+          service: [
+            {
+              coding: [
+                {
+                  system:
+                    "http://terminology.hl7.org/CodeSystem/restful-security-service",
+                  code: "OAuth",
+                  display: "OAuth",
+                },
+              ],
+            },
+          ],
+        },
+        interaction: [{ code: "search-system" }],
+        searchParam: rootParameters.resources.map((resource) => ({
+          name: resource.name,
+          definition: resource.url,
+          type: resource.type,
+          documentation: resource.description,
+        })),
+        resource: await Promise.all(
+          sds.map((sd) => createResourceRestCapabilities(memdb, sd))
+        ),
+      },
+    ],
   };
 }
 
