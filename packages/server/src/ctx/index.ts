@@ -41,21 +41,10 @@ function createMemoryDatabase(
   return database;
 }
 
-function serverCapabilities(): CapabilityStatement {
-  return {
-    resourceType: "CapabilityStatement",
-    status: "active",
-    date: new Date().toDateString(),
-    fhirVersion: "r4",
-    kind: "capability",
-    format: ["json"],
-  };
-}
-
-async function createResourceRestCapabilities(
+function createResourceRestCapabilities(
   memdb: ReturnType<typeof createMemoryDatabase>,
   sd: StructureDefinition
-): Promise<CapabilityStatementRestResource> {
+): CapabilityStatementRestResource {
   const resourceParameters = memdb.search_type({}, "SearchParameter", [
     {
       name: "base",
@@ -84,9 +73,9 @@ async function createResourceRestCapabilities(
   };
 }
 
-async function createCapabilityStatement(
+function serverCapabilities(
   memdb: ReturnType<typeof createMemoryDatabase>
-): Promise<CapabilityStatement> {
+): CapabilityStatement {
   const sds = memdb
     .search_type({}, "StructureDefinition", [])
     .resources.filter((sd) => sd.abstract === false && sd.kind === "resource");
@@ -129,9 +118,7 @@ async function createCapabilityStatement(
           type: resource.type,
           documentation: resource.description,
         })),
-        resource: await Promise.all(
-          sds.map((sd) => createResourceRestCapabilities(memdb, sd))
-        ),
+        resource: sds.map((sd) => createResourceRestCapabilities(memdb, sd)),
       },
     ],
   };
@@ -189,7 +176,7 @@ export default function createServiceCTX(): Pick<
 
   const services = {
     logger: createLogger(),
-    capabilities: serverCapabilities(),
+    capabilities: serverCapabilities(memoryDatabase),
     client,
     cache: new RedisCache({
       host: process.env.REDIS_HOST,
