@@ -18,7 +18,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     tabs: [
-      { id: 5, title: "Tab 1", content: "Tab 1 content" },
+      { id: 5, title: "Tab1", content: "Tab 1 content" },
       {
         id: 6,
         title: "Tab 2",
