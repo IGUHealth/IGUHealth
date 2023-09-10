@@ -7,7 +7,9 @@
   "scripts": {
     "build": "rollup -c --bundleConfigAsCjs && yarn postcss --config postcss.config.js -o dist/index.css src/index.css",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "watch-js": "rollup --watch -c --bundleConfigAsCjs",
+    "watch-css": "postcss --watch --config postcss.config.js -o dist/index.css src/index.css"
   },
   "peerDependencies": {
     "@codemirror/state": ">=6.0.0",
