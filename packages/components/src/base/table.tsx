@@ -26,7 +26,7 @@ function extract(
 ): string {
   switch (selectorType) {
     case "fhirpath": {
-      return fhirpath.evaluate(selector, data).join(",");
+      return fhirpath.evaluate(selector, data).join(", ");
     }
     default:
       throw new Error(`Unknown selector type: ${selectorType}`);

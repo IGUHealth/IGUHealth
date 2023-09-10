@@ -13,7 +13,7 @@ import {
   createBrowserRouter,
   RouterProvider,
   useNavigate,
-  useParams,
+  useMatches,
 } from "react-router-dom";
 
 import createHTTPClient from "@iguhealth/client/lib/http";
@@ -77,9 +77,14 @@ const router = createBrowserRouter([
     path: "/",
     element: <Root />,
     children: [
-      { path: "/", element: <Resources /> },
-      { path: "/resources/:resourceType", element: <ResourceType /> },
+      { id: "root", path: "/", element: <Resources /> },
       {
+        id: "types",
+        path: "/resources/:resourceType",
+        element: <ResourceType />,
+      },
+      {
+        id: "instance",
         path: "/resources/:resourceType/:id",
         element: <ResourceEditor />,
       },
@@ -90,14 +95,14 @@ const router = createBrowserRouter([
 function Root() {
   const auth0Info = useAuth0();
   const navigate = useNavigate();
-  const params = useParams();
+  const matches = useMatches();
 
   return (
     <Layout.SideBar.SidebarLayout
       sidebar={
         <Layout.SideBar.SideBar>
           <Layout.SideBar.SideBarItem
-            active
+            active={matches.find((match) => match.id === "root") !== undefined}
             logo={<TableCellsIcon />}
             onClick={() => {
               navigate("/");
@@ -105,7 +110,13 @@ function Root() {
           >
             Resources
           </Layout.SideBar.SideBarItem>
-          <Layout.SideBar.SideBarItem logo={<CodeBracketSquareIcon />}>
+          <Layout.SideBar.SideBarItem
+            active={matches[0].params.resourceType === "OperationDefinition"}
+            logo={<CodeBracketSquareIcon />}
+            onClick={() => {
+              navigate("/resources/OperationDefinition");
+            }}
+          >
             Custom Operations
           </Layout.SideBar.SideBarItem>
           <Layout.SideBar.SideBarItemGroup className="mt-auto" label="User">
@@ -136,29 +147,31 @@ function Root() {
                   >
                     Resources
                   </span>,
-                  ...(params.resourceType
-                    ? [
-                        <span
-                          onClick={() => {
-                            navigate(`/resources/${params.resourceType}`);
-                          }}
-                          className="hover:text-indigo-600 cursor-pointer"
-                        >
-                          {params.resourceType}
-                        </span>,
-                      ]
-                    : []),
-                  ...(params.id
+                  ...(matches[0].params.resourceType
                     ? [
                         <span
                           onClick={() => {
                             navigate(
-                              `/resources/${params.resourceType}/${params.id}`
+                              `/resources/${matches[0].params.resourceType}`
                             );
                           }}
                           className="hover:text-indigo-600 cursor-pointer"
                         >
-                          {params.id}
+                          {matches[0].params.resourceType}
+                        </span>,
+                      ]
+                    : []),
+                  ...(matches[0].params.id
+                    ? [
+                        <span
+                          onClick={() => {
+                            navigate(
+                              `/resources/${matches[0].params.resourceType}/${matches[0].params.id}`
+                            );
+                          }}
+                          className="hover:text-indigo-600 cursor-pointer"
+                        >
+                          {matches[0].params.id}
                         </span>,
                       ]
                     : []),
