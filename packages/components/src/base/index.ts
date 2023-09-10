@@ -7,6 +7,7 @@ import { CodeMirror } from "./codemirror";
 import { Loading } from "./loading";
 import * as Toaster from "./toaster";
 import { Tabs } from "./tabs";
+import { BreadCrumbs } from "./breadcrumbs";
 
 export {
   Button,
@@ -18,4 +19,5 @@ export {
   Loading,
   Toaster,
   Tabs,
+  BreadCrumbs,
 };

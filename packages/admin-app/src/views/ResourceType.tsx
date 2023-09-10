@@ -1,20 +1,22 @@
 import React, { useEffect } from "react";
+
 import { useRecoilValue } from "recoil";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { Base } from "@iguhealth/components";
-import { Resource } from "@iguhealth/fhir-types";
+import { Resource, ResourceType } from "@iguhealth/fhir-types";
 
 import { getClient } from "../data/client";
 
-export default function ResourcesView() {
+export default function ResourceTypeView() {
   const navigate = useNavigate();
+  const params = useParams();
   const c = useRecoilValue(getClient);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [data, setData] = React.useState<Resource[]>([]);
 
   useEffect(() => {
-    c.search_system({}, [
+    c.search_type({}, params.resourceType as ResourceType, [
       { name: "_count", value: [10] },
       { name: "_sort", value: ["-_lastUpdated"] },
     ]).then((response) => {
@@ -24,7 +26,7 @@ export default function ResourcesView() {
   }, []);
   return (
     <div className="flex flex-col flex-1">
-      <h2 className="text-2xl font-semibold">Latest Resources</h2>
+      <h2 className="text-2xl font-semibold">Latest {params.resourceType}</h2>
       <Base.Table
         isLoading={isLoading}
         data={data}

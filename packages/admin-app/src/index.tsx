@@ -13,6 +13,7 @@ import {
   createBrowserRouter,
   RouterProvider,
   useNavigate,
+  useParams,
 } from "react-router-dom";
 
 import createHTTPClient from "@iguhealth/client/lib/http";
@@ -21,6 +22,7 @@ import "@iguhealth/components/dist/index.css";
 
 import { getClient } from "./data/client";
 import Resources from "./views/Resources";
+import ResourceType from "./views/ResourceType";
 import ResourceEditor from "./views/ResourceEditor";
 
 import reportWebVitals from "./reportWebVitals";
@@ -39,8 +41,6 @@ function LoginWrapper({ children }: { children: React.ReactNode }) {
       });
     }
   }, [initiateAuth]);
-
-  console.log(auth0Info);
 
   return (
     <>
@@ -78,6 +78,7 @@ const router = createBrowserRouter([
     element: <Root />,
     children: [
       { path: "/", element: <Resources /> },
+      { path: "/resources/:resourceType", element: <ResourceType /> },
       {
         path: "/resources/:resourceType/:id",
         element: <ResourceEditor />,
@@ -89,6 +90,8 @@ const router = createBrowserRouter([
 function Root() {
   const auth0Info = useAuth0();
   const navigate = useNavigate();
+  const params = useParams();
+
   return (
     <Layout.SideBar.SidebarLayout
       sidebar={
@@ -106,10 +109,13 @@ function Root() {
             Custom Operations
           </Layout.SideBar.SideBarItem>
           <Layout.SideBar.SideBarItemGroup className="mt-auto" label="User">
-            <Layout.SideBar.SideBarItem logo={<Cog6ToothIcon />}>
+            {/* <Layout.SideBar.SideBarItem logo={<Cog6ToothIcon />}>
               Settings
-            </Layout.SideBar.SideBarItem>
-            <Layout.SideBar.SideBarItem logo={<ArrowLeftOnRectangleIcon />}>
+            </Layout.SideBar.SideBarItem> */}
+            <Layout.SideBar.SideBarItem
+              logo={<ArrowLeftOnRectangleIcon />}
+              onClick={() => auth0Info.logout()}
+            >
               Sign out
             </Layout.SideBar.SideBarItem>
           </Layout.SideBar.SideBarItemGroup>
@@ -117,17 +123,60 @@ function Root() {
       }
     >
       <>
-        <Layout.Navigation
-          active="Dashboard"
-          user={{
-            email: auth0Info.user?.email,
-            name: auth0Info.user?.name,
-            imageUrl: auth0Info.user?.picture,
-          }}
-          navigation={[{ name: "Dashboard" }, { name: "Resources" }]}
-          userNavigation={[{ name: "Settings" }, { name: "Sign out" }]}
-        />
-        <div className="p-4 flex flex-1">
+        <div className="px-4 sm:px-6 lg:px-8 border-b">
+          <div className="flex h-16 items-center justify-between">
+            <div className="font-semibold text-lg">
+              <Base.BreadCrumbs
+                breadcrumbs={[
+                  <span
+                    onClick={() => {
+                      navigate("/");
+                    }}
+                    className="hover:text-indigo-600 hover:underline cursor-pointer"
+                  >
+                    Resources
+                  </span>,
+                  ...(params.resourceType
+                    ? [
+                        <span
+                          onClick={() => {
+                            navigate(`/resources/${params.resourceType}`);
+                          }}
+                          className="hover:text-indigo-600 cursor-pointer"
+                        >
+                          {params.resourceType}
+                        </span>,
+                      ]
+                    : []),
+                  ...(params.id
+                    ? [
+                        <span
+                          onClick={() => {
+                            navigate(
+                              `/resources/${params.resourceType}/${params.id}`
+                            );
+                          }}
+                          className="hover:text-indigo-600 cursor-pointer"
+                        >
+                          {params.id}
+                        </span>,
+                      ]
+                    : []),
+                ]}
+              />
+            </div>
+            <Layout.ProfileDropdown
+              user={{
+                email: auth0Info.user?.email,
+                name: auth0Info.user?.name,
+                imageUrl: auth0Info.user?.picture,
+              }}
+              navigation={[{ name: "Sign out" }]}
+              onNavigation={() => auth0Info.logout()}
+            />
+          </div>
+        </div>
+        <div className="p-4 flex flex-1 mt-2">
           <Base.Toaster.Toaster />
           <Outlet />
         </div>
