@@ -27,6 +27,67 @@ export interface NavigationProps {
   user?: { imageUrl?: string; email?: string; name?: string };
 }
 
+interface ProfileDropdownProps {
+  onNavigation?: (nav: NavigationItem) => void;
+  navigation: NavigationItem[];
+  user?: { imageUrl?: string; email?: string; name?: string };
+}
+
+export const ProfileDropdown = ({
+  user,
+  navigation,
+  onNavigation = (item) => {},
+}: ProfileDropdownProps) => {
+  return (
+    <Menu as="div" className="relative ml-3">
+      <div>
+        <Menu.Button className="relative flex max-w-xs items-center rounded-full text-indigo-700 hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2">
+          <span className="absolute -inset-1.5" />
+          <span className="sr-only">Open user menu</span>
+          {user?.imageUrl ? (
+            <img className="h-8 w-8 rounded-full" src={user?.imageUrl} alt="" />
+          ) : (
+            <UserCircleIcon
+              className="h-8 w-8 rounded-full"
+              aria-hidden="true"
+            />
+          )}
+        </Menu.Button>
+      </div>
+      <Transition
+        as={Fragment}
+        enter="transition ease-out duration-100"
+        enterFrom="transform opacity-0 scale-95"
+        enterTo="transform opacity-100 scale-100"
+        leave="transition ease-in duration-75"
+        leaveFrom="transform opacity-100 scale-100"
+        leaveTo="transform opacity-0 scale-95"
+      >
+        <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          {navigation.map((item) => (
+            <Menu.Item key={item.name}>
+              {({ active }) => (
+                <a
+                  onClick={() => onNavigation(item)}
+                  href={item.href}
+                  className={classNames(
+                    "cursor-pointer block px-4 py-2 text-sm",
+                    active
+                      ? "bg-indigo-700 text-white"
+                      : "text-indigo-700 hover:bg-indigo-700 hover:text-white"
+                  )}
+                >
+                  {item.name}
+                </a>
+              )}
+            </Menu.Item>
+          ))}
+        </Menu.Items>
+      </Transition>
+    </Menu>
+  );
+};
+
 export const Navigation = ({
   onNavigation = (item) => {},
   navigation,
@@ -78,55 +139,7 @@ export const Navigation = ({
               <div className="hidden md:block">
                 <div className="ml-4 flex items-center md:ml-6">
                   {/* Profile dropdown */}
-                  <Menu as="div" className="relative ml-3">
-                    <div>
-                      <Menu.Button className="relative flex max-w-xs items-center rounded-full text-indigo-700 hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2">
-                        <span className="absolute -inset-1.5" />
-                        <span className="sr-only">Open user menu</span>
-                        {user?.imageUrl ? (
-                          <img
-                            className="h-8 w-8 rounded-full"
-                            src={user?.imageUrl}
-                            alt=""
-                          />
-                        ) : (
-                          <UserCircleIcon
-                            className="h-8 w-8 rounded-full"
-                            aria-hidden="true"
-                          />
-                        )}
-                      </Menu.Button>
-                    </div>
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {userNavigation.map((item) => (
-                          <Menu.Item key={item.name}>
-                            {({ active }) => (
-                              <a
-                                href={item.href}
-                                className={classNames(
-                                  "cursor-pointer block px-4 py-2 text-sm",
-                                  active
-                                    ? "bg-indigo-700 text-white"
-                                    : "text-indigo-700 hover:bg-indigo-700 hover:text-white"
-                                )}
-                              >
-                                {item.name}
-                              </a>
-                            )}
-                          </Menu.Item>
-                        ))}
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
+                  <ProfileDropdown navigation={userNavigation} user={user} />
                 </div>
               </div>
               <div className="-mr-2 md:hidden">

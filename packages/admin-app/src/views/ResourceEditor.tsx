@@ -39,7 +39,7 @@ function JSONEditor({
   );
 }
 
-export default function ResourceEditor() {
+export default function ResourceEditorView() {
   const client = useRecoilValue(getClient);
   const [value, setValue] = React.useState("");
 
@@ -64,7 +64,7 @@ export default function ResourceEditor() {
       tabs={[
         {
           id: 1,
-          title: "JSON",
+          title: "JSON Editor",
           content: <JSONEditor value={value} setValue={setValue} />,
         },
       ]}
