@@ -6,6 +6,7 @@ import { Table } from "./table";
 import { CodeMirror } from "./codemirror";
 import { Loading } from "./loading";
 import * as Toaster from "./toaster";
+import { Tabs } from "./tabs";
 
 export {
   Button,
@@ -16,4 +17,5 @@ export {
   CodeMirror,
   Loading,
   Toaster,
+  Tabs,
 };
