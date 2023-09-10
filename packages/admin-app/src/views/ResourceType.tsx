@@ -35,6 +35,11 @@ export default function ResourceTypeView() {
         }}
         columns={[
           {
+            name: "Id",
+            selector: "$this.id",
+            selectorType: "fhirpath",
+          },
+          {
             name: "Resource Type",
             selector: "$this.resourceType",
             selectorType: "fhirpath",
