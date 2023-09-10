@@ -24,7 +24,7 @@ export const Tabs = ({ tabs, selectedTab, onTab }: TabsProps) => {
               key={tab.id}
               className={({ selected }) =>
                 classNames(
-                  "py-2.5 text-sm font-medium leading-5 border-b-2 ",
+                  "py-2.5 text-sm font-medium leading-5 border-b-2 outline-none",
                   selected
                     ? "text-indigo-600  border-indigo-600"
                     : "text-slate-600 hover:text-slate-700 border-transparent"
