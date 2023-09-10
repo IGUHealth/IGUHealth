@@ -16,7 +16,7 @@ export interface TabsProps {
 
 export const Tabs = ({ tabs, selectedTab, onTab }: TabsProps) => {
   return (
-    <div className="w-full px-2 py-16 sm:px-0">
+    <div className="flex flex-1 flex-col px-2 sm:px-0">
       <Tab.Group>
         <Tab.List className="flex space-x-4 border-b ">
           {tabs.map((tab) => (
@@ -35,9 +35,11 @@ export const Tabs = ({ tabs, selectedTab, onTab }: TabsProps) => {
             </Tab>
           ))}
         </Tab.List>
-        <Tab.Panels className="mt-2">
+        <Tab.Panels className="mt-2 flex flex-grow flex-col">
           {tabs.map((tab) => (
-            <Tab.Panel key={tab.id}>{tab.content}</Tab.Panel>
+            <Tab.Panel className="flex flex-grow flex-col" key={tab.id}>
+              {tab.content}
+            </Tab.Panel>
           ))}
         </Tab.Panels>
       </Tab.Group>
