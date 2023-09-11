@@ -42,19 +42,23 @@ function JSONEditor({
 function ResourceHistory() {
   const client = useRecoilValue(getClient);
   const { resourceType, id } = useParams();
+  const [loading, setLoading] = useState(true);
   const [history, setHistory] = useState<Resource[] | undefined>(undefined);
 
   useEffect(() => {
-    const resourceHistory = client
+    setLoading(true);
+    client
       .historyInstance({}, resourceType as ResourceType, id as id)
       .then((response) => {
         setHistory(response);
+        setLoading(false);
         return response;
       });
   }, [resourceType, id, setHistory]);
 
   return (
     <Base.Table
+      isLoading={loading}
       data={history || []}
       columns={[
         {
