@@ -44,9 +44,16 @@ export default function ResourceTypeView() {
         </h2>
         <Base.Input
           placeholder="Enter search query e.g. _count=10&_sort=_lastUpdated"
-          className="rounded overflow-hidden flex flex-grow px-1 mr-1 text-xl font-light border hover:border-indigo-700 focus:border-indigo-700"
+          className="h-full rounded-md overflow-hidden flex flex-grow px-4 mr-1 text-xl font-light border hover:border-indigo-700 focus:border-indigo-700 outline-none"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onKeyUp={(e) => {
+            if (e.key === "Enter") {
+              search(query);
+            }
+          }}
+          onChange={(e) => {
+            setQuery(e.target.value);
+          }}
         />
         <Base.Button
           size="small"
