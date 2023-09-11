@@ -149,7 +149,7 @@ function Root() {
                     onClick={() => {
                       navigate("/");
                     }}
-                    className="hover:text-indigo-600 hover:underline cursor-pointer"
+                    className="hover:text-indigo-600 cursor-pointer"
                   >
                     Resources
                   </span>,
