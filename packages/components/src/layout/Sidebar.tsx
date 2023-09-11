@@ -48,10 +48,12 @@ export function SideBarItemGroup(props: SideBarItemGroupProps) {
 }
 
 export function SideBar({
+  top,
   isOpen = true,
   children,
 }: {
   isOpen?: boolean;
+  top?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
@@ -63,7 +65,8 @@ export function SideBar({
       )}
       aria-label="Sidebar"
     >
-      <nav className="flex flex-1 px-3 py-4 overflow-y-auto bg-indigo-600">
+      <nav className="flex flex-1 flex-col px-3 py-4 overflow-y-auto bg-indigo-600">
+        {top}
         <ul role="list" className="gap-y-2 flex flex-1 flex-col font-medium">
           {children}
         </ul>
