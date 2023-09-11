@@ -162,6 +162,7 @@ export default function createServiceCTX(): Pick<
         "create-request",
         "update-request",
         "delete-request",
+        "history-request",
       ],
       source: createPostgresClient({
         user: process.env["FHIR_DATABASE_USERNAME"],

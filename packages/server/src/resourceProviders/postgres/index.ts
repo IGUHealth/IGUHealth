@@ -690,6 +690,20 @@ async function getResource<CTX extends FHIRServerCTX>(
   return res.rows[0].resource as Resource;
 }
 
+async function getResourceInstanceHistory<CTX extends FHIRServerCTX>(
+  client: pg.PoolClient,
+  ctx: CTX,
+  resourceType: ResourceType,
+  id: string
+): Promise<Resource[]> {
+  const res = await client.query(
+    "SELECT resource FROM resources WHERE workspace = $1 AND resource_type = $2 AND id = $3 ORDER BY version_id DESC",
+    [ctx.workspace, resourceType, id]
+  );
+  const resourceHistory = res.rows.map((row) => row.resource as Resource);
+  return resourceHistory;
+}
+
 async function patchResource<CTX extends FHIRServerCTX>(
   client: pg.PoolClient,
   ctx: CTX,
@@ -925,6 +939,43 @@ function createPostgresMiddleware<
             };
           } finally {
             client.release();
+          }
+        }
+        case "history-request": {
+          switch (request.level) {
+            case "instance": {
+              const client = await args.state.pool.connect();
+              try {
+                const instanceHistory = await getResourceInstanceHistory(
+                  client,
+                  args.ctx,
+                  request.resourceType as ResourceType,
+                  request.id
+                );
+                return {
+                  state: args.state,
+                  ctx: args.ctx,
+                  response: {
+                    type: "history-response",
+                    level: "instance",
+                    resourceType: request.resourceType,
+                    id: request.id,
+                    body: instanceHistory,
+                  },
+                };
+              } finally {
+                client.release();
+              }
+            }
+            case "system":
+            case "type": {
+              throw new OperationError(
+                outcomeError(
+                  "not-supported",
+                  "History requests only supported at instance level."
+                )
+              );
+            }
           }
         }
         default:

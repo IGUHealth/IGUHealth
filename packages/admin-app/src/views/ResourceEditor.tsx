@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { basicSetup } from "codemirror";
@@ -39,6 +39,45 @@ function JSONEditor({
   );
 }
 
+function ResourceHistory() {
+  const client = useRecoilValue(getClient);
+  const { resourceType, id } = useParams();
+  const [history, setHistory] = useState<Resource[] | undefined>(undefined);
+
+  useEffect(() => {
+    const resourceHistory = client
+      .historyInstance({}, resourceType as ResourceType, id as id)
+      .then((response) => {
+        setHistory(response);
+        return response;
+      });
+  }, [resourceType, id, setHistory]);
+
+  return (
+    <Base.Table
+      data={history || []}
+      columns={[
+        {
+          name: "Version",
+          selector: "$this.meta.versionId",
+          selectorType: "fhirpath",
+        },
+        {
+          name: "Author",
+          selector:
+            "$this.meta.extension.where(url='https://iguhealth.app/author').valueString",
+          selectorType: "fhirpath",
+        },
+        {
+          name: "Last Updated",
+          selector: "$this.meta.lastUpdated",
+          selectorType: "fhirpath",
+        },
+      ]}
+    />
+  );
+}
+
 export default function ResourceEditorView() {
   const client = useRecoilValue(getClient);
   const [value, setValue] = React.useState("");
@@ -70,7 +109,7 @@ export default function ResourceEditorView() {
         {
           id: 1,
           title: "History",
-          content: <span> History View </span>,
+          content: <ResourceHistory />,
         },
         {
           id: 1,
