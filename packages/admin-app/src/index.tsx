@@ -107,24 +107,33 @@ function Root() {
             </div>
           }
         >
-          <Layout.SideBar.SideBarItem
-            active={matches.find((match) => match.id === "root") !== undefined}
-            logo={<TableCellsIcon />}
-            onClick={() => {
-              navigate("/");
-            }}
+          <Layout.SideBar.SideBarItemGroup label="Data">
+            <Layout.SideBar.SideBarItem
+              active={
+                matches.find((match) => match.id === "root") !== undefined
+              }
+              logo={<TableCellsIcon />}
+              onClick={() => {
+                navigate("/");
+              }}
+            >
+              Resources
+            </Layout.SideBar.SideBarItem>
+          </Layout.SideBar.SideBarItemGroup>
+          <Layout.SideBar.SideBarItemGroup
+            className="mt-4"
+            label="Configuration"
           >
-            Resources
-          </Layout.SideBar.SideBarItem>
-          <Layout.SideBar.SideBarItem
-            active={matches[0].params.resourceType === "OperationDefinition"}
-            logo={<CodeBracketSquareIcon />}
-            onClick={() => {
-              navigate("/resources/OperationDefinition");
-            }}
-          >
-            Custom Operations
-          </Layout.SideBar.SideBarItem>
+            <Layout.SideBar.SideBarItem
+              active={matches[0].params.resourceType === "OperationDefinition"}
+              logo={<CodeBracketSquareIcon />}
+              onClick={() => {
+                navigate("/resources/OperationDefinition");
+              }}
+            >
+              Custom Operations
+            </Layout.SideBar.SideBarItem>
+          </Layout.SideBar.SideBarItemGroup>
           <Layout.SideBar.SideBarItemGroup className="mt-auto" label="User">
             {/* <Layout.SideBar.SideBarItem logo={<Cog6ToothIcon />}>
               Settings

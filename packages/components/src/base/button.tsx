@@ -42,8 +42,13 @@ export const Button = (props: ButtonProps) => {
   return (
     <div
       onClick={onClick}
-      className={classNames("btn", btnTypeClass(type), btnSize(size))}
       {...props}
+      className={classNames(
+        "btn",
+        btnTypeClass(type),
+        btnSize(size),
+        props.className
+      )}
     >
       {label}
     </div>

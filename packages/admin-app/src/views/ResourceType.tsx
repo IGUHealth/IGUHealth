@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { useRecoilValue } from "recoil";
 import { useNavigate, useParams } from "react-router-dom";
@@ -13,24 +13,48 @@ export default function ResourceTypeView() {
   const params = useParams();
   const c = useRecoilValue(getClient);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
-  const [data, setData] = React.useState<Resource[]>([]);
+  const [data, setData] = React.useState<Resource[] | undefined>(undefined);
+  const [query, setQuery] = React.useState("_count=20&_sort=_lastUpdated");
+  const search = useMemo(
+    () => (query: string) => {
+      c.search_type({}, params.resourceType as ResourceType, query)
+        .then((response) => {
+          setIsLoading(false);
+          setData(response.resources);
+        })
+        .catch((e) => console.error(e));
+    },
+    [setIsLoading, setData, c]
+  );
 
   useEffect(() => {
-    c.search_type(
-      {},
-      params.resourceType as ResourceType,
-      "_count=1&_sort=_lastUpdated"
-    ).then((response) => {
-      setIsLoading(false);
-      setData(response.resources);
-    });
-  }, []);
+    if (!data) {
+      search(query);
+    }
+  }, [query]);
+
   return (
     <div className="flex flex-col flex-1">
-      <h2 className="text-2xl font-semibold mb-4">{params.resourceType}</h2>
+      <div className="flex items-center justify-center mb-4">
+        <h2 className="text-2xl font-semibold">{params.resourceType}</h2>
+
+        <Base.Input
+          placeholder="Enter search query e.g. _count=10&_sort=_lastUpdated"
+          className="flex flex-grow px-1 ml-4 text-xl font-light border border-white hover:border-indigo-700 focus:border-indigo-700"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+
+        <Base.Button
+          className="ml-2"
+          size="small"
+          label="Search"
+          onClick={(_e) => search(query)}
+        />
+      </div>
       <Base.Table
         isLoading={isLoading}
-        data={data}
+        data={data || []}
         onRowClick={(row: Resource) => {
           navigate(`/resources/${row.resourceType}/${row.id}`);
         }}
