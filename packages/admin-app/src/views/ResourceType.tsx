@@ -41,7 +41,7 @@ export default function ResourceTypeView() {
 
         <Base.Input
           placeholder="Enter search query e.g. _count=10&_sort=_lastUpdated"
-          className="flex flex-grow px-1 ml-4 text-xl font-light border border-white hover:border-indigo-700 focus:border-indigo-700"
+          className="rounded overflow-hidden flex flex-grow px-1 ml-4 text-xl font-light border border-white hover:border-indigo-700 focus:border-indigo-700"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
