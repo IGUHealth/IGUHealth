@@ -22,12 +22,12 @@ export interface FHIRClientSync<CTX> {
   capabilities(ctx: CTX): CapabilityStatement;
   search_system(
     ctx: CTX,
-    parameters: ParsedParameter<string | number>[]
+    parameters: ParsedParameter<string | number>[] | string
   ): { total?: number; resources: Resource[] };
   search_type<T extends ResourceType>(
     ctx: CTX,
     type: T,
-    parameters: ParsedParameter<string | number>[]
+    parameters: ParsedParameter<string | number>[] | string
   ): { total?: number; resources: AResource<T>[] };
   create<T extends Resource>(ctx: CTX, resource: T): T;
   update<T extends Resource>(ctx: CTX, resource: T): T;
@@ -82,12 +82,12 @@ export interface FHIRClientAsync<CTX> {
   capabilities(ctx: CTX): Promise<CapabilityStatement>;
   search_system(
     ctx: CTX,
-    parameters: ParsedParameter<string | number>[]
+    parameters: ParsedParameter<string | number>[] | string
   ): Promise<{ total?: number; resources: Resource[] }>;
   search_type<T extends ResourceType>(
     ctx: CTX,
     type: T,
-    parameters: ParsedParameter<string | number>[]
+    parameters: ParsedParameter<string | number>[] | string
   ): Promise<{ total?: number; resources: AResource<T>[] }>;
   create<T extends Resource>(ctx: CTX, resource: T): Promise<T>;
   update<T extends Resource>(ctx: CTX, resource: T): Promise<T>;

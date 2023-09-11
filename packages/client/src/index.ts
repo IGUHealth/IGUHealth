@@ -13,6 +13,7 @@ import type { FHIRClientAsync, FHIRClientSync } from "./interface.js";
 import type { FHIRRequest, FHIRResponse } from "./types.js";
 import { MiddlewareSync, MiddlewareAsync } from "./middleware/index.js";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import { parseQuery } from "./url.js";
 
 export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   private state: State;
@@ -95,12 +96,14 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
 
   async search_system(
     ctx: CTX,
-    parameters: ParsedParameter<string | number>[]
+    parameters: ParsedParameter<string | number>[] | string
   ): Promise<{ total?: number; resources: Resource[] }> {
+    const parsedParameters: ParsedParameter<string | number>[] =
+      typeof parameters === "string" ? parseQuery(parameters) : parameters;
     const response = await this.request(ctx, {
       type: "search-request",
       level: "system",
-      parameters: parameters,
+      parameters: parsedParameters,
     });
     if (response.type !== "search-response")
       throw new Error("Unexpected response type");
@@ -109,13 +112,15 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   async search_type<T extends ResourceType>(
     ctx: CTX,
     resourceType: T,
-    parameters: ParsedParameter<string | number>[]
+    parameters: ParsedParameter<string | number>[] | string
   ): Promise<{ total?: number; resources: AResource<T>[] }> {
+    const parsedParameters: ParsedParameter<string | number>[] =
+      typeof parameters === "string" ? parseQuery(parameters) : parameters;
     const response = await this.request(ctx, {
       type: "search-request",
       level: "type",
       resourceType: resourceType,
-      parameters: parameters,
+      parameters: parsedParameters,
     });
     if (response.type !== "search-response")
       throw new Error(`Unexpected response type '${response.type}'`);
@@ -363,12 +368,14 @@ export class SynchronousClient<State, CTX> implements FHIRClientSync<CTX> {
   }
   search_system(
     ctx: CTX,
-    parameters: ParsedParameter<string | number>[]
+    parameters: ParsedParameter<string | number>[] | string
   ): { total?: number; resources: Resource[] } {
+    const parsedParameters: ParsedParameter<string | number>[] =
+      typeof parameters === "string" ? parseQuery(parameters) : parameters;
     const response = this.request(ctx, {
       type: "search-request",
       level: "system",
-      parameters,
+      parameters: parsedParameters,
     });
     if (response.type !== "search-response")
       throw new Error("Unexpected response type");
@@ -377,13 +384,15 @@ export class SynchronousClient<State, CTX> implements FHIRClientSync<CTX> {
   search_type<T extends ResourceType>(
     ctx: CTX,
     resourceType: T,
-    parameters: ParsedParameter<string | number>[]
+    parameters: ParsedParameter<string | number>[] | string
   ): { total?: number; resources: AResource<T>[] } {
+    const parsedParameters: ParsedParameter<string | number>[] =
+      typeof parameters === "string" ? parseQuery(parameters) : parameters;
     const response = this.request(ctx, {
       type: "search-request",
       level: "type",
       resourceType: resourceType,
-      parameters,
+      parameters: parsedParameters,
     });
     if (response.type !== "search-response")
       throw new Error("Unexpected response type");

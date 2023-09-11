@@ -64,8 +64,18 @@ export default function ResourceEditorView() {
       tabs={[
         {
           id: 1,
-          title: "JSON Editor",
+          title: "Editor",
           content: <JSONEditor value={value} setValue={setValue} />,
+        },
+        {
+          id: 1,
+          title: "History",
+          content: <span> History View </span>,
+        },
+        {
+          id: 1,
+          title: "Audit events",
+          content: <span> Audit Events </span>,
         },
       ]}
     />
