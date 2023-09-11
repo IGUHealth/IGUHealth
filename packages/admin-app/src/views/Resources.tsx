@@ -16,7 +16,7 @@ const DisplayResources = () => {
 
   return (
     <div className="flex flex-col flex-1">
-      <h2 className="text-2xl font-semibold mb-4">Resources</h2>
+      <h2 className="text-2xl font-semibold mb-4">Supported Resources</h2>
       <Base.Table
         data={capabilities?.rest?.[0].resource || []}
         onRowClick={(row: CapabilityStatementRestResource) => {

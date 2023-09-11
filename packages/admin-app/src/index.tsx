@@ -3,7 +3,6 @@ import ReactDOM from "react-dom/client";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import {
   CodeBracketSquareIcon,
-  Cog6ToothIcon,
   TableCellsIcon,
   ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/outline";
@@ -24,8 +23,9 @@ import { getClient } from "./data/client";
 import Resources from "./views/Resources";
 import ResourceType from "./views/ResourceType";
 import ResourceEditor from "./views/ResourceEditor";
-
 import reportWebVitals from "./reportWebVitals";
+import { Logo } from "./components/logo";
+
 import "./index.css";
 
 function LoginWrapper({ children }: { children: React.ReactNode }) {
@@ -100,7 +100,13 @@ function Root() {
   return (
     <Layout.SideBar.SidebarLayout
       sidebar={
-        <Layout.SideBar.SideBar>
+        <Layout.SideBar.SideBar
+          top={
+            <div className="w-16 h-16 p-2 mb-4">
+              <Logo />
+            </div>
+          }
+        >
           <Layout.SideBar.SideBarItem
             active={matches.find((match) => match.id === "root") !== undefined}
             logo={<TableCellsIcon />}

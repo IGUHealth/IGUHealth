@@ -8,10 +8,49 @@ import {
 
 import { SidebarLayout, SideBar as SideBar, SideBarItem } from "./Sidebar";
 
+const LOGO = () => (
+  <svg viewBox="0 0 187 164" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M146.712 69.5279L68.4361 89.4457L95.55 0.16061L146.712 69.5279Z"
+      fill="white"
+    />
+    <path
+      d="M16.4547 19.5073L94.8009 0.046456L67.3112 89.1868L16.4547 19.5073Z"
+      fill="white"
+    />
+    <path
+      d="M173.347 15.7665L147.779 69.6827L123.713 37.3387L173.347 15.7665Z"
+      fill="white"
+    />
+    <path
+      d="M186.391 44.0356L159.802 47.5667L174.714 16.5346L186.391 44.0356Z"
+      fill="white"
+    />
+    <path
+      d="M18.4698 24.3331L57.1215 76.9956L0.511414 24.8183L18.4698 24.3331Z"
+      fill="white"
+    />
+    <path
+      d="M146.531 71.0352L97.5473 128.43L70.0508 90.125L146.531 71.0352Z"
+      fill="white"
+    />
+    <path
+      d="M45.2205 163.62L68.3534 89.5286L96.6975 128.647L45.2205 163.62Z"
+      fill="white"
+    />
+  </svg>
+);
+
 const LayoutExample = () => (
   <SidebarLayout
     sidebar={
-      <SideBar>
+      <SideBar
+        top={
+          <div className="w-16 h-16 p-2 mb-4">
+            <LOGO />
+          </div>
+        }
+      >
         <>
           <SideBarItem active logo={<Square3Stack3DIcon />}>
             Dashboard
