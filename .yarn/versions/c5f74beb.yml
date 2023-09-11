@@ -1,5 +1,0 @@
-releases:
-  admin-app: patch
-
-declined:
-  - "@iguhealth/client"
