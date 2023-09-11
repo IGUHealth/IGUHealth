@@ -14,9 +14,10 @@ export default function ResourceTypeView() {
   const c = useRecoilValue(getClient);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [data, setData] = React.useState<Resource[] | undefined>(undefined);
-  const [query, setQuery] = React.useState("_count=20&_sort=_lastUpdated");
+  const [query, setQuery] = React.useState("_count=20&_sort=-_lastUpdated");
   const search = useMemo(
     () => (query: string) => {
+      setIsLoading(true);
       c.search_type({}, params.resourceType as ResourceType, query)
         .then((response) => {
           setIsLoading(false);
