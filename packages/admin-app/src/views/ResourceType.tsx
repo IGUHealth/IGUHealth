@@ -8,13 +8,15 @@ import { Resource, ResourceType } from "@iguhealth/fhir-types";
 
 import { getClient } from "../data/client";
 
+const initialQuery = "_count=20&_sort=-_lastUpdated";
+
 export default function ResourceTypeView() {
   const navigate = useNavigate();
   const params = useParams();
   const c = useRecoilValue(getClient);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [data, setData] = React.useState<Resource[] | undefined>(undefined);
-  const [query, setQuery] = React.useState("_count=20&_sort=-_lastUpdated");
+  const [query, setQuery] = React.useState(initialQuery);
   const search = useMemo(
     () => (query: string) => {
       setIsLoading(true);
@@ -29,10 +31,9 @@ export default function ResourceTypeView() {
   );
 
   useEffect(() => {
-    if (!data) {
-      search(query);
-    }
-  }, [query]);
+    setQuery(initialQuery);
+    search(initialQuery);
+  }, [params]);
 
   return (
     <div className="flex flex-col flex-1">
