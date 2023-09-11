@@ -10,7 +10,7 @@ type ButtonSize = "small" | "medium" | "large";
 
 export interface ButtonProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
-  label: string;
+  label: React.ReactNode;
   size?: ButtonSize;
   type?: ButtonType;
 }

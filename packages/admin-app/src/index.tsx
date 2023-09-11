@@ -5,6 +5,7 @@ import {
   CodeBracketSquareIcon,
   TableCellsIcon,
   ArrowLeftOnRectangleIcon,
+  ShareIcon,
 } from "@heroicons/react/24/outline";
 import { RecoilRoot, useRecoilState } from "recoil";
 import {
@@ -132,6 +133,15 @@ function Root() {
               }}
             >
               Custom Operations
+            </Layout.SideBar.SideBarItem>
+            <Layout.SideBar.SideBarItem
+              active={matches[0].params.resourceType === "Subscription"}
+              logo={<ShareIcon />}
+              onClick={() => {
+                navigate("/resources/Subscription");
+              }}
+            >
+              Subscriptions
             </Layout.SideBar.SideBarItem>
           </Layout.SideBar.SideBarItemGroup>
           <Layout.SideBar.SideBarItemGroup className="mt-auto" label="User">
