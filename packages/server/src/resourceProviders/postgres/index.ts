@@ -707,12 +707,7 @@ async function patchResource<CTX extends FHIRServerCTX>(
       newResource.resourceType !== resource.resourceType ||
       newResource.id !== resource.id
     ) {
-      throw new OperationError(
-        outcomeError(
-          "invalid",
-          `Invalid patch, patches must maintain resourceType and id.`
-        )
-      );
+      newResource.id = resource.id;
     }
     const queryText =
       "INSERT INTO resources(workspace, author, resource, prev_version_id, patches) VALUES($1, $2, $3, $4, $5) RETURNING resource";
