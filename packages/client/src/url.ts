@@ -10,13 +10,9 @@ export type ParsedParameter<T> = {
 /*
  ** Given a query string create complex FHIR Query object.
  */
-export default function parseParameters(
-  url: string
+export function parseQuery(
+  queryParams: string
 ): ParsedParameter<string | number>[] {
-  const chunks = url.split("?");
-  if (chunks.length > 2)
-    throw new OperationError(outcomeError("invalid", "Invalid query string"));
-  const [_, queryParams] = chunks;
   const parameters = !queryParams
     ? {}
     : queryParams
@@ -46,4 +42,17 @@ export default function parseParameters(
         );
 
   return Object.values(parameters);
+}
+
+/*
+ ** Given a url string parsequery parameters.
+ */
+export default function parseUrl(
+  url: string
+): ParsedParameter<string | number>[] {
+  const chunks = url.split("?");
+  if (chunks.length > 2)
+    throw new OperationError(outcomeError("invalid", "Invalid query string"));
+  const [_, queryParams] = chunks;
+  return parseQuery(queryParams);
 }

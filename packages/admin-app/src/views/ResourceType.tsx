@@ -16,10 +16,11 @@ export default function ResourceTypeView() {
   const [data, setData] = React.useState<Resource[]>([]);
 
   useEffect(() => {
-    c.search_type({}, params.resourceType as ResourceType, [
-      { name: "_count", value: [10] },
-      { name: "_sort", value: ["-_lastUpdated"] },
-    ]).then((response) => {
+    c.search_type(
+      {},
+      params.resourceType as ResourceType,
+      "_count=1&_sort=_lastUpdated"
+    ).then((response) => {
       setIsLoading(false);
       setData(response.resources);
     });

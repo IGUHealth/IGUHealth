@@ -13,7 +13,7 @@ import type { FHIRClientAsync, FHIRClientSync } from "./interface.js";
 import type { FHIRRequest, FHIRResponse } from "./types.js";
 import { MiddlewareSync, MiddlewareAsync } from "./middleware/index.js";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
-import parseParameters from "./url.js";
+import { parseQuery } from "./url.js";
 
 export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   private state: State;
@@ -99,7 +99,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     parameters: ParsedParameter<string | number>[] | string
   ): Promise<{ total?: number; resources: Resource[] }> {
     const parsedParameters: ParsedParameter<string | number>[] =
-      typeof parameters === "string" ? parseParameters(parameters) : parameters;
+      typeof parameters === "string" ? parseQuery(parameters) : parameters;
     const response = await this.request(ctx, {
       type: "search-request",
       level: "system",
@@ -115,7 +115,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     parameters: ParsedParameter<string | number>[] | string
   ): Promise<{ total?: number; resources: AResource<T>[] }> {
     const parsedParameters: ParsedParameter<string | number>[] =
-      typeof parameters === "string" ? parseParameters(parameters) : parameters;
+      typeof parameters === "string" ? parseQuery(parameters) : parameters;
     const response = await this.request(ctx, {
       type: "search-request",
       level: "type",
@@ -371,7 +371,7 @@ export class SynchronousClient<State, CTX> implements FHIRClientSync<CTX> {
     parameters: ParsedParameter<string | number>[] | string
   ): { total?: number; resources: Resource[] } {
     const parsedParameters: ParsedParameter<string | number>[] =
-      typeof parameters === "string" ? parseParameters(parameters) : parameters;
+      typeof parameters === "string" ? parseQuery(parameters) : parameters;
     const response = this.request(ctx, {
       type: "search-request",
       level: "system",
@@ -387,7 +387,7 @@ export class SynchronousClient<State, CTX> implements FHIRClientSync<CTX> {
     parameters: ParsedParameter<string | number>[] | string
   ): { total?: number; resources: AResource<T>[] } {
     const parsedParameters: ParsedParameter<string | number>[] =
-      typeof parameters === "string" ? parseParameters(parameters) : parameters;
+      typeof parameters === "string" ? parseQuery(parameters) : parameters;
     const response = this.request(ctx, {
       type: "search-request",
       level: "type",
