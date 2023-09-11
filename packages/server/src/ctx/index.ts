@@ -61,6 +61,7 @@ function createResourceRestCapabilities(
       { code: "delete" },
       { code: "search-type" },
       { code: "create" },
+      { code: "history-instance" },
     ],
     versioning: "versioned",
     updateCreate: false,
