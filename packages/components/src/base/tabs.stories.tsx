@@ -1,6 +1,7 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
+import { Button } from "./button";
 import { Tabs } from "./tabs";
 
 const meta = {
@@ -30,5 +31,24 @@ export const Primary: Story = {
         content: <span className="font-medium underline">Tab 3 content</span>,
       },
     ],
+  },
+};
+
+export const RightSide: Story = {
+  args: {
+    tabs: [
+      { id: 5, title: "Tab1", content: "Tab 1 content" },
+      {
+        id: 6,
+        title: "Tab 2",
+        content: <span className="font-bold">Tab 2 content</span>,
+      },
+      {
+        id: 7,
+        title: "Tab 3",
+        content: <span className="font-medium underline">Tab 3 content</span>,
+      },
+    ],
+    rightSide: <Button size="small">Actions</Button>,
   },
 };

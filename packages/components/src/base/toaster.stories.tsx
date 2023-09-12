@@ -14,7 +14,7 @@ const TestPromise = ({
   return (
     <div>
       <Button
-        label="Click Me"
+        children="Click Me"
         onClick={() => {
           promise(
             new Promise((resolve, reject) => {

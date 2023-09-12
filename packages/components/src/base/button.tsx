@@ -1,16 +1,12 @@
 import classNames from "classnames";
-import React, {
-  MouseEventHandler,
-  DetailedHTMLProps,
-  HTMLAttributes,
-} from "react";
+import React, { DetailedHTMLProps, HTMLAttributes } from "react";
 
 type ButtonType = "primary" | "secondary" | "danger";
 type ButtonSize = "small" | "medium" | "large";
 
 export interface ButtonProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
-  label: React.ReactNode;
+  children: React.ReactNode;
   size?: ButtonSize;
   type?: ButtonType;
 }
@@ -38,7 +34,7 @@ function btnSize(size: ButtonSize) {
 }
 
 export const Button = (props: ButtonProps) => {
-  const { onClick, label, type = "primary", size = "medium" } = props;
+  const { onClick, children, type = "primary", size = "medium" } = props;
   return (
     <div
       onClick={onClick}
@@ -50,7 +46,7 @@ export const Button = (props: ButtonProps) => {
         props.className
       )}
     >
-      {label}
+      {children}
     </div>
   );
 };

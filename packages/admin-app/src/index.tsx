@@ -111,7 +111,13 @@ function Root() {
           <Layout.SideBar.SideBarItemGroup label="Data">
             <Layout.SideBar.SideBarItem
               active={
-                matches.find((match) => match.id === "root") !== undefined
+                matches.find((match) => match.id === "root") !== undefined ||
+                matches.find(
+                  (match) =>
+                    match.id === "types" &&
+                    match.params.resourceType !== "OperationDefinition" &&
+                    match.params.resourceType !== "Subscription"
+                ) !== undefined
               }
               logo={<TableCellsIcon />}
               onClick={() => {

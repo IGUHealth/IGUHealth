@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState, useMemo } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { basicSetup } from "codemirror";
 import { json } from "@codemirror/lang-json";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 // import { javascript } from "@codemirror/lang-javascript";
 
 import { Resource } from "@iguhealth/fhir-types";
@@ -85,21 +86,18 @@ function ResourceHistory() {
 export default function ResourceEditorView() {
   const client = useRecoilValue(getClient);
   const [value, setValue] = React.useState("");
+  const navigate = useNavigate();
 
   const { resourceType, id } = useParams();
 
   useEffect(() => {
-    const getResource = client
-      .read({}, resourceType as ResourceType, id as id)
-      .then((response) => {
-        setValue(JSON.stringify(response, null, 2));
-        return response;
-      });
-    Base.Toaster.promise(getResource, {
-      loading: "Loading resource",
-      success: (success) => `Retrieved ${(success as Resource).resourceType}`,
-      error: (error) => "Error loading resource",
-    });
+    if (id !== "new")
+      client
+        .read({}, resourceType as ResourceType, id as id)
+        .then((response) => {
+          setValue(JSON.stringify(response, null, 2));
+          return response;
+        });
   }, [resourceType, id]);
 
   return (
@@ -115,12 +113,67 @@ export default function ResourceEditorView() {
           title: "History",
           content: <ResourceHistory />,
         },
-        {
-          id: 1,
-          title: "Audit events",
-          content: <span> Audit Events </span>,
-        },
+        // {
+        //   id: 1,
+        //   title: "Audit events",
+        //   content: <span> Audit Events </span>,
+        // },
       ]}
+      rightSide={
+        <Base.DropDownMenu
+          links={[
+            {
+              label: id === "new" ? "Create" : "Update",
+              onClick: (_e) => {
+                const editPromise =
+                  id === "new"
+                    ? client
+                        .create({}, { ...JSON.parse(value), resourceType })
+                        .then((value) =>
+                          navigate(
+                            `/resources/${resourceType}/${
+                              (value as Resource).id
+                            }`,
+                            { replace: true }
+                          )
+                        )
+                    : client.update({}, JSON.parse(value));
+                Base.Toaster.promise(editPromise, {
+                  loading: "Updating Resource",
+                  success: (success) =>
+                    `Updated ${(success as Resource).resourceType}`,
+                  error: (error) => {
+                    console.log(error);
+                    const message = "Error updating resource";
+                    return message;
+                  },
+                });
+              },
+            },
+            {
+              className: "text-red-600 hover:bg-red-600 hover:text-white",
+              label: "Delete",
+              onClick: (_e) => {
+                const deletingResource = client
+                  .delete({}, resourceType as ResourceType, id as id)
+                  .then((v) => navigate(`/resources/${resourceType}`));
+                Base.Toaster.promise(deletingResource, {
+                  loading: "Deleting Resource",
+                  success: (success) =>
+                    `Deleted ${(success as Resource).resourceType}`,
+                  error: (error) => "Error deleting resource",
+                });
+              },
+            },
+          ]}
+        >
+          <Base.Button size="small" onClick={(_e) => {}}>
+            <div className="flex items-center">
+              <span>Actions</span> <ChevronDownIcon className="ml-1 w-3 h-3" />
+            </div>
+          </Base.Button>
+        </Base.DropDownMenu>
+      }
     />
   );
 }

@@ -66,7 +66,7 @@ export const Base64Binary = ({
             onClick={() => {
               fileDownload(value, "data");
             }}
-            label="Download"
+            children="Download"
           />
         )}
       </>
