@@ -67,7 +67,7 @@ export default function ResourceTypeView() {
         <Base.Button
           className="ml-2"
           size="small"
-          onClick={(_e) => search(query)}
+          onClick={(_e) => navigate(`/resources/${params.resourceType}/new`)}
         >
           Create
         </Base.Button>
