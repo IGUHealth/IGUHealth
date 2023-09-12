@@ -10,7 +10,7 @@ export const BreadCrumbs = ({ breadcrumbs }: BreadCrumbsProps) => {
     <div className="flex spacing-x-4 items-center">
       {breadcrumbs.map((breadcrumb, index) => {
         return (
-          <div className="flex items-center mr-1">
+          <div key={index} className="flex items-center mr-1">
             {index === breadcrumbs.length - 1 ? (
               breadcrumb
             ) : (
