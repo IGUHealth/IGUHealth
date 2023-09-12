@@ -125,30 +125,35 @@ export default function ResourceEditorView() {
             {
               label: id === "new" ? "Create" : "Update",
               onClick: (_e) => {
-                const resource = JSON.parse(value);
-                const editPromise =
-                  id === "new"
-                    ? client
-                        .create({}, { ...resource, resourceType })
-                        .then((value) =>
-                          navigate(
-                            `/resources/${resourceType}/${
-                              (value as Resource).id
-                            }`,
-                            { replace: true }
+                try {
+                  const resource = JSON.parse(value);
+                  const editPromise =
+                    id === "new"
+                      ? client
+                          .create({}, { ...resource, resourceType })
+                          .then((value) =>
+                            navigate(
+                              `/resources/${resourceType}/${
+                                (value as Resource).id
+                              }`,
+                              { replace: true }
+                            )
                           )
-                        )
-                    : client.update({}, resource);
-                Base.Toaster.promise(editPromise, {
-                  loading: "Updating Resource",
-                  success: (success) =>
-                    `Updated ${(success as Resource).resourceType}`,
-                  error: (error) => {
-                    console.log(error);
-                    const message = "Error updating resource";
-                    return message;
-                  },
-                });
+                      : client.update({}, resource);
+                  Base.Toaster.promise(editPromise, {
+                    loading: "Updating Resource",
+                    success: (success) =>
+                      `Updated ${(success as Resource).resourceType}`,
+                    error: (error) => {
+                      console.log(error);
+                      const message = "Error updating resource";
+                      return message;
+                    },
+                  });
+                } catch (e) {
+                  console.log(e);
+                  Base.Toaster.error(`${e}`);
+                }
               },
             },
             {
