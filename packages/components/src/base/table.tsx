@@ -62,13 +62,17 @@ export function Table({
           </tr>
         ) : (
           <>
-            {data.map((row) => (
+            {data.map((row, index) => (
               <tr
+                key={index}
                 className="border-b cursor-pointer hover:bg-slate-100"
                 onClick={(e) => onRowClick(row)}
               >
                 {columns.map((column) => (
-                  <td className="whitespace-nowrap px-2 py-2 font-medium">
+                  <td
+                    key={column.name}
+                    className="whitespace-nowrap px-2 py-2 font-medium"
+                  >
                     {extract(row, column.selector, column.selectorType)}
                   </td>
                 ))}

@@ -6,7 +6,7 @@ import { json } from "@codemirror/lang-json";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 // import { javascript } from "@codemirror/lang-javascript";
 
-import { Resource } from "@iguhealth/fhir-types";
+import { Resource, OperationOutcome } from "@iguhealth/fhir-types";
 import { Base } from "@iguhealth/components";
 
 import { getClient } from "../data/client";
@@ -125,44 +125,52 @@ export default function ResourceEditorView() {
             {
               label: id === "new" ? "Create" : "Update",
               onClick: (_e) => {
-                const editPromise =
-                  id === "new"
-                    ? client
-                        .create({}, { ...JSON.parse(value), resourceType })
-                        .then((value) =>
-                          navigate(
-                            `/resources/${resourceType}/${
-                              (value as Resource).id
-                            }`,
-                            { replace: true }
-                          )
-                        )
-                    : client.update({}, JSON.parse(value));
-                Base.Toaster.promise(editPromise, {
-                  loading: "Updating Resource",
-                  success: (success) =>
-                    `Updated ${(success as Resource).resourceType}`,
-                  error: (error) => {
-                    console.log(error);
-                    const message = "Error updating resource";
-                    return message;
-                  },
-                });
+                try {
+                  const resource = JSON.parse(value);
+                  const editPromise =
+                    id === "new"
+                      ? client.create({}, { ...resource, resourceType })
+                      : client.update({}, resource);
+                  Base.Toaster.promise(editPromise, {
+                    loading: "Creating Resource",
+                    success: (success) =>
+                      `Updated ${(success as Resource).resourceType}`,
+                    error: (error) => {
+                      const message = (
+                        error.operationOutcome as OperationOutcome
+                      ).issue
+                        .map((issue) => issue.diagnostics)
+                        .join("\n");
+
+                      return message;
+                    },
+                  }).then((value) =>
+                    navigate(
+                      `/resources/${resourceType}/${(value as Resource).id}`,
+                      { replace: true }
+                    )
+                  );
+                } catch (e) {
+                  Base.Toaster.error(`${e}`);
+                }
               },
             },
             {
               className: "text-red-600 hover:bg-red-600 hover:text-white",
               label: "Delete",
               onClick: (_e) => {
-                const deletingResource = client
-                  .delete({}, resourceType as ResourceType, id as id)
-                  .then((v) => navigate(`/resources/${resourceType}`));
+                const deletingResource = client.delete(
+                  {},
+                  resourceType as ResourceType,
+                  id as id
+                );
                 Base.Toaster.promise(deletingResource, {
                   loading: "Deleting Resource",
-                  success: (success) =>
-                    `Deleted ${(success as Resource).resourceType}`,
-                  error: (error) => "Error deleting resource",
-                });
+                  success: (success) => `Deleted ${resourceType}`,
+                  error: (error) => {
+                    return `${error}`;
+                  },
+                }).then((v) => navigate(`/resources/${resourceType}`));
               },
             },
           ]}
