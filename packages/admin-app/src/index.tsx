@@ -165,7 +165,7 @@ function Root() {
       }
     >
       <>
-        <div className="px-4 sm:px-6 lg:px-8 border-b">
+        <div className="px-4 sm:px-6 lg:px-8 border-b sticky top-0 bg-white">
           <div className="flex h-16 items-center justify-between">
             <div className="font-semibold text-lg">
               <Base.BreadCrumbs
@@ -220,7 +220,7 @@ function Root() {
             />
           </div>
         </div>
-        <div className="p-4 flex flex-1 mt-2">
+        <div className="p-4 flex flex-1 mt-2 overflow-auto">
           <Base.Toaster.Toaster />
           <Outlet />
         </div>
