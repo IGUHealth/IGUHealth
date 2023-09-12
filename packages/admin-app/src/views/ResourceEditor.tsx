@@ -155,7 +155,6 @@ export default function ResourceEditorView() {
                     },
                   });
                 } catch (e) {
-                  console.log(e);
                   Base.Toaster.error(`${e}`);
                 }
               },
