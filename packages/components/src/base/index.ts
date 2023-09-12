@@ -8,6 +8,7 @@ import { Loading } from "./loading";
 import * as Toaster from "./toaster";
 import { Tabs } from "./tabs";
 import { BreadCrumbs } from "./breadcrumbs";
+import { Menu, DropDownMenu } from "./menu";
 
 export {
   Button,
@@ -20,4 +21,6 @@ export {
   Toaster,
   Tabs,
   BreadCrumbs,
+  Menu,
+  DropDownMenu,
 };

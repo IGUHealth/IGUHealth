@@ -1,9 +1,5 @@
 import classNames from "classnames";
-import React, {
-  MouseEventHandler,
-  DetailedHTMLProps,
-  HTMLAttributes,
-} from "react";
+import React, { DetailedHTMLProps, HTMLAttributes } from "react";
 
 type ButtonType = "primary" | "secondary" | "danger";
 type ButtonSize = "small" | "medium" | "large";
