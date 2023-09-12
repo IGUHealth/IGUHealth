@@ -89,16 +89,9 @@ export default function ResourceEditorView() {
   const { resourceType, id } = useParams();
 
   useEffect(() => {
-    const getResource = client
-      .read({}, resourceType as ResourceType, id as id)
-      .then((response) => {
-        setValue(JSON.stringify(response, null, 2));
-        return response;
-      });
-    Base.Toaster.promise(getResource, {
-      loading: "Loading resource",
-      success: (success) => `Retrieved ${(success as Resource).resourceType}`,
-      error: (error) => "Error loading resource",
+    client.read({}, resourceType as ResourceType, id as id).then((response) => {
+      setValue(JSON.stringify(response, null, 2));
+      return response;
     });
   }, [resourceType, id]);
 
@@ -115,11 +108,11 @@ export default function ResourceEditorView() {
           title: "History",
           content: <ResourceHistory />,
         },
-        {
-          id: 1,
-          title: "Audit events",
-          content: <span> Audit Events </span>,
-        },
+        // {
+        //   id: 1,
+        //   title: "Audit events",
+        //   content: <span> Audit Events </span>,
+        // },
       ]}
     />
   );

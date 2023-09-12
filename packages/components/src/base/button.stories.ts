@@ -19,7 +19,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     type: "primary",
-    label: "Button",
+    children: "Button",
     size: "large",
   },
 };
@@ -27,7 +27,7 @@ export const Primary: Story = {
 export const Secondary: Story = {
   args: {
     type: "secondary",
-    label: "Button",
+    children: "Button",
     size: "large",
   },
 };
@@ -35,7 +35,7 @@ export const Secondary: Story = {
 export const Danger: Story = {
   args: {
     type: "danger",
-    label: "Button",
+    children: "Button",
     size: "small",
   },
 };
