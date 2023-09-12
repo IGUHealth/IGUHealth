@@ -125,10 +125,11 @@ export default function ResourceEditorView() {
             {
               label: id === "new" ? "Create" : "Update",
               onClick: (_e) => {
+                const resource = JSON.parse(value);
                 const editPromise =
                   id === "new"
                     ? client
-                        .create({}, { ...JSON.parse(value), resourceType })
+                        .create({}, { ...resource, resourceType })
                         .then((value) =>
                           navigate(
                             `/resources/${resourceType}/${
@@ -137,7 +138,7 @@ export default function ResourceEditorView() {
                             { replace: true }
                           )
                         )
-                    : client.update({}, JSON.parse(value));
+                    : client.update({}, resource);
                 Base.Toaster.promise(editPromise, {
                   loading: "Updating Resource",
                   success: (success) =>
