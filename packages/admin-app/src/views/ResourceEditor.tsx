@@ -129,19 +129,10 @@ export default function ResourceEditorView() {
                   const resource = JSON.parse(value);
                   const editPromise =
                     id === "new"
-                      ? client
-                          .create({}, { ...resource, resourceType })
-                          .then((value) =>
-                            navigate(
-                              `/resources/${resourceType}/${
-                                (value as Resource).id
-                              }`,
-                              { replace: true }
-                            )
-                          )
+                      ? client.create({}, { ...resource, resourceType })
                       : client.update({}, resource);
                   Base.Toaster.promise(editPromise, {
-                    loading: "Updating Resource",
+                    loading: "Creating Resource",
                     success: (success) =>
                       `Updated ${(success as Resource).resourceType}`,
                     error: (error) => {
@@ -153,7 +144,12 @@ export default function ResourceEditorView() {
 
                       return message;
                     },
-                  });
+                  }).then((value) =>
+                    navigate(
+                      `/resources/${resourceType}/${(value as Resource).id}`,
+                      { replace: true }
+                    )
+                  );
                 } catch (e) {
                   Base.Toaster.error(`${e}`);
                 }
@@ -163,15 +159,18 @@ export default function ResourceEditorView() {
               className: "text-red-600 hover:bg-red-600 hover:text-white",
               label: "Delete",
               onClick: (_e) => {
-                const deletingResource = client
-                  .delete({}, resourceType as ResourceType, id as id)
-                  .then((v) => navigate(`/resources/${resourceType}`));
+                const deletingResource = client.delete(
+                  {},
+                  resourceType as ResourceType,
+                  id as id
+                );
                 Base.Toaster.promise(deletingResource, {
                   loading: "Deleting Resource",
-                  success: (success) =>
-                    `Deleted ${(success as Resource).resourceType}`,
-                  error: (error) => "Error deleting resource",
-                });
+                  success: (success) => `Deleted ${resourceType}`,
+                  error: (error) => {
+                    return `${error}`;
+                  },
+                }).then((v) => navigate(`/resources/${resourceType}`));
               },
             },
           ]}
