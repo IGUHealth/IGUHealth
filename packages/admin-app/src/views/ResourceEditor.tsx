@@ -6,7 +6,7 @@ import { json } from "@codemirror/lang-json";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 // import { javascript } from "@codemirror/lang-javascript";
 
-import { Resource } from "@iguhealth/fhir-types";
+import { Resource, OperationOutcome } from "@iguhealth/fhir-types";
 import { Base } from "@iguhealth/components";
 
 import { getClient } from "../data/client";
@@ -145,8 +145,12 @@ export default function ResourceEditorView() {
                     success: (success) =>
                       `Updated ${(success as Resource).resourceType}`,
                     error: (error) => {
-                      console.log(error);
-                      const message = "Error updating resource";
+                      const message = (
+                        error.operationOutcome as OperationOutcome
+                      ).issue
+                        .map((issue) => issue.diagnostics)
+                        .join("\n");
+
                       return message;
                     },
                   });
