@@ -42,7 +42,9 @@ export function SideBarItemGroup(props: SideBarItemGroupProps) {
   return (
     <li {...props}>
       <div className="px-2 text-indigo-100 text-xs">{props.label}</div>
-      <ul>{props.children}</ul>
+      <div className="mt-1">
+        <ul className="space-y-1">{props.children}</ul>
+      </div>
     </li>
   );
 }
