@@ -58,17 +58,19 @@ export default function ResourceTypeView() {
         <Base.Button
           size="small"
           type="secondary"
-          label={<MagnifyingGlassIcon className="h-4 w-4" />}
           onClick={(_e) => search(query)}
-        />
+        >
+          <MagnifyingGlassIcon className="h-4 w-4" />
+        </Base.Button>
       </div>
       <div className="mt-2 mb-1 flex justify-end">
         <Base.Button
           className="ml-2"
           size="small"
-          label="Create"
           onClick={(_e) => search(query)}
-        />
+        >
+          Create
+        </Base.Button>
       </div>
       <Base.Table
         isLoading={isLoading}

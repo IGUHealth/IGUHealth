@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { basicSetup } from "codemirror";
 import { json } from "@codemirror/lang-json";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 // import { javascript } from "@codemirror/lang-javascript";
 
 import { Resource } from "@iguhealth/fhir-types";
@@ -114,6 +115,13 @@ export default function ResourceEditorView() {
         //   content: <span> Audit Events </span>,
         // },
       ]}
+      rightSide={
+        <Base.Button size="small" onClick={(_e) => {}}>
+          <div className="flex items-center">
+            <span>Actions</span> <ChevronDownIcon className="ml-1 w-3 h-3" />
+          </div>
+        </Base.Button>
+      }
     />
   );
 }
