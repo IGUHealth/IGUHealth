@@ -151,7 +151,13 @@ function workspaceMiddleware(
       ? createCheckJWT()
       : async (ctx, next) => {
           services.logger.warn("[WARNING] Server is publicly accessible.");
-          ctx.state = { ...ctx.state, user: { sub: "public-user" } };
+          ctx.state = {
+            ...ctx.state,
+            user: {
+              sub: "public-user",
+              "https://iguhealth.app/workspaces": [ctx.params.workspace],
+            },
+          };
           await next();
         },
     workspaceCheck,
