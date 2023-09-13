@@ -22,7 +22,7 @@ function JSONEditor({
   setValue: (value: string) => void;
 }) {
   return (
-    <div className="flex flex-1">
+    <div className="flex flex-1 border">
       <Base.CodeMirror
         extensions={extensions}
         value={value}

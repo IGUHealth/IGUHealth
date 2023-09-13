@@ -12,6 +12,10 @@ import cors from "@koa/cors";
 // import { fileURLToPath } from "url";
 // import Provider from "oidc-provider";
 // import mount from "koa-mount";
+// import Account from "./oidc-provider/accounts.js";
+// import configuration from "./oidc-provider/configuration.js";
+// import routes from "./oidc-provider/routes.js";
+// import { loadJWKS } from "./auth/jwks.js";
 
 import { Bundle, Resource } from "@iguhealth/fhir-types/r4/types";
 import {
@@ -24,10 +28,6 @@ import { FHIRResponse } from "@iguhealth/client/lib/types";
 
 import createServiceCTX from "./ctx/index.js";
 import createFHIRServer from "./fhirServer.js";
-// import Account from "./oidc-provider/accounts.js";
-// import configuration from "./oidc-provider/configuration.js";
-// import routes from "./oidc-provider/routes.js";
-// import { loadJWKS } from "./auth/jwks.js";
 import { KoaRequestToFHIRRequest } from "./fhirRequest/index.js";
 
 dotEnv.config();
