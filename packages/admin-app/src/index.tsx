@@ -46,7 +46,7 @@ function LoginWrapper({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      {auth0Info.isLoading ? (
+      {auth0Info.isLoading || !auth0Info.isAuthenticated ? (
         <div className="h-screen flex flex-1 justify-center items-center flex-col">
           <Base.Loading />
           <div className="mt-1 ">Loading...</div>
