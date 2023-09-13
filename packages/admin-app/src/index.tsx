@@ -21,6 +21,7 @@ import { Layout, Base } from "@iguhealth/components";
 import "@iguhealth/components/dist/index.css";
 
 import { getClient } from "./data/client";
+import EmptyWorkspace from "./views/EmptyWorkspace";
 import Resources from "./views/Resources";
 import ResourceType from "./views/ResourceType";
 import ResourceEditor from "./views/ResourceEditor";
@@ -45,7 +46,7 @@ function LoginWrapper({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      {auth0Info.isLoading ? (
+      {auth0Info.isLoading || !auth0Info.isAuthenticated ? (
         <div className="h-screen flex flex-1 justify-center items-center flex-col">
           <Base.Loading />
           <div className="mt-1 ">Loading...</div>
@@ -73,21 +74,58 @@ function ServiceSetup({ children }: { children: React.ReactNode }) {
   return <>{c ? <>{children}</> : undefined}</>;
 }
 
+function WorkspaceCheck() {
+  const navigate = useNavigate();
+  const matches = useMatches();
+
+  const auth0 = useAuth0();
+
+  useEffect(() => {
+    if (
+      auth0.user?.["https://iguhealth.app/workspaces"].length === 0 &&
+      matches.find((match) => match.id === "empty-workspace") === undefined
+    ) {
+      navigate("/no-workspace", { replace: true });
+    }
+  }, [auth0.user, navigate, matches]);
+
+  return (
+    <>
+      <Outlet />
+    </>
+  );
+}
+
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root />,
+    element: <WorkspaceCheck />,
     children: [
-      { id: "root", path: "/", element: <Resources /> },
       {
-        id: "types",
-        path: "/resources/:resourceType",
-        element: <ResourceType />,
+        id: "empty-workspace",
+        path: "/no-workspace",
+        element: <EmptyWorkspace />,
       },
       {
-        id: "instance",
-        path: "/resources/:resourceType/:id",
-        element: <ResourceEditor />,
+        path: "/",
+        element: (
+          <ServiceSetup>
+            <Root />
+          </ServiceSetup>
+        ),
+        children: [
+          { id: "root", path: "/", element: <Resources /> },
+          {
+            id: "types",
+            path: "/resources/:resourceType",
+            element: <ResourceType />,
+          },
+          {
+            id: "instance",
+            path: "/resources/:resourceType/:id",
+            element: <ResourceEditor />,
+          },
+        ],
       },
     ],
   },
@@ -240,9 +278,7 @@ function App() {
       }}
     >
       <LoginWrapper>
-        <ServiceSetup>
-          <RouterProvider router={router} />
-        </ServiceSetup>
+        <RouterProvider router={router} />
       </LoginWrapper>
     </Auth0Provider>
   );
