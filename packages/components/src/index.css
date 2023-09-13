@@ -23,10 +23,10 @@
     }
 }
 
-.cm-editor {
+/* .cm-editor {
     height: 100%;
     width: 100%;
-}
+} */
 
 .cm-scroller{
     overflow: auto;
