@@ -10,7 +10,16 @@ export default function EmptyWorkspace() {
         <h1 className="text-xl font-semibold mb-4 ">
           There are no workspaces associated with your account.
         </h1>
-        <Base.Button type="secondary" onClick={(_e) => auth0.logout()}>
+        <Base.Button
+          type="secondary"
+          onClick={(_e) =>
+            auth0.logout({
+              logoutParams: {
+                returnTo: window.location.origin,
+              },
+            })
+          }
+        >
           Logout
         </Base.Button>
       </div>

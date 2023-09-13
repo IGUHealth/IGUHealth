@@ -194,7 +194,13 @@ function Root() {
             </Layout.SideBar.SideBarItem> */}
             <Layout.SideBar.SideBarItem
               logo={<ArrowLeftOnRectangleIcon />}
-              onClick={() => auth0Info.logout()}
+              onClick={() =>
+                auth0Info.logout({
+                  logoutParams: {
+                    returnTo: window.location.origin,
+                  },
+                })
+              }
             >
               Sign out
             </Layout.SideBar.SideBarItem>
@@ -254,7 +260,13 @@ function Root() {
                 imageUrl: auth0Info.user?.picture,
               }}
               navigation={[{ name: "Sign out" }]}
-              onNavigation={() => auth0Info.logout()}
+              onNavigation={() =>
+                auth0Info.logout({
+                  logoutParams: {
+                    returnTo: window.location.origin,
+                  },
+                })
+              }
             />
           </div>
         </div>
