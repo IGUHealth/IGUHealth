@@ -22,14 +22,13 @@ function JSONEditor({
   setValue: (value: string) => void;
 }) {
   return (
-    <div className="flex flex-1">
+    <div className="flex flex-1 border overflow-auto">
       <Base.CodeMirror
         extensions={extensions}
         value={value}
         theme={{
           "&": {
             height: "100%",
-            width: "100%",
           },
         }}
         onChange={(value, _vu) => {

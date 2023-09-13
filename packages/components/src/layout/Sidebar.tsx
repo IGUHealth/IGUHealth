@@ -110,7 +110,12 @@ export const SidebarLayout = ({
         </svg>
       </button> */}
       {sidebar}
-      <div className="sm:ml-64 flex flex-col flex-grow">{children}</div>
+      <div
+        style={{ width: "calc(100% - 16rem)" }}
+        className="sm:ml-64 flex flex-col flex-grow"
+      >
+        {children}
+      </div>
     </>
   );
 };

@@ -17,7 +17,7 @@ export interface TabsProps {
 
 export const Tabs = ({ tabs, selectedTab, onTab, rightSide }: TabsProps) => {
   return (
-    <div className="flex flex-1 flex-col px-2 sm:px-0">
+    <div className="flex flex-1 flex-col px-2 sm:px-0 w-full h-full">
       <Tab.Group>
         <Tab.List className="flex space-x-4 border-b items-center">
           <div className="flex space-x-4 flex-grow">

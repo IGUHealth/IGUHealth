@@ -133,5 +133,5 @@ export const CodeMirror = ({
     }
   }, [view, extensions, theme, onChange]);
 
-  return <div className="flex border flex-grow" ref={root} />;
+  return <div className="flex flex-grow" ref={root} />;
 };
