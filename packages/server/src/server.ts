@@ -123,6 +123,24 @@ const createCheckJWT = () =>
     ],
   }) as unknown as Middleware<DefaultState, DefaultContext, any>;
 
+async function workspaceCheck(
+  ctx: Koa.ParameterizedContext<Koa.DefaultState, Koa.DefaultContext>,
+  next: Koa.Next
+) {
+  if (!ctx.params.workspace) {
+    ctx.throw(400, "workspace is required");
+  }
+  if (
+    !(ctx.state.user["https://iguhealth.app/workspaces"] as string[]).includes(
+      ctx.params.workspace
+    )
+  ) {
+    ctx.throw(403, "workspace is not authorized");
+  }
+
+  return next();
+}
+
 function workspaceMiddleware(
   services: ReturnType<typeof createServiceCTX>
 ): Router.Middleware<Koa.DefaultState, Koa.DefaultContext, unknown>[] {
@@ -136,6 +154,7 @@ function workspaceMiddleware(
           ctx.state = { ...ctx.state, user: { sub: "public-user" } };
           await next();
         },
+    workspaceCheck,
     async (ctx, next) => {
       try {
         const serverCTX = {
