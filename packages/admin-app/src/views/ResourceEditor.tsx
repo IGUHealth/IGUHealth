@@ -29,6 +29,7 @@ function JSONEditor({
         theme={{
           "&": {
             height: "100%",
+            width: "100%",
           },
         }}
         onChange={(value, _vu) => {
