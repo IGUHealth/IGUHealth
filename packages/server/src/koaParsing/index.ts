@@ -5,7 +5,7 @@ import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import parseParameters from "@iguhealth/client/lib/url.js";
 
-import { FHIRRequest } from "@iguhealth/client/lib/types";
+import { FHIRRequest, FHIRResponse } from "@iguhealth/client/lib/types";
 
 /*
  ** For Summary of types see:
@@ -275,4 +275,90 @@ export function KoaRequestToFHIRRequest(
     }
   }
   throw new OperationError(outcomeError("invalid", "request is invalid"));
+}
+
+function toBundle(
+  bundleType: Bundle["type"],
+  total: number | undefined,
+  resources: Resource[]
+): Bundle {
+  return {
+    resourceType: "Bundle",
+    type: bundleType,
+    total: total,
+    entry: resources.map((resource) => ({ resource })),
+  };
+}
+
+export function fhirResponseToKoaResponse(
+  fhirResponse: FHIRResponse
+): Partial<Koa.Response> {
+  switch (fhirResponse.type) {
+    case "read-response":
+    case "vread-response":
+      return {
+        headers: {
+          "Content-Location": `${fhirResponse.body.resourceType}/${
+            fhirResponse.body.id
+          }${
+            fhirResponse.type === "vread-response"
+              ? `/${fhirResponse.versionId}`
+              : ""
+          }`,
+        },
+        body: fhirResponse.body,
+        status: 200,
+      };
+    case "update-response":
+    case "patch-response":
+      return {
+        headers: {
+          Location: `${fhirResponse.body.resourceType}/${fhirResponse.body.id}`,
+        },
+        body: fhirResponse.body,
+        status: 200,
+      };
+    case "delete-response":
+      return {
+        status: 200,
+      };
+    case "history-response":
+      return {
+        status: 200,
+        body: toBundle("history", undefined, fhirResponse.body),
+      };
+    case "create-response":
+      return {
+        headers: {
+          Location: `${fhirResponse.body.resourceType}/${fhirResponse.body.id}`,
+        },
+        body: fhirResponse.body,
+        status: 201,
+      };
+    case "search-response": {
+      return {
+        status: 200,
+        body: toBundle("searchset", fhirResponse.total, fhirResponse.body),
+      };
+    }
+    case "capabilities-response":
+      return {
+        status: 200,
+        body: fhirResponse.body,
+      };
+    case "batch-response":
+      return {
+        status: 200,
+        body: fhirResponse.body,
+      };
+    case "transaction-response":
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `could not convert response to http of type '${fhirResponse.type}'`
+        )
+      );
+    case "invoke-response":
+      return { body: fhirResponse.body, status: 200 };
+  }
 }

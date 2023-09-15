@@ -17,18 +17,18 @@ import cors from "@koa/cors";
 // import routes from "./oidc-provider/routes.js";
 // import { loadJWKS } from "./auth/jwks.js";
 
-import { Bundle, Resource } from "@iguhealth/fhir-types/r4/types";
 import {
-  OperationError,
   isOperationError,
   issueSeverityToStatusCodes,
   outcomeError,
 } from "@iguhealth/operation-outcomes";
-import { FHIRResponse } from "@iguhealth/client/lib/types";
 
 import createServiceCTX from "./ctx/index.js";
 import createFHIRServer from "./fhirServer.js";
-import { KoaRequestToFHIRRequest } from "./fhirRequest/index.js";
+import {
+  KoaRequestToFHIRRequest,
+  fhirResponseToKoaResponse,
+} from "./koaParsing/index.js";
 
 dotEnv.config();
 
@@ -51,62 +51,6 @@ dotEnv.config();
 // console.log(signedJWT);
 // console.log(jose.decodeJwt(signedJWT));
 // console.log(await jose.jwtVerify(signedJWT, jwks));
-
-function toBundle(
-  bundleType: Bundle["type"],
-  total: number | undefined,
-  resources: Resource[]
-): Bundle {
-  return {
-    resourceType: "Bundle",
-    type: bundleType,
-    total: total,
-    entry: resources.map((resource) => ({ resource })),
-  };
-}
-
-function fhirResponseToKoaResponse(
-  fhirResponse: FHIRResponse
-): Partial<Koa.Response> {
-  switch (fhirResponse.type) {
-    case "read-response":
-    case "vread-response":
-      return { body: fhirResponse.body, status: 200 };
-    case "update-response":
-    case "patch-response":
-      return { body: fhirResponse.body, status: 200 };
-    case "delete-response":
-      return { status: 200 };
-    case "history-response":
-      return {
-        status: 200,
-        body: toBundle("history", undefined, fhirResponse.body),
-      };
-    case "create-response":
-      return { body: fhirResponse.body, status: 201 };
-    case "search-response": {
-      return {
-        status: 200,
-        body: toBundle("searchset", fhirResponse.total, fhirResponse.body),
-      };
-    }
-    case "capabilities-response":
-      return {
-        status: 200,
-        body: fhirResponse.body,
-      };
-    case "batch-response":
-    case "transaction-response":
-      throw new OperationError(
-        outcomeError(
-          "not-supported",
-          `could not convert response to http of type '${fhirResponse.type}'`
-        )
-      );
-    case "invoke-response":
-      return { body: fhirResponse.body, status: 200 };
-  }
-}
 
 const createCheckJWT = () =>
   jwt({
@@ -184,6 +128,10 @@ function workspaceMiddleware(
         const koaResponse = fhirResponseToKoaResponse(
           fhirServerResponse.response
         );
+        if (koaResponse.headers) {
+          ctx.set(koaResponse.headers as Record<string, string>);
+          delete koaResponse.headers;
+        }
         Object.keys(koaResponse).map(
           (k) =>
             (ctx[k as keyof Koa.DefaultContext] =
