@@ -6,6 +6,7 @@ import {
   TableCellsIcon,
   ArrowLeftOnRectangleIcon,
   ShareIcon,
+  ArrowUpOnSquareIcon,
 } from "@heroicons/react/24/outline";
 import { RecoilRoot, useRecoilState } from "recoil";
 import {
@@ -125,6 +126,11 @@ const router = createBrowserRouter([
             path: "/resources/:resourceType/:id",
             element: <ResourceEditor />,
           },
+          {
+            id: "batch-import",
+            path: "/batch-import",
+            element: <div>Batch Import</div>,
+          },
         ],
       },
     ],
@@ -203,6 +209,20 @@ function Root() {
               }
             >
               Sign out
+            </Layout.SideBar.SideBarItem>
+          </Layout.SideBar.SideBarItemGroup>
+          <Layout.SideBar.SideBarItemGroup label="Import">
+            <Layout.SideBar.SideBarItem
+              active={
+                matches.find((match) => match.id === "batch-import") !==
+                undefined
+              }
+              logo={<ArrowUpOnSquareIcon />}
+              onClick={() => {
+                navigate("/");
+              }}
+            >
+              Batch
             </Layout.SideBar.SideBarItem>
           </Layout.SideBar.SideBarItemGroup>
         </Layout.SideBar.SideBar>
