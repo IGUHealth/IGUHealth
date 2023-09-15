@@ -61,8 +61,8 @@ export const Base64Binary = ({
         />
         {value && (
           <Button
-            type="secondary"
-            size="medium"
+            buttonType="secondary"
+            buttonSize="medium"
             onClick={() => {
               fileDownload(value, "data");
             }}

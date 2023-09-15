@@ -49,6 +49,6 @@ export const RightSide: Story = {
         content: <span className="font-medium underline">Tab 3 content</span>,
       },
     ],
-    rightSide: <Button size="small">Actions</Button>,
+    rightSide: <Button buttonSize="small">Actions</Button>,
   },
 };

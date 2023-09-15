@@ -22,6 +22,7 @@ import { Layout, Base } from "@iguhealth/components";
 import "@iguhealth/components/dist/index.css";
 
 import { getClient } from "./data/client";
+import BatchImport from "./views/BatchImport";
 import EmptyWorkspace from "./views/EmptyWorkspace";
 import Resources from "./views/Resources";
 import ResourceType from "./views/ResourceType";
@@ -129,7 +130,7 @@ const router = createBrowserRouter([
           {
             id: "batch-import",
             path: "/batch-import",
-            element: <div>Batch Import</div>,
+            element: <BatchImport />,
           },
         ],
       },
@@ -147,12 +148,12 @@ function Root() {
       sidebar={
         <Layout.SideBar.SideBar
           top={
-            <div className="w-16 h-16 p-2 mb-4">
+            <div className="w-16 h-16 p-2 mt-4">
               <Logo />
             </div>
           }
         >
-          <Layout.SideBar.SideBarItemGroup label="Data">
+          <Layout.SideBar.SideBarItemGroup label="Data" className="mt-8">
             <Layout.SideBar.SideBarItem
               active={
                 matches.find((match) => match.id === "root") !== undefined ||
@@ -172,7 +173,7 @@ function Root() {
             </Layout.SideBar.SideBarItem>
           </Layout.SideBar.SideBarItemGroup>
           <Layout.SideBar.SideBarItemGroup
-            className="mt-4"
+            className="mt-12"
             label="Configuration"
           >
             <Layout.SideBar.SideBarItem
@@ -194,6 +195,20 @@ function Root() {
               Subscriptions
             </Layout.SideBar.SideBarItem>
           </Layout.SideBar.SideBarItemGroup>
+          <Layout.SideBar.SideBarItemGroup className="mt-12" label="Import">
+            <Layout.SideBar.SideBarItem
+              active={
+                matches.find((match) => match.id === "batch-import") !==
+                undefined
+              }
+              logo={<ArrowUpOnSquareIcon />}
+              onClick={() => {
+                navigate("/batch-import");
+              }}
+            >
+              Batch
+            </Layout.SideBar.SideBarItem>
+          </Layout.SideBar.SideBarItemGroup>
           <Layout.SideBar.SideBarItemGroup className="mt-auto" label="User">
             {/* <Layout.SideBar.SideBarItem logo={<Cog6ToothIcon />}>
               Settings
@@ -209,20 +224,6 @@ function Root() {
               }
             >
               Sign out
-            </Layout.SideBar.SideBarItem>
-          </Layout.SideBar.SideBarItemGroup>
-          <Layout.SideBar.SideBarItemGroup label="Import">
-            <Layout.SideBar.SideBarItem
-              active={
-                matches.find((match) => match.id === "batch-import") !==
-                undefined
-              }
-              logo={<ArrowUpOnSquareIcon />}
-              onClick={() => {
-                navigate("/");
-              }}
-            >
-              Batch
             </Layout.SideBar.SideBarItem>
           </Layout.SideBar.SideBarItemGroup>
         </Layout.SideBar.SideBar>

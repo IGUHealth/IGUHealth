@@ -175,7 +175,7 @@ export default function ResourceEditorView() {
             },
           ]}
         >
-          <Base.Button size="small" onClick={(_e) => {}}>
+          <Base.Button buttonSize="small" onClick={(_e) => {}}>
             <div className="flex items-center">
               <span>Actions</span> <ChevronDownIcon className="ml-1 w-3 h-3" />
             </div>
