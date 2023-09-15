@@ -1,4 +1,8 @@
-import { ResourceType } from "@iguhealth/fhir-types/r4/types";
+import {
+  ResourceType,
+  BundleEntry,
+  Resource,
+} from "@iguhealth/fhir-types/r4/types";
 import {
   FHIRRequest,
   FHIRResponse,
@@ -17,6 +21,11 @@ import { FHIRClient } from "@iguhealth/client/lib/interface";
 
 import { FHIRServerCTX } from "../fhirServer.js";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import {
+  KoaRequestToFHIRRequest,
+  fhirResponseToKoaResponse,
+} from "../koaParsing/index.js";
+import { Operation } from "@iguhealth/operation-execution";
 
 type InteractionSupported<T> = FHIRRequest["type"];
 type InteractionsSupported<T> = InteractionSupported<T>[];
@@ -114,9 +123,82 @@ function createRouterMiddleware<
           return { state: args.state, ctx: args.ctx, response: responses[0] };
         }
 
+        case "batch-request": {
+          const entries: BundleEntry[] = await Promise.all(
+            (request.body.entry || []).map(
+              async (entry, index): Promise<BundleEntry> => {
+                try {
+                  if (!entry.request?.method) {
+                    return {
+                      response: {
+                        status: "500",
+                        outcome: outcomeError(
+                          "invalid",
+                          `invalid entry in batch at index '${index}'`
+                        ),
+                      },
+                    };
+                  }
+                  const fhirRequest = KoaRequestToFHIRRequest(
+                    entry.request?.url || "",
+                    {
+                      method: entry.request?.method,
+                      body: entry.resource,
+                    }
+                  );
+
+                  const fhirResponse = await args.ctx.client.request(
+                    args.ctx,
+                    fhirRequest
+                  );
+                  const response = fhirResponseToKoaResponse(fhirResponse);
+                  console.log(response);
+                  return {
+                    response: {
+                      status: response.status
+                        ? response.status?.toString()
+                        : "200",
+                      location: (response.headers?.Location ||
+                        response.headers?.["Content-Location"] ||
+                        entry.request?.url) as any as string | undefined,
+                    },
+                    resource: response.body
+                      ? (response.body as Resource)
+                      : undefined,
+                  };
+                } catch (e) {
+                  return {
+                    response: {
+                      status: "500",
+                      outcome:
+                        e instanceof OperationError
+                          ? e.operationOutcome
+                          : outcomeError(
+                              "invalid",
+                              `invalid entry in batch at index '${index}'`
+                            ),
+                    },
+                  };
+                }
+              }
+            )
+          );
+          return {
+            state: args.state,
+            ctx: args.ctx,
+            response: {
+              type: "batch-response",
+              level: "system",
+              body: {
+                resourceType: "Bundle",
+                type: "batch-response",
+                entry: entries,
+              },
+            },
+          };
+        }
         // Mutations and invocations should only have one source
         case "invoke-request":
-        case "batch-request":
         case "transaction-request":
         case "create-request":
         case "update-request":

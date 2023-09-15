@@ -21,7 +21,7 @@ import logAuditEvent, {
   MAJOR_FAILURE,
   SERIOUS_FAILURE,
 } from "../logging/auditEvents.js";
-import { KoaRequestToFHIRRequest } from "../fhirRequest/index.js";
+import { KoaRequestToFHIRRequest } from "../koaParsing/index.js";
 import { FHIRServerCTX } from "../fhirServer.js";
 import { Operation } from "@iguhealth/operation-execution";
 

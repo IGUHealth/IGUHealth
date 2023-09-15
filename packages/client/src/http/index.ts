@@ -174,7 +174,12 @@ async function httpResponseToFHIRResponse(
       const oo = (await response.json()) as OperationOutcome;
       throw new OperationError(oo);
     } catch (e) {
-      console.error(e);
+      if (e instanceof OperationError) {
+        const outcome = e.operationOutcome;
+        console.error(outcome);
+      } else {
+        console.error(e);
+      }
       throw e;
     }
   }
