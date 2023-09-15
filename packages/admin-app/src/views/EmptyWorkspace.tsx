@@ -11,7 +11,7 @@ export default function EmptyWorkspace() {
           There are no workspaces associated with your account.
         </h1>
         <Base.Button
-          type="secondary"
+          buttonType="secondary"
           onClick={(_e) =>
             auth0.logout({
               logoutParams: {

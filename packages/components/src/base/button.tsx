@@ -5,10 +5,13 @@ type ButtonType = "primary" | "secondary" | "danger";
 type ButtonSize = "small" | "medium" | "large";
 
 export interface ButtonProps
-  extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
+  extends React.DetailedHTMLProps<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  > {
   children: React.ReactNode;
-  size?: ButtonSize;
-  type?: ButtonType;
+  buttonSize?: ButtonSize;
+  buttonType?: ButtonType;
 }
 
 function btnTypeClass(type: ButtonType) {
@@ -33,20 +36,25 @@ function btnSize(size: ButtonSize) {
   }
 }
 
-export const Button = (props: ButtonProps) => {
-  const { onClick, children, type = "primary", size = "medium" } = props;
+export const Button = ({
+  buttonType: type,
+  buttonSize: size,
+  ...props
+}: ButtonProps) => {
+  const { onClick, children } = props;
+
   return (
-    <div
+    <button
       onClick={onClick}
       {...props}
       className={classNames(
         "btn",
-        btnTypeClass(type),
-        btnSize(size),
+        btnTypeClass(type ? type : "primary"),
+        btnSize(size ? size : "medium"),
         props.className
       )}
     >
       {children}
-    </div>
+    </button>
   );
 };

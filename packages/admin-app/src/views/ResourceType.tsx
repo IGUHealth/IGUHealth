@@ -56,8 +56,8 @@ export default function ResourceTypeView() {
           }}
         />
         <Base.Button
-          size="small"
-          type="secondary"
+          buttonSize="small"
+          buttonType="secondary"
           onClick={(_e) => search(query)}
         >
           <MagnifyingGlassIcon className="h-4 w-4" />
@@ -66,7 +66,7 @@ export default function ResourceTypeView() {
       <div className="mt-2 mb-1 flex justify-end">
         <Base.Button
           className="ml-2"
-          size="small"
+          buttonSize="small"
           onClick={(_e) => navigate(`/resources/${params.resourceType}/new`)}
         >
           Create

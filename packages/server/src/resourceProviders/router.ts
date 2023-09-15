@@ -152,7 +152,7 @@ function createRouterMiddleware<
                     fhirRequest
                   );
                   const response = fhirResponseToKoaResponse(fhirResponse);
-                  console.log(response);
+
                   return {
                     response: {
                       status: response.status
