@@ -75,7 +75,7 @@ async function workspaceCheck(
     ctx.throw(400, "workspace is required");
   }
   if (
-    !(ctx.state.user["https://iguhealth.app/workspaces"] as string[]).includes(
+    !ctx.state.user["https://iguhealth.app/workspaces"]?.includes(
       ctx.params.workspace
     )
   ) {

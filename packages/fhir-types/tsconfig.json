@@ -1,7 +1,7 @@
 {
-    "extends": "../../config/base.tsconfig.json",
-    "exclude": ["./**/*.test.ts", "lib/*"],
-    "compilerOptions": {
-	    "outDir": "lib"
-    }
+  "extends": "../../config/base.tsconfig.json",
+  "exclude": ["./**/*.test.ts", "lib/*"],
+  "compilerOptions": {
+    "outDir": "lib"
+  }
 }

@@ -31,6 +31,12 @@
     "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
     "eject": "react-scripts eject"
   },
+  "files": [
+    "build/**/*",
+    "build/index.html",
+    "build/manifest.json",
+    "build/robots.txt"
+  ],
   "browserslist": {
     "production": [
       ">0.2%",

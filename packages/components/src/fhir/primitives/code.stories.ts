@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import HTTPClient from "@iguhealth/client/lib/http";
 import { ValueSet } from "@iguhealth/fhir-types/r4/types";
-import { r4 } from "@iguhealth/generated-ops";
+import { ValueSetExpand } from "@iguhealth/generated-ops/r4";
 
 import { Code } from "./code";
 
