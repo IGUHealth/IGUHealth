@@ -1,6 +1,6 @@
 import { expect, test } from "@jest/globals";
 import PostgresLock from "./postgres.lock.js";
-import { default as Redis } from "ioredis";
+import Redis from "ioredis";
 import RedisLock from "./redis.lock.js";
 import dotEnv from "dotenv";
 
