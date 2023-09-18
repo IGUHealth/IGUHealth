@@ -4,6 +4,7 @@
   "main": "./lib/index.js",
   "version": "0.0.7",
   "type": "module",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "jest --detectOpenHandles",
@@ -12,6 +13,9 @@
   },
   "dependencies": {
     "@iguhealth/operation-execution": "workspace:^"
+  },
+  "exports": {
+    "./r4": "./lib/r4/ops.js"
   },
   "devDependencies": {
     "@iguhealth/artifacts": "workspace:^",

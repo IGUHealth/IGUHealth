@@ -1,4 +1,4 @@
-import { SearchParameter, ResourceType } from "@iguhealth/fhir-types";
+import { SearchParameter, ResourceType } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../fhirServer.js";

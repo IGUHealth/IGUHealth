@@ -6,7 +6,7 @@ Provides utility methods to validate parameters and parses parameters from simpl
 ## Usage
 
 ```typescript
-import httpClient from "@iguhealth/client/lib/http";
+import httpClient from "@iguhealth/client/http";
 import { ValueSetExpand } from "./ops.js";
 
 const client = httpClient(configuration);

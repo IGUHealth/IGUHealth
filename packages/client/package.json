@@ -10,6 +10,15 @@
     "test": "jest",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
+  "exports": {
+    ".": "./lib/index.js",
+    "./types": "./lib/types.js",
+    "./interface": "./lib/interface.js",
+    "./middleware": "./lib/middleware/index.js",
+    "./url": "./lib/url.js",
+    "./lib/http": "./lib/http/index.js",
+    "./http": "./lib/http/index.js"
+  },
   "devDependencies": {
     "@iguhealth/fhir-types": "workspace:^",
     "@jest/globals": "^29.6.1",

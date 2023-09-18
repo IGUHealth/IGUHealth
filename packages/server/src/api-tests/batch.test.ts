@@ -1,9 +1,9 @@
 import { expect, test } from "@jest/globals";
-import { Bundle } from "@iguhealth/fhir-types";
+import { Bundle } from "@iguhealth/fhir-types/r4/types";
 
-import HTTPClient from "@iguhealth/client/lib/http/index.js";
+import HTTPClient from "@iguhealth/client/http";
 import { evaluate } from "@iguhealth/fhirpath";
-import { FHIRResponse } from "@iguhealth/client/lib/types";
+import { FHIRResponse } from "@iguhealth/client/types";
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system/api/v1/fhir/r4",

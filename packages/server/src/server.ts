@@ -1,6 +1,6 @@
 import Koa, { DefaultContext, DefaultState, Middleware } from "koa";
 import Router from "@koa/router";
-import bodyParser from "@koa/bodyparser";
+import { default as bodyParser } from "@koa/bodyparser";
 
 import dotEnv from "dotenv";
 
@@ -31,6 +31,8 @@ import {
 } from "./koaParsing/index.js";
 
 dotEnv.config();
+
+console.log("parser:", bodyParser);
 
 // const { PORT = 3000, ISSUER = `http://localhost:${PORT}` } = process.env;
 // configuration.findAccount = Account.findAccount;
@@ -180,6 +182,7 @@ export default function createServer(): Koa<
 
   app
     .use(cors())
+    //@ts-ignore
     .use(bodyParser())
     // .use(routes(provider).routes())
     // .use(mount(provider.app))

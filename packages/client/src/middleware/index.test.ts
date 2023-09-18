@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals";
-import { Resource } from "@iguhealth/fhir-types";
+import { Resource } from "@iguhealth/fhir-types/r4/types";
 import { createMiddlewareSync, createMiddlewareAsync } from "./index.js";
 import type { ParsedParameter } from "../url";
 

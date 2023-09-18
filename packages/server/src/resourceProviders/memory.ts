@@ -4,12 +4,12 @@ import {
   Resource,
   id,
 } from "@iguhealth/fhir-types/r4/types";
-import { ParsedParameter } from "@iguhealth/client/lib/url.js";
+import { ParsedParameter } from "@iguhealth/client/url";
 import { SynchronousClient } from "@iguhealth/client";
 import {
   createMiddlewareSync,
   MiddlewareSync,
-} from "@iguhealth/client/lib/middleware/index.js";
+} from "@iguhealth/client/middleware";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 type InternalData<T extends ResourceType> = Partial<

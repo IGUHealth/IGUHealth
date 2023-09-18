@@ -1,9 +1,9 @@
-import { Lock } from "./interfaces";
+import { Lock } from "./interfaces.js";
 import Redis, { RedisOptions } from "ioredis";
 import Redlock, {
-  ResourceLockedError,
-  RedlockAbortSignal,
   Settings,
+  RedlockAbortSignal,
+  ResourceLockedError,
 } from "redlock";
 
 const defaultSettings: Settings = {
@@ -30,7 +30,7 @@ const defaultSettings: Settings = {
 
 export default class RedisLock implements Lock<RedlockAbortSignal> {
   private _lock: Redlock;
-  constructor(client: Redis, lockSettings: Settings = defaultSettings) {
+  constructor(client: Redis.default, lockSettings: Settings = defaultSettings) {
     this._lock = new Redlock(
       // You should have one client for each independent redis node
       // or cluster.
@@ -38,7 +38,7 @@ export default class RedisLock implements Lock<RedlockAbortSignal> {
       lockSettings
     );
 
-    this._lock.on("error", (error) => {
+    this._lock.on("error", (error: unknown) => {
       // Ignore cases where a resource is explicitly marked as locked on a client.
       if (error instanceof ResourceLockedError) {
         return;

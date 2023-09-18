@@ -7,9 +7,9 @@ import {
   QuestionnaireResponse,
   Resource,
   RiskAssessment,
-} from "@iguhealth/fhir-types";
+} from "@iguhealth/fhir-types/r4/types";
 
-import HTTPClient from "@iguhealth/client/lib/http/index.js";
+import HTTPClient from "@iguhealth/client/http";
 import { evaluate } from "@iguhealth/fhirpath";
 
 const client = HTTPClient({

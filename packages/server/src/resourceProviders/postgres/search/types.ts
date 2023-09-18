@@ -1,5 +1,5 @@
-import { ParsedParameter } from "@iguhealth/client/lib/url.js";
-import { SearchParameter } from "@iguhealth/fhir-types";
+import { ParsedParameter } from "@iguhealth/client/url";
+import { SearchParameter } from "@iguhealth/fhir-types/r4/types";
 
 export type SearchParameterResource = ParsedParameter<string | number> & {
   type: "resource";

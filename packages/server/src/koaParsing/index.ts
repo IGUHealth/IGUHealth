@@ -3,9 +3,8 @@ import Koa from "koa";
 import { Bundle, Resource } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
-import parseParameters from "@iguhealth/client/lib/url.js";
-
-import { FHIRRequest, FHIRResponse } from "@iguhealth/client/lib/types";
+import parseParameters from "@iguhealth/client/url";
+import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
 
 /*
  ** For Summary of types see:

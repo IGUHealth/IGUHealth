@@ -1,4 +1,4 @@
-import type * as fhirTypes from "@iguhealth/fhir-types";
+import type * as fhirTypes from "@iguhealth/fhir-types/r4/types";
 import {
   Operation,
   IOperation,

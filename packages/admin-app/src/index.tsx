@@ -17,7 +17,7 @@ import {
   useMatches,
 } from "react-router-dom";
 
-import createHTTPClient from "@iguhealth/client/lib/http";
+import createHTTPClient from "@iguhealth/client/http";
 import { Layout, Base } from "@iguhealth/components";
 import "@iguhealth/components/dist/index.css";
 

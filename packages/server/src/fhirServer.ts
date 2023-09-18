@@ -9,9 +9,9 @@ import {
   outcome,
   outcomeError,
 } from "@iguhealth/operation-outcomes";
-import { createMiddlewareAsync } from "@iguhealth/client/lib/middleware/index.js";
-import { FHIRClientAsync } from "@iguhealth/client/lib/interface.js";
-import { FHIRRequest, FHIRResponse } from "@iguhealth/client/lib/types";
+import { createMiddlewareAsync } from "@iguhealth/client/middleware";
+import { FHIRClientAsync } from "@iguhealth/client/interface";
+import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
 import validate from "@iguhealth/fhir-validation";
 
 import { Lock } from "./synchronization/interfaces.js";

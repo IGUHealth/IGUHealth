@@ -5,7 +5,7 @@ import {
   ResourceType,
   AResource,
 } from "@iguhealth/fhir-types/r4/types";
-import { IndexFile, PackageJSON } from "./types";
+import { IndexFile, PackageJSON } from "./types.js";
 
 function isBundle(r: Resource): r is Bundle {
   return r?.resourceType === "Bundle";

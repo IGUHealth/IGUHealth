@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
 
-import { Bundle, OperationOutcome } from "@iguhealth/fhir-types";
+import { Bundle, OperationOutcome } from "@iguhealth/fhir-types/r4/types";
 import { Base } from "@iguhealth/components";
 
 import { getClient } from "../data/client";

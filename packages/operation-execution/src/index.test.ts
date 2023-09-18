@@ -3,7 +3,10 @@ import { expect, test } from "@jest/globals";
 
 import { parseParameters, Operation, IOperation, Invocation, OpCTX } from ".";
 import { loadArtifacts } from "@iguhealth/artifacts";
-import { OperationDefinition, Parameters } from "@iguhealth/fhir-types";
+import {
+  OperationDefinition,
+  Parameters,
+} from "@iguhealth/fhir-types/r4/types";
 
 const operationDefinitions = loadArtifacts(
   "OperationDefinition",

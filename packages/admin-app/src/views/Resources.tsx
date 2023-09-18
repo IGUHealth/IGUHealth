@@ -6,7 +6,7 @@ import { Base } from "@iguhealth/components";
 import {
   CapabilityStatementRestResource,
   Resource,
-} from "@iguhealth/fhir-types";
+} from "@iguhealth/fhir-types/r4/types";
 
 import { getCapabilities } from "../data/capabilities";
 

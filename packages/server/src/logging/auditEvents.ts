@@ -1,6 +1,6 @@
-import { AuditEvent, Reference } from "@iguhealth/fhir-types";
+import { AuditEvent, Reference } from "@iguhealth/fhir-types/r4/types";
 
-import { FHIRServerCTX } from "../fhirServer";
+import { FHIRServerCTX } from "../fhirServer.js";
 
 export type OUTCOMES = {
   SUCCESS: "0";

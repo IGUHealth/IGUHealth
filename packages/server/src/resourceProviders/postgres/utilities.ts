@@ -1,4 +1,4 @@
-import { ResourceType, SearchParameter } from "@iguhealth/fhir-types";
+import { ResourceType, SearchParameter } from "@iguhealth/fhir-types/r4/types";
 import { param_types_supported } from "./constants.js";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 

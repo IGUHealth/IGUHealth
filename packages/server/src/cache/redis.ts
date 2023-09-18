@@ -1,6 +1,6 @@
-import Redis from "ioredis";
 import type { RedisOptions } from "ioredis";
-import { IOCache } from "./interface";
+import Redis from "ioredis";
+import { IOCache } from "./interface.js";
 
 function constructKey(workspace: string, key: string) {
   return `${workspace}/${key}`;
@@ -9,9 +9,9 @@ function constructKey(workspace: string, key: string) {
 export default class RedisCache<CTX extends { workspace: string }>
   implements IOCache<CTX>
 {
-  private _client: Redis;
+  private _client: Redis.default;
   constructor(config: RedisOptions) {
-    this._client = new Redis(config);
+    this._client = new Redis.default(config);
   }
   async get(ctx: CTX, key: string) {
     const value = await this._client.get(constructKey(ctx.workspace, key));

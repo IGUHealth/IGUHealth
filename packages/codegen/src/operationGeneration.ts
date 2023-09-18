@@ -1,4 +1,4 @@
-import { OperationDefinition } from "@iguhealth/fhir-types";
+import { OperationDefinition } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 
 function generateParameterType(
@@ -86,7 +86,7 @@ export default async function operationGeneration(
 ): Promise<string> {
   if (fhirVersion !== "r4") throw new Error("Only support r4");
   const code = [
-    `import type * as fhirTypes from "@iguhealth/fhir-types";`,
+    `import type * as fhirTypes from "@iguhealth/fhir-types/r4/types";`,
     `import { Operation, IOperation, Executor } from "@iguhealth/operation-execution";`,
     ...operations.map((op) => generateOp(op)),
   ].join("\n");

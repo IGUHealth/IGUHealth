@@ -1,4 +1,4 @@
-import parseParameters from "@iguhealth/client/lib/url.js";
+import parseParameters from "@iguhealth/client/url";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { expect, test } from "@jest/globals";
 import path from "path";
@@ -7,7 +7,7 @@ import {
   SearchParameter,
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
-import createMemoryDatabase from "./memory";
+import createMemoryDatabase from "./memory.js";
 
 const artifactParameters = loadArtifacts(
   "SearchParameter",
