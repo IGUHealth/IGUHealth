@@ -1,9 +1,12 @@
 import { Lock } from "./interfaces.js";
 import Redis, { RedisOptions } from "ioredis";
-// @ts-ignore
-import Redlock from "redlock";
+import Redlock, {
+  Settings,
+  RedlockAbortSignal,
+  ResourceLockedError,
+} from "redlock";
 
-const defaultSettings: Redlock.Settings = {
+const defaultSettings: Settings = {
   // The expected clock drift; for more details see:
   // http://redis.io/topics/distlock
   driftFactor: 0.01, // multiplied by lock ttl to determine drift time
@@ -25,13 +28,10 @@ const defaultSettings: Redlock.Settings = {
   automaticExtensionThreshold: 500, // time in ms
 };
 
-export default class RedisLock implements Lock<Redlock.RedlockAbortSignal> {
-  private _lock: Redlock.default;
-  constructor(
-    client: Redis.default,
-    lockSettings: Redlock.Settings = defaultSettings
-  ) {
-    this._lock = new Redlock.default(
+export default class RedisLock implements Lock<RedlockAbortSignal> {
+  private _lock: Redlock;
+  constructor(client: Redis.default, lockSettings: Settings = defaultSettings) {
+    this._lock = new Redlock(
       // You should have one client for each independent redis node
       // or cluster.
       [client],
@@ -40,7 +40,7 @@ export default class RedisLock implements Lock<Redlock.RedlockAbortSignal> {
 
     this._lock.on("error", (error: unknown) => {
       // Ignore cases where a resource is explicitly marked as locked on a client.
-      if (error instanceof Redlock.ResourceLockedError) {
+      if (error instanceof ResourceLockedError) {
         return;
       }
 
@@ -51,7 +51,7 @@ export default class RedisLock implements Lock<Redlock.RedlockAbortSignal> {
 
   async withLock(
     lockId: string,
-    body: (ctx: Redlock.RedlockAbortSignal) => Promise<void>
+    body: (ctx: RedlockAbortSignal) => Promise<void>
   ): Promise<void> {
     await this._lock.using([lockId], 5000, body);
   }

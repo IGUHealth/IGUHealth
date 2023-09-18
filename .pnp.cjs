@@ -10335,7 +10335,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pino", "npm:8.15.0"],\
             ["react", "npm:18.2.0"],\
             ["react-dom", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:18.2.0"],\
-            ["redlock", "npm:5.0.0-beta2"],\
+            ["redlock", "patch:redlock@npm%3A5.0.0-beta.2#./.yarn/patches/redlock-npm-5.0.0-beta.2-e67212c5e7.patch::version=5.0.0-beta.2&hash=d307ea&locator=iguhealth-workspace%40workspace%3A."],\
             ["ts-jest", "virtual:60d59201a81fdf9d844335582569d604f77c0cfb33012fc0d97d31d995c40a543914afd8f900018942c3e21e71ae879a5dcdf97d4008644edf9f0ce84a7e8664#npm:29.1.1"],\
             ["tsc-watch", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:6.0.4"],\
             ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"],\
@@ -34254,10 +34254,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["redlock", [\
-        ["npm:5.0.0-beta2", {\
-          "packageLocation": "./.yarn/cache/redlock-npm-5.0.0-beta2-4d0e335fe9-d8a0d6d472.zip/node_modules/redlock/",\
+        ["patch:redlock@npm%3A5.0.0-beta.2#./.yarn/patches/redlock-npm-5.0.0-beta.2-e67212c5e7.patch::version=5.0.0-beta.2&hash=d307ea&locator=iguhealth-workspace%40workspace%3A.", {\
+          "packageLocation": "./.yarn/cache/redlock-patch-214d2e4571-c6f6978520.zip/node_modules/redlock/",\
           "packageDependencies": [\
-            ["redlock", "npm:5.0.0-beta2"],\
+            ["redlock", "patch:redlock@npm%3A5.0.0-beta.2#./.yarn/patches/redlock-npm-5.0.0-beta.2-e67212c5e7.patch::version=5.0.0-beta.2&hash=d307ea&locator=iguhealth-workspace%40workspace%3A."],\
             ["node-abort-controller", "npm:3.1.1"]\
           ],\
           "linkType": "HARD"\
