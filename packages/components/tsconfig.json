@@ -3,7 +3,8 @@
   "exclude": ["./**/*.test.ts", "lib/*"],
   "compilerOptions": {
     "outDir": "lib",
-    "moduleResolution": "node",
+    "rootDir": ".",
+    "moduleResolution": "bundler",
     "jsx": "react"
   }
 }
