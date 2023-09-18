@@ -5,9 +5,9 @@ import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { expect, test } from "@jest/globals";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import * as fhirpath from "@iguhealth/fhirpath";
+import { FHIRClientSync } from "@iguhealth/client/interface";
 
-import MemoryDatabase from "./memory";
-import { FHIRClientSync } from "@iguhealth/client/lib/interface.js";
+import MemoryDatabase from "./memory.js";
 
 function createMemoryDatabase(
   resourceTypes: ResourceType[]
