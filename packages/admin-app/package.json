@@ -2,6 +2,7 @@
   "name": "admin-app",
   "version": "0.1.4",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@auth0/auth0-react": "^2.2.1",
     "@codemirror/lang-javascript": "^6.2.1",

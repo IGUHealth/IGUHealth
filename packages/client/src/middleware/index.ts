@@ -1,4 +1,4 @@
-import { FHIRRequest, FHIRResponse } from "../types";
+import { FHIRRequest, FHIRResponse } from "../types.js";
 
 export type MiddlewareAsync<State, CTX> = (
   request: FHIRRequest,

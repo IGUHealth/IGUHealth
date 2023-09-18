@@ -11,13 +11,13 @@ import {
   TypeHistoryResponse,
   TypeSearchResponse,
   HistoryInstanceResponse,
-} from "@iguhealth/client/lib/types";
-import { AsynchronousClient } from "@iguhealth/client/lib/index.js";
+} from "@iguhealth/client/types";
+import { AsynchronousClient } from "@iguhealth/client";
 import {
   MiddlewareAsync,
   createMiddlewareAsync,
-} from "@iguhealth/client/lib/middleware/index.js";
-import { FHIRClient } from "@iguhealth/client/lib/interface";
+} from "@iguhealth/client/middleware";
+import { FHIRClient } from "@iguhealth/client/interface";
 
 import { FHIRServerCTX } from "../fhirServer.js";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";

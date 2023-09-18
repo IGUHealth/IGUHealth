@@ -3,7 +3,7 @@ import dotEnv from "dotenv";
 import pg from "pg";
 import { randomUUID } from "crypto";
 
-import { Resource, Subscription } from "@iguhealth/fhir-types";
+import { Resource, Subscription } from "@iguhealth/fhir-types/r4/types";
 import {
   OperationError,
   isOperationError,
@@ -12,7 +12,7 @@ import {
 import type {
   SystemSearchResponse,
   TypeSearchResponse,
-} from "@iguhealth/client/lib/types.js";
+} from "@iguhealth/client/types";
 import { evaluate } from "@iguhealth/fhirpath";
 
 import { resolveOperationDefinition } from "../operation-executors/utilities.js";

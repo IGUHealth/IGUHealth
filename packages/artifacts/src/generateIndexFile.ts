@@ -3,7 +3,7 @@ import fs from "node:fs";
 
 import { Bundle } from "@iguhealth/fhir-types/r4/types";
 
-import { IndexFile } from "./types";
+import { IndexFile } from "./types.js";
 
 function getAllFiles(directory: string): string[] {
   const files: string[] = [];

@@ -1,11 +1,11 @@
 import pg from "pg";
 import dayjs from "dayjs";
 
-import { ParsedParameter } from "@iguhealth/client/lib/url.js";
+import { ParsedParameter } from "@iguhealth/client/url";
 import {
   SystemSearchRequest,
   TypeSearchRequest,
-} from "@iguhealth/client/lib/types";
+} from "@iguhealth/client/types";
 import {
   Resource,
   ResourceType,

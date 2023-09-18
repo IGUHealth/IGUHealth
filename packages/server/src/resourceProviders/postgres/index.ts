@@ -3,12 +3,12 @@ import { v4 } from "uuid";
 import jsonpatch, { Operation } from "fast-json-patch";
 import dayjs from "dayjs";
 
-import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
-import { AsynchronousClient } from "@iguhealth/client/lib/index.js";
+import { FHIRClientAsync } from "@iguhealth/client/interface";
+import { AsynchronousClient } from "@iguhealth/client";
 import {
   createMiddlewareAsync,
   MiddlewareAsync,
-} from "@iguhealth/client/lib/middleware/index.js";
+} from "@iguhealth/client/middleware";
 import {
   Address,
   canonical,

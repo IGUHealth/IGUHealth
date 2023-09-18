@@ -1,6 +1,6 @@
 import { MiddlewareAsync, createMiddlewareAsync } from "../middleware/index.js";
 import { AsynchronousClient } from "../index.js";
-import { FHIRRequest, FHIRResponse } from "../types";
+import { FHIRRequest, FHIRResponse } from "../types.js";
 import { ParsedParameter } from "../url.js";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import {
@@ -9,7 +9,7 @@ import {
   OperationOutcome,
   Parameters,
   Resource,
-} from "@iguhealth/fhir-types";
+} from "@iguhealth/fhir-types/r4/types";
 
 type HTTPClientState = {
   getAccessToken?: () => Promise<string>;

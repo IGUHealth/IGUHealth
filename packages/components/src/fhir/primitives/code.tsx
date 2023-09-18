@@ -1,5 +1,8 @@
 import React, { useEffect } from "react";
-import { ValueSet, ValueSetExpansionContains } from "@iguhealth/fhir-types";
+import {
+  ValueSet,
+  ValueSetExpansionContains,
+} from "@iguhealth/fhir-types/r4/types";
 import { Select, Option } from "../../base/select";
 
 export interface CodeProps {

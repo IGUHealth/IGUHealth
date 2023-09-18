@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import HTTPClient from "@iguhealth/client/lib/http";
-import { ValueSet } from "@iguhealth/fhir-types";
+import { ValueSet } from "@iguhealth/fhir-types/r4/types";
 import { r4 } from "@iguhealth/generated-ops";
 
 import { Code } from "./code";

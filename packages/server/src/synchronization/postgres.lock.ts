@@ -1,7 +1,7 @@
 // Locking mechanisms
 
 import pg from "pg";
-import { Lock } from "./interfaces";
+import { Lock } from "./interfaces.js";
 
 function hash(str: string): number {
   let hash = 0,

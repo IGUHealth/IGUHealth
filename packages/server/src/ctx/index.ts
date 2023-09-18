@@ -11,7 +11,7 @@ import {
   CapabilityStatementRestResource,
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
-import { FHIRClientSync } from "@iguhealth/client/lib/interface.js";
+import { FHIRClientSync } from "@iguhealth/client/interface";
 
 import { createPostgresClient } from "../resourceProviders/postgres/index.js";
 import { FHIRServerCTX } from "../fhirServer.js";
@@ -21,7 +21,12 @@ import PostgresLock from "../synchronization/postgres.lock.js";
 import LambdaExecutioner from "../operation-executors/awsLambda.js";
 import RedisCache from "../cache/redis.js";
 
-const MEMORY_TYPES = ["StructureDefinition", "SearchParameter"];
+const MEMORY_TYPES = [
+  "StructureDefinition",
+  "SearchParameter",
+  "ValueSet",
+  "CodeSystem",
+];
 
 function createMemoryDatabase(
   resourceTypes: ResourceType[]
@@ -132,6 +137,8 @@ export default function createServiceCTX(): Pick<
   const memoryDatabase = createMemoryDatabase([
     "StructureDefinition",
     "SearchParameter",
+    "ValueSet",
+    "CodeSystem",
   ]);
 
   const client = RouterClient([
@@ -177,7 +184,7 @@ export default function createServiceCTX(): Pick<
   ]);
 
   const services = {
-    logger: createLogger(),
+    logger: createLogger.default(),
     capabilities: serverCapabilities(memoryDatabase),
     client,
     cache: new RedisCache({

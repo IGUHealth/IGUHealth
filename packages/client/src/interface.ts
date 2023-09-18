@@ -1,4 +1,4 @@
-import type { ParsedParameter } from "./url";
+import type { ParsedParameter } from "./url.js";
 import {
   Resource,
   id,
@@ -8,7 +8,7 @@ import {
   CapabilityStatement,
   BundleEntry,
 } from "@iguhealth/fhir-types/r4/types";
-import type { FHIRRequest, FHIRResponse } from "./types";
+import type { FHIRRequest, FHIRResponse } from "./types.js";
 import type { OPMetadata, IOperation } from "@iguhealth/operation-execution";
 
 type Async<F, Else = never> = F extends (...arg: infer A) => infer R

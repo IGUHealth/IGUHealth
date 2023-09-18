@@ -3,7 +3,7 @@ import {
   Parameters,
   Resource,
   StructureDefinition,
-} from "@iguhealth/fhir-types";
+} from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import validate from "@iguhealth/fhir-validation";
 import {

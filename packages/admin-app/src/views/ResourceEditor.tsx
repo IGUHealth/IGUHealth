@@ -6,11 +6,15 @@ import { json } from "@codemirror/lang-json";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 // import { javascript } from "@codemirror/lang-javascript";
 
-import { Resource, OperationOutcome } from "@iguhealth/fhir-types";
+import {
+  Resource,
+  OperationOutcome,
+  ResourceType,
+  id,
+} from "@iguhealth/fhir-types/r4/types";
 import { Base } from "@iguhealth/components";
 
 import { getClient } from "../data/client";
-import { ResourceType, id } from "@iguhealth/fhir-types";
 
 const extensions = [basicSetup, json()];
 

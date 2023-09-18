@@ -2,7 +2,7 @@ import path from "node:path";
 import { expect, test } from "@jest/globals";
 import { Invocation } from "@iguhealth/operation-execution";
 import { ValueSetExpand } from "./ops.js";
-import { ValueSet } from "@iguhealth/fhir-types";
+import { ValueSet } from "@iguhealth/fhir-types/r4/types";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { OpCTX } from "@iguhealth/operation-execution/src/index.js";
 

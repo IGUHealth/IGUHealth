@@ -8,17 +8,17 @@ import { configDotenv } from "dotenv";
 import AdmZip from "adm-zip";
 
 import { Operation } from "@iguhealth/operation-execution";
-import { AsynchronousClient } from "@iguhealth/client/lib/index.js";
+import { AsynchronousClient } from "@iguhealth/client";
 import {
   MiddlewareAsync,
   createMiddlewareAsync,
-} from "@iguhealth/client/lib/middleware/index.js";
-import { FHIRRequest } from "@iguhealth/client/lib/types.js";
+} from "@iguhealth/client/middleware";
+import { FHIRRequest } from "@iguhealth/client/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
-import { AuditEvent, ResourceType, id } from "@iguhealth/fhir-types";
+import { ResourceType, id } from "@iguhealth/fhir-types/r4/types";
 
-import { FHIRServerCTX } from "../fhirServer";
-import { InvokeRequest } from "./types";
+import { FHIRServerCTX } from "../fhirServer.js";
+import { InvokeRequest } from "./types.js";
 import {
   resolveOperationDefinition,
   getOperationCode,
@@ -75,7 +75,7 @@ type Payload = {
 // Used within lambda code for setup.
 async function handler(event: Payload, context: any) {
   const userHandler = require("./user");
-  const client = await import("@iguhealth/client/lib/http/index.js");
+  const client = await import("@iguhealth/client/http");
   // Pass in token here and instantiate client. Later.
   // @ts-ignore
   const HTTPClient = new client.default({

@@ -1,4 +1,4 @@
-import type { ParsedParameter } from "./url";
+import type { ParsedParameter } from "./url.js";
 import {
   Bundle,
   AResource,

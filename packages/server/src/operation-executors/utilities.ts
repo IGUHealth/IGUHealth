@@ -3,13 +3,13 @@ import {
   outcomeError,
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
-import { OperationDefinition } from "@iguhealth/fhir-types";
+import { OperationDefinition } from "@iguhealth/fhir-types/r4/types";
 import { evaluate } from "@iguhealth/fhirpath";
 import AdmZip from "adm-zip";
 import { OpCTX } from "@iguhealth/operation-execution";
 
-import { InvokeRequest } from "./types";
-import { FHIRServerCTX } from "../fhirServer";
+import { InvokeRequest } from "./types.js";
+import { FHIRServerCTX } from "../fhirServer.js";
 
 export async function resolveOperationDefinition(
   ctx: FHIRServerCTX,
