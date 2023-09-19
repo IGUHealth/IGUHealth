@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth0, User } from "@auth0/auth0-react";
 import { Base } from "@iguhealth/components";
 
 function copytoClipboard(token: string | undefined) {
@@ -11,29 +11,46 @@ function copytoClipboard(token: string | undefined) {
 
 interface SettingProps {
   token?: string;
+  user?: User;
 }
 
-function SettingDisplay({ token }: SettingProps) {
+function SettingDisplay({ user, token }: SettingProps) {
   return (
     <div className="flex flex-col flex-1">
-      <h2 className="text-2xl font-semibold mb-4">Settings</h2>
-      <div className="flex flex-col">
-        <label>Access Token</label>
-        <div className="flex flex-row">
-          <div className="flex flex-1">
-            <Base.InputContainer inlineLabel>
-              <Base.Input readOnly value={token} />
-            </Base.InputContainer>
+      <h2 className="text-2xl font-semibold mb-8">Settings</h2>
+      <div className="mb-2">
+        <h2 className="text-xl font-semibold ">User Information</h2>
+        <div className="flex flex-col p-2">
+          <div className="mb-2">
+            <label className="block font-medium">Name:</label>
+            <span>{user?.name}</span>
           </div>
-          <Base.Button
-            onClick={(e) => {
-              e.preventDefault();
-              copytoClipboard(token);
-            }}
-            className="ml-1"
-          >
-            Copy
-          </Base.Button>
+          <div className="mb-2">
+            <label className="block font-medium">Email:</label>
+            <span>{user?.email}</span>
+          </div>
+        </div>
+      </div>
+      <div className="mb-2">
+        <h2 className="text-xl font-semibold mb-2">Security</h2>
+        <div className="flex flex-col p-2">
+          <label>Access Token</label>
+          <div className="flex flex-row">
+            <div className="flex flex-1">
+              <Base.InputContainer inlineLabel>
+                <Base.Input readOnly value={token} />
+              </Base.InputContainer>
+            </div>
+            <Base.Button
+              onClick={(e) => {
+                e.preventDefault();
+                copytoClipboard(token);
+              }}
+              className="ml-1"
+            >
+              Copy
+            </Base.Button>
+          </div>
         </div>
       </div>
     </div>
@@ -57,7 +74,7 @@ export default function Settings() {
         </div>
       }
     >
-      <SettingDisplay token={token} />
+      <SettingDisplay user={auth0.user} token={token} />
     </React.Suspense>
   );
 }
