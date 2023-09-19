@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { LabelContainer } from "../../base/labelContainer";
+import { InputContainer } from "../../base/labelContainer";
 import { Input } from "../../base/input";
 
 export interface UnsignedIntegerProps {
@@ -29,7 +29,7 @@ export const UnsignedInteger = ({
   }, [value, issue]);
 
   return (
-    <LabelContainer label={label} issues={issues}>
+    <InputContainer label={label} issues={issues}>
       <Input
         type="number"
         min="0"
@@ -43,6 +43,6 @@ export const UnsignedInteger = ({
           }
         }}
       />
-    </LabelContainer>
+    </InputContainer>
   );
 };

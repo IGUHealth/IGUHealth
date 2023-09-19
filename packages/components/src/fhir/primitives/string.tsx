@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 
-import { LabelContainer } from "../../base/labelContainer";
+import { InputContainer } from "../../base/labelContainer";
 import { Input } from "../../base/input";
 
 export interface StringProps {
@@ -24,7 +24,7 @@ export interface StringProps {
 
 export const String = ({ onChange, value, issue, label }: StringProps) => {
   return (
-    <LabelContainer label={label} issues={issue ? [issue] : []}>
+    <InputContainer label={label} issues={issue ? [issue] : []}>
       <Input
         type="text"
         value={value}
@@ -34,6 +34,6 @@ export const String = ({ onChange, value, issue, label }: StringProps) => {
           }
         }}
       />
-    </LabelContainer>
+    </InputContainer>
   );
 };

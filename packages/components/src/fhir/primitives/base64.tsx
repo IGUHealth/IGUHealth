@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import fileDownload from "js-file-download";
 
-import { LabelContainer } from "../../base/labelContainer";
+import { InputContainer } from "../../base/labelContainer";
 import { Button } from "../../base/button";
 import { Input } from "../../base/input";
 
@@ -46,7 +46,7 @@ export const Base64Binary = ({
     setIssues(issues);
   }, [value, issue]);
   return (
-    <LabelContainer label={label} issues={issues}>
+    <InputContainer label={label} issues={issues}>
       <>
         <Input
           type="file"
@@ -70,6 +70,6 @@ export const Base64Binary = ({
           />
         )}
       </>
-    </LabelContainer>
+    </InputContainer>
   );
 };

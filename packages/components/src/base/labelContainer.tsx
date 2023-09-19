@@ -9,7 +9,7 @@ interface LabelContainerProps {
   labelProps?: HTMLProps<HTMLLabelElement>;
 }
 
-export const LabelContainer = ({
+export const InputContainer = ({
   children,
   issues = [],
   label,
@@ -17,13 +17,15 @@ export const LabelContainer = ({
   labelProps,
 }: LabelContainerProps) => (
   <div
-    className={classNames({
+    className={classNames("flex-grow", {
       "flex flex-row items-center justify-center": inlineLabel,
     })}
   >
-    <label {...labelProps} className="mr-1">
-      {label}
-    </label>
+    {label && (
+      <label {...labelProps} className="mr-1">
+        {label}
+      </label>
+    )}
 
     <div
       className={classNames(

@@ -1,5 +1,5 @@
 import React from "react";
-import { LabelContainer } from "../../base/labelContainer";
+import { InputContainer } from "../../base/labelContainer";
 import { Input } from "../../base/input";
 
 export interface BooleanProps {
@@ -11,7 +11,7 @@ export interface BooleanProps {
 
 export const Boolean = ({ value, onChange, label, issue }: BooleanProps) => {
   return (
-    <LabelContainer
+    <InputContainer
       inlineLabel={true}
       label={label}
       issues={issue ? [issue] : []}
@@ -23,6 +23,6 @@ export const Boolean = ({ value, onChange, label, issue }: BooleanProps) => {
           console.log(e.target.checked);
         }}
       />
-    </LabelContainer>
+    </InputContainer>
   );
 };

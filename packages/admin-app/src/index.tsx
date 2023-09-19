@@ -7,6 +7,7 @@ import {
   ArrowLeftOnRectangleIcon,
   ShareIcon,
   ArrowUpOnSquareIcon,
+  Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
 import { RecoilRoot, useRecoilState } from "recoil";
 import {
@@ -22,6 +23,7 @@ import { Layout, Base } from "@iguhealth/components";
 import "@iguhealth/components/dist/index.css";
 
 import { getClient } from "./data/client";
+import Settings from "./views/Settings";
 import BatchImport from "./views/BatchImport";
 import EmptyWorkspace from "./views/EmptyWorkspace";
 import Resources from "./views/Resources";
@@ -116,6 +118,7 @@ const router = createBrowserRouter([
           </ServiceSetup>
         ),
         children: [
+          { id: "settings", path: "/settings", element: <Settings /> },
           { id: "root", path: "/", element: <Resources /> },
           {
             id: "types",
@@ -210,9 +213,12 @@ function Root() {
             </Layout.SideBar.SideBarItem>
           </Layout.SideBar.SideBarItemGroup>
           <Layout.SideBar.SideBarItemGroup className="mt-auto" label="User">
-            {/* <Layout.SideBar.SideBarItem logo={<Cog6ToothIcon />}>
+            <Layout.SideBar.SideBarItem
+              logo={<Cog6ToothIcon />}
+              onClick={() => navigate("/settings")}
+            >
               Settings
-            </Layout.SideBar.SideBarItem> */}
+            </Layout.SideBar.SideBarItem>
             <Layout.SideBar.SideBarItem
               logo={<ArrowLeftOnRectangleIcon />}
               onClick={() =>
@@ -280,14 +286,26 @@ function Root() {
                 name: auth0Info.user?.name,
                 imageUrl: auth0Info.user?.picture,
               }}
-              navigation={[{ name: "Sign out" }]}
-              onNavigation={() =>
-                auth0Info.logout({
-                  logoutParams: {
-                    returnTo: window.location.origin,
-                  },
-                })
-              }
+              navigation={[
+                { id: "settings", name: "Settings" },
+                { id: "sign-out", name: "Sign out" },
+              ]}
+              onNavigation={(item) => {
+                switch (item.id) {
+                  case "settings": {
+                    navigate("/settings");
+                    return;
+                  }
+                  case "sign-out": {
+                    auth0Info.logout({
+                      logoutParams: {
+                        returnTo: window.location.origin,
+                      },
+                    });
+                    return;
+                  }
+                }
+              }}
             />
           </div>
         </div>
@@ -303,6 +321,7 @@ function Root() {
 function App() {
   return (
     <Auth0Provider
+      useRefreshTokens
       domain={process.env.REACT_APP_AUTH0_DOMAIN || ""}
       clientId={process.env.REACT_APP_AUTH0_CLIENT_ID || ""}
       authorizationParams={{

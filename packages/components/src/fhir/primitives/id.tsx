@@ -1,6 +1,6 @@
 import React from "react";
 
-import { LabelContainer } from "../../base/labelContainer";
+import { InputContainer } from "../../base/labelContainer";
 import { Input } from "../../base/input";
 
 export interface IdProps {
@@ -36,7 +36,7 @@ export const Id = ({ onChange, value, issue, label }: IdProps) => {
   }, [value, issue]);
 
   return (
-    <LabelContainer label={label} issues={issues}>
+    <InputContainer label={label} issues={issues}>
       <Input
         type="text"
         value={value}
@@ -46,6 +46,6 @@ export const Id = ({ onChange, value, issue, label }: IdProps) => {
           }
         }}
       />
-    </LabelContainer>
+    </InputContainer>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
 
-import { LabelContainer } from "../../base/labelContainer";
+import { InputContainer } from "../../base/labelContainer";
 import { Input } from "../../base/input";
 
 export interface DateProps {
@@ -49,7 +49,7 @@ export const Date = ({
   }, [value, issue]);
 
   return (
-    <LabelContainer label={label} issues={issues}>
+    <InputContainer label={label} issues={issues}>
       <Input
         type="date"
         value={dayjs(value).format("YYYY-MM-DD")}
@@ -60,6 +60,6 @@ export const Date = ({
           }
         }}
       />
-    </LabelContainer>
+    </InputContainer>
   );
 };

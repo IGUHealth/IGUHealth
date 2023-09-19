@@ -33,7 +33,7 @@ export default function BatchImportView() {
   return (
     <div className="w-full flex flex-col items-center justify-center">
       <div>
-        <Base.LabelContainer
+        <Base.InputContainer
           label="Select Batch file to import"
           issues={issues}
         >
@@ -55,7 +55,7 @@ export default function BatchImportView() {
               });
             }}
           />
-        </Base.LabelContainer>
+        </Base.InputContainer>
         <div className="flex justify-end">
           <Base.Button
             disabled={batch === undefined}
