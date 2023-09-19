@@ -2,7 +2,7 @@ import React, { Fragment, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
-import { LabelContainer } from "./labelContainer";
+import { InputContainer } from "./labelContainer";
 import classNames from "classnames";
 
 export type Option = { value: string | number; label: string };
@@ -49,7 +49,7 @@ export const Select = ({
       nullable
     >
       <div className="relative mt-1">
-        <LabelContainer label={label} issues={issue ? [issue] : []}>
+        <InputContainer label={label} issues={issue ? [issue] : []}>
           <Combobox.Input
             className="outline-none w-full border-none text-sm leading-5 text-gray-900 focus:ring-0"
             displayValue={(option: Option) => option.label}
@@ -61,7 +61,7 @@ export const Select = ({
               aria-hidden="true"
             />
           </Combobox.Button>
-        </LabelContainer>
+        </InputContainer>
         <Transition
           as={Fragment}
           leave="transition ease-in duration-100"

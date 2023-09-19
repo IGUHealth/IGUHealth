@@ -1,5 +1,5 @@
 import React from "react";
-import { LabelContainer } from "../../base/labelContainer";
+import { InputContainer } from "../../base/labelContainer";
 import { Input } from "../../base/input";
 
 export interface IntegerProps {
@@ -11,7 +11,7 @@ export interface IntegerProps {
 
 export const Integer = ({ value, onChange, issue, label }: IntegerProps) => {
   return (
-    <LabelContainer label={label} issues={issue ? [issue] : []}>
+    <InputContainer label={label} issues={issue ? [issue] : []}>
       <Input
         type="number"
         value={value ? Math.round(value) : value}
@@ -23,6 +23,6 @@ export const Integer = ({ value, onChange, issue, label }: IntegerProps) => {
           }
         }}
       />
-    </LabelContainer>
+    </InputContainer>
   );
 };

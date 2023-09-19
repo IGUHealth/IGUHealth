@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { LabelContainer } from "../../base/labelContainer";
+import { InputContainer } from "../../base/labelContainer";
 import { Input } from "../../base/input";
 
 export interface PositiveIntegerProps {
@@ -26,7 +26,7 @@ export const PositiveInteger = ({
   }, [value, issue]);
 
   return (
-    <LabelContainer label={label} issues={issues}>
+    <InputContainer label={label} issues={issues}>
       <Input
         type="number"
         min="0"
@@ -40,6 +40,6 @@ export const PositiveInteger = ({
           }
         }}
       />
-    </LabelContainer>
+    </InputContainer>
   );
 };

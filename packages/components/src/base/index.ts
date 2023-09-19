@@ -1,7 +1,7 @@
 import { Button } from "./button";
 import { Input } from "./input";
 import { Select } from "./select";
-import { LabelContainer } from "./labelContainer";
+import { InputContainer } from "./labelContainer";
 import { Table } from "./table";
 import { CodeMirror } from "./codemirror";
 import { Loading } from "./loading";
@@ -14,7 +14,7 @@ export {
   Button,
   Input,
   Select,
-  LabelContainer,
+  InputContainer,
   Table,
   CodeMirror,
   Loading,

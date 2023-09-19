@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
 
-import { LabelContainer } from "../../base/labelContainer";
+import { InputContainer } from "../../base/labelContainer";
 import { Input } from "../../base/input";
 
 export interface DateTimeProps {
@@ -48,7 +48,7 @@ export const DateTime = ({
   }, [value, issue]);
 
   return (
-    <LabelContainer label={label} issues={issues}>
+    <InputContainer label={label} issues={issues}>
       <Input
         type="datetime-local"
         value={dayjs(value).format("YYYY-MM-DDThh:mm:ss")}
@@ -59,6 +59,6 @@ export const DateTime = ({
           }
         }}
       />
-    </LabelContainer>
+    </InputContainer>
   );
 };
