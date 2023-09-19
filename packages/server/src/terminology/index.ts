@@ -1,4 +1,7 @@
-import { ValueSet } from "@iguhealth/fhir-types/r4/types";
+import {
+  ValueSet,
+  ValueSetExpansionContains,
+} from "@iguhealth/fhir-types/r4/types";
 import {
   ValueSetValidateCode,
   ValueSetExpand,
@@ -20,7 +23,41 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 //     }
 // }
 
-export class TerminologyProviderInline implements TerminologyProvider {
+// (defn- flatten-codes [expansion-entry]
+//     (let [expansion-entry-contains (mapcat flatten-codes (get expansion-entry :contains []))]
+//       (conj  expansion-entry-contains (:code expansion-entry))))
+
+//   (defn valueset->set-codes
+//     "Given a terminology provider fully expand valueset-uri and flatten codes into a set."
+//     [expanded-vs]
+//     (into
+//      #{}
+//      (comp
+//       (mapcat flatten-codes))
+//      (get-in expanded-vs [:expansion :contains] [])))
+
+//   (defn expand-to-set
+//     "Given a terminology provider fully expand valueset-uri and flatten codes into a set."
+//     [terminology-provider valueset-url]
+//     (let [expanded-vs (expand terminology-provider {:url valueset-url})]
+//       (valueset->set-codes expanded-vs)))
+
+function checkforCode(
+  contains: ValueSetExpansionContains[] | undefined,
+  code: string | undefined
+): boolean {
+  if (!code) return false;
+  if (!contains) {
+    return false;
+  }
+  if (contains.find((v) => v.code === code)) return true;
+  for (const c of contains) {
+    if (checkforCode(c.contains, code)) return true;
+  }
+  return false;
+}
+
+export class TerminologyProviderMemory implements TerminologyProvider {
   constructor() {}
   async validate(
     ctx: FHIRServerCTX,
@@ -35,6 +72,21 @@ export class TerminologyProviderInline implements TerminologyProvider {
         valueSet: input.valueSet,
       }
     );
+
+    if (!valueset) {
+      throw new OperationError(
+        outcomeError("not-found", "ValueSet was not found.")
+      );
+    }
+
+    const doesCodeExists = checkforCode(
+      valueset.expansion?.contains,
+      input.code
+    );
+
+    return {
+      result: doesCodeExists,
+    };
   }
   async expand(ctx: FHIRServerCTX, input: ExpandInput): Promise<ExpandOutput> {
     let valueset: ValueSet | undefined;
