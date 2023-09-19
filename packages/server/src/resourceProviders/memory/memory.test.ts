@@ -7,11 +7,11 @@ import {
   SearchParameter,
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
-import createMemoryDatabase from "./memory.js";
+import createMemoryDatabase from "./index.js";
 
 const artifactParameters = loadArtifacts(
   "SearchParameter",
-  path.join(__dirname, "../"),
+  path.join(__dirname, "../../"),
   true
 );
 

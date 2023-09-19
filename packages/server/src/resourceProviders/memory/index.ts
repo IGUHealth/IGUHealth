@@ -12,6 +12,11 @@ import {
 } from "@iguhealth/client/middleware";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import {
+  parametersWithMetaAssociated,
+  SearchParameterResource,
+} from "../utilities.js";
+
 type InternalData<T extends ResourceType> = Partial<
   Record<T, Record<id, AResource<T> | undefined>>
 >;
@@ -49,6 +54,17 @@ function createMemoryMiddleware<
     (request, args, next) => {
       switch (request.type) {
         case "search-request": {
+          // const parameters = await parametersWithMetaAssociated(
+          //   args.ctx,
+          //   request.level === "type" ? [request.resourceType] : [],
+          //   request.parameters
+          // );
+
+          // // Standard parameters
+          // let resourceParameters = parameters.filter(
+          //   (v): v is SearchParameterResource => v.type === "resource"
+          // );
+
           const resourceSet =
             request.level === "type"
               ? Object.values(
@@ -60,6 +76,7 @@ function createMemoryMiddleware<
                   )
                   .filter((v): v is Resource[] => v !== undefined)
                   .flat();
+
           const output = (resourceSet || []).filter((resource) => {
             for (let param of request.parameters) {
               if (!fitsSearchCriteria(param, resource)) return false;

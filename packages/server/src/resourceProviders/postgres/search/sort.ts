@@ -2,7 +2,10 @@ import { SearchParameter, ResourceType } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../fhirServer.js";
-import { searchResources, searchParameterToTableName } from "../utilities.js";
+import {
+  searchResources,
+  searchParameterToTableName,
+} from "../../utilities.js";
 import { param_types_supported } from "../constants.js";
 import type { SearchParameterResult } from "./types.js";
 

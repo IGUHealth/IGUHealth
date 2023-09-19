@@ -16,15 +16,13 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { FHIRServerCTX } from "../../../fhirServer.js";
 import { param_types_supported } from "../constants.js";
 import {
-  searchResources,
-  getDecimalPrecision,
-  searchParameterToTableName,
-} from "../utilities.js";
-import type {
   SearchParameterResource,
   SearchParameterResult,
-  ParameterType,
-} from "./types.js";
+  getDecimalPrecision,
+  searchParameterToTableName,
+  parametersWithMetaAssociated,
+} from "../../utilities.js";
+
 import { deriveSortQuery } from "./sort.js";
 
 function generateCanonicalReferenceSearch(
@@ -503,146 +501,6 @@ function buildParametersSQL(
   return { index, queries, values };
 }
 
-async function associateChainedParameters<CTX extends FHIRServerCTX>(
-  ctx: CTX,
-  parsedParameter: SearchParameterResource
-): Promise<SearchParameterResource> {
-  if (!parsedParameter.chains) return parsedParameter;
-
-  // All middle chains should be references.
-  let last = [parsedParameter.searchParameter];
-  let chainedParameters: SearchParameter[][] = [];
-  for (const chain of parsedParameter.chains) {
-    const targets = last
-      .map((l) => {
-        if (l.type !== "reference")
-          throw new OperationError(
-            outcomeError(
-              "invalid",
-              `SearchParameter with name '${l.name}' is not a reference.`
-            )
-          );
-        return l.target || [];
-      })
-      .flat();
-    const chainParameter = await ctx.client.search_type(
-      ctx,
-      "SearchParameter",
-      [
-        { name: "name", value: [chain] },
-        {
-          name: "type",
-          value: param_types_supported,
-        },
-        {
-          name: "base",
-          value: searchResources(targets as ResourceType[]),
-        },
-      ]
-    );
-    if (chainParameter.resources.length === 0)
-      throw new OperationError(
-        outcomeError(
-          "not-found",
-          `SearchParameter with name '${chain}' not found in chain.`
-        )
-      );
-    last = chainParameter.resources;
-    chainedParameters.push(chainParameter.resources);
-  }
-
-  return {
-    ...parsedParameter,
-    chainedParameters,
-  };
-}
-
-//
-
-function isSearchResultParameter(parameter: ParsedParameter<string | number>) {
-  // List pulled from https://hl7.org/fhir/r4/search.htm
-  // These parameters do not have associated search parameter and instead require hard logic.
-  switch (parameter.name) {
-    case "_count":
-    // _offset not in param results so adding here.
-    case "_offset":
-    case "_total":
-    case "_sort":
-      return true;
-    case "_include":
-    case "_revinclude":
-    case "_summary":
-    case "_elements":
-    case "_contained":
-    case "_containedType": {
-      throw new OperationError(
-        outcomeError(
-          "not-supported",
-          `Parameter of type '${parameter.name}' is not yet supported.`
-        )
-      );
-    }
-    default:
-      return false;
-  }
-}
-
-async function paramWithMeta<CTX extends FHIRServerCTX>(
-  ctx: CTX,
-  resourceTypes: ResourceType[],
-  parameters: ParsedParameter<string | number>[]
-): Promise<ParameterType[]> {
-  const result = await Promise.all(
-    parameters.map(async (p) => {
-      if (isSearchResultParameter(p)) {
-        const param: SearchParameterResult = { ...p, type: "result" };
-        return param;
-      }
-      const searchParameters = await ctx.client.search_type(
-        ctx,
-        "SearchParameter",
-        [
-          { name: "name", value: [p.name] },
-          {
-            name: "type",
-            value: param_types_supported,
-          },
-          {
-            name: "base",
-            value: searchResources(resourceTypes),
-          },
-        ]
-      );
-
-      if (searchParameters.resources.length === 0)
-        throw new OperationError(
-          outcomeError(
-            "not-found",
-            `SearchParameter with name '${p.name}' not found.`
-          )
-        );
-
-      if (searchParameters.resources.length > 1)
-        throw new OperationError(
-          outcomeError(
-            "invalid",
-            `SearchParameter with name '${p.name}' found multiple parameters.`
-          )
-        );
-
-      const searchParameter = searchParameters.resources[0];
-      const param: SearchParameterResource = {
-        ...p,
-        type: "resource",
-        searchParameter: searchParameter,
-      };
-      return associateChainedParameters(ctx, param);
-    })
-  );
-
-  return result;
-}
-
 async function calculateTotal(
   client: pg.Pool,
   totalType: string | number,
@@ -704,7 +562,7 @@ export async function executeSearchQuery(
   // Remove _type as using on derived resourceTypeFilter
   request.parameters = request.parameters.filter((p) => p.name !== "_type");
 
-  const parameters = await paramWithMeta(
+  const parameters = await parametersWithMetaAssociated(
     ctx,
     resourceTypes,
     request.parameters
@@ -719,7 +577,7 @@ export async function executeSearchQuery(
   // that are current.
   if (onlyLatest) {
     const idParameter = (
-      await paramWithMeta(ctx, resourceTypes, [
+      await parametersWithMetaAssociated(ctx, resourceTypes, [
         { name: "_id", modifier: "missing", value: ["false"] },
       ])
     ).filter((v): v is SearchParameterResource => v.type === "resource");

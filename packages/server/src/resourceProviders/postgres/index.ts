@@ -44,7 +44,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { param_types_supported } from "./constants.js";
-import { searchResources, getDecimalPrecision } from "./utilities.js";
+import { searchResources, getDecimalPrecision } from "../utilities.js";
 import { FHIRServerCTX } from "../../fhirServer.js";
 import { executeSearchQuery } from "./search/index.js";
 

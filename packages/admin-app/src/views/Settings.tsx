@@ -32,7 +32,7 @@ function SettingDisplay({ user, token }: SettingProps) {
         </div>
       </div>
       <div className="mb-2">
-        <h2 className="text-xl font-semibold mb-2">Security</h2>
+        <h2 className="text-xl font-semibold">Security</h2>
         <div className="flex flex-col p-2">
           <label>Access Token</label>
           <div className="flex flex-row">

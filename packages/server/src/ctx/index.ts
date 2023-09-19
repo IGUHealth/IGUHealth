@@ -15,7 +15,7 @@ import { FHIRClientSync } from "@iguhealth/client/interface";
 
 import { createPostgresClient } from "../resourceProviders/postgres/index.js";
 import { FHIRServerCTX } from "../fhirServer.js";
-import MemoryDatabase from "../resourceProviders/memory.js";
+import MemoryDatabase from "../resourceProviders/memory/index.js";
 import RouterClient from "../resourceProviders/router.js";
 import PostgresLock from "../synchronization/postgres.lock.js";
 import LambdaExecutioner from "../operation-executors/awsLambda.js";
