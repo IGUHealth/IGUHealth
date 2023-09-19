@@ -1,21 +1,18 @@
-import { ValueSet } from "@iguhealth/fhir-types/r4/types";
 import {
   ValueSetExpand,
   ValueSetValidateCode,
 } from "@iguhealth/generated-ops/r4";
+import { Operation } from "@iguhealth/operation-execution";
 
 import { FHIRServerCTX } from "../fhirServer.js";
 
-import ValueSetInput = ValueSetExpand.Input;
-import ValueSetOutput = ValueSetExpand.Output;
+import ExpandInput = ValueSetExpand.Input;
+import ExpandOutput = ValueSetExpand.Output;
 
-import ValueSetValidateCodeInput = ValueSetValidateCode.Input;
-import ValueSetValidateCodeOutput = ValueSetValidateCode.Output;
+import ValidateInput = ValueSetValidateCode.Input;
+import ValidateOutput = ValueSetValidateCode.Output;
 
 export interface TerminologyProvider {
-  expand(ctx: FHIRServerCTX, input: ValueSetInput): Promise<ValueSetOutput>;
-  validate(
-    ctx: FHIRServerCTX,
-    input: ValueSetValidateCodeInput
-  ): Promise<ValueSetValidateCodeOutput>;
+  expand(ctx: FHIRServerCTX, input: ExpandInput): Promise<ExpandOutput>;
+  validate(ctx: FHIRServerCTX, input: ValidateInput): Promise<ValidateOutput>;
 }
