@@ -42,17 +42,6 @@ function createMemoryMiddleware<
     (request, args, next) => {
       switch (request.type) {
         case "search-request": {
-          // const parameters = await parametersWithMetaAssociated(
-          //   args.ctx,
-          //   request.level === "type" ? [request.resourceType] : [],
-          //   request.parameters
-          // );
-
-          // // Standard parameters
-          // let resourceParameters = parameters.filter(
-          //   (v): v is SearchParameterResource => v.type === "resource"
-          // );
-
           const resourceSet =
             request.level === "type"
               ? Object.values(
