@@ -1,69 +1,65 @@
+import { ResourceType, Resource } from "@iguhealth/fhir-types/r4/types";
+import { AsynchronousClient } from "@iguhealth/client";
 import {
-  ResourceType,
-  AResource,
-  Resource,
-  id,
-} from "@iguhealth/fhir-types/r4/types";
-import { ParsedParameter } from "@iguhealth/client/url";
-import { SynchronousClient } from "@iguhealth/client";
-import {
-  createMiddlewareSync,
-  MiddlewareSync,
+  createMiddlewareAsync,
+  MiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import { evaluateWithMeta } from "@iguhealth/fhirpath";
 
 import {
   parametersWithMetaAssociated,
   SearchParameterResource,
+  SearchParameterResult,
 } from "../utilities.js";
-
-type InternalData<T extends ResourceType> = Partial<
-  Record<T, Record<id, AResource<T> | undefined>>
->;
+import { FHIRServerCTX } from "../../fhirServer.js";
+import { InternalData } from "./types.js";
 
 function fitsSearchCriteria(
-  criteria: ParsedParameter<unknown>,
-  resource: Resource
-): boolean {
-  if (criteria.modifier) throw new Error("Modifiers not supported");
-  switch (criteria.name) {
-    case "base":
-    case "name":
-    case "type":
-    case "url": {
-      // Q hack because safe in requires explicit string properties it seems.
-      const value = (resource as unknown as Record<string, string | number>)[
-        criteria.name
-      ];
-      if (Array.isArray(value)) {
-        return value.some((v) => criteria.value.indexOf(v) !== -1);
+  ctx: FHIRServerCTX,
+  resource: Resource,
+  parameter: SearchParameterResource
+) {
+  if (parameter.searchParameter.expression) {
+    const evaluation = evaluateWithMeta(
+      parameter.searchParameter.expression,
+      resource,
+      {
+        meta: { getSD: (type: string) => ctx.resolveSD(ctx, type) },
       }
-      return criteria.value.indexOf(value) !== -1;
-    }
-    default:
-      //console.warn(`received unknown criteria for memory: '${criteria.name}'`);
-      return false;
+    );
+    return (
+      evaluation.find((v) => {
+        const value = v.valueOf();
+        if (typeof value === "number" || typeof value === "string")
+          return parameter.value.includes(value);
+        return false;
+      }) !== undefined
+    );
   }
+  return false;
 }
 
 function createMemoryMiddleware<
   State extends { data: InternalData<ResourceType> },
-  CTX extends any
->(): MiddlewareSync<State, CTX> {
-  return createMiddlewareSync<State, CTX>([
-    (request, args, next) => {
+  CTX extends FHIRServerCTX
+>(): MiddlewareAsync<State, CTX> {
+  return createMiddlewareAsync<State, CTX>([
+    async (request, args, next) => {
       switch (request.type) {
         case "search-request": {
-          // const parameters = await parametersWithMetaAssociated(
-          //   args.ctx,
-          //   request.level === "type" ? [request.resourceType] : [],
-          //   request.parameters
-          // );
+          const parameters = await parametersWithMetaAssociated(
+            args.ctx,
+            request.level === "type"
+              ? ([request.resourceType] as ResourceType[])
+              : [],
+            request.parameters
+          );
 
-          // // Standard parameters
-          // let resourceParameters = parameters.filter(
-          //   (v): v is SearchParameterResource => v.type === "resource"
-          // );
+          // Standard parameters
+          const resourceParameters = parameters.filter(
+            (v): v is SearchParameterResource => v.type === "resource"
+          );
 
           const resourceSet =
             request.level === "type"
@@ -77,12 +73,37 @@ function createMemoryMiddleware<
                   .filter((v): v is Resource[] => v !== undefined)
                   .flat();
 
-          const output = (resourceSet || []).filter((resource) => {
-            for (let param of request.parameters) {
-              if (!fitsSearchCriteria(param, resource)) return false;
+          let result = (resourceSet || []).filter((resource) => {
+            for (let param of resourceParameters) {
+              if (!fitsSearchCriteria(args.ctx, resource, param)) return false;
             }
             return true;
           });
+
+          const parametersResult = parameters.filter(
+            (v): v is SearchParameterResult => v.type === "result"
+          );
+
+          const offsetParam = parametersResult.find(
+            (v) => v.name === "_offset"
+          );
+
+          if (offsetParam) {
+            if (isNaN(parseInt(offsetParam.value[0].toString())))
+              throw new OperationError(
+                outcomeError("invalid", "_offset must be a single number")
+              );
+            result = result.slice(parseInt(offsetParam.value[0].toString()));
+          }
+
+          const countParam = parametersResult.find((v) => v.name === "_count");
+          let total =
+            countParam && !isNaN(parseInt(countParam.value[0].toString()))
+              ? parseInt(countParam.value[0].toString())
+              : 50;
+
+          result = result.slice(0, total);
+
           if (request.level === "system") {
             return {
               state: args.state,
@@ -91,7 +112,7 @@ function createMemoryMiddleware<
                 level: request.level,
                 parameters: request.parameters,
                 type: "search-response",
-                body: output,
+                body: result,
               },
             };
           }
@@ -103,7 +124,7 @@ function createMemoryMiddleware<
               level: "type",
               parameters: request.parameters,
               type: "search-response",
-              body: output,
+              body: result,
             },
           };
         }
@@ -182,10 +203,10 @@ function createMemoryMiddleware<
   ]);
 }
 
-export default function MemoryDatabase<CTX>(
+export default function MemoryDatabase<CTX extends FHIRServerCTX>(
   data: InternalData<ResourceType>
-): SynchronousClient<{ data: InternalData<ResourceType> }, CTX> {
-  return new SynchronousClient<{ data: InternalData<ResourceType> }, CTX>(
+): AsynchronousClient<{ data: InternalData<ResourceType> }, CTX> {
+  return new AsynchronousClient<{ data: InternalData<ResourceType> }, CTX>(
     { data: data },
     createMemoryMiddleware()
   );
