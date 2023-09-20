@@ -97,14 +97,12 @@ function createMemoryMiddleware<
           }
 
           const countParam = parametersResult.find((v) => v.name === "_count");
-          if (countParam) {
-            if (isNaN(parseInt(countParam.value[0].toString()))) {
-              throw new OperationError(
-                outcomeError("invalid", "_count must be a single number")
-              );
-            }
-            result = result.slice(0, parseInt(countParam.value[0].toString()));
-          }
+          let total =
+            countParam && !isNaN(parseInt(countParam.value[0].toString()))
+              ? parseInt(countParam.value[0].toString())
+              : 50;
+
+          result = result.slice(0, total);
 
           if (request.level === "system") {
             return {

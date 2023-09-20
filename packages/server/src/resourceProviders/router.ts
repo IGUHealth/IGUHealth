@@ -90,6 +90,7 @@ function createRouterMiddleware<
               | HistoryInstanceResponse =>
               res.type === "history-response" || res.type === "search-response"
           );
+
           return {
             state: args.state,
             ctx: args.ctx,
