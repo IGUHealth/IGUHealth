@@ -65,14 +65,12 @@ function createMemoryMiddleware<
                   .filter((v): v is Resource[] => v !== undefined)
                   .flat();
 
-          const output = (resourceSet || [])
-            .filter((resource) => {
-              for (let param of request.parameters) {
-                if (!fitsSearchCriteria(param, resource)) return false;
-              }
-              return true;
-            })
-            .slice(0, 50);
+          const output = (resourceSet || []).filter((resource) => {
+            for (let param of request.parameters) {
+              if (!fitsSearchCriteria(param, resource)) return false;
+            }
+            return true;
+          });
           if (request.level === "system") {
             return {
               state: args.state,

@@ -161,15 +161,15 @@ export default function createServiceCTX(): Pick<
     },
     // Avoids recursion of looking up SearchParameters SearchParameter
     {
-      resourcesSupported: ["SearchParameter"],
+      resourcesSupported: MEMORY_TYPES,
       interactionsSupported: ["read-request", "search-request"],
       source: memDBSync,
     },
-    {
-      resourcesSupported: MEMORY_TYPES.filter((v) => v !== "SearchParameter"),
-      interactionsSupported: ["read-request", "search-request"],
-      source: memDBAsync,
-    },
+    // {
+    //   resourcesSupported: MEMORY_TYPES.filter((v) => v !== "SearchParameter"),
+    //   interactionsSupported: ["read-request", "search-request"],
+    //   source: memDBAsync,
+    // },
     {
       resourcesSupported: [...resourceTypes].filter(
         (type) => MEMORY_TYPES.indexOf(type as ResourceType) === -1
