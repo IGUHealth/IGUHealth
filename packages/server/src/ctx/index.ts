@@ -181,7 +181,7 @@ export default async function createServiceCTX(): Promise<
     {
       resourcesSupported: MEMORY_TYPES,
       interactionsSupported: ["read-request", "search-request"],
-      source: memDBSync, // memDBAsync,
+      source: memDBAsync, // memDBSync, //
     },
     {
       resourcesSupported: [...resourceTypes].filter(
