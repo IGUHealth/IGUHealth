@@ -23,6 +23,7 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
+import type { FHIRServerCTX } from "./fhirServer.js";
 import createServiceCTX from "./ctx/index.js";
 import createFHIRServer from "./fhirServer.js";
 import {
@@ -86,7 +87,10 @@ async function workspaceCheck(
 }
 
 function workspaceMiddleware(
-  services: ReturnType<typeof createServiceCTX>
+  services: Pick<
+    FHIRServerCTX,
+    "lock" | "client" | "resolveSD" | "capabilities" | "cache" | "logger"
+  >
 ): Router.Middleware<Koa.DefaultState, Koa.DefaultContext, unknown>[] {
   const fhirServer = createFHIRServer();
 
@@ -161,14 +165,13 @@ function workspaceMiddleware(
   ];
 }
 
-export default function createServer(): Koa<
-  Koa.DefaultState,
-  Koa.DefaultContext
+export default async function createServer(): Promise<
+  Koa<Koa.DefaultState, Koa.DefaultContext>
 > {
   const app = new Koa();
 
   const router = new Router();
-  const services = createServiceCTX();
+  const services = await createServiceCTX();
 
   router.all(
     "/w/:workspace/api/v1/fhir/r4/:fhirUrl*",

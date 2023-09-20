@@ -1,4 +1,4 @@
 import createServer from "./server.js";
 
-const server = createServer();
+const server = await createServer();
 server.listen(3000);

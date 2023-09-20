@@ -1,4 +1,5 @@
 import { expect, test } from "@jest/globals";
+
 import {
   Observation,
   Patient,
@@ -8,7 +9,6 @@ import {
   Resource,
   RiskAssessment,
 } from "@iguhealth/fhir-types/r4/types";
-
 import HTTPClient from "@iguhealth/client/http";
 import { evaluate } from "@iguhealth/fhirpath";
 
@@ -801,4 +801,26 @@ test("Type filter", async () => {
       })
     );
   }
+});
+
+test("Memory type test", async () => {
+  const primitiveSDSearch = await client.search_type(
+    {},
+    "StructureDefinition",
+    [
+      { name: "kind", value: ["primitive-type"] },
+      { name: "name", value: ["base64Binary"] },
+    ]
+  );
+  expect(primitiveSDSearch.resources.length).toEqual(1);
+  expect(primitiveSDSearch.resources[0].id).toEqual("base64Binary");
+});
+
+test("Memory type test with _count", async () => {
+  const primitiveSDSearch = await client.search_type(
+    {},
+    "StructureDefinition",
+    [{ name: "_count", value: ["1"] }]
+  );
+  expect(primitiveSDSearch.resources.length).toEqual(1);
 });
