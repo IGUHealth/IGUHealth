@@ -90,9 +90,12 @@ function createMemoryMiddleware<
             throw new OperationError(
               outcomeError("invalid", "Updated resource must have an id.")
             );
-          args.state.data[resource.resourceType] = {
-            ...args.state.data[resource.resourceType],
-            [resource.id]: resource,
+          args.state.data = {
+            ...args.state.data,
+            [resource.resourceType]: {
+              ...args.state.data[resource.resourceType],
+              [resource.id]: resource,
+            },
           };
           return {
             state: args.state,
@@ -112,9 +115,12 @@ function createMemoryMiddleware<
             args.state.data[request.resourceType as ResourceType];
           if (!resource?.id)
             resource.id = `${Math.round(Math.random() * 100000000)}`;
-          args.state.data[resource.resourceType] = {
-            ...resources,
-            [resource.id]: resource,
+          args.state.data = {
+            ...args.state.data,
+            [resource.resourceType]: {
+              ...args.state.data[resource.resourceType],
+              [resource.id]: resource,
+            },
           };
           return {
             state: args.state,
