@@ -5,33 +5,35 @@ import createLogger from "pino";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
+  id,
   ResourceType,
   Resource,
   CapabilityStatement,
   CapabilityStatementRestResource,
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
-import { FHIRClientSync } from "@iguhealth/client/interface";
+import { FHIRClientSync, FHIRClientAsync } from "@iguhealth/client/interface";
 
 import { createPostgresClient } from "../resourceProviders/postgres/index.js";
 import { FHIRServerCTX } from "../fhirServer.js";
-import MemoryDatabase from "../resourceProviders/memory/index.js";
+import { InternalData } from "../resourceProviders/memory/types.js";
+import MemoryDatabaseAsync from "../resourceProviders/memory/async.js";
+import MemoryDatabaseSync from "../resourceProviders/memory/sync.js";
 import RouterClient from "../resourceProviders/router.js";
 import PostgresLock from "../synchronization/postgres.lock.js";
 import LambdaExecutioner from "../operation-executors/awsLambda.js";
 import RedisCache from "../cache/redis.js";
 
-const MEMORY_TYPES = [
+const MEMORY_TYPES: ResourceType[] = [
   "StructureDefinition",
   "SearchParameter",
   "ValueSet",
   "CodeSystem",
 ];
 
-function createMemoryDatabase(
+function createMemoryDatabases(
   resourceTypes: ResourceType[]
-): FHIRClientSync<any> {
-  const database = MemoryDatabase<any>({});
+): [FHIRClientSync<any>, FHIRClientAsync<FHIRServerCTX>] {
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
       loadArtifacts(
@@ -40,14 +42,23 @@ function createMemoryDatabase(
       )
     )
     .flat();
+  let data: InternalData<ResourceType> = {};
   for (const resource of artifactResources) {
-    database.create({}, resource);
+    data = {
+      ...data,
+      [resource.resourceType]: {
+        ...data[resource.resourceType],
+        [resource.id as id]: resource,
+      },
+    };
   }
-  return database;
+  const database = MemoryDatabaseSync<any>(data);
+  const asyncDatabase = MemoryDatabaseAsync(data);
+  return [database, asyncDatabase];
 }
 
 function createResourceRestCapabilities(
-  memdb: ReturnType<typeof createMemoryDatabase>,
+  memdb: FHIRClientSync<any>,
   sd: StructureDefinition
 ): CapabilityStatementRestResource {
   const resourceParameters = memdb.search_type({}, "SearchParameter", [
@@ -79,9 +90,7 @@ function createResourceRestCapabilities(
   };
 }
 
-function serverCapabilities(
-  memdb: ReturnType<typeof createMemoryDatabase>
-): CapabilityStatement {
+function serverCapabilities(memdb: FHIRClientSync<any>): CapabilityStatement {
   const sds = memdb
     .search_type({}, "StructureDefinition", [])
     .resources.filter((sd) => sd.abstract === false && sd.kind === "resource");
@@ -134,12 +143,7 @@ export default function createServiceCTX(): Pick<
   FHIRServerCTX,
   "lock" | "client" | "resolveSD" | "capabilities" | "cache" | "logger"
 > {
-  const memoryDatabase = createMemoryDatabase([
-    "StructureDefinition",
-    "SearchParameter",
-    "ValueSet",
-    "CodeSystem",
-  ]);
+  const [memDBSync, memDBAsync] = createMemoryDatabases(MEMORY_TYPES);
 
   const client = RouterClient([
     // OP INVOCATION
@@ -155,14 +159,20 @@ export default function createServiceCTX(): Pick<
         LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
       }),
     },
+    // Avoids recursion of looking up SearchParameters SearchParameter
     {
-      resourcesSupported: MEMORY_TYPES as ResourceType[],
+      resourcesSupported: ["SearchParameter"],
       interactionsSupported: ["read-request", "search-request"],
-      source: memoryDatabase,
+      source: memDBSync,
+    },
+    {
+      resourcesSupported: MEMORY_TYPES.filter((v) => v !== "SearchParameter"),
+      interactionsSupported: ["read-request", "search-request"],
+      source: memDBAsync,
     },
     {
       resourcesSupported: [...resourceTypes].filter(
-        (type) => MEMORY_TYPES.indexOf(type) === -1
+        (type) => MEMORY_TYPES.indexOf(type as ResourceType) === -1
       ) as ResourceType[],
       interactionsSupported: [
         "read-request",
@@ -185,14 +195,14 @@ export default function createServiceCTX(): Pick<
 
   const services = {
     logger: createLogger.default(),
-    capabilities: serverCapabilities(memoryDatabase),
+    capabilities: serverCapabilities(memDBSync),
     client,
     cache: new RedisCache({
       host: process.env.REDIS_HOST,
       port: parseInt(process.env.REDIS_PORT || "6739"),
     }),
     resolveSD: (ctx: FHIRServerCTX, type: string) =>
-      memoryDatabase.read(ctx, "StructureDefinition", type),
+      memDBSync.read(ctx, "StructureDefinition", type),
     lock: new PostgresLock({
       user: process.env["FHIR_DATABASE_USERNAME"],
       password: process.env["FHIR_DATABASE_PASSWORD"],
