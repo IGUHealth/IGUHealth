@@ -21,9 +21,30 @@ import {
   getDecimalPrecision,
   searchParameterToTableName,
   parametersWithMetaAssociated,
+  searchResources,
 } from "../../utilities.js";
 
 import { deriveSortQuery } from "./sort.js";
+
+async function findSearchParameter<CTX extends FHIRServerCTX>(
+  ctx: CTX,
+  resourceTypes: ResourceType[],
+  name: string
+): Promise<{ total?: number; resources: SearchParameter[] }> {
+  const result = await ctx.client.search_type(ctx, "SearchParameter", [
+    { name: "name", value: [name] },
+    {
+      name: "type",
+      value: param_types_supported,
+    },
+    {
+      name: "base",
+      value: searchResources(resourceTypes),
+    },
+  ]);
+
+  return result;
+}
 
 function generateCanonicalReferenceSearch(
   ctx: FHIRServerCTX,
@@ -563,9 +584,12 @@ export async function executeSearchQuery(
   request.parameters = request.parameters.filter((p) => p.name !== "_type");
 
   const parameters = await parametersWithMetaAssociated(
-    ctx,
     resourceTypes,
-    request.parameters
+    request.parameters,
+    async (resourceTypes, name) =>
+      (
+        await findSearchParameter(ctx, resourceTypes, name)
+      ).resources
   );
   // Standard parameters
   let resourceParameters = parameters.filter(
@@ -577,9 +601,14 @@ export async function executeSearchQuery(
   // that are current.
   if (onlyLatest) {
     const idParameter = (
-      await parametersWithMetaAssociated(ctx, resourceTypes, [
-        { name: "_id", modifier: "missing", value: ["false"] },
-      ])
+      await parametersWithMetaAssociated(
+        resourceTypes,
+        [{ name: "_id", modifier: "missing", value: ["false"] }],
+        async (resourceTypes, name) =>
+          (
+            await findSearchParameter(ctx, resourceTypes, name)
+          ).resources
+      )
     ).filter((v): v is SearchParameterResource => v.type === "resource");
     resourceParameters = resourceParameters.concat(idParameter);
   }

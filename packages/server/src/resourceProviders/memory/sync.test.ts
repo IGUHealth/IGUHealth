@@ -7,7 +7,7 @@ import {
   SearchParameter,
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
-import createMemoryDatabase from "./sync.js";
+import CreateMemoryDatabaseSync from "./sync.js";
 
 const artifactParameters = loadArtifacts(
   "SearchParameter",
@@ -48,7 +48,7 @@ function generateSD(
 }
 
 test("Creation and search", async () => {
-  const memDb = createMemoryDatabase({});
+  const memDb = CreateMemoryDatabaseSync({});
   await memDb.create(
     {},
     generateParameter({
@@ -114,7 +114,7 @@ test("Creation and search", async () => {
 });
 
 test("artifactParameters", () => {
-  const memDb = createMemoryDatabase({});
+  const memDb = CreateMemoryDatabaseSync({});
   for (let param of artifactParameters) {
     //console.log(param.base[0], param.id);
     memDb.create({}, param);
