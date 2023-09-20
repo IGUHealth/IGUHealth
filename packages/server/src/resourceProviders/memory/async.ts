@@ -16,7 +16,6 @@ import {
   SearchParameterResource,
   SearchParameterResult,
 } from "../utilities.js";
-import { FHIRServerCTX } from "../../fhirServer.js";
 import { InternalData } from "./types.js";
 
 function fitsSearchCriteria(
@@ -61,6 +60,7 @@ function createMemoryMiddleware<
                     resourceTypes.includes(b as ResourceType)
                   )
               );
+
               return params;
             }
           );
@@ -112,30 +112,33 @@ function createMemoryMiddleware<
               : 50;
 
           result = result.slice(0, total);
-
-          if (request.level === "system") {
-            return {
-              state: args.state,
-              ctx: args.ctx,
-              response: {
-                level: request.level,
-                parameters: request.parameters,
-                type: "search-response",
-                body: result,
-              },
-            };
+          switch (request.level) {
+            case "system": {
+              return {
+                state: args.state,
+                ctx: args.ctx,
+                response: {
+                  level: request.level,
+                  parameters: request.parameters,
+                  type: "search-response",
+                  body: result,
+                },
+              };
+            }
+            case "type": {
+              return {
+                state: args.state,
+                ctx: args.ctx,
+                response: {
+                  resourceType: request.resourceType,
+                  level: "type",
+                  parameters: request.parameters,
+                  type: "search-response",
+                  body: result,
+                },
+              };
+            }
           }
-          return {
-            state: args.state,
-            ctx: args.ctx,
-            response: {
-              resourceType: request.resourceType,
-              level: "type",
-              parameters: request.parameters,
-              type: "search-response",
-              body: result,
-            },
-          };
         }
         case "update-request": {
           const resource = request.body;
@@ -143,10 +146,14 @@ function createMemoryMiddleware<
             throw new OperationError(
               outcomeError("invalid", "Updated resource must have an id.")
             );
-          args.state.data[resource.resourceType] = {
-            ...args.state.data[resource.resourceType],
-            [resource.id]: resource,
+          args.state.data = {
+            ...args.state.data,
+            [resource.resourceType]: {
+              ...args.state.data[resource.resourceType],
+              [resource.id]: resource,
+            },
           };
+
           return {
             state: args.state,
             ctx: args.ctx,
@@ -165,9 +172,13 @@ function createMemoryMiddleware<
             args.state.data[request.resourceType as ResourceType];
           if (!resource?.id)
             resource.id = `${Math.round(Math.random() * 100000000)}`;
-          args.state.data[resource.resourceType] = {
-            ...resources,
-            [resource.id]: resource,
+
+          args.state.data = {
+            ...args.state.data,
+            [resource.resourceType]: {
+              ...resources,
+              [resource.id]: resource,
+            },
           };
           return {
             state: args.state,
@@ -212,7 +223,7 @@ function createMemoryMiddleware<
   ]);
 }
 
-export default function MemoryDatabase<CTX extends FHIRServerCTX>(
+export default function MemoryDatabase<CTX extends any>(
   data: InternalData<ResourceType>
 ): AsynchronousClient<{ data: InternalData<ResourceType> }, CTX> {
   return new AsynchronousClient<{ data: InternalData<ResourceType> }, CTX>(

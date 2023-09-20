@@ -159,19 +159,14 @@ export async function parametersWithMetaAssociated<CTX extends FHIRServerCTX>(
         p.name
       );
 
-      // await findSearchParameter(
-      //   ctx,
-      //   resourceTypes,
-      //   p.name
-      // );
-
-      if (searchParameterSearchResult.length === 0)
+      if (searchParameterSearchResult.length === 0) {
         throw new OperationError(
           outcomeError(
             "not-found",
             `SearchParameter with name '${p.name}' not found.`
           )
         );
+      }
 
       if (searchParameterSearchResult.length > 1)
         throw new OperationError(

@@ -42,17 +42,6 @@ function createMemoryMiddleware<
     (request, args, next) => {
       switch (request.type) {
         case "search-request": {
-          // const parameters = await parametersWithMetaAssociated(
-          //   args.ctx,
-          //   request.level === "type" ? [request.resourceType] : [],
-          //   request.parameters
-          // );
-
-          // // Standard parameters
-          // let resourceParameters = parameters.filter(
-          //   (v): v is SearchParameterResource => v.type === "resource"
-          // );
-
           const resourceSet =
             request.level === "type"
               ? Object.values(
@@ -101,9 +90,12 @@ function createMemoryMiddleware<
             throw new OperationError(
               outcomeError("invalid", "Updated resource must have an id.")
             );
-          args.state.data[resource.resourceType] = {
-            ...args.state.data[resource.resourceType],
-            [resource.id]: resource,
+          args.state.data = {
+            ...args.state.data,
+            [resource.resourceType]: {
+              ...args.state.data[resource.resourceType],
+              [resource.id]: resource,
+            },
           };
           return {
             state: args.state,
@@ -123,9 +115,12 @@ function createMemoryMiddleware<
             args.state.data[request.resourceType as ResourceType];
           if (!resource?.id)
             resource.id = `${Math.round(Math.random() * 100000000)}`;
-          args.state.data[resource.resourceType] = {
-            ...resources,
-            [resource.id]: resource,
+          args.state.data = {
+            ...args.state.data,
+            [resource.resourceType]: {
+              ...args.state.data[resource.resourceType],
+              [resource.id]: resource,
+            },
           };
           return {
             state: args.state,
