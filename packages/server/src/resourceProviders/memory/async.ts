@@ -1,11 +1,15 @@
-import { ResourceType, Resource } from "@iguhealth/fhir-types/r4/types";
+import {
+  ResourceType,
+  Resource,
+  SearchParameter,
+} from "@iguhealth/fhir-types/r4/types";
 import { AsynchronousClient } from "@iguhealth/client";
 import {
   createMiddlewareAsync,
   MiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
-import { evaluateWithMeta } from "@iguhealth/fhirpath";
+import { evaluate } from "@iguhealth/fhirpath";
 
 import {
   parametersWithMetaAssociated,
@@ -16,18 +20,11 @@ import { FHIRServerCTX } from "../../fhirServer.js";
 import { InternalData } from "./types.js";
 
 function fitsSearchCriteria(
-  ctx: FHIRServerCTX,
   resource: Resource,
   parameter: SearchParameterResource
 ) {
   if (parameter.searchParameter.expression) {
-    const evaluation = evaluateWithMeta(
-      parameter.searchParameter.expression,
-      resource,
-      {
-        meta: { getSD: (type: string) => ctx.resolveSD(ctx, type) },
-      }
-    );
+    const evaluation = evaluate(parameter.searchParameter.expression, resource);
     return (
       evaluation.find((v) => {
         const value = v.valueOf();
@@ -42,18 +39,30 @@ function fitsSearchCriteria(
 
 function createMemoryMiddleware<
   State extends { data: InternalData<ResourceType> },
-  CTX extends FHIRServerCTX
+  CTX extends any
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
     async (request, args, next) => {
       switch (request.type) {
         case "search-request": {
           const parameters = await parametersWithMetaAssociated(
-            args.ctx,
             request.level === "type"
               ? ([request.resourceType] as ResourceType[])
               : [],
-            request.parameters
+            request.parameters,
+            async (resourceTypes, name) => {
+              const params = Object.values(
+                args.state.data?.["SearchParameter"] || {}
+              ).filter(
+                (p): p is SearchParameter =>
+                  p?.resourceType === "SearchParameter" &&
+                  p?.name === name &&
+                  p?.base?.some((b) =>
+                    resourceTypes.includes(b as ResourceType)
+                  )
+              );
+              return params;
+            }
           );
 
           // Standard parameters
@@ -75,7 +84,7 @@ function createMemoryMiddleware<
 
           let result = (resourceSet || []).filter((resource) => {
             for (let param of resourceParameters) {
-              if (!fitsSearchCriteria(args.ctx, resource, param)) return false;
+              if (!fitsSearchCriteria(resource, param)) return false;
             }
             return true;
           });
