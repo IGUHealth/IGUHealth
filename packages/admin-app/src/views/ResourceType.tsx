@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from "react";
 
 import { useRecoilValue } from "recoil";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 import { Base } from "@iguhealth/components";
@@ -12,29 +12,32 @@ import { getClient } from "../data/client";
 const initialQuery = "_count=20&_sort=-_lastUpdated";
 
 export default function ResourceTypeView() {
+  const client = useRecoilValue(getClient);
   const navigate = useNavigate();
+  let [searchParams, setSearchParams] = useSearchParams({
+    query: initialQuery,
+  });
   const params = useParams();
-  const c = useRecoilValue(getClient);
+
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [data, setData] = React.useState<Resource[] | undefined>(undefined);
-  const [query, setQuery] = React.useState(initialQuery);
   const search = useMemo(
     () => (query: string) => {
       setIsLoading(true);
-      c.search_type({}, params.resourceType as ResourceType, query)
+      client
+        .search_type({}, params.resourceType as ResourceType, query)
         .then((response) => {
           setIsLoading(false);
           setData(response.resources);
         })
         .catch((e) => console.error(e));
     },
-    [setIsLoading, setData, c]
+    [setIsLoading, setData, client]
   );
 
   useEffect(() => {
-    setQuery(initialQuery);
-    search(initialQuery);
-  }, [params]);
+    search(searchParams.get("query") || "");
+  }, [params.resourceType]);
 
   return (
     <div className="flex flex-col flex-1">
@@ -45,20 +48,22 @@ export default function ResourceTypeView() {
         <Base.Input
           placeholder="Enter search query e.g. _count=10&_sort=_lastUpdated"
           className="h-full rounded-md overflow-hidden flex flex-grow px-4 mr-1 text-xl font-light border hover:border-indigo-700 focus:border-indigo-700 outline-none"
-          value={query}
+          value={searchParams.get("query") || ""}
           onKeyUp={(e) => {
             if (e.key === "Enter") {
-              search(query);
+              search(searchParams.get("query") || "");
             }
           }}
           onChange={(e) => {
-            setQuery(e.target.value);
+            setSearchParams({ query: e.target.value });
           }}
         />
         <Base.Button
           buttonSize="small"
           buttonType="primary"
-          onClick={(_e) => search(query)}
+          onClick={(_e) => {
+            search(searchParams.get("query") || "");
+          }}
         >
           <MagnifyingGlassIcon className="h-4 w-4" />
         </Base.Button>
