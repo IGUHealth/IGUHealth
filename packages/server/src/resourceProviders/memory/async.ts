@@ -15,6 +15,7 @@ import {
   parametersWithMetaAssociated,
   SearchParameterResource,
   SearchParameterResult,
+  deriveResourceTypeFilter,
 } from "../utilities.js";
 import { InternalData } from "./types.js";
 
@@ -22,18 +23,46 @@ function fitsSearchCriteria(
   resource: Resource,
   parameter: SearchParameterResource
 ) {
-  if (parameter.searchParameter.expression) {
-    const evaluation = evaluate(parameter.searchParameter.expression, resource);
-    return (
-      evaluation.find((v) => {
-        const value = v.valueOf();
-        if (typeof value === "number" || typeof value === "string")
-          return parameter.value.includes(value);
-        return false;
-      }) !== undefined
-    );
+  switch (parameter.name) {
+    // Special handling for performance reason on heavily used parameters
+    case "name": {
+      return (resource as any)["name"] === parameter.value[0];
+    }
+    case "url": {
+      return (resource as any)["url"] === parameter.value[0];
+    }
+    default: {
+      if (parameter.searchParameter.expression) {
+        const evaluation = evaluate(
+          parameter.searchParameter.expression,
+          resource
+        );
+        return (
+          evaluation.find((v) => {
+            const value = v.valueOf();
+            if (typeof value === "number" || typeof value === "string")
+              return parameter.value.includes(value);
+            return false;
+          }) !== undefined
+        );
+      }
+      return false;
+    }
   }
-  return false;
+}
+
+async function resolveParameter(
+  data: InternalData<ResourceType>,
+  resourceTypes: ResourceType[],
+  name: string
+) {
+  const params = Object.values(data?.["SearchParameter"] || {}).filter(
+    (p): p is SearchParameter =>
+      p?.resourceType === "SearchParameter" &&
+      p?.name === name &&
+      p?.base?.some((b) => resourceTypes.includes(b as ResourceType))
+  );
+  return params;
 }
 
 function createMemoryMiddleware<
@@ -44,25 +73,17 @@ function createMemoryMiddleware<
     async (request, args, next) => {
       switch (request.type) {
         case "search-request": {
-          const parameters = await parametersWithMetaAssociated(
-            request.level === "type"
-              ? ([request.resourceType] as ResourceType[])
-              : [],
-            request.parameters,
-            async (resourceTypes, name) => {
-              const params = Object.values(
-                args.state.data?.["SearchParameter"] || {}
-              ).filter(
-                (p): p is SearchParameter =>
-                  p?.resourceType === "SearchParameter" &&
-                  p?.name === name &&
-                  p?.base?.some((b) =>
-                    resourceTypes.includes(b as ResourceType)
-                  )
-              );
+          const resourceTypes = deriveResourceTypeFilter(request);
+          // Remove _type as using on derived resourceTypeFilter
+          request.parameters = request.parameters.filter(
+            (p) => p.name !== "_type"
+          );
 
-              return params;
-            }
+          const parameters = await parametersWithMetaAssociated(
+            resourceTypes,
+            request.parameters,
+            async (resourceTypes, name) =>
+              resolveParameter(args.state.data, resourceTypes, name)
           );
 
           // Standard parameters

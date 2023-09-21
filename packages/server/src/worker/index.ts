@@ -109,7 +109,7 @@ async function handleSubscriptionPayload(
 
 async function subWorker(workerID = randomUUID(), loopInterval = 500) {
   // Using a pool directly because need to query up workspaces.
-  const services = createServiceCTX();
+  const services = await createServiceCTX();
 
   const pool = new pg.Pool({
     user: process.env["FHIR_DATABASE_USERNAME"],

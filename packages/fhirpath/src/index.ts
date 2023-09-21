@@ -544,14 +544,19 @@ function nonNullable(v: unknown): v is NonNullable<unknown> {
   return v !== undefined && v !== null;
 }
 
+const cachedAST: Record<string, any> = {};
+
 export function evaluateWithMeta(
   expression: string,
   ctx: unknown,
   options?: Options
 ): MetaValueSingular<NonNullable<unknown>>[] {
-  const ast = parse(expression);
+  if (!cachedAST[expression]) {
+    const ast = parse(expression);
+    cachedAST[expression] = ast;
+  }
   return _evaluate(
-    ast,
+    cachedAST[expression],
     toMetaValueSingulars(options?.meta, ctx),
     options
   ).filter(

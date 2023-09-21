@@ -1,7 +1,6 @@
 import pg from "pg";
 import dayjs from "dayjs";
 
-import { ParsedParameter } from "@iguhealth/client/url";
 import {
   SystemSearchRequest,
   TypeSearchRequest,
@@ -22,6 +21,7 @@ import {
   searchParameterToTableName,
   parametersWithMetaAssociated,
   searchResources,
+  deriveResourceTypeFilter,
 } from "../../utilities.js";
 
 import { deriveSortQuery } from "./sort.js";
@@ -560,16 +560,6 @@ function filterToLatest(query: string): string {
        as latest_resources where latest_resources.deleted = false`;
 }
 
-// Returns the resourceType from request on type level else uses the _type parameter or empty specifying no filter on specific resource.
-function deriveResourceTypeFilter(
-  request: SystemSearchRequest | TypeSearchRequest
-): ResourceType[] {
-  if (request.level === "type") return [request.resourceType as ResourceType];
-  const _typeParameter = request.parameters.find((p) => p.name === "_type");
-  if (_typeParameter) return _typeParameter.value as ResourceType[];
-  return [];
-}
-
 export async function executeSearchQuery(
   client: pg.Pool,
   request: SystemSearchRequest | TypeSearchRequest,
@@ -582,7 +572,6 @@ export async function executeSearchQuery(
   const resourceTypes = deriveResourceTypeFilter(request);
   // Remove _type as using on derived resourceTypeFilter
   request.parameters = request.parameters.filter((p) => p.name !== "_type");
-
   const parameters = await parametersWithMetaAssociated(
     resourceTypes,
     request.parameters,

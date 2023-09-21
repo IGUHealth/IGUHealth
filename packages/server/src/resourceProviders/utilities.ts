@@ -1,8 +1,12 @@
 import { ResourceType, SearchParameter } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import {
+  FHIRRequest,
+  SystemSearchRequest,
+  TypeSearchRequest,
+} from "@iguhealth/client/types";
 
 import { param_types_supported } from "./postgres/constants.js";
-import { FHIRServerCTX } from "../fhirServer.js";
 import { ParsedParameter } from "@iguhealth/client/url";
 
 export type SearchParameterResource = ParsedParameter<string | number> & {
@@ -46,6 +50,23 @@ export function searchParameterToTableName(
   );
 }
 
+// Returns the resourceType from request on type level else uses the _type parameter or empty specifying no filter on specific resource.
+export function deriveResourceTypeFilter(request: FHIRRequest): ResourceType[] {
+  switch (request.type) {
+    case "search-request": {
+      if (request.level === "type")
+        return [request.resourceType as ResourceType];
+      const _typeParameter = request.parameters.find((p) => p.name === "_type");
+      if (_typeParameter) return _typeParameter.value as ResourceType[];
+      return [];
+    }
+    default:
+      return "resourceType" in request
+        ? [request.resourceType as ResourceType]
+        : [];
+  }
+}
+
 /*
  * Returns resourceTypes to perform a search which involves concating
  * Given type with heirarchy of inherited types (DomainResource, Resource)
@@ -60,7 +81,7 @@ export function typesToSearch(
   return searchTypes;
 }
 
-async function associateChainedParameters<CTX extends FHIRServerCTX>(
+async function associateChainedParameters(
   parsedParameter: SearchParameterResource,
   resolveSearchParameter: (
     resourceTypes: ResourceType[],
@@ -139,7 +160,7 @@ export function isSearchResultParameter(
   }
 }
 
-export async function parametersWithMetaAssociated<CTX extends FHIRServerCTX>(
+export async function parametersWithMetaAssociated(
   resourceTypes: ResourceType[],
   parameters: ParsedParameter<string | number>[],
   resolveSearchParameter: (
@@ -163,7 +184,9 @@ export async function parametersWithMetaAssociated<CTX extends FHIRServerCTX>(
         throw new OperationError(
           outcomeError(
             "not-found",
-            `SearchParameter with name '${p.name}' not found.`
+            `SearchParameter with name '${
+              p.name
+            }' not found for types '${resourceTypes.join(", ")}'.`
           )
         );
       }

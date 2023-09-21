@@ -37,11 +37,7 @@ import {
   MetaValueArray,
   MetaValueSingular,
 } from "@iguhealth/meta-value";
-import {
-  OperationError,
-  outcome,
-  outcomeError,
-} from "@iguhealth/operation-outcomes";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { param_types_supported } from "./constants.js";
 import { searchResources, getDecimalPrecision } from "../utilities.js";
@@ -228,8 +224,15 @@ async function toReference(
     }
     case "uri":
     case "canonical": {
+      if (!parameter.target)
+        throw new OperationError(
+          outcomeError(
+            "invalid",
+            `no target specified on canonical search parameter '${parameter.name}'`
+          )
+        );
       const results = await ctx.client.search_system(ctx, [
-        { name: "_type", value: parameter.target || [] },
+        { name: "_type", value: parameter.target },
         { name: "url", value: [value.valueOf() as canonical | uri] },
       ]);
       if (results.resources.length !== 1) {

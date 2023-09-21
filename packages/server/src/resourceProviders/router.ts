@@ -11,6 +11,7 @@ import {
   TypeHistoryResponse,
   TypeSearchResponse,
   HistoryInstanceResponse,
+  TypeSearchRequest,
 } from "@iguhealth/client/types";
 import { AsynchronousClient } from "@iguhealth/client";
 import {
@@ -18,14 +19,14 @@ import {
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import { FHIRClient } from "@iguhealth/client/interface";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../fhirServer.js";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import { deriveResourceTypeFilter } from "./utilities.js";
 import {
   KoaRequestToFHIRRequest,
   fhirResponseToKoaResponse,
 } from "../koaParsing/index.js";
-import { Operation } from "@iguhealth/operation-execution";
 
 type InteractionSupported<T> = FHIRRequest["type"];
 type InteractionsSupported<T> = InteractionSupported<T>[];
@@ -65,10 +66,7 @@ function createRouterMiddleware<
     async (request, args, next) => {
       const constraint = {
         interactionsSupported: [request.type],
-        resourcesSupported:
-          "resourceType" in request
-            ? [request.resourceType as ResourceType]
-            : [],
+        resourcesSupported: deriveResourceTypeFilter(request),
       };
       const sources = findSource(args.state.sources, constraint);
       switch (request.type) {

@@ -31,9 +31,9 @@ const MEMORY_TYPES: ResourceType[] = [
   "CodeSystem",
 ];
 
-function createMemoryDatabases(
+function createMemoryData(
   resourceTypes: ResourceType[]
-): [FHIRClientSync<any>, FHIRClientAsync<FHIRServerCTX>] {
+): InternalData<ResourceType> {
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
       loadArtifacts(
@@ -52,19 +52,22 @@ function createMemoryDatabases(
       },
     };
   }
-  const database = MemoryDatabaseSync<any>(data);
-  const asyncDatabase = MemoryDatabaseAsync(data);
-  return [database, asyncDatabase];
+
+  return data;
 }
 
-function createResourceRestCapabilities(
-  memdb: FHIRClientSync<any>,
+async function createResourceRestCapabilities(
+  memdb: FHIRClientAsync<any>,
   sd: StructureDefinition
-): CapabilityStatementRestResource {
-  const resourceParameters = memdb.search_type({}, "SearchParameter", [
+): Promise<CapabilityStatementRestResource> {
+  const resourceParameters = await memdb.search_type({}, "SearchParameter", [
     {
       name: "base",
       value: ["Resource", "DomainResource", sd.type],
+    },
+    {
+      name: "_count",
+      value: [1000],
     },
   ]);
 
@@ -90,15 +93,26 @@ function createResourceRestCapabilities(
   };
 }
 
-function serverCapabilities(memdb: FHIRClientSync<any>): CapabilityStatement {
-  const sds = memdb
-    .search_type({}, "StructureDefinition", [])
-    .resources.filter((sd) => sd.abstract === false && sd.kind === "resource");
+async function serverCapabilities(
+  memdb: FHIRClientAsync<any>
+): Promise<CapabilityStatement> {
+  const sds = (
+    await memdb.search_type({}, "StructureDefinition", [
+      {
+        name: "_count",
+        value: [1000],
+      },
+    ])
+  ).resources.filter((sd) => sd.abstract === false && sd.kind === "resource");
 
-  const rootParameters = memdb.search_type({}, "SearchParameter", [
+  const rootParameters = await memdb.search_type({}, "SearchParameter", [
     {
       name: "base",
       value: ["Resource", "DomainResource"],
+    },
+    {
+      name: "_count",
+      value: [1000],
     },
   ]);
   return {
@@ -133,17 +147,22 @@ function serverCapabilities(memdb: FHIRClientSync<any>): CapabilityStatement {
           type: resource.type,
           documentation: resource.description,
         })),
-        resource: sds.map((sd) => createResourceRestCapabilities(memdb, sd)),
+        resource: await Promise.all(
+          sds.map((sd) => createResourceRestCapabilities(memdb, sd))
+        ),
       },
     ],
   };
 }
 
-export default function createServiceCTX(): Pick<
-  FHIRServerCTX,
-  "lock" | "client" | "resolveSD" | "capabilities" | "cache" | "logger"
+export default async function createServiceCTX(): Promise<
+  Pick<
+    FHIRServerCTX,
+    "lock" | "client" | "resolveSD" | "capabilities" | "cache" | "logger"
+  >
 > {
-  const [memDBSync, memDBAsync] = createMemoryDatabases(MEMORY_TYPES);
+  const memDBAsync = MemoryDatabaseAsync(createMemoryData(MEMORY_TYPES));
+  const memDBSync = MemoryDatabaseSync(createMemoryData(MEMORY_TYPES));
 
   const client = RouterClient([
     // OP INVOCATION
@@ -159,17 +178,11 @@ export default function createServiceCTX(): Pick<
         LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
       }),
     },
-    // Avoids recursion of looking up SearchParameters SearchParameter
     {
       resourcesSupported: MEMORY_TYPES,
       interactionsSupported: ["read-request", "search-request"],
-      source: memDBSync,
+      source: memDBAsync, // memDBSync, //
     },
-    // {
-    //   resourcesSupported: MEMORY_TYPES.filter((v) => v !== "SearchParameter"),
-    //   interactionsSupported: ["read-request", "search-request"],
-    //   source: memDBAsync,
-    // },
     {
       resourcesSupported: [...resourceTypes].filter(
         (type) => MEMORY_TYPES.indexOf(type as ResourceType) === -1
@@ -195,7 +208,7 @@ export default function createServiceCTX(): Pick<
 
   const services = {
     logger: createLogger.default(),
-    capabilities: serverCapabilities(memDBSync),
+    capabilities: await serverCapabilities(memDBAsync),
     client,
     cache: new RedisCache({
       host: process.env.REDIS_HOST,
