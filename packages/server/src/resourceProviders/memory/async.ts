@@ -23,18 +23,32 @@ function fitsSearchCriteria(
   resource: Resource,
   parameter: SearchParameterResource
 ) {
-  if (parameter.searchParameter.expression) {
-    const evaluation = evaluate(parameter.searchParameter.expression, resource);
-    return (
-      evaluation.find((v) => {
-        const value = v.valueOf();
-        if (typeof value === "number" || typeof value === "string")
-          return parameter.value.includes(value);
-        return false;
-      }) !== undefined
-    );
+  switch (parameter.name) {
+    // Special handling for performance reason on heavily used parameters
+    case "name": {
+      return (resource as any)["name"] === parameter.value[0];
+    }
+    case "url": {
+      return (resource as any)["url"] === parameter.value[0];
+    }
+    default: {
+      if (parameter.searchParameter.expression) {
+        const evaluation = evaluate(
+          parameter.searchParameter.expression,
+          resource
+        );
+        return (
+          evaluation.find((v) => {
+            const value = v.valueOf();
+            if (typeof value === "number" || typeof value === "string")
+              return parameter.value.includes(value);
+            return false;
+          }) !== undefined
+        );
+      }
+      return false;
+    }
   }
-  return false;
 }
 
 async function resolveParameter(
