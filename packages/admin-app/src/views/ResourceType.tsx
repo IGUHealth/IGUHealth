@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 import { Base } from "@iguhealth/components";
-import { Resource, ResourceType } from "@iguhealth/fhir-types";
+import { Resource, ResourceType } from "@iguhealth/fhir-types/r4/types";
 
 import { getClient } from "../data/client";
 
@@ -57,7 +57,7 @@ export default function ResourceTypeView() {
         />
         <Base.Button
           buttonSize="small"
-          buttonType="secondary"
+          buttonType="primary"
           onClick={(_e) => search(query)}
         >
           <MagnifyingGlassIcon className="h-4 w-4" />
@@ -67,6 +67,7 @@ export default function ResourceTypeView() {
         <Base.Button
           className="ml-2"
           buttonSize="small"
+          buttonType="secondary"
           onClick={(_e) => navigate(`/resources/${params.resourceType}/new`)}
         >
           Create
