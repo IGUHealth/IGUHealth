@@ -15,6 +15,7 @@ import {
   parametersWithMetaAssociated,
   SearchParameterResource,
   SearchParameterResult,
+  deriveResourceTypeFilter,
 } from "../utilities.js";
 import { InternalData } from "./types.js";
 
@@ -36,6 +37,20 @@ function fitsSearchCriteria(
   return false;
 }
 
+async function resolveParameter(
+  data: InternalData<ResourceType>,
+  resourceTypes: ResourceType[],
+  name: string
+) {
+  const params = Object.values(data?.["SearchParameter"] || {}).filter(
+    (p): p is SearchParameter =>
+      p?.resourceType === "SearchParameter" &&
+      p?.name === name &&
+      p?.base?.some((b) => resourceTypes.includes(b as ResourceType))
+  );
+  return params;
+}
+
 function createMemoryMiddleware<
   State extends { data: InternalData<ResourceType> },
   CTX extends any
@@ -44,25 +59,17 @@ function createMemoryMiddleware<
     async (request, args, next) => {
       switch (request.type) {
         case "search-request": {
-          const parameters = await parametersWithMetaAssociated(
-            request.level === "type"
-              ? ([request.resourceType] as ResourceType[])
-              : [],
-            request.parameters,
-            async (resourceTypes, name) => {
-              const params = Object.values(
-                args.state.data?.["SearchParameter"] || {}
-              ).filter(
-                (p): p is SearchParameter =>
-                  p?.resourceType === "SearchParameter" &&
-                  p?.name === name &&
-                  p?.base?.some((b) =>
-                    resourceTypes.includes(b as ResourceType)
-                  )
-              );
+          const resourceTypes = deriveResourceTypeFilter(request);
+          // Remove _type as using on derived resourceTypeFilter
+          request.parameters = request.parameters.filter(
+            (p) => p.name !== "_type"
+          );
 
-              return params;
-            }
+          const parameters = await parametersWithMetaAssociated(
+            resourceTypes,
+            request.parameters,
+            async (resourceTypes, name) =>
+              resolveParameter(args.state.data, resourceTypes, name)
           );
 
           // Standard parameters
