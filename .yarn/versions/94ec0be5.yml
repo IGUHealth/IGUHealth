@@ -1,5 +1,7 @@
 releases:
+  "@iguhealth/fhirpath": patch
   "@iguhealth/server": patch
 
 declined:
   - "@iguhealth/fhir-validation"
+  - "@iguhealth/meta-value"
