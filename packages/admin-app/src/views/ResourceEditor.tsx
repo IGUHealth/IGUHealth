@@ -7,6 +7,7 @@ import { ChevronDownIcon } from "@heroicons/react/24/outline";
 // import { javascript } from "@codemirror/lang-javascript";
 
 import {
+  BundleEntry,
   Resource,
   OperationOutcome,
   ResourceType,
@@ -48,7 +49,7 @@ function ResourceHistory() {
   const client = useRecoilValue(getClient);
   const { resourceType, id } = useParams();
   const [loading, setLoading] = useState(true);
-  const [history, setHistory] = useState<Resource[] | undefined>(undefined);
+  const [history, setHistory] = useState<BundleEntry[]>([]);
 
   useEffect(() => {
     setLoading(true);
@@ -67,19 +68,24 @@ function ResourceHistory() {
       data={history || []}
       columns={[
         {
+          name: "Interaction",
+          selector: "$this.request.method",
+          selectorType: "fhirpath",
+        },
+        {
           name: "Version",
-          selector: "$this.meta.versionId",
+          selector: "$this.resource.meta.versionId",
           selectorType: "fhirpath",
         },
         {
           name: "Author",
           selector:
-            "$this.meta.extension.where(url='https://iguhealth.app/author').valueString",
+            "$this.resource.meta.extension.where(url='https://iguhealth.app/author').valueString",
           selectorType: "fhirpath",
         },
         {
           name: "Last Updated",
-          selector: "$this.meta.lastUpdated",
+          selector: "$this.resource.meta.lastUpdated",
           selectorType: "fhirpath",
         },
       ]}

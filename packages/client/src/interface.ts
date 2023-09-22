@@ -45,16 +45,13 @@ export interface FHIRClientSync<CTX> {
     versionId: id
   ): AResource<T> | undefined;
   delete(ctx: CTX, resourceType: ResourceType, id: id): void;
-  historySystem(ctx: CTX): Resource[];
-  historyType<T extends ResourceType>(
-    ctx: CTX,
-    resourceType: T
-  ): AResource<T>[];
+  historySystem(ctx: CTX): BundleEntry[];
+  historyType<T extends ResourceType>(ctx: CTX, resourceType: T): BundleEntry[];
   historyInstance<T extends ResourceType>(
     ctx: CTX,
     resourceType: T,
     id: id
-  ): AResource<T>[];
+  ): BundleEntry[];
   invoke_system<Op extends IOperation<any, any>>(
     op: Op,
     ctx: CTX,
@@ -104,16 +101,16 @@ export interface FHIRClientAsync<CTX> {
     versionId: id
   ): Promise<AResource<T> | undefined>;
   delete(ctx: CTX, resourceType: ResourceType, id: id): Promise<void>;
-  historySystem(ctx: CTX): Promise<Resource[]>;
+  historySystem(ctx: CTX): Promise<BundleEntry[]>;
   historyType<T extends ResourceType>(
     ctx: CTX,
     resourceType: T
-  ): Promise<AResource<T>[]>;
+  ): Promise<BundleEntry[]>;
   historyInstance<T extends ResourceType>(
     ctx: CTX,
     resourceType: T,
     id: id
-  ): Promise<AResource<T>[]>;
+  ): Promise<BundleEntry[]>;
   invoke_system<Op extends IOperation<any, any>>(
     op: Op,
     ctx: CTX,

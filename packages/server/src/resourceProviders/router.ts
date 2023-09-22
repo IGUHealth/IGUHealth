@@ -6,12 +6,11 @@ import {
 import {
   FHIRRequest,
   FHIRResponse,
+  InstanceHistoryResponse,
   SystemHistoryResponse,
   SystemSearchResponse,
   TypeHistoryResponse,
   TypeSearchResponse,
-  HistoryInstanceResponse,
-  TypeSearchRequest,
 } from "@iguhealth/client/types";
 import { AsynchronousClient } from "@iguhealth/client";
 import {
@@ -71,7 +70,25 @@ function createRouterMiddleware<
       const sources = findSource(args.state.sources, constraint);
       switch (request.type) {
         // Multi-types allowed
-        case "search-request":
+        case "search-request": {
+          const responses = (
+            await Promise.all(
+              sources.map((source) => source.source.request(args.ctx, request))
+            )
+          ).filter(
+            (res): res is TypeSearchResponse | SystemSearchResponse =>
+              res.type === "search-response"
+          );
+
+          return {
+            state: args.state,
+            ctx: args.ctx,
+            response: {
+              ...responses[0],
+              body: responses.map((r) => r.body).flat(),
+            },
+          };
+        }
         case "history-request": {
           const responses = (
             await Promise.all(
@@ -81,12 +98,9 @@ function createRouterMiddleware<
             (
               res
             ): res is
-              | TypeSearchResponse
-              | SystemSearchResponse
               | SystemHistoryResponse
               | TypeHistoryResponse
-              | HistoryInstanceResponse =>
-              res.type === "history-response" || res.type === "search-response"
+              | InstanceHistoryResponse => res.type === "history-response"
           );
 
           return {
