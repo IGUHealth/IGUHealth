@@ -324,7 +324,11 @@ export function fhirResponseToKoaResponse(
     case "history-response":
       return {
         status: 200,
-        body: toBundle("history", undefined, fhirResponse.body),
+        body: {
+          type: "history",
+          resourceType: "Bundle",
+          entry: fhirResponse.body,
+        },
       };
     case "create-response":
       return {

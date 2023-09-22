@@ -1,0 +1,3 @@
+CREATE TYPE UPDATE_TYPE AS ENUM ('PUT', 'POST', 'PATCH', 'DELETE');
+
+ALTER TABLE resources ADD COLUMN request_method UPDATE_TYPE default 'PUT';

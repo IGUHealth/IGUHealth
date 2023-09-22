@@ -2,10 +2,13 @@ import {
   id,
   Resource,
   Bundle,
+  BundleEntry,
   CapabilityStatement,
   Parameters,
 } from "@iguhealth/fhir-types/r4/types";
 import type { ParsedParameter } from "./url.js";
+
+export type REQUEST_METHOD = "PUT" | "POST" | "DELETE" | "PATCH";
 
 export type RequestLevel = {
   instance: "instance";
@@ -186,9 +189,11 @@ export type DeleteResponse = InstanceInteraction & {
   type: ResponseInteractionTypes["delete"];
 };
 
-export type HistoryInstanceResponse = InstanceInteraction & {
+type HISTORY_BODY = BundleEntry[];
+
+export type InstanceHistoryResponse = InstanceInteraction & {
   type: ResponseInteractionTypes["history"];
-  body: Resource[];
+  body: HISTORY_BODY;
 };
 
 export type CreateResponse = TypeInteraction & {
@@ -205,7 +210,7 @@ export type TypeSearchResponse = TypeInteraction & {
 
 export type TypeHistoryResponse = TypeInteraction & {
   type: ResponseInteractionTypes["history"];
-  body: Resource[];
+  body: HISTORY_BODY;
 };
 
 export type CapabilitiesResponse = SystemInteraction & {
@@ -225,7 +230,7 @@ export type TransactionResponse = SystemInteraction & {
 
 export type SystemHistoryResponse = SystemInteraction & {
   type: ResponseInteractionTypes["history"];
-  body: Resource[];
+  body: HISTORY_BODY;
 };
 
 export type SystemSearchResponse = SystemInteraction & {
@@ -262,7 +267,7 @@ export type FHIRResponse =
   | UpdateResponse
   | PatchResponse
   | DeleteResponse
-  | HistoryInstanceResponse
+  | InstanceHistoryResponse
   | CreateResponse
   | TypeSearchResponse
   | TypeHistoryResponse

@@ -278,10 +278,7 @@ async function httpResponseToFHIRResponse(
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
       const hresource = (await response.json()) as Bundle;
-      const resources =
-        hresource.entry
-          ?.map((e) => e.resource)
-          .filter((r): r is Resource => r !== undefined) || [];
+      const resources = hresource.entry || [];
       switch (request.level) {
         case "system": {
           return {

@@ -11,6 +11,7 @@ import {
 } from "@iguhealth/client/middleware";
 import {
   Address,
+  BundleEntry,
   canonical,
   CodeableConcept,
   Coding,
@@ -657,9 +658,10 @@ async function saveResource<CTX extends FHIRServerCTX>(
   try {
     await client.query("BEGIN");
     const queryText =
-      "INSERT INTO resources(workspace, author, resource) VALUES($1, $2, $3) RETURNING resource";
+      "INSERT INTO resources(workspace, request_method, author, resource) VALUES($1, $2, $3, $4) RETURNING resource";
     const res = await client.query(queryText, [
       ctx.workspace,
+      "POST",
       ctx.author,
       resource,
     ]);
@@ -698,17 +700,24 @@ async function getResourceInstanceHistory<CTX extends FHIRServerCTX>(
   ctx: CTX,
   resourceType: ResourceType,
   id: string
-): Promise<Resource[]> {
+): Promise<BundleEntry[]> {
   const res = await client.query(
-    "SELECT resource FROM resources WHERE workspace = $1 AND resource_type = $2 AND id = $3 ORDER BY version_id DESC",
+    "SELECT resource, request_method FROM resources WHERE workspace = $1 AND resource_type = $2 AND id = $3 ORDER BY version_id DESC",
     [ctx.workspace, resourceType, id]
   );
-  const resourceHistory = res.rows.map((row) => row.resource as Resource);
+  const resourceHistory = res.rows.map((row) => ({
+    resource: row.resource as Resource,
+    request: {
+      url: `${row.resource.resourceType}/${row.resource.id}`,
+      method: row.request_method,
+    },
+  }));
   return resourceHistory;
 }
 
 async function patchResource<CTX extends FHIRServerCTX>(
   client: pg.PoolClient,
+  request_method: "PATCH" | "PUT",
   ctx: CTX,
   resourceType: ResourceType,
   id: string,
@@ -727,9 +736,10 @@ async function patchResource<CTX extends FHIRServerCTX>(
       newResource.id = resource.id;
     }
     const queryText =
-      "INSERT INTO resources(workspace, author, resource, prev_version_id, patches) VALUES($1, $2, $3, $4, $5) RETURNING resource";
+      "INSERT INTO resources(workspace, request_method, author, resource, prev_version_id, patches) VALUES($1, $2, $3, $4, $5, $6) RETURNING resource";
     const res = await client.query(queryText, [
       ctx.workspace,
+      request_method,
       ctx.author,
       newResource,
       resource.meta?.versionId,
@@ -761,10 +771,11 @@ async function deleteResource<CTX extends FHIRServerCTX>(
         )
       );
     const queryText =
-      "INSERT INTO resources(workspace, author, resource, prev_version_id, deleted) VALUES($1, $2, $3, $4, $5) RETURNING resource";
+      "INSERT INTO resources(workspace, request_method, author, resource, prev_version_id, deleted) VALUES($1, $2, $3, $4, $5, $6) RETURNING resource";
 
     const res = await client.query(queryText, [
       ctx.workspace,
+      "DELETE",
       ctx.author,
       resource,
       resource.meta?.versionId,
@@ -897,6 +908,7 @@ function createPostgresMiddleware<
               async () =>
                 await patchResource(
                   client,
+                  "PUT",
                   args.ctx,
                   request.resourceType as ResourceType,
                   request.id,
