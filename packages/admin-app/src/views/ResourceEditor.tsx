@@ -84,7 +84,7 @@ function ResourceHistory() {
           selectorType: "fhirpath",
         },
         {
-          name: "Last Updated",
+          name: "Updated at",
           selector: "$this.resource.meta.lastUpdated",
           selectorType: "fhirpath",
         },
