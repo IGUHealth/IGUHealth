@@ -1,2 +1,1 @@
 ALTER TABLE resources DROP COLUMN request_method;
-DROP TYPE UPDATE_TYPE;
