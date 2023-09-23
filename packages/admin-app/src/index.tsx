@@ -34,8 +34,9 @@ import { Logo } from "./components/logo";
 
 import "./index.css";
 
-function LoginWrapper({ children }: { children: React.ReactNode }) {
+function LoginWrapper() {
   const auth0Info = useAuth0();
+  const navigate = useNavigate();
   const initiateAuth = !auth0Info.isAuthenticated && !auth0Info.isLoading;
 
   useEffect(() => {
@@ -56,7 +57,9 @@ function LoginWrapper({ children }: { children: React.ReactNode }) {
           <div className="mt-1 ">Loading...</div>
         </div>
       ) : (
-        <div className="h-screen flex">{children}</div>
+        <div className="h-screen flex">
+          <Outlet />
+        </div>
       )}
     </>
   );
@@ -81,6 +84,7 @@ function ServiceSetup({ children }: { children: React.ReactNode }) {
 function WorkspaceCheck() {
   const navigate = useNavigate();
   const matches = useMatches();
+  console.log(matches, window.location.pathname);
 
   const auth0 = useAuth0();
 
@@ -100,40 +104,72 @@ function WorkspaceCheck() {
   );
 }
 
+function Auth0Wrapper() {
+  const navigate = useNavigate();
+  return (
+    <Auth0Provider
+      useRefreshTokens
+      domain={process.env.REACT_APP_AUTH0_DOMAIN || ""}
+      clientId={process.env.REACT_APP_AUTH0_CLIENT_ID || ""}
+      onRedirectCallback={(appState) => {
+        navigate(appState?.returnTo || "/");
+      }}
+      authorizationParams={{
+        audience: "https://iguhealth.com/api",
+        redirect_uri: window.location.origin,
+      }}
+    >
+      <Outlet />
+    </Auth0Provider>
+  );
+}
+
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <WorkspaceCheck />,
+    id: "auth0-wrapper",
+    element: <Auth0Wrapper />,
     children: [
       {
-        id: "empty-workspace",
-        path: "/no-workspace",
-        element: <EmptyWorkspace />,
-      },
-      {
-        path: "/",
-        element: (
-          <ServiceSetup>
-            <Root />
-          </ServiceSetup>
-        ),
+        id: "login",
+        element: <LoginWrapper />,
         children: [
-          { id: "settings", path: "/settings", element: <Settings /> },
-          { id: "root", path: "/", element: <Resources /> },
           {
-            id: "types",
-            path: "/resources/:resourceType",
-            element: <ResourceType />,
-          },
-          {
-            id: "instance",
-            path: "/resources/:resourceType/:id",
-            element: <ResourceEditor />,
-          },
-          {
-            id: "batch-import",
-            path: "/batch-import",
-            element: <BatchImport />,
+            path: "/",
+            element: <WorkspaceCheck />,
+            children: [
+              {
+                id: "empty-workspace",
+                path: "/no-workspace",
+                element: <EmptyWorkspace />,
+              },
+              {
+                path: "/",
+                element: (
+                  <ServiceSetup>
+                    <Root />
+                  </ServiceSetup>
+                ),
+                children: [
+                  { id: "settings", path: "/settings", element: <Settings /> },
+                  { id: "root", path: "/", element: <Resources /> },
+                  {
+                    id: "types",
+                    path: "/resources/:resourceType",
+                    element: <ResourceType />,
+                  },
+                  {
+                    id: "instance",
+                    path: "/resources/:resourceType/:id",
+                    element: <ResourceEditor />,
+                  },
+                  {
+                    id: "batch-import",
+                    path: "/batch-import",
+                    element: <BatchImport />,
+                  },
+                ],
+              },
+            ],
           },
         ],
       },
@@ -319,21 +355,7 @@ function Root() {
 }
 
 function App() {
-  return (
-    <Auth0Provider
-      useRefreshTokens
-      domain={process.env.REACT_APP_AUTH0_DOMAIN || ""}
-      clientId={process.env.REACT_APP_AUTH0_CLIENT_ID || ""}
-      authorizationParams={{
-        audience: "https://iguhealth.com/api",
-        redirect_uri: window.location.origin,
-      }}
-    >
-      <LoginWrapper>
-        <RouterProvider router={router} />
-      </LoginWrapper>
-    </Auth0Provider>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
