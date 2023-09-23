@@ -84,8 +84,6 @@ function ServiceSetup({ children }: { children: React.ReactNode }) {
 function WorkspaceCheck() {
   const navigate = useNavigate();
   const matches = useMatches();
-  console.log(matches, window.location.pathname);
-
   const auth0 = useAuth0();
 
   useEffect(() => {
