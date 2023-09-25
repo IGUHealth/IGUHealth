@@ -87,6 +87,7 @@ export type DeleteRequest = InstanceInteraction & {
 
 export type HistoryInstanceRequest = InstanceInteraction & {
   type: RequestInteractionTypes["history"];
+  parameters?: ParsedParameter<string | number>[];
 };
 
 export type CreateRequest = TypeInteraction & {
@@ -101,6 +102,7 @@ export type TypeSearchRequest = TypeInteraction & {
 
 export type TypeHistoryRequest = TypeInteraction & {
   type: RequestInteractionTypes["history"];
+  parameters?: ParsedParameter<string | number>[];
 };
 
 export type CapabilitiesRequest = SystemInteraction & {
@@ -119,6 +121,7 @@ export type TransactionRequest = SystemInteraction & {
 
 export type SystemHistoryRequest = SystemInteraction & {
   type: RequestInteractionTypes["history"];
+  parameters?: ParsedParameter<string | number>[];
 };
 
 export type SystemSearchRequest = SystemInteraction & {

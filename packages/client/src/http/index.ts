@@ -94,6 +94,7 @@ async function toHTTPRequest(
 
     case "history-request": {
       let url;
+      const queryString = parametersToQueryString(request.parameters || []);
       switch (request.level) {
         case "instance":
           url = `${state.url}/${request.resourceType}/${request.id}/_history`;
@@ -107,7 +108,7 @@ async function toHTTPRequest(
       }
 
       return {
-        url: url,
+        url: `${url}${queryString ? `?${queryString}` : ""}`,
         method: "GET",
         headers,
       };
@@ -277,6 +278,7 @@ async function httpResponseToFHIRResponse(
     case "history-request":
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
+
       const hresource = (await response.json()) as Bundle;
       const resources = hresource.entry || [];
       switch (request.level) {

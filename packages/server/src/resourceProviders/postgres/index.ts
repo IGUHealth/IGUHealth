@@ -41,9 +41,15 @@ import {
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { param_types_supported } from "./constants.js";
-import { searchResources, getDecimalPrecision } from "../utilities.js";
+import {
+  searchResources,
+  getDecimalPrecision,
+  deriveLimit,
+} from "../utilities.js";
 import { FHIRServerCTX } from "../../fhirServer.js";
 import { executeSearchQuery } from "./search/index.js";
+import { ParsedParameter } from "@iguhealth/client/url";
+import { last } from "lodash";
 
 async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
@@ -695,16 +701,129 @@ async function getResource<CTX extends FHIRServerCTX>(
   return res.rows[0].resource as Resource;
 }
 
-async function getResourceInstanceHistory<CTX extends FHIRServerCTX>(
+function processHistoryParameters(
+  query: string,
+  sqlParameters: any[],
+  parameters: ParsedParameter<string | number>[]
+): { query: string; parameters: any[] } {
+  let index = sqlParameters.length + 1;
+  const _since = parameters.find((p) => p.name === "_since");
+  const invalidParameters = parameters.filter(
+    (p) => validHistoryParameters.indexOf(p.name) === -1
+  );
+  if (invalidParameters.length !== 0) {
+    throw new OperationError(
+      outcomeError(
+        "invalid",
+        `Invalid parameters: ${invalidParameters.map((p) => p.name).join(", ")}`
+      )
+    );
+  }
+
+  if (_since?.value[0]) {
+    const formattedDate = dayjs(
+      _since.value[0] as string,
+      "YYYY-MM-DDThh:mm:ss+zz:zz"
+    ).toDate();
+
+    query = `${query} AND created_at >= $${index++} `;
+    sqlParameters = [...sqlParameters, formattedDate];
+  }
+
+  return {
+    query,
+    parameters: sqlParameters,
+  };
+}
+
+async function getInstanceHistory<CTX extends FHIRServerCTX>(
   client: pg.PoolClient,
   ctx: CTX,
   resourceType: ResourceType,
-  id: string
+  id: string,
+  parameters: ParsedParameter<string | number>[]
 ): Promise<BundleEntry[]> {
-  const res = await client.query(
-    "SELECT resource, request_method FROM resources WHERE workspace = $1 AND resource_type = $2 AND id = $3 ORDER BY version_id DESC",
-    [ctx.workspace, resourceType, id]
+  const _count = parameters.find((p) => p.name === "_count");
+  const limit = deriveLimit([0, 50], _count);
+
+  let { query, parameters: sqlParameters } = processHistoryParameters(
+    "SELECT resource, request_method FROM resources WHERE workspace = $1 AND resource_type = $2 AND id = $3",
+    [ctx.workspace, resourceType, id],
+    parameters
   );
+
+  query = `${query} ORDER BY version_id DESC LIMIT $${
+    sqlParameters.length + 1
+  }`;
+  sqlParameters = [...sqlParameters, limit];
+
+  const res = await client.query(query, sqlParameters);
+
+  const resourceHistory = res.rows.map((row) => ({
+    resource: row.resource as Resource,
+    request: {
+      url: `${row.resource.resourceType}/${row.resource.id}`,
+      method: row.request_method,
+    },
+  }));
+  return resourceHistory;
+}
+
+const validHistoryParameters = ["_count", "_since"]; // "_at", "_list"]
+
+async function getTypeHistory<CTX extends FHIRServerCTX>(
+  client: pg.PoolClient,
+  ctx: CTX,
+  resourceType: ResourceType,
+  parameters: ParsedParameter<string | number>[]
+): Promise<BundleEntry[]> {
+  const _count = parameters.find((p) => p.name === "_count");
+  const limit = deriveLimit([0, 50], _count);
+
+  let { query, parameters: sqlParameters } = processHistoryParameters(
+    "SELECT resource, request_method FROM resources WHERE workspace = $1 AND resource_type = $2",
+    [ctx.workspace, resourceType],
+    parameters
+  );
+
+  query = `${query} ORDER BY version_id DESC LIMIT $${
+    sqlParameters.length + 1
+  }`;
+  sqlParameters = [...sqlParameters, limit];
+
+  const res = await client.query(query, sqlParameters);
+
+  const resourceHistory = res.rows.map((row) => ({
+    resource: row.resource as Resource,
+    request: {
+      url: `${row.resource.resourceType}/${row.resource.id}`,
+      method: row.request_method,
+    },
+  }));
+  return resourceHistory;
+}
+
+async function getSystemHistory<CTX extends FHIRServerCTX>(
+  client: pg.PoolClient,
+  ctx: CTX,
+  parameters: ParsedParameter<string | number>[]
+): Promise<BundleEntry[]> {
+  const _count = parameters.find((p) => p.name === "_count");
+  const limit = deriveLimit([0, 50], _count);
+
+  let { query, parameters: sqlParameters } = processHistoryParameters(
+    "SELECT resource, request_method FROM resources WHERE workspace = $1",
+    [ctx.workspace],
+    parameters
+  );
+
+  query = `${query} ORDER BY version_id DESC LIMIT $${
+    sqlParameters.length + 1
+  }`;
+  sqlParameters = [...sqlParameters, limit];
+
+  const res = await client.query(query, sqlParameters);
+
   const resourceHistory = res.rows.map((row) => ({
     resource: row.resource as Resource,
     request: {
@@ -957,15 +1076,16 @@ function createPostgresMiddleware<
           }
         }
         case "history-request": {
-          switch (request.level) {
-            case "instance": {
-              const client = await args.state.pool.connect();
-              try {
-                const instanceHistory = await getResourceInstanceHistory(
+          const client = await args.state.pool.connect();
+          try {
+            switch (request.level) {
+              case "instance": {
+                const instanceHistory = await getInstanceHistory(
                   client,
                   args.ctx,
                   request.resourceType as ResourceType,
-                  request.id
+                  request.id,
+                  request.parameters || []
                 );
                 return {
                   state: args.state,
@@ -978,19 +1098,44 @@ function createPostgresMiddleware<
                     body: instanceHistory,
                   },
                 };
-              } finally {
-                client.release();
+              }
+              case "type": {
+                const typeHistory = await getTypeHistory(
+                  client,
+                  args.ctx,
+                  request.resourceType as ResourceType,
+                  request.parameters || []
+                );
+                return {
+                  state: args.state,
+                  ctx: args.ctx,
+                  response: {
+                    type: "history-response",
+                    level: "type",
+                    body: typeHistory,
+                    resourceType: request.resourceType,
+                  },
+                };
+              }
+              case "system": {
+                const systemHistory = await getSystemHistory(
+                  client,
+                  args.ctx,
+                  request.parameters || []
+                );
+                return {
+                  state: args.state,
+                  ctx: args.ctx,
+                  response: {
+                    type: "history-response",
+                    level: "system",
+                    body: systemHistory,
+                  },
+                };
               }
             }
-            case "system":
-            case "type": {
-              throw new OperationError(
-                outcomeError(
-                  "not-supported",
-                  "History requests only supported at instance level."
-                )
-              );
-            }
+          } finally {
+            client.release();
           }
         }
         default:

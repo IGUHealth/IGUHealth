@@ -218,10 +218,21 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     if (response.type !== "delete-response")
       throw new Error("Unexpected response type");
   }
-  async historySystem(ctx: CTX): Promise<BundleEntry[]> {
+  async historySystem(
+    ctx: CTX,
+    parameters?: ParsedParameter<string | number>[] | string
+  ): Promise<BundleEntry[]> {
+    const parsedParameters: ParsedParameter<string | number>[] =
+      typeof parameters === "string"
+        ? parseQuery(parameters)
+        : parameters
+        ? parameters
+        : [];
+
     const response = await this.request(ctx, {
       type: "history-request",
       level: "system",
+      parameters: parsedParameters,
     });
     if (response.type !== "history-response")
       throw new Error("Unexpected response type");
@@ -229,12 +240,20 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   }
   async historyType<T extends ResourceType>(
     ctx: CTX,
-    resourceType: T
+    resourceType: T,
+    parameters?: ParsedParameter<string | number>[] | string
   ): Promise<BundleEntry[]> {
+    const parsedParameters: ParsedParameter<string | number>[] =
+      typeof parameters === "string"
+        ? parseQuery(parameters)
+        : parameters
+        ? parameters
+        : [];
     const response = await this.request(ctx, {
       type: "history-request",
       level: "type",
       resourceType: resourceType,
+      parameters: parsedParameters,
     });
     if (response.type !== "history-response")
       throw new Error("Unexpected response type");
@@ -243,13 +262,21 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   async historyInstance<T extends ResourceType>(
     ctx: CTX,
     resourceType: T,
-    id: string
+    id: string,
+    parameters?: ParsedParameter<string | number>[] | string
   ): Promise<BundleEntry[]> {
+    const parsedParameters: ParsedParameter<string | number>[] =
+      typeof parameters === "string"
+        ? parseQuery(parameters)
+        : parameters
+        ? parameters
+        : [];
     const response = await this.request(ctx, {
       type: "history-request",
       level: "instance",
       resourceType: resourceType,
       id: id,
+      parameters: parsedParameters,
     });
     if (response.type !== "history-response")
       throw new Error("Unexpected response type");
@@ -484,10 +511,20 @@ export class SynchronousClient<State, CTX> implements FHIRClientSync<CTX> {
     if (response.type !== "delete-response")
       throw new Error("Unexpected response type");
   }
-  historySystem(ctx: CTX): BundleEntry[] {
+  historySystem(
+    ctx: CTX,
+    parameters: ParsedParameter<string | number>[] | string
+  ): BundleEntry[] {
+    const parsedParameters: ParsedParameter<string | number>[] =
+      typeof parameters === "string"
+        ? parseQuery(parameters)
+        : parameters
+        ? parameters
+        : [];
     const response = this.request(ctx, {
       type: "history-request",
       level: "system",
+      parameters: parsedParameters,
     });
     if (response.type !== "history-response")
       throw new Error("Unexpected response type");
@@ -495,12 +532,20 @@ export class SynchronousClient<State, CTX> implements FHIRClientSync<CTX> {
   }
   historyType<T extends ResourceType>(
     ctx: CTX,
-    resourceType: T
+    resourceType: T,
+    parameters: ParsedParameter<string | number>[] | string
   ): BundleEntry[] {
+    const parsedParameters: ParsedParameter<string | number>[] =
+      typeof parameters === "string"
+        ? parseQuery(parameters)
+        : parameters
+        ? parameters
+        : [];
     const response = this.request(ctx, {
       type: "history-request",
       level: "type",
       resourceType: resourceType,
+      parameters: parsedParameters,
     });
     if (response.type !== "history-response")
       throw new Error("Unexpected response type");
@@ -509,13 +554,21 @@ export class SynchronousClient<State, CTX> implements FHIRClientSync<CTX> {
   historyInstance<T extends ResourceType>(
     ctx: CTX,
     resourceType: T,
-    id: string
+    id: string,
+    parameters: ParsedParameter<string | number>[] | string
   ): BundleEntry[] {
+    const parsedParameters: ParsedParameter<string | number>[] =
+      typeof parameters === "string"
+        ? parseQuery(parameters)
+        : parameters
+        ? parameters
+        : [];
     const response = this.request(ctx, {
       type: "history-request",
       level: "instance",
       resourceType: resourceType,
       id: id,
+      parameters: parsedParameters,
     });
     if (response.type !== "history-response")
       throw new Error("Unexpected response type");
