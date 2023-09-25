@@ -27,9 +27,30 @@ test("History test", async () => {
 
     resources.push(p);
     expect(p.id).toBeDefined();
-    const patient = await client.update({}, p);
+    await client.update({}, p);
     const history = await client.historyInstance({}, "Patient", p.id as string);
     expect(history.length).toEqual(2);
+
+    const p2 = await client.create<Patient>({}, { resourceType: "Patient" });
+    resources.push(p2);
+    expect(p2.id).toBeDefined();
+    await client.update({}, p2);
+    const typeHistory = await client.historyType({}, "Patient", [
+      { name: "_since", value: [time] },
+    ]);
+    expect(typeHistory.length).toEqual(4);
+
+    const practitioner = await client.create<Practitioner>(
+      {},
+      { resourceType: "Practitioner" }
+    );
+    resources.push(practitioner);
+    expect(practitioner.id).toBeDefined();
+    await client.update({}, practitioner);
+    const systemHistory = await client.historySystem({}, [
+      { name: "_since", value: [time] },
+    ]);
+    expect(systemHistory.length).toEqual(6);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
