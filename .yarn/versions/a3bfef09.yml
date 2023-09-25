@@ -1,0 +1,7 @@
+releases:
+  "@iguhealth/client": minor
+  "@iguhealth/server": minor
+  admin-app: patch
+
+declined:
+  - "@iguhealth/fhir-validation"

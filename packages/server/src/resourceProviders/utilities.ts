@@ -21,6 +21,25 @@ export type SearchParameterResult = ParsedParameter<string | number> & {
 
 export type ParameterType = SearchParameterResource | SearchParameterResult;
 
+export function deriveLimit(
+  range: [number, number],
+  userLimit?: ParsedParameter<string | number>
+): number {
+  const limit =
+    userLimit &&
+    !isNaN(parseInt((userLimit.value && userLimit.value[0]).toString()))
+      ? Math.min(
+          Math.max(
+            parseInt((userLimit.value && userLimit.value[0]).toString()),
+            range[0]
+          ),
+          range[1]
+        )
+      : range[1];
+
+  return limit;
+}
+
 export function searchResources(
   resourceTypes: ResourceType[]
 ): (ResourceType | string)[] {

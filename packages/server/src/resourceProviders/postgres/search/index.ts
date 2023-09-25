@@ -22,6 +22,7 @@ import {
   parametersWithMetaAssociated,
   searchResources,
   deriveResourceTypeFilter,
+  deriveLimit,
 } from "../../utilities.js";
 
 import { deriveSortQuery } from "./sort.js";
@@ -647,17 +648,7 @@ export async function executeSearchQuery(
   const offsetParam = parametersResult.find((p) => p.name === "_offset");
   const totalParam = parametersResult.find((p) => p.name === "_total");
 
-  const limit =
-    countParam &&
-    !isNaN(parseInt((countParam.value && countParam.value[0]).toString()))
-      ? Math.min(
-          Math.max(
-            parseInt((countParam.value && countParam.value[0]).toString()),
-            0
-          ),
-          50
-        )
-      : 50;
+  const limit = deriveLimit([0, 50], countParam);
 
   const offset =
     offsetParam &&

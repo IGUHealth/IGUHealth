@@ -45,12 +45,20 @@ export interface FHIRClientSync<CTX> {
     versionId: id
   ): AResource<T> | undefined;
   delete(ctx: CTX, resourceType: ResourceType, id: id): void;
-  historySystem(ctx: CTX): BundleEntry[];
-  historyType<T extends ResourceType>(ctx: CTX, resourceType: T): BundleEntry[];
+  historySystem(
+    ctx: CTX,
+    parameters?: ParsedParameter<string | number>[] | string
+  ): BundleEntry[];
+  historyType<T extends ResourceType>(
+    ctx: CTX,
+    resourceType: T,
+    parameters?: ParsedParameter<string | number>[] | string
+  ): BundleEntry[];
   historyInstance<T extends ResourceType>(
     ctx: CTX,
     resourceType: T,
-    id: id
+    id: id,
+    parameters?: ParsedParameter<string | number>[] | string
   ): BundleEntry[];
   invoke_system<Op extends IOperation<any, any>>(
     op: Op,
@@ -101,15 +109,20 @@ export interface FHIRClientAsync<CTX> {
     versionId: id
   ): Promise<AResource<T> | undefined>;
   delete(ctx: CTX, resourceType: ResourceType, id: id): Promise<void>;
-  historySystem(ctx: CTX): Promise<BundleEntry[]>;
+  historySystem(
+    ctx: CTX,
+    parameters?: ParsedParameter<string | number>[] | string
+  ): Promise<BundleEntry[]>;
   historyType<T extends ResourceType>(
     ctx: CTX,
-    resourceType: T
+    resourceType: T,
+    parameters?: ParsedParameter<string | number>[] | string
   ): Promise<BundleEntry[]>;
   historyInstance<T extends ResourceType>(
     ctx: CTX,
     resourceType: T,
-    id: id
+    id: id,
+    parameters?: ParsedParameter<string | number>[] | string
   ): Promise<BundleEntry[]>;
   invoke_system<Op extends IOperation<any, any>>(
     op: Op,

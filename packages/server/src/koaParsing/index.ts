@@ -145,6 +145,7 @@ export function KoaRequestToFHIRRequest(
           return {
             type: "history-request",
             level: "system",
+            parameters: parseParameters(url),
           };
         }
         // Split by Questionmark because of search parameters
@@ -191,6 +192,7 @@ export function KoaRequestToFHIRRequest(
           type: "history-request",
           level: "type",
           resourceType: urlPieces[0],
+          parameters: parseParameters(url),
         };
       } else if (resourceTypes.has(urlPieces[0])) {
         return {
@@ -259,6 +261,7 @@ export function KoaRequestToFHIRRequest(
           level: "instance",
           resourceType: urlPieces[0],
           id: urlPieces[1],
+          parameters: parseParameters(url),
         };
       }
     }
