@@ -3,16 +3,18 @@ import dotEnv from "dotenv";
 import pg from "pg";
 import { randomUUID } from "crypto";
 
-import { Resource, Subscription } from "@iguhealth/fhir-types/r4/types";
+import {
+  ResourceType,
+  Resource,
+  Subscription,
+  BundleEntry,
+} from "@iguhealth/fhir-types/r4/types";
 import {
   OperationError,
   isOperationError,
+  outcome,
   outcomeError,
 } from "@iguhealth/operation-outcomes";
-import type {
-  SystemSearchResponse,
-  TypeSearchResponse,
-} from "@iguhealth/client/types";
 import { evaluate } from "@iguhealth/fhirpath";
 
 import { resolveOperationDefinition } from "../operation-executors/utilities.js";
@@ -24,6 +26,13 @@ import logAuditEvent, {
 import { KoaRequestToFHIRRequest } from "../koaParsing/index.js";
 import { FHIRServerCTX } from "../fhirServer.js";
 import { Operation } from "@iguhealth/operation-execution";
+import {
+  SearchParameterResource,
+  deriveResourceTypeFilter,
+  parametersWithMetaAssociated,
+  findSearchParameter,
+} from "../resourceProviders/utilities.js";
+import { fitsSearchCriteria } from "../resourceProviders/memory/search.js";
 
 dotEnv.config();
 
@@ -107,6 +116,11 @@ async function handleSubscriptionPayload(
   }
 }
 
+// Returns key for subscription lock.
+function subscriptionLockKey(workspace: string, subscriptionId: string) {
+  return `${workspace}:${subscriptionId}`;
+}
+
 async function subWorker(workerID = randomUUID(), loopInterval = 500) {
   // Using a pool directly because need to query up workspaces.
   const services = await createServiceCTX();
@@ -125,6 +139,7 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
     ).rows.map((row) => row.id);
 
     for (const workspace of activeWorkspaces) {
+      services.logger.info(`PROCESSING WORKSPACE SUBS '${workspace}'`);
       const ctx = { ...services, workspace, author: "system" };
       const activeSubscriptions = await services.client.search_type(
         ctx,
@@ -132,11 +147,15 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
         [{ name: "status", value: ["active"] }]
       );
       for (const subscription of activeSubscriptions.resources) {
+        // Use lock to avoid duplication on sub processing (could have two concurrent subs running in unison otherwise).
         await ctx.lock.withLock(
-          `${ctx.workspace}:${subscription.id}`,
+          subscriptionLockKey(workspace, subscription.id as string),
           async () => {
             ctx.logger.info(
-              `worker '${workerID}' has lock '${ctx.workspace}:${subscription.id}'`
+              `WORKER '${workerID}' has lock for '${subscriptionLockKey(
+                workspace,
+                subscription.id as string
+              )}'`
             );
             try {
               ctx.logger.info({
@@ -155,6 +174,7 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
                   )
                 );
               }
+
               const sortParameter = request.parameters.find(
                 (p) => p.name === "_sort"
               );
@@ -168,42 +188,112 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
                 );
               }
 
-              request.parameters = request.parameters.concat([
-                { name: "_sort", value: ["_iguhealth-version-seq"] },
-              ]);
-
-              let getLatestVersionIdForSub = await services.cache.get(
+              const cachedSubID = await services.cache.get(
                 ctx,
                 `${subscription.id}_latest`
               );
 
-              getLatestVersionIdForSub = getLatestVersionIdForSub
-                ? getLatestVersionIdForSub
+              const latestVersionIdForSub = cachedSubID
+                ? cachedSubID
                 : // If latest isn't there then use the subscription version when created.
                   getVersionSequence(subscription);
 
-              request.parameters = request.parameters.concat([
-                {
-                  name: "_iguhealth-version-seq",
-                  value: [`gt${getLatestVersionIdForSub}`],
-                },
-              ]);
+              let historyPoll: BundleEntry[] = [];
 
-              const result = (await services.client.request(ctx, request)) as
-                | TypeSearchResponse
-                | SystemSearchResponse;
+              switch (request.level) {
+                case "system": {
+                  historyPoll = await services.client.historySystem(ctx, [
+                    {
+                      name: "_since-version",
+                      value: [latestVersionIdForSub],
+                    },
+                  ]);
+                }
+                case "type": {
+                  historyPoll = await services.client.historyType(
+                    ctx,
+                    request.type as ResourceType,
+                    [
+                      {
+                        name: "_since-version",
+                        value: [latestVersionIdForSub],
+                      },
+                    ]
+                  );
+                }
+              }
 
-              if (result.body.length !== 0) {
+              if (
+                cachedSubID &&
+                historyPoll.length > 0 &&
+                historyPoll[historyPoll.length - 1].resource?.meta
+                  ?.versionId !== cachedSubID
+              ) {
+                throw new OperationError(
+                  outcomeError(
+                    "invalid",
+                    "Mismatch on subscription expected version and returned version."
+                  )
+                );
+              }
+
+              const resourceTypes = deriveResourceTypeFilter(request);
+              // Remove _type as using on derived resourceTypeFilter
+              request.parameters = request.parameters.filter(
+                (p) => p.name !== "_type"
+              );
+
+              const parameters = await parametersWithMetaAssociated(
+                resourceTypes,
+                request.parameters,
+                async (resourceTypes, name) =>
+                  (
+                    await findSearchParameter(ctx, resourceTypes, name)
+                  ).resources
+              );
+              // Standard parameters
+              const resourceParameters = parameters.filter(
+                (v): v is SearchParameterResource => v.type === "resource"
+              );
+
+              // By default poll would have 1 resource if current version ids match.
+              if (historyPoll.length > 1) {
+                if (historyPoll[0].resource === undefined)
+                  throw new OperationError(
+                    outcomeError(
+                      "invalid",
+                      "history poll returned entry missing resource."
+                    )
+                  );
                 await services.cache.set(
                   ctx,
                   `${subscription.id}_latest`,
-                  getVersionSequence(result.body[result.body.length - 1])
+                  getVersionSequence(historyPoll[0].resource)
                 );
-                await handleSubscriptionPayload(ctx, subscription, result.body);
+                for (const entry of historyPoll.slice(
+                  0,
+                  historyPoll.length - 1
+                )) {
+                  if (entry.resource === undefined)
+                    throw new OperationError(
+                      outcomeError(
+                        "invalid",
+                        "history poll returned entry missing resource."
+                      )
+                    );
+                  if (
+                    await fitsSearchCriteria(entry.resource, resourceParameters)
+                  ) {
+                    await handleSubscriptionPayload(ctx, subscription, [
+                      entry.resource,
+                    ]);
+                  }
+                }
               }
             } catch (e) {
               ctx.logger.error(e);
               let errorDescription = "Subscription failed to process";
+
               if (isOperationError(e)) {
                 errorDescription = e.outcome.issue
                   .map((i) => i.details)
@@ -215,6 +305,7 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
                 { reference: `Subscription/${subscription.id}` },
                 "Subscription failed to process"
               );
+
               await services.client.update(ctx, {
                 ...subscription,
                 status: "error",

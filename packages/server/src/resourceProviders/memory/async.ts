@@ -9,7 +9,6 @@ import {
   MiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
-import { evaluate } from "@iguhealth/fhirpath";
 
 import {
   parametersWithMetaAssociated,
@@ -18,39 +17,9 @@ import {
   deriveResourceTypeFilter,
 } from "../utilities.js";
 import { InternalData } from "./types.js";
+import { fitsSearchCriteria } from "./search.js";
 
-function fitsSearchCriteria(
-  resource: Resource,
-  parameter: SearchParameterResource
-) {
-  switch (parameter.name) {
-    // Special handling for performance reason on heavily used parameters
-    case "name": {
-      return (resource as any)["name"] === parameter.value[0];
-    }
-    case "url": {
-      return (resource as any)["url"] === parameter.value[0];
-    }
-    default: {
-      if (parameter.searchParameter.expression) {
-        const evaluation = evaluate(
-          parameter.searchParameter.expression,
-          resource
-        );
-        return (
-          evaluation.find((v) => {
-            const value = v.valueOf();
-            if (typeof value === "number" || typeof value === "string")
-              return parameter.value.includes(value);
-            return false;
-          }) !== undefined
-        );
-      }
-      return false;
-    }
-  }
-}
-
+// Need special handling of SearchParameter to avoid infinite recursion.
 async function resolveParameter(
   data: InternalData<ResourceType>,
   resourceTypes: ResourceType[],
@@ -103,12 +72,12 @@ function createMemoryMiddleware<
                   .filter((v): v is Resource[] => v !== undefined)
                   .flat();
 
-          let result = (resourceSet || []).filter((resource) => {
-            for (let param of resourceParameters) {
-              if (!fitsSearchCriteria(resource, param)) return false;
+          let result = [];
+          for (const resource of resourceSet || []) {
+            if (await fitsSearchCriteria(resource, resourceParameters)) {
+              result.push(resource);
             }
-            return true;
-          });
+          }
 
           const parametersResult = parameters.filter(
             (v): v is SearchParameterResult => v.type === "result"
