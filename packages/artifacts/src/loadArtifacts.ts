@@ -6,6 +6,7 @@ import {
   AResource,
 } from "@iguhealth/fhir-types/r4/types";
 import { IndexFile, PackageJSON } from "./types.js";
+import { deepStrictEqual } from "node:assert";
 
 function isBundle(r: Resource): r is Bundle {
   return r?.resourceType === "Bundle";
@@ -42,8 +43,17 @@ export default function loadArtifacts<T extends ResourceType>(
   silence = false
 ): AResource<T>[] {
   const requirer = createRequire(location);
-  const packageJson: PackageJSON = requirer("./package.json");
-  const deps = { ...packageJson.devDependencies, ...packageJson.dependencies };
+  const packageJSON: PackageJSON = requirer("./package.json");
+  let deps = { ...packageJSON.dependencies };
+  // https://jestjs.io/docs/environment-variables
+  // JEST sets environment to test by default.
+  if (
+    process.env.NODE_ENV === "development" ||
+    process.env.NODE_ENV === "test"
+  ) {
+    deps = { ...packageJSON.devDependencies, ...deps };
+  }
+
   return Object.keys(deps || {})
     .filter((d) => {
       try {
@@ -56,7 +66,9 @@ export default function loadArtifacts<T extends ResourceType>(
     .map((d) => {
       try {
         if (!silence)
-          console.log(` '${d}' Checking package for .index.config.json`);
+          console.log(
+            ` '${d}' Loading package contents from .index.config.json for resourceType '${resourceType}'`
+          );
         const indexFile: IndexFile | undefined = requirer(
           `${d}/.index.config.json`
         );
