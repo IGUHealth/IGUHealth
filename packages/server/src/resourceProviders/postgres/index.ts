@@ -708,6 +708,8 @@ function processHistoryParameters(
 ): { query: string; parameters: any[] } {
   let index = sqlParameters.length + 1;
   const _since = parameters.find((p) => p.name === "_since");
+  const _since_versionId = parameters.find((p) => p.name === "_since-version");
+
   const invalidParameters = parameters.filter(
     (p) => validHistoryParameters.indexOf(p.name) === -1
   );
@@ -728,6 +730,11 @@ function processHistoryParameters(
 
     query = `${query} AND created_at >= $${index++} `;
     sqlParameters = [...sqlParameters, formattedDate];
+  }
+
+  if (_since_versionId?.value[0]) {
+    query = `${query} AND version_id >= $${index++} `;
+    sqlParameters = [...sqlParameters, _since_versionId.value[0] as string];
   }
 
   return {
@@ -769,7 +776,7 @@ async function getInstanceHistory<CTX extends FHIRServerCTX>(
   return resourceHistory;
 }
 
-const validHistoryParameters = ["_count", "_since"]; // "_at", "_list"]
+const validHistoryParameters = ["_count", "_since", "_since-version"]; // "_at", "_list"]
 
 async function getTypeHistory<CTX extends FHIRServerCTX>(
   client: pg.PoolClient,
