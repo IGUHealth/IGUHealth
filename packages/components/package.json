@@ -1,5 +1,6 @@
 {
   "name": "@iguhealth/components",
+  "version": "0.1.0",
   "packageManager": "yarn@3.6.3",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -9,7 +10,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "watch-js": "rollup --watch -c --bundleConfigAsCjs",
-    "watch-css": "postcss --watch --config postcss.config.js -o dist/index.css src/index.css"
+    "watch-css": "postcss --watch --config postcss.config.js -o dist/index.css src/index.css",
+    "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "peerDependencies": {
     "@codemirror/state": ">=6.0.0",
