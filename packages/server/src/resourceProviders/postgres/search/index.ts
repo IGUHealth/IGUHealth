@@ -5,47 +5,23 @@ import {
   SystemSearchRequest,
   TypeSearchRequest,
 } from "@iguhealth/client/types";
-import {
-  Resource,
-  ResourceType,
-  SearchParameter,
-} from "@iguhealth/fhir-types/r4/types";
+import { Resource, SearchParameter } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../fhirServer.js";
-import { param_types_supported } from "../constants.js";
+
 import {
+  findSearchParameter,
   SearchParameterResource,
   SearchParameterResult,
   getDecimalPrecision,
   searchParameterToTableName,
   parametersWithMetaAssociated,
-  searchResources,
   deriveResourceTypeFilter,
   deriveLimit,
 } from "../../utilities.js";
 
 import { deriveSortQuery } from "./sort.js";
-
-async function findSearchParameter<CTX extends FHIRServerCTX>(
-  ctx: CTX,
-  resourceTypes: ResourceType[],
-  name: string
-): Promise<{ total?: number; resources: SearchParameter[] }> {
-  const result = await ctx.client.search_type(ctx, "SearchParameter", [
-    { name: "name", value: [name] },
-    {
-      name: "type",
-      value: param_types_supported,
-    },
-    {
-      name: "base",
-      value: searchResources(resourceTypes),
-    },
-  ]);
-
-  return result;
-}
 
 function generateCanonicalReferenceSearch(
   ctx: FHIRServerCTX,

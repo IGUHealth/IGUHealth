@@ -6,6 +6,7 @@ import {
   TypeSearchRequest,
 } from "@iguhealth/client/types";
 
+import { FHIRServerCTX } from "../fhirServer.js";
 import { param_types_supported } from "./postgres/constants.js";
 import { ParsedParameter } from "@iguhealth/client/url";
 
@@ -177,6 +178,31 @@ export function isSearchResultParameter(
     default:
       return false;
   }
+}
+
+export async function findSearchParameter<CTX extends FHIRServerCTX>(
+  ctx: CTX,
+  resourceTypes: ResourceType[],
+  name: string
+): Promise<{ total?: number; resources: SearchParameter[] }> {
+  const result = await ctx.client.search_type(ctx, "SearchParameter", [
+    { name: "name", value: [name] },
+    {
+      name: "type",
+      value: param_types_supported,
+    },
+    {
+      name: "base",
+      value: searchResources(resourceTypes),
+    },
+  ]);
+
+  console.log(
+    name,
+    result.resources.map((r) => r.name)
+  );
+
+  return result;
 }
 
 export async function parametersWithMetaAssociated(
