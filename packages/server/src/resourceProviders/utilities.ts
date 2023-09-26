@@ -197,11 +197,6 @@ export async function findSearchParameter<CTX extends FHIRServerCTX>(
     },
   ]);
 
-  console.log(
-    name,
-    result.resources.map((r) => r.name)
-  );
-
   return result;
 }
 

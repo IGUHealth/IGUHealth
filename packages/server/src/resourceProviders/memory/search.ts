@@ -9,7 +9,6 @@ function checkParameterWithResource(
   switch (parameter.name) {
     // Special handling for performance reason on heavily used parameters
     case "name": {
-      console.log((resource as any)["name"] === parameter.value[0]);
       return (resource as any)["name"] === parameter.value[0];
     }
     case "url": {
