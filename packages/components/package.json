@@ -67,5 +67,9 @@
     "dayjs": "^1.11.9",
     "js-file-download": "^0.4.12",
     "react-hot-toast": "^2.4.1"
-  }
+  },
+  "files": [
+    "dist/**",
+    "README.md"
+  ]
 }
