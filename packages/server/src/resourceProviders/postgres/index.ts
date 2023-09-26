@@ -781,7 +781,7 @@ async function getInstanceHistory<CTX extends FHIRServerCTX>(
   return resourceHistory;
 }
 
-const validHistoryParameters = ["_count", "_since"]; // "_at", "_list"]
+const validHistoryParameters = ["_count", "_since", "_since-version"]; // "_at", "_list"]
 
 async function getTypeHistory<CTX extends FHIRServerCTX>(
   client: pg.PoolClient,
