@@ -51,7 +51,7 @@ export default function loadArtifacts<T extends ResourceType>(
     process.env.NODE_ENV === "development" ||
     process.env.NODE_ENV === "test"
   ) {
-    deps = { ...deps, ...packageJSON.devDependencies };
+    deps = { ...packageJSON.devDependencies, ...deps };
   }
 
   return Object.keys(deps || {})
