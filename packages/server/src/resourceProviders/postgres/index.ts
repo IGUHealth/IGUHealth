@@ -728,17 +728,12 @@ function processHistoryParameters(
       "YYYY-MM-DDThh:mm:ss+zz:zz"
     ).toDate();
 
-    query = `${query} AND created_at > $${index++} `;
+    query = `${query} AND created_at >= $${index++} `;
     sqlParameters = [...sqlParameters, formattedDate];
   }
 
   if (_since_versionId?.value[0]) {
-    const formattedDate = dayjs(
-      _since_versionId.value[0] as string,
-      "YYYY-MM-DDThh:mm:ss+zz:zz"
-    ).toDate();
-
-    query = `${query} AND version_id > $${index++} `;
+    query = `${query} AND version_id >= $${index++} `;
     sqlParameters = [...sqlParameters, _since_versionId.value[0] as string];
   }
 
