@@ -708,6 +708,8 @@ function processHistoryParameters(
 ): { query: string; parameters: any[] } {
   let index = sqlParameters.length + 1;
   const _since = parameters.find((p) => p.name === "_since");
+  const _since_versionId = parameters.find((p) => p.name === "_since-version");
+
   const invalidParameters = parameters.filter(
     (p) => validHistoryParameters.indexOf(p.name) === -1
   );
@@ -726,8 +728,18 @@ function processHistoryParameters(
       "YYYY-MM-DDThh:mm:ss+zz:zz"
     ).toDate();
 
-    query = `${query} AND created_at >= $${index++} `;
+    query = `${query} AND created_at > $${index++} `;
     sqlParameters = [...sqlParameters, formattedDate];
+  }
+
+  if (_since_versionId?.value[0]) {
+    const formattedDate = dayjs(
+      _since_versionId.value[0] as string,
+      "YYYY-MM-DDThh:mm:ss+zz:zz"
+    ).toDate();
+
+    query = `${query} AND version_id > $${index++} `;
+    sqlParameters = [...sqlParameters, _since_versionId.value[0] as string];
   }
 
   return {
