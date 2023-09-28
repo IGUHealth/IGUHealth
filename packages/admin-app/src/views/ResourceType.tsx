@@ -45,28 +45,31 @@ export default function ResourceTypeView() {
         <h2 className="flex text-2xl font-semibold mr-4">
           {params.resourceType}
         </h2>
-        <Base.Input
-          placeholder="Enter search query e.g. _count=10&_sort=_lastUpdated"
-          className="h-full rounded-md overflow-hidden flex flex-grow px-4 mr-1 text-xl font-light border hover:border-indigo-700 focus:border-indigo-700 outline-none"
-          value={searchParams.get("query") || ""}
-          onKeyUp={(e) => {
-            if (e.key === "Enter") {
+        <div className="flex flex-grow border hover:border-indigo-700 h-10 focus:border-indigo-700">
+          <Base.Input
+            placeholder="Enter search query e.g. _count=10&_sort=_lastUpdated"
+            className="h-full rounded-md overflow-hidden flex flex-grow px-4 mr-1 text-xl font-light outline-none"
+            value={searchParams.get("query") || ""}
+            onKeyUp={(e) => {
+              if (e.key === "Enter") {
+                search(searchParams.get("query") || "");
+              }
+            }}
+            onChange={(e) => {
+              setSearchParams({ query: e.target.value });
+            }}
+          />
+          <Base.Button
+            className="ring-0 shadow-none rounded-none"
+            buttonSize="small"
+            buttonType="secondary"
+            onClick={(_e) => {
               search(searchParams.get("query") || "");
-            }
-          }}
-          onChange={(e) => {
-            setSearchParams({ query: e.target.value });
-          }}
-        />
-        <Base.Button
-          buttonSize="small"
-          buttonType="primary"
-          onClick={(_e) => {
-            search(searchParams.get("query") || "");
-          }}
-        >
-          <MagnifyingGlassIcon className="h-5 w-5" />
-        </Base.Button>
+            }}
+          >
+            <MagnifyingGlassIcon className="h-5 w-5" />
+          </Base.Button>
+        </div>
       </div>
       <div className="mt-2 mb-4 flex justify-start">
         <Base.Button
