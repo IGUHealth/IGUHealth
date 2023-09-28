@@ -41,7 +41,7 @@ export default function ResourceTypeView() {
 
   return (
     <div className="flex flex-col flex-1">
-      <div className="flex items-center justify-center mb-4">
+      <div className="flex items-center justify-center mb-2">
         <h2 className="flex text-2xl font-semibold mr-4">
           {params.resourceType}
         </h2>
@@ -68,9 +68,9 @@ export default function ResourceTypeView() {
           <MagnifyingGlassIcon className="h-5 w-5" />
         </Base.Button>
       </div>
-      <div className="mt-2 mb-1 flex justify-start">
+      <div className="mt-2 mb-4 flex justify-start">
         <Base.Button
-          className="ml-2 px-2"
+          className="ml-2 px-2 "
           buttonSize="small"
           buttonType="secondary"
           onClick={(_e) => navigate(`/resources/${params.resourceType}/new`)}

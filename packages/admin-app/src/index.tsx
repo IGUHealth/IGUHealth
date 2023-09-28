@@ -23,13 +23,12 @@ import { Layout, Base } from "@iguhealth/components";
 import "@iguhealth/components/dist/index.css";
 
 import { getClient } from "./data/client";
-import OperationDefinition from "./views/OperationDefinition";
 import Settings from "./views/Settings";
 import BatchImport from "./views/BatchImport";
 import EmptyWorkspace from "./views/EmptyWorkspace";
 import Resources from "./views/Resources";
 import ResourceType from "./views/ResourceType";
-import ResourceEditor from "./views/ResourceEditor";
+import ResourceEditor from "./views/ResourceEditor/index";
 import reportWebVitals from "./reportWebVitals";
 import { Logo } from "./components/logo";
 
@@ -155,11 +154,6 @@ const router = createBrowserRouter([
                     id: "types",
                     path: "/resources/:resourceType",
                     element: <ResourceType />,
-                  },
-                  {
-                    id: "operation-editor",
-                    path: "/resources/OperationDefinition/:id",
-                    element: <OperationDefinition />,
                   },
                   {
                     id: "instance",

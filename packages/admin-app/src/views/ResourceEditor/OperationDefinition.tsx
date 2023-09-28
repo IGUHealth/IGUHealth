@@ -2,7 +2,7 @@ import { basicSetup } from "codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { Base } from "@iguhealth/components";
 
-import ResourceEditorComponent from "../components/ResourceEditor";
+import ResourceEditorComponent from "../../components/ResourceEditor";
 
 const extensions = [basicSetup, javascript()];
 
