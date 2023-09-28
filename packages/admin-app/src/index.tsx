@@ -23,6 +23,7 @@ import { Layout, Base } from "@iguhealth/components";
 import "@iguhealth/components/dist/index.css";
 
 import { getClient } from "./data/client";
+import OperationDefinition from "./views/OperationDefinition";
 import Settings from "./views/Settings";
 import BatchImport from "./views/BatchImport";
 import EmptyWorkspace from "./views/EmptyWorkspace";
@@ -154,6 +155,11 @@ const router = createBrowserRouter([
                     id: "types",
                     path: "/resources/:resourceType",
                     element: <ResourceType />,
+                  },
+                  {
+                    id: "operation-editor",
+                    path: "/resources/OperationDefinition/:id",
+                    element: <OperationDefinition />,
                   },
                   {
                     id: "instance",

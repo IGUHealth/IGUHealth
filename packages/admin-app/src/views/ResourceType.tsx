@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from "react";
 
 import { useRecoilValue } from "recoil";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
 
 import { Base } from "@iguhealth/components";
 import { Resource, ResourceType } from "@iguhealth/fhir-types/r4/types";
@@ -65,17 +65,19 @@ export default function ResourceTypeView() {
             search(searchParams.get("query") || "");
           }}
         >
-          <MagnifyingGlassIcon className="h-4 w-4" />
+          <MagnifyingGlassIcon className="h-5 w-5" />
         </Base.Button>
       </div>
-      <div className="mt-2 mb-1 flex justify-end">
+      <div className="mt-2 mb-1 flex justify-start">
         <Base.Button
-          className="ml-2"
+          className="ml-2 px-2"
           buttonSize="small"
           buttonType="secondary"
           onClick={(_e) => navigate(`/resources/${params.resourceType}/new`)}
         >
-          Create
+          <div className="flex items-center justify-center ">
+            <PlusIcon className="w-4 h-4 mr-1" /> <span>New</span>
+          </div>
         </Base.Button>
       </div>
       <Base.Table
