@@ -60,7 +60,7 @@ export default function ResourceTypeView() {
             }}
           />
           <Base.Button
-            className="ring-0 shadow-none rounded-none"
+            className="border-l ring-0 shadow-none rounded-none"
             buttonSize="small"
             buttonType="secondary"
             onClick={(_e) => {
