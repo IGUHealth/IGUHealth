@@ -93,7 +93,14 @@ function ResourceHistory() {
   );
 }
 
-export default function ResourceEditorView() {
+interface AdditionalContent {
+  leftSide?: Parameters<typeof Base.Tabs>[0]["tabs"];
+  rightSide?: Parameters<typeof Base.Tabs>[0]["tabs"];
+}
+export default function ResourceEditorComponent({
+  leftSide = [],
+  rightSide = [],
+}: AdditionalContent) {
   const client = useRecoilValue(getClient);
   const [value, setValue] = React.useState("");
   const navigate = useNavigate();
@@ -113,21 +120,29 @@ export default function ResourceEditorView() {
   return (
     <Base.Tabs
       tabs={[
-        {
-          id: 1,
-          title: "Editor",
-          content: <JSONEditor value={value} setValue={setValue} />,
-        },
-        {
-          id: 1,
-          title: "History",
-          content: <ResourceHistory />,
-        },
+        ...leftSide,
+        ...[
+          {
+            id: 1,
+            title: "Editor",
+            content: <JSONEditor value={value} setValue={setValue} />,
+          },
+        ],
+        ...(id !== "new"
+          ? [
+              {
+                id: 2,
+                title: "History",
+                content: <ResourceHistory />,
+              },
+            ]
+          : []),
         // {
         //   id: 1,
         //   title: "Audit events",
         //   content: <span> Audit Events </span>,
         // },
+        ...rightSide,
       ]}
       rightSide={
         <Base.DropDownMenu

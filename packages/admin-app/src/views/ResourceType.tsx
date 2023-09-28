@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from "react";
 
 import { useRecoilValue } from "recoil";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
 
 import { Base } from "@iguhealth/components";
 import { Resource, ResourceType } from "@iguhealth/fhir-types/r4/types";
@@ -41,41 +41,46 @@ export default function ResourceTypeView() {
 
   return (
     <div className="flex flex-col flex-1">
-      <div className="flex items-center justify-center mb-4">
+      <div className="flex items-center justify-center mb-2">
         <h2 className="flex text-2xl font-semibold mr-4">
           {params.resourceType}
         </h2>
-        <Base.Input
-          placeholder="Enter search query e.g. _count=10&_sort=_lastUpdated"
-          className="h-full rounded-md overflow-hidden flex flex-grow px-4 mr-1 text-xl font-light border hover:border-indigo-700 focus:border-indigo-700 outline-none"
-          value={searchParams.get("query") || ""}
-          onKeyUp={(e) => {
-            if (e.key === "Enter") {
+        <div className="flex flex-grow border hover:border-indigo-700 h-10 focus:border-indigo-700">
+          <Base.Input
+            placeholder="Enter search query e.g. _count=10&_sort=_lastUpdated"
+            className="h-full rounded-md overflow-hidden flex flex-grow px-4 mr-1 text-xl font-light outline-none"
+            value={searchParams.get("query") || ""}
+            onKeyUp={(e) => {
+              if (e.key === "Enter") {
+                search(searchParams.get("query") || "");
+              }
+            }}
+            onChange={(e) => {
+              setSearchParams({ query: e.target.value });
+            }}
+          />
+          <Base.Button
+            className="border-l ring-0 shadow-none rounded-none"
+            buttonSize="small"
+            buttonType="secondary"
+            onClick={(_e) => {
               search(searchParams.get("query") || "");
-            }
-          }}
-          onChange={(e) => {
-            setSearchParams({ query: e.target.value });
-          }}
-        />
-        <Base.Button
-          buttonSize="small"
-          buttonType="primary"
-          onClick={(_e) => {
-            search(searchParams.get("query") || "");
-          }}
-        >
-          <MagnifyingGlassIcon className="h-4 w-4" />
-        </Base.Button>
+            }}
+          >
+            <MagnifyingGlassIcon className="h-5 w-5" />
+          </Base.Button>
+        </div>
       </div>
-      <div className="mt-2 mb-1 flex justify-end">
+      <div className="mt-2 mb-4 flex justify-start">
         <Base.Button
-          className="ml-2"
+          className="ml-2 px-2 "
           buttonSize="small"
           buttonType="secondary"
           onClick={(_e) => navigate(`/resources/${params.resourceType}/new`)}
         >
-          Create
+          <div className="flex items-center justify-center ">
+            <PlusIcon className="w-4 h-4 mr-1" /> <span>New</span>
+          </div>
         </Base.Button>
       </div>
       <Base.Table
