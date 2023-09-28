@@ -161,8 +161,9 @@ export default async function createServiceCTX(): Promise<
     "lock" | "client" | "resolveSD" | "capabilities" | "cache" | "logger"
   >
 > {
-  const memDBAsync = MemoryDatabaseAsync(createMemoryData(MEMORY_TYPES));
-  const memDBSync = MemoryDatabaseSync(createMemoryData(MEMORY_TYPES));
+  const data = createMemoryData(MEMORY_TYPES);
+  const memDBAsync = MemoryDatabaseAsync(data);
+  const memDBSync = MemoryDatabaseSync(data);
 
   const client = RouterClient([
     // OP INVOCATION
