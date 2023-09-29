@@ -94,28 +94,36 @@ function ResourceHistory() {
 }
 
 interface AdditionalContent {
+  id: id;
+  resourceType: ResourceType;
+  resource: Resource | undefined;
+  onChange?: (resource: Resource) => void;
   leftSide?: Parameters<typeof Base.Tabs>[0]["tabs"];
   rightSide?: Parameters<typeof Base.Tabs>[0]["tabs"];
 }
 export default function ResourceEditorComponent({
+  id,
+  resourceType,
+  resource,
+  onChange = (r: Resource) => {},
   leftSide = [],
   rightSide = [],
 }: AdditionalContent) {
   const client = useRecoilValue(getClient);
-  const [value, setValue] = React.useState("");
+  //const [value, setValue] = React.useState("");
   const navigate = useNavigate();
 
-  const { resourceType, id } = useParams();
+  // const { resourceType, id } = useParams();
 
-  useEffect(() => {
-    if (id !== "new")
-      client
-        .read({}, resourceType as ResourceType, id as id)
-        .then((response) => {
-          setValue(JSON.stringify(response, null, 2));
-          return response;
-        });
-  }, [resourceType, id]);
+  // useEffect(() => {
+  //   if (id !== "new")
+  //     client
+  //       .read({}, resourceType as ResourceType, id as id)
+  //       .then((response) => {
+  //         setValue(JSON.stringify(response, null, 2));
+  //         return response;
+  //       });
+  // }, [resourceType, id]);
 
   return (
     <Base.Tabs
@@ -125,7 +133,19 @@ export default function ResourceEditorComponent({
           {
             id: 1,
             title: "Editor",
-            content: <JSONEditor value={value} setValue={setValue} />,
+            content: (
+              <JSONEditor
+                value={JSON.stringify(resource, null, 2)}
+                setValue={(v) => {
+                  try {
+                    const resource = JSON.parse(v);
+                    onChange(resource);
+                  } catch (e) {
+                    return;
+                  }
+                }}
+              />
+            ),
           },
         ],
         ...(id !== "new"
@@ -151,11 +171,17 @@ export default function ResourceEditorComponent({
               label: id === "new" ? "Create" : "Update",
               onClick: (_e) => {
                 try {
-                  const resource = JSON.parse(value);
                   const editPromise =
                     id === "new"
-                      ? client.create({}, { ...resource, resourceType })
-                      : client.update({}, resource);
+                      ? client.create({}, {
+                          ...resource,
+                          resourceType, // Validate that resourceTypes align.
+                        } as Resource)
+                      : client.update({}, {
+                          ...resource,
+                          resourceType,
+                          id,
+                        } as Resource);
                   Base.Toaster.promise(editPromise, {
                     loading: "Creating Resource",
                     success: (success) =>

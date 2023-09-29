@@ -9,6 +9,8 @@ import { keymap } from "@codemirror/view";
 import {
   OperationDefinition,
   ResourceType,
+  id,
+  Resource,
 } from "@iguhealth/fhir-types/r4/types";
 import { Base } from "@iguhealth/components";
 
@@ -69,33 +71,26 @@ const DEFAULT_OPERATION: OperationDefinition = {
   instance: false,
 };
 
-export default function DefaultResourceEditorView() {
-  const client = useRecoilValue(getClient);
-  const [operation, setOperation] =
-    React.useState<OperationDefinition>(DEFAULT_OPERATION);
-  const navigate = useNavigate();
+interface OperationEditorProps {
+  id: id;
+  resourceType: ResourceType;
+  resource: OperationDefinition | undefined;
+  onChange?: (resource: Resource) => void;
+}
 
-  const { resourceType, id } = useParams();
-
-  useEffect(() => {
-    console.log(resourceType, id);
-    if (id !== "new")
-      client
-        .read({}, resourceType as ResourceType, id as string)
-        .then((response) => {
-          setOperation(response as OperationDefinition);
-        });
-  }, [resourceType, id, setOperation]);
-
-  console.log(JSON.stringify(operation));
-
+export default function OperationEditor({
+  id,
+  resourceType,
+  resource,
+  onChange,
+}: OperationEditorProps) {
   const code: string =
-    operation?.extension?.find(
+    resource?.extension?.find(
       (e) =>
         e.url ===
         "https://iguhealth.github.io/fhir-operation-definition/operation-code"
     ) !== undefined
-      ? operation?.extension?.filter(
+      ? resource?.extension?.filter(
           (e) =>
             e.url ===
             "https://iguhealth.github.io/fhir-operation-definition/operation-code"
@@ -104,6 +99,10 @@ export default function DefaultResourceEditorView() {
 
   return (
     <ResourceEditorComponent
+      id={id as string}
+      resourceType={resourceType as ResourceType}
+      resource={resource}
+      onChange={onChange}
       leftSide={[
         {
           id: 0,
@@ -112,10 +111,12 @@ export default function DefaultResourceEditorView() {
             <OperationCodeEditor
               value={code}
               setValue={(v: string) =>
-                setOperation({
-                  ...operation,
+                onChange &&
+                onChange({
+                  ...resource,
+                  resourceType: "OperationDefinition",
                   extension: [
-                    ...(operation?.extension?.filter(
+                    ...(resource?.extension?.filter(
                       (e) =>
                         e.url !==
                         "https://iguhealth.github.io/fhir-operation-definition/operation-code"
@@ -125,7 +126,7 @@ export default function DefaultResourceEditorView() {
                       valueString: v,
                     },
                   ],
-                })
+                } as OperationDefinition)
               }
             />
           ),
