@@ -41,6 +41,7 @@ export interface FHIRServerCTX {
   cache: IOCache<FHIRServerCTX>;
   client: FHIRClientAsync<FHIRServerCTX>;
   lock: Lock<unknown>;
+  user_access_token?: string;
   resolveSD: (
     ctx: FHIRServerCTX,
     type: string

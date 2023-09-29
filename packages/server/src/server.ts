@@ -61,6 +61,7 @@ const createCheckJWT = () => {
     jwksUri: process.env.AUTH_JWK_URI as string,
   });
   return jwt({
+    tokenKey: "access_token",
     secret: (header: jwksRsa.TokenHeader) => {
       return LOAD_EXTERNAL_TOKEN(header);
     },
@@ -107,6 +108,7 @@ function workspaceMiddleware(
             ...ctx.state,
             user: {
               sub: "public-user",
+              access_token: "sec-public",
               "https://iguhealth.app/workspaces": [ctx.params.workspace],
             },
           };
@@ -119,6 +121,7 @@ function workspaceMiddleware(
           ...services,
           workspace: ctx.params.workspace,
           author: ctx.state.user.sub,
+          user_access_token: ctx.state.access_token,
         };
 
         const fhirServerResponse = await fhirServer(

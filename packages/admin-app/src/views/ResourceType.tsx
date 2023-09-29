@@ -73,7 +73,7 @@ export default function ResourceTypeView() {
       </div>
       <div className="mt-2 mb-4 flex justify-start">
         <Base.Button
-          className="ml-2"
+          className="ml-2 font-medium"
           buttonSize="small"
           buttonType="secondary"
           onClick={(_e) => navigate(`/resources/${params.resourceType}/new`)}

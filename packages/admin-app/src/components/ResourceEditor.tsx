@@ -93,29 +93,39 @@ function ResourceHistory() {
   );
 }
 
-interface AdditionalContent {
-  leftSide?: Parameters<typeof Base.Tabs>[0]["tabs"];
-  rightSide?: Parameters<typeof Base.Tabs>[0]["tabs"];
+export interface AdditionalContent {
+  id: id;
+  resourceType: ResourceType;
+  resource: Resource | undefined;
+  onChange?: (resource: Resource) => void;
+  actions: Parameters<typeof Base.DropDownMenu>[0]["links"];
+  leftTabs?: Parameters<typeof Base.Tabs>[0]["tabs"];
+  rightTabs?: Parameters<typeof Base.Tabs>[0]["tabs"];
 }
 export default function ResourceEditorComponent({
-  leftSide = [],
-  rightSide = [],
+  id,
+  actions,
+  resourceType,
+  resource,
+  onChange = (r: Resource) => {},
+  leftTabs: leftSide = [],
+  rightTabs: rightSide = [],
 }: AdditionalContent) {
   const client = useRecoilValue(getClient);
-  const [value, setValue] = React.useState("");
+  //const [value, setValue] = React.useState("");
   const navigate = useNavigate();
 
-  const { resourceType, id } = useParams();
+  // const { resourceType, id } = useParams();
 
-  useEffect(() => {
-    if (id !== "new")
-      client
-        .read({}, resourceType as ResourceType, id as id)
-        .then((response) => {
-          setValue(JSON.stringify(response, null, 2));
-          return response;
-        });
-  }, [resourceType, id]);
+  // useEffect(() => {
+  //   if (id !== "new")
+  //     client
+  //       .read({}, resourceType as ResourceType, id as id)
+  //       .then((response) => {
+  //         setValue(JSON.stringify(response, null, 2));
+  //         return response;
+  //       });
+  // }, [resourceType, id]);
 
   return (
     <Base.Tabs
@@ -125,7 +135,19 @@ export default function ResourceEditorComponent({
           {
             id: 1,
             title: "Editor",
-            content: <JSONEditor value={value} setValue={setValue} />,
+            content: (
+              <JSONEditor
+                value={JSON.stringify(resource, null, 2)}
+                setValue={(v) => {
+                  try {
+                    const resource = JSON.parse(v);
+                    onChange(resource);
+                  } catch (e) {
+                    return;
+                  }
+                }}
+              />
+            ),
           },
         ],
         ...(id !== "new"
@@ -145,61 +167,7 @@ export default function ResourceEditorComponent({
         ...rightSide,
       ]}
       rightSide={
-        <Base.DropDownMenu
-          links={[
-            {
-              label: id === "new" ? "Create" : "Update",
-              onClick: (_e) => {
-                try {
-                  const resource = JSON.parse(value);
-                  const editPromise =
-                    id === "new"
-                      ? client.create({}, { ...resource, resourceType })
-                      : client.update({}, resource);
-                  Base.Toaster.promise(editPromise, {
-                    loading: "Creating Resource",
-                    success: (success) =>
-                      `Updated ${(success as Resource).resourceType}`,
-                    error: (error) => {
-                      const message = (
-                        error.operationOutcome as OperationOutcome
-                      ).issue
-                        .map((issue) => issue.diagnostics)
-                        .join("\n");
-
-                      return message;
-                    },
-                  }).then((value) =>
-                    navigate(
-                      `/resources/${resourceType}/${(value as Resource).id}`,
-                      { replace: true }
-                    )
-                  );
-                } catch (e) {
-                  Base.Toaster.error(`${e}`);
-                }
-              },
-            },
-            {
-              className: "text-red-600 hover:bg-red-600 hover:text-white",
-              label: "Delete",
-              onClick: (_e) => {
-                const deletingResource = client.delete(
-                  {},
-                  resourceType as ResourceType,
-                  id as id
-                );
-                Base.Toaster.promise(deletingResource, {
-                  loading: "Deleting Resource",
-                  success: (success) => `Deleted ${resourceType}`,
-                  error: (error) => {
-                    return `${error}`;
-                  },
-                }).then((v) => navigate(`/resources/${resourceType}`));
-              },
-            },
-          ]}
-        >
+        <Base.DropDownMenu links={actions}>
           <Base.Button
             buttonType="secondary"
             buttonSize="small"

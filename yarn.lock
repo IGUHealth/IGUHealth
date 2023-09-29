@@ -3224,6 +3224,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@codemirror/commands@npm:^6.3.0":
+  version: 6.3.0
+  resolution: "@codemirror/commands@npm:6.3.0"
+  dependencies:
+    "@codemirror/language": ^6.0.0
+    "@codemirror/state": ^6.2.0
+    "@codemirror/view": ^6.0.0
+    "@lezer/common": ^1.1.0
+  checksum: d6ade0ba7d4f80c2e44163935783d2f2f35c8b641a4b4f62452c0630211670abe5093786cf5a4af14147102d4284dae660a26f3ae58fd840e838685a81107d11
+  languageName: node
+  linkType: hard
+
 "@codemirror/lang-javascript@npm:^6.2.1":
   version: 6.2.1
   resolution: "@codemirror/lang-javascript@npm:6.2.1"
@@ -5521,6 +5533,13 @@ __metadata:
   version: 1.0.4
   resolution: "@lezer/common@npm:1.0.4"
   checksum: 0bea82da76e0b89afad4e5159d3add460022916352c47906ec67b26d6fe5ec9cb8e23df0e2bf0adef765ae78bed1706fc573a11506d01a80112a5b6dd317730c
+  languageName: node
+  linkType: hard
+
+"@lezer/common@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@lezer/common@npm:1.1.0"
+  checksum: 93c208a44d1c0bdf7407853ba7c4ddcedf1c52d1b82170813d83b9bd6301aa23587405ac54332fe39ce8bc37f706936ab237ceb4d3d535d1dead650153b6474c
   languageName: node
   linkType: hard
 
@@ -10028,8 +10047,10 @@ __metadata:
   resolution: "admin-app@workspace:packages/admin-app"
   dependencies:
     "@auth0/auth0-react": ^2.2.1
+    "@codemirror/commands": ^6.3.0
     "@codemirror/lang-javascript": ^6.2.1
     "@codemirror/lang-json": ^6.0.1
+    "@codemirror/view": ^6.18.0
     "@heroicons/react": ^2.0.18
     "@iguhealth/client": "workspace:^"
     "@iguhealth/components": "workspace:^"
