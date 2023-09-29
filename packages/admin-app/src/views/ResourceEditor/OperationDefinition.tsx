@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { useNavigate, useParams } from "react-router-dom";
 import { basicSetup } from "codemirror";
@@ -10,12 +10,15 @@ import {
   OperationDefinition,
   ResourceType,
   id,
+  AuditEvent,
   Resource,
 } from "@iguhealth/fhir-types/r4/types";
 import { Base } from "@iguhealth/components";
 
 import { getClient } from "../../data/client";
-import ResourceEditorComponent from "../../components/ResourceEditor";
+import ResourceEditorComponent, {
+  AdditionalContent,
+} from "../../components/ResourceEditor";
 
 const extensions = [
   basicSetup,
@@ -60,6 +63,47 @@ function OperationCodeEditor({
   );
 }
 
+function OperationAuditEvents({ operationId }: { operationId: string }) {
+  const client = useRecoilValue(getClient);
+  const [loading, setLoading] = useState(true);
+  const [auditEvents, setAuditEvents] = useState<AuditEvent[]>([]);
+
+  useEffect(() => {
+    setLoading(true);
+    client
+      .search_type({}, "AuditEvent", [{ name: "entity", value: [operationId] }])
+      .then((response) => {
+        setAuditEvents(response.resources);
+        setLoading(false);
+        return response;
+      });
+  }, [operationId, setAuditEvents]);
+
+  return (
+    <Base.Table
+      isLoading={loading}
+      data={auditEvents || []}
+      columns={[
+        {
+          name: "Outcome",
+          selector: "$this.outcome",
+          selectorType: "fhirpath",
+        },
+        {
+          name: "Agent",
+          selector: "$this.agent.name",
+          selectorType: "fhirpath",
+        },
+        {
+          name: "Description",
+          selector: "$this.outcomeDesc",
+          selectorType: "fhirpath",
+        },
+      ]}
+    />
+  );
+}
+
 const DEFAULT_OPERATION: OperationDefinition = {
   resourceType: "OperationDefinition",
   status: "draft",
@@ -71,17 +115,15 @@ const DEFAULT_OPERATION: OperationDefinition = {
   instance: false,
 };
 
-interface OperationEditorProps {
-  id: id;
-  resourceType: ResourceType;
+interface OperationEditorProps extends AdditionalContent {
   resource: OperationDefinition | undefined;
-  onChange?: (resource: Resource) => void;
 }
 
 export default function OperationEditor({
   id,
   resourceType,
   resource,
+  actions,
   onChange,
 }: OperationEditorProps) {
   const code: string =
@@ -100,10 +142,18 @@ export default function OperationEditor({
   return (
     <ResourceEditorComponent
       id={id as string}
+      actions={actions}
       resourceType={resourceType as ResourceType}
       resource={resource}
       onChange={onChange}
-      leftSide={[
+      rightTabs={[
+        {
+          id: 5,
+          title: "Audit Events",
+          content: <OperationAuditEvents operationId={id as string} />,
+        },
+      ]}
+      leftTabs={[
         {
           id: 0,
           title: "Code",

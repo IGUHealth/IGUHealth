@@ -93,21 +93,23 @@ function ResourceHistory() {
   );
 }
 
-interface AdditionalContent {
+export interface AdditionalContent {
   id: id;
   resourceType: ResourceType;
   resource: Resource | undefined;
   onChange?: (resource: Resource) => void;
-  leftSide?: Parameters<typeof Base.Tabs>[0]["tabs"];
-  rightSide?: Parameters<typeof Base.Tabs>[0]["tabs"];
+  actions: Parameters<typeof Base.DropDownMenu>[0]["links"];
+  leftTabs?: Parameters<typeof Base.Tabs>[0]["tabs"];
+  rightTabs?: Parameters<typeof Base.Tabs>[0]["tabs"];
 }
 export default function ResourceEditorComponent({
   id,
+  actions,
   resourceType,
   resource,
   onChange = (r: Resource) => {},
-  leftSide = [],
-  rightSide = [],
+  leftTabs: leftSide = [],
+  rightTabs: rightSide = [],
 }: AdditionalContent) {
   const client = useRecoilValue(getClient);
   //const [value, setValue] = React.useState("");
@@ -165,67 +167,7 @@ export default function ResourceEditorComponent({
         ...rightSide,
       ]}
       rightSide={
-        <Base.DropDownMenu
-          links={[
-            {
-              label: id === "new" ? "Create" : "Update",
-              onClick: (_e) => {
-                try {
-                  const editPromise =
-                    id === "new"
-                      ? client.create({}, {
-                          ...resource,
-                          resourceType, // Validate that resourceTypes align.
-                        } as Resource)
-                      : client.update({}, {
-                          ...resource,
-                          resourceType,
-                          id,
-                        } as Resource);
-                  Base.Toaster.promise(editPromise, {
-                    loading: "Creating Resource",
-                    success: (success) =>
-                      `Updated ${(success as Resource).resourceType}`,
-                    error: (error) => {
-                      const message = (
-                        error.operationOutcome as OperationOutcome
-                      ).issue
-                        .map((issue) => issue.diagnostics)
-                        .join("\n");
-
-                      return message;
-                    },
-                  }).then((value) =>
-                    navigate(
-                      `/resources/${resourceType}/${(value as Resource).id}`,
-                      { replace: true }
-                    )
-                  );
-                } catch (e) {
-                  Base.Toaster.error(`${e}`);
-                }
-              },
-            },
-            {
-              className: "text-red-600 hover:bg-red-600 hover:text-white",
-              label: "Delete",
-              onClick: (_e) => {
-                const deletingResource = client.delete(
-                  {},
-                  resourceType as ResourceType,
-                  id as id
-                );
-                Base.Toaster.promise(deletingResource, {
-                  loading: "Deleting Resource",
-                  success: (success) => `Deleted ${resourceType}`,
-                  error: (error) => {
-                    return `${error}`;
-                  },
-                }).then((v) => navigate(`/resources/${resourceType}`));
-              },
-            },
-          ]}
-        >
+        <Base.DropDownMenu links={actions}>
           <Base.Button
             buttonType="secondary"
             buttonSize="small"
