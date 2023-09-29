@@ -7942,6 +7942,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lezer/common", "npm:1.0.4"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:6.3.0", {\
+          "packageLocation": "./.yarn/cache/@codemirror-commands-npm-6.3.0-0df5e17a90-d6ade0ba7d.zip/node_modules/@codemirror/commands/",\
+          "packageDependencies": [\
+            ["@codemirror/commands", "npm:6.3.0"],\
+            ["@codemirror/language", "npm:6.9.0"],\
+            ["@codemirror/state", "npm:6.2.1"],\
+            ["@codemirror/view", "npm:6.18.0"],\
+            ["@lezer/common", "npm:1.1.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@codemirror/lang-javascript", [\
@@ -10066,6 +10077,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "packagePeers": [\
             "@codemirror/theme-one-dark",\
+            "@codemirror/view",\
             "@types/codemirror__state",\
             "@types/codemirror__theme-one-dark",\
             "@types/codemirror__view",\
@@ -11245,6 +11257,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@lezer-common-npm-1.0.4-c24f90adda-0bea82da76.zip/node_modules/@lezer/common/",\
           "packageDependencies": [\
             ["@lezer/common", "npm:1.0.4"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:1.1.0", {\
+          "packageLocation": "./.yarn/cache/@lezer-common-npm-1.1.0-b826058bec-93c208a44d.zip/node_modules/@lezer/common/",\
+          "packageDependencies": [\
+            ["@lezer/common", "npm:1.1.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -17053,8 +17072,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["admin-app", "workspace:packages/admin-app"],\
             ["@auth0/auth0-react", "virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#npm:2.2.1"],\
+            ["@codemirror/commands", "npm:6.3.0"],\
             ["@codemirror/lang-javascript", "npm:6.2.1"],\
             ["@codemirror/lang-json", "npm:6.0.1"],\
+            ["@codemirror/view", "npm:6.18.0"],\
             ["@heroicons/react", "virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#npm:2.0.18"],\
             ["@iguhealth/client", "workspace:packages/client"],\
             ["@iguhealth/components", "virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#workspace:packages/components"],\
