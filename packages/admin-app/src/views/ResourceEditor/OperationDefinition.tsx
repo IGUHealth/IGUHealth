@@ -40,27 +40,51 @@ const extensions = [
 ];
 
 function OperationCodeEditor({
+  operation,
   value,
   setValue,
 }: {
+  operation: OperationDefinition;
   value: string;
   setValue: (value: string) => void;
 }) {
   return (
-    <div className="flex flex-1 border overflow-auto">
-      <Base.CodeMirror
-        extensions={extensions}
-        value={value}
-        theme={{
-          "&": {
-            height: "100%",
-            width: "100%",
-          },
-        }}
-        onChange={(value, _vu) => {
-          setValue(value);
-        }}
-      />
+    <div className="flex flex-1 flex-col overflow-auto">
+      <div className="border flex-1 flex">
+        <Base.CodeMirror
+          extensions={extensions}
+          value={value}
+          theme={{
+            "&": {
+              height: "100%",
+              width: "100%",
+            },
+          }}
+          onChange={(value, _vu) => {
+            setValue(value);
+          }}
+        />
+      </div>
+      <div className="flex justify-start py-2 px-1">
+        <Base.Modal
+          modalTitle="Parameter"
+          ModalContent={(setOpen) => (
+            <InvocationModal operation={operation} setOpen={setOpen} />
+          )}
+        >
+          {(setOpen) => (
+            <Base.Button
+              buttonType="primary"
+              onClick={(e) => {
+                e.preventDefault();
+                setOpen(true);
+              }}
+            >
+              Invoke
+            </Base.Button>
+          )}
+        </Base.Modal>
+      </div>
     </div>
   );
 }
@@ -110,7 +134,8 @@ interface OperationEditorProps extends AdditionalContent {
   resource: OperationDefinition | undefined;
 }
 
-const InvocationModal = ({ setOpen }: any) => {
+const InvocationModal = ({ operation, setOpen }: any) => {
+  const client = useRecoilValue(getClient);
   const [parameters, setParameters] = useState("{}");
   return (
     <div className="flex flex-col h-56 w-full">
@@ -132,43 +157,51 @@ const InvocationModal = ({ setOpen }: any) => {
 
       <div className="mt-1 flex justify-end">
         <Base.Button
+          className="mr-1"
+          buttonType="primary"
+          onClick={(e) => {
+            e.preventDefault();
+            try {
+              const invocation = client.invoke_system(
+                new Operation(operation),
+                {},
+                { payload: { resourceType: "Patient" } }
+              );
+              Base.Toaster.promise(invocation, {
+                loading: "Invocation",
+                success: (success) =>
+                  `Invocation succeeded ${(success as Resource).resourceType}`,
+                error: (error) => {
+                  console.log(error);
+                  const message = (
+                    error.operationOutcome as OperationOutcome
+                  ).issue
+                    .map((issue) => issue.diagnostics)
+                    .join("\n");
+
+                  return message;
+                },
+              });
+            } catch (e) {
+              Base.Toaster.error(`${e}`);
+            }
+          }}
+        >
+          Send
+        </Base.Button>
+        <Base.Button
           buttonType="secondary"
           onClick={(e) => {
             e.preventDefault();
             setOpen(false);
           }}
         >
-          Close
+          Cancel
         </Base.Button>
       </div>
     </div>
   );
 };
-
-// onClick: () => {
-//   try {
-//     const invocation = client.invoke_system(
-//       new Operation(resource as OperationDefinition),
-//       {},
-//       { payload: { resourceType: "Patient" } }
-//     );
-//     Base.Toaster.promise(invocation, {
-//       loading: "Invocation",
-//       success: (success) =>
-//         `Invocation succeeded ${(success as Resource).resourceType}`,
-//       error: (error) => {
-//         console.log(error);
-//         const message = (error.operationOutcome as OperationOutcome).issue
-//           .map((issue) => issue.diagnostics)
-//           .join("\n");
-
-//         return message;
-//       },
-//     });
-//   } catch (e) {
-//     Base.Toaster.error(`${e}`);
-//   }
-// },
 
 export default function OperationEditor({
   id,
@@ -190,30 +223,11 @@ export default function OperationEditor({
             "https://iguhealth.github.io/fhir-operation-definition/operation-code"
         )[0].valueString || ""
       : "";
-  const opActions: Parameters<typeof Base.DropDownMenu>[0]["links"] = [
-    {
-      label: (
-        <Base.Modal modalTitle="Invocation" ModalContent={InvocationModal}>
-          {(setOpen) => (
-            <span
-              className="flex flex-1"
-              onClick={(e) => {
-                e.preventDefault();
-                setOpen(true);
-              }}
-            >
-              Invoke
-            </span>
-          )}
-        </Base.Modal>
-      ),
-    },
-  ];
 
   return (
     <ResourceEditorComponent
       id={id as string}
-      actions={opActions.concat(actions)}
+      actions={actions}
       resourceType={resourceType as ResourceType}
       resource={resource}
       onChange={onChange}
@@ -231,6 +245,7 @@ export default function OperationEditor({
           content: (
             <OperationCodeEditor
               value={code}
+              operation={resource}
               setValue={(v: string) =>
                 onChange &&
                 onChange({

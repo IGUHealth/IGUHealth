@@ -37,7 +37,7 @@ type Story = StoryObj<typeof meta>;
 
 export const DropdownMenuStory: Story = {
   args: {
-    ModalContent: ModalContent,
+    ModalContent: (setIsOpen) => <ModalContent setOpen={setIsOpen} />,
     children: (setIsOpen) => (
       <span
         onClick={() => {
