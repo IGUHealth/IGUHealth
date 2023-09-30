@@ -40,6 +40,7 @@ export const DropdownMenuStory: Story = {
     ModalContent: (setIsOpen) => <ModalContent setOpen={setIsOpen} />,
     children: (setIsOpen) => (
       <span
+        className="cursor-pointer"
         onClick={() => {
           setIsOpen(true);
         }}
