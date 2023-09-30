@@ -40,7 +40,7 @@ export function Table({
   isLoading = false,
 }: TableProps) {
   return (
-    <table className="table-auto min-w-full text-left text-xs font-light">
+    <table className="table-fixed min-w-full text-left text-xs font-light w-full">
       <thead className="border-b font-medium">
         <tr>
           {columns.map((column) => (
@@ -71,7 +71,7 @@ export function Table({
                 {columns.map((column) => (
                   <td
                     key={column.name}
-                    className="whitespace-nowrap px-2 py-2 font-medium"
+                    className="overflow-auto whitespace-nowrap px-2 py-2 font-medium"
                   >
                     {extract(row, column.selector, column.selectorType)}
                   </td>
