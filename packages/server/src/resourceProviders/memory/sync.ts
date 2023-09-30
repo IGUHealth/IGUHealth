@@ -137,8 +137,11 @@ function createMemoryMiddleware<
           const data =
             args.state.data[request.resourceType as ResourceType]?.[request.id];
           if (!data) {
-            throw new Error(
-              `Not found resource of type '${request.resourceType}' with id '${request.id}'`
+            throw new OperationError(
+              outcomeError(
+                "not-found",
+                `Not found resource of type '${request.resourceType}' with id '${request.id}'`
+              )
             );
           }
           return {

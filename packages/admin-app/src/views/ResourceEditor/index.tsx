@@ -103,7 +103,7 @@ export default function DefaultResourceEditorView() {
                   const invocation = client.invoke_system(
                     new Operation(resource as OperationDefinition),
                     {},
-                    { payload: "test" }
+                    { payload: { resourceType: "Patient" } }
                   );
                   Base.Toaster.promise(invocation, {
                     loading: "Invocation",
