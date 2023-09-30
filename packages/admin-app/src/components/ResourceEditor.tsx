@@ -112,20 +112,7 @@ export default function ResourceEditorComponent({
   rightTabs: rightSide = [],
 }: AdditionalContent) {
   const client = useRecoilValue(getClient);
-  //const [value, setValue] = React.useState("");
   const navigate = useNavigate();
-
-  // const { resourceType, id } = useParams();
-
-  // useEffect(() => {
-  //   if (id !== "new")
-  //     client
-  //       .read({}, resourceType as ResourceType, id as id)
-  //       .then((response) => {
-  //         setValue(JSON.stringify(response, null, 2));
-  //         return response;
-  //       });
-  // }, [resourceType, id]);
 
   return (
     <Base.Tabs

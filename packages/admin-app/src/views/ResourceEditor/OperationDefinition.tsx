@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { useNavigate, useParams } from "react-router-dom";
 import { basicSetup } from "codemirror";
+import { json } from "@codemirror/lang-json";
 import { javascript } from "@codemirror/lang-javascript";
 import { insertTab, indentLess } from "@codemirror/commands";
 import { keymap } from "@codemirror/view";
 
-
+import { Operation } from "@iguhealth/operation-execution";
 import {
+  OperationOutcome,
   OperationDefinition,
   ResourceType,
   id,
@@ -105,20 +106,69 @@ function OperationAuditEvents({ operationId }: { operationId: string }) {
   );
 }
 
-const DEFAULT_OPERATION: OperationDefinition = {
-  resourceType: "OperationDefinition",
-  status: "draft",
-  kind: "operation",
-  name: "Operation",
-  code: "new",
-  system: true,
-  type: false,
-  instance: false,
-};
-
 interface OperationEditorProps extends AdditionalContent {
   resource: OperationDefinition | undefined;
 }
+
+const InvocationModal = ({ setOpen }: any) => {
+  const [parameters, setParameters] = useState("{}");
+  return (
+    <div className="flex flex-col h-56 w-full">
+      <div className="flex flex-1 border">
+        <Base.CodeMirror
+          extensions={[basicSetup, json()]}
+          value={parameters}
+          theme={{
+            "&": {
+              height: "100%",
+              width: "100%",
+            },
+          }}
+          onChange={(value, _vu) => {
+            setParameters(value);
+          }}
+        />
+      </div>
+
+      <div className="mt-1 flex justify-end">
+        <Base.Button
+          buttonType="secondary"
+          onClick={(e) => {
+            e.preventDefault();
+            setOpen(false);
+          }}
+        >
+          Close
+        </Base.Button>
+      </div>
+    </div>
+  );
+};
+
+// onClick: () => {
+//   try {
+//     const invocation = client.invoke_system(
+//       new Operation(resource as OperationDefinition),
+//       {},
+//       { payload: { resourceType: "Patient" } }
+//     );
+//     Base.Toaster.promise(invocation, {
+//       loading: "Invocation",
+//       success: (success) =>
+//         `Invocation succeeded ${(success as Resource).resourceType}`,
+//       error: (error) => {
+//         console.log(error);
+//         const message = (error.operationOutcome as OperationOutcome).issue
+//           .map((issue) => issue.diagnostics)
+//           .join("\n");
+
+//         return message;
+//       },
+//     });
+//   } catch (e) {
+//     Base.Toaster.error(`${e}`);
+//   }
+// },
 
 export default function OperationEditor({
   id,
@@ -127,6 +177,7 @@ export default function OperationEditor({
   actions,
   onChange,
 }: OperationEditorProps) {
+  const client = useRecoilValue(getClient);
   const code: string =
     resource?.extension?.find(
       (e) =>
@@ -139,11 +190,30 @@ export default function OperationEditor({
             "https://iguhealth.github.io/fhir-operation-definition/operation-code"
         )[0].valueString || ""
       : "";
+  const opActions: Parameters<typeof Base.DropDownMenu>[0]["links"] = [
+    {
+      label: (
+        <Base.Modal modalTitle="Invocation" ModalContent={InvocationModal}>
+          {(setOpen) => (
+            <span
+              className="flex flex-1"
+              onClick={(e) => {
+                e.preventDefault();
+                setOpen(true);
+              }}
+            >
+              Invoke
+            </span>
+          )}
+        </Base.Modal>
+      ),
+    },
+  ];
 
   return (
     <ResourceEditorComponent
       id={id as string}
-      actions={actions}
+      actions={opActions.concat(actions)}
       resourceType={resourceType as ResourceType}
       resource={resource}
       onChange={onChange}

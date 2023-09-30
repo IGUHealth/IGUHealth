@@ -14,12 +14,13 @@ export function Modal({
   modalTitle?: string;
   ModalContent?: ContentComponent;
   children: (
-    openModal: React.Dispatch<React.SetStateAction<boolean>>
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>
   ) => React.ReactNode;
 }) {
   let [isOpen, setOpen] = useState(false);
 
   function closeModal() {
+    console.log("CLOSE MODAL");
     setOpen(false);
   }
 
