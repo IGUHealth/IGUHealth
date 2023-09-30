@@ -22,7 +22,6 @@ export function Modal({
   let [isOpen, setOpen] = useState(false);
 
   function closeModal() {
-    console.log("CLOSE MODAL");
     setOpen(false);
   }
 
