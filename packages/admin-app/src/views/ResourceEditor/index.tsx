@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { useParams, useNavigate } from "react-router-dom";
 
+import { Operation } from "@iguhealth/operation-execution";
 import { Base } from "@iguhealth/components";
 import {
   id,
@@ -98,7 +99,32 @@ export default function DefaultResourceEditorView() {
             {
               label: "Invoke",
               onClick: () => {
-                console.log("invoke");
+                try {
+                  const invocation = client.invoke_system(
+                    new Operation(resource as OperationDefinition),
+                    {},
+                    { payload: "test" }
+                  );
+                  Base.Toaster.promise(invocation, {
+                    loading: "Invocation",
+                    success: (success) =>
+                      `Invocation succeeded ${
+                        (success as Resource).resourceType
+                      }`,
+                    error: (error) => {
+                      console.log(error);
+                      const message = (
+                        error.operationOutcome as OperationOutcome
+                      ).issue
+                        .map((issue) => issue.diagnostics)
+                        .join("\n");
+
+                      return message;
+                    },
+                  });
+                } catch (e) {
+                  Base.Toaster.error(`${e}`);
+                }
               },
             },
           ].concat(actions)}

@@ -28,6 +28,7 @@ export function mapToParameter(
   if (!value) return [];
 
   if (!isArray) value = [value];
+  if (isArray && !Array.isArray(value)) value = [value];
 
   const params: NonNullable<Parameters["parameter"]> = value.map(
     (value: any): NonNullable<Parameters["parameter"]>[number] => {
