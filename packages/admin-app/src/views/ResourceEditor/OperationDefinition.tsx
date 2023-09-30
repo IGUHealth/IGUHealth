@@ -44,7 +44,7 @@ function OperationCodeEditor({
   value,
   setValue,
 }: {
-  operation: OperationDefinition;
+  operation: OperationDefinition | undefined;
   value: string;
   setValue: (value: string) => void;
 }) {
@@ -134,7 +134,13 @@ interface OperationEditorProps extends AdditionalContent {
   resource: OperationDefinition | undefined;
 }
 
-const InvocationModal = ({ operation, setOpen }: any) => {
+const InvocationModal = ({
+  operation,
+  setOpen,
+}: {
+  operation: OperationDefinition | undefined;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const client = useRecoilValue(getClient);
   const [parameters, setParameters] = useState("{}");
   return (
@@ -162,15 +168,19 @@ const InvocationModal = ({ operation, setOpen }: any) => {
           onClick={(e) => {
             e.preventDefault();
             try {
+              if (!operation) {
+                throw new Error("Must have operation to trigger invocation");
+              }
               const invocation = client.invoke_system(
                 new Operation(operation),
                 {},
-                { payload: { resourceType: "Patient" } }
+                JSON.parse(parameters)
               );
               Base.Toaster.promise(invocation, {
                 loading: "Invocation",
-                success: (success) =>
-                  `Invocation succeeded ${(success as Resource).resourceType}`,
+                success: (success) => {
+                  return `Invocation succeeded`;
+                },
                 error: (error) => {
                   console.log(error);
                   const message = (
