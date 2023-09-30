@@ -73,7 +73,7 @@ export function getOpCTX(ctx: FHIRServerCTX, request: InvokeRequest): OpCTX {
       const sd = ctx.resolveSD(ctx, type);
       if (!sd)
         throw new OperationError(
-          outcomeFatal("invalid", `Unknown type '${type}'`)
+          outcomeFatal("invalid", `Could not resolve type '${type}'`)
         );
       return sd;
     },

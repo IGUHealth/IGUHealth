@@ -1,12 +1,21 @@
 import path from "node:path";
 import { expect, test } from "@jest/globals";
 
-import { parseParameters, Operation, IOperation, Invocation, OpCTX } from ".";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import {
   OperationDefinition,
   Parameters,
+  Resource,
 } from "@iguhealth/fhir-types/r4/types";
+
+import {
+  parseParameters,
+  Operation,
+  IOperation,
+  Invocation,
+  OpCTX,
+  toParametersResource,
+} from "./index";
 
 const operationDefinitions = loadArtifacts(
   "OperationDefinition",
@@ -339,4 +348,101 @@ test("paramValidation", async () => {
       },
     })
   ).rejects.toThrow();
+});
+
+test("Test mapToParameters", () => {
+  const op: OperationDefinition = {
+    resourceType: "OperationDefinition",
+    id: "test",
+    status: "active",
+    kind: "operation",
+    name: "test",
+    code: "test",
+    system: true,
+    type: false,
+    instance: false,
+
+    parameter: [
+      {
+        max: "1",
+        min: 1,
+        use: "out",
+        name: "test",
+        type: "string",
+      },
+      {
+        max: "*",
+        min: 1,
+        use: "in",
+        name: "payload",
+        type: "Resource",
+      },
+    ],
+  };
+  expect(toParametersResource(op, "in", { payload: "test" })).toEqual({
+    resourceType: "Parameters",
+    parameter: [
+      {
+        name: "payload",
+        resource: "test",
+      },
+    ],
+  });
+});
+
+test("Test invalid resource validation", async () => {
+  const op: OperationDefinition = {
+    resourceType: "OperationDefinition",
+    id: "test",
+    status: "active",
+    kind: "operation",
+    name: "test",
+    code: "test",
+    system: true,
+    type: false,
+    instance: false,
+
+    parameter: [
+      {
+        max: "1",
+        min: 1,
+        use: "out",
+        name: "test",
+        type: "string",
+      },
+      {
+        max: "*",
+        min: 1,
+        use: "in",
+        name: "payload",
+        type: "Resource",
+      },
+    ],
+  };
+  const operation: IOperation<{ payload: Resource[] }, { test: string }> =
+    new Operation<{ payload: Resource[] }, { test: string }>(op);
+
+  const ctx: OpCTX = {
+    resolveType: (type: string) => {
+      const sd = structureDefinitions.find((sd) => sd.type === type);
+      if (!sd) throw new Error(`Could not resolve type ${type} for validation`);
+      return sd;
+    },
+    level: "instance",
+  };
+
+  const invoke = (
+    op: IOperation<{ payload: Resource[] }, { test: string }>,
+    ctx: OpCTX,
+    input: any
+  ) => {
+    op.validate(ctx, "in", input);
+    const output = { test: "whatever" };
+    op.validate(ctx, "out", output);
+    return output;
+  };
+
+  expect(() => {
+    invoke(operation, ctx, { payload: "asdf" } as any);
+  }).toThrow(new Error(`Could not resolve type undefined for validation`));
 });

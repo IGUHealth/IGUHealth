@@ -13,6 +13,7 @@ import {
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIRClientSync, FHIRClientAsync } from "@iguhealth/client/interface";
+import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { createPostgresClient } from "../resourceProviders/postgres/index.js";
 import { FHIRServerCTX } from "../fhirServer.js";
@@ -215,8 +216,18 @@ export default async function createServiceCTX(): Promise<
       host: process.env.REDIS_HOST,
       port: parseInt(process.env.REDIS_PORT || "6739"),
     }),
-    resolveSD: (ctx: FHIRServerCTX, type: string) =>
-      memDBSync.read(ctx, "StructureDefinition", type),
+    resolveSD: (ctx: FHIRServerCTX, type: string) => {
+      const sd = memDBSync.read(ctx, "StructureDefinition", type);
+      if (!sd) {
+        throw new OperationError(
+          outcomeFatal(
+            "invalid",
+            `Could not resolve a structure definition for type '${type}'`
+          )
+        );
+      }
+      return sd;
+    },
     lock: new PostgresLock({
       user: process.env["FHIR_DATABASE_USERNAME"],
       password: process.env["FHIR_DATABASE_PASSWORD"],
