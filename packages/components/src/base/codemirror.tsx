@@ -95,10 +95,6 @@ export const CodeMirror = ({
   useEffect(() => {
     if (root.current) {
       root.current.innerHTML = "";
-      console.log(
-        "extensions:",
-        createExtensions({ extensions, theme, onChange })
-      );
 
       const state = EditorState.create({
         doc: value || "",

@@ -7,7 +7,7 @@ interface Link
     HTMLAttributes<HTMLAnchorElement>,
     HTMLAnchorElement
   > {
-  label: string;
+  label: React.ReactNode;
 }
 
 export interface DropdownMenuProps {

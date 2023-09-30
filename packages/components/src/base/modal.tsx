@@ -12,9 +12,11 @@ export function Modal({
   children,
 }: {
   modalTitle?: string;
-  ModalContent?: ContentComponent;
+  ModalContent?: (
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  ) => React.ReactNode;
   children: (
-    openModal: React.Dispatch<React.SetStateAction<boolean>>
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>
   ) => React.ReactNode;
 }) {
   let [isOpen, setOpen] = useState(false);
@@ -62,7 +64,7 @@ export function Modal({
                   >
                     {modalTitle}
                   </Dialog.Title>
-                  {ModalContent && <ModalContent setOpen={setOpen} />}
+                  {ModalContent && ModalContent(setOpen)}
                 </Dialog.Panel>
               </Transition.Child>
             </div>

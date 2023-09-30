@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { useNavigate, useParams } from "react-router-dom";
 import { basicSetup } from "codemirror";
+import { json } from "@codemirror/lang-json";
 import { javascript } from "@codemirror/lang-javascript";
 import { insertTab, indentLess } from "@codemirror/commands";
 import { keymap } from "@codemirror/view";
 
-
+import { Operation } from "@iguhealth/operation-execution";
 import {
+  OperationOutcome,
   OperationDefinition,
   ResourceType,
   id,
@@ -39,27 +40,51 @@ const extensions = [
 ];
 
 function OperationCodeEditor({
+  operation,
   value,
   setValue,
 }: {
+  operation: OperationDefinition | undefined;
   value: string;
   setValue: (value: string) => void;
 }) {
   return (
-    <div className="flex flex-1 border overflow-auto">
-      <Base.CodeMirror
-        extensions={extensions}
-        value={value}
-        theme={{
-          "&": {
-            height: "100%",
-            width: "100%",
-          },
-        }}
-        onChange={(value, _vu) => {
-          setValue(value);
-        }}
-      />
+    <div className="flex flex-1 flex-col overflow-auto">
+      <div className="border flex-1 flex">
+        <Base.CodeMirror
+          extensions={extensions}
+          value={value}
+          theme={{
+            "&": {
+              height: "100%",
+              width: "100%",
+            },
+          }}
+          onChange={(value, _vu) => {
+            setValue(value);
+          }}
+        />
+      </div>
+      <div className="flex justify-start py-2 px-1">
+        <Base.Modal
+          modalTitle="Parameter"
+          ModalContent={(setOpen) => (
+            <InvocationModal operation={operation} setOpen={setOpen} />
+          )}
+        >
+          {(setOpen) => (
+            <Base.Button
+              buttonType="primary"
+              onClick={(e) => {
+                e.preventDefault();
+                setOpen(true);
+              }}
+            >
+              Invoke
+            </Base.Button>
+          )}
+        </Base.Modal>
+      </div>
     </div>
   );
 }
@@ -105,20 +130,88 @@ function OperationAuditEvents({ operationId }: { operationId: string }) {
   );
 }
 
-const DEFAULT_OPERATION: OperationDefinition = {
-  resourceType: "OperationDefinition",
-  status: "draft",
-  kind: "operation",
-  name: "Operation",
-  code: "new",
-  system: true,
-  type: false,
-  instance: false,
-};
-
 interface OperationEditorProps extends AdditionalContent {
   resource: OperationDefinition | undefined;
 }
+
+const InvocationModal = ({
+  operation,
+  setOpen,
+}: {
+  operation: OperationDefinition | undefined;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const client = useRecoilValue(getClient);
+  const [parameters, setParameters] = useState("{}");
+  return (
+    <div className="flex flex-col h-56 w-full">
+      <div className="flex flex-1 border">
+        <Base.CodeMirror
+          extensions={[basicSetup, json()]}
+          value={parameters}
+          theme={{
+            "&": {
+              height: "100%",
+              width: "100%",
+            },
+          }}
+          onChange={(value, _vu) => {
+            setParameters(value);
+          }}
+        />
+      </div>
+
+      <div className="mt-1 flex justify-end">
+        <Base.Button
+          className="mr-1"
+          buttonType="primary"
+          onClick={(e) => {
+            e.preventDefault();
+            try {
+              if (!operation) {
+                throw new Error("Must have operation to trigger invocation");
+              }
+              const invocation = client.invoke_system(
+                new Operation(operation),
+                {},
+                JSON.parse(parameters)
+              );
+              Base.Toaster.promise(invocation, {
+                loading: "Invocation",
+                success: (success) => {
+                  return `Invocation succeeded`;
+                },
+                error: (error) => {
+                  console.log(error);
+                  const message = (
+                    error.operationOutcome as OperationOutcome
+                  ).issue
+                    .map((issue) => issue.diagnostics)
+                    .join("\n");
+
+                  return message;
+                },
+              });
+            } catch (e) {
+              Base.Toaster.error(`${e}`);
+            }
+          }}
+        >
+          Send
+        </Base.Button>
+        <Base.Button
+          buttonType="secondary"
+          onClick={(e) => {
+            e.preventDefault();
+            setOpen(false);
+          }}
+        >
+          Cancel
+        </Base.Button>
+      </div>
+    </div>
+  );
+};
 
 export default function OperationEditor({
   id,
@@ -127,6 +220,7 @@ export default function OperationEditor({
   actions,
   onChange,
 }: OperationEditorProps) {
+  const client = useRecoilValue(getClient);
   const code: string =
     resource?.extension?.find(
       (e) =>
@@ -161,6 +255,7 @@ export default function OperationEditor({
           content: (
             <OperationCodeEditor
               value={code}
+              operation={resource}
               setValue={(v: string) =>
                 onChange &&
                 onChange({
