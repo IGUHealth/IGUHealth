@@ -280,7 +280,7 @@ export default function OperationEditor({
       rightTabs={[
         {
           id: 5,
-          title: "Audit Events",
+          title: "Logs",
           content: <OperationAuditEvents operationId={id as string} />,
         },
       ]}
