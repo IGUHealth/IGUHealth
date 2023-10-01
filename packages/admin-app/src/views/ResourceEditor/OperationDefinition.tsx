@@ -67,7 +67,7 @@ function OperationCodeEditor({
       </div>
       <div className="flex justify-start py-2 px-1">
         <Base.Modal
-          modalTitle="Parameter"
+          modalTitle={`Invoke ${operation?.code}`}
           ModalContent={(setOpen) => (
             <InvocationModal operation={operation} setOpen={setOpen} />
           )}
@@ -143,73 +143,109 @@ const InvocationModal = ({
 }) => {
   const client = useRecoilValue(getClient);
   const [parameters, setParameters] = useState("{}");
+  const [output, setOutput] = useState<unknown | undefined>(undefined);
+
   return (
-    <div className="flex flex-col h-56 w-full">
-      <div className="flex flex-1 border">
-        <Base.CodeMirror
-          extensions={[basicSetup, json()]}
-          value={parameters}
-          theme={{
-            "&": {
-              height: "100%",
-              width: "100%",
-            },
-          }}
-          onChange={(value, _vu) => {
-            setParameters(value);
-          }}
-        />
-      </div>
+    <Base.Tabs
+      tabs={[
+        {
+          id: "input",
+          title: "Input",
+          content: (
+            <div className="flex flex-col h-56 w-full">
+              <div className="flex flex-1 border overflow-auto">
+                <Base.CodeMirror
+                  extensions={[basicSetup, json()]}
+                  value={parameters}
+                  theme={{
+                    "&": {
+                      height: "100%",
+                      width: "100%",
+                    },
+                  }}
+                  onChange={(value, _vu) => {
+                    setParameters(value);
+                  }}
+                />
+              </div>
 
-      <div className="mt-1 flex justify-end">
-        <Base.Button
-          className="mr-1"
-          buttonType="primary"
-          onClick={(e) => {
-            e.preventDefault();
-            try {
-              if (!operation) {
-                throw new Error("Must have operation to trigger invocation");
-              }
-              const invocation = client.invoke_system(
-                new Operation(operation),
-                {},
-                JSON.parse(parameters)
-              );
-              Base.Toaster.promise(invocation, {
-                loading: "Invocation",
-                success: (success) => {
-                  return `Invocation succeeded`;
-                },
-                error: (error) => {
-                  console.log(error);
-                  const message = (
-                    error.operationOutcome as OperationOutcome
-                  ).issue
-                    .map((issue) => issue.diagnostics)
-                    .join("\n");
+              <div className="mt-1 flex justify-end">
+                <Base.Button
+                  className="mr-1"
+                  buttonType="primary"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    try {
+                      if (!operation) {
+                        throw new Error(
+                          "Must have operation to trigger invocation"
+                        );
+                      }
+                      const invocation = client.invoke_system(
+                        new Operation(operation),
+                        {},
+                        JSON.parse(parameters)
+                      );
+                      Base.Toaster.promise(invocation, {
+                        loading: "Invocation",
+                        success: (success) => {
+                          setOutput(success);
+                          return `Invocation succeeded`;
+                        },
+                        error: (error) => {
+                          console.log(error);
+                          const message = (
+                            error.operationOutcome as OperationOutcome
+                          ).issue
+                            .map((issue) => issue.diagnostics)
+                            .join("\n");
 
-                  return message;
-                },
-              });
-            } catch (e) {
-              Base.Toaster.error(`${e}`);
-            }
-          }}
-        >
-          Send
-        </Base.Button>
-        <Base.Button
-          buttonType="secondary"
-          onClick={(e) => {
-            e.preventDefault();
-            setOpen(false);
-          }}
-        >
-          Cancel
-        </Base.Button>
-      </div>
-    </div>
+                          return message;
+                        },
+                      });
+                    } catch (e) {
+                      Base.Toaster.error(`${e}`);
+                    }
+                  }}
+                >
+                  Send
+                </Base.Button>
+                <Base.Button
+                  buttonType="secondary"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setOpen(false);
+                  }}
+                >
+                  Cancel
+                </Base.Button>
+              </div>
+            </div>
+          ),
+        },
+        {
+          id: "output",
+          title: "Output",
+          content: (
+            <div className="flex flex-col h-56 w-full">
+              <div className="flex flex-1 border  overflow-auto">
+                <Base.CodeMirror
+                  readOnly
+                  extensions={[basicSetup, json()]}
+                  value={JSON.stringify(output, null, 2)}
+                  theme={{
+                    "&": {
+                      height: "100%",
+                      width: "100%",
+                    },
+                  }}
+                />
+              </div>
+            </div>
+          ),
+        },
+      ]}
+    />
   );
 };
 

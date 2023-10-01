@@ -57,6 +57,7 @@ function createUpdateListener(
 }
 
 export interface CodeMirrorProps {
+  readOnly?: boolean;
   value?: string;
   autoFocus?: boolean;
   extensions?: Extension[];
@@ -65,10 +66,12 @@ export interface CodeMirrorProps {
 }
 
 function createExtensions({
+  readOnly,
   extensions,
   theme,
   onChange,
 }: {
+  readOnly: boolean;
   extensions?: Extension[];
   theme?: Parameters<typeof EditorView.theme>[0];
   onChange: CodeMirrorProps["onChange"];
@@ -76,11 +79,13 @@ function createExtensions({
   let extensionsToUse: Extension[] = [...(extensions || [])];
   if (theme) extensionsToUse?.push(EditorView.theme(theme));
   if (onChange) extensionsToUse?.push(createUpdateListener(onChange));
+  if (readOnly) extensionsToUse?.push(EditorView.editable.of(false));
 
   return extensionsToUse;
 }
 
 export const CodeMirror = ({
+  readOnly = false,
   value,
   autoFocus,
   extensions = [],
@@ -98,7 +103,12 @@ export const CodeMirror = ({
 
       const state = EditorState.create({
         doc: value || "",
-        extensions: createExtensions({ extensions, theme, onChange }),
+        extensions: createExtensions({
+          readOnly,
+          extensions,
+          theme,
+          onChange,
+        }),
       });
       const view = new EditorView({
         state: state,
@@ -111,7 +121,7 @@ export const CodeMirror = ({
       setView(view);
       setState(state);
     }
-  }, [root, setView, setState]);
+  }, [root, setView, setState, readOnly]);
 
   // Synchronization on new value passed in.
   useEffect(() => {
@@ -123,11 +133,16 @@ export const CodeMirror = ({
     if (view) {
       view.dispatch({
         effects: StateEffect.reconfigure.of(
-          createExtensions({ extensions, theme, onChange })
+          createExtensions({
+            readOnly,
+            extensions,
+            theme,
+            onChange,
+          })
         ),
       });
     }
-  }, [view, extensions, theme, onChange]);
+  }, [view, extensions, theme, onChange, readOnly]);
 
   return <div className="flex flex-grow" ref={root} />;
 };
