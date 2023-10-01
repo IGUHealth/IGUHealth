@@ -173,7 +173,10 @@ async function createPayload(
   return {
     ctx: {
       SEC_TOKEN: ctx.user_access_token || "not-sec",
-      API_URL: `${process.env.API_URL}/w/${ctx.workspace}/api/v1/fhir/r4`,
+      API_URL: new URL(
+        `/w/${ctx.workspace}/api/v1/fhir/r4`,
+        process.env.API_URL
+      ).href,
       workspace: ctx.workspace,
       level: request.level,
       resourceType:
