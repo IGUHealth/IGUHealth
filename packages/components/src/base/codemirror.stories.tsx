@@ -5,13 +5,18 @@ import { basicSetup } from "codemirror";
 import { CodeMirror, CodeMirrorProps } from "./codemirror";
 
 const BasicCodeMirror = ({
+  readOnly,
   value,
   autoFocus,
   theme,
   onChange,
-}: Pick<CodeMirrorProps, "value" | "autoFocus" | "theme" | "onChange">) => {
+}: Pick<
+  CodeMirrorProps,
+  "value" | "autoFocus" | "theme" | "onChange" | "readOnly"
+>) => {
   return (
     <CodeMirror
+      readOnly={readOnly}
       value={value}
       autoFocus={autoFocus}
       theme={theme}
@@ -38,6 +43,20 @@ export const BasicSetup: Story = {
     value: "primary",
     onChange: (value: string, update) => console.log(value),
     autoFocus: true,
+    theme: {
+      "&": {
+        height: "400px",
+        width: "400px",
+      },
+    },
+  },
+};
+
+export const ReadOnly: Story = {
+  args: {
+    value: "primary",
+    onChange: (value: string, update) => console.log(value),
+    readOnly: true,
     theme: {
       "&": {
         height: "400px",

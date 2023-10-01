@@ -3,7 +3,7 @@ import { Tab } from "@headlessui/react";
 import classNames from "classnames";
 
 export interface Tab {
-  id: number;
+  id: number | string;
   title: string;
   content: React.ReactNode;
 }
