@@ -167,6 +167,8 @@ async function createPayload(
   const opCTX = getOpCTX(ctx, request);
 
   await op.validate(opCTX, "in", parsedBody);
+  if (!process.env.API_URL)
+    throw new OperationError(outcomeFatal("invalid", "API_URL is not set"));
 
   return {
     ctx: {
