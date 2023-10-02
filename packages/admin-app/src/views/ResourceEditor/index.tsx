@@ -39,7 +39,7 @@ export default function DefaultResourceEditorView() {
                   id,
                 } as Resource);
           Base.Toaster.promise(editPromise, {
-            loading: "Creating Resource",
+            loading: id === "new" ? "Creating Resource" : "Updating Resource",
             success: (success) =>
               `Updated ${(success as Resource).resourceType}`,
             error: (error) => {
