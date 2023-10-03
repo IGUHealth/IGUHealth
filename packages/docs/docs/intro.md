@@ -18,7 +18,7 @@ Get started by Downloading our [repo](https://github.com/iguhealth/iguhealth) or
 
 ## Start the server
 
-Setup a database on your postgres server and provide the following environment variables to the server
+Create a database on your postgres instance and then provide the following environment variables to the iguhealth server
 
 | name                   | description                        | required | defaults  |
 | ---------------------- | ---------------------------------- | -------- | --------- |
