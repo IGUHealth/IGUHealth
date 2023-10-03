@@ -32,7 +32,7 @@ export default function ResourceTypeView() {
         })
         .catch((e) => console.error(e));
     },
-    [setIsLoading, setData, client]
+    [setIsLoading, setData, client, params.resourceType]
   );
 
   useEffect(() => {
