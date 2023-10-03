@@ -31,7 +31,7 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
-    title: "Extend with custom code with OperationDefinitions",
+    title: "Write extensions using custom code and OperationDefinitions",
     description: (
       <>
         Easily extend our FHIR server with custom code (by default javascript)
