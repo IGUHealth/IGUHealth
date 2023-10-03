@@ -2,46 +2,59 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Intro
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Let's discover **IGUHealth in less than 5 minutes**.
 
 ## Getting Started
 
-Get started by **creating a new site**.
-
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+Get started by Downloading our [repo](https://github.com/iguhealth/iguhealth) or setting up an account.
 
 ### What you'll need
 
-- [Node.js](https://nodejs.org/en/download/) version 16.14 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+- [Node.js](https://nodejs.org/en/download/) version 19.6.0 or above
+- [Postgres](https://www.postgresql.org/) version 13 or above
+- [Redis](https://redis.io/) version 7.0.12 or above
 
-## Generate a new site
+## Start the server
 
-Generate a new Docusaurus site using the **classic template**.
+Setup a database on your postgres server and provide the following environment variables to the server
 
-The classic template will automatically be added to your project after you run the command:
+| name                   | description                        | required | defaults  |
+| ---------------------- | ---------------------------------- | -------- | --------- |
+| FHIR_DATABASE_NAME     | Postgres database name.            | true     | iguhealth |
+| FHIR_DATABASE_HOST     | Postgres host                      | true     | localhost |
+| FHIR_DATABASE_PORT     | Postgres port                      | true     | 5432      |
+| FHIR_DATABASE_PASSWORD | Postgres password                  | true     | ""        |
+| FHIR_DATABASE_USERNAME | Postgres username                  | true     | postgres  |
+| FHIR_DATABASE_SSL      | Whether Postgres connection is SSL | false    | false     |
+| REDIS_HOST             | Redis Host                         | true     | 127.0.0.1 |
+| REDIS_PORT             | Redis port                         | true     | 6379      |
+
+## RUN API Queries
+
+The server is setup where data is organized according to **workspaces**. Workspaces are a logical seperation of data. Data cannot be referenced between workspaces or queried. By default server is setup with an initial workspace of **system**.
+
+### Get Server capabilities
+
+Run the following query
 
 ```bash
-npm init docusaurus@latest my-website classic
+curl --request GET --url http://localhost:3000/w/system/api/v1/fhir/r4/metadata
 ```
 
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
+### Post Patient
 
-The command also installs all necessary dependencies you need to run Docusaurus.
-
-## Start your site
-
-Run the development server:
+Run the following query
 
 ```bash
-cd my-website
-npm run start
+curl --request POST --url http://localhost:3000/w/system/api/v1/fhir/r4/Patient \\n  --header 'content-type: application/json' \\n  --data '{"resourceType":"Patient", "name": [{"family": "parker", "given": ["John"]}]}'
 ```
 
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
+### Search Patient by Name
 
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
+Run the following query
 
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+```bash
+curl --request POST --url http://localhost:3000/w/system/api/v1/fhir/r4/Patient?name=parker
+```

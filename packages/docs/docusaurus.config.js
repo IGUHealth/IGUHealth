@@ -8,20 +8,20 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 const config = {
   title: "IGUHealth",
   tagline: "FHIR Development platform",
-  favicon: "img/favicon.ico",
+  favicon: "img/logo.svg",
 
   // Set the production url of your site here
-  url: "https://your-docusaurus-test-site.com",
+  url: "https://docs.iguhealth.app",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "facebook", // Usually your GitHub org/user name.
-  projectName: "docusaurus", // Usually your repo name.
+  organizationName: "IGUHealth", // Usually your GitHub org/user name.
+  projectName: "IGUHealth", // Usually your repo name.
 
-  onBrokenLinks: "throw",
+  onBrokenLinks: "ignore",
   onBrokenMarkdownLinks: "warn",
 
   // Even if you don't use internalization, you can use this field to set useful
@@ -38,6 +38,7 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          sidebarCollapsible: false,
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
@@ -62,7 +63,13 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       // Replace with your project's social card
-      image: "img/docusaurus-social-card.jpg",
+      // image: "img/docusaurus-social-card.jpg",
+      docs: {
+        sidebar: {
+          hideable: false,
+          autoCollapseCategories: false,
+        },
+      },
       navbar: {
         title: "IGUHealth",
         logo: {
@@ -72,13 +79,13 @@ const config = {
         items: [
           {
             type: "docSidebar",
-            sidebarId: "tutorialSidebar",
+            sidebarId: "documentationSidebar",
             position: "left",
-            label: "Tutorial",
+            label: "Documentation",
           },
           { to: "/blog", label: "Blog", position: "left" },
           {
-            href: "https://github.com/facebook/docusaurus",
+            href: "https://github.com/iguhealth/iguhealth",
             label: "GitHub",
             position: "right",
           },
@@ -91,7 +98,7 @@ const config = {
             title: "Docs",
             items: [
               {
-                label: "Tutorial",
+                label: "Documentation",
                 to: "/docs/intro",
               },
             ],
@@ -99,18 +106,18 @@ const config = {
           {
             title: "Community",
             items: [
-              {
-                label: "Stack Overflow",
-                href: "https://stackoverflow.com/questions/tagged/docusaurus",
-              },
-              {
-                label: "Discord",
-                href: "https://discordapp.com/invite/docusaurus",
-              },
-              {
-                label: "Twitter",
-                href: "https://twitter.com/docusaurus",
-              },
+              // {
+              //   label: "Stack Overflow",
+              //   href: "https://stackoverflow.com/questions/tagged/docusaurus",
+              // },
+              // {
+              //   label: "Discord",
+              //   href: "https://discordapp.com/invite/docusaurus",
+              // },
+              // {
+              //   label: "Twitter",
+              //   href: "https://twitter.com/docusaurus",
+              // },
             ],
           },
           {
@@ -122,12 +129,12 @@ const config = {
               },
               {
                 label: "GitHub",
-                href: "https://github.com/facebook/docusaurus",
+                href: "https://github.com/iguhealth/iguhealth",
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} IGUHealth.`,
       },
       prism: {
         theme: lightCodeTheme,
