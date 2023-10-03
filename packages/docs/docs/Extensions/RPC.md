@@ -142,7 +142,7 @@ exports.handler = async function (ctx, param) {
 | Name             | Type       | Description                                                            |
 | ---------------- | ---------- | ---------------------------------------------------------------------- |
 | ctx.workspace    | string     | the workspace slug that called the operation                           |
-| ctx.level        | string     | The level of the rpc call, can be system, type or level                |
+| ctx.level        | string     | The level of the rpc call, can be system, type or instance             |
 | ctx.resourceType | string     | If level is instance or type this will be the resourceType of the call |
 | ctx.id           | string     | If level is instance will be the id of the resource called             |
 | ctx.client       | HTTPClient | Client that allows you to call API from the RPC example below          |
