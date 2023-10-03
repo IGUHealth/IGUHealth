@@ -15,7 +15,6 @@ function createMemoryDatabase(resourceTypes) {
       )
     )
     .flat();
-
   for (const resource of artifactResources) {
     database.create({}, resource);
   }
@@ -81,7 +80,7 @@ const resourceStructureDefinitions = await memoryDatabase.search_type(
 );
 
 for (const structureDefinition of resourceStructureDefinitions.resources) {
-  const pathName = `./docs/FHIR/${structureDefinition.name}.mdx`;
+  const pathName = `./docs/Resources/${structureDefinition.name}.mdx`;
   const content = await processStructureDefinition(
     memoryDatabase,
     structureDefinition
