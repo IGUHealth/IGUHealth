@@ -22,9 +22,45 @@ function createMemoryDatabase(resourceTypes) {
   return database;
 }
 
-function processStructureDefinition(memdb, structureDefinition) {
-  const doc = `# ${structureDefinition.name}\n ## Description \n ${structureDefinition.description}`;
+async function processStructureDefinition(memdb, structureDefinition) {
+  const parameters = await memdb.search_type({}, "SearchParameter", [
+    {
+      name: "base",
+      value: ["DomainResource", "Resource", structureDefinition.name],
+    },
+  ]);
+
+  let doc = `# ${structureDefinition.name}\n ## Description \n ${structureDefinition.description}\n`;
+  doc = `${doc} ## Structure \n | Path | Cardinality | Type | Description \n | ---- | ----------- | ---- | -------  \n`;
   for (const element of structureDefinition.snapshot?.element || []) {
+    const path = element.path;
+    const min = element.min;
+    const max = element.max;
+    const type = element.type?.[0]?.code;
+    const description = element.definition
+      ?.replace("|", "/")
+      .replace(/(\r\n|\n|\r)/gm, "");
+    doc = `${doc} | ${path} | ${min}..${max} | ${
+      type ? type : structureDefinition.name
+    } | ${description} \n`;
+  }
+
+  doc = `${doc} ## Search Parameters \n | Name | Type | Description  | Expression  \n | ---- | ---- | ------- | ------  \n`;
+  for (const parameter of parameters.resources) {
+    const name = parameter.name;
+    const type = parameter.type;
+
+    const description = parameter.description
+      ?.replace("|", "/")
+      .replace(/(\r\n|\n|\r)/gm, "");
+
+    const expression = parameter.expression
+      ?.replace("|", "/")
+      .replace(/(\r\n|\n|\r)/gm, "");
+
+    doc = `${doc} | ${name} | ${type} | ${description ? description : ""} | ${
+      expression ? expression : ""
+    }  \n`;
   }
 
   return doc;
@@ -46,7 +82,7 @@ const resourceStructureDefinitions = await memoryDatabase.search_type(
 
 for (const structureDefinition of resourceStructureDefinitions.resources) {
   const pathName = `./docs/FHIR/${structureDefinition.name}.mdx`;
-  const content = processStructureDefinition(
+  const content = await processStructureDefinition(
     memoryDatabase,
     structureDefinition
   );

@@ -11,15 +11,15 @@ const config = {
   favicon: "img/logo.svg",
 
   // Set the production url of your site here
-  url: "https://your-docusaurus-test-site.com",
+  url: "https://docs.iguhealth.app",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "facebook", // Usually your GitHub org/user name.
-  projectName: "docusaurus", // Usually your repo name.
+  organizationName: "IGUHealth", // Usually your GitHub org/user name.
+  projectName: "IGUHealth", // Usually your repo name.
 
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
@@ -62,7 +62,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       // Replace with your project's social card
-      image: "img/docusaurus-social-card.jpg",
+      // image: "img/docusaurus-social-card.jpg",
       navbar: {
         title: "IGUHealth",
         logo: {
@@ -96,23 +96,23 @@ const config = {
               },
             ],
           },
-          // {
-          //   title: "Community",
-          //   items: [
-          //     {
-          //       label: "Stack Overflow",
-          //       href: "https://stackoverflow.com/questions/tagged/docusaurus",
-          //     },
-          //     {
-          //       label: "Discord",
-          //       href: "https://discordapp.com/invite/docusaurus",
-          //     },
-          //     {
-          //       label: "Twitter",
-          //       href: "https://twitter.com/docusaurus",
-          //     },
-          //   ],
-          // },
+          {
+            title: "Community",
+            items: [
+              // {
+              //   label: "Stack Overflow",
+              //   href: "https://stackoverflow.com/questions/tagged/docusaurus",
+              // },
+              // {
+              //   label: "Discord",
+              //   href: "https://discordapp.com/invite/docusaurus",
+              // },
+              // {
+              //   label: "Twitter",
+              //   href: "https://twitter.com/docusaurus",
+              // },
+            ],
+          },
           {
             title: "More",
             items: [
@@ -127,7 +127,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} IGUHealth. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} IGUHealth.`,
       },
       prism: {
         theme: lightCodeTheme,
