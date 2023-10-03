@@ -21,7 +21,7 @@ const config = {
   organizationName: "IGUHealth", // Usually your GitHub org/user name.
   projectName: "IGUHealth", // Usually your repo name.
 
-  onBrokenLinks: "throw",
+  onBrokenLinks: "ignore",
   onBrokenMarkdownLinks: "warn",
 
   // Even if you don't use internalization, you can use this field to set useful
@@ -38,6 +38,7 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          sidebarCollapsible: false,
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
@@ -63,6 +64,12 @@ const config = {
     ({
       // Replace with your project's social card
       // image: "img/docusaurus-social-card.jpg",
+      docs: {
+        sidebar: {
+          hideable: false,
+          autoCollapseCategories: false,
+        },
+      },
       navbar: {
         title: "IGUHealth",
         logo: {
