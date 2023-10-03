@@ -25,9 +25,8 @@ const FeatureList: FeatureItem[] = [
 
     description: (
       <>
-        Code is available{" "}
-        <a href="https://github.com/IGUHealth/IGUHealth">here</a>. Visit our
-        repo to submit issues and add features.
+        Our server is open source and licensed under BSD-3. This means you can
+        use our server freely and modify it as you wish.
       </>
     ),
   },
