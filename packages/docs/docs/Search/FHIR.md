@@ -45,7 +45,7 @@ When searching for data you may want to find resources based on data linked to a
 For example finding an Observation by a patients MRN identifier. To perform these kinds of searches you use chaining.
 Our api supports chained parameters so in the example above you can perform the following query:
 
-```curl
+```bash
 curl --request GET --url https://{my-api}/Observation?patient.identifier={mrn-system}|12345
 ```
 
@@ -54,11 +54,23 @@ To retrieve all observations for a patient with an mrn identifier of 12345. The 
 ## Modifiers
 
 Modifiers are colon seperated values that alter the behavior of search.
-For example the following query: <br /> `bash curl --request GET --url https://{my-api}/Patient?name=bob` <br />
+For example the following query: <br />
+
+```bash
+curl --request GET --url https://{my-api}/Patient?name=bob
+```
+
+<br />
+
 Will perform a default string search which is a case insensitive search for all patients whose name starts with bob. <br />
 
 To make this more specific we can use the `exact` modifier as follows: <br />
-`bash curl --request GET --url https://{my-api}/Patient?name:exact=Bob` <br />
+
+```bash
+curl --request GET --url https://{my-api}/Patient?name:exact=Bob
+```
+
+<br />
 This will perform a case sensitive search to find all Patients whose name exactly matches `Bob`.
 
 ### Supported Modifiers
@@ -72,7 +84,34 @@ This will perform a case sensitive search to find all Patients whose name exactl
 ## Prefixes
 
 Prefix which specifies the type of matching that occurs. This is used for odered parameter types **number**, **date** and **quantity**. <br />
-For example the following query: <br /> `bash curl --request GET --url https://{my-api}/Patient?_lastUpdated=2023` <br />
-Will query for all Patients who have been
+Currently we only have support for number based prefixes but plan on adding date and quantity support in the near future. <br />
+For example the following query: <br />
 
-###
+```bash
+curl --request GET --url https://{my-api}/RiskAssessment?probability=0.5
+```
+
+<br />
+Will query for all RiskAssessments who a probability of 0.5 with range given by decimal precision of query. <br />
+
+If instead you want to query for RiskAssessments with probability less than equal to 0.5 you would use the le prefix as follows: <br />
+
+```bash
+curl --request GET --url https://{my-api}/RiskAssessment?probability=le0.5
+```
+
+<br />
+
+### Supported Prefixes
+
+| Name | Supported | Type   | Description                                                                                                   |
+| ---- | --------- | ------ | ------------------------------------------------------------------------------------------------------------- |
+| eq   | Yes       | number | exact match of a value. By default matching is done by range of decimal precision this forces an exact match. |
+| ne   | Yes       | number | Search for value of parameter that is not the value provided.                                                 |
+| gt   | Yes       | number | Search for values greater than value provided.                                                                |
+| lt   | Yes       | number | Search for values less than value provided.                                                                   |
+| ge   | Yes       | number | Search for values greater than or equal to the value provided.                                                |
+| le   | Yes       | number | Search for values less than or equal to the value provided.                                                   |
+| sa   | No        |        | the value for the parameter in the resource starts after the provided value                                   |
+| eb   | No        |        | the value for the parameter in the resource ends before the provided value                                    |
+| ap   | No        |        | The value for the parameter in the resource is approximately the same to the provided value.                  |

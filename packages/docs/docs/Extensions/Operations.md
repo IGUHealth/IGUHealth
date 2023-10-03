@@ -1,3 +1,1 @@
 # Operations
-
-The standard
