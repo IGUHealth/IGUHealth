@@ -27588,7 +27588,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/koa", "npm:2.13.6"],\
             ["co-body", "npm:6.1.0"],\
             ["formidable", "npm:2.1.2"],\
-            ["zod", "npm:3.21.4"]\
+            ["zod", "npm:3.22.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -39834,10 +39834,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["zod", [\
-        ["npm:3.21.4", {\
-          "packageLocation": "./.yarn/cache/zod-npm-3.21.4-9f570b215c-f185ba8734.zip/node_modules/zod/",\
+        ["npm:3.22.3", {\
+          "packageLocation": "./.yarn/cache/zod-npm-3.22.3-2491f7ea17-65b05139be.zip/node_modules/zod/",\
           "packageDependencies": [\
-            ["zod", "npm:3.21.4"]\
+            ["zod", "npm:3.22.3"]\
           ],\
           "linkType": "HARD"\
         }]\
