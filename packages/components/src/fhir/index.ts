@@ -12,6 +12,7 @@ import { String } from "./primitives/string.js";
 import { Time } from "./primitives/time.js";
 import { UnsignedInteger } from "./primitives/unsignedinteger.js";
 import { Url } from "./primitives/url.js";
+import { UUID } from "./primitives/uuid.js";
 
 export {
   Boolean,
@@ -28,4 +29,5 @@ export {
   Time,
   UnsignedInteger,
   Url,
+  UUID,
 };
