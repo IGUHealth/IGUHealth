@@ -18,28 +18,30 @@ export interface DropdownMenuProps {
 function DropDownMenu({ links, children }: DropdownMenuProps) {
   return (
     <Menu>
-      <div className="relative">
+      <div>
         <Menu.Button>{children}</Menu.Button>
-        <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          {links.map((link) => (
-            <Menu.Item key={link.key}>
-              {({ active }) => (
-                <a
-                  {...link}
-                  className={classNames(
-                    "cursor-pointer block px-4 py-2 text-sm",
-                    active
-                      ? "bg-indigo-600 text-white"
-                      : "text-indigo-600 hover:bg-indigo-600 hover:text-white",
-                    link.className
-                  )}
-                >
-                  {link.label}
-                </a>
-              )}
-            </Menu.Item>
-          ))}
-        </Menu.Items>
+        <div className="relative">
+          <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            {links.map((link) => (
+              <Menu.Item key={link.key}>
+                {({ active }) => (
+                  <a
+                    {...link}
+                    className={classNames(
+                      "cursor-pointer block px-4 py-2 text-sm",
+                      active
+                        ? "bg-indigo-600 text-white"
+                        : "text-indigo-600 hover:bg-indigo-600 hover:text-white",
+                      link.className
+                    )}
+                  >
+                    {link.label}
+                  </a>
+                )}
+              </Menu.Item>
+            ))}
+          </Menu.Items>
+        </div>
       </div>
     </Menu>
   );
