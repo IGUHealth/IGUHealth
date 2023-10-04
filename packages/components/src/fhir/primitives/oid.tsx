@@ -3,13 +3,13 @@ import React, { useEffect, useState } from "react";
 import { InputContainer } from "../../base/labelContainer";
 import { Input } from "../../base/input";
 
-type UUID = `${string}-${string}-${string}-${string}`;
+type OID = `urn:oid:${string}`;
 
-export interface UUIDProps {
+export interface OIDProps {
   /**
    * The value of the input.
    */
-  value: UUID;
+  value: OID;
   /**
    * The value of the input.
    */
@@ -24,16 +24,15 @@ export interface UUIDProps {
   label?: string;
 }
 
-const uuidRegex =
-  /^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$/;
+const oidRegex = /^urn:oid:[0-2](\.(0|[1-9][0-9]*))+$/;
 
-export const UUID = ({ onChange, value, issue, label }: UUIDProps) => {
+export const OID = ({ onChange, value, issue, label }: OIDProps) => {
   const [issues, setIssues] = useState<string[]>([]);
 
   useEffect(() => {
     const issues: string[] = [];
-    if (value && !uuidRegex.test(value)) {
-      issues.push(`Invalid uuid format`);
+    if (value && !oidRegex.test(value)) {
+      issues.push(`Invalid oid format`);
     }
     if (issue) issues.push(issue);
     setIssues(issues);
