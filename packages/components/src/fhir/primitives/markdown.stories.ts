@@ -29,11 +29,3 @@ export const Error: Story = {
     onChange: (value: string) => console.log(value),
   },
 };
-
-export const InvalidValue: Story = {
-  args: {
-    // @ts-ignore
-    value: "bad-value",
-    onChange: (value: string) => console.log(value),
-  },
-};

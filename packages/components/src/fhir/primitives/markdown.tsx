@@ -1,6 +1,6 @@
 import React from "react";
 
-import { markdownLanguage } from "@codemirror/lang-markdown";
+import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { CodeMirror } from "../../base";
 import { InputContainer } from "../../base/labelContainer";
 
@@ -23,14 +23,14 @@ export interface MarkdownProps {
   label?: string;
 }
 
+const extensions = [markdown({ base: markdownLanguage })];
+
+console.log(markdown);
+
 export const Markdown = ({ onChange, value, issue, label }: MarkdownProps) => {
   return (
     <InputContainer label={label} issues={issue ? [issue] : []}>
-      <CodeMirror
-        extensions={[markdownLanguage]}
-        value={value}
-        onChange={onChange}
-      />
+      <CodeMirror extensions={extensions} value={value} onChange={onChange} />
     </InputContainer>
   );
 };
