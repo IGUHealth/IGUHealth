@@ -13,10 +13,15 @@ import { Time } from "./primitives/time.js";
 import { UnsignedInteger } from "./primitives/unsignedinteger.js";
 import { Url } from "./primitives/url.js";
 import { UUID } from "./primitives/uuid.js";
+import { Canonical } from "./primitives/canonical.js";
+import { Markdown } from "./primitives/markdown.js";
+import { OID } from "./primitives/oid.js";
+import { Uri } from "./primitives/uri.js";
 
 export {
   Boolean,
   Base64Binary,
+  Canonical,
   Code,
   Date,
   DateTime,
@@ -24,10 +29,13 @@ export {
   Id,
   Instant,
   Integer,
+  Markdown,
+  OID,
   PositiveInteger,
   String,
   Time,
   UnsignedInteger,
+  Uri,
   Url,
   UUID,
 };

@@ -25,5 +25,5 @@ For storybook visit https://storybook.iguhealth.app
 | uuid         | yes       |
 | oid          | yes       |
 | markdown     | yes       |
-| canonical    | no        |
+| canonical    | yes       |
 | uri          | yes       |
