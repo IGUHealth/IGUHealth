@@ -1,3 +1,3 @@
 import { String } from "./string";
 
-export { String as Url };
+export { String as Uri };
