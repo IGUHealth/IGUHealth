@@ -1,0 +1,367 @@
+import {
+  StructureDefinition,
+  Element,
+  ElementDefinition,
+  code,
+} from "@iguhealth/fhir-types/r4/types";
+import {
+  complexTypes,
+  resourceTypes,
+  primitiveTypes,
+} from "@iguhealth/fhir-types/r4/sets";
+
+type MetaInformation = {
+  sd: StructureDefinition;
+  elementIndex: number;
+  // Typechoice so need to maintain the type here.
+  type: string;
+  getSD?: (type: code) => StructureDefinition | undefined;
+};
+
+export type PartialMeta = Partial<MetaInformation>;
+
+export interface MetaValue<T> {
+  meta(): MetaInformation | undefined;
+  valueOf(): T;
+  isArray(): this is MetaValueArray<T>;
+}
+
+type RawPrimitive = string | number | boolean | undefined;
+type FHIRPathPrimitive<T extends RawPrimitive> = Element & {
+  _type_: "primitive";
+  value: T;
+};
+
+function isResourceOrComplexType(type: string): boolean {
+  return (
+    (complexTypes.has(type) || resourceTypes.has(type)) &&
+    // Because element and backbone can be used
+    // in certain contexts to extend
+    // just ignore for now
+    type !== "Element" &&
+    type !== "BackboneElement"
+  );
+}
+
+/*
+ ** Content references are a special case where the element is not defined in the current
+ ** location but instead defined using a pointer in seperate location in the SD.
+ ** This searches and resolves the elements pointer index.
+ */
+function resolveContentReferenceIndex(
+  sd: StructureDefinition,
+  element: ElementDefinition
+): number {
+  const contentReference = element.contentReference?.split("#")[1];
+  const referenceElementIndex = sd.snapshot?.element.findIndex(
+    (element) => element.id === contentReference
+  );
+  if (!referenceElementIndex)
+    throw new Error(
+      "unable to resolve contentreference: '" + element.contentReference + "'"
+    );
+  return referenceElementIndex;
+}
+
+function deriveMetaInformation(
+  partialMeta: PartialMeta | undefined
+): MetaInformation | undefined {
+  if (!partialMeta) return partialMeta;
+  if (!partialMeta.elementIndex) partialMeta.elementIndex = 0;
+  if (!partialMeta.sd && partialMeta.type)
+    partialMeta.sd = partialMeta.getSD && partialMeta.getSD(partialMeta.type);
+  return partialMeta.sd ? (partialMeta as MetaInformation) : undefined;
+}
+
+function isFPPrimitive(v: unknown): v is FHIRPathPrimitive<RawPrimitive> {
+  return isObject(v) && v._type_ === "primitive";
+}
+
+function toFPPrimitive<T extends RawPrimitive>(
+  value: T,
+  element?: Element
+): FHIRPathPrimitive<T> {
+  return { ...element, value, _type_: "primitive" };
+}
+
+function isRawPrimitive(v: unknown): v is RawPrimitive {
+  return (
+    typeof v === "string" ||
+    typeof v === "number" ||
+    typeof v === "boolean" ||
+    v === undefined
+  );
+}
+
+function isObject(value: unknown): value is { [key: string]: unknown } {
+  return value !== null && typeof value === "object";
+}
+
+function isArray<T>(v: T | T[]): v is T[] {
+  return Array.isArray(v);
+}
+
+function getField<T extends { [key: string]: unknown }>(
+  value: T,
+  field: string
+): string | undefined {
+  if (value.hasOwnProperty(field)) return field;
+  const foundField = Object.keys(value).find(
+    (k) =>
+      k.startsWith(field.toString()) || k.startsWith(`_${field.toString()}`)
+  );
+
+  return foundField?.startsWith("_") ? foundField.substring(1) : foundField;
+}
+
+/*
+ ** If Element definition fits criteria of path return the type [for typechoice].
+ ** If Undefined signals it's not compliant (will always return a type if compliant).
+ */
+function isElementDefinitionWithType(
+  element: ElementDefinition,
+  path: string,
+  expectedType?: string
+): code | undefined {
+  if (element.path === path) return element.type?.[0].code;
+  if (
+    element.type &&
+    element.type?.length > 1 &&
+    path.startsWith(element.path.replace("[x]", ""))
+  ) {
+    for (let type of element.type) {
+      // Because type pulled from typechoice will be capitalized and it may or may not be
+      // on the actual type for example HumanName vs boolean
+      // Just lowercase both and compare.
+      if (type.code.toLocaleLowerCase() === expectedType?.toLocaleLowerCase())
+        return type.code;
+    }
+  }
+  return undefined;
+}
+
+function pathMatchesElement(
+  element: ElementDefinition,
+  path: string,
+  expectedType?: string
+): boolean {
+  if (element.path === path) return true;
+  if (
+    element.type &&
+    element.type?.length > 1 &&
+    path.startsWith(element.path.replace("[x]", ""))
+  ) {
+    for (let type of element.type) {
+      // Because type pulled from typechoice will be capitalized and it may or may not be
+      // on the actual type for example HumanName vs boolean
+      // Just lowercase both and compare.
+      if (type.code.toLocaleLowerCase() === expectedType?.toLocaleLowerCase())
+        return true;
+    }
+  }
+  return false;
+}
+
+/*
+ ** Given a position return all children indices.
+ */
+function getChildrenElementIndices(meta: MetaInformation): number[] {
+  const childIndices: number[] = [];
+  const element = meta.sd.snapshot?.element[meta.elementIndex];
+  if (!element?.path) throw new Error("Invalid element when deriving children");
+
+  let childIndex = meta.elementIndex + 1;
+
+  const childRegex = new RegExp(`^${element.path}\\.[^\\.]+$`);
+
+  while (
+    meta.sd.snapshot?.element[childIndex]?.path &&
+    childRegex.test(meta.sd.snapshot?.element[childIndex]?.path)
+  ) {
+    childIndices.push(childIndex);
+    childIndex++;
+  }
+
+  return childIndices;
+}
+
+/*
+ ** Given Metainformation and field derive the next metainformation.
+ ** This could mean pulling in a new StructureDefinition (IE in case of complex type or resource)
+ ** Or setting a new Element index with type.
+ */
+function deriveNextMetaInformation(
+  meta: MetaInformation | undefined,
+  field: string,
+  expectedType?: string // For Typechoices pass in chunk pulled from field.
+): MetaInformation | undefined {
+  if (!meta?.elementIndex) return undefined;
+
+  const curElement = meta.sd.snapshot?.element[meta.elementIndex];
+  const nextElementPath = `${curElement?.path}.${field.toString()}`;
+  let i = meta.elementIndex + 1;
+
+  while (i < (meta.sd.snapshot?.element.length || 0)) {
+    let elementToCheck = meta.sd.snapshot?.element[i];
+    if (
+      elementToCheck &&
+      pathMatchesElement(elementToCheck, nextElementPath, expectedType)
+    ) {
+      // Handle content references.
+      if (elementToCheck?.contentReference) {
+        const referenceElementIndex = resolveContentReferenceIndex(
+          meta.sd,
+          elementToCheck
+        );
+        const referenceElement =
+          meta.sd.snapshot?.element[referenceElementIndex];
+        const type = referenceElement?.type?.[0].code;
+        if (!type) return undefined;
+        return {
+          sd: meta.sd,
+          type,
+          elementIndex: referenceElementIndex,
+          getSD: meta.getSD,
+        };
+      } else {
+        const type =
+          elementToCheck &&
+          isElementDefinitionWithType(
+            elementToCheck,
+            nextElementPath,
+            expectedType
+          );
+        if (!type) return undefined;
+        // In this case pull in the SD means it's a complex or resource type
+        // so need to retrieve the SD.
+        if (isResourceOrComplexType(type)) {
+          const sd = meta.getSD && meta.getSD(type);
+          if (!sd) {
+            throw new Error(`Could not retrieve sd of type '${type}'`);
+          }
+          return {
+            sd: sd,
+            type: type,
+            elementIndex: 0,
+            getSD: meta.getSD,
+          };
+        }
+
+        return {
+          sd: meta.sd,
+          type: type,
+          // Check for content reference and resolve to that indice.
+          elementIndex: i,
+          getSD: meta.getSD,
+        };
+      }
+    }
+    i++;
+  }
+}
+
+export function descend<T>(
+  node: MetaValueSingular<T>,
+  field: string
+): MetaValue<unknown> | undefined {
+  const internalValue = node.internalValue;
+  if (isObject(internalValue)) {
+    const computedField = getField(internalValue, field);
+    if (computedField) {
+      let v = internalValue[computedField];
+      let element = internalValue[`_${computedField}`] as
+        | Element[]
+        | Element
+        | undefined;
+      const nextMeta = deriveNextMetaInformation(
+        node.meta(),
+        field,
+        computedField.replace(field, "")
+      );
+      return MetaValue(nextMeta, v, element);
+    }
+  }
+  return undefined;
+}
+
+class MetaValueSingular<T> implements MetaValue<T> {
+  private _value: T | FHIRPathPrimitive<RawPrimitive>;
+  private _meta: MetaInformation | undefined;
+  constructor(meta: PartialMeta | undefined, value: T, element?: Element) {
+    if (isRawPrimitive(value) || element !== undefined) {
+      this._value = toFPPrimitive(
+        isRawPrimitive(value) ? value : undefined,
+        element
+      );
+    } else {
+      this._value = value;
+    }
+    this._meta = deriveMetaInformation(meta);
+  }
+  get internalValue() {
+    return this._value;
+  }
+  valueOf(): T {
+    if (isFPPrimitive(this._value)) return this._value.value as T;
+    return this._value;
+  }
+  meta(): MetaInformation | undefined {
+    return this._meta;
+  }
+  isArray(): this is MetaValueArray<T> {
+    return false;
+  }
+}
+
+class MetaValueArray<T> implements MetaValue<Array<T>> {
+  private value: Array<MetaValueSingular<T>>;
+  private _meta: MetaInformation | undefined;
+  constructor(
+    meta: PartialMeta | undefined,
+    value: Array<T>,
+    element?: Element[]
+  ) {
+    this.value = value.map(
+      (v, i: number) =>
+        new MetaValueSingular(
+          meta,
+          v,
+          element && isArray(element) ? element[i] : undefined
+        )
+    );
+    this._meta = deriveMetaInformation(meta);
+  }
+  valueOf(): Array<T> {
+    return this.value.map((v) => v.valueOf());
+  }
+  toArray(): Array<MetaValueSingular<T>> {
+    return this.value;
+  }
+  isArray(): this is MetaValueArray<Array<T>> {
+    return true;
+  }
+  meta(): MetaInformation | undefined {
+    return this._meta;
+  }
+}
+
+export function MetaValue<T>(
+  meta: PartialMeta | undefined,
+  value: T | T[],
+  element?: Element | Element[]
+): MetaValueSingular<T> | MetaValueArray<T> | undefined {
+  if (value instanceof MetaValueArray || value instanceof MetaValueSingular)
+    return value;
+  if (isArray(value)) {
+    return new MetaValueArray(
+      meta,
+      value,
+      element && isArray(element) ? element : undefined
+    );
+  }
+  if (value === undefined && element === undefined) return undefined;
+  // Assign a type automatically if the value is a resourceType
+  if (isObject(value) && typeof value.resourceType === "string")
+    meta = { ...meta, type: value.resourceType };
+  return new MetaValueSingular(meta, value, element as Element | undefined);
+}

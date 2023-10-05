@@ -10202,6 +10202,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["classnames", "npm:2.3.2"],\
             ["codemirror", "npm:6.0.1"],\
             ["dayjs", "npm:1.11.9"],\
+            ["fast-json-patch", "npm:3.1.1"],\
             ["js-file-download", "npm:0.4.12"],\
             ["postcss", "npm:8.4.29"],\
             ["postcss-cli", "virtual:5c2bf852363bd44ad9f0933fc81dcbe58d53ad6610b46d8eeca8a0825846f0546cc3282eb03f66584af67b1493682863c6b60d7b17e992ecf4c9bf0d1ec00a38#npm:10.1.0"],\
@@ -10264,6 +10265,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["classnames", "npm:2.3.2"],\
             ["codemirror", "npm:6.0.1"],\
             ["dayjs", "npm:1.11.9"],\
+            ["fast-json-patch", "npm:3.1.1"],\
             ["js-file-download", "npm:0.4.12"],\
             ["postcss", "npm:8.4.29"],\
             ["postcss-cli", "virtual:5c2bf852363bd44ad9f0933fc81dcbe58d53ad6610b46d8eeca8a0825846f0546cc3282eb03f66584af67b1493682863c6b60d7b17e992ecf4c9bf0d1ec00a38#npm:10.1.0"],\
@@ -14824,7 +14826,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],\
       ["@surma/rollup-plugin-off-main-thread", [\
         ["npm:2.2.3", {\
-          "packageLocation": "./.yarn/cache/@surma-rollup-plugin-off-main-thread-npm-2.2.3-1f57d3eded-2c02134944.zip/node_modules/@surma/rollup-plugin-off-main-thread/",\
+          "packageLocation": "./.yarn/unplugged/@surma-rollup-plugin-off-main-thread-npm-2.2.3-1f57d3eded/node_modules/@surma/rollup-plugin-off-main-thread/",\
           "packageDependencies": [\
             ["@surma/rollup-plugin-off-main-thread", "npm:2.2.3"],\
             ["ejs", "npm:3.1.9"],\
