@@ -32,6 +32,5 @@ export const Error: Story = {
     // @ts-ignore
     value: "test",
     issue: "Bad value",
-    onChange: (value) => console.log(value),
   },
 };

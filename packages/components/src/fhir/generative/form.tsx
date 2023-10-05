@@ -1,13 +1,33 @@
-import React from "react";
+import React, { useEffect, useRef, useMemo } from "react";
+import { applyPatch, Operation } from "fast-json-patch";
+import { produce } from "immer";
+
 import { resourceTypes, complexTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
   StructureDefinition,
   Resource,
   ElementDefinition,
 } from "@iguhealth/fhir-types/r4/types";
+
 import * as ComplexTypes from "../complex";
 import * as Primitives from "../primitives";
-import { applyPatch, Operation } from "fast-json-patch";
+
+function useTraceUpdate(props: any) {
+  const prev = useRef(props);
+  useEffect(() => {
+    const changedProps = Object.entries(props).reduce((ps, [k, v]) => {
+      if (prev.current[k] !== v) {
+        // @ts-ignore
+        ps[k] = [prev.current[k], v];
+      }
+      return ps;
+    }, {});
+    if (Object.keys(changedProps).length > 0) {
+      console.log("Changed props:", changedProps);
+    }
+    prev.current = props;
+  });
+}
 
 const EditTypeToComponent: Record<string, React.FC<any>> = {
   "http://hl7.org/fhirpath/System.String": Primitives.String,
@@ -54,8 +74,12 @@ function getChildrenElementIndices({
   return childIndices;
 }
 
+function capitalize(s: string) {
+  return s[0].toUpperCase() + s.slice(1);
+}
+
 function getFieldName(path: string) {
-  return path.substring(path.lastIndexOf(".") + 1);
+  return capitalize(path.substring(path.lastIndexOf(".") + 1));
 }
 
 interface MetaProps {
@@ -77,13 +101,8 @@ function getElementDefinition(
   return element;
 }
 
-function MetaValueArray({
-  sd,
-  elementIndex,
-  value = [undefined],
-  pointer,
-  onChange,
-}: MetaProps) {
+const MetaValueArray = React.memo((props: MetaProps) => {
+  const { sd, elementIndex, value = [undefined], pointer, onChange } = props;
   const element = getElementDefinition(sd, elementIndex);
   if (element.type?.length && element.type.length < 1) {
     return <span>TYPE CHOICES NOT SUPPORTED YET</span>;
@@ -108,7 +127,7 @@ function MetaValueArray({
       ))}
     </div>
   );
-}
+});
 
 function isIndexableObject(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null;
@@ -131,14 +150,22 @@ function getValueAndPointer(
   };
 }
 
-function MetaValueSingular({
-  sd,
-  elementIndex,
-  value,
-  pointer,
-  showLabel = true,
-  onChange,
-}: MetaProps) {
+const MetaValueSingular = React.memo((props: MetaProps) => {
+  const {
+    sd,
+    elementIndex,
+    value,
+    pointer,
+    showLabel = true,
+    onChange,
+  } = props;
+  //   useTraceUpdate(props);
+  //   useEffect(() => console.log("updated sd"), [sd]);
+  //   useEffect(() => console.log("updated elementIndex"), [elementIndex]);
+  //   useEffect(() => console.log("updated value"), [value]);
+  //   useEffect(() => console.log("updated pointer"), [pointer]);
+  //   useEffect(() => console.log("updated showLabel"), [showLabel]);
+  //   useEffect(() => console.log("updated onChange"), [onChange]);
   const element = getElementDefinition(sd, elementIndex);
   if (element.type?.length && element.type?.length < 1) {
     return (
@@ -196,7 +223,7 @@ function MetaValueSingular({
           const childProps = getValueAndPointer(childElement, pointer, value);
           return childElement.max === "1" ? (
             <MetaValueSingular
-              key={childIndex}
+              key={childProps.pointer}
               sd={sd}
               elementIndex={childIndex}
               onChange={onChange}
@@ -204,7 +231,7 @@ function MetaValueSingular({
             />
           ) : (
             <MetaValueArray
-              key={childIndex}
+              key={childProps.pointer}
               sd={sd}
               elementIndex={childIndex}
               onChange={onChange}
@@ -215,33 +242,40 @@ function MetaValueSingular({
       </div>
     </div>
   );
-}
+});
+
+type Setter = (resource: Resource) => Resource;
 
 export interface GenerativeFormProps {
   structureDefinition: StructureDefinition;
   value: Resource;
-  onChange?: (resource: Resource) => void;
+  setValue?: (s: Setter) => void;
 }
 
 export const GenerativeForm = ({
   structureDefinition,
   value,
-  onChange = (_r) => {},
+  setValue = (_r) => {},
 }: GenerativeFormProps) => {
   const pointer = "/";
-  return (
-    <OnChange.Provider value={onChange}>
-      <MetaValueSingular
-        sd={structureDefinition}
-        elementIndex={0}
-        value={value}
-        pointer={""}
-        onChange={(patches: Operation[]) => {
-            
+  const onChange = useMemo(() => {
+    return (patches: Operation[]) => {
+      setValue((resource) => {
+        const newResource = produce(resource, (value) => {
           const newValue = applyPatch(value, patches).newDocument;
-          onChange(newValue);
-        }}
-      />
-    </OnChange.Provider>
+          return newValue;
+        });
+        return newResource;
+      });
+    };
+  }, [setValue]);
+  return (
+    <MetaValueSingular
+      sd={structureDefinition}
+      elementIndex={0}
+      value={value}
+      pointer={""}
+      onChange={onChange}
+    />
   );
 };

@@ -4729,6 +4729,7 @@ __metadata:
     codemirror: ^6.0.1
     dayjs: ^1.11.9
     fast-json-patch: ^3.1.1
+    immer: ^10.0.3
     js-file-download: ^0.4.12
     postcss: ^8.4.31
     postcss-cli: ^10.1.0
@@ -16404,6 +16405,13 @@ __metadata:
   bin:
     image-size: bin/image-size.js
   checksum: 01745fdb47f87cecf538e69c63f9adc5bfab30a345345c2de91105f3afbd1bfcfba1256af02bf3323077b33b0004469a837e077bf0cbb9c907e9c1e9e7547585
+  languageName: node
+  linkType: hard
+
+"immer@npm:^10.0.3":
+  version: 10.0.3
+  resolution: "immer@npm:10.0.3"
+  checksum: 76acabe6f40e752028313762ba477a5d901e57b669f3b8fb406b87b9bb9b14e663a6fbbf5a6d1ab323737dd38f4b2494a4e28002045b88948da8dbf482309f28
   languageName: node
   linkType: hard
 

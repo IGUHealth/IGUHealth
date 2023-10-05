@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { GenerativeForm } from "./form";
@@ -8,14 +8,14 @@ const StateForm = (props: Parameters<typeof GenerativeForm>[0]) => {
   useEffect(() => {
     setState(props);
   }, [props]);
-  return (
-    <GenerativeForm
-      {...props}
-      onChange={(resource) => {
-        setState({ ...state, value: resource });
-      }}
-    />
-  );
+
+  const setValue = useMemo(() => {
+    return (setter) => {
+      setState((state) => ({ ...state, value: setter(state.value) }));
+    };
+  }, [setState]);
+
+  return <GenerativeForm {...state} setValue={setValue} />;
 };
 
 const meta = {
