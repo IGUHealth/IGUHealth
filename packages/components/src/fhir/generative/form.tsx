@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useMemo } from "react";
 import { applyPatch, Operation } from "fast-json-patch";
 import { produce } from "immer";
+import { PlusIcon } from "@heroicons/react/24/outline";
 
 import { resourceTypes, complexTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
@@ -11,6 +12,8 @@ import {
 
 import * as ComplexTypes from "../complex";
 import * as Primitives from "../primitives";
+
+import generateJSONPatches, { Mutation } from "./generatePatches";
 
 function useTraceUpdate(props: any) {
   const prev = useRef(props);
@@ -88,7 +91,7 @@ interface MetaProps {
   value: unknown;
   pointer: string;
   showLabel?: boolean;
-  onChange: (patches: Operation[]) => void;
+  onChange: (patches: Mutation) => void;
 }
 
 function getElementDefinition(
@@ -102,17 +105,18 @@ function getElementDefinition(
 }
 
 const MetaValueArray = React.memo((props: MetaProps) => {
-  const { sd, elementIndex, value = [undefined], pointer, onChange } = props;
+  const { sd, elementIndex, value = [], pointer, onChange } = props;
   const element = getElementDefinition(sd, elementIndex);
   if (element.type?.length && element.type.length < 1) {
     return <span>TYPE CHOICES NOT SUPPORTED YET</span>;
   }
   if (!Array.isArray(value))
     throw new Error("Value must be an array or undefined");
+
   return (
     <div>
       <label>{getFieldName(element.path)}</label>
-      {value.map((v, i) => (
+      {(value.length === 0 ? [undefined] : value).map((v, i) => (
         <div className="mt-1">
           <MetaValueSingular
             key={i}
@@ -125,6 +129,27 @@ const MetaValueArray = React.memo((props: MetaProps) => {
           />
         </div>
       ))}
+      <div className="ml-1 mt-1">
+        <span
+          className="flex items-center  text-slate-400 cursor-pointer hover:text-slate-500"
+          onClick={(_e) => {
+            onChange({
+              path: `${pointer}/${value.length}`,
+              op: "add",
+              value: [{}],
+            });
+            if (value.length === 0) {
+              onChange({
+                path: `${pointer}/${value.length + 1}`,
+                op: "add",
+                value: [{}],
+              });
+            }
+          }}
+        >
+          <PlusIcon className=" h-4 w-4" /> Add
+        </span>
+      </div>
     </div>
   );
 });
@@ -159,7 +184,6 @@ const MetaValueSingular = React.memo((props: MetaProps) => {
     showLabel = true,
     onChange,
   } = props;
-  //   useTraceUpdate(props);
   //   useEffect(() => console.log("updated sd"), [sd]);
   //   useEffect(() => console.log("updated elementIndex"), [elementIndex]);
   //   useEffect(() => console.log("updated value"), [value]);
@@ -186,13 +210,11 @@ const MetaValueSingular = React.memo((props: MetaProps) => {
             value={value}
             label={showLabel && getFieldName(element.path)}
             onChange={(v: unknown) => {
-              onChange([
-                {
-                  op: "replace",
-                  path: pointer,
-                  value: v,
-                },
-              ]);
+              onChange({
+                op: "replace",
+                path: pointer,
+                value: v,
+              });
             }}
           />
         ) : (
@@ -259,8 +281,10 @@ export const GenerativeForm = ({
 }: GenerativeFormProps) => {
   const pointer = "/";
   const onChange = useMemo(() => {
-    return (patches: Operation[]) => {
+    return (mutation: Mutation) => {
       setValue((resource) => {
+        const patches = generateJSONPatches(resource, mutation);
+        console.log(patches);
         const newResource = produce(resource, (value) => {
           const newValue = applyPatch(value, patches).newDocument;
           return newValue;
@@ -269,6 +293,9 @@ export const GenerativeForm = ({
       });
     };
   }, [setValue]);
+
+  console.log("resource:", value);
+
   return (
     <MetaValueSingular
       sd={structureDefinition}
