@@ -284,7 +284,6 @@ export const GenerativeForm = ({
     return (mutation: Mutation) => {
       setValue((resource) => {
         const patches = generateJSONPatches(resource, mutation);
-        console.log(patches);
         const newResource = produce(resource, (value) => {
           const newValue = applyPatch(value, patches).newDocument;
           return newValue;
