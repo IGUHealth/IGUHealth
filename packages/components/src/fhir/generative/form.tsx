@@ -117,7 +117,7 @@ const MetaValueArray = React.memo((props: MetaProps) => {
     <div>
       <label>{getFieldName(element.path)}</label>
       {(value.length === 0 ? [undefined] : value).map((v, i) => (
-        <div className="mt-1">
+        <div className="mt-1 relative">
           <MetaValueSingular
             key={i}
             sd={sd}
@@ -127,6 +127,20 @@ const MetaValueArray = React.memo((props: MetaProps) => {
             showLabel={false}
             onChange={onChange}
           />
+          {value.length > 0 && (
+            <div
+              className="absolute top-1 right-2 text-slate-400 cursor-pointer hover:text-slate-500 "
+              onClick={(e) => {
+                onChange({
+                  path: `${pointer}/${i}`,
+                  op: "remove",
+                  value: v,
+                });
+              }}
+            >
+              X
+            </div>
+          )}
         </div>
       ))}
       <div className="ml-1 mt-1">
