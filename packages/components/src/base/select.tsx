@@ -52,7 +52,7 @@ export const Select = ({
         <InputContainer label={label} issues={issue ? [issue] : []}>
           <Combobox.Input
             className="outline-none w-full border-none text-sm leading-5 text-gray-900 focus:ring-0"
-            displayValue={(option: Option) => option.label}
+            displayValue={(option: Option) => option && option.label}
             onChange={(event) => setQuery(event.target.value)}
           />
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">

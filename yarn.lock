@@ -4538,6 +4538,7 @@ __metadata:
     classnames: ^2.3.2
     codemirror: ^6.0.1
     dayjs: ^1.11.9
+    fast-json-patch: ^3.1.1
     js-file-download: ^0.4.12
     postcss: ^8.4.29
     postcss-cli: ^10.1.0
@@ -14584,7 +14585,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-json-patch@npm:3.1.1":
+"fast-json-patch@npm:3.1.1, fast-json-patch@npm:^3.1.1":
   version: 3.1.1
   resolution: "fast-json-patch@npm:3.1.1"
   checksum: c4525b61b2471df60d4b025b4118b036d99778a93431aa44d1084218182841d82ce93056f0f3bbd731a24e6a8e69820128adf1873eb2199a26c62ef58d137833

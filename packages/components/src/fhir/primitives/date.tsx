@@ -52,7 +52,7 @@ export const Date = ({
     <InputContainer label={label} issues={issues}>
       <Input
         type="date"
-        value={dayjs(value).format("YYYY-MM-DD")}
+        value={value && dayjs(value).format("YYYY-MM-DD")}
         onChange={(e) => {
           if (onChange) {
             const dateString = dayjs(e.target.value).format(outputFormat);

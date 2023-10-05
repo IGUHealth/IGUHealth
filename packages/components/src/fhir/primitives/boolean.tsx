@@ -12,7 +12,7 @@ export interface BooleanProps {
 export const Boolean = ({ value, onChange, label, issue }: BooleanProps) => {
   return (
     <InputContainer
-      inlineLabel={true}
+      inlineLabel={false}
       label={label}
       issues={issue ? [issue] : []}
     >
