@@ -1,4 +1,5 @@
 import React from "react";
+import { resourceTypes, complexTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
   StructureDefinition,
   Resource,
@@ -6,6 +7,7 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 import * as ComplexTypes from "../complex";
 import * as Primitives from "../primitives";
+import { applyPatch, Operation } from "fast-json-patch";
 
 const EditTypeToComponent: Record<string, React.FC<any>> = {
   "http://hl7.org/fhirpath/System.String": Primitives.String,
@@ -18,6 +20,7 @@ const EditTypeToComponent: Record<string, React.FC<any>> = {
   code: Primitives.Code,
   Address: ComplexTypes.AddressEditable,
   Identifier: ComplexTypes.IdentifierEditable,
+  Meta: ComplexTypes.MetaReadOnly,
 };
 
 const OnChange = React.createContext<(r: Resource) => void>((_r) => {});
@@ -61,6 +64,7 @@ interface MetaProps {
   value: unknown;
   pointer: string;
   showLabel?: boolean;
+  onChange: (patches: Operation[]) => void;
 }
 
 function getElementDefinition(
@@ -78,6 +82,7 @@ function MetaValueArray({
   elementIndex,
   value = [undefined],
   pointer,
+  onChange,
 }: MetaProps) {
   const element = getElementDefinition(sd, elementIndex);
   if (element.type?.length && element.type.length < 1) {
@@ -97,6 +102,7 @@ function MetaValueArray({
             pointer={`${pointer}/${i}`}
             value={v}
             showLabel={false}
+            onChange={onChange}
           />
         </div>
       ))}
@@ -131,6 +137,7 @@ function MetaValueSingular({
   value,
   pointer,
   showLabel = true,
+  onChange,
 }: MetaProps) {
   const element = getElementDefinition(sd, elementIndex);
   if (element.type?.length && element.type?.length < 1) {
@@ -148,7 +155,19 @@ function MetaValueSingular({
     return (
       <div className="">
         {Comp ? (
-          <Comp value={value} label={showLabel && getFieldName(element.path)} />
+          <Comp
+            value={value}
+            label={showLabel && getFieldName(element.path)}
+            onChange={(v: unknown) => {
+              onChange([
+                {
+                  op: "replace",
+                  path: pointer,
+                  value: v,
+                },
+              ]);
+            }}
+          />
         ) : (
           <div>
             <span className="font-semibold"> {element.path}</span>
@@ -166,12 +185,21 @@ function MetaValueSingular({
       <div className="p-2 border space-y-2">
         {children.map((childIndex) => {
           const childElement = getElementDefinition(sd, childIndex);
+          // Skipping extensions and nested resources for now
+          if (
+            childElement.type?.find(
+              (t) => t.code === "Extension" || resourceTypes.has(t.code)
+            )
+          ) {
+            return;
+          }
           const childProps = getValueAndPointer(childElement, pointer, value);
           return childElement.max === "1" ? (
             <MetaValueSingular
               key={childIndex}
               sd={sd}
               elementIndex={childIndex}
+              onChange={onChange}
               {...childProps}
             />
           ) : (
@@ -179,6 +207,7 @@ function MetaValueSingular({
               key={childIndex}
               sd={sd}
               elementIndex={childIndex}
+              onChange={onChange}
               {...childProps}
             />
           );
@@ -206,7 +235,12 @@ export const GenerativeForm = ({
         sd={structureDefinition}
         elementIndex={0}
         value={value}
-        pointer={"/"}
+        pointer={""}
+        onChange={(patches: Operation[]) => {
+            
+          const newValue = applyPatch(value, patches).newDocument;
+          onChange(newValue);
+        }}
       />
     </OnChange.Provider>
   );

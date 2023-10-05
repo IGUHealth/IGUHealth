@@ -1,18 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { GenerativeForm } from "./form";
 
+const StateForm = (props: Parameters<typeof GenerativeForm>[0]) => {
+  const [state, setState] = React.useState(props);
+  useEffect(() => {
+    setState(props);
+  }, [props]);
+  return (
+    <GenerativeForm
+      {...props}
+      onChange={(resource) => {
+        setState({ ...state, value: resource });
+      }}
+    />
+  );
+};
+
 const meta = {
   title: "Generated/Form",
-  component: GenerativeForm,
+  component: StateForm,
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
   tags: ["autodocs"],
   parameters: {
     // More on how to position stories at: https://storybook.js.org/docs/react/configure/story-layout
     layout: "centered",
   },
-} satisfies Meta<typeof GenerativeForm>;
+} satisfies Meta<typeof StateForm>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
