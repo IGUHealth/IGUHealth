@@ -3,7 +3,6 @@ import {
   Element,
   ElementDefinition,
   code,
-  Meta,
 } from "@iguhealth/fhir-types/r4/types";
 import { complexTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 

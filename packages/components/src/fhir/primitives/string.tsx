@@ -7,7 +7,7 @@ export interface StringProps {
   /**
    * The value of the input.
    */
-  value: string;
+  value: string | undefined;
   /**
    * The value of the input.
    */
@@ -20,12 +20,21 @@ export interface StringProps {
    * Label string.
    */
   label?: string;
+
+  inputProps?: Parameters<typeof Input>[0];
 }
 
-export const String = ({ onChange, value, issue, label }: StringProps) => {
+export const String = ({
+  onChange,
+  value,
+  issue,
+  label,
+  inputProps,
+}: StringProps) => {
   return (
     <InputContainer label={label} issues={issue ? [issue] : []}>
       <Input
+        {...inputProps}
         type="text"
         value={value}
         onChange={(e) => {

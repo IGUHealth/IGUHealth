@@ -48,7 +48,7 @@ export const Select = ({
       onChange={onChange}
       nullable
     >
-      <div className="relative mt-1">
+      <div className="relative">
         <InputContainer label={label} issues={issue ? [issue] : []}>
           <Combobox.Input
             className="outline-none w-full border-none text-sm leading-5 text-gray-900 focus:ring-0"

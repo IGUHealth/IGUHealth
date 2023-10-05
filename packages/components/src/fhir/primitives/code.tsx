@@ -9,7 +9,7 @@ export interface CodeProps {
   value?: string;
   system?: string;
   expand?: (value: string) => Promise<ValueSet>;
-  onChange: (value: string | undefined) => void;
+  onChange?: (value: string | undefined) => void;
   issue?: string;
   label?: string;
 }
@@ -49,7 +49,9 @@ export const Code = ({
     <Select
       value={value}
       onChange={(option) =>
-        option ? onChange(option.value as string) : onChange(undefined)
+        option
+          ? onChange && onChange(option.value as string)
+          : onChange && onChange(undefined)
       }
       issue={issue}
       label={label}
