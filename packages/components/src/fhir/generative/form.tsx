@@ -4,6 +4,7 @@ import {
   Resource,
   ElementDefinition,
 } from "@iguhealth/fhir-types/r4/types";
+import * as ComplexTypes from "../complex";
 import * as Primitives from "../primitives";
 
 const EditTypeToComponent: Record<string, React.FC<any>> = {
@@ -15,6 +16,8 @@ const EditTypeToComponent: Record<string, React.FC<any>> = {
   dateTime: Primitives.DateTime,
   uri: Primitives.Uri,
   code: Primitives.Code,
+  Address: ComplexTypes.AddressEditable,
+  Identifier: ComplexTypes.IdentifierEditable,
 };
 
 const OnChange = React.createContext<(r: Resource) => void>((_r) => {});
@@ -57,6 +60,7 @@ interface MetaProps {
   elementIndex: number;
   value: unknown;
   pointer: string;
+  showLabel?: boolean;
 }
 
 function getElementDefinition(
@@ -81,18 +85,23 @@ function MetaValueArray({
   }
   if (!Array.isArray(value))
     throw new Error("Value must be an array or undefined");
-
-  return value.map((v, i) => {
-    return (
-      <MetaValueSingular
-        key={i}
-        sd={sd}
-        elementIndex={elementIndex}
-        pointer={`${pointer}/${i}`}
-        value={v}
-      />
-    );
-  });
+  return (
+    <div>
+      <label>{getFieldName(element.path)}</label>
+      {value.map((v, i) => (
+        <div className="mt-1">
+          <MetaValueSingular
+            key={i}
+            sd={sd}
+            elementIndex={elementIndex}
+            pointer={`${pointer}/${i}`}
+            value={v}
+            showLabel={false}
+          />
+        </div>
+      ))}
+    </div>
+  );
 }
 
 function isIndexableObject(v: unknown): v is Record<string, unknown> {
@@ -116,7 +125,13 @@ function getValueAndPointer(
   };
 }
 
-function MetaValueSingular({ sd, elementIndex, value, pointer }: MetaProps) {
+function MetaValueSingular({
+  sd,
+  elementIndex,
+  value,
+  pointer,
+  showLabel = true,
+}: MetaProps) {
   const element = getElementDefinition(sd, elementIndex);
   if (element.type?.length && element.type?.length < 1) {
     return (
@@ -133,7 +148,7 @@ function MetaValueSingular({ sd, elementIndex, value, pointer }: MetaProps) {
     return (
       <div className="">
         {Comp ? (
-          <Comp value={value} label={getFieldName(element.path)} />
+          <Comp value={value} label={showLabel && getFieldName(element.path)} />
         ) : (
           <div>
             <span className="font-semibold"> {element.path}</span>
@@ -147,8 +162,8 @@ function MetaValueSingular({ sd, elementIndex, value, pointer }: MetaProps) {
   }
   return (
     <div className="">
-      <div className="font-semibold">{element.path}</div>
-      <div className="p-2 border">
+      <div className="font-semibold">{getFieldName(element.path)}</div>
+      <div className="p-2 border space-y-2">
         {children.map((childIndex) => {
           const childElement = getElementDefinition(sd, childIndex);
           const childProps = getValueAndPointer(childElement, pointer, value);

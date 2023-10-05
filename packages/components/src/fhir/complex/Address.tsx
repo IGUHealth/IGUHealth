@@ -8,7 +8,7 @@ export interface AddressEditableProps {
   /**
    * The value of the input.
    */
-  value: Address;
+  value: Address | undefined;
   /**
    * Issues
    */
@@ -16,7 +16,7 @@ export interface AddressEditableProps {
   /**
    * Call back triggered when input changes.
    */
-  onChange?: (value: string) => void;
+  onChange?: (value: Address) => void;
   /**
    * Label string.
    */
@@ -32,13 +32,12 @@ export const AddressEditable = ({
   return (
     <InputContainer label={label} issues={issue ? [issue] : []}>
       <div className="flex space-x-1">
-        <String label="Line" value={value.line?.[0] || ""} />
-        <String label="City" value={value.city || ""} />
-        <String label="City" value={value.city || ""} />
-        <String label="District" value={value.district || ""} />
-        <String label="State" value={value.state || ""} />
-        <String label="Postal Code" value={value.postalCode || ""} />
-        <String label="Country" value={value.country || ""} />
+        <String label="Line" value={value?.line?.[0] || ""} />
+        <String label="City" value={value?.city || ""} />
+        {/* <String label="District" value={value?.district || ""} /> */}
+        <String label="State" value={value?.state || ""} />
+        <String label="Postal Code" value={value?.postalCode || ""} />
+        <String label="Country" value={value?.country || ""} />
       </div>
     </InputContainer>
   );

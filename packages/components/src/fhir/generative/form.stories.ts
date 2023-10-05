@@ -23,6 +23,11 @@ export const Primary: Story = {
       resourceType: "Patient",
       id: "testing",
       meta: { lastUpdated: "1980-01-01" },
+      gender: "male",
+      address: [
+        { line: ["testing", "test"], state: "WA" },
+        { line: ["12345"], state: "CA" },
+      ],
     },
     structureDefinition: {
       resourceType: "StructureDefinition",

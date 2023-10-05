@@ -1,3 +1,4 @@
 import { AddressEditable } from "./Address";
+import { IdentifierEditable } from "./Identifier";
 
-export { AddressEditable };
+export { AddressEditable, IdentifierEditable };

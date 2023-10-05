@@ -7,7 +7,7 @@ export interface StringProps {
   /**
    * The value of the input.
    */
-  value: string;
+  value: string | undefined;
   /**
    * The value of the input.
    */
