@@ -52,14 +52,18 @@ function descend(path: string, field: string) {
 //     (= :- (second fields))            []
 //     :else                              {}))
 
-function deriveNextValuePlaceHolder(fields: string[]): any {
-  if (!isNaN(parseInt(fields[1]))) return [];
+function deriveNextValuePlaceHolder(
+  fields: string[]
+): Array<unknown> | Record<string, unknown> {
+  if (!isNaN(parseInt(fields[1]))) {
+    return [];
+  }
   return {};
 }
 
 function createPatchesNonExistantFields(resource: Resource, path: string) {
   const fields = pathFields(path);
-  const patches: Operation[] = [];
+  let patches: Operation[] = [];
   let curValue: any = resource;
   let curPointer = "";
   for (let i = 0; i < fields.length; i++) {
@@ -67,11 +71,7 @@ function createPatchesNonExistantFields(resource: Resource, path: string) {
     curValue = getValue(curValue, curPointer);
     if (curValue !== undefined) break;
     const nextValue = deriveNextValuePlaceHolder(fields.slice(i));
-    patches.push({
-      op: "add",
-      path: curPointer,
-      value: nextValue,
-    });
+    patches = [...patches, { op: "add", path: curPointer, value: nextValue }];
   }
   return patches;
 }
