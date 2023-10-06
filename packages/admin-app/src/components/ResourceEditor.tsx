@@ -132,7 +132,7 @@ export default function ResourceEditorComponent({
                   const newResource = getResource(
                     resource
                       ? resource
-                      : ({ resourceType: structureDefinition.kind } as Resource)
+                      : ({ resourceType: structureDefinition.type } as Resource)
                   );
                   onChange(newResource);
                 }}
