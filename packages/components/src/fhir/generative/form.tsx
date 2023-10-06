@@ -338,6 +338,7 @@ export const GenerativeForm = ({
       value={value}
       pointer={""}
       onChange={onChange}
+      showLabel={false}
       showInvalid={false}
     />
   );

@@ -4,7 +4,6 @@ import { useRecoilValue } from "recoil";
 import { basicSetup } from "codemirror";
 import { json } from "@codemirror/lang-json";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
-// import { javascript } from "@codemirror/lang-javascript";
 
 import {
   StructureDefinition,
@@ -14,7 +13,7 @@ import {
   ResourceType,
   id,
 } from "@iguhealth/fhir-types/r4/types";
-import { Base } from "@iguhealth/components";
+import { Base, FHIR } from "@iguhealth/components";
 
 import { getClient } from "../data/client";
 
@@ -124,16 +123,13 @@ export default function ResourceEditorComponent({
           {
             id: 1,
             title: "Editor",
-            content: (
-              <JSONEditor
-                value={JSON.stringify(resource, null, 2)}
-                setValue={(v) => {
-                  try {
-                    const resource = JSON.parse(v);
-                    onChange(resource);
-                  } catch (e) {
-                    return;
-                  }
+            content: resource && structureDefinition && (
+              <FHIR.GenerativeForm
+                value={resource}
+                structureDefinition={structureDefinition}
+                setValue={(getResource) => {
+                  const newResource = getResource(resource);
+                  onChange(newResource);
                 }}
               />
             ),
