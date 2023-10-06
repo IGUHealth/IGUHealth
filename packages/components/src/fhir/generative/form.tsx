@@ -252,6 +252,8 @@ const MetaValueSingular = React.memo((props: MetaProps) => {
         <Comp
           value={value}
           label={showLabel && getFieldName(element.path)}
+          open={true}
+          system={element.binding?.valueSet}
           onChange={(v: unknown) => {
             onChange({
               op: "replace",
