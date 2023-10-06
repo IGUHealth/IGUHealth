@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { basicSetup } from "codemirror";
@@ -98,7 +98,7 @@ export interface AdditionalContent {
   resourceType: ResourceType;
   resource: Resource | undefined;
   structureDefinition: StructureDefinition | undefined;
-  onChange?: (resource: Resource) => void;
+  onChange?: React.Dispatch<React.SetStateAction<Resource | undefined>>;
   actions: Parameters<typeof Base.DropDownMenu>[0]["links"];
   leftTabs?: Parameters<typeof Base.Tabs>[0]["tabs"];
   rightTabs?: Parameters<typeof Base.Tabs>[0]["tabs"];
@@ -108,14 +108,35 @@ export default function ResourceEditorComponent({
   actions,
   resource,
   structureDefinition,
-  onChange = (r: Resource) => {},
+  onChange,
   leftTabs: leftSide = [],
   rightTabs: rightSide = [],
 }: AdditionalContent) {
   const client = useRecoilValue(getClient);
   const navigate = useNavigate();
 
-  console.log(structureDefinition, resource);
+  const setValue = useMemo(
+    () => (getResource: any) => {
+      const newResource = getResource(
+        resource
+          ? resource
+          : ({ resourceType: structureDefinition?.type } as Resource)
+      );
+      onChange &&
+        onChange((resource) => {
+          const newResource = getResource(
+            resource
+              ? resource
+              : ({
+                  resourceType: structureDefinition?.type,
+                } as Resource)
+          );
+          return newResource;
+        });
+    },
+    [structureDefinition, onChange]
+  );
+
   return (
     <Base.Tabs
       tabs={[
@@ -128,14 +149,7 @@ export default function ResourceEditorComponent({
               <FHIR.GenerativeForm
                 value={resource}
                 structureDefinition={structureDefinition}
-                setValue={(getResource) => {
-                  const newResource = getResource(
-                    resource
-                      ? resource
-                      : ({ resourceType: structureDefinition.type } as Resource)
-                  );
-                  onChange(newResource);
-                }}
+                setValue={setValue}
               />
             ),
           },
@@ -148,7 +162,7 @@ export default function ResourceEditorComponent({
                 setValue={(v) => {
                   try {
                     const resource = JSON.parse(v);
-                    onChange(resource);
+                    onChange && onChange(resource);
                   } catch (e) {
                     return;
                   }

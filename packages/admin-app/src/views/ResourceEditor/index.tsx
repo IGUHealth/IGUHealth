@@ -136,9 +136,7 @@ export default function DefaultResourceEditorView() {
           actions={actions}
           resource={resource}
           structureDefinition={structureDefinition}
-          onChange={(resource) => {
-            setResource(resource);
-          }}
+          onChange={setResource}
         />
       );
   }
