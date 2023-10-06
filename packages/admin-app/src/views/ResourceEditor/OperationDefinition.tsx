@@ -254,6 +254,7 @@ export default function OperationEditor({
   resourceType,
   resource,
   actions,
+  structureDefinition,
   onChange,
 }: OperationEditorProps) {
   const client = useRecoilValue(getClient);
@@ -274,6 +275,7 @@ export default function OperationEditor({
     <ResourceEditorComponent
       id={id as string}
       actions={actions}
+      structureDefinition={structureDefinition}
       resourceType={resourceType as ResourceType}
       resource={resource}
       onChange={onChange}

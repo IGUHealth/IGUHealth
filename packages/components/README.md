@@ -30,8 +30,27 @@ For storybook visit https://storybook.iguhealth.app
 
 ### Complex Types
 
-| Name       | Supported |
-| ---------- | --------- |
-| Address    | yes       |
-| Identifier | yes       |
-| Meta       | yes       |
+| Name            | Supported |
+| --------------- | --------- |
+| Address         | yes       |
+| Identifier      | yes       |
+| Meta            | yes       |
+| ContactPoint    | yes       |
+| Ratio           | no        |
+| Period          | no        |
+| Attachment      | no        |
+| Annotation      | no        |
+| HumanName       | no        |
+| CodeableConcept | no        |
+| Coding          | no        |
+| Money           | no        |
+| Timing          | no        |
+| Quantity        | no        |
+| SampleData      | no        |
+| Signature       | no        |
+| Age             | no        |
+| Distance        | no        |
+| Duration        | no        |
+| Count           | no        |
+| MoneyQuantity   | no        |
+| SimpleQuantity  | no        |

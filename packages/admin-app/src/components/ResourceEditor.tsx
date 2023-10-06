@@ -1,19 +1,19 @@
-import React, { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { basicSetup } from "codemirror";
 import { json } from "@codemirror/lang-json";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
-// import { javascript } from "@codemirror/lang-javascript";
 
 import {
+  StructureDefinition,
   BundleEntry,
   Resource,
   OperationOutcome,
   ResourceType,
   id,
 } from "@iguhealth/fhir-types/r4/types";
-import { Base } from "@iguhealth/components";
+import { Base, FHIR } from "@iguhealth/components";
 
 import { getClient } from "../data/client";
 
@@ -97,6 +97,7 @@ export interface AdditionalContent {
   id: id;
   resourceType: ResourceType;
   resource: Resource | undefined;
+  structureDefinition: StructureDefinition | undefined;
   onChange?: (resource: Resource) => void;
   actions: Parameters<typeof Base.DropDownMenu>[0]["links"];
   leftTabs?: Parameters<typeof Base.Tabs>[0]["tabs"];
@@ -105,8 +106,8 @@ export interface AdditionalContent {
 export default function ResourceEditorComponent({
   id,
   actions,
-  resourceType,
   resource,
+  structureDefinition,
   onChange = (r: Resource) => {},
   leftTabs: leftSide = [],
   rightTabs: rightSide = [],
@@ -114,14 +115,33 @@ export default function ResourceEditorComponent({
   const client = useRecoilValue(getClient);
   const navigate = useNavigate();
 
+  console.log(structureDefinition, resource);
   return (
     <Base.Tabs
       tabs={[
         ...leftSide,
         ...[
           {
-            id: 1,
+            id: 0,
             title: "Editor",
+            content: structureDefinition && (
+              <FHIR.GenerativeForm
+                value={resource}
+                structureDefinition={structureDefinition}
+                setValue={(getResource) => {
+                  const newResource = getResource(
+                    resource
+                      ? resource
+                      : ({ resourceType: structureDefinition.type } as Resource)
+                  );
+                  onChange(newResource);
+                }}
+              />
+            ),
+          },
+          {
+            id: 1,
+            title: "JSON",
             content: (
               <JSONEditor
                 value={JSON.stringify(resource, null, 2)}

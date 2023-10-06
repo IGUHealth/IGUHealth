@@ -12,6 +12,7 @@ export interface CodeProps {
   onChange?: (value: string | undefined) => void;
   issue?: string;
   label?: string;
+  open?: boolean;
 }
 
 function flatten(item: ValueSetExpansionContains): Option[] {
@@ -35,6 +36,7 @@ export const Code = ({
   issue,
   label,
   expand,
+  open = false,
   system,
 }: CodeProps) => {
   const [options, setOptions] = React.useState<Option[]>([]);
@@ -55,6 +57,7 @@ export const Code = ({
       }
       issue={issue}
       label={label}
+      open={open}
       options={options}
     />
   );

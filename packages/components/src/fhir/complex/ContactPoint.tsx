@@ -36,6 +36,7 @@ export const ContactPointEditable = ({
       <div className="flex space-x-1">
         <Code
           label="use"
+          open={true}
           system="http://hl7.org/fhir/ValueSet/contact-point-use"
           value={value?.use}
           onChange={(use) => {
@@ -44,6 +45,7 @@ export const ContactPointEditable = ({
         />
         <Code
           label="system"
+          open={true}
           system="http://hl7.org/fhir/ValueSet/contact-point-system"
           value={value?.system}
           onChange={(system) => {

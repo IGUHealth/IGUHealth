@@ -18,6 +18,8 @@ import { Markdown } from "./primitives/markdown.js";
 import { OID } from "./primitives/oid.js";
 import { Uri } from "./primitives/uri.js";
 
+import { GenerativeForm } from "./generative/form.js";
+
 export {
   Boolean,
   Base64Binary,
@@ -38,4 +40,5 @@ export {
   Uri,
   Url,
   UUID,
+  GenerativeForm,
 };

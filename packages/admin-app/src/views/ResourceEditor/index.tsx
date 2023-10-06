@@ -9,6 +9,7 @@ import {
   Resource,
   OperationDefinition,
   OperationOutcome,
+  StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
 
 import { getClient } from "../../data/client";
@@ -18,6 +19,9 @@ import OperationDefinitionView from "./OperationDefinition";
 export default function DefaultResourceEditorView() {
   const client = useRecoilValue(getClient);
   const [resource, setResource] = useState<Resource | undefined>(undefined);
+  const [structureDefinition, setStructureDefinition] = useState<
+    StructureDefinition | undefined
+  >(undefined);
   const navigate = useNavigate();
 
   const { resourceType, id } = useParams();
@@ -80,12 +84,34 @@ export default function DefaultResourceEditorView() {
   ];
 
   useEffect(() => {
-    if (id !== "new")
-      client
-        .read({}, resourceType as ResourceType, id as id)
-        .then((response) => {
-          setResource(response);
-        });
+    client
+      .batch(
+        {},
+        {
+          type: "batch",
+          resourceType: "Bundle",
+          entry: [
+            {
+              request: {
+                method: "GET",
+                url: `${resourceType}/${id}`,
+              },
+            },
+            {
+              request: {
+                method: "GET",
+                url: `StructureDefinition/${resourceType}`,
+              },
+            },
+          ],
+        }
+      )
+      .then((response) => {
+        setResource(response.entry?.[0]?.resource);
+        setStructureDefinition(
+          response.entry?.[1]?.resource as StructureDefinition
+        );
+      });
   }, [resourceType, id]);
 
   switch (resourceType) {
@@ -96,6 +122,7 @@ export default function DefaultResourceEditorView() {
           resourceType={resourceType as ResourceType}
           actions={actions}
           resource={resource as OperationDefinition}
+          structureDefinition={structureDefinition}
           onChange={(resource) => {
             setResource(resource);
           }}
@@ -108,6 +135,7 @@ export default function DefaultResourceEditorView() {
           resourceType={resourceType as ResourceType}
           actions={actions}
           resource={resource}
+          structureDefinition={structureDefinition}
           onChange={(resource) => {
             setResource(resource);
           }}
