@@ -27,3 +27,11 @@ For storybook visit https://storybook.iguhealth.app
 | markdown     | yes       |
 | canonical    | yes       |
 | uri          | yes       |
+
+### Complex Types
+
+| Name       | Supported |
+| ---------- | --------- |
+| Address    | yes       |
+| Identifier | yes       |
+| Meta       | yes       |

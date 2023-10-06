@@ -20,7 +20,7 @@ export const Boolean = ({ value, onChange, label, issue }: BooleanProps) => {
         type="checkbox"
         checked={value}
         onChange={(e) => {
-          console.log(e.target.checked);
+          onChange(e.target.checked);
         }}
       />
     </InputContainer>

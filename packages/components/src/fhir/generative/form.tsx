@@ -15,23 +15,6 @@ import * as Primitives from "../primitives";
 
 import generateJSONPatches, { Mutation } from "./generatePatches";
 
-function useTraceUpdate(props: any) {
-  const prev = useRef(props);
-  useEffect(() => {
-    const changedProps = Object.entries(props).reduce((ps, [k, v]) => {
-      if (prev.current[k] !== v) {
-        // @ts-ignore
-        ps[k] = [prev.current[k], v];
-      }
-      return ps;
-    }, {});
-    if (Object.keys(changedProps).length > 0) {
-      console.log("Changed props:", changedProps);
-    }
-    prev.current = props;
-  });
-}
-
 const EditTypeToComponent: Record<string, React.FC<any>> = {
   "http://hl7.org/fhirpath/System.String": Primitives.String,
   string: Primitives.String,
@@ -44,6 +27,7 @@ const EditTypeToComponent: Record<string, React.FC<any>> = {
   Address: ComplexTypes.AddressEditable,
   Identifier: ComplexTypes.IdentifierEditable,
   Meta: ComplexTypes.MetaReadOnly,
+  ContactPoint: ComplexTypes.ContactPointEditable,
 };
 
 const OnChange = React.createContext<(r: Resource) => void>((_r) => {});
@@ -91,6 +75,7 @@ interface MetaProps {
   value: unknown;
   pointer: string;
   showLabel?: boolean;
+  showInvalid?: boolean;
   onChange: (patches: Mutation) => void;
 }
 
@@ -150,13 +135,13 @@ const MetaValueArray = React.memo((props: MetaProps) => {
             onChange({
               path: `${pointer}/${value.length}`,
               op: "add",
-              value: [{}],
+              value: null,
             });
             if (value.length === 0) {
               onChange({
                 path: `${pointer}/${value.length + 1}`,
                 op: "add",
-                value: [{}],
+                value: null,
               });
             }
           }}
@@ -196,23 +181,20 @@ const MetaValueSingular = React.memo((props: MetaProps) => {
     value,
     pointer,
     showLabel = true,
+    showInvalid = false,
+
     onChange,
   } = props;
-  //   useEffect(() => console.log("updated sd"), [sd]);
-  //   useEffect(() => console.log("updated elementIndex"), [elementIndex]);
-  //   useEffect(() => console.log("updated value"), [value]);
-  //   useEffect(() => console.log("updated pointer"), [pointer]);
-  //   useEffect(() => console.log("updated showLabel"), [showLabel]);
-  //   useEffect(() => console.log("updated onChange"), [onChange]);
   const element = getElementDefinition(sd, elementIndex);
-  if (element.type?.length && element.type?.length < 1) {
-    return (
+
+  if (element.type?.length && element.type?.length > 1) {
+    return showInvalid ? (
       <div>
         <span>{element.path}</span>
         TYPE CHOICES NOT SUPPORTED YET{" "}
         {JSON.stringify(element.type?.map((t) => t.code))}
       </div>
-    );
+    ) : undefined;
   }
   const children = getChildrenElementIndices({ sd, elementIndex });
   if (children.length === 0) {
@@ -231,20 +213,20 @@ const MetaValueSingular = React.memo((props: MetaProps) => {
               });
             }}
           />
-        ) : (
+        ) : showInvalid ? (
           <div>
             <span className="font-semibold"> {element.path}</span>
             <span>
               {element.type && element.type[0].code}: {JSON.stringify(value)}
             </span>
           </div>
-        )}
+        ) : undefined}
       </div>
     );
   }
   return (
     <div className="">
-      <div className="font-semibold">{getFieldName(element.path)}</div>
+      {showLabel && <div className="">{getFieldName(element.path)}</div>}
       <div className="p-2 border space-y-2">
         {children.map((childIndex) => {
           const childElement = getElementDefinition(sd, childIndex);
@@ -263,6 +245,7 @@ const MetaValueSingular = React.memo((props: MetaProps) => {
               sd={sd}
               elementIndex={childIndex}
               onChange={onChange}
+              showInvalid={showInvalid}
               {...childProps}
             />
           ) : (
@@ -270,6 +253,7 @@ const MetaValueSingular = React.memo((props: MetaProps) => {
               key={childProps.pointer}
               sd={sd}
               elementIndex={childIndex}
+              showInvalid={showInvalid}
               onChange={onChange}
               {...childProps}
             />
@@ -298,16 +282,16 @@ export const GenerativeForm = ({
     return (mutation: Mutation) => {
       setValue((resource) => {
         const patches = generateJSONPatches(resource, mutation);
+        console.log(resource, patches);
         const newResource = produce(resource, (value) => {
           const newValue = applyPatch(value, patches).newDocument;
           return newValue;
         });
+        console.log(newResource);
         return newResource;
       });
     };
   }, [setValue]);
-
-  console.log("resource:", value);
 
   return (
     <MetaValueSingular

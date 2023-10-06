@@ -1,7 +1,10 @@
 import React, { useEffect, useState, useMemo } from "react";
+import type { Resource } from "@iguhealth/fhir-types/r4/types";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { GenerativeForm } from "./form";
+
+type Setter = (r: Resource) => void;
 
 const StateForm = (props: Parameters<typeof GenerativeForm>[0]) => {
   const [state, setState] = React.useState(props);
@@ -10,7 +13,7 @@ const StateForm = (props: Parameters<typeof GenerativeForm>[0]) => {
   }, [props]);
 
   const setValue = useMemo(() => {
-    return (setter) => {
+    return (setter: Setter) => {
       setState((state) => ({ ...state, value: setter(state.value) }));
     };
   }, [setState]);
