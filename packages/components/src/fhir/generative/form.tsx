@@ -28,6 +28,7 @@ const EditTypeToComponent: Record<string, React.FC<any>> = {
   Identifier: ComplexTypes.IdentifierEditable,
   Meta: ComplexTypes.MetaReadOnly,
   ContactPoint: ComplexTypes.ContactPointEditable,
+  HumanName: ComplexTypes.HumanNameEditable,
 };
 
 const OnChange = React.createContext<(r: Resource) => void>((_r) => {});
