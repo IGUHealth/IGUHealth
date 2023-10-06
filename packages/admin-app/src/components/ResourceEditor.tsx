@@ -115,20 +115,25 @@ export default function ResourceEditorComponent({
   const client = useRecoilValue(getClient);
   const navigate = useNavigate();
 
+  console.log(structureDefinition, resource);
   return (
     <Base.Tabs
       tabs={[
         ...leftSide,
         ...[
           {
-            id: 1,
+            id: 0,
             title: "Editor",
-            content: resource && structureDefinition && (
+            content: structureDefinition && (
               <FHIR.GenerativeForm
                 value={resource}
                 structureDefinition={structureDefinition}
                 setValue={(getResource) => {
-                  const newResource = getResource(resource);
+                  const newResource = getResource(
+                    resource
+                      ? resource
+                      : ({ resourceType: structureDefinition.kind } as Resource)
+                  );
                   onChange(newResource);
                 }}
               />

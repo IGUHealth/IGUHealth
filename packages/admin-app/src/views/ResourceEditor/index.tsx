@@ -84,35 +84,34 @@ export default function DefaultResourceEditorView() {
   ];
 
   useEffect(() => {
-    if (id !== "new")
-      client
-        .batch(
-          {},
-          {
-            type: "batch",
-            resourceType: "Bundle",
-            entry: [
-              {
-                request: {
-                  method: "GET",
-                  url: `${resourceType}/${id}`,
-                },
+    client
+      .batch(
+        {},
+        {
+          type: "batch",
+          resourceType: "Bundle",
+          entry: [
+            {
+              request: {
+                method: "GET",
+                url: `${resourceType}/${id}`,
               },
-              {
-                request: {
-                  method: "GET",
-                  url: `StructureDefinition/${resourceType}`,
-                },
+            },
+            {
+              request: {
+                method: "GET",
+                url: `StructureDefinition/${resourceType}`,
               },
-            ],
-          }
-        )
-        .then((response) => {
-          setResource(response.entry?.[0]?.resource);
-          setStructureDefinition(
-            response.entry?.[1]?.resource as StructureDefinition
-          );
-        });
+            },
+          ],
+        }
+      )
+      .then((response) => {
+        setResource(response.entry?.[0]?.resource);
+        setStructureDefinition(
+          response.entry?.[1]?.resource as StructureDefinition
+        );
+      });
   }, [resourceType, id]);
 
   switch (resourceType) {

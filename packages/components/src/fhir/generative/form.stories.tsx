@@ -12,7 +12,10 @@ const StateForm = (props: Parameters<typeof GenerativeForm>[0]) => {
 
   const setValue = useMemo(() => {
     return (setter: Setter) => {
-      setState((state) => ({ ...state, value: setter(state.value) }));
+      setState((state) => ({
+        ...state,
+        value: state.value ? setter(state.value) : state.value,
+      }));
     };
   }, [setState]);
 

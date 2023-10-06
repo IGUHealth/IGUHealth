@@ -307,7 +307,7 @@ export type Setter = (resource: Resource) => Resource;
 
 export interface GenerativeFormProps {
   structureDefinition: StructureDefinition;
-  value: Resource;
+  value: Resource | undefined;
   setValue?: (s: Setter) => void;
 }
 
