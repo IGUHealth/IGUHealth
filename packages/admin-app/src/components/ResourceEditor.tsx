@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { basicSetup } from "codemirror";
@@ -7,6 +7,7 @@ import { ChevronDownIcon } from "@heroicons/react/24/outline";
 // import { javascript } from "@codemirror/lang-javascript";
 
 import {
+  StructureDefinition,
   BundleEntry,
   Resource,
   OperationOutcome,
@@ -97,6 +98,7 @@ export interface AdditionalContent {
   id: id;
   resourceType: ResourceType;
   resource: Resource | undefined;
+  structureDefinition: StructureDefinition | undefined;
   onChange?: (resource: Resource) => void;
   actions: Parameters<typeof Base.DropDownMenu>[0]["links"];
   leftTabs?: Parameters<typeof Base.Tabs>[0]["tabs"];
@@ -105,8 +107,8 @@ export interface AdditionalContent {
 export default function ResourceEditorComponent({
   id,
   actions,
-  resourceType,
   resource,
+  structureDefinition,
   onChange = (r: Resource) => {},
   leftTabs: leftSide = [],
   rightTabs: rightSide = [],
@@ -122,6 +124,23 @@ export default function ResourceEditorComponent({
           {
             id: 1,
             title: "Editor",
+            content: (
+              <JSONEditor
+                value={JSON.stringify(resource, null, 2)}
+                setValue={(v) => {
+                  try {
+                    const resource = JSON.parse(v);
+                    onChange(resource);
+                  } catch (e) {
+                    return;
+                  }
+                }}
+              />
+            ),
+          },
+          {
+            id: 1,
+            title: "JSON",
             content: (
               <JSONEditor
                 value={JSON.stringify(resource, null, 2)}

@@ -90,14 +90,31 @@ function getElementDefinition(
 }
 
 const MetaValueArray = React.memo((props: MetaProps) => {
-  const { sd, elementIndex, value = [], pointer, onChange } = props;
+  const {
+    sd,
+    elementIndex,
+    value = [],
+    pointer,
+    onChange,
+    showInvalid = false,
+  } = props;
   const element = getElementDefinition(sd, elementIndex);
-  if (element.type?.length && element.type.length < 1) {
+  if (showInvalid && element.type?.length && element.type.length < 1) {
     return <span>TYPE CHOICES NOT SUPPORTED YET</span>;
   }
   if (!Array.isArray(value))
     throw new Error("Value must be an array or undefined");
 
+  const Comp = element.type && EditTypeToComponent[element.type[0].code];
+  if (!Comp) {
+    return (
+      <DisplayInvalid
+        element={element}
+        value={value}
+        showInvalid={showInvalid}
+      />
+    );
+  }
   return (
     <div>
       <label>{getFieldName(element.path)}</label>
@@ -110,6 +127,7 @@ const MetaValueArray = React.memo((props: MetaProps) => {
             pointer={`${pointer}/${i}`}
             value={v}
             showLabel={false}
+            showInvalid={showInvalid}
             onChange={onChange}
           />
           {value.length > 0 && (
@@ -174,6 +192,27 @@ function getValueAndPointer(
   };
 }
 
+function DisplayInvalid({
+  element,
+  value,
+  showInvalid,
+}: {
+  showInvalid: boolean;
+  element: ElementDefinition;
+  value: unknown;
+}) {
+  if (showInvalid)
+    return (
+      <div>
+        <span className="font-semibold"> {element.path}</span>
+        <span>
+          {element.type && element.type[0].code}: {JSON.stringify(value)}
+        </span>
+      </div>
+    );
+  return undefined;
+}
+
 const MetaValueSingular = React.memo((props: MetaProps) => {
   const {
     sd,
@@ -182,9 +221,9 @@ const MetaValueSingular = React.memo((props: MetaProps) => {
     pointer,
     showLabel = true,
     showInvalid = false,
-
     onChange,
   } = props;
+
   const element = getElementDefinition(sd, elementIndex);
 
   if (element.type?.length && element.type?.length > 1) {
@@ -199,28 +238,28 @@ const MetaValueSingular = React.memo((props: MetaProps) => {
   const children = getChildrenElementIndices({ sd, elementIndex });
   if (children.length === 0) {
     const Comp = element.type && EditTypeToComponent[element.type[0].code];
+    if (!Comp) {
+      return (
+        <DisplayInvalid
+          element={element}
+          value={value}
+          showInvalid={showInvalid}
+        />
+      );
+    }
     return (
       <div className="">
-        {Comp ? (
-          <Comp
-            value={value}
-            label={showLabel && getFieldName(element.path)}
-            onChange={(v: unknown) => {
-              onChange({
-                op: "replace",
-                path: pointer,
-                value: v,
-              });
-            }}
-          />
-        ) : showInvalid ? (
-          <div>
-            <span className="font-semibold"> {element.path}</span>
-            <span>
-              {element.type && element.type[0].code}: {JSON.stringify(value)}
-            </span>
-          </div>
-        ) : undefined}
+        <Comp
+          value={value}
+          label={showLabel && getFieldName(element.path)}
+          onChange={(v: unknown) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
       </div>
     );
   }
@@ -264,7 +303,7 @@ const MetaValueSingular = React.memo((props: MetaProps) => {
   );
 });
 
-type Setter = (resource: Resource) => Resource;
+export type Setter = (resource: Resource) => Resource;
 
 export interface GenerativeFormProps {
   structureDefinition: StructureDefinition;
@@ -282,12 +321,11 @@ export const GenerativeForm = ({
     return (mutation: Mutation) => {
       setValue((resource) => {
         const patches = generateJSONPatches(resource, mutation);
-        console.log(resource, patches);
         const newResource = produce(resource, (value) => {
           const newValue = applyPatch(value, patches).newDocument;
           return newValue;
         });
-        console.log(newResource);
+
         return newResource;
       });
     };
@@ -300,6 +338,7 @@ export const GenerativeForm = ({
       value={value}
       pointer={""}
       onChange={onChange}
+      showInvalid={false}
     />
   );
 };

@@ -2,9 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import type { Resource } from "@iguhealth/fhir-types/r4/types";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { GenerativeForm } from "./form";
-
-type Setter = (r: Resource) => void;
+import { GenerativeForm, Setter } from "./form";
 
 const StateForm = (props: Parameters<typeof GenerativeForm>[0]) => {
   const [state, setState] = React.useState(props);
