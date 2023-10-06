@@ -25,8 +25,6 @@ export interface MarkdownProps {
 
 const extensions = [markdown({ base: markdownLanguage })];
 
-console.log(markdown);
-
 export const Markdown = ({ onChange, value, issue, label }: MarkdownProps) => {
   return (
     <InputContainer label={label} issues={issue ? [issue] : []}>

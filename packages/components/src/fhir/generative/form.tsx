@@ -119,9 +119,8 @@ const MetaValueArray = React.memo((props: MetaProps) => {
     <div>
       <label>{getFieldName(element.path)}</label>
       {(value.length === 0 ? [undefined] : value).map((v, i) => (
-        <div className="mt-1 relative">
+        <div className="mt-1 relative" key={`${pointer}/${i}`}>
           <MetaValueSingular
-            key={i}
             sd={sd}
             elementIndex={elementIndex}
             pointer={`${pointer}/${i}`}

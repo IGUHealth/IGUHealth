@@ -143,7 +143,7 @@ export default function ResourceEditorComponent({
         ...leftSide,
         ...[
           {
-            id: 0,
+            id: "editor",
             title: "Editor",
             content: structureDefinition && (
               <FHIR.GenerativeForm
@@ -154,7 +154,7 @@ export default function ResourceEditorComponent({
             ),
           },
           {
-            id: 1,
+            id: "json",
             title: "JSON",
             content: (
               <JSONEditor
@@ -174,7 +174,7 @@ export default function ResourceEditorComponent({
         ...(id !== "new"
           ? [
               {
-                id: 2,
+                id: "history",
                 title: "History",
                 content: <ResourceHistory />,
               },
