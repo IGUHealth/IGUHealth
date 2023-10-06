@@ -36,6 +36,7 @@ export const IdentifierEditable = ({
       <div className="flex space-x-1">
         <Code
           label="use"
+          open={true}
           system="http://hl7.org/fhir/ValueSet/identifier-use"
           value={value?.use}
           onChange={(use) => {
