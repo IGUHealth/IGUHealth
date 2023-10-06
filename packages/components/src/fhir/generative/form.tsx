@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useMemo } from "react";
 import { applyPatch, Operation } from "fast-json-patch";
 import { produce } from "immer";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import { resourceTypes, complexTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
@@ -119,9 +119,8 @@ const MetaValueArray = React.memo((props: MetaProps) => {
     <div>
       <label>{getFieldName(element.path)}</label>
       {(value.length === 0 ? [undefined] : value).map((v, i) => (
-        <div className="mt-1 relative">
+        <div className="mt-1 relative" key={`${pointer}/${i}`}>
           <MetaValueSingular
-            key={i}
             sd={sd}
             elementIndex={elementIndex}
             pointer={`${pointer}/${i}`}
@@ -132,7 +131,7 @@ const MetaValueArray = React.memo((props: MetaProps) => {
           />
           {value.length > 0 && (
             <div
-              className="absolute top-1 right-2 text-slate-400 cursor-pointer hover:text-slate-500 "
+              className="absolute top-1 right-1 text-slate-400 cursor-pointer hover:text-slate-500 "
               onClick={(e) => {
                 onChange({
                   path: `${pointer}/${i}`,
@@ -141,7 +140,7 @@ const MetaValueArray = React.memo((props: MetaProps) => {
                 });
               }}
             >
-              X
+              <XMarkIcon className="h-4 w-4" />
             </div>
           )}
         </div>

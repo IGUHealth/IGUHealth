@@ -28,6 +28,7 @@ export default function DefaultResourceEditorView() {
 
   const actions = [
     {
+      key: "Update",
       label: id === "new" ? "Create" : "Update",
       onClick: () => {
         try {
@@ -64,6 +65,7 @@ export default function DefaultResourceEditorView() {
       },
     },
     {
+      key: "Delete",
       className: "text-red-600 hover:bg-red-600 hover:text-white",
       label: "Delete",
       onClick: () => {
@@ -136,9 +138,7 @@ export default function DefaultResourceEditorView() {
           actions={actions}
           resource={resource}
           structureDefinition={structureDefinition}
-          onChange={(resource) => {
-            setResource(resource);
-          }}
+          onChange={setResource}
         />
       );
   }
