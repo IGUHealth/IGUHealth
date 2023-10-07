@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
 
-import { InputContainer } from "../../base/containers";
 import { Input } from "../../base/input";
 
 export interface DateProps {
@@ -49,17 +48,17 @@ export const Date = ({
   }, [value, issue]);
 
   return (
-    <InputContainer label={label} issues={issues}>
-      <Input
-        type="date"
-        value={value && dayjs(value).format("YYYY-MM-DD")}
-        onChange={(e) => {
-          if (onChange) {
-            const dateString = dayjs(e.target.value).format(outputFormat);
-            onChange(dateString);
-          }
-        }}
-      />
-    </InputContainer>
+    <Input
+      label={label}
+      issues={issues}
+      type="date"
+      value={value && dayjs(value).format("YYYY-MM-DD")}
+      onChange={(e) => {
+        if (onChange) {
+          const dateString = dayjs(e.target.value).format(outputFormat);
+          onChange(dateString);
+        }
+      }}
+    />
   );
 };

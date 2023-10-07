@@ -1,6 +1,5 @@
 import React, { FC } from "react";
 
-import { InputContainer } from "../../base/containers";
 import { Input } from "../../base/input";
 
 export interface StringProps {
@@ -35,22 +34,18 @@ export const String = ({
   inputProps,
 }: StringProps) => {
   return (
-    <InputContainer
+    <Input
+      {...inputProps}
       disabled={disabled}
       label={label}
       issues={issue ? [issue] : []}
-    >
-      <Input
-        {...inputProps}
-        disabled={disabled}
-        type="text"
-        value={value}
-        onChange={(e) => {
-          if (onChange) {
-            onChange(e.target.value);
-          }
-        }}
-      />
-    </InputContainer>
+      type="text"
+      value={value}
+      onChange={(e) => {
+        if (onChange) {
+          onChange(e.target.value);
+        }
+      }}
+    />
   );
 };

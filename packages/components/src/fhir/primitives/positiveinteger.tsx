@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { InputContainer } from "../../base/containers";
+
 import { Input } from "../../base/input";
 
 export interface PositiveIntegerProps {
@@ -26,20 +26,20 @@ export const PositiveInteger = ({
   }, [value, issue]);
 
   return (
-    <InputContainer label={label} issues={issues}>
-      <Input
-        type="number"
-        min="0"
-        value={value ? Math.round(value) : value}
-        step="0.1"
-        onChange={(e) => {
-          const value = parseInt(e.target.value);
-          if (value <= 0) onChange(1);
-          if (onChange && !isNaN(value)) {
-            onChange(value);
-          }
-        }}
-      />
-    </InputContainer>
+    <Input
+      label={label}
+      issues={issues}
+      type="number"
+      min="0"
+      value={value ? Math.round(value) : value}
+      step="0.1"
+      onChange={(e) => {
+        const value = parseInt(e.target.value);
+        if (value <= 0) onChange(1);
+        if (onChange && !isNaN(value)) {
+          onChange(value);
+        }
+      }}
+    />
   );
 };

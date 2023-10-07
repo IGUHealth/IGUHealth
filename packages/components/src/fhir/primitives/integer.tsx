@@ -1,5 +1,5 @@
 import React from "react";
-import { InputContainer } from "../../base/containers";
+
 import { Input } from "../../base/input";
 
 export interface IntegerProps {
@@ -11,18 +11,18 @@ export interface IntegerProps {
 
 export const Integer = ({ value, onChange, issue, label }: IntegerProps) => {
   return (
-    <InputContainer label={label} issues={issue ? [issue] : []}>
-      <Input
-        type="number"
-        value={value ? Math.round(value) : value}
-        step="0.1"
-        onChange={(e) => {
-          const value = parseInt(e.target.value);
-          if (onChange && !isNaN(value)) {
-            onChange(value);
-          }
-        }}
-      />
-    </InputContainer>
+    <Input
+      label={label}
+      issues={issue ? [issue] : []}
+      type="number"
+      value={value ? Math.round(value) : value}
+      step="0.1"
+      onChange={(e) => {
+        const value = parseInt(e.target.value);
+        if (onChange && !isNaN(value)) {
+          onChange(value);
+        }
+      }}
+    />
   );
 };

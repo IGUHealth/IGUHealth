@@ -37,9 +37,7 @@ function SettingDisplay({ user, token }: SettingProps) {
           <label>Access Token</label>
           <div className="flex flex-row">
             <div className="flex flex-1">
-              <Base.InputContainer inlineLabel>
-                <Base.Input readOnly value={token} />
-              </Base.InputContainer>
+              <Base.Input inlineLabel readOnly value={token} />
             </div>
             <Base.Button
               onClick={(e) => {

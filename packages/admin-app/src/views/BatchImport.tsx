@@ -33,29 +33,27 @@ export default function BatchImportView() {
   return (
     <div className="w-full flex flex-col items-center justify-center">
       <div>
-        <Base.InputContainer
+        <Base.Input
           label="Select Batch file to import"
           issues={issues}
-        >
-          <Base.Input
-            type="file"
-            onChange={(e) => {
-              const file = e.target?.files?.[0];
+          type="file"
+          onChange={(e) => {
+            const file = e.target?.files?.[0];
 
-              if (!file) return;
-              getData(file).then((data) => {
-                try {
-                  const json = JSON.parse(atob(data));
-                  if (json.resourceType !== "Bundle" && json.type !== "batch")
-                    throw new Error("Not a batch bundle");
-                  setBatch(json);
-                } catch (e) {
-                  setIssues([`${e}`]);
-                }
-              });
-            }}
-          />
-        </Base.InputContainer>
+            if (!file) return;
+            getData(file).then((data) => {
+              try {
+                const json = JSON.parse(atob(data));
+                if (json.resourceType !== "Bundle" && json.type !== "batch")
+                  throw new Error("Not a batch bundle");
+                setBatch(json);
+              } catch (e) {
+                setIssues([`${e}`]);
+              }
+            });
+          }}
+        />
+
         <div className="flex justify-end">
           <Base.Button
             disabled={batch === undefined}

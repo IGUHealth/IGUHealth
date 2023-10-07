@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
 
-import { InputContainer } from "../../base/containers";
 import { Input } from "../../base/input";
 
 export interface DateTimeProps {
@@ -48,17 +47,17 @@ export const DateTime = ({
   }, [value, issue]);
 
   return (
-    <InputContainer label={label} issues={issues}>
-      <Input
-        type="datetime-local"
-        value={dayjs(value).format("YYYY-MM-DDThh:mm:ss")}
-        onChange={(e) => {
-          if (onChange) {
-            const dateString = dayjs(e.target.value).format(outputFormat);
-            onChange(dateString);
-          }
-        }}
-      />
-    </InputContainer>
+    <Input
+      label={label}
+      issues={issues}
+      type="datetime-local"
+      value={dayjs(value).format("YYYY-MM-DDThh:mm:ss")}
+      onChange={(e) => {
+        if (onChange) {
+          const dateString = dayjs(e.target.value).format(outputFormat);
+          onChange(dateString);
+        }
+      }}
+    />
   );
 };
