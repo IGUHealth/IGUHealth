@@ -1,4 +1,5 @@
 import { ResourceType, SearchParameter } from "@iguhealth/fhir-types/r4/types";
+import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import {
   FHIRRequest,
@@ -71,7 +72,7 @@ export function searchParameterToTableName(
 }
 
 // Returns the resourceType from request on type level else uses the _type parameter or empty specifying no filter on specific resource.
-export function deriveResourceTypeFilter(request: FHIRRequest): ResourceType[] {
+function _deriveResourceTypeFilter(request: FHIRRequest): string[] {
   switch (request.type) {
     case "search-request": {
       if (request.level === "type")
@@ -85,6 +86,21 @@ export function deriveResourceTypeFilter(request: FHIRRequest): ResourceType[] {
         ? [request.resourceType as ResourceType]
         : [];
   }
+}
+
+export function deriveResourceTypeFilter(request: FHIRRequest): ResourceType[] {
+  const passedinTypes = _deriveResourceTypeFilter(request) as ResourceType[];
+  for (const type of passedinTypes) {
+    if (!resourceTypes.has(type)) {
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `Resource Type '${type}' is not supported`
+        )
+      );
+    }
+  }
+  return passedinTypes;
 }
 
 /*
