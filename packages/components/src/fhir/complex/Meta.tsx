@@ -11,12 +11,12 @@ export const MetaReadOnly = ({ value }: MetaReadonlyProps) => {
     <div className="p-1 flex space-x-1">
       <String
         value={value?.versionId}
-        inputProps={{ readOnly: true }}
+        inputProps={{ disabled: true }}
         label="Version ID"
       />
       <String
         value={value?.lastUpdated}
-        inputProps={{ readOnly: true }}
+        inputProps={{ disabled: true }}
         label="Last Updated"
       />
     </div>

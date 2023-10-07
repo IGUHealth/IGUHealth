@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import fileDownload from "js-file-download";
 
-import { InputContainer } from "../../base/labelContainer";
+import { InputContainer } from "../../base/containers";
 import { Button } from "../../base/button";
 import { Input } from "../../base/input";
 

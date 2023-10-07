@@ -2,7 +2,7 @@ import React, { Fragment, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
-import { InputContainer } from "./labelContainer";
+import { InputContainer } from "./containers";
 import classNames from "classnames";
 
 export type Option = { value: string | number; label: string };

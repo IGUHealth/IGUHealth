@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 
-import { InputContainer } from "../../base/labelContainer";
+import { InputContainer } from "../../base/containers";
 import { Input } from "../../base/input";
 
 export interface StringProps {
@@ -21,6 +21,8 @@ export interface StringProps {
    */
   label?: string;
 
+  disabled?: boolean;
+
   inputProps?: Parameters<typeof Input>[0];
 }
 
@@ -29,12 +31,18 @@ export const String = ({
   value,
   issue,
   label,
+  disabled = false,
   inputProps,
 }: StringProps) => {
   return (
-    <InputContainer label={label} issues={issue ? [issue] : []}>
+    <InputContainer
+      disabled={disabled}
+      label={label}
+      issues={issue ? [issue] : []}
+    >
       <Input
         {...inputProps}
+        disabled={disabled}
         type="text"
         value={value}
         onChange={(e) => {

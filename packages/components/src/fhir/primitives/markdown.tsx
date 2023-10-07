@@ -2,7 +2,7 @@ import React from "react";
 
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { CodeMirror } from "../../base";
-import { InputContainer } from "../../base/labelContainer";
+import { InputContainer } from "../../base/containers";
 
 export interface MarkdownProps {
   /**

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { InputContainer } from "../../base/labelContainer";
+import { InputContainer } from "../../base/containers";
 import { Input } from "../../base/input";
 
 type OID = `urn:oid:${string}`;

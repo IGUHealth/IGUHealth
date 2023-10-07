@@ -1,5 +1,5 @@
 import React from "react";
-import { InputContainer } from "../../base/labelContainer";
+import { InputContainer } from "../../base/containers";
 import { Input } from "../../base/input";
 
 export interface BooleanProps {
@@ -11,18 +11,21 @@ export interface BooleanProps {
 
 export const Boolean = ({ value, onChange, label, issue }: BooleanProps) => {
   return (
-    <InputContainer
-      inlineLabel={false}
-      label={label}
-      issues={issue ? [issue] : []}
-    >
-      <Input
-        type="checkbox"
-        checked={value}
-        onChange={(e) => {
-          onChange(e.target.checked);
-        }}
-      />
-    </InputContainer>
+    <div className="inline-block">
+      <InputContainer
+        hideBorder
+        inlineLabel={false}
+        label={label}
+        issues={issue ? [issue] : []}
+      >
+        <Input
+          type="checkbox"
+          checked={value}
+          onChange={(e) => {
+            onChange(e.target.checked);
+          }}
+        />
+      </InputContainer>
+    </div>
   );
 };
