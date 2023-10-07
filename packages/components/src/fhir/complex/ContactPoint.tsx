@@ -1,7 +1,7 @@
 import React from "react";
 import { ContactPoint } from "@iguhealth/fhir-types/r4/types";
 
-import { InputContainer } from "../../base/labelContainer";
+import { InputContainer } from "../../base/containers";
 import { Code } from "../primitives/code";
 import { Uri } from "../primitives/uri";
 import { String } from "../primitives/string";

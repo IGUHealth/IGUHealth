@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-import { InputContainer } from "../../base/labelContainer";
 import { Input } from "../../base/input";
 
 type UUID = `${string}-${string}-${string}-${string}`;
@@ -40,16 +39,16 @@ export const UUID = ({ onChange, value, issue, label }: UUIDProps) => {
   }, [value, issue]);
 
   return (
-    <InputContainer label={label} issues={issues}>
-      <Input
-        type="text"
-        value={value}
-        onChange={(e) => {
-          if (onChange) {
-            onChange(e.target.value);
-          }
-        }}
-      />
-    </InputContainer>
+    <Input
+      label={label}
+      issues={issues}
+      type="text"
+      value={value}
+      onChange={(e) => {
+        if (onChange) {
+          onChange(e.target.value);
+        }
+      }}
+    />
   );
 };

@@ -16,7 +16,9 @@ import * as Primitives from "../primitives";
 import generateJSONPatches, { Mutation } from "./generatePatches";
 
 const EditTypeToComponent: Record<string, React.FC<any>> = {
-  "http://hl7.org/fhirpath/System.String": Primitives.String,
+  "http://hl7.org/fhirpath/System.String": (props: any) => (
+    <Primitives.String disabled={true} {...props} />
+  ),
   string: Primitives.String,
   boolean: Primitives.Boolean,
   url: Primitives.Url,

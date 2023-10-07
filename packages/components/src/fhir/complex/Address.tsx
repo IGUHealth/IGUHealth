@@ -1,7 +1,7 @@
 import React from "react";
 import { Address } from "@iguhealth/fhir-types/r4/types";
 
-import { InputContainer } from "../../base/labelContainer";
+import { InputContainer } from "../../base/containers";
 import { String } from "../primitives/string";
 
 export interface AddressEditableProps {

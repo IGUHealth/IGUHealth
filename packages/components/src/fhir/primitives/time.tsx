@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-import classNames from "classnames";
-import { InputContainer } from "../../base/labelContainer";
 import { Input } from "../../base/input";
 
 export interface TimeProps {
@@ -38,17 +36,17 @@ export const Time = ({ onChange, value, issue, label }: TimeProps) => {
   }, [value, issue]);
 
   return (
-    <InputContainer label={label} issues={issues}>
-      <Input
-        step="1"
-        type="time"
-        value={value}
-        onChange={(e) => {
-          if (onChange) {
-            onChange(e.target.value);
-          }
-        }}
-      />
-    </InputContainer>
+    <Input
+      label={label}
+      issues={issues}
+      step="1"
+      type="time"
+      value={value}
+      onChange={(e) => {
+        if (onChange) {
+          onChange(e.target.value);
+        }
+      }}
+    />
   );
 };

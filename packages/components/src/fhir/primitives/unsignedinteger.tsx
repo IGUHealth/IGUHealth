@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { InputContainer } from "../../base/labelContainer";
+
 import { Input } from "../../base/input";
 
 export interface UnsignedIntegerProps {
@@ -29,20 +29,20 @@ export const UnsignedInteger = ({
   }, [value, issue]);
 
   return (
-    <InputContainer label={label} issues={issues}>
-      <Input
-        type="number"
-        min="0"
-        value={value ? Math.round(value) : value}
-        step="0.1"
-        onChange={(e) => {
-          const value = parseInt(e.target.value);
-          if (value < 0) onChange(0);
-          if (onChange && !isNaN(value)) {
-            onChange(value);
-          }
-        }}
-      />
-    </InputContainer>
+    <Input
+      label={label}
+      issues={issues}
+      type="number"
+      min="0"
+      value={value ? Math.round(value) : value}
+      step="0.1"
+      onChange={(e) => {
+        const value = parseInt(e.target.value);
+        if (value < 0) onChange(0);
+        if (onChange && !isNaN(value)) {
+          onChange(value);
+        }
+      }}
+    />
   );
 };

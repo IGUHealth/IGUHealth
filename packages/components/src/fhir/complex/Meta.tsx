@@ -9,16 +9,8 @@ export interface MetaReadonlyProps {
 export const MetaReadOnly = ({ value }: MetaReadonlyProps) => {
   return (
     <div className="p-1 flex space-x-1">
-      <String
-        value={value?.versionId}
-        inputProps={{ readOnly: true }}
-        label="Version ID"
-      />
-      <String
-        value={value?.lastUpdated}
-        inputProps={{ readOnly: true }}
-        label="Last Updated"
-      />
+      <String value={value?.versionId} disabled={true} label="Version ID" />
+      <String value={value?.lastUpdated} disabled={true} label="Last Updated" />
     </div>
   );
 };

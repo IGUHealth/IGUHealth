@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import fileDownload from "js-file-download";
 
-import { InputContainer } from "../../base/labelContainer";
+import { InputContainer } from "../../base/containers";
 import { Button } from "../../base/button";
 import { Input } from "../../base/input";
 
@@ -47,12 +47,12 @@ export const Base64Binary = ({
   }, [value, issue]);
   return (
     <InputContainer label={label} issues={issues}>
-      <>
+      <div className="flex">
         <Input
           type="file"
+          hideBorder={true}
           onChange={(e) => {
             const file = e.target?.files?.[0];
-
             if (!file) return;
             const string = convertFileToBase64(file).then((data) => {
               onChange(data);
@@ -61,6 +61,7 @@ export const Base64Binary = ({
         />
         {value && (
           <Button
+            className="ml-1"
             buttonType="secondary"
             buttonSize="medium"
             onClick={() => {
@@ -69,7 +70,7 @@ export const Base64Binary = ({
             children="Download"
           />
         )}
-      </>
+      </div>
     </InputContainer>
   );
 };

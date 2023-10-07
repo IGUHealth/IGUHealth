@@ -1,19 +1,51 @@
 import classNames from "classnames";
 import React, {
-  MouseEventHandler,
   DetailedHTMLProps,
   InputHTMLAttributes,
-  HTMLAttributes,
+  HTMLProps,
 } from "react";
+import {
+  inputClassNames,
+  ContainerProps,
+  DisplayIssues,
+  Label,
+} from "./containers";
 
-type ButtonType = "primary" | "secondary" | "danger";
-type ButtonSize = "small" | "medium" | "large";
-
-type InputProps = DetailedHTMLProps<
-  InputHTMLAttributes<HTMLInputElement>,
-  HTMLInputElement
->;
+interface InputProps
+  extends DetailedHTMLProps<
+    InputHTMLAttributes<HTMLInputElement>,
+    HTMLInputElement
+  > {
+  issues?: string[];
+  hideBorder?: boolean;
+  labelProps?: HTMLProps<HTMLLabelElement>;
+  label?: string;
+}
 
 export const Input = (props: InputProps) => {
-  return <input className="w-full outline-none" {...props} />;
+  const {
+    label,
+    labelProps,
+    hideBorder = false,
+    issues = [],
+    ...inputProps
+  } = props;
+  return (
+    <div className="flex flex-col flex-grow">
+      <Label
+        {...labelProps}
+        label={label}
+        className={classNames("mr-1 ", labelProps?.className)}
+      />
+      <input
+        {...inputProps}
+        className={classNames(
+          "w-full outline-none",
+          inputClassNames({ hideBorder, issues }),
+          inputProps?.className
+        )}
+      />
+      <DisplayIssues issues={issues} />
+    </div>
+  );
 };
