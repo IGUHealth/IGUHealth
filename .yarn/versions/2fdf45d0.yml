@@ -1,8 +1,0 @@
-releases:
-  "@iguhealth/components": patch
-  "@iguhealth/meta-value": patch
-
-declined:
-  - admin-app
-  - "@iguhealth/fhirpath"
-  - "@iguhealth/server"

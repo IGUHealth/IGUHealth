@@ -1,5 +1,0 @@
-releases:
-  "@iguhealth/components": patch
-
-declined:
-  - admin-app
