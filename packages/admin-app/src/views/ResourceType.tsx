@@ -47,6 +47,7 @@ export default function ResourceTypeView() {
         </h2>
         <div className="flex flex-grow border hover:border-indigo-700 h-10 focus:border-indigo-700">
           <Base.Input
+            hideBorder
             placeholder="Enter search query e.g. _count=10&_sort=_lastUpdated"
             className="h-full rounded-md overflow-hidden flex flex-grow px-4 mr-1 text-xl font-light outline-none"
             value={searchParams.get("query") || ""}
