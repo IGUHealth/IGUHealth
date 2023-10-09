@@ -31,30 +31,64 @@ type InteractionSupported<T> = FHIRRequest["type"];
 type InteractionsSupported<T> = InteractionSupported<T>[];
 
 type Source<CTX> = {
-  resourcesSupported: ResourceType[];
-  interactionsSupported: InteractionsSupported<CTX>;
+  resourcesSupported?: ResourceType[];
+  interactionsSupported?: InteractionsSupported<CTX>;
+  filter?: (request: FHIRRequest) => boolean;
   source: FHIRClient<CTX>;
 };
 type Sources<CTX> = Source<CTX>[];
 
-type Constraint<T> = Partial<
-  Pick<Source<T>, "resourcesSupported" | "interactionsSupported">
->;
+/*
+ ** Sets of requests like search will touch multiple sources.
+ ** Mutations though should only resolve to a single source.
+ */
+function getIsMultiSourced(request: FHIRRequest): boolean {
+  switch (request.type) {
+    case "search-request":
+    case "history-request":
+    case "read-request":
+    case "vread-request":
+    case "batch-request":
+      return true;
+    case "capabilities-request":
+    case "invoke-request":
+    case "transaction-request":
+    case "create-request":
+    case "update-request":
+    case "patch-request":
+    case "delete-request":
+      return false;
+  }
+}
 
-function findSource<T>(
+export function findSource<T>(
   sources: Sources<T>,
-  constraints: Constraint<T>
+  request: FHIRRequest
 ): Sources<T> {
-  return sources.filter((source) => {
-    return (
-      constraints.resourcesSupported?.every((resource) =>
-        source.resourcesSupported.includes(resource)
+  const isMultiSourced = getIsMultiSourced(request);
+  let found: { source: Source<T>; score: number }[] = [];
+
+  for (const source of sources) {
+    if (source.filter && !source.filter(request)) {
+      found = [...found, { source, score: 5 }];
+    } else if (
+      deriveResourceTypeFilter(request).every((resource) =>
+        source.resourcesSupported?.includes(resource)
       ) &&
-      constraints.interactionsSupported?.every((interaction) =>
-        source.interactionsSupported.includes(interaction)
-      )
-    );
-  });
+      source.interactionsSupported?.includes(request.type)
+    ) {
+      found = [...found, { source, score: 1 }];
+    }
+  }
+  if (isMultiSourced) return found.map((s) => s.source);
+  else {
+    found = found.sort((a, b) => a.score - b.score);
+    if (found.length === 0) throw new Error(`No source found for request`);
+    if (found.length > 1 && found[0].score === found[1].score) {
+      throw new Error(`Multiple sources found for request with same score`);
+    }
+    return [found[0].source];
+  }
 }
 
 function createRouterMiddleware<
@@ -67,7 +101,7 @@ function createRouterMiddleware<
         interactionsSupported: [request.type],
         resourcesSupported: deriveResourceTypeFilter(request),
       };
-      const sources = findSource(args.state.sources, constraint);
+      const sources = findSource(args.state.sources, request);
       switch (request.type) {
         // Multi-types allowed
         case "search-request": {
