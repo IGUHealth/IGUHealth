@@ -17,15 +17,15 @@ import { FHIRRequest } from "@iguhealth/client/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 import { ResourceType, id } from "@iguhealth/fhir-types/r4/types";
 
-import { FHIRServerCTX } from "../fhirServer.js";
-import { InvokeRequest } from "./types.js";
+import { FHIRServerCTX } from "../../fhirServer.js";
+import { InvokeRequest } from "../types.js";
 import {
   resolveOperationDefinition,
   getOperationCode,
   getOpCTX,
-} from "./utilities.js";
+} from "../utilities.js";
 
-import logAuditEvent, { MINOR_FAILURE } from "../logging/auditEvents.js";
+import logAuditEvent, { MINOR_FAILURE } from "../../logging/auditEvents.js";
 
 configDotenv();
 

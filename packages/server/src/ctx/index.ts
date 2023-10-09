@@ -22,7 +22,7 @@ import MemoryDatabaseAsync from "../resourceProviders/memory/async.js";
 import MemoryDatabaseSync from "../resourceProviders/memory/sync.js";
 import RouterClient from "../resourceProviders/router.js";
 import PostgresLock from "../synchronization/postgres.lock.js";
-import LambdaExecutioner from "../operation-executors/awsLambda.js";
+import LambdaExecutioner from "../operation-executors/awsLambda/index.js";
 import RedisCache from "../cache/redis.js";
 
 const MEMORY_TYPES: ResourceType[] = [
@@ -168,6 +168,15 @@ export default async function createServiceCTX(): Promise<
 
   const client = RouterClient([
     // OP INVOCATION
+    {
+      useSource: (request) => {
+        return (
+          request.type === "invoke-request" &&
+          request.operation === "expand"
+        );
+      }
+      source: InlineOperations(),
+    }
     {
       resourcesSupported: [...resourceTypes] as ResourceType[],
       interactionsSupported: ["invoke-request"],
