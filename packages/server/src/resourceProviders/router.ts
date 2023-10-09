@@ -69,7 +69,7 @@ export function findSource<T>(
   let found: { source: Source<T>; score: number }[] = [];
 
   for (const source of sources) {
-    if (source.filter && !source.filter(request)) {
+    if (source.filter && source.filter(request)) {
       found = [...found, { source, score: 5 }];
     } else if (
       deriveResourceTypeFilter(request).every((resource) =>
@@ -80,13 +80,15 @@ export function findSource<T>(
       found = [...found, { source, score: 1 }];
     }
   }
+
+  found = found.sort((a, b) => b.score - a.score);
   if (isMultiSourced) return found.map((s) => s.source);
   else {
-    found = found.sort((a, b) => a.score - b.score);
     if (found.length === 0) throw new Error(`No source found for request`);
     if (found.length > 1 && found[0].score === found[1].score) {
       throw new Error(`Multiple sources found for request with same score`);
     }
+
     return [found[0].source];
   }
 }
@@ -97,10 +99,6 @@ function createRouterMiddleware<
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
     async (request, args, next) => {
-      const constraint = {
-        interactionsSupported: [request.type],
-        resourcesSupported: deriveResourceTypeFilter(request),
-      };
       const sources = findSource(args.state.sources, request);
       switch (request.type) {
         // Multi-types allowed
@@ -163,9 +161,13 @@ function createRouterMiddleware<
           ).filter(
             (response): response is FHIRResponse => response !== undefined
           );
+          if (responses.length > 1)
+            throw new OperationError(
+              outcomeError("not-found", `Read response returned two items`)
+            );
           if (responses.length !== 1)
             throw new OperationError(
-              outcomeError("not-found", "Resource not found")
+              outcomeError("not-found", `Resource not found`)
             );
           return { state: args.state, ctx: args.ctx, response: responses[0] };
         }
