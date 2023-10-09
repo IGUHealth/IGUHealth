@@ -71,7 +71,7 @@ test("Test routing priority", async () => {
           },
         },
       }),
-      filter: (request: FHIRRequest) => {
+      useSource: (request: FHIRRequest) => {
         return (
           request.type === "search-request" &&
           request.level === "type" &&
@@ -123,7 +123,7 @@ test("Test routing priority", async () => {
           },
         },
       }),
-      filter: (request: FHIRRequest) => {
+      useSource: (request: FHIRRequest) => {
         return false;
       },
     },

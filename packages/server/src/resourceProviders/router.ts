@@ -33,7 +33,7 @@ type InteractionsSupported<T> = InteractionSupported<T>[];
 type Source<CTX> = {
   resourcesSupported?: ResourceType[];
   interactionsSupported?: InteractionsSupported<CTX>;
-  filter?: (request: FHIRRequest) => boolean;
+  useSource?: (request: FHIRRequest) => boolean;
   source: FHIRClient<CTX>;
 };
 type Sources<CTX> = Source<CTX>[];
@@ -69,7 +69,7 @@ export function findSource<T>(
   let found: { source: Source<T>; score: number }[] = [];
 
   for (const source of sources) {
-    if (source.filter && source.filter(request)) {
+    if (source.useSource && source.useSource(request)) {
       found = [...found, { source, score: 5 }];
     } else if (
       deriveResourceTypeFilter(request).every((resource) =>
