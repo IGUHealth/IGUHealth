@@ -12,7 +12,7 @@ import {
   CapabilityStatementRestResource,
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
-import { FHIRClientSync, FHIRClientAsync } from "@iguhealth/client/interface";
+import { FHIRClientAsync } from "@iguhealth/client/interface";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { createPostgresClient } from "../resourceProviders/postgres/index.js";
