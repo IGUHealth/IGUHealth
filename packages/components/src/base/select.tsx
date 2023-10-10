@@ -28,8 +28,8 @@ export const Select = ({
   const filteredOptions =
     query === ""
       ? options
-      : options.filter((person) =>
-          person.label
+      : options.filter((option) =>
+          option.label
             .toLowerCase()
             .replace(/\s+/g, "")
             .includes(query.toLowerCase().replace(/\s+/g, ""))

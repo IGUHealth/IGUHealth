@@ -341,7 +341,7 @@ export interface IOperation<I, O> {
   parseToParameters<Use extends "in" | "out">(
     use: Use,
     input: InputOutput<I, O>[Use]
-  ): Parameters;
+  ): Parameters | I | O;
   validate<Use extends "in" | "out">(
     ctx: OpCTX,
     use: Use,
@@ -405,17 +405,14 @@ export class Operation<I, O> implements IOperation<I, O> {
     return output as InputOutput<I, O>[Use];
   }
 
-  parseToParameters(use: "in" | "out", input: I | O): Parameters {
+  parseToParameters(use: "in" | "out", input: I | O): Parameters | I | O {
     if (
       use === "out" &&
       !isParameters(input) &&
       isStrictlyReturn(this.operationDefinition)
     ) {
-      return toParametersResource(this._operationDefinition, use, {
-        return: input,
-      });
+      return input;
     }
-
     return toParametersResource(
       this._operationDefinition,
       use,

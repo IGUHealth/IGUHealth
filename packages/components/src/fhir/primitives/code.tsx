@@ -27,6 +27,8 @@ function flatten(item: ValueSetExpansionContains): Option[] {
 }
 
 function valueSetToOptions(valueSet: ValueSet): Option[] {
+  console.log(valueSet.expansion?.contains?.map(flatten).flat() || []);
+  console.log(valueSet);
   return valueSet.expansion?.contains?.map(flatten).flat() || [];
 }
 

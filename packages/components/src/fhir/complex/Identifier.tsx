@@ -1,5 +1,5 @@
 import React from "react";
-import { Identifier } from "@iguhealth/fhir-types/r4/types";
+import { Identifier, ValueSet } from "@iguhealth/fhir-types/r4/types";
 
 import { InputContainer } from "../../base/containers";
 import { Code } from "../primitives/code";
@@ -23,10 +23,12 @@ export interface IdentifierEditableProps {
    * Label string.
    */
   label?: string;
+  expand?: (value: string) => Promise<ValueSet>;
 }
 
 export const IdentifierEditable = ({
   value,
+  expand,
   onChange,
   issue,
   label,
@@ -35,6 +37,7 @@ export const IdentifierEditable = ({
     <InputContainer label={label} issues={issue ? [issue] : []}>
       <div className="flex space-x-1">
         <Code
+          expand={expand}
           label="use"
           open={true}
           system="http://hl7.org/fhir/ValueSet/identifier-use"
