@@ -2,7 +2,6 @@ import { expect, test } from "@jest/globals";
 
 import HTTPClient from "@iguhealth/client/lib/http";
 import { ValueSetExpand } from "@iguhealth/generated-ops/r4";
-import { evaluate } from "@iguhealth/fhirpath";
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system/api/v1/fhir/r4",
