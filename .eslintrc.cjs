@@ -9,10 +9,12 @@ module.exports = {
   },
   ignorePatterns: [
     "dist",
+    "build",
     "node_modules",
     "examples",
     "scripts",
     "lib",
+    "storybook-static",
     "packages/server/src/resourceProviders/postgres/migrations",
   ],
 };
