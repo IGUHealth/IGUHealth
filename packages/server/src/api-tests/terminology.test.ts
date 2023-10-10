@@ -19,7 +19,7 @@ test("Hl7 Gender expansion", async () => {
       url: "http://hl7.org/fhir/ValueSet/gender-identity",
     }
   );
-  expect(valuesetExpanded.expansion.contains).toEqual([
+  expect(valuesetExpanded?.expansion?.contains).toEqual([
     {
       system: "http://hl7.org/fhir/administrative-gender",
       code: "male",
