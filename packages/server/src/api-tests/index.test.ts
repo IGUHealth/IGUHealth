@@ -191,7 +191,7 @@ const observation: Observation = {
 const SEED_URL = "http://seed-id";
 
 async function createTestData(seed: number) {
-  let resources: Array<Resource> = [];
+  const resources: Array<Resource> = [];
   const ext = [
     {
       url: SEED_URL,

@@ -1,16 +1,11 @@
 import { expect, test } from "@jest/globals";
 
 import {
-  Observation,
   Patient,
   Practitioner,
-  Questionnaire,
-  QuestionnaireResponse,
   Resource,
-  RiskAssessment,
 } from "@iguhealth/fhir-types/r4/types";
 import HTTPClient from "@iguhealth/client/lib/http";
-import { evaluate } from "@iguhealth/fhirpath";
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system/api/v1/fhir/r4",
