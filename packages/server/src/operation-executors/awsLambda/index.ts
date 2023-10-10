@@ -15,7 +15,7 @@ import {
 } from "@iguhealth/client/middleware";
 import { FHIRRequest } from "@iguhealth/client/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
-import { ResourceType, id } from "@iguhealth/fhir-types/r4/types";
+import { ResourceType, id, Parameters } from "@iguhealth/fhir-types/r4/types";
 
 import { FHIRServerCTX } from "../../fhirServer.js";
 import { InvokeRequest } from "../types.js";
@@ -226,7 +226,10 @@ function createExecutor(
               ctx,
               request.operation
             );
-            const op = new Operation(operationDefinition);
+            const op = new Operation<Record<string, any>, Record<string, any>>(
+              operationDefinition
+            );
+
             const opCTX = getOpCTX(ctx, request);
 
             const lambda = await confirmLambdaExistsAndReady(
@@ -272,7 +275,10 @@ function createExecutor(
 
             await op.validate(opCTX, "out", output);
 
-            const outputParameters = op.parseToParameters("out", output);
+            const outputParameters = op.parseToParameters(
+              "out",
+              output
+            ) as any as Parameters;
 
             switch (request.level) {
               case "instance": {

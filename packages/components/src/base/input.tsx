@@ -11,7 +11,7 @@ import {
   Label,
 } from "./containers";
 
-interface InputProps
+export interface InputProps
   extends DetailedHTMLProps<
     InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement

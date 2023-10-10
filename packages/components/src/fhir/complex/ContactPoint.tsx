@@ -1,5 +1,5 @@
 import React from "react";
-import { ContactPoint } from "@iguhealth/fhir-types/r4/types";
+import { ContactPoint, ValueSet } from "@iguhealth/fhir-types/r4/types";
 
 import { InputContainer } from "../../base/containers";
 import { Code } from "../primitives/code";
@@ -11,6 +11,8 @@ export interface ContactPointEditableProps {
    * The value of the input.
    */
   value: ContactPoint | undefined;
+
+  expand?: (value: string) => Promise<ValueSet>;
   /**
    * Issues
    */
@@ -27,6 +29,7 @@ export interface ContactPointEditableProps {
 
 export const ContactPointEditable = ({
   value,
+  expand,
   onChange,
   issue,
   label,
@@ -36,6 +39,7 @@ export const ContactPointEditable = ({
       <div className="flex space-x-1">
         <Code
           label="use"
+          expand={expand}
           open={true}
           system="http://hl7.org/fhir/ValueSet/contact-point-use"
           value={value?.use}
@@ -45,6 +49,7 @@ export const ContactPointEditable = ({
         />
         <Code
           label="system"
+          expand={expand}
           open={true}
           system="http://hl7.org/fhir/ValueSet/contact-point-system"
           value={value?.system}

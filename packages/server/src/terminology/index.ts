@@ -1,5 +1,6 @@
 import {
   ValueSet,
+  ValueSetComposeInclude,
   ValueSetExpansionContains,
 } from "@iguhealth/fhir-types/r4/types";
 import {
@@ -17,30 +18,96 @@ import ValidateInput = ValueSetValidateCode.Input;
 import ValidateOutput = ValueSetValidateCode.Output;
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-// export class TerminologyProviderAWSLambda implements TerminologyProvider {
-//     constructor(){
+function inlineCodesetToValuesetExpansion(
+  include: ValueSetComposeInclude
+): ValueSetExpansionContains[] | undefined {
+  return include.concept?.map((concept) => {
+    return {
+      system: include.system,
+      code: concept.code,
+      display: concept.display,
+      designation: concept.designation,
+    };
+  });
+}
 
-//     }
-// }
+function areCodesInline(include: ValueSetComposeInclude) {
+  return include.concept !== undefined;
+}
 
-// (defn- flatten-codes [expansion-entry]
-//     (let [expansion-entry-contains (mapcat flatten-codes (get expansion-entry :contains []))]
-//       (conj  expansion-entry-contains (:code expansion-entry))))
+async function getValuesetExpansionContains(
+  ctx: FHIRServerCTX,
+  valueSet: ValueSet
+): Promise<ValueSetExpansionContains[]> {
+  let expansion: ValueSetExpansionContains[] = [];
+  for (const include of valueSet.compose?.include || []) {
+    if (areCodesInline(include)) {
+      const inlineExpansion = inlineCodesetToValuesetExpansion(include);
+      expansion = expansion.concat(inlineExpansion ? inlineExpansion : []);
+    }
+    // [TODO] Check for infinite recursion here.
+    // Users could exploit creation of valueset that refers to itself.
+    else if (include.valueSet) {
+      for (const includeValueSet of include.valueSet) {
+        const expandedValueSet = await ctx.client.invoke_type(
+          ValueSetExpand.Op,
+          ctx,
+          "ValueSet",
+          { url: includeValueSet }
+        );
+        expansion = expansion.concat(
+          expandedValueSet?.expansion?.contains
+            ? expandedValueSet?.expansion?.contains
+            : []
+        );
+      }
+    } else if (include.system) {
+      const codeSystemSearch = await ctx.client.search_type(ctx, "CodeSystem", [
+        { name: "url", value: [include.system] },
+      ]);
+      if (codeSystemSearch.resources.length > 1) {
+        throw new OperationError(
+          outcomeError(
+            "invalid",
+            `CodeSystem '${include.system}' returned duplicate results so cannot be used to expand valueset '${valueSet.id}'`
+          )
+        );
+      }
+      if (codeSystemSearch.resources.length < 1) {
+        throw new OperationError(
+          outcomeError(
+            "not-found",
+            `Could not find codesystem ${include.system}`
+          )
+        );
+      }
+      const codesystem = codeSystemSearch.resources[0];
+      const codeSystemExapnsion: ValueSetExpansionContains[] | undefined =
+        codesystem.concept?.map((concept) => {
+          return {
+            system: include.system,
+            code: concept.code,
+            version: codesystem.version,
+            display: concept.display,
+            designation: concept.designation,
+            extension: concept.extension,
+          };
+        });
+      expansion = expansion.concat(
+        codeSystemExapnsion ? codeSystemExapnsion : []
+      );
+    } else {
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `Could not expand valueset ${valueSet.id}`
+        )
+      );
+    }
+  }
 
-//   (defn valueset->set-codes
-//     "Given a terminology provider fully expand valueset-uri and flatten codes into a set."
-//     [expanded-vs]
-//     (into
-//      #{}
-//      (comp
-//       (mapcat flatten-codes))
-//      (get-in expanded-vs [:expansion :contains] [])))
-
-//   (defn expand-to-set
-//     "Given a terminology provider fully expand valueset-uri and flatten codes into a set."
-//     [terminology-provider valueset-url]
-//     (let [expanded-vs (expand terminology-provider {:url valueset-url})]
-//       (valueset->set-codes expanded-vs)))
+  return expansion;
+}
 
 function checkforCode(
   contains: ValueSetExpansionContains[] | undefined,
@@ -93,9 +160,15 @@ export class TerminologyProviderMemory implements TerminologyProvider {
     if (input.valueSet) {
       valueset = input.valueSet;
     } else if (input.url) {
-      const valuesetSearch = await ctx.client.search_type(ctx, "ValueSet", [
-        { name: "url", value: [input.url] },
-      ]);
+      const [url, version] = input.url.split("|");
+      const valuesetSearch = await ctx.client.search_type(
+        ctx,
+        "ValueSet",
+        [{ name: "url", value: [url] }].concat(
+          version ? [{ name: "version", value: [version] }] : []
+        )
+      );
+
       if (valuesetSearch.resources.length === 1) {
         valueset = valuesetSearch.resources[0];
       }
@@ -107,6 +180,13 @@ export class TerminologyProviderMemory implements TerminologyProvider {
       );
     }
 
+    if (!valueset.expansion) {
+      const contains = await getValuesetExpansionContains(ctx, valueset);
+      valueset = {
+        ...valueset,
+        expansion: { timestamp: new Date().toISOString(), contains },
+      };
+    }
     return valueset;
   }
 }

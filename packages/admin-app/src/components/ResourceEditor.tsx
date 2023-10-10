@@ -1,10 +1,11 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useRecoilCallback } from "recoil";
 import { basicSetup } from "codemirror";
 import { json } from "@codemirror/lang-json";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
+import { ValueSetExpand } from "@iguhealth/generated-ops/r4";
 import {
   StructureDefinition,
   BundleEntry,
@@ -15,6 +16,7 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 import { Base, FHIR } from "@iguhealth/components";
 
+import { getValueSetExpansion } from "../data/terminology";
 import { getClient } from "../data/client";
 
 const extensions = [basicSetup, json()];
@@ -137,6 +139,17 @@ export default function ResourceEditorComponent({
     [structureDefinition, onChange]
   );
 
+  const expansion = useRecoilCallback(
+    ({ snapshot }) =>
+      async (url: string) => {
+        const valueSetExpansion = await snapshot.getPromise(
+          getValueSetExpansion(url)
+        );
+        return valueSetExpansion;
+      },
+    []
+  );
+
   return (
     <Base.Tabs
       tabs={[
@@ -150,6 +163,7 @@ export default function ResourceEditorComponent({
                 value={resource}
                 structureDefinition={structureDefinition}
                 setValue={setValue}
+                expand={expansion}
               />
             ),
           },

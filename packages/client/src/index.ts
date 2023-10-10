@@ -6,6 +6,7 @@ import {
   Resource,
   ResourceType,
   id,
+  Parameters,
   CapabilityStatement,
 } from "@iguhealth/fhir-types/r4/types";
 import type { OPMetadata, IOperation } from "@iguhealth/operation-execution";
@@ -45,7 +46,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       type: "invoke-request",
       level: "system",
       operation: op.code,
-      body: op.parseToParameters("in", input),
+      body: op.parseToParameters("in", input) as Parameters,
     });
     if (response.type !== "invoke-response")
       throw new Error("Unexpected response type");
@@ -65,7 +66,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       level: "type",
       operation: op.code,
       resourceType,
-      body: op.parseToParameters("in", input),
+      body: op.parseToParameters("in", input) as Parameters,
     });
     if (response.type !== "invoke-response")
       throw new Error("Unexpected response type");
@@ -88,7 +89,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       operation: op.code,
       resourceType,
       id,
-      body: op.parseToParameters("in", input),
+      body: op.parseToParameters("in", input) as Parameters,
     });
     if (response.type !== "invoke-response")
       throw new Error("Unexpected response type");
@@ -343,7 +344,7 @@ export class SynchronousClient<State, CTX> implements FHIRClientSync<CTX> {
       type: "invoke-request",
       level: "system",
       operation: op.code,
-      body: op.parseToParameters("in", input),
+      body: op.parseToParameters("in", input) as Parameters,
     });
     if (response.type !== "invoke-response")
       throw new Error("Unexpected response type");
@@ -360,7 +361,7 @@ export class SynchronousClient<State, CTX> implements FHIRClientSync<CTX> {
       level: "type",
       operation: op.code,
       resourceType,
-      body: op.parseToParameters("in", input),
+      body: op.parseToParameters("in", input) as Parameters,
     });
     if (response.type !== "invoke-response")
       throw new Error("Unexpected response type");
@@ -383,7 +384,7 @@ export class SynchronousClient<State, CTX> implements FHIRClientSync<CTX> {
       operation: op.code,
       resourceType,
       id,
-      body: op.parseToParameters("in", input),
+      body: op.parseToParameters("in", input) as Parameters,
     });
     if (response.type !== "invoke-response")
       throw new Error("Unexpected response type");
