@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import classNames from "classnames";
 
 export interface SideBarItemProps
@@ -84,7 +84,7 @@ export const SidebarLayout = ({
   children: React.ReactNode;
   sidebar: React.ReactNode;
 }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  // const [sidebarOpen, setSidebarOpen] = useState(true);
   return (
     <>
       {/* <button

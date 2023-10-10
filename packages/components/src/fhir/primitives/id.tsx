@@ -21,7 +21,7 @@ export interface IdProps {
   label?: string;
 }
 
-const idRegex = /^[A-Za-z0-9\-\.]{1,64}$/;
+const idRegex = /^[A-Za-z0-9\-.]{1,64}$/;
 
 export const Id = ({ onChange, value, issue, label }: IdProps) => {
   const [issues, setIssues] = React.useState<string[]>([]);

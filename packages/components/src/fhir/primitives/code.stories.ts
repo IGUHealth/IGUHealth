@@ -1,14 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import HTTPClient from "@iguhealth/client/lib/http";
-import { ValueSet } from "@iguhealth/fhir-types/r4/types";
-import { ValueSetExpand } from "@iguhealth/generated-ops/r4";
 
 import { Code } from "./code";
-
-const client = HTTPClient({
-  url: "http://hapi.fhir.org/baseR4",
-  getAccessToken: () => Promise.resolve(""),
-});
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
@@ -31,7 +23,7 @@ export const Primary: Story = {
     value: "test",
     onChange: (value: string | undefined) => console.log(value),
     system: "http://hl7.org/fhir/ValueSet/gender-identity",
-    expand: async (_url) => {
+    expand: async () => {
       return {
         resourceType: "ValueSet",
         id: "gender-identity",

@@ -27,7 +27,7 @@ export interface Base64BinaryProps {
   label?: string;
 }
 
-const base64Regex = /^(\s*([0-9a-zA-Z\+\=]){4}\s*)+$/;
+const base64Regex = /^(\s*([0-9a-zA-Z+=]){4}\s*)+$/;
 
 export const Base64Binary = ({
   value,
@@ -54,7 +54,7 @@ export const Base64Binary = ({
           onChange={(e) => {
             const file = e.target?.files?.[0];
             if (!file) return;
-            const string = convertFileToBase64(file).then((data) => {
+            convertFileToBase64(file).then((data) => {
               onChange(data);
             });
           }}

@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
-export default function useTraceUpdate(props: any) {
+export default function useTraceUpdate(props: Record<string, unknown>) {
   const prev = useRef(props);
   useEffect(() => {
     const changedProps = Object.entries(props).reduce((ps, [k, v]) => {

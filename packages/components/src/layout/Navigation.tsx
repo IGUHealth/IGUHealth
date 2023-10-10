@@ -36,7 +36,7 @@ interface ProfileDropdownProps {
 export const ProfileDropdown = ({
   user,
   navigation,
-  onNavigation = (item) => {},
+  onNavigation = () => {},
 }: ProfileDropdownProps) => {
   return (
     <Menu as="div" className="relative ml-3">
@@ -89,7 +89,7 @@ export const ProfileDropdown = ({
 };
 
 export const Navigation = ({
-  onNavigation = (item) => {},
+  onNavigation = () => {},
   navigation,
   active,
   userNavigation,

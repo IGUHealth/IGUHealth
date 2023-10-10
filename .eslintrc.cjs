@@ -5,6 +5,7 @@ module.exports = {
   plugins: ["@typescript-eslint"],
   root: true,
   rules: {
+    "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-unused-vars": "warn",
   },
   ignorePatterns: [
@@ -15,6 +16,7 @@ module.exports = {
     "scripts",
     "lib",
     "storybook-static",
+    "tailwind.config.js",
     "packages/server/src/resourceProviders/postgres/migrations",
   ],
 };
