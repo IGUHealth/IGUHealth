@@ -23,7 +23,6 @@ function createExecutor(): MiddlewareAsync<{}, FHIRServerCTX> {
           switch (request.operation) {
             case "expand":
               const expanded = await ValueSetExpandInvoke(ctx, request);
-              console.log(expanded);
               const response: InvokeResponse = {
                 type: "invoke-response",
                 level: "system",
