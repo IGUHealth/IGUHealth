@@ -261,6 +261,11 @@ export type InvokeSystemResponse = SystemInteraction & {
   body: Parameters;
 };
 
+export type InvokeResponse =
+  | InvokeInstanceResponse
+  | InvokeTypeResponse
+  | InvokeSystemResponse;
+
 export type FHIRResponse =
   | InvokeInstanceResponse
   | InvokeTypeResponse

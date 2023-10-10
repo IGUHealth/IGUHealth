@@ -404,7 +404,18 @@ export class Operation<I, O> implements IOperation<I, O> {
     const output = parseParameters(this._operationDefinition, use, input);
     return output as InputOutput<I, O>[Use];
   }
+
   parseToParameters(use: "in" | "out", input: I | O): Parameters {
+    if (
+      use === "out" &&
+      !isParameters(input) &&
+      isStrictlyReturn(this.operationDefinition)
+    ) {
+      return toParametersResource(this._operationDefinition, use, {
+        return: input,
+      });
+    }
+
     return toParametersResource(
       this._operationDefinition,
       use,
