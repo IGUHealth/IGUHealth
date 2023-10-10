@@ -5,7 +5,7 @@ import {
   Extension,
   StateEffect,
 } from "@codemirror/state";
-import { EditorView, placeholder, ViewUpdate } from "@codemirror/view";
+import { EditorView, ViewUpdate } from "@codemirror/view";
 
 const SyncAnnotation = Annotation.define();
 
@@ -76,7 +76,7 @@ function createExtensions({
   theme?: Parameters<typeof EditorView.theme>[0];
   onChange: CodeMirrorProps["onChange"];
 }) {
-  let extensionsToUse: Extension[] = [...(extensions || [])];
+  const extensionsToUse: Extension[] = [...(extensions || [])];
   if (theme) extensionsToUse?.push(EditorView.theme(theme));
   if (onChange) extensionsToUse?.push(createUpdateListener(onChange));
   if (readOnly) extensionsToUse?.push(EditorView.editable.of(false));
@@ -93,7 +93,7 @@ export const CodeMirror = ({
   onChange,
 }: CodeMirrorProps) => {
   const [view, setView] = useState<EditorView>();
-  const [state, setState] = useState<EditorState>();
+  const [, setState] = useState<EditorState>();
   const root = useRef<HTMLDivElement | null>(null);
 
   // Initial view set up.

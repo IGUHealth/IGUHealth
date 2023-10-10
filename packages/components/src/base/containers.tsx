@@ -43,7 +43,6 @@ export interface ContainerProps {
   issues?: string[];
   label?: string;
   inlineLabel?: boolean;
-  disabled?: boolean;
   hideBorder?: boolean;
   labelProps?: HTMLProps<HTMLLabelElement>;
 }
@@ -54,7 +53,6 @@ export const InputContainer = ({
   label,
   inlineLabel = false,
   hideBorder = false,
-  disabled = false,
   labelProps,
 }: ContainerProps) => (
   <div

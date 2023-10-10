@@ -24,7 +24,7 @@ export interface UUIDProps {
 }
 
 const uuidRegex =
-  /^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$/;
+  /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
 export const UUID = ({ onChange, value, issue, label }: UUIDProps) => {
   const [issues, setIssues] = useState<string[]>([]);

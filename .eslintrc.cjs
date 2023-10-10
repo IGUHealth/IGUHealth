@@ -5,14 +5,20 @@ module.exports = {
   plugins: ["@typescript-eslint"],
   root: true,
   rules: {
+    "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-unused-vars": "warn",
   },
   ignorePatterns: [
     "dist",
+    "build",
     "node_modules",
     "examples",
     "scripts",
     "lib",
+    "storybook-static",
+    "tailwind.config.js",
+    "rollup.config.js",
+    "postcss.config.js",
     "packages/server/src/resourceProviders/postgres/migrations",
   ],
 };

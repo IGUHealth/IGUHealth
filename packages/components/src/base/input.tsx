@@ -4,12 +4,7 @@ import React, {
   InputHTMLAttributes,
   HTMLProps,
 } from "react";
-import {
-  inputClassNames,
-  ContainerProps,
-  DisplayIssues,
-  Label,
-} from "./containers";
+import { inputClassNames, DisplayIssues, Label } from "./containers";
 
 export interface InputProps
   extends DetailedHTMLProps<

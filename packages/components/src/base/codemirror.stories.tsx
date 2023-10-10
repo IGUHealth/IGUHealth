@@ -41,7 +41,7 @@ type Story = StoryObj<typeof meta>;
 export const BasicSetup: Story = {
   args: {
     value: "primary",
-    onChange: (value: string, update) => console.log(value),
+    onChange: (value: string) => console.log(value),
     autoFocus: true,
     theme: {
       "&": {
@@ -55,7 +55,7 @@ export const BasicSetup: Story = {
 export const ReadOnly: Story = {
   args: {
     value: "primary",
-    onChange: (value: string, update) => console.log(value),
+    onChange: (value: string) => console.log(value),
     readOnly: true,
     theme: {
       "&": {
