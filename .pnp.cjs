@@ -17339,6 +17339,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@iguhealth/client", "workspace:packages/client"],\
             ["@iguhealth/components", "virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#workspace:packages/components"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
+            ["@iguhealth/generated-ops", "workspace:packages/generated-ops"],\
             ["@iguhealth/operation-execution", "workspace:packages/operation-execution"],\
             ["@testing-library/jest-dom", "virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#npm:6.1.3"],\
             ["@testing-library/react", "virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#npm:13.4.0"],\

@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useMemo } from "react";
-import { applyPatch, Operation } from "fast-json-patch";
+import React, { useMemo } from "react";
+import { applyPatch } from "fast-json-patch";
 import { produce } from "immer";
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
-import { resourceTypes, complexTypes } from "@iguhealth/fhir-types/r4/sets";
+import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
+  ValueSet,
   StructureDefinition,
   Resource,
   ElementDefinition,
@@ -79,6 +80,7 @@ interface MetaProps {
   pointer: string;
   showLabel?: boolean;
   showInvalid?: boolean;
+  expand?: (url: string) => Promise<ValueSet>;
   onChange: (patches: Mutation) => void;
 }
 
@@ -99,6 +101,7 @@ const MetaValueArray = React.memo((props: MetaProps) => {
     value = [],
     pointer,
     onChange,
+    expand,
     showInvalid = false,
   } = props;
   const element = getElementDefinition(sd, elementIndex);
@@ -108,8 +111,10 @@ const MetaValueArray = React.memo((props: MetaProps) => {
   if (!Array.isArray(value))
     throw new Error("Value must be an array or undefined");
 
+  const children = getChildrenElementIndices({ sd, elementIndex });
   const Comp = element.type && EditTypeToComponent[element.type[0].code];
-  if (!Comp) {
+
+  if (!Comp && children.length === 0) {
     return (
       <DisplayInvalid
         element={element}
@@ -124,6 +129,7 @@ const MetaValueArray = React.memo((props: MetaProps) => {
       {(value.length === 0 ? [undefined] : value).map((v, i) => (
         <div className="mt-1 relative" key={`${pointer}/${i}`}>
           <MetaValueSingular
+            expand={expand}
             sd={sd}
             elementIndex={elementIndex}
             pointer={`${pointer}/${i}`}
@@ -223,6 +229,7 @@ const MetaValueSingular = React.memo((props: MetaProps) => {
     pointer,
     showLabel = true,
     showInvalid = false,
+    expand,
     onChange,
   } = props;
 
@@ -252,6 +259,7 @@ const MetaValueSingular = React.memo((props: MetaProps) => {
     return (
       <div className="">
         <Comp
+          expand={expand}
           value={value}
           label={showLabel && getFieldName(element.path)}
           open={true}
@@ -284,6 +292,7 @@ const MetaValueSingular = React.memo((props: MetaProps) => {
           const childProps = getValueAndPointer(childElement, pointer, value);
           return childElement.max === "1" ? (
             <MetaValueSingular
+              expand={expand}
               key={childProps.pointer}
               sd={sd}
               elementIndex={childIndex}
@@ -293,6 +302,7 @@ const MetaValueSingular = React.memo((props: MetaProps) => {
             />
           ) : (
             <MetaValueArray
+              expand={expand}
               key={childProps.pointer}
               sd={sd}
               elementIndex={childIndex}
@@ -313,11 +323,13 @@ export interface GenerativeFormProps {
   structureDefinition: StructureDefinition;
   value: Resource | undefined;
   setValue?: (s: Setter) => void;
+  expand?: (url: string) => Promise<ValueSet>;
 }
 
 export const GenerativeForm = ({
   structureDefinition,
   value,
+  expand,
   setValue = (_r) => {},
 }: GenerativeFormProps) => {
   const pointer = "/";
@@ -337,6 +349,7 @@ export const GenerativeForm = ({
 
   return (
     <MetaValueSingular
+      expand={expand}
       sd={structureDefinition}
       elementIndex={0}
       value={value}

@@ -5,6 +5,7 @@ import { basicSetup } from "codemirror";
 import { json } from "@codemirror/lang-json";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
+import { ValueSetExpand } from "@iguhealth/generated-ops/r4";
 import {
   StructureDefinition,
   BundleEntry,
@@ -150,6 +151,9 @@ export default function ResourceEditorComponent({
                 value={resource}
                 structureDefinition={structureDefinition}
                 setValue={setValue}
+                expand={(url) => {
+                  return client.invoke_system(ValueSetExpand.Op, {}, { url });
+                }}
               />
             ),
           },
