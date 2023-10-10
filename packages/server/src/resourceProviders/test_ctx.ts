@@ -17,12 +17,12 @@ class TestLock implements Lock<TestLock> {
 }
 
 class TestCache<CTX extends { workspace: string }> implements IOCache<CTX> {
-  _date: Record<string, any>;
+  _date: Record<string, unknown>;
   constructor() {
     this._date = {};
   }
   get(ctx: CTX, key: string): Promise<string | number | null> {
-    return Promise.resolve(this._date[key] || null);
+    return Promise.resolve((this._date[key] as string | number) || null);
   }
   set(ctx: CTX, key: string, value: string | number): Promise<void> {
     this._date[key] = value;

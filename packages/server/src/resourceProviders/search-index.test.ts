@@ -11,8 +11,8 @@ import MemoryDatabase from "./memory/sync.js";
 
 function createMemoryDatabase(
   resourceTypes: ResourceType[]
-): FHIRClientSync<any> {
-  const database = MemoryDatabase<any>({});
+): FHIRClientSync<unknown> {
+  const database = MemoryDatabase<unknown>({});
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
       loadArtifacts(resourceType, path.join(__dirname, "../"), true)

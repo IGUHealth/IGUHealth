@@ -209,7 +209,7 @@ function createRouterMiddleware<
                         : "200",
                       location: (response.headers?.Location ||
                         response.headers?.["Content-Location"] ||
-                        entry.request?.url) as any as string | undefined,
+                        entry.request?.url) as unknown as string | undefined,
                     },
                     resource: response.body
                       ? (response.body as Resource)
@@ -261,7 +261,7 @@ function createRouterMiddleware<
             throw new Error(
               `No source found for mutation operation '${
                 request.type
-              } and resource type '${(request as any).resourceType}'`
+              } and resource type '${(request as Resource).resourceType}'`
             );
           const source = sources[0];
           const response = await source.source.request(args.ctx, request);
