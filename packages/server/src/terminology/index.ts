@@ -85,7 +85,7 @@ async function getValuesetExpansionContains(
       const codeSystemExapnsion: ValueSetExpansionContains[] | undefined =
         codesystem.concept?.map((concept) => {
           return {
-            system: include.system,
+            system: codesystem.url,
             code: concept.code,
             version: codesystem.version,
             display: concept.display,
