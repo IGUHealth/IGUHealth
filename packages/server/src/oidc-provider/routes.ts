@@ -75,7 +75,7 @@ export default (provider: Provider) => {
           session: session ? debug(session) : undefined,
           dbg: {
             params: debug(params),
-            prompt: debug(prompt),
+            prompt: debug(prompt as unknown as Record<string, unknown>),
           },
         });
       }
@@ -89,7 +89,7 @@ export default (provider: Provider) => {
           session: session ? debug(session) : undefined,
           dbg: {
             params: debug(params),
-            prompt: debug(prompt),
+            prompt: debug(prompt as unknown as Record<string, unknown>),
           },
         });
       }
@@ -110,7 +110,10 @@ export default (provider: Provider) => {
     } = await provider.interactionDetails(ctx.req, ctx.res);
     assert.equal(name, "login");
 
-    const account = await Account.findByLogin(ctx.request.body.login);
+    const account = await Account.findByLogin(
+      (ctx.request as unknown as Record<string, Record<string, string>>).body
+        .login
+    );
 
     const result = {
       login: {
@@ -131,7 +134,10 @@ export default (provider: Provider) => {
 
     const path = `/interaction/${ctx.params.uid}/federated`;
 
-    switch (ctx.request.body.upstream) {
+    switch (
+      (ctx.request as unknown as Record<string, Record<string, string>>).body
+        .upstream
+    ) {
       case "google": {
         const callbackParams = ctx.google.callbackParams(ctx.req);
 
