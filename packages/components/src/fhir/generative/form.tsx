@@ -16,7 +16,9 @@ import * as Primitives from "../primitives";
 
 import generateJSONPatches, { Mutation } from "./generatePatches";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const EditTypeToComponent: Record<string, React.FC<any>> = {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   "http://hl7.org/fhirpath/System.String": (props: any) => (
     <Primitives.String disabled={true} {...props} />
   ),
@@ -33,8 +35,6 @@ const EditTypeToComponent: Record<string, React.FC<any>> = {
   ContactPoint: ComplexTypes.ContactPointEditable,
   HumanName: ComplexTypes.HumanNameEditable,
 };
-
-const OnChange = React.createContext<(r: Resource) => void>((_r) => {});
 
 /*
  ** Given a position return all children indices.
@@ -141,7 +141,7 @@ const MetaValueArray = React.memo((props: MetaProps) => {
           {value.length > 0 && (
             <div
               className="absolute top-1 right-1 text-slate-400 cursor-pointer hover:text-slate-500 "
-              onClick={(e) => {
+              onClick={() => {
                 onChange({
                   path: `${pointer}/${i}`,
                   op: "remove",
@@ -157,7 +157,7 @@ const MetaValueArray = React.memo((props: MetaProps) => {
       <div className="ml-1 mt-1">
         <span
           className="flex items-center  text-slate-400 cursor-pointer hover:text-slate-500"
-          onClick={(_e) => {
+          onClick={() => {
             onChange({
               path: `${pointer}/${value.length}`,
               op: "add",
@@ -330,9 +330,8 @@ export const GenerativeForm = ({
   structureDefinition,
   value,
   expand,
-  setValue = (_r) => {},
+  setValue = () => {},
 }: GenerativeFormProps) => {
-  const pointer = "/";
   const onChange = useMemo(() => {
     return (mutation: Mutation) => {
       setValue((resource) => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Tab } from "@headlessui/react";
 import classNames from "classnames";
 
@@ -15,7 +15,7 @@ export interface TabsProps {
   rightSide?: React.ReactNode;
 }
 
-export const Tabs = ({ tabs, selectedTab, onTab, rightSide }: TabsProps) => {
+export const Tabs = ({ tabs, rightSide }: TabsProps) => {
   return (
     <div className="flex flex-1 flex-col px-2 sm:px-0 w-full h-full">
       <Tab.Group>

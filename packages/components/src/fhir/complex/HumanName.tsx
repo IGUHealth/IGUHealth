@@ -36,7 +36,7 @@ export const HumanNameEditable = ({
           label="First"
           value={value?.given?.[0] || ""}
           onChange={(firstName) => {
-            let given = value?.given ? [...value.given] : [];
+            const given = value?.given ? [...value.given] : [];
             given[0] = firstName;
             onChange && onChange({ ...value, given });
           }}

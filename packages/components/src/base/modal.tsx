@@ -2,10 +2,6 @@ import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 
-type ContentComponent = React.ComponentType<{
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}>;
-
 export function Modal({
   modalTitle,
   ModalContent,
@@ -19,14 +15,10 @@ export function Modal({
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
   ) => React.ReactNode;
 }) {
-  let [isOpen, setOpen] = useState(false);
+  const [isOpen, setOpen] = useState(false);
 
   function closeModal() {
     setOpen(false);
-  }
-
-  function openModal() {
-    setOpen(true);
   }
 
   return (

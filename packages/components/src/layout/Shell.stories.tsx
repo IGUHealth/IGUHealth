@@ -1,7 +1,9 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Shell, Test } from "./Shell";
+import { Shell } from "./Shell";
+
+const Test = () => <span>Test</span>;
 
 const meta = {
   title: "Layout/Shell",

@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
-import type { Resource } from "@iguhealth/fhir-types/r4/types";
+import React, { useEffect, useMemo } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { GenerativeForm, Setter } from "./form";

@@ -17,6 +17,8 @@ module.exports = {
     "lib",
     "storybook-static",
     "tailwind.config.js",
+    "rollup.config.js",
+    "postcss.config.js",
     "packages/server/src/resourceProviders/postgres/migrations",
   ],
 };

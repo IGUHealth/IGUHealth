@@ -4,7 +4,7 @@ import { Operation } from "fast-json-patch";
 export interface Mutation {
   path: string;
   op: "add" | "remove" | "replace";
-  value?: any;
+  value?: unknown;
 }
 
 function isObject(value: unknown): value is Record<string, unknown> {
@@ -64,7 +64,7 @@ function deriveNextValuePlaceHolder(
 function createPatchesNonExistantFields(resource: Resource, path: string) {
   const fields = pathFields(path);
   let patches: Operation[] = [];
-  let curValue: any = resource;
+  let curValue = resource as unknown;
   let curPointer = "";
   for (let i = 0; i < fields.length; i++) {
     curPointer = descend(curPointer, fields[i]);
@@ -83,8 +83,6 @@ export default function buildPatches(
   // Builds patches with a given mutation to include non existant values up to the point in the path
   // where the mutation occurs
 
-  const fields = pathFields(op.path);
-  let currentPath = "";
   switch (op.op) {
     case "remove": {
       if (valueExistsAtJsonPointer(value, op.path)) {
@@ -111,13 +109,13 @@ export default function buildPatches(
       }
       return [...patches, { op: "add", path: op.path, value: op.value }];
     }
-    case "replace":
+    case "replace": {
       if (op.value === undefined || op.value === null) {
         return buildPatches(value, { op: "remove", path: op.path });
       }
       const patches = createPatchesNonExistantFields(value, op.path);
       return [...patches, { op: "replace", path: op.path, value: op.value }];
-
+    }
     default:
       throw new Error(`Invalid operation '${op.op}'`);
   }

@@ -15,12 +15,12 @@ export interface Columns {
 export interface TableProps {
   isLoading?: boolean;
   columns: Columns[];
-  data: any[];
-  onRowClick?: (row: any) => void;
+  data: unknown[];
+  onRowClick?: (row: unknown) => void;
 }
 
 function extract(
-  data: any,
+  data: unknown,
   selector: string,
   selectorType: SelectorType
 ): string {
@@ -43,8 +43,10 @@ export function Table({
     <table className="table-fixed min-w-full text-left text-xs font-light w-full">
       <thead className="border-b font-medium">
         <tr>
-          {columns.map((column) => (
-            <th className="px-2 py-2">{column.name}</th>
+          {columns.map((column, i) => (
+            <th key={i} className="px-2 py-2">
+              {column.name}
+            </th>
           ))}
         </tr>
       </thead>
@@ -66,7 +68,7 @@ export function Table({
               <tr
                 key={index}
                 className="border-b cursor-pointer hover:bg-slate-100"
-                onClick={(e) => onRowClick(row)}
+                onClick={() => onRowClick(row)}
               >
                 {columns.map((column) => (
                   <td

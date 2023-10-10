@@ -17,14 +17,14 @@ const TestPromise = ({
         children="Click Me"
         onClick={() => {
           promise(
-            new Promise((resolve, reject) => {
+            new Promise((resolve) => {
               setTimeout(() => {
                 resolve(true);
               }, 1000);
             }),
             {
               loading: loading,
-              success: (data) => success,
+              success: () => success,
               error: (err) => `This just happened: ${err.toString()}`,
             }
           );
