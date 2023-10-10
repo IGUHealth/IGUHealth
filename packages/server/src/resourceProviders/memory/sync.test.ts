@@ -115,7 +115,7 @@ test("Creation and search", async () => {
 
 test("artifactParameters", () => {
   const memDb = CreateMemoryDatabaseSync({});
-  for (let param of artifactParameters) {
+  for (const param of artifactParameters) {
     //console.log(param.base[0], param.id);
     memDb.create({}, param);
   }

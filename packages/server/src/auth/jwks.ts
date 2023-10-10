@@ -27,7 +27,9 @@ export async function loadJWKS(directory: string, fileName: string) {
   let jwksFile;
   try {
     jwksFile = readFileSync(location, "utf8");
-  } catch (e) {}
+  } catch (e) {
+    console.error(e);
+  }
 
   if (!jwksFile) return createJWKSFile(directory, fileName);
 

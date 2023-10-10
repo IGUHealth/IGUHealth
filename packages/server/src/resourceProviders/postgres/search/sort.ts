@@ -33,7 +33,7 @@ export async function deriveSortQuery(
   sortParameter: SearchParameterResult,
   query: string,
   index: number,
-  values: any[]
+  values: unknown[]
 ) {
   const sortInformation = await Promise.all(
     sortParameter.value.map(

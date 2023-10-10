@@ -132,7 +132,10 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
     database: process.env["FHIR_DATABASE_NAME"],
     port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
   });
+
   pool.connect();
+
+  /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
   while (true) {
     const activeWorkspaces = (
       await pool.query("SELECT id from workspaces where deleted = $1", [false])
@@ -208,6 +211,7 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
                       value: [latestVersionIdForSub],
                     },
                   ]);
+                  break;
                 }
                 case "type": {
                   historyPoll = await services.client.historyType(
@@ -220,6 +224,7 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
                       },
                     ]
                   );
+                  break;
                 }
               }
 

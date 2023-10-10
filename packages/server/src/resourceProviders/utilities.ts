@@ -128,7 +128,7 @@ async function associateChainedParameters(
 
   // All middle chains should be references.
   let last = [parsedParameter.searchParameter];
-  let chainedParameters: SearchParameter[][] = [];
+  const chainedParameters: SearchParameter[][] = [];
 
   for (const chain of parsedParameter.chains) {
     const targets = last
@@ -171,6 +171,7 @@ export function isSearchResultParameter(
 ) {
   // List pulled from https://hl7.org/fhir/r4/search.htm
   // These parameters do not have associated search parameter and instead require hard logic.
+  /* eslint-disable no-fallthrough */
   switch (parameter.name) {
     case "_count":
     // _offset not in param results so adding here.

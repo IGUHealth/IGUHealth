@@ -59,7 +59,7 @@ function createMemoryData(
 }
 
 async function createResourceRestCapabilities(
-  memdb: FHIRClientAsync<any>,
+  memdb: FHIRClientAsync<unknown>,
   sd: StructureDefinition
 ): Promise<CapabilityStatementRestResource> {
   const resourceParameters = await memdb.search_type({}, "SearchParameter", [
@@ -96,7 +96,7 @@ async function createResourceRestCapabilities(
 }
 
 async function serverCapabilities(
-  memdb: FHIRClientAsync<any>
+  memdb: FHIRClientAsync<unknown>
 ): Promise<CapabilityStatement> {
   const sds = (
     await memdb.search_type({}, "StructureDefinition", [

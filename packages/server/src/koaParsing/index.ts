@@ -1,6 +1,6 @@
 import Koa from "koa";
 
-import { Bundle, Resource } from "@iguhealth/fhir-types/r4/types";
+import { Bundle, Parameters, Resource } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import parseParameters from "@iguhealth/client/url";
@@ -52,8 +52,8 @@ function isBundle(v: unknown): v is Bundle {
   if (
     typeof v === "object" &&
     v !== null &&
-    v.hasOwnProperty("resourceType") &&
-    (v as any).resourceType === "Bundle"
+    Object.prototype.hasOwnProperty.call(v, "resourceType") &&
+    (v as Resource).resourceType === "Bundle"
   )
     return true;
   return false;
@@ -61,7 +61,7 @@ function isBundle(v: unknown): v is Bundle {
 
 export function KoaRequestToFHIRRequest(
   url: string,
-  request: Pick<Koa.Request, "method" | "body">
+  request: { method: string; body?: unknown }
 ): FHIRRequest {
   const method = request.method;
   const urlPieces = url.split("?")[0].split("/");
@@ -108,7 +108,7 @@ export function KoaRequestToFHIRRequest(
             type: "invoke-request",
             level: "system",
             operation: urlPieces[0].slice(1),
-            body: request.body,
+            body: request.body as Parameters,
           };
         } else if (method === "GET") {
           throw new OperationError(
@@ -128,7 +128,7 @@ export function KoaRequestToFHIRRequest(
             type: "create-request",
             level: "type",
             resourceType: urlPieces[0],
-            body: request.body,
+            body: request.body as Parameters,
           };
         } else if (urlPieces[0] === "_search") {
           throw new OperationError(
@@ -167,7 +167,7 @@ export function KoaRequestToFHIRRequest(
           level: "type",
           resourceType: urlPieces[0],
           operation: urlPieces[1].slice(1),
-          body: request.body,
+          body: request.body as Parameters,
         };
       } else if (method === "GET") {
         throw new OperationError(
@@ -219,7 +219,7 @@ export function KoaRequestToFHIRRequest(
           level: "instance",
           resourceType: urlPieces[0],
           id: urlPieces[1],
-          body: request.body,
+          body: request.body as object,
         };
       }
     } else if (method === "DELETE") {
@@ -241,7 +241,7 @@ export function KoaRequestToFHIRRequest(
           resourceType: urlPieces[0],
           id: urlPieces[1],
           operation: urlPieces[2].slice(1),
-          body: request.body,
+          body: request.body as Parameters,
         };
       } else if (method === "GET") {
         throw new OperationError(

@@ -26,7 +26,7 @@ import { deriveSortQuery } from "./sort.js";
 function generateCanonicalReferenceSearch(
   ctx: FHIRServerCTX,
   parameter: SearchParameterResource,
-  values: any[],
+  values: unknown[],
   index: number
 ) {
   const uriTablename = searchParameterToTableName("uri");
@@ -58,9 +58,9 @@ function chainSQL(
   parameter: SearchParameterResource & {
     chainedParameters: SearchParameter[][];
   },
-  values: any[],
+  values: unknown[],
   index: number
-): { index: number; values: any[]; query: string } {
+): { index: number; values: unknown[]; query: string } {
   const referenceParameters = [
     [parameter.searchParameter],
     ...parameter.chainedParameters.slice(0, -1),
@@ -72,7 +72,7 @@ function chainSQL(
         index,
         values,
         query,
-      }: { index: number; values: any[]; query: string[] },
+      }: { index: number; values: unknown[]; query: string[] },
       parameters
     ) => {
       const res = parameters.reduce(
@@ -81,7 +81,7 @@ function chainSQL(
             index,
             values,
             query,
-          }: { index: number; values: any[]; query: string[] },
+          }: { index: number; values: unknown[]; query: string[] },
           p
         ) => {
           const res = buildParameterSQL(
@@ -125,7 +125,7 @@ function chainSQL(
         index,
         values,
         query,
-      }: { index: number; values: any[]; query: string[] },
+      }: { index: number; values: unknown[]; query: string[] },
       p
     ) => {
       const res = buildParameterSQL(
@@ -169,9 +169,9 @@ function buildParameterSQL(
   ctx: FHIRServerCTX,
   parameter: SearchParameterResource,
   index: number,
-  values: any[],
+  values: unknown[],
   columns: string[] = ["DISTINCT(r_version_id)"]
-): { index: number; query: string; values: any[] } {
+): { index: number; query: string; values: unknown[] } {
   const searchParameter = parameter.searchParameter;
   const search_table = searchParameterToTableName(searchParameter.type);
 
@@ -470,7 +470,7 @@ function buildParameterSQL(
       );
   }
 
-  let query = `(${rootSelect} AND workspace=$${index++} ${
+  const query = `(${rootSelect} AND workspace=$${index++} ${
     parameterClause ? `AND ${parameterClause}` : ""
   })`;
 
@@ -486,11 +486,10 @@ function buildParametersSQL(
   ctx: FHIRServerCTX,
   parameters: SearchParameterResource[],
   index: number,
-  values: any[]
-): { index: number; queries: string[]; values: any[] } {
-  let queries = [];
-  let i = 0;
-  for (let parameter of parameters) {
+  values: unknown[]
+): { index: number; queries: string[]; values: unknown[] } {
+  const queries = [];
+  for (const parameter of parameters) {
     const res = buildParameterSQL(ctx, parameter, index, values);
     index = res.index;
     queries.push(res.query);
@@ -503,13 +502,13 @@ async function calculateTotal(
   client: pg.Pool,
   totalType: string | number,
   query: string,
-  values: any[]
+  values: unknown[]
 ): Promise<number | undefined> {
   switch (totalType) {
     case "none":
       return undefined;
     case "accurate":
-    case "estimate":
+    case "estimate": {
       // TODO SWITCH to count_estimate for estimate
       const result = await client.query(
         // Need to escape out quotations with double quote so can place as query text.
@@ -517,6 +516,7 @@ async function calculateTotal(
         values
       );
       return parseInt(result.rows[0].count);
+    }
     default:
       throw new OperationError(
         outcomeError(
@@ -543,7 +543,7 @@ export async function executeSearchQuery(
   ctx: FHIRServerCTX,
   onlyLatest: boolean = true
 ): Promise<{ total?: number; resources: Resource[] }> {
-  let values: any[] = [];
+  let values: unknown[] = [];
   let index = 1;
 
   const resourceTypes = deriveResourceTypeFilter(request);
@@ -583,7 +583,7 @@ export async function executeSearchQuery(
     (v): v is SearchParameterResult => v.type === "result"
   );
 
-  let parameterQuery = buildParametersSQL(
+  const parameterQuery = buildParametersSQL(
     ctx,
     resourceParameters,
     index,
@@ -659,7 +659,7 @@ export async function executeSearchQuery(
 
   if (process.env.LOG_SQL) {
     ctx.logger.info(
-      values.reduce((queryText, value, index) => {
+      values.reduce((queryText: string, value, index) => {
         return queryText.replace(`$${index + 1}`, `'${value}'`);
       }, queryText)
     );

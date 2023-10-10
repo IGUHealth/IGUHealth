@@ -5,7 +5,6 @@ import * as crypto from "node:crypto";
 import { inspect } from "node:util";
 
 import isEmpty from "lodash/isEmpty.js";
-import { koaBody as bodyParser } from "koa-body";
 import Router from "@koa/router";
 
 import * as defaults from "./defaults.js"; // make your own, you'll need it anyway
@@ -14,7 +13,7 @@ import { errors } from "oidc-provider";
 import type Provider from "oidc-provider";
 
 const keys = new Set();
-const debug = (obj: any) =>
+const debug = (obj: Record<string, unknown>) =>
   querystring.stringify(
     Object.entries(obj).reduce(
       (acc: { [key: string]: string }, [key, value]) => {
@@ -76,7 +75,7 @@ export default (provider: Provider) => {
           session: session ? debug(session) : undefined,
           dbg: {
             params: debug(params),
-            prompt: debug(prompt),
+            prompt: debug(prompt as unknown as Record<string, unknown>),
           },
         });
       }
@@ -90,7 +89,7 @@ export default (provider: Provider) => {
           session: session ? debug(session) : undefined,
           dbg: {
             params: debug(params),
-            prompt: debug(prompt),
+            prompt: debug(prompt as unknown as Record<string, unknown>),
           },
         });
       }
@@ -111,7 +110,10 @@ export default (provider: Provider) => {
     } = await provider.interactionDetails(ctx.req, ctx.res);
     assert.equal(name, "login");
 
-    const account = await Account.findByLogin(ctx.request.body.login);
+    const account = await Account.findByLogin(
+      (ctx.request as unknown as Record<string, Record<string, string>>).body
+        .login
+    );
 
     const result = {
       login: {
@@ -132,7 +134,10 @@ export default (provider: Provider) => {
 
     const path = `/interaction/${ctx.params.uid}/federated`;
 
-    switch (ctx.request.body.upstream) {
+    switch (
+      (ctx.request as unknown as Record<string, Record<string, string>>).body
+        .upstream
+    ) {
       case "google": {
         const callbackParams = ctx.google.callbackParams(ctx.req);
 

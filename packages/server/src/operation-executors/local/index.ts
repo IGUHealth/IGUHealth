@@ -15,13 +15,14 @@ import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 import { ValueSetExpandInvoke } from "./expand.js";
 import { InvokeResponse } from "@iguhealth/client/types";
 
-function createExecutor(): MiddlewareAsync<{}, FHIRServerCTX> {
-  return createMiddlewareAsync<{}, FHIRServerCTX>([
+function createExecutor(): MiddlewareAsync<unknown, FHIRServerCTX> {
+  return createMiddlewareAsync<unknown, FHIRServerCTX>([
     async (request, { ctx, state }, next) => {
+      /* eslint-disable no-fallthrough */
       switch (request.type) {
         case "invoke-request": {
           switch (request.operation) {
-            case "expand":
+            case "expand": {
               const expanded = await ValueSetExpandInvoke(ctx, request);
               const response: InvokeResponse = {
                 type: "invoke-response",
@@ -35,6 +36,7 @@ function createExecutor(): MiddlewareAsync<{}, FHIRServerCTX> {
                 response,
               };
               return output;
+            }
           }
         }
         default:
@@ -50,8 +52,8 @@ function createExecutor(): MiddlewareAsync<{}, FHIRServerCTX> {
 }
 
 export default function InlineOperations(): AsynchronousClient<
-  {},
+  unknown,
   FHIRServerCTX
 > {
-  return new AsynchronousClient<{}, FHIRServerCTX>({}, createExecutor());
+  return new AsynchronousClient<unknown, FHIRServerCTX>({}, createExecutor());
 }
