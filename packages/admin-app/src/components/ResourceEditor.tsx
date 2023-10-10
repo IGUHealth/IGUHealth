@@ -145,7 +145,6 @@ export default function ResourceEditorComponent({
         const valueSetExpansion = await snapshot.getPromise(
           getValueSetExpansion(url)
         );
-        console.log("Expansion: ", valueSetExpansion);
         return valueSetExpansion;
       },
     []
