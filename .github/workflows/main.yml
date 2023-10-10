@@ -9,6 +9,33 @@ jobs:
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  linting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node 19
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19.6.0
+          cache: "yarn"
+
+      - name: EnableCorePack
+        run: corepack enable
+
+      - name: Yarn v3
+        run: corepack prepare yarn@3.6.1 --activate
+
+      - name: Version Check
+        run: yarn version check
+
+      - name: Install dependencies
+        run: yarn
+      - name: Lint
+        run: yarn eslint packages/server --quiet
   server-tests:
     runs-on: ubuntu-latest
     services:
