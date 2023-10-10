@@ -36,10 +36,11 @@ async function resolveParameter(
 
 function createMemoryMiddleware<
   State extends { data: InternalData<ResourceType> },
-  CTX extends any
+  CTX
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
     async (request, args, next) => {
+      /* eslint-disable no-fallthrough */
       switch (request.type) {
         case "search-request": {
           const resourceTypes = deriveResourceTypeFilter(request);
@@ -96,7 +97,7 @@ function createMemoryMiddleware<
           }
 
           const countParam = parametersResult.find((v) => v.name === "_count");
-          let total =
+          const total =
             countParam && !isNaN(parseInt(countParam.value[0].toString()))
               ? parseInt(countParam.value[0].toString())
               : 50;
@@ -213,7 +214,7 @@ function createMemoryMiddleware<
   ]);
 }
 
-export default function MemoryDatabase<CTX extends any>(
+export default function MemoryDatabase<CTX>(
   data: InternalData<ResourceType>
 ): AsynchronousClient<{ data: InternalData<ResourceType> }, CTX> {
   return new AsynchronousClient<{ data: InternalData<ResourceType> }, CTX>(

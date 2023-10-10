@@ -350,6 +350,7 @@ function toDateRange(
     case "dateTime": {
       const v: dateTime = value.valueOf() as dateTime;
       const precision = getPrecision(v);
+      /* eslint-disable no-fallthrough */
       switch (precision) {
         case "ms": {
           return [{ start: v, end: v }];
@@ -360,18 +361,16 @@ function toDateRange(
         case "day":
         case "month":
         case "year": {
-          {
-            return [
-              {
-                start: dayjs(v, "YYYY-MM-DDThh:mm:ss+zz:zz")
-                  .startOf(precision)
-                  .toISOString(),
-                end: dayjs(v, "YYYY-MM-DDThh:mm:ss+zz:zz")
-                  .endOf(precision)
-                  .toISOString(),
-              },
-            ];
-          }
+          return [
+            {
+              start: dayjs(v, "YYYY-MM-DDThh:mm:ss+zz:zz")
+                .startOf(precision)
+                .toISOString(),
+              end: dayjs(v, "YYYY-MM-DDThh:mm:ss+zz:zz")
+                .endOf(precision)
+                .toISOString(),
+            },
+          ];
         }
       }
     }
@@ -703,9 +702,9 @@ async function getResource<CTX extends FHIRServerCTX>(
 
 function processHistoryParameters(
   query: string,
-  sqlParameters: any[],
+  sqlParameters: unknown[],
   parameters: ParsedParameter<string | number>[]
-): { query: string; parameters: any[] } {
+): { query: string; parameters: unknown[] } {
   let index = sqlParameters.length + 1;
   const _since = parameters.find((p) => p.name === "_since");
   const _since_versionId = parameters.find((p) => p.name === "_since-version");
@@ -918,6 +917,7 @@ async function deleteResource<CTX extends FHIRServerCTX>(
 async function retryFailedTransactions<ReturnType>(
   execute: () => Promise<ReturnType>
 ): Promise<ReturnType> {
+  /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
   while (true) {
     try {
       const res = await execute();

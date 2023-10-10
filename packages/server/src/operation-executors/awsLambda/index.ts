@@ -222,6 +222,7 @@ function createExecutor(
   return createMiddlewareAsync<unknown, FHIRServerCTX>([
     async (request, { ctx, state }, next) => {
       try {
+        /* eslint-disable no-fallthrough */
         switch (request.type) {
           case "invoke-request": {
             const operationDefinition = await resolveOperationDefinition(
@@ -281,7 +282,7 @@ function createExecutor(
             const outputParameters = op.parseToParameters(
               "out",
               output
-            ) as any as Parameters;
+            ) as unknown as Parameters;
 
             switch (request.level) {
               case "instance": {
@@ -355,7 +356,7 @@ export default function createLambdaExecutioner({
   LAMBDA_ROLE,
   AWS_ACCESS_KEY_ID,
   AWS_ACCESS_KEY_SECRET,
-}: Config): AsynchronousClient<{}, FHIRServerCTX> {
+}: Config): AsynchronousClient<unknown, FHIRServerCTX> {
   const client = new LambdaClient({
     region: AWS_REGION,
     credentials: {

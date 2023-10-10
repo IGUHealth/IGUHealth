@@ -9,10 +9,16 @@ function checkParameterWithResource(
   switch (parameter.name) {
     // Special handling for performance reason on heavily used parameters
     case "name": {
-      return (resource as any)["name"] === parameter.value[0];
+      return (
+        (resource as unknown as Record<string, unknown>)["name"] ===
+        parameter.value[0]
+      );
     }
     case "url": {
-      return (resource as any)["url"] === parameter.value[0];
+      return (
+        (resource as unknown as Record<string, unknown>)["url"] ===
+        parameter.value[0]
+      );
     }
     default: {
       if (parameter.searchParameter.expression) {

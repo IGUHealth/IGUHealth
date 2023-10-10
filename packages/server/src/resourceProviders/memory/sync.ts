@@ -36,10 +36,10 @@ function fitsSearchCriteria(
 
 function createMemoryMiddleware<
   State extends { data: InternalData<ResourceType> },
-  CTX extends any
+  CTX
 >(): MiddlewareSync<State, CTX> {
   return createMiddlewareSync<State, CTX>([
-    (request, args, next) => {
+    (request, args, _next) => {
       switch (request.type) {
         case "search-request": {
           const resourceSet =
@@ -55,7 +55,7 @@ function createMemoryMiddleware<
                   .flat();
 
           const output = (resourceSet || []).filter((resource) => {
-            for (let param of request.parameters) {
+            for (const param of request.parameters) {
               if (!fitsSearchCriteria(param, resource)) return false;
             }
             return true;

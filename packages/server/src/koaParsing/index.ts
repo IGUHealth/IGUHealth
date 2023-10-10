@@ -219,7 +219,7 @@ export function KoaRequestToFHIRRequest(
           level: "instance",
           resourceType: urlPieces[0],
           id: urlPieces[1],
-          body: request.body as Object,
+          body: request.body as object,
         };
       }
     } else if (method === "DELETE") {
