@@ -111,7 +111,7 @@ function createFHIRServer() {
       if (!next) throw new Error("No next");
       return next(request, { state, ctx });
     },
-    async (request, { state, ctx }, next) => {
+    async (request, { state, ctx }, _next) => {
       return {
         state,
         ctx,

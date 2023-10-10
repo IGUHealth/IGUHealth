@@ -3,7 +3,6 @@ import { v4 } from "uuid";
 import type {
   Account as AccountInterface,
   ClaimsParameterMember,
-  KoaContextWithOIDC,
   FindAccount,
 } from "oidc-provider";
 
@@ -12,10 +11,10 @@ const logins = new Map();
 
 class Account implements AccountInterface {
   accountId: string;
-  profile: any;
+  profile: Record<string, unknown> | undefined;
   [key: string]: unknown;
 
-  constructor(id: string | undefined, profile?: any) {
+  constructor(id: string | undefined, profile?: Record<string, unknown>) {
     this.accountId = id || v4();
     this.profile = profile;
     store.set(this.accountId, this);
@@ -30,10 +29,10 @@ class Account implements AccountInterface {
    *   or not return them in id tokens but only userinfo and so on.
    */
   async claims(
-    use: string,
-    scope: string,
-    claims: { [key: string]: null | ClaimsParameterMember },
-    rejected: string[]
+    _use: string,
+    _scope: string,
+    _claims: { [key: string]: null | ClaimsParameterMember },
+    _rejected: string[]
   ) {
     // eslint-disable-line no-unused-vars
     if (this.profile) {
@@ -80,7 +79,10 @@ class Account implements AccountInterface {
     };
   }
 
-  static async findByFederated(provider: string, claims: any) {
+  static async findByFederated(
+    provider: string,
+    claims: Record<string, unknown>
+  ) {
     const id = `${provider}.${claims.sub}`;
     if (!logins.get(id)) {
       logins.set(id, new Account(id, claims));
@@ -97,9 +99,9 @@ class Account implements AccountInterface {
   }
 
   static async findAccount(
-    ctx: Parameters<FindAccount>[0],
+    _ctx: Parameters<FindAccount>[0],
     sub: Parameters<FindAccount>[1],
-    token?: Parameters<FindAccount>[2]
+    _token?: Parameters<FindAccount>[2]
   ) {
     // eslint-disable-line no-unused-vars
     // token is a reference to the token used for which a given account is being loaded,

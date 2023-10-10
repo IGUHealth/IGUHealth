@@ -53,7 +53,7 @@ dotEnv.config();
 // console.log(jose.decodeJwt(signedJWT));
 // console.log(await jose.jwtVerify(signedJWT, jwks));
 
-const createCheckJWT = () => {
+function createCheckJWT(): Middleware<DefaultState, DefaultContext, unknown> {
   const LOAD_EXTERNAL_TOKEN = jwksRsa.koaJwtSecret({
     cache: true,
     rateLimit: true,
@@ -70,8 +70,8 @@ const createCheckJWT = () => {
     algorithms: [
       process.env.AUTH_JWT_ALGORITHM ? process.env.AUTH_JWT_ALGORITHM : "RS256",
     ],
-  }) as unknown as Middleware<DefaultState, DefaultContext, any>;
-};
+  }) as unknown as Middleware<DefaultState, DefaultContext, unknown>;
+}
 
 async function workspaceCheck(
   ctx: Koa.ParameterizedContext<Koa.DefaultState, Koa.DefaultContext>,
@@ -129,7 +129,10 @@ function workspaceMiddleware(
             `${ctx.params.fhirUrl || ""}${ctx.request.querystring ? "?" : ""}${
               ctx.request.querystring
             }`,
-            ctx.request
+            {
+              method: ctx.request.method,
+              body: (ctx.request as unknown as Record<string, unknown>).body,
+            }
           ),
           {
             state: undefined,

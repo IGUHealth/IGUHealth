@@ -4,5 +4,15 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint"],
   root: true,
-  ignorePatterns: ["dist", "node_modules", "examples", "scripts", "lib"],
+  rules: {
+    "@typescript-eslint/no-unused-vars": "warn",
+  },
+  ignorePatterns: [
+    "dist",
+    "node_modules",
+    "examples",
+    "scripts",
+    "lib",
+    "packages/server/src/resourceProviders/postgres/migrations",
+  ],
 };

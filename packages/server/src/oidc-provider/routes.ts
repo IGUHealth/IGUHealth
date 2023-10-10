@@ -5,7 +5,6 @@ import * as crypto from "node:crypto";
 import { inspect } from "node:util";
 
 import isEmpty from "lodash/isEmpty.js";
-import { koaBody as bodyParser } from "koa-body";
 import Router from "@koa/router";
 
 import * as defaults from "./defaults.js"; // make your own, you'll need it anyway
@@ -14,7 +13,7 @@ import { errors } from "oidc-provider";
 import type Provider from "oidc-provider";
 
 const keys = new Set();
-const debug = (obj: any) =>
+const debug = (obj: Record<string, unknown>) =>
   querystring.stringify(
     Object.entries(obj).reduce(
       (acc: { [key: string]: string }, [key, value]) => {

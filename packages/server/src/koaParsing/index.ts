@@ -52,8 +52,8 @@ function isBundle(v: unknown): v is Bundle {
   if (
     typeof v === "object" &&
     v !== null &&
-    v.hasOwnProperty("resourceType") &&
-    (v as any).resourceType === "Bundle"
+    Object.prototype.hasOwnProperty.call(v, "resourceType") &&
+    (v as Resource).resourceType === "Bundle"
   )
     return true;
   return false;
@@ -61,7 +61,7 @@ function isBundle(v: unknown): v is Bundle {
 
 export function KoaRequestToFHIRRequest(
   url: string,
-  request: Pick<Koa.Request, "method" | "body">
+  request: { method: string; body: unknown }
 ): FHIRRequest {
   const method = request.method;
   const urlPieces = url.split("?")[0].split("/");

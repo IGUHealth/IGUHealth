@@ -28,7 +28,6 @@ import {
 import logAuditEvent, { MINOR_FAILURE } from "../../logging/auditEvents.js";
 
 configDotenv();
-
 function getLambdaFunctionName(
   ctx: FHIRServerCTX,
   operation: Operation<unknown, unknown>
@@ -69,21 +68,24 @@ type Payload = {
     resourceType?: ResourceType;
     id?: id;
   };
-  input: Record<string, any>;
+  input: Record<string, unknown>;
 };
 
 // Used within lambda code for setup.
-async function handler(event: Payload, context: any) {
+async function handler(event: Payload, _context: Payload["ctx"]) {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const userHandler = require("./user");
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const client = await import("@iguhealth/client/http");
   // Pass in token here and instantiate client. Later.
-  // @ts-ignore
-  const HTTPClient = new client.default({
+
+  const HTTPClient = client.default({
     getAccessToken: async function () {
       return event.ctx.SEC_TOKEN;
     },
     url: event.ctx.API_URL,
   });
+
   const ctx = {
     workspace: event.ctx.workspace,
     level: event.ctx.level,
@@ -160,7 +162,7 @@ async function createLambdaFunction(
 
 async function createPayload(
   ctx: FHIRServerCTX,
-  op: Operation<Record<string, any>, Record<string, any>>,
+  op: Operation<Record<string, unknown>, Record<string, unknown>>,
   request: InvokeRequest
 ): Promise<Payload> {
   const parsedBody = op.parseToObject("in", request.body);
@@ -216,8 +218,8 @@ function createExecutor(
   layers: string[],
   role: string,
   client: LambdaClient
-): MiddlewareAsync<{}, FHIRServerCTX> {
-  return createMiddlewareAsync<{}, FHIRServerCTX>([
+): MiddlewareAsync<unknown, FHIRServerCTX> {
+  return createMiddlewareAsync<unknown, FHIRServerCTX>([
     async (request, { ctx, state }, next) => {
       try {
         switch (request.type) {
@@ -226,9 +228,10 @@ function createExecutor(
               ctx,
               request.operation
             );
-            const op = new Operation<Record<string, any>, Record<string, any>>(
-              operationDefinition
-            );
+            const op = new Operation<
+              Record<string, unknown>,
+              Record<string, unknown>
+            >(operationDefinition);
 
             const opCTX = getOpCTX(ctx, request);
 
@@ -360,7 +363,7 @@ export default function createLambdaExecutioner({
       secretAccessKey: AWS_ACCESS_KEY_SECRET,
     },
   });
-  return new AsynchronousClient<{}, FHIRServerCTX>(
+  return new AsynchronousClient<unknown, FHIRServerCTX>(
     {},
     createExecutor(LAYERS, LAMBDA_ROLE, client)
   );
