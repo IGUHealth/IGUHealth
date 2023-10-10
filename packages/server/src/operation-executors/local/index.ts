@@ -12,7 +12,8 @@ import {
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRServerCTX } from "../../fhirServer.js";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
-import ValueSetExpansionOperation from "./expand.js";
+import { ValueSetExpandInvoke } from "./expand.js";
+import { InvokeResponse } from "@iguhealth/client/types";
 
 function createExecutor(): MiddlewareAsync<{}, FHIRServerCTX> {
   return createMiddlewareAsync<{}, FHIRServerCTX>([
@@ -20,9 +21,21 @@ function createExecutor(): MiddlewareAsync<{}, FHIRServerCTX> {
       switch (request.type) {
         case "invoke-request": {
           switch (request.operation) {
-            case "expand": {
-              return ValueSetExpansionOperation(ctx, request);
-            }
+            case "expand":
+              const expanded = await ValueSetExpandInvoke(ctx, request);
+              console.log(expanded);
+              const response: InvokeResponse = {
+                type: "invoke-response",
+                level: "system",
+                operation: request.operation,
+                body: expanded,
+              };
+              const output = {
+                ctx,
+                state,
+                response,
+              };
+              return output;
           }
         }
         default:

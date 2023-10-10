@@ -22,7 +22,8 @@ import MemoryDatabaseAsync from "../resourceProviders/memory/async.js";
 import MemoryDatabaseSync from "../resourceProviders/memory/sync.js";
 import RouterClient from "../resourceProviders/router.js";
 import PostgresLock from "../synchronization/postgres.lock.js";
-import LambdaExecutioner from "../operation-executors/awsLambda/index.js";
+import InlineExecutioner from "../operation-executors/local/index.js";
+import AWSLambdaExecutioner from "../operation-executors/awsLambda/index.js";
 import RedisCache from "../cache/redis.js";
 
 const MEMORY_TYPES: ResourceType[] = [
@@ -171,16 +172,15 @@ export default async function createServiceCTX(): Promise<
     {
       useSource: (request) => {
         return (
-          request.type === "invoke-request" &&
-          request.operation === "expand"
+          request.type === "invoke-request" && request.operation === "expand"
         );
-      }
-      source: InlineOperations(),
-    }
+      },
+      source: InlineExecutioner(),
+    },
     {
       resourcesSupported: [...resourceTypes] as ResourceType[],
       interactionsSupported: ["invoke-request"],
-      source: LambdaExecutioner({
+      source: AWSLambdaExecutioner({
         AWS_REGION: process.env.AWS_REGION as string,
         AWS_ACCESS_KEY_ID: process.env.AWS_LAMBDA_ACCESS_KEY_ID as string,
         AWS_ACCESS_KEY_SECRET: process.env
