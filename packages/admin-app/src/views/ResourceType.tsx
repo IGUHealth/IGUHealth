@@ -14,7 +14,7 @@ const initialQuery = "_count=20&_sort=-_lastUpdated";
 export default function ResourceTypeView() {
   const client = useRecoilValue(getClient);
   const navigate = useNavigate();
-  let [searchParams, setSearchParams] = useSearchParams({
+  const [searchParams, setSearchParams] = useSearchParams({
     query: initialQuery,
   });
   const params = useParams();

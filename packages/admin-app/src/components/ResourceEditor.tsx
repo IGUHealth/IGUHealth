@@ -118,7 +118,7 @@ export default function ResourceEditorComponent({
   const navigate = useNavigate();
 
   const setValue = useMemo(
-    () => (getResource: any) => {
+    () => (getResource: (r: Resource) => Resource) => {
       const newResource = getResource(
         resource
           ? resource
