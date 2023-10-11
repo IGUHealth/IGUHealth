@@ -224,6 +224,7 @@ test("execution", async () => {
 
   const invoke: Invocation = async (op, ctx, input) => {
     op.validate(ctx, "in", input);
+    // @ts-ignore
     const output = { testOut: input.test };
     op.validate(ctx, "out", output);
     return output;
@@ -244,6 +245,7 @@ test("execution", async () => {
 
   const invokeBadOutput: Invocation = async (op, ctx, input) => {
     op.validate(ctx, "in", input);
+    // @ts-ignore
     const output = { testOut: input.test, z: 5 };
     op.validate(ctx, "out", output);
     return output;
@@ -272,6 +274,7 @@ test("paramValidation", async () => {
 
   const invoke: Invocation = async (op, ctx, input) => {
     op.validate(ctx, "in", input);
+    // @ts-ignore
     const output = { testOut: input.test };
     op.validate(ctx, "out", output);
     return output;
