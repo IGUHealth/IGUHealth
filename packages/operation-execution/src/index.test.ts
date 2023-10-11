@@ -254,10 +254,10 @@ test("execution", async () => {
 
 test("paramValidation", async () => {
   const operation: IOperation<
-    { test: string; [keyword: string]: any },
+    { test: string; [keyword: string]: unknown },
     { testOut: string }
   > = new Operation<
-    { test: string; [keyword: string]: any },
+    { test: string; [keyword: string]: unknown },
     { testOut: string }
   >(operationTest);
 
@@ -434,7 +434,7 @@ test("Test invalid resource validation", async () => {
   const invoke = (
     op: IOperation<{ payload: Resource[] }, { test: string }>,
     ctx: OpCTX,
-    input: any
+    input: unknown
   ) => {
     op.validate(ctx, "in", input);
     const output = { test: "whatever" };
@@ -443,6 +443,6 @@ test("Test invalid resource validation", async () => {
   };
 
   expect(() => {
-    invoke(operation, ctx, { payload: "asdf" } as any);
+    invoke(operation, ctx, { payload: "asdf" } as unknown);
   }).toThrow(new Error(`Could not resolve type undefined for validation`));
 });

@@ -70,7 +70,7 @@ export function mapToParameter(
 export function toParametersResource(
   operationDefinition: OperationDefinition,
   use: "out" | "in",
-  value: Record<string, any>
+  value: Record<string, unknown>
 ): Parameters {
   const definitions =
     operationDefinition.parameter?.filter((param) => param.use === use) || [];
@@ -141,7 +141,7 @@ function parseParameter(
           );
         validateNoExtraFields(definition.part, use, param.part || []);
         return (definition.part || []).reduce(
-          (acc: Record<string, any>, paramDefinition) => {
+          (acc: Record<string, unknown>, paramDefinition) => {
             const parsedParam = parseParameter(
               paramDefinition,
               use,
@@ -186,8 +186,8 @@ export function parseParameters(
   const paramDefinitions =
     operationDefinition.parameter?.filter((param) => param.use === use) || [];
   validateNoExtraFields(paramDefinitions, use, parameters.parameter || []);
-  const parametersParsed: Record<string, any> = paramDefinitions.reduce(
-    (parametersParsed: Record<string, any>, parameterDefinition) => {
+  const parametersParsed: Record<string, unknown> = paramDefinitions.reduce(
+    (parametersParsed: Record<string, unknown>, parameterDefinition) => {
       const curParameters =
         parameters.parameter?.filter(
           (param) => param.name === parameterDefinition.name
@@ -210,17 +210,17 @@ export function parseParameters(
 
 type InputOutput<I, O> = { in: I; out: O };
 
-export function isParameters(input: any): input is Parameters {
-  return input.resourceType === "Parameters";
+export function isParameters(input: unknown): input is Parameters {
+  return Object.prototype.hasOwnProperty.call(input, "resourceType");
 }
 
-function isRecord(input: any): input is Record<string, any> {
+function isRecord(input: unknown): input is Record<string, unknown> {
   return typeof input === "object" && input !== null;
 }
 
 function validateRequired(
   definitions: NonNullable<OperationDefinition["parameter"]>,
-  value: Record<string, any>
+  value: Record<string, unknown>
 ) {
   definitions
     .filter((d) => d.min > 0)
@@ -296,7 +296,7 @@ function validateParameter<Use extends "in" | "out">(
 }
 
 function validateParameters<
-  T extends IOperation<any, any>,
+  T extends IOperation<unknown, unknown>,
   Use extends "in" | "out"
 >(
   op: T,
@@ -336,7 +336,7 @@ export interface IOperation<I, O> {
   get operationDefinition(): OperationDefinition;
   parseToObject<Use extends "in" | "out">(
     use: Use,
-    input: any
+    input: unknown
   ): InputOutput<I, O>[Use];
   parseToParameters<Use extends "in" | "out">(
     use: Use,
@@ -416,7 +416,7 @@ export class Operation<I, O> implements IOperation<I, O> {
     return toParametersResource(
       this._operationDefinition,
       use,
-      input as Record<string, any>
+      input as Record<string, unknown>
     );
   }
   validate<Use extends "in" | "out">(
@@ -445,7 +445,10 @@ export class Operation<I, O> implements IOperation<I, O> {
   }
 }
 
-export type Invocation = <T extends IOperation<any, any>, CTX extends OpCTX>(
+export type Invocation = <
+  T extends IOperation<unknown, unknown>,
+  CTX extends OpCTX
+>(
   op: T,
   ctx: CTX,
   input: OPMetadata<T>["Input"]
