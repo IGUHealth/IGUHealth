@@ -64,7 +64,7 @@ export default function ResourceTypeView() {
             className="border-l ring-0 shadow-none rounded-none"
             buttonSize="small"
             buttonType="secondary"
-            onClick={(_e) => {
+            onClick={() => {
               search(searchParams.get("query") || "");
             }}
           >
@@ -77,7 +77,7 @@ export default function ResourceTypeView() {
           className="ml-2 font-medium"
           buttonSize="small"
           buttonType="secondary"
-          onClick={(_e) => navigate(`/resources/${params.resourceType}/new`)}
+          onClick={() => navigate(`/resources/${params.resourceType}/new`)}
         >
           <div className="flex items-center justify-center ">
             <PlusIcon className="w-4 h-4 mr-1" /> <span>New</span>

@@ -64,7 +64,7 @@ export default function BatchImportView() {
                 const batchPromise = client.batch({}, batch);
                 Base.Toaster.promise(batchPromise, {
                   loading: "Uploading Batch bundle",
-                  success: (success) => `Batch bundle was uploaded`,
+                  success: () => `Batch bundle was uploaded`,
                   error: (error) => {
                     const message = (
                       error.operationOutcome as OperationOutcome
@@ -73,7 +73,7 @@ export default function BatchImportView() {
                       .join("\n");
                     return message;
                   },
-                }).then((v) => {
+                }).then(() => {
                   navigate("/");
                 });
               }

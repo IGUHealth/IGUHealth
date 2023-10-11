@@ -37,7 +37,7 @@ function SettingDisplay({ user, token }: SettingProps) {
           <label>Access Token</label>
           <div className="flex flex-row">
             <div className="flex flex-1">
-              <Base.Input inlineLabel readOnly value={token} />
+              <Base.Input readOnly value={token} />
             </div>
             <Base.Button
               onClick={(e) => {
@@ -58,11 +58,12 @@ function SettingDisplay({ user, token }: SettingProps) {
 export default function Settings() {
   const auth0 = useAuth0();
   const [token, setToken] = useState<string>();
-  const refreshToken = useEffect(() => {
+  useEffect(() => {
     auth0.getAccessTokenSilently().then((token) => {
       setToken(token);
     });
   }, [setToken]);
+
   return (
     <React.Suspense
       fallback={

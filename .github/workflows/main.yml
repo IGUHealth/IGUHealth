@@ -35,7 +35,7 @@ jobs:
       - name: Install dependencies
         run: yarn
       - name: Lint
-        run: yarn eslint packages/server --quiet && yarn eslint packages/components --quiet
+        run: yarn eslint packages/server --quiet && yarn eslint packages/components --quiet && yarn eslint packages/admin-app --quiet
   server-tests:
     runs-on: ubuntu-latest
     services:

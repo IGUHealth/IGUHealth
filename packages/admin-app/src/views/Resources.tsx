@@ -1,12 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 import { Base } from "@iguhealth/components";
-import {
-  CapabilityStatementRestResource,
-  Resource,
-} from "@iguhealth/fhir-types/r4/types";
+import { CapabilityStatementRestResource } from "@iguhealth/fhir-types/r4/types";
 
 import { getCapabilities } from "../data/capabilities";
 
