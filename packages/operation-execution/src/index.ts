@@ -211,7 +211,10 @@ export function parseParameters(
 type InputOutput<I, O> = { in: I; out: O };
 
 export function isParameters(input: unknown): input is Parameters {
-  return Object.prototype.hasOwnProperty.call(input, "resourceType");
+  return (
+    Object.prototype.hasOwnProperty.call(input, "resourceType") &&
+    (input as Record<string, unknown>).resourceType === "Parameters"
+  );
 }
 
 function isRecord(input: unknown): input is Record<string, unknown> {
