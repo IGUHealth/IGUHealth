@@ -4,7 +4,8 @@ import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 function generateParameterType(
   parameters: NonNullable<OperationDefinition["parameter"]>
 ): string {
-  return parameters
+  if (parameters.length === 0) return `Record<string, never>`;
+  const fields = parameters
     .map((p) => {
       const isArray = p.max !== "1";
       const required = p.min > 0;
@@ -14,12 +15,13 @@ function generateParameterType(
 
       const singularValue = p.type
         ? `fhirTypes.${type}`
-        : `{${generateParameterType(p.part || [])}}`;
+        : generateParameterType(p.part || []);
       const value = isArray ? `Array<${singularValue}>` : singularValue;
 
       return `${fieldName}: ${value}`;
     })
     .join(",\n");
+  return `{${fields}}`;
 }
 
 function capitalize(s: string): string {
@@ -49,7 +51,7 @@ function generateOutput(
       parameters[0].type === "Any" ? "Resource" : parameters[0].type
     }`;
   }
-  return `{${generateParameterType(parameters)}}`;
+  return generateParameterType(parameters);
 }
 
 export function generateOp(op: OperationDefinition): string {
@@ -63,9 +65,9 @@ export function generateOp(op: OperationDefinition): string {
     (op) => op.use === "out"
   );
 
-  const inputType = `export type ${inputName} = {${generateParameterType(
+  const inputType = `export type ${inputName} = ${generateParameterType(
     inputParameters
-  )}}`;
+  )}`;
 
   const outputType = `export type ${outputName} = ${generateOutput(
     outputParameters
@@ -76,7 +78,7 @@ export function generateOp(op: OperationDefinition): string {
     op
   )})`;
 
-  return `export namespace ${namespace} {
+  return `export module ${namespace} {
   ${[inputType, outputType, operationType, operationInstance].join("\n")}}`;
 }
 
