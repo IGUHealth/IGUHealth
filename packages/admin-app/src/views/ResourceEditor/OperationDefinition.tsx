@@ -11,9 +11,7 @@ import {
   OperationOutcome,
   OperationDefinition,
   ResourceType,
-  id,
   AuditEvent,
-  Resource,
 } from "@iguhealth/fhir-types/r4/types";
 import { Base } from "@iguhealth/components";
 
@@ -60,7 +58,7 @@ function OperationCodeEditor({
               width: "100%",
             },
           }}
-          onChange={(value, _vu) => {
+          onChange={(value) => {
             setValue(value);
           }}
         />
@@ -163,7 +161,7 @@ const InvocationModal = ({
                       width: "100%",
                     },
                   }}
-                  onChange={(value, _vu) => {
+                  onChange={(value) => {
                     setParameters(value);
                   }}
                 />
@@ -257,7 +255,6 @@ export default function OperationEditor({
   structureDefinition,
   onChange,
 }: OperationEditorProps) {
-  const client = useRecoilValue(getClient);
   const code: string =
     resource?.extension?.find(
       (e) =>

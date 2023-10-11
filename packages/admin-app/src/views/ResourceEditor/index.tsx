@@ -76,11 +76,11 @@ export default function DefaultResourceEditorView() {
         );
         Base.Toaster.promise(deletingResource, {
           loading: "Deleting Resource",
-          success: (success) => `Deleted ${resourceType}`,
+          success: () => `Deleted ${resourceType}`,
           error: (error) => {
             return `${error}`;
           },
-        }).then((v) => navigate(`/resources/${resourceType}`));
+        }).then(() => navigate(`/resources/${resourceType}`));
       },
     },
   ];

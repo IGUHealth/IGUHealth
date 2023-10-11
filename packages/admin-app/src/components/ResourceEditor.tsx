@@ -1,16 +1,14 @@
 import { useEffect, useState, useMemo } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useRecoilValue, useRecoilCallback } from "recoil";
 import { basicSetup } from "codemirror";
 import { json } from "@codemirror/lang-json";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
-import { ValueSetExpand } from "@iguhealth/generated-ops/r4";
 import {
   StructureDefinition,
   BundleEntry,
   Resource,
-  OperationOutcome,
   ResourceType,
   id,
 } from "@iguhealth/fhir-types/r4/types";
@@ -39,7 +37,7 @@ function JSONEditor({
             width: "100%",
           },
         }}
-        onChange={(value, _vu) => {
+        onChange={(value) => {
           setValue(value);
         }}
       />
@@ -114,16 +112,8 @@ export default function ResourceEditorComponent({
   leftTabs: leftSide = [],
   rightTabs: rightSide = [],
 }: AdditionalContent) {
-  const client = useRecoilValue(getClient);
-  const navigate = useNavigate();
-
   const setValue = useMemo(
-    () => (getResource: any) => {
-      const newResource = getResource(
-        resource
-          ? resource
-          : ({ resourceType: structureDefinition?.type } as Resource)
-      );
+    () => (getResource: (r: Resource) => Resource) => {
       onChange &&
         onChange((resource) => {
           const newResource = getResource(
@@ -206,7 +196,7 @@ export default function ResourceEditorComponent({
           <Base.Button
             buttonType="secondary"
             buttonSize="small"
-            onClick={(_e) => {}}
+            onClick={() => {}}
           >
             <div className="flex items-center">
               <span>Actions</span> <ChevronDownIcon className="ml-1 w-3 h-3" />

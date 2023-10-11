@@ -12,7 +12,7 @@ export default function EmptyWorkspace() {
         </h1>
         <Base.Button
           buttonType="secondary"
-          onClick={(_e) =>
+          onClick={() =>
             auth0.logout({
               logoutParams: {
                 returnTo: window.location.origin,

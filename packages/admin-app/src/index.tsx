@@ -36,7 +36,6 @@ import "./index.css";
 
 function LoginWrapper() {
   const auth0Info = useAuth0();
-  const navigate = useNavigate();
   const initiateAuth = !auth0Info.isAuthenticated && !auth0Info.isLoading;
 
   useEffect(() => {

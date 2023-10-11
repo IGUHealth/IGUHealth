@@ -14,7 +14,7 @@ const initialQuery = "_count=20&_sort=-_lastUpdated";
 export default function ResourceTypeView() {
   const client = useRecoilValue(getClient);
   const navigate = useNavigate();
-  let [searchParams, setSearchParams] = useSearchParams({
+  const [searchParams, setSearchParams] = useSearchParams({
     query: initialQuery,
   });
   const params = useParams();
@@ -64,7 +64,7 @@ export default function ResourceTypeView() {
             className="border-l ring-0 shadow-none rounded-none"
             buttonSize="small"
             buttonType="secondary"
-            onClick={(_e) => {
+            onClick={() => {
               search(searchParams.get("query") || "");
             }}
           >
@@ -77,7 +77,7 @@ export default function ResourceTypeView() {
           className="ml-2 font-medium"
           buttonSize="small"
           buttonType="secondary"
-          onClick={(_e) => navigate(`/resources/${params.resourceType}/new`)}
+          onClick={() => navigate(`/resources/${params.resourceType}/new`)}
         >
           <div className="flex items-center justify-center ">
             <PlusIcon className="w-4 h-4 mr-1" /> <span>New</span>
