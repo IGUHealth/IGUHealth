@@ -9,11 +9,13 @@ import {
   MiddlewareAsync,
 } from "@iguhealth/client/middleware";
 
-import { AsynchronousClient } from "@iguhealth/client";
-import { FHIRServerCTX } from "../../fhirServer.js";
-import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
-import { ValueSetExpandInvoke } from "./expand.js";
 import { InvokeResponse } from "@iguhealth/client/types";
+import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
+import { AsynchronousClient } from "@iguhealth/client";
+
+import { InlineOperation } from "./interface.js";
+import { FHIRServerCTX } from "../../fhirServer.js";
+import { ValueSetExpandInvoke } from "./expand.js";
 
 function createExecutor(): MiddlewareAsync<unknown, FHIRServerCTX> {
   return createMiddlewareAsync<unknown, FHIRServerCTX>([
@@ -51,9 +53,20 @@ function createExecutor(): MiddlewareAsync<unknown, FHIRServerCTX> {
   ]);
 }
 
-export default function InlineOperations(): AsynchronousClient<
-  unknown,
-  FHIRServerCTX
-> {
-  return new AsynchronousClient<unknown, FHIRServerCTX>({}, createExecutor());
+class OperationClient extends AsynchronousClient<unknown, FHIRServerCTX> {
+  constructor(
+    initialState: unknown,
+    middleware: MiddlewareAsync<unknown, FHIRServerCTX>
+  ) {
+    super(initialState, middleware);
+  }
+  supportedOperations(): string[] {
+    return ["expand"];
+  }
+}
+
+export default function InlineOperations(): OperationClient {
+  const client = new OperationClient({}, createExecutor());
+
+  return client;
 }

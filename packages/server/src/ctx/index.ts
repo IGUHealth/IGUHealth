@@ -166,16 +166,20 @@ export default async function createServiceCTX(): Promise<
   const data = createMemoryData(MEMORY_TYPES);
   const memDBAsync = MemoryDatabaseAsync(data);
   const memDBSync = MemoryDatabaseSync(data);
+  const inlineOperationExecution = InlineExecutioner();
 
   const client = RouterClient([
     // OP INVOCATION
     {
       useSource: (request) => {
         return (
-          request.type === "invoke-request" && request.operation === "expand"
+          request.type === "invoke-request" &&
+          inlineOperationExecution
+            .supportedOperations()
+            .includes(request.operation)
         );
       },
-      source: InlineExecutioner(),
+      source: inlineOperationExecution,
     },
     {
       resourcesSupported: [...resourceTypes] as ResourceType[],
