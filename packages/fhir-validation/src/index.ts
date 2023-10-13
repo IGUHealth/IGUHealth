@@ -14,6 +14,11 @@ import { eleIndexToChildIndices } from "@iguhealth/codegen";
 import { descend, createPath, ascend } from "./path.js";
 import jsonpointer from "jsonpointer";
 
+interface ValidationCTX {
+  resolveSD(type: string): StructureDefinition;
+  validateCode?(code: string): Promise<boolean>;
+}
+
 type Validator = (input: any) => Promise<OperationOutcome["issue"]>;
 
 // Create a validator for a given fhir type and value
@@ -206,7 +211,7 @@ function determineTypesAndFields(
 }
 
 async function validateSingular(
-  resolveType: (type: string) => StructureDefinition,
+  ctx: ValidationCTX,
   path: string,
   structureDefinition: StructureDefinition,
   elementIndex: number,
@@ -230,7 +235,7 @@ async function validateSingular(
         element
       );
       return validateSingular(
-        resolveType,
+        ctx,
         path,
         structureDefinition,
         referenceElementIndex,
@@ -253,7 +258,7 @@ async function validateSingular(
       if (type === "Resource" || type === "DomainResource") {
         type = jsonpointer.get(root, descend(path, "resourceType"));
       }
-      return validate(resolveType, type, root, path);
+      return validate(ctx, type, root, path);
     }
   } else {
     // Validating root / backbone / element nested types here.
@@ -297,7 +302,7 @@ async function validateSingular(
             ];
           }
           const { issues, fieldsFound } = await checkFields(
-            resolveType,
+            ctx,
             path,
             structureDefinition,
             index,
@@ -320,7 +325,7 @@ async function validateSingular(
 
             const fields = determineTypesAndFields(child, value);
             const { issues, fieldsFound } = await checkFields(
-              resolveType,
+              ctx,
               path,
               structureDefinition,
               index,
@@ -369,7 +374,7 @@ async function validateSingular(
   }
 }
 async function checkFields(
-  resolveType: (type: string) => StructureDefinition,
+  ctx: ValidationCTX,
   path: string,
   structureDefinition: StructureDefinition,
   index: number,
@@ -386,7 +391,7 @@ async function checkFields(
         const [field, type] = fieldType;
         fieldsFound.push(field);
         return validateElement(
-          resolveType,
+          ctx,
           descend(path, field),
           structureDefinition,
           index,
@@ -401,7 +406,7 @@ async function checkFields(
 }
 
 async function validateElement(
-  resolveType: (type: string) => StructureDefinition,
+  ctx: ValidationCTX,
   path: string,
   structureDefinition: StructureDefinition,
   elementIndex: number,
@@ -445,7 +450,7 @@ async function validateElement(
       await Promise.all(
         (value || []).map((v: any, i: number) => {
           return validateSingular(
-            resolveType,
+            ctx,
             descend(path, i),
             structureDefinition,
             elementIndex,
@@ -457,7 +462,7 @@ async function validateElement(
     ).flat();
   } else {
     return validateSingular(
-      resolveType,
+      ctx,
       path,
       structureDefinition,
       elementIndex,
@@ -468,18 +473,18 @@ async function validateElement(
 }
 
 export default async function validate(
-  resolveType: (type: string) => StructureDefinition,
+  ctx: ValidationCTX,
   type: string,
   value: NonNullable<any>,
   path: string = createPath()
 ): Promise<OperationOutcome["issue"]> {
-  const sd = resolveType(type);
+  const sd = ctx.resolveSD(type);
   const indice = 0;
 
   if (primitiveTypes.has(type)) return validatePrimitive(value, path, type);
 
   return validateElement(
-    resolveType,
+    ctx,
     path,
     sd,
     indice,
@@ -490,11 +495,11 @@ export default async function validate(
 }
 
 export function createValidator(
-  resolveType: (type: string) => StructureDefinition,
+  ctx: ValidationCTX,
   type: string,
   path: string = createPath()
 ): Validator {
   return (value: NonNullable<any>) => {
-    return validate(resolveType, type, value, path);
+    return validate(ctx, type, value, path);
   };
 }
