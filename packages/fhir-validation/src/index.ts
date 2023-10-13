@@ -441,9 +441,9 @@ async function validateElement(
 
   if (Array.isArray(value === undefined ? [] : value)) {
     // Validate each element in the array
-    return await Promise.all(
-      (value || [])
-        .map((v: any, i: number) => {
+    return (
+      await Promise.all(
+        (value || []).map((v: any, i: number) => {
           return validateSingular(
             resolveType,
             descend(path, i),
@@ -453,8 +453,8 @@ async function validateElement(
             type
           );
         })
-        .flat()
-    );
+      )
+    ).flat();
   } else {
     return validateSingular(
       resolveType,
