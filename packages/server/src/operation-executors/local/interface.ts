@@ -18,3 +18,7 @@ export default function InlineOperation<
     return op.parseToParameters("out", result) as Parameters;
   };
 }
+
+export interface InlineOperation {
+  supportedOperations(): string[];
+}
