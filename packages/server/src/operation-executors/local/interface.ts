@@ -12,9 +12,9 @@ export default function InlineOperation<
 >(op: OP, executor: (ctx: FHIRServerCTX, v: Input<OP>) => Promise<Output<OP>>) {
   return async (ctx: FHIRServerCTX, request: InvokeRequest) => {
     const input = op.parseToObject("in", request.body) as Input<OP>;
-    op.validate({ level: request.levels, ...ctx }, "in", input);
+    await op.validate({ level: request.levels, ...ctx }, "in", input);
     const result = await executor(ctx, input);
-    op.validate({ level: request.levels, ...ctx }, "out", result);
+    await op.validate({ level: request.levels, ...ctx }, "out", result);
     return op.parseToParameters("out", result) as Parameters;
   };
 }

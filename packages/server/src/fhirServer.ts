@@ -79,7 +79,7 @@ function createFHIRServer() {
         case "invoke-request":
         case "transaction-request": {
           const resourceType = getResourceTypeToValidate(request);
-          const issues = validate(
+          const issues = await validate(
             (type) => {
               const sd = ctx.resolveSD(ctx, type);
               if (!sd)
