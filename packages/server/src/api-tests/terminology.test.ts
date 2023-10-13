@@ -1,7 +1,10 @@
 import { expect, test } from "@jest/globals";
 
 import HTTPClient from "@iguhealth/client/lib/http";
-import { ValueSetExpand } from "@iguhealth/generated-ops/r4";
+import {
+  ValueSetExpand,
+  ValueSetValidateCode,
+} from "@iguhealth/generated-ops/r4";
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system/api/v1/fhir/r4",
@@ -71,4 +74,27 @@ test("Hl7 Gender expansion", async () => {
       ],
     },
   ]);
+});
+
+test("Hl7 Gender valiadtion", async () => {
+  const validationSuccess = await client.invoke_type(
+    ValueSetValidateCode.Op,
+    {},
+    "ValueSet",
+    {
+      url: "http://hl7.org/fhir/ValueSet/administrative-gender|4.0.1",
+      code: "male",
+    }
+  );
+  expect(validationSuccess).toEqual({ result: true });
+  const validationFail = await client.invoke_type(
+    ValueSetValidateCode.Op,
+    {},
+    "ValueSet",
+    {
+      url: "http://hl7.org/fhir/ValueSet/administrative-gender|4.0.1",
+      code: "mae",
+    }
+  );
+  expect(validationFail).toEqual({ result: false });
 });

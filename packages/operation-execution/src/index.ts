@@ -25,7 +25,7 @@ export function mapToParameter(
 ): NonNullable<Parameters["parameter"]> {
   const isArray = definition.max !== "1";
   let value = valueMap[definition.name];
-  if (!value) return [];
+  if (value === undefined || value === null) return [];
 
   if (!isArray) value = [value];
   if (isArray && !Array.isArray(value)) value = [value];
