@@ -10,7 +10,7 @@ const sds = loadArtifacts("StructureDefinition", path.join(__dirname, "../"));
 
 test("Test ValueSet Expands", async () => {
   const ctx: OpCTX = {
-    resolveType: (type: string) => {
+    resolveSD: (type: string) => {
       const sd = sds.find((sd) => sd.type === type);
       if (!sd) throw new Error(`Could not resolve type ${type}`);
       return sd;

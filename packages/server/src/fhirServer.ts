@@ -16,6 +16,7 @@ import validate from "@iguhealth/fhir-validation";
 
 import { Lock } from "./synchronization/interfaces.js";
 import { IOCache } from "./cache/interface.js";
+import { TerminologyProvider } from "./terminology/interface.js";
 
 async function fhirRequestToFHIRResponse(
   ctx: FHIRServerCTX,
@@ -34,7 +35,7 @@ async function fhirRequestToFHIRResponse(
 export interface FHIRServerCTX {
   workspace: string;
   author: string;
-
+  terminologyProvider: TerminologyProvider;
   // Services setup
   logger: Logger<unknown>;
   capabilities: CapabilityStatement;
@@ -80,16 +81,25 @@ function createFHIRServer() {
         case "transaction-request": {
           const resourceType = getResourceTypeToValidate(request);
           const issues = await validate(
-            (type) => {
-              const sd = ctx.resolveSD(ctx, type);
-              if (!sd)
-                throw new OperationError(
-                  outcomeError(
-                    "invalid",
-                    `Could not validate type of ${resourceType}`
-                  )
-                );
-              return sd;
+            {
+              validateCode: async (url: string, code: string) => {
+                const result = await ctx.terminologyProvider.validate(ctx, {
+                  code,
+                  url,
+                });
+                return result.result;
+              },
+              resolveSD: (type) => {
+                const sd = ctx.resolveSD(ctx, type);
+                if (!sd)
+                  throw new OperationError(
+                    outcomeError(
+                      "invalid",
+                      `Could not validate type of ${resourceType}`
+                    )
+                  );
+                return sd;
+              },
             },
             resourceType,
             request.body

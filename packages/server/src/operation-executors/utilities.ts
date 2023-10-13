@@ -69,7 +69,14 @@ export async function getOperationCode(
 export function getOpCTX(ctx: FHIRServerCTX, request: InvokeRequest): OpCTX {
   return {
     level: request.level,
-    resolveType: (type: string) => {
+    validateCode: async (url: string, code: string) => {
+      const result = await ctx.terminologyProvider.validate(ctx, {
+        code,
+        url,
+      });
+      return result.result;
+    },
+    resolveSD: (type: string) => {
       const sd = ctx.resolveSD(ctx, type);
       if (!sd)
         throw new OperationError(

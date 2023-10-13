@@ -25,6 +25,7 @@ import PostgresLock from "../synchronization/postgres.lock.js";
 import InlineExecutioner from "../operation-executors/local/index.js";
 import AWSLambdaExecutioner from "../operation-executors/awsLambda/index.js";
 import RedisCache from "../cache/redis.js";
+import { TerminologyProviderMemory } from "../terminology/index.js";
 
 const MEMORY_TYPES: ResourceType[] = [
   "StructureDefinition",
@@ -160,7 +161,13 @@ async function serverCapabilities(
 export default async function createServiceCTX(): Promise<
   Pick<
     FHIRServerCTX,
-    "lock" | "client" | "resolveSD" | "capabilities" | "cache" | "logger"
+    | "lock"
+    | "client"
+    | "resolveSD"
+    | "capabilities"
+    | "cache"
+    | "logger"
+    | "terminologyProvider"
   >
 > {
   const data = createMemoryData(MEMORY_TYPES);
@@ -223,6 +230,7 @@ export default async function createServiceCTX(): Promise<
 
   const services = {
     logger: createLogger.default(),
+    terminologyProvider: new TerminologyProviderMemory(),
     capabilities: await serverCapabilities(memDBAsync),
     client,
     cache: new RedisCache({

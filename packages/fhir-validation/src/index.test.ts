@@ -25,14 +25,18 @@ const memDatabase = createMemoryDatabase([
   ...resourceTypes.values(),
 ] as ResourceType[]);
 
-test("Testing validating resourceType 'Patient'", async () => {
-  const sd = memDatabase.read({}, "StructureDefinition", "Patient");
-
-  const validator = createValidator((type: string) => {
+const CTX = {
+  resolveSD: (type: string) => {
     const sd = memDatabase.read({}, "StructureDefinition", type);
     if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
     return sd;
-  }, "Patient");
+  },
+};
+
+test("Testing validating resourceType 'Patient'", async () => {
+  const sd = memDatabase.read({}, "StructureDefinition", "Patient");
+
+  const validator = createValidator(CTX, "Patient");
 
   expect(
     await validator({
@@ -58,11 +62,7 @@ test("Testing validating resourceType 'Patient'", async () => {
 test("test typechoice checking", async () => {
   const sd = memDatabase.read({}, "StructureDefinition", "Patient");
 
-  const validator = createValidator((type: string) => {
-    const sd = memDatabase.read({}, "StructureDefinition", type);
-    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
-    return sd;
-  }, "Patient");
+  const validator = createValidator(CTX, "Patient");
 
   expect(
     await validator({
@@ -104,11 +104,7 @@ test("test typechoice checking", async () => {
 test("Primitive Extensions", async () => {
   const sd = memDatabase.read({}, "StructureDefinition", "Patient");
 
-  const validator = createValidator((type: string) => {
-    const sd = memDatabase.read({}, "StructureDefinition", type);
-    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
-    return sd;
-  }, "Patient");
+  const validator = createValidator(CTX, "Patient");
 
   expect(
     await validator({
@@ -162,11 +158,7 @@ test("Primitive Extensions", async () => {
 test("Primitive extension testing", async () => {
   const sd = memDatabase.read({}, "StructureDefinition", "Patient");
 
-  const validator = createValidator((type: string) => {
-    const sd = memDatabase.read({}, "StructureDefinition", type);
-    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
-    return sd;
-  }, "Patient");
+  const validator = createValidator(CTX, "Patient");
 
   expect(
     await validator({
@@ -244,21 +236,13 @@ test("SearchParameter testing", async () => {
     xpathUsage: "normal",
   };
 
-  const validator = createValidator((type: string) => {
-    const sd = memDatabase.read({}, "StructureDefinition", type);
-    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
-    return sd;
-  }, "SearchParameter");
+  const validator = createValidator(CTX, "SearchParameter");
 
   expect(await validator(parameter)).toEqual([]);
 });
 
 test("Test cardinality ", async () => {
-  const validator = createValidator((type: string) => {
-    const sd = memDatabase.read({}, "StructureDefinition", type);
-    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
-    return sd;
-  }, "Patient");
+  const validator = createValidator(CTX, "Patient");
 
   expect(
     await validator({
@@ -282,11 +266,7 @@ test("Test cardinality ", async () => {
 });
 
 test("Test required ", async () => {
-  const validator = createValidator((type: string) => {
-    const sd = memDatabase.read({}, "StructureDefinition", type);
-    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
-    return sd;
-  }, "Patient");
+  const validator = createValidator(CTX, "Patient");
 
   expect(
     await validator({
@@ -313,11 +293,7 @@ test("Test required ", async () => {
 });
 
 test("Validate element with no primitive", async () => {
-  const validator = createValidator((type: string) => {
-    const sd = memDatabase.read({}, "StructureDefinition", type);
-    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
-    return sd;
-  }, "Patient");
+  const validator = createValidator(CTX, "Patient");
 
   expect(
     await validator({
@@ -377,11 +353,7 @@ test("Validate element with no primitive", async () => {
 });
 
 test("Observation nested case", async () => {
-  const validator = createValidator((type: string) => {
-    const sd = memDatabase.read({}, "StructureDefinition", type);
-    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
-    return sd;
-  }, "Observation");
+  const validator = createValidator(CTX, "Observation");
 
   expect(
     await validator({
@@ -444,11 +416,7 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
       .resources.filter((r) => r.id)
       .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
       .slice(0, 1);
-    const validator = createValidator((type: string) => {
-      const sd = memDatabase.read({}, "StructureDefinition", type);
-      if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
-      return sd;
-    }, resourceType);
+    const validator = createValidator(CTX, resourceType);
 
     for (const resource of resources) {
       const issues = await validator(resource);
@@ -459,11 +427,7 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
 );
 
 test("Patient with primitive on name", async () => {
-  const validator = createValidator((type: string) => {
-    const sd = memDatabase.read({}, "StructureDefinition", type);
-    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
-    return sd;
-  }, "Patient");
+  const validator = createValidator(CTX, "Patient");
 
   expect(
     await validator({
