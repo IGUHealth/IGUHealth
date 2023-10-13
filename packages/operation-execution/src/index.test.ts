@@ -446,7 +446,9 @@ test("Test invalid resource validation", async () => {
     return output;
   };
 
-  expect(async () => {
-    await invoke(operation, ctx, { payload: "asdf" } as unknown);
-  }).toThrow(new Error(`Could not resolve type undefined for validation`));
+  expect(
+    invoke(operation, ctx, { payload: "asdf" } as unknown)
+  ).rejects.toThrow(
+    new Error(`Could not resolve type undefined for validation`)
+  );
 });
