@@ -16,6 +16,7 @@ import {
   OpCTX,
   toParametersResource,
 } from "./index";
+import { OperationError } from "@iguhealth/operation-outcomes";
 
 const operationDefinitions = loadArtifacts(
   "OperationDefinition",
@@ -223,10 +224,10 @@ test("execution", async () => {
   };
 
   const invoke: Invocation = async (op, ctx, input) => {
-    op.validate(ctx, "in", input);
+    await op.validate(ctx, "in", input);
     // @ts-ignore
     const output = { testOut: input.test };
-    op.validate(ctx, "out", output);
+    await op.validate(ctx, "out", output);
     return output;
   };
 
@@ -244,10 +245,10 @@ test("execution", async () => {
   ).rejects.toThrow();
 
   const invokeBadOutput: Invocation = async (op, ctx, input) => {
-    op.validate(ctx, "in", input);
+    await op.validate(ctx, "in", input);
     // @ts-ignore
     const output = { testOut: input.test, z: 5 };
-    op.validate(ctx, "out", output);
+    await op.validate(ctx, "out", output);
     return output;
   };
 
@@ -273,10 +274,10 @@ test("paramValidation", async () => {
   };
 
   const invoke: Invocation = async (op, ctx, input) => {
-    op.validate(ctx, "in", input);
+    await op.validate(ctx, "in", input);
     // @ts-ignore
     const output = { testOut: input.test };
-    op.validate(ctx, "out", output);
+    await op.validate(ctx, "out", output);
     return output;
   };
 
@@ -434,18 +435,18 @@ test("Test invalid resource validation", async () => {
     level: "instance",
   };
 
-  const invoke = (
+  const invoke = async (
     op: IOperation<{ payload: Resource[] }, { test: string }>,
     ctx: OpCTX,
     input: unknown
   ) => {
-    op.validate(ctx, "in", input);
+    await op.validate(ctx, "in", input);
     const output = { test: "whatever" };
-    op.validate(ctx, "out", output);
+    await op.validate(ctx, "out", output);
     return output;
   };
 
-  expect(() => {
-    invoke(operation, ctx, { payload: "asdf" } as unknown);
+  expect(async () => {
+    await invoke(operation, ctx, { payload: "asdf" } as unknown);
   }).toThrow(new Error(`Could not resolve type undefined for validation`));
 });

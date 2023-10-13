@@ -253,7 +253,7 @@ function validateCardinalities(
   }
 }
 
-function validateParameter<Use extends "in" | "out">(
+async function validateParameter<Use extends "in" | "out">(
   paramDefinition: NonNullable<OperationDefinition["parameter"]>[number],
   use: Use,
   value: any,
@@ -262,7 +262,7 @@ function validateParameter<Use extends "in" | "out">(
   let arr: Array<any> = (value = Array.isArray(value) ? value : [value]);
   validateCardinalities(paramDefinition, value);
 
-  arr.forEach((_v: unknown, index) => {
+  for (const index in arr) {
     if (paramDefinition.type) {
       const type =
         paramDefinition.type === "Any" ||
@@ -271,7 +271,7 @@ function validateParameter<Use extends "in" | "out">(
           ? arr[index].resourceType
           : paramDefinition.type;
       if (resolveType) {
-        const issues = validate(resolveType, type, arr, `/${index}`);
+        const issues = await validate(resolveType, type, arr, `/${index}`);
         if (issues.length > 0) throw new OperationError(outcome(issues));
       }
     } else {
@@ -283,7 +283,7 @@ function validateParameter<Use extends "in" | "out">(
           )
         );
       validateRequired(paramDefinition.part, value);
-      paramDefinition.part.forEach((part) => {
+      for (const part of paramDefinition.part) {
         if (!isRecord(value)) {
           throw new OperationError(
             outcomeError(
@@ -292,13 +292,13 @@ function validateParameter<Use extends "in" | "out">(
             )
           );
         }
-        validateParameter(part, use, value[part.name], resolveType);
-      });
+        await validateParameter(part, use, value[part.name], resolveType);
+      }
     }
-  });
+  }
 }
 
-function validateParameters<
+async function validateParameters<
   T extends IOperation<unknown, unknown>,
   Use extends "in" | "out"
 >(
@@ -306,9 +306,7 @@ function validateParameters<
   use: Use,
   value: unknown,
   resolveType?: (type: string) => StructureDefinition
-): value is Use extends "in"
-  ? OPMetadata<T>["Input"]
-  : OPMetadata<T>["Output"] {
+): Promise<boolean> {
   const definitions = (op.operationDefinition.parameter || []).filter(
     (p) => p.use === use
   );
@@ -318,14 +316,15 @@ function validateParameters<
     );
 
   validateRequired(definitions, value);
-  Object.keys(value).forEach((key: string) => {
+  for (const key of Object.keys(value)) {
     const paramDefinition = definitions.find((d) => d.name === key);
-    if (paramDefinition === undefined)
+    if (paramDefinition === undefined) {
       throw new OperationError(
         outcomeError("invalid", `Invalid parameter ${key}`)
       );
-    validateParameter(paramDefinition, use, value[key], resolveType);
-  });
+    }
+    await validateParameter(paramDefinition, use, value[key], resolveType);
+  }
   return true;
 }
 
@@ -349,7 +348,7 @@ export interface IOperation<I, O> {
     ctx: OpCTX,
     use: Use,
     value: unknown
-  ): value is InputOutput<I, O>[Use];
+  ): Promise<boolean>;
 }
 
 function isStrictlyReturn(op: OperationDefinition): boolean {
@@ -422,18 +421,18 @@ export class Operation<I, O> implements IOperation<I, O> {
       input as Record<string, unknown>
     );
   }
-  validate<Use extends "in" | "out">(
+  async validate<Use extends "in" | "out">(
     ctx: OpCTX,
     use: Use,
     value: unknown
-  ): value is InputOutput<I, O>[Use] {
+  ): Promise<boolean> {
     if (isStrictlyReturn(this.operationDefinition) && use === "out") {
       const type =
         this.operationDefinition.parameter?.find((p) => p.use === "out")
           ?.type || "Resource";
       const fhirtype = type === "Any" ? "Resource" : type;
       if (ctx.resolveType) {
-        const issues = validate(ctx.resolveType, fhirtype, value);
+        const issues = await validate(ctx.resolveType, fhirtype, value);
         if (issues.length > 0) return false;
         return true;
       }
@@ -444,7 +443,7 @@ export class Operation<I, O> implements IOperation<I, O> {
           : value?.resourceType === fhirtype
         : false;
     }
-    return validateParameters(this, use, value, ctx.resolveType);
+    return await validateParameters(this, use, value, ctx.resolveType);
   }
 }
 
