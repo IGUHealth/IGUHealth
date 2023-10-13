@@ -13,8 +13,8 @@ import { InvokeResponse } from "@iguhealth/client/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 import { AsynchronousClient } from "@iguhealth/client";
 
-import { InlineOperation } from "./interface.js";
 import { FHIRServerCTX } from "../../fhirServer.js";
+import { ValueSetValidate } from "./validate.js";
 import { ValueSetExpandInvoke } from "./expand.js";
 
 function createExecutor(): MiddlewareAsync<unknown, FHIRServerCTX> {
@@ -24,6 +24,21 @@ function createExecutor(): MiddlewareAsync<unknown, FHIRServerCTX> {
       switch (request.type) {
         case "invoke-request": {
           switch (request.operation) {
+            case "validate-code": {
+              const validationResponse = await ValueSetValidate(ctx, request);
+              const response: InvokeResponse = {
+                type: "invoke-response",
+                level: "system",
+                operation: request.operation,
+                body: validationResponse,
+              };
+              const output = {
+                ctx,
+                state,
+                response,
+              };
+              return output;
+            }
             case "expand": {
               const expanded = await ValueSetExpandInvoke(ctx, request);
               const response: InvokeResponse = {
@@ -61,7 +76,7 @@ class OperationClient extends AsynchronousClient<unknown, FHIRServerCTX> {
     super(initialState, middleware);
   }
   supportedOperations(): string[] {
-    return ["expand"];
+    return ["expand", "validate-code"];
   }
 }
 
