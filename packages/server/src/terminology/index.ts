@@ -130,15 +130,11 @@ export class TerminologyProviderMemory implements TerminologyProvider {
     ctx: FHIRServerCTX,
     input: ValidateInput
   ): Promise<ValidateOutput> {
-    const valueset = await ctx.client.invoke_type(
-      ValueSetExpand.Op,
-      ctx,
-      "ValueSet",
-      {
-        url: input.url,
-        valueSet: input.valueSet,
-      }
-    );
+    const valueset = await this.expand(ctx, {
+      url: input.url,
+      valueSet: input.valueSet,
+      valueSetVersion: input.valueSetVersion,
+    });
 
     if (!valueset) {
       throw new OperationError(
@@ -160,7 +156,9 @@ export class TerminologyProviderMemory implements TerminologyProvider {
     if (input.valueSet) {
       valueset = input.valueSet;
     } else if (input.url) {
-      const [url, version] = input.url.split("|");
+      const [url, url_version] = input.url.split("|");
+      const version = url_version ? url_version : input.valueSetVersion;
+
       const valuesetSearch = await ctx.client.search_type(
         ctx,
         "ValueSet",
