@@ -14,7 +14,7 @@ import { eleIndexToChildIndices } from "@iguhealth/codegen";
 import { descend, createPath, ascend } from "./path.js";
 import jsonpointer from "jsonpointer";
 
-type Validator = (input: any) => OperationOutcome["issue"];
+type Validator = (input: any) => Promise<OperationOutcome["issue"]>;
 
 // Create a validator for a given fhir type and value
 
@@ -205,14 +205,14 @@ function determineTypesAndFields(
   return fields;
 }
 
-function validateSingular(
+async function validateSingular(
   resolveType: (type: string) => StructureDefinition,
   path: string,
   structureDefinition: StructureDefinition,
   elementIndex: number,
   root: any,
   type: string
-): OperationOutcome["issue"] {
+): Promise<OperationOutcome["issue"]> {
   const element = structureDefinition.snapshot?.element?.[
     elementIndex
   ] as ElementDefinition;
@@ -280,43 +280,23 @@ function validateSingular(
       (i) => requiredElements.indexOf(i) === -1
     );
 
-    let issues = requiredElements
-      .map((index) => {
-        const child = structureDefinition.snapshot?.element?.[index];
-        if (!child) throw new Error("Child not found");
-
-        const fields = determineTypesAndFields(child, value);
-        if (fields.length === 0) {
-          return [
-            issueError(
-              "structure",
-              `Missing required field '${child.path}' at path '${path}'`,
-              [path]
-            ),
-          ];
-        }
-        const { issues, fieldsFound } = checkFields(
-          resolveType,
-          path,
-          structureDefinition,
-          index,
-          root,
-          fields
-        );
-        foundFields = foundFields.concat(fieldsFound);
-        return issues;
-      })
-      .flat();
-
-    issues = [
-      ...issues,
-      ...optionalElements
-        .map((index) => {
+    let issues = (
+      await Promise.all(
+        requiredElements.map(async (index) => {
           const child = structureDefinition.snapshot?.element?.[index];
           if (!child) throw new Error("Child not found");
 
           const fields = determineTypesAndFields(child, value);
-          const { issues, fieldsFound } = checkFields(
+          if (fields.length === 0) {
+            return [
+              issueError(
+                "structure",
+                `Missing required field '${child.path}' at path '${path}'`,
+                [path]
+              ),
+            ];
+          }
+          const { issues, fieldsFound } = await checkFields(
             resolveType,
             path,
             structureDefinition,
@@ -327,7 +307,31 @@ function validateSingular(
           foundFields = foundFields.concat(fieldsFound);
           return issues;
         })
-        .flat(),
+      )
+    ).flat();
+
+    issues = [
+      ...issues,
+      ...(
+        await Promise.all(
+          optionalElements.map(async (index) => {
+            const child = structureDefinition.snapshot?.element?.[index];
+            if (!child) throw new Error("Child not found");
+
+            const fields = determineTypesAndFields(child, value);
+            const { issues, fieldsFound } = await checkFields(
+              resolveType,
+              path,
+              structureDefinition,
+              index,
+              root,
+              fields
+            );
+            foundFields = foundFields.concat(fieldsFound);
+            return issues;
+          })
+        )
+      ).flat(),
     ];
 
     // Check for additional fields
@@ -364,44 +368,46 @@ function validateSingular(
     return issues;
   }
 }
-function checkFields(
+async function checkFields(
   resolveType: (type: string) => StructureDefinition,
   path: string,
   structureDefinition: StructureDefinition,
   index: number,
   root: any,
   fields: [string, string][]
-): {
+): Promise<{
   fieldsFound: string[];
   issues: OperationOutcome["issue"];
-} {
+}> {
   const fieldsFound: string[] = [];
-  const issues = fields
-    .map((fieldType) => {
-      const [field, type] = fieldType;
-      fieldsFound.push(field);
-      return validateElement(
-        resolveType,
-        descend(path, field),
-        structureDefinition,
-        index,
-        root,
-        type
-      );
-    })
-    .flat();
+  const issues = (
+    await Promise.all(
+      fields.map((fieldType) => {
+        const [field, type] = fieldType;
+        fieldsFound.push(field);
+        return validateElement(
+          resolveType,
+          descend(path, field),
+          structureDefinition,
+          index,
+          root,
+          type
+        );
+      })
+    )
+  ).flat();
 
   return { issues, fieldsFound };
 }
 
-function validateElement(
+async function validateElement(
   resolveType: (type: string) => StructureDefinition,
   path: string,
   structureDefinition: StructureDefinition,
   elementIndex: number,
   root: any,
   type: string
-): OperationOutcome["issue"] {
+): Promise<OperationOutcome["issue"]> {
   const value = jsonpointer.get(root, path);
   const element = structureDefinition.snapshot?.element?.[elementIndex];
 
@@ -435,18 +441,20 @@ function validateElement(
 
   if (Array.isArray(value === undefined ? [] : value)) {
     // Validate each element in the array
-    return (value || [])
-      .map((v: any, i: number) => {
-        return validateSingular(
-          resolveType,
-          descend(path, i),
-          structureDefinition,
-          elementIndex,
-          root,
-          type
-        );
-      })
-      .flat();
+    return await Promise.all(
+      (value || [])
+        .map((v: any, i: number) => {
+          return validateSingular(
+            resolveType,
+            descend(path, i),
+            structureDefinition,
+            elementIndex,
+            root,
+            type
+          );
+        })
+        .flat()
+    );
   } else {
     return validateSingular(
       resolveType,
@@ -459,12 +467,12 @@ function validateElement(
   }
 }
 
-export default function validate(
+export default async function validate(
   resolveType: (type: string) => StructureDefinition,
   type: string,
   value: NonNullable<any>,
   path: string = createPath()
-): OperationOutcome["issue"] {
+): Promise<OperationOutcome["issue"]> {
   const sd = resolveType(type);
   const indice = 0;
 
