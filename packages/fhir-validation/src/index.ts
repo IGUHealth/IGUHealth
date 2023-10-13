@@ -16,18 +16,20 @@ import jsonpointer from "jsonpointer";
 
 export interface ValidationCTX {
   resolveSD(type: string): StructureDefinition;
-  validateCode?(code: string): Promise<boolean>;
+  validateCode?(system: string, code: string): Promise<boolean>;
 }
 
 type Validator = (input: any) => Promise<OperationOutcome["issue"]>;
 
 // Create a validator for a given fhir type and value
 
-function validatePrimitive(
+async function validatePrimitive(
+  ctx: ValidationCTX,
+  element: ElementDefinition | undefined,
   root: any,
   path: string,
   type: string
-): OperationOutcome["issue"] {
+): Promise<OperationOutcome["issue"]> {
   const value = jsonpointer.get(root, path);
   switch (type) {
     case "http://hl7.org/fhirpath/System.String":
@@ -67,6 +69,8 @@ function validatePrimitive(
     }
 
     case "code": {
+      const strength = element?.binding?.strength;
+      const valueSet = element?.binding?.valueSet;
       if (typeof value !== "string") {
         return [
           issueError(
@@ -76,6 +80,20 @@ function validatePrimitive(
           ),
         ];
       }
+
+      if (strength === "required" && valueSet && ctx.validateCode) {
+        const isValid = await ctx.validateCode(valueSet, value);
+        if (!isValid) {
+          return [
+            issueError(
+              "structure",
+              `Code '${value}' is not in value set '${valueSet}' at path '${path}'`,
+              [path]
+            ),
+          ];
+        }
+      }
+
       return [];
     }
 
@@ -253,7 +271,9 @@ async function validateSingular(
         throw new Error(
           `No field found on path ${path} for sd ${structureDefinition.id}`
         );
-      return issues.concat(validatePrimitive(root, path, type));
+      return issues.concat(
+        await validatePrimitive(ctx, element, root, path, type)
+      );
     } else {
       if (type === "Resource" || type === "DomainResource") {
         type = jsonpointer.get(root, descend(path, "resourceType"));
@@ -481,7 +501,8 @@ export default async function validate(
   const sd = ctx.resolveSD(type);
   const indice = 0;
 
-  if (primitiveTypes.has(type)) return validatePrimitive(value, path, type);
+  if (primitiveTypes.has(type))
+    return validatePrimitive(ctx, undefined, value, path, type);
 
   return validateElement(
     ctx,

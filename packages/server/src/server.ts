@@ -94,7 +94,13 @@ async function workspaceCheck(
 function workspaceMiddleware(
   services: Pick<
     FHIRServerCTX,
-    "lock" | "client" | "resolveSD" | "capabilities" | "cache" | "logger"
+    | "lock"
+    | "client"
+    | "resolveSD"
+    | "capabilities"
+    | "cache"
+    | "logger"
+    | "terminologyProvider"
   >
 ): Router.Middleware<Koa.DefaultState, Koa.DefaultContext, unknown>[] {
   const fhirServer = createFHIRServer();

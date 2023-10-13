@@ -3,6 +3,7 @@ import { IOperation } from "@iguhealth/operation-execution";
 
 import { FHIRServerCTX } from "../../fhirServer.js";
 import { InvokeRequest } from "../types.js";
+import { getOpCTX } from "../utilities.js";
 
 type Input<T> = T extends IOperation<infer Input, unknown> ? Input : never;
 type Output<T> = T extends IOperation<unknown, infer Output> ? Output : never;
@@ -12,9 +13,9 @@ export default function InlineOperation<
 >(op: OP, executor: (ctx: FHIRServerCTX, v: Input<OP>) => Promise<Output<OP>>) {
   return async (ctx: FHIRServerCTX, request: InvokeRequest) => {
     const input = op.parseToObject("in", request.body) as Input<OP>;
-    await op.validate({ level: request.levels, ...ctx }, "in", input);
+    await op.validate(getOpCTX(ctx, request), "in", input);
     const result = await executor(ctx, input);
-    await op.validate({ level: request.levels, ...ctx }, "out", result);
+    await op.validate(getOpCTX(ctx, request), "out", result);
     return op.parseToParameters("out", result) as Parameters;
   };
 }

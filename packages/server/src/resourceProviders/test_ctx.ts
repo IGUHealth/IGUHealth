@@ -7,6 +7,7 @@ import { IOCache } from "../cache/interface.js";
 import { FHIRServerCTX } from "../fhirServer.js";
 
 import { Lock } from "../synchronization/interfaces.js";
+import { TerminologyProviderMemory } from "../terminology/index.js";
 
 dotEnv.config();
 
@@ -33,6 +34,7 @@ class TestCache<CTX extends { workspace: string }> implements IOCache<CTX> {
 export const testServices: FHIRServerCTX = {
   workspace: "test",
   author: "test-user",
+  terminologyProvider: new TerminologyProviderMemory(),
   logger: createLogger.default(),
   capabilities: {
     resourceType: "CapabilityStatement",
