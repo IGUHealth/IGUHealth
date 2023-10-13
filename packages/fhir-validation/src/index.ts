@@ -14,7 +14,7 @@ import { eleIndexToChildIndices } from "@iguhealth/codegen";
 import { descend, createPath, ascend } from "./path.js";
 import jsonpointer from "jsonpointer";
 
-interface ValidationCTX {
+export interface ValidationCTX {
   resolveSD(type: string): StructureDefinition;
   validateCode?(code: string): Promise<boolean>;
 }

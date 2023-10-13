@@ -215,7 +215,7 @@ test("execution", async () => {
     new Operation<{ test: string }, { testOut: string }>(operationTest);
 
   const ctx: OpCTX = {
-    resolveType: (type: string) => {
+    resolveSD: (type: string) => {
       const sd = structureDefinitions.find((sd) => sd.type === type);
       if (!sd) throw new Error(`Could not resolve type ${type}`);
       return sd;
@@ -265,7 +265,7 @@ test("paramValidation", async () => {
   >(operationTest);
 
   const ctx: OpCTX = {
-    resolveType: (type: string) => {
+    resolveSD: (type: string) => {
       const sd = structureDefinitions.find((sd) => sd.type === type);
       if (!sd) throw new Error(`Could not resolve type ${type}`);
       return sd;
@@ -427,7 +427,7 @@ test("Test invalid resource validation", async () => {
     new Operation<{ payload: Resource[] }, { test: string }>(op);
 
   const ctx: OpCTX = {
-    resolveType: (type: string) => {
+    resolveSD: (type: string) => {
       const sd = structureDefinitions.find((sd) => sd.type === type);
       if (!sd) throw new Error(`Could not resolve type ${type} for validation`);
       return sd;

@@ -5,7 +5,7 @@ import {
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
-import validate from "@iguhealth/fhir-validation";
+import validate, { ValidationCTX } from "@iguhealth/fhir-validation";
 import {
   OperationError,
   outcome,
@@ -254,10 +254,10 @@ function validateCardinalities(
 }
 
 async function validateParameter<Use extends "in" | "out">(
+  ctx: ValidationCTX,
   paramDefinition: NonNullable<OperationDefinition["parameter"]>[number],
   use: Use,
-  value: any,
-  resolveType?: (type: string) => StructureDefinition
+  value: any
 ) {
   let arr: Array<any> = (value = Array.isArray(value) ? value : [value]);
   validateCardinalities(paramDefinition, value);
@@ -270,8 +270,8 @@ async function validateParameter<Use extends "in" | "out">(
         paramDefinition.type === "DomainResource"
           ? arr[index].resourceType
           : paramDefinition.type;
-      if (resolveType) {
-        const issues = await validate(resolveType, type, arr, `/${index}`);
+      if (ctx) {
+        const issues = await validate(ctx, type, arr, `/${index}`);
         if (issues.length > 0) throw new OperationError(outcome(issues));
       }
     } else {
@@ -292,7 +292,7 @@ async function validateParameter<Use extends "in" | "out">(
             )
           );
         }
-        await validateParameter(part, use, value[part.name], resolveType);
+        await validateParameter(ctx, part, use, value[part.name]);
       }
     }
   }
@@ -301,12 +301,7 @@ async function validateParameter<Use extends "in" | "out">(
 async function validateParameters<
   T extends IOperation<unknown, unknown>,
   Use extends "in" | "out"
->(
-  op: T,
-  use: Use,
-  value: unknown,
-  resolveType?: (type: string) => StructureDefinition
-): Promise<boolean> {
+>(ctx: ValidationCTX, op: T, use: Use, value: unknown): Promise<boolean> {
   const definitions = (op.operationDefinition.parameter || []).filter(
     (p) => p.use === use
   );
@@ -323,15 +318,14 @@ async function validateParameters<
         outcomeError("invalid", `Invalid parameter ${key}`)
       );
     }
-    await validateParameter(paramDefinition, use, value[key], resolveType);
+    await validateParameter(ctx, paramDefinition, use, value[key]);
   }
   return true;
 }
 
-export type OpCTX = {
-  resolveType?: (type: string) => StructureDefinition;
+export interface OpCTX extends ValidationCTX {
   level: "system" | "type" | "instance";
-};
+}
 
 export interface IOperation<I, O> {
   code: string;
@@ -431,8 +425,8 @@ export class Operation<I, O> implements IOperation<I, O> {
         this.operationDefinition.parameter?.find((p) => p.use === "out")
           ?.type || "Resource";
       const fhirtype = type === "Any" ? "Resource" : type;
-      if (ctx.resolveType) {
-        const issues = await validate(ctx.resolveType, fhirtype, value);
+      if (ctx) {
+        const issues = await validate(ctx, fhirtype, value);
         if (issues.length > 0) return false;
         return true;
       }
@@ -443,7 +437,7 @@ export class Operation<I, O> implements IOperation<I, O> {
           : value?.resourceType === fhirtype
         : false;
     }
-    return await validateParameters(this, use, value, ctx.resolveType);
+    return await validateParameters(ctx, this, use, value);
   }
 }
 
