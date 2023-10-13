@@ -20,6 +20,7 @@ module.exports = {
     "tailwind.config.js",
     "rollup.config.js",
     "postcss.config.js",
+    "*.test.ts",
     "packages/server/src/resourceProviders/postgres/migrations",
   ],
 };
