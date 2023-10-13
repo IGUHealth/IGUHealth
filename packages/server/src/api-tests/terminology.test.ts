@@ -76,7 +76,7 @@ test("Hl7 Gender expansion", async () => {
   ]);
 });
 
-test("Hl7 Gender valiadtion", async () => {
+test("Hl7 Gender validation", async () => {
   const validationSuccess = await client.invoke_type(
     ValueSetValidateCode.Op,
     {},
