@@ -27,7 +27,7 @@ Type level history encompasses all mutations that have happened at the type leve
 Example:
 
 ```bash
-curl --request GET --url https://{my-api}/{type}/\_history?{parameters}
+curl --request GET --url https://{my-api}/{type}/_history?{parameters}
 ```
 
 ### Instance level
