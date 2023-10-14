@@ -16,6 +16,7 @@ import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRServerCTX } from "../../fhirServer.js";
 import { ValueSetValidate } from "./validate.js";
 import { ValueSetExpandInvoke } from "./expand.js";
+import { CodeSystemLookupInvoke } from "./lookup.js";
 
 function createExecutor(): MiddlewareAsync<unknown, FHIRServerCTX> {
   return createMiddlewareAsync<unknown, FHIRServerCTX>([
@@ -54,6 +55,28 @@ function createExecutor(): MiddlewareAsync<unknown, FHIRServerCTX> {
               };
               return output;
             }
+            case "lookup": {
+              const expanded = await CodeSystemLookupInvoke(ctx, request);
+              const response: InvokeResponse = {
+                type: "invoke-response",
+                level: "system",
+                operation: request.operation,
+                body: expanded,
+              };
+              const output = {
+                ctx,
+                state,
+                response,
+              };
+              return output;
+            }
+            default:
+              throw new OperationError(
+                outcomeFatal(
+                  "invalid",
+                  `Invocation client does not support operation '${request.operation}'`
+                )
+              );
           }
         }
         default:
@@ -76,7 +99,7 @@ class OperationClient extends AsynchronousClient<unknown, FHIRServerCTX> {
     super(initialState, middleware);
   }
   supportedOperations(): string[] {
-    return ["expand", "validate-code"];
+    return ["expand", "validate-code", "lookup"];
   }
 }
 

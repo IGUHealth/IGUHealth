@@ -8,6 +8,7 @@ import {
 import {
   ValueSetValidateCode,
   ValueSetExpand,
+  CodeSystemLookup,
 } from "@iguhealth/generated-ops/r4";
 
 import { FHIRServerCTX } from "../fhirServer.js";
@@ -18,7 +19,11 @@ import ExpandOutput = ValueSetExpand.Output;
 
 import ValidateInput = ValueSetValidateCode.Input;
 import ValidateOutput = ValueSetValidateCode.Output;
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  outcome,
+  outcomeError,
+} from "@iguhealth/operation-outcomes";
 
 function inlineCodesetToValuesetExpansion(
   include: ValueSetComposeInclude
@@ -139,6 +144,22 @@ function checkforCode(
   return false;
 }
 
+function findConcept(
+  concepts: CodeSystemConcept[],
+  code: string
+): CodeSystemConcept | undefined {
+  for (const concept of concepts) {
+    if (concept.code === code) {
+      return concept;
+    }
+    if (concept.concept) {
+      const foundConcept = findConcept(concept.concept, code);
+      if (foundConcept) return foundConcept;
+    }
+  }
+  return undefined;
+}
+
 export class TerminologyProviderMemory implements TerminologyProvider {
   constructor() {}
   async validate(
@@ -201,5 +222,54 @@ export class TerminologyProviderMemory implements TerminologyProvider {
       };
     }
     return valueset;
+  }
+  async lookup(
+    ctx: FHIRServerCTX,
+    input: CodeSystemLookup.Input
+  ): Promise<CodeSystemLookup.Output> {
+    if (!input.system || !input.code) {
+      throw new OperationError(
+        outcomeError("invalid", "Invalid input must have both system and code")
+      );
+    }
+    const codeSystem = await ctx.client.search_type(ctx, "CodeSystem", [
+      { name: "url", value: [input.system] },
+    ]);
+    if (codeSystem.resources.length < 1) {
+      throw new OperationError(
+        outcomeError(
+          "not-found",
+          `Could not find code system with url: '${input.system}'`
+        )
+      );
+    }
+    if (codeSystem.resources.length > 1) {
+      throw new OperationError(
+        outcomeError(
+          "invalid",
+          `Found conflicting code systems with url: '${input.system}'`
+        )
+      );
+    }
+
+    const codeSystemResource = codeSystem.resources[0];
+
+    const found = findConcept(codeSystemResource.concept || [], input.code);
+
+    if (!found)
+      throw new OperationError(
+        outcomeError(
+          "not-found",
+          `Could not find code '${input.code}' in code system '${input.system}'`
+        )
+      );
+
+    return {
+      name: codeSystemResource.name || `CodeSystem/${codeSystemResource.id}`,
+      version: codeSystemResource.version,
+      display: found.display || found.code,
+      designation: found.designation ? found.designation : [],
+      property: found.property ? found.property : [],
+    };
   }
 }
