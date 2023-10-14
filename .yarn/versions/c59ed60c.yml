@@ -1,5 +1,8 @@
 releases:
+  "@iguhealth/client": patch
   "@iguhealth/server": patch
 
 declined:
+  - admin-app
+  - "@iguhealth/components"
   - "@iguhealth/fhir-validation"
