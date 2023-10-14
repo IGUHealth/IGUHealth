@@ -101,7 +101,7 @@ test("Hl7 Gender validation", async () => {
 
 test("nested test", async () => {
   const validationSuccess = await client.invoke_type(
-    ValueSetExpand.Op,
+    ValueSetValidateCode.Op,
     {},
     "ValueSet",
     {
@@ -111,7 +111,7 @@ test("nested test", async () => {
   );
   expect(validationSuccess).toEqual({ result: true });
   const validationFail = await client.invoke_type(
-    ValueSetExpand.Op,
+    ValueSetValidateCode.Op,
     {},
     "ValueSet",
     {
@@ -127,7 +127,6 @@ test("nested test", async () => {
     "ValueSet",
     {
       url: "http://hl7.org/fhir/ValueSet/name-use|4.0.1",
-      code: "maiden",
     }
   );
 
