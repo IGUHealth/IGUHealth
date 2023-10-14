@@ -195,9 +195,14 @@ test("Hl7 Name Lookup", async () => {
     display: "Name changed for Marriage",
   });
 
-  const lookupName2 = client.invoke_type(CodeSystemLookup.Op, {}, "ValueSet", {
-    system: "http://hl7.org/fhir/name-use",
-    code: "not-there",
-  });
+  const lookupName2 = client.invoke_type(
+    CodeSystemLookup.Op,
+    {},
+    "CodeSystem",
+    {
+      system: "http://hl7.org/fhir/name-use",
+      code: "not-there",
+    }
+  );
   expect(lookupName2).rejects.toThrow();
 });
