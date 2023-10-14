@@ -84,9 +84,24 @@ export function findSource<T>(
   found = found.sort((a, b) => b.score - a.score);
   if (isMultiSourced) return found.map((s) => s.source);
   else {
-    if (found.length === 0) throw new Error(`No source found for request`);
+    if (found.length === 0)
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `No source found with support for operation '${
+            request.type
+          }' for type '${(request as Resource).resourceType}'`
+        )
+      );
     if (found.length > 1 && found[0].score === found[1].score) {
-      throw new Error(`Multiple sources found for request with same score`);
+      throw new OperationError(
+        outcomeError(
+          "invalid",
+          `Conflicting sources found for request '${request.type}' for type '${
+            (request as Resource).resourceType
+          }'`
+        )
+      );
     }
 
     return [found[0].source];
@@ -98,7 +113,7 @@ function createRouterMiddleware<
   State extends { sources: Sources<CTX> }
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
-    async (request, args, next) => {
+    async (request, args, _next) => {
       const sources = findSource(args.state.sources, request);
       switch (request.type) {
         // Multi-types allowed
@@ -258,10 +273,13 @@ function createRouterMiddleware<
               `Only one source can support create per mutation operation'`
             );
           if (sources.length < 1)
-            throw new Error(
-              `No source found for mutation operation '${
-                request.type
-              } and resource type '${(request as Resource).resourceType}'`
+            throw new OperationError(
+              outcomeError(
+                "not-supported",
+                `No source found with support for operation '${
+                  request.type
+                }' for type '${(request as Resource).resourceType}'`
+              )
             );
           const source = sources[0];
           const response = await source.source.request(args.ctx, request);
@@ -269,7 +287,9 @@ function createRouterMiddleware<
         }
         case "capabilities-request":
         default:
-          throw new Error(`Not supported '${request.type}'`);
+          throw new OperationError(
+            outcomeError("not-supported", `Not supported '${request.type}'`)
+          );
       }
     },
   ]);
