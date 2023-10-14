@@ -4,6 +4,7 @@ import HTTPClient from "@iguhealth/client/lib/http";
 import {
   ValueSetExpand,
   ValueSetValidateCode,
+  CodeSystemLookup,
 } from "@iguhealth/generated-ops/r4";
 
 const client = HTTPClient({
@@ -176,4 +177,27 @@ test("nested test", async () => {
       ],
     },
   ]);
+});
+
+test("Hl7 Name Lookup", async () => {
+  const lookupName = await client.invoke_type(
+    CodeSystemLookup.Op,
+    {},
+    "ValueSet",
+    {
+      system: "http://hl7.org/fhir/name-use",
+      code: "maiden",
+    }
+  );
+  expect(lookupName).toEqual({
+    name: "NameUse",
+    version: "4.0.1",
+    display: "Name changed for Marriage",
+  });
+
+  const lookupName2 = client.invoke_type(CodeSystemLookup.Op, {}, "ValueSet", {
+    system: "http://hl7.org/fhir/name-use",
+    code: "not-there",
+  });
+  expect(lookupName2).rejects.toThrow();
 });
