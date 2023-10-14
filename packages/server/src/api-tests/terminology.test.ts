@@ -98,3 +98,83 @@ test("Hl7 Gender validation", async () => {
   );
   expect(validationFail).toEqual({ result: false });
 });
+
+test("nested test", async () => {
+  const validationSuccess = await client.invoke_type(
+    ValueSetExpand.Op,
+    {},
+    "ValueSet",
+    {
+      url: "http://hl7.org/fhir/ValueSet/name-use|4.0.1",
+      code: "maiden",
+    }
+  );
+  expect(validationSuccess).toEqual({ result: true });
+  const validationFail = await client.invoke_type(
+    ValueSetExpand.Op,
+    {},
+    "ValueSet",
+    {
+      url: "http://hl7.org/fhir/ValueSet/name-use|4.0.1",
+      code: "maide",
+    }
+  );
+  expect(validationFail).toEqual({ result: false });
+
+  const expansion = await client.invoke_type(
+    ValueSetExpand.Op,
+    {},
+    "ValueSet",
+    {
+      url: "http://hl7.org/fhir/ValueSet/name-use|4.0.1",
+      code: "maiden",
+    }
+  );
+
+  expect(expansion?.expansion?.contains).toEqual([
+    {
+      system: "http://hl7.org/fhir/name-use",
+      code: "usual",
+      version: "4.0.1",
+      display: "Usual",
+    },
+    {
+      system: "http://hl7.org/fhir/name-use",
+      code: "official",
+      version: "4.0.1",
+      display: "Official",
+    },
+    {
+      system: "http://hl7.org/fhir/name-use",
+      code: "temp",
+      version: "4.0.1",
+      display: "Temp",
+    },
+    {
+      system: "http://hl7.org/fhir/name-use",
+      code: "nickname",
+      version: "4.0.1",
+      display: "Nickname",
+    },
+    {
+      system: "http://hl7.org/fhir/name-use",
+      code: "anonymous",
+      version: "4.0.1",
+      display: "Anonymous",
+    },
+    {
+      system: "http://hl7.org/fhir/name-use",
+      code: "old",
+      version: "4.0.1",
+      display: "Old",
+      contains: [
+        {
+          system: "http://hl7.org/fhir/name-use",
+          code: "maiden",
+          version: "4.0.1",
+          display: "Name changed for Marriage",
+        },
+      ],
+    },
+  ]);
+});

@@ -2,6 +2,8 @@ import {
   ValueSet,
   ValueSetComposeInclude,
   ValueSetExpansionContains,
+  CodeSystemConcept,
+  CodeSystem,
 } from "@iguhealth/fhir-types/r4/types";
 import {
   ValueSetValidateCode,
@@ -33,6 +35,25 @@ function inlineCodesetToValuesetExpansion(
 
 function areCodesInline(include: ValueSetComposeInclude) {
   return include.concept !== undefined;
+}
+
+function codeSystemConceptToValuesetExpansion(
+  codesystem: CodeSystem,
+  concepts: CodeSystemConcept[]
+): ValueSetExpansionContains[] {
+  return concepts.map((concept) => {
+    return {
+      system: codesystem.url,
+      code: concept.code,
+      version: codesystem.version,
+      display: concept.display,
+      designation: concept.designation,
+      extension: concept.extension,
+      contains: concept.concept
+        ? codeSystemConceptToValuesetExpansion(codesystem, concept.concept)
+        : undefined,
+    };
+  });
 }
 
 async function getValuesetExpansionContains(
@@ -82,19 +103,13 @@ async function getValuesetExpansionContains(
         );
       }
       const codesystem = codeSystemSearch.resources[0];
-      const codeSystemExapnsion: ValueSetExpansionContains[] | undefined =
-        codesystem.concept?.map((concept) => {
-          return {
-            system: codesystem.url,
-            code: concept.code,
-            version: codesystem.version,
-            display: concept.display,
-            designation: concept.designation,
-            extension: concept.extension,
-          };
-        });
+      const codesystemExpansion = codeSystemConceptToValuesetExpansion(
+        codesystem,
+        codesystem.concept ? codesystem.concept : []
+      );
+
       expansion = expansion.concat(
-        codeSystemExapnsion ? codeSystemExapnsion : []
+        codesystemExpansion ? codesystemExpansion : []
       );
     } else {
       throw new OperationError(
