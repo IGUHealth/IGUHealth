@@ -29,7 +29,7 @@ This is a list of supported operations we support in the terminology module. To 
 
 | Operation      | Supported | Url                                                             | Description                                                       |
 | -------------- | --------- | --------------------------------------------------------------- | ----------------------------------------------------------------- |
-| $lookup        | no        | https://hl7.org/fhir/r4/codesystem-operation-lookup.html        | Retrieve additional details about a concept.                      |
+| $lookup        | yes       | https://hl7.org/fhir/r4/codesystem-operation-lookup.html        | Retrieve additional details about a concept.                      |
 | $validate-code | no        | https://hl7.org/fhir/r4/codesystem-operation-validate-code.html | Validate code is in a codeystem.                                  |
 | $subsumes      | no        | https://hl7.org/fhir/r4/codesystem-operation-subsumes.html      | Check subsumption relationship between two codes.                 |
 | $find-matches  | no        | https://hl7.org/fhir/r4/codesystem-operation-find-matches.html  | Given list of properties return matching codes that fit criteria. |
