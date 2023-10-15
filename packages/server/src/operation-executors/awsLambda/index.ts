@@ -23,6 +23,7 @@ import {
   resolveOperationDefinition,
   getOperationCode,
   getOpCTX,
+  validateInvocationContext,
 } from "../utilities.js";
 
 import logAuditEvent, { MINOR_FAILURE } from "../../logging/auditEvents.js";
@@ -235,6 +236,13 @@ function createExecutor(
             >(operationDefinition);
 
             const opCTX = getOpCTX(ctx, request);
+
+            const invocationConextOperation = validateInvocationContext(
+              op.operationDefinition,
+              request
+            );
+            if (invocationConextOperation)
+              throw new OperationError(invocationConextOperation);
 
             const lambda = await confirmLambdaExistsAndReady(
               client,
