@@ -6,10 +6,12 @@ import { TerminologyProviderMemory } from "../../terminology/index.js";
 
 const termProvider = new TerminologyProviderMemory();
 
-export const ValueSetExpandInvoke = InlineOperation(
+const ValueSetExpandInvoke = InlineOperation(
   ValueSetExpand.Op,
   async (ctx: FHIRServerCTX, input) => {
     const expandedValueSet = await termProvider.expand(ctx, input);
     return expandedValueSet;
   }
 );
+
+export default ValueSetExpandInvoke;

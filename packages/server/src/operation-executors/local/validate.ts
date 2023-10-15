@@ -6,10 +6,12 @@ import { TerminologyProviderMemory } from "../../terminology/index.js";
 
 const termProvider = new TerminologyProviderMemory();
 
-export const ValueSetValidate = InlineOperation(
+const ValueSetValidateInvoke = InlineOperation(
   ValueSetValidateCode.Op,
   async (ctx: FHIRServerCTX, input) => {
     const validationResult = await termProvider.validate(ctx, input);
     return validationResult;
   }
 );
+
+export default ValueSetValidateInvoke;

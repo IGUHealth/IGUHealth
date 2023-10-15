@@ -8,76 +8,44 @@ import {
   createMiddlewareAsync,
   MiddlewareAsync,
 } from "@iguhealth/client/middleware";
+import { OperationDefinition } from "@iguhealth/fhir-types/r4/types";
 
-import { InvokeResponse } from "@iguhealth/client/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 import { AsynchronousClient } from "@iguhealth/client";
 
+import { InlineOp } from "./interface.js";
 import { FHIRServerCTX } from "../../fhirServer.js";
-import { ValueSetValidate } from "./validate.js";
-import { ValueSetExpandInvoke } from "./expand.js";
-import { CodeSystemLookupInvoke } from "./lookup.js";
 
-function createExecutor(): MiddlewareAsync<unknown, FHIRServerCTX> {
-  return createMiddlewareAsync<unknown, FHIRServerCTX>([
-    async (request, { ctx, state }, next) => {
+function createExecutor(): MiddlewareAsync<
+  InlineOp<unknown, unknown>[],
+  FHIRServerCTX
+> {
+  return createMiddlewareAsync<InlineOp<unknown, unknown>[], FHIRServerCTX>([
+    async (request, { ctx, state }, _next) => {
       /* eslint-disable no-fallthrough */
       switch (request.type) {
         case "invoke-request": {
-          switch (request.operation) {
-            case "validate-code": {
-              const validationResponse = await ValueSetValidate(ctx, request);
-              const response: InvokeResponse = {
-                type: "invoke-response",
-                level: "system",
-                operation: request.operation,
-                body: validationResponse,
-              };
-              const output = {
+          for (const op of state) {
+            if (op.code === request.operation) {
+              const parameterOutput = await op.execute(ctx, request);
+              return {
                 ctx,
                 state,
-                response,
+                response: {
+                  type: "invoke-response",
+                  level: "system",
+                  operation: request.operation,
+                  body: parameterOutput,
+                },
               };
-              return output;
             }
-            case "expand": {
-              const expanded = await ValueSetExpandInvoke(ctx, request);
-              const response: InvokeResponse = {
-                type: "invoke-response",
-                level: "system",
-                operation: request.operation,
-                body: expanded,
-              };
-              const output = {
-                ctx,
-                state,
-                response,
-              };
-              return output;
-            }
-            case "lookup": {
-              const expanded = await CodeSystemLookupInvoke(ctx, request);
-              const response: InvokeResponse = {
-                type: "invoke-response",
-                level: "system",
-                operation: request.operation,
-                body: expanded,
-              };
-              const output = {
-                ctx,
-                state,
-                response,
-              };
-              return output;
-            }
-            default:
-              throw new OperationError(
-                outcomeFatal(
-                  "invalid",
-                  `Invocation client does not support operation '${request.operation}'`
-                )
-              );
           }
+          throw new OperationError(
+            outcomeFatal(
+              "not-supported",
+              `Operation '${request.operation}' is not supported`
+            )
+          );
         }
         default:
           throw new OperationError(
@@ -91,20 +59,27 @@ function createExecutor(): MiddlewareAsync<unknown, FHIRServerCTX> {
   ]);
 }
 
-class OperationClient extends AsynchronousClient<unknown, FHIRServerCTX> {
+class OperationClient extends AsynchronousClient<
+  InlineOp<unknown, unknown>[],
+  FHIRServerCTX
+> {
+  _state: InlineOp<unknown, unknown>[];
   constructor(
-    initialState: unknown,
-    middleware: MiddlewareAsync<unknown, FHIRServerCTX>
+    initialState: InlineOp<unknown, unknown>[],
+    middleware: MiddlewareAsync<InlineOp<unknown, unknown>[], FHIRServerCTX>
   ) {
     super(initialState, middleware);
+    this._state = initialState;
   }
-  supportedOperations(): string[] {
-    return ["expand", "validate-code", "lookup"];
+  supportedOperations(): OperationDefinition[] {
+    return this._state.map((op) => op.operationDefinition);
   }
 }
 
-export default function InlineOperations(): OperationClient {
-  const client = new OperationClient({}, createExecutor());
+export default function InlineOperations(
+  ops: InlineOp<unknown, unknown>[]
+): OperationClient {
+  const client = new OperationClient(ops, createExecutor());
 
   return client;
 }
