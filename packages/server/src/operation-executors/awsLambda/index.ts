@@ -18,11 +18,12 @@ import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 import { ResourceType, id, Parameters } from "@iguhealth/fhir-types/r4/types";
 
 import { FHIRServerCTX } from "../../fhirServer.js";
-import { InvokeRequest } from "../types.js";
+import { InvokeRequest } from "@iguhealth/client/types";
 import {
   resolveOperationDefinition,
   getOperationCode,
   getOpCTX,
+  validateInvocationContext,
 } from "../utilities.js";
 
 import logAuditEvent, { MINOR_FAILURE } from "../../logging/auditEvents.js";
@@ -235,6 +236,13 @@ function createExecutor(
             >(operationDefinition);
 
             const opCTX = getOpCTX(ctx, request);
+
+            const invocationConextOperation = validateInvocationContext(
+              op.operationDefinition,
+              request
+            );
+            if (invocationConextOperation)
+              throw new OperationError(invocationConextOperation);
 
             const lambda = await confirmLambdaExistsAndReady(
               client,

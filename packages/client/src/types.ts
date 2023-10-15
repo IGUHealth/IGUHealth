@@ -266,6 +266,11 @@ export type InvokeResponse =
   | InvokeTypeResponse
   | InvokeSystemResponse;
 
+export type InvokeRequest =
+  | InvokeInstanceRequest
+  | InvokeTypeRequest
+  | InvokeSystemRequest;
+
 export type FHIRResponse =
   | InvokeInstanceResponse
   | InvokeTypeResponse
