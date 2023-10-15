@@ -127,10 +127,12 @@ export function validateInvocationContext(
   if (issues) return issues;
 
   if (request.level === "instance" || request.level === "type") {
-    if (operation.resource?.includes(request.type))
+    if (!operation.resource?.includes(request.resourceType))
       return outcomeError(
         "invalid",
-        "Instance level invocation requires an instance"
+        `Invalid resourcetype on invocation request '${
+          request.resourceType
+        }' expected one of '${operation.resource?.join(", ")}'`
       );
   }
 }
