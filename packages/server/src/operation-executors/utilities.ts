@@ -86,3 +86,43 @@ export function getOpCTX(ctx: FHIRServerCTX, request: InvokeRequest): OpCTX {
     },
   };
 }
+
+function validateLevel(operation: OperationDefinition, request: InvokeRequest) {
+  switch (request.level) {
+    case "system": {
+      if (!operation.system)
+        throw new OperationError(
+          outcomeError(
+            "invalid",
+            "Operation does not support system level invocation"
+          )
+        );
+      break;
+    }
+    case "type":
+      if (!operation.type) {
+        throw new OperationError(
+          outcomeError(
+            "invalid",
+            "Operation does not support type level invocation"
+          )
+        );
+      }
+      break;
+    case "instance":
+      if (!operation.instance) {
+        throw new OperationError(
+          outcomeError(
+            "invalid",
+            "Operation does not support instance level invocation"
+          )
+        );
+      }
+      break;
+  }
+}
+
+function validateInvocationContext(
+  operation: OperationDefinition,
+  request: InvokeRequest
+) {}
