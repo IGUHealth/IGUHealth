@@ -18,7 +18,7 @@ import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 import { ResourceType, id, Parameters } from "@iguhealth/fhir-types/r4/types";
 
 import { FHIRServerCTX } from "../../fhirServer.js";
-import { InvokeRequest } from "../types.js";
+import { InvokeRequest } from "@iguhealth/client/types";
 import {
   resolveOperationDefinition,
   getOperationCode,
