@@ -3,12 +3,14 @@ import {
   outcomeError,
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
-import { OperationDefinition } from "@iguhealth/fhir-types/r4/types";
+import {
+  OperationDefinition,
+  OperationOutcome,
+} from "@iguhealth/fhir-types/r4/types";
 import { evaluate } from "@iguhealth/fhirpath";
-import AdmZip from "adm-zip";
 import { OpCTX } from "@iguhealth/operation-execution";
 
-import { InvokeRequest } from "./types.js";
+import { InvokeRequest } from "@iguhealth/client/types";
 import { FHIRServerCTX } from "../fhirServer.js";
 
 export async function resolveOperationDefinition(
@@ -91,38 +93,44 @@ function validateLevel(operation: OperationDefinition, request: InvokeRequest) {
   switch (request.level) {
     case "system": {
       if (!operation.system)
-        throw new OperationError(
-          outcomeError(
-            "invalid",
-            "Operation does not support system level invocation"
-          )
+        return outcomeError(
+          "invalid",
+          "Operation does not support system level invocation"
         );
+
       break;
     }
     case "type":
       if (!operation.type) {
-        throw new OperationError(
-          outcomeError(
-            "invalid",
-            "Operation does not support type level invocation"
-          )
+        return outcomeError(
+          "invalid",
+          "Operation does not support type level invocation"
         );
       }
       break;
     case "instance":
       if (!operation.instance) {
-        throw new OperationError(
-          outcomeError(
-            "invalid",
-            "Operation does not support instance level invocation"
-          )
+        return outcomeError(
+          "invalid",
+          "Operation does not support instance level invocation"
         );
       }
       break;
   }
 }
 
-function validateInvocationContext(
+export function validateInvocationContext(
   operation: OperationDefinition,
   request: InvokeRequest
-) {}
+): OperationOutcome | undefined {
+  const issues = validateLevel(operation, request);
+  if (issues) return issues;
+
+  if (request.level === "instance" || request.level === "type") {
+    if (operation.resource?.includes(request.type))
+      return outcomeError(
+        "invalid",
+        "Instance level invocation requires an instance"
+      );
+  }
+}
