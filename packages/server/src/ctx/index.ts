@@ -23,6 +23,9 @@ import MemoryDatabaseSync from "../resourceProviders/memory/sync.js";
 import RouterClient from "../resourceProviders/router.js";
 import PostgresLock from "../synchronization/postgres.lock.js";
 import InlineExecutioner from "../operation-executors/local/index.js";
+import ValueSetExpandInvoke from "../operation-executors/local/expand.js";
+import ValueSetValidateInvoke from "../operation-executors/local/validate.js";
+import CodeSystemLookupInvoke from "../operation-executors/local/lookup.js";
 import AWSLambdaExecutioner from "../operation-executors/awsLambda/index.js";
 import RedisCache from "../cache/redis.js";
 import { TerminologyProviderMemory } from "../terminology/index.js";
@@ -173,7 +176,11 @@ export default async function createServiceCTX(): Promise<
   const data = createMemoryData(MEMORY_TYPES);
   const memDBAsync = MemoryDatabaseAsync(data);
   const memDBSync = MemoryDatabaseSync(data);
-  const inlineOperationExecution = InlineExecutioner();
+  const inlineOperationExecution = InlineExecutioner([
+    ValueSetExpandInvoke,
+    ValueSetValidateInvoke,
+    CodeSystemLookupInvoke,
+  ]);
 
   const client = RouterClient([
     // OP INVOCATION
@@ -183,6 +190,7 @@ export default async function createServiceCTX(): Promise<
           request.type === "invoke-request" &&
           inlineOperationExecution
             .supportedOperations()
+            .map((op) => op.code)
             .includes(request.operation)
         );
       },

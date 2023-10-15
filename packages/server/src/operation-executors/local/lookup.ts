@@ -6,10 +6,12 @@ import { TerminologyProviderMemory } from "../../terminology/index.js";
 
 const termProvider = new TerminologyProviderMemory();
 
-export const CodeSystemLookupInvoke = InlineOperation(
+const CodeSystemLookupInvoke = InlineOperation(
   CodeSystemLookup.Op,
   async (ctx: FHIRServerCTX, input) => {
     const lookup = await termProvider.lookup(ctx, input);
     return lookup;
   }
 );
+
+export default CodeSystemLookupInvoke;
