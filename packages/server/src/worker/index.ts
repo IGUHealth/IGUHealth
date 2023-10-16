@@ -12,7 +12,6 @@ import {
 import {
   OperationError,
   isOperationError,
-  outcome,
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 import { evaluate } from "@iguhealth/fhirpath";
