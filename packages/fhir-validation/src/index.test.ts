@@ -1,7 +1,12 @@
 import path from "path";
 import { expect, test } from "@jest/globals";
 
-import { Resource, ResourceType } from "@iguhealth/fhir-types/r4/types";
+import {
+  Resource,
+  ResourceType,
+  Account,
+  Appointment,
+} from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import MemoryDatabase from "@iguhealth/server/lib/resourceProviders/memory/sync.js";
@@ -34,8 +39,6 @@ const CTX = {
 };
 
 test("Testing validating resourceType 'Patient'", async () => {
-  const sd = memDatabase.read({}, "StructureDefinition", "Patient");
-
   const validator = createValidator(CTX, "Patient");
 
   expect(
@@ -60,8 +63,6 @@ test("Testing validating resourceType 'Patient'", async () => {
 });
 
 test("test typechoice checking", async () => {
-  const sd = memDatabase.read({}, "StructureDefinition", "Patient");
-
   const validator = createValidator(CTX, "Patient");
 
   expect(
@@ -156,8 +157,6 @@ test("Primitive Extensions", async () => {
 });
 
 test("Primitive extension testing", async () => {
-  const sd = memDatabase.read({}, "StructureDefinition", "Patient");
-
   const validator = createValidator(CTX, "Patient");
 
   expect(
@@ -442,4 +441,61 @@ test("Patient with primitive on name", async () => {
       severity: "error",
     },
   ]);
+});
+
+test("validate regexes", async () => {
+  const validator = createValidator(CTX, "Account");
+  const account: Account = {
+    resourceType: "Account",
+    status: "active",
+    coverage: [
+      {
+        coverage: { reference: "Coverage/123" },
+        priority: -1,
+      },
+    ],
+  };
+  expect(await validator(account)).toEqual([
+    {
+      code: "value",
+      diagnostics:
+        "Invalid value '-1' at path '/coverage/0/priority'. Value must conform to regex '/^(\\+?[1-9][0-9]*)$/'",
+      expression: ["/coverage/0/priority"],
+      severity: "error",
+    },
+  ]);
+  expect(
+    await validator({
+      ...account,
+      coverage: [{ coverage: { reference: "Coverage/122" }, priority: 1 }],
+    })
+  ).toEqual([]);
+
+  const validator2 = createValidator(CTX, "Appointment");
+
+  expect(
+    await validator2({
+      resourceType: "Appointment",
+      status: "active",
+      participant: [{ status: "active", actor: { reference: "Patient/1" } }],
+      priority: -1,
+    })
+  ).toEqual([
+    {
+      code: "value",
+      diagnostics:
+        "Invalid value '-1' at path '/priority'. Value must conform to regex '/^([0]|([1-9][0-9]*))$/'",
+      expression: ["/priority"],
+      severity: "error",
+    },
+  ]);
+
+  expect(
+    await validator2({
+      resourceType: "Appointment",
+      status: "active",
+      participant: [{ status: "active", actor: { reference: "Patient/1" } }],
+      priority: 0,
+    })
+  ).toEqual([]);
 });

@@ -189,6 +189,7 @@ test("Hl7 Name Lookup", async () => {
       code: "maiden",
     }
   );
+
   expect(lookupName).toEqual({
     name: "NameUse",
     version: "4.0.1",
