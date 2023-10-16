@@ -2,8 +2,17 @@ import {
   LambdaClient,
   GetFunctionCommand,
   CreateFunctionCommand,
+  UpdateFunctionCodeCommand,
   InvokeCommand,
+  UpdateFunctionConfigurationCommand,
+  TagResourceCommand,
 } from "@aws-sdk/client-lambda";
+
+import {
+  ResourceGroupsTaggingAPI,
+  GetResourcesCommand,
+} from "@aws-sdk/client-resource-groups-tagging-api";
+
 import { configDotenv } from "dotenv";
 import AdmZip from "adm-zip";
 
@@ -15,7 +24,12 @@ import {
 } from "@iguhealth/client/middleware";
 import { FHIRRequest } from "@iguhealth/client/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
-import { ResourceType, id, Parameters } from "@iguhealth/fhir-types/r4/types";
+import {
+  ResourceType,
+  id,
+  Parameters,
+  OperationDefinition,
+} from "@iguhealth/fhir-types/r4/types";
 
 import { FHIRServerCTX } from "../../fhirServer.js";
 import { InvokeRequest } from "@iguhealth/client/types";
@@ -39,20 +53,59 @@ function getLambdaFunctionName(
       outcomeFatal("invalid", "OperationDefinition.meta is required")
     );
 
-  return `${ctx.workspace}-${definition.meta.versionId}`;
+  return `iguhealth_custom_op_${definition.id}`;
+}
+
+function getLambdaTags(
+  ctx: FHIRServerCTX,
+  op: OperationDefinition
+): Record<string, string> {
+  return {
+    workspace: ctx.workspace,
+    id: op.id as string,
+    versionId: op.meta?.versionId as string,
+    operation: op.code,
+  };
 }
 
 async function getLambda(
-  client: LambdaClient,
+  client: {
+    lambda: LambdaClient;
+    tagging: ResourceGroupsTaggingAPI;
+  },
   ctx: FHIRServerCTX,
   operation: Operation<unknown, unknown>
 ) {
   try {
+    const getResources = new GetResourcesCommand({
+      ResourceTypeFilters: ["lambda"],
+      TagFilters: [
+        { Key: "workspace", Values: [ctx.workspace] },
+        { Key: "id", Values: [operation.operationDefinition.id as string] },
+      ],
+    });
+    const taggingResponse = await client.tagging.send(getResources);
+
+    if (
+      !taggingResponse.ResourceTagMappingList ||
+      taggingResponse.ResourceTagMappingList.length < 1
+    ) {
+      return undefined;
+    }
+
+    if (taggingResponse.ResourceTagMappingList.length > 1) {
+      throw new OperationError(
+        outcomeFatal("invalid", "Duplicate functions found for operation")
+      );
+    }
+
+    const resource = taggingResponse.ResourceTagMappingList[0];
+
     const getFunction = new GetFunctionCommand({
-      FunctionName: getLambdaFunctionName(ctx, operation),
+      FunctionName: resource?.ResourceARN,
     });
 
-    const response = await client.send(getFunction);
+    const response = await client.lambda.send(getFunction);
 
     return response;
   } catch (e) {
@@ -114,8 +167,11 @@ function createZipFile(code: string): Buffer {
   return zip.toBuffer();
 }
 
-async function createLambdaFunction(
-  client: LambdaClient,
+async function createOrUpdateLambda(
+  client: {
+    lambda: LambdaClient;
+    tagging: ResourceGroupsTaggingAPI;
+  },
   layers: string[],
   role: string,
   ctx: FHIRServerCTX,
@@ -125,7 +181,11 @@ async function createLambdaFunction(
   await ctx.lock.withLock(lambdaName, async () => {
     // Confirm lambda does not exist when lock taken.
     const lambda = await getLambda(client, ctx, operation);
-    if (lambda) return;
+    if (
+      lambda?.Tags?.["versionId"] ===
+      operation.operationDefinition.meta?.versionId
+    )
+      return;
 
     const operationCode = await getOperationCode(
       ctx,
@@ -139,23 +199,34 @@ async function createLambdaFunction(
 
     const zip = createZipFile(operationCode);
 
-    const createFunction = new CreateFunctionCommand({
-      FunctionName: lambdaName,
-      Runtime: "nodejs18.x",
-      Layers: layers,
-      Handler: "index.handler",
-      Role: role,
-      Tags: {
-        workspace: ctx.workspace,
-        id: operation.operationDefinition.id as string,
-        versionId: operation.operationDefinition.meta?.versionId as string,
-      },
-      Code: {
+    // If lambda exists means misaligned versions so instead updating code and tags.
+    if (lambda) {
+      const updateFunction = new UpdateFunctionCodeCommand({
+        FunctionName: lambdaName,
         ZipFile: zip,
-      },
-    });
+      });
 
-    const response = await client.send(createFunction);
+      const response = await client.lambda.send(updateFunction);
+      const updateTags = new TagResourceCommand({
+        Resource: response.FunctionArn as string,
+        Tags: getLambdaTags(ctx, operation.operationDefinition),
+      });
+      await client.lambda.send(updateTags);
+    } else {
+      const createFunction = new CreateFunctionCommand({
+        FunctionName: lambdaName,
+        Runtime: "nodejs18.x",
+        Layers: layers,
+        Handler: "index.handler",
+        Role: role,
+        Tags: getLambdaTags(ctx, operation.operationDefinition),
+        Code: {
+          ZipFile: zip,
+        },
+      });
+
+      const response = await client.lambda.send(createFunction);
+    }
 
     return;
   });
@@ -193,7 +264,10 @@ async function createPayload(
 }
 
 async function confirmLambdaExistsAndReady(
-  client: LambdaClient,
+  client: {
+    lambda: LambdaClient;
+    tagging: ResourceGroupsTaggingAPI;
+  },
   layers: string[],
   role: string,
   ctx: FHIRServerCTX,
@@ -201,15 +275,27 @@ async function confirmLambdaExistsAndReady(
 ) {
   let lambda = await getLambda(client, ctx, op);
   // Setup creation if lambda does not exist.
-  if (!lambda) {
-    await createLambdaFunction(client, layers, role, ctx, op);
+  if (
+    !lambda ||
+    lambda.Tags?.versionId !== op.operationDefinition.meta?.versionId
+  ) {
+    await createOrUpdateLambda(client, layers, role, ctx, op);
     lambda = await getLambda(client, ctx, op);
   }
 
+  // Confirm the lambda is found and that the versionID in tag align.
   // Confirm state is not pending and then proceed to the invocation.
-  while (lambda?.Configuration?.State === "Pending") {
+  while (
+    lambda?.Configuration?.LastUpdateStatus !== "Successful" ||
+    lambda.Tags?.versionId !== op.operationDefinition.meta?.versionId
+  ) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     lambda = await getLambda(client, ctx, op);
+    if (lambda?.Configuration?.LastUpdateStatus === "Failed") {
+      throw new OperationError(
+        outcomeFatal("exception", "Lambda failed to update.")
+      );
+    }
   }
 
   return lambda;
@@ -218,7 +304,10 @@ async function confirmLambdaExistsAndReady(
 function createExecutor(
   layers: string[],
   role: string,
-  client: LambdaClient
+  client: {
+    lambda: LambdaClient;
+    tagging: ResourceGroupsTaggingAPI;
+  }
 ): MiddlewareAsync<unknown, FHIRServerCTX> {
   return createMiddlewareAsync<unknown, FHIRServerCTX>([
     async (request, { ctx, state }, next) => {
@@ -255,11 +344,11 @@ function createExecutor(
             const payload = await createPayload(ctx, op, request);
 
             const invoke = new InvokeCommand({
-              FunctionName: getLambdaFunctionName(ctx, op),
+              FunctionName: lambda.Configuration?.FunctionArn,
               Payload: Buffer.from(JSON.stringify(payload)),
             });
 
-            const invokeResponse = await client.send(invoke);
+            const invokeResponse = await client.lambda.send(invoke);
             const payloadString = invokeResponse.Payload?.transformToString();
             if (!payloadString)
               throw new OperationError(
@@ -365,15 +454,26 @@ export default function createLambdaExecutioner({
   AWS_ACCESS_KEY_ID,
   AWS_ACCESS_KEY_SECRET,
 }: Config): AsynchronousClient<unknown, FHIRServerCTX> {
-  const client = new LambdaClient({
+  const lambdaClient = new LambdaClient({
     region: AWS_REGION,
     credentials: {
       accessKeyId: AWS_ACCESS_KEY_ID,
       secretAccessKey: AWS_ACCESS_KEY_SECRET,
     },
   });
+  const taggingClient = new ResourceGroupsTaggingAPI({
+    region: AWS_REGION,
+    credentials: {
+      accessKeyId: AWS_ACCESS_KEY_ID,
+      secretAccessKey: AWS_ACCESS_KEY_SECRET,
+    },
+  });
+
   return new AsynchronousClient<unknown, FHIRServerCTX>(
     {},
-    createExecutor(LAYERS, LAMBDA_ROLE, client)
+    createExecutor(LAYERS, LAMBDA_ROLE, {
+      lambda: lambdaClient,
+      tagging: taggingClient,
+    })
   );
 }

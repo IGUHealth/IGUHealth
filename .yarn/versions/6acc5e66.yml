@@ -1,0 +1,7 @@
+releases:
+  "@iguhealth/fhir-validation": patch
+  "@iguhealth/server": patch
+  admin-app: patch
+
+declined:
+  - "@iguhealth/operation-execution"
