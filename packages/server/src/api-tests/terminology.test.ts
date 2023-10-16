@@ -183,7 +183,7 @@ test("Hl7 Name Lookup", async () => {
   const lookupName = await client.invoke_type(
     CodeSystemLookup.Op,
     {},
-    "ValueSet",
+    "CodeSystem",
     {
       system: "http://hl7.org/fhir/name-use",
       code: "maiden",
