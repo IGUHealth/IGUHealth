@@ -291,15 +291,12 @@ async function confirmLambdaExistsAndReady(
   ) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     lambda = await getLambda(client, ctx, op);
-    console.log(lambda?.Configuration?.LastUpdateStatus);
     if (lambda?.Configuration?.LastUpdateStatus === "Failed") {
       throw new OperationError(
         outcomeFatal("exception", "Lambda failed to update.")
       );
     }
   }
-
-  console.log(JSON.stringify(lambda));
 
   return lambda;
 }
