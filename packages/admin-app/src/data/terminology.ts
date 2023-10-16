@@ -10,7 +10,9 @@ export const getValueSetExpansion = selectorFamily({
     (url: string) =>
     async ({ get }) => {
       const client = get(getClient);
-      const expansion = client.invoke_system(ValueSetExpand.Op, {}, { url });
+      const expansion = client.invoke_type(ValueSetExpand.Op, {}, "ValueSet", {
+        url,
+      });
       return expansion;
     },
 });

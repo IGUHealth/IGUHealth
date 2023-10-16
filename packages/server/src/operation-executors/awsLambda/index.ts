@@ -24,7 +24,12 @@ import {
 } from "@iguhealth/client/middleware";
 import { FHIRRequest } from "@iguhealth/client/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
-import { ResourceType, id, Parameters } from "@iguhealth/fhir-types/r4/types";
+import {
+  ResourceType,
+  id,
+  Parameters,
+  OperationDefinition,
+} from "@iguhealth/fhir-types/r4/types";
 
 import { FHIRServerCTX } from "../../fhirServer.js";
 import { InvokeRequest } from "@iguhealth/client/types";
@@ -48,7 +53,19 @@ function getLambdaFunctionName(
       outcomeFatal("invalid", "OperationDefinition.meta is required")
     );
 
-  return `${definition.id}`;
+  return `iguhealth_custom_op_${definition.id}`;
+}
+
+function getLambdaTags(
+  ctx: FHIRServerCTX,
+  op: OperationDefinition
+): Record<string, string> {
+  return {
+    workspace: ctx.workspace,
+    id: op.id as string,
+    versionId: op.meta?.versionId as string,
+    operation: op.code,
+  };
 }
 
 async function getLambda(
@@ -150,7 +167,7 @@ function createZipFile(code: string): Buffer {
   return zip.toBuffer();
 }
 
-async function createLambdaFunction(
+async function createOrUpdateLambda(
   client: {
     lambda: LambdaClient;
     tagging: ResourceGroupsTaggingAPI;
@@ -182,6 +199,7 @@ async function createLambdaFunction(
 
     const zip = createZipFile(operationCode);
 
+    // If lambda exists means misaligned versions so instead updating code and tags.
     if (lambda) {
       const updateFunction = new UpdateFunctionCodeCommand({
         FunctionName: lambdaName,
@@ -191,12 +209,7 @@ async function createLambdaFunction(
       const response = await client.lambda.send(updateFunction);
       const updateTags = new TagResourceCommand({
         Resource: response.FunctionArn as string,
-        Tags: {
-          workspace: ctx.workspace,
-          id: operation.operationDefinition.id as string,
-          versionId: operation.operationDefinition.meta?.versionId as string,
-          operation: operation.operationDefinition.code,
-        },
+        Tags: getLambdaTags(ctx, operation.operationDefinition),
       });
       await client.lambda.send(updateTags);
     } else {
@@ -206,12 +219,7 @@ async function createLambdaFunction(
         Layers: layers,
         Handler: "index.handler",
         Role: role,
-        Tags: {
-          workspace: ctx.workspace,
-          id: operation.operationDefinition.id as string,
-          versionId: operation.operationDefinition.meta?.versionId as string,
-          operation: operation.operationDefinition.code,
-        },
+        Tags: getLambdaTags(ctx, operation.operationDefinition),
         Code: {
           ZipFile: zip,
         },
@@ -267,16 +275,31 @@ async function confirmLambdaExistsAndReady(
 ) {
   let lambda = await getLambda(client, ctx, op);
   // Setup creation if lambda does not exist.
-  if (!lambda) {
-    await createLambdaFunction(client.lambda, layers, role, ctx, op);
+  if (
+    !lambda ||
+    lambda.Tags?.versionId !== op.operationDefinition.meta?.versionId
+  ) {
+    await createOrUpdateLambda(client, layers, role, ctx, op);
     lambda = await getLambda(client, ctx, op);
   }
 
+  // Confirm the lambda is found and that the versionID in tag align.
   // Confirm state is not pending and then proceed to the invocation.
-  while (lambda?.Configuration?.State === "Pending") {
+  while (
+    lambda?.Configuration?.LastUpdateStatus !== "Successful" ||
+    lambda.Tags?.versionId !== op.operationDefinition.meta?.versionId
+  ) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     lambda = await getLambda(client, ctx, op);
+    console.log(lambda?.Configuration?.LastUpdateStatus);
+    if (lambda?.Configuration?.LastUpdateStatus === "Failed") {
+      throw new OperationError(
+        outcomeFatal("exception", "Lambda failed to update.")
+      );
+    }
   }
+
+  console.log(JSON.stringify(lambda));
 
   return lambda;
 }
@@ -313,7 +336,7 @@ function createExecutor(
             if (invocationConextOperation)
               throw new OperationError(invocationConextOperation);
 
-            const lambdaARN = await confirmLambdaExistsAndReady(
+            const lambda = await confirmLambdaExistsAndReady(
               client,
               layers,
               role,
@@ -324,7 +347,7 @@ function createExecutor(
             const payload = await createPayload(ctx, op, request);
 
             const invoke = new InvokeCommand({
-              FunctionName: getLambdaFunctionName(ctx, op),
+              FunctionName: lambda.Configuration?.FunctionArn,
               Payload: Buffer.from(JSON.stringify(payload)),
             });
 
