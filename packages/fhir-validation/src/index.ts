@@ -24,12 +24,12 @@ type Validator = (input: any) => Promise<OperationOutcome["issue"]>;
 // Create a validator for a given fhir type and value
 
 const REGEX: Record<string, RegExp> = {
-  base64Binary: /^(\s*([0-9a-zA-Z+=]){4}\s*)+$/,
+  // base64Binary: /^(\s*([0-9a-zA-Z+=]){4}\s*)+$/,
   uuid: /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/,
   time: /^([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?$/,
   oid: /^urn:oid:[0-2](\.(0|[1-9][0-9]*))+$/,
   unsignedInt: /^([0]|([1-9][0-9]*))$/,
-  positiveInt: /^(+?[1-9][0-9]*)$/,
+  positiveInt: /^(\+?[1-9][0-9]*)$/,
   instant:
     /^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?(Z|(\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))$/,
   id: /^[A-Za-z0-9\-.]{1,64}$/,
