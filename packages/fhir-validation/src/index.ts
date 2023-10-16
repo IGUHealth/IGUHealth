@@ -23,6 +23,21 @@ type Validator = (input: any) => Promise<OperationOutcome["issue"]>;
 
 // Create a validator for a given fhir type and value
 
+const REGEX: Record<string, RegExp> = {
+  base64Binary: /^(\s*([0-9a-zA-Z+=]){4}\s*)+$/,
+  uuid: /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/,
+  time: /^([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?$/,
+  oid: /^urn:oid:[0-2](\.(0|[1-9][0-9]*))+$/,
+  unsignedInt: /^([0]|([1-9][0-9]*))$/,
+  positiveInt: /^(+?[1-9][0-9]*)$/,
+  instant:
+    /^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?(Z|(\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))$/,
+  id: /^[A-Za-z0-9\-.]{1,64}$/,
+  date: /^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1]))?)?$/,
+  dateTime:
+    /^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?(Z|(\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)))?)?)?$/,
+};
+
 async function validatePrimitive(
   ctx: ValidationCTX,
   element: ElementDefinition | undefined,
@@ -33,6 +48,10 @@ async function validatePrimitive(
   const value = jsonpointer.get(root, path);
   switch (type) {
     case "http://hl7.org/fhirpath/System.String":
+    case "date":
+    case "dateTime":
+    case "time":
+    case "instant":
     case "id":
     case "string":
     case "xhtml":
@@ -52,6 +71,16 @@ async function validatePrimitive(
           ),
         ];
       }
+      if (REGEX[type] && !REGEX[type].test(value)) {
+        return [
+          issueError(
+            "value",
+            `Invalid value '${value}' at path '${path}'. Value must conform to regex '${REGEX[type]}'`,
+            [path]
+          ),
+        ];
+      }
+
       return [];
     }
 
@@ -96,23 +125,6 @@ async function validatePrimitive(
 
       return [];
     }
-
-    case "date":
-    case "dateTime":
-    case "time":
-    case "instant": {
-      if (typeof value !== "string") {
-        return [
-          issueError(
-            "structure",
-            `Expected primitive type '${type}' at path '${path}'`,
-            [path]
-          ),
-        ];
-      }
-      return [];
-    }
-
     case "integer":
     case "positiveInt":
     case "unsignedInt":
@@ -122,6 +134,15 @@ async function validatePrimitive(
           issueError(
             "structure",
             `Expected primitive type '${type}' at path '${path}'`,
+            [path]
+          ),
+        ];
+      }
+      if (REGEX[type] && !REGEX[type].test(value.toString())) {
+        return [
+          issueError(
+            "value",
+            `Invalid value '${value}' at path '${path}'. Value must conform to regex '${REGEX[type]}'`,
             [path]
           ),
         ];
