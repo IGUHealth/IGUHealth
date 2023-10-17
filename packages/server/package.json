@@ -16,6 +16,7 @@
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.379.1",
     "@aws-sdk/client-resource-groups-tagging-api": "^3.379.1",
+    "@dagrejs/graphlib": "^2.1.13",
     "@iguhealth/artifacts": "workspace:^",
     "@iguhealth/cli": "workspace:^",
     "@iguhealth/client": "workspace:^",
