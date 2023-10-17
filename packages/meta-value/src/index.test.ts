@@ -36,7 +36,7 @@ test("Untyped", () => {
     name: [{ given: ["bob"] }],
     deceasedBoolean: true,
   };
-  const myValue = new MetaValueSingular(undefined, patient) as any;
+  const myValue = new MetaValueSingular({}, patient) as any;
 
   expect(descend(myValue, "name")?.valueOf()).toEqual([{ given: ["bob"] }]);
   expect(descend(myValue, "deceased")?.valueOf()).toEqual(true);
@@ -56,10 +56,12 @@ test("Simple Type test", () => {
   };
   const myValue = new MetaValueSingular(
     {
-      type: "Patient",
-      getSD: (type: string) => {
-        const foundSD = sds.find((sd) => sd.type === type);
-        return foundSD;
+      type: {
+        type: "Patient",
+        getSD: (type: string) => {
+          const foundSD = sds.find((sd) => sd.type === type);
+          return foundSD;
+        },
       },
     },
     patient
@@ -116,10 +118,12 @@ test("ConceptMap test", () => {
   };
   const myValue = new MetaValueSingular(
     {
-      type: "ConceptMap",
-      getSD: (type: string) => {
-        const foundSD = sds.find((sd) => sd.type === type);
-        return foundSD;
+      type: {
+        type: "ConceptMap",
+        getSD: (type: string) => {
+          const foundSD = sds.find((sd) => sd.type === type);
+          return foundSD;
+        },
       },
     },
     cm
@@ -155,11 +159,12 @@ test("Location test", () => {
   };
   const myValue = new MetaValueSingular(
     {
-      location: [],
-      type: "Patient",
-      getSD: (type: string) => {
-        const foundSD = sds.find((sd) => sd.type === type);
-        return foundSD;
+      type: {
+        type: "Patient",
+        getSD: (type: string) => {
+          const foundSD = sds.find((sd) => sd.type === type);
+          return foundSD;
+        },
       },
     },
     patient
