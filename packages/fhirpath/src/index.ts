@@ -202,13 +202,13 @@ const fp_functions: Record<
    * Note that the ordering of the children is undefined and using functions like first() on the result may return different results on different platforms.
    */
   children(ast, context, options) {
-    const children = context
-      .map((node) => {
+    const children = flatten(
+      context.map((node) => {
         const v = node.valueOf();
         const keys = Object.keys(v || {});
-        return keys.map((k) => flattenedDescend(node, k)).flat();
+        return flatten(keys.map((k) => flattenedDescend(node, k)));
       })
-      .flat();
+    );
 
     return children;
   },
