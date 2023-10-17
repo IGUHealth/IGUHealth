@@ -144,3 +144,34 @@ test("ConceptMap test", () => {
   cur = flattenedDescend(cur[0], "url");
   expect(cur[0]?.meta()?.type).toEqual("canonical");
 });
+
+test("Location test", () => {
+  const patient: Patient = {
+    id: "123",
+    resourceType: "Patient",
+    identifier: [{ system: "mrn", value: "123" }],
+    name: [{ given: ["bob", "frank"] }],
+    deceasedBoolean: true,
+  };
+  const myValue = new MetaValueSingular(
+    {
+      location: [],
+      type: "Patient",
+      getSD: (type: string) => {
+        const foundSD = sds.find((sd) => sd.type === type);
+        return foundSD;
+      },
+    },
+    patient
+  ) as any;
+  let cur = flattenedDescend(myValue, "name");
+  cur = flattenedDescend(cur[0], "given");
+  expect(cur.map((v) => v.location())).toEqual([
+    ["name", 0, "given", 0],
+    ["name", 0, "given", 1],
+  ]);
+
+  cur = flattenedDescend(myValue, "identifier");
+  cur = flattenedDescend(cur[0], "system");
+  expect(cur[0].location()).toEqual(["identifier", 0, "system"]);
+});
