@@ -9,7 +9,7 @@ import {
   OperationOutcome,
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
-import { primitiveTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
+import { primitiveTypes } from "@iguhealth/fhir-types/r4/sets";
 import { eleIndexToChildIndices } from "@iguhealth/codegen";
 import { descend, createPath, ascend } from "./path.js";
 import jsonpointer from "jsonpointer";

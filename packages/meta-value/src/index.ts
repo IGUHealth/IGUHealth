@@ -33,26 +33,24 @@ function resolveContentReferenceIndex(
   return referenceElementIndex;
 }
 
+type Location = (string | number)[];
+
 type MetaInformation = {
   sd: StructureDefinition;
   elementIndex: number;
   // Typechoice so need to maintain the type here.
   type: string;
   getSD?: (type: code) => StructureDefinition | undefined;
+  location?: Location;
 };
 
-export type PartialMeta = {
-  type?: MetaInformation["type"];
-  elementIndex?: MetaInformation["elementIndex"];
-  sd?: MetaInformation["sd"];
-  // Typechoice so need to maintain the type here.
-  getSD?: MetaInformation["getSD"];
-};
+export type PartialMeta = Partial<MetaInformation>;
 
 export interface MetaValue<T> {
   meta(): MetaInformation | undefined;
   valueOf(): T;
   isArray(): this is MetaValueArray<T>;
+  location(): Location | undefined;
 }
 
 type RawPrimitive = string | number | boolean | undefined;
@@ -160,6 +158,11 @@ function pathMatchesElement(
   return false;
 }
 
+function capitalize(s: string | undefined): string {
+  if (s === undefined) return "";
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 /*
  ** Given Metainformation and field derive the next metainformation.
  ** This could mean pulling in a new StructureDefinition (IE in case of complex type or resource)
@@ -170,68 +173,73 @@ function deriveNextMetaInformation(
   field: string,
   expectedType?: string // For Typechoices pass in chunk pulled from field.
 ): MetaInformation | undefined {
-  if (meta?.elementIndex !== undefined) {
-    const curElement = meta.sd.snapshot?.element[meta.elementIndex];
-    const nextElementPath = `${curElement?.path}.${field.toString()}`;
-    let i = meta.elementIndex + 1;
-    while (i < (meta.sd.snapshot?.element.length || 0)) {
-      let elementToCheck = meta.sd.snapshot?.element[i];
-      if (
-        elementToCheck &&
-        pathMatchesElement(elementToCheck, nextElementPath, expectedType)
-      ) {
-        // Handle content references.
-        if (elementToCheck?.contentReference) {
-          const referenceElementIndex = resolveContentReferenceIndex(
-            meta.sd,
-            elementToCheck
-          );
-          const referenceElement =
-            meta.sd.snapshot?.element[referenceElementIndex];
-          const type = referenceElement?.type?.[0].code;
-          if (!type) return undefined;
-          return {
-            sd: meta.sd,
-            type,
-            elementIndex: referenceElementIndex,
-            getSD: meta.getSD,
-          };
-        } else {
-          const type =
-            elementToCheck &&
-            isElementDefinitionWithType(
-              elementToCheck,
-              nextElementPath,
-              expectedType
-            );
-          if (!type) return undefined;
-          // In this case pull in the SD means it's a complex or resource type
-          // so need to retrieve the SD.
-          if (isResourceOrComplexType(type)) {
-            const sd = meta.getSD && meta.getSD(type);
-            if (!sd) {
-              throw new Error(`Could not retrieve sd of type '${type}'`);
-            }
-            return {
-              sd: sd,
-              type: type,
-              elementIndex: 0,
-              getSD: meta.getSD,
-            };
-          }
+  if (meta?.elementIndex === undefined) return undefined;
 
+  const curElement = meta.sd.snapshot?.element[meta.elementIndex];
+  const nextElementPath = `${curElement?.path}.${field.toString()}`;
+  let i = meta.elementIndex + 1;
+  while (i < (meta.sd.snapshot?.element.length || 0)) {
+    let elementToCheck = meta.sd.snapshot?.element[i];
+    if (!elementToCheck) return undefined;
+
+    if (pathMatchesElement(elementToCheck, nextElementPath, expectedType)) {
+      const nextMeta: Partial<MetaInformation> = {
+        location: meta.location
+          ? [...meta.location, `${field}${capitalize(expectedType)}`]
+          : undefined,
+        getSD: meta.getSD,
+      };
+
+      // Handle content references.
+      if (elementToCheck.contentReference) {
+        const referenceElementIndex = resolveContentReferenceIndex(
+          meta.sd,
+          elementToCheck
+        );
+        const referenceElement =
+          meta.sd.snapshot?.element[referenceElementIndex];
+        const type = referenceElement?.type?.[0].code;
+        if (!type) return undefined;
+
+        return {
+          ...nextMeta,
+          sd: meta.sd,
+          type,
+          elementIndex: referenceElementIndex,
+        };
+      } else {
+        const type = isElementDefinitionWithType(
+          elementToCheck,
+          nextElementPath,
+          expectedType
+        );
+        if (!type) return undefined;
+        // In this case pull in the SD means it's a complex or resource type
+        // so need to retrieve the SD.
+        if (isResourceOrComplexType(type)) {
+          const sd = meta.getSD && meta.getSD(type);
+          if (!sd) {
+            throw new Error(`Could not retrieve sd of type '${type}'`);
+          }
           return {
-            sd: meta.sd,
+            ...nextMeta,
+            sd: sd,
             type: type,
-            // Check for content reference and resolve to that indice.
-            elementIndex: i,
-            getSD: meta.getSD,
+            elementIndex: 0,
           };
         }
+
+        return {
+          ...nextMeta,
+          sd: meta.sd,
+          type,
+          elementIndex: i,
+        };
       }
-      i++;
     }
+    i++;
   }
+
   return undefined;
 }
 
@@ -308,6 +316,9 @@ export class MetaValueSingular<T> implements MetaValue<T> {
   isArray(): this is MetaValueArray<T> {
     return false;
   }
+  location(): Location | undefined {
+    return this.meta()?.location;
+  }
 }
 
 export class MetaValueArray<T> implements MetaValue<Array<T>> {
@@ -321,7 +332,10 @@ export class MetaValueArray<T> implements MetaValue<Array<T>> {
     this.value = value.map(
       (v, i: number) =>
         new MetaValueSingular(
-          meta,
+          {
+            ...meta,
+            location: meta?.location ? [...meta.location, i] : undefined,
+          },
           v,
           element && isArray(element) ? element[i] : undefined
         )
@@ -339,5 +353,8 @@ export class MetaValueArray<T> implements MetaValue<Array<T>> {
   }
   meta(): MetaInformation | undefined {
     return this._meta;
+  }
+  location(): Location | undefined {
+    return this.meta()?.location;
   }
 }
