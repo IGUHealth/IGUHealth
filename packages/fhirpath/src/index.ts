@@ -198,6 +198,25 @@ const fp_functions: Record<
       throw new Error("Where clause criteria must evaluate to a boolean");
     });
   },
+  /**
+   *
+   * @param ast
+   * @param context
+   * @param options
+   * Returns a collection with all immediate child nodes of all items in the input collection.
+   * Note that the ordering of the children is undefined and using functions like first() on the result may return different results on different platforms.
+   */
+  children(ast, context, options) {
+    const children = context
+      .map((node) => {
+        const v = node.valueOf();
+        const keys = Object.keys(v || {});
+        return keys.map((k) => flattenedDescend(node, k)).flat();
+      })
+      .flat();
+
+    return children;
+  },
   select(ast, context, options) {
     const selection = ast.next[0];
     return flatten(

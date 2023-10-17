@@ -650,3 +650,74 @@ test("test reference finding", () => {
     ["subject", 2],
   ]);
 });
+
+test("children", () => {
+  expect(
+    evaluate(
+      "CarePlan.children()",
+      {
+        resourceType: "CarePlan",
+        subject: [
+          { reference: "Patient/123" },
+          { reference: "Practitioner/123" },
+          { reference: "Patient/4" },
+        ],
+      },
+      {
+        meta: {
+          type: "CarePlan",
+          getSD,
+        },
+      }
+    )
+  ).toEqual([
+    "CarePlan",
+    { reference: "Patient/123" },
+    { reference: "Practitioner/123" },
+    { reference: "Patient/4" },
+  ]);
+
+  expect(
+    evaluateWithMeta(
+      "CarePlan.children()",
+      {
+        resourceType: "CarePlan",
+        subject: [
+          { reference: "Patient/123" },
+          { reference: "Practitioner/123" },
+          { reference: "Patient/4" },
+        ],
+      },
+      {
+        meta: {
+          type: "CarePlan",
+          getSD,
+        },
+      }
+    ).map((v) => v.location())
+  ).toEqual([["resourceType"], ["subject", 0], ["subject", 1], ["subject", 2]]);
+
+  expect(
+    evaluateWithMeta(
+      "CarePlan.children().ofType(Reference)",
+      {
+        resourceType: "CarePlan",
+        subject: [
+          { reference: "Patient/123" },
+          { reference: "Practitioner/123" },
+          { reference: "Patient/4" },
+        ],
+      },
+      {
+        meta: {
+          type: "CarePlan",
+          getSD,
+        },
+      }
+    ).map((v) => v.location())
+  ).toEqual([
+    ["subject", 0],
+    ["subject", 1],
+    ["subject", 2],
+  ]);
+});
