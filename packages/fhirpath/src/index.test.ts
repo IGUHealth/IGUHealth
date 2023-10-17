@@ -721,3 +721,63 @@ test("children", () => {
     ["subject", 2],
   ]);
 });
+
+test("descendants", () => {
+  expect(
+    evaluate(
+      "Patient.descendants()",
+      {
+        resourceType: "Patient",
+        name: [{ given: ["bob"], family: "jameson" }],
+        deceasedBoolean: false,
+        identifier: [{ system: "mrn", value: "123" }],
+      },
+      metaOptions("Patient")
+    )
+  ).toEqual([
+    "Patient",
+    {
+      family: "jameson",
+      given: ["bob"],
+    },
+    false,
+    {
+      system: "mrn",
+      value: "123",
+    },
+    "bob",
+    "jameson",
+    "mrn",
+    "123",
+  ]);
+
+  expect(
+    evaluate(
+      "Patient.descendants().ofType(Identifier)",
+      {
+        resourceType: "Patient",
+        name: [{ given: ["bob"], family: "jameson" }],
+        deceasedBoolean: false,
+        identifier: [{ system: "mrn", value: "123" }],
+      },
+      metaOptions("Patient")
+    )
+  ).toEqual([
+    {
+      system: "mrn",
+      value: "123",
+    },
+  ]);
+  expect(
+    evaluate(
+      "Patient.descendants().ofType(string)",
+      {
+        resourceType: "Patient",
+        name: [{ given: ["bob"], family: "jameson" }],
+        deceasedBoolean: false,
+        identifier: [{ system: "mrn", value: "123" }],
+      },
+      metaOptions("Patient")
+    )
+  ).toEqual(["bob", "jameson", "123"]);
+});

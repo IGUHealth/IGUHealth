@@ -1,6 +1,5 @@
 import { Reference, Resource } from "@iguhealth/fhir-types/r4/types";
 import {
-  Meta,
   PartialMeta,
   PartialTypeMeta,
   MetaValueArray,
@@ -199,10 +198,6 @@ const fp_functions: Record<
     });
   },
   /**
-   *
-   * @param ast
-   * @param context
-   * @param options
    * Returns a collection with all immediate child nodes of all items in the input collection.
    * Note that the ordering of the children is undefined and using functions like first() on the result may return different results on different platforms.
    */
@@ -216,6 +211,12 @@ const fp_functions: Record<
       .flat();
 
     return children;
+  },
+  /**
+   * Returns a collection with all descendant nodes of all items in the input collection.
+   */
+  descendants(_ast, context, options) {
+    return evaluateWithMeta("repeat(children())", context, options);
   },
   select(ast, context, options) {
     const selection = ast.next[0];
