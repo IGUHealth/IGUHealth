@@ -650,3 +650,134 @@ test("test reference finding", () => {
     ["subject", 2],
   ]);
 });
+
+test("children", () => {
+  expect(
+    evaluate(
+      "CarePlan.children()",
+      {
+        resourceType: "CarePlan",
+        subject: [
+          { reference: "Patient/123" },
+          { reference: "Practitioner/123" },
+          { reference: "Patient/4" },
+        ],
+      },
+      {
+        meta: {
+          type: "CarePlan",
+          getSD,
+        },
+      }
+    )
+  ).toEqual([
+    "CarePlan",
+    { reference: "Patient/123" },
+    { reference: "Practitioner/123" },
+    { reference: "Patient/4" },
+  ]);
+
+  expect(
+    evaluateWithMeta(
+      "CarePlan.children()",
+      {
+        resourceType: "CarePlan",
+        subject: [
+          { reference: "Patient/123" },
+          { reference: "Practitioner/123" },
+          { reference: "Patient/4" },
+        ],
+      },
+      {
+        meta: {
+          type: "CarePlan",
+          getSD,
+        },
+      }
+    ).map((v) => v.location())
+  ).toEqual([["resourceType"], ["subject", 0], ["subject", 1], ["subject", 2]]);
+
+  expect(
+    evaluateWithMeta(
+      "CarePlan.children().ofType(Reference)",
+      {
+        resourceType: "CarePlan",
+        subject: [
+          { reference: "Patient/123" },
+          { reference: "Practitioner/123" },
+          { reference: "Patient/4" },
+        ],
+      },
+      {
+        meta: {
+          type: "CarePlan",
+          getSD,
+        },
+      }
+    ).map((v) => v.location())
+  ).toEqual([
+    ["subject", 0],
+    ["subject", 1],
+    ["subject", 2],
+  ]);
+});
+
+test("descendants", () => {
+  expect(
+    evaluate(
+      "Patient.descendants()",
+      {
+        resourceType: "Patient",
+        name: [{ given: ["bob"], family: "jameson" }],
+        deceasedBoolean: false,
+        identifier: [{ system: "mrn", value: "123" }],
+      },
+      metaOptions("Patient")
+    )
+  ).toEqual([
+    "Patient",
+    {
+      family: "jameson",
+      given: ["bob"],
+    },
+    false,
+    {
+      system: "mrn",
+      value: "123",
+    },
+    "bob",
+    "jameson",
+    "mrn",
+    "123",
+  ]);
+
+  expect(
+    evaluate(
+      "Patient.descendants().ofType(Identifier)",
+      {
+        resourceType: "Patient",
+        name: [{ given: ["bob"], family: "jameson" }],
+        deceasedBoolean: false,
+        identifier: [{ system: "mrn", value: "123" }],
+      },
+      metaOptions("Patient")
+    )
+  ).toEqual([
+    {
+      system: "mrn",
+      value: "123",
+    },
+  ]);
+  expect(
+    evaluate(
+      "Patient.descendants().ofType(string)",
+      {
+        resourceType: "Patient",
+        name: [{ given: ["bob"], family: "jameson" }],
+        deceasedBoolean: false,
+        identifier: [{ system: "mrn", value: "123" }],
+      },
+      metaOptions("Patient")
+    )
+  ).toEqual(["bob", "jameson", "123"]);
+});

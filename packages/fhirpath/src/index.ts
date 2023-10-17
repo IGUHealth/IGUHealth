@@ -1,6 +1,5 @@
 import { Reference, Resource } from "@iguhealth/fhir-types/r4/types";
 import {
-  Meta,
   PartialMeta,
   PartialTypeMeta,
   MetaValueArray,
@@ -197,6 +196,27 @@ const fp_functions: Record<
       if (typeChecking("boolean", result)) return result[0].valueOf();
       throw new Error("Where clause criteria must evaluate to a boolean");
     });
+  },
+  /**
+   * Returns a collection with all immediate child nodes of all items in the input collection.
+   * Note that the ordering of the children is undefined and using functions like first() on the result may return different results on different platforms.
+   */
+  children(ast, context, options) {
+    const children = flatten(
+      context.map((node) => {
+        const v = node.valueOf();
+        const keys = Object.keys(v || {});
+        return flatten(keys.map((k) => flattenedDescend(node, k)));
+      })
+    );
+
+    return children;
+  },
+  /**
+   * Returns a collection with all descendant nodes of all items in the input collection.
+   */
+  descendants(_ast, context, options) {
+    return evaluateWithMeta("repeat(children())", context, options);
   },
   select(ast, context, options) {
     const selection = ast.next[0];

@@ -345,17 +345,17 @@ export class MetaValueArray<T> implements MetaValue<Array<T>> {
   private value: Array<MetaValueSingular<T>>;
   private _meta: Meta;
   constructor(meta: PartialMeta, value: Array<T>, element?: Element[]) {
-    this.value = value.map(
-      (v, i: number) =>
-        new MetaValueSingular(
-          {
-            ...meta,
-            location: meta?.location ? [...meta.location, i] : [],
-          },
-          v,
-          element ? element[i] : undefined
-        )
-    );
+    this.value = value.map((v, i: number) => {
+      if (v instanceof MetaValueSingular) return v;
+      return new MetaValueSingular(
+        {
+          ...meta,
+          location: meta?.location ? [...meta.location, i] : [],
+        },
+        v,
+        element ? element[i] : undefined
+      );
+    });
     this._meta = {
       location: meta.location ? meta.location : [],
       type: deriveNextTypeMeta(meta.type),
