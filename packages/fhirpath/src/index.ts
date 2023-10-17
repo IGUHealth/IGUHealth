@@ -1,6 +1,8 @@
 import { Reference, Resource } from "@iguhealth/fhir-types/r4/types";
 import {
+  Meta,
   PartialMeta,
+  PartialTypeMeta,
   MetaValueArray,
   MetaValueSingular,
   descend,
@@ -23,7 +25,7 @@ function toMetaValueSingulars<T>(
   value: T | T[],
   element?: Element | Element[]
 ): MetaValueSingular<T>[] {
-  const node = toMetaValueNodes(meta, value, element);
+  const node = toMetaValueNodes(meta ? meta : {}, value, element);
   if (node instanceof MetaValueArray) return node.toArray();
   if (node instanceof MetaValueSingular) return [node];
   return [];
@@ -31,7 +33,7 @@ function toMetaValueSingulars<T>(
 
 type Options = {
   variables?: Record<string, unknown> | ((v: string) => unknown);
-  meta?: PartialMeta;
+  meta?: PartialTypeMeta;
 };
 
 function flatten<T>(arr: T[][]): T[] {
@@ -49,7 +51,7 @@ function getVariableValue(
     value = options.variables[name];
   }
 
-  return toMetaValueSingulars(options?.meta, value);
+  return toMetaValueSingulars({ type: options?.meta }, value);
 }
 
 function assert(assertion: boolean, message?: string) {
@@ -81,19 +83,19 @@ const fp_functions: Record<
   exists: function (ast, context, options) {
     if (ast.next.length === 1) {
       return toMetaValueSingulars(
-        options?.meta,
+        { type: options?.meta },
         _evaluate(ast.next[0], context, options).length > 0
       );
     }
-    return toMetaValueSingulars(options?.meta, context.length > 0);
+    return toMetaValueSingulars({ type: options?.meta }, context.length > 0);
   },
   // exists([criteria : expression]) : Boolean
   empty(ast, context, options) {
-    return toMetaValueSingulars(options?.meta, context.length === 0);
+    return toMetaValueSingulars({ type: options?.meta }, context.length === 0);
   },
   all(ast, context, options) {
     return toMetaValueSingulars(
-      options?.meta,
+      { type: options?.meta },
       flatten(context.map((v) => _evaluate(ast.next[0], [v], options)))
         .map((v) => v.valueOf())
         .reduce((acc, v) => acc && v, true)
@@ -101,32 +103,32 @@ const fp_functions: Record<
   },
   allTrue(ast, context, options) {
     return toMetaValueSingulars(
-      options?.meta,
+      { type: options?.meta },
       context.reduce((acc, v) => v.valueOf() === true && acc, true)
     );
   },
   anyTrue(ast, context, options) {
     return toMetaValueSingulars(
-      options?.meta,
+      { type: options?.meta },
       context.reduce((acc, v) => v.valueOf() === true || acc, false)
     );
   },
   allFalse(ast, context, options) {
     return toMetaValueSingulars(
-      options?.meta,
+      { type: options?.meta },
       context.reduce((acc, v) => v.valueOf() === false && acc, true)
     );
   },
   anyFalse(ast, context, options) {
     return toMetaValueSingulars(
-      options?.meta,
+      { type: options?.meta },
       context.reduce((acc, v) => v.valueOf() === false || acc, false)
     );
   },
   subsetOf(ast, context, options) {
     const otherSet = _evaluate(ast.next[0], context, options);
     return toMetaValueSingulars(
-      options?.meta,
+      { type: options?.meta },
       context.reduce(
         (acc, v1) =>
           acc &&
@@ -142,7 +144,7 @@ const fp_functions: Record<
   supersetOf(ast, context, options) {
     const otherSet = _evaluate(ast.next[0], context, options);
     return toMetaValueSingulars(
-      options?.meta,
+      { type: options?.meta },
       otherSet.reduce(
         (acc, v1) =>
           acc &&
@@ -155,7 +157,7 @@ const fp_functions: Record<
     );
   },
   count(ast, context, options) {
-    return toMetaValueSingulars(options?.meta, context.length);
+    return toMetaValueSingulars({ type: options?.meta }, context.length);
   },
   distinct(ast, context, options) {
     const map = context
@@ -182,7 +184,7 @@ const fp_functions: Record<
   isDistinct(ast, context, options) {
     const distinct = fp_functions.distinct(undefined, context, options);
     return toMetaValueSingulars(
-      options?.meta,
+      { type: options?.meta },
       context.length === distinct.length
     );
   },
@@ -274,7 +276,7 @@ function _evaluateTermStart(
       }
       return evaluateInvocation(ast.value, context, options);
     case "Literal": {
-      return toMetaValueSingulars(options?.meta, ast.value.value);
+      return toMetaValueSingulars({ type: options?.meta }, ast.value.value);
     }
     case "Variable":
       return getVariableValue(ast.value.value.value, options);
@@ -376,15 +378,15 @@ const equalityCheck: EvaledOperation = (
 ): MetaValueSingular<boolean>[] => {
   // TODO improve Deep Equals speed.
   if (left.length !== right.length)
-    return toMetaValueSingulars(options?.meta, false);
+    return toMetaValueSingulars({ type: options?.meta }, false);
   if (typeof left[0].valueOf() === "object") {
     return toMetaValueSingulars(
-      options?.meta,
+      { type: options?.meta },
       JSON.stringify(left[0].valueOf()) === JSON.stringify(right[0].valueOf())
     );
   }
   return toMetaValueSingulars(
-    { ...options?.meta, type: "boolean" },
+    { type: { ...options?.meta, type: "boolean" } },
     left[0].valueOf() === right[0].valueOf()
   );
 };
@@ -422,12 +424,12 @@ const fp_operations: Record<
   "+": op_prevaled((left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
       return toMetaValueSingulars(
-        options?.meta,
+        { type: options?.meta },
         left[0].valueOf() + right[0].valueOf()
       );
     } else if (typeChecking("string", left) && typeChecking("string", right)) {
       return toMetaValueSingulars(
-        options?.meta,
+        { type: options?.meta },
         left[0].valueOf() + right[0].valueOf()
       );
     } else {
@@ -452,7 +454,7 @@ const fp_operations: Record<
     const typeIdentifier = expressionToTypeIdentifier(ast.right);
     return context.map((c) => {
       return new MetaValueSingular(
-        { ...options?.meta, type: "boolean" },
+        { type: { ...options?.meta, type: "boolean" } },
         isType(c, typeIdentifier)
       );
     });
@@ -460,7 +462,7 @@ const fp_operations: Record<
   "-": op_prevaled((left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
       return toMetaValueSingulars(
-        options?.meta,
+        { type: options?.meta },
         left[0].valueOf() - right[0].valueOf()
       );
     } else {
@@ -470,7 +472,7 @@ const fp_operations: Record<
   "*": op_prevaled((left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
       return toMetaValueSingulars(
-        options?.meta,
+        { type: options?.meta },
         left[0].valueOf() * right[0].valueOf()
       );
     } else {
@@ -480,7 +482,7 @@ const fp_operations: Record<
   "/": op_prevaled((left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
       return toMetaValueSingulars(
-        options?.meta,
+        { type: options?.meta },
         left[0].valueOf() / right[0].valueOf()
       );
     } else {
@@ -493,7 +495,7 @@ const fp_operations: Record<
   and: op_prevaled((left, right, options) => {
     if (typeChecking("boolean", left) && typeChecking("boolean", right)) {
       return toMetaValueSingulars(
-        { ...options?.meta, type: "boolean" },
+        { type: { ...options?.meta, type: "boolean" } },
         left[0].valueOf() && right[0].valueOf()
       );
     }
@@ -504,7 +506,7 @@ const fp_operations: Record<
     const equality = equalityCheck(left, right, options);
     equality[0].valueOf() === false;
     return toMetaValueSingulars(
-      { ...options?.meta, type: "boolean" },
+      { type: { ...options?.meta, type: "boolean" } },
       equality[0].valueOf() === false
     );
   }),
@@ -557,7 +559,7 @@ export function evaluateWithMeta(
   }
   return _evaluate(
     cachedAST[expression],
-    toMetaValueSingulars(options?.meta, ctx),
+    toMetaValueSingulars({ type: options?.meta }, ctx),
     options
   ).filter(
     (

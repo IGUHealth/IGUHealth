@@ -35,19 +35,20 @@ function resolveContentReferenceIndex(
 
 type Location = (string | number)[];
 
-type MetaInformation = {
+type TypeMeta = {
   sd: StructureDefinition;
   elementIndex: number;
   // Typechoice so need to maintain the type here.
   type: string;
   getSD?: (type: code) => StructureDefinition | undefined;
-  location?: Location;
 };
 
-export type PartialMeta = Partial<MetaInformation>;
+export type Meta = { location: Location; type: TypeMeta | undefined };
+export type PartialTypeMeta = Partial<TypeMeta>;
+export type PartialMeta = { location?: Location; type?: Partial<TypeMeta> };
 
 export interface MetaValue<T> {
-  meta(): MetaInformation | undefined;
+  meta(): TypeMeta | undefined;
   valueOf(): T;
   isArray(): this is MetaValueArray<T>;
   location(): Location | undefined;
@@ -59,14 +60,15 @@ type FHIRPathPrimitive<T extends RawPrimitive> = Element & {
   value: T;
 };
 
-function deriveMetaInformation(
-  partialMeta: PartialMeta | undefined
-): MetaInformation | undefined {
+function deriveNextTypeMeta(
+  partialMeta: PartialTypeMeta | undefined
+): TypeMeta | undefined {
   if (!partialMeta) return partialMeta;
   if (!partialMeta.elementIndex) partialMeta.elementIndex = 0;
   if (!partialMeta.sd && partialMeta.type)
     partialMeta.sd = partialMeta.getSD && partialMeta.getSD(partialMeta.type);
-  return partialMeta.sd ? (partialMeta as MetaInformation) : undefined;
+
+  return partialMeta.sd ? (partialMeta as TypeMeta) : undefined;
 }
 
 function isFPPrimitive(v: unknown): v is FHIRPathPrimitive<RawPrimitive> {
@@ -169,10 +171,10 @@ function capitalize(s: string | undefined): string {
  ** Or setting a new Element index with type.
  */
 function deriveNextMetaInformation(
-  meta: MetaInformation | undefined,
+  meta: TypeMeta | undefined,
   field: string,
   expectedType?: string // For Typechoices pass in chunk pulled from field.
-): MetaInformation | undefined {
+): TypeMeta | undefined {
   if (meta?.elementIndex === undefined) return undefined;
 
   const curElement = meta.sd.snapshot?.element[meta.elementIndex];
@@ -183,10 +185,7 @@ function deriveNextMetaInformation(
     if (!elementToCheck) return undefined;
 
     if (pathMatchesElement(elementToCheck, nextElementPath, expectedType)) {
-      const nextMeta: Partial<MetaInformation> = {
-        location: meta.location
-          ? [...meta.location, `${field}${capitalize(expectedType)}`]
-          : undefined,
+      const nextMeta: PartialTypeMeta = {
         getSD: meta.getSD,
       };
 
@@ -244,7 +243,7 @@ function deriveNextMetaInformation(
 }
 
 export function toMetaValueNodes<T>(
-  meta: PartialMeta | undefined,
+  meta: PartialMeta,
   value: T | T[],
   element?: Element | Element[]
 ): MetaValueSingular<T> | MetaValueArray<T> | undefined {
@@ -260,8 +259,23 @@ export function toMetaValueNodes<T>(
   if (value === undefined && element === undefined) return undefined;
   // Assign a type automatically if the value is a resourceType
   if (isObject(value) && typeof value.resourceType === "string")
-    meta = { ...meta, type: value.resourceType };
+    meta = {
+      ...meta,
+      type: meta.type ? { ...meta.type, type: value.resourceType } : undefined,
+    };
   return new MetaValueSingular(meta, value, element as Element | undefined);
+}
+
+// Need special handling for primitives which if going into elements will need to use _field.
+function descendLoc<T>(
+  v: MetaValueSingular<T>["internalValue"],
+  loc: Location | undefined = [],
+  field: string
+): Location {
+  if (isFPPrimitive(v) && loc.length > 0) {
+    loc[loc.length - 1] = `_${loc[loc.length - 1]}`;
+  }
+  return [...loc, field];
 }
 
 export function descend<T>(
@@ -277,11 +291,14 @@ export function descend<T>(
         | Element[]
         | Element
         | undefined;
-      const nextMeta = deriveNextMetaInformation(
-        node.meta(),
-        field,
-        computedField.replace(field, "")
-      );
+      const nextMeta = {
+        location: descendLoc(internalValue, node.location(), computedField),
+        type: deriveNextMetaInformation(
+          node.meta(),
+          field,
+          computedField.replace(field, "")
+        ),
+      };
 
       return toMetaValueNodes(nextMeta, v, element);
     }
@@ -291,8 +308,8 @@ export function descend<T>(
 
 export class MetaValueSingular<T> implements MetaValue<T> {
   private _value: T | FHIRPathPrimitive<RawPrimitive>;
-  private _meta: MetaInformation | undefined;
-  constructor(meta: PartialMeta | undefined, value: T, element?: Element) {
+  private _meta: Meta;
+  constructor(meta: PartialMeta, value: T, element?: Element) {
     if (isRawPrimitive(value) || element !== undefined) {
       this._value = toFPPrimitive(
         isRawPrimitive(value) ? value : undefined,
@@ -301,7 +318,10 @@ export class MetaValueSingular<T> implements MetaValue<T> {
     } else {
       this._value = value;
     }
-    this._meta = deriveMetaInformation(meta);
+    this._meta = {
+      location: meta.location ? meta.location : [],
+      type: deriveNextTypeMeta(meta.type),
+    };
   }
   get internalValue() {
     return this._value;
@@ -310,37 +330,36 @@ export class MetaValueSingular<T> implements MetaValue<T> {
     if (isFPPrimitive(this._value)) return this._value.value as T;
     return this._value;
   }
-  meta(): MetaInformation | undefined {
-    return this._meta;
+  meta(): TypeMeta | undefined {
+    return this._meta.type;
   }
   isArray(): this is MetaValueArray<T> {
     return false;
   }
   location(): Location | undefined {
-    return this.meta()?.location;
+    return this._meta.location;
   }
 }
 
 export class MetaValueArray<T> implements MetaValue<Array<T>> {
   private value: Array<MetaValueSingular<T>>;
-  private _meta: MetaInformation | undefined;
-  constructor(
-    meta: PartialMeta | undefined,
-    value: Array<T>,
-    element?: Element[]
-  ) {
+  private _meta: Meta;
+  constructor(meta: PartialMeta, value: Array<T>, element?: Element[]) {
     this.value = value.map(
       (v, i: number) =>
         new MetaValueSingular(
           {
             ...meta,
-            location: meta?.location ? [...meta.location, i] : undefined,
+            location: meta?.location ? [...meta.location, i] : [],
           },
           v,
-          element && isArray(element) ? element[i] : undefined
+          element ? element[i] : undefined
         )
     );
-    this._meta = deriveMetaInformation(meta);
+    this._meta = {
+      location: meta.location ? meta.location : [],
+      type: deriveNextTypeMeta(meta.type),
+    };
   }
   valueOf(): Array<T> {
     return this.value.map((v) => v.valueOf());
@@ -351,10 +370,10 @@ export class MetaValueArray<T> implements MetaValue<Array<T>> {
   isArray(): this is MetaValueArray<Array<T>> {
     return true;
   }
-  meta(): MetaInformation | undefined {
-    return this._meta;
+  meta(): TypeMeta | undefined {
+    return this._meta.type;
   }
   location(): Location | undefined {
-    return this.meta()?.location;
+    return this._meta.location;
   }
 }

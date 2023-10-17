@@ -311,6 +311,11 @@ test("indexed", () => {
     evaluate("$this.test['test']", { test: [1, 2, 3] });
   }).toThrow();
   expect(evaluate("$this.test[0]", { test: [1, 2, 3] })).toEqual([1]);
+  expect(
+    evaluateWithMeta("$this.test[0]", { test: [1, 2, 3] }).map((v) =>
+      v.location()
+    )
+  ).toEqual([["test", 0]]);
 });
 
 test("backtick", () => {
@@ -596,4 +601,52 @@ test("Subscription extension test", () => {
       },
     })
   ).toEqual(["test-1"]);
+
+  expect(
+    evaluateWithMeta(
+      "$this.channel.type.extension.where(url=%typeUrl).value",
+      sub,
+      {
+        variables: {
+          typeUrl: "https://iguhealth.app/Subscription/operation-code",
+        },
+      }
+    ).map((v) => v.location())
+  ).toEqual([["channel", "_type", "extension", 1, "valueCode"]]);
+  expect(
+    evaluateWithMeta(
+      "$this.channel.type.extension.where(url=%typeUrl).value",
+      sub,
+      {
+        variables: {
+          typeUrl: "https://iguhealth.app/Subscription/channel-type",
+        },
+      }
+    ).map((v) => v.location())
+  ).toEqual([["channel", "_type", "extension", 0, "valueCode"]]);
+});
+
+test("test reference finding", () => {
+  expect(
+    evaluateWithMeta(
+      "CarePlan.subject.where(resolve is Patient)",
+      {
+        resourceType: "CarePlan",
+        subject: [
+          { reference: "Patient/123" },
+          { reference: "Practitioner/123" },
+          { reference: "Patient/4" },
+        ],
+      },
+      {
+        meta: {
+          type: "CarePlan",
+          getSD,
+        },
+      }
+    ).map((v) => v.location())
+  ).toEqual([
+    ["subject", 0],
+    ["subject", 2],
+  ]);
 });
