@@ -4,6 +4,7 @@ import {
   StructureDefinition,
   Patient,
   ConceptMap,
+  Practitioner,
 } from "@iguhealth/fhir-types/r4/types";
 // import { evaluate } from "@iguhealth/fhirpath";
 import { expect, test } from "@jest/globals";
@@ -168,7 +169,7 @@ test("Location test", () => {
       },
     },
     patient
-  ) as any;
+  );
   let cur = flattenedDescend(myValue, "name");
   cur = flattenedDescend(cur[0], "given");
   expect(cur.map((v) => v.location())).toEqual([
@@ -179,4 +180,33 @@ test("Location test", () => {
   cur = flattenedDescend(myValue, "identifier");
   cur = flattenedDescend(cur[0], "system");
   expect(cur[0].location()).toEqual(["identifier", 0, "system"]);
+});
+
+test("typechoice", () => {
+  const practitioner: Practitioner = {
+    extension: [{ url: "test", valueReference: { reference: "urn:oid:2" } }],
+    resourceType: "Practitioner",
+    name: [{ given: ["Bob"] }],
+  };
+  const myValue = new MetaValueSingular(
+    {
+      type: {
+        type: "Practitioner",
+        getSD: (type: string) => {
+          const foundSD = sds.find((sd) => sd.type === type);
+          return foundSD;
+        },
+      },
+    },
+    practitioner
+  );
+
+  let cur = flattenedDescend(myValue, "extension");
+  cur = flattenedDescend(cur[0], "value");
+
+  expect(cur[0].meta()?.type).toEqual("Reference");
+
+  cur = flattenedDescend(myValue, "extension");
+  cur = flattenedDescend(cur[0], "valueReference");
+  expect(cur[0].meta()?.type).toEqual("Reference");
 });

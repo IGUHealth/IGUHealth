@@ -14,3 +14,18 @@ exports[`Generate a graph from a transaction 1`] = `
   },
 }
 `;
+
+exports[`Test Cyclical 1`] = `
+{
+  "graph": Graph {},
+  "locationsToUpdate": {
+    "0": [
+      [
+        "generalPractitioner",
+        0,
+      ],
+    ],
+    "1": [],
+  },
+}
+`;

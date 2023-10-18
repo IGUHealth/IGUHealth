@@ -58,3 +58,31 @@ test("Generate a graph from a transaction", () => {
   expect({ graph, locationsToUpdate }).toMatchSnapshot();
   expect(alg.topsort(graph)).toEqual(["1", "0"]);
 });
+
+test("Test Cyclical", () => {
+  const { graph, locationsToUpdate } = buildTransactionTopologicalGraph(getSD, {
+    resourceType: "Bundle",
+    type: "transaction-request",
+    entry: [
+      {
+        fullUrl: "urn:oid:2",
+        resource: {
+          resourceType: "Patient",
+          generalPractitioner: [{ reference: "urn:oid:1" }],
+        },
+      },
+      {
+        fullUrl: "urn:oid:1",
+        resource: {
+          extension: [
+            { url: "test", valueReference: { reference: "urn:oid:2" } },
+          ],
+          resourceType: "Practitioner",
+          name: [{ given: ["Bob"] }],
+        },
+      },
+    ],
+  });
+  expect({ graph, locationsToUpdate }).toMatchSnapshot();
+  expect(alg.topsort(graph)).toEqual(["1", "0"]);
+});
