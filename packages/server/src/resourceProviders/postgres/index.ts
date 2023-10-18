@@ -53,6 +53,7 @@ import {
   getDecimalPrecision,
   deriveLimit,
   fhirResponseToBundleEntry,
+  transaction,
 } from "../utilities.js";
 import { executeSearchQuery } from "./search/index.js";
 import { ParsedParameter } from "@iguhealth/client/url";
@@ -667,8 +668,7 @@ async function saveResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
   resource: Resource
 ): Promise<Resource> {
-  try {
-    await client.query("BEGIN");
+  return transaction(ctx, client, async (ctx) => {
     const queryText =
       "INSERT INTO resources(workspace, request_method, author, resource) VALUES($1, $2, $3, $4) RETURNING resource";
     const res = await client.query(queryText, [
@@ -678,12 +678,8 @@ async function saveResource<CTX extends FHIRServerCTX>(
       resource,
     ]);
     await indexResource(client, ctx, res.rows[0].resource as Resource);
-    await client.query("COMMIT");
     return res.rows[0].resource as Resource;
-  } catch (e) {
-    await client.query("ROLLBACK");
-    throw e;
-  }
+  });
 }
 
 async function getResource<CTX extends FHIRServerCTX>(
@@ -855,8 +851,7 @@ async function patchResource<CTX extends FHIRServerCTX>(
   id: string,
   patches: Operation[]
 ): Promise<Resource> {
-  try {
-    await client.query("BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE");
+  return transaction(ctx, client, async (ctx) => {
     const resource = await getResource(client, ctx, resourceType, id);
     // [TODO] CHECK VALIDATION
     const newResource = jsonpatch.applyPatch(resource, patches)
@@ -878,12 +873,8 @@ async function patchResource<CTX extends FHIRServerCTX>(
       JSON.stringify(patches),
     ]);
     await indexResource(client, ctx, res.rows[0].resource as Resource);
-    await client.query("COMMIT");
     return res.rows[0].resource as Resource;
-  } catch (e) {
-    await client.query("ROLLBACK");
-    throw e;
-  }
+  });
 }
 
 async function deleteResource<CTX extends FHIRServerCTX>(
@@ -892,8 +883,7 @@ async function deleteResource<CTX extends FHIRServerCTX>(
   resourceType: ResourceType,
   id: string
 ) {
-  try {
-    await client.query("BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE");
+  return transaction(ctx, client, async (ctx) => {
     const resource = await getResource(client, ctx, resourceType, id);
     if (!resource)
       throw new OperationError(
@@ -914,11 +904,7 @@ async function deleteResource<CTX extends FHIRServerCTX>(
       true,
     ]);
     await removeIndices(client, ctx, resource);
-    await client.query("END");
-  } catch (e) {
-    await client.query("ROLLBACK");
-    throw e;
-  }
+  });
 }
 
 async function retryFailedTransactions<ReturnType>(
@@ -1130,24 +1116,23 @@ function createPostgresMiddleware<
           }
         }
         case "transaction-request": {
-          try {
-            if ((request.body.entry || []).length > 20) {
-              throw new OperationError(
-                outcomeError(
-                  "invalid",
-                  "Transaction bundle only allowed to have 20 entries."
-                )
-              );
-            }
-
-            let transaction = request.body;
-            const { graph, locationsToUpdate, order } =
-              buildTransactionTopologicalGraph(args.ctx, transaction);
-            const responseEntries = [];
-            args.state.client.query("BEGIN");
-
+          let transactionBundle = request.body;
+          const { locationsToUpdate, order } = buildTransactionTopologicalGraph(
+            args.ctx,
+            transactionBundle
+          );
+          const responseEntries: BundleEntry[] = [];
+          if ((transactionBundle.entry || []).length > 20) {
+            throw new OperationError(
+              outcomeError(
+                "invalid",
+                "Transaction bundle only allowed to have 20 entries."
+              )
+            );
+          }
+          return transaction(args.ctx, args.state.client, async (ctx) => {
             for (const index of order) {
-              const entry = request.body?.entry?.[parseInt(index)];
+              const entry = transactionBundle.entry?.[parseInt(index)];
               if (!entry)
                 throw new OperationError(
                   outcomeFatal(
@@ -1179,10 +1164,7 @@ function createPostgresMiddleware<
                   body: entry.resource,
                 }
               );
-              const fhirResponse = await args.ctx.client.request(
-                args.ctx,
-                fhirRequest
-              );
+              const fhirResponse = await ctx.client.request(ctx, fhirRequest);
               const responseEntry = fhirResponseToBundleEntry(fhirResponse);
               responseEntries.push(responseEntry);
               // Generate patches to update the transaction references.
@@ -1203,13 +1185,14 @@ function createPostgresMiddleware<
                   })
                 : [];
 
+              console.log(transactionBundle, patches);
+
               // Update transaction bundle with applied references.
-              transaction = jsonpatch.applyPatch(
-                transaction,
+              transactionBundle = jsonpatch.applyPatch(
+                transactionBundle,
                 patches
               ).newDocument;
             }
-            await args.state.client.query("COMMIT");
             const bundle: Bundle = {
               resourceType: "Bundle",
               type: "transaction-response",
@@ -1225,11 +1208,7 @@ function createPostgresMiddleware<
                 body: bundle,
               },
             };
-          } catch (e) {
-            await args.state.client.query("ROLLBACK");
-            console.log(e);
-            throw e;
-          }
+          });
         }
         default:
           throw new OperationError(

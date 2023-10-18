@@ -165,7 +165,7 @@ function workspaceMiddleware(
             .sort()[operationOutcome.issue.length - 1];
           ctx.body = operationOutcome;
         } else {
-          ctx.logger.error(e);
+          console.error(e);
           const operationOutcome = outcomeError(
             "invalid",
             "internal server error"
@@ -175,6 +175,8 @@ function workspaceMiddleware(
             .sort()[operationOutcome.issue.length - 1];
           ctx.body = operationOutcome;
         }
+      } finally {
+        client.release();
       }
     },
   ];

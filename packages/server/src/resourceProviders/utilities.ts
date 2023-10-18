@@ -1,3 +1,5 @@
+import pg from "pg";
+
 import {
   Resource,
   BundleEntry,
@@ -284,4 +286,21 @@ export function fhirResponseToBundleEntry(
     },
     resource: koaResponse.body ? (koaResponse.body as Resource) : undefined,
   };
+}
+
+export async function transaction<T>(
+  ctx: FHIRServerCTX,
+  client: pg.PoolClient,
+  body: (ctx: FHIRServerCTX) => Promise<T>
+): Promise<T> {
+  try {
+    if (!ctx.inTransaction)
+      client.query("BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE");
+    const returnV = await body({ ...ctx, inTransaction: true });
+    if (!ctx.inTransaction) client.query("COMMIT");
+    return returnV;
+  } catch (e) {
+    if (!ctx.inTransaction) client.query("ROLLBACK");
+    throw e;
+  }
 }
