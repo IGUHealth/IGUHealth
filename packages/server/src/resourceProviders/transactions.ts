@@ -33,13 +33,14 @@ export function buildTransactionTopologicalGraph(
   const graph = new Graph({ directed: true });
   const urlToIndice = getTransactionFullUrls(transaction);
   const locationsToUpdate: LocationsToUpdate = {};
+
   for (const idx in entries) {
     const entry = entries[parseInt(idx)];
     graph.setNode(idx, entry.fullUrl);
 
     // Pull dependencies from references.
     if (entry.resource) {
-      const dependencies = evaluateWithMeta(
+      const bundleDependencies = evaluateWithMeta(
         "$this.descendants().ofType(Reference)",
         entry.resource,
         { meta: { type: entry.resource.resourceType, getSD } }
@@ -49,9 +50,11 @@ export function buildTransactionTopologicalGraph(
         return false;
       });
 
-      locationsToUpdate[idx] = dependencies.map((dep) => dep.location() || []);
+      locationsToUpdate[idx] = bundleDependencies.map(
+        (dep) => dep.location() || []
+      );
 
-      for (const dep of dependencies) {
+      for (const dep of bundleDependencies) {
         const ref = (dep.valueOf() as Reference).reference;
         graph.setEdge(urlToIndice[ref as string].toString(), idx);
       }

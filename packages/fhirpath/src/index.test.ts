@@ -781,3 +781,19 @@ test("descendants", () => {
     )
   ).toEqual(["bob", "jameson", "123"]);
 });
+
+test("descendants with type filter", () => {
+  expect(
+    evaluate(
+      "Practitioner.descendants().ofType(Reference)",
+      {
+        extension: [
+          { url: "test", valueReference: { reference: "urn:oid:2" } },
+        ],
+        resourceType: "Practitioner",
+        name: [{ given: ["Bob"] }],
+      },
+      metaOptions("Patient")
+    )
+  ).toEqual([{ reference: "urn:oid:2" }]);
+});

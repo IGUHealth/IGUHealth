@@ -138,31 +138,31 @@ function isElementDefinitionWithType(
   return undefined;
 }
 
-function pathMatchesElement(
-  element: ElementDefinition,
-  path: string,
-  expectedType?: string
-): boolean {
-  if (element.path === path) return true;
-  if (
-    element.type &&
-    element.type?.length > 1 &&
-    path.startsWith(element.path.replace("[x]", ""))
-  ) {
-    for (let type of element.type) {
-      // Because type pulled from typechoice will be capitalized and it may or may not be
-      // on the actual type for example HumanName vs boolean
-      // Just lowercase both and compare.
-      if (type.code.toLocaleLowerCase() === expectedType?.toLocaleLowerCase())
-        return true;
-    }
-  }
-  return false;
+function capitalize(v: string) {
+  return v.charAt(0).toUpperCase() + v.slice(1);
 }
 
-function capitalize(s: string | undefined): string {
-  if (s === undefined) return "";
-  return s.charAt(0).toUpperCase() + s.slice(1);
+function searchElementIndexAndType(
+  snapshotElements: ElementDefinition[],
+  path: string,
+  elementIndex: number
+): { index: number; type: string } | undefined {
+  for (let i = elementIndex + 1; i < snapshotElements.length; i++) {
+    const elementToCheck = snapshotElements[i];
+    if (elementToCheck.path === path)
+      return { index: i, type: elementToCheck.type?.[0].code as string };
+    // Test types on typechoice element.
+    if (elementToCheck.type && elementToCheck.type?.length > 1) {
+      for (const type of elementToCheck.type) {
+        const elementToCheckPath = elementToCheck.path.replace(
+          "[x]",
+          capitalize(type.code)
+        );
+        if (path === elementToCheckPath) return { index: i, type: type.code };
+      }
+    }
+  }
+  return undefined;
 }
 
 /*
@@ -172,71 +172,72 @@ function capitalize(s: string | undefined): string {
  */
 function deriveNextMetaInformation(
   meta: TypeMeta | undefined,
-  field: string,
-  expectedType?: string // For Typechoices pass in chunk pulled from field.
+  computedField: string
 ): TypeMeta | undefined {
   if (meta?.elementIndex === undefined) return undefined;
 
   const curElement = meta.sd.snapshot?.element[meta.elementIndex];
-  const nextElementPath = `${curElement?.path}.${field.toString()}`;
-  let i = meta.elementIndex + 1;
-  while (i < (meta.sd.snapshot?.element.length || 0)) {
-    let elementToCheck = meta.sd.snapshot?.element[i];
-    if (!elementToCheck) return undefined;
+  const nextElementPath = `${curElement?.path}.${computedField}`;
 
-    if (pathMatchesElement(elementToCheck, nextElementPath, expectedType)) {
-      const nextMeta: PartialTypeMeta = {
-        getSD: meta.getSD,
+  const foundIndexAndType = searchElementIndexAndType(
+    meta.sd?.snapshot?.element || [],
+    nextElementPath,
+    meta.elementIndex
+  );
+
+  if (foundIndexAndType) {
+    const { index, type: nextType } = foundIndexAndType;
+    const nextElement = meta.sd.snapshot?.element[index] as ElementDefinition;
+
+    const nextMeta: PartialTypeMeta = {
+      getSD: meta.getSD,
+    };
+
+    // Handle content references.
+    if (nextElement.contentReference) {
+      const referenceElementIndex = resolveContentReferenceIndex(
+        meta.sd,
+        nextElement
+      );
+      const referenceElement = meta.sd.snapshot?.element[referenceElementIndex];
+      const type = referenceElement?.type?.[0].code;
+      if (!type) return undefined;
+
+      return {
+        ...nextMeta,
+        sd: meta.sd,
+        type,
+        elementIndex: referenceElementIndex,
       };
-
-      // Handle content references.
-      if (elementToCheck.contentReference) {
-        const referenceElementIndex = resolveContentReferenceIndex(
-          meta.sd,
-          elementToCheck
-        );
-        const referenceElement =
-          meta.sd.snapshot?.element[referenceElementIndex];
-        const type = referenceElement?.type?.[0].code;
-        if (!type) return undefined;
-
-        return {
-          ...nextMeta,
-          sd: meta.sd,
-          type,
-          elementIndex: referenceElementIndex,
-        };
-      } else {
-        const type = isElementDefinitionWithType(
-          elementToCheck,
-          nextElementPath,
-          expectedType
-        );
-        if (!type) return undefined;
-        // In this case pull in the SD means it's a complex or resource type
-        // so need to retrieve the SD.
-        if (isResourceOrComplexType(type)) {
-          const sd = meta.getSD && meta.getSD(type);
-          if (!sd) {
-            throw new Error(`Could not retrieve sd of type '${type}'`);
-          }
-          return {
-            ...nextMeta,
-            sd: sd,
-            type: type,
-            elementIndex: 0,
-          };
+    } else {
+      const type = isElementDefinitionWithType(
+        nextElement,
+        nextElementPath,
+        nextType
+      );
+      if (!type) return undefined;
+      // In this case pull in the SD means it's a complex or resource type
+      // so need to retrieve the SD.
+      if (isResourceOrComplexType(type)) {
+        const sd = meta.getSD && meta.getSD(type);
+        if (!sd) {
+          throw new Error(`Could not retrieve sd of type '${type}'`);
         }
-
         return {
           ...nextMeta,
-          sd: meta.sd,
-          type,
-          elementIndex: i,
+          sd: sd,
+          type: type,
+          elementIndex: 0,
         };
       }
+
+      return {
+        ...nextMeta,
+        sd: meta.sd,
+        type,
+        elementIndex: index,
+      };
     }
-    i++;
   }
 
   return undefined;
@@ -287,20 +288,16 @@ export function descend<T>(
     const computedField = getField(internalValue, field);
     if (computedField) {
       let v = internalValue[computedField];
-      let element = internalValue[`_${computedField}`] as
+      let elementValue = internalValue[`_${computedField}`] as
         | Element[]
         | Element
         | undefined;
       const nextMeta = {
         location: descendLoc(internalValue, node.location(), computedField),
-        type: deriveNextMetaInformation(
-          node.meta(),
-          field,
-          computedField.replace(field, "")
-        ),
+        type: deriveNextMetaInformation(node.meta(), computedField),
       };
 
-      return toMetaValueNodes(nextMeta, v, element);
+      return toMetaValueNodes(nextMeta, v, elementValue);
     }
   }
   return undefined;
