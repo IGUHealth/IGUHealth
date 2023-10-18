@@ -8563,6 +8563,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@dagrejs/graphlib", [\
+        ["npm:2.1.13", {\
+          "packageLocation": "./.yarn/cache/@dagrejs-graphlib-npm-2.1.13-d176f10e1c-7d0732f786.zip/node_modules/@dagrejs/graphlib/",\
+          "packageDependencies": [\
+            ["@dagrejs/graphlib", "npm:2.1.13"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@discoveryjs/json-ext", [\
         ["npm:0.5.7", {\
           "packageLocation": "./.yarn/cache/@discoveryjs-json-ext-npm-0.5.7-fe04af1f31-2176d301cc.zip/node_modules/@discoveryjs/json-ext/",\
@@ -10572,6 +10581,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@iguhealth/server", "workspace:packages/server"],\
             ["@aws-sdk/client-lambda", "npm:3.379.1"],\
             ["@aws-sdk/client-resource-groups-tagging-api", "npm:3.379.1"],\
+            ["@dagrejs/graphlib", "npm:2.1.13"],\
             ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
             ["@iguhealth/cli", "workspace:packages/cli"],\
             ["@iguhealth/client", "workspace:packages/client"],\

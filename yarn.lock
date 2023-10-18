@@ -3580,6 +3580,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@dagrejs/graphlib@npm:^2.1.13":
+  version: 2.1.13
+  resolution: "@dagrejs/graphlib@npm:2.1.13"
+  checksum: 7d0732f78675ea1c25e54ad1fb2dcd3b8784705faba328bd44def6f372140197ccdf546d75c33db05555da9b288a00d67f34317215f64233b89e9e59bd79596a
+  languageName: node
+  linkType: hard
+
 "@discoveryjs/json-ext@npm:0.5.7, @discoveryjs/json-ext@npm:^0.5.3":
   version: 0.5.7
   resolution: "@discoveryjs/json-ext@npm:0.5.7"
@@ -4789,6 +4796,7 @@ __metadata:
   dependencies:
     "@aws-sdk/client-lambda": ^3.379.1
     "@aws-sdk/client-resource-groups-tagging-api": ^3.379.1
+    "@dagrejs/graphlib": ^2.1.13
     "@iguhealth/artifacts": "workspace:^"
     "@iguhealth/cli": "workspace:^"
     "@iguhealth/client": "workspace:^"
