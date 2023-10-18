@@ -25,7 +25,13 @@ exports[`Test Cyclical 1`] = `
         0,
       ],
     ],
-    "1": [],
+    "1": [
+      [
+        "extension",
+        0,
+        "valueReference",
+      ],
+    ],
   },
 }
 `;

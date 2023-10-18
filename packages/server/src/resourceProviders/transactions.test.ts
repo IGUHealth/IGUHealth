@@ -84,5 +84,7 @@ test("Test Cyclical", () => {
     ],
   });
   expect({ graph, locationsToUpdate }).toMatchSnapshot();
-  expect(alg.topsort(graph)).toEqual(["1", "0"]);
+  expect(() => {
+    alg.topsort(graph);
+  }).toThrow();
 });
