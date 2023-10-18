@@ -46,15 +46,9 @@ export function buildTransactionTopologicalGraph(
         { meta: { type: entry.resource.resourceType, getSD } }
       ).filter((v) => {
         const ref = (v.valueOf() as Reference).reference;
-        console.log("ref:", ref);
         if (ref && urlToIndice[ref] !== undefined) return true;
         return false;
       });
-
-      console.log(
-        entry.fullUrl,
-        bundleDependencies.map((v) => v.valueOf())
-      );
 
       locationsToUpdate[idx] = bundleDependencies.map(
         (dep) => dep.location() || []
