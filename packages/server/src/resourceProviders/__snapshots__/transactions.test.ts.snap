@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Generate a graph from a transaction 1`] = `
+{
+  "graph": Graph {},
+  "locationsToUpdate": {
+    "0": [
+      [
+        "generalPractitioner",
+        0,
+      ],
+    ],
+    "1": [],
+  },
+}
+`;
