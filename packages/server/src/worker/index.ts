@@ -17,7 +17,7 @@ import {
 import { evaluate } from "@iguhealth/fhirpath";
 
 import { resolveOperationDefinition } from "../operation-executors/utilities.js";
-import createServiceCTX from "../ctx/index.js";
+import { deriveCTX } from "../ctx/index.js";
 import logAuditEvent, {
   MAJOR_FAILURE,
   SERIOUS_FAILURE,
@@ -122,7 +122,7 @@ function subscriptionLockKey(workspace: string, subscriptionId: string) {
 
 async function subWorker(workerID = randomUUID(), loopInterval = 500) {
   // Using a pool directly because need to query up workspaces.
-  const services = await createServiceCTX();
+  const getCTX = await deriveCTX();
 
   const pool = new pg.Pool({
     user: process.env["FHIR_DATABASE_USERNAME"],
@@ -141,185 +141,194 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
     ).rows.map((row) => row.id);
 
     for (const workspace of activeWorkspaces) {
-      services.logger.info(`PROCESSING WORKSPACE SUBS '${workspace}'`);
-      const ctx = { ...services, workspace, author: "system" };
-      const activeSubscriptions = await services.client.search_type(
-        ctx,
-        "Subscription",
-        [{ name: "status", value: ["active"] }]
-      );
-      for (const subscription of activeSubscriptions.resources) {
-        // Use lock to avoid duplication on sub processing (could have two concurrent subs running in unison otherwise).
-        await ctx.lock.withLock(
-          subscriptionLockKey(workspace, subscription.id as string),
-          async () => {
-            ctx.logger.info(
-              `WORKER '${workerID}' has lock for '${subscriptionLockKey(
-                workspace,
-                subscription.id as string
-              )}'`
-            );
-            try {
-              ctx.logger.info({
-                worker: workerID,
-                workspace: ctx.workspace,
-                criteria: subscription.criteria,
-              });
-              const request = KoaRequestToFHIRRequest(subscription.criteria, {
-                method: "GET",
-              });
-              if (request.type !== "search-request") {
-                throw new OperationError(
-                  outcomeError(
-                    "invalid",
-                    `Criteria must be a search request but found ${request.type}`
-                  )
-                );
-              }
-
-              const sortParameter = request.parameters.find(
-                (p) => p.name === "_sort"
+      const client = await pool.connect();
+      try {
+        const services = getCTX({ pg: client, workspace, author: "system" });
+        services.logger.info(`PROCESSING WORKSPACE SUBS '${workspace}'`);
+        const ctx = { ...services, workspace, author: "system" };
+        const activeSubscriptions = await services.client.search_type(
+          ctx,
+          "Subscription",
+          [{ name: "status", value: ["active"] }]
+        );
+        for (const subscription of activeSubscriptions.resources) {
+          // Use lock to avoid duplication on sub processing (could have two concurrent subs running in unison otherwise).
+          await ctx.lock.withLock(
+            subscriptionLockKey(workspace, subscription.id as string),
+            async () => {
+              ctx.logger.info(
+                `WORKER '${workerID}' has lock for '${subscriptionLockKey(
+                  workspace,
+                  subscription.id as string
+                )}'`
               );
-
-              if (sortParameter) {
-                throw new OperationError(
-                  outcomeError(
-                    "invalid",
-                    `Criteria cannot include _sort. Sorting must be based order resource was updated.`
-                  )
-                );
-              }
-
-              const cachedSubID = await services.cache.get(
-                ctx,
-                `${subscription.id}_latest`
-              );
-
-              const latestVersionIdForSub = cachedSubID
-                ? cachedSubID
-                : // If latest isn't there then use the subscription version when created.
-                  getVersionSequence(subscription);
-
-              let historyPoll: BundleEntry[] = [];
-
-              switch (request.level) {
-                case "system": {
-                  historyPoll = await services.client.historySystem(ctx, [
-                    {
-                      name: "_since-version",
-                      value: [latestVersionIdForSub],
-                    },
-                  ]);
-                  break;
+              try {
+                ctx.logger.info({
+                  worker: workerID,
+                  workspace: ctx.workspace,
+                  criteria: subscription.criteria,
+                });
+                const request = KoaRequestToFHIRRequest(subscription.criteria, {
+                  method: "GET",
+                });
+                if (request.type !== "search-request") {
+                  throw new OperationError(
+                    outcomeError(
+                      "invalid",
+                      `Criteria must be a search request but found ${request.type}`
+                    )
+                  );
                 }
-                case "type": {
-                  historyPoll = await services.client.historyType(
-                    ctx,
-                    request.type as ResourceType,
-                    [
+
+                const sortParameter = request.parameters.find(
+                  (p) => p.name === "_sort"
+                );
+
+                if (sortParameter) {
+                  throw new OperationError(
+                    outcomeError(
+                      "invalid",
+                      `Criteria cannot include _sort. Sorting must be based order resource was updated.`
+                    )
+                  );
+                }
+
+                const cachedSubID = await services.cache.get(
+                  ctx,
+                  `${subscription.id}_latest`
+                );
+
+                const latestVersionIdForSub = cachedSubID
+                  ? cachedSubID
+                  : // If latest isn't there then use the subscription version when created.
+                    getVersionSequence(subscription);
+
+                let historyPoll: BundleEntry[] = [];
+
+                switch (request.level) {
+                  case "system": {
+                    historyPoll = await services.client.historySystem(ctx, [
                       {
                         name: "_since-version",
                         value: [latestVersionIdForSub],
                       },
-                    ]
-                  );
-                  break;
+                    ]);
+                    break;
+                  }
+                  case "type": {
+                    historyPoll = await services.client.historyType(
+                      ctx,
+                      request.type as ResourceType,
+                      [
+                        {
+                          name: "_since-version",
+                          value: [latestVersionIdForSub],
+                        },
+                      ]
+                    );
+                    break;
+                  }
                 }
-              }
 
-              if (
-                cachedSubID &&
-                historyPoll.length > 0 &&
-                historyPoll[historyPoll.length - 1].resource?.meta
-                  ?.versionId !== cachedSubID
-              ) {
-                throw new OperationError(
-                  outcomeError(
-                    "invalid",
-                    "Mismatch on subscription expected version and returned version."
-                  )
-                );
-              }
-
-              const resourceTypes = deriveResourceTypeFilter(request);
-              // Remove _type as using on derived resourceTypeFilter
-              request.parameters = request.parameters.filter(
-                (p) => p.name !== "_type"
-              );
-
-              const parameters = await parametersWithMetaAssociated(
-                resourceTypes,
-                request.parameters,
-                async (resourceTypes, name) =>
-                  (
-                    await findSearchParameter(ctx, resourceTypes, name)
-                  ).resources
-              );
-              // Standard parameters
-              const resourceParameters = parameters.filter(
-                (v): v is SearchParameterResource => v.type === "resource"
-              );
-
-              // By default poll would have 1 resource if current version ids match.
-              if (historyPoll.length > 1) {
-                if (historyPoll[0].resource === undefined)
+                if (
+                  cachedSubID &&
+                  historyPoll.length > 0 &&
+                  historyPoll[historyPoll.length - 1].resource?.meta
+                    ?.versionId !== cachedSubID
+                ) {
                   throw new OperationError(
                     outcomeError(
                       "invalid",
-                      "history poll returned entry missing resource."
+                      "Mismatch on subscription expected version and returned version."
                     )
                   );
-                await services.cache.set(
-                  ctx,
-                  `${subscription.id}_latest`,
-                  getVersionSequence(historyPoll[0].resource)
+                }
+
+                const resourceTypes = deriveResourceTypeFilter(request);
+                // Remove _type as using on derived resourceTypeFilter
+                request.parameters = request.parameters.filter(
+                  (p) => p.name !== "_type"
                 );
-                for (const entry of historyPoll.slice(
-                  0,
-                  historyPoll.length - 1
-                )) {
-                  if (entry.resource === undefined)
+
+                const parameters = await parametersWithMetaAssociated(
+                  resourceTypes,
+                  request.parameters,
+                  async (resourceTypes, name) =>
+                    (
+                      await findSearchParameter(ctx, resourceTypes, name)
+                    ).resources
+                );
+                // Standard parameters
+                const resourceParameters = parameters.filter(
+                  (v): v is SearchParameterResource => v.type === "resource"
+                );
+
+                // By default poll would have 1 resource if current version ids match.
+                if (historyPoll.length > 1) {
+                  if (historyPoll[0].resource === undefined)
                     throw new OperationError(
                       outcomeError(
                         "invalid",
                         "history poll returned entry missing resource."
                       )
                     );
-                  if (
-                    await fitsSearchCriteria(entry.resource, resourceParameters)
-                  ) {
-                    await handleSubscriptionPayload(ctx, subscription, [
-                      entry.resource,
-                    ]);
+                  await services.cache.set(
+                    ctx,
+                    `${subscription.id}_latest`,
+                    getVersionSequence(historyPoll[0].resource)
+                  );
+                  for (const entry of historyPoll.slice(
+                    0,
+                    historyPoll.length - 1
+                  )) {
+                    if (entry.resource === undefined)
+                      throw new OperationError(
+                        outcomeError(
+                          "invalid",
+                          "history poll returned entry missing resource."
+                        )
+                      );
+                    if (
+                      await fitsSearchCriteria(
+                        entry.resource,
+                        resourceParameters
+                      )
+                    ) {
+                      await handleSubscriptionPayload(ctx, subscription, [
+                        entry.resource,
+                      ]);
+                    }
                   }
                 }
-              }
-            } catch (e) {
-              ctx.logger.error(e);
-              let errorDescription = "Subscription failed to process";
+              } catch (e) {
+                ctx.logger.error(e);
+                let errorDescription = "Subscription failed to process";
 
-              if (isOperationError(e)) {
-                errorDescription = e.outcome.issue
-                  .map((i) => i.details)
-                  .join(". ");
-              }
-              await logAuditEvent(
-                ctx,
-                SERIOUS_FAILURE,
-                { reference: `Subscription/${subscription.id}` },
-                "Subscription failed to process"
-              );
+                if (isOperationError(e)) {
+                  errorDescription = e.outcome.issue
+                    .map((i) => i.details)
+                    .join(". ");
+                }
+                await logAuditEvent(
+                  ctx,
+                  SERIOUS_FAILURE,
+                  { reference: `Subscription/${subscription.id}` },
+                  "Subscription failed to process"
+                );
 
-              await services.client.update(ctx, {
-                ...subscription,
-                status: "error",
-              });
+                await services.client.update(ctx, {
+                  ...subscription,
+                  status: "error",
+                });
+              }
             }
-          }
-        );
+          );
+        }
+      } finally {
+        client.release();
       }
+      await new Promise((resolve) => setTimeout(resolve, loopInterval));
     }
-    await new Promise((resolve) => setTimeout(resolve, loopInterval));
   }
 }
 

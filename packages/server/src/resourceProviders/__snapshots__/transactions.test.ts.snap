@@ -4,34 +4,19 @@ exports[`Generate a graph from a transaction 1`] = `
 {
   "graph": Graph {},
   "locationsToUpdate": {
-    "0": [
+    "urn:oid:1": [
       [
+        "entry",
+        "resource",
+        "0",
         "generalPractitioner",
         0,
       ],
     ],
-    "1": [],
   },
-}
-`;
-
-exports[`Test Cyclical 1`] = `
-{
-  "graph": Graph {},
-  "locationsToUpdate": {
-    "0": [
-      [
-        "generalPractitioner",
-        0,
-      ],
-    ],
-    "1": [
-      [
-        "extension",
-        0,
-        "valueReference",
-      ],
-    ],
-  },
+  "order": [
+    "1",
+    "0",
+  ],
 }
 `;

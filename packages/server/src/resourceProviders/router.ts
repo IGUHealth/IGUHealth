@@ -21,7 +21,10 @@ import { FHIRClient } from "@iguhealth/client/interface";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../fhirServer.js";
-import { deriveResourceTypeFilter } from "./utilities.js";
+import {
+  deriveResourceTypeFilter,
+  fhirResponseToBundleEntry,
+} from "./utilities.js";
 import {
   KoaRequestToFHIRRequest,
   fhirResponseToKoaResponse,
@@ -215,21 +218,7 @@ function createRouterMiddleware<
                     args.ctx,
                     fhirRequest
                   );
-                  const response = fhirResponseToKoaResponse(fhirResponse);
-
-                  return {
-                    response: {
-                      status: response.status
-                        ? response.status?.toString()
-                        : "200",
-                      location: (response.headers?.Location ||
-                        response.headers?.["Content-Location"] ||
-                        entry.request?.url) as unknown as string | undefined,
-                    },
-                    resource: response.body
-                      ? (response.body as Resource)
-                      : undefined,
-                  };
+                  return fhirResponseToBundleEntry(fhirResponse);
                 } catch (e) {
                   return {
                     response: {

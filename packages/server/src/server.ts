@@ -4,6 +4,7 @@ import { bodyParser } from "@koa/bodyparser";
 
 import dotEnv from "dotenv";
 
+import pg from "pg";
 import jwt from "koa-jwt";
 import jwksRsa from "jwks-rsa";
 import cors from "@koa/cors";
@@ -24,7 +25,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import type { FHIRServerCTX } from "./fhirServer.js";
-import createServiceCTX from "./ctx/index.js";
+import { deriveCTX } from "./ctx/index.js";
 import createFHIRServer from "./fhirServer.js";
 import {
   KoaRequestToFHIRRequest,
@@ -92,16 +93,12 @@ async function workspaceCheck(
 }
 
 function workspaceMiddleware(
-  services: Pick<
-    FHIRServerCTX,
-    | "lock"
-    | "client"
-    | "resolveSD"
-    | "capabilities"
-    | "cache"
-    | "logger"
-    | "terminologyProvider"
-  >
+  pool: pg.Pool,
+  getCTX: (
+    arg: Pick<FHIRServerCTX, "workspace" | "author" | "user_access_token"> & {
+      pg: pg.PoolClient;
+    }
+  ) => FHIRServerCTX
 ): Router.Middleware<Koa.DefaultState, Koa.DefaultContext, unknown>[] {
   const fhirServer = createFHIRServer();
 
@@ -109,7 +106,7 @@ function workspaceMiddleware(
     process.env.AUTH_JWT_ISSUER
       ? createCheckJWT()
       : async (ctx, next) => {
-          services.logger.warn("[WARNING] Server is publicly accessible.");
+          console.warn("[WARNING] Server is publicly accessible.");
           ctx.state = {
             ...ctx.state,
             user: {
@@ -122,13 +119,15 @@ function workspaceMiddleware(
         },
     workspaceCheck,
     async (ctx, next) => {
+      const client = await pool.connect();
+
       try {
-        const serverCTX = {
-          ...services,
+        const serverCTX = getCTX({
+          pg: client,
           workspace: ctx.params.workspace,
           author: ctx.state.user.sub,
           user_access_token: ctx.state.access_token,
-        };
+        });
 
         const fhirServerResponse = await fhirServer(
           KoaRequestToFHIRRequest(
@@ -166,7 +165,7 @@ function workspaceMiddleware(
             .sort()[operationOutcome.issue.length - 1];
           ctx.body = operationOutcome;
         } else {
-          services.logger.error(e);
+          ctx.logger.error(e);
           const operationOutcome = outcomeError(
             "invalid",
             "internal server error"
@@ -187,11 +186,19 @@ export default async function createServer(): Promise<
   const app = new Koa();
 
   const router = new Router();
-  const services = await createServiceCTX();
+  const getCTX = await deriveCTX();
+  const pool = new pg.Pool({
+    user: process.env["FHIR_DATABASE_USERNAME"],
+    password: process.env["FHIR_DATABASE_PASSWORD"],
+    host: process.env["FHIR_DATABASE_HOST"],
+    database: process.env["FHIR_DATABASE_NAME"],
+    port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
+    ssl: process.env["FHIR_DATABASE_SSL"] === "true",
+  });
 
   router.all(
     "/w/:workspace/api/v1/fhir/r4/:fhirUrl*",
-    ...workspaceMiddleware(services)
+    ...workspaceMiddleware(pool, getCTX)
   );
 
   // TODO Use an adapter  adapter,
@@ -206,7 +213,7 @@ export default async function createServer(): Promise<
     .use(async (ctx, next) => {
       await next();
       const rt = ctx.response.get("X-Response-Time");
-      services.logger.info(`${ctx.method} ${ctx.url} - ${rt}`);
+      console.info(`${ctx.method} ${ctx.url} - ${rt}`);
     })
     .use(async (ctx, next) => {
       const start = Date.now();
@@ -217,7 +224,7 @@ export default async function createServer(): Promise<
     .use(router.routes())
     .use(router.allowedMethods());
 
-  services.logger.info("Running app");
+  console.info("Running app");
 
   return app;
 }

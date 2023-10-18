@@ -1,6 +1,7 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import createLogger from "pino";
+import pg from "pg";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
@@ -161,17 +162,15 @@ async function serverCapabilities(
   };
 }
 
-export default async function createServiceCTX(): Promise<
-  Pick<
-    FHIRServerCTX,
-    | "lock"
-    | "client"
-    | "resolveSD"
-    | "capabilities"
-    | "cache"
-    | "logger"
-    | "terminologyProvider"
-  >
+export async function deriveCTX(): Promise<
+  ({
+    pg,
+    workspace,
+    author,
+    user_access_token,
+  }: Pick<FHIRServerCTX, "workspace" | "author" | "user_access_token"> & {
+    pg: pg.PoolClient;
+  }) => FHIRServerCTX
 > {
   const data = createMemoryData(MEMORY_TYPES);
   const memDBAsync = MemoryDatabaseAsync(data);
@@ -181,91 +180,94 @@ export default async function createServiceCTX(): Promise<
     ValueSetValidateInvoke,
     CodeSystemLookupInvoke,
   ]);
-
-  const client = RouterClient([
-    // OP INVOCATION
-    {
-      useSource: (request) => {
-        return (
-          request.type === "invoke-request" &&
-          inlineOperationExecution
-            .supportedOperations()
-            .map((op) => op.code)
-            .includes(request.operation)
-        );
-      },
-      source: inlineOperationExecution,
-    },
-    {
-      resourcesSupported: [...resourceTypes] as ResourceType[],
-      interactionsSupported: ["invoke-request"],
-      source: AWSLambdaExecutioner({
-        AWS_REGION: process.env.AWS_REGION as string,
-        AWS_ACCESS_KEY_ID: process.env.AWS_LAMBDA_ACCESS_KEY_ID as string,
-        AWS_ACCESS_KEY_SECRET: process.env
-          .AWS_LAMBDA_ACCESS_KEY_SECRET as string,
-        LAMBDA_ROLE: process.env.AWS_LAMBDA_ROLE as string,
-        LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
-      }),
-    },
-    {
-      resourcesSupported: MEMORY_TYPES,
-      interactionsSupported: ["read-request", "search-request"],
-      source: memDBAsync, // memDBSync, //
-    },
-    {
-      resourcesSupported: [...resourceTypes].filter(
-        (type) => MEMORY_TYPES.indexOf(type as ResourceType) === -1
-      ) as ResourceType[],
-      interactionsSupported: [
-        "read-request",
-        "search-request",
-        "create-request",
-        "update-request",
-        "delete-request",
-        "history-request",
-      ],
-      source: createPostgresClient({
-        user: process.env["FHIR_DATABASE_USERNAME"],
-        password: process.env["FHIR_DATABASE_PASSWORD"],
-        host: process.env["FHIR_DATABASE_HOST"],
-        database: process.env["FHIR_DATABASE_NAME"],
-        port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
-        ssl: process.env["FHIR_DATABASE_SSL"] === "true",
-      }),
-    },
-  ]);
-
-  const services = {
-    logger: createLogger.default(),
-    terminologyProvider: new TerminologyProviderMemory(),
-    capabilities: await serverCapabilities(memDBAsync),
-    client,
-    cache: new RedisCache({
-      host: process.env.REDIS_HOST,
-      port: parseInt(process.env.REDIS_PORT || "6739"),
-    }),
-    resolveSD: (ctx: FHIRServerCTX, type: string) => {
-      const sd = memDBSync.read(ctx, "StructureDefinition", type);
-      if (!sd) {
-        throw new OperationError(
-          outcomeFatal(
-            "invalid",
-            `Could not resolve a structure definition for type '${type}'`
-          )
-        );
-      }
-      return sd;
-    },
-    lock: new PostgresLock({
-      user: process.env["FHIR_DATABASE_USERNAME"],
-      password: process.env["FHIR_DATABASE_PASSWORD"],
-      host: process.env["FHIR_DATABASE_HOST"],
-      database: process.env["FHIR_DATABASE_NAME"],
-      port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
-      ssl: process.env["FHIR_DATABASE_SSL"] === "true",
-    }),
+  const terminologyProvider = new TerminologyProviderMemory();
+  const capabilities = await serverCapabilities(memDBAsync);
+  const cache = new RedisCache({
+    host: process.env.REDIS_HOST,
+    port: parseInt(process.env.REDIS_PORT || "6739"),
+  });
+  const resolveSD = (ctx: FHIRServerCTX, type: string) => {
+    const sd = memDBSync.read(ctx, "StructureDefinition", type);
+    if (!sd) {
+      throw new OperationError(
+        outcomeFatal(
+          "invalid",
+          `Could not resolve a structure definition for type '${type}'`
+        )
+      );
+    }
+    return sd;
   };
 
-  return services;
+  const lock = new PostgresLock({
+    user: process.env["FHIR_DATABASE_USERNAME"],
+    password: process.env["FHIR_DATABASE_PASSWORD"],
+    host: process.env["FHIR_DATABASE_HOST"],
+    database: process.env["FHIR_DATABASE_NAME"],
+    port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
+    ssl: process.env["FHIR_DATABASE_SSL"] === "true",
+  });
+
+  return ({ pg, workspace, author, user_access_token }) => {
+    const client = RouterClient([
+      // OP INVOCATION
+      {
+        useSource: (request) => {
+          return (
+            request.type === "invoke-request" &&
+            inlineOperationExecution
+              .supportedOperations()
+              .map((op) => op.code)
+              .includes(request.operation)
+          );
+        },
+        source: inlineOperationExecution,
+      },
+      {
+        resourcesSupported: [...resourceTypes] as ResourceType[],
+        interactionsSupported: ["invoke-request"],
+        source: AWSLambdaExecutioner({
+          AWS_REGION: process.env.AWS_REGION as string,
+          AWS_ACCESS_KEY_ID: process.env.AWS_LAMBDA_ACCESS_KEY_ID as string,
+          AWS_ACCESS_KEY_SECRET: process.env
+            .AWS_LAMBDA_ACCESS_KEY_SECRET as string,
+          LAMBDA_ROLE: process.env.AWS_LAMBDA_ROLE as string,
+          LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
+        }),
+      },
+      {
+        resourcesSupported: MEMORY_TYPES,
+        interactionsSupported: ["read-request", "search-request"],
+        source: memDBAsync, // memDBSync, //
+      },
+      {
+        resourcesSupported: [...resourceTypes].filter(
+          (type) => MEMORY_TYPES.indexOf(type as ResourceType) === -1
+        ) as ResourceType[],
+        interactionsSupported: [
+          "read-request",
+          "search-request",
+          "create-request",
+          "update-request",
+          "delete-request",
+          "history-request",
+          "transaction-request",
+        ],
+        source: createPostgresClient(pg),
+      },
+    ]);
+
+    return {
+      workspace,
+      author,
+      user_access_token,
+      logger: createLogger.default(),
+      terminologyProvider,
+      capabilities,
+      client,
+      cache,
+      resolveSD,
+      lock,
+    };
+  };
 }
