@@ -654,13 +654,25 @@ async function indexResource<CTX extends FHIRServerCTX>(
   const searchParameters = await getAllParametersForResource(ctx, [
     resource.resourceType,
   ]);
-  for (const searchParameter of searchParameters) {
-    if (searchParameter.expression === undefined) continue;
-    const evaluation = evaluateWithMeta(searchParameter.expression, resource, {
-      meta: { getSD: (type: string) => ctx.resolveSD(ctx, type) },
-    });
-    indexSearchParameter(client, ctx, searchParameter, resource, evaluation);
-  }
+  await Promise.all(
+    searchParameters.map((searchParameter) => {
+      if (searchParameter.expression === undefined) return;
+      const evaluation = evaluateWithMeta(
+        searchParameter.expression,
+        resource,
+        {
+          meta: { getSD: (type: string) => ctx.resolveSD(ctx, type) },
+        }
+      );
+      return indexSearchParameter(
+        client,
+        ctx,
+        searchParameter,
+        resource,
+        evaluation
+      );
+    })
+  );
 }
 
 async function saveResource<CTX extends FHIRServerCTX>(
@@ -907,24 +919,6 @@ async function deleteResource<CTX extends FHIRServerCTX>(
   });
 }
 
-async function retryFailedTransactions<ReturnType>(
-  execute: () => Promise<ReturnType>
-): Promise<ReturnType> {
-  /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
-  while (true) {
-    try {
-      const res = await execute();
-      return res;
-    } catch (e) {
-      if (!(e instanceof pg.DatabaseError)) throw e;
-      // Only going to retry on failed transactions
-      if (e.code !== "40001") {
-        throw e;
-      }
-    }
-  }
-}
-
 function createPostgresMiddleware<
   State extends { client: pg.PoolClient },
   CTX extends FHIRServerCTX
@@ -988,13 +982,15 @@ function createPostgresMiddleware<
           }
         }
         case "create-request": {
-          const savedResource = await retryFailedTransactions(
-            async () =>
-              await saveResource(args.state.client, args.ctx, {
-                ...request.body,
-                id: v4(),
-              })
+          const savedResource = await saveResource(
+            args.state.client,
+            args.ctx,
+            {
+              ...request.body,
+              id: v4(),
+            }
           );
+
           return {
             state: args.state,
             ctx: args.ctx,
@@ -1012,17 +1008,15 @@ function createPostgresMiddleware<
             outcomeError("not-supported", `Patch is not yet supported.`)
           );
         case "update-request": {
-          const savedResource = await retryFailedTransactions(
-            async () =>
-              await patchResource(
-                args.state.client,
-                "PUT",
-                args.ctx,
-                request.resourceType as ResourceType,
-                request.id,
-                [{ op: "replace", path: "", value: request.body }]
-              )
+          const savedResource = await patchResource(
+            args.state.client,
+            "PUT",
+            args.ctx,
+            request.resourceType as ResourceType,
+            request.id,
+            [{ op: "replace", path: "", value: request.body }]
           );
+
           return {
             state: args.state,
             ctx: args.ctx,
@@ -1036,14 +1030,12 @@ function createPostgresMiddleware<
           };
         }
         case "delete-request": {
-          await retryFailedTransactions(async () => {
-            await deleteResource(
-              args.state.client,
-              args.ctx,
-              request.resourceType as ResourceType,
-              request.id
-            );
-          });
+          await deleteResource(
+            args.state.client,
+            args.ctx,
+            request.resourceType as ResourceType,
+            request.id
+          );
 
           return {
             state: args.state,
@@ -1165,7 +1157,6 @@ function createPostgresMiddleware<
                 }
               );
               const fhirResponse = await ctx.client.request(ctx, fhirRequest);
-              console.log(fhirResponse);
               const responseEntry = fhirResponseToBundleEntry(fhirResponse);
               responseEntries.push(responseEntry);
               // Generate patches to update the transaction references.
@@ -1200,8 +1191,6 @@ function createPostgresMiddleware<
               type: "transaction-response",
               entry: responseEntries,
             };
-
-            console.log(transactionResponse);
 
             return {
               state: args.state,
