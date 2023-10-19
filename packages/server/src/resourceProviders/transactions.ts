@@ -109,9 +109,11 @@ async function retryFailedTransactions<ReturnType>(
         ctx.logger.error("Postgres error threw :", e);
         throw e;
       }
-      ctx.logger.warn("Retrying transaction :", i);
+      ctx.logger.warn(`Retrying transaction : ${i + 1}`, { retry: i + 1 });
     }
   }
+
+  ctx.logger.error(`Max number of retries exceeded '${numberOfRetries}'`);
   throw new OperationError(
     outcomeFatal(
       "internal",
@@ -120,16 +122,63 @@ async function retryFailedTransactions<ReturnType>(
   );
 }
 
+/*
+ ** Postgres transactional isolation levels.
+ */
+export enum ISOLATION_LEVEL {
+  /*
+   ** Dirty Read:            Not possible
+   ** Nonrepeatable Read:	 Possible
+   ** Phantom Read:          Possible
+   ** Serialization Anomaly: Possible
+   */
+  ReadCommitted = 0,
+  /*
+   ** Dirty Read:            Not possible
+   ** Nonrepeatable Read:	 Not possible
+   ** Phantom Read:          Allowed, but not in PG
+   ** Serialization Anomaly: Possible
+   */
+  RepeatableRead = 1,
+  /*
+   ** Dirty Read:            Not possible
+   ** Nonrepeatable Read:	 Not possible
+   ** Phantom Read:          Not possible
+   ** Serialization Anomaly: Not possible
+   */
+  Serializable = 2,
+}
+
+function begin(isolation_level: ISOLATION_LEVEL) {
+  switch (isolation_level) {
+    case ISOLATION_LEVEL.ReadCommitted: {
+      return "BEGIN";
+    }
+    case ISOLATION_LEVEL.RepeatableRead: {
+      return "BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ";
+    }
+    case ISOLATION_LEVEL.Serializable: {
+      return "BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE";
+    }
+    default: {
+      throw new OperationError(
+        outcomeFatal("exception", `Invalid isolation level ${isolation_level}`)
+      );
+    }
+  }
+}
+
 export async function transaction<T>(
+  isolation_level: ISOLATION_LEVEL,
   ctx: FHIRServerCTX,
+
   client: pg.PoolClient,
   body: (ctx: FHIRServerCTX) => Promise<T>
 ): Promise<T> {
   if (ctx.inTransaction) return body(ctx);
   return retryFailedTransactions(ctx, 5, async () => {
     try {
-      // client.query("BEGIN");
-      await client.query("BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE");
+      await client.query(begin(isolation_level));
       const returnV = await body({ ...ctx, inTransaction: true });
       await client.query("END");
       return returnV;

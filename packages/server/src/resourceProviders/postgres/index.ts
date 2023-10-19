@@ -58,6 +58,7 @@ import { executeSearchQuery } from "./search/index.js";
 import { ParsedParameter } from "@iguhealth/client/url";
 import {
   transaction,
+  ISOLATION_LEVEL,
   buildTransactionTopologicalGraph,
 } from "../transactions.js";
 
@@ -682,18 +683,24 @@ async function saveResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
   resource: Resource
 ): Promise<Resource> {
-  return transaction(ctx, client, async (ctx) => {
-    const queryText =
-      "INSERT INTO resources(workspace, request_method, author, resource) VALUES($1, $2, $3, $4) RETURNING resource";
-    const res = await client.query(queryText, [
-      ctx.workspace,
-      "POST",
-      ctx.author,
-      resource,
-    ]);
-    await indexResource(client, ctx, res.rows[0].resource as Resource);
-    return res.rows[0].resource as Resource;
-  });
+  return transaction(
+    /* Only insertion don't need a guarantee around state of data */
+    ISOLATION_LEVEL.ReadCommitted,
+    ctx,
+    client,
+    async (ctx) => {
+      const queryText =
+        "INSERT INTO resources(workspace, request_method, author, resource) VALUES($1, $2, $3, $4) RETURNING resource";
+      const res = await client.query(queryText, [
+        ctx.workspace,
+        "POST",
+        ctx.author,
+        resource,
+      ]);
+      await indexResource(client, ctx, res.rows[0].resource as Resource);
+      return res.rows[0].resource as Resource;
+    }
+  );
 }
 
 async function getResource<CTX extends FHIRServerCTX>(
@@ -865,7 +872,7 @@ async function patchResource<CTX extends FHIRServerCTX>(
   id: string,
   patches: Operation[]
 ): Promise<Resource> {
-  return transaction(ctx, client, async (ctx) => {
+  return transaction(ISOLATION_LEVEL.Serializable, ctx, client, async (ctx) => {
     const resource = await getResource(client, ctx, resourceType, id);
     // [TODO] CHECK VALIDATION
     const newResource = jsonpatch.applyPatch(resource, patches)
@@ -897,28 +904,33 @@ async function deleteResource<CTX extends FHIRServerCTX>(
   resourceType: ResourceType,
   id: string
 ) {
-  return transaction(ctx, client, async (ctx) => {
-    const resource = await getResource(client, ctx, resourceType, id);
-    if (!resource)
-      throw new OperationError(
-        outcomeError(
-          "not-found",
-          `'${resourceType}' with id '${id}' was not found`
-        )
-      );
-    const queryText =
-      "INSERT INTO resources(workspace, request_method, author, resource, prev_version_id, deleted) VALUES($1, $2, $3, $4, $5, $6) RETURNING resource";
+  return transaction(
+    ISOLATION_LEVEL.RepeatableRead,
+    ctx,
+    client,
+    async (ctx) => {
+      const resource = await getResource(client, ctx, resourceType, id);
+      if (!resource)
+        throw new OperationError(
+          outcomeError(
+            "not-found",
+            `'${resourceType}' with id '${id}' was not found`
+          )
+        );
+      const queryText =
+        "INSERT INTO resources(workspace, request_method, author, resource, prev_version_id, deleted) VALUES($1, $2, $3, $4, $5, $6) RETURNING resource";
 
-    const res = await client.query(queryText, [
-      ctx.workspace,
-      "DELETE",
-      ctx.author,
-      resource,
-      resource.meta?.versionId,
-      true,
-    ]);
-    await removeIndices(client, ctx, resource);
-  });
+      const res = await client.query(queryText, [
+        ctx.workspace,
+        "DELETE",
+        ctx.author,
+        resource,
+        resource.meta?.versionId,
+        true,
+      ]);
+      await removeIndices(client, ctx, resource);
+    }
+  );
 }
 
 function createPostgresMiddleware<
@@ -1124,86 +1136,93 @@ function createPostgresMiddleware<
               )
             );
           }
-          return transaction(args.ctx, args.state.client, async (ctx) => {
-            for (const index of order) {
-              const entry = transactionBundle.entry?.[parseInt(index)];
-              if (!entry)
-                throw new OperationError(
-                  outcomeFatal(
-                    "exception",
-                    "invalid entry in transaction processing."
-                  )
-                );
+          return transaction(
+            ISOLATION_LEVEL.Serializable,
+            args.ctx,
+            args.state.client,
+            async (ctx) => {
+              for (const index of order) {
+                const entry = transactionBundle.entry?.[parseInt(index)];
+                if (!entry)
+                  throw new OperationError(
+                    outcomeFatal(
+                      "exception",
+                      "invalid entry in transaction processing."
+                    )
+                  );
 
-              if (!entry.request?.method) {
-                throw new OperationError(
-                  outcomeError(
-                    "invalid",
-                    `No request.method found at index '${index}'`
-                  )
-                );
-              }
-              if (!entry.request?.url) {
-                throw new OperationError(
-                  outcomeError(
-                    "invalid",
-                    `No request.url found at index '${index}'`
-                  )
-                );
-              }
-              const fhirRequest = KoaRequestToFHIRRequest(
-                entry.request?.url || "",
-                {
-                  method: entry.request?.method,
-                  body: entry.resource,
+                if (!entry.request?.method) {
+                  throw new OperationError(
+                    outcomeError(
+                      "invalid",
+                      `No request.method found at index '${index}'`
+                    )
+                  );
                 }
-              );
-              const fhirResponse = await ctx.client.request(ctx, fhirRequest);
-              const responseEntry = fhirResponseToBundleEntry(fhirResponse);
-              responseEntries.push(responseEntry);
-              // Generate patches to update the transaction references.
-              const patches = entry.fullUrl
-                ? (locationsToUpdate[entry.fullUrl] || []).map(
-                    (loc): Operation => {
-                      if (!responseEntry.response?.location)
-                        throw new OperationError(
-                          outcomeFatal(
-                            "exception",
-                            "response location not found during transaction processing"
-                          )
-                        );
-                      return {
-                        path: `/${loc.join("/")}`,
-                        op: "replace",
-                        value: { reference: responseEntry.response?.location },
-                      };
-                    }
-                  )
-                : [];
+                if (!entry.request?.url) {
+                  throw new OperationError(
+                    outcomeError(
+                      "invalid",
+                      `No request.url found at index '${index}'`
+                    )
+                  );
+                }
+                const fhirRequest = KoaRequestToFHIRRequest(
+                  entry.request?.url || "",
+                  {
+                    method: entry.request?.method,
+                    body: entry.resource,
+                  }
+                );
+                const fhirResponse = await ctx.client.request(ctx, fhirRequest);
+                const responseEntry = fhirResponseToBundleEntry(fhirResponse);
+                responseEntries.push(responseEntry);
+                // Generate patches to update the transaction references.
+                const patches = entry.fullUrl
+                  ? (locationsToUpdate[entry.fullUrl] || []).map(
+                      (loc): Operation => {
+                        if (!responseEntry.response?.location)
+                          throw new OperationError(
+                            outcomeFatal(
+                              "exception",
+                              "response location not found during transaction processing"
+                            )
+                          );
+                        return {
+                          path: `/${loc.join("/")}`,
+                          op: "replace",
+                          value: {
+                            reference: responseEntry.response?.location,
+                          },
+                        };
+                      }
+                    )
+                  : [];
 
-              // Update transaction bundle with applied references.
-              transactionBundle = jsonpatch.applyPatch(
-                transactionBundle,
-                patches
-              ).newDocument;
-            }
+                // Update transaction bundle with applied references.
+                transactionBundle = jsonpatch.applyPatch(
+                  transactionBundle,
+                  patches
+                ).newDocument;
+              }
 
-            const transactionResponse: Bundle = {
-              resourceType: "Bundle",
-              type: "transaction-response",
-              entry: responseEntries,
-            };
-
-            return {
-              state: args.state,
-              ctx: args.ctx,
-              response: {
+              const transactionResponse: Bundle = {
+                resourceType: "Bundle",
                 type: "transaction-response",
-                level: "system",
-                body: transactionResponse,
-              },
-            };
-          });
+                entry: responseEntries,
+              };
+
+              return {
+                state: args.state,
+                ctx: args.ctx,
+                response: {
+                  type: "transaction-response",
+                  level: "system",
+                  body: transactionResponse,
+                },
+              };
+            }
+          );
         }
         default:
           throw new OperationError(
