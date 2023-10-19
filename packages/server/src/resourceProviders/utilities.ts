@@ -1,5 +1,3 @@
-import pg from "pg";
-
 import {
   Resource,
   BundleEntry,
@@ -7,11 +5,7 @@ import {
   SearchParameter,
 } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
-import {
-  OperationError,
-  outcomeError,
-  outcomeFatal,
-} from "@iguhealth/operation-outcomes";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
 
 import { fhirResponseToKoaResponse } from "../koaParsing/index.js";
@@ -290,51 +284,4 @@ export function fhirResponseToBundleEntry(
     },
     resource: koaResponse.body ? (koaResponse.body as Resource) : undefined,
   };
-}
-
-async function retryFailedTransactions<ReturnType>(
-  ctx: FHIRServerCTX,
-  numberOfRetries: number,
-  execute: () => Promise<ReturnType>
-): Promise<ReturnType> {
-  for (let i = 0; i < numberOfRetries; i++) {
-    try {
-      const res = await execute();
-      return res;
-    } catch (e) {
-      if (!(e instanceof pg.DatabaseError)) {
-        ctx.logger.error("Error during transaction:", e);
-        throw e;
-      }
-      // Only going to retry on failed transactions
-      if (e.code !== "40001") {
-        ctx.logger.error("Postgres error threw :", e);
-        throw e;
-      }
-      ctx.logger.warn("Retrying transaction :", i);
-    }
-  }
-  throw new OperationError(
-    outcomeFatal("internal", "Failed to retry transaction")
-  );
-}
-
-export async function transaction<T>(
-  ctx: FHIRServerCTX,
-  client: pg.PoolClient,
-  body: (ctx: FHIRServerCTX) => Promise<T>
-): Promise<T> {
-  if (ctx.inTransaction) return body(ctx);
-  return retryFailedTransactions(ctx, 5, async () => {
-    try {
-      // client.query("BEGIN");
-      await client.query("BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE");
-      const returnV = await body({ ...ctx, inTransaction: true });
-      await client.query("END");
-      return returnV;
-    } catch (e) {
-      await client.query("ROLLBACK");
-      throw e;
-    }
-  });
 }

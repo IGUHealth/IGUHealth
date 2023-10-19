@@ -1,4 +1,5 @@
 import graphlib from "@dagrejs/graphlib";
+import pg from "pg";
 
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { Bundle, Reference } from "@iguhealth/fhir-types/r4/types";
@@ -87,4 +88,54 @@ export function buildTransactionTopologicalGraph(
     );
   }
   return { locationsToUpdate, graph, order: graphlib.alg.topsort(graph) };
+}
+
+async function retryFailedTransactions<ReturnType>(
+  ctx: FHIRServerCTX,
+  numberOfRetries: number,
+  execute: () => Promise<ReturnType>
+): Promise<ReturnType> {
+  for (let i = 0; i < numberOfRetries; i++) {
+    try {
+      const res = await execute();
+      return res;
+    } catch (e) {
+      if (!(e instanceof pg.DatabaseError)) {
+        ctx.logger.error("Error during transaction:", e);
+        throw e;
+      }
+      // Only going to retry on failed transactions
+      if (e.code !== "40001") {
+        ctx.logger.error("Postgres error threw :", e);
+        throw e;
+      }
+      ctx.logger.warn("Retrying transaction :", i);
+    }
+  }
+  throw new OperationError(
+    outcomeFatal(
+      "internal",
+      `Could not apply transaction after '${numberOfRetries}' retries.`
+    )
+  );
+}
+
+export async function transaction<T>(
+  ctx: FHIRServerCTX,
+  client: pg.PoolClient,
+  body: (ctx: FHIRServerCTX) => Promise<T>
+): Promise<T> {
+  if (ctx.inTransaction) return body(ctx);
+  return retryFailedTransactions(ctx, 5, async () => {
+    try {
+      // client.query("BEGIN");
+      await client.query("BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE");
+      const returnV = await body({ ...ctx, inTransaction: true });
+      await client.query("END");
+      return returnV;
+    } catch (e) {
+      await client.query("ROLLBACK");
+      throw e;
+    }
+  });
 }
