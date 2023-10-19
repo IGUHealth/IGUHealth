@@ -1165,27 +1165,28 @@ function createPostgresMiddleware<
                 }
               );
               const fhirResponse = await ctx.client.request(ctx, fhirRequest);
+              console.log(fhirResponse);
               const responseEntry = fhirResponseToBundleEntry(fhirResponse);
               responseEntries.push(responseEntry);
               // Generate patches to update the transaction references.
               const patches = entry.fullUrl
-                ? locationsToUpdate[entry.fullUrl].map((loc): Operation => {
-                    if (!responseEntry.response?.location)
-                      throw new OperationError(
-                        outcomeFatal(
-                          "exception",
-                          "response location not found during transaction processing"
-                        )
-                      );
-                    return {
-                      path: `/${loc.join("/")}`,
-                      op: "replace",
-                      value: { reference: responseEntry.response?.location },
-                    };
-                  })
+                ? (locationsToUpdate[entry.fullUrl] || []).map(
+                    (loc): Operation => {
+                      if (!responseEntry.response?.location)
+                        throw new OperationError(
+                          outcomeFatal(
+                            "exception",
+                            "response location not found during transaction processing"
+                          )
+                        );
+                      return {
+                        path: `/${loc.join("/")}`,
+                        op: "replace",
+                        value: { reference: responseEntry.response?.location },
+                      };
+                    }
+                  )
                 : [];
-
-              console.log(transactionBundle, patches);
 
               // Update transaction bundle with applied references.
               transactionBundle = jsonpatch.applyPatch(
@@ -1193,11 +1194,14 @@ function createPostgresMiddleware<
                 patches
               ).newDocument;
             }
-            const bundle: Bundle = {
+
+            const transactionResponse: Bundle = {
               resourceType: "Bundle",
               type: "transaction-response",
               entry: responseEntries,
             };
+
+            console.log(transactionResponse);
 
             return {
               state: args.state,
@@ -1205,7 +1209,7 @@ function createPostgresMiddleware<
               response: {
                 type: "transaction-response",
                 level: "system",
-                body: bundle,
+                body: transactionResponse,
               },
             };
           });

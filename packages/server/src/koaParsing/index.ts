@@ -358,12 +358,10 @@ export function fhirResponseToKoaResponse(
         body: fhirResponse.body,
       };
     case "transaction-response":
-      throw new OperationError(
-        outcomeError(
-          "not-supported",
-          `could not convert response to http of type '${fhirResponse.type}'`
-        )
-      );
+      return {
+        status: 200,
+        body: fhirResponse.body,
+      };
     case "invoke-response":
       return { body: fhirResponse.body, status: 200 };
   }

@@ -18,7 +18,7 @@ function getTransactionFullUrls(transaction: Bundle): Record<string, number> {
 }
 
 type LocationsToUpdate = {
-  [key: string]: (string | number)[][];
+  [key: string]: (string | number)[][] | undefined;
 };
 
 export function buildTransactionTopologicalGraph(
@@ -69,8 +69,8 @@ export function buildTransactionTopologicalGraph(
             )
           );
 
-        const bundleEntryLocation = ["entry", "resource", idx, ...location];
-        locationsToUpdate[ref].push(bundleEntryLocation);
+        const bundleEntryLocation = ["entry", idx, "resource", ...location];
+        (locationsToUpdate[ref] || []).push(bundleEntryLocation);
         graph.setEdge(urlToIndice[ref as string].toString(), idx);
       }
     }
