@@ -1127,7 +1127,6 @@ function createPostgresMiddleware<
             args.ctx,
             transactionBundle
           );
-          const responseEntries: BundleEntry[] = [];
           if ((transactionBundle.entry || []).length > 20) {
             throw new OperationError(
               outcomeError(
@@ -1136,6 +1135,9 @@ function createPostgresMiddleware<
               )
             );
           }
+          const responseEntries: BundleEntry[] = [
+            ...new Array((transactionBundle.entry || []).length),
+          ];
           return transaction(
             ISOLATION_LEVEL.Serializable,
             args.ctx,
@@ -1176,7 +1178,7 @@ function createPostgresMiddleware<
                 );
                 const fhirResponse = await ctx.client.request(ctx, fhirRequest);
                 const responseEntry = fhirResponseToBundleEntry(fhirResponse);
-                responseEntries.push(responseEntry);
+                responseEntries[parseInt(index)] = responseEntry;
                 // Generate patches to update the transaction references.
                 const patches = entry.fullUrl
                   ? (locationsToUpdate[entry.fullUrl] || []).map(

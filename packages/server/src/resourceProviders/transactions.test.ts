@@ -44,7 +44,7 @@ const CTX = {
 test("Generate a graph from a transaction", () => {
   const result = buildTransactionTopologicalGraph(CTX, {
     resourceType: "Bundle",
-    type: "transaction-request",
+    type: "transaction",
     entry: [
       {
         fullUrl: "urn:oid:2",
@@ -70,7 +70,7 @@ test("Test Cyclical", () => {
   expect(() => {
     return buildTransactionTopologicalGraph(CTX, {
       resourceType: "Bundle",
-      type: "transaction-request",
+      type: "transaction",
       entry: [
         {
           fullUrl: "urn:oid:2",
@@ -104,7 +104,7 @@ test("Test Cyclical", () => {
   try {
     buildTransactionTopologicalGraph(CTX, {
       resourceType: "Bundle",
-      type: "transaction-request",
+      type: "transaction",
       entry: [
         {
           fullUrl: "urn:oid:2",
