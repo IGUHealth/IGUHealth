@@ -7,8 +7,8 @@ exports[`Generate a graph from a transaction 1`] = `
     "urn:oid:1": [
       [
         "entry",
-        "resource",
         "0",
+        "resource",
         "generalPractitioner",
         0,
       ],
