@@ -1,6 +1,5 @@
 import path from "path";
 import { test, expect } from "@jest/globals";
-import { alg } from "@dagrejs/graphlib";
 
 import {
   ResourceType,
@@ -9,9 +8,12 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { FHIRClientSync } from "@iguhealth/client/interface";
+import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import MemoryDatabase from "./memory/sync.js";
 import { buildTransactionTopologicalGraph } from "./transactions";
+import { testServices } from "./test_ctx.js";
+import { FHIRServerCTX } from "../fhirServer.js";
 
 function createMemoryDatabase(
   resourceTypes: ResourceType[]
@@ -34,10 +36,15 @@ function getSD(type: string): StructureDefinition | undefined {
   return memDB.read({}, "StructureDefinition", type);
 }
 
+const CTX = {
+  ...testServices,
+  resolveSD: (ctx: FHIRServerCTX, type: string) => getSD(type),
+};
+
 test("Generate a graph from a transaction", () => {
-  const { graph, locationsToUpdate } = buildTransactionTopologicalGraph(getSD, {
+  const result = buildTransactionTopologicalGraph(CTX, {
     resourceType: "Bundle",
-    type: "transaction-request",
+    type: "transaction",
     entry: [
       {
         fullUrl: "urn:oid:2",
@@ -55,36 +62,82 @@ test("Generate a graph from a transaction", () => {
       },
     ],
   });
-  expect({ graph, locationsToUpdate }).toMatchSnapshot();
-  expect(alg.topsort(graph)).toEqual(["1", "0"]);
+  expect(result).toMatchSnapshot();
+  expect(result.order).toEqual(["1", "0"]);
 });
 
 test("Test Cyclical", () => {
-  const { graph, locationsToUpdate } = buildTransactionTopologicalGraph(getSD, {
-    resourceType: "Bundle",
-    type: "transaction-request",
-    entry: [
-      {
-        fullUrl: "urn:oid:2",
-        resource: {
-          resourceType: "Patient",
-          generalPractitioner: [{ reference: "urn:oid:1" }],
-        },
-      },
-      {
-        fullUrl: "urn:oid:1",
-        resource: {
-          extension: [
-            { url: "test", valueReference: { reference: "urn:oid:2" } },
-          ],
-          resourceType: "Practitioner",
-          name: [{ given: ["Bob"] }],
-        },
-      },
-    ],
-  });
-  expect({ graph, locationsToUpdate }).toMatchSnapshot();
   expect(() => {
-    alg.topsort(graph);
-  }).toThrow();
+    return buildTransactionTopologicalGraph(CTX, {
+      resourceType: "Bundle",
+      type: "transaction",
+      entry: [
+        {
+          fullUrl: "urn:oid:2",
+          resource: {
+            resourceType: "Patient",
+            generalPractitioner: [{ reference: "urn:oid:1" }],
+          },
+        },
+        {
+          fullUrl: "urn:oid:1",
+          resource: {
+            extension: [
+              { url: "test", valueReference: { reference: "urn:oid:2" } },
+            ],
+            resourceType: "Practitioner",
+            name: [{ given: ["Bob"] }],
+          },
+        },
+      ],
+    });
+  }).toThrow(
+    new OperationError(
+      outcomeFatal(
+        "exception",
+        `Transaction bundle has cycles at following indices ${JSON.stringify(
+          []
+        )}.`
+      )
+    )
+  );
+  try {
+    buildTransactionTopologicalGraph(CTX, {
+      resourceType: "Bundle",
+      type: "transaction",
+      entry: [
+        {
+          fullUrl: "urn:oid:2",
+          resource: {
+            resourceType: "Patient",
+            generalPractitioner: [{ reference: "urn:oid:1" }],
+          },
+        },
+        {
+          fullUrl: "urn:oid:1",
+          resource: {
+            extension: [
+              { url: "test", valueReference: { reference: "urn:oid:2" } },
+            ],
+            resourceType: "Practitioner",
+            name: [{ given: ["Bob"] }],
+          },
+        },
+      ],
+    });
+  } catch (e) {
+    if (e instanceof OperationError) {
+      expect(e.operationOutcome.issue).toEqual([
+        {
+          code: "exception",
+          diagnostics:
+            "Transaction bundle has cycles at following indice paths 1->0.",
+          expression: undefined,
+          severity: "fatal",
+        },
+      ]);
+    } else {
+      throw e;
+    }
+  }
 });

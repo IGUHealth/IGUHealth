@@ -499,7 +499,7 @@ function buildParametersSQL(
 }
 
 async function calculateTotal(
-  client: pg.Pool,
+  client: pg.PoolClient,
   totalType: string | number,
   query: string,
   values: unknown[]
@@ -538,7 +538,7 @@ function filterToLatest(query: string): string {
 }
 
 export async function executeSearchQuery(
-  client: pg.Pool,
+  client: pg.PoolClient,
   request: SystemSearchRequest | TypeSearchRequest,
   ctx: FHIRServerCTX,
   onlyLatest: boolean = true

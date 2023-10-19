@@ -33,6 +33,7 @@ async function fhirRequestToFHIRResponse(
 }
 
 export interface FHIRServerCTX {
+  inTransaction?: boolean;
   workspace: string;
   author: string;
   terminologyProvider: TerminologyProvider;

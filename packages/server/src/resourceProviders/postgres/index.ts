@@ -11,6 +11,7 @@ import {
 } from "@iguhealth/client/middleware";
 import {
   Address,
+  Bundle,
   BundleEntry,
   canonical,
   CodeableConcept,
@@ -38,18 +39,28 @@ import {
   MetaValueArray,
   MetaValueSingular,
 } from "@iguhealth/meta-value";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  outcomeError,
+  outcomeFatal,
+} from "@iguhealth/operation-outcomes";
 
+import { KoaRequestToFHIRRequest } from "../../koaParsing/index.js";
+import { FHIRServerCTX } from "../../fhirServer.js";
 import { param_types_supported } from "./constants.js";
 import {
   searchResources,
   getDecimalPrecision,
   deriveLimit,
+  fhirResponseToBundleEntry,
 } from "../utilities.js";
-import { FHIRServerCTX } from "../../fhirServer.js";
 import { executeSearchQuery } from "./search/index.js";
 import { ParsedParameter } from "@iguhealth/client/url";
-import { last } from "lodash";
+import {
+  transaction,
+  ISOLATION_LEVEL,
+  buildTransactionTopologicalGraph,
+} from "../transactions.js";
 
 async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
@@ -646,13 +657,25 @@ async function indexResource<CTX extends FHIRServerCTX>(
   const searchParameters = await getAllParametersForResource(ctx, [
     resource.resourceType,
   ]);
-  for (const searchParameter of searchParameters) {
-    if (searchParameter.expression === undefined) continue;
-    const evaluation = evaluateWithMeta(searchParameter.expression, resource, {
-      meta: { getSD: (type: string) => ctx.resolveSD(ctx, type) },
-    });
-    indexSearchParameter(client, ctx, searchParameter, resource, evaluation);
-  }
+  await Promise.all(
+    searchParameters.map((searchParameter) => {
+      if (searchParameter.expression === undefined) return;
+      const evaluation = evaluateWithMeta(
+        searchParameter.expression,
+        resource,
+        {
+          meta: { getSD: (type: string) => ctx.resolveSD(ctx, type) },
+        }
+      );
+      return indexSearchParameter(
+        client,
+        ctx,
+        searchParameter,
+        resource,
+        evaluation
+      );
+    })
+  );
 }
 
 async function saveResource<CTX extends FHIRServerCTX>(
@@ -660,23 +683,24 @@ async function saveResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
   resource: Resource
 ): Promise<Resource> {
-  try {
-    await client.query("BEGIN");
-    const queryText =
-      "INSERT INTO resources(workspace, request_method, author, resource) VALUES($1, $2, $3, $4) RETURNING resource";
-    const res = await client.query(queryText, [
-      ctx.workspace,
-      "POST",
-      ctx.author,
-      resource,
-    ]);
-    await indexResource(client, ctx, res.rows[0].resource as Resource);
-    await client.query("COMMIT");
-    return res.rows[0].resource as Resource;
-  } catch (e) {
-    await client.query("ROLLBACK");
-    throw e;
-  }
+  return transaction(
+    /* Only insertion don't need a guarantee around state of data */
+    ISOLATION_LEVEL.ReadCommitted,
+    ctx,
+    client,
+    async (ctx) => {
+      const queryText =
+        "INSERT INTO resources(workspace, request_method, author, resource) VALUES($1, $2, $3, $4) RETURNING resource";
+      const res = await client.query(queryText, [
+        ctx.workspace,
+        "POST",
+        ctx.author,
+        resource,
+      ]);
+      await indexResource(client, ctx, res.rows[0].resource as Resource);
+      return res.rows[0].resource as Resource;
+    }
+  );
 }
 
 async function getResource<CTX extends FHIRServerCTX>(
@@ -848,8 +872,7 @@ async function patchResource<CTX extends FHIRServerCTX>(
   id: string,
   patches: Operation[]
 ): Promise<Resource> {
-  try {
-    await client.query("BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE");
+  return transaction(ISOLATION_LEVEL.Serializable, ctx, client, async (ctx) => {
     const resource = await getResource(client, ctx, resourceType, id);
     // [TODO] CHECK VALIDATION
     const newResource = jsonpatch.applyPatch(resource, patches)
@@ -871,12 +894,8 @@ async function patchResource<CTX extends FHIRServerCTX>(
       JSON.stringify(patches),
     ]);
     await indexResource(client, ctx, res.rows[0].resource as Resource);
-    await client.query("COMMIT");
     return res.rows[0].resource as Resource;
-  } catch (e) {
-    await client.query("ROLLBACK");
-    throw e;
-  }
+  });
 }
 
 async function deleteResource<CTX extends FHIRServerCTX>(
@@ -885,87 +904,64 @@ async function deleteResource<CTX extends FHIRServerCTX>(
   resourceType: ResourceType,
   id: string
 ) {
-  try {
-    await client.query("BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE");
-    const resource = await getResource(client, ctx, resourceType, id);
-    if (!resource)
-      throw new OperationError(
-        outcomeError(
-          "not-found",
-          `'${resourceType}' with id '${id}' was not found`
-        )
-      );
-    const queryText =
-      "INSERT INTO resources(workspace, request_method, author, resource, prev_version_id, deleted) VALUES($1, $2, $3, $4, $5, $6) RETURNING resource";
+  return transaction(
+    ISOLATION_LEVEL.RepeatableRead,
+    ctx,
+    client,
+    async (ctx) => {
+      const resource = await getResource(client, ctx, resourceType, id);
+      if (!resource)
+        throw new OperationError(
+          outcomeError(
+            "not-found",
+            `'${resourceType}' with id '${id}' was not found`
+          )
+        );
+      const queryText =
+        "INSERT INTO resources(workspace, request_method, author, resource, prev_version_id, deleted) VALUES($1, $2, $3, $4, $5, $6) RETURNING resource";
 
-    const res = await client.query(queryText, [
-      ctx.workspace,
-      "DELETE",
-      ctx.author,
-      resource,
-      resource.meta?.versionId,
-      true,
-    ]);
-    await removeIndices(client, ctx, resource);
-    await client.query("END");
-  } catch (e) {
-    await client.query("ROLLBACK");
-    throw e;
-  }
-}
-
-async function retryFailedTransactions<ReturnType>(
-  execute: () => Promise<ReturnType>
-): Promise<ReturnType> {
-  /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
-  while (true) {
-    try {
-      const res = await execute();
-      return res;
-    } catch (e) {
-      if (!(e instanceof pg.DatabaseError)) throw e;
-      // Only going to retry on failed transactions
-      if (e.code !== "40001") {
-        throw e;
-      }
+      const res = await client.query(queryText, [
+        ctx.workspace,
+        "DELETE",
+        ctx.author,
+        resource,
+        resource.meta?.versionId,
+        true,
+      ]);
+      await removeIndices(client, ctx, resource);
     }
-  }
+  );
 }
 
 function createPostgresMiddleware<
-  State extends { pool: pg.Pool },
+  State extends { client: pg.PoolClient },
   CTX extends FHIRServerCTX
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
     async (request, args, next) => {
       switch (request.type) {
         case "read-request": {
-          const client = await args.state.pool.connect();
-          try {
-            const resource = await getResource(
-              client,
-              args.ctx,
-              request.resourceType as ResourceType,
-              request.id
-            );
-            return {
-              state: args.state,
-              ctx: args.ctx,
-              response: {
-                level: "instance",
-                type: "read-response",
-                resourceType: request.resourceType,
-                id: request.id,
-                body: resource,
-              },
-            };
-          } finally {
-            client.release();
-          }
+          const resource = await getResource(
+            args.state.client,
+            args.ctx,
+            request.resourceType as ResourceType,
+            request.id
+          );
+          return {
+            state: args.state,
+            ctx: args.ctx,
+            response: {
+              level: "instance",
+              type: "read-response",
+              resourceType: request.resourceType,
+              id: request.id,
+              body: resource,
+            },
+          };
         }
         case "search-request": {
           const result = await executeSearchQuery(
-            args.state.pool,
+            args.state.client,
             request,
             args.ctx
           );
@@ -1000,150 +996,235 @@ function createPostgresMiddleware<
           }
         }
         case "create-request": {
-          const client = await args.state.pool.connect();
-          try {
-            const savedResource = await retryFailedTransactions(
-              async () =>
-                await saveResource(client, args.ctx, {
-                  ...request.body,
-                  id: v4(),
-                })
-            );
-            return {
-              state: args.state,
-              ctx: args.ctx,
-              response: {
-                level: "type",
-                resourceType: request.resourceType,
-                type: "create-response",
-                body: savedResource,
-              },
-            };
-          } finally {
-            client.release();
-          }
+          const savedResource = await saveResource(
+            args.state.client,
+            args.ctx,
+            {
+              ...request.body,
+              id: v4(),
+            }
+          );
+
+          return {
+            state: args.state,
+            ctx: args.ctx,
+            response: {
+              level: "type",
+              resourceType: request.resourceType,
+              type: "create-response",
+              body: savedResource,
+            },
+          };
         }
+
         case "patch-request":
           throw new OperationError(
             outcomeError("not-supported", `Patch is not yet supported.`)
           );
         case "update-request": {
-          const client = await args.state.pool.connect();
-          try {
-            const savedResource = await retryFailedTransactions(
-              async () =>
-                await patchResource(
-                  client,
-                  "PUT",
-                  args.ctx,
-                  request.resourceType as ResourceType,
-                  request.id,
-                  [{ op: "replace", path: "", value: request.body }]
-                )
-            );
-            return {
-              state: args.state,
-              ctx: args.ctx,
-              response: {
-                level: "instance",
-                resourceType: request.resourceType,
-                id: request.id,
-                type: "update-response",
-                body: savedResource,
-              },
-            };
-          } finally {
-            client.release();
-          }
+          const savedResource = await patchResource(
+            args.state.client,
+            "PUT",
+            args.ctx,
+            request.resourceType as ResourceType,
+            request.id,
+            [{ op: "replace", path: "", value: request.body }]
+          );
+
+          return {
+            state: args.state,
+            ctx: args.ctx,
+            response: {
+              level: "instance",
+              resourceType: request.resourceType,
+              id: request.id,
+              type: "update-response",
+              body: savedResource,
+            },
+          };
         }
         case "delete-request": {
-          const client = await args.state.pool.connect();
-          try {
-            await retryFailedTransactions(async () => {
-              await deleteResource(
-                client,
+          await deleteResource(
+            args.state.client,
+            args.ctx,
+            request.resourceType as ResourceType,
+            request.id
+          );
+
+          return {
+            state: args.state,
+            ctx: args.ctx,
+            response: {
+              type: "delete-response",
+              level: "instance",
+              resourceType: request.resourceType,
+              id: request.id,
+            },
+          };
+        }
+
+        case "history-request": {
+          switch (request.level) {
+            case "instance": {
+              const instanceHistory = await getInstanceHistory(
+                args.state.client,
                 args.ctx,
                 request.resourceType as ResourceType,
-                request.id
+                request.id,
+                request.parameters || []
               );
-            });
-
-            return {
-              state: args.state,
-              ctx: args.ctx,
-              response: {
-                type: "delete-response",
-                level: "instance",
-                resourceType: request.resourceType,
-                id: request.id,
-              },
-            };
-          } finally {
-            client.release();
+              return {
+                state: args.state,
+                ctx: args.ctx,
+                response: {
+                  type: "history-response",
+                  level: "instance",
+                  resourceType: request.resourceType,
+                  id: request.id,
+                  body: instanceHistory,
+                },
+              };
+            }
+            case "type": {
+              const typeHistory = await getTypeHistory(
+                args.state.client,
+                args.ctx,
+                request.resourceType as ResourceType,
+                request.parameters || []
+              );
+              return {
+                state: args.state,
+                ctx: args.ctx,
+                response: {
+                  type: "history-response",
+                  level: "type",
+                  body: typeHistory,
+                  resourceType: request.resourceType,
+                },
+              };
+            }
+            case "system": {
+              const systemHistory = await getSystemHistory(
+                args.state.client,
+                args.ctx,
+                request.parameters || []
+              );
+              return {
+                state: args.state,
+                ctx: args.ctx,
+                response: {
+                  type: "history-response",
+                  level: "system",
+                  body: systemHistory,
+                },
+              };
+            }
           }
         }
-        case "history-request": {
-          const client = await args.state.pool.connect();
-          try {
-            switch (request.level) {
-              case "instance": {
-                const instanceHistory = await getInstanceHistory(
-                  client,
-                  args.ctx,
-                  request.resourceType as ResourceType,
-                  request.id,
-                  request.parameters || []
-                );
-                return {
-                  state: args.state,
-                  ctx: args.ctx,
-                  response: {
-                    type: "history-response",
-                    level: "instance",
-                    resourceType: request.resourceType,
-                    id: request.id,
-                    body: instanceHistory,
-                  },
-                };
-              }
-              case "type": {
-                const typeHistory = await getTypeHistory(
-                  client,
-                  args.ctx,
-                  request.resourceType as ResourceType,
-                  request.parameters || []
-                );
-                return {
-                  state: args.state,
-                  ctx: args.ctx,
-                  response: {
-                    type: "history-response",
-                    level: "type",
-                    body: typeHistory,
-                    resourceType: request.resourceType,
-                  },
-                };
-              }
-              case "system": {
-                const systemHistory = await getSystemHistory(
-                  client,
-                  args.ctx,
-                  request.parameters || []
-                );
-                return {
-                  state: args.state,
-                  ctx: args.ctx,
-                  response: {
-                    type: "history-response",
-                    level: "system",
-                    body: systemHistory,
-                  },
-                };
-              }
-            }
-          } finally {
-            client.release();
+        case "transaction-request": {
+          let transactionBundle = request.body;
+          const { locationsToUpdate, order } = buildTransactionTopologicalGraph(
+            args.ctx,
+            transactionBundle
+          );
+          if ((transactionBundle.entry || []).length > 20) {
+            throw new OperationError(
+              outcomeError(
+                "invalid",
+                "Transaction bundle only allowed to have 20 entries."
+              )
+            );
           }
+          const responseEntries: BundleEntry[] = [
+            ...new Array((transactionBundle.entry || []).length),
+          ];
+          return transaction(
+            ISOLATION_LEVEL.Serializable,
+            args.ctx,
+            args.state.client,
+            async (ctx) => {
+              for (const index of order) {
+                const entry = transactionBundle.entry?.[parseInt(index)];
+                if (!entry)
+                  throw new OperationError(
+                    outcomeFatal(
+                      "exception",
+                      "invalid entry in transaction processing."
+                    )
+                  );
+
+                if (!entry.request?.method) {
+                  throw new OperationError(
+                    outcomeError(
+                      "invalid",
+                      `No request.method found at index '${index}'`
+                    )
+                  );
+                }
+                if (!entry.request?.url) {
+                  throw new OperationError(
+                    outcomeError(
+                      "invalid",
+                      `No request.url found at index '${index}'`
+                    )
+                  );
+                }
+                const fhirRequest = KoaRequestToFHIRRequest(
+                  entry.request?.url || "",
+                  {
+                    method: entry.request?.method,
+                    body: entry.resource,
+                  }
+                );
+                const fhirResponse = await ctx.client.request(ctx, fhirRequest);
+                const responseEntry = fhirResponseToBundleEntry(fhirResponse);
+                responseEntries[parseInt(index)] = responseEntry;
+                // Generate patches to update the transaction references.
+                const patches = entry.fullUrl
+                  ? (locationsToUpdate[entry.fullUrl] || []).map(
+                      (loc): Operation => {
+                        if (!responseEntry.response?.location)
+                          throw new OperationError(
+                            outcomeFatal(
+                              "exception",
+                              "response location not found during transaction processing"
+                            )
+                          );
+                        return {
+                          path: `/${loc.join("/")}`,
+                          op: "replace",
+                          value: {
+                            reference: responseEntry.response?.location,
+                          },
+                        };
+                      }
+                    )
+                  : [];
+
+                // Update transaction bundle with applied references.
+                transactionBundle = jsonpatch.applyPatch(
+                  transactionBundle,
+                  patches
+                ).newDocument;
+              }
+
+              const transactionResponse: Bundle = {
+                resourceType: "Bundle",
+                type: "transaction-response",
+                entry: responseEntries,
+              };
+
+              return {
+                state: args.state,
+                ctx: args.ctx,
+                response: {
+                  type: "transaction-response",
+                  level: "system",
+                  body: transactionResponse,
+                },
+              };
+            }
+          );
         }
         default:
           throw new OperationError(
@@ -1158,12 +1239,10 @@ function createPostgresMiddleware<
 }
 
 export function createPostgresClient<CTX extends FHIRServerCTX>(
-  config: pg.PoolConfig
+  client: pg.PoolClient
 ): FHIRClientAsync<CTX> {
-  const pool = new pg.Pool(config);
-  pool.connect();
-  return new AsynchronousClient<{ pool: pg.Pool }, CTX>(
-    { pool },
+  return new AsynchronousClient<{ client: pg.PoolClient }, CTX>(
+    { client },
     createPostgresMiddleware()
   );
 }
