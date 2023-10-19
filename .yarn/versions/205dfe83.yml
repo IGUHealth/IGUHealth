@@ -1,8 +1,0 @@
-releases:
-  "@iguhealth/fhirpath": patch
-  "@iguhealth/meta-value": patch
-  "@iguhealth/server": patch
-
-declined:
-  - "@iguhealth/components"
-  - "@iguhealth/fhir-validation"
