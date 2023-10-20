@@ -56,5 +56,5 @@ curl --request POST --url http://localhost:3000/w/system/api/v1/fhir/r4/Patient 
 Run the following query
 
 ```bash
-curl --request POST --url http://localhost:3000/w/system/api/v1/fhir/r4/Patient?name=parker
+curl --request GET --url http://localhost:3000/w/system/api/v1/fhir/r4/Patient?name=parker
 ```
