@@ -25,7 +25,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import type { FHIRServerCTX } from "./fhirServer.js";
-import { deriveCTX } from "./ctx/index.js";
+import { deriveCTX, logger } from "./ctx/index.js";
 import createFHIRServer from "./fhirServer.js";
 import {
   KoaRequestToFHIRRequest,
@@ -102,11 +102,13 @@ function workspaceMiddleware(
 ): Router.Middleware<Koa.DefaultState, Koa.DefaultContext, unknown>[] {
   const fhirServer = createFHIRServer();
 
+  if (!process.env.AUTH_JWT_ISSUER)
+    logger.warn("[WARNING] Server is publicly accessible.");
+
   return [
     process.env.AUTH_JWT_ISSUER
       ? createCheckJWT()
       : async (ctx, next) => {
-          console.warn("[WARNING] Server is publicly accessible.");
           ctx.state = {
             ...ctx.state,
             user: {
@@ -165,7 +167,7 @@ function workspaceMiddleware(
             .sort()[operationOutcome.issue.length - 1];
           ctx.body = operationOutcome;
         } else {
-          console.error(e);
+          logger.error(e);
           const operationOutcome = outcomeError(
             "invalid",
             "internal server error"
@@ -215,7 +217,7 @@ export default async function createServer(): Promise<
     .use(async (ctx, next) => {
       await next();
       const rt = ctx.response.get("X-Response-Time");
-      console.info(`${ctx.method} ${ctx.url} - ${rt}`);
+      logger.info(`${ctx.method} ${ctx.url} - ${rt}`);
     })
     .use(async (ctx, next) => {
       const start = Date.now();
@@ -226,7 +228,7 @@ export default async function createServer(): Promise<
     .use(router.routes())
     .use(router.allowedMethods());
 
-  console.info("Running app");
+  logger.info("Running app");
 
   return app;
 }
