@@ -6,11 +6,10 @@
   "type": "module",
   "scripts": {
     "build": "tsc && yarn copyfiles  -u 1 \"./src/**/*.sql\" lib",
-    "start": "yarn build && yarn node --enable-source-maps ./lib/local.js",
+    "start": "yarn build && yarn node --enable-source-maps ./lib/cli.js run server",
     "test": "jest --detectOpenHandles",
     "migrate": "db-migrate --sql-file -m src/resourceProviders/postgres/migrations",
-    "watch": "yarn migrate up && yarn tsc-watch --onSuccess \"yarn node --enable-source-maps  ./lib/local.js\"",
-    "watch-worker": "yarn migrate up && yarn tsc-watch --onSuccess \"yarn node --enable-source-maps  ./lib/worker/local.js\"",
+    "watch": "yarn migrate up && yarn tsc-watch --onSuccess \"yarn node --enable-source-maps  ./lib/cli.js run both\"",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "dependencies": {
@@ -30,6 +29,7 @@
     "@koa/cors": "^4.0.0",
     "@koa/router": "^12.0.0",
     "adm-zip": "^0.5.10",
+    "commander": "^11.1.0",
     "dayjs": "^1.11.9",
     "db-migrate": "1.0.0-beta.21",
     "db-migrate-pg": "^1.3.0",

@@ -162,6 +162,8 @@ async function serverCapabilities(
   };
 }
 
+export const logger = createLogger.default();
+
 export async function deriveCTX(): Promise<
   ({
     pg,
@@ -261,7 +263,7 @@ export async function deriveCTX(): Promise<
       workspace,
       author,
       user_access_token,
-      logger: createLogger.default(),
+      logger,
       terminologyProvider,
       capabilities,
       client,

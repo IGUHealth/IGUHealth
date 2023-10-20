@@ -17,7 +17,7 @@ import {
 import { evaluate } from "@iguhealth/fhirpath";
 
 import { resolveOperationDefinition } from "../operation-executors/utilities.js";
-import { deriveCTX } from "../ctx/index.js";
+import { deriveCTX, logger } from "../ctx/index.js";
 import logAuditEvent, {
   MAJOR_FAILURE,
   SERIOUS_FAILURE,
@@ -120,7 +120,9 @@ function subscriptionLockKey(workspace: string, subscriptionId: string) {
   return `${workspace}:${subscriptionId}`;
 }
 
-async function subWorker(workerID = randomUUID(), loopInterval = 500) {
+async function createWorker(workerID = randomUUID(), loopInterval = 500) {
+  logger.info({ workerID }, `Worker started with interval '${loopInterval}'`);
+
   // Using a pool directly because need to query up workspaces.
   const getCTX = await deriveCTX();
 
@@ -134,8 +136,10 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
 
   pool.connect();
 
+  let isRunning = true;
+
   /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
-  while (true) {
+  while (isRunning) {
     const activeWorkspaces = (
       await pool.query("SELECT id from workspaces where deleted = $1", [false])
     ).rows.map((row) => row.id);
@@ -144,7 +148,7 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
       const client = await pool.connect();
       try {
         const services = getCTX({ pg: client, workspace, author: "system" });
-        services.logger.info(`PROCESSING WORKSPACE SUBS '${workspace}'`);
+        const logger = services.logger.child({ worker: workerID, workerID });
         const ctx = { ...services, workspace, author: "system" };
         const activeSubscriptions = await services.client.search_type(
           ctx,
@@ -156,14 +160,14 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
           await ctx.lock.withLock(
             subscriptionLockKey(workspace, subscription.id as string),
             async () => {
-              ctx.logger.info(
+              logger.info(
                 `WORKER '${workerID}' has lock for '${subscriptionLockKey(
                   workspace,
                   subscription.id as string
                 )}'`
               );
               try {
-                ctx.logger.info({
+                logger.info({
                   worker: workerID,
                   workspace: ctx.workspace,
                   criteria: subscription.criteria,
@@ -265,6 +269,7 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
 
                 // By default poll would have 1 resource if current version ids match.
                 if (historyPoll.length > 1) {
+                  logger.info(`PROCESSING WORKSPACE SUBS '${workspace}'`);
                   if (historyPoll[0].resource === undefined)
                     throw new OperationError(
                       outcomeError(
@@ -301,7 +306,7 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
                   }
                 }
               } catch (e) {
-                ctx.logger.error(e);
+                logger.error(e);
                 let errorDescription = "Subscription failed to process";
 
                 if (isOperationError(e)) {
@@ -330,6 +335,10 @@ async function subWorker(workerID = randomUUID(), loopInterval = 500) {
       await new Promise((resolve) => setTimeout(resolve, loopInterval));
     }
   }
+
+  return () => {
+    isRunning = false;
+  };
 }
 
-subWorker();
+export default createWorker;
