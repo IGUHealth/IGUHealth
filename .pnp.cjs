@@ -10608,6 +10608,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/pg", "npm:8.10.2"],\
             ["@types/uuid", "npm:9.0.2"],\
             ["adm-zip", "npm:0.5.10"],\
+            ["commander", "npm:11.1.0"],\
             ["copyfiles", "npm:2.4.1"],\
             ["dayjs", "npm:1.11.9"],\
             ["db-migrate", "npm:1.0.0-beta.21"],\
@@ -20056,6 +20057,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/commander-npm-11.0.0-7def992f0c-6621954e1e.zip/node_modules/commander/",\
           "packageDependencies": [\
             ["commander", "npm:11.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:11.1.0", {\
+          "packageLocation": "./.yarn/cache/commander-npm-11.1.0-56e979613c-fd1a8557c6.zip/node_modules/commander/",\
+          "packageDependencies": [\
+            ["commander", "npm:11.1.0"]\
           ],\
           "linkType": "HARD"\
         }],\
