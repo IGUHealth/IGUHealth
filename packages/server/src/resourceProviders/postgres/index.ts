@@ -1139,7 +1139,7 @@ function createPostgresMiddleware<
             ...new Array((transactionBundle.entry || []).length),
           ];
           return transaction(
-            ISOLATION_LEVEL.Serializable,
+            ISOLATION_LEVEL.RepeatableRead,
             args.ctx,
             args.state.client,
             async (ctx) => {
