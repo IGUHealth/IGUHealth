@@ -4,7 +4,11 @@ import DBMigrate from "db-migrate";
 import createWorker from "./worker/index.js";
 import createServer from "./server.js";
 
-let dbmigrate: any;
+interface DBMigrate {
+  up: () => Promise<void>;
+}
+
+let dbmigrate: DBMigrate;
 
 async function runServer(port: number) {
   const server = await createServer();
