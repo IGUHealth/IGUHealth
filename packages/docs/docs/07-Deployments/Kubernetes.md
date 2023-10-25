@@ -1,5 +1,0 @@
-# Kubernetes
-
-## Docker Image
-
-## Example

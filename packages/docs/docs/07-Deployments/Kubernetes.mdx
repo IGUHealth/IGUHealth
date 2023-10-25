@@ -1,0 +1,182 @@
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Kubernetes
+
+## Docker Image
+
+Our Docker image is hosted via the github container registry [here](https://github.com/IGUHealth/IGUHealth/pkgs/container/iguhealth%2Figuhealth).
+All images are tagged with semantic versioning correlating to the servers packageJSON version (also correlating with the published version on npm [see](https://www.npmjs.com/package/@iguhealth/server?activeTab=readme)).
+
+### Usage
+
+The docker image supports three use-cases (specified via ending argument)
+For a list of environment variables that can be used see [here](../intro#start-the-server)
+
+#### Running the Server (Main FHIR Server)
+
+Running the FHIR Server `docker run [environment-variables] ghcr.io/iguhealth/iguhealth/iguhealth server`.
+
+```bash
+docker run -p 3000:3000 --env REDIS_HOST=docker.for.mac.host.internal --env REDIS_PORT=6379 --env FHIR_DATABASE_NAME=testdb --env FHIR_DATABASE_PORT=5432 --env FHIR_DATABASE_USERNAME=postgres --env FHIR_DATABASE_HOST=docker.for.mac.host.internal ghcr.io/iguhealth/iguhealth/iguhealth server
+```
+
+#### Running a Worker (Subscription processing)
+
+Running the a subscription worker `docker run [environment-variables] ghcr.io/iguhealth/iguhealth/iguhealth worker`.
+
+```bash
+docker run  --env REDIS_HOST=docker.for.mac.host.internal --env REDIS_PORT=6379 --env FHIR_DATABASE_NAME=testdb --env FHIR_DATABASE_PORT=5432 --env FHIR_DATABASE_USERNAME=postgres --env FHIR_DATABASE_HOST=docker.for.mac.host.internal ghcr.io/iguhealth/iguhealth/iguhealth worker
+```
+
+#### Running SQL Migrations (Setting up database IE creating tables etc.)
+
+Running database migrations `docker run [environment-variables] ghcr.io/iguhealth/iguhealth/iguhealth migrate`.
+
+```bash
+docker run --env FHIR_DATABASE_NAME=testdb --env FHIR_DATABASE_PORT=5432 --env FHIR_DATABASE_USERNAME=postgres --env FHIR_DATABASE_HOST=docker.for.mac.host.internal ghcr.io/iguhealth/iguhealth/iguhealth migrate
+```
+
+## Configuring Kubernetes
+
+When setting up Kubernetes, our general recommendation is to use gitops. We use Flux on our server.
+When setting up the server, specify routing to the container via service.
+If you need assistance or example configurations, feel free to reach out.
+
+### Example Configuration
+
+<Tabs>
+  <TabItem value="service" label="Service">
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iguhealth
+spec:
+  type: ClusterIP
+  selector:
+    app: server
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 3000
+```
+
+  </TabItem>
+  <TabItem value="server" label="Server">
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  labels:
+    app: server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      containers:
+        - name: iguhealth
+          image: ghcr.io/iguhealth/iguhealth/iguhealth:[semver]
+          ports:
+            - containerPort: 3000
+          env:
+            - name: API_URL
+              valueFrom:
+                secretKeyRef:
+                  name: iguhealth-secrets
+                  key: api-url
+            - name: AUTH_JWK_URI
+              valueFrom:
+                secretKeyRef:
+                  name: iguhealth-secrets
+                  key: auth-jwk-uri
+            - name: AUTH_JWT_ALGORITHM
+              valueFrom:
+                secretKeyRef:
+                  name: iguhealth-secrets
+                  key: auth-jwt-alg
+            - name: AUTH_JWT_AUDIENCE
+              valueFrom:
+                secretKeyRef:
+                  name: iguhealth-secrets
+                  key: auth-jwt-audience
+            - name: AUTH_JWT_ISSUER
+              valueFrom:
+                secretKeyRef:
+                  name: iguhealth-secrets
+                  key: auth-jwt-issuer
+
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: iguhealth-secrets
+                  key: redis-host
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: iguhealth-secrets
+                  key: redis-port
+            - name: FHIR_DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: iguhealth-secrets
+                  key: fhir-db-name
+            - name: FHIR_DATABASE_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: iguhealth-secrets
+                  key: fhir-db-host
+            - name: FHIR_DATABASE_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: iguhealth-secrets
+                  key: fhir-db-port
+            - name: FHIR_DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: iguhealth-secrets
+                  key: fhir-db-username
+            - name: FHIR_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: iguhealth-secrets
+                  key: fhir-db-password
+            - name: AWS_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secrets
+                  key: aws-region
+            - name: AWS_LAMBDA_ROLE
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secrets
+                  key: aws-lambda-role
+            - name: AWS_LAMBDA_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secrets
+                  key: aws-lambda-access-key-id
+            - name: AWS_LAMBDA_ACCESS_KEY_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secrets
+                  key: aws-lambda-access-key-secret
+            - name: AWS_LAMBDA_LAYER_ARN
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secrets
+                  key: aws-lambda-layer-arn
+```
+
+  </TabItem>
+</Tabs>
