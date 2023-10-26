@@ -246,8 +246,6 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
                   (v): v is SearchParameterResource => v.type === "resource"
                 );
 
-                console.log("poll:", historyPoll.length, latestVersionIdForSub);
-
                 if (historyPoll.length > 0) {
                   logger.info(`PROCESSING Subscription '${subscription.id}'`);
                   if (historyPoll[0].resource === undefined)
