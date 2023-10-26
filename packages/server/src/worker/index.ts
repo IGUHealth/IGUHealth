@@ -95,6 +95,7 @@ async function handleSubscriptionPayload(
         ctx,
         operation
       );
+
       const output = await ctx.client.invoke_system(
         new Operation(operationDefinition),
         ctx,
@@ -102,7 +103,6 @@ async function handleSubscriptionPayload(
           payload,
         }
       );
-
       return;
     }
     default:
@@ -148,7 +148,6 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
       const client = await pool.connect();
       try {
         const services = getCTX({ pg: client, workspace, author: "system" });
-        const logger = services.logger.child({ worker: workerID, workerID });
         const ctx = { ...services, workspace, author: "system" };
         const activeSubscriptions = await services.client.search_type(
           ctx,
@@ -160,18 +159,12 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
           await ctx.lock.withLock(
             subscriptionLockKey(workspace, subscription.id as string),
             async () => {
-              logger.info(
-                `WORKER '${workerID}' has lock for '${subscriptionLockKey(
-                  workspace,
-                  subscription.id as string
-                )}'`
-              );
+              const logger = services.logger.child({
+                worker: workerID,
+                workspace: ctx.workspace,
+                criteria: subscription.criteria,
+              });
               try {
-                logger.info({
-                  worker: workerID,
-                  workspace: ctx.workspace,
-                  criteria: subscription.criteria,
-                });
                 const request = KoaRequestToFHIRRequest(subscription.criteria, {
                   method: "GET",
                 });
@@ -234,20 +227,6 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
                   }
                 }
 
-                if (
-                  cachedSubID &&
-                  historyPoll.length > 0 &&
-                  historyPoll[historyPoll.length - 1].resource?.meta
-                    ?.versionId !== cachedSubID
-                ) {
-                  throw new OperationError(
-                    outcomeError(
-                      "invalid",
-                      "Mismatch on subscription expected version and returned version."
-                    )
-                  );
-                }
-
                 const resourceTypes = deriveResourceTypeFilter(request);
                 // Remove _type as using on derived resourceTypeFilter
                 request.parameters = request.parameters.filter(
@@ -267,9 +246,8 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
                   (v): v is SearchParameterResource => v.type === "resource"
                 );
 
-                // By default poll would have 1 resource if current version ids match.
-                if (historyPoll.length > 1) {
-                  logger.info(`PROCESSING WORKSPACE SUBS '${workspace}'`);
+                if (historyPoll.length > 0) {
+                  logger.info(`PROCESSING Subscription '${subscription.id}'`);
                   if (historyPoll[0].resource === undefined)
                     throw new OperationError(
                       outcomeError(
@@ -277,15 +255,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
                         "history poll returned entry missing resource."
                       )
                     );
-                  await services.cache.set(
-                    ctx,
-                    `${subscription.id}_latest`,
-                    getVersionSequence(historyPoll[0].resource)
-                  );
-                  for (const entry of historyPoll.slice(
-                    0,
-                    historyPoll.length - 1
-                  )) {
+                  for (const entry of historyPoll) {
                     if (entry.resource === undefined)
                       throw new OperationError(
                         outcomeError(
@@ -293,6 +263,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
                           "history poll returned entry missing resource."
                         )
                       );
+
                     if (
                       await fitsSearchCriteria(
                         entry.resource,
@@ -304,6 +275,11 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
                       ]);
                     }
                   }
+                  await services.cache.set(
+                    ctx,
+                    `${subscription.id}_latest`,
+                    getVersionSequence(historyPoll[0].resource)
+                  );
                 }
               } catch (e) {
                 logger.error(e);
