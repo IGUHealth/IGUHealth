@@ -240,8 +240,6 @@ async function createPayload(
   const parsedBody = op.parseToObject("in", request.body);
   const opCTX = getOpCTX(ctx, request);
 
-  console.log(parsedBody, JSON.stringify(request.body));
-
   await op.validate(opCTX, "in", parsedBody);
   if (!process.env.API_URL)
     throw new OperationError(outcomeFatal("invalid", "API_URL is not set"));
