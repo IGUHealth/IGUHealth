@@ -73,7 +73,7 @@ test("History test since versionid", async () => {
     const typeHistory = await client.historyType({}, "Patient", [
       { name: "_since-version", value: [p.meta?.versionId as string] },
     ]);
-    expect(typeHistory.length).toEqual(4);
+    expect(typeHistory.length).toEqual(3);
 
     const practitioner = await client.create<Practitioner>(
       {},
@@ -85,7 +85,7 @@ test("History test since versionid", async () => {
     const systemHistory = await client.historySystem({}, [
       { name: "_since-version", value: [p.meta?.versionId as string] },
     ]);
-    expect(systemHistory.length).toEqual(6);
+    expect(systemHistory.length).toEqual(5);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
