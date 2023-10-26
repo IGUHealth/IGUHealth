@@ -148,7 +148,6 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
       const client = await pool.connect();
       try {
         const services = getCTX({ pg: client, workspace, author: "system" });
-        const logger = services.logger.child({ worker: workerID, workerID });
         const ctx = { ...services, workspace, author: "system" };
         const activeSubscriptions = await services.client.search_type(
           ctx,
@@ -160,18 +159,12 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
           await ctx.lock.withLock(
             subscriptionLockKey(workspace, subscription.id as string),
             async () => {
-              // logger.info(
-              //   `WORKER '${workerID}' has lock for '${subscriptionLockKey(
-              //     workspace,
-              //     subscription.id as string
-              //   )}'`
-              // );
+              const logger = services.logger.child({
+                worker: workerID,
+                workspace: ctx.workspace,
+                criteria: subscription.criteria,
+              });
               try {
-                // logger.info({
-                //   worker: workerID,
-                //   workspace: ctx.workspace,
-                //   criteria: subscription.criteria,
-                // });
                 const request = KoaRequestToFHIRRequest(subscription.criteria, {
                   method: "GET",
                 });
@@ -253,8 +246,10 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
                   (v): v is SearchParameterResource => v.type === "resource"
                 );
 
+                console.log("poll:", historyPoll.length, latestVersionIdForSub);
+
                 if (historyPoll.length > 0) {
-                  logger.info(`PROCESSING WORKSPACE SUBS '${workspace}'`);
+                  logger.info(`PROCESSING Subscription '${subscription.id}'`);
                   if (historyPoll[0].resource === undefined)
                     throw new OperationError(
                       outcomeError(
