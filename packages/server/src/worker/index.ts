@@ -69,6 +69,25 @@ async function handleSubscriptionPayload(
   )[0];
 
   switch (channelType) {
+    case "rest-hook": {
+      if (!subscription.channel.endpoint) {
+        throw new OperationError(
+          outcomeError("invalid", `Subscription channel is missing endpoint.`)
+        );
+      }
+
+      await Promise.all(
+        payload.map((resource) =>
+          fetch(subscription.channel.endpoint as string, {
+            method: "POST",
+            // headers: subscription.channel.header,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(resource),
+          })
+        )
+      );
+      return;
+    }
     case "operation": {
       const OPERATION_URL = "https://iguhealth.app/Subscription/operation-code";
       const operation = evaluate(
@@ -283,6 +302,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
                 }
               } catch (e) {
                 logger.error(e);
+
                 let errorDescription = "Subscription failed to process";
 
                 if (isOperationError(e)) {
@@ -294,7 +314,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
                   ctx,
                   SERIOUS_FAILURE,
                   { reference: `Subscription/${subscription.id}` },
-                  "Subscription failed to process"
+                  errorDescription
                 );
 
                 await services.client.update(ctx, {
