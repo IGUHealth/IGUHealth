@@ -16,7 +16,6 @@ import {
   OpCTX,
   toParametersResource,
 } from "./index";
-import { OperationError } from "@iguhealth/operation-outcomes";
 
 const operationDefinitions = loadArtifacts(
   "OperationDefinition",

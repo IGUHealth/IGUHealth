@@ -756,7 +756,7 @@ function processHistoryParameters(
   }
 
   if (_since_versionId?.value[0]) {
-    query = `${query} AND version_id >= $${index++} `;
+    query = `${query} AND version_id > $${index++} `;
     sqlParameters = [...sqlParameters, _since_versionId.value[0] as string];
   }
 

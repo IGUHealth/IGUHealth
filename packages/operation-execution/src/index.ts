@@ -115,9 +115,9 @@ function parseParameter(
   const parsedParameters = parameters
     .map((param) => {
       if (definition.type || definition.searchType) {
-        // Means this is a primitive
         if (
-          (definition.type === "Any", resourceTypes.has(definition.type || ""))
+          definition.type === "Any" ||
+          resourceTypes.has(definition.type || "")
         ) {
           return param.resource;
         } else {
