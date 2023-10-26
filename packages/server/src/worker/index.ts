@@ -222,7 +222,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
                   case "type": {
                     historyPoll = await services.client.historyType(
                       ctx,
-                      request.type as ResourceType,
+                      request.resourceType as ResourceType,
                       [
                         {
                           name: "_since-version",
