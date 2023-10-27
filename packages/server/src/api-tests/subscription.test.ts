@@ -65,7 +65,7 @@ test("test offsets and count", async () => {
   try {
     const qr: QuestionnaireResponse = {
       resourceType: "QuestionnaireResponse",
-      status: "active",
+      status: "completed",
       identifier: { system: "iguhealth-system", value: "test-qr" },
     };
     resources.push(await client.create({}, sub));
