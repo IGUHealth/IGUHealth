@@ -1,16 +1,10 @@
-import {
-  Resource,
-  BundleEntry,
-  ResourceType,
-  SearchParameter,
-} from "@iguhealth/fhir-types/r4/types";
+import { ResourceType, SearchParameter } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
-import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
+import { FHIRRequest } from "@iguhealth/client/types";
 
-import { fhirResponseToKoaResponse } from "../koaParsing/index.js";
-import { FHIRServerCTX } from "../fhirServer.js";
-import { param_types_supported } from "./postgres/constants.js";
+import { FHIRServerCTX } from "../../../fhirServer.js";
+import { param_types_supported } from "../../postgres/constants.js";
 import { ParsedParameter } from "@iguhealth/client/url";
 
 export type SearchParameterResource = ParsedParameter<string | number> & {
@@ -269,19 +263,4 @@ export async function parametersWithMetaAssociated(
   );
 
   return result;
-}
-
-export function fhirResponseToBundleEntry(
-  fhirResponse: FHIRResponse
-): BundleEntry {
-  const koaResponse = fhirResponseToKoaResponse(fhirResponse);
-
-  return {
-    response: {
-      status: koaResponse.status ? koaResponse.status?.toString() : "200",
-      location: (koaResponse.headers?.Location ||
-        koaResponse.headers?.["Content-Location"]) as string | undefined,
-    },
-    resource: koaResponse.body ? (koaResponse.body as Resource) : undefined,
-  };
 }

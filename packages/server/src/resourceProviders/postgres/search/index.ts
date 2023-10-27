@@ -19,7 +19,7 @@ import {
   parametersWithMetaAssociated,
   deriveResourceTypeFilter,
   deriveLimit,
-} from "../../utilities.js";
+} from "../../utilities/search/parameters.js";
 
 import { deriveSortQuery } from "./sort.js";
 

@@ -1,5 +1,5 @@
 import { Resource } from "@iguhealth/fhir-types/r4/types";
-import { SearchParameterResource } from "../utilities.js";
+import { SearchParameterResource } from "../utilities/search/parameters.js";
 import * as fp from "@iguhealth/fhirpath";
 
 function checkParameterWithResource(
@@ -8,15 +8,6 @@ function checkParameterWithResource(
 ) {
   switch (parameter.name) {
     // Special handling for performance reason on heavily used parameters
-    case "name": {
-      // Because SearchParameter.name is heavily used using a special case here to avoid
-      // performance degredation.
-      if (resource.resourceType !== "SearchParameter")
-        return (
-          (resource as unknown as Record<string, unknown>)["name"] ===
-          parameter.value[0]
-        );
-    }
     case "url": {
       return (
         (resource as unknown as Record<string, unknown>)["url"] ===
@@ -25,7 +16,7 @@ function checkParameterWithResource(
     }
     default: {
       if (parameter.searchParameter.expression) {
-        const evaluation = fp.evaluate(
+        const evaluation = fp.evaluateWithMeta(
           parameter.searchParameter.expression,
           resource
         );

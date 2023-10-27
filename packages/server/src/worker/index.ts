@@ -30,7 +30,7 @@ import {
   deriveResourceTypeFilter,
   parametersWithMetaAssociated,
   findSearchParameter,
-} from "../resourceProviders/utilities.js";
+} from "../resourceProviders/utilities/search/parameters.js";
 import { fitsSearchCriteria } from "../resourceProviders/memory/search.js";
 
 dotEnv.config();

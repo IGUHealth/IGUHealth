@@ -240,7 +240,7 @@ export async function deriveCTX(): Promise<
       {
         resourcesSupported: MEMORY_TYPES,
         interactionsSupported: ["read-request", "search-request"],
-        source: memDBAsync, // memDBSync, //
+        source: memDBAsync,
       },
       {
         resourcesSupported: [...resourceTypes].filter(
