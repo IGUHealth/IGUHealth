@@ -5,6 +5,7 @@ import {
   QuestionnaireResponse,
   Subscription,
   Resource,
+  Patient,
 } from "@iguhealth/fhir-types/r4/types";
 import HTTPClient from "@iguhealth/client/lib/http";
 
@@ -45,21 +46,20 @@ const client2 = HTTPClient({
   },
 });
 
-const sub: Subscription = {
-  reason: "QR POST BACK",
-  status: "active",
-  channel: {
-    type: "rest-hook",
-    endpoint:
-      "http://localhost:3000/w/test/api/v1/fhir/r4/QuestionnaireResponse",
-  },
-  criteria: "QuestionnaireResponse",
-  language: "en",
-  resourceType: "Subscription",
-};
-
-test("test offsets and count", async () => {
+test("No filter QR", async () => {
   await createWorkspace("test");
+  const sub: Subscription = {
+    reason: "QR POST BACK",
+    status: "active",
+    channel: {
+      type: "rest-hook",
+      endpoint:
+        "http://localhost:3000/w/test/api/v1/fhir/r4/QuestionnaireResponse",
+    },
+    criteria: "QuestionnaireResponse",
+    language: "en",
+    resourceType: "Subscription",
+  };
 
   const resources: Resource[] = [];
   try {
@@ -88,3 +88,53 @@ test("test offsets and count", async () => {
     );
   }
 });
+
+// test("No filter QR", async () => {
+//   await createWorkspace("test");
+
+//   const sub: Subscription = {
+//     reason: "QR POST BACK",
+//     status: "active",
+//     channel: {
+//       type: "rest-hook",
+//       endpoint:
+//         "http://localhost:3000/w/test/api/v1/fhir/r4/QuestionnaireResponse",
+//     },
+//     criteria: "Patient?given=John",
+//     language: "en",
+//     resourceType: "Subscription",
+//   };
+
+//   const resources: Resource[] = [];
+//   try {
+//     resources.push(await client.create({}, sub));
+//     resources.push(
+//       await client.create(
+//         {},
+//         {
+//           resourceType: "Patient",
+//           name: [{ given: ["John"] }],
+//         }
+//       )
+//     );
+//     resources.push(
+//       await client.create(
+//         {},
+//         {
+//           resourceType: "Patient",
+//           name: [{ given: ["David"] }],
+//         }
+//       )
+//     );
+//     await new Promise((resolve) => setTimeout(resolve, 2000));
+//     const response = await client2.search_type({}, "Patient", []);
+//     expect(response.resources.length).toEqual(1);
+//     await client2.delete({}, "Patient", response.resources[0].id as string);
+//   } finally {
+//     await Promise.all(
+//       resources.map(async ({ resourceType, id }) => {
+//         return await client.delete({}, resourceType, id as string);
+//       })
+//     );
+//   }
+// });

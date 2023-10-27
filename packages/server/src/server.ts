@@ -188,7 +188,6 @@ export default async function createServer(): Promise<
   Koa<Koa.DefaultState, Koa.DefaultContext>
 > {
   const app = new Koa();
-
   const router = new Router();
   const getCTX = await deriveCTX();
   const pool = new pg.Pool({

@@ -15,7 +15,7 @@ import {
   SearchParameterResource,
   SearchParameterResult,
   deriveResourceTypeFilter,
-} from "../utilities.js";
+} from "../utilities/search/parameters.js";
 import { InternalData } from "./types.js";
 import { fitsSearchCriteria } from "./search.js";
 

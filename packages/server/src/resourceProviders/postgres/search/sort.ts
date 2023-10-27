@@ -5,7 +5,7 @@ import { FHIRServerCTX } from "../../../fhirServer.js";
 import {
   searchResources,
   searchParameterToTableName,
-} from "../../utilities.js";
+} from "../../utilities/search/parameters.js";
 import { param_types_supported } from "../constants.js";
 import type { SearchParameterResult } from "./types.js";
 
