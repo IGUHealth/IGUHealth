@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc && yarn copyfiles  -u 1 \"./src/**/*.sql\" lib",
-    "start": "yarn build && yarn node --enable-source-maps ./lib/cli.js run server",
+    "start": "yarn build & yarn node --enable-source-maps ./lib/cli.js run server & yarn node --enable-source-maps ./lib/cli.js run worker",
     "test": "jest --detectOpenHandles",
     "migrate": "db-migrate --sql-file -m src/resourceProviders/postgres/migrations",
     "watch": "yarn migrate up && yarn tsc-watch --onSuccess \"yarn node --enable-source-maps  ./lib/cli.js run both\"",

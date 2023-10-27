@@ -59,8 +59,8 @@ test("test offsets and count", async () => {
       status: "active",
       identifier: { system: "iguhealth-system", value: "test-qr" },
     };
-    resources.push(await client.create({}, "Subscription", sub));
-    resources.push(await client.create({}, "QuestionnaireResponse", qr));
+    resources.push(await client.create({}, sub));
+    resources.push(await client.create({}, qr));
     await new Promise((resolve) => setTimeout(resolve, 2000));
     const response = await client2.search_type({}, "QuestionnaireResponse", [
       { name: "identifier", value: ["iguhealth-system|test-qr"] },
