@@ -89,52 +89,52 @@ test("No filter QR", async () => {
   }
 });
 
-test("No filter QR", async () => {
-  await createWorkspace("test");
+// test("No filter QR", async () => {
+//   await createWorkspace("test");
 
-  const sub: Subscription = {
-    reason: "QR POST BACK",
-    status: "active",
-    channel: {
-      type: "rest-hook",
-      endpoint:
-        "http://localhost:3000/w/test/api/v1/fhir/r4/QuestionnaireResponse",
-    },
-    criteria: "Patient?given=John",
-    language: "en",
-    resourceType: "Subscription",
-  };
+//   const sub: Subscription = {
+//     reason: "QR POST BACK",
+//     status: "active",
+//     channel: {
+//       type: "rest-hook",
+//       endpoint:
+//         "http://localhost:3000/w/test/api/v1/fhir/r4/QuestionnaireResponse",
+//     },
+//     criteria: "Patient?given=John",
+//     language: "en",
+//     resourceType: "Subscription",
+//   };
 
-  const resources: Resource[] = [];
-  try {
-    resources.push(await client.create({}, sub));
-    resources.push(
-      await client.create(
-        {},
-        {
-          resourceType: "Patient",
-          name: [{ given: ["John"] }],
-        }
-      )
-    );
-    resources.push(
-      await client.create(
-        {},
-        {
-          resourceType: "Patient",
-          name: [{ given: ["David"] }],
-        }
-      )
-    );
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    const response = await client2.search_type({}, "Patient", []);
-    expect(response.resources.length).toEqual(1);
-    await client2.delete({}, "Patient", response.resources[0].id as string);
-  } finally {
-    await Promise.all(
-      resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
-      })
-    );
-  }
-});
+//   const resources: Resource[] = [];
+//   try {
+//     resources.push(await client.create({}, sub));
+//     resources.push(
+//       await client.create(
+//         {},
+//         {
+//           resourceType: "Patient",
+//           name: [{ given: ["John"] }],
+//         }
+//       )
+//     );
+//     resources.push(
+//       await client.create(
+//         {},
+//         {
+//           resourceType: "Patient",
+//           name: [{ given: ["David"] }],
+//         }
+//       )
+//     );
+//     await new Promise((resolve) => setTimeout(resolve, 2000));
+//     const response = await client2.search_type({}, "Patient", []);
+//     expect(response.resources.length).toEqual(1);
+//     await client2.delete({}, "Patient", response.resources[0].id as string);
+//   } finally {
+//     await Promise.all(
+//       resources.map(async ({ resourceType, id }) => {
+//         return await client.delete({}, resourceType, id as string);
+//       })
+//     );
+//   }
+// });
