@@ -616,6 +616,9 @@ function createPostgresMiddleware<
                 },
               };
             }
+            default: {
+              throw new Error("Invalid search level");
+            }
           }
         }
         case "create-request": {
@@ -741,6 +744,9 @@ function createPostgresMiddleware<
                   body: systemHistory,
                 },
               };
+            }
+            default: {
+              throw new Error("Invalid history level");
             }
           }
         }
