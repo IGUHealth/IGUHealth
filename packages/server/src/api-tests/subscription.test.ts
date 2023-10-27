@@ -7,22 +7,29 @@ import {
   Resource,
 } from "@iguhealth/fhir-types/r4/types";
 import HTTPClient from "@iguhealth/client/lib/http";
-import { TIMEOUT } from "dns";
 
-const pgClient = new pg.Client({
-  user: process.env["FHIR_DATABASE_USERNAME"],
-  password: process.env["FHIR_DATABASE_PASSWORD"],
-  host: process.env["FHIR_DATABASE_HOST"],
-  database: process.env["FHIR_DATABASE_NAME"],
-  port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
-  ssl: process.env["FHIR_DATABASE_SSL"] === "true",
-});
+async function createWorkspace(workspace: string) {
+  const pgClient = new pg.Client({
+    user: process.env["FHIR_DATABASE_USERNAME"],
+    password: process.env["FHIR_DATABASE_PASSWORD"],
+    host: process.env["FHIR_DATABASE_HOST"],
+    database: process.env["FHIR_DATABASE_NAME"],
+    port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
+    ssl: process.env["FHIR_DATABASE_SSL"] === "true",
+  });
+  await pgClient.connect();
+  const res = await pgClient.query("select id from workspaces where id = $1", [
+    workspace,
+  ]);
+  if (res.rows.length === 0) {
+    await pgClient.query(
+      "INSERT INTO workspaces (id, workspace) VALUES ($1, $2)",
+      [workspace, { id: "test", name: "test" }]
+    );
+  }
 
-await pgClient.connect();
-await pgClient.query("INSERT INTO workspaces (id, workspace) VALUES ($1, $2)", [
-  "test",
-  { id: "test", name: "test" },
-]);
+  await pgClient.end();
+}
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system/api/v1/fhir/r4",
@@ -52,6 +59,8 @@ const sub: Subscription = {
 };
 
 test("test offsets and count", async () => {
+  await createWorkspace("test");
+
   const resources: Resource[] = [];
   try {
     const qr: QuestionnaireResponse = {
