@@ -14,19 +14,16 @@ function checkParameterWithResource(
         parameter.value[0]
       );
     }
-    case "name": {
-      // Because SearchParameter.name is heavily used using a special case here to avoid
-      // performance degredation.
-      if (resource.resourceType === "SearchParameter") {
-        console.log("HIT");
+    default: {
+      if (
+        parameter.name === "name" &&
+        resource.resourceType === "SearchParameter"
+      ) {
         return (
           (resource as unknown as Record<string, unknown>)["name"] ===
           parameter.value[0]
         );
-      }
-    }
-    default: {
-      if (parameter.searchParameter.expression) {
+      } else if (parameter.searchParameter.expression) {
         const evaluation = fp.evaluateWithMeta(
           parameter.searchParameter.expression,
           resource
