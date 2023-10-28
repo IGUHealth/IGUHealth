@@ -274,7 +274,9 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
                         "history poll returned entry missing resource."
                       )
                     );
-                  for (const entry of historyPoll) {
+
+                  // Do reverse as ordering is the latest update first.
+                  for (const entry of historyPoll.reverse()) {
                     if (entry.resource === undefined)
                       throw new OperationError(
                         outcomeError(
