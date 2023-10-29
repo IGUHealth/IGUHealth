@@ -10,9 +10,7 @@ export type ParsedParameter<T> = {
 /*
  ** Given a query string create complex FHIR Query object.
  */
-export function parseQuery(
-  queryParams: string
-): ParsedParameter<string | number>[] {
+export function parseQuery(queryParams: string): ParsedParameter<string>[] {
   const parameters = !queryParams
     ? {}
     : queryParams
@@ -27,7 +25,7 @@ export function parseQuery(
 
             let [name, modifier] = chains[0].split(":");
 
-            let searchParam: ParsedParameter<string | number> = {
+            let searchParam: ParsedParameter<string> = {
               name,
               modifier,
               value: value.split(","),

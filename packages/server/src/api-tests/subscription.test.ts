@@ -32,22 +32,20 @@ async function createWorkspace(workspace: string) {
   await pgClient.end();
 }
 
-const client = HTTPClient({
-  url: "http://localhost:3000/w/system/api/v1/fhir/r4",
-  getAccessToken: async function () {
-    return "blah";
-  },
-});
-
-const client2 = HTTPClient({
-  url: "http://localhost:3000/w/test/api/v1/fhir/r4",
-  getAccessToken: async function () {
-    return "blah";
-  },
-});
+function createClient(workspace: string) {
+  return HTTPClient({
+    url: `http://localhost:3000/w/${workspace}/api/v1/fhir/r4`,
+    getAccessToken: async function () {
+      return "blah";
+    },
+  });
+}
 
 test("No filter QR", async () => {
   await createWorkspace("test");
+  const client = createClient("system");
+  const client2 = createClient("test");
+
   const sub: Subscription = {
     reason: "QR POST BACK",
     status: "active",
@@ -91,6 +89,8 @@ test("No filter QR", async () => {
 
 test("Filter patient sub ", async () => {
   await createWorkspace("test");
+  const client = createClient("system");
+  const client2 = createClient("test");
 
   const sub: Subscription = {
     reason: "Patient post back",
@@ -113,6 +113,57 @@ test("Filter patient sub ", async () => {
         {
           resourceType: "Patient",
           name: [{ given: ["John"] }],
+        }
+      )
+    );
+    resources.push(
+      await client.create(
+        {},
+        {
+          resourceType: "Patient",
+          name: [{ given: ["David"] }],
+        }
+      )
+    );
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    const response = await client2.search_type({}, "Patient", []);
+    expect(response.resources.length).toEqual(1);
+    await client2.delete({}, "Patient", response.resources[0].id as string);
+  } finally {
+    await Promise.all(
+      resources.map(async ({ resourceType, id }) => {
+        return await client.delete({}, resourceType, id as string);
+      })
+    );
+  }
+});
+
+test("name check", async () => {
+  await createWorkspace("test2");
+  const client = createClient("system");
+  const client2 = createClient("test2");
+
+  const sub: Subscription = {
+    reason: "Patient post back",
+    status: "active",
+    channel: {
+      type: "rest-hook",
+      endpoint: "http://localhost:3000/w/test2/api/v1/fhir/r4/Patient",
+    },
+    criteria: "Patient?name=Marko1",
+    language: "en",
+    resourceType: "Subscription",
+  };
+
+  const resources: Resource[] = [];
+  try {
+    resources.push(await client.create({}, sub));
+    resources.push(
+      await client.create(
+        {},
+        {
+          resourceType: "Patient",
+          name: [{ given: ["Marko1"] }],
         }
       )
     );

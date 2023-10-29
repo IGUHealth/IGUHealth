@@ -29,7 +29,10 @@ function createMemoryDatabase(
   return database;
 }
 
-const memDB = createMemoryDatabase(["SearchParameter"] as ResourceType[]);
+const memDB = createMemoryDatabase([
+  "SearchParameter",
+  "StructureDefinition",
+] as ResourceType[]);
 
 const CTX = { ...testServices, client: memDB };
 
