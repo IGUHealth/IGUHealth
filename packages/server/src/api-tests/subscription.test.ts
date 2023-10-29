@@ -68,7 +68,7 @@ test("No filter QR", async () => {
     };
     resources.push(await client.create({}, sub));
     resources.push(await client.create({}, qr));
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     const response = await client2.search_type({}, "QuestionnaireResponse", [
       { name: "identifier", value: ["iguhealth-system|test-qr"] },
     ]);
@@ -125,7 +125,7 @@ test("Filter patient sub ", async () => {
         }
       )
     );
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     const response = await client2.search_type({}, "Patient", []);
     expect(response.resources.length).toEqual(1);
     await client2.delete({}, "Patient", response.resources[0].id as string);
@@ -176,7 +176,7 @@ test("name check", async () => {
         }
       )
     );
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     const response = await client2.search_type({}, "Patient", []);
     expect(response.resources.length).toEqual(1);
     await client2.delete({}, "Patient", response.resources[0].id as string);
