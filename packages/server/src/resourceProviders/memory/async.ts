@@ -2,6 +2,7 @@ import {
   ResourceType,
   Resource,
   SearchParameter,
+  StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
 import { AsynchronousClient } from "@iguhealth/client";
 import {
@@ -75,7 +76,17 @@ function createMemoryMiddleware<
 
           let result = [];
           for (const resource of resourceSet || []) {
-            if (await fitsSearchCriteria(resource, resourceParameters)) {
+            if (
+              await fitsSearchCriteria(
+                (type) => {
+                  return args.state.data["StructureDefinition"]?.[type] as
+                    | StructureDefinition
+                    | undefined;
+                },
+                resource,
+                resourceParameters
+              )
+            ) {
               result.push(resource);
             }
           }

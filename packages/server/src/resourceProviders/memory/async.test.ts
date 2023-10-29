@@ -16,9 +16,14 @@ const artifactParameters = loadArtifacts(
   path.join(__dirname, "../../"),
   true
 );
+const sds = loadArtifacts(
+  "StructureDefinition",
+  path.join(__dirname, "../../"),
+  true
+);
 
 let data: InternalData<ResourceType> = {};
-for (const resource of artifactParameters) {
+for (const resource of [...artifactParameters, ...sds]) {
   data = {
     ...data,
     [resource.resourceType]: {
