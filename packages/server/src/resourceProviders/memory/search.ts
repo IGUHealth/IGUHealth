@@ -54,14 +54,6 @@ function expressionSearch(
       }
       return false;
     }
-    case "date": {
-      throw new OperationError(
-        outcomeError(
-          "not-supported",
-          "Date search on subscription criteria is not supported yet."
-        )
-      );
-    }
     case "string": {
       for (const stringValue of evaluation.map(toStringParameters).flat()) {
         if (parameter.value.includes(stringValue)) return true;
@@ -78,6 +70,7 @@ function expressionSearch(
 
       return false;
     }
+    case "date":
     case "reference":
     case "composite":
     case "quantity":
