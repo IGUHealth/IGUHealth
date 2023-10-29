@@ -69,11 +69,7 @@ export function toStringParameters(
       ].flat();
     }
     default:
-      throw new Error(
-        `Unknown string parameter '${
-          value.meta()?.type
-        }' for value '${value.valueOf()}'`
-      );
+      throw new Error(`Unknown string parameter '${value.meta()?.type}'`);
   }
 }
 
