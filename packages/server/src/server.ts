@@ -72,7 +72,7 @@ const RATE_LIMIT = ratelimit({
     reset: "Rate-Limit-Reset",
     total: "Rate-Limit-Total",
   },
-  max: 100,
+  max: process.env.RATE_LIMIT_MAX ? parseInt(process.env.RATE_LIMIT_MAX) : 100,
   disableHeader: false,
   // whitelist: (ctx) => {
   //   // some logic that returns a boolean
