@@ -7,7 +7,6 @@ import { stripUrlQueryAndFragment } from "@sentry/utils";
 export function enableSentry(sentryDSN: string, release: string) {
   Sentry.init({
     dsn: sentryDSN,
-    debug: true,
     integrations: [
       // Automatically instrument Node.js libraries and frameworks
       new Sentry.Integrations.Postgres({ module: pg }),
