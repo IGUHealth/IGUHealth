@@ -210,6 +210,14 @@ export async function deriveCTX(): Promise<
     ssl: process.env["FHIR_DATABASE_SSL"] === "true",
   });
 
+  const lambdaExecutioner = AWSLambdaExecutioner({
+    AWS_REGION: process.env.AWS_REGION as string,
+    AWS_ACCESS_KEY_ID: process.env.AWS_LAMBDA_ACCESS_KEY_ID as string,
+    AWS_ACCESS_KEY_SECRET: process.env.AWS_LAMBDA_ACCESS_KEY_SECRET as string,
+    LAMBDA_ROLE: process.env.AWS_LAMBDA_ROLE as string,
+    LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
+  });
+
   return ({ pg, workspace, author, user_access_token }) => {
     const client = RouterClient([
       // OP INVOCATION
@@ -228,14 +236,7 @@ export async function deriveCTX(): Promise<
       {
         resourcesSupported: [...resourceTypes] as ResourceType[],
         interactionsSupported: ["invoke-request"],
-        source: AWSLambdaExecutioner({
-          AWS_REGION: process.env.AWS_REGION as string,
-          AWS_ACCESS_KEY_ID: process.env.AWS_LAMBDA_ACCESS_KEY_ID as string,
-          AWS_ACCESS_KEY_SECRET: process.env
-            .AWS_LAMBDA_ACCESS_KEY_SECRET as string,
-          LAMBDA_ROLE: process.env.AWS_LAMBDA_ROLE as string,
-          LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
-        }),
+        source: lambdaExecutioner,
       },
       {
         resourcesSupported: MEMORY_TYPES,
