@@ -6,6 +6,7 @@ tsconfig.tsbuildinfo
 packages/docs/.yarn
 packages/docs/build
 packages/admin-app/build/
+packages/server/src/version.ts
 storybook-static/
 .docusaurus
 

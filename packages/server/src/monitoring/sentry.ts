@@ -4,9 +4,10 @@ import * as Sentry from "@sentry/node";
 import { ProfilingIntegration } from "@sentry/profiling-node";
 import { stripUrlQueryAndFragment } from "@sentry/utils";
 
-export function enableSentry(sentryDSN: string) {
+export function enableSentry(sentryDSN: string, release: string) {
   Sentry.init({
     dsn: sentryDSN,
+    debug: true,
     integrations: [
       // Automatically instrument Node.js libraries and frameworks
       new Sentry.Integrations.Postgres({ module: pg }),
@@ -23,13 +24,17 @@ export function disableSentry() {
   Sentry.close();
 }
 
-export const onKoaError = (err: unknown, ctx: Koa.DefaultContext) => {
+export const logError = (err: unknown, ctx: Koa.DefaultContext) => {
   Sentry.withScope((scope) => {
     scope.addEventProcessor((event) => {
       return Sentry.addRequestDataToEvent(event, ctx.request);
     });
     Sentry.captureException(err);
   });
+};
+
+export const onKoaError = (err: unknown, ctx: Koa.DefaultContext) => {
+  logError(err, ctx);
 };
 
 // this tracing middleware creates a transaction per request
