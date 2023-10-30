@@ -59,9 +59,17 @@ Optional depending on whether you are executing custom code for operations
 
 Authentication environment variables
 
-| name               | description                             | required | defaults                  |
-| ------------------ | --------------------------------------- | -------- | ------------------------- |
-| AUTH_JWK_URI       | JWK remote url to pull JSON WEB Key Set | true     |                           |
-| AUTH_JWT_AUDIENCE  | String representing audience for jwt    | false    | https://iguhealth.app/api |
-| AUTH_JWT_ISSUER    | Issuer of the JWT.                      | true     |                           |
-| AUTH_JWT_ALGORITHM |                                         | false    | RS256                     |
+| name               | description                              | required | defaults                  |
+| ------------------ | ---------------------------------------- | -------- | ------------------------- |
+| AUTH_JWK_URI       | JWK remote url to pull JSON WEB Key Set. | true     |                           |
+| AUTH_JWT_AUDIENCE  | String representing audience for jwt.    | false    | https://iguhealth.app/api |
+| AUTH_JWT_ISSUER    | Issuer of the JWT.                       | true     |                           |
+| AUTH_JWT_ALGORITHM |                                          | false    | RS256                     |
+
+#### Monitoring
+
+Monitoring services
+
+| name       | description                                           | required | defaults |
+| ---------- | ----------------------------------------------------- | -------- | -------- |
+| SENTRY_DSN | Sentry DSN URL for monitoring errors and performance. | false    |          |

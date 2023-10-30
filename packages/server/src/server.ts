@@ -1,8 +1,8 @@
 import Koa, { DefaultContext, DefaultState, Middleware } from "koa";
 import Router from "@koa/router";
+import ratelimit from "koa-ratelimit";
 import { bodyParser } from "@koa/bodyparser";
 import Redis from "ioredis";
-import ratelimit from "koa-ratelimit";
 
 import dotEnv from "dotenv";
 
@@ -26,6 +26,7 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
+import * as Sentry from "./monitoring/sentry.js";
 import type { FHIRServerCTX } from "./fhirServer.js";
 import { deriveCTX, logger } from "./ctx/index.js";
 import createFHIRServer from "./fhirServer.js";
@@ -110,6 +111,7 @@ function workspaceMiddleware(
     logger.warn("[WARNING] Server is publicly accessible.");
 
   return [
+    Sentry.tracingMiddleWare(process.env.SENTRY_DSN),
     process.env.AUTH_JWT_ISSUER
       ? createCheckJWT()
       : async (ctx, next) => {
@@ -125,6 +127,14 @@ function workspaceMiddleware(
         },
     workspaceCheck,
     async (ctx, next) => {
+      let span;
+      const transaction = ctx.__sentry_transaction;
+      if (transaction) {
+        span = transaction.startChild({
+          description: "FHIR MIDDLEWARE",
+          op: "fhirserver",
+        });
+      }
       const client = await pool.connect();
 
       try {
@@ -182,6 +192,9 @@ function workspaceMiddleware(
           ctx.body = operationOutcome;
         }
       } finally {
+        if (span) {
+          span.finish();
+        }
         client.release();
       }
     },
@@ -191,6 +204,7 @@ function workspaceMiddleware(
 export default async function createServer(): Promise<
   Koa<Koa.DefaultState, Koa.DefaultContext>
 > {
+  if (process.env.SENTRY_DSN) Sentry.enableSentry(process.env.SENTRY_DSN);
   const app = new Koa();
   const router = new Router();
   const getCTX = await deriveCTX();
@@ -259,6 +273,8 @@ export default async function createServer(): Promise<
     .use(router.allowedMethods());
 
   logger.info("Running app");
+
+  app.on("error", Sentry.onKoaError);
 
   return app;
 }
