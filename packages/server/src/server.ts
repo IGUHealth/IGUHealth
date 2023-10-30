@@ -1,6 +1,8 @@
 import Koa, { DefaultContext, DefaultState, Middleware } from "koa";
 import Router from "@koa/router";
 import { bodyParser } from "@koa/bodyparser";
+import Redis from "ioredis";
+import ratelimit from "koa-ratelimit";
 
 import dotEnv from "dotenv";
 
@@ -53,6 +55,32 @@ dotEnv.config();
 // console.log(signedJWT);
 // console.log(jose.decodeJwt(signedJWT));
 // console.log(await jose.jwtVerify(signedJWT, jwks));
+
+// apply rate limit
+
+const RATE_LIMIT = ratelimit({
+  driver: "redis",
+  db: new Redis.default({
+    host: process.env.REDIS_HOST,
+    port: parseInt(process.env.REDIS_PORT || "6739"),
+  }),
+  duration: 60000,
+  errorMessage: "Sometimes You Just Have to Slow Down.",
+  id: (ctx) => ctx.ip,
+  headers: {
+    remaining: "Rate-Limit-Remaining",
+    reset: "Rate-Limit-Reset",
+    total: "Rate-Limit-Total",
+  },
+  max: 100,
+  disableHeader: false,
+  // whitelist: (ctx) => {
+  //   // some logic that returns a boolean
+  // },
+  // blacklist: (ctx) => {
+  //   // some logic that returns a boolean
+  // },
+});
 
 function createCheckJWT(): Middleware<DefaultState, DefaultContext, unknown> {
   const LOAD_EXTERNAL_TOKEN = jwksRsa.koaJwtSecret({
@@ -208,6 +236,7 @@ export default async function createServer(): Promise<
   //const provider = new Provider(ISSUER, { ...configuration });
 
   app
+    .use(RATE_LIMIT)
     .use(cors())
     .use(bodyParser())
     // .use(routes(provider).routes())
