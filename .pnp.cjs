@@ -10646,6 +10646,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:29.5.2"],\
             ["@types/koa", "npm:2.13.6"],\
             ["@types/koa-mount", "npm:4.0.2"],\
+            ["@types/koa-ratelimit", "npm:5.0.3"],\
             ["@types/koa__cors", "npm:4.0.0"],\
             ["@types/koa__router", "npm:12.0.0"],\
             ["@types/lodash", "npm:4.14.195"],\
@@ -10668,6 +10669,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["koa-body", "npm:6.0.1"],\
             ["koa-jwt", "npm:4.0.4"],\
             ["koa-mount", "npm:4.0.0"],\
+            ["koa-ratelimit", "npm:5.0.1"],\
             ["lodash", "npm:4.17.21"],\
             ["oidc-provider", "npm:8.2.2"],\
             ["openid-client", "npm:5.4.3"],\
@@ -16322,6 +16324,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@types/koa-ratelimit", [\
+        ["npm:5.0.3", {\
+          "packageLocation": "./.yarn/cache/@types-koa-ratelimit-npm-5.0.3-5c677ee2b1-1f3077d741.zip/node_modules/@types/koa-ratelimit/",\
+          "packageDependencies": [\
+            ["@types/koa-ratelimit", "npm:5.0.3"],\
+            ["@types/koa", "npm:2.13.6"],\
+            ["@types/node", "npm:20.3.3"],\
+            ["ioredis", "npm:5.3.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@types/koa__cors", [\
         ["npm:4.0.0", {\
           "packageLocation": "./.yarn/cache/@types-koa__cors-npm-4.0.0-9268e86c9f-0a7f8c2ab9.zip/node_modules/@types/koa__cors/",\
@@ -18230,6 +18244,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/async-limiter-npm-1.0.1-7e6819bcdb-2b849695b4.zip/node_modules/async-limiter/",\
           "packageDependencies": [\
             ["async-limiter", "npm:1.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["async-ratelimiter", [\
+        ["npm:1.3.12", {\
+          "packageLocation": "./.yarn/cache/async-ratelimiter-npm-1.3.12-25c4d3ff00-bf492d85a3.zip/node_modules/async-ratelimiter/",\
+          "packageDependencies": [\
+            ["async-ratelimiter", "npm:1.3.12"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -28222,6 +28245,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["koa-mount", "npm:4.0.0"],\
             ["debug", "virtual:feb0771c9f8eadaf509cfed41e14a8bebbea5442233275c1c87085111077a08ef71eb773b899665b154d8203a55a489610a54117ae059fce5f5b8b844493b1b1#npm:4.3.4"],\
             ["koa-compose", "npm:4.1.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["koa-ratelimit", [\
+        ["npm:5.0.1", {\
+          "packageLocation": "./.yarn/cache/koa-ratelimit-npm-5.0.1-41ab5b43db-24bb74b530.zip/node_modules/koa-ratelimit/",\
+          "packageDependencies": [\
+            ["koa-ratelimit", "npm:5.0.1"],\
+            ["async-ratelimiter", "npm:1.3.12"],\
+            ["debug", "virtual:feb0771c9f8eadaf509cfed41e14a8bebbea5442233275c1c87085111077a08ef71eb773b899665b154d8203a55a489610a54117ae059fce5f5b8b844493b1b1#npm:4.3.4"],\
+            ["ms", "npm:2.1.3"]\
           ],\
           "linkType": "HARD"\
         }]\

@@ -114,6 +114,7 @@ jobs:
           FHIR_DATABASE_USERNAME: postgres
           REDIS_HOST: localhost
           REDIS_PORT: 6379
+          RATE_LIMIT_MAX: 10000000
 
       - name: Run tests and collect coverage
         run: yarn workspaces foreach run test
