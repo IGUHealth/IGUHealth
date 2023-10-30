@@ -58,30 +58,6 @@ dotEnv.config();
 
 // apply rate limit
 
-const RATE_LIMIT = ratelimit({
-  driver: "redis",
-  db: new Redis.default({
-    host: process.env.REDIS_HOST,
-    port: parseInt(process.env.REDIS_PORT || "6739"),
-  }),
-  duration: 60000,
-  errorMessage: "Sometimes You Just Have to Slow Down.",
-  id: (ctx) => ctx.ip,
-  headers: {
-    remaining: "Rate-Limit-Remaining",
-    reset: "Rate-Limit-Reset",
-    total: "Rate-Limit-Total",
-  },
-  max: process.env.RATE_LIMIT_MAX ? parseInt(process.env.RATE_LIMIT_MAX) : 100,
-  disableHeader: false,
-  // whitelist: (ctx) => {
-  //   // some logic that returns a boolean
-  // },
-  // blacklist: (ctx) => {
-  //   // some logic that returns a boolean
-  // },
-});
-
 function createCheckJWT(): Middleware<DefaultState, DefaultContext, unknown> {
   const LOAD_EXTERNAL_TOKEN = jwksRsa.koaJwtSecret({
     cache: true,
@@ -236,7 +212,33 @@ export default async function createServer(): Promise<
   //const provider = new Provider(ISSUER, { ...configuration });
 
   app
-    .use(RATE_LIMIT)
+    .use(
+      ratelimit({
+        driver: "redis",
+        db: new Redis.default({
+          host: process.env.REDIS_HOST,
+          port: parseInt(process.env.REDIS_PORT || "6739"),
+        }),
+        duration: 60000,
+        errorMessage: "Sometimes You Just Have to Slow Down.",
+        id: (ctx) => ctx.ip,
+        headers: {
+          remaining: "Rate-Limit-Remaining",
+          reset: "Rate-Limit-Reset",
+          total: "Rate-Limit-Total",
+        },
+        max: process.env.RATE_LIMIT_MAX
+          ? parseInt(process.env.RATE_LIMIT_MAX)
+          : 100,
+        disableHeader: false,
+        // whitelist: (ctx) => {
+        //   // some logic that returns a boolean
+        // },
+        // blacklist: (ctx) => {
+        //   // some logic that returns a boolean
+        // },
+      })
+    )
     .use(cors())
     .use(bodyParser())
     // .use(routes(provider).routes())
