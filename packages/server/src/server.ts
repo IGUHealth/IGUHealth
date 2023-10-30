@@ -26,6 +26,7 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
+import { LIB_VERSION } from "./version.js";
 import * as Sentry from "./monitoring/sentry.js";
 import type { FHIRServerCTX } from "./fhirServer.js";
 import { deriveCTX, logger } from "./ctx/index.js";
@@ -182,6 +183,8 @@ function workspaceMiddleware(
           ctx.body = operationOutcome;
         } else {
           logger.error(e);
+          Sentry.logError(e, ctx);
+
           const operationOutcome = outcomeError(
             "invalid",
             "internal server error"
@@ -204,7 +207,8 @@ function workspaceMiddleware(
 export default async function createServer(): Promise<
   Koa<Koa.DefaultState, Koa.DefaultContext>
 > {
-  if (process.env.SENTRY_DSN) Sentry.enableSentry(process.env.SENTRY_DSN);
+  if (process.env.SENTRY_DSN)
+    Sentry.enableSentry(process.env.SENTRY_DSN, LIB_VERSION);
   const app = new Koa();
   const router = new Router();
   const getCTX = await deriveCTX();
