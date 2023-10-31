@@ -39,7 +39,12 @@ dotEnv.config();
 
 if (process.env.SENTRY_WORKER_DSN)
   Sentry.enableSentry(process.env.SENTRY_WORKER_DSN, LIB_VERSION, {
-    tracesSampleRate: 0.1,
+    tracesSampleRate: parseFloat(
+      process.env.SENTRY_TRACES_SAMPLE_RATE || "0.1"
+    ),
+    profilesSampleRate: parseFloat(
+      process.env.SENTRY_PROFILES_SAMPLE_RATE || "0.1"
+    ),
   });
 
 function getVersionSequence(resource: Resource): number {
