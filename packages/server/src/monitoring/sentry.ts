@@ -11,6 +11,7 @@ export function enableSentry(
 ) {
   Sentry.init({
     dsn: sentryDSN,
+    release,
     integrations: [
       // Automatically instrument Node.js libraries and frameworks
       new Sentry.Integrations.Postgres({ module: pg }),
