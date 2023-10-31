@@ -53,11 +53,6 @@ export default class RedisLock implements Lock<RedlockAbortSignal> {
     lockId: string,
     body: (ctx: RedlockAbortSignal) => Promise<void>
   ): Promise<void> {
-    try {
-      await this._lock.using([lockId], 5000, body);
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
+    await this._lock.using([lockId], 5000, body);
   }
 }
