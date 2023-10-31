@@ -70,6 +70,7 @@ Authentication environment variables
 
 Monitoring services
 
-| name       | description                                           | required | defaults |
-| ---------- | ----------------------------------------------------- | -------- | -------- |
-| SENTRY_DSN | Sentry DSN URL for monitoring errors and performance. | false    |          |
+| name              | description                                                    | required | defaults |
+| ----------------- | -------------------------------------------------------------- | -------- | -------- |
+| SENTRY_SERVER_DSN | Sentry DSN URL for monitoring errors and performance.          | false    |          |
+| SENTRY_WORKER_DSN | SENTR?Y Worker for monitoring errors and performance on worker | false    |          |

@@ -2,6 +2,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import createLogger from "pino";
 import pg from "pg";
+import Redis from "ioredis";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
@@ -22,6 +23,7 @@ import { InternalData } from "../resourceProviders/memory/types.js";
 import MemoryDatabaseAsync from "../resourceProviders/memory/async.js";
 import MemoryDatabaseSync from "../resourceProviders/memory/sync.js";
 import RouterClient from "../resourceProviders/router.js";
+import RedisLock from "../synchronization/redis.lock.js";
 import PostgresLock from "../synchronization/postgres.lock.js";
 import InlineExecutioner from "../operation-executors/local/index.js";
 import ValueSetExpandInvoke from "../operation-executors/local/expand.js";
@@ -201,14 +203,20 @@ export async function deriveCTX(): Promise<
     return sd;
   };
 
-  const lock = new PostgresLock({
-    user: process.env["FHIR_DATABASE_USERNAME"],
-    password: process.env["FHIR_DATABASE_PASSWORD"],
-    host: process.env["FHIR_DATABASE_HOST"],
-    database: process.env["FHIR_DATABASE_NAME"],
-    port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
-    ssl: process.env["FHIR_DATABASE_SSL"] === "true",
+  // const lock = new PostgresLock({
+  //   user: process.env["FHIR_DATABASE_USERNAME"],
+  //   password: process.env["FHIR_DATABASE_PASSWORD"],
+  //   host: process.env["FHIR_DATABASE_HOST"],
+  //   database: process.env["FHIR_DATABASE_NAME"],
+  //   port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
+  //   ssl: process.env["FHIR_DATABASE_SSL"] === "true",
+  // });
+
+  const redisClient = new Redis.default({
+    host: process.env.REDIS_HOST,
+    port: parseInt(process.env.REDIS_PORT || "6739"),
   });
+  const lock = new RedisLock(redisClient);
 
   const lambdaExecutioner = AWSLambdaExecutioner({
     AWS_REGION: process.env.AWS_REGION as string,

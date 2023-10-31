@@ -112,7 +112,7 @@ function workspaceMiddleware(
     logger.warn("[WARNING] Server is publicly accessible.");
 
   return [
-    Sentry.tracingMiddleWare(process.env.SENTRY_DSN),
+    Sentry.tracingMiddleWare(process.env.SENTRY_SERVER_DSN),
     process.env.AUTH_JWT_ISSUER
       ? createCheckJWT()
       : async (ctx, next) => {
@@ -207,8 +207,8 @@ function workspaceMiddleware(
 export default async function createServer(): Promise<
   Koa<Koa.DefaultState, Koa.DefaultContext>
 > {
-  if (process.env.SENTRY_DSN)
-    Sentry.enableSentry(process.env.SENTRY_DSN, LIB_VERSION);
+  if (process.env.SENTRY_SERVER_DSN)
+    Sentry.enableSentry(process.env.SENTRY_SERVER_DSN, LIB_VERSION);
   const app = new Koa();
   const router = new Router();
   const getCTX = await deriveCTX();

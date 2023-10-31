@@ -1,5 +1,6 @@
 import { expect, test } from "@jest/globals";
 import pg from "pg";
+import dotEnv from "dotenv";
 
 import {
   QuestionnaireResponse,
@@ -8,6 +9,8 @@ import {
   Patient,
 } from "@iguhealth/fhir-types/r4/types";
 import HTTPClient from "@iguhealth/client/lib/http";
+
+dotEnv.config();
 
 async function createWorkspace(workspace: string) {
   const pgClient = new pg.Client({
@@ -19,17 +22,20 @@ async function createWorkspace(workspace: string) {
     ssl: process.env["FHIR_DATABASE_SSL"] === "true",
   });
   await pgClient.connect();
-  const res = await pgClient.query("select id from workspaces where id = $1", [
-    workspace,
-  ]);
-  if (res.rows.length === 0) {
-    await pgClient.query(
-      "INSERT INTO workspaces (id, workspace) VALUES ($1, $2)",
-      [workspace, { id: "test", name: "test" }]
+  try {
+    const res = await pgClient.query(
+      "select id from workspaces where id = $1",
+      [workspace]
     );
+    if (res.rows.length === 0) {
+      await pgClient.query(
+        "INSERT INTO workspaces (id, workspace) VALUES ($1, $2)",
+        [workspace, { id: "test", name: "test" }]
+      );
+    }
+  } finally {
+    await pgClient.end();
   }
-
-  await pgClient.end();
 }
 
 function createClient(workspace: string) {
