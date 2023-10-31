@@ -4,7 +4,11 @@ import * as Sentry from "@sentry/node";
 import { ProfilingIntegration } from "@sentry/profiling-node";
 import { stripUrlQueryAndFragment } from "@sentry/utils";
 
-export function enableSentry(sentryDSN: string, release: string) {
+export function enableSentry(
+  sentryDSN: string,
+  release: string,
+  debug = false
+) {
   Sentry.init({
     dsn: sentryDSN,
     integrations: [
@@ -12,6 +16,7 @@ export function enableSentry(sentryDSN: string, release: string) {
       new Sentry.Integrations.Postgres({ module: pg }),
       new ProfilingIntegration(),
     ],
+    debug,
     // Performance Monitoring
     tracesSampleRate: 1.0,
     // Set sampling rate for profiling - this is relative to tracesSampleRate
