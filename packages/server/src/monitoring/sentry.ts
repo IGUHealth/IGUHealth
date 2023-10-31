@@ -7,7 +7,7 @@ import { stripUrlQueryAndFragment } from "@sentry/utils";
 export function enableSentry(
   sentryDSN: string,
   release: string,
-  debug = false
+  options: Partial<Sentry.NodeOptions> = {}
 ) {
   Sentry.init({
     dsn: sentryDSN,
@@ -17,11 +17,11 @@ export function enableSentry(
       new Sentry.Integrations.Postgres({ module: pg }),
       new ProfilingIntegration(),
     ],
-    debug,
     // Performance Monitoring
     tracesSampleRate: 1.0,
     // Set sampling rate for profiling - this is relative to tracesSampleRate
     profilesSampleRate: 1.0,
+    ...options,
   });
 }
 
@@ -41,6 +41,36 @@ export const logError = (err: unknown, ctx: Koa.DefaultContext) => {
 export const onKoaError = (err: unknown, ctx: Koa.DefaultContext) => {
   logError(err, ctx);
 };
+
+export async function sentryTransaction<T>(
+  dsn: string | undefined,
+  transactionContext: Parameters<typeof Sentry.startTransaction>[0],
+  body: (transaction: Sentry.Transaction | undefined) => Promise<T>
+): Promise<T> {
+  if (!dsn) return body(undefined);
+  const transaction = Sentry.startTransaction(transactionContext);
+  try {
+    const value = await body(transaction);
+    return value;
+  } finally {
+    transaction.finish();
+  }
+}
+
+export async function sentrySpan<T>(
+  transaction: Sentry.Transaction | Sentry.Span | undefined,
+  spanContext: Parameters<typeof Sentry.startSpan>[0],
+  body: (span: Sentry.Span | undefined) => Promise<T>
+): Promise<T> {
+  if (!transaction) return body(undefined);
+  const span = transaction.startChild(spanContext);
+  try {
+    const value = await body(span);
+    return value;
+  } finally {
+    span.finish();
+  }
+}
 
 // this tracing middleware creates a transaction per request
 export const tracingMiddleWare =
