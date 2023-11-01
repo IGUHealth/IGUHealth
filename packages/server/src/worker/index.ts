@@ -413,9 +413,9 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
               }
             }
           );
-          await new Promise((resolve) => setTimeout(resolve, loopInterval));
         }
       );
+      await new Promise((resolve) => setTimeout(resolve, loopInterval));
     }
   }
 
