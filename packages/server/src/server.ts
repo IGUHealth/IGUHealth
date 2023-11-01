@@ -1,24 +1,15 @@
+import path from "path";
+import { fileURLToPath } from "url";
 import Koa, { DefaultContext, DefaultState, Middleware } from "koa";
 import Router from "@koa/router";
 import ratelimit from "koa-ratelimit";
 import { bodyParser } from "@koa/bodyparser";
+import cors from "@koa/cors";
 import Redis from "ioredis";
-
-import dotEnv from "dotenv";
-
 import pg from "pg";
 import jwt from "koa-jwt";
 import jwksRsa from "jwks-rsa";
-import cors from "@koa/cors";
-// import * as jose from "jose";
-// import path from "path";
-// import { fileURLToPath } from "url";
-// import Provider from "oidc-provider";
-// import mount from "koa-mount";
-// import Account from "./oidc-provider/accounts.js";
-// import configuration from "./oidc-provider/configuration.js";
-// import routes from "./oidc-provider/routes.js";
-// import { loadJWKS } from "./auth/jwks.js";
+import dotEnv from "dotenv";
 
 import {
   isOperationError,
@@ -26,6 +17,7 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
+import { loadJWKS } from "./auth/jwks.js";
 import { LIB_VERSION } from "./version.js";
 import * as Sentry from "./monitoring/sentry.js";
 import type { FHIRServerCTX } from "./fhirServer.js";
@@ -38,13 +30,10 @@ import {
 
 dotEnv.config();
 
-// const { PORT = 3000, ISSUER = `http://localhost:${PORT}` } = process.env;
-// configuration.findAccount = Account.findAccount;
-
-// const { jwks, privateKey } = await loadJWKS(
-//   path.join(fileURLToPath(import.meta.url), "../../certifications"),
-//   "jwks"
-// );
+const { jwks, privateKey } = await loadJWKS(
+  path.join(fileURLToPath(import.meta.url), "../../certifications"),
+  "jwks"
+);
 
 // const signedJWT = await new jose.SignJWT({ "urn:example:claim": true })
 //   .setProtectedHeader({ alg: "RS256" })
@@ -61,7 +50,7 @@ dotEnv.config();
 // apply rate limit
 
 function createCheckJWT(): Middleware<DefaultState, DefaultContext, unknown> {
-  const LOAD_EXTERNAL_TOKEN = jwksRsa.koaJwtSecret({
+  const AUTH0_JWT_SECRET = jwksRsa.koaJwtSecret({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 2,
@@ -69,8 +58,12 @@ function createCheckJWT(): Middleware<DefaultState, DefaultContext, unknown> {
   });
   return jwt({
     tokenKey: "access_token",
-    secret: (header: jwksRsa.TokenHeader) => {
-      return LOAD_EXTERNAL_TOKEN(header);
+    secret: (header: jwksRsa.TokenHeader, payload: { iss: string }) => {
+      if (payload.iss === process.env.AUTH_JWT_ISSUER) {
+        return AUTH0_JWT_SECRET(header);
+      } else {
+        throw new Error("Invalid issuer");
+      }
     },
     audience: process.env.AUTH_JWT_AUDIENCE,
     issuer: process.env.AUTH_JWT_ISSUER ? [process.env.AUTH_JWT_ISSUER] : [],
