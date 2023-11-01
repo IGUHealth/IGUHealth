@@ -17,6 +17,7 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
+import { IGUHEALTH_ISSUER } from "./auth/token.js";
 import { loadJWKS } from "./auth/jwks.js";
 import { LIB_VERSION } from "./version.js";
 import * as Sentry from "./monitoring/sentry.js";
@@ -30,39 +31,40 @@ import {
 
 dotEnv.config();
 
-const { jwks, privateKey } = await loadJWKS(
+const { jwks, publicKey, privateKey } = await loadJWKS(
   path.join(fileURLToPath(import.meta.url), "../../certifications"),
   "jwks"
 );
 
-// const signedJWT = await new jose.SignJWT({ "urn:example:claim": true })
-//   .setProtectedHeader({ alg: "RS256" })
-//   .setIssuedAt()
-//   .setIssuer("urn:example:issuer")
-//   .setAudience("urn:example:audience")
-//   .setExpirationTime("2h")
-//   .sign(privateKey);
-
-// console.log(signedJWT);
-// console.log(jose.decodeJwt(signedJWT));
-// console.log(await jose.jwtVerify(signedJWT, jwks));
-
-// apply rate limit
-
 function createCheckJWT(): Middleware<DefaultState, DefaultContext, unknown> {
-  const AUTH0_JWT_SECRET = jwksRsa.koaJwtSecret({
+  const EXTERNAL_JWT_SECRET = jwksRsa.koaJwtSecret({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 2,
     jwksUri: process.env.AUTH_JWK_URI as string,
   });
+  const IGUHEALTH_JWT_SECRET = jwksRsa.koaJwtSecret({
+    jwksUri: "_not_used",
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 2,
+    fetcher: async (uri) => {
+      return JSON.parse(jwks.toString());
+    },
+  });
+
   return jwt({
     tokenKey: "access_token",
     secret: (header: jwksRsa.TokenHeader, payload: { iss: string }) => {
-      if (payload.iss === process.env.AUTH_JWT_ISSUER) {
-        return AUTH0_JWT_SECRET(header);
-      } else {
-        throw new Error("Invalid issuer");
+      switch (payload.iss) {
+        case process.env.AUTH_JWT_AUDIENCE: {
+          return EXTERNAL_JWT_SECRET(header);
+        }
+        case IGUHEALTH_ISSUER: {
+          return IGUHEALTH_JWT_SECRET(header);
+        }
+        default:
+          throw new Error(`Unknown issuer '${payload.iss}'`);
       }
     },
     audience: process.env.AUTH_JWT_AUDIENCE,
