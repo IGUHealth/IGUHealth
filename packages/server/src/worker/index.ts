@@ -176,245 +176,216 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
     ).rows.map((row) => row.id);
 
     for (const workspace of activeWorkspaces) {
-      await Sentry.sentryTransaction(
-        process.env.SENTRY_WORKER_DSN,
-        {
-          name: `workspace: ${workspace}`,
-          op: "iguhealth.worker",
-        },
-        async (transaction) => {
-          const client = await pool.connect();
-          await Sentry.sentrySpan(
-            transaction,
-            {
-              op: "iguhealth.worker.processSubscriptions",
-              name: `process-subscriptions`,
-              description: "workspace subscription processing",
-            },
-            async (workerSubscriptionsSpan) => {
+      const client = await pool.connect();
+      try {
+        const services = getCTX({
+          pg: client,
+          workspace,
+          author: "system",
+        });
+        const ctx = { ...services, workspace, author: "system" };
+        const activeSubscriptions = await services.client.search_type(
+          ctx,
+          "Subscription",
+          [{ name: "status", value: ["active"] }]
+        );
+        for (const subscription of activeSubscriptions.resources) {
+          // Use lock to avoid duplication on sub processing (could have two concurrent subs running in unison otherwise).
+
+          await ctx.lock.withLock(
+            subscriptionLockKey(workspace, subscription.id as string),
+            async () => {
+              const logger = services.logger.child({
+                worker: workerID,
+                workspace: ctx.workspace,
+                criteria: subscription.criteria,
+              });
               try {
-                const services = getCTX({
-                  pg: client,
-                  workspace,
-                  author: "system",
+                const request = KoaRequestToFHIRRequest(subscription.criteria, {
+                  method: "GET",
                 });
-                const ctx = { ...services, workspace, author: "system" };
-                const activeSubscriptions = await services.client.search_type(
-                  ctx,
-                  "Subscription",
-                  [{ name: "status", value: ["active"] }]
+                if (request.type !== "search-request") {
+                  throw new OperationError(
+                    outcomeError(
+                      "invalid",
+                      `Criteria must be a search request but found ${request.type}`
+                    )
+                  );
+                }
+
+                const sortParameter = request.parameters.find(
+                  (p) => p.name === "_sort"
                 );
-                for (const subscription of activeSubscriptions.resources) {
-                  // Use lock to avoid duplication on sub processing (could have two concurrent subs running in unison otherwise).
-                  await Sentry.sentrySpan(
-                    workerSubscriptionsSpan,
+
+                if (sortParameter) {
+                  throw new OperationError(
+                    outcomeError(
+                      "invalid",
+                      `Criteria cannot include _sort. Sorting must be based order resource was updated.`
+                    )
+                  );
+                }
+
+                const cachedSubID = await services.cache.get(
+                  ctx,
+                  `${subscription.id}_latest`
+                );
+
+                const latestVersionIdForSub = cachedSubID
+                  ? cachedSubID
+                  : // If latest isn't there then use the subscription version when created.
+                    getVersionSequence(subscription);
+
+                let historyPoll: BundleEntry[] = [];
+
+                switch (request.level) {
+                  case "system": {
+                    historyPoll = await services.client.historySystem(ctx, [
+                      {
+                        name: "_since-version",
+                        value: [latestVersionIdForSub],
+                      },
+                    ]);
+                    break;
+                  }
+                  case "type": {
+                    historyPoll = await services.client.historyType(
+                      ctx,
+                      request.resourceType as ResourceType,
+                      [
+                        {
+                          name: "_since-version",
+                          value: [latestVersionIdForSub],
+                        },
+                      ]
+                    );
+                    break;
+                  }
+                }
+
+                const resourceTypes = deriveResourceTypeFilter(request);
+                // Remove _type as using on derived resourceTypeFilter
+                request.parameters = request.parameters.filter(
+                  (p) => p.name !== "_type"
+                );
+
+                const parameters = await parametersWithMetaAssociated(
+                  resourceTypes,
+                  request.parameters,
+                  async (resourceTypes, name) =>
+                    (
+                      await findSearchParameter(ctx, resourceTypes, name)
+                    ).resources
+                );
+
+                // Standard parameters
+                const resourceParameters = parameters.filter(
+                  (v): v is SearchParameterResource => v.type === "resource"
+                );
+
+                if (historyPoll.length > 0) {
+                  await Sentry.sentryTransaction(
+                    process.env.SENTRY_WORKER_DSN,
                     {
-                      op: `iguhealth.worker.processSubscription-${subscription.id}`,
-                      name: "subscription-processing",
-                      description: "Subscription processing",
+                      name: `${workspace}-processing-sub`,
+                      op: "iguhealth.worker",
                     },
-                    async (subscriptionSpan) => {
-                      await ctx.lock.withLock(
-                        subscriptionLockKey(
-                          workspace,
-                          subscription.id as string
-                        ),
-                        async () => {
-                          const logger = services.logger.child({
-                            worker: workerID,
-                            workspace: ctx.workspace,
-                            criteria: subscription.criteria,
-                          });
-                          try {
-                            const request = KoaRequestToFHIRRequest(
-                              subscription.criteria,
-                              {
-                                method: "GET",
-                              }
-                            );
-                            if (request.type !== "search-request") {
-                              throw new OperationError(
-                                outcomeError(
-                                  "invalid",
-                                  `Criteria must be a search request but found ${request.type}`
-                                )
-                              );
-                            }
+                    async (transaction) => {
+                      logger.info(
+                        `PROCESSING Subscription '${subscription.id}'`
+                      );
+                      if (historyPoll[0].resource === undefined)
+                        throw new OperationError(
+                          outcomeError(
+                            "invalid",
+                            "history poll returned entry missing resource."
+                          )
+                        );
 
-                            const sortParameter = request.parameters.find(
-                              (p) => p.name === "_sort"
-                            );
+                      // Do reverse as ordering is the latest update first.
 
-                            if (sortParameter) {
-                              throw new OperationError(
-                                outcomeError(
-                                  "invalid",
-                                  `Criteria cannot include _sort. Sorting must be based order resource was updated.`
-                                )
-                              );
-                            }
-
-                            const cachedSubID = await services.cache.get(
-                              ctx,
-                              `${subscription.id}_latest`
-                            );
-
-                            const latestVersionIdForSub = cachedSubID
-                              ? cachedSubID
-                              : // If latest isn't there then use the subscription version when created.
-                                getVersionSequence(subscription);
-
-                            let historyPoll: BundleEntry[] = [];
-
-                            switch (request.level) {
-                              case "system": {
-                                historyPoll =
-                                  await services.client.historySystem(ctx, [
-                                    {
-                                      name: "_since-version",
-                                      value: [latestVersionIdForSub],
-                                    },
-                                  ]);
-                                break;
-                              }
-                              case "type": {
-                                historyPoll = await services.client.historyType(
-                                  ctx,
-                                  request.resourceType as ResourceType,
-                                  [
-                                    {
-                                      name: "_since-version",
-                                      value: [latestVersionIdForSub],
-                                    },
-                                  ]
-                                );
-                                break;
-                              }
-                            }
-
-                            const resourceTypes =
-                              deriveResourceTypeFilter(request);
-                            // Remove _type as using on derived resourceTypeFilter
-                            request.parameters = request.parameters.filter(
-                              (p) => p.name !== "_type"
-                            );
-
-                            const parameters = await Sentry.sentrySpan(
-                              subscriptionSpan,
-                              {
-                                op: "iguhealth.worker.processSubscription.associateParams",
-                                name: "associate-params",
-                                description:
-                                  "Deriving search parameter metadata.",
-                              },
-                              async () => {
-                                return parametersWithMetaAssociated(
-                                  resourceTypes,
-                                  request.parameters,
-                                  async (resourceTypes, name) =>
-                                    (
-                                      await findSearchParameter(
-                                        ctx,
-                                        resourceTypes,
-                                        name
-                                      )
-                                    ).resources
-                                );
-                              }
-                            );
-                            // Standard parameters
-                            const resourceParameters = parameters.filter(
-                              (v): v is SearchParameterResource =>
-                                v.type === "resource"
-                            );
-
-                            if (historyPoll.length > 0) {
-                              logger.info(
-                                `PROCESSING Subscription '${subscription.id}'`
-                              );
-                              if (historyPoll[0].resource === undefined)
-                                throw new OperationError(
-                                  outcomeError(
-                                    "invalid",
-                                    "history poll returned entry missing resource."
-                                  )
-                                );
-
-                              // Do reverse as ordering is the latest update first.
+                      for (const entry of historyPoll.reverse()) {
+                        if (entry.resource === undefined)
+                          throw new OperationError(
+                            outcomeError(
+                              "invalid",
+                              "history poll returned entry missing resource."
+                            )
+                          );
+                        await Sentry.sentrySpan(
+                          transaction,
+                          {
+                            op: `iguhealth.worker.checkingCriteria`,
+                            name: `${workspace}-processing-sub-checking-criteria`,
+                            description:
+                              "Checking if history poll fits subscription criteria",
+                          },
+                          async (span) => {
+                            if (
+                              await fitsSearchCriteria(
+                                (type) => ctx.resolveSD(ctx, type),
+                                entry.resource as Resource,
+                                resourceParameters
+                              )
+                            ) {
                               await Sentry.sentrySpan(
-                                subscriptionSpan,
+                                transaction,
                                 {
-                                  op: "iguhealth.worker.processSubscription.processPayloads",
-                                  name: "Process subscription payloads",
+                                  op: `iguhealth.worker.handlingPayload`,
+                                  name: `${workspace}-processing-sub-handling-payload`,
                                   description:
-                                    "Processing subscription payloads.",
+                                    "Checking if history poll fits subscription criteria",
                                 },
-                                async () => {
-                                  for (const entry of historyPoll.reverse()) {
-                                    if (entry.resource === undefined)
-                                      throw new OperationError(
-                                        outcomeError(
-                                          "invalid",
-                                          "history poll returned entry missing resource."
-                                        )
-                                      );
-                                    if (
-                                      await fitsSearchCriteria(
-                                        (type) => ctx.resolveSD(ctx, type),
-                                        entry.resource,
-                                        resourceParameters
-                                      )
-                                    ) {
-                                      await handleSubscriptionPayload(
-                                        ctx,
-                                        subscription,
-                                        [entry.resource]
-                                      );
-                                    }
-                                  }
+                                async (_span) => {
+                                  await handleSubscriptionPayload(
+                                    ctx,
+                                    subscription,
+                                    [entry.resource as Resource]
+                                  );
                                 }
                               );
-                              await services.cache.set(
-                                ctx,
-                                `${subscription.id}_latest`,
-                                getVersionSequence(historyPoll[0].resource)
-                              );
                             }
-                          } catch (e) {
-                            logger.error(e);
-                            Sentry.logError(e, ctx);
-                            let errorDescription =
-                              "Subscription failed to process";
-
-                            if (isOperationError(e)) {
-                              errorDescription = e.outcome.issue
-                                .map((i) => i.details)
-                                .join(". ");
-                            }
-                            await logAuditEvent(
-                              ctx,
-                              SERIOUS_FAILURE,
-                              { reference: `Subscription/${subscription.id}` },
-                              errorDescription
-                            );
-
-                            await services.client.update(ctx, {
-                              ...subscription,
-                              status: "error",
-                            });
                           }
-                        }
+                        );
+                      }
+
+                      await services.cache.set(
+                        ctx,
+                        `${subscription.id}_latest`,
+                        getVersionSequence(historyPoll[0].resource)
                       );
                     }
                   );
                 }
-              } finally {
-                client.release();
+              } catch (e) {
+                logger.error(e);
+                Sentry.logError(e, ctx);
+                let errorDescription = "Subscription failed to process";
+
+                if (isOperationError(e)) {
+                  errorDescription = e.outcome.issue
+                    .map((i) => i.details)
+                    .join(". ");
+                }
+                await logAuditEvent(
+                  ctx,
+                  SERIOUS_FAILURE,
+                  { reference: `Subscription/${subscription.id}` },
+                  errorDescription
+                );
+
+                await services.client.update(ctx, {
+                  ...subscription,
+                  status: "error",
+                });
               }
             }
           );
         }
-      );
+      } finally {
+        client.release();
+      }
+
       await new Promise((resolve) => setTimeout(resolve, loopInterval));
     }
   }
