@@ -66,6 +66,12 @@ Authentication environment variables
 | AUTH_JWT_ISSUER    | Issuer of the JWT.                       | true     |                           |
 | AUTH_JWT_ALGORITHM |                                          | false    | RS256                     |
 
+#### Performance
+
+| name           | description                     | required | defaults |
+| -------------- | ------------------------------- | -------- | -------- |
+| RATE_LIMIT_MAX | Rate limiting amount per minute | false    | 100      |
+
 #### Monitoring
 
 Monitoring services
