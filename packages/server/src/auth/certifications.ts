@@ -1,10 +1,4 @@
-import {
-  readFileSync,
-  writeFileSync,
-  mkdirSync,
-  readdirSync,
-  readFile,
-} from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, readdirSync } from "node:fs";
 import path from "node:path";
 import * as jose from "jose";
 
@@ -17,6 +11,10 @@ export const ALGORITHMS = {
   RS256: "RS256",
 };
 
+/*
+ ** Saves certifications as follows:
+ ** private keys under /private/{kid}.pkcs8 and public keys under /public/{kid}.spki
+ */
 export async function createCertifications(
   directory: string,
   kid: string,
@@ -39,6 +37,10 @@ export async function createCertifications(
   };
 }
 
+/*
+ ** Returns a JSON Web Key Set with all public keys in the directory directory/public.
+ ** Uses filename to distinguish between keys (sets the kid field in the JWK).
+ */
 export async function getJWKS(
   directory: string,
   alg: string = ALGORITHMS.RS256
@@ -65,6 +67,9 @@ export async function getJWKS(
   };
 }
 
+/*
+ ** Returns the private key for a given kid.
+ */
 export async function getSigningKey(
   directory: string,
   kid: string,
@@ -79,6 +84,11 @@ export async function getSigningKey(
   return { kid, key: privateKey };
 }
 
+/*
+ ** Create certifications if not exist. Saves by default
+ ** private keys under /private/{kid}.pkcs8 and public keys under /public/{kid}.spki.
+ ** Should only be used in development environment as these should be injected in environment in prod.
+ */
 export async function createCertsIfNoneExists(
   directory: string,
   kid: string,

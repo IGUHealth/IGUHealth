@@ -2,6 +2,9 @@ import * as jose from "jose";
 
 export const IGUHEALTH_ISSUER = "https://iguhealth.app/";
 
+/**
+ * Creates a JWT token using the provided private key and payload.
+ */
 export async function createToken(
   privatekey: { kid: string; key: jose.KeyLike },
   payload: Record<string, unknown>
@@ -19,6 +22,3 @@ export async function createToken(
 
   return signedJWT;
 }
-// console.log(signedJWT);
-// console.log(jose.decodeJwt(signedJWT));
-// console.log(await jose.jwtVerify(signedJWT, jwks));

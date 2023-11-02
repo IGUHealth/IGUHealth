@@ -49,20 +49,20 @@ async function createCheckJWT(): Promise<
     path.join(fileURLToPath(import.meta.url), "../../certifications")
   );
 
-  console.log(
-    await createToken(
-      await getSigningKey(
-        path.join(fileURLToPath(import.meta.url), "../../certifications"),
-        SIGNING_KID
-      ),
-      {
-        "https://iguhealth.app/workspaces": ["system"],
-        sub: "iguhealth-system",
-        aud: ["https://iguhealth.com/api"],
-        scope: "openid profile email offline_access",
-      }
-    )
-  );
+  // console.log(
+  //   await createToken(
+  //     await getSigningKey(
+  //       path.join(fileURLToPath(import.meta.url), "../../certifications"),
+  //       SIGNING_KID
+  //     ),
+  //     {
+  //       "https://iguhealth.app/workspaces": ["system"],
+  //       sub: "iguhealth-system",
+  //       aud: ["https://iguhealth.com/api"],
+  //       scope: "openid profile email offline_access",
+  //     }
+  //   )
+  // );
 
   const EXTERNAL_JWT_SECRET = jwksRsa.koaJwtSecret({
     cache: true,
