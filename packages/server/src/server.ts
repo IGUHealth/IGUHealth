@@ -17,7 +17,7 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
-import { IGUHEALTH_ISSUER } from "./auth/token.js";
+import { createToken, IGUHEALTH_ISSUER } from "./auth/token.js";
 import { loadJWKS } from "./auth/jwks.js";
 import { LIB_VERSION } from "./version.js";
 import * as Sentry from "./monitoring/sentry.js";
@@ -36,6 +36,13 @@ const { jwks, publicKey, privateKey } = await loadJWKS(
   "jwks"
 );
 
+// await createToken(privateKey, {
+//   "https://iguhealth.app/workspaces": ["system"],
+//   sub: "iguhealth-system",
+//   aud: ["https://iguhealth.com/api"],
+//   scope: "openid profile email offline_access",
+// });
+
 function createCheckJWT(): Middleware<DefaultState, DefaultContext, unknown> {
   const EXTERNAL_JWT_SECRET = jwksRsa.koaJwtSecret({
     cache: true,
@@ -49,15 +56,15 @@ function createCheckJWT(): Middleware<DefaultState, DefaultContext, unknown> {
     rateLimit: true,
     jwksRequestsPerMinute: 2,
     fetcher: async (uri) => {
-      return JSON.parse(jwks.toString());
+      return jwks;
     },
   });
 
   return jwt({
     tokenKey: "access_token",
-    secret: (header: jwksRsa.TokenHeader, payload: { iss: string }) => {
+    secret: async (header: jwksRsa.TokenHeader, payload: { iss: string }) => {
       switch (payload.iss) {
-        case process.env.AUTH_JWT_AUDIENCE: {
+        case process.env.AUTH_JWT_ISSUER: {
           return EXTERNAL_JWT_SECRET(header);
         }
         case IGUHEALTH_ISSUER: {
@@ -68,7 +75,9 @@ function createCheckJWT(): Middleware<DefaultState, DefaultContext, unknown> {
       }
     },
     audience: process.env.AUTH_JWT_AUDIENCE,
-    issuer: process.env.AUTH_JWT_ISSUER ? [process.env.AUTH_JWT_ISSUER] : [],
+    issuer: process.env.AUTH_JWT_ISSUER
+      ? [process.env.AUTH_JWT_ISSUER, IGUHEALTH_ISSUER]
+      : [IGUHEALTH_ISSUER],
     algorithms: [
       process.env.AUTH_JWT_ALGORITHM ? process.env.AUTH_JWT_ALGORITHM : "RS256",
     ],
