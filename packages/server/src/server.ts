@@ -1,24 +1,15 @@
+import path from "path";
+import { fileURLToPath } from "url";
 import Koa, { DefaultContext, DefaultState, Middleware } from "koa";
 import Router from "@koa/router";
 import ratelimit from "koa-ratelimit";
 import { bodyParser } from "@koa/bodyparser";
+import cors from "@koa/cors";
 import Redis from "ioredis";
-
-import dotEnv from "dotenv";
-
 import pg from "pg";
 import jwt from "koa-jwt";
 import jwksRsa from "jwks-rsa";
-import cors from "@koa/cors";
-// import * as jose from "jose";
-// import path from "path";
-// import { fileURLToPath } from "url";
-// import Provider from "oidc-provider";
-// import mount from "koa-mount";
-// import Account from "./oidc-provider/accounts.js";
-// import configuration from "./oidc-provider/configuration.js";
-// import routes from "./oidc-provider/routes.js";
-// import { loadJWKS } from "./auth/jwks.js";
+import dotEnv from "dotenv";
 
 import {
   isOperationError,
@@ -26,6 +17,8 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
+import { createToken, IGUHEALTH_ISSUER } from "./auth/token.js";
+import { loadJWKS } from "./auth/jwks.js";
 import { LIB_VERSION } from "./version.js";
 import * as Sentry from "./monitoring/sentry.js";
 import type { FHIRServerCTX } from "./fhirServer.js";
@@ -38,42 +31,53 @@ import {
 
 dotEnv.config();
 
-// const { PORT = 3000, ISSUER = `http://localhost:${PORT}` } = process.env;
-// configuration.findAccount = Account.findAccount;
+const { jwks, publicKey, privateKey } = await loadJWKS(
+  path.join(fileURLToPath(import.meta.url), "../../certifications"),
+  "jwks"
+);
 
-// const { jwks, privateKey } = await loadJWKS(
-//   path.join(fileURLToPath(import.meta.url), "../../certifications"),
-//   "jwks"
-// );
-
-// const signedJWT = await new jose.SignJWT({ "urn:example:claim": true })
-//   .setProtectedHeader({ alg: "RS256" })
-//   .setIssuedAt()
-//   .setIssuer("urn:example:issuer")
-//   .setAudience("urn:example:audience")
-//   .setExpirationTime("2h")
-//   .sign(privateKey);
-
-// console.log(signedJWT);
-// console.log(jose.decodeJwt(signedJWT));
-// console.log(await jose.jwtVerify(signedJWT, jwks));
-
-// apply rate limit
+// await createToken(privateKey, {
+//   "https://iguhealth.app/workspaces": ["system"],
+//   sub: "iguhealth-system",
+//   aud: ["https://iguhealth.com/api"],
+//   scope: "openid profile email offline_access",
+// });
 
 function createCheckJWT(): Middleware<DefaultState, DefaultContext, unknown> {
-  const LOAD_EXTERNAL_TOKEN = jwksRsa.koaJwtSecret({
+  const EXTERNAL_JWT_SECRET = jwksRsa.koaJwtSecret({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 2,
     jwksUri: process.env.AUTH_JWK_URI as string,
   });
+  const IGUHEALTH_JWT_SECRET = jwksRsa.koaJwtSecret({
+    jwksUri: "_not_used",
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 2,
+    fetcher: async (uri) => {
+      return jwks;
+    },
+  });
+
   return jwt({
     tokenKey: "access_token",
-    secret: (header: jwksRsa.TokenHeader) => {
-      return LOAD_EXTERNAL_TOKEN(header);
+    secret: async (header: jwksRsa.TokenHeader, payload: { iss: string }) => {
+      switch (payload.iss) {
+        case process.env.AUTH_JWT_ISSUER: {
+          return EXTERNAL_JWT_SECRET(header);
+        }
+        case IGUHEALTH_ISSUER: {
+          return IGUHEALTH_JWT_SECRET(header);
+        }
+        default:
+          throw new Error(`Unknown issuer '${payload.iss}'`);
+      }
     },
     audience: process.env.AUTH_JWT_AUDIENCE,
-    issuer: process.env.AUTH_JWT_ISSUER ? [process.env.AUTH_JWT_ISSUER] : [],
+    issuer: process.env.AUTH_JWT_ISSUER
+      ? [process.env.AUTH_JWT_ISSUER, IGUHEALTH_ISSUER]
+      : [IGUHEALTH_ISSUER],
     algorithms: [
       process.env.AUTH_JWT_ALGORITHM ? process.env.AUTH_JWT_ALGORITHM : "RS256",
     ],
