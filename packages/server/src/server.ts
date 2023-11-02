@@ -18,7 +18,6 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { createToken, IGUHEALTH_ISSUER } from "./auth/token.js";
-import { loadJWKS } from "./auth/certifications.js";
 import { LIB_VERSION } from "./version.js";
 import * as Sentry from "./monitoring/sentry.js";
 import type { FHIRServerCTX } from "./fhirServer.js";
@@ -28,22 +27,43 @@ import {
   KoaRequestToFHIRRequest,
   fhirResponseToKoaResponse,
 } from "./koaParsing/index.js";
+import {
+  createCertsIfNoneExists,
+  getJWKS,
+  getSigningKey,
+} from "./auth/certifications.js";
 
 dotEnv.config();
 
-const { jwks, publicKey, privateKey } = await loadJWKS(
-  path.join(fileURLToPath(import.meta.url), "../../certifications"),
-  "jwks"
-);
+const SIGNING_KID = process.env.SIGNING_KEY || "signing_key";
 
-// await createToken(privateKey, {
-//   "https://iguhealth.app/workspaces": ["system"],
-//   sub: "iguhealth-system",
-//   aud: ["https://iguhealth.com/api"],
-//   scope: "openid profile email offline_access",
-// });
+async function createCheckJWT(): Promise<
+  Middleware<DefaultState, DefaultContext, unknown>
+> {
+  await createCertsIfNoneExists(
+    path.join(fileURLToPath(import.meta.url), "../../certifications"),
+    SIGNING_KID
+  );
 
-function createCheckJWT(): Middleware<DefaultState, DefaultContext, unknown> {
+  const jwks = await getJWKS(
+    path.join(fileURLToPath(import.meta.url), "../../certifications")
+  );
+
+  console.log(
+    await createToken(
+      await getSigningKey(
+        path.join(fileURLToPath(import.meta.url), "../../certifications"),
+        SIGNING_KID
+      ),
+      {
+        "https://iguhealth.app/workspaces": ["system"],
+        sub: "iguhealth-system",
+        aud: ["https://iguhealth.com/api"],
+        scope: "openid profile email offline_access",
+      }
+    )
+  );
+
   const EXTERNAL_JWT_SECRET = jwksRsa.koaJwtSecret({
     cache: true,
     rateLimit: true,
@@ -102,14 +122,14 @@ async function workspaceCheck(
   return next();
 }
 
-function workspaceMiddleware(
+async function workspaceMiddleware(
   pool: pg.Pool,
   getCTX: (
     arg: Pick<FHIRServerCTX, "workspace" | "author" | "user_access_token"> & {
       pg: pg.PoolClient;
     }
   ) => FHIRServerCTX
-): Router.Middleware<Koa.DefaultState, Koa.DefaultContext, unknown>[] {
+): Promise<Router.Middleware<Koa.DefaultState, Koa.DefaultContext, unknown>[]> {
   const fhirServer = createFHIRServer();
 
   if (!process.env.AUTH_JWT_ISSUER)
@@ -118,7 +138,7 @@ function workspaceMiddleware(
   return [
     Sentry.tracingMiddleWare(process.env.SENTRY_SERVER_DSN),
     process.env.AUTH_JWT_ISSUER
-      ? createCheckJWT()
+      ? await createCheckJWT()
       : async (ctx, next) => {
           ctx.state = {
             ...ctx.state,
@@ -234,7 +254,7 @@ export default async function createServer(): Promise<
 
   router.all(
     "/w/:workspace/api/v1/fhir/r4/:fhirUrl*",
-    ...workspaceMiddleware(pool, getCTX)
+    ...(await workspaceMiddleware(pool, getCTX))
   );
 
   // TODO Use an adapter  adapter,

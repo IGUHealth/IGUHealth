@@ -1,71 +1,92 @@
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import {
+  readFileSync,
+  writeFileSync,
+  mkdirSync,
+  readdirSync,
+  readFile,
+} from "node:fs";
 import path from "node:path";
 import * as jose from "jose";
-
-type Output = Promise<{
-  publicKey: (
-    protectedHeader?: jose.JWSHeaderParameters | undefined,
-    token?: jose.FlattenedJWSInput | undefined
-  ) => Promise<jose.KeyLike>;
-  privateKey: jose.KeyLike;
-  jwks: { keys: jose.JWK[] };
-}>;
 
 export async function generateKeyPair(alg: string = "RS256") {
   const { privateKey, publicKey } = await jose.generateKeyPair(alg);
   return { privateKey, publicKey };
 }
 
-async function createCertifications(
+export const ALGORITHMS = {
+  RS256: "RS256",
+};
+
+export async function createCertifications(
   directory: string,
-  fileName: string,
-  alg: string = "RS256"
+  kid: string,
+  alg: string = ALGORITHMS.RS256
 ) {
-  mkdirSync(directory, { recursive: true });
+  mkdirSync(path.join(directory, `public`), { recursive: true });
+  mkdirSync(path.join(directory, `private`), { recursive: true });
 
-  const { privateKey, publicKey } = await generateKeyPair(alg);
+  const { publicKey, privateKey } = await generateKeyPair(alg);
 
-  const publicJWK = await jose.exportJWK(publicKey);
+  const pkcs8PublicKey = await jose.exportSPKI(publicKey);
   const pkcs8Private = await jose.exportPKCS8(privateKey);
 
-  const JWKS = { keys: [{ ...publicJWK, use: "sig", alg }] };
-
-  writeFileSync(
-    path.join(directory, `${fileName}_public.json`),
-    JSON.stringify(JWKS)
-  );
-  writeFileSync(
-    path.join(directory, `${fileName}_private.pkcs8`),
-    pkcs8Private
-  );
+  writeFileSync(path.join(directory, `public/${kid}.spki`), pkcs8PublicKey);
+  writeFileSync(path.join(directory, `private/${kid}.pkcs8`), pkcs8Private);
 
   return {
-    jwks: JWKS,
-    publicKey: jose.createLocalJWKSet(JWKS),
-    privateKey: privateKey,
+    publicKey,
+    privateKey,
   };
 }
 
-export async function loadJWKS(directory: string, fileName: string): Output {
-  const location = path.join(directory, `${fileName}_public.json`);
-  let jwksFile;
-  try {
-    jwksFile = readFileSync(location, "utf8");
-  } catch (e) {
-    console.log("NO JWKS FILE FOUND SO CREATING A NEW ONE.");
-  }
+export async function getJWKS(
+  directory: string,
+  alg: string = ALGORITHMS.RS256
+) {
+  //joining path of directory
+  const publicDirectory = path.join(directory, "public");
+  const publicKeyPaths = readdirSync(publicDirectory);
+  const keys = await Promise.all(
+    publicKeyPaths.map(async (pubKeyPath) => {
+      const pubKey = await jose.importSPKI(
+        readFileSync(path.join(publicDirectory, pubKeyPath), "utf-8"),
+        alg
+      );
 
-  if (!jwksFile) return createCertifications(directory, fileName);
+      const kid = path.parse(pubKeyPath).name;
+      const pubJWK = await jose.exportJWK(pubKey);
 
-  const JWKS = JSON.parse(jwksFile);
-  const publicKey = jose.createLocalJWKSet(JWKS);
+      return { ...pubJWK, alg, use: "sig", kid };
+    })
+  );
 
   return {
-    jwks: JWKS,
-    publicKey,
-    privateKey: await jose.importPKCS8(
-      readFileSync(path.join(directory, `${fileName}_private.pkcs8`), "utf8"),
-      "RS256"
-    ),
+    keys,
   };
+}
+
+export async function getSigningKey(
+  directory: string,
+  kid: string,
+  alg = ALGORITHMS.RS256
+) {
+  const privateKeyPath = path.join(directory, `private/${kid}.pkcs8`);
+  const privateKey = await jose.importPKCS8(
+    readFileSync(privateKeyPath, "utf-8"),
+    alg
+  );
+
+  return { kid, key: privateKey };
+}
+
+export async function createCertsIfNoneExists(
+  directory: string,
+  kid: string,
+  alg = ALGORITHMS.RS256
+) {
+  try {
+    await getSigningKey(directory, kid, alg);
+  } catch (e) {
+    await createCertifications(directory, kid, alg);
+  }
 }
