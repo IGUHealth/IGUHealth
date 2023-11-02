@@ -18,7 +18,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { createToken, IGUHEALTH_ISSUER } from "./auth/token.js";
-import { loadJWKS } from "./auth/jwks.js";
+import { loadJWKS } from "./auth/certifications.js";
 import { LIB_VERSION } from "./version.js";
 import * as Sentry from "./monitoring/sentry.js";
 import type { FHIRServerCTX } from "./fhirServer.js";

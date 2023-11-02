@@ -11,18 +11,29 @@ type Output = Promise<{
   jwks: { keys: jose.JWK[] };
 }>;
 
-async function createJWKSFile(directory: string, fileName: string) {
-  const location = path.join(directory, `${fileName}_public.json`);
+export async function generateKeyPair(alg: string = "RS256") {
+  const { privateKey, publicKey } = await jose.generateKeyPair(alg);
+  return { privateKey, publicKey };
+}
+
+async function createCertifications(
+  directory: string,
+  fileName: string,
+  alg: string = "RS256"
+) {
   mkdirSync(directory, { recursive: true });
 
-  const { privateKey, publicKey } = await jose.generateKeyPair("RS256");
+  const { privateKey, publicKey } = await generateKeyPair(alg);
 
   const publicJWK = await jose.exportJWK(publicKey);
   const pkcs8Private = await jose.exportPKCS8(privateKey);
 
-  const JWKS = { keys: [{ ...publicJWK, use: "sig", alg: "RS256" }] };
+  const JWKS = { keys: [{ ...publicJWK, use: "sig", alg }] };
 
-  writeFileSync(location, JSON.stringify(JWKS));
+  writeFileSync(
+    path.join(directory, `${fileName}_public.json`),
+    JSON.stringify(JWKS)
+  );
   writeFileSync(
     path.join(directory, `${fileName}_private.pkcs8`),
     pkcs8Private
@@ -41,10 +52,10 @@ export async function loadJWKS(directory: string, fileName: string): Output {
   try {
     jwksFile = readFileSync(location, "utf8");
   } catch (e) {
-    console.error(e);
+    console.log("NO JWKS FILE FOUND SO CREATING A NEW ONE.");
   }
 
-  if (!jwksFile) return createJWKSFile(directory, fileName);
+  if (!jwksFile) return createCertifications(directory, fileName);
 
   const JWKS = JSON.parse(jwksFile);
   const publicKey = jose.createLocalJWKSet(JWKS);
