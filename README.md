@@ -70,9 +70,10 @@ Authentication environment variables
 
 #### Performance
 
-| name           | description                     | required | defaults |
-| -------------- | ------------------------------- | -------- | -------- |
-| RATE_LIMIT_MAX | Rate limiting amount per minute | false    | 100      |
+| name                             | description                      | required | defaults |
+| -------------------------------- | -------------------------------- | -------- | -------- |
+| RATE_LIMIT_MAX                   | Rate limiting amount per minute  | false    | 100      |
+| POSTGRES_TRANSACTION_ENTRY_LIMIT | Postgres transaction entry limit | false    | 20       |
 
 #### Monitoring
 
