@@ -59,12 +59,14 @@ Optional depending on whether you are executing custom code for operations
 
 Authentication environment variables
 
-| name               | description                              | required | defaults                  |
-| ------------------ | ---------------------------------------- | -------- | ------------------------- |
-| AUTH_JWK_URI       | JWK remote url to pull JSON WEB Key Set. | true     |                           |
-| AUTH_JWT_AUDIENCE  | String representing audience for jwt.    | false    | https://iguhealth.app/api |
-| AUTH_JWT_ISSUER    | Issuer of the JWT.                       | true     |                           |
-| AUTH_JWT_ALGORITHM |                                          | false    | RS256                     |
+| name                        | description                                            | required | defaults                  |
+| --------------------------- | ------------------------------------------------------ | -------- | ------------------------- |
+| AUTH_JWK_URI                | JWK remote url to pull JSON WEB Key Set.               | true     |                           |
+| AUTH_JWT_AUDIENCE           | String representing audience for jwt.                  | false    | https://iguhealth.app/api |
+| AUTH_JWT_ISSUER             | Issuer of the JWT.                                     | true     |                           |
+| AUTH_JWT_ALGORITHM          |                                                        | false    | RS256                     |
+| AUTH_CERTIFICATION_LOCATION | Location for local certifications for IGUHEALTH ISSUER | false    |                           |
+| AUTH_SIGNING_KEY            | The signing key used to generate new local tokens      | false    |                           |
 
 #### Performance
 

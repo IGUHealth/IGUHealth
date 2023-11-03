@@ -35,49 +35,46 @@ import {
 
 dotEnv.config();
 
-const SIGNING_KID = process.env.SIGNING_KEY || "signing_key";
-
 async function createCheckJWT(): Promise<
   Middleware<DefaultState, DefaultContext, unknown>
 > {
-  await createCertsIfNoneExists(
-    path.join(fileURLToPath(import.meta.url), "../../certifications"),
-    SIGNING_KID
-  );
-
-  const jwks = await getJWKS(
-    path.join(fileURLToPath(import.meta.url), "../../certifications")
-  );
-
-  // console.log(
-  //   await createToken(
-  //     await getSigningKey(
-  //       path.join(fileURLToPath(import.meta.url), "../../certifications"),
-  //       SIGNING_KID
-  //     ),
-  //     {
-  //       "https://iguhealth.app/workspaces": ["system"],
-  //       sub: "iguhealth-system",
-  //       aud: ["https://iguhealth.com/api"],
-  //       scope: "openid profile email offline_access",
-  //     }
-  //   )
-  // );
+  let IGUHEALTH_JWT_SECRET: ReturnType<typeof jwksRsa.koaJwtSecret> | undefined;
+  if (process.env.AUTH_SIGNING_KEY && process.env.AUTH_CERTIFICATION_LOCATION) {
+    await createCertsIfNoneExists(
+      process.env.AUTH_CERTIFICATION_LOCATION,
+      process.env.AUTH_SIGNING_KEY
+    );
+    const jwks = await getJWKS(process.env.AUTH_CERTIFICATION_LOCATION);
+    IGUHEALTH_JWT_SECRET = jwksRsa.koaJwtSecret({
+      jwksUri: "_not_used",
+      cache: true,
+      rateLimit: true,
+      jwksRequestsPerMinute: 2,
+      fetcher: async (uri) => {
+        return jwks;
+      },
+    });
+    // console.log(
+    //   await createToken(
+    //     await getSigningKey(
+    //       CERTIFICATION_LOCATION,
+    //       SIGNING_KID
+    //     ),
+    //     {
+    //       "https://iguhealth.app/workspaces": ["system"],
+    //       sub: "iguhealth-system",
+    //       aud: ["https://iguhealth.com/api"],
+    //       scope: "openid profile email offline_access",
+    //     }
+    //   )
+    // );
+  }
 
   const EXTERNAL_JWT_SECRET = jwksRsa.koaJwtSecret({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 2,
     jwksUri: process.env.AUTH_JWK_URI as string,
-  });
-  const IGUHEALTH_JWT_SECRET = jwksRsa.koaJwtSecret({
-    jwksUri: "_not_used",
-    cache: true,
-    rateLimit: true,
-    jwksRequestsPerMinute: 2,
-    fetcher: async (uri) => {
-      return jwks;
-    },
   });
 
   return jwt({
@@ -88,7 +85,8 @@ async function createCheckJWT(): Promise<
           return EXTERNAL_JWT_SECRET(header);
         }
         case IGUHEALTH_ISSUER: {
-          return IGUHEALTH_JWT_SECRET(header);
+          if (IGUHEALTH_JWT_SECRET) return IGUHEALTH_JWT_SECRET(header);
+          throw new Error("IGUHealth issuer is not configured");
         }
         default:
           throw new Error(`Unknown issuer '${payload.iss}'`);

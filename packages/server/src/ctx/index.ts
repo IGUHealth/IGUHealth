@@ -264,7 +264,11 @@ export async function deriveCTX(): Promise<
           "history-request",
           "transaction-request",
         ],
-        source: createPostgresClient(pg),
+        source: createPostgresClient(pg, {
+          transaction_entry_limit: parseInt(
+            process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20"
+          ),
+        }),
       },
     ]);
 
