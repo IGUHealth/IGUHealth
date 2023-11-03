@@ -47,6 +47,7 @@ import {
   ISOLATION_LEVEL,
   buildTransactionTopologicalGraph,
 } from "../transactions.js";
+import { State } from "@aws-sdk/client-lambda";
 
 async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
@@ -557,7 +558,7 @@ async function deleteResource<CTX extends FHIRServerCTX>(
 }
 
 function createPostgresMiddleware<
-  State extends { client: pg.PoolClient },
+  State extends { client: pg.PoolClient; transaction_entry_limit: number },
   CTX extends FHIRServerCTX
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
@@ -756,7 +757,10 @@ function createPostgresMiddleware<
             args.ctx,
             transactionBundle
           );
-          if ((transactionBundle.entry || []).length > 20) {
+          if (
+            (transactionBundle.entry || []).length >
+            args.state.transaction_entry_limit
+          ) {
             throw new OperationError(
               outcomeError(
                 "invalid",
@@ -868,10 +872,13 @@ function createPostgresMiddleware<
 }
 
 export function createPostgresClient<CTX extends FHIRServerCTX>(
-  client: pg.PoolClient
+  client: pg.PoolClient,
+  { transaction_entry_limit }: { transaction_entry_limit: number } = {
+    transaction_entry_limit: 20,
+  }
 ): FHIRClientAsync<CTX> {
-  return new AsynchronousClient<{ client: pg.PoolClient }, CTX>(
-    { client },
-    createPostgresMiddleware()
-  );
+  return new AsynchronousClient<
+    { client: pg.PoolClient; transaction_entry_limit: number },
+    CTX
+  >({ client, transaction_entry_limit }, createPostgresMiddleware());
 }
