@@ -45,6 +45,7 @@ async function createCheckJWT(): Promise<
       );
 
     const jwks = await getJWKS(process.env.AUTH_CERTIFICATION_LOCATION);
+
     IGUHEALTH_JWT_SECRET = jwksRsa.koaJwtSecret({
       jwksUri: "_not_used",
       cache: true,
@@ -58,8 +59,8 @@ async function createCheckJWT(): Promise<
     // console.log(
     //   await createToken(
     //     await getSigningKey(
-    //       CERTIFICATION_LOCATION,
-    //       SIGNING_KID
+    //       process.env.AUTH_CERTIFICATION_LOCATION,
+    //       process.env.AUTH_SIGNING_KEY
     //     ),
     //     {
     //       "https://iguhealth.app/workspaces": ["system"],
