@@ -7,6 +7,8 @@ RUN yarn workspaces foreach -ptR --from @iguhealth/server run build
 
 COPY docker_entrypoint.sh /usr/local/bin/docker_entrypoint
 RUN chmod +x /usr/local/bin/docker_entrypoint
+
+ENV NODE_ENV=production
 ENTRYPOINT ["docker_entrypoint"]
 
 CMD ["server"]

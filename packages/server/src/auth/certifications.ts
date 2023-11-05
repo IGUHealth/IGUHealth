@@ -13,23 +13,22 @@ export const ALGORITHMS = {
 
 /*
  ** Saves certifications as follows:
- ** private keys under /private/{kid}.pkcs8 and public keys under /public/{kid}.spki
+ ** private keys as /${directory}/{kid}.p8 and public keys as /${directory}/{kid}.spki
  */
 export async function createCertifications(
   directory: string,
   kid: string,
   alg: string = ALGORITHMS.RS256
 ) {
-  mkdirSync(path.join(directory, `public`), { recursive: true });
-  mkdirSync(path.join(directory, `private`), { recursive: true });
+  mkdirSync(directory, { recursive: true });
 
   const { publicKey, privateKey } = await generateKeyPair(alg);
 
-  const pkcs8PublicKey = await jose.exportSPKI(publicKey);
-  const pkcs8Private = await jose.exportPKCS8(privateKey);
+  const p8PublicKey = await jose.exportSPKI(publicKey);
+  const p8Private = await jose.exportPKCS8(privateKey);
 
-  writeFileSync(path.join(directory, `public/${kid}.spki`), pkcs8PublicKey);
-  writeFileSync(path.join(directory, `private/${kid}.pkcs8`), pkcs8Private);
+  writeFileSync(path.join(directory, `${kid}.spki`), p8PublicKey);
+  writeFileSync(path.join(directory, `${kid}.p8`), p8Private);
 
   return {
     publicKey,
@@ -38,28 +37,30 @@ export async function createCertifications(
 }
 
 /*
- ** Returns a JSON Web Key Set with all public keys in the directory directory/public.
+ ** Returns a JSON Web Key Set with all public keys in the directory
  ** Uses filename to distinguish between keys (sets the kid field in the JWK).
  */
 export async function getJWKS(
   directory: string,
   alg: string = ALGORITHMS.RS256
 ) {
-  //joining path of directory
-  const publicDirectory = path.join(directory, "public");
-  const publicKeyPaths = readdirSync(publicDirectory);
+  const publicKeyPaths = readdirSync(directory);
   const keys = await Promise.all(
-    publicKeyPaths.map(async (pubKeyPath) => {
-      const pubKey = await jose.importSPKI(
-        readFileSync(path.join(publicDirectory, pubKeyPath), "utf-8"),
-        alg
-      );
+    publicKeyPaths
+      .filter((keyPath) => {
+        return keyPath.endsWith(".spki");
+      })
+      .map(async (pubKeyPath) => {
+        const pubKey = await jose.importSPKI(
+          readFileSync(path.join(directory, pubKeyPath), "utf-8"),
+          alg
+        );
 
-      const kid = path.parse(pubKeyPath).name;
-      const pubJWK = await jose.exportJWK(pubKey);
+        const kid = path.parse(pubKeyPath).name;
+        const pubJWK = await jose.exportJWK(pubKey);
 
-      return { ...pubJWK, alg, use: "sig", kid };
-    })
+        return { ...pubJWK, alg, use: "sig", kid };
+      })
   );
 
   return {
@@ -75,7 +76,7 @@ export async function getSigningKey(
   kid: string,
   alg = ALGORITHMS.RS256
 ) {
-  const privateKeyPath = path.join(directory, `private/${kid}.pkcs8`);
+  const privateKeyPath = path.join(directory, `${kid}.p8`);
   const privateKey = await jose.importPKCS8(
     readFileSync(privateKeyPath, "utf-8"),
     alg
@@ -86,7 +87,7 @@ export async function getSigningKey(
 
 /*
  ** Create certifications if not exist. Saves by default
- ** private keys under /private/{kid}.pkcs8 and public keys under /public/{kid}.spki.
+ ** private keys under /${directory}/{kid}.p8 and public keys under /${directory}/{kid}.spki.
  ** Should only be used in development environment as these should be injected in environment in prod.
  */
 export async function createCertsIfNoneExists(
