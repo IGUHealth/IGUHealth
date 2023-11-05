@@ -1,5 +1,3 @@
-import path from "path";
-import { fileURLToPath } from "url";
 import Koa, { DefaultContext, DefaultState, Middleware } from "koa";
 import Router from "@koa/router";
 import ratelimit from "koa-ratelimit";
@@ -40,10 +38,12 @@ async function createCheckJWT(): Promise<
 > {
   let IGUHEALTH_JWT_SECRET: ReturnType<typeof jwksRsa.koaJwtSecret> | undefined;
   if (process.env.AUTH_SIGNING_KEY && process.env.AUTH_CERTIFICATION_LOCATION) {
-    await createCertsIfNoneExists(
-      process.env.AUTH_CERTIFICATION_LOCATION,
-      process.env.AUTH_SIGNING_KEY
-    );
+    if (process.env.NODE_ENV === "development")
+      await createCertsIfNoneExists(
+        process.env.AUTH_CERTIFICATION_LOCATION,
+        process.env.AUTH_SIGNING_KEY
+      );
+
     const jwks = await getJWKS(process.env.AUTH_CERTIFICATION_LOCATION);
     IGUHEALTH_JWT_SECRET = jwksRsa.koaJwtSecret({
       jwksUri: "_not_used",
@@ -54,6 +54,7 @@ async function createCheckJWT(): Promise<
         return jwks;
       },
     });
+
     // console.log(
     //   await createToken(
     //     await getSigningKey(
