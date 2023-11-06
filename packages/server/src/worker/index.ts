@@ -144,17 +144,22 @@ async function handleSubscriptionPayload(
       );
 
       const user_access_token =
-        process.env.AUTH_CERTIFICATION_LOCATION && process.env.AUTH_SIGNING_KEY
+        process.env.AUTH_CERTIFICATION_LOCATION &&
+        process.env.AUTH_SIGNING_KEY &&
+        process.env.AUTH_JWT_AUDIENCE
           ? await createToken(
               await getSigningKey(
                 process.env.AUTH_CERTIFICATION_LOCATION,
                 process.env.AUTH_SIGNING_KEY
               ),
               {
-                "https://iguhealth.app/workspaces": [ctx.workspace],
-                sub: `OperationDefinition/${operationDefinition.id}`,
-                aud: ["https://iguhealth.com/api"],
-                scope: "openid profile email offline_access",
+                header: { audience: process.env.AUTH_JWT_AUDIENCE },
+                payload: {
+                  "https://iguhealth.app/workspaces": [ctx.workspace],
+                  sub: `OperationDefinition/${operationDefinition.id}`,
+                  aud: ["https://iguhealth.com/api"],
+                  scope: "openid profile email offline_access",
+                },
               }
             )
           : undefined;
