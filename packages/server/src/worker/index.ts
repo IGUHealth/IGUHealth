@@ -299,6 +299,8 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
                     break;
                   }
                 }
+                // Reverse mutates the array in place.
+                historyPoll.reverse();
 
                 const resourceTypes = deriveResourceTypeFilter(request);
                 // Remove _type as using on derived resourceTypeFilter
@@ -342,7 +344,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
                       // Do reverse as ordering is the latest update first.
                       const payload: Resource[] = [];
 
-                      for (const entry of historyPoll.reverse()) {
+                      for (const entry of historyPoll) {
                         if (entry.resource === undefined)
                           throw new OperationError(
                             outcomeError(
@@ -393,7 +395,10 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
                       await services.cache.set(
                         ctx,
                         `${subscription.id}_latest`,
-                        getVersionSequence(historyPoll[0].resource)
+                        getVersionSequence(
+                          historyPoll[historyPoll.length - 1]
+                            .resource as Resource
+                        )
                       );
                     }
                   );
