@@ -15,6 +15,7 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 import { evaluate } from "@iguhealth/fhirpath";
+import { Operation } from "@iguhealth/operation-execution";
 
 import * as Sentry from "../monitoring/sentry.js";
 import { LIB_VERSION } from "../version.js";
@@ -26,7 +27,6 @@ import logAuditEvent, {
 } from "../logging/auditEvents.js";
 import { KoaRequestToFHIRRequest } from "../koaParsing/index.js";
 import { FHIRServerCTX } from "../fhirServer.js";
-import { Operation } from "@iguhealth/operation-execution";
 import {
   SearchParameterResource,
   deriveResourceTypeFilter,
@@ -34,8 +34,24 @@ import {
   findSearchParameter,
 } from "../resourceProviders/utilities/search/parameters.js";
 import { fitsSearchCriteria } from "../resourceProviders/memory/search.js";
+import { createToken } from "../auth/token.js";
+import {
+  createCertsIfNoneExists,
+  getSigningKey,
+} from "../auth/certifications.js";
 
 dotEnv.config();
+
+if (
+  process.env.AUTH_SIGNING_KEY &&
+  process.env.AUTH_CERTIFICATION_LOCATION &&
+  process.env.NODE_ENV === "development"
+) {
+  await createCertsIfNoneExists(
+    process.env.AUTH_CERTIFICATION_LOCATION,
+    process.env.AUTH_SIGNING_KEY
+  );
+}
 
 if (process.env.SENTRY_WORKER_DSN)
   Sentry.enableSentry(process.env.SENTRY_WORKER_DSN, LIB_VERSION, {
@@ -127,9 +143,25 @@ async function handleSubscriptionPayload(
         operation
       );
 
+      const user_access_token =
+        process.env.AUTH_CERTIFICATION_LOCATION && process.env.AUTH_SIGNING_KEY
+          ? await createToken(
+              await getSigningKey(
+                process.env.AUTH_CERTIFICATION_LOCATION,
+                process.env.AUTH_SIGNING_KEY
+              ),
+              {
+                "https://iguhealth.app/workspaces": [ctx.workspace],
+                sub: `OperationDefinition/${operationDefinition.id}`,
+                aud: ["https://iguhealth.com/api"],
+                scope: "openid profile email offline_access",
+              }
+            )
+          : undefined;
+
       const output = await ctx.client.invoke_system(
         new Operation(operationDefinition),
-        ctx,
+        { ...ctx, user_access_token },
         {
           payload,
         }
@@ -303,6 +335,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
                         );
 
                       // Do reverse as ordering is the latest update first.
+                      const payload: Resource[] = [];
 
                       for (const entry of historyPoll.reverse()) {
                         if (entry.resource === undefined)
@@ -320,34 +353,37 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
                             description:
                               "Checking if history poll fits subscription criteria",
                           },
-                          async (span) => {
+                          async (_span) => {
                             if (
-                              await fitsSearchCriteria(
+                              entry.resource &&
+                              (await fitsSearchCriteria(
                                 (type) => ctx.resolveSD(ctx, type),
-                                entry.resource as Resource,
+                                entry.resource,
                                 resourceParameters
-                              )
+                              ))
                             ) {
-                              await Sentry.sentrySpan(
-                                transaction,
-                                {
-                                  op: `iguhealth.worker.handlingPayload`,
-                                  name: `${workspace}-processing-sub-handling-payload`,
-                                  description:
-                                    "Checking if history poll fits subscription criteria",
-                                },
-                                async (_span) => {
-                                  await handleSubscriptionPayload(
-                                    ctx,
-                                    subscription,
-                                    [entry.resource as Resource]
-                                  );
-                                }
-                              );
+                              payload.push(entry.resource);
                             }
                           }
                         );
                       }
+
+                      await Sentry.sentrySpan(
+                        transaction,
+                        {
+                          op: `iguhealth.worker.handlingPayload`,
+                          name: `${workspace}-processing-sub-handling-payload`,
+                          description:
+                            "Checking if history poll fits subscription criteria",
+                        },
+                        async (_span) => {
+                          await handleSubscriptionPayload(
+                            ctx,
+                            subscription,
+                            payload
+                          );
+                        }
+                      );
 
                       await services.cache.set(
                         ctx,

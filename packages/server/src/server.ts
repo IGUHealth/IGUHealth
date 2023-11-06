@@ -15,7 +15,7 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
-import { createToken, IGUHEALTH_ISSUER } from "./auth/token.js";
+import { IGUHEALTH_ISSUER } from "./auth/token.js";
 import { LIB_VERSION } from "./version.js";
 import * as Sentry from "./monitoring/sentry.js";
 import type { FHIRServerCTX } from "./fhirServer.js";
@@ -25,11 +25,7 @@ import {
   KoaRequestToFHIRRequest,
   fhirResponseToKoaResponse,
 } from "./koaParsing/index.js";
-import {
-  createCertsIfNoneExists,
-  getJWKS,
-  getSigningKey,
-} from "./auth/certifications.js";
+import { createCertsIfNoneExists, getJWKS } from "./auth/certifications.js";
 
 dotEnv.config();
 
