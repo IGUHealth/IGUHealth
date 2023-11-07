@@ -4,6 +4,7 @@ import { loadArtifacts } from "@iguhealth/artifacts";
 import { expect, test } from "@jest/globals";
 import path from "path";
 
+import { testServices } from "../test_ctx.js";
 import {
   SearchParameter,
   StructureDefinition,
@@ -68,25 +69,25 @@ function generateSD(
 test("Creation and search", async () => {
   const memDb = CreateMemoryDatabaseAsync(data);
   await memDb.create(
-    {},
+    testServices,
     generateParameter({
       id: "test1",
       name: "test1",
     })
   );
   await memDb.create(
-    {},
+    testServices,
     generateParameter({
       id: "test2",
       name: "test2",
     })
   );
 
-  await memDb.create({}, generateSD({ id: "test0", name: "test1" }));
+  await memDb.create(testServices, generateSD({ id: "test0", name: "test1" }));
   expect(
     (
       await memDb.search_type(
-        {},
+        testServices,
         "SearchParameter",
         parseParameters("SearchParameter?name=test")
       )
@@ -96,7 +97,7 @@ test("Creation and search", async () => {
   expect(
     (
       await memDb.search_type(
-        {},
+        testServices,
         "SearchParameter",
         parseParameters("SearchParameter?name=test1")
       )
@@ -116,7 +117,7 @@ test("artifactParameters", async () => {
   // Patient 23
   const parameters = (
     await memDb.search_type(
-      {},
+      testServices,
       "SearchParameter",
       parseParameters("SearchParameter?base=Patient,Resource,DomainResource")
     )
@@ -126,7 +127,7 @@ test("artifactParameters", async () => {
   expect(
     (
       await memDb.search_type(
-        {},
+        testServices,
         "SearchParameter",
         parseParameters("SearchParameter?base=DomainResource")
       )
@@ -136,7 +137,7 @@ test("artifactParameters", async () => {
   expect(
     (
       await memDb.search_type(
-        {},
+        testServices,
         "SearchParameter",
         parseParameters("SearchParameter?base=Resource")
       )
@@ -157,7 +158,7 @@ test("artifactParameters", async () => {
   expect(
     (
       await memDb.search_type(
-        {},
+        testServices,
         "SearchParameter",
         parseParameters("SearchParameter?base=Patient")
       )
@@ -167,7 +168,7 @@ test("artifactParameters", async () => {
   expect(
     (
       await memDb.search_type(
-        {},
+        testServices,
         "SearchParameter",
         parseParameters(
           "SearchParameter?base=Patient,Resource,DomainResource&type=string"
@@ -179,7 +180,7 @@ test("artifactParameters", async () => {
   expect(
     (
       await memDb.search_type(
-        {},
+        testServices,
         "SearchParameter",
         parseParameters(
           "SearchParameter?base=Patient,Resource,DomainResource&type=date"

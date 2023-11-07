@@ -3,13 +3,15 @@ import { SearchParameterResource } from "../utilities/search/parameters.js";
 import * as fp from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import {
+  toReference,
   toDateRange,
   toStringParameters,
   toTokenParameters,
 } from "../utilities/search/dataConversion.js";
+import { AsyncMemoryCTX } from "./types.js";
 
-function expressionSearch(
-  resolveSD: (type: string) => StructureDefinition | undefined,
+async function expressionSearch(
+  ctx: AsyncMemoryCTX,
   resource: Resource,
   parameter: SearchParameterResource
 ) {
@@ -42,7 +44,7 @@ function expressionSearch(
     {
       meta: {
         type: resource.resourceType,
-        getSD: resolveSD,
+        getSD: (type) => ctx.resolveSD(type),
       },
     }
   );
@@ -55,8 +57,16 @@ function expressionSearch(
       return false;
     }
     case "string": {
-      for (const stringValue of evaluation.map(toStringParameters).flat()) {
-        if (parameter.value.includes(stringValue)) return true;
+      for (const resourceValue of evaluation.map(toStringParameters).flat()) {
+        for (const value of parameter.value) {
+          if (
+            resourceValue
+              .toLowerCase()
+              .startsWith(value.toString().toLowerCase())
+          ) {
+            return true;
+          }
+        }
       }
       return false;
     }
@@ -70,11 +80,21 @@ function expressionSearch(
 
       return false;
     }
-    case "date":
+    case "uri": {
+      for (const stringValue of evaluation.map(toStringParameters).flat()) {
+        if (parameter.value.includes(stringValue)) return true;
+      }
+      return false;
+    }
+    // case "reference": {
+    //   const references = await Promise.all(
+    //     evaluation.map((v) => toReference(ctx, parameter.searchParameter, v))
+    //   );
+    // }
     case "reference":
+    case "date":
     case "composite":
     case "quantity":
-    case "uri":
     case "special": {
       throw new OperationError(
         outcomeError(
@@ -87,7 +107,7 @@ function expressionSearch(
 }
 
 function checkParameterWithResource(
-  resolveSD: (type: string) => StructureDefinition | undefined,
+  ctx: AsyncMemoryCTX,
   resource: Resource,
   parameter: SearchParameterResource
 ) {
@@ -109,18 +129,18 @@ function checkParameterWithResource(
           parameter.value[0]
         );
       }
-      return expressionSearch(resolveSD, resource, parameter);
+      return expressionSearch(ctx, resource, parameter);
     }
   }
 }
 
 export async function fitsSearchCriteria(
-  resolveSD: (type: string) => StructureDefinition | undefined,
+  ctx: AsyncMemoryCTX,
   resource: Resource,
   parameters: SearchParameterResource[]
 ) {
   for (const param of parameters) {
-    if (!checkParameterWithResource(resolveSD, resource, param)) return false;
+    if (!(await checkParameterWithResource(ctx, resource, param))) return false;
   }
 
   return true;
