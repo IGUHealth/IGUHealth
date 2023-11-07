@@ -46,7 +46,7 @@ export const testServices: FHIRServerCTX = {
   },
   client: MemoryDatabase({}),
   cache: new TestCache(),
-  resolveSD: (ctx: FHIRServerCTX, type: string) => {
+  resolveSD: (type: string) => {
     return undefined;
   },
   lock: new TestLock(),

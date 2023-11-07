@@ -288,7 +288,7 @@ async function indexResource<CTX extends FHIRServerCTX>(
         searchParameter.expression,
         resource,
         {
-          meta: { getSD: (type: string) => ctx.resolveSD(ctx, type) },
+          meta: { getSD: (type: string) => ctx.resolveSD(type) },
         }
       );
       return indexSearchParameter(

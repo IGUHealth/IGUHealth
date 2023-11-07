@@ -44,10 +44,7 @@ export interface FHIRServerCTX {
   client: FHIRClientAsync<FHIRServerCTX>;
   lock: Lock<unknown>;
   user_access_token?: string;
-  resolveSD: (
-    ctx: FHIRServerCTX,
-    type: string
-  ) => StructureDefinition | undefined;
+  resolveSD: (type: string) => StructureDefinition | undefined;
 }
 
 function getResourceTypeToValidate(request: FHIRRequest) {
@@ -91,7 +88,7 @@ function createFHIRServer() {
                 return result.result;
               },
               resolveSD: (type) => {
-                const sd = ctx.resolveSD(ctx, type);
+                const sd = ctx.resolveSD(type);
                 if (!sd)
                   throw new OperationError(
                     outcomeError(

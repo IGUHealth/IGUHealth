@@ -199,9 +199,6 @@ export async function toReference(
         { name: "url", value: [value.valueOf() as canonical | uri] },
       ]);
       if (results.resources.length !== 1) {
-        ctx.logger.warn(
-          `Expected one resource for canonical or uri reference parameter '${parameter.url}' but found '${results.resources.length}' so could not resolve.`
-        );
         return [];
       }
       return [

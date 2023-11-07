@@ -370,7 +370,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
                               if (
                                 entry.resource &&
                                 (await fitsSearchCriteria(
-                                  (type) => ctx.resolveSD(ctx, type),
+                                  ctx,
                                   entry.resource,
                                   resourceParameters
                                 ))

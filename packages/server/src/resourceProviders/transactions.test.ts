@@ -38,7 +38,7 @@ function getSD(type: string): StructureDefinition | undefined {
 
 const CTX = {
   ...testServices,
-  resolveSD: (ctx: FHIRServerCTX, type: string) => getSD(type),
+  resolveSD: (type: string) => getSD(type),
 };
 
 test("Generate a graph from a transaction", () => {

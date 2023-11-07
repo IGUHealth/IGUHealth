@@ -1,30 +1,25 @@
 import path from "path";
 
-import {
-  ResourceType,
-  Resource,
-  Patient,
-} from "@iguhealth/fhir-types/r4/types";
-import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
+import { ResourceType, Resource } from "@iguhealth/fhir-types/r4/types";
 import { expect, test } from "@jest/globals";
 import { loadArtifacts } from "@iguhealth/artifacts";
-import * as fhirpath from "@iguhealth/fhirpath";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
 
 import { testServices } from "../test_ctx.js";
 import MemoryDatabase from "./async.js";
+import { FHIRServerCTX } from "../../fhirServer.js";
 
 function createMemoryDatabase(
   resourceTypes: ResourceType[]
-): FHIRClientAsync<unknown> {
-  const database = MemoryDatabase<unknown>({});
+): FHIRClientAsync<FHIRServerCTX> {
+  const database = MemoryDatabase({});
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
       loadArtifacts(resourceType, path.join(__dirname, "../../"), true)
     )
     .flat();
   for (const resource of artifactResources) {
-    database.create({}, resource);
+    database.create(testServices, resource);
   }
   return database;
 }

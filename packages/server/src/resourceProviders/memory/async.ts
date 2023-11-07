@@ -19,6 +19,7 @@ import {
 } from "../utilities/search/parameters.js";
 import { InternalData } from "./types.js";
 import { fitsSearchCriteria } from "./search.js";
+import { AsyncMemoryCTX } from "./types.js";
 
 // Need special handling of SearchParameter to avoid infinite recursion.
 async function resolveParameter(
@@ -37,7 +38,7 @@ async function resolveParameter(
 
 function createMemoryMiddleware<
   State extends { data: InternalData<ResourceType> },
-  CTX
+  CTX extends AsyncMemoryCTX
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
     async (request, args, next) => {
@@ -77,15 +78,7 @@ function createMemoryMiddleware<
           let result = [];
           for (const resource of resourceSet || []) {
             if (
-              await fitsSearchCriteria(
-                (type) => {
-                  return args.state.data["StructureDefinition"]?.[type] as
-                    | StructureDefinition
-                    | undefined;
-                },
-                resource,
-                resourceParameters
-              )
+              await fitsSearchCriteria(args.ctx, resource, resourceParameters)
             ) {
               result.push(resource);
             }
@@ -225,7 +218,7 @@ function createMemoryMiddleware<
   ]);
 }
 
-export default function MemoryDatabase<CTX>(
+export default function MemoryDatabase<CTX extends AsyncMemoryCTX>(
   data: InternalData<ResourceType>
 ): AsynchronousClient<{ data: InternalData<ResourceType> }, CTX> {
   return new AsynchronousClient<{ data: InternalData<ResourceType> }, CTX>(

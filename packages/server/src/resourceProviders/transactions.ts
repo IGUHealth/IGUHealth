@@ -47,7 +47,7 @@ export function buildTransactionTopologicalGraph(
         {
           meta: {
             type: entry.resource.resourceType,
-            getSD: (type) => ctx.resolveSD(ctx, type),
+            getSD: (type) => ctx.resolveSD(type),
           },
         }
       );
