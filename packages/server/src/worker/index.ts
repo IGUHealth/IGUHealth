@@ -438,6 +438,8 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
           client.release();
         }
       }
+    } catch (e) {
+      logger.error(e);
     } finally {
       await new Promise((resolve) => setTimeout(resolve, loopInterval));
     }
