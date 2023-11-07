@@ -14,7 +14,7 @@ import {
   CapabilityStatementRestResource,
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
-import { FHIRClientAsync, FHIRClientSync } from "@iguhealth/client/interface";
+import { FHIRClientSync } from "@iguhealth/client/interface";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { createPostgresClient } from "../resourceProviders/postgres/index.js";
@@ -22,10 +22,8 @@ import { FHIRServerCTX } from "../fhirServer.js";
 import { InternalData } from "../resourceProviders/memory/types.js";
 import MemoryDatabaseAsync from "../resourceProviders/memory/async.js";
 import MemoryDatabaseSync from "../resourceProviders/memory/sync.js";
-import { AsyncMemoryCTX } from "../resourceProviders/memory/types.js";
 import RouterClient from "../resourceProviders/router.js";
 import RedisLock from "../synchronization/redis.lock.js";
-import PostgresLock from "../synchronization/postgres.lock.js";
 import InlineExecutioner from "../operation-executors/local/index.js";
 import ValueSetExpandInvoke from "../operation-executors/local/expand.js";
 import ValueSetValidateInvoke from "../operation-executors/local/validate.js";
@@ -70,22 +68,12 @@ async function createResourceRestCapabilities(
   memdb: FHIRClientSync<unknown>,
   sd: StructureDefinition
 ): Promise<CapabilityStatementRestResource> {
-  const resourceParameters = await memdb.search_type({}, "SearchParameter", []);
-  // {
-  //   name: "base",
-  //   value: ["Resource", "DomainResource", sd.type],
-  // },
-  // {
-  //   name: "_count",
-  //   value: [1000],
-  // },
-  const searchParameters = resourceParameters.resources.filter((s) => {
-    return (
-      s.base.includes("Resource") ||
-      s.base.includes("DomainResource") ||
-      s.base.includes(sd.type)
-    );
-  });
+  const resourceParameters = await memdb.search_type({}, "SearchParameter", [
+    {
+      name: "base",
+      value: ["Resource", "DomainResource", sd.type],
+    },
+  ]);
 
   return {
     type: sd.type,
@@ -100,7 +88,7 @@ async function createResourceRestCapabilities(
     ],
     versioning: "versioned",
     updateCreate: false,
-    searchParam: searchParameters.map((resource) => ({
+    searchParam: resourceParameters.resources.map((resource) => ({
       name: resource.name,
       definition: resource.url,
       type: resource.type,
@@ -121,11 +109,8 @@ async function serverCapabilities(
       name: "base",
       value: ["Resource", "DomainResource"],
     },
-    {
-      name: "_count",
-      value: [1000],
-    },
   ]);
+
   return {
     resourceType: "CapabilityStatement",
     status: "active",
@@ -204,15 +189,6 @@ export async function deriveCTX(): Promise<
     host: process.env.REDIS_HOST,
     port: parseInt(process.env.REDIS_PORT || "6739"),
   });
-
-  // const lock = new PostgresLock({
-  //   user: process.env["FHIR_DATABASE_USERNAME"],
-  //   password: process.env["FHIR_DATABASE_PASSWORD"],
-  //   host: process.env["FHIR_DATABASE_HOST"],
-  //   database: process.env["FHIR_DATABASE_NAME"],
-  //   port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
-  //   ssl: process.env["FHIR_DATABASE_SSL"] === "true",
-  // });
 
   const redisClient = new Redis.default({
     host: process.env.REDIS_HOST,
