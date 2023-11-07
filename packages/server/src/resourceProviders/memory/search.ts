@@ -94,6 +94,7 @@ async function expressionSearch(
     case "reference":
     case "date":
     case "composite":
+    case "quantity":
     case "special": {
       throw new OperationError(
         outcomeError(
