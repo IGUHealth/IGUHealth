@@ -87,11 +87,12 @@ async function expressionSearch(
       }
       return false;
     }
-    case "reference": {
-      const references = await Promise.all(
-        evaluation.map((v) => toReference(ctx, parameter.searchParameter, v))
-      );
-    }
+    // case "reference": {
+    //   const references = await Promise.all(
+    //     evaluation.map((v) => toReference(ctx, parameter.searchParameter, v))
+    //   );
+    // }
+    case "reference":
     case "date":
     case "composite":
     case "special": {

@@ -37,13 +37,13 @@ test("TEST Name search", async () => {
     id: "test",
     name: [{ given: ["John"], family: "Doe" }],
   });
-  const response = await memDB.search_type({}, "Patient", [
+  const response = await memDB.search_type(CTX, "Patient", [
     { name: "given", value: ["John"] },
   ]);
 
   expect(response.resources.map((r) => r.id)).toEqual(["test"]);
 
-  const response2 = await memDB.search_type({}, "Patient", [
+  const response2 = await memDB.search_type(CTX, "Patient", [
     { name: "given", value: ["John2"] },
   ]);
 
