@@ -99,7 +99,7 @@ jobs:
         run: yarn version check
 
       - name: Install dependencies
-        run: yarn
+        run: yarn install
 
       - name: Compile
         run: yarn workspaces foreach -t run build
