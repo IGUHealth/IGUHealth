@@ -60,10 +60,9 @@ async function expressionSearch(
       for (const resourceValue of evaluation.map(toStringParameters).flat()) {
         for (const value of parameter.value) {
           if (
-            value
-              .toString()
+            resourceValue
               .toLowerCase()
-              .startsWith(resourceValue.toLowerCase())
+              .startsWith(value.toString().toLowerCase())
           ) {
             return true;
           }

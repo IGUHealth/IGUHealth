@@ -48,4 +48,10 @@ test("TEST Name search", async () => {
   ]);
 
   expect(response2.resources.map((r) => r.id)).toEqual([]);
+
+  const response3 = await memDB.search_type(CTX, "Patient", [
+    { name: "given", value: ["jo"] },
+  ]);
+
+  expect(response3.resources.map((r) => r.id)).toEqual(["test"]);
 });
