@@ -351,7 +351,7 @@ function getQuantityRange(value: number): { start: number; end: number } {
 
 export function toQuantityRange(
   value: MetaValueSingular<NonNullable<unknown>>
-): { start?: QuantityIndex; end?: QuantityIndex }[] {
+): { start: QuantityIndex; end: QuantityIndex }[] {
   switch (value.meta()?.type) {
     case "Range": {
       const range: Range = value.valueOf() as Range;

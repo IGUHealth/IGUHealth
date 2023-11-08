@@ -5,6 +5,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import {
   toReference,
   toDateRange,
+  toQuantityRange,
   toStringParameters,
   toTokenParameters,
 } from "../utilities/search/dataConversion.js";
@@ -116,9 +117,24 @@ async function expressionSearch(
       }
       return false;
     }
+    case "quantity": {
+      const quantityRanges = evaluation.map(toQuantityRange).flat();
+      for (const range of quantityRanges) {
+        for (const value of parameter.value) {
+          const low = range.start.value ? range.start.value : Number.MIN_VALUE;
+          const high =
+            range.end.value && range.end.value !== "infinite"
+              ? range.end.value
+              : Number.MAX_VALUE;
+          if (value >= low && value <= high) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
     case "date":
     case "composite":
-    case "quantity":
     case "special": {
       throw new OperationError(
         outcomeError(
