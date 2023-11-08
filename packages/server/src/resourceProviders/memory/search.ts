@@ -114,6 +114,7 @@ async function expressionSearch(
           if (foundRef) return true;
         }
       }
+      return false;
     }
     case "date":
     case "composite":
