@@ -1,6 +1,10 @@
 import path from "path";
 
-import { ResourceType, Resource } from "@iguhealth/fhir-types/r4/types";
+import {
+  ResourceType,
+  Resource,
+  Observation,
+} from "@iguhealth/fhir-types/r4/types";
 import { expect, test } from "@jest/globals";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
@@ -54,4 +58,56 @@ test("TEST Name search", async () => {
   ]);
 
   expect(response3.resources.map((r) => r.id)).toEqual(["test"]);
+});
+
+test("Quantity Test", async () => {
+  const observation: Observation = {
+    resourceType: "Observation",
+    code: {
+      coding: [
+        {
+          system: "http://loinc.org",
+          code: "15074-8",
+          display: "Glucose [Moles/volume] in Blood",
+        },
+      ],
+    },
+    id: "ob1",
+    status: "final",
+    valueQuantity: {
+      value: 15.1,
+    },
+  };
+  await memDB.create(CTX, observation);
+
+  expect(
+    (
+      await memDB.search_type(CTX, "Observation", [
+        { name: "value-quantity", value: [15.12] },
+      ])
+    ).resources.map((r) => r.id)
+  ).toEqual(["ob1"]);
+
+  expect(
+    (
+      await memDB.search_type(CTX, "Observation", [
+        { name: "value-quantity", value: [15.2] },
+      ])
+    ).resources.map((r) => r.id)
+  ).toEqual([]);
+
+  expect(
+    (
+      await memDB.search_type(CTX, "Observation", [
+        { name: "value-quantity", value: [15.0] },
+      ])
+    ).resources.map((r) => r.id)
+  ).toEqual([]);
+  expect(
+    (
+      await memDB.search_type(CTX, "Observation", [
+        { name: "value-quantity", value: [15.14] },
+      ])
+    ).resources.map((r) => r.id)
+  ).toEqual(["ob1"]);
 });
