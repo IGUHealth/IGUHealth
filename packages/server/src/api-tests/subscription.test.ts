@@ -194,3 +194,80 @@ test("name check", async () => {
     );
   }
 });
+
+test("Reference Check", async () => {
+  await createWorkspace("ref-check");
+  const client = createClient("system");
+  const client2 = createClient("ref-check");
+  const resources: Resource[] = [];
+  try {
+    resources.push(
+      await client.create(
+        {},
+        {
+          reason: "Patient post back",
+          status: "active",
+          channel: {
+            type: "rest-hook",
+            endpoint:
+              "http://localhost:3000/w/ref-check/api/v1/fhir/r4/QuestionnaireResponse",
+          },
+          criteria: "QuestionnaireResponse?questionnaire=ahc-questionnaire",
+          language: "en",
+          resourceType: "Subscription",
+        }
+      )
+    );
+    resources.push(
+      await client.create(
+        {},
+        {
+          resourceType: "Questionnaire",
+          url: "ahc-questionnaire",
+          status: "active",
+        }
+      )
+    );
+
+    resources.push(
+      await client.create(
+        {},
+        {
+          resourceType: "QuestionnaireResponse",
+          questionnaire: "ahc-questionnaire",
+          status: "completed",
+        }
+      )
+    );
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    let qrs = await client2.search_type({}, "QuestionnaireResponse", []);
+    expect(qrs.resources[0].questionnaire).toEqual("ahc-questionnaire");
+
+    // Confirm additional QRS aren't getting pushed
+    resources.push(
+      await client.create(
+        {},
+        {
+          resourceType: "QuestionnaireResponse",
+          questionnaire: "unknown-questionnaire",
+          status: "completed",
+        }
+      )
+    );
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    qrs = await client2.search_type({}, "QuestionnaireResponse", []);
+    expect(qrs.resources.length).toEqual(1);
+
+    for (const qr of qrs.resources) {
+      await client2.delete({}, "QuestionnaireResponse", qr.id as string);
+    }
+  } finally {
+    await Promise.all(
+      resources.map(async ({ resourceType, id }) => {
+        return await client.delete({}, resourceType, id as string);
+      })
+    );
+  }
+});

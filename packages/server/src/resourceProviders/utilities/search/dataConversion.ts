@@ -165,7 +165,12 @@ export async function toReference(
   parameter: SearchParameter,
   value: MetaValueSingular<NonNullable<unknown>>
 ): Promise<
-  Array<{ reference: Reference; resourceType?: ResourceType; id?: id }>
+  Array<{
+    reference: Reference;
+    resourceType?: ResourceType;
+    id?: id;
+    url?: canonical | uri;
+  }>
 > {
   switch (value.meta()?.type) {
     case "Reference": {
@@ -208,6 +213,7 @@ export async function toReference(
           },
           resourceType: results.resources[0].resourceType,
           id: results.resources[0].id,
+          url: value.valueOf() as canonical | uri,
         },
       ];
     }

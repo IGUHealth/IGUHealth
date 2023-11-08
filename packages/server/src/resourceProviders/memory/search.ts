@@ -91,7 +91,31 @@ async function expressionSearch(
     //     evaluation.map((v) => toReference(ctx, parameter.searchParameter, v))
     //   );
     // }
-    case "reference":
+    case "reference": {
+      const references = (
+        await Promise.all(
+          evaluation.map((v) => toReference(ctx, parameter.searchParameter, v))
+        )
+      ).flat();
+
+      for (const value of parameter.value) {
+        const pieces = value.toString().split("/");
+
+        if (pieces.length === 1) {
+          const foundRef = references.find(
+            (r) => r.id === pieces[0] || r.url === pieces[0]
+          );
+          if (foundRef) return true;
+        }
+        if (pieces.length === 2) {
+          const foundRef = references.find(
+            (r) => r.resourceType === pieces[0] && r.id === pieces[1]
+          );
+          if (foundRef) return true;
+        }
+      }
+      return false;
+    }
     case "date":
     case "composite":
     case "quantity":
