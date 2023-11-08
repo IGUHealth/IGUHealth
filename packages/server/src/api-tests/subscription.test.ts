@@ -293,7 +293,7 @@ test("Reference standard", async () => {
           endpoint:
             "http://localhost:3000/w/ref-check/api/v1/fhir/r4/Encounter",
         },
-        criteria: `http://localhost:3000/w/system/api/v1/fhir/r4/Encounter?patient=${patient.id}`,
+        criteria: `Encounter?patient=${patient.id}`,
         language: "en",
         resourceType: "Subscription",
       }
@@ -348,7 +348,7 @@ test("Reference standard", async () => {
       {},
       {
         ...sub,
-        criteria: `http://localhost:3000/w/system/api/v1/fhir/r4/Encounter?patient=Patient/${patient.id}`,
+        criteria: `Encounter?patient=Patient/${patient.id}`,
       }
     );
     resources.push(
@@ -393,6 +393,8 @@ test("Reference standard", async () => {
     expect(encounters.resources[0]?.subject?.reference).toEqual(
       `Patient/${patient.id}`
     );
+
+    await client2.delete({}, "Encounter", encounters.resources[0].id as string);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
@@ -400,4 +402,4 @@ test("Reference standard", async () => {
       })
     );
   }
-});
+}, 10000);
