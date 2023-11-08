@@ -195,7 +195,7 @@ test("name check", async () => {
   }
 });
 
-test("Reference Check", async () => {
+test("Reference canonical", async () => {
   await createWorkspace("ref-check");
   const client = createClient("system");
   const client2 = createClient("ref-check");
@@ -271,3 +271,135 @@ test("Reference Check", async () => {
     );
   }
 });
+
+test("Reference standard", async () => {
+  await createWorkspace("ref-check");
+  const client = createClient("system");
+  const client2 = createClient("ref-check");
+  const resources: Resource[] = [];
+  try {
+    const patient: Patient = await client.create(
+      {},
+      { resourceType: "Patient" }
+    );
+    resources.push(patient);
+    const sub = await client.create(
+      {},
+      {
+        reason: "Patient post back",
+        status: "active",
+        channel: {
+          type: "rest-hook",
+          endpoint:
+            "http://localhost:3000/w/ref-check/api/v1/fhir/r4/Encounter",
+        },
+        criteria: `Encounter?patient=${patient.id}`,
+        language: "en",
+        resourceType: "Subscription",
+      }
+    );
+    resources.push(sub);
+    resources.push(
+      await client.create(
+        {},
+        {
+          resourceType: "Encounter",
+          status: "finished",
+          class: {
+            system: "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+            code: "IMP",
+            display: "inpatient encounter",
+          },
+          subject: {
+            reference: `Patient/${patient.id}`,
+          },
+        }
+      )
+    );
+
+    resources.push(
+      await client.create(
+        {},
+        {
+          resourceType: "Encounter",
+          status: "finished",
+          class: {
+            system: "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+            code: "IMP",
+            display: "inpatient encounter",
+          },
+          subject: {
+            reference: "Patient/1",
+          },
+        }
+      )
+    );
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    let encounters = await client2.search_type({}, "Encounter", []);
+    expect(encounters.resources.length).toEqual(1);
+    expect(encounters.resources[0]?.subject?.reference).toEqual(
+      `Patient/${patient.id}`
+    );
+
+    await client2.delete({}, "Encounter", encounters.resources[0].id as string);
+
+    await client.update(
+      {},
+      {
+        ...sub,
+        criteria: `Encounter?patient=Patient/${patient.id}`,
+      }
+    );
+    resources.push(
+      await client.create(
+        {},
+        {
+          resourceType: "Encounter",
+          status: "finished",
+          class: {
+            system: "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+            code: "IMP",
+            display: "inpatient encounter",
+          },
+          subject: {
+            reference: `Patient/${patient.id}`,
+          },
+        }
+      )
+    );
+
+    resources.push(
+      await client.create(
+        {},
+        {
+          resourceType: "Encounter",
+          status: "finished",
+          class: {
+            system: "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+            code: "IMP",
+            display: "inpatient encounter",
+          },
+          subject: {
+            reference: "Patient/1",
+          },
+        }
+      )
+    );
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    encounters = await client2.search_type({}, "Encounter", []);
+    expect(encounters.resources.length).toEqual(1);
+    expect(encounters.resources[0]?.subject?.reference).toEqual(
+      `Patient/${patient.id}`
+    );
+
+    await client2.delete({}, "Encounter", encounters.resources[0].id as string);
+  } finally {
+    await Promise.all(
+      resources.map(async ({ resourceType, id }) => {
+        return await client.delete({}, resourceType, id as string);
+      })
+    );
+  }
+}, 10000);
