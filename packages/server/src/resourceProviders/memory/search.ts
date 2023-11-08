@@ -101,8 +101,6 @@ async function expressionSearch(
       for (const value of parameter.value) {
         const pieces = value.toString().split("/");
 
-        // Note I'm not checking the canonical url.
-
         if (pieces.length === 1) {
           const foundRef = references.find(
             (r) => r.id === pieces[0] || r.url === pieces[0]
