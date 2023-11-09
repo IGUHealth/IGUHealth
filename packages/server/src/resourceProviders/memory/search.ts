@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
-// @ts-ignore
-import * as isBetween from "dayjs/plugin/isBetween";
+import isBetween from "dayjs/plugin/isBetween.js";
 
 import { Resource } from "@iguhealth/fhir-types/r4/types";
 import * as fp from "@iguhealth/fhirpath";
@@ -144,7 +143,6 @@ async function expressionSearch(
       const dateRanges = evaluation.map(toDateRange).flat();
       for (const range of dateRanges) {
         for (const value of parameter.value) {
-          // @ts-ignore
           if (dayjs(value).isBetween(range.start, dayjs(range.end))) {
             return true;
           }
