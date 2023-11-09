@@ -111,3 +111,50 @@ test("Quantity Test", async () => {
     ).resources.map((r) => r.id)
   ).toEqual(["ob1"]);
 });
+
+test("Quantity Test", async () => {
+  const observation: Observation = {
+    resourceType: "Observation",
+    code: {
+      coding: [
+        {
+          system: "http://loinc.org",
+          code: "15074-8",
+          display: "Glucose [Moles/volume] in Blood",
+        },
+      ],
+    },
+    effectiveDateTime: "1980",
+    id: "ob1",
+    status: "final",
+    valueQuantity: {
+      value: 15.1,
+    },
+  };
+
+  await memDB.create(CTX, observation);
+
+  expect(
+    (
+      await memDB.search_type(CTX, "Observation", [
+        { name: "effective-date", value: ["1980-01"] },
+      ])
+    ).resources.map((r) => r.id)
+  ).toEqual(["ob1"]);
+
+  expect(
+    (
+      await memDB.search_type(CTX, "Observation", [
+        { name: "effective-date", value: ["1981"] },
+      ])
+    ).resources.map((r) => r.id)
+  ).toEqual([]);
+
+  expect(
+    (
+      await memDB.search_type(CTX, "Observation", [
+        { name: "effective-date", value: ["1979"] },
+      ])
+    ).resources.map((r) => r.id)
+  ).toEqual([]);
+});
