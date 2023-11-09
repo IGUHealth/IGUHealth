@@ -319,6 +319,7 @@ function createExecutor(
               ctx,
               request.operation
             );
+
             const op = new Operation<
               Record<string, unknown>,
               Record<string, unknown>
@@ -326,12 +327,12 @@ function createExecutor(
 
             const opCTX = getOpCTX(ctx, request);
 
-            const invocationConextOperation = validateInvocationContext(
+            const invocationContextOperation = validateInvocationContext(
               op.operationDefinition,
               request
             );
-            if (invocationConextOperation)
-              throw new OperationError(invocationConextOperation);
+            if (invocationContextOperation)
+              throw new OperationError(invocationContextOperation);
 
             const lambda = await confirmLambdaExistsAndReady(
               client,
