@@ -1,7 +1,11 @@
-import { Resource, StructureDefinition } from "@iguhealth/fhir-types/r4/types";
-import { SearchParameterResource } from "../utilities/search/parameters.js";
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween.js";
+
+import { Resource } from "@iguhealth/fhir-types/r4/types";
 import * as fp from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+
+import { SearchParameterResource } from "../utilities/search/parameters.js";
 import {
   toReference,
   toDateRange,
@@ -10,6 +14,8 @@ import {
   toTokenParameters,
 } from "../utilities/search/dataConversion.js";
 import { AsyncMemoryCTX } from "./types.js";
+
+dayjs.extend(isBetween);
 
 async function expressionSearch(
   ctx: AsyncMemoryCTX,
@@ -133,7 +139,20 @@ async function expressionSearch(
       }
       return false;
     }
-    case "date":
+    case "date": {
+      const dateRanges = evaluation.map(toDateRange).flat();
+
+      for (const range of dateRanges) {
+        for (const value of parameter.value) {
+          if (
+            dayjs(value).isBetween(range.start, dayjs(range.end), null, "[]")
+          ) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
     case "composite":
     case "special": {
       throw new OperationError(
