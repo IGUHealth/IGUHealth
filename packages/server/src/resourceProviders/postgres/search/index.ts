@@ -8,7 +8,7 @@ import {
 import { Resource, SearchParameter } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../fhirServer.js";
+import { FHIRServerCTX } from "../../../ctx/types.js";
 
 import {
   findSearchParameter,

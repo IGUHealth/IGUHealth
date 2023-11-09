@@ -11,7 +11,7 @@ import { FHIRClientAsync } from "@iguhealth/client/interface";
 
 import { testServices } from "../test_ctx.js";
 import MemoryDatabase from "./async.js";
-import { FHIRServerCTX } from "../../fhirServer.js";
+import { FHIRServerCTX } from "../../ctx/types.js";
 
 function createMemoryDatabase(
   resourceTypes: ResourceType[]

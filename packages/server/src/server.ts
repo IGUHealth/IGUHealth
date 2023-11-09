@@ -18,9 +18,8 @@ import {
 import { IGUHEALTH_ISSUER } from "./auth/token.js";
 import { LIB_VERSION } from "./version.js";
 import * as Sentry from "./monitoring/sentry.js";
-import type { FHIRServerCTX } from "./fhirServer.js";
+import type { FHIRServerCTX } from "./ctx/types.js";
 import { deriveCTX, logger } from "./ctx/index.js";
-import createFHIRServer from "./fhirServer.js";
 import {
   KoaRequestToFHIRRequest,
   fhirResponseToKoaResponse,
@@ -126,8 +125,6 @@ async function workspaceMiddleware(
     }
   ) => FHIRServerCTX
 ): Promise<Router.Middleware<Koa.DefaultState, Koa.DefaultContext, unknown>[]> {
-  const fhirServer = createFHIRServer();
-
   if (!process.env.AUTH_JWT_ISSUER)
     logger.warn("[WARNING] Server is publicly accessible.");
 
@@ -166,7 +163,8 @@ async function workspaceMiddleware(
           user_access_token: ctx.state.access_token,
         });
 
-        const fhirServerResponse = await fhirServer(
+        const fhirServerResponse = await serverCTX.client.request(
+          serverCTX,
           KoaRequestToFHIRRequest(
             `${ctx.params.fhirUrl || ""}${ctx.request.querystring ? "?" : ""}${
               ctx.request.querystring
@@ -175,15 +173,10 @@ async function workspaceMiddleware(
               method: ctx.request.method,
               body: (ctx.request as unknown as Record<string, unknown>).body,
             }
-          ),
-          {
-            state: undefined,
-            ctx: serverCTX,
-          }
+          )
         );
-        const koaResponse = fhirResponseToKoaResponse(
-          fhirServerResponse.response
-        );
+
+        const koaResponse = fhirResponseToKoaResponse(fhirServerResponse);
         if (koaResponse.headers) {
           ctx.set(koaResponse.headers as Record<string, string>);
           delete koaResponse.headers;

@@ -4,7 +4,7 @@ import {
   CodeSystemLookup,
 } from "@iguhealth/generated-ops/r4";
 
-import { FHIRServerCTX } from "../fhirServer.js";
+import { FHIRServerCTX } from "../ctx/types.js";
 
 export interface TerminologyProvider {
   expand(

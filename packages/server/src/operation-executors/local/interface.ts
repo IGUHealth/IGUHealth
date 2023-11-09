@@ -4,7 +4,7 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 import { IOperation, Operation } from "@iguhealth/operation-execution";
 
-import { FHIRServerCTX } from "../../fhirServer.js";
+import { FHIRServerCTX } from "../../ctx/types.js";
 import { InvokeRequest, InvokeResponse } from "@iguhealth/client/types";
 import { getOpCTX } from "../utilities.js";
 import { validateInvocationContext } from "../utilities.js";

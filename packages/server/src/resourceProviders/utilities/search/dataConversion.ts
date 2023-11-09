@@ -28,7 +28,7 @@ import {
 } from "@iguhealth/meta-value";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../fhirServer.js";
+import { FHIRServerCTX } from "../../../ctx/types.js";
 import { getDecimalPrecision } from "./parameters.js";
 
 // ---------------------------------------------------------

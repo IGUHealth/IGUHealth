@@ -11,7 +11,7 @@ import { evaluate } from "@iguhealth/fhirpath";
 import { OpCTX } from "@iguhealth/operation-execution";
 
 import { InvokeRequest } from "@iguhealth/client/types";
-import { FHIRServerCTX } from "../fhirServer.js";
+import { FHIRServerCTX } from "../ctx/types.js";
 
 export async function resolveOperationDefinition(
   ctx: FHIRServerCTX,

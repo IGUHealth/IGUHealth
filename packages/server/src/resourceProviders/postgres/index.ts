@@ -38,7 +38,7 @@ import {
 } from "../utilities/search/parameters.js";
 import { fhirResponseToBundleEntry } from "../utilities/bundle.js";
 import { KoaRequestToFHIRRequest } from "../../koaParsing/index.js";
-import { FHIRServerCTX } from "../../fhirServer.js";
+import { FHIRServerCTX } from "../../ctx/types.js";
 import { param_types_supported } from "./constants.js";
 import { executeSearchQuery } from "./search/index.js";
 import { ParsedParameter } from "@iguhealth/client/url";
