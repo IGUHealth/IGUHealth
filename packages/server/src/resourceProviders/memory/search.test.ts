@@ -112,7 +112,7 @@ test("Quantity Test", async () => {
   ).toEqual(["ob1"]);
 });
 
-test("Quantity Test", async () => {
+test("Date Test", async () => {
   const observation: Observation = {
     resourceType: "Observation",
     code: {
@@ -127,9 +127,7 @@ test("Quantity Test", async () => {
     effectiveDateTime: "1980",
     id: "ob1",
     status: "final",
-    valueQuantity: {
-      value: 15.1,
-    },
+    valueDateTime: "1980",
   };
 
   await memDB.create(CTX, observation);
@@ -137,7 +135,7 @@ test("Quantity Test", async () => {
   expect(
     (
       await memDB.search_type(CTX, "Observation", [
-        { name: "effective-date", value: ["1980-01"] },
+        { name: "value-date", value: ["1980-01"] },
       ])
     ).resources.map((r) => r.id)
   ).toEqual(["ob1"]);
@@ -145,7 +143,7 @@ test("Quantity Test", async () => {
   expect(
     (
       await memDB.search_type(CTX, "Observation", [
-        { name: "effective-date", value: ["1981"] },
+        { name: "value-date", value: ["1981"] },
       ])
     ).resources.map((r) => r.id)
   ).toEqual([]);
@@ -153,7 +151,7 @@ test("Quantity Test", async () => {
   expect(
     (
       await memDB.search_type(CTX, "Observation", [
-        { name: "effective-date", value: ["1979"] },
+        { name: "value-date", value: ["1979"] },
       ])
     ).resources.map((r) => r.id)
   ).toEqual([]);

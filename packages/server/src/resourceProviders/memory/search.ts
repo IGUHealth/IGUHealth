@@ -141,9 +141,12 @@ async function expressionSearch(
     }
     case "date": {
       const dateRanges = evaluation.map(toDateRange).flat();
+
       for (const range of dateRanges) {
         for (const value of parameter.value) {
-          if (dayjs(value).isBetween(range.start, dayjs(range.end))) {
+          if (
+            dayjs(value).isBetween(range.start, dayjs(range.end), null, "[]")
+          ) {
             return true;
           }
         }
