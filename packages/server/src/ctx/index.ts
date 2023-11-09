@@ -4,6 +4,7 @@ import createLogger from "pino";
 import pg from "pg";
 import Redis from "ioredis";
 
+import validate from "@iguhealth/fhir-validation";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
@@ -14,11 +15,18 @@ import {
   CapabilityStatementRestResource,
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
+import { MiddlewareAsync } from "@iguhealth/client/middleware";
 import { FHIRClientSync } from "@iguhealth/client/interface";
-import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
+import { FHIRRequest } from "@iguhealth/client/types";
+import {
+  OperationError,
+  outcomeFatal,
+  outcomeError,
+  outcome,
+} from "@iguhealth/operation-outcomes";
 
 import { createPostgresClient } from "../resourceProviders/postgres/index.js";
-import { FHIRServerCTX } from "../fhirServer.js";
+import { FHIRServerCTX } from "./types.js";
 import { InternalData } from "../resourceProviders/memory/types.js";
 import MemoryDatabaseAsync from "../resourceProviders/memory/async.js";
 import MemoryDatabaseSync from "../resourceProviders/memory/sync.js";
@@ -153,6 +161,98 @@ async function serverCapabilities(
 
 export const logger = createLogger.default();
 
+function getResourceTypeToValidate(request: FHIRRequest) {
+  switch (request.type) {
+    case "create-request":
+      return request.resourceType || request.body.resourceType;
+    case "update-request":
+      return request.resourceType;
+    case "invoke-request":
+      return "Parameters";
+    case "transaction-request":
+    case "batch-request":
+      return "Bundle";
+    default:
+      throw new OperationError(
+        outcomeError(
+          "invalid",
+          `cannot validate resource type '${request.type}'`
+        )
+      );
+  }
+}
+
+const validationMiddleware: Parameters<typeof RouterClient>[0][number] = async (
+  request,
+  { state, ctx },
+  next
+) => {
+  switch (request.type) {
+    case "update-request":
+    case "create-request":
+    case "batch-request":
+    case "invoke-request":
+    case "transaction-request": {
+      const resourceType = getResourceTypeToValidate(request);
+      const issues = await validate(
+        {
+          validateCode: async (url: string, code: string) => {
+            const result = await ctx.terminologyProvider.validate(ctx, {
+              code,
+              url,
+            });
+            return result.result;
+          },
+          resolveSD: (type) => {
+            const sd = ctx.resolveSD(type);
+            if (!sd)
+              throw new OperationError(
+                outcomeError(
+                  "invalid",
+                  `Could not validate type of ${resourceType}`
+                )
+              );
+            return sd;
+          },
+        },
+        resourceType,
+        request.body
+      );
+      if (issues.length > 0) {
+        throw new OperationError(outcome(issues));
+      }
+      break;
+    }
+    case "patch-request": {
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `Operation '${request.type}' not supported`
+        )
+      );
+    }
+  }
+  if (!next) throw new Error("No next");
+  return next(request, { state, ctx });
+};
+
+const capabilitiesMiddleware: Parameters<
+  typeof RouterClient
+>[0][number] = async (request, args, next) => {
+  if (request.type === "capabilities-request") {
+    return {
+      ...args,
+      response: {
+        level: "system",
+        type: "capabilities-response",
+        body: args.ctx.capabilities,
+      },
+    };
+  }
+  if (!next) throw new Error("next middleware was not defined");
+  return next(request, args);
+};
+
 export async function deriveCTX(): Promise<
   ({
     pg,
@@ -205,50 +305,53 @@ export async function deriveCTX(): Promise<
   });
 
   return ({ pg, workspace, author, user_access_token }) => {
-    const client = RouterClient([
-      // OP INVOCATION
-      {
-        useSource: (request) => {
-          return (
-            request.type === "invoke-request" &&
-            inlineOperationExecution
-              .supportedOperations()
-              .map((op) => op.code)
-              .includes(request.operation)
-          );
+    const client = RouterClient(
+      [validationMiddleware, capabilitiesMiddleware],
+      [
+        // OP INVOCATION
+        {
+          useSource: (request) => {
+            return (
+              request.type === "invoke-request" &&
+              inlineOperationExecution
+                .supportedOperations()
+                .map((op) => op.code)
+                .includes(request.operation)
+            );
+          },
+          source: inlineOperationExecution,
         },
-        source: inlineOperationExecution,
-      },
-      {
-        resourcesSupported: [...resourceTypes] as ResourceType[],
-        interactionsSupported: ["invoke-request"],
-        source: lambdaExecutioner,
-      },
-      {
-        resourcesSupported: MEMORY_TYPES,
-        interactionsSupported: ["read-request", "search-request"],
-        source: memDBAsync,
-      },
-      {
-        resourcesSupported: [...resourceTypes].filter(
-          (type) => MEMORY_TYPES.indexOf(type as ResourceType) === -1
-        ) as ResourceType[],
-        interactionsSupported: [
-          "read-request",
-          "search-request",
-          "create-request",
-          "update-request",
-          "delete-request",
-          "history-request",
-          "transaction-request",
-        ],
-        source: createPostgresClient(pg, {
-          transaction_entry_limit: parseInt(
-            process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20"
-          ),
-        }),
-      },
-    ]);
+        {
+          resourcesSupported: [...resourceTypes] as ResourceType[],
+          interactionsSupported: ["invoke-request"],
+          source: lambdaExecutioner,
+        },
+        {
+          resourcesSupported: MEMORY_TYPES,
+          interactionsSupported: ["read-request", "search-request"],
+          source: memDBAsync,
+        },
+        {
+          resourcesSupported: [...resourceTypes].filter(
+            (type) => MEMORY_TYPES.indexOf(type as ResourceType) === -1
+          ) as ResourceType[],
+          interactionsSupported: [
+            "read-request",
+            "search-request",
+            "create-request",
+            "update-request",
+            "delete-request",
+            "history-request",
+            "transaction-request",
+          ],
+          source: createPostgresClient(pg, {
+            transaction_entry_limit: parseInt(
+              process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20"
+            ),
+          }),
+        },
+      ]
+    );
 
     return {
       workspace,

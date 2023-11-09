@@ -1,6 +1,6 @@
 import { CodeSystemLookup } from "@iguhealth/generated-ops/r4";
 
-import { FHIRServerCTX } from "../../fhirServer.js";
+import { FHIRServerCTX } from "../../ctx/types.js";
 import InlineOperation from "./interface.js";
 import { TerminologyProviderMemory } from "../../terminology/index.js";
 

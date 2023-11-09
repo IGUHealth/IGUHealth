@@ -26,7 +26,7 @@ import logAuditEvent, {
   SERIOUS_FAILURE,
 } from "../logging/auditEvents.js";
 import { KoaRequestToFHIRRequest } from "../koaParsing/index.js";
-import { FHIRServerCTX } from "../fhirServer.js";
+import { FHIRServerCTX } from "../ctx/types.js";
 import {
   SearchParameterResource,
   deriveResourceTypeFilter,

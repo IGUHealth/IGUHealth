@@ -20,7 +20,7 @@ import {
 import { FHIRClient } from "@iguhealth/client/interface";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../fhirServer.js";
+import { FHIRServerCTX } from "../ctx/types.js";
 import { deriveResourceTypeFilter } from "./utilities/search/parameters.js";
 import { fhirResponseToBundleEntry } from "./utilities/bundle.js";
 import {
@@ -283,10 +283,11 @@ function createRouterMiddleware<
 }
 
 export default function RouterClient<CTX extends FHIRServerCTX>(
+  middleware: MiddlewareAsync<{ sources: Sources<CTX> }, CTX>[],
   sources: Sources<CTX>
 ): AsynchronousClient<{ sources: Sources<CTX> }, CTX> {
   return new AsynchronousClient<{ sources: Sources<CTX> }, CTX>(
     { sources },
-    createRouterMiddleware()
+    createMiddlewareAsync([...middleware, createRouterMiddleware()])
   );
 }

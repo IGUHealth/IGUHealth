@@ -5,7 +5,7 @@ import dotEnv from "dotenv";
 import MemoryDatabase from "./memory/async.js";
 import RedisCache from "../cache/redis.js";
 import { IOCache } from "../cache/interface.js";
-import { FHIRServerCTX } from "../fhirServer.js";
+import { FHIRServerCTX } from "../ctx/types.js";
 import { loadArtifacts } from "@iguhealth/artifacts";
 
 import { Lock } from "../synchronization/interfaces.js";

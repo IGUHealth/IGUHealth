@@ -13,7 +13,7 @@ import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 import MemoryDatabase from "./memory/sync.js";
 import { buildTransactionTopologicalGraph } from "./transactions";
 import { testServices } from "./test_ctx.js";
-import { FHIRServerCTX } from "../fhirServer.js";
+import { FHIRServerCTX } from "../ctx/types.js";
 
 function createMemoryDatabase(
   resourceTypes: ResourceType[]
