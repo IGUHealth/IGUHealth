@@ -764,7 +764,11 @@ function createPostgresMiddleware<
             throw new OperationError(
               outcomeError(
                 "invalid",
-                "Transaction bundle only allowed to have 20 entries."
+                `Transaction bundle only allowed to have '${
+                  args.state.transaction_entry_limit
+                }' entries. Current bundle has '${
+                  (transactionBundle.entry || []).length
+                }'`
               )
             );
           }
