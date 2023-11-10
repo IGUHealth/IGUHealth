@@ -30,7 +30,7 @@ program
     const generatedTypes = generateTypes(options.version, structureDefinitions);
     const generatedSets = generateSets(options.version, structureDefinitions);
 
-    writeFileSync(path.join(options.output, "types.d.ts"), generatedTypes);
+    writeFileSync(path.join(options.output, "types.ts"), generatedTypes);
     writeFileSync(path.join(options.output, "sets.ts"), generatedSets);
   });
 

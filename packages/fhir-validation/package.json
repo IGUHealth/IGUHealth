@@ -18,7 +18,6 @@
   "devDependencies": {
     "@iguhealth/artifacts": "workspace:^",
     "@iguhealth/fhir-types": "workspace:^",
-    "@iguhealth/server": "workspace:^",
     "@iguhealth/test-data": "workspace:^",
     "@jest/globals": "^29.5.0",
     "@types/jest": "^29.5.2",

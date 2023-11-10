@@ -1,4 +1,5 @@
 export type base64Binary = string;
+// @ts-ignore
 export type boolean = boolean;
 export type canonical = string;
 export type code = string;
@@ -11,6 +12,7 @@ export type integer = number;
 export type markdown = string;
 export type oid = string;
 export type positiveInt = number;
+// @ts-ignore
 export type string = string;
 export type time = string;
 export type unsignedInt = number;

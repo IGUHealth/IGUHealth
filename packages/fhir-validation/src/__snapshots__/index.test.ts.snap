@@ -21486,6 +21486,9 @@ exports[`Testing validating resourceType 'ConceptMap' 1`] = `
         ],
       },
     ],
+    "meta": {
+      "lastUpdated": "2019-11-01T09:29:23.356+11:00",
+    },
     "name": "FHIR-v3-Address-Use",
     "publisher": "HL7, Inc",
     "purpose": "To help implementers map from HL7 v3/CDA to FHIR",
@@ -21564,7 +21567,7 @@ exports[`Testing validating resourceType 'ConceptMap' 1`] = `
         },
       },
     ],
-    "version": "4.0.0",
+    "version": "4.0.1",
   },
   [],
 ]

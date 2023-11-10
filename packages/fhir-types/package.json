@@ -4,26 +4,25 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "generate": "yarn cli generate-types-artifacts --output=./r4",
+    "generate": "cli generate-types-artifacts --output=./src/r4",
     "build": "tsc",
     "test": "echo \"Error: no test specified\"",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
-  "types": "r4/types.d.ts",
+  "types": "lib/r4/types.d.ts",
   "keywords": [],
   "author": "",
   "license": "ISC",
   "exports": {
-    "./r4/sets": "./lib/sets.js",
-    "./r4/types": "./r4/types.d.ts"
+    "./r4/sets": "./lib/r4/sets.js",
+    "./r4/types": "./lib/r4/types.js"
   },
   "devDependencies": {
-    "@iguhealth/cli": "workspace:^",
     "typescript": "5.1.3"
   },
   "files": [
     "readme.md",
-    "lib/**",
-    "r4/**"
+    "types/**",
+    "src/**"
   ]
 }
