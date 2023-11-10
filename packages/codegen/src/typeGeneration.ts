@@ -90,9 +90,15 @@ function primitiveToTypescriptType(
   )[0]?.type?.[0]?.code;
   // Skip over these primitive types as already exist in typescript
   if (primitiveValueType) {
-    return `export type ${primitiveSd.id} = ${fhirSystemTypePredicate(
-      primitiveValueType
-    )};`;
+    let primitiveType = `export type ${
+      primitiveSd.id
+    } = ${fhirSystemTypePredicate(primitiveValueType)};`;
+    // Avoid compiler issues by ts-ignoring boolean and string
+    // which don't allow type aliasing
+    if (primitiveSd.id === "boolean" || primitiveSd.id === "string") {
+      primitiveType = `// @ts-ignore\n${primitiveType}`;
+    }
+    return primitiveType;
   } else {
     throw new Error("No type found for primitive");
   }

@@ -3,12 +3,28 @@ import { applyPatch } from "fast-json-patch";
 import { produce } from "immer";
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
-import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
+  resourceTypes,
+  complexTypes,
+  primitiveTypes,
+} from "@iguhealth/fhir-types/r4/sets";
+import {
+  Address,
   ValueSet,
   StructureDefinition,
   Resource,
   ElementDefinition,
+  url,
+  date,
+  dateTime,
+  uri,
+  code,
+  decimal,
+  integer,
+  Identifier,
+  Meta,
+  ContactPoint,
+  HumanName,
 } from "@iguhealth/fhir-types/r4/types";
 
 import * as ComplexTypes from "../complex";
@@ -16,25 +32,245 @@ import * as Primitives from "../primitives";
 
 import generateJSONPatches, { Mutation } from "./generatePatches";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const EditTypeToComponent: Record<string, React.FC<any>> = {
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  "http://hl7.org/fhirpath/System.String": (props: any) => (
-    <Primitives.String disabled={true} {...props} />
-  ),
-  string: Primitives.String,
-  boolean: Primitives.Boolean,
-  url: Primitives.Url,
-  date: Primitives.Date,
-  dateTime: Primitives.DateTime,
-  uri: Primitives.Uri,
-  code: Primitives.Code,
-  Address: ComplexTypes.AddressEditable,
-  Identifier: ComplexTypes.IdentifierEditable,
-  Meta: ComplexTypes.MetaReadOnly,
-  ContactPoint: ComplexTypes.ContactPointEditable,
-  HumanName: ComplexTypes.HumanNameEditable,
-};
+function EditorComponent({
+  element,
+  value,
+  onChange,
+  showLabel,
+  pointer,
+  expand,
+}: {
+  element: ElementDefinition;
+  value: unknown;
+  onChange: (patches: Mutation) => void;
+  showLabel: boolean;
+  pointer: string;
+  expand?: (url: string) => Promise<ValueSet>;
+}) {
+  switch (element.type?.[0].code) {
+    case "http://hl7.org/fhirpath/System.String": {
+      // Only render the root element not the ones underneath.
+      // id is special primitive string.
+      if (pointer === "/id")
+        return (
+          <Primitives.String
+            disabled={true}
+            value={value as string}
+            label={showLabel ? getFieldName(element.path) : undefined}
+            onChange={(v: unknown) => {
+              onChange({
+                op: "replace",
+                path: pointer,
+                value: v,
+              });
+            }}
+          />
+        );
+      return undefined;
+    }
+    case "string": {
+      return (
+        <Primitives.String
+          value={value as string}
+          label={showLabel ? getFieldName(element.path) : undefined}
+          onChange={(v: unknown) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
+      );
+    }
+
+    case "boolean":
+      return (
+        <Primitives.Boolean
+          value={value as boolean}
+          label={showLabel ? getFieldName(element.path) : undefined}
+          onChange={(v: unknown) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
+      );
+    case "url":
+      return (
+        <Primitives.Url
+          value={value as url}
+          label={showLabel ? getFieldName(element.path) : undefined}
+          onChange={(v: unknown) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
+      );
+
+    case "date":
+      return (
+        <Primitives.Date
+          value={value as date}
+          label={showLabel ? getFieldName(element.path) : undefined}
+          onChange={(v: unknown) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
+      );
+    case "dateTime":
+      return (
+        <Primitives.DateTime
+          value={value as dateTime}
+          label={showLabel ? getFieldName(element.path) : undefined}
+          onChange={(v: unknown) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
+      );
+    case "uri":
+      return (
+        <Primitives.Uri
+          value={value as uri}
+          label={showLabel ? getFieldName(element.path) : undefined}
+          onChange={(v: unknown) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
+      );
+    case "code":
+      return (
+        <Primitives.Code
+          expand={expand}
+          value={value as code}
+          label={showLabel ? getFieldName(element.path) : undefined}
+          open={true}
+          system={element.binding?.valueSet}
+          onChange={(v: unknown) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
+      );
+    case "decimal":
+      return (
+        <Primitives.Decimal
+          value={value as decimal}
+          label={showLabel ? getFieldName(element.path) : undefined}
+          onChange={(v: unknown) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
+      );
+    case "integer":
+      return (
+        <Primitives.Integer
+          value={value as integer}
+          label={showLabel ? getFieldName(element.path) : undefined}
+          onChange={(v: unknown) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
+      );
+    case "Address":
+      return (
+        <ComplexTypes.AddressEditable
+          value={value as Address}
+          label={showLabel ? getFieldName(element.path) : undefined}
+          onChange={(v: unknown) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
+      );
+    case "Identifier":
+      return (
+        <ComplexTypes.IdentifierEditable
+          value={value as Identifier}
+          label={showLabel ? getFieldName(element.path) : undefined}
+          onChange={(v: unknown) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
+      );
+    case "Meta":
+      return <ComplexTypes.MetaReadOnly value={value as Meta} />;
+    case "ContactPoint":
+      return (
+        <ComplexTypes.ContactPointEditable
+          value={value as ContactPoint}
+          label={showLabel ? getFieldName(element.path) : undefined}
+          onChange={(v: unknown) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
+      );
+    case "HumanName":
+      return (
+        <ComplexTypes.HumanNameEditable
+          value={value as HumanName}
+          label={showLabel ? getFieldName(element.path) : undefined}
+          onChange={(v: unknown) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
+      );
+    default:
+      return undefined;
+  }
+}
+
+function isLeaf(type: string | undefined) {
+  return (
+    type &&
+    (primitiveTypes.has(type) ||
+      complexTypes.has(type) ||
+      type === "http://hl7.org/fhirpath/System.String")
+  );
+}
 
 /*
  ** Given a position return all children indices.
@@ -108,13 +344,13 @@ const MetaValueArray = React.memo((props: MetaProps) => {
   if (showInvalid && element.type?.length && element.type.length < 1) {
     return <span>TYPE CHOICES NOT SUPPORTED YET</span>;
   }
-  if (!Array.isArray(value))
+  if (!Array.isArray(value)) {
     throw new Error("Value must be an array or undefined");
+  }
 
   const children = getChildrenElementIndices({ sd, elementIndex });
-  const Comp = element.type && EditTypeToComponent[element.type[0].code];
 
-  if (!Comp && children.length === 0) {
+  if (!isLeaf(element.type?.[0].code) && children.length === 0) {
     return (
       <DisplayInvalid
         element={element}
@@ -126,7 +362,7 @@ const MetaValueArray = React.memo((props: MetaProps) => {
   return (
     <div>
       <label>{getFieldName(element.path)}</label>
-      {(value.length === 0 ? [undefined] : value).map((v, i) => (
+      {value.map((v, i) => (
         <div className="mt-1 relative" key={`${pointer}/${i}`}>
           <MetaValueSingular
             expand={expand}
@@ -161,15 +397,8 @@ const MetaValueArray = React.memo((props: MetaProps) => {
             onChange({
               path: `${pointer}/${value.length}`,
               op: "add",
-              value: null,
+              value: complexTypes.has(element.type?.[0].code || "") ? {} : null,
             });
-            if (value.length === 0) {
-              onChange({
-                path: `${pointer}/${value.length + 1}`,
-                op: "add",
-                value: null,
-              });
-            }
           }}
         >
           <PlusIcon className=" h-4 w-4" /> Add
@@ -195,7 +424,7 @@ function getValueAndPointer(
     throw new Error("invalid value must be object to descend");
 
   return {
-    value: isIndexableObject(value) ? value[field] : value,
+    value: isIndexableObject(value) ? value[field] : undefined,
     pointer: `${pointer}/${field}`,
   };
 }
@@ -246,8 +475,7 @@ const MetaValueSingular = React.memo((props: MetaProps) => {
   }
   const children = getChildrenElementIndices({ sd, elementIndex });
   if (children.length === 0) {
-    const Comp = element.type && EditTypeToComponent[element.type[0].code];
-    if (!Comp) {
+    if (!isLeaf(element.type?.[0].code)) {
       return (
         <DisplayInvalid
           element={element}
@@ -258,19 +486,13 @@ const MetaValueSingular = React.memo((props: MetaProps) => {
     }
     return (
       <div className="">
-        <Comp
+        <EditorComponent
+          element={element}
+          pointer={pointer}
           expand={expand}
           value={value}
-          label={showLabel && getFieldName(element.path)}
-          open={true}
-          system={element.binding?.valueSet}
-          onChange={(v: unknown) => {
-            onChange({
-              op: "replace",
-              path: pointer,
-              value: v,
-            });
-          }}
+          showLabel={showLabel}
+          onChange={onChange}
         />
       </div>
     );
@@ -340,7 +562,6 @@ export const GenerativeForm = ({
           const newValue = applyPatch(value, patches).newDocument;
           return newValue;
         });
-
         return newResource;
       });
     };

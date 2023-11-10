@@ -15,20 +15,20 @@ function pathFields(path: string) {
   return path.split("/").slice(1);
 }
 
-function getValue(value: unknown, json_pointer: string) {
-  const fields = pathFields(json_pointer);
-  let current_value = value;
+function getValue(value: unknown, jsonPointer: string) {
+  const fields = pathFields(jsonPointer);
+  let currentValue = value;
   for (const field of fields) {
-    if (current_value === undefined) return undefined;
-    if (Array.isArray(current_value) && !isNaN(parseInt(field))) {
-      current_value = current_value[parseInt(field)];
-    } else if (isObject(current_value)) {
-      current_value = current_value[field];
+    if (currentValue === undefined) return undefined;
+    if (Array.isArray(currentValue) && !isNaN(parseInt(field))) {
+      currentValue = currentValue[parseInt(field)];
+    } else if (isObject(currentValue)) {
+      currentValue = currentValue[field];
     } else {
       return undefined;
     }
   }
-  return current_value;
+  return currentValue;
 }
 
 function valueExistsAtJsonPointer(value: unknown, json_pointer: string) {
@@ -38,19 +38,6 @@ function valueExistsAtJsonPointer(value: unknown, json_pointer: string) {
 function descend(path: string, field: string) {
   return `${path}/${field}`;
 }
-
-// (defn- ->next-value
-//   "will return either :array or :map for next auto-created type depending on next field."
-//   [fields]
-//   (cond
-//     ;; Map means it's a search for a value if can't find value than utilize the map as the default during building.
-//     (map? (first fields))              (first fields)
-//     ;; If number means next sequence array
-//     (utils/is-number? (second fields)) []
-//     ;; Map means filter is being applied so should be array.
-//     (map? (second fields))             []
-//     (= :- (second fields))            []
-//     :else                              {}))
 
 function deriveNextValuePlaceHolder(
   fields: string[]
@@ -68,10 +55,11 @@ function createPatchesNonExistantFields(resource: Resource, path: string) {
   let curPointer = "";
   for (let i = 0; i < fields.length; i++) {
     curPointer = descend(curPointer, fields[i]);
-    curValue = getValue(curValue, curPointer);
-    if (curValue !== undefined) break;
-    const nextValue = deriveNextValuePlaceHolder(fields.slice(i));
-    patches = [...patches, { op: "add", path: curPointer, value: nextValue }];
+    curValue = getValue(resource, curPointer);
+    if (curValue === undefined) {
+      const nextValue = deriveNextValuePlaceHolder(fields.slice(i));
+      patches = [...patches, { op: "add", path: curPointer, value: nextValue }];
+    }
   }
   return patches;
 }

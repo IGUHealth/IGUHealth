@@ -10514,7 +10514,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/fhir-types/",\
           "packageDependencies": [\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
-            ["@iguhealth/cli", "workspace:packages/cli"],\
             ["typescript", "patch:typescript@npm%3A5.1.3#~builtin<compat/typescript>::version=5.1.3&hash=5da071"]\
           ],\
           "linkType": "SOFT"\
