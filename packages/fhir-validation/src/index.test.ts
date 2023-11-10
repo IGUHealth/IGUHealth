@@ -2,6 +2,7 @@ import path from "path";
 import { expect, test } from "@jest/globals";
 
 import {
+  StructureDefinition,
   Resource,
   ResourceType,
   Account,
@@ -15,7 +16,10 @@ import { createValidator } from "./index";
 function createMemoryDatabase(
   resourceTypes: ResourceType[]
 ): Record<ResourceType, Resource[]> {
-  const data = {};
+  const data: Record<ResourceType, Resource[]> = {} as Record<
+    ResourceType,
+    Resource[]
+  >;
   for (const resourceType of resourceTypes) {
     const resources = loadArtifacts(
       resourceType,
@@ -36,7 +40,7 @@ const CTX = {
   resolveSD: (type: string) => {
     const sd = memDatabase["StructureDefinition"].find((sd) => sd.id === type);
     if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
-    return sd;
+    return sd as StructureDefinition;
   },
 };
 
@@ -403,7 +407,7 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
     );
     const sd = structureDefinition[0];
 
-    const resources = memDatabase[resourceType]
+    const resources = memDatabase[resourceType as ResourceType]
       .filter((r) => r.id)
       .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
       .slice(0, 1);
