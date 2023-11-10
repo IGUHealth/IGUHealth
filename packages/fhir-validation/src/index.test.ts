@@ -9,21 +9,23 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { loadArtifacts } from "@iguhealth/artifacts";
-import MemoryDatabase from "@iguhealth/server/lib/resourceProviders/memory/sync.js";
 
 import { createValidator } from "./index";
 
-function createMemoryDatabase(resourceTypes: ResourceType[]) {
-  const database = MemoryDatabase<any>({});
-  const artifactResources: Resource[] = resourceTypes
-    .map((resourceType) =>
-      loadArtifacts(resourceType, path.join(__dirname, "./"), true)
-    )
-    .flat();
-  for (const resource of artifactResources) {
-    database.create({}, resource);
+function createMemoryDatabase(
+  resourceTypes: ResourceType[]
+): Record<ResourceType, Resource[]> {
+  const data = {};
+  for (const resourceType of resourceTypes) {
+    const resources = loadArtifacts(
+      resourceType,
+      path.join(__dirname, "./"),
+      true
+    );
+    data[resourceType] = resources;
   }
-  return database;
+
+  return data;
 }
 
 const memDatabase = createMemoryDatabase([
@@ -32,7 +34,7 @@ const memDatabase = createMemoryDatabase([
 
 const CTX = {
   resolveSD: (type: string) => {
-    const sd = memDatabase.read({}, "StructureDefinition", type);
+    const sd = memDatabase["StructureDefinition"].find((sd) => sd.id === type);
     if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
     return sd;
   },
@@ -103,8 +105,6 @@ test("test typechoice checking", async () => {
 });
 
 test("Primitive Extensions", async () => {
-  const sd = memDatabase.read({}, "StructureDefinition", "Patient");
-
   const validator = createValidator(CTX, "Patient");
 
   expect(
@@ -398,21 +398,13 @@ test("Observation nested case", async () => {
 test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
   `Testing validating resourceType '%s'`,
   async (resourceType) => {
-    const structureDefinition = memDatabase.search_type(
-      {},
-      "StructureDefinition",
-      [
-        {
-          name: "type",
-          value: [resourceType],
-        },
-      ]
-    ).resources;
+    const structureDefinition = memDatabase["StructureDefinition"].filter(
+      (sd) => sd.id === resourceType
+    );
     const sd = structureDefinition[0];
 
-    const resources = memDatabase
-      .search_type({}, resourceType as ResourceType, [])
-      .resources.filter((r) => r.id)
+    const resources = memDatabase[resourceType]
+      .filter((r) => r.id)
       .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
       .slice(0, 1);
     const validator = createValidator(CTX, resourceType);
