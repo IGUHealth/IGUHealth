@@ -392,7 +392,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-crypto/material-management@npm:^4.0.0":
+"@aws-crypto/material-management@npm:*, @aws-crypto/material-management@npm:^4.0.0":
   version: 4.0.0
   resolution: "@aws-crypto/material-management@npm:4.0.0"
   dependencies:

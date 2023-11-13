@@ -285,6 +285,7 @@ export async function deriveCTX(): Promise<
           encryptorKeyARNS: [process.env.AWS_ENCRYPTION_KEY as string],
         })
       : undefined;
+
   const resolveSD = (type: string) => {
     const sd = memDBSync.read({}, "StructureDefinition", type);
     if (!sd) {

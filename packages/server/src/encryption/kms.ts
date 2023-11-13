@@ -59,7 +59,7 @@ export class AWSKMSProvider implements EncryptionProvider {
   ): Promise<string> {
     const { plaintext, messageHeader } = await this._client.decrypt(
       this._keyRing,
-      data
+      Buffer.from(data, "base64")
     );
 
     if (!isVerifiedContext(messageHeader, context))

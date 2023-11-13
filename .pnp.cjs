@@ -616,6 +616,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@aws-crypto/kms-keyring-node", "npm:4.0.0"],\
             ["@aws-crypto/kms-keyring", "npm:4.0.0"],\
+            ["@aws-crypto/material-management", "npm:4.0.0"],\
             ["@aws-crypto/material-management-node", "npm:4.0.0"],\
             ["@aws-sdk/client-kms", "npm:3.449.0"],\
             ["tslib", "npm:2.6.2"]\
