@@ -68,6 +68,19 @@ Authentication environment variables
 | AUTH_CERTIFICATION_LOCATION | Location for local certifications for IGUHEALTH ISSUER | false    |                           |
 | AUTH_SIGNING_KEY            | The signing key used to generate new local tokens      | false    |                           |
 
+#### Encryption
+
+Encryption is used for user passed in secrets (for example an external token for a service ). We currently only support encyrption via AWS KMS
+using the AWS encryption sdk.
+
+| name                         | description                                           | required | defaults                                   |
+| ---------------------------- | ----------------------------------------------------- | -------- | ------------------------------------------ |
+| ENCRYPTION_TYPE              | The type of encryption (used to encrypt user secrets) | false    | none (currently aws only option supported) |
+| AWS_KMS_ACCESS_KEY_ID        | KMS client access key ID                              | false    |                                            |
+| AWS_KMS_ACCESS_KEY_SECRET    | KMS client access key secret                          | false    |                                            |
+| AWS_ENCRYPTION_GENERATOR_KEY | KMS key used to generate data keys on keyring         | false    |                                            |
+| AWS_ENCRYPTION_KEY           | Additional KMS key used for encryption                | false    |                                            |
+
 #### Performance
 
 | name                             | description                      | required | defaults |

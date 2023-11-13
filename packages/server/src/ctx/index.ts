@@ -15,7 +15,6 @@ import {
   CapabilityStatementRestResource,
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
-import { MiddlewareAsync } from "@iguhealth/client/middleware";
 import { FHIRClientSync } from "@iguhealth/client/interface";
 import { FHIRRequest } from "@iguhealth/client/types";
 import {
@@ -39,6 +38,7 @@ import CodeSystemLookupInvoke from "../operation-executors/local/lookup.js";
 import AWSLambdaExecutioner from "../operation-executors/awsLambda/index.js";
 import RedisCache from "../cache/redis.js";
 import { TerminologyProviderMemory } from "../terminology/index.js";
+import { AWSKMSProvider } from "../encryption/kms.js";
 
 const MEMORY_TYPES: ResourceType[] = [
   "StructureDefinition",
@@ -272,6 +272,19 @@ export async function deriveCTX(): Promise<
     CodeSystemLookupInvoke,
   ]);
   const terminologyProvider = new TerminologyProviderMemory();
+  const kmsProvider =
+    process.env.ENCRYPTION_TYPE === "aws"
+      ? new AWSKMSProvider({
+          clientConfig: {
+            credentials: {
+              accessKeyId: process.env.AWS_KMS_ACCESS_KEY_ID as string,
+              secretAccessKey: process.env.AWS_KMS_ACCESS_KEY_SECRET as string,
+            },
+          },
+          generatorKeyARN: process.env.AWS_ENCRYPTION_GENERATOR_KEY as string,
+          encryptorKeyARNS: [process.env.AWS_ENCRYPTION_KEY as string],
+        })
+      : undefined;
   const resolveSD = (type: string) => {
     const sd = memDBSync.read({}, "StructureDefinition", type);
     if (!sd) {
@@ -364,6 +377,7 @@ export async function deriveCTX(): Promise<
       cache,
       resolveSD,
       lock,
+      kmsProvider,
     };
   };
 }

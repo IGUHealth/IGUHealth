@@ -23,18 +23,22 @@ export class AWSKMSProvider implements EncryptionProvider {
   private _client: ReturnType<typeof buildClient>;
   private _keyRing: InstanceType<typeof KmsKeyringNode>;
 
-  constructor(
-    clientParameters: ConstructorParameters<typeof KMS>[0],
-    generatorKeyARN: string,
-    encryptorKeyARNS: string[]
-  ) {
+  constructor({
+    clientConfig,
+    generatorKeyARN,
+    encryptorKeyARNS,
+  }: {
+    clientConfig: ConstructorParameters<typeof KMS>[0];
+    generatorKeyARN: string;
+    encryptorKeyARNS: string[];
+  }) {
     this._client = buildClient();
     this._keyRing = new KmsKeyringNode({
       generatorKeyId: generatorKeyARN,
       keyIds: encryptorKeyARNS,
       clientProvider: (region) =>
         new KMS({
-          ...clientParameters,
+          ...clientConfig,
           region,
         }),
     });
