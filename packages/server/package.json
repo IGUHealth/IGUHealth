@@ -14,6 +14,7 @@
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "dependencies": {
+    "@aws-crypto/client-node": "^4.0.0",
     "@aws-sdk/client-lambda": "^3.379.1",
     "@aws-sdk/client-resource-groups-tagging-api": "^3.379.1",
     "@dagrejs/graphlib": "^2.1.13",
