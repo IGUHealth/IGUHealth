@@ -127,7 +127,9 @@ export function validateInvocationContext(
   if (issues) return issues;
 
   if (request.level === "instance" || request.level === "type") {
-    if (!operation.resource?.includes(request.resourceType))
+    if (operation.resource?.includes("Resource")) {
+      return;
+    } else if (!operation.resource?.includes(request.resourceType))
       return outcomeError(
         "invalid",
         `Invalid resourcetype on invocation request '${

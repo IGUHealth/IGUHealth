@@ -5,11 +5,12 @@ import {
   issueError,
 } from "@iguhealth/operation-outcomes";
 import {
+  Resource,
   ElementDefinition,
   OperationOutcome,
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
-import { primitiveTypes } from "@iguhealth/fhir-types/r4/sets";
+import { primitiveTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { eleIndexToChildIndices } from "@iguhealth/codegen";
 import { descend, createPath, ascend } from "./path.js";
 import jsonpointer from "jsonpointer";
@@ -19,7 +20,7 @@ export interface ValidationCTX {
   validateCode?(system: string, code: string): Promise<boolean>;
 }
 
-type Validator = (input: any) => Promise<OperationOutcome["issue"]>;
+type Validator = (input: unknown) => Promise<OperationOutcome["issue"]>;
 
 // Create a validator for a given fhir type and value
 
@@ -41,11 +42,22 @@ const REGEX: Record<string, RegExp> = {
 async function validatePrimitive(
   ctx: ValidationCTX,
   element: ElementDefinition | undefined,
-  root: any,
+  root: unknown,
   path: string,
   type: string
 ): Promise<OperationOutcome["issue"]> {
-  const value = jsonpointer.get(root, path);
+  let value;
+  if (validateIsObject(root)) value = jsonpointer.get(root, path);
+  else if (path === "") value = root;
+  else
+    return [
+      issueError(
+        "structure",
+        `Expected primitive type '${type}' at path '${path}'`,
+        [path]
+      ),
+    ];
+
   switch (type) {
     case "http://hl7.org/fhirpath/System.String":
     case "date":
@@ -206,7 +218,7 @@ function resolveContentReferenceIndex(
 
 function findBaseFieldAndType(
   element: ElementDefinition,
-  value: any
+  value: object
 ): [string, string] | undefined {
   if (element.contentReference) {
     return [fieldName(element), element.type?.[0].code || ""];
@@ -221,7 +233,7 @@ function findBaseFieldAndType(
 
 function determineTypesAndFields(
   element: ElementDefinition,
-  value: any
+  value: object
 ): [string, string][] {
   let fields: [string, string][] = [];
   const base = findBaseFieldAndType(element, value);
@@ -254,7 +266,7 @@ async function validateSingular(
   path: string,
   structureDefinition: StructureDefinition,
   elementIndex: number,
-  root: any,
+  root: object,
   type: string
 ): Promise<OperationOutcome["issue"]> {
   const element = structureDefinition.snapshot?.element?.[
@@ -287,7 +299,7 @@ async function validateSingular(
     ) {
       // Element Check.
       let issues: OperationOutcome["issue"] = [];
-      const { parent, field } = ascend(path) || {};
+      const { field } = ascend(path) || {};
       if (field === undefined)
         throw new Error(
           `No field found on path ${path} for sd ${structureDefinition.id}`
@@ -419,7 +431,7 @@ async function checkFields(
   path: string,
   structureDefinition: StructureDefinition,
   index: number,
-  root: any,
+  root: object,
   fields: [string, string][]
 ): Promise<{
   fieldsFound: string[];
@@ -446,12 +458,16 @@ async function checkFields(
   return { issues, fieldsFound };
 }
 
+function validateIsObject(v: unknown): v is object {
+  return typeof v === "object" && v !== null;
+}
+
 async function validateElement(
   ctx: ValidationCTX,
   path: string,
   structureDefinition: StructureDefinition,
   elementIndex: number,
-  root: any,
+  root: object,
   type: string
 ): Promise<OperationOutcome["issue"]> {
   const value = jsonpointer.get(root, path);
@@ -516,21 +532,45 @@ async function validateElement(
 export default async function validate(
   ctx: ValidationCTX,
   type: string,
-  value: NonNullable<any>,
+  root: unknown,
   path: string = createPath()
 ): Promise<OperationOutcome["issue"]> {
   const sd = ctx.resolveSD(type);
   const indice = 0;
 
   if (primitiveTypes.has(type))
-    return validatePrimitive(ctx, undefined, value, path, type);
+    return validatePrimitive(ctx, undefined, root, path, type);
+
+  if (!validateIsObject(root))
+    return [
+      issueError(
+        "structure",
+        `Value must be an object when validating '${type}'. Instead found type of '${typeof root}'`,
+        [path]
+      ),
+    ];
+
+  if (
+    resourceTypes.has(type) &&
+    jsonpointer.get(root, descend(path, "resourceType")) !== type
+  ) {
+    return [
+      issueError(
+        "invalid",
+        `ResourceType '${
+          (root as Resource).resourceType
+        }' does not match expected type '${type}'`,
+        [path]
+      ),
+    ];
+  }
 
   return validateElement(
     ctx,
     path,
     sd,
     indice,
-    value,
+    root,
     // This should only be one at the root.
     sd.snapshot?.element[indice].type?.[0].code as string
   );
@@ -541,7 +581,7 @@ export function createValidator(
   type: string,
   path: string = createPath()
 ): Validator {
-  return (value: NonNullable<any>) => {
+  return (value: unknown) => {
     return validate(ctx, type, value, path);
   };
 }

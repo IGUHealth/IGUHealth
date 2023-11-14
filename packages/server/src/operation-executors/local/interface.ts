@@ -5,7 +5,11 @@ import {
 import { IOperation, Operation } from "@iguhealth/operation-execution";
 
 import { FHIRServerCTX } from "../../ctx/types.js";
-import { InvokeRequest, InvokeResponse } from "@iguhealth/client/types";
+import {
+  FHIRRequest,
+  InvokeRequest,
+  InvokeResponse,
+} from "@iguhealth/client/types";
 import { getOpCTX } from "../utilities.js";
 import { validateInvocationContext } from "../utilities.js";
 import { OperationError } from "@iguhealth/operation-outcomes";
@@ -34,7 +38,11 @@ export default function InlineOperation<
   OP extends IOperation<unknown, unknown>
 >(
   op: OP,
-  executor: (ctx: FHIRServerCTX, v: Input<OP>) => Promise<Output<OP>>
+  executor: (
+    ctx: FHIRServerCTX,
+    request: FHIRRequest,
+    v: Input<OP>
+  ) => Promise<Output<OP>>
 ): InlineOp<Input<OP>, Output<OP>> {
   return new InlineOp(
     op.operationDefinition,
@@ -50,7 +58,7 @@ export default function InlineOperation<
 
       const input = op.parseToObject("in", request.body) as Input<OP>;
       await op.validate(getOpCTX(ctx, request), "in", input);
-      const result = await executor(ctx, input);
+      const result = await executor(ctx, request, input);
       await op.validate(getOpCTX(ctx, request), "out", result);
       return op.parseToParameters("out", result) as Parameters;
     }

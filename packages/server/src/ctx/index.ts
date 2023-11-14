@@ -4,7 +4,6 @@ import createLogger from "pino";
 import pg from "pg";
 import Redis from "ioredis";
 
-import validate from "@iguhealth/fhir-validation";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
@@ -16,13 +15,12 @@ import {
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIRClientSync } from "@iguhealth/client/interface";
-import { FHIRRequest } from "@iguhealth/client/types";
 import {
   OperationError,
   outcomeFatal,
   outcomeError,
-  outcome,
 } from "@iguhealth/operation-outcomes";
+import { FHIRRequest } from "@iguhealth/client/types";
 
 import { createPostgresClient } from "../resourceProviders/postgres/index.js";
 import { FHIRServerCTX } from "./types.js";
@@ -32,13 +30,15 @@ import MemoryDatabaseSync from "../resourceProviders/memory/sync.js";
 import RouterClient from "../resourceProviders/router.js";
 import RedisLock from "../synchronization/redis.lock.js";
 import InlineExecutioner from "../operation-executors/local/index.js";
-import ValueSetExpandInvoke from "../operation-executors/local/expand.js";
-import ValueSetValidateInvoke from "../operation-executors/local/validate.js";
-import CodeSystemLookupInvoke from "../operation-executors/local/lookup.js";
+import ResourceValidateInvoke from "../operation-executors/local/resource_validate.js";
+import ValueSetExpandInvoke from "../operation-executors/local/terminology/expand.js";
+import ValueSetValidateInvoke from "../operation-executors/local/terminology/validate.js";
+import CodeSystemLookupInvoke from "../operation-executors/local/terminology/lookup.js";
 import AWSLambdaExecutioner from "../operation-executors/awsLambda/index.js";
 import RedisCache from "../cache/redis.js";
 import { TerminologyProviderMemory } from "../terminology/index.js";
 import { AWSKMSProvider } from "../encryption/kms.js";
+import { validateResource } from "../operation-executors/local/resource_validate.js";
 
 const MEMORY_TYPES: ResourceType[] = [
   "StructureDefinition",
@@ -161,12 +161,12 @@ async function serverCapabilities(
 
 export const logger = createLogger.default();
 
-function getResourceTypeToValidate(request: FHIRRequest) {
+function getResourceTypeToValidate(request: FHIRRequest): ResourceType {
   switch (request.type) {
     case "create-request":
-      return request.resourceType || request.body.resourceType;
+      return request.resourceType as ResourceType;
     case "update-request":
-      return request.resourceType;
+      return request.resourceType as ResourceType;
     case "invoke-request":
       return "Parameters";
     case "transaction-request":
@@ -193,33 +193,20 @@ const validationMiddleware: Parameters<typeof RouterClient>[0][number] = async (
     case "batch-request":
     case "invoke-request":
     case "transaction-request": {
-      const resourceType = getResourceTypeToValidate(request);
-      const issues = await validate(
+      const outcome = await validateResource(
+        ctx,
+        getResourceTypeToValidate(request),
         {
-          validateCode: async (url: string, code: string) => {
-            const result = await ctx.terminologyProvider.validate(ctx, {
-              code,
-              url,
-            });
-            return result.result;
-          },
-          resolveSD: (type) => {
-            const sd = ctx.resolveSD(type);
-            if (!sd)
-              throw new OperationError(
-                outcomeError(
-                  "invalid",
-                  `Could not validate type of ${resourceType}`
-                )
-              );
-            return sd;
-          },
-        },
-        resourceType,
-        request.body
+          mode: request.type === "create-request" ? "create" : "update",
+          resource: request.body,
+        }
       );
-      if (issues.length > 0) {
-        throw new OperationError(outcome(issues));
+      if (
+        outcome.issue.find(
+          (i) => i.severity === "fatal" || i.severity === "error"
+        )
+      ) {
+        throw new OperationError(outcome);
       }
       break;
     }
@@ -253,6 +240,28 @@ const capabilitiesMiddleware: Parameters<
   return next(request, args);
 };
 
+// const encryptionMiddleware: Parameters<typeof RouterClient>[0][number] = async (
+//   request,
+//   args,
+//   next
+// ) => {
+//   if (!next) throw new Error("next middleware was not defined");
+//   if (
+//     request.resourceType !== "OperationDefinition" ||
+//     !args.ctx.encryptionProvider
+//   )
+//     return next(request, args);
+
+//   switch (request.type) {
+//     case "update-request": {
+//     }
+//     case "patch-request": {
+//     }
+//     case "create-request": {
+//     }
+//   }
+// };
+
 export async function deriveCTX(): Promise<
   ({
     pg,
@@ -267,12 +276,13 @@ export async function deriveCTX(): Promise<
   const memDBAsync = MemoryDatabaseAsync(data);
   const memDBSync = MemoryDatabaseSync(data);
   const inlineOperationExecution = InlineExecutioner([
+    ResourceValidateInvoke,
     ValueSetExpandInvoke,
     ValueSetValidateInvoke,
     CodeSystemLookupInvoke,
   ]);
   const terminologyProvider = new TerminologyProviderMemory();
-  const kmsProvider =
+  const encryptionProvider =
     process.env.ENCRYPTION_TYPE === "aws"
       ? new AWSKMSProvider({
           clientConfig: {
@@ -378,7 +388,7 @@ export async function deriveCTX(): Promise<
       cache,
       resolveSD,
       lock,
-      kmsProvider,
+      encryptionProvider,
     };
   };
 }

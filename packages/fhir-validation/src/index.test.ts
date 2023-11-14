@@ -411,6 +411,7 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
       .filter((r) => r.id)
       .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
       .slice(0, 1);
+
     const validator = createValidator(CTX, resourceType);
 
     for (const resource of resources) {
@@ -494,4 +495,46 @@ test("validate regexes", async () => {
       priority: 0,
     })
   ).toEqual([]);
+});
+
+test("Misaligned types", async () => {
+  const validator2 = createValidator(CTX, "Appointment");
+  expect(
+    await validator2({
+      resourceType: "Patient",
+      name: [{ given: ["bob"] }],
+    })
+  ).toEqual([
+    {
+      code: "invalid",
+      diagnostics:
+        "ResourceType 'Patient' does not match expected type 'Appointment'",
+      expression: [""],
+      severity: "error",
+    },
+  ]);
+});
+
+test("Type checking", async () => {
+  const stringValidator = createValidator(CTX, "string");
+  expect(await stringValidator("bob")).toEqual([]);
+  expect(await stringValidator({})).toEqual([
+    {
+      code: "structure",
+      diagnostics: "Expected primitive type 'string' at path ''",
+      expression: [""],
+      severity: "error",
+    },
+  ]);
+
+  const patientValidator = createValidator(CTX, "Patient");
+  expect(await patientValidator("test")).toEqual([
+    {
+      code: "structure",
+      diagnostics:
+        "Value must be an object when validating 'Patient'. Instead found type of 'string'",
+      expression: [""],
+      severity: "error",
+    },
+  ]);
 });
