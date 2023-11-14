@@ -297,7 +297,7 @@ async function validateParameter<Use extends "in" | "out">(
           ),
         ];
       } else {
-        let issues = validateRequired(paramDefinition.part, value);
+        issues = [...issues, ...validateRequired(paramDefinition.part, value)];
 
         for (const part of paramDefinition.part) {
           if (!isRecord(value)) {

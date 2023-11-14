@@ -298,15 +298,12 @@ async function validateSingular(
       type === "http://hl7.org/fhirpath/System.String"
     ) {
       // Element Check.
-      let issues: OperationOutcome["issue"] = [];
       const { field } = ascend(path) || {};
       if (field === undefined)
         throw new Error(
           `No field found on path ${path} for sd ${structureDefinition.id}`
         );
-      return issues.concat(
-        await validatePrimitive(ctx, element, root, path, type)
-      );
+      return validatePrimitive(ctx, element, root, path, type);
     } else {
       if (type === "Resource" || type === "DomainResource") {
         type = jsonpointer.get(root, descend(path, "resourceType"));
