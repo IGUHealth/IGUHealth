@@ -19,6 +19,12 @@ const client = HTTPClient({
   },
 });
 
+test("create bad patient", async () => {
+  expect(
+    client.create({}, { resourceType: "Patient", badValue: 5 })
+  ).rejects.toThrowError();
+});
+
 test("Bad Creation", async () => {
   const badPatient = { resourceType: "Patient", name: "bob" };
   //@ts-ignore
@@ -73,6 +79,26 @@ test("ValidationOperation", async () => {
         code: "informational",
         diagnostics: "Validation successful",
         severity: "information",
+      },
+    ],
+    resourceType: "OperationOutcome",
+  });
+
+  const invalidType = client.invoke_type(
+    ResourceValidate.Op,
+    {},
+    "Practitioner",
+    { resource: { resourceType: "Patient", name: [{ given: ["bob"] }] } }
+  );
+
+  expect(invalidType).resolves.toEqual({
+    issue: [
+      {
+        code: "invalid",
+        diagnostics:
+          "ResourceType 'Patient' does not match expected type 'Practitioner'",
+        expression: [""],
+        severity: "error",
       },
     ],
     resourceType: "OperationOutcome",

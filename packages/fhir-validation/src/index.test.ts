@@ -411,6 +411,7 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
       .filter((r) => r.id)
       .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
       .slice(0, 1);
+
     const validator = createValidator(CTX, resourceType);
 
     for (const resource of resources) {
@@ -494,4 +495,22 @@ test("validate regexes", async () => {
       priority: 0,
     })
   ).toEqual([]);
+});
+
+test("Misaligned types", async () => {
+  const validator2 = createValidator(CTX, "Appointment");
+  expect(
+    await validator2({
+      resourceType: "Patient",
+      name: [{ given: ["bob"] }],
+    })
+  ).toEqual([
+    {
+      code: "invalid",
+      diagnostics:
+        "ResourceType 'Patient' does not match expected type 'Appointment'",
+      expression: [""],
+      severity: "error",
+    },
+  ]);
 });

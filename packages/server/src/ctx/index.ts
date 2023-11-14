@@ -20,6 +20,7 @@ import {
   outcomeFatal,
   outcomeError,
 } from "@iguhealth/operation-outcomes";
+import { FHIRRequest } from "@iguhealth/client/types";
 
 import { createPostgresClient } from "../resourceProviders/postgres/index.js";
 import { FHIRServerCTX } from "./types.js";
@@ -160,6 +161,27 @@ async function serverCapabilities(
 
 export const logger = createLogger.default();
 
+function getResourceTypeToValidate(request: FHIRRequest): ResourceType {
+  switch (request.type) {
+    case "create-request":
+      return request.resourceType as ResourceType;
+    case "update-request":
+      return request.resourceType as ResourceType;
+    case "invoke-request":
+      return "Parameters";
+    case "transaction-request":
+    case "batch-request":
+      return "Bundle";
+    default:
+      throw new OperationError(
+        outcomeError(
+          "invalid",
+          `cannot validate resource type '${request.type}'`
+        )
+      );
+  }
+}
+
 const validationMiddleware: Parameters<typeof RouterClient>[0][number] = async (
   request,
   { state, ctx },
@@ -171,10 +193,14 @@ const validationMiddleware: Parameters<typeof RouterClient>[0][number] = async (
     case "batch-request":
     case "invoke-request":
     case "transaction-request": {
-      const outcome = await validateResource(ctx, {
-        mode: request.type === "create-request" ? "create" : "update",
-        resource: request.body,
-      });
+      const outcome = await validateResource(
+        ctx,
+        getResourceTypeToValidate(request),
+        {
+          mode: request.type === "create-request" ? "create" : "update",
+          resource: request.body,
+        }
+      );
       if (
         outcome.issue.find(
           (i) => i.severity === "fatal" || i.severity === "error"
