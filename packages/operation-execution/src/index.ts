@@ -424,18 +424,12 @@ export class Operation<I, O> implements IOperation<I, O> {
       const type =
         this.operationDefinition.parameter?.find((p) => p.use === "out")
           ?.type || "Resource";
-      const fhirtype = type === "Any" ? "Resource" : type;
-      if (ctx) {
-        const issues = await validate(ctx, fhirtype, value);
-        if (issues.length > 0) return false;
-        return true;
-      }
 
-      return isResource(value)
-        ? fhirtype === "Resource"
-          ? value?.resourceType !== undefined
-          : value?.resourceType === fhirtype
-        : false;
+      const fhirtype = type === "Any" ? "Resource" : type;
+
+      const issues = await validate(ctx, fhirtype, value);
+      if (issues.length > 0) return false;
+      return true;
     }
     return await validateParameters(ctx, this, use, value);
   }

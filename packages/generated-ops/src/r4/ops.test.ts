@@ -23,11 +23,15 @@ test("Test ValueSet Expands", async () => {
     status: "final",
   };
   const output = valueSet;
-
+  
   const invoke: Invocation = async (op, ctx, input) => {
-    await op.validate(ctx, "in", input);
+    if(!await op.validate(ctx, "in", input)){
+       throw new Error("Input is invalid")
+    }
+    if(!await op.validate(ctx, "out", output)){
+      throw new Error("Output is invalid")
+    } 
 
-    await op.validate(ctx, "out", output);
     return output;
   };
   expect(invoke(ValueSetExpand.Op, ctx, { url: "asdf" })).resolves.toEqual(
@@ -44,9 +48,14 @@ test("Test ValueSet Expands", async () => {
   ).rejects.toThrow();
 
   const badOutput: Invocation = async (op, ctx, input) => {
-    await op.validate(ctx, "in", input);
+    if(!await op.validate(ctx, "in", input)){
+      throw new Error("Input is invalid")
+   }
     const output = { return: 5 };
-    await op.validate(ctx, "out", output);
+    if(!await op.validate(ctx, "out", output)){
+      throw new Error("Output is invalid")
+    } 
+
     return { return: 5 };
   };
 
