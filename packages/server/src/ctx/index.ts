@@ -29,6 +29,7 @@ import MemoryDatabaseSync from "../resourceProviders/memory/sync.js";
 import RouterClient from "../resourceProviders/router.js";
 import RedisLock from "../synchronization/redis.lock.js";
 import InlineExecutioner from "../operation-executors/local/index.js";
+import ResourceValidateInvoke from "../operation-executors/local/resource_validate.js";
 import ValueSetExpandInvoke from "../operation-executors/local/terminology/expand.js";
 import ValueSetValidateInvoke from "../operation-executors/local/terminology/validate.js";
 import CodeSystemLookupInvoke from "../operation-executors/local/terminology/lookup.js";
@@ -249,6 +250,7 @@ export async function deriveCTX(): Promise<
   const memDBAsync = MemoryDatabaseAsync(data);
   const memDBSync = MemoryDatabaseSync(data);
   const inlineOperationExecution = InlineExecutioner([
+    ResourceValidateInvoke,
     ValueSetExpandInvoke,
     ValueSetValidateInvoke,
     CodeSystemLookupInvoke,

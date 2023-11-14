@@ -13,9 +13,11 @@ export const validateResource = async (
   ctx: FHIRServerCTX,
   input: ResourceValidate.Input
 ) => {
-  switch (input.mode) {
+  const mode = input.mode ? input.mode : "no-action";
+  switch (mode) {
     case "create":
     case "update":
+    case "no-action":
     case "delete": {
       if (!input.resource)
         return outcomeError(
