@@ -4,7 +4,6 @@ import createLogger from "pino";
 import pg from "pg";
 import Redis from "ioredis";
 
-import validate from "@iguhealth/fhir-validation";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
@@ -16,12 +15,10 @@ import {
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIRClientSync } from "@iguhealth/client/interface";
-import { FHIRRequest } from "@iguhealth/client/types";
 import {
   OperationError,
   outcomeFatal,
   outcomeError,
-  outcome,
 } from "@iguhealth/operation-outcomes";
 
 import { createPostgresClient } from "../resourceProviders/postgres/index.js";
@@ -39,6 +36,7 @@ import AWSLambdaExecutioner from "../operation-executors/awsLambda/index.js";
 import RedisCache from "../cache/redis.js";
 import { TerminologyProviderMemory } from "../terminology/index.js";
 import { AWSKMSProvider } from "../encryption/kms.js";
+import { validateResource } from "../operation-executors/local/resource_validate.js";
 
 const MEMORY_TYPES: ResourceType[] = [
   "StructureDefinition",
@@ -161,27 +159,6 @@ async function serverCapabilities(
 
 export const logger = createLogger.default();
 
-function getResourceTypeToValidate(request: FHIRRequest) {
-  switch (request.type) {
-    case "create-request":
-      return request.resourceType || request.body.resourceType;
-    case "update-request":
-      return request.resourceType;
-    case "invoke-request":
-      return "Parameters";
-    case "transaction-request":
-    case "batch-request":
-      return "Bundle";
-    default:
-      throw new OperationError(
-        outcomeError(
-          "invalid",
-          `cannot validate resource type '${request.type}'`
-        )
-      );
-  }
-}
-
 const validationMiddleware: Parameters<typeof RouterClient>[0][number] = async (
   request,
   { state, ctx },
@@ -193,33 +170,16 @@ const validationMiddleware: Parameters<typeof RouterClient>[0][number] = async (
     case "batch-request":
     case "invoke-request":
     case "transaction-request": {
-      const resourceType = getResourceTypeToValidate(request);
-      const issues = await validate(
-        {
-          validateCode: async (url: string, code: string) => {
-            const result = await ctx.terminologyProvider.validate(ctx, {
-              code,
-              url,
-            });
-            return result.result;
-          },
-          resolveSD: (type) => {
-            const sd = ctx.resolveSD(type);
-            if (!sd)
-              throw new OperationError(
-                outcomeError(
-                  "invalid",
-                  `Could not validate type of ${resourceType}`
-                )
-              );
-            return sd;
-          },
-        },
-        resourceType,
-        request.body
-      );
-      if (issues.length > 0) {
-        throw new OperationError(outcome(issues));
+      const outcome = await validateResource(ctx, {
+        mode: request.type === "create-request" ? "create" : "update",
+        resource: request.body,
+      });
+      if (
+        outcome.issue.find(
+          (i) => i.severity === "fatal" || i.severity === "error"
+        )
+      ) {
+        throw new OperationError(outcome);
       }
       break;
     }
