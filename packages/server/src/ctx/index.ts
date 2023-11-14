@@ -32,9 +32,9 @@ import MemoryDatabaseSync from "../resourceProviders/memory/sync.js";
 import RouterClient from "../resourceProviders/router.js";
 import RedisLock from "../synchronization/redis.lock.js";
 import InlineExecutioner from "../operation-executors/local/index.js";
-import ValueSetExpandInvoke from "../operation-executors/local/expand.js";
-import ValueSetValidateInvoke from "../operation-executors/local/validate.js";
-import CodeSystemLookupInvoke from "../operation-executors/local/lookup.js";
+import ValueSetExpandInvoke from "../operation-executors/local/terminology/expand.js";
+import ValueSetValidateInvoke from "../operation-executors/local/terminology/validate.js";
+import CodeSystemLookupInvoke from "../operation-executors/local/terminology/lookup.js";
 import AWSLambdaExecutioner from "../operation-executors/awsLambda/index.js";
 import RedisCache from "../cache/redis.js";
 import { TerminologyProviderMemory } from "../terminology/index.js";
@@ -253,6 +253,28 @@ const capabilitiesMiddleware: Parameters<
   return next(request, args);
 };
 
+// const encryptionMiddleware: Parameters<typeof RouterClient>[0][number] = async (
+//   request,
+//   args,
+//   next
+// ) => {
+//   if (!next) throw new Error("next middleware was not defined");
+//   if (
+//     request.resourceType !== "OperationDefinition" ||
+//     !args.ctx.encryptionProvider
+//   )
+//     return next(request, args);
+
+//   switch (request.type) {
+//     case "update-request": {
+//     }
+//     case "patch-request": {
+//     }
+//     case "create-request": {
+//     }
+//   }
+// };
+
 export async function deriveCTX(): Promise<
   ({
     pg,
@@ -272,7 +294,7 @@ export async function deriveCTX(): Promise<
     CodeSystemLookupInvoke,
   ]);
   const terminologyProvider = new TerminologyProviderMemory();
-  const kmsProvider =
+  const encryptionProvider =
     process.env.ENCRYPTION_TYPE === "aws"
       ? new AWSKMSProvider({
           clientConfig: {
@@ -378,7 +400,7 @@ export async function deriveCTX(): Promise<
       cache,
       resolveSD,
       lock,
-      kmsProvider,
+      encryptionProvider,
     };
   };
 }
