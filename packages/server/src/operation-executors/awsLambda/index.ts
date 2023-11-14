@@ -331,9 +331,11 @@ function createExecutor(
               op.operationDefinition,
               request
             );
+
+            const payload = await createPayload(ctx, op, request);
+
             if (invocationContextOperation)
               throw new OperationError(invocationContextOperation);
-
             const lambda = await confirmLambdaExistsAndReady(
               client,
               layers,
@@ -341,8 +343,6 @@ function createExecutor(
               ctx,
               op
             );
-
-            const payload = await createPayload(ctx, op, request);
 
             const invoke = new InvokeCommand({
               FunctionName: lambda.Configuration?.FunctionArn,
