@@ -16,6 +16,7 @@ import {
   OpCTX,
   toParametersResource,
 } from "./index";
+import { OperationError, outcome } from "@iguhealth/operation-outcomes";
 
 const operationDefinitions = loadArtifacts(
   "OperationDefinition",
@@ -223,10 +224,14 @@ test("execution", async () => {
   };
 
   const invoke: Invocation = async (op, ctx, input) => {
-    await op.validate(ctx, "in", input);
+    const inputIssues = await op.validate(ctx, "in", input);
+    if (inputIssues.length > 0) throw new OperationError(outcome(inputIssues));
+
     // @ts-ignore
     const output = { testOut: input.test };
-    await op.validate(ctx, "out", output);
+    const outputIssues = await op.validate(ctx, "out", output);
+    if (outputIssues.length > 0)
+      throw new OperationError(outcome(outputIssues));
     return output;
   };
 
@@ -244,10 +249,14 @@ test("execution", async () => {
   ).rejects.toThrow();
 
   const invokeBadOutput: Invocation = async (op, ctx, input) => {
-    await op.validate(ctx, "in", input);
+    const inputIssues = await op.validate(ctx, "in", input);
+    if (inputIssues.length > 0) throw new OperationError(outcome(inputIssues));
     // @ts-ignore
     const output = { testOut: input.test, z: 5 };
-    await op.validate(ctx, "out", output);
+    const outputIssues = await op.validate(ctx, "out", output);
+    if (outputIssues.length > 0)
+      throw new OperationError(outcome(outputIssues));
+
     return output;
   };
 
@@ -273,16 +282,33 @@ test("paramValidation", async () => {
   };
 
   const invoke: Invocation = async (op, ctx, input) => {
-    await op.validate(ctx, "in", input);
+    const inputIssues = await op.validate(ctx, "in", input);
+    if (inputIssues.length > 0) throw new OperationError(outcome(inputIssues));
     // @ts-ignore
     const output = { testOut: input.test };
-    await op.validate(ctx, "out", output);
+    const outputIssues = await op.validate(ctx, "out", output);
+    if (outputIssues.length > 0)
+      throw new OperationError(outcome(outputIssues));
     return output;
   };
 
   expect(
-    invoke(operation, ctx, { test: "asdf", name: { given: "Bob" } })
-  ).rejects.toThrow();
+    invoke(operation, ctx, { test: "asdf", name: { given: "Bob" } }).catch(
+      (e) => {
+        throw e.operationOutcome;
+      }
+    )
+  ).rejects.toEqual({
+    issue: [
+      {
+        code: "structure",
+        diagnostics: "Element at path '/0/given' is expected to be an array.",
+        expression: ["/0/given"],
+        severity: "error",
+      },
+    ],
+    resourceType: "OperationOutcome",
+  });
 
   expect(
     invoke(operation, ctx, { test: "test", name: { given: ["Bob"] } })
@@ -309,8 +335,21 @@ test("paramValidation", async () => {
       test: "test",
       name: { given: ["Bob"] },
       patient: { resourceType: "Patient", name: [{ given: [4] }] },
+    }).catch((e) => {
+      throw e.operationOutcome;
     })
-  ).rejects.toThrow();
+  ).rejects.toEqual({
+    issue: [
+      {
+        code: "structure",
+        diagnostics:
+          "Expected primitive type 'string' at path '/0/name/0/given/0'",
+        expression: ["/0/name/0/given/0"],
+        severity: "error",
+      },
+    ],
+    resourceType: "OperationOutcome",
+  });
 
   expect(
     invoke(operation, ctx, {

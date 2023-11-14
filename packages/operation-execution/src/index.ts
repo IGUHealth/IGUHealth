@@ -1,14 +1,15 @@
 import {
   OperationDefinition,
+  OperationOutcomeIssue,
   Parameters,
   Resource,
-  StructureDefinition,
+  OperationDefinitionParameter,
 } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import validate, { ValidationCTX } from "@iguhealth/fhir-validation";
 import {
   OperationError,
-  outcome,
+  issueError,
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
@@ -224,15 +225,27 @@ function isRecord(input: unknown): input is Record<string, unknown> {
 function validateRequired(
   definitions: NonNullable<OperationDefinition["parameter"]>,
   value: Record<string, unknown>
-) {
-  definitions
+): OperationOutcomeIssue[] {
+  return definitions
     .filter((d) => d.min > 0)
-    .forEach((d) => {
-      if (!(d.name in value))
-        throw new OperationError(
-          outcomeError("required", `Missing required parameter '${d.name}'`)
-        );
-    });
+    .reduce(
+      (
+        issues: OperationOutcomeIssue[],
+        definition: OperationDefinitionParameter
+      ) => {
+        if (!(definition.name in value))
+          return [
+            ...issues,
+            issueError(
+              "required",
+              `Missing required parameter '${definition.name}'`
+            ),
+          ];
+
+        return issues;
+      },
+      []
+    );
 }
 
 function validateCardinalities(
@@ -258,9 +271,11 @@ async function validateParameter<Use extends "in" | "out">(
   paramDefinition: NonNullable<OperationDefinition["parameter"]>[number],
   use: Use,
   value: any
-) {
+): Promise<OperationOutcomeIssue[]> {
   let arr: Array<any> = (value = Array.isArray(value) ? value : [value]);
   validateCardinalities(paramDefinition, value);
+
+  let issues: OperationOutcomeIssue[] = [];
 
   for (const index in arr) {
     if (paramDefinition.type) {
@@ -270,57 +285,75 @@ async function validateParameter<Use extends "in" | "out">(
         paramDefinition.type === "DomainResource"
           ? arr[index].resourceType
           : paramDefinition.type;
-      if (ctx) {
-        const issues = await validate(ctx, type, arr, `/${index}`);
-        if (issues.length > 0) throw new OperationError(outcome(issues));
-      }
+
+      issues = [...issues, ...(await validate(ctx, type, arr, `/${index}`))];
     } else {
-      if (!paramDefinition.part)
-        throw new OperationError(
-          outcomeError(
+      if (!paramDefinition.part) {
+        issues = [
+          ...issues,
+          issueError(
             "invalid",
             `Invalid definition '${paramDefinition.name}' must have either part or type`
-          )
-        );
-      validateRequired(paramDefinition.part, value);
-      for (const part of paramDefinition.part) {
-        if (!isRecord(value)) {
-          throw new OperationError(
-            outcomeError(
-              "invalid",
-              `Parameter ${part.name} must be an object found: '${value}'`
-            )
-          );
+          ),
+        ];
+      } else {
+        let issues = validateRequired(paramDefinition.part, value);
+
+        for (const part of paramDefinition.part) {
+          if (!isRecord(value)) {
+            issues = [
+              ...issues,
+              issueError(
+                "invalid",
+                `Parameter ${part.name} must be an object found: '${value}'`
+              ),
+            ];
+          }
+          issues = [
+            ...issues,
+            ...(await validateParameter(ctx, part, use, value[part.name])),
+          ];
         }
-        await validateParameter(ctx, part, use, value[part.name]);
       }
     }
   }
+  return issues;
 }
 
 async function validateParameters<
   T extends IOperation<unknown, unknown>,
   Use extends "in" | "out"
->(ctx: ValidationCTX, op: T, use: Use, value: unknown): Promise<boolean> {
+>(
+  ctx: ValidationCTX,
+  op: T,
+  use: Use,
+  value: unknown
+): Promise<OperationOutcomeIssue[]> {
+  let issues: OperationOutcomeIssue[] = [];
   const definitions = (op.operationDefinition.parameter || []).filter(
     (p) => p.use === use
   );
   if (!isRecord(value))
-    throw new OperationError(
-      outcomeError("invalid", "Invalid input, input must be a Record")
-    );
+    return [
+      ...issues,
+      issueError("invalid", "Invalid input, input must be a Record"),
+    ];
 
-  validateRequired(definitions, value);
+  issues = [...issues, ...validateRequired(definitions, value)];
+
   for (const key of Object.keys(value)) {
     const paramDefinition = definitions.find((d) => d.name === key);
     if (paramDefinition === undefined) {
-      throw new OperationError(
-        outcomeError("invalid", `Invalid parameter ${key}`)
-      );
+      issues = [...issues, issueError("invalid", `Invalid parameter ${key}`)];
+    } else {
+      issues = [
+        ...issues,
+        ...(await validateParameter(ctx, paramDefinition, use, value[key])),
+      ];
     }
-    await validateParameter(ctx, paramDefinition, use, value[key]);
   }
-  return true;
+
+  return issues;
 }
 
 export interface OpCTX extends ValidationCTX {
@@ -342,7 +375,7 @@ export interface IOperation<I, O> {
     ctx: OpCTX,
     use: Use,
     value: unknown
-  ): Promise<boolean>;
+  ): Promise<OperationOutcomeIssue[]>;
 }
 
 function isStrictlyReturn(op: OperationDefinition): boolean {
@@ -419,7 +452,7 @@ export class Operation<I, O> implements IOperation<I, O> {
     ctx: OpCTX,
     use: Use,
     value: unknown
-  ): Promise<boolean> {
+  ): Promise<OperationOutcomeIssue[]> {
     if (isStrictlyReturn(this.operationDefinition) && use === "out") {
       const type =
         this.operationDefinition.parameter?.find((p) => p.use === "out")
@@ -428,8 +461,8 @@ export class Operation<I, O> implements IOperation<I, O> {
       const fhirtype = type === "Any" ? "Resource" : type;
 
       const issues = await validate(ctx, fhirtype, value);
-      if (issues.length > 0) return false;
-      return true;
+
+      return issues;
     }
     return await validateParameters(ctx, this, use, value);
   }
