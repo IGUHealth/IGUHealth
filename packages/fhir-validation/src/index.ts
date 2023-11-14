@@ -42,11 +42,22 @@ const REGEX: Record<string, RegExp> = {
 async function validatePrimitive(
   ctx: ValidationCTX,
   element: ElementDefinition | undefined,
-  root: any,
+  root: unknown,
   path: string,
   type: string
 ): Promise<OperationOutcome["issue"]> {
-  const value = jsonpointer.get(root, path);
+  let value;
+  if (validateIsObject(root)) value = jsonpointer.get(root, path);
+  else if (path === "") value = root;
+  else
+    return [
+      issueError(
+        "structure",
+        `Expected primitive type '${type}' at path '${path}'`,
+        [path]
+      ),
+    ];
+
   switch (type) {
     case "http://hl7.org/fhirpath/System.String":
     case "date":

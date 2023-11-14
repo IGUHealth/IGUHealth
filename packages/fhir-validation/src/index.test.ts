@@ -514,3 +514,27 @@ test("Misaligned types", async () => {
     },
   ]);
 });
+
+test("Type checking", async () => {
+  const stringValidator = createValidator(CTX, "string");
+  expect(await stringValidator("bob")).toEqual([]);
+  expect(await stringValidator({})).toEqual([
+    {
+      code: "structure",
+      diagnostics: "Expected primitive type 'string' at path ''",
+      expression: [""],
+      severity: "error",
+    },
+  ]);
+
+  const patientValidator = createValidator(CTX, "Patient");
+  expect(await patientValidator("test")).toEqual([
+    {
+      code: "structure",
+      diagnostics:
+        "Value must be an object when validating 'Patient'. Instead found type of 'string'",
+      expression: [""],
+      severity: "error",
+    },
+  ]);
+});
