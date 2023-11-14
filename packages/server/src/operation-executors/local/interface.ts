@@ -12,7 +12,7 @@ import {
 } from "@iguhealth/client/types";
 import { getOpCTX } from "../utilities.js";
 import { validateInvocationContext } from "../utilities.js";
-import { OperationError } from "@iguhealth/operation-outcomes";
+import { OperationError, outcome } from "@iguhealth/operation-outcomes";
 
 type Input<T> = T extends IOperation<infer Input, unknown> ? Input : never;
 type Output<T> = T extends IOperation<unknown, infer Output> ? Output : never;
@@ -57,9 +57,24 @@ export default function InlineOperation<
       }
 
       const input = op.parseToObject("in", request.body) as Input<OP>;
-      await op.validate(getOpCTX(ctx, request), "in", input);
+      const inputIssues = await op.validate(
+        getOpCTX(ctx, request),
+        "in",
+        input
+      );
+      if (inputIssues.length > 0)
+        throw new OperationError(outcome(inputIssues));
+
       const result = await executor(ctx, request, input);
-      await op.validate(getOpCTX(ctx, request), "out", result);
+      const outputIssues = await op.validate(
+        getOpCTX(ctx, request),
+        "out",
+        result
+      );
+
+      if (outputIssues.length > 0)
+        throw new OperationError(outcome(outputIssues));
+
       return op.parseToParameters("out", result) as Parameters;
     }
   );

@@ -4,7 +4,6 @@ import {
   CreateFunctionCommand,
   UpdateFunctionCodeCommand,
   InvokeCommand,
-  UpdateFunctionConfigurationCommand,
   TagResourceCommand,
 } from "@aws-sdk/client-lambda";
 
@@ -23,7 +22,11 @@ import {
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import { FHIRRequest } from "@iguhealth/client/types";
-import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  outcome,
+  outcomeFatal,
+} from "@iguhealth/operation-outcomes";
 import {
   ResourceType,
   id,
@@ -240,7 +243,9 @@ async function createPayload(
   const parsedBody = op.parseToObject("in", request.body);
   const opCTX = getOpCTX(ctx, request);
 
-  await op.validate(opCTX, "in", parsedBody);
+  const issues = await op.validate(opCTX, "in", parsedBody);
+  if (issues.length > 0) throw new OperationError(outcome(issues));
+
   if (!process.env.API_URL)
     throw new OperationError(outcomeFatal("invalid", "API_URL is not set"));
 
@@ -375,7 +380,8 @@ function createExecutor(
               );
             }
 
-            await op.validate(opCTX, "out", output);
+            const issues = await op.validate(opCTX, "out", output);
+            if (issues.length > 0) throw new OperationError(outcome(issues));
 
             const outputParameters = op.parseToParameters(
               "out",

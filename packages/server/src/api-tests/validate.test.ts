@@ -104,3 +104,23 @@ test("ValidationOperation", async () => {
     resourceType: "OperationOutcome",
   });
 });
+
+test("Invalid Operation Payload", async () => {
+  expect(
+    // @ts-ignore
+    client.invoke_system(ValueSetExpand.Op, {}, { url: 5 }).catch((e) => {
+      throw e.operationOutcome;
+    })
+  ).rejects.toEqual({
+    issue: [
+      {
+        code: "structure",
+        diagnostics:
+          "Expected primitive type 'uri' at path '/parameter/0/valueUri'",
+        expression: ["/parameter/0/valueUri"],
+        severity: "error",
+      },
+    ],
+    resourceType: "OperationOutcome",
+  });
+});

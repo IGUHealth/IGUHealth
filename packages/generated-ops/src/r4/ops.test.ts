@@ -1,10 +1,12 @@
 import path from "node:path";
 import { expect, test } from "@jest/globals";
+
 import { Invocation } from "@iguhealth/operation-execution";
-import { ValueSetExpand } from "./ops.js";
 import { ValueSet } from "@iguhealth/fhir-types/r4/types";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { OpCTX } from "@iguhealth/operation-execution/src/index.js";
+
+import { ValueSetExpand } from "./ops.js";
 
 const sds = loadArtifacts("StructureDefinition", path.join(__dirname, "../"));
 
@@ -25,12 +27,12 @@ test("Test ValueSet Expands", async () => {
   const output = valueSet;
   
   const invoke: Invocation = async (op, ctx, input) => {
-    if(!await op.validate(ctx, "in", input)){
-       throw new Error("Input is invalid")
-    }
-    if(!await op.validate(ctx, "out", output)){
-      throw new Error("Output is invalid")
-    } 
+    const inputIssues = await op.validate(ctx, "in", input);
+    if (inputIssues.length > 0) throw new Error("Input is invalid")
+    
+    const outputIssues = await op.validate(ctx, "out", output);
+    if (outputIssues.length > 0) throw new Error("Output is invalid")
+
 
     return output;
   };
@@ -48,15 +50,16 @@ test("Test ValueSet Expands", async () => {
   ).rejects.toThrow();
 
   const badOutput: Invocation = async (op, ctx, input) => {
-    if(!await op.validate(ctx, "in", input)){
-      throw new Error("Input is invalid")
-   }
+    
+    const inputIssues = await op.validate(ctx, "in", input);
+    if (inputIssues.length > 0) throw new Error("Input is invalid")
+    
     const output = { return: 5 };
-    if(!await op.validate(ctx, "out", output)){
-      throw new Error("Output is invalid")
-    } 
 
-    return { return: 5 };
+    const outputIssues = await op.validate(ctx, "out", output);
+    if (outputIssues.length > 0) throw new Error("Output is invalid")
+
+    return output
   };
 
   expect(badOutput(ValueSetExpand.Op, ctx, { url: "asdf" })).rejects.toThrow();
