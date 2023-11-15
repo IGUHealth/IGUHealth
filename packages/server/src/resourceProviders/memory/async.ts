@@ -66,7 +66,7 @@ function createMemoryMiddleware<
           const resourceSet =
             request.level === "type"
               ? Object.values(
-                  args.state.data[request.resourceType as ResourceType] || {}
+                  args.state.data[request.resourceType] || {}
                 ).filter((v): v is Resource => v !== undefined)
               : Object.keys(args.state.data)
                   .map((k) =>
@@ -163,8 +163,7 @@ function createMemoryMiddleware<
         }
         case "create-request": {
           const resource = request.body;
-          const resources =
-            args.state.data[request.resourceType as ResourceType];
+          const resources = args.state.data[request.resourceType];
           if (!resource?.id)
             resource.id = `${Math.round(Math.random() * 100000000)}`;
 
@@ -187,8 +186,7 @@ function createMemoryMiddleware<
           };
         }
         case "read-request": {
-          const data =
-            args.state.data[request.resourceType as ResourceType]?.[request.id];
+          const data = args.state.data[request.resourceType]?.[request.id];
           if (!data) {
             throw new Error(
               `Not found resource of type '${request.resourceType}' with id '${request.id}'`

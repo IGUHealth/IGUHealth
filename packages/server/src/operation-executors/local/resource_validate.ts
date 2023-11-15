@@ -73,7 +73,7 @@ export const validateResource = async (
 export default InlineOperation(ResourceValidate.Op, (ctx, request, input) => {
   return validateResource(
     ctx,
-    (request as TypeInteraction).resourceType as ResourceType,
+    (request as TypeInteraction).resourceType,
     input
   );
 });

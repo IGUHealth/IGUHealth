@@ -166,9 +166,9 @@ export const logger = createLogger.default();
 function getResourceTypeToValidate(request: FHIRRequest): ResourceType {
   switch (request.type) {
     case "create-request":
-      return request.resourceType as ResourceType;
+      return request.resourceType;
     case "update-request":
-      return request.resourceType as ResourceType;
+      return request.resourceType;
     case "invoke-request":
       return "Parameters";
     case "transaction-request":

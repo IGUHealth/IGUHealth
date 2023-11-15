@@ -1,6 +1,11 @@
 import Koa from "koa";
 
-import { Bundle, Parameters, Resource } from "@iguhealth/fhir-types/r4/types";
+import {
+  Bundle,
+  Parameters,
+  Resource,
+  ResourceType,
+} from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import parseParameters from "@iguhealth/client/url";
@@ -127,7 +132,7 @@ export function KoaRequestToFHIRRequest(
           return {
             type: "create-request",
             level: "type",
-            resourceType: urlPieces[0],
+            resourceType: urlPieces[0] as ResourceType,
             body: request.body as Parameters,
           };
         } else if (urlPieces[0] === "_search") {
@@ -153,7 +158,7 @@ export function KoaRequestToFHIRRequest(
           return {
             type: "search-request",
             level: "type",
-            resourceType: urlPieces[0].split("?")[0],
+            resourceType: urlPieces[0].split("?")[0] as ResourceType,
             parameters: parseParameters(url),
           };
         }
@@ -165,7 +170,7 @@ export function KoaRequestToFHIRRequest(
         return {
           type: "invoke-request",
           level: "type",
-          resourceType: urlPieces[0],
+          resourceType: urlPieces[0] as ResourceType,
           operation: urlPieces[1].slice(1),
           body: request.body as Parameters,
         };
@@ -191,14 +196,14 @@ export function KoaRequestToFHIRRequest(
         return {
           type: "history-request",
           level: "type",
-          resourceType: urlPieces[0],
+          resourceType: urlPieces[0] as ResourceType,
           parameters: parseParameters(url),
         };
       } else if (resourceTypes.has(urlPieces[0])) {
         return {
           type: "read-request",
           level: "instance",
-          resourceType: urlPieces[0],
+          resourceType: urlPieces[0] as ResourceType,
           id: urlPieces[1],
         };
       }
@@ -207,7 +212,7 @@ export function KoaRequestToFHIRRequest(
         return {
           type: "update-request",
           level: "instance",
-          resourceType: urlPieces[0],
+          resourceType: urlPieces[0] as ResourceType,
           id: urlPieces[1],
           body: request.body as Resource,
         };
@@ -217,7 +222,7 @@ export function KoaRequestToFHIRRequest(
         return {
           type: "patch-request",
           level: "instance",
-          resourceType: urlPieces[0],
+          resourceType: urlPieces[0] as ResourceType,
           id: urlPieces[1],
           body: request.body as object,
         };
@@ -227,7 +232,7 @@ export function KoaRequestToFHIRRequest(
         return {
           type: "delete-request",
           level: "instance",
-          resourceType: urlPieces[0],
+          resourceType: urlPieces[0] as ResourceType,
           id: urlPieces[1],
         };
       }
@@ -238,7 +243,7 @@ export function KoaRequestToFHIRRequest(
         return {
           type: "invoke-request",
           level: "instance",
-          resourceType: urlPieces[0],
+          resourceType: urlPieces[0] as ResourceType,
           id: urlPieces[1],
           operation: urlPieces[2].slice(1),
           body: request.body as Parameters,
@@ -259,7 +264,7 @@ export function KoaRequestToFHIRRequest(
         return {
           type: "history-request",
           level: "instance",
-          resourceType: urlPieces[0],
+          resourceType: urlPieces[0] as ResourceType,
           id: urlPieces[1],
           parameters: parseParameters(url),
         };
@@ -270,7 +275,7 @@ export function KoaRequestToFHIRRequest(
       return {
         type: "vread-request",
         level: "instance",
-        resourceType: urlPieces[0],
+        resourceType: urlPieces[0] as ResourceType,
         id: urlPieces[1],
         versionId: urlPieces[3],
       };

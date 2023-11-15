@@ -260,7 +260,7 @@ async function createPayload(
       level: request.level,
       resourceType:
         request.level === "type" || request.level === "instance"
-          ? (request.resourceType as ResourceType)
+          ? request.resourceType
           : undefined,
       id: request.level === "instance" ? request.resourceType : undefined,
     },

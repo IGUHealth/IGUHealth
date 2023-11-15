@@ -593,7 +593,7 @@ function createPostgresMiddleware<
           const resource = await getResource(
             args.state.client,
             args.ctx,
-            request.resourceType as ResourceType,
+            request.resourceType,
             request.id
           );
           return {
@@ -674,7 +674,7 @@ function createPostgresMiddleware<
             args.state.client,
             "PATCH",
             args.ctx,
-            request.resourceType as ResourceType,
+            request.resourceType,
             request.id,
             request.body as Operation[]
           );
@@ -696,7 +696,7 @@ function createPostgresMiddleware<
             args.state.client,
             "PUT",
             args.ctx,
-            request.resourceType as ResourceType,
+            request.resourceType,
             request.id,
             [{ op: "replace", path: "", value: request.body }]
           );
@@ -717,7 +717,7 @@ function createPostgresMiddleware<
           await deleteResource(
             args.state.client,
             args.ctx,
-            request.resourceType as ResourceType,
+            request.resourceType,
             request.id
           );
 
@@ -739,7 +739,7 @@ function createPostgresMiddleware<
               const instanceHistory = await getInstanceHistory(
                 args.state.client,
                 args.ctx,
-                request.resourceType as ResourceType,
+                request.resourceType,
                 request.id,
                 request.parameters || []
               );
@@ -759,7 +759,7 @@ function createPostgresMiddleware<
               const typeHistory = await getTypeHistory(
                 args.state.client,
                 args.ctx,
-                request.resourceType as ResourceType,
+                request.resourceType,
                 request.parameters || []
               );
               return {
