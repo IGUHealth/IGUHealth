@@ -47,8 +47,7 @@ import {
   ISOLATION_LEVEL,
   buildTransactionTopologicalGraph,
 } from "../transactions.js";
-import { State } from "@aws-sdk/client-lambda";
-import { ResourceValidate } from "@iguhealth/generated-ops/r4";
+import { validateResource } from "../../operation-executors/local/resource_validate.js";
 
 async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
@@ -503,21 +502,16 @@ async function patchResource<CTX extends FHIRServerCTX>(
     try {
       const newResource = jsonpatch.applyPatch(resource, patches)
         .newDocument as Resource;
-      const validationOperationOutcome = await ctx.client.invoke_type(
-        ResourceValidate.Op,
-        ctx,
-        resourceType,
-        {
-          resource: newResource,
-        }
-      );
 
+      const outcome = await validateResource(ctx, resourceType, {
+        resource: newResource,
+      });
       if (
-        validationOperationOutcome.issue.filter(
-          (i) => i.severity === "fatal" || i.severity === "error"
-        ).length !== 0
+        outcome.issue.filter(
+          (i) => i.severity === "error" || i.severity === "fatal"
+        ).length > 0
       ) {
-        throw new OperationError(validationOperationOutcome);
+        throw new OperationError(outcome);
       }
 
       if (
