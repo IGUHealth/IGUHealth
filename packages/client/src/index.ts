@@ -171,7 +171,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       level: "instance",
       resourceType: resource.resourceType,
       id: resource.id,
-      body: resource,
+      body: patches,
     });
     if (response.type !== "patch-response")
       throw new Error("Unexpected response type");
@@ -464,7 +464,7 @@ export class SynchronousClient<State, CTX> implements FHIRClientSync<CTX> {
       level: "instance",
       resourceType: resource.resourceType,
       id: resource.id,
-      body: resource,
+      body: patches,
     });
     if (response.type !== "patch-response")
       throw new Error("Unexpected response type");

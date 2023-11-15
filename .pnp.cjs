@@ -11259,6 +11259,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/pg", "npm:8.10.2"],\
             ["@types/uuid", "npm:9.0.2"],\
             ["adm-zip", "npm:0.5.10"],\
+            ["ajv", "npm:8.12.0"],\
             ["commander", "npm:11.1.0"],\
             ["copyfiles", "npm:2.4.1"],\
             ["dayjs", "npm:1.11.9"],\

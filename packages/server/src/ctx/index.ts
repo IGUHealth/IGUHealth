@@ -3,6 +3,7 @@ import { fileURLToPath } from "url";
 import createLogger from "pino";
 import pg from "pg";
 import Redis from "ioredis";
+import Ajv from "ajv";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
@@ -39,6 +40,7 @@ import RedisCache from "../cache/redis.js";
 import { TerminologyProviderMemory } from "../terminology/index.js";
 import { AWSKMSProvider } from "../encryption/kms.js";
 import { validateResource } from "../operation-executors/local/resource_validate.js";
+import JSONPatchSchema from "../schemas/jsonpatch.schema.js";
 
 const MEMORY_TYPES: ResourceType[] = [
   "StructureDefinition",
@@ -182,6 +184,9 @@ function getResourceTypeToValidate(request: FHIRRequest): ResourceType {
   }
 }
 
+const ajv = new Ajv.default({});
+const validateJSONPatch = ajv.compile(JSONPatchSchema);
+
 const validationMiddleware: Parameters<typeof RouterClient>[0][number] = async (
   request,
   { state, ctx },
@@ -211,12 +216,13 @@ const validationMiddleware: Parameters<typeof RouterClient>[0][number] = async (
       break;
     }
     case "patch-request": {
-      throw new OperationError(
-        outcomeError(
-          "not-supported",
-          `Operation '${request.type}' not supported`
-        )
-      );
+      const valid = validateJSONPatch(request.body);
+      if (!valid) {
+        throw new OperationError(
+          outcomeError("invalid", `JSON Patch is not valid.`)
+        );
+      }
+      break;
     }
   }
   if (!next) throw new Error("No next");
@@ -363,6 +369,7 @@ export async function deriveCTX(): Promise<
             "read-request",
             "search-request",
             "create-request",
+            "patch-request",
             "update-request",
             "delete-request",
             "history-request",
