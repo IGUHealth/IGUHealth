@@ -48,6 +48,7 @@ import {
   buildTransactionTopologicalGraph,
 } from "../transactions.js";
 import { State } from "@aws-sdk/client-lambda";
+import { ResourceValidate } from "@iguhealth/generated-ops/r4";
 
 async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
@@ -499,26 +500,56 @@ async function patchResource<CTX extends FHIRServerCTX>(
   return transaction(ISOLATION_LEVEL.Serializable, ctx, client, async (ctx) => {
     const resource = await getResource(client, ctx, resourceType, id);
     // [TODO] CHECK VALIDATION
-    const newResource = jsonpatch.applyPatch(resource, patches)
-      .newDocument as Resource;
-    if (
-      newResource.resourceType !== resource.resourceType ||
-      newResource.id !== resource.id
-    ) {
-      newResource.id = resource.id;
+    try {
+      const newResource = jsonpatch.applyPatch(resource, patches)
+        .newDocument as Resource;
+      const validationOperationOutcome = await ctx.client.invoke_type(
+        ResourceValidate.Op,
+        ctx,
+        resourceType,
+        {
+          resource: newResource,
+        }
+      );
+
+      if (
+        validationOperationOutcome.issue.filter(
+          (i) => i.severity === "fatal" || i.severity === "error"
+        ).length !== 0
+      ) {
+        throw new OperationError(validationOperationOutcome);
+      }
+
+      if (
+        newResource.resourceType !== resource.resourceType ||
+        newResource.id !== resource.id
+      ) {
+        newResource.id = resource.id;
+      }
+      const queryText =
+        "INSERT INTO resources(workspace, request_method, author, resource, prev_version_id, patches) VALUES($1, $2, $3, $4, $5, $6) RETURNING resource";
+      const res = await client.query(queryText, [
+        ctx.workspace,
+        request_method,
+        ctx.author,
+        newResource,
+        resource.meta?.versionId,
+        JSON.stringify(patches),
+      ]);
+      await indexResource(client, ctx, res.rows[0].resource as Resource);
+      return res.rows[0].resource as Resource;
+    } catch (e) {
+      if (e instanceof OperationError) throw e;
+      else {
+        ctx.logger.error(e);
+        throw new OperationError(
+          outcomeError(
+            "structure",
+            `Patch could not be applied to the given resource '${resourceType}/${id}'`
+          )
+        );
+      }
     }
-    const queryText =
-      "INSERT INTO resources(workspace, request_method, author, resource, prev_version_id, patches) VALUES($1, $2, $3, $4, $5, $6) RETURNING resource";
-    const res = await client.query(queryText, [
-      ctx.workspace,
-      request_method,
-      ctx.author,
-      newResource,
-      resource.meta?.versionId,
-      JSON.stringify(patches),
-    ]);
-    await indexResource(client, ctx, res.rows[0].resource as Resource);
-    return res.rows[0].resource as Resource;
   });
 }
 
@@ -644,10 +675,28 @@ function createPostgresMiddleware<
           };
         }
 
-        case "patch-request":
-          throw new OperationError(
-            outcomeError("not-supported", `Patch is not yet supported.`)
+        case "patch-request": {
+          const savedResource = await patchResource(
+            args.state.client,
+            "PATCH",
+            args.ctx,
+            request.resourceType as ResourceType,
+            request.id,
+            request.body as Operation[]
           );
+
+          return {
+            state: args.state,
+            ctx: args.ctx,
+            response: {
+              level: "instance",
+              resourceType: request.resourceType,
+              id: request.id,
+              type: "patch-response",
+              body: savedResource,
+            },
+          };
+        }
         case "update-request": {
           const savedResource = await patchResource(
             args.state.client,
