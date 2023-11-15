@@ -246,7 +246,7 @@ function processSubscription(
         case "type": {
           historyPoll = await ctx.client.historyType(
             ctx,
-            request.resourceType as ResourceType,
+            request.resourceType,
             [
               {
                 name: "_since-version",

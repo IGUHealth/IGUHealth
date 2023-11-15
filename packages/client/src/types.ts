@@ -1,6 +1,7 @@
 import {
   id,
   Resource,
+  ResourceType,
   Bundle,
   BundleEntry,
   CapabilityStatement,
@@ -48,13 +49,13 @@ type ResponseInteractionTypes = {
 
 export type InstanceInteraction = {
   level: RequestLevel["instance"];
-  resourceType: string;
+  resourceType: ResourceType;
   id: id;
 };
 
 export type TypeInteraction = {
   level: RequestLevel["type"];
-  resourceType: string;
+  resourceType: ResourceType;
 };
 
 export type SystemInteraction = {

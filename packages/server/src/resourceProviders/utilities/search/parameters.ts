@@ -71,16 +71,13 @@ export function searchParameterToTableName(
 function _deriveResourceTypeFilter(request: FHIRRequest): string[] {
   switch (request.type) {
     case "search-request": {
-      if (request.level === "type")
-        return [request.resourceType as ResourceType];
+      if (request.level === "type") return [request.resourceType];
       const _typeParameter = request.parameters.find((p) => p.name === "_type");
       if (_typeParameter) return _typeParameter.value as ResourceType[];
       return [];
     }
     default:
-      return "resourceType" in request
-        ? [request.resourceType as ResourceType]
-        : [];
+      return "resourceType" in request ? [request.resourceType] : [];
   }
 }
 
