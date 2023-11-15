@@ -44,9 +44,8 @@ test("Test successfull patch", async () => {
       issue: [
         {
           code: "structure",
-          diagnostics:
-            "Additional fields found at path '/parameter/0/resource': 'd'",
-          expression: ["/parameter/0/resource"],
+          diagnostics: "Additional fields found at path '': 'd'",
+          expression: [""],
           severity: "error",
         },
       ],
