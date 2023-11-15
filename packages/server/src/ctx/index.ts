@@ -184,7 +184,7 @@ function getResourceTypeToValidate(request: FHIRRequest): ResourceType {
   }
 }
 
-var ajv = new Ajv.default({});
+const ajv = new Ajv.default({});
 const validateJSONPatch = ajv.compile(JSONPatchSchema);
 
 const validationMiddleware: Parameters<typeof RouterClient>[0][number] = async (
