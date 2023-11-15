@@ -210,3 +210,71 @@ test("typechoice", () => {
   cur = flattenedDescend(cur[0], "valueReference");
   expect(cur[0].meta()?.type).toEqual("Reference");
 });
+
+function getValue(loc: (string | number)[] = [], obj: any) {
+  let cur: any = obj;
+  for (const l of loc) {
+    cur = cur[l];
+  }
+  return cur;
+}
+
+test("Location test primitive extensions", () => {
+  const patient = new MetaValueSingular(
+    {
+      type: {
+        type: "Practitioner",
+        getSD: (type: string) => {
+          const foundSD = sds.find((sd) => sd.type === type);
+          return foundSD;
+        },
+      },
+    },
+    {
+      id: "123",
+      resourceType: "Patient",
+      identifier: [{ system: "mrn", value: "123" }],
+      deceasedBoolean: true,
+      name: [
+        {
+          given: ["Bob"],
+          _given: [
+            { extension: [{ url: "https://given.com", valueString: "given" }] },
+          ],
+        },
+      ],
+      _deceasedBoolean: {
+        extension: [{ url: "https://test.com", valueString: "boolean" }],
+      },
+    }
+  );
+
+  let cur = flattenedDescend(patient, "deceased");
+  cur = flattenedDescend(cur[0], "extension");
+  cur = flattenedDescend(cur[0], "value");
+  expect(cur[0].location()).toEqual([
+    "_deceasedBoolean",
+    "extension",
+    0,
+    "valueString",
+  ]);
+  expect(cur[0].valueOf()).toEqual("boolean");
+  expect(getValue(cur[0].location(), patient.valueOf())).toEqual("boolean");
+
+  cur = flattenedDescend(patient, "name");
+  cur = flattenedDescend(cur[0], "given");
+  cur = flattenedDescend(cur[0], "extension");
+  cur = flattenedDescend(cur[0], "value");
+
+  expect(cur[0].location()).toEqual([
+    "name",
+    0,
+    "_given",
+    0,
+    "extension",
+    0,
+    "valueString",
+  ]);
+  expect(cur[0].valueOf()).toEqual("given");
+  expect(getValue(cur[0].location(), patient.valueOf())).toEqual("given");
+});
