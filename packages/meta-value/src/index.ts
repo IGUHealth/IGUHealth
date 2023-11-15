@@ -273,8 +273,16 @@ function descendLoc<T>(
   loc: Location | undefined = [],
   field: string
 ): Location {
-  if (isFPPrimitive(v) && loc.length > 0) {
-    loc[loc.length - 1] = `_${loc[loc.length - 1]}`;
+  // Need special handling for .value and extensions which are under _fieldName for primitives.
+  if (isFPPrimitive(v)) {
+    if (loc.length > 0 && field !== "value") {
+      return [
+        ...loc.slice(0, loc.length - 1),
+        `_${loc[loc.length - 1]}`,
+        field,
+      ];
+    }
+    return loc;
   }
   return [...loc, field];
 }
