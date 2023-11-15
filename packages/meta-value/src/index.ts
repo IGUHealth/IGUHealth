@@ -268,13 +268,27 @@ export function toMetaValueNodes<T>(
 }
 
 // Need special handling for primitives which if going into elements will need to use _field.
-function descendLoc<T>(
-  v: MetaValueSingular<T>["internalValue"],
-  loc: Location | undefined = [],
-  field: string
-): Location {
-  if (isFPPrimitive(v) && loc.length > 0) {
-    loc[loc.length - 1] = `_${loc[loc.length - 1]}`;
+function descendLoc<T>(v: MetaValueSingular<T>, field: string): Location {
+  const loc = v.location() || [];
+  // Need special handling for .value and extensions which are under _fieldName for primitives.
+  if (isFPPrimitive(v.internalValue)) {
+    if (field === "value") return loc;
+    // Handle Array and singular
+    // Array primitives parents will be number over field.
+    if (typeof loc[loc.length - 1] === "number") {
+      return [
+        ...loc.slice(0, loc.length - 2),
+        `_${loc[loc.length - 2]}`,
+        loc[loc.length - 1],
+        field,
+      ];
+    } else {
+      return [
+        ...loc.slice(0, loc.length - 1),
+        `_${loc[loc.length - 1]}`,
+        field,
+      ];
+    }
   }
   return [...loc, field];
 }
@@ -293,7 +307,7 @@ export function descend<T>(
         | Element
         | undefined;
       const nextMeta = {
-        location: descendLoc(internalValue, node.location(), computedField),
+        location: descendLoc(node, computedField),
         type: deriveNextMetaInformation(node.meta(), computedField),
       };
 

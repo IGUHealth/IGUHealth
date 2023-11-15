@@ -253,19 +253,21 @@ const capabilitiesMiddleware: Parameters<
 // ) => {
 //   if (!next) throw new Error("next middleware was not defined");
 //   if (
-//     request.resourceType !== "OperationDefinition" ||
+//     ("resourceType" in request &&
+//       request.resourceType !== "OperationDefinition") ||
 //     !args.ctx.encryptionProvider
-//   )
-//     return next(request, args);
-
-//   switch (request.type) {
-//     case "update-request": {
-//     }
-//     case "patch-request": {
-//     }
-//     case "create-request": {
+//   ) {
+//     switch (request.type) {
+//       case "update-request": {
+//       }
+//       case "patch-request": {
+//       }
+//       case "create-request": {
+//       }
 //     }
 //   }
+
+//   return next(request, args);
 // };
 
 export async function deriveCTX(): Promise<

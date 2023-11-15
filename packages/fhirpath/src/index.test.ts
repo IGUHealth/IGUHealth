@@ -1,5 +1,9 @@
 import { evaluate, evaluateWithMeta } from "./index";
-import { StructureDefinition, code } from "@iguhealth/fhir-types/r4/types";
+import {
+  StructureDefinition,
+  OperationDefinition,
+  code,
+} from "@iguhealth/fhir-types/r4/types";
 import { expect, test } from "@jest/globals";
 import { loadArtifacts } from "@iguhealth/artifacts";
 
@@ -796,4 +800,37 @@ test("descendants with type filter", () => {
       metaOptions("Patient")
     )
   ).toEqual([{ reference: "urn:oid:2" }]);
+});
+
+test("Get Locations for extensions", () => {
+  const operationDefinition: OperationDefinition = {
+    resourceType: "OperationDefinition",
+    status: "active",
+    system: true,
+    type: false,
+    instance: false,
+    code: "test",
+    kind: "operation",
+    name: "Test",
+    _name: {
+      extension: [
+        {
+          url: "https://iguhealth.app/Extension/encrypted-value",
+          valueString: "testing",
+        },
+      ],
+    },
+  };
+
+  const nodes = evaluateWithMeta(
+    "$this.descendants().where($this.extension.url=%extUrl).value",
+    operationDefinition,
+    {
+      variables: {
+        extUrl: "https://iguhealth.app/Extension/encrypted-value",
+      },
+    }
+  );
+  expect(nodes.map((n) => n.valueOf())).toEqual(["Test"]);
+  expect(nodes.map((n) => n.location())).toEqual([["name"]]);
 });
