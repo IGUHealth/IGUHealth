@@ -38,7 +38,7 @@ import CodeSystemLookupInvoke from "../operation-executors/local/terminology/loo
 import AWSLambdaExecutioner from "../operation-executors/awsLambda/index.js";
 import RedisCache from "../cache/redis.js";
 import { TerminologyProviderMemory } from "../terminology/index.js";
-import { AWSKMSProvider } from "../encryption/kms.js";
+import { AWSKMSProvider } from "../encryption/provider/kms.js";
 import { validateResource } from "../operation-executors/local/resource_validate.js";
 import JSONPatchSchema from "../schemas/jsonpatch.schema.js";
 

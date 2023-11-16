@@ -347,7 +347,7 @@ export class MetaValueSingular<T> implements MetaValue<T> {
   isArray(): this is MetaValueArray<T> {
     return false;
   }
-  location(): Location | undefined {
+  location(): Location {
     return this._meta.location;
   }
 }
@@ -384,7 +384,7 @@ export class MetaValueArray<T> implements MetaValue<Array<T>> {
   meta(): TypeMeta | undefined {
     return this._meta.type;
   }
-  location(): Location | undefined {
+  location(): Location {
     return this._meta.location;
   }
 }
