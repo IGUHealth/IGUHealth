@@ -5182,3 +5182,42 @@ export module ValueSetValidateCode {
     ],
   });
 }
+export module IguhealthEncrypt {
+  export type Input = { value: fhirTypes.string };
+  export type Output = { encryptedValue: fhirTypes.string };
+  export type IOp = IOperation<Input, Output>;
+  export const Op: IOp = new Operation<Input, Output>({
+    resourceType: "OperationDefinition",
+    id: "iguhealth-encrypt",
+    url: "https://iguhealth.app/OperationDefinition/encrypt",
+    version: "4.0.1",
+    name: "Encrypt a string value",
+    status: "draft",
+    kind: "operation",
+    date: "2023-11-16T09:29:23+11:00",
+    publisher: "IGUHealth",
+    description: "Encrypts a passed in string value",
+    code: "encrypt",
+    system: true,
+    type: false,
+    instance: false,
+    parameter: [
+      {
+        name: "value",
+        use: "in",
+        min: 1,
+        max: "1",
+        documentation: "Value to encrypt",
+        type: "string",
+      },
+      {
+        name: "encryptedValue",
+        use: "out",
+        min: 1,
+        max: "1",
+        documentation: "Value that has been encrypted",
+        type: "string",
+      },
+    ],
+  });
+}

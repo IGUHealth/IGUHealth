@@ -2,7 +2,6 @@ import { ValueSetValidateCode } from "@iguhealth/generated-ops/r4";
 
 import { FHIRServerCTX } from "../../../ctx/types.js";
 import InlineOperation from "../interface.js";
-import { TerminologyProviderMemory } from "../../../terminology/index.js";
 import { FHIRRequest } from "@iguhealth/client/types";
 
 const ValueSetValidateInvoke = InlineOperation(

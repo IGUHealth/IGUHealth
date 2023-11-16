@@ -54,19 +54,23 @@
       "resourceType": "ValueSet"
     },
     {
-      "filename": "r4/iguhealth/client-application.json",
+      "filename": "r4/iguhealth/operation/encrypt.json",
+      "resourceType": "OperationDefinition"
+    },
+    {
+      "filename": "r4/iguhealth/structuredefinition/client-application.json",
       "resourceType": "StructureDefinition"
     },
     {
-      "filename": "r4/iguhealth/connection.json",
+      "filename": "r4/iguhealth/structuredefinition/connection.json",
       "resourceType": "StructureDefinition"
     },
     {
-      "filename": "r4/iguhealth/parameters.json",
+      "filename": "r4/iguhealth/structuredefinition/parameters.json",
       "resourceType": "SearchParameter"
     },
     {
-      "filename": "r4/iguhealth/tenant.json",
+      "filename": "r4/iguhealth/structuredefinition/tenant.json",
       "resourceType": "StructureDefinition"
     }
   ]
