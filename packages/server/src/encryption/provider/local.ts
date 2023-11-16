@@ -36,8 +36,8 @@ export default class LocalEncryption implements EncryptionProvider {
     context: Record<string, string>,
     data: string
   ): Promise<string> {
-    let encryptedText = Buffer.from(data, "hex");
-    let decipher = crypto.createDecipheriv(
+    const encryptedText = Buffer.from(data, "hex");
+    const decipher = crypto.createDecipheriv(
       this._alg,
       Buffer.from(this._key),
       this._iv
