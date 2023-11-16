@@ -23,6 +23,7 @@
   "files": [
     "readme.md",
     "types/**",
+    "lib/**",
     "src/**"
   ]
 }
