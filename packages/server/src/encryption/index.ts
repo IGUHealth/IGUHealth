@@ -2,33 +2,52 @@ import { Resource } from "@iguhealth/fhir-types/r4/types";
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import jsonpatch, { Operation } from "fast-json-patch";
 
-import { EncryptionProvider } from "./provider/interface.js";
 import { FHIRServerCTX } from "../ctx/types.js";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 function toFP(loc: (string | number)[]) {
-  return loc
-    .map((v) => {
-      if (typeof v === "string") return v;
-      return `[${v}]`;
-    })
-    .join(".");
+  let FP = "$this";
+  for (const field of loc) {
+    if (typeof field === "string") FP = `${FP}.${field}`;
+    else FP = `${FP}[${field}]`;
+  }
+  return FP;
 }
+
+export const ENCRYPTION_URL = "https://iguhealth.app/Extension/encrypt-value";
 
 export async function encryptResource<T extends Resource>(
   ctx: FHIRServerCTX,
-  provider: EncryptionProvider,
   resource: T
 ): Promise<T> {
+  const encryptionProvider = ctx.encryptionProvider;
+  if (!encryptionProvider)
+    throw new OperationError(
+      outcomeError("invalid", "No encryption provider configured.")
+    );
+
   const encryptionLocations = evaluateWithMeta(
     "$this.descendants().where($this.extension.url=%extUrl).value",
-    resource
+    resource,
+    {
+      variables: {
+        extUrl: ENCRYPTION_URL,
+      },
+    }
   );
   const operations = await Promise.all(
     encryptionLocations.map(async (metaValue): Promise<Operation[]> => {
+      console.log(
+        `${toFP(metaValue.location())}.extension.where(url=%extUrl).value`
+      );
       const extension = evaluateWithMeta(
         `${toFP(metaValue.location())}.extension.where(url=%extUrl).value`,
-        resource
+        resource,
+        {
+          variables: {
+            extUrl: ENCRYPTION_URL,
+          },
+        }
       );
       if (extension.length < 1) {
         throw new OperationError(
@@ -58,19 +77,19 @@ export async function encryptResource<T extends Resource>(
       }
 
       if (extension.valueOf() !== metaValue.valueOf()) {
-        const encryptedValue = await provider.encrypt(
+        const encryptedValue = await encryptionProvider.encrypt(
           { workspace: ctx.workspace },
           value
         );
         return [
           {
             op: "replace",
-            path: metaValue.location().join("/"),
+            path: `/${metaValue.location().join("/")}`,
             value: encryptedValue,
           },
           {
             op: "replace",
-            path: extension[0].location().join("/"),
+            path: `/${extension[0].location().join("/")}`,
             value: encryptedValue,
           },
         ];
