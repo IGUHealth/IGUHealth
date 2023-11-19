@@ -74,9 +74,5 @@ test("get function", () => {
 
 test("path meta", () => {
   const nestedLoc = descend(pointer("Patient", "123"), "name");
-
-  const z = pathMeta(nestedLoc);
-  toJSONPointer(nestedLoc);
-
   expect(pathMeta(nestedLoc)).toEqual({ resourceType: "Patient", id: "123" });
 });

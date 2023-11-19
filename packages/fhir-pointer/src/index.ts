@@ -1,6 +1,11 @@
 import jsonpointer from "jsonpointer";
 
-import { AResource, ResourceType, id } from "@iguhealth/fhir-types/r4/types";
+import {
+  AResource,
+  Resource,
+  ResourceType,
+  id,
+} from "@iguhealth/fhir-types/r4/types";
 
 // Parent Loc
 declare const __parent: unique symbol;
@@ -58,9 +63,9 @@ export function toJSONPointer<T, R, P extends Parent<T>>(loc: Loc<T, R, P>) {
   return loc.substring(loc.indexOf("/"), loc.length);
 }
 
-export function pathMeta<T, R, P extends Parent<T>>(
+export function pathMeta<T extends Resource, R, P extends Parent<T>>(
   loc: Loc<T, R, P>
-): { resourceType: ResourceType; id: id } {
+): { resourceType: T["resourceType"]; id: id } {
   const [resourceType, id] = loc.substring(0, loc.indexOf("/")).split("|");
   return { resourceType: resourceType as ResourceType, id };
 }
