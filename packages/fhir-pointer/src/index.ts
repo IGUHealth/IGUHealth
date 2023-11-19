@@ -72,12 +72,6 @@ export function get<T extends object, R, P extends Parent<T>>(
   return jsonpointer.get(v, toJSONPointer(loc)) as R;
 }
 
-const v = get(descend(pointer("Patient", "123"), "name"), {
-  resourceType: "Patient",
-  id: "123",
-  name: [{ given: ["John"] }],
-});
-
 /*
  ** Creates a Loc pointer for a resource.
  */

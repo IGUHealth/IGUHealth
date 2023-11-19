@@ -53,4 +53,14 @@ test("test get", () => {
       patient
     )
   ).toEqual(undefined);
+
+  expect(
+    get(
+      descend(
+        descend(descend(pointer("Patient", "123"), "identifier"), 1),
+        "system"
+      ),
+      patient
+    )
+  ).toEqual(undefined);
 });

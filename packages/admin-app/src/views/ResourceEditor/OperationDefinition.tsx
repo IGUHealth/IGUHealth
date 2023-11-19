@@ -369,17 +369,17 @@ export default function OperationEditor({
             />
           ),
         },
-        {
-          id: "secret",
-          title: "Secrets",
-          content: resource ? (
-            <OperationSecrets operation={resource} />
-          ) : (
-            <div className="flex justify-center items-center">
-              <Base.Loading />
-            </div>
-          ),
-        },
+        // {
+        //   id: "secret",
+        //   title: "Secrets",
+        //   content: resource ? (
+        //     <OperationSecrets operation={resource} />
+        //   ) : (
+        //     <div className="flex justify-center items-center">
+        //       <Base.Loading />
+        //     </div>
+        //   ),
+        // },
       ]}
     />
   );
