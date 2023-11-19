@@ -6,12 +6,14 @@ import { javascript } from "@codemirror/lang-javascript";
 import { insertTab, indentLess } from "@codemirror/commands";
 import { keymap } from "@codemirror/view";
 
+import * as fpt from "@iguhealth/fhir-pointer";
 import { Operation } from "@iguhealth/operation-execution";
 import {
   OperationOutcome,
   OperationDefinition,
   ResourceType,
   AuditEvent,
+  Extension,
 } from "@iguhealth/fhir-types/r4/types";
 import { Base } from "@iguhealth/components";
 
@@ -247,6 +249,61 @@ const InvocationModal = ({
   );
 };
 
+function OperationSecrets({ operation }: { operation: OperationDefinition }) {
+  const client = useRecoilValue(getClient);
+  const pointer = fpt.pointer("OperationDefinition", operation.id as string);
+  const secretPointers = operation.extension
+    ?.map((e, i): [Extension, number] => [e, i])
+    .filter(
+      ([e, _i]) => e.url === "https://iguhealth.app/Extension/operation-secret"
+    )
+    .map(([_e, i]) => fpt.descend(fpt.descend(pointer, "extension"), i));
+
+  return (
+    <div>
+      {secretPointers?.map((s) => (
+        <div>{s}</div>
+      ))}
+      {/* {secrets?.map(([e, i]) => {
+        const name = e.valueString;
+        const value = e.extension?.find(
+          (e) =>
+            e.url === "https://iguhealth.app/Extension/operation-secret-value"
+        )?.valueString;
+
+        return (
+          <div className="flex space-x-1 mb-2">
+            <Base.Input value={name} label="Name" />
+            <Base.Input type="password" value={value} label="Value" />
+          </div>
+        );
+      })} */}
+      <Base.Button
+        onClick={async (e) => {
+          const response = await client.patch({}, operation, [
+            {
+              op: "add",
+              path: "/extension/-",
+              value: {
+                extension: [
+                  {
+                    url: "https://iguhealth.app/Extension/operation-secret-value",
+                    valueString: "",
+                  },
+                ],
+                url: "https://iguhealth.app/Extension/operation-secret",
+                valueString: "",
+              },
+            },
+          ]);
+        }}
+      >
+        Add
+      </Base.Button>
+    </div>
+  );
+}
+
 export default function OperationEditor({
   id,
   resourceType,
@@ -278,14 +335,14 @@ export default function OperationEditor({
       onChange={onChange}
       rightTabs={[
         {
-          id: 5,
+          id: "logs",
           title: "Logs",
           content: <OperationAuditEvents operationId={id as string} />,
         },
       ]}
       leftTabs={[
         {
-          id: 0,
+          id: "code",
           title: "Code",
           content: (
             <OperationCodeEditor
@@ -312,6 +369,17 @@ export default function OperationEditor({
             />
           ),
         },
+        // {
+        //   id: "secret",
+        //   title: "Secrets",
+        //   content: resource ? (
+        //     <OperationSecrets operation={resource} />
+        //   ) : (
+        //     <div className="flex justify-center items-center">
+        //       <Base.Loading />
+        //     </div>
+        //   ),
+        // },
       ]}
     />
   );

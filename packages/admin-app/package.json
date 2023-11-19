@@ -12,6 +12,7 @@
     "@heroicons/react": "^2.0.18",
     "@iguhealth/client": "workspace:^",
     "@iguhealth/components": "workspace:^",
+    "@iguhealth/fhir-pointer": "workspace:^",
     "@iguhealth/generated-ops": "workspace:^",
     "@iguhealth/operation-execution": "workspace:^",
     "@testing-library/jest-dom": "^6.1.3",
