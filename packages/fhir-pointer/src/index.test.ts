@@ -1,6 +1,13 @@
 import { expect, test } from "@jest/globals";
 import { AResource, Patient } from "@iguhealth/fhir-types/r4/types";
-import { pointer, descend, ascend, get } from "./index";
+import {
+  pointer,
+  descend,
+  ascend,
+  get,
+  toJSONPointer,
+  pathMeta,
+} from "./index";
 
 test("pointer", () => {
   const loc = pointer("Patient", "123");
@@ -30,7 +37,7 @@ test("ascend pointer", () => {
   });
 });
 
-test("test get", () => {
+test("get function", () => {
   const nestedLoc = descend(
     descend(descend(pointer("Patient", "123"), "name"), 0),
     "given"
@@ -63,4 +70,13 @@ test("test get", () => {
       patient
     )
   ).toEqual(undefined);
+});
+
+test("path meta", () => {
+  const nestedLoc = descend(pointer("Patient", "123"), "name");
+
+  const z = pathMeta(nestedLoc);
+  toJSONPointer(nestedLoc);
+
+  expect(pathMeta(nestedLoc)).toEqual({ resourceType: "Patient", id: "123" });
 });
