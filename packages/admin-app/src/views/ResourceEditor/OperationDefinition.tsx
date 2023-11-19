@@ -6,6 +6,7 @@ import { javascript } from "@codemirror/lang-javascript";
 import { insertTab, indentLess } from "@codemirror/commands";
 import { keymap } from "@codemirror/view";
 
+import * as fpt from "@iguhealth/fhir-pointer";
 import { Operation } from "@iguhealth/operation-execution";
 import {
   OperationOutcome,
@@ -250,15 +251,20 @@ const InvocationModal = ({
 
 function OperationSecrets({ operation }: { operation: OperationDefinition }) {
   const client = useRecoilValue(getClient);
-  const secrets = operation.extension
+  const pointer = fpt.pointer("OperationDefinition", operation.id as string);
+  const secretPointers = operation.extension
     ?.map((e, i): [Extension, number] => [e, i])
     .filter(
-      ([e, i]) => e.url === "https://iguhealth.app/Extension/operation-secret"
-    );
+      ([e, _i]) => e.url === "https://iguhealth.app/Extension/operation-secret"
+    )
+    .map(([_e, i]) => fpt.descend(fpt.descend(pointer, "extension"), i));
 
   return (
     <div>
-      {secrets?.map(([e, i]) => {
+      {secretPointers?.map((s) => (
+        <div>{s}</div>
+      ))}
+      {/* {secrets?.map(([e, i]) => {
         const name = e.valueString;
         const value = e.extension?.find(
           (e) =>
@@ -271,7 +277,7 @@ function OperationSecrets({ operation }: { operation: OperationDefinition }) {
             <Base.Input type="password" value={value} label="Value" />
           </div>
         );
-      })}
+      })} */}
       <Base.Button
         onClick={async (e) => {
           const response = await client.patch({}, operation, [
@@ -366,7 +372,13 @@ export default function OperationEditor({
         {
           id: "secret",
           title: "Secrets",
-          content: <OperationSecrets operation={resource} />,
+          content: resource ? (
+            <OperationSecrets operation={resource} />
+          ) : (
+            <div className="flex justify-center items-center">
+              <Base.Loading />
+            </div>
+          ),
         },
       ]}
     />
