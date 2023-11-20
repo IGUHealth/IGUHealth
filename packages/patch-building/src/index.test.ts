@@ -1,0 +1,98 @@
+import { expect, test } from "@jest/globals";
+import jsonpatch from "fast-json-patch";
+
+import { AResource, Patient } from "@iguhealth/fhir-types/r4/types";
+import { pointer, descend } from "@iguhealth/fhir-pointer";
+
+import buildPatches from "./index.js";
+
+test("Adding a value.", () => {
+  const loc = pointer("Patient", "123");
+  const patient: Patient = { resourceType: "Patient", id: "123" };
+
+  descend(descend(descend(descend(loc, "name"), 0), "given"), 0);
+  expect(
+    buildPatches(patient, {
+      op: "add",
+      path: descend(descend(descend(descend(loc, "name"), 0), "given"), 0),
+      value: "test",
+    })
+  ).toEqual([
+    {
+      op: "add",
+      path: "/name",
+      value: [],
+    },
+    {
+      op: "add",
+      path: "/name/0",
+      value: {},
+    },
+    {
+      op: "add",
+      path: "/name/0/given",
+      value: [],
+    },
+    {
+      op: "add",
+      path: "/name/0/given/0",
+      value: "test",
+    },
+  ]);
+
+  expect(
+    buildPatches(patient, {
+      op: "add",
+      path: descend(loc, "name"),
+      value: [{ given: ["John"] }],
+    })
+  ).toEqual([
+    {
+      op: "add",
+      path: "/name",
+      value: [{ given: ["John"] }],
+    },
+  ]);
+
+  expect(
+    buildPatches(
+      { ...patient, name: [{ given: ["bob"] }] },
+      {
+        op: "add",
+        path: descend(descend(descend(descend(loc, "name"), 0), "given"), 1),
+        value: "Jake",
+      }
+    )
+  ).toEqual([
+    {
+      op: "add",
+      path: "/name/0/given/1",
+      value: "Jake",
+    },
+  ]);
+
+  expect(
+    jsonpatch.applyPatch(
+      { ...patient, name: [{ given: ["bob"] }] },
+      buildPatches(
+        { ...patient, name: [{ given: ["bob"] }] },
+        {
+          op: "add",
+          path: descend(descend(descend(descend(loc, "name"), 0), "given"), 1),
+          value: "Jake",
+        }
+      )
+    ).newDocument
+  ).toEqual({ ...patient, name: [{ given: ["bob", "Jake"] }] });
+
+  expect(
+    jsonpatch.applyPatch(
+      patient,
+      buildPatches(patient, {
+        op: "add",
+        path: descend(descend(descend(descend(loc, "name"), 0), "given"), 0),
+        value: "test",
+      })
+    ).newDocument
+  ).toEqual({ ...patient, name: [{ given: ["test"] }] });
+});

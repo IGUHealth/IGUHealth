@@ -1,13 +1,6 @@
 import { expect, test } from "@jest/globals";
-import { AResource, Patient } from "@iguhealth/fhir-types/r4/types";
-import {
-  pointer,
-  descend,
-  ascend,
-  get,
-  toJSONPointer,
-  pathMeta,
-} from "./index";
+import { Patient } from "@iguhealth/fhir-types/r4/types";
+import { pointer, descend, ascend, get, pathMeta } from "./index";
 
 test("pointer", () => {
   const loc = pointer("Patient", "123");
