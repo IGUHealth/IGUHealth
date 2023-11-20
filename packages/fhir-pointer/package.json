@@ -2,14 +2,15 @@
   "name": "@iguhealth/fhir-pointer",
   "version": "0.0.2",
   "description": "FHIR Pointer allows creation and manipulation of pointers to fhir-types.",
-  "main": "./lib/index.js",
   "type": "module",
+  "packageManager": "yarn@3.6.3",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "yarn jest",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
-  "types": "./lib/index.d.ts",
   "keywords": [],
   "author": "IGUHealth",
   "license": "ISC",

@@ -1,8 +1,11 @@
 {
-  "name": "@iguhealth/patch-building",
+  "name": "@iguhealth/fhir-patch-building",
+  "version": "0.0.1",
   "description": "JSON Patch building with typesafe fhir pointers.",
-  "packageManager": "yarn@3.6.3",
   "type": "module",
+  "packageManager": "yarn@3.6.3",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "build": "yarn tsc",
     "test": "yarn jest",

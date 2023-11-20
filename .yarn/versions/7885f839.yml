@@ -1,0 +1,4 @@
+releases:
+  "@iguhealth/fhir-patch-building": patch
+  "@iguhealth/fhir-pointer": patch
+  admin-app: patch
