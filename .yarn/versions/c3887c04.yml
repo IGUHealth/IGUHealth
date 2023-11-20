@@ -1,5 +1,3 @@
 releases:
-  "@iguhealth/components": patch
   "@iguhealth/fhir-pointer": patch
-  "@iguhealth/server": patch
   admin-app: patch
