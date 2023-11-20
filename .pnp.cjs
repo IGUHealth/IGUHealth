@@ -10965,6 +10965,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@headlessui/react", "virtual:5c2bf852363bd44ad9f0933fc81dcbe58d53ad6610b46d8eeca8a0825846f0546cc3282eb03f66584af67b1493682863c6b60d7b17e992ecf4c9bf0d1ec00a38#npm:1.7.17"],\
             ["@heroicons/react", "virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#npm:2.0.18"],\
             ["@iguhealth/client", "workspace:packages/client"],\
+            ["@iguhealth/fhir-patch-building", "workspace:packages/fhir-patch-building"],\
+            ["@iguhealth/fhir-pointer", "workspace:packages/fhir-pointer"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
             ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
             ["@iguhealth/generated-ops", "workspace:packages/generated-ops"],\
@@ -11032,6 +11034,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@headlessui/react", "virtual:5c2bf852363bd44ad9f0933fc81dcbe58d53ad6610b46d8eeca8a0825846f0546cc3282eb03f66584af67b1493682863c6b60d7b17e992ecf4c9bf0d1ec00a38#npm:1.7.17"],\
             ["@heroicons/react", "virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#npm:2.0.18"],\
             ["@iguhealth/client", "workspace:packages/client"],\
+            ["@iguhealth/fhir-patch-building", "workspace:packages/fhir-patch-building"],\
+            ["@iguhealth/fhir-pointer", "workspace:packages/fhir-pointer"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
             ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
             ["@iguhealth/generated-ops", "workspace:packages/generated-ops"],\
