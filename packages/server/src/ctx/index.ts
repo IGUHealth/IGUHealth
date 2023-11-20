@@ -253,6 +253,12 @@ const encryptionMiddleware: (
 ) => Parameters<typeof RouterClient>[0][number] =
   (resourceTypesToEncrypt: ResourceType[]) => async (request, args, next) => {
     if (!next) throw new Error("next middleware was not defined");
+    if (!args.ctx.encryptionProvider) {
+      args.ctx.logger.warn(
+        "Cannot encrypt, no encryption provider configured."
+      );
+      return next(request, args);
+    }
     if (
       "resourceType" in request &&
       resourceTypesToEncrypt.includes(request.resourceType)
