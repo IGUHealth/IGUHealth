@@ -7,6 +7,7 @@ import { insertTab, indentLess } from "@codemirror/commands";
 import { keymap } from "@codemirror/view";
 
 import * as fpt from "@iguhealth/fhir-pointer";
+import * as fpb from "@iguhealth/fhir-patch-building";
 import { Operation } from "@iguhealth/operation-execution";
 import {
   OperationOutcome,
@@ -132,6 +133,7 @@ function OperationAuditEvents({ operationId }: { operationId: string }) {
 
 interface OperationEditorProps extends AdditionalContent {
   resource: OperationDefinition | undefined;
+  onChange: NonNullable<AdditionalContent["onChange"]>;
 }
 
 const InvocationModal = ({
@@ -249,24 +251,33 @@ const InvocationModal = ({
   );
 };
 
-function OperationSecrets({ operation }: { operation: OperationDefinition }) {
-  const client = useRecoilValue(getClient);
+function EnvironmentVariables({
+  operation,
+  onChange,
+}: {
+  operation: OperationDefinition;
+  onChange: OperationEditorProps["onChange"];
+}) {
   const pointer = fpt.pointer("OperationDefinition", operation.id as string);
-  const secretPointers = operation.extension
+  const operationExtensions = fpt.descend(pointer, "extension");
+  const environmentExtensions = operation.extension
     ?.map((e, i): [Extension, number] => [e, i])
     .filter(
-      ([e, _i]) => e.url === "https://iguhealth.app/Extension/operation-secret"
+      ([e, _i]) =>
+        e.url ===
+        "https://iguhealth.app/Extension/OperationDefinition/environment-variable"
     )
-    .map(([_e, i]) => fpt.descend(fpt.descend(pointer, "extension"), i));
+    .map(([_e, i]) => fpt.descend(operationExtensions, i));
 
   return (
     <div>
-      {secretPointers?.map((s) => {
-        const ext = fpt.get(s, operation);
+      {environmentExtensions?.map((pointer) => {
+        const ext = fpt.get(pointer, operation);
+        console.log(ext);
         if (!ext) throw new Error("Ext not on pointer");
 
         return (
-          <div className="flex space-x-1 mb-2">
+          <div key={pointer} className="flex space-x-1 mb-2">
             <Base.Input
               value={ext.valueString}
               label="Name"
@@ -276,6 +287,19 @@ function OperationSecrets({ operation }: { operation: OperationDefinition }) {
               type="password"
               value={ext.extension?.[0].valueString}
               label="Value"
+              onChange={(e) => {
+                onChange(
+                  fpb.applyMutationImmutable(operation, {
+                    op: "replace",
+                    path: fpt.descend(
+                      fpt.descend(fpt.descend(pointer, "extension"), 0),
+                      "valueString"
+                    ),
+
+                    value: e.target.value,
+                  })
+                );
+              }}
             />
             <Base.Input
               type="checkbox"
@@ -301,38 +325,27 @@ function OperationSecrets({ operation }: { operation: OperationDefinition }) {
           </div>
         );
       })}
-      {/* {secrets?.map(([e, i]) => {
-        const name = e.valueString;
-        const value = e.extension?.find(
-          (e) =>
-            e.url === "https://iguhealth.app/Extension/operation-secret-value"
-        )?.valueString;
-
-        return (
-          <div className="flex space-x-1 mb-2">
-            <Base.Input value={name} label="Name" />
-            <Base.Input type="password" value={value} label="Value" />
-          </div>
-        );
-      })} */}
       <Base.Button
-        onClick={async (e) => {
-          const response = await client.patch({}, operation, [
-            {
+        onClick={() => {
+          onChange(
+            fpb.applyMutationImmutable(operation, {
               op: "add",
-              path: "/extension/-",
+              path: fpt.descend(
+                operationExtensions,
+                operationExtensions.length
+              ),
               value: {
                 extension: [
                   {
-                    url: "https://iguhealth.app/Extension/operation-secret-value",
+                    url: "https://iguhealth.app/Extension/OperationDefinition/environment-variable-value",
                     valueString: "",
                   },
                 ],
-                url: "https://iguhealth.app/Extension/operation-secret",
+                url: "https://iguhealth.app/Extension/OperationDefinition/environment-variable",
                 valueString: "",
               },
-            },
-          ]);
+            })
+          );
         }}
       >
         Add
@@ -341,7 +354,7 @@ function OperationSecrets({ operation }: { operation: OperationDefinition }) {
   );
 }
 
-export default function OperationEditor({
+export default function OperationDefinitionView({
   id,
   resourceType,
   resource,
@@ -361,7 +374,6 @@ export default function OperationEditor({
             "https://iguhealth.github.io/fhir-operation-definition/operation-code"
         )[0].valueString || ""
       : "";
-
   return (
     <ResourceEditorComponent
       id={id as string}
@@ -386,7 +398,6 @@ export default function OperationEditor({
               value={code}
               operation={resource}
               setValue={(v: string) =>
-                onChange &&
                 onChange({
                   ...resource,
                   resourceType: "OperationDefinition",
@@ -406,17 +417,23 @@ export default function OperationEditor({
             />
           ),
         },
-        // {
-        //   id: "secret",
-        //   title: "Secrets",
-        //   content: resource ? (
-        //     <OperationSecrets operation={resource} />
-        //   ) : (
-        //     <div className="flex justify-center items-center">
-        //       <Base.Loading />
-        //     </div>
-        //   ),
-        // },
+        {
+          id: "environment",
+          title: "Environment",
+          content: resource ? (
+            <EnvironmentVariables
+              operation={resource}
+              onChange={(v) => {
+                console.log(onChange);
+                onChange(v);
+              }}
+            />
+          ) : (
+            <div className="flex justify-center items-center">
+              <Base.Loading />
+            </div>
+          ),
+        },
       ]}
     />
   );

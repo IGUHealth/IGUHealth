@@ -1,4 +1,5 @@
-import { Operation } from "fast-json-patch";
+import { produce } from "immer";
+import { Operation, applyPatch } from "fast-json-patch";
 
 import * as fpt from "@iguhealth/fhir-pointer";
 import { Resource } from "@iguhealth/fhir-types/r4/types";
@@ -122,4 +123,20 @@ export default function buildPatches<T extends Resource, R>(
     default:
       throw new Error(`Invalid operation '${mutation.op}'`);
   }
+}
+
+export function applyMutation<T extends Resource, R>(
+  value: T,
+  mutation: Mutation<T, R>
+): T {
+  return applyPatch(value, buildPatches(value, mutation)).newDocument;
+}
+
+export function applyMutationImmutable<T extends Resource, R>(
+  value: T,
+  mutation: Mutation<T, R>
+): T {
+  return produce(value, (v) => {
+    applyMutation(v as T, mutation);
+  });
 }
