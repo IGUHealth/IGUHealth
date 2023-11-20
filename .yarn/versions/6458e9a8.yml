@@ -1,0 +1,3 @@
+releases:
+  "@iguhealth/server": patch
+  admin-app: patch

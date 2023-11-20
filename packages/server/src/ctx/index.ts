@@ -40,6 +40,7 @@ import AWSLambdaExecutioner from "../operation-executors/awsLambda/index.js";
 import RedisCache from "../cache/redis.js";
 import { TerminologyProviderMemory } from "../terminology/index.js";
 import { AWSKMSProvider } from "../encryption/provider/kms.js";
+import { encryptValue } from "../encryption/index.js";
 import { validateResource } from "../operation-executors/local/resource_validate.js";
 import JSONPatchSchema from "../schemas/jsonpatch.schema.js";
 
@@ -247,6 +248,40 @@ const capabilitiesMiddleware: Parameters<
   return next(request, args);
 };
 
+const encryptionMiddleware: (
+  resourceTypesToEncrypt: ResourceType[]
+) => Parameters<typeof RouterClient>[0][number] =
+  (resourceTypesToEncrypt: ResourceType[]) => async (request, args, next) => {
+    if (!next) throw new Error("next middleware was not defined");
+    if (!args.ctx.encryptionProvider) {
+      args.ctx.logger.warn(
+        "Cannot encrypt, no encryption provider configured."
+      );
+      return next(request, args);
+    }
+    if (
+      "resourceType" in request &&
+      resourceTypesToEncrypt.includes(request.resourceType)
+    ) {
+      switch (request.type) {
+        case "create-request":
+        case "update-request": {
+          const encrypted = await encryptValue(args.ctx, request.body);
+          return next({ ...request, body: encrypted }, args);
+        }
+        case "patch-request": {
+          const encrypted = await encryptValue(args.ctx, request.body);
+          return next({ ...request, body: encrypted }, args);
+        }
+        default: {
+          return next(request, args);
+        }
+      }
+    } else {
+      return next(request, args);
+    }
+  };
+
 export async function deriveCTX(): Promise<
   ({
     pg,
@@ -316,7 +351,11 @@ export async function deriveCTX(): Promise<
 
   return ({ pg, workspace, author, user_access_token }) => {
     const client = RouterClient(
-      [validationMiddleware, capabilitiesMiddleware],
+      [
+        validationMiddleware,
+        capabilitiesMiddleware,
+        encryptionMiddleware(["OperationDefinition"]),
+      ],
       [
         // OP INVOCATION
         {

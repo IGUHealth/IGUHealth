@@ -16,7 +16,7 @@ function toFP(loc: (string | number)[]) {
 
 export const ENCRYPTION_URL = "https://iguhealth.app/Extension/encrypt-value";
 
-export async function encryptResource<T extends Resource>(
+export async function encryptValue<T extends object>(
   ctx: FHIRServerCTX,
   resource: T
 ): Promise<T> {
