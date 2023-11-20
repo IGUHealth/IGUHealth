@@ -261,9 +261,46 @@ function OperationSecrets({ operation }: { operation: OperationDefinition }) {
 
   return (
     <div>
-      {secretPointers?.map((s) => (
-        <div>{s}</div>
-      ))}
+      {secretPointers?.map((s) => {
+        const ext = fpt.get(s, operation);
+        if (!ext) throw new Error("Ext not on pointer");
+
+        return (
+          <div className="flex space-x-1 mb-2">
+            <Base.Input
+              value={ext.valueString}
+              label="Name"
+              onChange={(e) => {}}
+            />
+            <Base.Input
+              type="password"
+              value={ext.extension?.[0].valueString}
+              label="Value"
+            />
+            <Base.Input
+              type="checkbox"
+              label="Is Secret"
+              checked={ext.extension?.[0]._valueString !== undefined}
+              onChange={(e) => {
+                if (ext.extension?.[0]) {
+                  if (e.target.checked) {
+                    ext.extension[0]._valueString = {
+                      extension: [
+                        {
+                          url: "https://iguhealth.app/Extension/encrypt-value",
+                          valueString: "",
+                        },
+                      ],
+                    };
+                  } else {
+                    delete ext.extension?.[0]._valueString;
+                  }
+                }
+              }}
+            />
+          </div>
+        );
+      })}
       {/* {secrets?.map(([e, i]) => {
         const name = e.valueString;
         const value = e.extension?.find(
