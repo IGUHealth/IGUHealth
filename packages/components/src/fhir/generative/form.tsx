@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-explicit-any: 0 */
 import React, { useMemo } from "react";
 import { applyPatch } from "fast-json-patch";
 import { produce } from "immer";
@@ -9,6 +10,7 @@ import {
   primitiveTypes,
 } from "@iguhealth/fhir-types/r4/sets";
 import {
+  ResourceType,
   Address,
   ValueSet,
   StructureDefinition,
@@ -26,11 +28,11 @@ import {
   ContactPoint,
   HumanName,
 } from "@iguhealth/fhir-types/r4/types";
+import { descend, ascend, Loc, pointer } from "@iguhealth/fhir-pointer";
+import generateJSONPatches, { Mutation } from "@iguhealth/fhir-patch-building";
 
 import * as ComplexTypes from "../complex";
 import * as Primitives from "../primitives";
-
-import generateJSONPatches, { Mutation } from "./generatePatches";
 
 function EditorComponent({
   element,
@@ -42,16 +44,16 @@ function EditorComponent({
 }: {
   element: ElementDefinition;
   value: unknown;
-  onChange: (patches: Mutation) => void;
+  onChange: (patches: Mutation<any, any>) => void;
   showLabel: boolean;
-  pointer: string;
+  pointer: Loc<any, any, any>;
   expand?: (url: string) => Promise<ValueSet>;
 }) {
   switch (element.type?.[0].code) {
     case "http://hl7.org/fhirpath/System.String": {
       // Only render the root element not the ones underneath.
       // id is special primitive string.
-      if (pointer === "/id")
+      if (ascend(pointer)?.field === "id")
         return (
           <Primitives.String
             disabled={true}
@@ -309,15 +311,15 @@ function getFieldName(path: string) {
   return capitalize(path.substring(path.lastIndexOf(".") + 1));
 }
 
-interface MetaProps {
+interface MetaProps<T, R> {
   sd: StructureDefinition;
   elementIndex: number;
   value: unknown;
-  pointer: string;
+  pointer: Loc<T, R, any>;
   showLabel?: boolean;
   showInvalid?: boolean;
   expand?: (url: string) => Promise<ValueSet>;
-  onChange: (patches: Mutation) => void;
+  onChange: (patches: Mutation<T, R>) => void;
 }
 
 function getElementDefinition(
@@ -330,7 +332,7 @@ function getElementDefinition(
   return element;
 }
 
-const MetaValueArray = React.memo((props: MetaProps) => {
+const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
   const {
     sd,
     elementIndex,
@@ -363,12 +365,12 @@ const MetaValueArray = React.memo((props: MetaProps) => {
     <div>
       <label>{getFieldName(element.path)}</label>
       {value.map((v, i) => (
-        <div className="mt-1 relative" key={`${pointer}/${i}`}>
+        <div className="mt-1 relative" key={`${descend(pointer, i)}`}>
           <MetaValueSingular
             expand={expand}
             sd={sd}
             elementIndex={elementIndex}
-            pointer={`${pointer}/${i}`}
+            pointer={descend(pointer, i)}
             value={v}
             showLabel={false}
             showInvalid={showInvalid}
@@ -379,7 +381,7 @@ const MetaValueArray = React.memo((props: MetaProps) => {
               className="absolute top-1 right-1 text-slate-400 cursor-pointer hover:text-slate-500 "
               onClick={() => {
                 onChange({
-                  path: `${pointer}/${i}`,
+                  path: descend(pointer, i),
                   op: "remove",
                   value: v,
                 });
@@ -395,7 +397,7 @@ const MetaValueArray = React.memo((props: MetaProps) => {
           className="flex items-center  text-slate-400 cursor-pointer hover:text-slate-500"
           onClick={() => {
             onChange({
-              path: `${pointer}/${value.length}`,
+              path: descend(pointer, value.length),
               op: "add",
               value: complexTypes.has(element.type?.[0].code || "") ? {} : null,
             });
@@ -414,9 +416,9 @@ function isIndexableObject(v: unknown): v is Record<string, unknown> {
 
 function getValueAndPointer(
   elementDefinition: ElementDefinition,
-  pointer: string,
+  pointer: Loc<any, any, any>,
   value: unknown
-): { value: unknown; pointer: string } {
+): { value: unknown; pointer: Loc<any, any, any> } {
   const field = elementDefinition.path.substring(
     elementDefinition.path.lastIndexOf(".") + 1
   );
@@ -425,7 +427,7 @@ function getValueAndPointer(
 
   return {
     value: isIndexableObject(value) ? value[field] : undefined,
-    pointer: `${pointer}/${field}`,
+    pointer: descend(pointer, field),
   };
 }
 
@@ -450,7 +452,7 @@ function DisplayInvalid({
   return undefined;
 }
 
-const MetaValueSingular = React.memo((props: MetaProps) => {
+const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
   const {
     sd,
     elementIndex,
@@ -555,7 +557,7 @@ export const GenerativeForm = ({
   setValue = () => {},
 }: GenerativeFormProps) => {
   const onChange = useMemo(() => {
-    return (mutation: Mutation) => {
+    return (mutation: Mutation<any, any>) => {
       setValue((resource) => {
         const patches = generateJSONPatches(resource, mutation);
         const newResource = produce(resource, (value) => {
@@ -573,7 +575,10 @@ export const GenerativeForm = ({
       sd={structureDefinition}
       elementIndex={0}
       value={value}
-      pointer={""}
+      pointer={pointer(
+        structureDefinition.type as ResourceType,
+        value?.id || "new"
+      )}
       onChange={onChange}
       showLabel={false}
       showInvalid={false}

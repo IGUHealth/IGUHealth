@@ -5247,6 +5247,8 @@ __metadata:
     "@headlessui/react": ^1.7.17
     "@heroicons/react": ^2.0.18
     "@iguhealth/client": "workspace:^"
+    "@iguhealth/fhir-patch-building": "workspace:^"
+    "@iguhealth/fhir-pointer": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
     "@iguhealth/fhirpath": "workspace:^"
     "@iguhealth/generated-ops": "workspace:^"
@@ -5329,7 +5331,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@iguhealth/fhir-patch-building@workspace:packages/fhir-patch-building":
+"@iguhealth/fhir-patch-building@workspace:^, @iguhealth/fhir-patch-building@workspace:packages/fhir-patch-building":
   version: 0.0.0-use.local
   resolution: "@iguhealth/fhir-patch-building@workspace:packages/fhir-patch-building"
   dependencies:
