@@ -1,6 +1,6 @@
 import { expect, test } from "@jest/globals";
 import { Patient } from "@iguhealth/fhir-types/r4/types";
-import { pointer, descend, ascend, get, pathMeta } from "./index";
+import { pointer, descend, ascend, get, pathMeta, fields, root } from "./index";
 
 test("pointer", () => {
   const loc = pointer("Patient", "123");
@@ -68,4 +68,20 @@ test("get function", () => {
 test("path meta", () => {
   const nestedLoc = descend(pointer("Patient", "123"), "name");
   expect(pathMeta(nestedLoc)).toEqual({ resourceType: "Patient", id: "123" });
+});
+
+test("fields", () => {
+  const nestedLoc = descend(
+    descend(descend(pointer("Patient", "123"), "name"), 0),
+    "given"
+  );
+  expect(fields(nestedLoc)).toEqual(["name", 0, "given"]);
+});
+
+test("root", () => {
+  const nestedLoc = descend(
+    descend(descend(pointer("Patient", "123"), "name"), 0),
+    "given"
+  );
+  expect(root(nestedLoc)).toEqual("Patient|123");
 });

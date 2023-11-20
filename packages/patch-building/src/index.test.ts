@@ -96,3 +96,77 @@ test("Adding a value.", () => {
     ).newDocument
   ).toEqual({ ...patient, name: [{ given: ["test"] }] });
 });
+
+test("replace", () => {
+  const loc = pointer("Patient", "123");
+  const patient: Patient = { resourceType: "Patient", id: "123" };
+  expect(
+    jsonpatch.applyPatch(
+      { ...patient, name: [{ given: ["bob"] }] },
+      buildPatches(
+        { ...patient, name: [{ given: ["bob"] }] },
+        {
+          op: "replace",
+          path: descend(descend(descend(descend(loc, "name"), 0), "given"), 0),
+          value: "Jake",
+        }
+      )
+    ).newDocument
+  ).toEqual({ ...patient, name: [{ given: ["Jake"] }] });
+
+  expect(
+    jsonpatch.applyPatch(
+      { ...patient, name: [{ given: ["bob"] }] },
+      buildPatches(
+        { ...patient, name: [{ given: ["bob"] }] },
+        {
+          op: "replace",
+          path: descend(descend(descend(descend(loc, "name"), 0), "given"), 1),
+          value: "Jake",
+        }
+      )
+    ).newDocument
+  ).toEqual({ ...patient, name: [{ given: ["bob", "Jake"] }] });
+});
+
+test("removal", () => {
+  const loc = pointer("Patient", "123");
+  const patient: Patient = { resourceType: "Patient", id: "123" };
+  expect(
+    jsonpatch.applyPatch(
+      { ...patient, name: [{ given: ["bob"] }] },
+      buildPatches(
+        { ...patient, name: [{ given: ["bob"] }] },
+        {
+          op: "remove",
+          path: descend(descend(descend(descend(loc, "name"), 0), "given"), 0),
+        }
+      )
+    ).newDocument
+  ).toEqual({ ...patient, name: [{ given: [] }] });
+
+  expect(
+    jsonpatch.applyPatch(
+      { ...patient, name: [{ given: ["bob"] }] },
+      buildPatches(
+        { ...patient, name: [{ given: ["bob"] }] },
+        {
+          op: "remove",
+          path: descend(descend(descend(descend(loc, "name"), 0), "given"), 1),
+        }
+      )
+    ).newDocument
+  ).toEqual({ ...patient, name: [{ given: ["bob"] }] });
+  expect(
+    jsonpatch.applyPatch(
+      { ...patient, name: [{ given: ["bob"] }] },
+      buildPatches(
+        { ...patient, name: [{ given: ["bob"] }] },
+        {
+          op: "remove",
+          path: descend(descend(descend(loc, "identifier"), 0), "system"),
+        }
+      )
+    ).newDocument
+  ).toEqual({ ...patient, name: [{ given: ["bob"] }] });
+});
