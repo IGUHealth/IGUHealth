@@ -116,6 +116,8 @@ export default function DefaultResourceEditorView() {
       });
   }, [resourceType, id]);
 
+  console.log("RESOURCEEDIT:", resource);
+
   switch (resourceType) {
     case "OperationDefinition":
       return (
@@ -125,9 +127,7 @@ export default function DefaultResourceEditorView() {
           actions={actions}
           resource={resource as OperationDefinition}
           structureDefinition={structureDefinition}
-          onChange={(resource) => {
-            setResource(resource);
-          }}
+          onChange={setResource}
         />
       );
     default:

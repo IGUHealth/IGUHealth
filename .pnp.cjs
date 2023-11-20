@@ -11127,6 +11127,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
             ["@jest/globals", "npm:29.6.1"],\
             ["fast-json-patch", "npm:3.1.1"],\
+            ["immer", "npm:10.0.3"],\
             ["jest", "virtual:60d59201a81fdf9d844335582569d604f77c0cfb33012fc0d97d31d995c40a543914afd8f900018942c3e21e71ae879a5dcdf97d4008644edf9f0ce84a7e8664#npm:29.6.0"],\
             ["ts-jest", "virtual:1d211f1d1b74f1431d94dee6154efb618f2b240f78e3cd2c7bff89c06972575aa9d2987a2e98dff8bea49b83220f448caca9ce4fd28f1b7b9a1c020cfaf1de74#npm:29.1.1"],\
             ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"]\
@@ -18775,6 +18776,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@heroicons/react", "virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#npm:2.0.18"],\
             ["@iguhealth/client", "workspace:packages/client"],\
             ["@iguhealth/components", "virtual:ff366a969f6ac3e5cc1b5a47cc663d862551328fbe357c6f0c032db16c3e5c7bb4a5a4961946e1f80a3fee6aae28ef1524634b206e855fc47f31a652de8bece3#workspace:packages/components"],\
+            ["@iguhealth/fhir-patch-building", "workspace:packages/fhir-patch-building"],\
             ["@iguhealth/fhir-pointer", "workspace:packages/fhir-pointer"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
             ["@iguhealth/generated-ops", "workspace:packages/generated-ops"],\

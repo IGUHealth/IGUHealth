@@ -4,7 +4,7 @@ import jsonpatch from "fast-json-patch";
 import { AResource, Patient } from "@iguhealth/fhir-types/r4/types";
 import { pointer, descend } from "@iguhealth/fhir-pointer";
 
-import buildPatches from "./index.js";
+import buildPatches, { applyMutationImmutable } from "./index.js";
 
 test("Adding a value.", () => {
   const loc = pointer("Patient", "123");
@@ -169,4 +169,19 @@ test("removal", () => {
       )
     ).newDocument
   ).toEqual({ ...patient, name: [{ given: ["bob"] }] });
+});
+
+test("immutable Patch", () => {
+  const loc = pointer("Patient", "123");
+  const patient: Patient = { resourceType: "Patient", id: "123" };
+  expect(
+    applyMutationImmutable(
+      { ...patient, name: [{ given: ["bob"] }] },
+      {
+        op: "replace",
+        path: descend(descend(descend(descend(loc, "name"), 0), "given"), 1),
+        value: "Jake",
+      }
+    )
+  ).toEqual({ ...patient, name: [{ given: ["bob", "Jake"] }] });
 });
