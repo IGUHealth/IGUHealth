@@ -255,7 +255,9 @@ function OperationSecrets({ operation }: { operation: OperationDefinition }) {
   const secretPointers = operation.extension
     ?.map((e, i): [Extension, number] => [e, i])
     .filter(
-      ([e, _i]) => e.url === "https://iguhealth.app/Extension/operation-secret"
+      ([e, _i]) =>
+        e.url ===
+        "https://iguhealth.app/Extension/OperationDefinition/environment"
     )
     .map(([_e, i]) => fpt.descend(fpt.descend(pointer, "extension"), i));
 

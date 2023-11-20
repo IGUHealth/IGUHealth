@@ -29,7 +29,7 @@ test("test resourceEncryption", async () => {
     system: false,
     extension: [
       {
-        url: "https://iguhealth.app/Extension/operation-secret",
+        url: "https://iguhealth.app/Extension/OperationDefinition/environment",
         valueString: "secret",
         _valueString: {
           extension: [
