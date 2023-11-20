@@ -116,8 +116,6 @@ export default function DefaultResourceEditorView() {
       });
   }, [resourceType, id]);
 
-  console.log("RESOURCEEDIT:", resource);
-
   switch (resourceType) {
     case "OperationDefinition":
       return (

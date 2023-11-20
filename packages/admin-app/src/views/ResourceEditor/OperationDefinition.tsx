@@ -273,28 +273,34 @@ function EnvironmentVariables({
     <div>
       {environmentExtensions?.map((pointer) => {
         const ext = fpt.get(pointer, operation);
-        console.log(ext);
         if (!ext) throw new Error("Ext not on pointer");
+        const valuePointer = fpt.descend(fpt.descend(pointer, "extension"), 0);
+        const isSecret = ext.extension?.[0]._valueString !== undefined;
 
         return (
           <div key={pointer} className="flex space-x-1 mb-2">
             <Base.Input
               value={ext.valueString}
               label="Name"
-              onChange={(e) => {}}
+              onChange={(e) => {
+                onChange(
+                  fpb.applyMutationImmutable(operation, {
+                    op: "replace",
+                    path: fpt.descend(pointer, "valueString"),
+                    value: e.target.value,
+                  })
+                );
+              }}
             />
             <Base.Input
-              type="password"
+              type={isSecret ? "password" : "text"}
               value={ext.extension?.[0].valueString}
               label="Value"
               onChange={(e) => {
                 onChange(
                   fpb.applyMutationImmutable(operation, {
                     op: "replace",
-                    path: fpt.descend(
-                      fpt.descend(fpt.descend(pointer, "extension"), 0),
-                      "valueString"
-                    ),
+                    path: fpt.descend(valuePointer, "valueString"),
 
                     value: e.target.value,
                   })
@@ -304,21 +310,30 @@ function EnvironmentVariables({
             <Base.Input
               type="checkbox"
               label="Is Secret"
-              checked={ext.extension?.[0]._valueString !== undefined}
+              checked={isSecret}
               onChange={(e) => {
-                if (ext.extension?.[0]) {
-                  if (e.target.checked) {
-                    ext.extension[0]._valueString = {
-                      extension: [
-                        {
-                          url: "https://iguhealth.app/Extension/encrypt-value",
-                          valueString: "",
-                        },
-                      ],
-                    };
-                  } else {
-                    delete ext.extension?.[0]._valueString;
-                  }
+                if (e.target.checked) {
+                  onChange(
+                    fpb.applyMutationImmutable(operation, {
+                      op: "add",
+                      path: fpt.descend(valuePointer, "_valueString"),
+                      value: {
+                        extension: [
+                          {
+                            url: "https://iguhealth.app/Extension/encrypt-value",
+                            valueString: "",
+                          },
+                        ],
+                      },
+                    })
+                  );
+                } else {
+                  onChange(
+                    fpb.applyMutationImmutable(operation, {
+                      op: "remove",
+                      path: fpt.descend(valuePointer, "_valueString"),
+                    })
+                  );
                 }
               }}
             />
@@ -424,7 +439,6 @@ export default function OperationDefinitionView({
             <EnvironmentVariables
               operation={resource}
               onChange={(v) => {
-                console.log(onChange);
                 onChange(v);
               }}
             />
