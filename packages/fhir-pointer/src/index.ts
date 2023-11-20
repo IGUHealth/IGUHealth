@@ -46,13 +46,15 @@ type ReturnType<L> = L extends Loc<infer B, infer T, infer P> ? T : any;
  */
 export function ascend<T, R, P extends Parent<T>>(
   loc: Loc<T, R, P>
-): { parent: P; field: NonNullable<keyof ReturnType<P>> } | undefined {
+):
+  | { parent: NonNullable<P>; field: NonNullable<keyof ReturnType<P>> }
+  | undefined {
   // At root so return undefined.
   const lastIndexSlash = loc.lastIndexOf("/");
   if (lastIndexSlash === -1) return undefined;
   const field = loc.substring(lastIndexSlash + 1);
   return {
-    parent: loc.slice(0, lastIndexSlash) as P,
+    parent: loc.slice(0, lastIndexSlash) as NonNullable<P>,
     field: Number.isNaN(parseInt(field))
       ? field
       : (parseInt(field) as keyof NonNullable<ReturnType<P>>),
@@ -65,7 +67,7 @@ export function toJSONPointer<T, R, P extends Parent<T>>(loc: Loc<T, R, P>) {
 
 export function pathMeta<T extends Resource, R, P extends Parent<T>>(
   loc: Loc<T, R, P>
-): { resourceType: T["resourceType"]; id: id } {
+): { resourceType: ResourceType; id: id } {
   const [resourceType, id] = loc.substring(0, loc.indexOf("/")).split("|");
   return { resourceType: resourceType as ResourceType, id };
 }
@@ -75,6 +77,25 @@ export function get<T extends object, R, P extends Parent<T>>(
   v: T
 ): R {
   return jsonpointer.get(v, toJSONPointer(loc)) as R;
+}
+
+export function fields<T extends object, R, P extends Parent<T>>(
+  loc: Loc<T, R, P>
+) {
+  let asc = ascend(loc);
+  let fields = [];
+  while (asc) {
+    fields.unshift(asc.field);
+    asc = ascend(asc.parent);
+  }
+  return fields;
+}
+
+export function root<T extends Resource, R, P extends Parent<T>>(
+  loc: Loc<T, R, P>
+): Loc<T, T> {
+  const { resourceType, id } = pathMeta(loc);
+  return pointer(resourceType, id) as any as Loc<T, T>;
 }
 
 /*

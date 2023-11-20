@@ -1,0 +1,3 @@
+releases:
+  "@iguhealth/fhir-pointer": patch
+  admin-app: patch
