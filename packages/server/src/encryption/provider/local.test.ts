@@ -4,7 +4,7 @@ import { OperationDefinition } from "@iguhealth/fhir-types/r4/types";
 
 import { testServices } from "../../resourceProviders/test_ctx";
 import LocalEncryption from "./local.js";
-import { encryptResource } from "../index.js";
+import { encryptValue } from "../index.js";
 
 const key = crypto.randomBytes(32);
 const iv = crypto.randomBytes(16);
@@ -42,7 +42,7 @@ test("test resourceEncryption", async () => {
       },
     ],
   };
-  const encryptedOp = await encryptResource(
+  const encryptedOp = await encryptValue(
     { ...testServices, encryptionProvider: provider },
     operationDefinition
   );
