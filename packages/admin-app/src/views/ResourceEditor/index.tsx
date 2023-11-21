@@ -32,7 +32,7 @@ export default function DefaultResourceEditorView() {
       label: id === "new" ? "Create" : "Update",
       onClick: () => {
         try {
-          const editPromise =
+          const editPromise = (
             id === "new"
               ? client.create({}, {
                   ...resource,
@@ -42,7 +42,11 @@ export default function DefaultResourceEditorView() {
                   ...resource,
                   resourceType,
                   id,
-                } as Resource);
+                } as Resource)
+          ).then((response) => {
+            setResource(response);
+            return response;
+          });
           Base.Toaster.promise(editPromise, {
             loading: id === "new" ? "Creating Resource" : "Updating Resource",
             success: (success) =>

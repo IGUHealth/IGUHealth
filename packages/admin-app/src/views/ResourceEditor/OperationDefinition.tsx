@@ -300,9 +300,12 @@ function EnvironmentVariables({
                 onChange(
                   fpb.applyMutationImmutable(operation, {
                     op: "replace",
-                    path: fpt.descend(valuePointer, "valueString"),
-
-                    value: e.target.value,
+                    path: valuePointer,
+                    value: {
+                      ...ext.extension?.[0],
+                      url: "https://iguhealth.app/Extension/OperationDefinition/environment-variable-value",
+                      valueString: e.target.value,
+                    },
                   })
                 );
               }}

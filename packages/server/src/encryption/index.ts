@@ -1,4 +1,4 @@
-import { Resource } from "@iguhealth/fhir-types/r4/types";
+import { Resource, Extension } from "@iguhealth/fhir-types/r4/types";
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import jsonpatch, { Operation } from "fast-json-patch";
 
@@ -36,12 +36,12 @@ export async function encryptValue<T extends object>(
     }
   );
   const operations = await Promise.all(
-    encryptionLocations.map(async (metaValue): Promise<Operation[]> => {
+    encryptionLocations.map(async (value): Promise<Operation[]> => {
       console.log(
-        `${toFP(metaValue.location())}.extension.where(url=%extUrl).value`
+        `${toFP(value.location())}.extension.where(url=%extUrl).value`
       );
-      const extension = evaluateWithMeta(
-        `${toFP(metaValue.location())}.extension.where(url=%extUrl).value`,
+      const encryptExtensionValue = evaluateWithMeta(
+        `${toFP(value.location())}.extension.where(url=%extUrl).value`,
         resource,
         {
           variables: {
@@ -49,47 +49,47 @@ export async function encryptValue<T extends object>(
           },
         }
       );
-      if (extension.length < 1) {
+      if (encryptExtensionValue.length < 1) {
         throw new OperationError(
           outcomeError(
             "invalid",
             "Could not find extension at location to encrypt.",
-            [toFP(metaValue.location())]
+            [toFP(value.location())]
           )
         );
       }
-      if (extension.length > 1) {
+      if (encryptExtensionValue.length > 1) {
         throw new OperationError(
           outcomeError(
             "invalid",
             "Error multiple encryption extensions found at location.",
-            [toFP(metaValue.location())]
+            [toFP(value.location())]
           )
         );
       }
-      const value = metaValue.valueOf();
-      if (typeof value !== "string") {
+
+      if (typeof value.valueOf() !== "string") {
         throw new OperationError(
           outcomeError("invalid", "Cannot encrypt a non string value.", [
-            toFP(metaValue.location()),
+            toFP(value.location()),
           ])
         );
       }
 
-      if (extension.valueOf() !== metaValue.valueOf()) {
+      if (encryptExtensionValue[0].valueOf() !== value.valueOf()) {
         const encryptedValue = await encryptionProvider.encrypt(
           { workspace: ctx.workspace },
-          value
+          value.valueOf() as string
         );
         return [
           {
             op: "replace",
-            path: `/${metaValue.location().join("/")}`,
+            path: `/${value.location().join("/")}`,
             value: encryptedValue,
           },
           {
             op: "replace",
-            path: `/${extension[0].location().join("/")}`,
+            path: `/${encryptExtensionValue[0].location().join("/")}`,
             value: encryptedValue,
           },
         ];
