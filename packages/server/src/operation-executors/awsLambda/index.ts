@@ -5,6 +5,8 @@ import {
   UpdateFunctionCodeCommand,
   InvokeCommand,
   TagResourceCommand,
+  UpdateFunctionConfigurationCommand,
+  DeleteFunctionCommand,
 } from "@aws-sdk/client-lambda";
 
 import {
@@ -170,6 +172,51 @@ function createZipFile(code: string): Buffer {
   return zip.toBuffer();
 }
 
+async function createEnvironmentVariables(
+  ctx: FHIRServerCTX,
+  operationDefinition: OperationDefinition
+): Promise<Record<string, string>> {
+  const environment = (
+    await Promise.all(
+      (operationDefinition.extension || [])
+        .filter(
+          (ext) =>
+            ext.url ===
+            "https://iguhealth.app/Extension/OperationDefinition/environment-variable"
+        )
+        .map(async (ext) => {
+          const key = ext.valueString;
+          const valueExt = ext.extension?.find(
+            (ext) =>
+              ext.url ===
+              "https://iguhealth.app/Extension/OperationDefinition/environment-variable-value"
+          );
+
+          let value;
+          if (
+            valueExt?._valueString?.extension?.find(
+              (e) => e.url === "https://iguhealth.app/Extension/encrypt-value"
+            ) &&
+            valueExt?.valueString
+          ) {
+            value = await ctx.encryptionProvider?.decrypt(
+              { workspace: ctx.workspace },
+              valueExt.valueString
+            );
+          } else {
+            value = valueExt?.valueString;
+          }
+          return [key, value];
+        })
+    )
+  ).reduce((acc, [key, value]) => {
+    if (!key || !value) return acc;
+    return { ...acc, [key]: value };
+  }, {});
+
+  return environment;
+}
+
 async function createOrUpdateLambda(
   client: {
     lambda: LambdaClient;
@@ -202,34 +249,38 @@ async function createOrUpdateLambda(
 
     const zip = createZipFile(operationCode);
 
-    // If lambda exists means misaligned versions so instead updating code and tags.
+    const environmentVariables = await createEnvironmentVariables(
+      ctx,
+      operation.operationDefinition
+    );
+
+    // If lambda exists means misaligned versions so delete existing lambda to replace with new.
     if (lambda) {
-      const updateFunction = new UpdateFunctionCodeCommand({
-        FunctionName: lambdaName,
-        ZipFile: zip,
-      });
-
-      const response = await client.lambda.send(updateFunction);
-      const updateTags = new TagResourceCommand({
-        Resource: response.FunctionArn as string,
-        Tags: getLambdaTags(ctx, operation.operationDefinition),
-      });
-      await client.lambda.send(updateTags);
-    } else {
-      const createFunction = new CreateFunctionCommand({
-        FunctionName: lambdaName,
-        Runtime: "nodejs18.x",
-        Layers: layers,
-        Handler: "index.handler",
-        Role: role,
-        Tags: getLambdaTags(ctx, operation.operationDefinition),
-        Code: {
-          ZipFile: zip,
-        },
-      });
-
-      const response = await client.lambda.send(createFunction);
+      await client.lambda.send(
+        new DeleteFunctionCommand({
+          FunctionName: lambdaName,
+        })
+      );
     }
+    const createFunction = new CreateFunctionCommand({
+      FunctionName: lambdaName,
+      Runtime: "nodejs18.x",
+      Layers: layers,
+      Handler: "index.handler",
+      Role: role,
+      Tags: getLambdaTags(ctx, operation.operationDefinition),
+      Code: {
+        ZipFile: zip,
+      },
+      Environment: {
+        Variables: await createEnvironmentVariables(
+          ctx,
+          operation.operationDefinition
+        ),
+      },
+    });
+
+    const _response = await client.lambda.send(createFunction);
 
     return;
   });
