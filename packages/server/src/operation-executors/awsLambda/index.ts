@@ -249,11 +249,6 @@ async function createOrUpdateLambda(
 
     const zip = createZipFile(operationCode);
 
-    const environmentVariables = await createEnvironmentVariables(
-      ctx,
-      operation.operationDefinition
-    );
-
     // If lambda exists means misaligned versions so delete existing lambda to replace with new.
     if (lambda) {
       await client.lambda.send(
