@@ -162,7 +162,70 @@ exports.handler = async function (ctx, param) {
 };
 ```
 
-#### Extending with third party libraries
+### Secrets and Environment Variables
+
+To use environment variables use the following extension on `OperationDefinition.extension`
+
+```json
+{
+  "url": "https://iguhealth.app/Extension/OperationDefinition/environment-variable",
+  "extension": [
+    {
+      "url": "https://iguhealth.app/Extension/OperationDefinition/environment-variable-value",
+      "valueString": "variable-value"
+    }
+  ],
+  "valueString": "variable-name"
+}
+```
+
+Within code you can then access the value via `process.env[variable-name]`
+
+```javascript
+exports.handler = async function (ctx, param) {
+  const variablevalue = process.env["variable-value"];
+};
+```
+
+#### Encryption
+
+If your value is a secret encrypt it automatically via the following extension on variable-value
+
+```json
+ "_valueString": {
+    "extension": [
+      {
+        "url": "https://iguhealth.app/Extension/encrypt-value",
+        "valueString": ""
+      }
+    ]
+  }
+```
+
+In the example above the following will automatically encrypt the value on update for variable-value.
+
+```json
+{
+  "url": "https://iguhealth.app/Extension/OperationDefinition/environment-variable",
+  "extension": [
+    {
+      "url": "https://iguhealth.app/Extension/OperationDefinition/environment-variable-value",
+      "valueString": "variable-value"
+      "_valueString": {
+         "extension": [
+          {
+            "url": "https://iguhealth.app/Extension/encrypt-value",
+            "valueString": ""
+          }
+        ]
+      }
+    }
+  ],
+  "valueString": "variable-name"
+}
+```
+
+### Extending with third party libraries
 
 Libraries we default support in execution environment are as follows:
 
