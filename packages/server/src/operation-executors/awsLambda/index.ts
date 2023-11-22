@@ -267,6 +267,7 @@ async function createOrUpdateLambda(
       Code: {
         ZipFile: zip,
       },
+      Timeout: 10,
       Environment: {
         Variables: await createEnvironmentVariables(
           ctx,
