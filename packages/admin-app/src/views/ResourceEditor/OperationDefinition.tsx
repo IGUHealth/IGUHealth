@@ -270,79 +270,87 @@ function EnvironmentVariables({
     .map(([_e, i]) => fpt.descend(operationExtensions, i));
 
   return (
-    <div>
-      {environmentExtensions?.map((pointer) => {
-        const ext = fpt.get(pointer, operation);
-        if (!ext) throw new Error("Ext not on pointer");
-        const valuePointer = fpt.descend(fpt.descend(pointer, "extension"), 0);
-        const isSecret = ext.extension?.[0]._valueString !== undefined;
+    <table>
+      <tbody>
+        {environmentExtensions?.map((pointer) => {
+          const ext = fpt.get(pointer, operation);
+          if (!ext) throw new Error("Ext not on pointer");
+          const valuePointer = fpt.descend(
+            fpt.descend(pointer, "extension"),
+            0
+          );
+          const isSecret = ext.extension?.[0]._valueString !== undefined;
 
-        return (
-          <div key={pointer} className="flex space-x-1 mb-2">
-            <Base.Input
-              value={ext.valueString}
-              label="Name"
-              onChange={(e) => {
-                onChange(
-                  fpb.applyMutationImmutable(operation, {
-                    op: "replace",
-                    path: fpt.descend(pointer, "valueString"),
-                    value: e.target.value,
-                  })
-                );
-              }}
-            />
-            <Base.Input
-              type={isSecret ? "password" : "text"}
-              value={ext.extension?.[0].valueString}
-              label="Value"
-              onChange={(e) => {
-                onChange(
-                  fpb.applyMutationImmutable(operation, {
-                    op: "replace",
-                    path: valuePointer,
-                    value: {
-                      ...ext.extension?.[0],
-                      url: "https://iguhealth.app/Extension/OperationDefinition/environment-variable-value",
-                      valueString: e.target.value,
-                    },
-                  })
-                );
-              }}
-            />
-            <Base.Input
-              type="checkbox"
-              label="Is Secret"
-              checked={isSecret}
-              onChange={(e) => {
-                if (e.target.checked) {
-                  onChange(
-                    fpb.applyMutationImmutable(operation, {
-                      op: "add",
-                      path: fpt.descend(valuePointer, "_valueString"),
-                      value: {
-                        extension: [
-                          {
-                            url: "https://iguhealth.app/Extension/encrypt-value",
-                            valueString: "",
+          return (
+            <tr key={pointer}>
+              <td>
+                <Base.Input
+                  value={ext.valueString}
+                  onChange={(e) => {
+                    onChange(
+                      fpb.applyMutationImmutable(operation, {
+                        op: "replace",
+                        path: fpt.descend(pointer, "valueString"),
+                        value: e.target.value,
+                      })
+                    );
+                  }}
+                />
+              </td>
+              <td>
+                <Base.Input
+                  type={isSecret ? "password" : "text"}
+                  value={ext.extension?.[0].valueString}
+                  onChange={(e) => {
+                    onChange(
+                      fpb.applyMutationImmutable(operation, {
+                        op: "replace",
+                        path: valuePointer,
+                        value: {
+                          ...ext.extension?.[0],
+                          url: "https://iguhealth.app/Extension/OperationDefinition/environment-variable-value",
+                          valueString: e.target.value,
+                        },
+                      })
+                    );
+                  }}
+                />
+              </td>
+              <td>
+                <Base.Input
+                  type="checkbox"
+                  checked={isSecret}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      onChange(
+                        fpb.applyMutationImmutable(operation, {
+                          op: "add",
+                          path: fpt.descend(valuePointer, "_valueString"),
+                          value: {
+                            extension: [
+                              {
+                                url: "https://iguhealth.app/Extension/encrypt-value",
+                                valueString: "",
+                              },
+                            ],
                           },
-                        ],
-                      },
-                    })
-                  );
-                } else {
-                  onChange(
-                    fpb.applyMutationImmutable(operation, {
-                      op: "remove",
-                      path: fpt.descend(valuePointer, "_valueString"),
-                    })
-                  );
-                }
-              }}
-            />
-          </div>
-        );
-      })}
+                        })
+                      );
+                    } else {
+                      onChange(
+                        fpb.applyMutationImmutable(operation, {
+                          op: "remove",
+                          path: fpt.descend(valuePointer, "_valueString"),
+                        })
+                      );
+                    }
+                  }}
+                />
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
       <Base.Button
         onClick={() => {
           onChange(
@@ -368,7 +376,7 @@ function EnvironmentVariables({
       >
         Add
       </Base.Button>
-    </div>
+    </table>
   );
 }
 
