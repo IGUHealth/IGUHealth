@@ -271,6 +271,14 @@ function EnvironmentVariables({
 
   return (
     <table>
+      <thead>
+        <tr>
+          <th className="text-left">Name</th>
+          <th className="text-left">Value</th>
+          <th>Secret</th>
+          <th></th>
+        </tr>
+      </thead>
       <tbody>
         {environmentExtensions?.map((pointer) => {
           const ext = fpt.get(pointer, operation);
@@ -347,35 +355,46 @@ function EnvironmentVariables({
                   }}
                 />
               </td>
+              <td>
+                <span className="text-red-600 font-semibold cursor-pointer hover:text-red-500">
+                  Remove
+                </span>
+              </td>
             </tr>
           );
         })}
       </tbody>
-      <Base.Button
-        onClick={() => {
-          onChange(
-            fpb.applyMutationImmutable(operation, {
-              op: "add",
-              path: fpt.descend(
-                operationExtensions,
-                operationExtensions.length
-              ),
-              value: {
-                extension: [
-                  {
-                    url: "https://iguhealth.app/Extension/OperationDefinition/environment-variable-value",
-                    valueString: "",
-                  },
-                ],
-                url: "https://iguhealth.app/Extension/OperationDefinition/environment-variable",
-                valueString: "",
-              },
-            })
-          );
-        }}
-      >
-        Add
-      </Base.Button>
+      <tfoot>
+        <tr>
+          <td>
+            <Base.Button
+              onClick={() => {
+                onChange(
+                  fpb.applyMutationImmutable(operation, {
+                    op: "add",
+                    path: fpt.descend(
+                      operationExtensions,
+                      operationExtensions.length
+                    ),
+                    value: {
+                      extension: [
+                        {
+                          url: "https://iguhealth.app/Extension/OperationDefinition/environment-variable-value",
+                          valueString: "",
+                        },
+                      ],
+                      url: "https://iguhealth.app/Extension/OperationDefinition/environment-variable",
+                      valueString: "",
+                    },
+                  })
+                );
+              }}
+            >
+              Add Environment Variable
+            </Base.Button>
+          </td>
+        </tr>
+      </tfoot>
     </table>
   );
 }
