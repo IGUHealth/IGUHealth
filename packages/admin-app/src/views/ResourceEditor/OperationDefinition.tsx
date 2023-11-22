@@ -287,6 +287,7 @@ function EnvironmentVariables({
             fpt.descend(pointer, "extension"),
             0
           );
+
           const isSecret = ext.extension?.[0]._valueString !== undefined;
 
           return (
@@ -356,7 +357,17 @@ function EnvironmentVariables({
                 />
               </td>
               <td>
-                <span className="text-red-600 font-semibold cursor-pointer hover:text-red-500">
+                <span
+                  onClick={(_e) => {
+                    onChange(
+                      fpb.applyMutationImmutable(operation, {
+                        op: "remove",
+                        path: pointer,
+                      })
+                    );
+                  }}
+                  className="text-red-600 font-semibold cursor-pointer hover:text-red-500"
+                >
                   Remove
                 </span>
               </td>
