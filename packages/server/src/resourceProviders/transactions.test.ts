@@ -27,6 +27,7 @@ const resources = loadResources(["StructureDefinition"]);
 const CTX = {
   ...testServices,
   resolveCanonical<T extends ResourceType>(type: T, url: string): AResource<T> {
+    // @ts-ignore
     const sd = resources.find((sd) => sd.url === url);
     if (!sd) throw new Error(`Could not resolve url ${url}`);
     return sd as AResource<T>;
