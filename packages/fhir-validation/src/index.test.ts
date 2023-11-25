@@ -2,11 +2,11 @@ import path from "path";
 import { expect, test } from "@jest/globals";
 
 import {
+  AResource,
   StructureDefinition,
   Resource,
   ResourceType,
   Account,
-  Appointment,
 } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { loadArtifacts } from "@iguhealth/artifacts";
@@ -37,10 +37,12 @@ const memDatabase = createMemoryDatabase([
 ] as ResourceType[]);
 
 const CTX = {
-  resolveSD: (type: string) => {
-    const sd = memDatabase["StructureDefinition"].find((sd) => sd.id === type);
-    if (!sd) throw new Error(`Couldn't find sd for type '${type}'`);
-    return sd as StructureDefinition;
+  resolveCanonical: <T extends ResourceType>(t: T, url: string) => {
+    const sd = memDatabase[t].find(
+      (sd) => (sd as StructureDefinition).url === url
+    );
+    if (!sd) throw new Error(`Couldn't find sd with url '${url}'`);
+    return sd as AResource<T>;
   },
 };
 

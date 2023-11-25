@@ -4,6 +4,7 @@ import pg from "pg";
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { Bundle, Reference } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
+import { typeToUrl } from "@iguhealth/fhir-validation";
 import { FHIRServerCTX } from "../ctx/types.js";
 
 function getTransactionFullUrls(transaction: Bundle): Record<string, number> {
@@ -47,7 +48,8 @@ export function buildTransactionTopologicalGraph(
         {
           meta: {
             type: entry.resource.resourceType,
-            getSD: (type) => ctx.resolveSD(type),
+            getSD: (type) =>
+              ctx.resolveCanonical("StructureDefinition", typeToUrl(type)),
           },
         }
       );

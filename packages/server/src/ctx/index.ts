@@ -8,6 +8,7 @@ import Ajv from "ajv";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
+  AResource,
   id,
   ResourceType,
   Resource,
@@ -317,17 +318,30 @@ export async function deriveCTX(): Promise<
         })
       : undefined;
 
-  const resolveSD = (type: string) => {
-    const sd = memDBSync.read({}, "StructureDefinition", type);
-    if (!sd) {
+  const resolveCanonical = <T extends ResourceType>(
+    type: T,
+    url: string
+  ): AResource<T> => {
+    const resources = memDBSync.search_type({}, type, [
+      { name: "url", value: [url] },
+    ]);
+    if (resources.resources.length < 1) {
       throw new OperationError(
         outcomeFatal(
           "invalid",
-          `Could not resolve a structure definition for type '${type}'`
+          `Could not resolve resource with canonical url '${url}'`
         )
       );
     }
-    return sd;
+    if (resources.resources.length > 1) {
+      throw new OperationError(
+        outcomeFatal(
+          "invalid",
+          `Found multiple resources with canonical url '${url}'`
+        )
+      );
+    }
+    return resources.resources[0];
   };
   const capabilities = await serverCapabilities(memDBSync);
   const cache = new RedisCache({
@@ -412,7 +426,7 @@ export async function deriveCTX(): Promise<
       capabilities,
       client,
       cache,
-      resolveSD,
+      resolveCanonical,
       lock,
       encryptionProvider,
     };

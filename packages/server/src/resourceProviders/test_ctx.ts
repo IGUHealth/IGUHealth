@@ -2,12 +2,13 @@ import path from "node:path";
 import createLogger from "pino";
 import dotEnv from "dotenv";
 
+import { ResourceType, AResource } from "@iguhealth/fhir-types/r4/types";
+import { loadArtifacts } from "@iguhealth/artifacts";
+
 import MemoryDatabase from "./memory/async.js";
 import RedisCache from "../cache/redis.js";
 import { IOCache } from "../cache/interface.js";
 import { FHIRServerCTX } from "../ctx/types.js";
-import { loadArtifacts } from "@iguhealth/artifacts";
-
 import { Lock } from "../synchronization/interfaces.js";
 import { TerminologyProviderMemory } from "../terminology/index.js";
 
@@ -54,8 +55,8 @@ export const testServices: FHIRServerCTX = {
   },
   client: MemoryDatabase({}),
   cache: new TestCache(),
-  resolveSD: (type: string) => {
-    return sds.find((sd) => sd.id === type);
+  resolveCanonical: <T extends ResourceType>(type: T, url: string) => {
+    return sds.find((sd) => sd.url === url) as AResource<T>;
   },
   lock: new TestLock(),
 };

@@ -1,8 +1,9 @@
 import type { Logger } from "pino";
 
 import {
+  ResourceType,
+  AResource,
   CapabilityStatement,
-  StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
 
@@ -24,5 +25,8 @@ export interface FHIRServerCTX {
   client: FHIRClientAsync<FHIRServerCTX>;
   lock: Lock<unknown>;
   user_access_token?: string;
-  resolveSD: (type: string) => StructureDefinition | undefined;
+  resolveCanonical: <T extends ResourceType>(
+    type: T,
+    url: string
+  ) => AResource<T>;
 }

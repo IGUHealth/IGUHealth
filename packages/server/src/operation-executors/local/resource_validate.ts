@@ -35,14 +35,7 @@ export const validateResource = async (
             });
             return result.result;
           },
-          resolveSD: (type) => {
-            const sd = ctx.resolveSD(type);
-            if (!sd)
-              throw new OperationError(
-                outcomeError("invalid", `Could not validate type of ${type}`)
-              );
-            return sd;
-          },
+          resolveCanonical: ctx.resolveCanonical,
         },
         resourceType,
         input.resource
