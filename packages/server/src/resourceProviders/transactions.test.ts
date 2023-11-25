@@ -5,39 +5,29 @@ import {
   ResourceType,
   Resource,
   AResource,
-  StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
 import { loadArtifacts } from "@iguhealth/artifacts";
-import { FHIRClientSync } from "@iguhealth/client/interface";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import MemoryDatabase from "./memory/sync.js";
 import { buildTransactionTopologicalGraph } from "./transactions";
 import { testServices } from "./test_ctx.js";
 import { FHIRServerCTX } from "../ctx/types.js";
 
-function createMemoryDatabase(
-  resourceTypes: ResourceType[]
-): FHIRClientSync<unknown> {
-  const database = MemoryDatabase<unknown>({});
+function loadResources(resourceTypes: ResourceType[]): Resource[] {
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
       loadArtifacts(resourceType, path.join(__dirname, "../"), true)
     )
     .flat();
-  for (const resource of artifactResources) {
-    database.create({}, resource);
-  }
-  return database;
+  return artifactResources;
 }
 
-const memDB = createMemoryDatabase(["StructureDefinition"]);
+const resources = loadResources(["StructureDefinition"]);
 
 const CTX = {
   ...testServices,
   resolveCanonical<T extends ResourceType>(type: T, url: string): AResource<T> {
-    const sds = memDB.search_type({}, "StructureDefinition", []);
-    const sd = sds.resources.find((sd) => sd.url === url);
+    const sd = resources.find((sd) => sd.url === url);
     if (!sd) throw new Error(`Could not resolve url ${url}`);
     return sd as AResource<T>;
   },

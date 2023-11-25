@@ -18,7 +18,10 @@ import { descend, createPath, ascend } from "./path.js";
 import jsonpointer from "jsonpointer";
 
 export interface ValidationCTX {
-  resolveCanonical<T extends ResourceType>(type: T, url: string): AResource<T>;
+  resolveCanonical<T extends ResourceType>(
+    type: T,
+    url: string
+  ): AResource<T> | undefined;
   validateCode?(system: string, code: string): Promise<boolean>;
 }
 
@@ -539,6 +542,15 @@ export default async function validate(
   path: string = createPath()
 ): Promise<OperationOutcome["issue"]> {
   const sd = ctx.resolveCanonical("StructureDefinition", typeToUrl(type));
+  if (!sd)
+    throw new OperationError(
+      outcomeFatal(
+        "structure",
+        `Unable to resolve canonical for type '${type}'`,
+        [path]
+      )
+    );
+
   const indice = 0;
 
   if (primitiveTypes.has(type))
