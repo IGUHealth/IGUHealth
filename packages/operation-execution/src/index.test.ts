@@ -3,6 +3,8 @@ import { expect, test } from "@jest/globals";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import {
+  ResourceType,
+  AResource,
   OperationDefinition,
   Parameters,
   Resource,
@@ -215,10 +217,13 @@ test("execution", async () => {
     new Operation<{ test: string }, { testOut: string }>(operationTest);
 
   const ctx: OpCTX = {
-    resolveSD: (type: string) => {
-      const sd = structureDefinitions.find((sd) => sd.type === type);
-      if (!sd) throw new Error(`Could not resolve type ${type}`);
-      return sd;
+    resolveCanonical<T extends ResourceType>(
+      type: T,
+      url: string
+    ): AResource<T> {
+      const sd = structureDefinitions.find((sd) => sd.url === url);
+      if (!sd) throw new Error(`Could not resolve url ${url}`);
+      return sd as AResource<T>;
     },
     level: "instance",
   };
@@ -273,10 +278,13 @@ test("paramValidation", async () => {
   >(operationTest);
 
   const ctx: OpCTX = {
-    resolveSD: (type: string) => {
-      const sd = structureDefinitions.find((sd) => sd.type === type);
-      if (!sd) throw new Error(`Could not resolve type ${type}`);
-      return sd;
+    resolveCanonical<T extends ResourceType>(
+      type: T,
+      url: string
+    ): AResource<T> {
+      const sd = structureDefinitions.find((sd) => sd.url === url);
+      if (!sd) throw new Error(`Could not resolve url ${url}`);
+      return sd as AResource<T>;
     },
     level: "instance",
   };
@@ -465,10 +473,13 @@ test("Test invalid resource validation", async () => {
     new Operation<{ payload: Resource[] }, { test: string }>(op);
 
   const ctx: OpCTX = {
-    resolveSD: (type: string) => {
-      const sd = structureDefinitions.find((sd) => sd.type === type);
-      if (!sd) throw new Error(`Could not resolve type ${type} for validation`);
-      return sd;
+    resolveCanonical<T extends ResourceType>(
+      type: T,
+      url: string
+    ): AResource<T> {
+      const sd = structureDefinitions.find((sd) => sd.url === url);
+      if (!sd) throw new Error(`Could not resolve url ${url}`);
+      return sd as AResource<T>;
     },
     level: "instance",
   };
@@ -487,6 +498,8 @@ test("Test invalid resource validation", async () => {
   expect(
     invoke(operation, ctx, { payload: "asdf" } as unknown)
   ).rejects.toThrow(
-    new Error(`Could not resolve type undefined for validation`)
+    new Error(
+      `Could not resolve url http://hl7.org/fhir/StructureDefinition/undefined`
+    )
   );
 });

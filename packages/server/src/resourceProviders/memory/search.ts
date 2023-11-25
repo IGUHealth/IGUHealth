@@ -4,6 +4,7 @@ import isBetween from "dayjs/plugin/isBetween.js";
 import { Resource } from "@iguhealth/fhir-types/r4/types";
 import * as fp from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import { typeToUrl } from "@iguhealth/fhir-validation";
 
 import { SearchParameterResource } from "../utilities/search/parameters.js";
 import {
@@ -51,7 +52,8 @@ async function expressionSearch(
     {
       meta: {
         type: resource.resourceType,
-        getSD: (type) => ctx.resolveSD(type),
+        getSD: (type) =>
+          ctx.resolveCanonical("StructureDefinition", typeToUrl(type)),
       },
     }
   );

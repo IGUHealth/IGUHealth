@@ -78,14 +78,7 @@ export function getOpCTX(ctx: FHIRServerCTX, request: InvokeRequest): OpCTX {
       });
       return result.result;
     },
-    resolveSD: (type: string) => {
-      const sd = ctx.resolveSD(type);
-      if (!sd)
-        throw new OperationError(
-          outcomeFatal("invalid", `Could not resolve type '${type}'`)
-        );
-      return sd;
-    },
+    resolveCanonical: ctx.resolveCanonical,
   };
 }
 

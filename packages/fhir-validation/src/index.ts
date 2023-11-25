@@ -5,10 +5,12 @@ import {
   issueError,
 } from "@iguhealth/operation-outcomes";
 import {
+  AResource,
   Resource,
   ElementDefinition,
   OperationOutcome,
   StructureDefinition,
+  ResourceType,
 } from "@iguhealth/fhir-types/r4/types";
 import { primitiveTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { eleIndexToChildIndices } from "@iguhealth/codegen";
@@ -16,7 +18,7 @@ import { descend, createPath, ascend } from "./path.js";
 import jsonpointer from "jsonpointer";
 
 export interface ValidationCTX {
-  resolveSD(type: string): StructureDefinition;
+  resolveCanonical<T extends ResourceType>(type: T, url: string): AResource<T>;
   validateCode?(system: string, code: string): Promise<boolean>;
 }
 
@@ -399,7 +401,7 @@ async function validateSingular(
         throw new OperationError(
           outcomeError(
             "structure",
-            `Expected resourceType '${structureDefinition.type}' at path '${path}'`,
+            `Expected resourceType '${structureDefinition.type}' at path '${path}' found type '${value.resourceType}'`,
             [path]
           )
         );
@@ -526,13 +528,17 @@ async function validateElement(
   }
 }
 
+export function typeToUrl(type: string) {
+  return `http://hl7.org/fhir/StructureDefinition/${type}`;
+}
+
 export default async function validate(
   ctx: ValidationCTX,
   type: string,
   root: unknown,
   path: string = createPath()
 ): Promise<OperationOutcome["issue"]> {
-  const sd = ctx.resolveSD(type);
+  const sd = ctx.resolveCanonical("StructureDefinition", typeToUrl(type));
   const indice = 0;
 
   if (primitiveTypes.has(type))

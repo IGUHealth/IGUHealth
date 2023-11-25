@@ -4,6 +4,7 @@ import { test, expect } from "@jest/globals";
 import {
   ResourceType,
   Resource,
+  AResource,
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
 import { loadArtifacts } from "@iguhealth/artifacts";
@@ -32,13 +33,14 @@ function createMemoryDatabase(
 
 const memDB = createMemoryDatabase(["StructureDefinition"]);
 
-function getSD(type: string): StructureDefinition | undefined {
-  return memDB.read({}, "StructureDefinition", type);
-}
-
 const CTX = {
   ...testServices,
-  resolveSD: (type: string) => getSD(type),
+  resolveCanonical<T extends ResourceType>(type: T, url: string): AResource<T> {
+    const sds = memDB.search_type({}, "StructureDefinition", []);
+    const sd = sds.resources.find((sd) => sd.url === url);
+    if (!sd) throw new Error(`Could not resolve url ${url}`);
+    return sd as AResource<T>;
+  },
 };
 
 test("Generate a graph from a transaction", () => {

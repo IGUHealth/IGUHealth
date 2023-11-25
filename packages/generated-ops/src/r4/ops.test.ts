@@ -2,7 +2,7 @@ import path from "node:path";
 import { expect, test } from "@jest/globals";
 
 import { Invocation } from "@iguhealth/operation-execution";
-import { ValueSet } from "@iguhealth/fhir-types/r4/types";
+import { ValueSet, ResourceType, AResource } from "@iguhealth/fhir-types/r4/types";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { OpCTX } from "@iguhealth/operation-execution/src/index.js";
 
@@ -12,10 +12,10 @@ const sds = loadArtifacts("StructureDefinition", path.join(__dirname, "../"));
 
 test("Test ValueSet Expands", async () => {
   const ctx: OpCTX = {
-    resolveSD: (type: string) => {
-      const sd = sds.find((sd) => sd.type === type);
+    resolveCanonical<T extends ResourceType>(type: T, url: string): AResource<T> {
+      const sd = sds.find((sd) => sd.url === url);
       if (!sd) throw new Error(`Could not resolve type ${type}`);
-      return sd;
+      return sd as AResource<T>;
     },
     level: "instance",
   };
@@ -35,6 +35,7 @@ test("Test ValueSet Expands", async () => {
 
     return output;
   };
+
   expect(invoke(ValueSetExpand.Op, ctx, { url: "asdf" })).resolves.toEqual(
     output,
   );
