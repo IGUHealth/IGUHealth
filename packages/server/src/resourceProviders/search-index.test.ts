@@ -1,45 +1,40 @@
 import path from "path";
 
-import { ResourceType, Resource } from "@iguhealth/fhir-types/r4/types";
+import {
+  StructureDefinition,
+  ResourceType,
+  Resource,
+  SearchParameter,
+} from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { expect, test } from "@jest/globals";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import * as fhirpath from "@iguhealth/fhirpath";
-import { FHIRClientSync } from "@iguhealth/client/interface";
 
-import MemoryDatabase from "./memory/sync.js";
-
-function createMemoryDatabase(
-  resourceTypes: ResourceType[]
-): FHIRClientSync<unknown> {
-  const database = MemoryDatabase<unknown>({});
+function getArtifactResources(resourceTypes: ResourceType[]): Resource[] {
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
       loadArtifacts(resourceType, path.join(__dirname, "../"), true)
     )
     .flat();
-  for (const resource of artifactResources) {
-    database.create({}, resource);
-  }
-  return database;
+
+  return artifactResources;
 }
 
-const memDatabase = createMemoryDatabase([
+const artifactResources = getArtifactResources([
   ...resourceTypes.values(),
 ] as ResourceType[]);
 
 test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
   `Testing indexing resourceType '%s'`,
   (resourceType) => {
-    const searchParameters = memDatabase.search_type({}, "SearchParameter", [
-      {
-        name: "base",
-        value: [resourceType],
-      },
-    ]).resources;
-    const resources = memDatabase
-      .search_type({}, resourceType as ResourceType, [])
-      .resources.filter((r) => r.id)
+    const searchParameters = artifactResources.filter(
+      (r): r is SearchParameter =>
+        r.resourceType === "SearchParameter" && r.base.includes(resourceType)
+    );
+    const resources = artifactResources
+      .filter((r) => r.resourceType === resourceType)
+      .filter((r) => r.id)
       .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
       .slice(0, 10);
     for (const resource of resources) {
@@ -52,7 +47,11 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
               {
                 meta: {
                   getSD: (type) => {
-                    return memDatabase.read({}, "StructureDefinition", type);
+                    return artifactResources.find(
+                      (r) =>
+                        r.resourceType === "StructureDefinition" &&
+                        r.type === type
+                    ) as StructureDefinition | undefined;
                   },
                 },
               }

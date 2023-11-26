@@ -16,7 +16,7 @@ import {
   CapabilityStatementRestResource,
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
-import { FHIRClientSync } from "@iguhealth/client/interface";
+import { FHIRClientAsync } from "@iguhealth/client/interface";
 import {
   OperationError,
   outcomeFatal,
@@ -28,7 +28,6 @@ import { createPostgresClient } from "../resourceProviders/postgres/index.js";
 import { FHIRServerCTX } from "./types.js";
 import { InternalData } from "../resourceProviders/memory/types.js";
 import MemoryDatabaseAsync from "../resourceProviders/memory/async.js";
-import MemoryDatabaseSync from "../resourceProviders/memory/sync.js";
 import RouterClient from "../resourceProviders/router.js";
 import RedisLock from "../synchronization/redis.lock.js";
 import InlineExecutioner from "../operation-executors/local/index.js";
@@ -78,10 +77,11 @@ function createMemoryData(
 }
 
 async function createResourceRestCapabilities(
-  memdb: FHIRClientSync<unknown>,
+  ctx: Partial<FHIRServerCTX>,
+  memdb: FHIRClientAsync<unknown>,
   sd: StructureDefinition
 ): Promise<CapabilityStatementRestResource> {
-  const resourceParameters = await memdb.search_type({}, "SearchParameter", [
+  const resourceParameters = await memdb.search_type(ctx, "SearchParameter", [
     {
       name: "base",
       value: ["Resource", "DomainResource", sd.type],
@@ -111,13 +111,14 @@ async function createResourceRestCapabilities(
 }
 
 async function serverCapabilities(
-  memdb: FHIRClientSync<unknown>
+  ctx: Partial<FHIRServerCTX>,
+  memdb: FHIRClientAsync<unknown>
 ): Promise<CapabilityStatement> {
   const sds = (
     await memdb.search_type({}, "StructureDefinition", [])
   ).resources.filter((sd) => sd.abstract === false && sd.kind === "resource");
 
-  const rootParameters = await memdb.search_type({}, "SearchParameter", [
+  const rootParameters = await memdb.search_type(ctx, "SearchParameter", [
     {
       name: "base",
       value: ["Resource", "DomainResource"],
@@ -157,7 +158,7 @@ async function serverCapabilities(
           documentation: resource.description,
         })),
         resource: await Promise.all(
-          sds.map((sd) => createResourceRestCapabilities(memdb, sd))
+          sds.map((sd) => createResourceRestCapabilities(ctx, memdb, sd))
         ),
       },
     ],
@@ -283,6 +284,33 @@ const encryptionMiddleware: (
     }
   };
 
+function createResolveCanonical(
+  data: InternalData<ResourceType>
+): <T extends ResourceType>(type: T, url: string) => AResource<T> | undefined {
+  const map = new Map<ResourceType, Map<string, string>>();
+  for (const resourceType of Object.keys(data)) {
+    for (const resource of Object.values(
+      data[resourceType as ResourceType] || {}
+    )) {
+      if ((resource as { url: string })?.url) {
+        if (!map.has(resourceType as ResourceType)) {
+          map.set(resourceType as ResourceType, new Map());
+        }
+        const url = (resource as { url: string }).url;
+        const id = resource?.id;
+        if (!map.get(resourceType as ResourceType)?.has(url) && id) {
+          map.get(resourceType as ResourceType)?.set(url, id);
+        }
+      }
+    }
+  }
+
+  return <T extends ResourceType>(type: T, url: string) => {
+    const id = map.get(type)?.get(url);
+    return id ? (data[type]?.[id] as AResource<T>) : undefined;
+  };
+}
+
 export async function deriveCTX(): Promise<
   ({
     pg,
@@ -295,7 +323,8 @@ export async function deriveCTX(): Promise<
 > {
   const data = createMemoryData(MEMORY_TYPES);
   const memDBAsync = MemoryDatabaseAsync(data);
-  const memDBSync = MemoryDatabaseSync(data);
+  const resolveCanonical = createResolveCanonical(data);
+
   const inlineOperationExecution = InlineExecutioner([
     IguhealthEncryptInvoke,
     ResourceValidateInvoke,
@@ -318,32 +347,10 @@ export async function deriveCTX(): Promise<
         })
       : undefined;
 
-  const resolveCanonical = <T extends ResourceType>(
-    type: T,
-    url: string
-  ): AResource<T> => {
-    const resources = memDBSync.search_type({}, type, [
-      { name: "url", value: [url] },
-    ]);
-    if (resources.resources.length < 1) {
-      throw new OperationError(
-        outcomeFatal(
-          "invalid",
-          `Could not resolve resource with canonical url '${url}'`
-        )
-      );
-    }
-    if (resources.resources.length > 1) {
-      throw new OperationError(
-        outcomeFatal(
-          "invalid",
-          `Found multiple resources with canonical url '${url}'`
-        )
-      );
-    }
-    return resources.resources[0];
-  };
-  const capabilities = await serverCapabilities(memDBSync);
+  const capabilities = await serverCapabilities(
+    { resolveCanonical },
+    memDBAsync
+  );
   const cache = new RedisCache({
     host: process.env.REDIS_HOST,
     port: parseInt(process.env.REDIS_PORT || "6739"),

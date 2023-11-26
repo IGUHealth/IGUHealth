@@ -28,5 +28,5 @@ export interface FHIRServerCTX {
   resolveCanonical: <T extends ResourceType>(
     type: T,
     url: string
-  ) => AResource<T>;
+  ) => AResource<T> | undefined;
 }
