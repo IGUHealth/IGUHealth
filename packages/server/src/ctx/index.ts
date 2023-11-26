@@ -82,6 +82,7 @@ async function createResourceRestCapabilities(
   sd: StructureDefinition
 ): Promise<CapabilityStatementRestResource> {
   const resourceParameters = await memdb.search_type(ctx, "SearchParameter", [
+    { name: "_count", value: [1000] },
     {
       name: "base",
       value: ["Resource", "DomainResource", sd.type],
@@ -115,10 +116,13 @@ async function serverCapabilities(
   memdb: FHIRClientAsync<unknown>
 ): Promise<CapabilityStatement> {
   const sds = (
-    await memdb.search_type({}, "StructureDefinition", [])
+    await memdb.search_type({}, "StructureDefinition", [
+      { name: "_count", value: [1000] },
+    ])
   ).resources.filter((sd) => sd.abstract === false && sd.kind === "resource");
 
   const rootParameters = await memdb.search_type(ctx, "SearchParameter", [
+    { name: "_count", value: [1000] },
     {
       name: "base",
       value: ["Resource", "DomainResource"],
