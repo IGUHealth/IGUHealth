@@ -5895,7 +5895,11 @@ exports[`Testing indexing resourceType 'ConceptMap' 26`] = `
 exports[`Testing indexing resourceType 'ConceptMap' 27`] = `
 [
   "(CapabilityStatement.useContext.value.ofType(CodeableConcept)) | (CodeSystem.useContext.value.ofType(CodeableConcept)) | (CompartmentDefinition.useContext.value.ofType(CodeableConcept)) | (ConceptMap.useContext.value.ofType(CodeableConcept)) | (GraphDefinition.useContext.value.ofType(CodeableConcept)) | (ImplementationGuide.useContext.value.ofType(CodeableConcept)) | (MessageDefinition.useContext.value.ofType(CodeableConcept)) | (NamingSystem.useContext.value.ofType(CodeableConcept)) | (OperationDefinition.useContext.value.ofType(CodeableConcept)) | (SearchParameter.useContext.value.ofType(CodeableConcept)) | (StructureDefinition.useContext.value.ofType(CodeableConcept)) | (StructureMap.useContext.value.ofType(CodeableConcept)) | (TerminologyCapabilities.useContext.value.ofType(CodeableConcept)) | (ValueSet.useContext.value.ofType(CodeableConcept))",
-  [],
+  [
+    {
+      "text": "for CCDA Usage",
+    },
+  ],
 ]
 `;
 
@@ -5909,7 +5913,12 @@ exports[`Testing indexing resourceType 'ConceptMap' 28`] = `
 exports[`Testing indexing resourceType 'ConceptMap' 29`] = `
 [
   "CapabilityStatement.useContext.code | CodeSystem.useContext.code | CompartmentDefinition.useContext.code | ConceptMap.useContext.code | GraphDefinition.useContext.code | ImplementationGuide.useContext.code | MessageDefinition.useContext.code | NamingSystem.useContext.code | OperationDefinition.useContext.code | SearchParameter.useContext.code | StructureDefinition.useContext.code | StructureMap.useContext.code | TerminologyCapabilities.useContext.code | ValueSet.useContext.code",
-  [],
+  [
+    {
+      "code": "venue",
+      "system": "http://terminology.hl7.org/CodeSystem/usage-context-type",
+    },
+  ],
 ]
 `;
 
@@ -5917,7 +5926,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 30`] = `
 [
   "CapabilityStatement.date | CodeSystem.date | CompartmentDefinition.date | ConceptMap.date | GraphDefinition.date | ImplementationGuide.date | MessageDefinition.date | NamingSystem.date | OperationDefinition.date | SearchParameter.date | StructureDefinition.date | StructureMap.date | TerminologyCapabilities.date | ValueSet.date",
   [
-    "2013-07-25",
+    "2012-06-13",
   ],
 ]
 `;
@@ -5925,14 +5934,25 @@ exports[`Testing indexing resourceType 'ConceptMap' 30`] = `
 exports[`Testing indexing resourceType 'ConceptMap' 31`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
-  [],
+  [
+    "A mapping between the FHIR and HL7 v3 AddressUse Code systems",
+  ],
 ]
 `;
 
 exports[`Testing indexing resourceType 'ConceptMap' 32`] = `
 [
   "CapabilityStatement.jurisdiction | CodeSystem.jurisdiction | ConceptMap.jurisdiction | GraphDefinition.jurisdiction | ImplementationGuide.jurisdiction | MessageDefinition.jurisdiction | NamingSystem.jurisdiction | OperationDefinition.jurisdiction | SearchParameter.jurisdiction | StructureDefinition.jurisdiction | StructureMap.jurisdiction | TerminologyCapabilities.jurisdiction | ValueSet.jurisdiction",
-  [],
+  [
+    {
+      "coding": [
+        {
+          "code": "US",
+          "system": "urn:iso:std:iso:3166",
+        },
+      ],
+    },
+  ],
 ]
 `;
 
@@ -5940,7 +5960,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 33`] = `
 [
   "CapabilityStatement.name | CodeSystem.name | CompartmentDefinition.name | ConceptMap.name | GraphDefinition.name | ImplementationGuide.name | MessageDefinition.name | NamingSystem.name | OperationDefinition.name | SearchParameter.name | StructureDefinition.name | StructureMap.name | TerminologyCapabilities.name | ValueSet.name",
   [
-    "Specimen mapping from v2 table 0487 to SNOMED CT",
+    "FHIR-v3-Address-Use",
   ],
 ]
 `;
@@ -5949,7 +5969,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 34`] = `
 [
   "CapabilityStatement.publisher | CodeSystem.publisher | CompartmentDefinition.publisher | ConceptMap.publisher | GraphDefinition.publisher | ImplementationGuide.publisher | MessageDefinition.publisher | NamingSystem.publisher | OperationDefinition.publisher | SearchParameter.publisher | StructureDefinition.publisher | StructureMap.publisher | TerminologyCapabilities.publisher | ValueSet.publisher",
   [
-    "FHIR project team (original source: LabMCoP)",
+    "HL7, Inc",
   ],
 ]
 `;
@@ -5966,7 +5986,9 @@ exports[`Testing indexing resourceType 'ConceptMap' 35`] = `
 exports[`Testing indexing resourceType 'ConceptMap' 36`] = `
 [
   "CapabilityStatement.title | CodeSystem.title | ConceptMap.title | ImplementationGuide.title | MessageDefinition.title | OperationDefinition.title | StructureDefinition.title | StructureMap.title | TerminologyCapabilities.title | ValueSet.title",
-  [],
+  [
+    "FHIR/v3 Address Use Mapping",
+  ],
 ]
 `;
 
@@ -5974,7 +5996,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 37`] = `
 [
   "CapabilityStatement.url | CodeSystem.url | CompartmentDefinition.url | ConceptMap.url | GraphDefinition.url | ImplementationGuide.url | MessageDefinition.url | OperationDefinition.url | SearchParameter.url | StructureDefinition.url | StructureMap.url | TerminologyCapabilities.url | ValueSet.url",
   [
-    "http://hl7.org/fhir/ConceptMap/102",
+    "http://hl7.org/fhir/ConceptMap/101",
   ],
 ]
 `;
@@ -5983,7 +6005,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 38`] = `
 [
   "CapabilityStatement.version | CodeSystem.version | CompartmentDefinition.version | ConceptMap.version | GraphDefinition.version | ImplementationGuide.version | MessageDefinition.version | OperationDefinition.version | SearchParameter.version | StructureDefinition.version | StructureMap.version | TerminologyCapabilities.version | ValueSet.version",
   [
-    "4.0.1",
+    "4.0.0",
   ],
 ]
 `;
@@ -5991,21 +6013,46 @@ exports[`Testing indexing resourceType 'ConceptMap' 38`] = `
 exports[`Testing indexing resourceType 'ConceptMap' 39`] = `
 [
   "CapabilityStatement.useContext | CodeSystem.useContext | CompartmentDefinition.useContext | ConceptMap.useContext | GraphDefinition.useContext | ImplementationGuide.useContext | MessageDefinition.useContext | NamingSystem.useContext | OperationDefinition.useContext | SearchParameter.useContext | StructureDefinition.useContext | StructureMap.useContext | TerminologyCapabilities.useContext | ValueSet.useContext",
-  [],
+  [
+    {
+      "code": {
+        "code": "venue",
+        "system": "http://terminology.hl7.org/CodeSystem/usage-context-type",
+      },
+      "valueCodeableConcept": {
+        "text": "for CCDA Usage",
+      },
+    },
+  ],
 ]
 `;
 
 exports[`Testing indexing resourceType 'ConceptMap' 40`] = `
 [
   "CapabilityStatement.useContext | CodeSystem.useContext | CompartmentDefinition.useContext | ConceptMap.useContext | GraphDefinition.useContext | ImplementationGuide.useContext | MessageDefinition.useContext | NamingSystem.useContext | OperationDefinition.useContext | SearchParameter.useContext | StructureDefinition.useContext | StructureMap.useContext | TerminologyCapabilities.useContext | ValueSet.useContext",
-  [],
+  [
+    {
+      "code": {
+        "code": "venue",
+        "system": "http://terminology.hl7.org/CodeSystem/usage-context-type",
+      },
+      "valueCodeableConcept": {
+        "text": "for CCDA Usage",
+      },
+    },
+  ],
 ]
 `;
 
 exports[`Testing indexing resourceType 'ConceptMap' 41`] = `
 [
   "CodeSystem.identifier | ConceptMap.identifier | MessageDefinition.identifier | StructureDefinition.identifier | StructureMap.identifier | ValueSet.identifier",
-  [],
+  [
+    {
+      "system": "urn:ietf:rfc:3986",
+      "value": "urn:uuid:53cd62ee-033e-414c-9f58-3ca97b5ffc3b",
+    },
+  ],
 ]
 `;
 
@@ -6024,6 +6071,218 @@ exports[`Testing indexing resourceType 'ConceptMap' 43`] = `
 `;
 
 exports[`Testing indexing resourceType 'ConceptMap' 44`] = `
+[
+  "ConceptMap.group.element.target.product.property",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 45`] = `
+[
+  "(ConceptMap.source.ofType(canonical))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 46`] = `
+[
+  "ConceptMap.group.element.code",
+  [
+    "home",
+    "work",
+    "temp",
+    "old",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 47`] = `
+[
+  "ConceptMap.group.source",
+  [
+    "http://hl7.org/fhir/address-use",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 48`] = `
+[
+  "(ConceptMap.source.ofType(uri))",
+  [
+    "http://hl7.org/fhir/ValueSet/address-use",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 49`] = `
+[
+  "(ConceptMap.target.ofType(canonical))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 50`] = `
+[
+  "ConceptMap.group.element.target.code",
+  [
+    "H",
+    "WP",
+    "TMP",
+    "BAD",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 51`] = `
+[
+  "ConceptMap.group.target",
+  [
+    "http://terminology.hl7.org/CodeSystem/v3-AddressUse",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 52`] = `
+[
+  "(ConceptMap.target.ofType(uri))",
+  [
+    "http://terminology.hl7.org/ValueSet/v3-AddressUse",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 53`] = `
+[
+  "(CapabilityStatement.useContext.value.ofType(CodeableConcept)) | (CodeSystem.useContext.value.ofType(CodeableConcept)) | (CompartmentDefinition.useContext.value.ofType(CodeableConcept)) | (ConceptMap.useContext.value.ofType(CodeableConcept)) | (GraphDefinition.useContext.value.ofType(CodeableConcept)) | (ImplementationGuide.useContext.value.ofType(CodeableConcept)) | (MessageDefinition.useContext.value.ofType(CodeableConcept)) | (NamingSystem.useContext.value.ofType(CodeableConcept)) | (OperationDefinition.useContext.value.ofType(CodeableConcept)) | (SearchParameter.useContext.value.ofType(CodeableConcept)) | (StructureDefinition.useContext.value.ofType(CodeableConcept)) | (StructureMap.useContext.value.ofType(CodeableConcept)) | (TerminologyCapabilities.useContext.value.ofType(CodeableConcept)) | (ValueSet.useContext.value.ofType(CodeableConcept))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 54`] = `
+[
+  "(CapabilityStatement.useContext.value.ofType(Quantity)) | (CapabilityStatement.useContext.value.ofType(Range)) | (CodeSystem.useContext.value.ofType(Quantity)) | (CodeSystem.useContext.value.ofType(Range)) | (CompartmentDefinition.useContext.value.ofType(Quantity)) | (CompartmentDefinition.useContext.value.ofType(Range)) | (ConceptMap.useContext.value.ofType(Quantity)) | (ConceptMap.useContext.value.ofType(Range)) | (GraphDefinition.useContext.value.ofType(Quantity)) | (GraphDefinition.useContext.value.ofType(Range)) | (ImplementationGuide.useContext.value.ofType(Quantity)) | (ImplementationGuide.useContext.value.ofType(Range)) | (MessageDefinition.useContext.value.ofType(Quantity)) | (MessageDefinition.useContext.value.ofType(Range)) | (NamingSystem.useContext.value.ofType(Quantity)) | (NamingSystem.useContext.value.ofType(Range)) | (OperationDefinition.useContext.value.ofType(Quantity)) | (OperationDefinition.useContext.value.ofType(Range)) | (SearchParameter.useContext.value.ofType(Quantity)) | (SearchParameter.useContext.value.ofType(Range)) | (StructureDefinition.useContext.value.ofType(Quantity)) | (StructureDefinition.useContext.value.ofType(Range)) | (StructureMap.useContext.value.ofType(Quantity)) | (StructureMap.useContext.value.ofType(Range)) | (TerminologyCapabilities.useContext.value.ofType(Quantity)) | (TerminologyCapabilities.useContext.value.ofType(Range)) | (ValueSet.useContext.value.ofType(Quantity)) | (ValueSet.useContext.value.ofType(Range))",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 55`] = `
+[
+  "CapabilityStatement.useContext.code | CodeSystem.useContext.code | CompartmentDefinition.useContext.code | ConceptMap.useContext.code | GraphDefinition.useContext.code | ImplementationGuide.useContext.code | MessageDefinition.useContext.code | NamingSystem.useContext.code | OperationDefinition.useContext.code | SearchParameter.useContext.code | StructureDefinition.useContext.code | StructureMap.useContext.code | TerminologyCapabilities.useContext.code | ValueSet.useContext.code",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 56`] = `
+[
+  "CapabilityStatement.date | CodeSystem.date | CompartmentDefinition.date | ConceptMap.date | GraphDefinition.date | ImplementationGuide.date | MessageDefinition.date | NamingSystem.date | OperationDefinition.date | SearchParameter.date | StructureDefinition.date | StructureMap.date | TerminologyCapabilities.date | ValueSet.date",
+  [
+    "2013-07-25",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 57`] = `
+[
+  "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 58`] = `
+[
+  "CapabilityStatement.jurisdiction | CodeSystem.jurisdiction | ConceptMap.jurisdiction | GraphDefinition.jurisdiction | ImplementationGuide.jurisdiction | MessageDefinition.jurisdiction | NamingSystem.jurisdiction | OperationDefinition.jurisdiction | SearchParameter.jurisdiction | StructureDefinition.jurisdiction | StructureMap.jurisdiction | TerminologyCapabilities.jurisdiction | ValueSet.jurisdiction",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 59`] = `
+[
+  "CapabilityStatement.name | CodeSystem.name | CompartmentDefinition.name | ConceptMap.name | GraphDefinition.name | ImplementationGuide.name | MessageDefinition.name | NamingSystem.name | OperationDefinition.name | SearchParameter.name | StructureDefinition.name | StructureMap.name | TerminologyCapabilities.name | ValueSet.name",
+  [
+    "Specimen mapping from v2 table 0487 to SNOMED CT",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 60`] = `
+[
+  "CapabilityStatement.publisher | CodeSystem.publisher | CompartmentDefinition.publisher | ConceptMap.publisher | GraphDefinition.publisher | ImplementationGuide.publisher | MessageDefinition.publisher | NamingSystem.publisher | OperationDefinition.publisher | SearchParameter.publisher | StructureDefinition.publisher | StructureMap.publisher | TerminologyCapabilities.publisher | ValueSet.publisher",
+  [
+    "FHIR project team (original source: LabMCoP)",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 61`] = `
+[
+  "CapabilityStatement.status | CodeSystem.status | CompartmentDefinition.status | ConceptMap.status | GraphDefinition.status | ImplementationGuide.status | MessageDefinition.status | NamingSystem.status | OperationDefinition.status | SearchParameter.status | StructureDefinition.status | StructureMap.status | TerminologyCapabilities.status | ValueSet.status",
+  [
+    "draft",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 62`] = `
+[
+  "CapabilityStatement.title | CodeSystem.title | ConceptMap.title | ImplementationGuide.title | MessageDefinition.title | OperationDefinition.title | StructureDefinition.title | StructureMap.title | TerminologyCapabilities.title | ValueSet.title",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 63`] = `
+[
+  "CapabilityStatement.url | CodeSystem.url | CompartmentDefinition.url | ConceptMap.url | GraphDefinition.url | ImplementationGuide.url | MessageDefinition.url | OperationDefinition.url | SearchParameter.url | StructureDefinition.url | StructureMap.url | TerminologyCapabilities.url | ValueSet.url",
+  [
+    "http://hl7.org/fhir/ConceptMap/102",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 64`] = `
+[
+  "CapabilityStatement.version | CodeSystem.version | CompartmentDefinition.version | ConceptMap.version | GraphDefinition.version | ImplementationGuide.version | MessageDefinition.version | OperationDefinition.version | SearchParameter.version | StructureDefinition.version | StructureMap.version | TerminologyCapabilities.version | ValueSet.version",
+  [
+    "4.0.1",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 65`] = `
+[
+  "CapabilityStatement.useContext | CodeSystem.useContext | CompartmentDefinition.useContext | ConceptMap.useContext | GraphDefinition.useContext | ImplementationGuide.useContext | MessageDefinition.useContext | NamingSystem.useContext | OperationDefinition.useContext | SearchParameter.useContext | StructureDefinition.useContext | StructureMap.useContext | TerminologyCapabilities.useContext | ValueSet.useContext",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 66`] = `
+[
+  "CapabilityStatement.useContext | CodeSystem.useContext | CompartmentDefinition.useContext | ConceptMap.useContext | GraphDefinition.useContext | ImplementationGuide.useContext | MessageDefinition.useContext | NamingSystem.useContext | OperationDefinition.useContext | SearchParameter.useContext | StructureDefinition.useContext | StructureMap.useContext | TerminologyCapabilities.useContext | ValueSet.useContext",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 67`] = `
+[
+  "CodeSystem.identifier | ConceptMap.identifier | MessageDefinition.identifier | StructureDefinition.identifier | StructureMap.identifier | ValueSet.identifier",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 68`] = `
+[
+  "ConceptMap.group.element.target.dependsOn.property",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 69`] = `
+[
+  "ConceptMap.group.unmapped.url",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'ConceptMap' 70`] = `
 [
   "ConceptMap.group.element.target.product.property",
   [
@@ -6155,7 +6414,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 44`] = `
 ]
 `;
 
-exports[`Testing indexing resourceType 'ConceptMap' 45`] = `
+exports[`Testing indexing resourceType 'ConceptMap' 71`] = `
 [
   "(ConceptMap.source.ofType(canonical))",
   [
@@ -6164,7 +6423,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 45`] = `
 ]
 `;
 
-exports[`Testing indexing resourceType 'ConceptMap' 46`] = `
+exports[`Testing indexing resourceType 'ConceptMap' 72`] = `
 [
   "ConceptMap.group.element.code",
   [
@@ -6445,7 +6704,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 46`] = `
 ]
 `;
 
-exports[`Testing indexing resourceType 'ConceptMap' 47`] = `
+exports[`Testing indexing resourceType 'ConceptMap' 73`] = `
 [
   "ConceptMap.group.source",
   [
@@ -6454,14 +6713,14 @@ exports[`Testing indexing resourceType 'ConceptMap' 47`] = `
 ]
 `;
 
-exports[`Testing indexing resourceType 'ConceptMap' 48`] = `
+exports[`Testing indexing resourceType 'ConceptMap' 74`] = `
 [
   "(ConceptMap.source.ofType(uri))",
   [],
 ]
 `;
 
-exports[`Testing indexing resourceType 'ConceptMap' 49`] = `
+exports[`Testing indexing resourceType 'ConceptMap' 75`] = `
 [
   "(ConceptMap.target.ofType(canonical))",
   [
@@ -6470,7 +6729,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 49`] = `
 ]
 `;
 
-exports[`Testing indexing resourceType 'ConceptMap' 50`] = `
+exports[`Testing indexing resourceType 'ConceptMap' 76`] = `
 [
   "ConceptMap.group.element.target.code",
   [
@@ -6695,235 +6954,11 @@ exports[`Testing indexing resourceType 'ConceptMap' 50`] = `
 ]
 `;
 
-exports[`Testing indexing resourceType 'ConceptMap' 51`] = `
-[
-  "ConceptMap.group.target",
-  [
-    "http://snomed.info/sct",
-  ],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 52`] = `
-[
-  "(ConceptMap.target.ofType(uri))",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 53`] = `
-[
-  "(CapabilityStatement.useContext.value.ofType(CodeableConcept)) | (CodeSystem.useContext.value.ofType(CodeableConcept)) | (CompartmentDefinition.useContext.value.ofType(CodeableConcept)) | (ConceptMap.useContext.value.ofType(CodeableConcept)) | (GraphDefinition.useContext.value.ofType(CodeableConcept)) | (ImplementationGuide.useContext.value.ofType(CodeableConcept)) | (MessageDefinition.useContext.value.ofType(CodeableConcept)) | (NamingSystem.useContext.value.ofType(CodeableConcept)) | (OperationDefinition.useContext.value.ofType(CodeableConcept)) | (SearchParameter.useContext.value.ofType(CodeableConcept)) | (StructureDefinition.useContext.value.ofType(CodeableConcept)) | (StructureMap.useContext.value.ofType(CodeableConcept)) | (TerminologyCapabilities.useContext.value.ofType(CodeableConcept)) | (ValueSet.useContext.value.ofType(CodeableConcept))",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 54`] = `
-[
-  "(CapabilityStatement.useContext.value.ofType(Quantity)) | (CapabilityStatement.useContext.value.ofType(Range)) | (CodeSystem.useContext.value.ofType(Quantity)) | (CodeSystem.useContext.value.ofType(Range)) | (CompartmentDefinition.useContext.value.ofType(Quantity)) | (CompartmentDefinition.useContext.value.ofType(Range)) | (ConceptMap.useContext.value.ofType(Quantity)) | (ConceptMap.useContext.value.ofType(Range)) | (GraphDefinition.useContext.value.ofType(Quantity)) | (GraphDefinition.useContext.value.ofType(Range)) | (ImplementationGuide.useContext.value.ofType(Quantity)) | (ImplementationGuide.useContext.value.ofType(Range)) | (MessageDefinition.useContext.value.ofType(Quantity)) | (MessageDefinition.useContext.value.ofType(Range)) | (NamingSystem.useContext.value.ofType(Quantity)) | (NamingSystem.useContext.value.ofType(Range)) | (OperationDefinition.useContext.value.ofType(Quantity)) | (OperationDefinition.useContext.value.ofType(Range)) | (SearchParameter.useContext.value.ofType(Quantity)) | (SearchParameter.useContext.value.ofType(Range)) | (StructureDefinition.useContext.value.ofType(Quantity)) | (StructureDefinition.useContext.value.ofType(Range)) | (StructureMap.useContext.value.ofType(Quantity)) | (StructureMap.useContext.value.ofType(Range)) | (TerminologyCapabilities.useContext.value.ofType(Quantity)) | (TerminologyCapabilities.useContext.value.ofType(Range)) | (ValueSet.useContext.value.ofType(Quantity)) | (ValueSet.useContext.value.ofType(Range))",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 55`] = `
-[
-  "CapabilityStatement.useContext.code | CodeSystem.useContext.code | CompartmentDefinition.useContext.code | ConceptMap.useContext.code | GraphDefinition.useContext.code | ImplementationGuide.useContext.code | MessageDefinition.useContext.code | NamingSystem.useContext.code | OperationDefinition.useContext.code | SearchParameter.useContext.code | StructureDefinition.useContext.code | StructureMap.useContext.code | TerminologyCapabilities.useContext.code | ValueSet.useContext.code",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 56`] = `
-[
-  "CapabilityStatement.date | CodeSystem.date | CompartmentDefinition.date | ConceptMap.date | GraphDefinition.date | ImplementationGuide.date | MessageDefinition.date | NamingSystem.date | OperationDefinition.date | SearchParameter.date | StructureDefinition.date | StructureMap.date | TerminologyCapabilities.date | ValueSet.date",
-  [
-    "2012-06-13",
-  ],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 57`] = `
-[
-  "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
-  [
-    "Example rule-based mappings between SNOMED CT to ICD-10-CM for fracture of ulna",
-  ],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 58`] = `
-[
-  "CapabilityStatement.jurisdiction | CodeSystem.jurisdiction | ConceptMap.jurisdiction | GraphDefinition.jurisdiction | ImplementationGuide.jurisdiction | MessageDefinition.jurisdiction | NamingSystem.jurisdiction | OperationDefinition.jurisdiction | SearchParameter.jurisdiction | StructureDefinition.jurisdiction | StructureMap.jurisdiction | TerminologyCapabilities.jurisdiction | ValueSet.jurisdiction",
-  [
-    {
-      "coding": [
-        {
-          "code": "840",
-          "display": "United States of America",
-          "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
-        },
-      ],
-    },
-  ],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 59`] = `
-[
-  "CapabilityStatement.name | CodeSystem.name | CompartmentDefinition.name | ConceptMap.name | GraphDefinition.name | ImplementationGuide.name | MessageDefinition.name | NamingSystem.name | OperationDefinition.name | SearchParameter.name | StructureDefinition.name | StructureMap.name | TerminologyCapabilities.name | ValueSet.name",
-  [
-    "SNOMED CT to ICD-10-CM mappings for fracture of ulna",
-  ],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 60`] = `
-[
-  "CapabilityStatement.publisher | CodeSystem.publisher | CompartmentDefinition.publisher | ConceptMap.publisher | GraphDefinition.publisher | ImplementationGuide.publisher | MessageDefinition.publisher | NamingSystem.publisher | OperationDefinition.publisher | SearchParameter.publisher | StructureDefinition.publisher | StructureMap.publisher | TerminologyCapabilities.publisher | ValueSet.publisher",
-  [
-    "HL7, Inc",
-  ],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 61`] = `
-[
-  "CapabilityStatement.status | CodeSystem.status | CompartmentDefinition.status | ConceptMap.status | GraphDefinition.status | ImplementationGuide.status | MessageDefinition.status | NamingSystem.status | OperationDefinition.status | SearchParameter.status | StructureDefinition.status | StructureMap.status | TerminologyCapabilities.status | ValueSet.status",
-  [
-    "draft",
-  ],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 62`] = `
-[
-  "CapabilityStatement.title | CodeSystem.title | ConceptMap.title | ImplementationGuide.title | MessageDefinition.title | OperationDefinition.title | StructureDefinition.title | StructureMap.title | TerminologyCapabilities.title | ValueSet.title",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 63`] = `
-[
-  "CapabilityStatement.url | CodeSystem.url | CompartmentDefinition.url | ConceptMap.url | GraphDefinition.url | ImplementationGuide.url | MessageDefinition.url | OperationDefinition.url | SearchParameter.url | StructureDefinition.url | StructureMap.url | TerminologyCapabilities.url | ValueSet.url",
-  [
-    "http://hl7.org/fhir/ConceptMap/103",
-  ],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 64`] = `
-[
-  "CapabilityStatement.version | CodeSystem.version | CompartmentDefinition.version | ConceptMap.version | GraphDefinition.version | ImplementationGuide.version | MessageDefinition.version | OperationDefinition.version | SearchParameter.version | StructureDefinition.version | StructureMap.version | TerminologyCapabilities.version | ValueSet.version",
-  [
-    "4.0.1",
-  ],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 65`] = `
-[
-  "CapabilityStatement.useContext | CodeSystem.useContext | CompartmentDefinition.useContext | ConceptMap.useContext | GraphDefinition.useContext | ImplementationGuide.useContext | MessageDefinition.useContext | NamingSystem.useContext | OperationDefinition.useContext | SearchParameter.useContext | StructureDefinition.useContext | StructureMap.useContext | TerminologyCapabilities.useContext | ValueSet.useContext",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 66`] = `
-[
-  "CapabilityStatement.useContext | CodeSystem.useContext | CompartmentDefinition.useContext | ConceptMap.useContext | GraphDefinition.useContext | ImplementationGuide.useContext | MessageDefinition.useContext | NamingSystem.useContext | OperationDefinition.useContext | SearchParameter.useContext | StructureDefinition.useContext | StructureMap.useContext | TerminologyCapabilities.useContext | ValueSet.useContext",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 67`] = `
-[
-  "CodeSystem.identifier | ConceptMap.identifier | MessageDefinition.identifier | StructureDefinition.identifier | StructureMap.identifier | ValueSet.identifier",
-  [
-    {
-      "system": "urn:ietf:rfc:3986",
-      "value": "urn:uuid:53cd62ee-033e-414c-9f58-3ca97b5ffc3b",
-    },
-  ],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 68`] = `
-[
-  "ConceptMap.group.element.target.dependsOn.property",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 69`] = `
-[
-  "ConceptMap.group.unmapped.url",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 70`] = `
-[
-  "ConceptMap.group.element.target.product.property",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 71`] = `
-[
-  "(ConceptMap.source.ofType(canonical))",
-  [
-    "http://snomed.info/sct?fhir_vs",
-  ],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 72`] = `
-[
-  "ConceptMap.group.element.code",
-  [
-    "263204007",
-  ],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 73`] = `
-[
-  "ConceptMap.group.source",
-  [
-    "http://snomed.info/sct",
-  ],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 74`] = `
-[
-  "(ConceptMap.source.ofType(uri))",
-  [],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 75`] = `
-[
-  "(ConceptMap.target.ofType(canonical))",
-  [
-    "http://hl7.org/fhir/sid/icd-10-us",
-  ],
-]
-`;
-
-exports[`Testing indexing resourceType 'ConceptMap' 76`] = `
-[
-  "ConceptMap.group.element.target.code",
-  [
-    "S52.209A",
-    "S52.209D",
-  ],
-]
-`;
-
 exports[`Testing indexing resourceType 'ConceptMap' 77`] = `
 [
   "ConceptMap.group.target",
   [
-    "http://hl7.org/fhir/sid/icd-10-us",
+    "http://snomed.info/sct",
   ],
 ]
 `;
@@ -6959,7 +6994,9 @@ exports[`Testing indexing resourceType 'ConceptMap' 81`] = `
 exports[`Testing indexing resourceType 'ConceptMap' 82`] = `
 [
   "CapabilityStatement.date | CodeSystem.date | CompartmentDefinition.date | ConceptMap.date | GraphDefinition.date | ImplementationGuide.date | MessageDefinition.date | NamingSystem.date | OperationDefinition.date | SearchParameter.date | StructureDefinition.date | StructureMap.date | TerminologyCapabilities.date | ValueSet.date",
-  [],
+  [
+    "2012-06-13",
+  ],
 ]
 `;
 
@@ -6967,7 +7004,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 83`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
   [
-    "This concept map defines a mapping from CDS Hooks indicator to request priority.",
+    "Example rule-based mappings between SNOMED CT to ICD-10-CM for fracture of ulna",
   ],
 ]
 `;
@@ -6975,7 +7012,17 @@ exports[`Testing indexing resourceType 'ConceptMap' 83`] = `
 exports[`Testing indexing resourceType 'ConceptMap' 84`] = `
 [
   "CapabilityStatement.jurisdiction | CodeSystem.jurisdiction | ConceptMap.jurisdiction | GraphDefinition.jurisdiction | ImplementationGuide.jurisdiction | MessageDefinition.jurisdiction | NamingSystem.jurisdiction | OperationDefinition.jurisdiction | SearchParameter.jurisdiction | StructureDefinition.jurisdiction | StructureMap.jurisdiction | TerminologyCapabilities.jurisdiction | ValueSet.jurisdiction",
-  [],
+  [
+    {
+      "coding": [
+        {
+          "code": "840",
+          "display": "United States of America",
+          "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+        },
+      ],
+    },
+  ],
 ]
 `;
 
@@ -6983,7 +7030,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 85`] = `
 [
   "CapabilityStatement.name | CodeSystem.name | CompartmentDefinition.name | ConceptMap.name | GraphDefinition.name | ImplementationGuide.name | MessageDefinition.name | NamingSystem.name | OperationDefinition.name | SearchParameter.name | StructureDefinition.name | StructureMap.name | TerminologyCapabilities.name | ValueSet.name",
   [
-    "IndicatorToRequestPriority",
+    "SNOMED CT to ICD-10-CM mappings for fracture of ulna",
   ],
 ]
 `;
@@ -6991,7 +7038,9 @@ exports[`Testing indexing resourceType 'ConceptMap' 85`] = `
 exports[`Testing indexing resourceType 'ConceptMap' 86`] = `
 [
   "CapabilityStatement.publisher | CodeSystem.publisher | CompartmentDefinition.publisher | ConceptMap.publisher | GraphDefinition.publisher | ImplementationGuide.publisher | MessageDefinition.publisher | NamingSystem.publisher | OperationDefinition.publisher | SearchParameter.publisher | StructureDefinition.publisher | StructureMap.publisher | TerminologyCapabilities.publisher | ValueSet.publisher",
-  [],
+  [
+    "HL7, Inc",
+  ],
 ]
 `;
 
@@ -7015,7 +7064,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 89`] = `
 [
   "CapabilityStatement.url | CodeSystem.url | CompartmentDefinition.url | ConceptMap.url | GraphDefinition.url | ImplementationGuide.url | MessageDefinition.url | OperationDefinition.url | SearchParameter.url | StructureDefinition.url | StructureMap.url | TerminologyCapabilities.url | ValueSet.url",
   [
-    "http://cds-hooks.hl7.org/ConceptMap/indicator-to-request-priority",
+    "http://hl7.org/fhir/ConceptMap/103",
   ],
 ]
 `;
@@ -7023,7 +7072,9 @@ exports[`Testing indexing resourceType 'ConceptMap' 89`] = `
 exports[`Testing indexing resourceType 'ConceptMap' 90`] = `
 [
   "CapabilityStatement.version | CodeSystem.version | CompartmentDefinition.version | ConceptMap.version | GraphDefinition.version | ImplementationGuide.version | MessageDefinition.version | OperationDefinition.version | SearchParameter.version | StructureDefinition.version | StructureMap.version | TerminologyCapabilities.version | ValueSet.version",
-  [],
+  [
+    "4.0.1",
+  ],
 ]
 `;
 
@@ -7044,7 +7095,12 @@ exports[`Testing indexing resourceType 'ConceptMap' 92`] = `
 exports[`Testing indexing resourceType 'ConceptMap' 93`] = `
 [
   "CodeSystem.identifier | ConceptMap.identifier | MessageDefinition.identifier | StructureDefinition.identifier | StructureMap.identifier | ValueSet.identifier",
-  [],
+  [
+    {
+      "system": "urn:ietf:rfc:3986",
+      "value": "urn:uuid:53cd62ee-033e-414c-9f58-3ca97b5ffc3b",
+    },
+  ],
 ]
 `;
 
@@ -7073,7 +7129,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 97`] = `
 [
   "(ConceptMap.source.ofType(canonical))",
   [
-    "http://cds-hooks.hl7.org/ValueSet/indicator",
+    "http://snomed.info/sct?fhir_vs",
   ],
 ]
 `;
@@ -7082,9 +7138,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 98`] = `
 [
   "ConceptMap.group.element.code",
   [
-    "info",
-    "warning",
-    "critical",
+    "263204007",
   ],
 ]
 `;
@@ -7092,7 +7146,9 @@ exports[`Testing indexing resourceType 'ConceptMap' 98`] = `
 exports[`Testing indexing resourceType 'ConceptMap' 99`] = `
 [
   "ConceptMap.group.source",
-  [],
+  [
+    "http://snomed.info/sct",
+  ],
 ]
 `;
 
@@ -7107,7 +7163,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 101`] = `
 [
   "(ConceptMap.target.ofType(canonical))",
   [
-    "http://hl7.org/fhir/ValueSet/request-priority",
+    "http://hl7.org/fhir/sid/icd-10-us",
   ],
 ]
 `;
@@ -7116,9 +7172,8 @@ exports[`Testing indexing resourceType 'ConceptMap' 102`] = `
 [
   "ConceptMap.group.element.target.code",
   [
-    "routine",
-    "urgent",
-    "stat",
+    "S52.209A",
+    "S52.209D",
   ],
 ]
 `;
@@ -7126,7 +7181,9 @@ exports[`Testing indexing resourceType 'ConceptMap' 102`] = `
 exports[`Testing indexing resourceType 'ConceptMap' 103`] = `
 [
   "ConceptMap.group.target",
-  [],
+  [
+    "http://hl7.org/fhir/sid/icd-10-us",
+  ],
 ]
 `;
 
@@ -7161,16 +7218,16 @@ exports[`Testing indexing resourceType 'ConceptMap' 107`] = `
 exports[`Testing indexing resourceType 'ConceptMap' 108`] = `
 [
   "CapabilityStatement.date | CodeSystem.date | CompartmentDefinition.date | ConceptMap.date | GraphDefinition.date | ImplementationGuide.date | MessageDefinition.date | NamingSystem.date | OperationDefinition.date | SearchParameter.date | StructureDefinition.date | StructureMap.date | TerminologyCapabilities.date | ValueSet.date",
-  [
-    "2019-11-01T09:29:23+11:00",
-  ],
+  [],
 ]
 `;
 
 exports[`Testing indexing resourceType 'ConceptMap' 109`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
-  [],
+  [
+    "This concept map defines a mapping from CDS Hooks indicator to request priority.",
+  ],
 ]
 `;
 
@@ -7185,7 +7242,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 111`] = `
 [
   "CapabilityStatement.name | CodeSystem.name | CompartmentDefinition.name | ConceptMap.name | GraphDefinition.name | ImplementationGuide.name | MessageDefinition.name | NamingSystem.name | OperationDefinition.name | SearchParameter.name | StructureDefinition.name | StructureMap.name | TerminologyCapabilities.name | ValueSet.name",
   [
-    "v3.AddressType",
+    "IndicatorToRequestPriority",
   ],
 ]
 `;
@@ -7193,9 +7250,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 111`] = `
 exports[`Testing indexing resourceType 'ConceptMap' 112`] = `
 [
   "CapabilityStatement.publisher | CodeSystem.publisher | CompartmentDefinition.publisher | ConceptMap.publisher | GraphDefinition.publisher | ImplementationGuide.publisher | MessageDefinition.publisher | NamingSystem.publisher | OperationDefinition.publisher | SearchParameter.publisher | StructureDefinition.publisher | StructureMap.publisher | TerminologyCapabilities.publisher | ValueSet.publisher",
-  [
-    "HL7 (FHIR Project)",
-  ],
+  [],
 ]
 `;
 
@@ -7211,9 +7266,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 113`] = `
 exports[`Testing indexing resourceType 'ConceptMap' 114`] = `
 [
   "CapabilityStatement.title | CodeSystem.title | ConceptMap.title | ImplementationGuide.title | MessageDefinition.title | OperationDefinition.title | StructureDefinition.title | StructureMap.title | TerminologyCapabilities.title | ValueSet.title",
-  [
-    "v3 map for AddressType",
-  ],
+  [],
 ]
 `;
 
@@ -7221,7 +7274,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 115`] = `
 [
   "CapabilityStatement.url | CodeSystem.url | CompartmentDefinition.url | ConceptMap.url | GraphDefinition.url | ImplementationGuide.url | MessageDefinition.url | OperationDefinition.url | SearchParameter.url | StructureDefinition.url | StructureMap.url | TerminologyCapabilities.url | ValueSet.url",
   [
-    "http://hl7.org/fhir/ConceptMap/cm-address-type-v3",
+    "http://cds-hooks.hl7.org/ConceptMap/indicator-to-request-priority",
   ],
 ]
 `;
@@ -7229,9 +7282,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 115`] = `
 exports[`Testing indexing resourceType 'ConceptMap' 116`] = `
 [
   "CapabilityStatement.version | CodeSystem.version | CompartmentDefinition.version | ConceptMap.version | GraphDefinition.version | ImplementationGuide.version | MessageDefinition.version | OperationDefinition.version | SearchParameter.version | StructureDefinition.version | StructureMap.version | TerminologyCapabilities.version | ValueSet.version",
-  [
-    "4.0.1",
-  ],
+  [],
 ]
 `;
 
@@ -7281,7 +7332,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 123`] = `
 [
   "(ConceptMap.source.ofType(canonical))",
   [
-    "http://hl7.org/fhir/ValueSet/address-type",
+    "http://cds-hooks.hl7.org/ValueSet/indicator",
   ],
 ]
 `;
@@ -7290,8 +7341,9 @@ exports[`Testing indexing resourceType 'ConceptMap' 124`] = `
 [
   "ConceptMap.group.element.code",
   [
-    "postal",
-    "physical",
+    "info",
+    "warning",
+    "critical",
   ],
 ]
 `;
@@ -7299,9 +7351,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 124`] = `
 exports[`Testing indexing resourceType 'ConceptMap' 125`] = `
 [
   "ConceptMap.group.source",
-  [
-    "http://hl7.org/fhir/address-type",
-  ],
+  [],
 ]
 `;
 
@@ -7316,7 +7366,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 127`] = `
 [
   "(ConceptMap.target.ofType(canonical))",
   [
-    "http://terminology.hl7.org/ValueSet/v3-AddressUse",
+    "http://hl7.org/fhir/ValueSet/request-priority",
   ],
 ]
 `;
@@ -7325,8 +7375,9 @@ exports[`Testing indexing resourceType 'ConceptMap' 128`] = `
 [
   "ConceptMap.group.element.target.code",
   [
-    "PST",
-    "PHYS",
+    "routine",
+    "urgent",
+    "stat",
   ],
 ]
 `;
@@ -7334,9 +7385,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 128`] = `
 exports[`Testing indexing resourceType 'ConceptMap' 129`] = `
 [
   "ConceptMap.group.target",
-  [
-    "http://terminology.hl7.org/CodeSystem/v3-AddressUse",
-  ],
+  [],
 ]
 `;
 
@@ -7395,7 +7444,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 137`] = `
 [
   "CapabilityStatement.name | CodeSystem.name | CompartmentDefinition.name | ConceptMap.name | GraphDefinition.name | ImplementationGuide.name | MessageDefinition.name | NamingSystem.name | OperationDefinition.name | SearchParameter.name | StructureDefinition.name | StructureMap.name | TerminologyCapabilities.name | ValueSet.name",
   [
-    "v2.AddressUse",
+    "v3.AddressType",
   ],
 ]
 `;
@@ -7422,7 +7471,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 140`] = `
 [
   "CapabilityStatement.title | CodeSystem.title | ConceptMap.title | ImplementationGuide.title | MessageDefinition.title | OperationDefinition.title | StructureDefinition.title | StructureMap.title | TerminologyCapabilities.title | ValueSet.title",
   [
-    "v2 map for AddressUse",
+    "v3 map for AddressType",
   ],
 ]
 `;
@@ -7431,7 +7480,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 141`] = `
 [
   "CapabilityStatement.url | CodeSystem.url | CompartmentDefinition.url | ConceptMap.url | GraphDefinition.url | ImplementationGuide.url | MessageDefinition.url | OperationDefinition.url | SearchParameter.url | StructureDefinition.url | StructureMap.url | TerminologyCapabilities.url | ValueSet.url",
   [
-    "http://hl7.org/fhir/ConceptMap/cm-address-use-v2",
+    "http://hl7.org/fhir/ConceptMap/cm-address-type-v3",
   ],
 ]
 `;
@@ -7491,7 +7540,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 149`] = `
 [
   "(ConceptMap.source.ofType(canonical))",
   [
-    "http://hl7.org/fhir/ValueSet/address-use",
+    "http://hl7.org/fhir/ValueSet/address-type",
   ],
 ]
 `;
@@ -7500,11 +7549,8 @@ exports[`Testing indexing resourceType 'ConceptMap' 150`] = `
 [
   "ConceptMap.group.element.code",
   [
-    "home",
-    "work",
-    "temp",
-    "old",
-    "billing",
+    "postal",
+    "physical",
   ],
 ]
 `;
@@ -7513,7 +7559,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 151`] = `
 [
   "ConceptMap.group.source",
   [
-    "http://hl7.org/fhir/address-use",
+    "http://hl7.org/fhir/address-type",
   ],
 ]
 `;
@@ -7529,7 +7575,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 153`] = `
 [
   "(ConceptMap.target.ofType(canonical))",
   [
-    "http://terminology.hl7.org/ValueSet/v2-0190",
+    "http://terminology.hl7.org/ValueSet/v3-AddressUse",
   ],
 ]
 `;
@@ -7538,11 +7584,8 @@ exports[`Testing indexing resourceType 'ConceptMap' 154`] = `
 [
   "ConceptMap.group.element.target.code",
   [
-    "H",
-    "O",
-    "C",
-    "BA",
-    "BI",
+    "PST",
+    "PHYS",
   ],
 ]
 `;
@@ -7551,7 +7594,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 155`] = `
 [
   "ConceptMap.group.target",
   [
-    "http://terminology.hl7.org/CodeSystem/v2-0190",
+    "http://terminology.hl7.org/CodeSystem/v3-AddressUse",
   ],
 ]
 `;
@@ -7611,7 +7654,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 163`] = `
 [
   "CapabilityStatement.name | CodeSystem.name | CompartmentDefinition.name | ConceptMap.name | GraphDefinition.name | ImplementationGuide.name | MessageDefinition.name | NamingSystem.name | OperationDefinition.name | SearchParameter.name | StructureDefinition.name | StructureMap.name | TerminologyCapabilities.name | ValueSet.name",
   [
-    "v3.AddressUse",
+    "v2.AddressUse",
   ],
 ]
 `;
@@ -7638,7 +7681,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 166`] = `
 [
   "CapabilityStatement.title | CodeSystem.title | ConceptMap.title | ImplementationGuide.title | MessageDefinition.title | OperationDefinition.title | StructureDefinition.title | StructureMap.title | TerminologyCapabilities.title | ValueSet.title",
   [
-    "v3 map for AddressUse",
+    "v2 map for AddressUse",
   ],
 ]
 `;
@@ -7647,7 +7690,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 167`] = `
 [
   "CapabilityStatement.url | CodeSystem.url | CompartmentDefinition.url | ConceptMap.url | GraphDefinition.url | ImplementationGuide.url | MessageDefinition.url | OperationDefinition.url | SearchParameter.url | StructureDefinition.url | StructureMap.url | TerminologyCapabilities.url | ValueSet.url",
   [
-    "http://hl7.org/fhir/ConceptMap/cm-address-use-v3",
+    "http://hl7.org/fhir/ConceptMap/cm-address-use-v2",
   ],
 ]
 `;
@@ -7720,6 +7763,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 176`] = `
     "work",
     "temp",
     "old",
+    "billing",
   ],
 ]
 `;
@@ -7744,7 +7788,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 179`] = `
 [
   "(ConceptMap.target.ofType(canonical))",
   [
-    "http://terminology.hl7.org/ValueSet/v3-AddressUse",
+    "http://terminology.hl7.org/ValueSet/v2-0190",
   ],
 ]
 `;
@@ -7754,10 +7798,10 @@ exports[`Testing indexing resourceType 'ConceptMap' 180`] = `
   "ConceptMap.group.element.target.code",
   [
     "H",
-    "WP",
-    "TMP",
-    "OLD",
-    "BAD",
+    "O",
+    "C",
+    "BA",
+    "BI",
   ],
 ]
 `;
@@ -7766,7 +7810,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 181`] = `
 [
   "ConceptMap.group.target",
   [
-    "http://terminology.hl7.org/CodeSystem/v3-AddressUse",
+    "http://terminology.hl7.org/CodeSystem/v2-0190",
   ],
 ]
 `;
@@ -7826,7 +7870,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 189`] = `
 [
   "CapabilityStatement.name | CodeSystem.name | CompartmentDefinition.name | ConceptMap.name | GraphDefinition.name | ImplementationGuide.name | MessageDefinition.name | NamingSystem.name | OperationDefinition.name | SearchParameter.name | StructureDefinition.name | StructureMap.name | TerminologyCapabilities.name | ValueSet.name",
   [
-    "v2.AdministrativeGender",
+    "v3.AddressUse",
   ],
 ]
 `;
@@ -7853,7 +7897,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 192`] = `
 [
   "CapabilityStatement.title | CodeSystem.title | ConceptMap.title | ImplementationGuide.title | MessageDefinition.title | OperationDefinition.title | StructureDefinition.title | StructureMap.title | TerminologyCapabilities.title | ValueSet.title",
   [
-    "v2 map for AdministrativeGender",
+    "v3 map for AddressUse",
   ],
 ]
 `;
@@ -7862,7 +7906,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 193`] = `
 [
   "CapabilityStatement.url | CodeSystem.url | CompartmentDefinition.url | ConceptMap.url | GraphDefinition.url | ImplementationGuide.url | MessageDefinition.url | OperationDefinition.url | SearchParameter.url | StructureDefinition.url | StructureMap.url | TerminologyCapabilities.url | ValueSet.url",
   [
-    "http://hl7.org/fhir/ConceptMap/cm-administrative-gender-v2",
+    "http://hl7.org/fhir/ConceptMap/cm-address-use-v3",
   ],
 ]
 `;
@@ -7922,7 +7966,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 201`] = `
 [
   "(ConceptMap.source.ofType(canonical))",
   [
-    "http://hl7.org/fhir/ValueSet/administrative-gender",
+    "http://hl7.org/fhir/ValueSet/address-use",
   ],
 ]
 `;
@@ -7931,10 +7975,10 @@ exports[`Testing indexing resourceType 'ConceptMap' 202`] = `
 [
   "ConceptMap.group.element.code",
   [
-    "male",
-    "female",
-    "other",
-    "unknown",
+    "home",
+    "work",
+    "temp",
+    "old",
   ],
 ]
 `;
@@ -7943,7 +7987,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 203`] = `
 [
   "ConceptMap.group.source",
   [
-    "http://hl7.org/fhir/administrative-gender",
+    "http://hl7.org/fhir/address-use",
   ],
 ]
 `;
@@ -7959,7 +8003,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 205`] = `
 [
   "(ConceptMap.target.ofType(canonical))",
   [
-    "http://terminology.hl7.org/ValueSet/v2-0001",
+    "http://terminology.hl7.org/ValueSet/v3-AddressUse",
   ],
 ]
 `;
@@ -7968,11 +8012,11 @@ exports[`Testing indexing resourceType 'ConceptMap' 206`] = `
 [
   "ConceptMap.group.element.target.code",
   [
-    "M",
-    "F",
-    "A",
-    "O",
-    "U",
+    "H",
+    "WP",
+    "TMP",
+    "OLD",
+    "BAD",
   ],
 ]
 `;
@@ -7981,7 +8025,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 207`] = `
 [
   "ConceptMap.group.target",
   [
-    "http://terminology.hl7.org/CodeSystem/v2-0001",
+    "http://terminology.hl7.org/CodeSystem/v3-AddressUse",
   ],
 ]
 `;
@@ -8041,7 +8085,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 215`] = `
 [
   "CapabilityStatement.name | CodeSystem.name | CompartmentDefinition.name | ConceptMap.name | GraphDefinition.name | ImplementationGuide.name | MessageDefinition.name | NamingSystem.name | OperationDefinition.name | SearchParameter.name | StructureDefinition.name | StructureMap.name | TerminologyCapabilities.name | ValueSet.name",
   [
-    "v3.AdministrativeGender",
+    "v2.AdministrativeGender",
   ],
 ]
 `;
@@ -8068,7 +8112,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 218`] = `
 [
   "CapabilityStatement.title | CodeSystem.title | ConceptMap.title | ImplementationGuide.title | MessageDefinition.title | OperationDefinition.title | StructureDefinition.title | StructureMap.title | TerminologyCapabilities.title | ValueSet.title",
   [
-    "v3 map for AdministrativeGender",
+    "v2 map for AdministrativeGender",
   ],
 ]
 `;
@@ -8077,7 +8121,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 219`] = `
 [
   "CapabilityStatement.url | CodeSystem.url | CompartmentDefinition.url | ConceptMap.url | GraphDefinition.url | ImplementationGuide.url | MessageDefinition.url | OperationDefinition.url | SearchParameter.url | StructureDefinition.url | StructureMap.url | TerminologyCapabilities.url | ValueSet.url",
   [
-    "http://hl7.org/fhir/ConceptMap/cm-administrative-gender-v3",
+    "http://hl7.org/fhir/ConceptMap/cm-administrative-gender-v2",
   ],
 ]
 `;
@@ -8174,7 +8218,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 231`] = `
 [
   "(ConceptMap.target.ofType(canonical))",
   [
-    "http://terminology.hl7.org/ValueSet/v3-AdministrativeGender",
+    "http://terminology.hl7.org/ValueSet/v2-0001",
   ],
 ]
 `;
@@ -8185,8 +8229,9 @@ exports[`Testing indexing resourceType 'ConceptMap' 232`] = `
   [
     "M",
     "F",
-    "UN",
-    "UNK",
+    "A",
+    "O",
+    "U",
   ],
 ]
 `;
@@ -8195,7 +8240,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 233`] = `
 [
   "ConceptMap.group.target",
   [
-    "http://terminology.hl7.org/CodeSystem/v3-AdministrativeGender",
+    "http://terminology.hl7.org/CodeSystem/v2-0001",
   ],
 ]
 `;
@@ -8255,7 +8300,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 241`] = `
 [
   "CapabilityStatement.name | CodeSystem.name | CompartmentDefinition.name | ConceptMap.name | GraphDefinition.name | ImplementationGuide.name | MessageDefinition.name | NamingSystem.name | OperationDefinition.name | SearchParameter.name | StructureDefinition.name | StructureMap.name | TerminologyCapabilities.name | ValueSet.name",
   [
-    "v3.CompositionStatus",
+    "v3.AdministrativeGender",
   ],
 ]
 `;
@@ -8282,7 +8327,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 244`] = `
 [
   "CapabilityStatement.title | CodeSystem.title | ConceptMap.title | ImplementationGuide.title | MessageDefinition.title | OperationDefinition.title | StructureDefinition.title | StructureMap.title | TerminologyCapabilities.title | ValueSet.title",
   [
-    "v3 map for CompositionStatus",
+    "v3 map for AdministrativeGender",
   ],
 ]
 `;
@@ -8291,7 +8336,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 245`] = `
 [
   "CapabilityStatement.url | CodeSystem.url | CompartmentDefinition.url | ConceptMap.url | GraphDefinition.url | ImplementationGuide.url | MessageDefinition.url | OperationDefinition.url | SearchParameter.url | StructureDefinition.url | StructureMap.url | TerminologyCapabilities.url | ValueSet.url",
   [
-    "http://hl7.org/fhir/ConceptMap/cm-composition-status-v3",
+    "http://hl7.org/fhir/ConceptMap/cm-administrative-gender-v3",
   ],
 ]
 `;
@@ -8351,7 +8396,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 253`] = `
 [
   "(ConceptMap.source.ofType(canonical))",
   [
-    "http://hl7.org/fhir/ValueSet/composition-status",
+    "http://hl7.org/fhir/ValueSet/administrative-gender",
   ],
 ]
 `;
@@ -8360,10 +8405,10 @@ exports[`Testing indexing resourceType 'ConceptMap' 254`] = `
 [
   "ConceptMap.group.element.code",
   [
-    "preliminary",
-    "final",
-    "amended",
-    "entered-in-error",
+    "male",
+    "female",
+    "other",
+    "unknown",
   ],
 ]
 `;
@@ -8372,7 +8417,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 255`] = `
 [
   "ConceptMap.group.source",
   [
-    "http://hl7.org/fhir/composition-status",
+    "http://hl7.org/fhir/administrative-gender",
   ],
 ]
 `;
@@ -8388,7 +8433,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 257`] = `
 [
   "(ConceptMap.target.ofType(canonical))",
   [
-    "http://terminology.hl7.org/ValueSet/v3-ActStatus",
+    "http://terminology.hl7.org/ValueSet/v3-AdministrativeGender",
   ],
 ]
 `;
@@ -8397,10 +8442,10 @@ exports[`Testing indexing resourceType 'ConceptMap' 258`] = `
 [
   "ConceptMap.group.element.target.code",
   [
-    "active",
-    "completed",
-    "completed",
-    "nullified",
+    "M",
+    "F",
+    "UN",
+    "UNK",
   ],
 ]
 `;
@@ -8409,7 +8454,7 @@ exports[`Testing indexing resourceType 'ConceptMap' 259`] = `
 [
   "ConceptMap.group.target",
   [
-    "http://terminology.hl7.org/CodeSystem/v3-ActStatus",
+    "http://terminology.hl7.org/CodeSystem/v3-AdministrativeGender",
   ],
 ]
 `;
@@ -20825,6 +20870,124 @@ exports[`Testing indexing resourceType 'Organization' 12`] = `
 `;
 
 exports[`Testing indexing resourceType 'Organization' 13`] = `
+[
+  "Organization.type",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 14`] = `
+[
+  "Organization.active",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 15`] = `
+[
+  "Organization.address",
+  [
+    {
+      "city": "Ann Arbor",
+      "country": "USA",
+      "line": [
+        "3300 Washtenaw Avenue, Suite 227",
+      ],
+      "postalCode": "48104",
+      "state": "MI",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 16`] = `
+[
+  "Organization.address.city",
+  [
+    "Ann Arbor",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 17`] = `
+[
+  "Organization.address.country",
+  [
+    "USA",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 18`] = `
+[
+  "Organization.address.postalCode",
+  [
+    "48104",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 19`] = `
+[
+  "Organization.address.state",
+  [
+    "MI",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 20`] = `
+[
+  "Organization.address.use",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 21`] = `
+[
+  "Organization.endpoint",
+  [
+    {
+      "reference": "Endpoint/example",
+    },
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 22`] = `
+[
+  "Organization.identifier",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 23`] = `
+[
+  "Organization.name | Organization.alias",
+  [
+    "Health Level Seven International",
+    "HL7 International",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 24`] = `
+[
+  "Organization.partOf",
+  [],
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 25`] = `
+[
+  "Organization.name",
+  [
+    "Health Level Seven International",
+  ],
+]
+`;
+
+exports[`Testing indexing resourceType 'Organization' 26`] = `
 [
   "Organization.type",
   [],
