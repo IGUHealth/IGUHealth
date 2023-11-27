@@ -11,7 +11,6 @@ function findLastIndex<T>(collection: T[], predicate: (item: T) => boolean) {
   for (let i = 0; i < collection.length; i++) {
     const isPredicate = predicate(collection[i]);
     if (isPredicate) index = i;
-    if (!isPredicate && index > -1) break;
   }
   return index;
 }
@@ -40,24 +39,26 @@ async function generateSnapshot(ctx: FHIRServerCTX, sd: StructureDefinition) {
       (e) => e.id === element.id
     );
 
-    if (existingElementIndex) {
+    if (existingElementIndex !== -1) {
       baseSnapshotElements.splice(existingElementIndex, 1, {
         ...baseSnapshotElements[existingElementIndex],
         ...element,
       });
     } else {
-      const index = findLastIndex(
-        baseSnapshotElements,
-        (e) => e.path === element.path
+      const index = findLastIndex(baseSnapshotElements, (e) =>
+        element.path.startsWith(e.path)
       );
-      if (!index)
+
+      if (index === -1)
         throw new OperationError(
           outcomeError(
             "invalid",
-            `Could not find element ${element.path} in base snapshot`
+            `Could not find element with path '${element.path}' in base snapshot`
           )
         );
-      baseSnapshotElements.splice(index, 0, element);
+
+      // Place behind last element found.
+      baseSnapshotElements.splice(index + 1, 0, element);
     }
   }
 

@@ -5,6 +5,8 @@ import { loadArtifacts } from "@iguhealth/artifacts";
 import HTTPClient from "@iguhealth/client/lib/http";
 import { StructureDefinitionSnapshot } from "@iguhealth/generated-ops/r4";
 
+import usCoreDifferential from "../data/us-core-differential";
+
 const sds = loadArtifacts(
   "StructureDefinition",
   path.join(__dirname, "../../")
@@ -17,14 +19,15 @@ const client = HTTPClient({
   },
 });
 
+const PATIENT_URL = "http://hl7.org/fhir/StructureDefinition/Patient";
+
 test("Patient expansion", async () => {
-  const patientUrl = "http://hl7.org/fhir/StructureDefinition/Patient";
   const result = await client
     .invoke_type(StructureDefinitionSnapshot.Op, {}, "StructureDefinition", {
-      url: patientUrl,
+      url: PATIENT_URL,
     })
     .catch((e) => e.operationOutcome);
-  expect(result).toEqual(sds.find((sd) => sd.url === patientUrl));
+  expect(result).toEqual(sds.find((sd) => sd.url === PATIENT_URL));
 
   const patientTest = await client
     .invoke_type(StructureDefinitionSnapshot.Op, {}, "StructureDefinition", {
@@ -58,4 +61,22 @@ test("Patient expansion", async () => {
     .catch((e) => e.operationOutcome);
 
   expect(patientTest.snapshot.element).toMatchSnapshot();
+});
+
+test("us-core-snapshot", async () => {
+  const usCoreSnapshot = await client
+    .invoke_type(StructureDefinitionSnapshot.Op, {}, "StructureDefinition", {
+      definition: { ...usCoreDifferential, snapshot: undefined },
+    })
+    .catch((e) => console.error(e.operationOutcome));
+
+  const idSets = new Set(
+    sds.find((sd) => sd.url === PATIENT_URL)?.snapshot?.element.map((e) => e.id)
+  );
+
+  usCoreDifferential?.differential?.element?.forEach((e) => idSets.add(e.id));
+
+  expect(usCoreSnapshot?.snapshot?.element.map((e) => e.id).sort()).toEqual(
+    Array.from(idSets).sort()
+  );
 });
