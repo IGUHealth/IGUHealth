@@ -122,10 +122,18 @@ function parseParameter(
         ) {
           return param.resource;
         } else {
-          if (definition.searchType)
+          if (!definition.type) {
             throw new OperationError(
-              outcomeError("not-supported", `SearchType not supported`)
+              outcomeError(
+                "invalid",
+                `No type found on parameter definition ${definition.name}`
+              )
             );
+          }
+          // if (definition.searchType)
+          //   throw new OperationError(
+          //     outcomeError("not-supported", `SearchType not supported`)
+          //   );
           if (definition.type === "Type")
             throw new Error("Cannot process 'Type'");
           // @ts-ignore

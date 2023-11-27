@@ -35,18 +35,30 @@ async function generateSnapshot(ctx: FHIRServerCTX, sd: StructureDefinition) {
     : [];
 
   for (const element of sd.differential.element) {
-    const index = findLastIndex(
-      baseSnapshotElements || [],
-      (e) => e.path === element.path
+    const existingElementIndex = findLastIndex(
+      baseSnapshotElements,
+      (e) => e.id === element.id
     );
-    if (!index)
-      throw new OperationError(
-        outcomeError(
-          "invalid",
-          `Could not find element ${element.path} in base snapshot`
-        )
+
+    if (existingElementIndex) {
+      baseSnapshotElements.splice(existingElementIndex, 1, {
+        ...baseSnapshotElements[existingElementIndex],
+        ...element,
+      });
+    } else {
+      const index = findLastIndex(
+        baseSnapshotElements,
+        (e) => e.path === element.path
       );
-    baseSnapshotElements.splice(index, 0, element);
+      if (!index)
+        throw new OperationError(
+          outcomeError(
+            "invalid",
+            `Could not find element ${element.path} in base snapshot`
+          )
+        );
+      baseSnapshotElements.splice(index, 0, element);
+    }
   }
 
   return { ...sd, snapshot: { element: baseSnapshotElements } };

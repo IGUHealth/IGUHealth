@@ -31,6 +31,7 @@ import MemoryDatabaseAsync from "../resourceProviders/memory/async.js";
 import RouterClient from "../resourceProviders/router.js";
 import RedisLock from "../synchronization/redis.lock.js";
 import InlineExecutioner from "../operation-executors/local/index.js";
+import StructureDefinitionSnapshotInvoke from "../operation-executors/local/structureDefinition/snapshot.js";
 import IguhealthEncryptInvoke from "../operation-executors/local/encryption/encrypt.js";
 import ResourceValidateInvoke from "../operation-executors/local/resource_validate.js";
 import ValueSetExpandInvoke from "../operation-executors/local/terminology/expand.js";
@@ -330,6 +331,7 @@ export async function deriveCTX(): Promise<
   const resolveCanonical = createResolveCanonical(data);
 
   const inlineOperationExecution = InlineExecutioner([
+    StructureDefinitionSnapshotInvoke,
     IguhealthEncryptInvoke,
     ResourceValidateInvoke,
     ValueSetExpandInvoke,
