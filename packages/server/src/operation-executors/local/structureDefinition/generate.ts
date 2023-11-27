@@ -6,7 +6,17 @@ import { FHIRServerCTX } from "../../../ctx/types.js";
 import InlineOperation from "../interface.js";
 import { FHIRRequest } from "@iguhealth/client/types";
 
-function generateSnapshot(ctx: FHIRServerCTX, sd: StructureDefinition) {
+function findLastIndex<T>(collection: T[], predicate: (item: T) => boolean) {
+  let index = -1;
+  for (let i = 0; i < collection.length; i++) {
+    const isPredicate = predicate(collection[i]);
+    if (isPredicate) index = i;
+    if (!isPredicate && index > -1) break;
+  }
+  return index;
+}
+
+async function generateSnapshot(ctx: FHIRServerCTX, sd: StructureDefinition) {
   if (sd.snapshot) return sd;
 
   if (!sd.differential)
@@ -16,8 +26,30 @@ function generateSnapshot(ctx: FHIRServerCTX, sd: StructureDefinition) {
         "StructureDefinitionSnapshot requires a differential to generate a snapshot"
       )
     );
+  // slice so I'm not altering the original when injecting values with splice.
+  const baseSnapshotElements = sd.baseDefinition
+    ? (
+        (await ctx.resolveCanonical("StructureDefinition", sd.baseDefinition)
+          ?.snapshot?.element) ?? []
+      ).slice()
+    : [];
 
-  return { ...sd };
+  for (const element of sd.differential.element) {
+    const index = findLastIndex(
+      baseSnapshotElements || [],
+      (e) => e.path === element.path
+    );
+    if (!index)
+      throw new OperationError(
+        outcomeError(
+          "invalid",
+          `Could not find element ${element.path} in base snapshot`
+        )
+      );
+    baseSnapshotElements.splice(index, 0, element);
+  }
+
+  return { ...sd, snapshot: { element: baseSnapshotElements } };
 }
 
 const StructureDefinitionSnapshotInvoke = InlineOperation(
@@ -44,7 +76,7 @@ const StructureDefinitionSnapshotInvoke = InlineOperation(
       );
     }
 
-    return sd;
+    return generateSnapshot(ctx, sd);
   }
 );
 
