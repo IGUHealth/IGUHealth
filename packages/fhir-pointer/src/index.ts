@@ -27,6 +27,15 @@ type NullGuard<V, Field extends keyof NonNullable<V>> = V extends NonNullable<V>
   ? NonNullable<V>[Field]
   : NonNullable<V>[Field] | undefined;
 
+// See [https://datatracker.ietf.org/doc/html/rfc6901#section-3] for reference.
+function escapeField(field: string) {
+  return field.replace("~", "~0").replace("/", "~1");
+}
+
+function unescapeField(field: string) {
+  return field.replace("~1", "/").replace("~0", "~");
+}
+
 /*
  ** Descend Loc pointer with field.
  */
@@ -36,7 +45,11 @@ export function descend<
   P extends Parent<T>,
   Field extends keyof NonNullable<R>
 >(loc: Loc<T, R, P>, field: Field): Loc<T, NullGuard<R, Field>, typeof loc> {
-  return `${loc}/${String(field)}` as Loc<T, NullGuard<R, Field>, typeof loc>;
+  return `${loc}/${escapeField(String(field))}` as Loc<
+    T,
+    NullGuard<R, Field>,
+    typeof loc
+  >;
 }
 
 type ReturnType<L> = L extends Loc<infer B, infer T, infer P> ? T : any;
@@ -52,7 +65,7 @@ export function ascend<T, R, P extends Parent<T>>(
   // At root so return undefined.
   const lastIndexSlash = loc.lastIndexOf("/");
   if (lastIndexSlash === -1) return undefined;
-  const field = loc.substring(lastIndexSlash + 1);
+  const field = unescapeField(loc.substring(lastIndexSlash + 1));
   return {
     parent: loc.slice(0, lastIndexSlash) as NonNullable<P>,
     field: Number.isNaN(parseInt(field))
@@ -106,4 +119,8 @@ export function pointer<T extends ResourceType>(
   resourceId: id
 ): Loc<AResource<T>, AResource<T>> {
   return `${resourceType}|${resourceId}` as Loc<AResource<T>, AResource<T>>;
+}
+
+export function typedPointer<V, T>(path: string = ""): Loc<V, T, Parent<V>> {
+  return path as Loc<V, T, Parent<V>>;
 }

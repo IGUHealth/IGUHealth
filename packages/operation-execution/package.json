@@ -12,6 +12,7 @@
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "dependencies": {
+    "@iguhealth/fhir-pointer": "workspace:^",
     "@iguhealth/fhir-types": "workspace:^",
     "@iguhealth/fhir-validation": "workspace:^",
     "@iguhealth/operation-outcomes": "workspace:^"
