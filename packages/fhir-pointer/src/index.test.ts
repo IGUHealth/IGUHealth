@@ -1,6 +1,17 @@
 import { expect, test } from "@jest/globals";
 import { Patient } from "@iguhealth/fhir-types/r4/types";
-import { pointer, descend, ascend, get, pathMeta, fields, root } from "./index";
+import {
+  Loc,
+  pointer,
+  descend,
+  ascend,
+  get,
+  pathMeta,
+  fields,
+  root,
+  toJSONPointer,
+  typedPointer,
+} from "./index";
 
 test("pointer", () => {
   const loc = pointer("Patient", "123");
@@ -84,4 +95,20 @@ test("root", () => {
     "given"
   );
   expect(root(nestedLoc)).toEqual("Patient|123");
+});
+
+test("escaping strings.", () => {
+  const loc = pointer("Patient", "asdf") as Loc<any, any>;
+  const escapedLoc = descend(descend(loc, "~name"), "/test");
+  expect(escapedLoc).toEqual("Patient|asdf/~0name/~1test");
+  expect(toJSONPointer(escapedLoc)).toEqual("/~0name/~1test");
+  expect(get(escapedLoc, { "~name": { "/test": "test" } })).toEqual("test");
+});
+
+test("typedpointer", () => {
+  const loc = typedPointer() as Loc<any, any>;
+  const escapedLoc = descend(descend(loc, "~name"), "/test");
+  expect(escapedLoc).toEqual("/~0name/~1test");
+  expect(toJSONPointer(escapedLoc)).toEqual("/~0name/~1test");
+  expect(get(escapedLoc, { "~name": { "/test": "test" } })).toEqual("test");
 });

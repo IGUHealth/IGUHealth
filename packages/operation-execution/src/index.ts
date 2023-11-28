@@ -7,6 +7,7 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import validate, { ValidationCTX } from "@iguhealth/fhir-validation";
+import { descend, typedPointer } from "@iguhealth/fhir-pointer";
 import {
   OperationError,
   issueError,
@@ -294,7 +295,15 @@ async function validateParameter<Use extends "in" | "out">(
           ? arr[index].resourceType
           : paramDefinition.type;
 
-      issues = [...issues, ...(await validate(ctx, type, arr, `/${index}`))];
+      issues = [
+        ...issues,
+        ...(await validate(
+          ctx,
+          type,
+          arr,
+          descend(typedPointer<typeof arr, (typeof arr)[number]>(), index)
+        )),
+      ];
     } else {
       if (!paramDefinition.part) {
         issues = [

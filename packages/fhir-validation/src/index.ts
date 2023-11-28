@@ -14,8 +14,13 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 import { primitiveTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { eleIndexToChildIndices } from "@iguhealth/codegen";
-import { descend, createPath, ascend } from "./path.js";
-import jsonpointer from "jsonpointer";
+import {
+  get,
+  descend,
+  ascend,
+  Loc,
+  typedPointer,
+} from "@iguhealth/fhir-pointer";
 
 export interface ValidationCTX {
   resolveCanonical<T extends ResourceType>(
@@ -48,11 +53,11 @@ async function validatePrimitive(
   ctx: ValidationCTX,
   element: ElementDefinition | undefined,
   root: unknown,
-  path: string,
+  path: Loc<object, any, any>,
   type: string
 ): Promise<OperationOutcome["issue"]> {
   let value;
-  if (validateIsObject(root)) value = jsonpointer.get(root, path);
+  if (validateIsObject(root)) value = get(path, root);
   else if (path === "") value = root;
   else
     return [
@@ -268,7 +273,7 @@ function determineTypesAndFields(
 
 async function validateSingular(
   ctx: ValidationCTX,
-  path: string,
+  path: Loc<object, any, any>,
   structureDefinition: StructureDefinition,
   elementIndex: number,
   root: object,
@@ -311,7 +316,7 @@ async function validateSingular(
       return validatePrimitive(ctx, element, root, path, type);
     } else {
       if (type === "Resource" || type === "DomainResource") {
-        type = jsonpointer.get(root, descend(path, "resourceType"));
+        type = get(descend(path, "resourceType"), root);
       }
       return validate(ctx, type, root, path);
     }
@@ -321,7 +326,7 @@ async function validateSingular(
     // And the typechoice check on each field.
     // Found concatenate on found fields so can check at end whether their are additional and throw error.
     let foundFields: string[] = [];
-    const value = jsonpointer.get(root, path);
+    const value = get(path, root);
 
     if (typeof value !== "object") {
       return [
@@ -430,7 +435,7 @@ async function validateSingular(
 }
 async function checkFields(
   ctx: ValidationCTX,
-  path: string,
+  path: Loc<object, any, any>,
   structureDefinition: StructureDefinition,
   index: number,
   root: object,
@@ -466,13 +471,13 @@ function validateIsObject(v: unknown): v is object {
 
 async function validateElement(
   ctx: ValidationCTX,
-  path: string,
+  path: Loc<any, any, any>,
   structureDefinition: StructureDefinition,
   elementIndex: number,
   root: object,
   type: string
 ): Promise<OperationOutcome["issue"]> {
-  const value = jsonpointer.get(root, path);
+  const value = get(path, root);
   const element = structureDefinition.snapshot?.element?.[elementIndex];
 
   if (!isElement(element)) {
@@ -539,7 +544,7 @@ export default async function validate(
   ctx: ValidationCTX,
   type: string,
   root: unknown,
-  path: string = createPath()
+  path: Loc<any, any, any> = typedPointer<any, any>()
 ): Promise<OperationOutcome["issue"]> {
   const sd = ctx.resolveCanonical("StructureDefinition", typeToUrl(type));
   if (!sd)
@@ -567,7 +572,7 @@ export default async function validate(
 
   if (
     resourceTypes.has(type) &&
-    jsonpointer.get(root, descend(path, "resourceType")) !== type
+    get(descend(path, "resourceType"), root) !== type
   ) {
     return [
       issueError(
@@ -594,7 +599,7 @@ export default async function validate(
 export function createValidator(
   ctx: ValidationCTX,
   type: string,
-  path: string = createPath()
+  path: Loc<any, any, any> = typedPointer()
 ): Validator {
   return (value: unknown) => {
     return validate(ctx, type, value, path);
