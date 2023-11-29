@@ -8,6 +8,7 @@ import {
   Resource,
   Subscription,
   BundleEntry,
+  id,
 } from "@iguhealth/fhir-types/r4/types";
 import {
   OperationError,
@@ -191,9 +192,23 @@ function subscriptionLockKey(workspace: string, subscriptionId: string) {
 function processSubscription(
   workerID: string,
   ctx: FHIRServerCTX,
-  subscription: Subscription
+  subscriptionId: id
 ) {
   return async () => {
+    // Reread here in event that concurrent process has altered the id.
+    const subscription = await ctx.client.read(
+      ctx,
+      "Subscription",
+      subscriptionId
+    );
+    if (!subscription)
+      throw new OperationError(
+        outcomeError(
+          "not-found",
+          `Subscription with id '${subscriptionId}' not found.`
+        )
+      );
+    if (subscription.status !== "active") return;
     const logger = ctx.logger.child({
       worker: workerID,
       workspace: ctx.workspace,
@@ -408,20 +423,22 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
           const services = getCTX({
             pg: client,
             workspace,
-            author: "system",
+            author: `system-worker-${workerID}`,
           });
           const ctx = { ...services, workspace, author: "system" };
-          const activeSubscriptions = await services.client.search_type(
-            ctx,
-            "Subscription",
-            [{ name: "status", value: ["active"] }]
-          );
-          for (const subscription of activeSubscriptions.resources) {
+          const activeSubscriptionIds = (
+            await services.client.search_type(ctx, "Subscription", [
+              { name: "status", value: ["active"] },
+            ])
+          ).resources.map((r) => r.id);
+          for (const subscriptionId of activeSubscriptionIds) {
             // Use lock to avoid duplication on sub processing (could have two concurrent subs running in unison otherwise).
+            if (!subscriptionId)
+              throw new Error("Subscription ID was undefined.");
             try {
               await ctx.lock.withLock(
-                subscriptionLockKey(workspace, subscription.id as string),
-                processSubscription(workerID, ctx, subscription)
+                subscriptionLockKey(workspace, subscriptionId),
+                processSubscription(workerID, ctx, subscriptionId)
               );
             } catch (e) {
               ctx.logger.error(e);
