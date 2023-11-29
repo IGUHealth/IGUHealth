@@ -261,9 +261,6 @@ const encryptionMiddleware: (
   (resourceTypesToEncrypt: ResourceType[]) => async (request, args, next) => {
     if (!next) throw new Error("next middleware was not defined");
     if (!args.ctx.encryptionProvider) {
-      args.ctx.logger.warn(
-        "Cannot encrypt, no encryption provider configured."
-      );
       return next(request, args);
     }
     if (
