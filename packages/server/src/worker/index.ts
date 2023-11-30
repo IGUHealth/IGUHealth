@@ -418,16 +418,16 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
       ).rows.map((row) => row.id);
 
       for (const workspace of activeWorkspaces) {
-        const client = await pool.connect();
+        const pgPool = await pool.connect();
         try {
-          const services = getCTX({
-            pg: client,
+          const ctx = getCTX({
+            pg: pgPool,
             workspace,
             author: `system-worker-${workerID}`,
           });
-          const ctx = { ...services, workspace, author: "system" };
+
           const activeSubscriptionIds = (
-            await services.client.search_type(ctx, "Subscription", [
+            await ctx.client.search_type(ctx, "Subscription", [
               { name: "status", value: ["active"] },
             ])
           ).resources.map((r) => r.id);
@@ -445,7 +445,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
             }
           }
         } finally {
-          client.release();
+          pgPool.release();
         }
       }
     } catch (e) {
