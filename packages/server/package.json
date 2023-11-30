@@ -8,7 +8,7 @@
     "prebuild": "node -p \"'export const LIB_VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/version.ts",
     "build": "yarn prebuild && tsc && yarn copyfiles  -u 1 \"./src/**/*.sql\" lib",
     "ci": "yarn build & yarn node --enable-source-maps ./lib/cli.js run server & yarn node --enable-source-maps ./lib/cli.js run worker",
-    "test": "jest --detectOpenHandles",
+    "test": "yarn node --experimental-vm-modules $(yarn bin jest) --runInBand",
     "migrate": "db-migrate --sql-file -m src/resourceProviders/postgres/migrations",
     "watch": "yarn prebuild && yarn migrate up && yarn tsc-watch --onSuccess \"yarn node --enable-source-maps  ./lib/cli.js run both\"",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
@@ -79,27 +79,6 @@
     "ts-jest": "^29.1.0",
     "tsc-watch": "^6.0.4",
     "typescript": "^5.1.3"
-  },
-  "jest": {
-    "preset": "ts-jest/presets/js-with-ts-esm",
-    "testEnvironment": "node",
-    "collectCoverage": true,
-    "coverageReporters": [
-      "text",
-      "cobertura"
-    ],
-    "testMatch": [
-      "**/?(*.)+(spec|test).[t]s?(x)"
-    ],
-    "extensionsToTreatAsEsm": [
-      ".ts"
-    ],
-    "moduleNameMapper": {
-      "^(\\.{1,2}/.*)\\.js$": "$1"
-    },
-    "transformIgnorePatterns": [
-      "node_modules/(?!@iguhealth)"
-    ]
   },
   "files": [
     "package.json",

@@ -1,5 +1,6 @@
 {
   "extends": "../../config/base.tsconfig.json",
+  "exclude": ["./**/*.test.ts", "lib/*", "jest.config.js"],
   "compilerOptions": {
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],

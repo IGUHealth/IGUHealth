@@ -1,4 +1,5 @@
 import path from "path";
+import { fileURLToPath } from "url";
 import { test, expect } from "@jest/globals";
 
 import {
@@ -16,7 +17,11 @@ import { FHIRServerCTX } from "../ctx/types.js";
 function loadResources(resourceTypes: ResourceType[]): Resource[] {
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
-      loadArtifacts(resourceType, path.join(__dirname, "../"), true)
+      loadArtifacts(
+        resourceType,
+        path.join(fileURLToPath(import.meta.url), "../../"),
+        true,
+      ),
     )
     .flat();
   return artifactResources;
@@ -89,10 +94,10 @@ test("Test Cyclical", () => {
       outcomeFatal(
         "exception",
         `Transaction bundle has cycles at following indices ${JSON.stringify(
-          []
-        )}.`
-      )
-    )
+          [],
+        )}.`,
+      ),
+    ),
   );
   try {
     buildTransactionTopologicalGraph(CTX, {

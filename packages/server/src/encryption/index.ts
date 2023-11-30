@@ -37,9 +37,6 @@ export async function encryptValue<T extends object>(
   );
   const operations = await Promise.all(
     encryptionLocations.map(async (value): Promise<Operation[]> => {
-      console.log(
-        `${toFP(value.location())}.extension.where(url=%extUrl).value`
-      );
       const encryptExtensionValue = evaluateWithMeta(
         `${toFP(value.location())}.extension.where(url=%extUrl).value`,
         resource,

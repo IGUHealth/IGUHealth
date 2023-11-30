@@ -1,8 +1,10 @@
+import path from "path";
+import { fileURLToPath } from "url";
+
 import { ResourceType, id } from "@iguhealth/fhir-types/r4/types";
 import parseParameters from "@iguhealth/client/url";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { expect, test } from "@jest/globals";
-import path from "path";
 
 import { testServices } from "../test_ctx.js";
 import {
@@ -14,12 +16,12 @@ import CreateMemoryDatabaseAsync from "./async.js";
 
 const artifactParameters = loadArtifacts(
   "SearchParameter",
-  path.join(__dirname, "../../"),
+  path.join(fileURLToPath(import.meta.url), "../../../"),
   true
 );
 const sds = loadArtifacts(
   "StructureDefinition",
-  path.join(__dirname, "../../"),
+  path.join(fileURLToPath(import.meta.url), "../../../"),
   true
 );
 

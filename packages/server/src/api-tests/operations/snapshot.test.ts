@@ -1,4 +1,5 @@
-import path from "node:path";
+import path from "path";
+import { fileURLToPath } from "url";
 import { expect, test } from "@jest/globals";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
@@ -9,7 +10,7 @@ import usCoreDifferential from "../data/us-core-differential";
 
 const sds = loadArtifacts(
   "StructureDefinition",
-  path.join(__dirname, "../../")
+  path.join(fileURLToPath(import.meta.url), "../../../"),
 );
 
 const client = HTTPClient({

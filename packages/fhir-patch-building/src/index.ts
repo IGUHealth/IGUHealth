@@ -1,5 +1,5 @@
 import { produce } from "immer";
-import { Operation, applyPatch } from "fast-json-patch";
+import jsonpatch, { Operation } from "fast-json-patch";
 
 import * as fpt from "@iguhealth/fhir-pointer";
 import { Resource } from "@iguhealth/fhir-types/r4/types";
@@ -129,7 +129,7 @@ export function applyMutation<T extends Resource, R>(
   value: T,
   mutation: Mutation<T, R>
 ): T {
-  return applyPatch(value, buildPatches(value, mutation)).newDocument;
+  return jsonpatch.applyPatch(value, buildPatches(value, mutation)).newDocument;
 }
 
 export function applyMutationImmutable<T extends Resource, R>(

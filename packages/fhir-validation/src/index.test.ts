@@ -1,4 +1,5 @@
 import path from "path";
+import { fileURLToPath } from "url";
 import { expect, test } from "@jest/globals";
 
 import {
@@ -23,7 +24,7 @@ function createMemoryDatabase(
   for (const resourceType of resourceTypes) {
     const resources = loadArtifacts(
       resourceType,
-      path.join(__dirname, "./"),
+      path.join(fileURLToPath(import.meta.url), ".."),
       true
     );
     data[resourceType] = resources;

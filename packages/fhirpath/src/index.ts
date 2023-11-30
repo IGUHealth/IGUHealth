@@ -30,7 +30,7 @@ function toMetaValueSingulars<T>(
   return [];
 }
 
-type Options = {
+export type Options = {
   variables?: Record<string, unknown> | ((v: string) => unknown);
   meta?: PartialTypeMeta;
 };

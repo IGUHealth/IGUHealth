@@ -7,7 +7,7 @@
   "types": "./lib/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "jest --detectOpenHandles",
+    "test": "yarn node --experimental-vm-modules $(yarn bin jest)",
     "generate": "yarn cli generate-operations --output=./src/r4 && yarn prettier --write ./src/r4/**/*.ts",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
@@ -26,27 +26,6 @@
     "prettier": "^3.0.0",
     "ts-jest": "^29.1.0",
     "typescript": "^5.1.3"
-  },
-  "jest": {
-    "preset": "ts-jest/presets/js-with-ts-esm",
-    "testEnvironment": "node",
-    "collectCoverage": true,
-    "coverageReporters": [
-      "text",
-      "cobertura"
-    ],
-    "testMatch": [
-      "**/?(*.)+(spec|test).[t]s?(x)"
-    ],
-    "extensionsToTreatAsEsm": [
-      ".ts"
-    ],
-    "moduleNameMapper": {
-      "^(\\.{1,2}/.*)\\.js$": "$1"
-    },
-    "transformIgnorePatterns": [
-      "node_modules/(?!@iguhealth)"
-    ]
   },
   "files": [
     "README.md",

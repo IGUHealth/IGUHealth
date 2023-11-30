@@ -57,6 +57,4 @@ test("test resourceEncryption", async () => {
       encryptedOp.extension?.[0]?.valueString as string
     )
   ).toEqual("secret");
-
-  console.log(encryptedOp);
 });
