@@ -1,4 +1,5 @@
-import path from "node:path";
+import path from "path";
+import { fileURLToPath } from "url";
 import { expect, test } from "@jest/globals";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
@@ -22,12 +23,12 @@ import { OperationError, outcome } from "@iguhealth/operation-outcomes";
 
 const operationDefinitions = loadArtifacts(
   "OperationDefinition",
-  path.join(__dirname, "./")
+  path.join(fileURLToPath(import.meta.url), ".."),
 );
 
 const structureDefinitions = loadArtifacts(
   "StructureDefinition",
-  path.join(__dirname, "./")
+  path.join(fileURLToPath(import.meta.url), ".."),
 );
 
 const valueSetExpandOp = operationDefinitions.find(

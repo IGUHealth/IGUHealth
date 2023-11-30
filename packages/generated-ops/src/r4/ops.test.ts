@@ -1,18 +1,29 @@
 import path from "node:path";
+import { fileURLToPath } from "url";
 import { expect, test } from "@jest/globals";
 
 import { Invocation } from "@iguhealth/operation-execution";
-import { ValueSet, ResourceType, AResource } from "@iguhealth/fhir-types/r4/types";
+import {
+  ValueSet,
+  ResourceType,
+  AResource,
+} from "@iguhealth/fhir-types/r4/types";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { OpCTX } from "@iguhealth/operation-execution/src/index.js";
 
 import { ValueSetExpand } from "./ops.js";
 
-const sds = loadArtifacts("StructureDefinition", path.join(__dirname, "../"));
+const sds = loadArtifacts(
+  "StructureDefinition",
+  path.join(fileURLToPath(import.meta.url), "../../"),
+);
 
 test("Test ValueSet Expands", async () => {
   const ctx: OpCTX = {
-    resolveCanonical<T extends ResourceType>(type: T, url: string): AResource<T> {
+    resolveCanonical<T extends ResourceType>(
+      type: T,
+      url: string,
+    ): AResource<T> {
       const sd = sds.find((sd) => sd.url === url);
       if (!sd) throw new Error(`Could not resolve type ${type}`);
       return sd as AResource<T>;

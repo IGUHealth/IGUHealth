@@ -1,4 +1,5 @@
 import path from "path";
+import { fileURLToPath } from "url";
 
 import {
   ResourceType,
@@ -14,12 +15,16 @@ import MemoryDatabase from "./async.js";
 import { FHIRServerCTX } from "../../ctx/types.js";
 
 function createMemoryDatabase(
-  resourceTypes: ResourceType[]
+  resourceTypes: ResourceType[],
 ): FHIRClientAsync<FHIRServerCTX> {
   const database = MemoryDatabase({});
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
-      loadArtifacts(resourceType, path.join(__dirname, "../../"), true)
+      loadArtifacts(
+        resourceType,
+        path.join(fileURLToPath(import.meta.url), "../../../"),
+        true,
+      ),
     )
     .flat();
   for (const resource of artifactResources) {
@@ -85,7 +90,7 @@ test("Quantity Test", async () => {
       await memDB.search_type(CTX, "Observation", [
         { name: "value-quantity", value: [15.12] },
       ])
-    ).resources.map((r) => r.id)
+    ).resources.map((r) => r.id),
   ).toEqual(["ob1"]);
 
   expect(
@@ -93,7 +98,7 @@ test("Quantity Test", async () => {
       await memDB.search_type(CTX, "Observation", [
         { name: "value-quantity", value: [15.2] },
       ])
-    ).resources.map((r) => r.id)
+    ).resources.map((r) => r.id),
   ).toEqual([]);
 
   expect(
@@ -101,14 +106,14 @@ test("Quantity Test", async () => {
       await memDB.search_type(CTX, "Observation", [
         { name: "value-quantity", value: [15.0] },
       ])
-    ).resources.map((r) => r.id)
+    ).resources.map((r) => r.id),
   ).toEqual([]);
   expect(
     (
       await memDB.search_type(CTX, "Observation", [
         { name: "value-quantity", value: [15.14] },
       ])
-    ).resources.map((r) => r.id)
+    ).resources.map((r) => r.id),
   ).toEqual(["ob1"]);
 });
 
@@ -137,7 +142,7 @@ test("Date Test", async () => {
       await memDB.search_type(CTX, "Observation", [
         { name: "value-date", value: ["1980-01"] },
       ])
-    ).resources.map((r) => r.id)
+    ).resources.map((r) => r.id),
   ).toEqual(["ob1"]);
 
   expect(
@@ -145,7 +150,7 @@ test("Date Test", async () => {
       await memDB.search_type(CTX, "Observation", [
         { name: "value-date", value: ["1981"] },
       ])
-    ).resources.map((r) => r.id)
+    ).resources.map((r) => r.id),
   ).toEqual([]);
 
   expect(
@@ -153,6 +158,6 @@ test("Date Test", async () => {
       await memDB.search_type(CTX, "Observation", [
         { name: "value-date", value: ["1979"] },
       ])
-    ).resources.map((r) => r.id)
+    ).resources.map((r) => r.id),
   ).toEqual([]);
 });

@@ -1,6 +1,6 @@
 {
   "extends": "../../config/base.tsconfig.json",
-  "exclude": ["./**/*.test.ts", "lib/*", "scripts/*"],
+  "exclude": ["./**/*.test.ts", "lib/*", "jest.config.js", "scripts/*"],
   "compilerOptions": {
     "outDir": "lib",
     "jsx": "react"

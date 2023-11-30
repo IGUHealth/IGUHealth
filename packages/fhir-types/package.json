@@ -6,7 +6,6 @@
   "scripts": {
     "generate": "cli generate-types-artifacts --output=./src/r4",
     "build": "tsc",
-    "test": "echo \"Error: no test specified\"",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "types": "lib/r4/types.d.ts",
@@ -18,6 +17,7 @@
     "./r4/types": "./lib/r4/types.js"
   },
   "devDependencies": {
+    "@types/node": "^20.10.1",
     "typescript": "5.1.3"
   },
   "files": [

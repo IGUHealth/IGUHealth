@@ -1,4 +1,6 @@
-import { evaluate, evaluateWithMeta } from "./index";
+import path from "path";
+import { fileURLToPath } from "url";
+
 import {
   StructureDefinition,
   OperationDefinition,
@@ -7,9 +9,11 @@ import {
 import { expect, test } from "@jest/globals";
 import { loadArtifacts } from "@iguhealth/artifacts";
 
+import { evaluate, evaluateWithMeta } from "./index";
+
 const sds: StructureDefinition[] = loadArtifacts(
   "StructureDefinition",
-  __dirname
+  path.join(fileURLToPath(import.meta.url), ".."),
 );
 
 function getSD(type: code) {

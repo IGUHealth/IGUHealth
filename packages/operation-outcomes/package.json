@@ -2,10 +2,10 @@
   "name": "@iguhealth/operation-outcomes",
   "packageManager": "yarn@3.6.1",
   "version": "0.1.10",
+  "type": "module",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "type": "module",
   "scripts": {
     "build": "tsc",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"

@@ -1,4 +1,5 @@
-import { MetaValueSingular, MetaValueArray, descend } from "./index";
+import path from "path";
+import { fileURLToPath } from "url";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import {
   StructureDefinition,
@@ -6,13 +7,13 @@ import {
   ConceptMap,
   Practitioner,
 } from "@iguhealth/fhir-types/r4/types";
-// import { evaluate } from "@iguhealth/fhirpath";
 import { expect, test } from "@jest/globals";
-import path from "path";
+
+import { MetaValueSingular, MetaValueArray, descend } from "./index";
 
 const sds: StructureDefinition[] = loadArtifacts(
   "StructureDefinition",
-  path.join(__dirname)
+  path.join(fileURLToPath(import.meta.url), ".."),
 );
 
 const patientSD = sds.find(

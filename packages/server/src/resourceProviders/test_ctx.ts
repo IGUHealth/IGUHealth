@@ -1,4 +1,6 @@
-import path from "node:path";
+import path from "path";
+import { fileURLToPath } from "url";
+
 import createLogger from "pino";
 import dotEnv from "dotenv";
 
@@ -16,8 +18,8 @@ dotEnv.config();
 
 const sds = loadArtifacts(
   "StructureDefinition",
-  path.join(__dirname, "../"),
-  true
+  path.join(fileURLToPath(import.meta.url), "../../"),
+  true,
 );
 
 class TestLock implements Lock<TestLock> {
