@@ -84,6 +84,11 @@ const config = {
           },
           { to: "/blog", label: "Blog", position: "left" },
           {
+            to: "https://api-reference.iguhealth.app/",
+            label: "Reference",
+            position: "right",
+          },
+          {
             href: "https://github.com/iguhealth/iguhealth",
             label: "GitHub",
             position: "right",

@@ -9,6 +9,7 @@ packages/admin-app/build/
 packages/server/src/version.ts
 storybook-static/
 .docusaurus
+docs/
 
 ## Below comes from the react-storybook gitignore
 

@@ -1,7 +1,7 @@
 import { expect, test } from "@jest/globals";
 import jsonpatch from "fast-json-patch";
 
-import { AResource, Patient } from "@iguhealth/fhir-types/r4/types";
+import { Patient } from "@iguhealth/fhir-types/r4/types";
 import { pointer, descend } from "@iguhealth/fhir-pointer";
 
 import buildPatches, { applyMutationImmutable } from "./index.js";
