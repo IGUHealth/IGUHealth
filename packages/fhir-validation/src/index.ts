@@ -30,7 +30,7 @@ export interface ValidationCTX {
   validateCode?(system: string, code: string): Promise<boolean>;
 }
 
-type Validator = (input: unknown) => Promise<OperationOutcome["issue"]>;
+type Validator<V> = (input: V) => Promise<OperationOutcome["issue"]>;
 
 // Create a validator for a given fhir type and value
 
@@ -596,12 +596,12 @@ export default async function validate(
   );
 }
 
-export function createValidator(
+export function createValidator<V>(
   ctx: ValidationCTX,
   type: string,
-  path: Loc<any, any, any> = typedPointer()
-): Validator {
-  return (value: unknown) => {
+  path: Loc<V, V, any> = typedPointer()
+): Validator<V> {
+  return (value: V) => {
     return validate(ctx, type, value, path);
   };
 }
