@@ -1,5 +1,6 @@
-import React, { useState, Fragment } from "react";
-import { atom, useRecoilState, useRecoilValue } from "recoil";
+import React, { useMemo, useState, Fragment, useEffect } from "react";
+import classNames from "classnames";
+import { RecoilState, atom, useRecoilState, useRecoilValue } from "recoil";
 import { Dialog, Transition } from "@headlessui/react";
 
 import { getCapabilities } from "../data/capabilities";
@@ -10,17 +11,50 @@ export const openSearchModalAtom = atom({
   default: false,
 });
 
-function SearchModal({
-  position,
-  value = "",
-}: {
-  value?: string;
-  position?: DOMRect;
-}) {
+export const currentIndex: RecoilState<number> = atom({
+  key: "searchModalIndex",
+});
+
+function SearchModal({ value = "" }: { value?: string }) {
   const [search, setSearch] = useState(value);
   const capabilities = useRecoilValue(getCapabilities);
   const [openModal, setOpenModal] = useRecoilState(openSearchModalAtom);
+  const [searchIndex, setSearchIndex] = useRecoilState(currentIndex);
+
+  const searchResults = useMemo(() => {
+    return capabilities?.rest?.[0].resource?.filter((r) => {
+      return (
+        r.type.toLowerCase().includes(search.toLowerCase()) ||
+        r.profile?.toLowerCase().includes(search.toLowerCase())
+      );
+    });
+  }, [search, capabilities]);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const keyboardSearch = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpenModal((open) => !open);
+      }
+      if (e.key === "ArrowDown") {
+        setSearchIndex((v) => v + 1);
+      }
+      if (e.key === "ArrowUp") {
+        setSearchIndex((v) => v - 1);
+      }
+      if (e.key === "ArrowUp") {
+        setSearchIndex((v) => v - 1);
+      }
+    };
+    window.addEventListener("keydown", keyboardSearch);
+    return () => {
+      window.removeEventListener("keydown", keyboardSearch);
+    };
+  }, [openModal]);
+
+  console.log(openModal);
 
   return (
     <Transition appear show={openModal} as={Fragment}>
@@ -71,35 +105,33 @@ function SearchModal({
                 </div>
                 <div className="w-full border-b" />
                 <div className="text-slate-600 space-y-2 px-2 py-2 max-h-64 overflow-y-auto">
-                  {capabilities?.rest?.[0].resource
-                    ?.filter((r) => {
-                      return (
-                        r.type.toLowerCase().includes(search.toLowerCase()) ||
-                        r.profile?.toLowerCase().includes(search.toLowerCase())
-                      );
-                    })
-                    .map((resource) => {
-                      return (
-                        <div
-                          onClick={(e) => {
-                            navigate(`/resources/${resource.type}`);
-                            setOpenModal(false);
-                          }}
-                          className="group cursor-pointer px-1 py-1 rounded hover:bg-blue-100"
-                        >
-                          <div>
-                            <span className="text-sm group-hover:text-slate-700 font-weight">
-                              {resource.type}
-                            </span>
-                          </div>
-                          <div>
-                            <span className="text-xs text-slate-400 group-hover:text-slate-500">
-                              {resource.profile}
-                            </span>
-                          </div>
+                  {searchResults?.map((resource, i) => {
+                    return (
+                      <div
+                        key={resource.type}
+                        onClick={(e) => {
+                          navigate(`/resources/${resource.type}`);
+                          setOpenModal(false);
+                        }}
+                        onMouseEnter={() => setSearchIndex(i)}
+                        className={classNames(
+                          "group cursor-pointer px-1 py-1 rounded ",
+                          { "bg-gray-100": i === searchIndex }
+                        )}
+                      >
+                        <div>
+                          <span className="text-sm group-hover:text-slate-700 font-weight">
+                            {resource.type}
+                          </span>
                         </div>
-                      );
-                    })}
+                        <div>
+                          <span className="text-xs text-slate-400 group-hover:text-slate-500">
+                            {resource.profile}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </Dialog.Panel>
             </Transition.Child>
