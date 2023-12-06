@@ -100,7 +100,10 @@ function SearchModal() {
                     className="focus:outline-none text-left flex-1 text-slate-400 text-sm"
                     placeholder="Search..."
                     value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                      setSearchIndex(0);
+                    }}
                   />
                   <button
                     onClick={(e) => {
