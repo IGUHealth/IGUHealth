@@ -13,12 +13,15 @@ export const openSearchModalAtom = atom({
 
 export const currentIndex: RecoilState<number> = atom({
   key: "searchModalIndex",
+  default: 0,
 });
 
-function SearchModal({ value = "" }: { value?: string }) {
-  const [search, setSearch] = useState(value);
+function SearchModal() {
+  const [search, setSearch] = useState("");
   const capabilities = useRecoilValue(getCapabilities);
+
   const [openModal, setOpenModal] = useRecoilState(openSearchModalAtom);
+
   const [searchIndex, setSearchIndex] = useRecoilState(currentIndex);
 
   const searchResults = useMemo(() => {
@@ -38,23 +41,28 @@ function SearchModal({ value = "" }: { value?: string }) {
         e.preventDefault();
         setOpenModal((open) => !open);
       }
+
       if (e.key === "ArrowDown") {
-        setSearchIndex((v) => v + 1);
+        setSearchIndex((v) =>
+          Math.min(v + 1, searchResults ? searchResults.length - 1 : 0)
+        );
+        return;
       }
       if (e.key === "ArrowUp") {
-        setSearchIndex((v) => v - 1);
+        setSearchIndex((v) => Math.max(v - 1, 0));
+        return;
       }
-      if (e.key === "ArrowUp") {
-        setSearchIndex((v) => v - 1);
+      if (e.key === "Enter") {
+        navigate(`/resources/${searchResults?.[searchIndex]?.type}`);
+        setOpenModal(false);
+        return;
       }
     };
     window.addEventListener("keydown", keyboardSearch);
     return () => {
       window.removeEventListener("keydown", keyboardSearch);
     };
-  }, [openModal]);
-
-  console.log(openModal);
+  }, [openModal, searchResults, searchIndex]);
 
   return (
     <Transition appear show={openModal} as={Fragment}>
