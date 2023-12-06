@@ -269,7 +269,7 @@ function Root() {
       }
     >
       <>
-        <div className="px-4 sm:px-6 lg:px-8 border-b sticky top-0 bg-white">
+        <div className="px-4 sm:px-6 lg:px-8 sticky top-0 bg-white">
           <div className="flex h-16 items-center justify-between">
             <div className="font-semibold text-lg">
               <Base.BreadCrumbs
