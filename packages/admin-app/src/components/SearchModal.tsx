@@ -3,6 +3,7 @@ import { atom, useRecoilState, useRecoilValue } from "recoil";
 import { Dialog, Transition } from "@headlessui/react";
 
 import { getCapabilities } from "../data/capabilities";
+import { useNavigate } from "react-router-dom";
 
 export const openSearchModalAtom = atom({
   key: "openSearchModal",
@@ -19,6 +20,7 @@ function SearchModal({
   const [search, setSearch] = useState(value);
   const capabilities = useRecoilValue(getCapabilities);
   const [openModal, setOpenModal] = useRecoilState(openSearchModalAtom);
+  const navigate = useNavigate();
 
   return (
     <Transition appear show={openModal} as={Fragment}>
@@ -50,7 +52,7 @@ function SearchModal({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="max-w-md w-full transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-opacity">
+              <Dialog.Panel className="absolute top-12 max-w-lg w-full transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-opacity">
                 <div className="flex flex-1 p-3 rounded-lg space-x-2 items-center focus:outline-none">
                   <input
                     className="focus:outline-none text-left flex-1 text-slate-400 text-sm"
@@ -58,9 +60,14 @@ function SearchModal({
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                   />
-                  <span className="flex-none text-slate-400 font-semibold">
-                    ⌘K
-                  </span>
+                  <button
+                    onClick={(e) => {
+                      setOpenModal(false);
+                    }}
+                    className="shadow-sm cursor flex-none text-xs text-slate-400 p-1 border"
+                  >
+                    ESC
+                  </button>
                 </div>
                 <div className="w-full border-b" />
                 <div className="text-slate-600 space-y-2 px-2 py-2 max-h-64 overflow-y-auto">
@@ -73,7 +80,13 @@ function SearchModal({
                     })
                     .map((resource) => {
                       return (
-                        <div className="group cursor-pointer px-1 py-1 rounded hover:bg-blue-100">
+                        <div
+                          onClick={(e) => {
+                            navigate(`/resources/${resource.type}`);
+                            setOpenModal(false);
+                          }}
+                          className="group cursor-pointer px-1 py-1 rounded hover:bg-blue-100"
+                        >
                           <div>
                             <span className="text-sm group-hover:text-slate-700 font-weight">
                               {resource.type}
