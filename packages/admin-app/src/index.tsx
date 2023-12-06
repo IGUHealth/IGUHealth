@@ -31,6 +31,7 @@ import ResourceType from "./views/ResourceType";
 import ResourceEditor from "./views/ResourceEditor/index";
 import reportWebVitals from "./reportWebVitals";
 import { Logo } from "./components/Logo";
+import Search from "./components/Search";
 
 import "./index.css";
 
@@ -271,48 +272,7 @@ function Root() {
       <>
         <div className="px-4 sm:px-6 lg:px-8 sticky top-0 bg-white">
           <div className="flex h-16 items-center justify-between">
-            <div className="font-semibold text-lg">
-              <Base.BreadCrumbs
-                breadcrumbs={[
-                  <span
-                    onClick={() => {
-                      navigate("/");
-                    }}
-                    className="hover:text-indigo-600 cursor-pointer"
-                  >
-                    Resources
-                  </span>,
-                  ...(matches[0].params.resourceType
-                    ? [
-                        <span
-                          onClick={() => {
-                            navigate(
-                              `/resources/${matches[0].params.resourceType}`
-                            );
-                          }}
-                          className="hover:text-indigo-600 cursor-pointer"
-                        >
-                          {matches[0].params.resourceType}
-                        </span>,
-                      ]
-                    : []),
-                  ...(matches[0].params.id
-                    ? [
-                        <span
-                          onClick={() => {
-                            navigate(
-                              `/resources/${matches[0].params.resourceType}/${matches[0].params.id}`
-                            );
-                          }}
-                          className="hover:text-indigo-600 cursor-pointer"
-                        >
-                          {matches[0].params.id}
-                        </span>,
-                      ]
-                    : []),
-                ]}
-              />
-            </div>
+            <Search />
             <Layout.ProfileDropdown
               user={{
                 email: auth0Info.user?.email,
