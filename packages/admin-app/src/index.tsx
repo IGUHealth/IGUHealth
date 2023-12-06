@@ -30,7 +30,7 @@ import Resources from "./views/Resources";
 import ResourceType from "./views/ResourceType";
 import ResourceEditor from "./views/ResourceEditor/index";
 import reportWebVitals from "./reportWebVitals";
-import { Logo } from "./components/logo";
+import { Logo } from "./components/Logo";
 
 import "./index.css";
 
