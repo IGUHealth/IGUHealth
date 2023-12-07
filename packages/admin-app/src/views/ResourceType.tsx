@@ -55,7 +55,7 @@ export default function ResourceTypeView() {
   }, [params.resourceType]);
 
   return (
-    <div className="flex flex-col flex-1">
+    <div className="flex flex-col flex-1 w-full">
       <div className="flex items-center justify-center mb-2">
         <h2 className="flex text-2xl font-semibold mr-4">
           {params.resourceType}
@@ -107,14 +107,16 @@ export default function ResourceTypeView() {
             navigate(`/resources/${row.resourceType}/${row.id}`);
           }}
           columns={[
-            ...(searchParameters || []).map(
-              (searchParameter) =>
-                ({
-                  name: searchParameter.name,
-                  selector: searchParameter.expression,
-                  selectorType: "fhirpath",
-                } as any)
-            ),
+            ...(searchParameters || [])
+              .filter((s) => s.expression)
+              .map(
+                (searchParameter) =>
+                  ({
+                    name: searchParameter.name,
+                    selector: searchParameter.expression,
+                    selectorType: "fhirpath",
+                  } as any)
+              ),
           ]}
         />
       </div>
