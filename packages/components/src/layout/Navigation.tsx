@@ -41,7 +41,7 @@ export const ProfileDropdown = ({
   return (
     <Menu as="div" className="relative ml-3">
       <div>
-        <Menu.Button className="relative flex max-w-xs items-center rounded-full text-indigo-700 hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2">
+        <Menu.Button className="relative flex max-w-xs items-center rounded-full text-blue-700 hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2">
           <span className="absolute -inset-1.5" />
           <span className="sr-only">Open user menu</span>
           {user?.imageUrl ? (
@@ -73,8 +73,8 @@ export const ProfileDropdown = ({
                   className={classNames(
                     "cursor-pointer block px-4 py-2 text-sm",
                     active
-                      ? "bg-indigo-700 text-white"
-                      : "text-indigo-700 hover:bg-indigo-700 hover:text-white"
+                      ? "bg-blue-700 text-white"
+                      : "text-blue-700 hover:bg-blue-700 hover:text-white"
                   )}
                 >
                   {item.name}
@@ -124,8 +124,8 @@ export const Navigation = ({
                         onClick={() => onNavigation(item)}
                         className={classNames(
                           active === item.name
-                            ? "bg-indigo-700 text-white"
-                            : "text-indigo-700 hover:bg-indigo-700 hover:text-white",
+                            ? "bg-blue-700 text-white"
+                            : "text-blue-700 hover:bg-blue-700 hover:text-white",
                           "cursor-pointer rounded-md px-3 py-2 text-sm font-medium"
                         )}
                         aria-current={active === item.name ? "page" : undefined}
@@ -144,7 +144,7 @@ export const Navigation = ({
               </div>
               <div className="-mr-2 md:hidden">
                 {/* Mobile menu button */}
-                <Disclosure.Button className="relative rounded-full p-1  focus:ring-offset-indigo-800 text-indigo-700 hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2">
+                <Disclosure.Button className="relative rounded-full p-1  focus:ring-offset-blue-800 text-blue-700 hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2">
                   <span className="absolute -inset-0.5" />
                   <span className="sr-only">Open main menu</span>
                   {open ? (
@@ -166,8 +166,8 @@ export const Navigation = ({
                   href={item.href}
                   className={classNames(
                     active === item.name
-                      ? "bg-indigo-700 text-white"
-                      : "text-indigo-700 hover:bg-indigo-700 hover:text-white",
+                      ? "bg-blue-700 text-white"
+                      : "text-blue-700 hover:bg-blue-700 hover:text-white",
                     "block rounded-md px-3 py-2 text-base font-medium"
                   )}
                   aria-current={item.name === active ? "page" : undefined}
@@ -186,7 +186,7 @@ export const Navigation = ({
                   />
                 </div>
                 <div className="ml-3">
-                  <div className="text-base font-medium leading-none text-indigo-700">
+                  <div className="text-base font-medium leading-none text-blue-700">
                     {user?.name}
                   </div>
                   <div className="text-sm font-medium leading-none text-gray-400">
@@ -202,7 +202,7 @@ export const Navigation = ({
                     href={item.href}
                     className={classNames(
                       "block rounded-md px-3 py-2 text-base font-medium",
-                      "text-indigo-700 hover:bg-indigo-700 hover:text-white"
+                      "text-blue-700 hover:bg-blue-700 hover:text-white"
                     )}
                   >
                     {item.name}

@@ -56,7 +56,7 @@ export function Table({
             <td className="p-2" colSpan={columns.length}>
               <div className="flex justify-center items-center flex-col">
                 <Loading />
-                <div className="mt-1 font-medium text-indigo-700">
+                <div className="mt-1 font-medium text-blue-700">
                   <span>Loading</span>
                 </div>
               </div>

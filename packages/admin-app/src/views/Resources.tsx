@@ -26,13 +26,13 @@ const DisplayResources = () => {
             selectorType: "fhirpath",
           },
           {
-            name: "Interactions Supported",
-            selector: "$this.interaction.code",
+            name: "Profile",
+            selector: "$this.profile",
             selectorType: "fhirpath",
           },
           {
-            name: "Profile",
-            selector: "$this.profile",
+            name: "Interactions Supported",
+            selector: "$this.interaction.code",
             selectorType: "fhirpath",
           },
         ]}

@@ -101,9 +101,9 @@ function SearchModal() {
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel className="absolute top-12 max-w-lg w-full transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-opacity">
-                <div className="flex flex-1 p-3 rounded-lg space-x-2 items-center focus:outline-none">
+                <div className="flex flex-1 p-3 space-x-2 items-center focus:outline-none shadow-sm">
                   <input
-                    className="focus:outline-none text-left flex-1 text-slate-400 text-sm"
+                    className="focus:outline-none text-left flex-1 text-slate-500 text-sm"
                     placeholder="Search..."
                     value={search}
                     onChange={(e) => {
@@ -120,8 +120,8 @@ function SearchModal() {
                     ESC
                   </button>
                 </div>
-                <div className="w-full border-b" />
-                <div className="text-slate-600 space-y-2 px-2 py-2 max-h-64 overflow-y-auto">
+                <div className="w-full " />
+                <div className="text-slate-600 space-y-2 px-4 py-2 max-h-64 overflow-y-auto">
                   {searchResults?.map((resource, i) => {
                     return (
                       <div
@@ -131,8 +131,8 @@ function SearchModal() {
                         }}
                         onMouseEnter={() => setSearchIndex(i)}
                         className={classNames(
-                          "group cursor-pointer px-1 py-1 rounded ",
-                          { "bg-gray-100": i === searchIndex }
+                          "group cursor-pointer px-2 py-1 rounded ",
+                          { "bg-gray-50": i === searchIndex }
                         )}
                       >
                         <div>

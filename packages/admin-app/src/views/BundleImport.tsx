@@ -27,14 +27,14 @@ const getData = (file: File): Promise<string> => {
 export default function BatchImportView() {
   const navigate = useNavigate();
   const client = useRecoilValue(getClient);
-  const [batch, setBatch] = useState<Bundle>();
+  const [bundle, setBundle] = useState<Bundle>();
   const [issues, setIssues] = useState<string[]>([]);
 
   return (
-    <div className="w-full flex flex-col items-center justify-center">
-      <div>
+    <div className="w-full flex flex-col items-center text-slate-700">
+      <div className="mt-[10%]">
         <Base.Input
-          label="Select Batch file to import"
+          label="Select Bundle to import (must be either a batch or transaction bundle)"
           issues={issues}
           type="file"
           onChange={(e) => {
@@ -44,9 +44,12 @@ export default function BatchImportView() {
             getData(file).then((data) => {
               try {
                 const json = JSON.parse(atob(data));
-                if (json.resourceType !== "Bundle" && json.type !== "batch")
-                  throw new Error("Not a batch bundle");
-                setBatch(json);
+                if (
+                  json.resourceType !== "Bundle" &&
+                  (json.type !== "batch" || json.type !== "transaction")
+                )
+                  throw new Error("Not a transaction or batch bundle");
+                setBundle(json);
               } catch (e) {
                 setIssues([`${e}`]);
               }
@@ -56,15 +59,18 @@ export default function BatchImportView() {
 
         <div className="flex justify-end">
           <Base.Button
-            disabled={batch === undefined}
+            disabled={bundle === undefined}
             className="mt-2"
             buttonSize="medium"
             onClick={() => {
-              if (batch) {
-                const batchPromise = client.batch({}, batch);
+              if (bundle) {
+                const batchPromise =
+                  bundle.type === "transaction"
+                    ? client.transaction({}, bundle)
+                    : client.batch({}, bundle);
                 Base.Toaster.promise(batchPromise, {
-                  loading: "Uploading Batch bundle",
-                  success: () => `Batch bundle was uploaded`,
+                  loading: "Uploading Bundle",
+                  success: () => `Bundle was uploaded`,
                   error: (error) => {
                     const message = (
                       error.operationOutcome as OperationOutcome
