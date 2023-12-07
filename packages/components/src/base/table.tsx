@@ -40,7 +40,7 @@ export function Table({
   isLoading = false,
 }: TableProps) {
   return (
-    <table className="table-fixed min-w-full text-left text-xs font-light w-full">
+    <table className="min-w-full text-left text-xs font-light w-full">
       <thead className="border-b font-medium">
         <tr>
           {columns.map((column, i) => (

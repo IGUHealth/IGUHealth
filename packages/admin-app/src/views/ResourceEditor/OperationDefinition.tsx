@@ -263,11 +263,11 @@ function EnvironmentVariables({
   const environmentExtensions = operation.extension
     ?.map((e, i): [Extension, number] => [e, i])
     .filter(
-      ([e, _i]) =>
+      ([e]) =>
         e.url ===
         "https://iguhealth.app/Extension/OperationDefinition/environment-variable"
     )
-    .map(([_e, i]) => fpt.descend(operationExtensions, i));
+    .map(([, i]) => fpt.descend(operationExtensions, i));
 
   return (
     <table>
@@ -358,7 +358,7 @@ function EnvironmentVariables({
               </td>
               <td>
                 <span
-                  onClick={(_e) => {
+                  onClick={() => {
                     onChange(
                       fpb.applyMutationImmutable(operation, {
                         op: "remove",
