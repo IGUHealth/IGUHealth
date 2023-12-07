@@ -70,6 +70,10 @@ export default function ResourceTypeView() {
               if (e.key === "Enter") {
                 search(queryParameter.get("query") || "");
               }
+              e.stopPropagation();
+            }}
+            onKeyDown={(e) => {
+              e.stopPropagation();
             }}
             onChange={(e) => {
               setQueryParameter({ query: e.target.value });
