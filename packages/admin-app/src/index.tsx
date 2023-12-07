@@ -277,33 +277,42 @@ function Root() {
           <div className="px-4 sm:px-6 lg:px-8 sticky top-0 bg-white">
             <div className="flex h-16 items-center justify-between">
               <Search />
-              <Layout.ProfileDropdown
-                user={{
-                  email: auth0Info.user?.email,
-                  name: auth0Info.user?.name,
-                  imageUrl: auth0Info.user?.picture,
-                }}
-                navigation={[
-                  { id: "settings", name: "Settings" },
-                  { id: "sign-out", name: "Sign out" },
-                ]}
-                onNavigation={(item) => {
-                  switch (item.id) {
-                    case "settings": {
-                      navigate("/settings");
-                      return;
+              <div className="flex justify-center items-center space-x-8">
+                <a
+                  target="_blank"
+                  className="cursor text-slate-500 hover:text-slate-600 hover:underline"
+                  href="https://docs.iguhealth.app/docs/intro"
+                >
+                  Documentation
+                </a>
+                <Layout.ProfileDropdown
+                  user={{
+                    email: auth0Info.user?.email,
+                    name: auth0Info.user?.name,
+                    imageUrl: auth0Info.user?.picture,
+                  }}
+                  navigation={[
+                    { id: "settings", name: "Settings" },
+                    { id: "sign-out", name: "Sign out" },
+                  ]}
+                  onNavigation={(item) => {
+                    switch (item.id) {
+                      case "settings": {
+                        navigate("/settings");
+                        return;
+                      }
+                      case "sign-out": {
+                        auth0Info.logout({
+                          logoutParams: {
+                            returnTo: window.location.origin,
+                          },
+                        });
+                        return;
+                      }
                     }
-                    case "sign-out": {
-                      auth0Info.logout({
-                        logoutParams: {
-                          returnTo: window.location.origin,
-                        },
-                      });
-                      return;
-                    }
-                  }
-                }}
-              />
+                  }}
+                />
+              </div>
             </div>
           </div>
           <div className="p-4 flex flex-1 mt-2 overflow-auto">
