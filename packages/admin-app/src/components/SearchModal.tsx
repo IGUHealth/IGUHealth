@@ -112,7 +112,7 @@ function SearchModal() {
                     }}
                   />
                   <button
-                    onClick={(e) => {
+                    onClick={() => {
                       setOpenModal(false);
                     }}
                     className="shadow-sm cursor flex-none text-xs text-slate-400 p-1 border"
@@ -126,7 +126,7 @@ function SearchModal() {
                     return (
                       <div
                         key={resource.type}
-                        onClick={(e) => {
+                        onClick={() => {
                           onSelect();
                         }}
                         onMouseEnter={() => setSearchIndex(i)}

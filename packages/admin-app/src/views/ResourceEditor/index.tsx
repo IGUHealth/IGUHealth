@@ -16,7 +16,7 @@ import { getClient } from "../../data/client";
 import ResourceEditorComponent from "../../components/ResourceEditor";
 import OperationDefinitionView from "./OperationDefinition";
 
-export default function DefaultResourceEditorView() {
+function ResourceEditorTabs() {
   const client = useRecoilValue(getClient);
   const [resource, setResource] = useState<Resource | undefined>(undefined);
   const [structureDefinition, setStructureDefinition] = useState<
@@ -144,4 +144,16 @@ export default function DefaultResourceEditorView() {
         />
       );
   }
+}
+
+export default function ResourceEditor() {
+  const { resourceType, id } = useParams();
+  return (
+    <div className="flex w-full flex-col">
+      <h3 className="text-slate-700 text-xl font-semibold mb-2">
+        {resourceType} {id}
+      </h3>
+      <ResourceEditorTabs />
+    </div>
+  );
 }

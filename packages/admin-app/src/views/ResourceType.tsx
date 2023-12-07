@@ -55,9 +55,9 @@ export default function ResourceTypeView() {
   }, [params.resourceType]);
 
   return (
-    <div className="flex flex-col flex-1 w-full">
+    <div className="flex flex-col flex-1 w-full text-slate-700">
       <div className="flex items-center justify-center mb-2">
-        <h2 className="flex text-2xl font-semibold mr-4">
+        <h2 className="flex text-xl font-semibold mr-4 ">
           {params.resourceType}
         </h2>
         <div className="flex flex-grow border hover:border-indigo-700 h-10 focus:border-indigo-700">
