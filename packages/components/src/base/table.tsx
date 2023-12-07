@@ -44,7 +44,7 @@ export function Table({
       <thead className="border-b font-medium">
         <tr>
           {columns.map((column, i) => (
-            <th key={i} className="px-2 py-2">
+            <th key={i} className="px-2 py-2 whitespace-nowrap">
               {column.name}
             </th>
           ))}
