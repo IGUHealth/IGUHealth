@@ -2,11 +2,7 @@ import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import {
-  CodeBracketSquareIcon,
-  TableCellsIcon,
   ArrowLeftOnRectangleIcon,
-  ShareIcon,
-  ArrowUpOnSquareIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
 import { RecoilRoot, useRecoilState } from "recoil";
@@ -24,7 +20,7 @@ import "@iguhealth/components/dist/index.css";
 
 import { getClient } from "./data/client";
 import Settings from "./views/Settings";
-import BatchImport from "./views/BatchImport";
+import BundleImport from "./views/BundleImport";
 import EmptyWorkspace from "./views/EmptyWorkspace";
 import Resources from "./views/Resources";
 import ResourceType from "./views/ResourceType";
@@ -162,9 +158,9 @@ const router = createBrowserRouter([
                     element: <ResourceEditor />,
                   },
                   {
-                    id: "batch-import",
-                    path: "/batch-import",
-                    element: <BatchImport />,
+                    id: "bundle-import",
+                    path: "/bundle-import",
+                    element: <BundleImport />,
                   },
                 ],
               },
@@ -181,6 +177,8 @@ function Root() {
   const navigate = useNavigate();
   const matches = useMatches();
 
+  console.log(matches);
+
   return (
     <>
       <Layout.SideBar.SidebarLayout
@@ -192,34 +190,14 @@ function Root() {
               </div>
             }
           >
-            <Layout.SideBar.SideBarItemGroup label="Data" className="mt-8">
-              <Layout.SideBar.SideBarItem
-                active={
-                  matches.find((match) => match.id === "root") !== undefined ||
-                  matches.find(
-                    (match) =>
-                      match.id === "types" &&
-                      match.params.resourceType !== "OperationDefinition" &&
-                      match.params.resourceType !== "Subscription"
-                  ) !== undefined
-                }
-                logo={<TableCellsIcon />}
-                onClick={() => {
-                  navigate("/");
-                }}
-              >
-                Resources
-              </Layout.SideBar.SideBarItem>
-            </Layout.SideBar.SideBarItemGroup>
             <Layout.SideBar.SideBarItemGroup
-              className="mt-12"
+              className="mt-8"
               label="Configuration"
             >
               <Layout.SideBar.SideBarItem
                 active={
                   matches[0].params.resourceType === "OperationDefinition"
                 }
-                logo={<CodeBracketSquareIcon />}
                 onClick={() => {
                   navigate("/resources/OperationDefinition");
                 }}
@@ -228,7 +206,6 @@ function Root() {
               </Layout.SideBar.SideBarItem>
               <Layout.SideBar.SideBarItem
                 active={matches[0].params.resourceType === "Subscription"}
-                logo={<ShareIcon />}
                 onClick={() => {
                   navigate("/resources/Subscription");
                 }}
@@ -236,23 +213,65 @@ function Root() {
                 Subscriptions
               </Layout.SideBar.SideBarItem>
             </Layout.SideBar.SideBarItemGroup>
-            <Layout.SideBar.SideBarItemGroup className="mt-12" label="Import">
+            <Layout.SideBar.SideBarItemGroup className="mt-8" label="UI">
               <Layout.SideBar.SideBarItem
-                active={
-                  matches.find((match) => match.id === "batch-import") !==
-                  undefined
-                }
-                logo={<ArrowUpOnSquareIcon />}
+                active={matches[0].params.resourceType === "Questionnaire"}
                 onClick={() => {
-                  navigate("/batch-import");
+                  navigate("/resources/Questionnaire");
                 }}
               >
-                Batch
+                Questionnaires
+              </Layout.SideBar.SideBarItem>
+              <Layout.SideBar.SideBarItem
+                active={
+                  matches[0].params.resourceType === "QuestionnaireResponse"
+                }
+                onClick={() => {
+                  navigate("/resources/QuestionnaireResponse");
+                }}
+              >
+                Questionnaire Responses
+              </Layout.SideBar.SideBarItem>
+            </Layout.SideBar.SideBarItemGroup>
+            <Layout.SideBar.SideBarItemGroup label="Data" className="mt-8">
+              <Layout.SideBar.SideBarItem
+                active={
+                  matches.find((match) => match.id === "root") !== undefined ||
+                  matches.find(
+                    (match) =>
+                      match.id === "types" &&
+                      match.params.resourceType !== "OperationDefinition" &&
+                      match.params.resourceType !== "Subscription" &&
+                      match.params.resourceType !== "Questionnaire" &&
+                      match.params.resourceType !== "QuestionnaireResponse"
+                  ) !== undefined
+                }
+                onClick={() => {
+                  navigate("/");
+                }}
+              >
+                All Resources
+              </Layout.SideBar.SideBarItem>
+            </Layout.SideBar.SideBarItemGroup>
+            <Layout.SideBar.SideBarItemGroup className="mt-8" label="Import">
+              <Layout.SideBar.SideBarItem
+                active={
+                  matches.find((match) => match.id === "bundle-import") !==
+                  undefined
+                }
+                onClick={() => {
+                  navigate("/bundle-import");
+                }}
+              >
+                Bundle
               </Layout.SideBar.SideBarItem>
             </Layout.SideBar.SideBarItemGroup>
             <Layout.SideBar.SideBarItemGroup className="mt-auto" label="User">
               <Layout.SideBar.SideBarItem
                 logo={<Cog6ToothIcon />}
+                active={
+                  matches.find((match) => match.id === "settings") !== undefined
+                }
                 onClick={() => navigate("/settings")}
               >
                 Settings

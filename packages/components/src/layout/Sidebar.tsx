@@ -24,8 +24,12 @@ export function SideBarItem(props: SideBarItemProps) {
           }
         )}
       >
-        <div className="w-5 h-5 transition duration-75">{logo}</div>
-        <span className="flex-1 ml-3 whitespace-nowrap">{children}</span>
+        {logo && (
+          <div className="flex-none w-5 h-5 mr-3 transition duration-75">
+            {logo}
+          </div>
+        )}
+        <span className="flex-1 whitespace-nowrap">{children}</span>
       </div>
     </li>
   );
@@ -43,7 +47,7 @@ export function SideBarItemGroup(props: SideBarItemGroupProps) {
   return (
     <li {...props}>
       <div className="px-2 text-blue-800 text-xs">{props.label}</div>
-      <div className="mt-1">
+      <div className="mt-1 ml-1">
         <ul className="space-y-1">{props.children}</ul>
       </div>
     </li>
