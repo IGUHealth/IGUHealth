@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/components",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "packageManager": "yarn@3.6.3",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
