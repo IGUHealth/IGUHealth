@@ -17,11 +17,9 @@ export const currentIndex: RecoilState<number> = atom({
 });
 
 function SearchModal() {
-  const [search, setSearch] = useState("");
   const capabilities = useRecoilValue(getCapabilities);
-
+  const [search, setSearch] = useState("");
   const [openModal, setOpenModal] = useRecoilState(openSearchModalAtom);
-
   const [searchIndex, setSearchIndex] = useRecoilState(currentIndex);
 
   const searchResults = useMemo(() => {
@@ -32,6 +30,15 @@ function SearchModal() {
       );
     });
   }, [search, capabilities]);
+
+  const onSelect = useMemo(() => {
+    return () => {
+      navigate(`/resources/${searchResults?.[searchIndex]?.type}`);
+      setOpenModal(false);
+      setSearch("");
+      return;
+    };
+  }, [searchIndex, searchResults, setOpenModal, setSearch]);
 
   const navigate = useNavigate();
 
@@ -53,8 +60,7 @@ function SearchModal() {
         return;
       }
       if (e.key === "Enter") {
-        navigate(`/resources/${searchResults?.[searchIndex]?.type}`);
-        setOpenModal(false);
+        onSelect();
         return;
       }
     };
@@ -121,8 +127,7 @@ function SearchModal() {
                       <div
                         key={resource.type}
                         onClick={(e) => {
-                          navigate(`/resources/${resource.type}`);
-                          setOpenModal(false);
+                          onSelect();
                         }}
                         onMouseEnter={() => setSearchIndex(i)}
                         className={classNames(

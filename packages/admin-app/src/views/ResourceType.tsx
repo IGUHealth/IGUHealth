@@ -110,12 +110,17 @@ export default function ResourceTypeView() {
             ...(searchParameters || [])
               .filter((s) => s.expression)
               .map(
-                (searchParameter) =>
-                  ({
-                    name: searchParameter.name,
-                    selector: searchParameter.expression,
-                    selectorType: "fhirpath",
-                  } as any)
+                (
+                  searchParameter
+                ): {
+                  selectorType: "fhirpath";
+                  selector: string;
+                  name: string;
+                } => ({
+                  name: searchParameter.name,
+                  selector: searchParameter.expression as string,
+                  selectorType: "fhirpath",
+                })
               ),
           ]}
         />
