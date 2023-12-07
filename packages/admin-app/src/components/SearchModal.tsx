@@ -49,26 +49,28 @@ function SearchModal() {
         setOpenModal((open) => !open);
       }
 
-      if (e.key === "ArrowDown") {
-        setSearchIndex((v) =>
-          Math.min(v + 1, searchResults ? searchResults.length - 1 : 0)
-        );
-        return;
-      }
-      if (e.key === "ArrowUp") {
-        setSearchIndex((v) => Math.max(v - 1, 0));
-        return;
-      }
-      if (e.key === "Enter") {
-        onSelect();
-        return;
+      if (openModal) {
+        if (e.key === "ArrowDown") {
+          setSearchIndex((v) =>
+            Math.min(v + 1, searchResults ? searchResults.length - 1 : 0)
+          );
+          return;
+        }
+        if (e.key === "ArrowUp") {
+          setSearchIndex((v) => Math.max(v - 1, 0));
+          return;
+        }
+        if (e.key === "Enter") {
+          onSelect();
+          return;
+        }
       }
     };
     window.addEventListener("keydown", keyboardSearch);
     return () => {
       window.removeEventListener("keydown", keyboardSearch);
     };
-  }, [openModal, searchResults, searchIndex]);
+  }, [openModal, searchResults, searchIndex, setOpenModal]);
 
   return (
     <Transition appear show={openModal} as={Fragment}>
