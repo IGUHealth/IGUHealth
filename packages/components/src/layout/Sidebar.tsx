@@ -17,13 +17,14 @@ export function SideBarItem(props: SideBarItemProps) {
     <li {...props}>
       <div
         className={classNames(
-          "cursor-pointer flex items-center p-2 group rounded-lg hover:text-white group hover:bg-indigo-700",
-          { "text-indigo-100": !active, "text-white  bg-indigo-700": active }
+          "cursor-pointer flex items-center p-2 group rounded-lg group",
+          {
+            "text-slate-800 hover:bg-gray-200": !active,
+            "text-blue-800 bg-blue-100 ": active,
+          }
         )}
       >
-        <div className="w-5 h-5 text-white transition duration-75  group-hover:text-indigo-50 ">
-          {logo}
-        </div>
+        <div className="w-5 h-5 transition duration-75">{logo}</div>
         <span className="flex-1 ml-3 whitespace-nowrap">{children}</span>
       </div>
     </li>
@@ -41,7 +42,7 @@ export interface SideBarItemGroupProps
 export function SideBarItemGroup(props: SideBarItemGroupProps) {
   return (
     <li {...props}>
-      <div className="px-2 text-indigo-100 text-xs">{props.label}</div>
+      <div className="px-2 text-blue-800 text-xs">{props.label}</div>
       <div className="mt-1">
         <ul className="space-y-1">{props.children}</ul>
       </div>
@@ -67,7 +68,7 @@ export function SideBar({
       )}
       aria-label="Sidebar"
     >
-      <nav className="flex flex-1 flex-col px-3 py-4 overflow-y-auto bg-indigo-600">
+      <nav className="flex flex-1 flex-col px-3 py-4 overflow-y-auto bg-gray-100">
         {top}
         <ul role="list" className="gap-y-2 flex flex-1 flex-col font-medium">
           {children}
@@ -92,7 +93,7 @@ export const SidebarLayout = ({
           setSidebarOpen(!sidebarOpen);
         }}
         type="button"
-        className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg  hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+        className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg  hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-800 dark:focus:ring-gray-600"
       >
         <span className="sr-only">Open sidebar</span>
         <svg

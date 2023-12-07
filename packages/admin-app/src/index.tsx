@@ -30,7 +30,9 @@ import Resources from "./views/Resources";
 import ResourceType from "./views/ResourceType";
 import ResourceEditor from "./views/ResourceEditor/index";
 import reportWebVitals from "./reportWebVitals";
-import { Logo } from "./components/logo";
+import { Logo } from "./components/Logo";
+import Search from "./components/Search";
+import SearchModal from "./components/SearchModal";
 
 import "./index.css";
 
@@ -180,174 +182,149 @@ function Root() {
   const matches = useMatches();
 
   return (
-    <Layout.SideBar.SidebarLayout
-      sidebar={
-        <Layout.SideBar.SideBar
-          top={
-            <div className="w-16 h-16 p-2 mt-4">
-              <Logo />
-            </div>
-          }
-        >
-          <Layout.SideBar.SideBarItemGroup label="Data" className="mt-8">
-            <Layout.SideBar.SideBarItem
-              active={
-                matches.find((match) => match.id === "root") !== undefined ||
-                matches.find(
-                  (match) =>
-                    match.id === "types" &&
-                    match.params.resourceType !== "OperationDefinition" &&
-                    match.params.resourceType !== "Subscription"
-                ) !== undefined
-              }
-              logo={<TableCellsIcon />}
-              onClick={() => {
-                navigate("/");
-              }}
-            >
-              Resources
-            </Layout.SideBar.SideBarItem>
-          </Layout.SideBar.SideBarItemGroup>
-          <Layout.SideBar.SideBarItemGroup
-            className="mt-12"
-            label="Configuration"
+    <>
+      <Layout.SideBar.SidebarLayout
+        sidebar={
+          <Layout.SideBar.SideBar
+            top={
+              <div className="w-16 h-16 p-2 mt-4">
+                <Logo />
+              </div>
+            }
           >
-            <Layout.SideBar.SideBarItem
-              active={matches[0].params.resourceType === "OperationDefinition"}
-              logo={<CodeBracketSquareIcon />}
-              onClick={() => {
-                navigate("/resources/OperationDefinition");
-              }}
-            >
-              Custom Operations
-            </Layout.SideBar.SideBarItem>
-            <Layout.SideBar.SideBarItem
-              active={matches[0].params.resourceType === "Subscription"}
-              logo={<ShareIcon />}
-              onClick={() => {
-                navigate("/resources/Subscription");
-              }}
-            >
-              Subscriptions
-            </Layout.SideBar.SideBarItem>
-          </Layout.SideBar.SideBarItemGroup>
-          <Layout.SideBar.SideBarItemGroup className="mt-12" label="Import">
-            <Layout.SideBar.SideBarItem
-              active={
-                matches.find((match) => match.id === "batch-import") !==
-                undefined
-              }
-              logo={<ArrowUpOnSquareIcon />}
-              onClick={() => {
-                navigate("/batch-import");
-              }}
-            >
-              Batch
-            </Layout.SideBar.SideBarItem>
-          </Layout.SideBar.SideBarItemGroup>
-          <Layout.SideBar.SideBarItemGroup className="mt-auto" label="User">
-            <Layout.SideBar.SideBarItem
-              logo={<Cog6ToothIcon />}
-              onClick={() => navigate("/settings")}
-            >
-              Settings
-            </Layout.SideBar.SideBarItem>
-            <Layout.SideBar.SideBarItem
-              logo={<ArrowLeftOnRectangleIcon />}
-              onClick={() =>
-                auth0Info.logout({
-                  logoutParams: {
-                    returnTo: window.location.origin,
-                  },
-                })
-              }
-            >
-              Sign out
-            </Layout.SideBar.SideBarItem>
-          </Layout.SideBar.SideBarItemGroup>
-        </Layout.SideBar.SideBar>
-      }
-    >
-      <>
-        <div className="px-4 sm:px-6 lg:px-8 border-b sticky top-0 bg-white">
-          <div className="flex h-16 items-center justify-between">
-            <div className="font-semibold text-lg">
-              <Base.BreadCrumbs
-                breadcrumbs={[
-                  <span
-                    onClick={() => {
-                      navigate("/");
-                    }}
-                    className="hover:text-indigo-600 cursor-pointer"
-                  >
-                    Resources
-                  </span>,
-                  ...(matches[0].params.resourceType
-                    ? [
-                        <span
-                          onClick={() => {
-                            navigate(
-                              `/resources/${matches[0].params.resourceType}`
-                            );
-                          }}
-                          className="hover:text-indigo-600 cursor-pointer"
-                        >
-                          {matches[0].params.resourceType}
-                        </span>,
-                      ]
-                    : []),
-                  ...(matches[0].params.id
-                    ? [
-                        <span
-                          onClick={() => {
-                            navigate(
-                              `/resources/${matches[0].params.resourceType}/${matches[0].params.id}`
-                            );
-                          }}
-                          className="hover:text-indigo-600 cursor-pointer"
-                        >
-                          {matches[0].params.id}
-                        </span>,
-                      ]
-                    : []),
-                ]}
-              />
-            </div>
-            <Layout.ProfileDropdown
-              user={{
-                email: auth0Info.user?.email,
-                name: auth0Info.user?.name,
-                imageUrl: auth0Info.user?.picture,
-              }}
-              navigation={[
-                { id: "settings", name: "Settings" },
-                { id: "sign-out", name: "Sign out" },
-              ]}
-              onNavigation={(item) => {
-                switch (item.id) {
-                  case "settings": {
-                    navigate("/settings");
-                    return;
-                  }
-                  case "sign-out": {
-                    auth0Info.logout({
-                      logoutParams: {
-                        returnTo: window.location.origin,
-                      },
-                    });
-                    return;
-                  }
+            <Layout.SideBar.SideBarItemGroup label="Data" className="mt-8">
+              <Layout.SideBar.SideBarItem
+                active={
+                  matches.find((match) => match.id === "root") !== undefined ||
+                  matches.find(
+                    (match) =>
+                      match.id === "types" &&
+                      match.params.resourceType !== "OperationDefinition" &&
+                      match.params.resourceType !== "Subscription"
+                  ) !== undefined
                 }
-              }}
-            />
+                logo={<TableCellsIcon />}
+                onClick={() => {
+                  navigate("/");
+                }}
+              >
+                Resources
+              </Layout.SideBar.SideBarItem>
+            </Layout.SideBar.SideBarItemGroup>
+            <Layout.SideBar.SideBarItemGroup
+              className="mt-12"
+              label="Configuration"
+            >
+              <Layout.SideBar.SideBarItem
+                active={
+                  matches[0].params.resourceType === "OperationDefinition"
+                }
+                logo={<CodeBracketSquareIcon />}
+                onClick={() => {
+                  navigate("/resources/OperationDefinition");
+                }}
+              >
+                Custom Operations
+              </Layout.SideBar.SideBarItem>
+              <Layout.SideBar.SideBarItem
+                active={matches[0].params.resourceType === "Subscription"}
+                logo={<ShareIcon />}
+                onClick={() => {
+                  navigate("/resources/Subscription");
+                }}
+              >
+                Subscriptions
+              </Layout.SideBar.SideBarItem>
+            </Layout.SideBar.SideBarItemGroup>
+            <Layout.SideBar.SideBarItemGroup className="mt-12" label="Import">
+              <Layout.SideBar.SideBarItem
+                active={
+                  matches.find((match) => match.id === "batch-import") !==
+                  undefined
+                }
+                logo={<ArrowUpOnSquareIcon />}
+                onClick={() => {
+                  navigate("/batch-import");
+                }}
+              >
+                Batch
+              </Layout.SideBar.SideBarItem>
+            </Layout.SideBar.SideBarItemGroup>
+            <Layout.SideBar.SideBarItemGroup className="mt-auto" label="User">
+              <Layout.SideBar.SideBarItem
+                logo={<Cog6ToothIcon />}
+                onClick={() => navigate("/settings")}
+              >
+                Settings
+              </Layout.SideBar.SideBarItem>
+              <Layout.SideBar.SideBarItem
+                logo={<ArrowLeftOnRectangleIcon />}
+                onClick={() =>
+                  auth0Info.logout({
+                    logoutParams: {
+                      returnTo: window.location.origin,
+                    },
+                  })
+                }
+              >
+                Sign out
+              </Layout.SideBar.SideBarItem>
+            </Layout.SideBar.SideBarItemGroup>
+          </Layout.SideBar.SideBar>
+        }
+      >
+        <>
+          <div className="px-4 sm:px-6 lg:px-8 sticky top-0 bg-white">
+            <div className="flex h-16 items-center justify-between">
+              <Search />
+              <div className="flex justify-center items-center space-x-8">
+                <a
+                  target="_blank"
+                  className="cursor text-slate-500 hover:text-slate-600 hover:underline"
+                  href="https://docs.iguhealth.app/docs/intro"
+                >
+                  Documentation
+                </a>
+                <Layout.ProfileDropdown
+                  user={{
+                    email: auth0Info.user?.email,
+                    name: auth0Info.user?.name,
+                    imageUrl: auth0Info.user?.picture,
+                  }}
+                  navigation={[
+                    { id: "settings", name: "Settings" },
+                    { id: "sign-out", name: "Sign out" },
+                  ]}
+                  onNavigation={(item) => {
+                    switch (item.id) {
+                      case "settings": {
+                        navigate("/settings");
+                        return;
+                      }
+                      case "sign-out": {
+                        auth0Info.logout({
+                          logoutParams: {
+                            returnTo: window.location.origin,
+                          },
+                        });
+                        return;
+                      }
+                    }
+                  }}
+                />
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="p-4 flex flex-1 mt-2 overflow-auto">
-          <Base.Toaster.Toaster />
-          <Outlet />
-        </div>
-      </>
-    </Layout.SideBar.SidebarLayout>
+          <div className="p-4 flex flex-1 mt-2 overflow-auto">
+            <Base.Toaster.Toaster />
+            <Outlet />
+          </div>
+        </>
+      </Layout.SideBar.SidebarLayout>
+      <React.Suspense fallback={<div />}>
+        <SearchModal />
+      </React.Suspense>
+    </>
   );
 }
 
