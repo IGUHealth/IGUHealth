@@ -373,14 +373,13 @@ function processHistoryParameters(
     );
   }
 
-  if (_since?.value[0]) {
-    const formattedDate = dayjs(
-      _since.value[0] as string,
-      "YYYY-MM-DDThh:mm:ss+zz:zz"
-    ).toDate();
-
+  if (_since?.value[0] && typeof _since?.value[0] === "string") {
     query = `${query} AND created_at >= $${index++} `;
-    sqlParameters = [...sqlParameters, formattedDate];
+
+    sqlParameters = [
+      ...sqlParameters,
+      dayjs(_since.value[0] as string, "YYYY-MM-DDThh:mm:ss+zz:zz").toDate(),
+    ];
   }
 
   if (_since_versionId?.value[0]) {
