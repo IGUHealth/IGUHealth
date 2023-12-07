@@ -236,6 +236,23 @@ function Root() {
                 Questionnaire Responses
               </Layout.SideBar.SideBarItem>
             </Layout.SideBar.SideBarItemGroup>
+            <Layout.SideBar.SideBarItemGroup
+              className="mt-8"
+              label="Monitoring"
+            >
+              <Layout.SideBar.SideBarItem
+                active={matches[0].params.resourceType === "AuditEvent"}
+                onClick={() => {
+                  navigate("/resources/AuditEvent");
+                }}
+              >
+                Audit Events
+              </Layout.SideBar.SideBarItem>
+            </Layout.SideBar.SideBarItemGroup>
+            {/* <Layout.SideBar.SideBarItemGroup
+              className="mt-8"
+              label="Security"
+            ></Layout.SideBar.SideBarItemGroup> */}
             <Layout.SideBar.SideBarItemGroup label="Data" className="mt-8">
               <Layout.SideBar.SideBarItem
                 active={
@@ -246,7 +263,8 @@ function Root() {
                       match.params.resourceType !== "OperationDefinition" &&
                       match.params.resourceType !== "Subscription" &&
                       match.params.resourceType !== "Questionnaire" &&
-                      match.params.resourceType !== "QuestionnaireResponse"
+                      match.params.resourceType !== "QuestionnaireResponse" &&
+                      match.params.resourceType !== "AuditEvent"
                   ) !== undefined
                 }
                 onClick={() => {
@@ -269,6 +287,7 @@ function Root() {
                 Bundle
               </Layout.SideBar.SideBarItem>
             </Layout.SideBar.SideBarItemGroup>
+
             <Layout.SideBar.SideBarItemGroup className="mt-auto" label="User">
               <Layout.SideBar.SideBarItem
                 logo={<Cog6ToothIcon />}
