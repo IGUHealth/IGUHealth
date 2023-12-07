@@ -185,7 +185,10 @@ function Root() {
         sidebar={
           <Layout.SideBar.SideBar
             top={
-              <div className="w-16 h-16 p-2 mt-4">
+              <div
+                onClick={() => navigate("/")}
+                className="cursor-pointer w-16 h-16 p-2 mt-4"
+              >
                 <Logo />
               </div>
             }
