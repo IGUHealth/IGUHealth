@@ -404,19 +404,19 @@ function buildParameterSQL(
       switch (parameter.modifier) {
         case "exact":
           parameterClause = parameter.value
-            .map((value) => `value = $${index++}`)
+            .map((_value) => `value = $${index++}`)
             .join(" OR ");
           values = [...values, ...parameter.value];
           break;
         case "contains":
           parameterClause = parameter.value
-            .map((value) => `value ilike $${index++}`)
+            .map((_value) => `value ilike $${index++}`)
             .join(" OR ");
           values = [...values, ...parameter.value.map((v) => `%${v}%`)];
           break;
         default:
           parameterClause = parameter.value
-            .map((value) => `value ilike $${index++}`)
+            .map((_value) => `value ilike $${index++}`)
             .join(" OR ");
           values = [...values, ...parameter.value.map((v) => `${v}%`)];
           break;
@@ -488,14 +488,18 @@ function buildParametersSQL(
   index: number,
   values: unknown[]
 ): { index: number; queries: string[]; values: unknown[] } {
-  const queries = [];
-  for (const parameter of parameters) {
-    const res = buildParameterSQL(ctx, parameter, index, values);
-    index = res.index;
-    queries.push(res.query);
-    values = res.values;
-  }
-  return { index, queries, values };
+  return parameters.reduce(
+    (
+      acc: { queries: string[]; index: number; values: unknown[] },
+      parameter
+    ) => {
+      const res = buildParameterSQL(ctx, parameter, index, values);
+      index = res.index;
+      values = res.values;
+      return { queries: [...acc.queries, res.query], index, values };
+    },
+    { queries: [], index, values }
+  );
 }
 
 async function calculateTotal(
