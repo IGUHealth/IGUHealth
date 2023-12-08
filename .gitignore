@@ -10,6 +10,7 @@ packages/server/src/version.ts
 storybook-static/
 .docusaurus
 docs/
+.dccache
 
 ## Below comes from the react-storybook gitignore
 

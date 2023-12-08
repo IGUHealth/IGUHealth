@@ -72,9 +72,10 @@ export const ProfileDropdown = ({
                   href={item.href}
                   className={classNames(
                     "cursor-pointer block px-4 py-2 text-sm",
-                    active
-                      ? "bg-blue-700 text-white"
-                      : "text-blue-700 hover:bg-blue-700 hover:text-white"
+                    {
+                      "text-slate-800 hover:bg-gray-200": !active,
+                      "text-blue-800 bg-blue-100 ": active,
+                    }
                   )}
                 >
                   {item.name}
