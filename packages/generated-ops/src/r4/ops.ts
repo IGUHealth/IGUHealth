@@ -1,10 +1,6 @@
 import type * as fhirTypes from "@iguhealth/fhir-types/r4/types";
-import {
-  Operation,
-  IOperation,
-  Executor,
-} from "@iguhealth/operation-execution";
-export module ActivityDefinitionApply {
+import { Operation, IOperation } from "@iguhealth/operation-execution";
+export namespace ActivityDefinitionApply {
   export type Input = {
     activityDefinition?: fhirTypes.ActivityDefinition;
     subject: Array<fhirTypes.string>;
@@ -164,7 +160,7 @@ export module ActivityDefinitionApply {
     ],
   });
 }
-export module ActivityDefinitionDataRequirements {
+export namespace ActivityDefinitionDataRequirements {
   export type Input = Record<string, never>;
   export type Output = fhirTypes.Library;
   export type IOp = IOperation<Input, Output>;
@@ -223,7 +219,7 @@ export module ActivityDefinitionDataRequirements {
     ],
   });
 }
-export module CapabilityStatementConforms {
+export namespace CapabilityStatementConforms {
   export type Input = {
     left?: fhirTypes.canonical;
     right?: fhirTypes.canonical;
@@ -334,7 +330,7 @@ export module CapabilityStatementConforms {
     ],
   });
 }
-export module CapabilityStatementImplements {
+export namespace CapabilityStatementImplements {
   export type Input = {
     server?: fhirTypes.canonical;
     client?: fhirTypes.canonical;
@@ -422,7 +418,7 @@ export module CapabilityStatementImplements {
     ],
   });
 }
-export module CapabilityStatementSubset {
+export namespace CapabilityStatementSubset {
   export type Input = {
     server?: fhirTypes.uri;
     resource: Array<fhirTypes.code>;
@@ -500,7 +496,7 @@ export module CapabilityStatementSubset {
     ],
   });
 }
-export module CapabilityStatementVersions {
+export namespace CapabilityStatementVersions {
   export type Input = Record<string, never>;
   export type Output = {
     version: Array<fhirTypes.code>;
@@ -569,7 +565,7 @@ export module CapabilityStatementVersions {
     ],
   });
 }
-export module ChargeItemDefinitionApply {
+export namespace ChargeItemDefinitionApply {
   export type Input = {
     chargeItem: fhirTypes.Reference;
     account?: fhirTypes.Reference;
@@ -650,7 +646,7 @@ export module ChargeItemDefinitionApply {
     ],
   });
 }
-export module ClaimSubmit {
+export namespace ClaimSubmit {
   export type Input = { resource: fhirTypes.Resource };
   export type Output = fhirTypes.Resource;
   export type IOp = IOperation<Input, Output>;
@@ -716,7 +712,7 @@ export module ClaimSubmit {
     ],
   });
 }
-export module CodeSystemFindMatches {
+export namespace CodeSystemFindMatches {
   export type Input = {
     system?: fhirTypes.uri;
     version?: fhirTypes.string;
@@ -1055,7 +1051,7 @@ export module CodeSystemFindMatches {
     ],
   });
 }
-export module CodeSystemLookup {
+export namespace CodeSystemLookup {
   export type Input = {
     code?: fhirTypes.code;
     system?: fhirTypes.uri;
@@ -1385,7 +1381,7 @@ export module CodeSystemLookup {
     ],
   });
 }
-export module CodeSystemSubsumes {
+export namespace CodeSystemSubsumes {
   export type Input = {
     codeA?: fhirTypes.code;
     codeB?: fhirTypes.code;
@@ -1512,7 +1508,7 @@ export module CodeSystemSubsumes {
     ],
   });
 }
-export module CodeSystemValidateCode {
+export namespace CodeSystemValidateCode {
   export type Input = {
     url?: fhirTypes.uri;
     codeSystem?: fhirTypes.CodeSystem;
@@ -1694,7 +1690,7 @@ export module CodeSystemValidateCode {
     ],
   });
 }
-export module CompositionDocument {
+export namespace CompositionDocument {
   export type Input = {
     id?: fhirTypes.uri;
     persist?: fhirTypes.boolean;
@@ -1775,7 +1771,7 @@ export module CompositionDocument {
     ],
   });
 }
-export module ConceptMapClosure {
+export namespace ConceptMapClosure {
   export type Input = {
     name: fhirTypes.string;
     concept?: Array<fhirTypes.Coding>;
@@ -1862,7 +1858,7 @@ export module ConceptMapClosure {
     ],
   });
 }
-export module ConceptMapTranslate {
+export namespace ConceptMapTranslate {
   export type Input = {
     url?: fhirTypes.uri;
     conceptMap?: fhirTypes.ConceptMap;
@@ -2149,7 +2145,7 @@ export module ConceptMapTranslate {
     ],
   });
 }
-export module CoverageEligibilityRequestSubmit {
+export namespace CoverageEligibilityRequestSubmit {
   export type Input = { resource: fhirTypes.Resource };
   export type Output = fhirTypes.Resource;
   export type IOp = IOperation<Input, Output>;
@@ -2215,7 +2211,7 @@ export module CoverageEligibilityRequestSubmit {
     ],
   });
 }
-export module EncounterEverything {
+export namespace EncounterEverything {
   export type Input = {
     _since?: fhirTypes.instant;
     _type?: Array<fhirTypes.code>;
@@ -2304,7 +2300,7 @@ export module EncounterEverything {
     ],
   });
 }
-export module GroupEverything {
+export namespace GroupEverything {
   export type Input = {
     start?: fhirTypes.date;
     end?: fhirTypes.date;
@@ -2413,7 +2409,7 @@ export module GroupEverything {
     ],
   });
 }
-export module LibraryDataRequirements {
+export namespace LibraryDataRequirements {
   export type Input = { target?: fhirTypes.string };
   export type Output = fhirTypes.Library;
   export type IOp = IOperation<Input, Output>;
@@ -2479,7 +2475,7 @@ export module LibraryDataRequirements {
     ],
   });
 }
-export module ListFind {
+export namespace ListFind {
   export type Input = { patient: fhirTypes.id; name: fhirTypes.code };
   export type Output = Record<string, never>;
   export type IOp = IOperation<Input, Output>;
@@ -2546,7 +2542,7 @@ export module ListFind {
     ],
   });
 }
-export module MeasureCareGaps {
+export namespace MeasureCareGaps {
   export type Input = {
     periodStart: fhirTypes.date;
     periodEnd: fhirTypes.date;
@@ -2647,7 +2643,7 @@ export module MeasureCareGaps {
     ],
   });
 }
-export module MeasureCollectData {
+export namespace MeasureCollectData {
   export type Input = {
     periodStart: fhirTypes.date;
     periodEnd: fhirTypes.date;
@@ -2782,7 +2778,7 @@ export module MeasureCollectData {
     ],
   });
 }
-export module MeasureDataRequirements {
+export namespace MeasureDataRequirements {
   export type Input = {
     periodStart: fhirTypes.date;
     periodEnd: fhirTypes.date;
@@ -2862,7 +2858,7 @@ export module MeasureDataRequirements {
     ],
   });
 }
-export module MeasureEvaluateMeasure {
+export namespace MeasureEvaluateMeasure {
   export type Input = {
     periodStart: fhirTypes.date;
     periodEnd: fhirTypes.date;
@@ -2995,7 +2991,7 @@ export module MeasureEvaluateMeasure {
     ],
   });
 }
-export module MeasureSubmitData {
+export namespace MeasureSubmitData {
   export type Input = {
     measureReport: fhirTypes.MeasureReport;
     resource?: Array<fhirTypes.Resource>;
@@ -3065,7 +3061,7 @@ export module MeasureSubmitData {
     ],
   });
 }
-export module MedicinalProductEverything {
+export namespace MedicinalProductEverything {
   export type Input = {
     _since?: fhirTypes.instant;
     _count?: fhirTypes.integer;
@@ -3144,7 +3140,7 @@ export module MedicinalProductEverything {
     ],
   });
 }
-export module MessageHeaderProcessMessage {
+export namespace MessageHeaderProcessMessage {
   export type Input = {
     content: fhirTypes.Bundle;
     async?: fhirTypes.boolean;
@@ -3234,7 +3230,7 @@ export module MessageHeaderProcessMessage {
     ],
   });
 }
-export module NamingSystemPreferredId {
+export namespace NamingSystemPreferredId {
   export type Input = { id: fhirTypes.string; type: fhirTypes.code };
   export type Output = { result: fhirTypes.string };
   export type IOp = IOperation<Input, Output>;
@@ -3313,7 +3309,7 @@ export module NamingSystemPreferredId {
     ],
   });
 }
-export module ObservationLastn {
+export namespace ObservationLastn {
   export type Input = { max?: fhirTypes.positiveInt };
   export type Output = fhirTypes.Bundle;
   export type IOp = IOperation<Input, Output>;
@@ -3381,7 +3377,7 @@ export module ObservationLastn {
     ],
   });
 }
-export module ObservationStats {
+export namespace ObservationStats {
   export type Input = {
     subject: fhirTypes.uri;
     code?: Array<fhirTypes.string>;
@@ -3542,7 +3538,7 @@ export module ObservationStats {
     ],
   });
 }
-export module PatientEverything {
+export namespace PatientEverything {
   export type Input = {
     start?: fhirTypes.date;
     end?: fhirTypes.date;
@@ -3651,7 +3647,7 @@ export module PatientEverything {
     ],
   });
 }
-export module PatientMatch {
+export namespace PatientMatch {
   export type Input = {
     resource: fhirTypes.Resource;
     onlyCertainMatches?: fhirTypes.boolean;
@@ -3741,7 +3737,7 @@ export module PatientMatch {
     ],
   });
 }
-export module PlanDefinitionApply {
+export namespace PlanDefinitionApply {
   export type Input = {
     planDefinition?: fhirTypes.PlanDefinition;
     subject: Array<fhirTypes.string>;
@@ -3901,7 +3897,7 @@ export module PlanDefinitionApply {
     ],
   });
 }
-export module PlanDefinitionDataRequirements {
+export namespace PlanDefinitionDataRequirements {
   export type Input = Record<string, never>;
   export type Output = fhirTypes.Library;
   export type IOp = IOperation<Input, Output>;
@@ -3960,7 +3956,7 @@ export module PlanDefinitionDataRequirements {
     ],
   });
 }
-export module ResourceConvert {
+export namespace ResourceConvert {
   export type Input = { input: fhirTypes.Resource };
   export type Output = { output: fhirTypes.Resource };
   export type IOp = IOperation<Input, Output>;
@@ -4026,7 +4022,7 @@ export module ResourceConvert {
     ],
   });
 }
-export module ResourceGraph {
+export namespace ResourceGraph {
   export type Input = { graph: fhirTypes.uri };
   export type Output = { result: fhirTypes.Bundle };
   export type IOp = IOperation<Input, Output>;
@@ -4092,7 +4088,7 @@ export module ResourceGraph {
     ],
   });
 }
-export module ResourceGraphql {
+export namespace ResourceGraphql {
   export type Input = { query: fhirTypes.string };
   export type Output = { result: fhirTypes.Binary };
   export type IOp = IOperation<Input, Output>;
@@ -4150,7 +4146,7 @@ export module ResourceGraphql {
     ],
   });
 }
-export module ResourceMeta {
+export namespace ResourceMeta {
   export type Input = Record<string, never>;
   export type Output = { return: fhirTypes.Meta };
   export type IOp = IOperation<Input, Output>;
@@ -4208,7 +4204,7 @@ export module ResourceMeta {
     ],
   });
 }
-export module ResourceMetaAdd {
+export namespace ResourceMetaAdd {
   export type Input = { meta: fhirTypes.Meta };
   export type Output = { return: fhirTypes.Meta };
   export type IOp = IOperation<Input, Output>;
@@ -4273,7 +4269,7 @@ export module ResourceMetaAdd {
     ],
   });
 }
-export module ResourceMetaDelete {
+export namespace ResourceMetaDelete {
   export type Input = { meta: fhirTypes.Meta };
   export type Output = { return: fhirTypes.Meta };
   export type IOp = IOperation<Input, Output>;
@@ -4338,7 +4334,7 @@ export module ResourceMetaDelete {
     ],
   });
 }
-export module ResourceValidate {
+export namespace ResourceValidate {
   export type Input = {
     resource?: fhirTypes.Resource;
     mode?: fhirTypes.code;
@@ -4435,7 +4431,7 @@ export module ResourceValidate {
     ],
   });
 }
-export module StructureDefinitionQuestionnaire {
+export namespace StructureDefinitionQuestionnaire {
   export type Input = {
     identifier?: fhirTypes.canonical;
     profile?: fhirTypes.string;
@@ -4542,7 +4538,7 @@ export module StructureDefinitionQuestionnaire {
     ],
   });
 }
-export module StructureDefinitionSnapshot {
+export namespace StructureDefinitionSnapshot {
   export type Input = {
     definition?: fhirTypes.StructureDefinition;
     url?: fhirTypes.string;
@@ -4620,7 +4616,7 @@ export module StructureDefinitionSnapshot {
     ],
   });
 }
-export module StructureMapTransform {
+export namespace StructureMapTransform {
   export type Input = { source?: fhirTypes.uri; content: fhirTypes.Resource };
   export type Output = fhirTypes.Resource;
   export type IOp = IOperation<Input, Output>;
@@ -4695,7 +4691,7 @@ export module StructureMapTransform {
     ],
   });
 }
-export module ValueSetExpand {
+export namespace ValueSetExpand {
   export type Input = {
     url?: fhirTypes.uri;
     valueSet?: fhirTypes.ValueSet;
@@ -4969,7 +4965,7 @@ export module ValueSetExpand {
     ],
   });
 }
-export module ValueSetValidateCode {
+export namespace ValueSetValidateCode {
   export type Input = {
     url?: fhirTypes.uri;
     context?: fhirTypes.uri;
@@ -5182,7 +5178,7 @@ export module ValueSetValidateCode {
     ],
   });
 }
-export module IguhealthEncrypt {
+export namespace IguhealthEncrypt {
   export type Input = { value: fhirTypes.string };
   export type Output = { encryptedValue: fhirTypes.string };
   export type IOp = IOperation<Input, Output>;

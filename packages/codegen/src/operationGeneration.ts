@@ -78,7 +78,7 @@ export function generateOp(op: OperationDefinition): string {
     op
   )})`;
 
-  return `export module ${namespace} {
+  return `export namespace ${namespace} {
   ${[inputType, outputType, operationType, operationInstance].join("\n")}}`;
 }
 
@@ -89,7 +89,7 @@ export default async function operationGeneration(
   if (fhirVersion !== "r4") throw new Error("Only support r4");
   const code = [
     `import type * as fhirTypes from "@iguhealth/fhir-types/r4/types";`,
-    `import { Operation, IOperation, Executor } from "@iguhealth/operation-execution";`,
+    `import { Operation, IOperation } from "@iguhealth/operation-execution";`,
     ...operations.map((op) => generateOp(op)),
   ].join("\n");
 
