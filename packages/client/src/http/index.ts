@@ -212,6 +212,7 @@ async function httpResponseToFHIRResponse(
           };
         }
       }
+      throw new OperationError(outcomeError("exception", "Invalid level"));
     }
     case "read-request":
       if (!response.body)
@@ -269,7 +270,7 @@ async function httpResponseToFHIRResponse(
         id: request.id,
       };
 
-    case "history-request":
+    case "history-request": {
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
 
@@ -301,6 +302,8 @@ async function httpResponseToFHIRResponse(
           };
         }
       }
+      throw new OperationError(outcomeError("exception", "Invalid level"));
+    }
 
     case "create-request":
       if (!response.body)
@@ -342,6 +345,7 @@ async function httpResponseToFHIRResponse(
           };
         }
       }
+      throw new OperationError(outcomeError("exception", "Invalid level"));
     }
 
     case "capabilities-request": {
