@@ -1,0 +1,11 @@
+releases:
+  "@iguhealth/cli": patch
+  "@iguhealth/client": patch
+  "@iguhealth/codegen": patch
+  "@iguhealth/components": patch
+  "@iguhealth/fhir-validation": patch
+  "@iguhealth/generated-ops": patch
+  "@iguhealth/operation-execution": patch
+  "@iguhealth/server": patch
+  "@iguhealth/test-data": patch
+  admin-app: patch
