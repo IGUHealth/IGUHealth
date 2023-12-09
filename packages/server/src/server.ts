@@ -181,7 +181,7 @@ async function workspaceMiddleware(
           ctx.set(koaResponse.headers as Record<string, string>);
           delete koaResponse.headers;
         }
-        Object.keys(koaResponse).map(
+        Object.keys(koaResponse).forEach(
           (k) =>
             (ctx[k as keyof Koa.DefaultContext] =
               koaResponse[k as keyof Partial<Koa.Response>])

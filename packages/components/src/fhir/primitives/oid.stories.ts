@@ -22,7 +22,7 @@ export const Primary: Story = {
   },
 };
 
-export const Error: Story = {
+export const OnError: Story = {
   args: {
     value: "urn:oid:1.2.3.4.5",
     issue: "Issue",

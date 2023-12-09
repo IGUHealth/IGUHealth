@@ -364,10 +364,16 @@ function typeChecking<T extends ValidOperandType, U>(
   }, true) as boolean;
 }
 
-function invalidOperandError(args: unknown[], operator: string) {
-  new Error(
-    `Invalid operands for operator: '${operator}' Found types '${typeof args[0]}' and '${typeof args[1]}'`
-  );
+export class InvalidOperandError extends Error {
+  private args: unknown[];
+  private operator: string;
+  constructor(args: unknown[], operator: string) {
+    super(
+      `Invalid operands for operator: '${operator}' Found types '${typeof args[0]}' and '${typeof args[1]}'`
+    );
+    this.args = args;
+    this.operator = operator;
+  }
 }
 
 type EvaledOperation = (
@@ -453,7 +459,7 @@ const fp_operations: Record<
         left[0].valueOf() + right[0].valueOf()
       );
     } else {
-      throw invalidOperandError([left[0], right[0]], "+");
+      throw new InvalidOperandError([left[0], right[0]], "+");
     }
   }),
   as: (ast, context, options) => {
@@ -486,7 +492,7 @@ const fp_operations: Record<
         left[0].valueOf() - right[0].valueOf()
       );
     } else {
-      throw invalidOperandError([left[0], right[0]], "-");
+      throw new InvalidOperandError([left[0], right[0]], "-");
     }
   }),
   "*": op_prevaled((left, right, options) => {
@@ -496,7 +502,7 @@ const fp_operations: Record<
         left[0].valueOf() * right[0].valueOf()
       );
     } else {
-      throw invalidOperandError([left[0], right[0]], "*");
+      throw new InvalidOperandError([left[0], right[0]], "*");
     }
   }),
   "/": op_prevaled((left, right, options) => {
@@ -506,7 +512,7 @@ const fp_operations: Record<
         left[0].valueOf() / right[0].valueOf()
       );
     } else {
-      throw invalidOperandError([left[0], right[0]], "/");
+      throw new InvalidOperandError([left[0], right[0]], "/");
     }
   }),
   "|": op_prevaled((left, right, options) => {
@@ -519,12 +525,11 @@ const fp_operations: Record<
         left[0].valueOf() && right[0].valueOf()
       );
     }
-    throw invalidOperandError([left[0], right[0]], "/");
+    throw new InvalidOperandError([left[0], right[0]], "/");
   }),
   "=": op_prevaled(equalityCheck),
   "!=": op_prevaled((left, right, options) => {
     const equality = equalityCheck(left, right, options);
-    equality[0].valueOf() === false;
     return toMetaValueSingulars(
       { type: { ...options?.meta, type: "boolean" } },
       equality[0].valueOf() === false
