@@ -266,9 +266,10 @@ async function removeIndices(
 ) {
   await Promise.all(
     param_types_supported.map((type) => {
-      return client.query(`DELETE FROM ${type}_idx WHERE r_id = $1`, [
-        resource.id,
-      ]);
+      return client.query(
+        `DELETE FROM ${client.escapeIdentifier(type + "_idx")} WHERE r_id = $1`,
+        [resource.id]
+      );
     })
   );
 }
