@@ -20,7 +20,6 @@ export default async function logAuditEvent(
   entity: Reference,
   outcomeDescription: string
 ) {
-  ctx.author;
   const auditEvent: AuditEvent = {
     resourceType: "AuditEvent",
     type: {
