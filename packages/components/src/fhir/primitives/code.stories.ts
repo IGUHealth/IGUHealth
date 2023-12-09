@@ -131,7 +131,7 @@ export const Primary: Story = {
   },
 };
 
-export const Error: Story = {
+export const OnError: Story = {
   args: {
     value: "test",
     issue: "Bad value",

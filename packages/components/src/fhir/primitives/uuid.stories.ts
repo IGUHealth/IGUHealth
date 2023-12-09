@@ -22,7 +22,7 @@ export const Primary: Story = {
   },
 };
 
-export const Error: Story = {
+export const OnError: Story = {
   args: {
     value: "d38ad80a-61b9-4c9b-a8e9-8c8b22659865",
     issue: "Issue",

@@ -25,7 +25,7 @@ export const ExistingData: Story = {
   },
 };
 
-export const Error: Story = {
+export const OnError: Story = {
   args: {
     issue: "Bad value",
     onChange: (value: boolean) => console.log(value),

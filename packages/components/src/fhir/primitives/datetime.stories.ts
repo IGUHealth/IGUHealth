@@ -28,7 +28,7 @@ export const Primary: Story = {
   },
 };
 
-export const Error: Story = {
+export const OnError: Story = {
   args: {
     value: "invalid-date",
     issue: "Bad value",

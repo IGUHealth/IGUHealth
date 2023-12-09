@@ -30,7 +30,7 @@ export const Primary: Story = {
   },
 };
 
-export const Error: Story = {
+export const OnError: Story = {
   args: {
     // @ts-ignore
     value: "test",

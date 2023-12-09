@@ -59,7 +59,7 @@ export const OpenSelect: Story = {
   },
 };
 
-export const Error: Story = {
+export const OnError: Story = {
   args: {
     onChange: (value) => console.log(value),
     value: "option1",
