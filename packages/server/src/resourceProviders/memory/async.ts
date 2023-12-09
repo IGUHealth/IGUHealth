@@ -2,9 +2,9 @@ import {
   ResourceType,
   Resource,
   SearchParameter,
-  StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
 import { AsynchronousClient } from "@iguhealth/client";
+import { v4 } from "uuid";
 import {
   createMiddlewareAsync,
   MiddlewareAsync,
@@ -164,8 +164,7 @@ function createMemoryMiddleware<
         case "create-request": {
           const resource = request.body;
           const resources = args.state.data[request.resourceType];
-          if (!resource?.id)
-            resource.id = `${Math.round(Math.random() * 100000000)}`;
+          if (!resource?.id) resource.id = v4();
 
           args.state.data = {
             ...args.state.data,
