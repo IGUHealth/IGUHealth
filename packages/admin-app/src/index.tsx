@@ -287,7 +287,8 @@ function Root() {
                 Bundle
               </Layout.SideBar.SideBarItem>
             </Layout.SideBar.SideBarItemGroup>
-
+            {/* Used because want to maintain a margin of at least 8 when shrinking. */}
+            <div className="mb-8" />
             <Layout.SideBar.SideBarItemGroup className="mt-auto" label="User">
               <Layout.SideBar.SideBarItem
                 logo={<Cog6ToothIcon />}
