@@ -30,6 +30,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.15.0",
     "react-scripts": "5.0.1",
+    "react-window": "^1.8.10",
     "recoil": "^0.7.7",
     "typescript": "^4.4.2",
     "web-vitals": "^2.1.0"
@@ -59,6 +60,7 @@
   },
   "devDependencies": {
     "@iguhealth/fhir-types": "workspace:^",
+    "@types/react-window": "^1.8.8",
     "tailwindcss": "^3.3.3"
   }
 }
