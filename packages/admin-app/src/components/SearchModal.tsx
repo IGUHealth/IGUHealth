@@ -23,7 +23,7 @@ function SearchResultItem({
   data,
   index,
   style,
-}: {
+}: Readonly<{
   data: {
     data: CapabilityStatementRestResource[];
     activeIndex: number;
@@ -32,7 +32,7 @@ function SearchResultItem({
   };
   index: number;
   style: CSSProperties;
-}) {
+}>) {
   const resource = data.data[index];
   return (
     <div
