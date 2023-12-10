@@ -1,10 +1,13 @@
-import React, { useMemo, useState, Fragment, useEffect } from "react";
+import { useMemo, useState, Fragment, useEffect, CSSProperties } from "react";
+import { FixedSizeList as List } from "react-window";
 import classNames from "classnames";
 import { RecoilState, atom, useRecoilState, useRecoilValue } from "recoil";
 import { Dialog, Transition } from "@headlessui/react";
+import { useNavigate } from "react-router-dom";
+
+import { CapabilityStatementRestResource } from "@iguhealth/fhir-types";
 
 import { getCapabilities } from "../data/capabilities";
-import { useNavigate } from "react-router-dom";
 
 export const openSearchModalAtom = atom({
   key: "openSearchModal",
@@ -15,6 +18,47 @@ export const currentIndex: RecoilState<number> = atom({
   key: "searchModalIndex",
   default: 0,
 });
+
+function SearchResultItem({
+  data,
+  index,
+  style,
+}: Readonly<{
+  data: {
+    data: CapabilityStatementRestResource[];
+    activeIndex: number;
+    setActiveIndex: (v: number) => void;
+    onSelect: () => void;
+  };
+  index: number;
+  style: CSSProperties;
+}>) {
+  const resource = data.data[index];
+  return (
+    <div
+      key={resource.type}
+      onClick={() => {
+        data.onSelect();
+      }}
+      style={style}
+      onMouseEnter={() => data.setActiveIndex(index)}
+      className={classNames("group cursor-pointer px-2 py-1 rounded ", {
+        "bg-gray-50": index === data.activeIndex,
+      })}
+    >
+      <div>
+        <span className="text-sm group-hover:text-slate-700 font-weight">
+          {resource.type}
+        </span>
+      </div>
+      <div>
+        <span className="text-xs text-slate-400 group-hover:text-slate-500">
+          {resource.profile}
+        </span>
+      </div>
+    </div>
+  );
+}
 
 function SearchModal() {
   const capabilities = useRecoilValue(getCapabilities);
@@ -123,33 +167,21 @@ function SearchModal() {
                   </button>
                 </div>
                 <div className="w-full " />
-                <div className="text-slate-600 space-y-2 px-4 py-2 max-h-64 overflow-y-auto">
-                  {searchResults?.map((resource, i) => {
-                    return (
-                      <div
-                        key={resource.type}
-                        onClick={() => {
-                          onSelect();
-                        }}
-                        onMouseEnter={() => setSearchIndex(i)}
-                        className={classNames(
-                          "group cursor-pointer px-2 py-1 rounded ",
-                          { "bg-gray-50": i === searchIndex }
-                        )}
-                      >
-                        <div>
-                          <span className="text-sm group-hover:text-slate-700 font-weight">
-                            {resource.type}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-xs text-slate-400 group-hover:text-slate-500">
-                            {resource.profile}
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
+                <div className="text-slate-600 space-y-2 px-2 py-2 max-h-64 overflow-y-auto">
+                  <List
+                    height={200}
+                    itemData={{
+                      data: searchResults || [],
+                      activeIndex: searchIndex,
+                      setActiveIndex: setSearchIndex,
+                      onSelect,
+                    }}
+                    itemCount={searchResults ? searchResults.length : 0}
+                    itemSize={55}
+                    width={"100%"}
+                  >
+                    {SearchResultItem}
+                  </List>
                 </div>
               </Dialog.Panel>
             </Transition.Child>
