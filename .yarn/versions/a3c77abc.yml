@@ -1,5 +1,0 @@
-releases:
-  "@iguhealth/components": patch
-  "@iguhealth/fhirpath": patch
-  "@iguhealth/server": patch
-  admin-app: patch
