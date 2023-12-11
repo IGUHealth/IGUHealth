@@ -2,6 +2,7 @@ import { expect, test } from "@jest/globals";
 import PostgresLock from "./postgres.lock.js";
 import { Redis } from "ioredis";
 import RedisLock from "./redis.lock.js";
+import { getRedisClient } from "../ctx/index.js";
 import dotEnv from "dotenv";
 
 dotEnv.config();
@@ -11,10 +12,7 @@ function timeout(ms: number) {
 }
 
 test("redisLock", async () => {
-  const redisClient = new Redis({
-    host: process.env.REDIS_HOST,
-    port: parseInt(process.env.REDIS_PORT || "6739"),
-  });
+  const redisClient = getRedisClient();
   const lock = new RedisLock(redisClient);
 
   let sharedValue = 0;

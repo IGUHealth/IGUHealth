@@ -17,11 +17,7 @@ import {
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
-import {
-  OperationError,
-  outcomeFatal,
-  outcomeError,
-} from "@iguhealth/operation-outcomes";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { FHIRRequest } from "@iguhealth/client/types";
 
 import { createPostgresClient } from "../resourceProviders/postgres/index.js";
@@ -313,6 +309,22 @@ function createResolveCanonical(
   };
 }
 
+export function getRedisClient() {
+  const redisClient = new Redis.default({
+    host: process.env.REDIS_HOST,
+    port: parseInt(process.env.REDIS_PORT || "6739"),
+    tls:
+      process.env.REDIS_SSL === "true"
+        ? {
+            rejectUnauthorized: false,
+            host: process.env.REDIS_HOST,
+            port: parseInt(process.env.REDIS_PORT || "6739"),
+          }
+        : undefined,
+  });
+  return redisClient;
+}
+
 export async function deriveCTX(): Promise<
   ({
     pg,
@@ -354,15 +366,10 @@ export async function deriveCTX(): Promise<
     { resolveCanonical },
     memDBAsync
   );
-  const cache = new RedisCache({
-    host: process.env.REDIS_HOST,
-    port: parseInt(process.env.REDIS_PORT || "6739"),
-  });
 
-  const redisClient = new Redis.default({
-    host: process.env.REDIS_HOST,
-    port: parseInt(process.env.REDIS_PORT || "6739"),
-  });
+  const redisClient = getRedisClient();
+
+  const cache = new RedisCache(redisClient);
   const lock = new RedisLock(redisClient);
 
   const lambdaExecutioner = AWSLambdaExecutioner({
