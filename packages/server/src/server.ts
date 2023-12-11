@@ -19,7 +19,7 @@ import { IGUHEALTH_ISSUER } from "./auth/token.js";
 import { LIB_VERSION } from "./version.js";
 import * as Sentry from "./monitoring/sentry.js";
 import type { FHIRServerCTX } from "./ctx/types.js";
-import { deriveCTX, logger } from "./ctx/index.js";
+import { deriveCTX, getRedisClient, logger } from "./ctx/index.js";
 import {
   KoaRequestToFHIRRequest,
   fhirResponseToKoaResponse,
@@ -261,10 +261,7 @@ export default async function createServer(): Promise<
     .use(
       ratelimit({
         driver: "redis",
-        db: new Redis.default({
-          host: process.env.REDIS_HOST,
-          port: parseInt(process.env.REDIS_PORT || "6739"),
-        }),
+        db: getRedisClient(),
         duration: 60000,
         errorMessage: "Sometimes You Just Have to Slow Down.",
         id: (ctx) => ctx.ip,

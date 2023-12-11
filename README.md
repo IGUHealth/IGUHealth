@@ -36,6 +36,7 @@ yarn watch
 | FHIR_DATABASE_SSL      | Whether Postgres connection is SSL | false    | false     |
 | REDIS_HOST             | Redis Host                         | true     | 127.0.0.1 |
 | REDIS_PORT             | Redis port                         | true     | 6379      |
+| REDIS_SSL              | Whether Redis connection is SSL    | false    | false     |
 
 #### Meta Information
 
