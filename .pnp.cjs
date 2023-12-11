@@ -11317,7 +11317,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@iguhealth/test-data", "workspace:packages/test-data-r4"],\
             ["@jest/globals", "npm:29.6.1"],\
             ["@koa/bodyparser", "npm:5.0.0"],\
-            ["@koa/cors", "npm:4.0.0"],\
+            ["@koa/cors", "npm:5.0.0"],\
             ["@koa/router", "npm:12.0.0"],\
             ["@sentry/node", "npm:7.76.0"],\
             ["@sentry/profiling-node", "npm:1.2.1"],\
@@ -12236,6 +12236,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@koa-cors-npm-4.0.0-e1649c9262-e076054482.zip/node_modules/@koa/cors/",\
           "packageDependencies": [\
             ["@koa/cors", "npm:4.0.0"],\
+            ["vary", "npm:1.1.2"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:5.0.0", {\
+          "packageLocation": "./.yarn/cache/@koa-cors-npm-5.0.0-693911adf6-050701fb57.zip/node_modules/@koa/cors/",\
+          "packageDependencies": [\
+            ["@koa/cors", "npm:5.0.0"],\
             ["vary", "npm:1.1.2"]\
           ],\
           "linkType": "HARD"\
