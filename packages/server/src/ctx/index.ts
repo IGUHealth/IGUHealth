@@ -317,8 +317,6 @@ export function getRedisClient() {
       process.env.REDIS_SSL === "true"
         ? {
             rejectUnauthorized: false,
-            host: process.env.REDIS_HOST,
-            port: parseInt(process.env.REDIS_PORT || "6739"),
           }
         : undefined,
   });
