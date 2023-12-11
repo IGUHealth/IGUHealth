@@ -4,7 +4,6 @@ import pg from "pg";
 import { randomUUID } from "crypto";
 
 import {
-  ResourceType,
   Resource,
   Subscription,
   BundleEntry,
