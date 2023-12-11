@@ -241,6 +241,7 @@ export default async function createServer(): Promise<
     ssl:
       process.env["FHIR_DATABASE_SSL"] === "true"
         ? {
+            // Self signed certificate CA is not used.
             rejectUnauthorized: false,
             host: process.env["FHIR_DATABASE_HOST"],
             port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
