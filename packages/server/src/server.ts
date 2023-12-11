@@ -238,7 +238,14 @@ export default async function createServer(): Promise<
     host: process.env["FHIR_DATABASE_HOST"],
     database: process.env["FHIR_DATABASE_NAME"],
     port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
-    ssl: process.env["FHIR_DATABASE_SSL"] === "true",
+    ssl:
+      process.env["FHIR_DATABASE_SSL"] === "true"
+        ? {
+            rejectUnauthorized: false,
+            host: process.env["FHIR_DATABASE_HOST"],
+            port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
+          }
+        : false,
   });
 
   router.all(
