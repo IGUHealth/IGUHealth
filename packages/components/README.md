@@ -37,7 +37,7 @@ For storybook visit https://storybook.iguhealth.app
 | Meta            | yes       |
 | ContactPoint    | yes       |
 | Ratio           | no        |
-| Period          | no        |
+| Period          | yes       |
 | Attachment      | no        |
 | Annotation      | no        |
 | HumanName       | no        |
