@@ -1,18 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Base64Binary } from "./base64";
+import { FHIRBase64BinaryEditable } from "./base64";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
   title: "Primitives/base64",
-  component: Base64Binary,
+  component: FHIRBase64BinaryEditable,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
     layout: "centered",
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
   tags: ["autodocs"],
-} satisfies Meta<typeof Base64Binary>;
+} satisfies Meta<typeof FHIRBase64BinaryEditable>;
 
 export default meta;
 

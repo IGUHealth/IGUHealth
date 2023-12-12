@@ -7,7 +7,7 @@ import {
 import { EditableProps } from "../types";
 import { Select, Option } from "../../base/select";
 
-export type CodeProps = EditableProps<string> & {
+export type FHIRCodeEditableProps = EditableProps<string> & {
   system?: string;
   expand?: (value: string) => Promise<ValueSet>;
   open?: boolean;
@@ -28,7 +28,7 @@ function valueSetToOptions(valueSet: ValueSet): Option[] {
   return valueSet.expansion?.contains?.map(flatten).flat() || [];
 }
 
-export const Code = ({
+export const FHIRCodeEditable = ({
   value,
   onChange,
   issue,
@@ -36,7 +36,7 @@ export const Code = ({
   expand,
   open = false,
   system,
-}: CodeProps) => {
+}: FHIRCodeEditableProps) => {
   const [options, setOptions] = React.useState<Option[]>([]);
   useEffect(() => {
     if (expand && system) {

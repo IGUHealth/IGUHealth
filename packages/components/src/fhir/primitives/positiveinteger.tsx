@@ -3,14 +3,14 @@ import React, { useEffect } from "react";
 import { EditableProps } from "../types";
 import { Input } from "../../base/input";
 
-export type PositiveIntegerProps = EditableProps<number>;
+export type FHIRPositiveIntegerEditableProps = EditableProps<number>;
 
-export const PositiveInteger = ({
+export const FHIRPositiveIntegerEditable = ({
   value,
   onChange,
   issue,
   label,
-}: PositiveIntegerProps) => {
+}: FHIRPositiveIntegerEditableProps) => {
   const [issues, setIssues] = React.useState<string[]>([]);
   useEffect(() => {
     const issues: string[] = [];

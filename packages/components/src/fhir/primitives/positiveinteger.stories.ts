@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { PositiveInteger } from "./positiveinteger";
+import { FHIRPositiveIntegerEditable } from "./positiveinteger";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
   title: "Primitives/positiveinteger",
-  component: PositiveInteger,
+  component: FHIRPositiveIntegerEditable,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
     layout: "centered",
@@ -15,7 +15,7 @@ const meta = {
   argTypes: {
     value: { control: "number" },
   },
-} satisfies Meta<typeof PositiveInteger>;
+} satisfies Meta<typeof FHIRPositiveIntegerEditable>;
 
 export default meta;
 

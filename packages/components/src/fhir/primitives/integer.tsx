@@ -3,9 +3,14 @@ import React from "react";
 import { EditableProps } from "../types";
 import { Input } from "../../base/input";
 
-export type IntegerProps = EditableProps<number>;
+export type FHIRIntegerEditableProps = EditableProps<number>;
 
-export const Integer = ({ value, onChange, issue, label }: IntegerProps) => {
+export const FHIRIntegerEditable = ({
+  value,
+  onChange,
+  issue,
+  label,
+}: FHIRIntegerEditableProps) => {
   return (
     <Input
       label={label}

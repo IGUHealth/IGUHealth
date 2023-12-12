@@ -3,14 +3,14 @@ import React, { useEffect } from "react";
 import { EditableProps } from "../types";
 import { Input } from "../../base/input";
 
-export type UnsignedIntegerProps = EditableProps<number>;
+export type FHIRUnsignedIntegerEditableProps = EditableProps<number>;
 
-export const UnsignedInteger = ({
+export const FHIRUnsignedIntegerEditable = ({
   value,
   onChange,
   issue,
   label,
-}: UnsignedIntegerProps) => {
+}: FHIRUnsignedIntegerEditableProps) => {
   const [issues, setIssues] = React.useState<string[]>([]);
   useEffect(() => {
     const issues: string[] = [];

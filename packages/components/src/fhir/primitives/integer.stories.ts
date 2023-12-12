@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Integer } from "./integer";
+import { FHIRIntegerEditable } from "./integer";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
   title: "Primitives/integer",
-  component: Integer,
+  component: FHIRIntegerEditable,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
     layout: "centered",
@@ -15,7 +15,7 @@ const meta = {
   argTypes: {
     value: { control: "number" },
   },
-} satisfies Meta<typeof Integer>;
+} satisfies Meta<typeof FHIRIntegerEditable>;
 
 export default meta;
 

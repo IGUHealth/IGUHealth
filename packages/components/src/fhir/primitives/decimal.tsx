@@ -3,9 +3,14 @@ import React from "react";
 import { EditableProps } from "../types";
 import { Input } from "../../base/input";
 
-export type DecimalProps = EditableProps<number>;
+export type FHIRDecimalEditableProps = EditableProps<number>;
 
-export const Decimal = ({ value, onChange, issue, label }: DecimalProps) => {
+export const FHIRDecimalEditable = ({
+  value,
+  onChange,
+  issue,
+  label,
+}: FHIRDecimalEditableProps) => {
   return (
     <Input
       label={label}

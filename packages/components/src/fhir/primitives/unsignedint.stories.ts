@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { UnsignedInteger } from "./unsignedinteger";
+import { FHIRUnsignedIntegerEditable } from "./unsignedinteger";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
   title: "Primitives/unsigendinteger",
-  component: UnsignedInteger,
+  component: FHIRUnsignedIntegerEditable,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
     layout: "centered",
@@ -15,7 +15,7 @@ const meta = {
   argTypes: {
     value: { control: "number" },
   },
-} satisfies Meta<typeof UnsignedInteger>;
+} satisfies Meta<typeof FHIRUnsignedIntegerEditable>;
 
 export default meta;
 

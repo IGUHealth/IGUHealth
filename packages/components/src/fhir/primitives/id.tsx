@@ -3,11 +3,16 @@ import React from "react";
 import { EditableProps } from "../types";
 import { Input } from "../../base/input";
 
-export type IdProps = EditableProps<string>;
+export type FHIRIdEditableProps = EditableProps<string>;
 
 const idRegex = /^[A-Za-z0-9\-.]{1,64}$/;
 
-export const Id = ({ onChange, value, issue, label }: IdProps) => {
+export const FHIRIdEditable = ({
+  onChange,
+  value,
+  issue,
+  label,
+}: FHIRIdEditableProps) => {
   const [issues, setIssues] = React.useState<string[]>([]);
   React.useEffect(() => {
     const issues: string[] = [];

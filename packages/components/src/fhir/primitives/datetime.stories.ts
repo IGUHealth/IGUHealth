@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { DateTime } from "./datetime";
+import { FHIRDateTimeEditable } from "./datetime";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
   title: "Primitives/datetime",
-  component: DateTime,
+  component: FHIRDateTimeEditable,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
     layout: "centered",
@@ -15,7 +15,7 @@ const meta = {
   argTypes: {
     value: { control: "text" },
   },
-} satisfies Meta<typeof DateTime>;
+} satisfies Meta<typeof FHIRDateTimeEditable>;
 
 export default meta;
 

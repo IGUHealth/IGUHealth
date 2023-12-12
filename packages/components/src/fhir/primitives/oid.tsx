@@ -5,7 +5,7 @@ import { Input } from "../../base/input";
 
 type OID = `urn:oid:${string}`;
 
-export type OIDProps = EditableProps<OID>;
+export type FHIROIDEditableProps = EditableProps<OID>;
 
 const oidRegex = /^urn:oid:[0-2](\.(0|[1-9][0-9]*))+$/;
 
@@ -13,7 +13,12 @@ function isOID(value: string): value is OID {
   return oidRegex.test(value);
 }
 
-export const OID = ({ onChange, value, issue, label }: OIDProps) => {
+export const FHIROIDEditable = ({
+  onChange,
+  value,
+  issue,
+  label,
+}: FHIROIDEditableProps) => {
   const [issues, setIssues] = useState<string[]>([]);
 
   useEffect(() => {

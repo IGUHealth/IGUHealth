@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Decimal } from "./decimal";
+import { FHIRDecimalEditable } from "./decimal";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
   title: "Primitives/decimal",
-  component: Decimal,
+  component: FHIRDecimalEditable,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
     layout: "centered",
@@ -15,7 +15,7 @@ const meta = {
   argTypes: {
     value: { control: "number" },
   },
-} satisfies Meta<typeof Decimal>;
+} satisfies Meta<typeof FHIRDecimalEditable>;
 
 export default meta;
 

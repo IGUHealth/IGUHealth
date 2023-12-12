@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { OID } from "./oid";
+import { FHIROIDEditable } from "./oid";
 
 const meta = {
   title: "Primitives/oid",
-  component: OID,
+  component: FHIROIDEditable,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
-} satisfies Meta<typeof OID>;
+} satisfies Meta<typeof FHIROIDEditable>;
 
 export default meta;
 

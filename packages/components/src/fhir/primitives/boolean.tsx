@@ -3,9 +3,14 @@ import React from "react";
 import { EditableProps } from "../types";
 import { Input } from "../../base/input";
 
-export type BooleanProps = EditableProps<boolean>;
+export type FHIRBooleanEditableProps = EditableProps<boolean>;
 
-export const Boolean = ({ value, onChange, label, issue }: BooleanProps) => {
+export const FHIRBooleanEditable = ({
+  value,
+  onChange,
+  label,
+  issue,
+}: FHIRBooleanEditableProps) => {
   return (
     <div className="inline-block">
       <Input

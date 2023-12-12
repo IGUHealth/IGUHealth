@@ -3,19 +3,19 @@ import React from "react";
 import { EditableProps } from "../types";
 import { Input } from "../../base/input";
 
-export type StringProps = EditableProps<string> & {
+export type FHIRStringEditableProps = EditableProps<string> & {
   disabled?: boolean;
   inputProps?: Parameters<typeof Input>[0];
 };
 
-export const String = ({
+export const FHIRStringEditable = ({
   onChange,
   value,
   issue,
   label,
   disabled = false,
   inputProps,
-}: StringProps) => {
+}: FHIRStringEditableProps) => {
   return (
     <Input
       {...inputProps}

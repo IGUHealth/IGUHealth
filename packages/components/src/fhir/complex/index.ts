@@ -1,15 +1,15 @@
-import { AddressEditable } from "./Address";
-import { IdentifierEditable } from "./Identifier";
-import { ContactPointEditable } from "./ContactPoint";
-import { HumanNameEditable } from "./HumanName";
-import { MetaReadOnly } from "./Meta";
-import { PeriodEditable } from "./Period";
+import { FHIRAddressEditable } from "./Address";
+import { FHIRIdentifierEditable } from "./Identifier";
+import { FHIRContactPointEditable } from "./ContactPoint";
+import { FHIRHumanNameEditable } from "./HumanName";
+import { FHIRMetaReadOnly } from "./Meta";
+import { FHIRPeriodEditable } from "./Period";
 
 export {
-  AddressEditable,
-  IdentifierEditable,
-  HumanNameEditable,
-  MetaReadOnly,
-  ContactPointEditable,
-  PeriodEditable,
+  FHIRAddressEditable as AddressEditable,
+  FHIRIdentifierEditable as IdentifierEditable,
+  FHIRHumanNameEditable as HumanNameEditable,
+  FHIRMetaReadOnly as MetaReadOnly,
+  FHIRContactPointEditable as ContactPointEditable,
+  FHIRPeriodEditable as PeriodEditable,
 };
