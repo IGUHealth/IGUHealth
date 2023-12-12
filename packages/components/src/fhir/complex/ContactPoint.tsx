@@ -1,14 +1,13 @@
 import React from "react";
 import { ContactPoint, ValueSet } from "@iguhealth/fhir-types/r4/types";
 
-import { EditableProps } from "../types";
+import { EditableProps, TerminologyLookupProps } from "../types";
 import { InputContainer } from "../../base/containers";
 import { FHIRCodeEditable } from "../primitives/code";
 import { FHIRStringEditable } from "../primitives/string";
 
-export type FHIRContactPointEditableProps = EditableProps<ContactPoint> & {
-  expand?: (value: string) => Promise<ValueSet>;
-};
+export type FHIRContactPointEditableProps = EditableProps<ContactPoint> &
+  TerminologyLookupProps;
 
 export const FHIRContactPointEditable = ({
   value,

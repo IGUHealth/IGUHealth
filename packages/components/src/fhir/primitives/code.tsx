@@ -4,14 +4,13 @@ import {
   ValueSetExpansionContains,
 } from "@iguhealth/fhir-types/r4/types";
 
-import { EditableProps } from "../types";
+import { EditableProps, TerminologyLookupProps } from "../types";
 import { Select, Option } from "../../base/select";
 
 export type FHIRCodeEditableProps = EditableProps<string> & {
   system?: string;
-  expand?: (value: string) => Promise<ValueSet>;
   open?: boolean;
-};
+} & TerminologyLookupProps;
 
 function flatten(item: ValueSetExpansionContains): Option[] {
   const children = item.contains?.map(flatten).flat() || [];

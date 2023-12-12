@@ -1,15 +1,14 @@
 import React from "react";
 import { Identifier, ValueSet } from "@iguhealth/fhir-types/r4/types";
 
-import { EditableProps } from "../types";
+import { EditableProps, TerminologyLookupProps } from "../types";
 import { InputContainer } from "../../base/containers";
 import { FHIRCodeEditable } from "../primitives/code";
 import { FHIRUriEditable } from "../primitives/uri";
 import { FHIRStringEditable } from "../primitives/string";
 
-export type FHIRIdentifierEditableProps = EditableProps<Identifier> & {
-  expand?: (value: string) => Promise<ValueSet>;
-};
+export type FHIRIdentifierEditableProps = EditableProps<Identifier> &
+  TerminologyLookupProps;
 
 export const FHIRIdentifierEditable = ({
   value,

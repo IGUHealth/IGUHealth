@@ -33,6 +33,7 @@ import {
 import { descend, ascend, Loc, pointer, root } from "@iguhealth/fhir-pointer";
 import generateJSONPatches, { Mutation } from "@iguhealth/fhir-patch-building";
 
+import { TerminologyLookupProps } from "../types";
 import * as ComplexTypes from "../complex";
 import * as Primitives from "../primitives";
 
@@ -49,8 +50,7 @@ function EditorComponent({
   onChange: (patches: Mutation<any, any>) => void;
   showLabel: boolean;
   pointer: Loc<any, any, any>;
-  expand?: (url: string) => Promise<ValueSet>;
-}) {
+} & TerminologyLookupProps) {
   switch (element.type?.[0].code) {
     case "http://hl7.org/fhirpath/System.String": {
       // Only render the root element not the ones underneath.
@@ -343,16 +343,15 @@ function getFieldName(path: string) {
   return capitalize(path.substring(path.lastIndexOf(".") + 1));
 }
 
-interface MetaProps<T, R> {
+type MetaProps<T, R> = {
   sd: StructureDefinition;
   elementIndex: number;
   value: unknown;
   pointer: Loc<T, R, any>;
   showLabel?: boolean;
   showInvalid?: boolean;
-  expand?: (url: string) => Promise<ValueSet>;
   onChange: (patches: Mutation<T, R>) => void;
-}
+} & TerminologyLookupProps;
 
 function getElementDefinition(
   sd: StructureDefinition,
@@ -575,12 +574,11 @@ const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
 
 export type Setter = (resource: Resource) => Resource;
 
-export interface FHIRGenerativeFormProps {
+export type FHIRGenerativeFormProps = {
   structureDefinition: StructureDefinition;
   value: Resource | undefined;
   setValue?: (s: Setter) => void;
-  expand?: (url: string) => Promise<ValueSet>;
-}
+} & TerminologyLookupProps;
 
 export const FHIRGenerativeForm = ({
   structureDefinition,
