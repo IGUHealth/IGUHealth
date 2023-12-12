@@ -1,27 +1,11 @@
 import React from "react";
 import { Address } from "@iguhealth/fhir-types/r4/types";
 
+import { EditableProps } from "../types";
 import { InputContainer } from "../../base/containers";
 import { String } from "../primitives/string";
 
-export interface AddressEditableProps {
-  /**
-   * The value of the input.
-   */
-  value: Address | undefined;
-  /**
-   * Issues
-   */
-  issue?: string;
-  /**
-   * Call back triggered when input changes.
-   */
-  onChange?: (value: Address) => void;
-  /**
-   * Label string.
-   */
-  label?: string;
-}
+export type AddressEditableProps = EditableProps<Address>;
 
 export const AddressEditable = ({
   value,
@@ -36,7 +20,7 @@ export const AddressEditable = ({
           label="Line"
           value={value?.line?.[0] || ""}
           onChange={(line) => {
-            onChange && onChange({ ...value, line: [line] });
+            line && onChange && onChange({ ...value, line: [line] });
           }}
         />
         <String

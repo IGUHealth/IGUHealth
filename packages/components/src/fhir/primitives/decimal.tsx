@@ -1,13 +1,9 @@
 import React from "react";
 
+import { EditableProps } from "../types";
 import { Input } from "../../base/input";
 
-export interface DecimalProps {
-  value?: number;
-  onChange: (value: number) => void;
-  issue?: string;
-  label?: string;
-}
+export type DecimalProps = EditableProps<number>;
 
 export const Decimal = ({ value, onChange, issue, label }: DecimalProps) => {
   return (

@@ -1,30 +1,15 @@
 import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
 
+import { EditableProps } from "../types";
 import { Input } from "../../base/input";
 
-export interface DateProps {
-  /**
-   * String date value.
-   */
-  value?: string;
-  /**
-   * onChange returns date string based on outputFormat.
-   */
-  onChange: (value: string) => void;
-  /**
-   * Error issue string.
-   */
-  issue?: string;
+export type DateProps = EditableProps<string> & {
   /**
    * String output format defaults to YYYY-MM-DD.
    */
   outputFormat?: string;
-  /**
-   * Label string.
-   */
-  label?: string;
-}
+};
 
 const dateRegex =
   /^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1]))?)?$/;

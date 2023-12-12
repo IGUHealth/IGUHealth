@@ -1,13 +1,9 @@
 import React from "react";
 
+import { EditableProps } from "../types";
 import { Input } from "../../base/input";
 
-export interface IntegerProps {
-  value?: number;
-  onChange: (value: number) => void;
-  issue?: string;
-  label?: string;
-}
+export type IntegerProps = EditableProps<number>;
 
 export const Integer = ({ value, onChange, issue, label }: IntegerProps) => {
   return (

@@ -1,27 +1,11 @@
 import React from "react";
 import { HumanName } from "@iguhealth/fhir-types/r4/types";
 
+import { EditableProps } from "../types";
 import { InputContainer } from "../../base/containers";
 import { String } from "../primitives/string";
 
-export interface HumanNameEditableProps {
-  /**
-   * The value of the input.
-   */
-  value: HumanName | undefined;
-  /**
-   * Issues
-   */
-  issue?: string;
-  /**
-   * Call back triggered when input changes.
-   */
-  onChange?: (value: HumanName) => void;
-  /**
-   * Label string.
-   */
-  label?: string;
-}
+export type HumanNameEditableProps = EditableProps<HumanName>;
 
 export const HumanNameEditable = ({
   value,
@@ -37,7 +21,9 @@ export const HumanNameEditable = ({
           value={value?.given?.[0] || ""}
           onChange={(firstName) => {
             const given = value?.given ? [...value.given] : [];
-            given[0] = firstName;
+            if (firstName) {
+              given[0] = firstName;
+            }
             onChange && onChange({ ...value, given });
           }}
         />
@@ -47,7 +33,9 @@ export const HumanNameEditable = ({
           onChange={(middleName) => {
             const given = value?.given ? [...value.given] : [];
             if (!given[0]) given[0] = "";
-            given[1] = middleName;
+            if (middleName) {
+              given[1] = middleName;
+            }
             onChange && onChange({ ...value, given });
           }}
         />

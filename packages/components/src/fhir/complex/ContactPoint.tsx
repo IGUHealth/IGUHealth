@@ -1,30 +1,14 @@
 import React from "react";
 import { ContactPoint, ValueSet } from "@iguhealth/fhir-types/r4/types";
 
+import { EditableProps } from "../types";
 import { InputContainer } from "../../base/containers";
 import { Code } from "../primitives/code";
 import { String } from "../primitives/string";
 
-export interface ContactPointEditableProps {
-  /**
-   * The value of the input.
-   */
-  value: ContactPoint | undefined;
-
+export type ContactPointEditableProps = EditableProps<ContactPoint> & {
   expand?: (value: string) => Promise<ValueSet>;
-  /**
-   * Issues
-   */
-  issue?: string;
-  /**
-   * Call back triggered when input changes.
-   */
-  onChange?: (value: ContactPoint) => void;
-  /**
-   * Label string.
-   */
-  label?: string;
-}
+};
 
 export const ContactPointEditable = ({
   value,

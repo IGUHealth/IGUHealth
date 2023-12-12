@@ -1,25 +1,9 @@
 import React from "react";
 
+import { EditableProps } from "../types";
 import { Input } from "../../base/input";
 
-export interface IdProps {
-  /**
-   * The value of the input.
-   */
-  value: string;
-  /**
-   * The value of the input.
-   */
-  issue?: string;
-  /**
-   * Call back triggered when input changes.
-   */
-  onChange?: (value: string) => void;
-  /**
-   * Label string.
-   */
-  label?: string;
-}
+export type IdProps = EditableProps<string>;
 
 const idRegex = /^[A-Za-z0-9\-.]{1,64}$/;
 

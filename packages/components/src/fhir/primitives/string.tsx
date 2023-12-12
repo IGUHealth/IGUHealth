@@ -1,29 +1,12 @@
 import React from "react";
 
+import { EditableProps } from "../types";
 import { Input } from "../../base/input";
 
-export interface StringProps {
-  /**
-   * The value of the input.
-   */
-  value: string | undefined;
-  /**
-   * The value of the input.
-   */
-  issue?: string;
-  /**
-   * Call back triggered when input changes.
-   */
-  onChange?: (value: string) => void;
-  /**
-   * Label string.
-   */
-  label?: string;
-
+export type StringProps = EditableProps<string> & {
   disabled?: boolean;
-
   inputProps?: Parameters<typeof Input>[0];
-}
+};
 
 export const String = ({
   onChange,

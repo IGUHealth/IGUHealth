@@ -1,27 +1,11 @@
 import React from "react";
-
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
+
+import { EditableProps } from "../types";
 import { CodeMirror } from "../../base";
 import { InputContainer } from "../../base/containers";
 
-export interface MarkdownProps {
-  /**
-   * The value of the input.
-   */
-  value: string;
-  /**
-   * The value of the input.
-   */
-  issue?: string;
-  /**
-   * Call back triggered when input changes.
-   */
-  onChange?: (value: string) => void;
-  /**
-   * Label string.
-   */
-  label?: string;
-}
+export type MarkdownProps = EditableProps<string>;
 
 const extensions = [markdown({ base: markdownLanguage })];
 
