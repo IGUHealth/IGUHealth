@@ -1,27 +1,11 @@
 import React from "react";
 import { HumanName } from "@iguhealth/fhir-types/r4/types";
 
+import { EditableProps } from "../types";
 import { InputContainer } from "../../base/containers";
 import { String } from "../primitives/string";
 
-export interface HumanNameEditableProps {
-  /**
-   * The value of the input.
-   */
-  value: HumanName | undefined;
-  /**
-   * Issues
-   */
-  issue?: string;
-  /**
-   * Call back triggered when input changes.
-   */
-  onChange?: (value: HumanName) => void;
-  /**
-   * Label string.
-   */
-  label?: string;
-}
+export type HumanNameEditableProps = EditableProps<HumanName>;
 
 export const HumanNameEditable = ({
   value,

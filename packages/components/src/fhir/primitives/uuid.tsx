@@ -1,30 +1,18 @@
 import React, { useEffect, useState } from "react";
 
+import { EditableProps } from "../types";
 import { Input } from "../../base/input";
 
 type UUID = `${string}-${string}-${string}-${string}`;
 
-export interface UUIDProps {
-  /**
-   * The value of the input.
-   */
-  value: UUID;
-  /**
-   * The value of the input.
-   */
-  issue?: string;
-  /**
-   * Call back triggered when input changes.
-   */
-  onChange?: (value: string) => void;
-  /**
-   * Label string.
-   */
-  label?: string;
-}
+export type UUIDProps = EditableProps<UUID>;
 
 const uuidRegex =
   /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+
+function isUUID(value: string): value is UUID {
+  return uuidRegex.test(value);
+}
 
 export const UUID = ({ onChange, value, issue, label }: UUIDProps) => {
   const [issues, setIssues] = useState<string[]>([]);
@@ -45,8 +33,9 @@ export const UUID = ({ onChange, value, issue, label }: UUIDProps) => {
       type="text"
       value={value}
       onChange={(e) => {
+        const value = e.target.value;
         if (onChange) {
-          onChange(e.target.value);
+          onChange(value as UUID);
         }
       }}
     />

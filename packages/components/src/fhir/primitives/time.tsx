@@ -1,25 +1,9 @@
 import React, { useState, useEffect } from "react";
 
+import { EditableProps } from "../types";
 import { Input } from "../../base/input";
 
-export interface TimeProps {
-  /**
-   * String time value.
-   */
-  value?: string;
-  /**
-   * onChange returns time string based on outputFormat.
-   */
-  onChange: (value: string) => void;
-  /**
-   * Error issue string.
-   */
-  issue?: string;
-  /**
-   * Label string.
-   */
-  label?: string;
-}
+export type TimeProps = EditableProps<string>;
 
 const timeRegex = /^([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?$/;
 

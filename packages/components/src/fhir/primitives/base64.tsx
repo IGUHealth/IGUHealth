@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import fileDownload from "js-file-download";
 
+import { EditableProps } from "../types";
 import { InputContainer } from "../../base/containers";
 import { Button } from "../../base/button";
 import { Input } from "../../base/input";
@@ -20,12 +21,7 @@ const convertFileToBase64 = (file: File): Promise<string> => {
   });
 };
 
-export interface Base64BinaryProps {
-  value?: string;
-  onChange: (value: string) => void;
-  issue?: string;
-  label?: string;
-}
+export type Base64BinaryProps = EditableProps<string>;
 
 const base64Regex = /^(\s*([0-9a-zA-Z+=]){4}\s*)+$/;
 
@@ -55,7 +51,7 @@ export const Base64Binary = ({
             const file = e.target?.files?.[0];
             if (!file) return;
             convertFileToBase64(file).then((data) => {
-              onChange(data);
+              onChange && onChange(data);
             });
           }}
         />

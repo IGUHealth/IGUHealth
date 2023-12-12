@@ -1,36 +1,24 @@
 import React, { useEffect, useState } from "react";
 
+import { EditableProps } from "../types";
 import { Input } from "../../base/input";
 
 type OID = `urn:oid:${string}`;
 
-export interface OIDProps {
-  /**
-   * The value of the input.
-   */
-  value: OID;
-  /**
-   * The value of the input.
-   */
-  issue?: string;
-  /**
-   * Call back triggered when input changes.
-   */
-  onChange?: (value: string) => void;
-  /**
-   * Label string.
-   */
-  label?: string;
-}
+export type OIDProps = EditableProps<OID>;
 
 const oidRegex = /^urn:oid:[0-2](\.(0|[1-9][0-9]*))+$/;
+
+function isOID(value: string): value is OID {
+  return oidRegex.test(value);
+}
 
 export const OID = ({ onChange, value, issue, label }: OIDProps) => {
   const [issues, setIssues] = useState<string[]>([]);
 
   useEffect(() => {
     const issues: string[] = [];
-    if (value && !oidRegex.test(value)) {
+    if (value && !isOID(value)) {
       issues.push(`Invalid oid format`);
     }
     if (issue) issues.push(issue);
@@ -44,8 +32,9 @@ export const OID = ({ onChange, value, issue, label }: OIDProps) => {
       type="text"
       value={value}
       onChange={(e) => {
+        const value = e.target.value;
         if (onChange) {
-          onChange(e.target.value);
+          onChange(value as OID);
         }
       }}
     />

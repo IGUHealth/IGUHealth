@@ -1,30 +1,15 @@
 import React from "react";
 import { Identifier, ValueSet } from "@iguhealth/fhir-types/r4/types";
 
+import { EditableProps } from "../types";
 import { InputContainer } from "../../base/containers";
 import { Code } from "../primitives/code";
 import { Uri } from "../primitives/uri";
 import { String } from "../primitives/string";
 
-export interface IdentifierEditableProps {
-  /**
-   * The value of the input.
-   */
-  value: Identifier | undefined;
-  /**
-   * Issues
-   */
-  issue?: string;
-  /**
-   * Call back triggered when input changes.
-   */
-  onChange?: (value: Identifier) => void;
-  /**
-   * Label string.
-   */
-  label?: string;
+export type IdentifierEditableProps = EditableProps<Identifier> & {
   expand?: (value: string) => Promise<ValueSet>;
-}
+};
 
 export const IdentifierEditable = ({
   value,

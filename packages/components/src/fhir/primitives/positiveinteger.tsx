@@ -1,13 +1,9 @@
 import React, { useEffect } from "react";
 
+import { EditableProps } from "../types";
 import { Input } from "../../base/input";
 
-export interface PositiveIntegerProps {
-  value?: number;
-  onChange: (value: number) => void;
-  issue?: string;
-  label?: string;
-}
+export type PositiveIntegerProps = EditableProps<number>;
 
 export const PositiveInteger = ({
   value,
@@ -35,7 +31,7 @@ export const PositiveInteger = ({
       step="0.1"
       onChange={(e) => {
         const value = parseInt(e.target.value);
-        if (value <= 0) onChange(1);
+        if (value <= 0 && onChange) onChange(1);
         if (onChange && !isNaN(value)) {
           onChange(value);
         }

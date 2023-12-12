@@ -3,17 +3,15 @@ import {
   ValueSet,
   ValueSetExpansionContains,
 } from "@iguhealth/fhir-types/r4/types";
+
+import { EditableProps } from "../types";
 import { Select, Option } from "../../base/select";
 
-export interface CodeProps {
-  value?: string;
+export type CodeProps = EditableProps<string> & {
   system?: string;
   expand?: (value: string) => Promise<ValueSet>;
-  onChange?: (value: string | undefined) => void;
-  issue?: string;
-  label?: string;
   open?: boolean;
-}
+};
 
 function flatten(item: ValueSetExpansionContains): Option[] {
   const children = item.contains?.map(flatten).flat() || [];

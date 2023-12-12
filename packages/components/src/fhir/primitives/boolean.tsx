@@ -1,13 +1,9 @@
 import React from "react";
 
+import { EditableProps } from "../types";
 import { Input } from "../../base/input";
 
-export interface BooleanProps {
-  value?: boolean;
-  onChange: (value: boolean) => void;
-  issue?: string;
-  label?: string;
-}
+export type BooleanProps = EditableProps<boolean>;
 
 export const Boolean = ({ value, onChange, label, issue }: BooleanProps) => {
   return (
@@ -19,7 +15,7 @@ export const Boolean = ({ value, onChange, label, issue }: BooleanProps) => {
         type="checkbox"
         checked={value}
         onChange={(e) => {
-          onChange(e.target.checked);
+          onChange && onChange(e.target.checked);
         }}
       />
     </div>
