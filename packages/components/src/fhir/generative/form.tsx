@@ -12,7 +12,6 @@ import {
 import {
   ResourceType,
   Address,
-  ValueSet,
   StructureDefinition,
   Resource,
   ElementDefinition,
@@ -26,11 +25,14 @@ import {
   Identifier,
   Meta,
   ContactPoint,
+  ContactDetail,
   HumanName,
+  Period,
 } from "@iguhealth/fhir-types/r4/types";
-import { descend, ascend, Loc, pointer } from "@iguhealth/fhir-pointer";
+import { descend, ascend, Loc, pointer, root } from "@iguhealth/fhir-pointer";
 import generateJSONPatches, { Mutation } from "@iguhealth/fhir-patch-building";
 
+import { TerminologyLookupProps } from "../types";
 import * as ComplexTypes from "../complex";
 import * as Primitives from "../primitives";
 
@@ -47,13 +49,13 @@ function EditorComponent({
   onChange: (patches: Mutation<any, any>) => void;
   showLabel: boolean;
   pointer: Loc<any, any, any>;
-  expand?: (url: string) => Promise<ValueSet>;
-}) {
+} & TerminologyLookupProps) {
   switch (element.type?.[0].code) {
     case "http://hl7.org/fhirpath/System.String": {
       // Only render the root element not the ones underneath.
       // id is special primitive string.
-      if (ascend(pointer)?.field === "id")
+      const asc = ascend(pointer);
+      if (asc?.field === "id" && asc?.parent === root(pointer))
         return (
           <Primitives.FHIRStringEditable
             disabled={true}
@@ -260,6 +262,35 @@ function EditorComponent({
           }}
         />
       );
+    case "ContactDetail":
+      return (
+        <ComplexTypes.FHIRContactDetailEditable
+          value={value as ContactDetail}
+          expand={expand}
+          label={showLabel ? getFieldName(element.path) : undefined}
+          onChange={(v) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
+      );
+    case "Period":
+      return (
+        <ComplexTypes.FHIRPeriodEditable
+          value={value as Period}
+          label={showLabel ? getFieldName(element.path) : undefined}
+          onChange={(v) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
+      );
     default:
       return undefined;
   }
@@ -311,16 +342,15 @@ function getFieldName(path: string) {
   return capitalize(path.substring(path.lastIndexOf(".") + 1));
 }
 
-interface MetaProps<T, R> {
+type MetaProps<T, R> = {
   sd: StructureDefinition;
   elementIndex: number;
   value: unknown;
   pointer: Loc<T, R, any>;
   showLabel?: boolean;
   showInvalid?: boolean;
-  expand?: (url: string) => Promise<ValueSet>;
   onChange: (patches: Mutation<T, R>) => void;
-}
+} & TerminologyLookupProps;
 
 function getElementDefinition(
   sd: StructureDefinition,
@@ -543,12 +573,11 @@ const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
 
 export type Setter = (resource: Resource) => Resource;
 
-export interface FHIRGenerativeFormProps {
+export type FHIRGenerativeFormProps = {
   structureDefinition: StructureDefinition;
   value: Resource | undefined;
   setValue?: (s: Setter) => void;
-  expand?: (url: string) => Promise<ValueSet>;
-}
+} & TerminologyLookupProps;
 
 export const FHIRGenerativeForm = ({
   structureDefinition,

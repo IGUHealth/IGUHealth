@@ -1,3 +1,5 @@
+import { ValueSet } from "@iguhealth/fhir-types/r4/types";
+
 export type EditableProps<T> = {
   /**
    * The value of the input.
@@ -15,4 +17,8 @@ export type EditableProps<T> = {
    * Label string.
    */
   label?: string;
+};
+
+export type TerminologyLookupProps = {
+  expand?: (value: string) => Promise<ValueSet>;
 };
