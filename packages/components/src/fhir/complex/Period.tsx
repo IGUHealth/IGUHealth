@@ -3,27 +3,27 @@ import { Period } from "@iguhealth/fhir-types/r4/types";
 
 import { EditableProps } from "../types";
 import { InputContainer } from "../../base/containers";
-import { DateTime } from "../primitives/datetime";
+import { FHIRDateTimeEditable } from "../primitives/datetime";
 
-export type PeriodEditableProps = EditableProps<Period>;
+export type FHIRPeriodEditableProps = EditableProps<Period>;
 
-export const PeriodEditable = ({
+export const FHIRPeriodEditable = ({
   value,
   onChange,
   issue,
   label,
-}: PeriodEditableProps) => {
+}: FHIRPeriodEditableProps) => {
   return (
     <InputContainer label={label} issues={issue ? [issue] : []}>
       <div className="flex space-x-1">
-        <DateTime
+        <FHIRDateTimeEditable
           value={value?.start}
           label="Start"
           onChange={(start) => {
             onChange && onChange({ ...value, start });
           }}
         />
-        <DateTime
+        <FHIRDateTimeEditable
           value={value?.end}
           label="End"
           onChange={(end) => {

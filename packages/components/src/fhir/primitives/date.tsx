@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { EditableProps } from "../types";
 import { Input } from "../../base/input";
 
-export type DateProps = EditableProps<string> & {
+export type FHIRDateEditableProps = EditableProps<string> & {
   /**
    * String output format defaults to YYYY-MM-DD.
    */
@@ -14,13 +14,13 @@ export type DateProps = EditableProps<string> & {
 const dateRegex =
   /^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1]))?)?$/;
 
-export const Date = ({
+export const FHIRDateEditable = ({
   onChange,
   value,
   issue,
   label,
   outputFormat = "YYYY-MM-DD",
-}: DateProps) => {
+}: FHIRDateEditableProps) => {
   const [issues, setIssues] = useState<string[]>([]);
   useEffect(() => {
     const issues: string[] = [];

@@ -1,16 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { HumanNameEditable } from "./HumanName";
+import { FHIRHumanNameEditable } from "./HumanName";
 
 const meta = {
-  title: "Complex/HumanName",
-  component: HumanNameEditable,
+  title: "Complex/FHIRHumanNameEditable",
+  component: FHIRHumanNameEditable,
   parameters: {
     layout: "centered",
   },
 
   tags: ["autodocs"],
-} satisfies Meta<typeof HumanNameEditable>;
+} satisfies Meta<typeof FHIRHumanNameEditable>;
 
 export default meta;
 

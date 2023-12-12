@@ -21,16 +21,16 @@ const convertFileToBase64 = (file: File): Promise<string> => {
   });
 };
 
-export type Base64BinaryProps = EditableProps<string>;
+export type FHIRBase64BinaryEditableProps = EditableProps<string>;
 
 const base64Regex = /^(\s*([0-9a-zA-Z+=]){4}\s*)+$/;
 
-export const Base64Binary = ({
+export const FHIRBase64BinaryEditable = ({
   value,
   onChange,
   issue,
   label,
-}: Base64BinaryProps) => {
+}: FHIRBase64BinaryEditableProps) => {
   const [issues, setIssues] = useState<string[]>([]);
   useEffect(() => {
     const issues: string[] = [];

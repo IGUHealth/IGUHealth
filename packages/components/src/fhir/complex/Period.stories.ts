@@ -1,18 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { PeriodEditable } from "./Period";
+import { FHIRPeriodEditable } from "./Period";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
-  title: "Complex/Period",
-  component: PeriodEditable,
+  title: "Complex/FHIRPeriodEditable",
+  component: FHIRPeriodEditable,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
     layout: "centered",
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
   tags: ["autodocs"],
-} satisfies Meta<typeof PeriodEditable>;
+} satisfies Meta<typeof FHIRPeriodEditable>;
 
 export default meta;
 

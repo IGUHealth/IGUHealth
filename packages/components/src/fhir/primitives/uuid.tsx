@@ -5,7 +5,7 @@ import { Input } from "../../base/input";
 
 type UUID = `${string}-${string}-${string}-${string}`;
 
-export type UUIDProps = EditableProps<UUID>;
+export type FHIRUUIDEditableProps = EditableProps<UUID>;
 
 const uuidRegex =
   /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
@@ -14,7 +14,12 @@ function isUUID(value: string): value is UUID {
   return uuidRegex.test(value);
 }
 
-export const UUID = ({ onChange, value, issue, label }: UUIDProps) => {
+export const FHIRUUIDEditable = ({
+  onChange,
+  value,
+  issue,
+  label,
+}: FHIRUUIDEditableProps) => {
   const [issues, setIssues] = useState<string[]>([]);
 
   useEffect(() => {

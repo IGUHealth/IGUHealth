@@ -3,24 +3,24 @@ import { ContactPoint, ValueSet } from "@iguhealth/fhir-types/r4/types";
 
 import { EditableProps } from "../types";
 import { InputContainer } from "../../base/containers";
-import { Code } from "../primitives/code";
-import { String } from "../primitives/string";
+import { FHIRCodeEditable } from "../primitives/code";
+import { FHIRStringEditable } from "../primitives/string";
 
-export type ContactPointEditableProps = EditableProps<ContactPoint> & {
+export type FHIRContactPointEditableProps = EditableProps<ContactPoint> & {
   expand?: (value: string) => Promise<ValueSet>;
 };
 
-export const ContactPointEditable = ({
+export const FHIRContactPointEditable = ({
   value,
   expand,
   onChange,
   issue,
   label,
-}: ContactPointEditableProps) => {
+}: FHIRContactPointEditableProps) => {
   return (
     <InputContainer label={label} issues={issue ? [issue] : []}>
       <div className="flex space-x-1">
-        <Code
+        <FHIRCodeEditable
           label="use"
           expand={expand}
           open={true}
@@ -30,7 +30,7 @@ export const ContactPointEditable = ({
             onChange && onChange({ ...value, use });
           }}
         />
-        <Code
+        <FHIRCodeEditable
           label="system"
           expand={expand}
           open={true}
@@ -40,7 +40,7 @@ export const ContactPointEditable = ({
             onChange && onChange({ ...value, system });
           }}
         />
-        <String
+        <FHIRStringEditable
           label="value"
           value={value?.value}
           onChange={(v) => {

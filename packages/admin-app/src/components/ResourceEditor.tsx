@@ -18,7 +18,7 @@ import {
   Button,
   Tabs,
   Table,
-  GenerativeForm,
+  FHIRGenerativeForm,
 } from "@iguhealth/components";
 
 import { getValueSetExpansion } from "../data/terminology";
@@ -156,7 +156,7 @@ export default function ResourceEditorComponent({
             id: "editor",
             title: "Editor",
             content: structureDefinition && (
-              <GenerativeForm
+              <FHIRGenerativeForm
                 value={resource}
                 structureDefinition={structureDefinition}
                 setValue={setValue}

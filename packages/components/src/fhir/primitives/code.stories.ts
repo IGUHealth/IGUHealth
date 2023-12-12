@@ -1,18 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Code } from "./code";
+import { FHIRCodeEditable } from "./code";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
-  title: "Primitives/code",
-  component: Code,
+  title: "Primitives/FHIRCodeEditable",
+  component: FHIRCodeEditable,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
     layout: "centered",
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
   tags: ["autodocs"],
-} satisfies Meta<typeof Code>;
+} satisfies Meta<typeof FHIRCodeEditable>;
 
 export default meta;
 
@@ -135,6 +135,6 @@ export const OnError: Story = {
   args: {
     value: "test",
     issue: "Bad value",
-    onChange: (value: string | undefined) => console.log(value),
+    onChange: (value) => console.log(value),
   },
 };

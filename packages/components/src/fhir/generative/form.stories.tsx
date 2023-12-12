@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { GenerativeForm, Setter } from "./form";
+import { FHIRGenerativeForm, Setter } from "./form";
 
-const StateForm = (props: Parameters<typeof GenerativeForm>[0]) => {
+const StateForm = (props: Parameters<typeof FHIRGenerativeForm>[0]) => {
   const [state, setState] = React.useState(props);
   useEffect(() => {
     setState(props);
@@ -18,11 +18,11 @@ const StateForm = (props: Parameters<typeof GenerativeForm>[0]) => {
     };
   }, [setState]);
 
-  return <GenerativeForm {...state} setValue={setValue} />;
+  return <FHIRGenerativeForm {...state} setValue={setValue} />;
 };
 
 const meta = {
-  title: "Generated/Form",
+  title: "Generated/FHIRGenerativeForm",
   component: StateForm,
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
   tags: ["autodocs"],

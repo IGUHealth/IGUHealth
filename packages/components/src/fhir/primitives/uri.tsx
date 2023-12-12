@@ -1,3 +1,3 @@
-import { String } from "./string";
+import { FHIRStringEditable } from "./string";
 
-export { String as Uri };
+export { FHIRStringEditable as FHIRUriEditable };

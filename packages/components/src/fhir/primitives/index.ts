@@ -1,41 +1,41 @@
-import { Boolean } from "./boolean";
-import { Base64Binary } from "./base64";
-import { Code } from "./code";
-import { Date } from "./date";
-import { DateTime } from "./datetime";
-import { Decimal } from "./decimal";
-import { Id } from "./id";
-import { Instant } from "./instant";
-import { Integer } from "./integer";
-import { PositiveInteger } from "./positiveinteger";
-import { String } from "./string";
-import { Time } from "./time";
-import { UnsignedInteger } from "./unsignedinteger";
-import { Url } from "./url";
-import { UUID } from "./uuid";
-import { Canonical } from "./canonical";
-import { Markdown } from "./markdown";
-import { OID } from "./oid";
-import { Uri } from "./uri";
+import { FHIRBooleanEditable } from "./boolean";
+import { FHIRBase64BinaryEditable } from "./base64";
+import { FHIRCodeEditable } from "./code";
+import { FHIRDateEditable } from "./date";
+import { FHIRDateTimeEditable } from "./datetime";
+import { FHIRDecimalEditable } from "./decimal";
+import { FHIRIdEditable } from "./id";
+import { FHIRInstantEditable } from "./instant";
+import { FHIRIntegerEditable } from "./integer";
+import { FHIRPositiveIntegerEditable } from "./positiveinteger";
+import { FHIRStringEditable } from "./string";
+import { FHIRTimeEditable } from "./time";
+import { FHIRUnsignedIntegerEditable } from "./unsignedinteger";
+import { FHIRUrlEditable } from "./url";
+import { FHIRUUIDEditable } from "./uuid";
+import { FHIRCanonicalEditable } from "./canonical";
+import { FHIRMarkdownEditable } from "./markdown";
+import { FHIROIDEditable } from "./oid";
+import { FHIRUriEditable } from "./uri";
 
 export {
-  Boolean,
-  Base64Binary,
-  Canonical,
-  Code,
-  Date,
-  DateTime,
-  Decimal,
-  Id,
-  Instant,
-  Integer,
-  Markdown,
-  OID,
-  PositiveInteger,
-  String,
-  Time,
-  UnsignedInteger,
-  Uri,
-  Url,
-  UUID,
+  FHIRBooleanEditable,
+  FHIRBase64BinaryEditable,
+  FHIRCanonicalEditable,
+  FHIRCodeEditable,
+  FHIRDateEditable,
+  FHIRDateTimeEditable,
+  FHIRDecimalEditable,
+  FHIRIdEditable,
+  FHIRInstantEditable,
+  FHIRIntegerEditable,
+  FHIRMarkdownEditable,
+  FHIROIDEditable,
+  FHIRPositiveIntegerEditable,
+  FHIRStringEditable,
+  FHIRTimeEditable,
+  FHIRUnsignedIntegerEditable,
+  FHIRUriEditable,
+  FHIRUrlEditable,
+  FHIRUUIDEditable,
 };

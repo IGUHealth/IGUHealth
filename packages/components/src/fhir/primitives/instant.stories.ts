@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Instant } from "./instant";
+import { FHIRInstantEditable } from "./instant";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
-  title: "Primitives/instant",
-  component: Instant,
+  title: "Primitives/FHIRInstantEditable",
+  component: FHIRInstantEditable,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
     layout: "centered",
@@ -15,7 +15,7 @@ const meta = {
   argTypes: {
     value: { control: "text" },
   },
-} satisfies Meta<typeof Instant>;
+} satisfies Meta<typeof FHIRInstantEditable>;
 
 export default meta;
 

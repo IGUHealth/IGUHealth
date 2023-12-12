@@ -1,16 +1,24 @@
 import React from "react";
 import { Meta } from "@iguhealth/fhir-types/r4/types";
-import { String } from "../primitives/string";
+import { FHIRStringEditable } from "../primitives/string";
 
-export interface MetaReadonlyProps {
+export interface FHIRMetaReadonlyProps {
   value: Meta | undefined;
 }
 
-export const MetaReadOnly = ({ value }: MetaReadonlyProps) => {
+export const FHIRMetaReadOnly = ({ value }: FHIRMetaReadonlyProps) => {
   return (
     <div className="p-1 flex space-x-1">
-      <String value={value?.versionId} disabled={true} label="Version ID" />
-      <String value={value?.lastUpdated} disabled={true} label="Last Updated" />
+      <FHIRStringEditable
+        value={value?.versionId}
+        disabled={true}
+        label="Version ID"
+      />
+      <FHIRStringEditable
+        value={value?.lastUpdated}
+        disabled={true}
+        label="Last Updated"
+      />
     </div>
   );
 };

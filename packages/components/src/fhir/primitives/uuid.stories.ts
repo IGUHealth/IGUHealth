@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { UUID } from "./uuid";
+import { FHIRUUIDEditable } from "./uuid";
 
 const meta = {
-  title: "Primitives/uuid",
-  component: UUID,
+  title: "Primitives/FHIRUUIDEditable",
+  component: FHIRUUIDEditable,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
-} satisfies Meta<typeof UUID>;
+} satisfies Meta<typeof FHIRUUIDEditable>;
 
 export default meta;
 

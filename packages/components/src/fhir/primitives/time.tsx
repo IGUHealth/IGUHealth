@@ -3,11 +3,16 @@ import React, { useState, useEffect } from "react";
 import { EditableProps } from "../types";
 import { Input } from "../../base/input";
 
-export type TimeProps = EditableProps<string>;
+export type FHIRTimeEditableProps = EditableProps<string>;
 
 const timeRegex = /^([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?$/;
 
-export const Time = ({ onChange, value, issue, label }: TimeProps) => {
+export const FHIRTimeEditable = ({
+  onChange,
+  value,
+  issue,
+  label,
+}: FHIRTimeEditableProps) => {
   const [issues, setIssues] = useState<string[]>([]);
   useEffect(() => {
     const issues: string[] = [];

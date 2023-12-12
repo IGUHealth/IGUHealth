@@ -3,27 +3,27 @@ import { Address } from "@iguhealth/fhir-types/r4/types";
 
 import { EditableProps } from "../types";
 import { InputContainer } from "../../base/containers";
-import { String } from "../primitives/string";
+import { FHIRStringEditable } from "../primitives/string";
 
-export type AddressEditableProps = EditableProps<Address>;
+export type FHIRAddressEditableProps = EditableProps<Address>;
 
-export const AddressEditable = ({
+export const FHIRAddressEditable = ({
   value,
   onChange,
   issue,
   label,
-}: AddressEditableProps) => {
+}: FHIRAddressEditableProps) => {
   return (
     <InputContainer label={label} issues={issue ? [issue] : []}>
       <div className="flex space-x-1">
-        <String
+        <FHIRStringEditable
           label="Line"
           value={value?.line?.[0] || ""}
           onChange={(line) => {
             line && onChange && onChange({ ...value, line: [line] });
           }}
         />
-        <String
+        <FHIRStringEditable
           label="City"
           value={value?.city || ""}
           onChange={(city) => {
@@ -31,21 +31,21 @@ export const AddressEditable = ({
           }}
         />
         {/* <String label="District" value={value?.district || ""} /> */}
-        <String
+        <FHIRStringEditable
           label="State"
           value={value?.state || ""}
           onChange={(state) => {
             onChange && onChange({ ...value, state });
           }}
         />
-        <String
+        <FHIRStringEditable
           label="Postal Code"
           value={value?.postalCode || ""}
           onChange={(postalCode) => {
             onChange && onChange({ ...value, postalCode });
           }}
         />
-        <String
+        <FHIRStringEditable
           label="Country"
           value={value?.country || ""}
           onChange={(country) => {

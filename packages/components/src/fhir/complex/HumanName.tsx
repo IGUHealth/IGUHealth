@@ -3,20 +3,20 @@ import { HumanName } from "@iguhealth/fhir-types/r4/types";
 
 import { EditableProps } from "../types";
 import { InputContainer } from "../../base/containers";
-import { String } from "../primitives/string";
+import { FHIRStringEditable } from "../primitives/string";
 
-export type HumanNameEditableProps = EditableProps<HumanName>;
+export type FHIRHumanNameEditableProps = EditableProps<HumanName>;
 
-export const HumanNameEditable = ({
+export const FHIRHumanNameEditable = ({
   value,
   onChange,
   issue,
   label,
-}: HumanNameEditableProps) => {
+}: FHIRHumanNameEditableProps) => {
   return (
     <InputContainer label={label} issues={issue ? [issue] : []}>
       <div className="flex space-x-1">
-        <String
+        <FHIRStringEditable
           label="First"
           value={value?.given?.[0] || ""}
           onChange={(firstName) => {
@@ -27,7 +27,7 @@ export const HumanNameEditable = ({
             onChange && onChange({ ...value, given });
           }}
         />
-        <String
+        <FHIRStringEditable
           label="Middle"
           value={value?.given?.[1] || ""}
           onChange={(middleName) => {
@@ -39,7 +39,7 @@ export const HumanNameEditable = ({
             onChange && onChange({ ...value, given });
           }}
         />
-        <String
+        <FHIRStringEditable
           label="Last"
           value={value?.family}
           onChange={(family) => {
