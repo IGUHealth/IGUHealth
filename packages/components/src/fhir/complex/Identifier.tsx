@@ -1,5 +1,5 @@
 import React from "react";
-import { Identifier, ValueSet } from "@iguhealth/fhir-types/r4/types";
+import { Identifier } from "@iguhealth/fhir-types/r4/types";
 
 import { EditableProps, TerminologyLookupProps } from "../types";
 import { InputContainer } from "../../base/containers";

@@ -12,7 +12,6 @@ import {
 import {
   ResourceType,
   Address,
-  ValueSet,
   StructureDefinition,
   Resource,
   ElementDefinition,

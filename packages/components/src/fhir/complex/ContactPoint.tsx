@@ -1,5 +1,5 @@
 import React from "react";
-import { ContactPoint, ValueSet } from "@iguhealth/fhir-types/r4/types";
+import { ContactPoint } from "@iguhealth/fhir-types/r4/types";
 
 import { EditableProps, TerminologyLookupProps } from "../types";
 import { InputContainer } from "../../base/containers";

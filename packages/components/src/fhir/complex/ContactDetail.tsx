@@ -1,9 +1,8 @@
 import React from "react";
-import { ContactDetail, ValueSet } from "@iguhealth/fhir-types/r4/types";
+import { ContactDetail } from "@iguhealth/fhir-types/r4/types";
 
 import { EditableProps, TerminologyLookupProps } from "../types";
 import { InputContainer } from "../../base/containers";
-import { FHIRContactPointEditable } from "./ContactPoint";
 import { FHIRStringEditable, FHIRCodeEditable } from "../primitives";
 
 export type FHIRContactDetailEditableProps = EditableProps<ContactDetail> &
