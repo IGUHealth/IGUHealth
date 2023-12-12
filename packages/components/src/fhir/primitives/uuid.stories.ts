@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { FHIRUUIDEditable } from "./uuid";
 
 const meta = {
-  title: "Primitives/uuid",
+  title: "Primitives/FHIRUUIDEditable",
   component: FHIRUUIDEditable,
   parameters: {
     layout: "centered",

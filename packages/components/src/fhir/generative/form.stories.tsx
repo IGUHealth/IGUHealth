@@ -22,7 +22,7 @@ const StateForm = (props: Parameters<typeof FHIRGenerativeForm>[0]) => {
 };
 
 const meta = {
-  title: "Generated/Form",
+  title: "Generated/FHIRGenerativeForm",
   component: StateForm,
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
   tags: ["autodocs"],
