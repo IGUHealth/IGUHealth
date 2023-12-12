@@ -28,7 +28,7 @@ import {
   ContactPoint,
   HumanName,
 } from "@iguhealth/fhir-types/r4/types";
-import { descend, ascend, Loc, pointer } from "@iguhealth/fhir-pointer";
+import { descend, ascend, Loc, pointer, root } from "@iguhealth/fhir-pointer";
 import generateJSONPatches, { Mutation } from "@iguhealth/fhir-patch-building";
 
 import * as ComplexTypes from "../complex";
@@ -53,7 +53,9 @@ function EditorComponent({
     case "http://hl7.org/fhirpath/System.String": {
       // Only render the root element not the ones underneath.
       // id is special primitive string.
-      if (ascend(pointer)?.field === "id")
+      const asc = ascend(pointer);
+      console.log(asc);
+      if (asc?.field === "id" && asc?.parent === root(pointer))
         return (
           <Primitives.FHIRStringEditable
             disabled={true}
