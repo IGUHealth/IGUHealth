@@ -55,7 +55,7 @@ function EditorComponent({
       // id is special primitive string.
       if (ascend(pointer)?.field === "id")
         return (
-          <Primitives.String
+          <Primitives.FHIRStringEditable
             disabled={true}
             value={value as string}
             label={showLabel ? getFieldName(element.path) : undefined}
@@ -72,7 +72,7 @@ function EditorComponent({
     }
     case "string": {
       return (
-        <Primitives.String
+        <Primitives.FHIRStringEditable
           value={value as string}
           label={showLabel ? getFieldName(element.path) : undefined}
           onChange={(v: unknown) => {
@@ -88,7 +88,7 @@ function EditorComponent({
 
     case "boolean":
       return (
-        <Primitives.Boolean
+        <Primitives.FHIRBooleanEditable
           value={value as boolean}
           label={showLabel ? getFieldName(element.path) : undefined}
           onChange={(v: unknown) => {
@@ -102,7 +102,7 @@ function EditorComponent({
       );
     case "url":
       return (
-        <Primitives.Url
+        <Primitives.FHIRUrlEditable
           value={value as url}
           label={showLabel ? getFieldName(element.path) : undefined}
           onChange={(v: unknown) => {
@@ -117,7 +117,7 @@ function EditorComponent({
 
     case "date":
       return (
-        <Primitives.Date
+        <Primitives.FHIRDateEditable
           value={value as date}
           label={showLabel ? getFieldName(element.path) : undefined}
           onChange={(v: unknown) => {
@@ -131,7 +131,7 @@ function EditorComponent({
       );
     case "dateTime":
       return (
-        <Primitives.DateTime
+        <Primitives.FHIRDateTimeEditable
           value={value as dateTime}
           label={showLabel ? getFieldName(element.path) : undefined}
           onChange={(v: unknown) => {
@@ -145,7 +145,7 @@ function EditorComponent({
       );
     case "uri":
       return (
-        <Primitives.Uri
+        <Primitives.FHIRUriEditable
           value={value as uri}
           label={showLabel ? getFieldName(element.path) : undefined}
           onChange={(v: unknown) => {
@@ -159,7 +159,7 @@ function EditorComponent({
       );
     case "code":
       return (
-        <Primitives.Code
+        <Primitives.FHIRCodeEditable
           expand={expand}
           value={value as code}
           label={showLabel ? getFieldName(element.path) : undefined}
@@ -176,7 +176,7 @@ function EditorComponent({
       );
     case "decimal":
       return (
-        <Primitives.Decimal
+        <Primitives.FHIRDecimalEditable
           value={value as decimal}
           label={showLabel ? getFieldName(element.path) : undefined}
           onChange={(v: unknown) => {
@@ -190,7 +190,7 @@ function EditorComponent({
       );
     case "integer":
       return (
-        <Primitives.Integer
+        <Primitives.FHIRIntegerEditable
           value={value as integer}
           label={showLabel ? getFieldName(element.path) : undefined}
           onChange={(v: unknown) => {
@@ -204,7 +204,7 @@ function EditorComponent({
       );
     case "Address":
       return (
-        <ComplexTypes.AddressEditable
+        <ComplexTypes.FHIRAddressEditable
           value={value as Address}
           label={showLabel ? getFieldName(element.path) : undefined}
           onChange={(v: unknown) => {
@@ -218,7 +218,7 @@ function EditorComponent({
       );
     case "Identifier":
       return (
-        <ComplexTypes.IdentifierEditable
+        <ComplexTypes.FHIRIdentifierEditable
           value={value as Identifier}
           label={showLabel ? getFieldName(element.path) : undefined}
           onChange={(v: unknown) => {
@@ -231,10 +231,10 @@ function EditorComponent({
         />
       );
     case "Meta":
-      return <ComplexTypes.MetaReadOnly value={value as Meta} />;
+      return <ComplexTypes.FHIRMetaReadOnly value={value as Meta} />;
     case "ContactPoint":
       return (
-        <ComplexTypes.ContactPointEditable
+        <ComplexTypes.FHIRContactPointEditable
           value={value as ContactPoint}
           label={showLabel ? getFieldName(element.path) : undefined}
           onChange={(v: unknown) => {
@@ -248,7 +248,7 @@ function EditorComponent({
       );
     case "HumanName":
       return (
-        <ComplexTypes.HumanNameEditable
+        <ComplexTypes.FHIRHumanNameEditable
           value={value as HumanName}
           label={showLabel ? getFieldName(element.path) : undefined}
           onChange={(v: unknown) => {

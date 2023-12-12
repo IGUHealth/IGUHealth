@@ -6,10 +6,10 @@ import { FHIRMetaReadOnly } from "./Meta";
 import { FHIRPeriodEditable } from "./Period";
 
 export {
-  FHIRAddressEditable as AddressEditable,
-  FHIRIdentifierEditable as IdentifierEditable,
-  FHIRHumanNameEditable as HumanNameEditable,
-  FHIRMetaReadOnly as MetaReadOnly,
-  FHIRContactPointEditable as ContactPointEditable,
-  FHIRPeriodEditable as PeriodEditable,
+  FHIRAddressEditable,
+  FHIRIdentifierEditable,
+  FHIRHumanNameEditable,
+  FHIRMetaReadOnly,
+  FHIRContactPointEditable,
+  FHIRPeriodEditable,
 };
