@@ -4,7 +4,7 @@ import { useRecoilValue } from "recoil";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
 
-import { Base } from "@iguhealth/components";
+import { Table, Button, Input } from "@iguhealth/components";
 import {
   SearchParameter,
   Resource,
@@ -61,7 +61,7 @@ export default function ResourceTypeView() {
           {params.resourceType}
         </h2>
         <div className="flex flex-grow border hover:border-blue-700 h-10 focus:border-blue-700">
-          <Base.Input
+          <Input
             hideBorder
             placeholder="Enter search query e.g. _count=10&_sort=_lastUpdated"
             className="h-full rounded-md overflow-hidden flex flex-grow px-4 mr-1 text-xl font-light outline-none"
@@ -79,7 +79,7 @@ export default function ResourceTypeView() {
               setQueryParameter({ query: e.target.value });
             }}
           />
-          <Base.Button
+          <Button
             className="border-l ring-0 shadow-none rounded-none"
             buttonSize="small"
             buttonType="secondary"
@@ -88,11 +88,11 @@ export default function ResourceTypeView() {
             }}
           >
             <MagnifyingGlassIcon className="h-5 w-5" />
-          </Base.Button>
+          </Button>
         </div>
       </div>
       <div className="mt-2 mb-4 flex justify-start">
-        <Base.Button
+        <Button
           className="ml-2 font-medium"
           buttonSize="small"
           buttonType="secondary"
@@ -101,14 +101,18 @@ export default function ResourceTypeView() {
           <div className="flex items-center justify-center ">
             <PlusIcon className="w-4 h-4 mr-1" /> <span>New</span>
           </div>
-        </Base.Button>
+        </Button>
       </div>
       <div className="overflow-auto">
-        <Base.Table
+        <Table
           isLoading={isLoading}
           data={data || []}
-          onRowClick={(row: Resource) => {
-            navigate(`/resources/${row.resourceType}/${row.id}`);
+          onRowClick={(row) => {
+            navigate(
+              `/resources/${(row as Resource).resourceType}/${
+                (row as Resource).id
+              }`
+            );
           }}
           columns={[
             ...(searchParameters || [])

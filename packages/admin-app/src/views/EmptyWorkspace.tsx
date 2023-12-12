@@ -1,6 +1,6 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Base } from "@iguhealth/components";
+import { Button } from "@iguhealth/components";
 
 export default function EmptyWorkspace() {
   const auth0 = useAuth0();
@@ -10,7 +10,7 @@ export default function EmptyWorkspace() {
         <h1 className="text-xl font-semibold mb-4 ">
           There are no workspaces associated with your account.
         </h1>
-        <Base.Button
+        <Button
           buttonType="secondary"
           onClick={() =>
             auth0.logout({
@@ -21,7 +21,7 @@ export default function EmptyWorkspace() {
           }
         >
           Logout
-        </Base.Button>
+        </Button>
       </div>
     </div>
   );

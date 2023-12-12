@@ -12,7 +12,14 @@ import {
   ResourceType,
   id,
 } from "@iguhealth/fhir-types/r4/types";
-import { Base, FHIR } from "@iguhealth/components";
+import {
+  CodeMirror,
+  DropDownMenu,
+  Button,
+  Tabs,
+  Table,
+  GenerativeForm,
+} from "@iguhealth/components";
 
 import { getValueSetExpansion } from "../data/terminology";
 import { getClient } from "../data/client";
@@ -28,7 +35,7 @@ function JSONEditor({
 }) {
   return (
     <div className="flex flex-1 border overflow-auto">
-      <Base.CodeMirror
+      <CodeMirror
         extensions={extensions}
         value={value}
         theme={{
@@ -63,7 +70,7 @@ function ResourceHistory() {
   }, [resourceType, id, setHistory]);
 
   return (
-    <Base.Table
+    <Table
       isLoading={loading}
       data={history || []}
       columns={[
@@ -99,9 +106,9 @@ export interface AdditionalContent {
   resource: Resource | undefined;
   structureDefinition: StructureDefinition | undefined;
   onChange?: React.Dispatch<React.SetStateAction<Resource | undefined>>;
-  actions: Parameters<typeof Base.DropDownMenu>[0]["links"];
-  leftTabs?: Parameters<typeof Base.Tabs>[0]["tabs"];
-  rightTabs?: Parameters<typeof Base.Tabs>[0]["tabs"];
+  actions: Parameters<typeof DropDownMenu>[0]["links"];
+  leftTabs?: Parameters<typeof Tabs>[0]["tabs"];
+  rightTabs?: Parameters<typeof Tabs>[0]["tabs"];
 }
 export default function ResourceEditorComponent({
   id,
@@ -141,7 +148,7 @@ export default function ResourceEditorComponent({
   );
 
   return (
-    <Base.Tabs
+    <Tabs
       tabs={[
         ...leftSide,
         ...[
@@ -149,7 +156,7 @@ export default function ResourceEditorComponent({
             id: "editor",
             title: "Editor",
             content: structureDefinition && (
-              <FHIR.GenerativeForm
+              <GenerativeForm
                 value={resource}
                 structureDefinition={structureDefinition}
                 setValue={setValue}
@@ -192,17 +199,13 @@ export default function ResourceEditorComponent({
         ...rightSide,
       ]}
       rightSide={
-        <Base.DropDownMenu links={actions}>
-          <Base.Button
-            buttonType="secondary"
-            buttonSize="small"
-            onClick={() => {}}
-          >
+        <DropDownMenu links={actions}>
+          <Button buttonType="secondary" buttonSize="small" onClick={() => {}}>
             <div className="flex items-center">
               <span>Actions</span> <ChevronDownIcon className="ml-1 w-3 h-3" />
             </div>
-          </Base.Button>
-        </Base.DropDownMenu>
+          </Button>
+        </DropDownMenu>
       }
     />
   );

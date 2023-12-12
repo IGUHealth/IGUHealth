@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { useParams, useNavigate } from "react-router-dom";
 
-import { Base } from "@iguhealth/components";
+import { Toaster } from "@iguhealth/components";
 import {
   id,
   ResourceType,
@@ -47,7 +47,7 @@ function ResourceEditorTabs() {
             setResource(response);
             return response;
           });
-          Base.Toaster.promise(editPromise, {
+          Toaster.promise(editPromise, {
             loading: id === "new" ? "Creating Resource" : "Updating Resource",
             success: (success) =>
               `Updated ${(success as Resource).resourceType}`,
@@ -64,7 +64,7 @@ function ResourceEditorTabs() {
             })
           );
         } catch (e) {
-          Base.Toaster.error(`${e}`);
+          Toaster.error(`${e}`);
         }
       },
     },
@@ -78,7 +78,7 @@ function ResourceEditorTabs() {
           resourceType as ResourceType,
           id as id
         );
-        Base.Toaster.promise(deletingResource, {
+        Toaster.promise(deletingResource, {
           loading: "Deleting Resource",
           success: () => `Deleted ${resourceType}`,
           error: (error) => {

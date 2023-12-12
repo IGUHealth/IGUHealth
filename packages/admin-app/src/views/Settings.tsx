@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useAuth0, User } from "@auth0/auth0-react";
-import { Base } from "@iguhealth/components";
+import { Input, Button, Toaster, Loading } from "@iguhealth/components";
 
 function copytoClipboard(token: string | undefined) {
   if (token) {
     navigator.clipboard.writeText(token);
-    Base.Toaster.success("Access Token copied");
+    Toaster.success("Access Token copied");
   }
 }
 
@@ -37,9 +37,9 @@ function SettingDisplay({ user, token }: SettingProps) {
           <label>Access Token</label>
           <div className="flex flex-row">
             <div className="flex flex-1">
-              <Base.Input readOnly value={token} />
+              <Input readOnly value={token} />
             </div>
-            <Base.Button
+            <Button
               onClick={(e) => {
                 e.preventDefault();
                 copytoClipboard(token);
@@ -47,7 +47,7 @@ function SettingDisplay({ user, token }: SettingProps) {
               className="ml-1"
             >
               Copy
-            </Base.Button>
+            </Button>
           </div>
         </div>
       </div>
@@ -68,7 +68,7 @@ export default function Settings() {
     <React.Suspense
       fallback={
         <div className="h-screen flex flex-1 justify-center items-center flex-col">
-          <Base.Loading />
+          <Loading />
           <div className="mt-1 ">Loading...</div>
         </div>
       }

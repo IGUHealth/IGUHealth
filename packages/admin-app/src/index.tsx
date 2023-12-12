@@ -15,7 +15,12 @@ import {
 } from "react-router-dom";
 
 import createHTTPClient from "@iguhealth/client/http";
-import { Layout, Base } from "@iguhealth/components";
+import {
+  SideBar,
+  Loading,
+  Toaster,
+  ProfileDropdown,
+} from "@iguhealth/components";
 import "@iguhealth/components/dist/index.css";
 
 import { getClient } from "./data/client";
@@ -50,7 +55,7 @@ function LoginWrapper() {
     <>
       {auth0Info.isLoading || !auth0Info.isAuthenticated ? (
         <div className="h-screen flex flex-1 justify-center items-center flex-col">
-          <Base.Loading />
+          <Loading />
           <div className="mt-1 ">Loading...</div>
         </div>
       ) : (
@@ -181,9 +186,9 @@ function Root() {
 
   return (
     <>
-      <Layout.SideBar.SidebarLayout
+      <SideBar.SidebarLayout
         sidebar={
-          <Layout.SideBar.SideBar
+          <SideBar.SideBar
             top={
               <div
                 onClick={() => navigate("/")}
@@ -193,11 +198,8 @@ function Root() {
               </div>
             }
           >
-            <Layout.SideBar.SideBarItemGroup
-              className="mt-8"
-              label="Configuration"
-            >
-              <Layout.SideBar.SideBarItem
+            <SideBar.SideBarItemGroup className="mt-8" label="Configuration">
+              <SideBar.SideBarItem
                 active={
                   matches[0].params.resourceType === "OperationDefinition"
                 }
@@ -206,26 +208,26 @@ function Root() {
                 }}
               >
                 Custom Operations
-              </Layout.SideBar.SideBarItem>
-              <Layout.SideBar.SideBarItem
+              </SideBar.SideBarItem>
+              <SideBar.SideBarItem
                 active={matches[0].params.resourceType === "Subscription"}
                 onClick={() => {
                   navigate("/resources/Subscription");
                 }}
               >
                 Subscriptions
-              </Layout.SideBar.SideBarItem>
-            </Layout.SideBar.SideBarItemGroup>
-            <Layout.SideBar.SideBarItemGroup className="mt-8" label="UI">
-              <Layout.SideBar.SideBarItem
+              </SideBar.SideBarItem>
+            </SideBar.SideBarItemGroup>
+            <SideBar.SideBarItemGroup className="mt-8" label="UI">
+              <SideBar.SideBarItem
                 active={matches[0].params.resourceType === "Questionnaire"}
                 onClick={() => {
                   navigate("/resources/Questionnaire");
                 }}
               >
                 Questionnaires
-              </Layout.SideBar.SideBarItem>
-              <Layout.SideBar.SideBarItem
+              </SideBar.SideBarItem>
+              <SideBar.SideBarItem
                 active={
                   matches[0].params.resourceType === "QuestionnaireResponse"
                 }
@@ -234,27 +236,24 @@ function Root() {
                 }}
               >
                 Questionnaire Responses
-              </Layout.SideBar.SideBarItem>
-            </Layout.SideBar.SideBarItemGroup>
-            <Layout.SideBar.SideBarItemGroup
-              className="mt-8"
-              label="Monitoring"
-            >
-              <Layout.SideBar.SideBarItem
+              </SideBar.SideBarItem>
+            </SideBar.SideBarItemGroup>
+            <SideBar.SideBarItemGroup className="mt-8" label="Monitoring">
+              <SideBar.SideBarItem
                 active={matches[0].params.resourceType === "AuditEvent"}
                 onClick={() => {
                   navigate("/resources/AuditEvent");
                 }}
               >
                 Audit Events
-              </Layout.SideBar.SideBarItem>
-            </Layout.SideBar.SideBarItemGroup>
-            {/* <Layout.SideBar.SideBarItemGroup
+              </SideBar.SideBarItem>
+            </SideBar.SideBarItemGroup>
+            {/* <SideBar.SideBarItemGroup
               className="mt-8"
               label="Security"
-            ></Layout.SideBar.SideBarItemGroup> */}
-            <Layout.SideBar.SideBarItemGroup label="Data" className="mt-8">
-              <Layout.SideBar.SideBarItem
+            ></SideBar.SideBarItemGroup> */}
+            <SideBar.SideBarItemGroup label="Data" className="mt-8">
+              <SideBar.SideBarItem
                 active={
                   matches.find((match) => match.id === "root") !== undefined ||
                   matches.find(
@@ -272,10 +271,10 @@ function Root() {
                 }}
               >
                 All Resources
-              </Layout.SideBar.SideBarItem>
-            </Layout.SideBar.SideBarItemGroup>
-            <Layout.SideBar.SideBarItemGroup className="mt-8" label="Import">
-              <Layout.SideBar.SideBarItem
+              </SideBar.SideBarItem>
+            </SideBar.SideBarItemGroup>
+            <SideBar.SideBarItemGroup className="mt-8" label="Import">
+              <SideBar.SideBarItem
                 active={
                   matches.find((match) => match.id === "bundle-import") !==
                   undefined
@@ -285,12 +284,12 @@ function Root() {
                 }}
               >
                 Bundle
-              </Layout.SideBar.SideBarItem>
-            </Layout.SideBar.SideBarItemGroup>
+              </SideBar.SideBarItem>
+            </SideBar.SideBarItemGroup>
             {/* Used because want to maintain a margin of at least 8 when shrinking. */}
             <div className="mb-8" />
-            <Layout.SideBar.SideBarItemGroup className="mt-auto" label="User">
-              <Layout.SideBar.SideBarItem
+            <SideBar.SideBarItemGroup className="mt-auto" label="User">
+              <SideBar.SideBarItem
                 logo={<Cog6ToothIcon />}
                 active={
                   matches.find((match) => match.id === "settings") !== undefined
@@ -298,8 +297,8 @@ function Root() {
                 onClick={() => navigate("/settings")}
               >
                 Settings
-              </Layout.SideBar.SideBarItem>
-              <Layout.SideBar.SideBarItem
+              </SideBar.SideBarItem>
+              <SideBar.SideBarItem
                 logo={<ArrowLeftOnRectangleIcon />}
                 onClick={() =>
                   auth0Info.logout({
@@ -310,9 +309,9 @@ function Root() {
                 }
               >
                 Sign out
-              </Layout.SideBar.SideBarItem>
-            </Layout.SideBar.SideBarItemGroup>
-          </Layout.SideBar.SideBar>
+              </SideBar.SideBarItem>
+            </SideBar.SideBarItemGroup>
+          </SideBar.SideBar>
         }
       >
         <>
@@ -327,7 +326,7 @@ function Root() {
                 >
                   Documentation
                 </a>
-                <Layout.ProfileDropdown
+                <ProfileDropdown
                   user={{
                     email: auth0Info.user?.email,
                     name: auth0Info.user?.name,
@@ -358,11 +357,11 @@ function Root() {
             </div>
           </div>
           <div className="p-4 flex flex-1 mt-2 overflow-auto">
-            <Base.Toaster.Toaster />
+            <Toaster.Toaster />
             <Outlet />
           </div>
         </>
-      </Layout.SideBar.SidebarLayout>
+      </SideBar.SidebarLayout>
       <React.Suspense fallback={<div />}>
         <SearchModal />
       </React.Suspense>
