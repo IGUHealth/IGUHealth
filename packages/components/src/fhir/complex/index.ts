@@ -4,6 +4,7 @@ import { FHIRContactPointEditable } from "./ContactPoint";
 import { FHIRHumanNameEditable } from "./HumanName";
 import { FHIRMetaReadOnly } from "./Meta";
 import { FHIRPeriodEditable } from "./Period";
+import { FHIRContactDetailEditable } from "./ContactDetail";
 
 export {
   FHIRAddressEditable,
@@ -12,4 +13,5 @@ export {
   FHIRMetaReadOnly,
   FHIRContactPointEditable,
   FHIRPeriodEditable,
+  FHIRContactDetailEditable,
 };
