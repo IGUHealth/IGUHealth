@@ -2,7 +2,7 @@ export type EditableProps<T> = {
   /**
    * The value of the input.
    */
-  value: T | undefined;
+  value?: T;
   /**
    * Issues
    */

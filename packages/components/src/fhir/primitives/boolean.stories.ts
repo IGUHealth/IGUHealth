@@ -21,13 +21,13 @@ type Story = StoryObj<typeof meta>;
 export const ExistingData: Story = {
   args: {
     value: true,
-    onChange: (value: boolean) => console.log(value),
+    onChange: (value) => console.log(value),
   },
 };
 
 export const OnError: Story = {
   args: {
     issue: "Bad value",
-    onChange: (value: boolean) => console.log(value),
+    onChange: (value) => console.log(value),
   },
 };

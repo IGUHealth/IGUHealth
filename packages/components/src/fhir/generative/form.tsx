@@ -543,19 +543,19 @@ const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
 
 export type Setter = (resource: Resource) => Resource;
 
-export interface GenerativeFormProps {
+export interface FHIRGenerativeFormProps {
   structureDefinition: StructureDefinition;
   value: Resource | undefined;
   setValue?: (s: Setter) => void;
   expand?: (url: string) => Promise<ValueSet>;
 }
 
-export const GenerativeForm = ({
+export const FHIRGenerativeForm = ({
   structureDefinition,
   value,
   expand,
   setValue = () => {},
-}: GenerativeFormProps) => {
+}: FHIRGenerativeFormProps) => {
   const onChange = useMemo(() => {
     return (mutation: Mutation<any, any>) => {
       setValue((resource) => {

@@ -21,12 +21,12 @@ type Story = StoryObj<typeof meta>;
 export const ExistingData: Story = {
   args: {
     value: "test data",
-    onChange: (value: string) => console.log(value),
+    onChange: (value) => console.log(value),
   },
 };
 
 export const EmptyData: Story = {
   args: {
-    onChange: (value: string) => console.log(value),
+    onChange: (value) => console.log(value),
   },
 };

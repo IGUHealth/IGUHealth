@@ -135,6 +135,6 @@ export const OnError: Story = {
   args: {
     value: "test",
     issue: "Bad value",
-    onChange: (value: string | undefined) => console.log(value),
+    onChange: (value) => console.log(value),
   },
 };

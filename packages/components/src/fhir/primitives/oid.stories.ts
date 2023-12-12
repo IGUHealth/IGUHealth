@@ -18,7 +18,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     value: "urn:oid:1.2.3.4.5",
-    onChange: (value: string) => console.log(value),
+    onChange: (value) => console.log(value),
   },
 };
 
@@ -26,7 +26,7 @@ export const OnError: Story = {
   args: {
     value: "urn:oid:1.2.3.4.5",
     issue: "Issue",
-    onChange: (value: string) => console.log(value),
+    onChange: (value) => console.log(value),
   },
 };
 
@@ -34,6 +34,6 @@ export const InvalidValue: Story = {
   args: {
     // @ts-ignore
     value: "bad-value",
-    onChange: (value: string) => console.log(value),
+    onChange: (value) => console.log(value),
   },
 };

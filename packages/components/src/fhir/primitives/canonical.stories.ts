@@ -21,7 +21,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     value: "test",
-    onChange: (value: string) => console.log(value),
+    onChange: (value) => console.log(value),
   },
 };
 
@@ -29,6 +29,6 @@ export const OnError: Story = {
   args: {
     value: "test",
     issue: "Bad value",
-    onChange: (value: string) => console.log(value),
+    onChange: (value) => console.log(value),
   },
 };
