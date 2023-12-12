@@ -26,7 +26,9 @@ import {
   Identifier,
   Meta,
   ContactPoint,
+  ContactDetail,
   HumanName,
+  Period,
 } from "@iguhealth/fhir-types/r4/types";
 import { descend, ascend, Loc, pointer, root } from "@iguhealth/fhir-pointer";
 import generateJSONPatches, { Mutation } from "@iguhealth/fhir-patch-building";
@@ -54,7 +56,6 @@ function EditorComponent({
       // Only render the root element not the ones underneath.
       // id is special primitive string.
       const asc = ascend(pointer);
-      console.log(asc);
       if (asc?.field === "id" && asc?.parent === root(pointer))
         return (
           <Primitives.FHIRStringEditable
@@ -254,6 +255,35 @@ function EditorComponent({
           value={value as HumanName}
           label={showLabel ? getFieldName(element.path) : undefined}
           onChange={(v: unknown) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
+      );
+    case "ContactDetail":
+      return (
+        <ComplexTypes.FHIRContactDetailEditable
+          value={value as ContactDetail}
+          expand={expand}
+          label={showLabel ? getFieldName(element.path) : undefined}
+          onChange={(v) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
+      );
+    case "Period":
+      return (
+        <ComplexTypes.FHIRPeriodEditable
+          value={value as Period}
+          label={showLabel ? getFieldName(element.path) : undefined}
+          onChange={(v) => {
             onChange({
               op: "replace",
               path: pointer,
