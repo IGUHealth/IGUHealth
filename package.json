@@ -4,7 +4,8 @@
   "packageManager": "yarn@3.6.3",
   "main": "index.js",
   "scripts": {
-    "configure": "yarn node configure_packages.cjs"
+    "configure": "yarn node configure_packages.cjs",
+    "generate-documentation": "yarn typedoc"
   },
   "devDependencies": {
     "@types/node": "^20.3.1",

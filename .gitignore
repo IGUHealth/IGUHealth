@@ -9,8 +9,12 @@ packages/admin-app/build/
 packages/server/src/version.ts
 storybook-static/
 .docusaurus
-docs/
 .dccache
+
+# Typedoc generation ignore
+docs/
+!packages/docs
+!packages/docs/docs
 
 ## Below comes from the react-storybook gitignore
 
