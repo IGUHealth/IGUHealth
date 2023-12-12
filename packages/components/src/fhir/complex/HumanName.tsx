@@ -21,7 +21,9 @@ export const HumanNameEditable = ({
           value={value?.given?.[0] || ""}
           onChange={(firstName) => {
             const given = value?.given ? [...value.given] : [];
-            given[0] = firstName;
+            if (firstName) {
+              given[0] = firstName;
+            }
             onChange && onChange({ ...value, given });
           }}
         />
@@ -31,7 +33,9 @@ export const HumanNameEditable = ({
           onChange={(middleName) => {
             const given = value?.given ? [...value.given] : [];
             if (!given[0]) given[0] = "";
-            given[1] = middleName;
+            if (middleName) {
+              given[1] = middleName;
+            }
             onChange && onChange({ ...value, given });
           }}
         />

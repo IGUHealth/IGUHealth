@@ -20,7 +20,7 @@ export const AddressEditable = ({
           label="Line"
           value={value?.line?.[0] || ""}
           onChange={(line) => {
-            onChange && onChange({ ...value, line: [line] });
+            line && onChange && onChange({ ...value, line: [line] });
           }}
         />
         <String
