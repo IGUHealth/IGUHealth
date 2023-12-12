@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 import { Bundle, OperationOutcome } from "@iguhealth/fhir-types/r4/types";
-import { Base } from "@iguhealth/components";
+import { Input, Button, Toaster } from "@iguhealth/components";
 
 import { getClient } from "../data/client";
 
@@ -33,7 +33,7 @@ export default function BatchImportView() {
   return (
     <div className="w-full flex flex-col items-center text-slate-700">
       <div className="mt-[10%]">
-        <Base.Input
+        <Input
           label="Select Bundle to import (must be either a batch or transaction bundle)"
           issues={issues}
           type="file"
@@ -58,7 +58,7 @@ export default function BatchImportView() {
         />
 
         <div className="flex justify-end">
-          <Base.Button
+          <Button
             disabled={bundle === undefined}
             className="mt-2"
             buttonSize="medium"
@@ -68,7 +68,7 @@ export default function BatchImportView() {
                   bundle.type === "transaction"
                     ? client.transaction({}, bundle)
                     : client.batch({}, bundle);
-                Base.Toaster.promise(batchPromise, {
+                Toaster.promise(batchPromise, {
                   loading: "Uploading Bundle",
                   success: () => `Bundle was uploaded`,
                   error: (error) => {
@@ -86,7 +86,7 @@ export default function BatchImportView() {
             }}
           >
             Import
-          </Base.Button>
+          </Button>
         </div>
       </div>
     </div>

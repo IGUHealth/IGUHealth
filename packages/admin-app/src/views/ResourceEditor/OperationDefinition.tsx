@@ -16,7 +16,16 @@ import {
   AuditEvent,
   Extension,
 } from "@iguhealth/fhir-types/r4/types";
-import { Base } from "@iguhealth/components";
+import {
+  Tabs,
+  CodeMirror,
+  Toaster,
+  Modal,
+  Button,
+  Loading,
+  Input,
+  Table,
+} from "@iguhealth/components";
 
 import { getClient } from "../../data/client";
 import ResourceEditorComponent, {
@@ -52,7 +61,7 @@ function OperationCodeEditor({
   return (
     <div className="flex flex-1 flex-col overflow-auto">
       <div className="border flex-1 flex">
-        <Base.CodeMirror
+        <CodeMirror
           extensions={extensions}
           value={value}
           theme={{
@@ -67,14 +76,14 @@ function OperationCodeEditor({
         />
       </div>
       <div className="flex justify-start py-2 px-1">
-        <Base.Modal
+        <Modal
           modalTitle={`Invoke ${operation?.code}`}
           ModalContent={(setOpen) => (
             <InvocationModal operation={operation} setOpen={setOpen} />
           )}
         >
           {(setOpen) => (
-            <Base.Button
+            <Button
               buttonType="primary"
               onClick={(e) => {
                 e.preventDefault();
@@ -82,9 +91,9 @@ function OperationCodeEditor({
               }}
             >
               Invoke
-            </Base.Button>
+            </Button>
           )}
-        </Base.Modal>
+        </Modal>
       </div>
     </div>
   );
@@ -107,7 +116,7 @@ function OperationAuditEvents({ operationId }: { operationId: string }) {
   }, [operationId, setAuditEvents]);
 
   return (
-    <Base.Table
+    <Table
       isLoading={loading}
       data={auditEvents || []}
       columns={[
@@ -148,7 +157,7 @@ const InvocationModal = ({
   const [output, setOutput] = useState<unknown | undefined>(undefined);
 
   return (
-    <Base.Tabs
+    <Tabs
       tabs={[
         {
           id: "input",
@@ -156,7 +165,7 @@ const InvocationModal = ({
           content: (
             <div className="flex flex-col h-56 w-full">
               <div className="flex flex-1 border overflow-auto">
-                <Base.CodeMirror
+                <CodeMirror
                   extensions={[basicSetup, json()]}
                   value={parameters}
                   theme={{
@@ -172,7 +181,7 @@ const InvocationModal = ({
               </div>
 
               <div className="mt-1 flex justify-end">
-                <Base.Button
+                <Button
                   className="mr-1"
                   buttonType="primary"
                   onClick={(e) => {
@@ -188,7 +197,7 @@ const InvocationModal = ({
                         {},
                         JSON.parse(parameters)
                       );
-                      Base.Toaster.promise(invocation, {
+                      Toaster.promise(invocation, {
                         loading: "Invocation",
                         success: (success) => {
                           setOutput(success);
@@ -206,13 +215,13 @@ const InvocationModal = ({
                         },
                       });
                     } catch (e) {
-                      Base.Toaster.error(`${e}`);
+                      Toaster.error(`${e}`);
                     }
                   }}
                 >
                   Send
-                </Base.Button>
-                <Base.Button
+                </Button>
+                <Button
                   buttonType="secondary"
                   onClick={(e) => {
                     e.preventDefault();
@@ -220,7 +229,7 @@ const InvocationModal = ({
                   }}
                 >
                   Cancel
-                </Base.Button>
+                </Button>
               </div>
             </div>
           ),
@@ -231,7 +240,7 @@ const InvocationModal = ({
           content: (
             <div className="flex flex-col h-56 w-full">
               <div className="flex flex-1 border  overflow-auto">
-                <Base.CodeMirror
+                <CodeMirror
                   readOnly
                   extensions={[basicSetup, json()]}
                   value={JSON.stringify(output, null, 2)}
@@ -293,7 +302,7 @@ function EnvironmentVariables({
           return (
             <tr key={pointer}>
               <td>
-                <Base.Input
+                <Input
                   value={ext.valueString}
                   onChange={(e) => {
                     onChange(
@@ -307,7 +316,7 @@ function EnvironmentVariables({
                 />
               </td>
               <td>
-                <Base.Input
+                <Input
                   type={isSecret ? "password" : "text"}
                   value={ext.extension?.[0].valueString}
                   onChange={(e) => {
@@ -326,7 +335,7 @@ function EnvironmentVariables({
                 />
               </td>
               <td>
-                <Base.Input
+                <Input
                   type="checkbox"
                   checked={isSecret}
                   onChange={(e) => {
@@ -378,7 +387,7 @@ function EnvironmentVariables({
       <tfoot>
         <tr>
           <td>
-            <Base.Button
+            <Button
               onClick={() => {
                 onChange(
                   fpb.applyMutationImmutable(operation, {
@@ -402,7 +411,7 @@ function EnvironmentVariables({
               }}
             >
               Add Environment Variable
-            </Base.Button>
+            </Button>
           </td>
         </tr>
       </tfoot>
@@ -485,7 +494,7 @@ export default function OperationDefinitionView({
             />
           ) : (
             <div className="flex justify-center items-center">
-              <Base.Loading />
+              <Loading />
             </div>
           ),
         },

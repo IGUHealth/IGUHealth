@@ -5,7 +5,7 @@ import { RecoilState, atom, useRecoilState, useRecoilValue } from "recoil";
 import { Dialog, Transition } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
 
-import { CapabilityStatementRestResource } from "@iguhealth/fhir-types";
+import { CapabilityStatementRestResource } from "@iguhealth/fhir-types/r4/types";
 
 import { getCapabilities } from "../data/capabilities";
 
