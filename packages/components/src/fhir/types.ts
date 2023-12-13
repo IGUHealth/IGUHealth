@@ -1,4 +1,3 @@
-import { ValueSet } from "@iguhealth/fhir-types/r4/types";
 import createHTTPClient from "@iguhealth/client/http";
 
 type HTTPClient = ReturnType<typeof createHTTPClient>;
