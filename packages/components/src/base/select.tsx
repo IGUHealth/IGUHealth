@@ -1,9 +1,9 @@
 import React, { Fragment, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
+import classNames from "classnames";
 
 import { DisplayIssues, Label, inputClassNames } from "./containers";
-import classNames from "classnames";
 
 export type Option = { value: string | number; label: string };
 export interface SelectProps {
@@ -51,23 +51,29 @@ export const Select = ({
       <div className="relative">
         <div className="flex flex-col flex-grow">
           <Label label={label} className={classNames("mr-1 ")} />
-          <Combobox.Input
-            className={classNames(
-              "outline-none w-full leading-5 text-gray-900 focus:ring-0",
-              inputClassNames({
-                hideBorder: false,
-                issues: issue ? [issue] : [],
-              })
-            )}
-            displayValue={(option: Option) => option && option.label}
-            onChange={(event) => setQuery(event.target.value)}
-          />
-          <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2 top-[22px]">
-            <ChevronUpDownIcon
-              className="h-5 w-5 text-gray-400"
-              aria-hidden="true"
+          <div className="relative">
+            <Combobox.Input
+              className={classNames(
+                "outline-none w-full leading-5 text-gray-900 focus:ring-0",
+                inputClassNames({
+                  hideBorder: false,
+                  issues: issue ? [issue] : [],
+                })
+              )}
+              displayValue={(option: Option) => option && option.label}
+              onChange={(event) => setQuery(event.target.value)}
             />
-          </Combobox.Button>
+            <Combobox.Button
+              className={classNames(
+                "absolute inset-y-0 right-0 flex items-center pr-2"
+              )}
+            >
+              <ChevronUpDownIcon
+                className="h-5 w-5 text-gray-400"
+                aria-hidden="true"
+              />
+            </Combobox.Button>
+          </div>
           <DisplayIssues issues={issue ? [issue] : []} />
         </div>
         <Transition
