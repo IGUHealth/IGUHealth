@@ -1,18 +1,18 @@
 import React from "react";
 import { Identifier } from "@iguhealth/fhir-types/r4/types";
 
-import { EditableProps, TerminologyLookupProps } from "../types";
+import { EditableProps, ClientProps } from "../types";
 import { InputContainer } from "../../base/containers";
 import { FHIRCodeEditable } from "../primitives/code";
 import { FHIRUriEditable } from "../primitives/uri";
 import { FHIRStringEditable } from "../primitives/string";
 
 export type FHIRIdentifierEditableProps = EditableProps<Identifier> &
-  TerminologyLookupProps;
+  ClientProps;
 
 export const FHIRIdentifierEditable = ({
   value,
-  expand,
+  client,
   onChange,
   issue,
   label,
@@ -21,7 +21,7 @@ export const FHIRIdentifierEditable = ({
     <InputContainer label={label} issues={issue ? [issue] : []}>
       <div className="flex space-x-1">
         <FHIRCodeEditable
-          expand={expand}
+          client={client}
           label="Use"
           open={true}
           system="http://hl7.org/fhir/ValueSet/identifier-use"

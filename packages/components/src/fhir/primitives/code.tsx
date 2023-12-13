@@ -1,16 +1,18 @@
 import React, { useEffect } from "react";
+
+import { ValueSetExpand } from "@iguhealth/generated-ops/r4";
 import {
   ValueSet,
   ValueSetExpansionContains,
 } from "@iguhealth/fhir-types/r4/types";
 
-import { EditableProps, TerminologyLookupProps } from "../types";
+import { EditableProps, ClientProps } from "../types";
 import { Select, Option } from "../../base/select";
 
 export type FHIRCodeEditableProps = EditableProps<string> & {
   system?: string;
   open?: boolean;
-} & TerminologyLookupProps;
+} & ClientProps;
 
 function flatten(item: ValueSetExpansionContains): Option[] {
   const children = item.contains?.map(flatten).flat() || [];
@@ -32,18 +34,20 @@ export const FHIRCodeEditable = ({
   onChange,
   issue,
   label,
-  expand,
+  client,
   open = false,
   system,
 }: FHIRCodeEditableProps) => {
   const [options, setOptions] = React.useState<Option[]>([]);
   useEffect(() => {
-    if (expand && system) {
-      expand(system).then((valueset) => {
-        setOptions(valueSetToOptions(valueset));
-      });
+    if (system) {
+      client
+        .invoke_type(ValueSetExpand.Op, {}, "ValueSet", { url: system })
+        .then((valueSet) => {
+          setOptions(valueSetToOptions(valueSet));
+        });
     }
-  }, [system, expand]);
+  }, [system, client]);
   return (
     <Select
       value={value}

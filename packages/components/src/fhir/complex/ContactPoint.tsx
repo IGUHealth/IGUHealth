@@ -1,17 +1,17 @@
 import React from "react";
 import { ContactPoint } from "@iguhealth/fhir-types/r4/types";
 
-import { EditableProps, TerminologyLookupProps } from "../types";
+import { EditableProps, ClientProps } from "../types";
 import { InputContainer } from "../../base/containers";
 import { FHIRCodeEditable } from "../primitives/code";
 import { FHIRStringEditable } from "../primitives/string";
 
 export type FHIRContactPointEditableProps = EditableProps<ContactPoint> &
-  TerminologyLookupProps;
+  ClientProps;
 
 export const FHIRContactPointEditable = ({
   value,
-  expand,
+  client,
   onChange,
   issue,
   label,
@@ -21,7 +21,7 @@ export const FHIRContactPointEditable = ({
       <div className="flex space-x-1">
         <FHIRCodeEditable
           label="Use"
-          expand={expand}
+          client={client}
           open={true}
           system="http://hl7.org/fhir/ValueSet/contact-point-use"
           value={value?.use}
@@ -31,7 +31,7 @@ export const FHIRContactPointEditable = ({
         />
         <FHIRCodeEditable
           label="System"
-          expand={expand}
+          client={client}
           open={true}
           system="http://hl7.org/fhir/ValueSet/contact-point-system"
           value={value?.system}

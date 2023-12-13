@@ -1,4 +1,7 @@
 import { ValueSet } from "@iguhealth/fhir-types/r4/types";
+import createHTTPClient from "@iguhealth/client/http";
+
+type HTTPClient = ReturnType<typeof createHTTPClient>;
 
 export type EditableProps<T> = {
   /**
@@ -19,6 +22,6 @@ export type EditableProps<T> = {
   label?: string;
 };
 
-export type TerminologyLookupProps = {
-  expand?: (value: string) => Promise<ValueSet>;
+export type ClientProps = {
+  client: HTTPClient;
 };

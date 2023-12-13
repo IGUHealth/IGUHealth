@@ -119,6 +119,7 @@ export default function ResourceEditorComponent({
   leftTabs: leftSide = [],
   rightTabs: rightSide = [],
 }: AdditionalContent) {
+  const client = useRecoilValue(getClient);
   const setValue = useMemo(
     () => (getResource: (r: Resource) => Resource) => {
       onChange &&
@@ -160,7 +161,7 @@ export default function ResourceEditorComponent({
                 value={resource}
                 structureDefinition={structureDefinition}
                 setValue={setValue}
-                expand={expansion}
+                client={client}
               />
             ),
           },

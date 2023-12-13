@@ -2,6 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { FHIRGenerativeForm, Setter } from "./form";
+import { createStorybookClient } from "../stories.client";
 
 const StateForm = (props: Parameters<typeof FHIRGenerativeForm>[0]) => {
   const [state, setState] = React.useState(props);
@@ -37,6 +38,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
+    client: createStorybookClient(),
     value: {
       resourceType: "Patient",
       id: "testing",
