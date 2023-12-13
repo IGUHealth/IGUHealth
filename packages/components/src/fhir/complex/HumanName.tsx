@@ -24,7 +24,7 @@ export const FHIRHumanNameEditable = ({
             if (firstName) {
               given[0] = firstName;
             }
-            onChange && onChange({ ...value, given });
+            onChange?.call(this, { ...value, given });
           }}
         />
         <FHIRStringEditable
@@ -36,14 +36,14 @@ export const FHIRHumanNameEditable = ({
             if (middleName) {
               given[1] = middleName;
             }
-            onChange && onChange({ ...value, given });
+            onChange?.call(this, { ...value, given });
           }}
         />
         <FHIRStringEditable
           label="Last"
           value={value?.family}
           onChange={(family) => {
-            onChange && onChange({ ...value, family });
+            onChange?.call(this, { ...value, family });
           }}
         />
       </div>

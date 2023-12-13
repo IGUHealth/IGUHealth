@@ -20,30 +20,30 @@ export const FHIRContactPointEditable = ({
     <InputContainer label={label} issues={issue ? [issue] : []}>
       <div className="flex space-x-1">
         <FHIRCodeEditable
-          label="use"
+          label="Use"
           expand={expand}
           open={true}
           system="http://hl7.org/fhir/ValueSet/contact-point-use"
           value={value?.use}
           onChange={(use) => {
-            onChange && onChange({ ...value, use });
+            onChange?.call(this, { ...value, use });
           }}
         />
         <FHIRCodeEditable
-          label="system"
+          label="System"
           expand={expand}
           open={true}
           system="http://hl7.org/fhir/ValueSet/contact-point-system"
           value={value?.system}
           onChange={(system) => {
-            onChange && onChange({ ...value, system });
+            onChange?.call(this, { ...value, system });
           }}
         />
         <FHIRStringEditable
-          label="value"
+          label="Value"
           value={value?.value}
           onChange={(v) => {
-            onChange && onChange({ ...value, value: v });
+            onChange?.call(this, { ...value, value: v });
           }}
         />
       </div>

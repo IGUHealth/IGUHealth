@@ -22,26 +22,26 @@ export const FHIRIdentifierEditable = ({
       <div className="flex space-x-1">
         <FHIRCodeEditable
           expand={expand}
-          label="use"
+          label="Use"
           open={true}
           system="http://hl7.org/fhir/ValueSet/identifier-use"
           value={value?.use}
           onChange={(use) => {
-            onChange && onChange({ ...value, use });
+            onChange?.call(this, { ...value, use });
           }}
         />
         <FHIRUriEditable
-          label="system"
+          label="System"
           value={value?.system}
           onChange={(system) => {
-            onChange && onChange({ ...value, system });
+            onChange?.call(this, { ...value, system });
           }}
         />
         <FHIRStringEditable
-          label="value"
+          label="Value"
           value={value?.value}
           onChange={(v) => {
-            onChange && onChange({ ...value, value: v });
+            onChange?.call(this, { ...value, value: v });
           }}
         />
       </div>

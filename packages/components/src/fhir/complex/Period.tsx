@@ -20,14 +20,14 @@ export const FHIRPeriodEditable = ({
           value={value?.start}
           label="Start"
           onChange={(start) => {
-            onChange && onChange({ ...value, start });
+            onChange?.call(this, { ...value, start });
           }}
         />
         <FHIRDateTimeEditable
           value={value?.end}
           label="End"
           onChange={(end) => {
-            onChange && onChange({ ...value, end });
+            onChange?.call(this, { ...value, end });
           }}
         />
       </div>

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { FHIRAnnotationEditable } from "./Annotation";
 
 const meta = {
-  title: "Primitives/FHIRAnnotationEditable",
+  title: "Complex/FHIRAnnotationEditable",
   component: FHIRAnnotationEditable,
   parameters: {
     layout: "centered",

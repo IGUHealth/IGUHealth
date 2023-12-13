@@ -38,9 +38,7 @@ export const FHIROIDEditable = ({
       value={value}
       onChange={(e) => {
         const value = e.target.value;
-        if (onChange) {
-          onChange(value as OID);
-        }
+        onChange?.call(this, value as OID);
       }}
     />
   );

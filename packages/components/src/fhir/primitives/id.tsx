@@ -30,9 +30,7 @@ export const FHIRIdEditable = ({
       type="text"
       value={value}
       onChange={(e) => {
-        if (onChange) {
-          onChange(e.target.value);
-        }
+        onChange?.call(this, e.target.value);
       }}
     />
   );

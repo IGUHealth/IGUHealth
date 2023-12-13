@@ -20,14 +20,14 @@ export const FHIRSimpleQuantityEditable = ({
           label="Value"
           value={value?.value}
           onChange={(valueDec) => {
-            onChange && onChange({ ...value, value: valueDec });
+            onChange?.call(this, { ...value, value: valueDec });
           }}
         />
         <FHIRStringEditable
           label="Unit"
           value={value?.unit}
           onChange={(unit) => {
-            onChange && onChange({ ...value, unit });
+            onChange?.call(this, { ...value, unit });
           }}
         />
       </div>
