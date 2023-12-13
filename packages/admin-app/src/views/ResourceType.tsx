@@ -11,7 +11,7 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/r4/types";
 
-import { getClient } from "../data/client";
+import { getClient } from "../db/client";
 
 const initialQuery = "_count=20&_sort=-_lastUpdated";
 

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { FHIRContactPointEditable } from "./ContactPoint";
+import { createStorybookClient } from "../stories.client";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
@@ -18,8 +19,11 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+const client = createStorybookClient();
+
 export const Primary: Story = {
   args: {
+    client: client,
     value: {
       use: "home",
       system: "phone",

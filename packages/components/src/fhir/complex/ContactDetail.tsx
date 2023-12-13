@@ -1,17 +1,17 @@
 import React from "react";
 import { ContactDetail } from "@iguhealth/fhir-types/r4/types";
 
-import { EditableProps, TerminologyLookupProps } from "../types";
+import { EditableProps, ClientProps } from "../types";
 import { InputContainer } from "../../base/containers";
 import { FHIRStringEditable, FHIRCodeEditable } from "../primitives";
 
 export type FHIRContactDetailEditableProps = EditableProps<ContactDetail> &
-  TerminologyLookupProps;
+  ClientProps;
 
 export const FHIRContactDetailEditable = ({
   value,
   onChange,
-  expand,
+  client,
   issue,
   label,
 }: FHIRContactDetailEditableProps) => {
@@ -27,7 +27,7 @@ export const FHIRContactDetailEditable = ({
         />
         <FHIRCodeEditable
           label="System"
-          expand={expand}
+          client={client}
           open={true}
           system="http://hl7.org/fhir/ValueSet/contact-point-system"
           value={value?.telecom?.[0]?.system}

@@ -12,7 +12,7 @@ import {
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
 
-import { getClient } from "../../data/client";
+import { getClient } from "../../db/client";
 import ResourceEditorComponent from "../../components/ResourceEditor";
 import OperationDefinitionView from "./OperationDefinition";
 

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Bundle, OperationOutcome } from "@iguhealth/fhir-types/r4/types";
 import { Input, Button, Toaster } from "@iguhealth/components";
 
-import { getClient } from "../data/client";
+import { getClient } from "../db/client";
 
 const getData = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {

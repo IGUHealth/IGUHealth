@@ -27,7 +27,7 @@ import {
   Table,
 } from "@iguhealth/components";
 
-import { getClient } from "../../data/client";
+import { getClient } from "../../db/client";
 import ResourceEditorComponent, {
   AdditionalContent,
 } from "../../components/ResourceEditor";

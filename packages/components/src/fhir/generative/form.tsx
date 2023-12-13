@@ -33,7 +33,7 @@ import {
 import { descend, ascend, Loc, pointer, root } from "@iguhealth/fhir-pointer";
 import generateJSONPatches, { Mutation } from "@iguhealth/fhir-patch-building";
 
-import { TerminologyLookupProps } from "../types";
+import { ClientProps } from "../types";
 import * as ComplexTypes from "../complex";
 import * as Primitives from "../primitives";
 
@@ -43,14 +43,14 @@ function EditorComponent({
   onChange,
   showLabel,
   pointer,
-  expand,
+  client,
 }: {
   element: ElementDefinition;
   value: unknown;
   onChange: (patches: Mutation<any, any>) => void;
   showLabel: boolean;
   pointer: Loc<any, any, any>;
-} & TerminologyLookupProps) {
+} & ClientProps) {
   switch (element.type?.[0].code) {
     case "http://hl7.org/fhirpath/System.String": {
       // Only render the root element not the ones underneath.
@@ -163,7 +163,7 @@ function EditorComponent({
     case "code":
       return (
         <Primitives.FHIRCodeEditable
-          expand={expand}
+          client={client}
           value={value as code}
           label={showLabel ? getFieldName(element.path) : undefined}
           open={true}
@@ -222,6 +222,7 @@ function EditorComponent({
     case "Identifier":
       return (
         <ComplexTypes.FHIRIdentifierEditable
+          client={client}
           value={value as Identifier}
           label={showLabel ? getFieldName(element.path) : undefined}
           onChange={(v: unknown) => {
@@ -238,6 +239,7 @@ function EditorComponent({
     case "ContactPoint":
       return (
         <ComplexTypes.FHIRContactPointEditable
+          client={client}
           value={value as ContactPoint}
           label={showLabel ? getFieldName(element.path) : undefined}
           onChange={(v: unknown) => {
@@ -267,7 +269,7 @@ function EditorComponent({
       return (
         <ComplexTypes.FHIRContactDetailEditable
           value={value as ContactDetail}
-          expand={expand}
+          client={client}
           label={showLabel ? getFieldName(element.path) : undefined}
           onChange={(v) => {
             onChange({
@@ -351,7 +353,7 @@ type MetaProps<T, R> = {
   showLabel?: boolean;
   showInvalid?: boolean;
   onChange: (patches: Mutation<T, R>) => void;
-} & TerminologyLookupProps;
+} & ClientProps;
 
 function getElementDefinition(
   sd: StructureDefinition,
@@ -370,7 +372,7 @@ const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
     value = [],
     pointer,
     onChange,
-    expand,
+    client,
     showInvalid = false,
   } = props;
   const element = getElementDefinition(sd, elementIndex);
@@ -404,7 +406,7 @@ const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
           key={`${descend(pointer, i)}`}
         >
           <MetaValueSingular
-            expand={expand}
+            client={client}
             sd={sd}
             elementIndex={elementIndex}
             pointer={descend(pointer, i)}
@@ -497,7 +499,7 @@ const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
     pointer,
     showLabel = true,
     showInvalid = false,
-    expand,
+    client,
     onChange,
   } = props;
 
@@ -528,7 +530,7 @@ const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
         <EditorComponent
           element={element}
           pointer={pointer}
-          expand={expand}
+          client={client}
           value={value}
           showLabel={showLabel}
           onChange={onChange}
@@ -553,7 +555,7 @@ const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
           const childProps = getValueAndPointer(childElement, pointer, value);
           return childElement.max === "1" ? (
             <MetaValueSingular
-              expand={expand}
+              client={client}
               key={childProps.pointer}
               sd={sd}
               elementIndex={childIndex}
@@ -563,7 +565,7 @@ const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
             />
           ) : (
             <MetaValueArray
-              expand={expand}
+              client={client}
               key={childProps.pointer}
               sd={sd}
               elementIndex={childIndex}
@@ -584,12 +586,12 @@ export type FHIRGenerativeFormProps = {
   structureDefinition: StructureDefinition;
   value: Resource | undefined;
   setValue?: (s: Setter) => void;
-} & TerminologyLookupProps;
+} & ClientProps;
 
 export const FHIRGenerativeForm = ({
   structureDefinition,
   value,
-  expand,
+  client,
   setValue = () => {},
 }: FHIRGenerativeFormProps) => {
   const onChange = useMemo(() => {
@@ -607,7 +609,7 @@ export const FHIRGenerativeForm = ({
 
   return (
     <MetaValueSingular
-      expand={expand}
+      client={client}
       sd={structureDefinition}
       elementIndex={0}
       value={value}

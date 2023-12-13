@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 import { CapabilityStatementRestResource } from "@iguhealth/fhir-types/r4/types";
 
-import { getCapabilities } from "../data/capabilities";
+import { getCapabilities } from "../db/capabilities";
 
 export const openSearchModalAtom = atom({
   key: "openSearchModal",

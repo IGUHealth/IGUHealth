@@ -1,7 +1,7 @@
 import React from "react";
 import { Quantity } from "@iguhealth/fhir-types/r4/types";
 
-import { EditableProps, TerminologyLookupProps } from "../types";
+import { EditableProps, ClientProps } from "../types";
 import { InputContainer } from "../../base/containers";
 import {
   FHIRStringEditable,
@@ -9,21 +9,20 @@ import {
   FHIRDecimalEditable,
 } from "../primitives";
 
-export type FHIRQuantityEditableProps = EditableProps<Quantity> &
-  TerminologyLookupProps;
+export type FHIRQuantityEditableProps = EditableProps<Quantity> & ClientProps;
 
 export const FHIRQuantityEditable = ({
   value,
   onChange,
   issue,
   label,
-  expand,
+  client,
 }: FHIRQuantityEditableProps) => {
   return (
     <InputContainer label={label} issues={issue ? [issue] : []}>
       <div className="flex space-x-1">
         <FHIRCodeEditable
-          expand={expand}
+          client={client}
           label="Comparator"
           open={true}
           system="http://hl7.org/fhir/ValueSet/quantity-comparator"
