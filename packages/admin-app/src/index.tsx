@@ -23,7 +23,7 @@ import {
 } from "@iguhealth/components";
 import "@iguhealth/components/dist/index.css";
 
-import { getClient } from "./data/client";
+import { getClient, createCachedClient } from "./db/client";
 import Settings from "./views/Settings";
 import BundleImport from "./views/BundleImport";
 import EmptyWorkspace from "./views/EmptyWorkspace";
@@ -73,10 +73,12 @@ function ServiceSetup({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     setClient(
-      createHTTPClient({
-        getAccessToken: () => auth0.getAccessTokenSilently(),
-        url: process.env.REACT_APP_FHIR_BASE_URL || "",
-      })
+      createCachedClient(
+        createHTTPClient({
+          getAccessToken: () => auth0.getAccessTokenSilently(),
+          url: process.env.REACT_APP_FHIR_BASE_URL || "",
+        })
+      )
     );
   }, [setClient]);
 

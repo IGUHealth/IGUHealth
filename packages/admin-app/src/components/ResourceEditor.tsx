@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { useRecoilValue, useRecoilCallback } from "recoil";
+import { useRecoilValue } from "recoil";
 import { basicSetup } from "codemirror";
 import { json } from "@codemirror/lang-json";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
@@ -21,8 +21,7 @@ import {
   FHIRGenerativeForm,
 } from "@iguhealth/components";
 
-import { getValueSetExpansion } from "../data/terminology";
-import { getClient } from "../data/client";
+import { getClient } from "../db/client";
 
 const extensions = [basicSetup, json()];
 
@@ -135,17 +134,6 @@ export default function ResourceEditorComponent({
         });
     },
     [structureDefinition, onChange]
-  );
-
-  const expansion = useRecoilCallback(
-    ({ snapshot }) =>
-      async (url: string) => {
-        const valueSetExpansion = await snapshot.getPromise(
-          getValueSetExpansion(url)
-        );
-        return valueSetExpansion;
-      },
-    []
   );
 
   return (

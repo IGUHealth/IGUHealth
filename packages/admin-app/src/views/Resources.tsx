@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Table, Loading } from "@iguhealth/components";
 import { CapabilityStatementRestResource } from "@iguhealth/fhir-types/r4/types";
 
-import { getCapabilities } from "../data/capabilities";
+import { getCapabilities } from "../db/capabilities";
 
 const DisplayResources = () => {
   const capabilities = useRecoilValue(getCapabilities);
