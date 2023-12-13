@@ -397,7 +397,10 @@ const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
       <label>{getFieldName(element.path)}</label>
       {value.map((v, i) => (
         <div
-          className={classNames("mt-1 relative", { "bg-gray-50": i % 2 === 1 })}
+          className={classNames("mt-1 relative", {
+            "bg-gray-50": i % 2 === 1,
+            "bg-white": i % 2 === 0,
+          })}
           key={`${descend(pointer, i)}`}
         >
           <MetaValueSingular
