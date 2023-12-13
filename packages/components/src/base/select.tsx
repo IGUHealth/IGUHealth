@@ -2,7 +2,7 @@ import React, { Fragment, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
-import { InputContainer } from "./containers";
+import { DisplayIssues, Label, inputClassNames } from "./containers";
 import classNames from "classnames";
 
 export type Option = { value: string | number; label: string };
@@ -49,19 +49,27 @@ export const Select = ({
       nullable
     >
       <div className="relative">
-        <InputContainer label={label} issues={issue ? [issue] : []}>
+        <div className="flex flex-col flex-grow">
+          <Label label={label} className={classNames("mr-1 ")} />
           <Combobox.Input
-            className="outline-none w-full border-none text-sm leading-5 text-gray-900 focus:ring-0"
+            className={classNames(
+              "outline-none w-full leading-5 text-gray-900 focus:ring-0",
+              inputClassNames({
+                hideBorder: false,
+                issues: issue ? [issue] : [],
+              })
+            )}
             displayValue={(option: Option) => option && option.label}
             onChange={(event) => setQuery(event.target.value)}
           />
-          <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+          <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2 top-[22px]">
             <ChevronUpDownIcon
               className="h-5 w-5 text-gray-400"
               aria-hidden="true"
             />
           </Combobox.Button>
-        </InputContainer>
+          <DisplayIssues issues={issue ? [issue] : []} />
+        </div>
         <Transition
           as={Fragment}
           leave="transition ease-in duration-100"

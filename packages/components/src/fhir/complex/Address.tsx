@@ -20,14 +20,14 @@ export const FHIRAddressEditable = ({
           label="Line"
           value={value?.line?.[0] || ""}
           onChange={(line) => {
-            line && onChange && onChange({ ...value, line: [line] });
+            line && onChange?.call(this, { ...value, line: [line] });
           }}
         />
         <FHIRStringEditable
           label="City"
           value={value?.city || ""}
           onChange={(city) => {
-            onChange && onChange({ ...value, city });
+            onChange?.call(this, { ...value, city });
           }}
         />
         {/* <String label="District" value={value?.district || ""} /> */}
@@ -35,21 +35,21 @@ export const FHIRAddressEditable = ({
           label="State"
           value={value?.state || ""}
           onChange={(state) => {
-            onChange && onChange({ ...value, state });
+            onChange?.call(this, { ...value, state });
           }}
         />
         <FHIRStringEditable
           label="Postal Code"
           value={value?.postalCode || ""}
           onChange={(postalCode) => {
-            onChange && onChange({ ...value, postalCode });
+            onChange?.call(this, { ...value, postalCode });
           }}
         />
         <FHIRStringEditable
           label="Country"
           value={value?.country || ""}
           onChange={(country) => {
-            onChange && onChange({ ...value, country });
+            onChange?.call(this, { ...value, country });
           }}
         />
       </div>

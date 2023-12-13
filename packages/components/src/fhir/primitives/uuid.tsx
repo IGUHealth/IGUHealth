@@ -39,9 +39,7 @@ export const FHIRUUIDEditable = ({
       value={value}
       onChange={(e) => {
         const value = e.target.value;
-        if (onChange) {
-          onChange(value as UUID);
-        }
+        onChange?.call(this, value as UUID);
       }}
     />
   );

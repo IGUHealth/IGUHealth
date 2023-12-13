@@ -20,7 +20,7 @@ export const FHIRBooleanEditable = ({
         type="checkbox"
         checked={value}
         onChange={(e) => {
-          onChange && onChange(e.target.checked);
+          onChange?.call(this, e.target.checked);
         }}
       />
     </div>

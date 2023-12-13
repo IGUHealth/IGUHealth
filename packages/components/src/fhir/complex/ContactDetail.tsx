@@ -22,7 +22,7 @@ export const FHIRContactDetailEditable = ({
           label="Name"
           value={value?.name}
           onChange={(name) => {
-            name && onChange && onChange({ ...value, name });
+            name && onChange?.call(this, { ...value, name });
           }}
         />
         <FHIRCodeEditable
@@ -32,11 +32,10 @@ export const FHIRContactDetailEditable = ({
           system="http://hl7.org/fhir/ValueSet/contact-point-system"
           value={value?.telecom?.[0]?.system}
           onChange={(telecomSystem) => {
-            onChange &&
-              onChange({
-                ...value,
-                telecom: [{ ...value?.telecom?.[0], system: telecomSystem }],
-              });
+            onChange?.call(this, {
+              ...value,
+              telecom: [{ ...value?.telecom?.[0], system: telecomSystem }],
+            });
           }}
         />
         <FHIRStringEditable
@@ -44,8 +43,7 @@ export const FHIRContactDetailEditable = ({
           value={value?.telecom?.[0]?.value}
           onChange={(telecomValue) => {
             telecomValue &&
-              onChange &&
-              onChange({
+              onChange?.call(this, {
                 ...value,
                 telecom: [{ ...value?.telecom?.[0], value: telecomValue }],
               });

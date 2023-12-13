@@ -1,5 +1,6 @@
 /* eslint @typescript-eslint/no-explicit-any: 0 */
 import React, { useMemo } from "react";
+import classNames from "classnames";
 import { applyPatch } from "fast-json-patch";
 import { produce } from "immer";
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -395,7 +396,10 @@ const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
     <div>
       <label>{getFieldName(element.path)}</label>
       {value.map((v, i) => (
-        <div className="mt-1 relative" key={`${descend(pointer, i)}`}>
+        <div
+          className={classNames("mt-1 relative", { "bg-gray-50": i % 2 === 1 })}
+          key={`${descend(pointer, i)}`}
+        >
           <MetaValueSingular
             expand={expand}
             sd={sd}

@@ -29,21 +29,21 @@ export const FHIRQuantityEditable = ({
           system="http://hl7.org/fhir/ValueSet/quantity-comparator"
           value={value?.comparator}
           onChange={(comparator) => {
-            onChange && onChange({ ...value, comparator });
+            onChange?.call(this, { ...value, comparator });
           }}
         />
         <FHIRDecimalEditable
           label="Value"
           value={value?.value}
           onChange={(valueDec) => {
-            onChange && onChange({ ...value, value: valueDec });
+            onChange?.call(this, { ...value, value: valueDec });
           }}
         />
         <FHIRStringEditable
           label="Unit"
           value={value?.unit}
           onChange={(unit) => {
-            onChange && onChange({ ...value, unit });
+            onChange?.call(this, { ...value, unit });
           }}
         />
       </div>

@@ -49,8 +49,8 @@ export const FHIRCodeEditable = ({
       value={value}
       onChange={(option) =>
         option
-          ? onChange && onChange(option.value as string)
-          : onChange && onChange(undefined)
+          ? onChange?.call(this, option.value as string)
+          : onChange?.call(this, undefined)
       }
       issue={issue}
       label={label}

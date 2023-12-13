@@ -51,7 +51,7 @@ export const FHIRBase64BinaryEditable = ({
             const file = e.target?.files?.[0];
             if (!file) return;
             convertFileToBase64(file).then((data) => {
-              onChange && onChange(data);
+              onChange?.call(this, data);
             });
           }}
         />
