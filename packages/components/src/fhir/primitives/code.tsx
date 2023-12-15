@@ -9,10 +9,12 @@ import {
 import { EditableProps, ClientProps } from "../types";
 import { Select, Option } from "../../base/select";
 
-export type FHIRCodeEditableProps = EditableProps<string> & {
-  system?: string;
-  open?: boolean;
-} & ClientProps;
+export type FHIRCodeEditableProps = EditableProps<string> &
+  ClientProps & {
+    system?: string;
+    open?: boolean;
+    filter?: (option: Option) => boolean;
+  };
 
 function flatten(item: ValueSetExpansionContains): Option[] {
   const children = item.contains?.map(flatten).flat() || [];
@@ -37,6 +39,7 @@ export const FHIRCodeEditable = ({
   client,
   open = false,
   system,
+  filter,
 }: FHIRCodeEditableProps) => {
   const [options, setOptions] = React.useState<Option[]>([]);
   useEffect(() => {
@@ -59,7 +62,7 @@ export const FHIRCodeEditable = ({
       issue={issue}
       label={label}
       open={open}
-      options={options}
+      options={filter ? options.filter(filter) : options}
     />
   );
 };

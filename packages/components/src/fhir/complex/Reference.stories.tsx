@@ -1,0 +1,58 @@
+import React from "react";
+import type { Meta, StoryObj } from "@storybook/react";
+import { Reference } from "@iguhealth/fhir-types/r4/types";
+
+import { FHIRReferenceEditable } from "./Reference";
+import { createStorybookClient } from "../stories.client";
+
+const FHIRReferenceStorie = (
+  props: Parameters<typeof FHIRReferenceEditable>[0]
+) => {
+  const [reference, setReference] = React.useState<Reference | undefined>(
+    props.value
+  );
+  return (
+    <FHIRReferenceEditable
+      {...props}
+      value={reference}
+      onChange={setReference}
+    />
+  );
+};
+
+// More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
+const meta = {
+  title: "Complex/FHIRReferenceEditable",
+  component: FHIRReferenceStorie,
+  parameters: {
+    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
+    layout: "centered",
+  },
+  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
+  tags: ["autodocs"],
+} satisfies Meta<typeof FHIRReferenceStorie>;
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Primary: Story = {
+  args: {
+    client: createStorybookClient(),
+    value: {
+      reference: "Patient/123",
+    },
+    label: "Subject",
+    onChange: (value) => console.log(value),
+  },
+};
+
+export const OnError: Story = {
+  args: {
+    client: createStorybookClient(),
+    // @ts-ignore
+    value: "test",
+    issue: "Bad value",
+    onChange: (value) => console.log(value),
+  },
+};

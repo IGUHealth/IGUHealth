@@ -9,14 +9,13 @@ export const inputClassNames = ({
   issues: string[];
 }) =>
   classNames(
-    "relative",
-    "px-3 py-2",
-    { border: !hideBorder },
-    { "focus:ring-1": !hideBorder },
+    "flex relative px-3 py-2 group-aria-disabled:bg-gray-50",
     "placeholder-slate-400 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200",
     "focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm ",
     "invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500 disabled:shadow-none",
     {
+      border: !hideBorder,
+      "focus:ring-1": !hideBorder,
       "border-slate-300": issues.length === 0 ? true : false,
       "text-pink-500": issues.length !== 0 ? true : false,
       "border-pink-500": issues.length !== 0 ? true : false,
@@ -42,9 +41,11 @@ export interface ContainerProps {
   children: React.ReactNode;
   issues?: string[];
   label?: string;
+  disabled?: boolean;
   inlineLabel?: boolean;
   hideBorder?: boolean;
   labelProps?: HTMLProps<HTMLLabelElement>;
+  inputContainerClass?: string;
 }
 
 export const InputContainer = ({
@@ -53,12 +54,15 @@ export const InputContainer = ({
   label,
   inlineLabel = false,
   hideBorder = false,
+  disabled = false,
   labelProps,
+  inputContainerClass,
 }: ContainerProps) => (
   <div
-    className={classNames("flex-grow", {
+    className={classNames("group flex-grow", {
       "flex flex-row items-center justify-center": inlineLabel,
     })}
+    aria-disabled={disabled}
   >
     <Label
       {...labelProps}
@@ -66,7 +70,14 @@ export const InputContainer = ({
       className={classNames("mr-1", labelProps?.className)}
     />
 
-    <div className={inputClassNames({ hideBorder, issues })}>{children}</div>
+    <div
+      className={classNames(
+        inputClassNames({ hideBorder, issues }),
+        inputContainerClass
+      )}
+    >
+      {children}
+    </div>
     <DisplayIssues issues={issues} />
   </div>
 );

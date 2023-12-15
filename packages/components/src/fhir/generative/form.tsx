@@ -29,6 +29,9 @@ import {
   ContactDetail,
   HumanName,
   Period,
+  Annotation,
+  Quantity,
+  Reference,
 } from "@iguhealth/fhir-types/r4/types";
 import { descend, ascend, Loc, pointer, root } from "@iguhealth/fhir-pointer";
 import generateJSONPatches, { Mutation } from "@iguhealth/fhir-patch-building";
@@ -210,7 +213,21 @@ function EditorComponent({
         <ComplexTypes.FHIRAddressEditable
           value={value as Address}
           label={showLabel ? getFieldName(element.path) : undefined}
-          onChange={(v: unknown) => {
+          onChange={(v: Address | undefined) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
+      );
+    case "Annotation":
+      return (
+        <ComplexTypes.FHIRAnnotationEditable
+          value={value as Annotation}
+          label={showLabel ? getFieldName(element.path) : undefined}
+          onChange={(v: Annotation | undefined) => {
             onChange({
               op: "replace",
               path: pointer,
@@ -284,6 +301,39 @@ function EditorComponent({
       return (
         <ComplexTypes.FHIRPeriodEditable
           value={value as Period}
+          label={showLabel ? getFieldName(element.path) : undefined}
+          onChange={(v) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
+      );
+    case "Quantity":
+      return (
+        <ComplexTypes.FHIRSimpleQuantityEditable
+          value={value as Quantity}
+          label={showLabel ? getFieldName(element.path) : undefined}
+          onChange={(v) => {
+            onChange({
+              op: "replace",
+              path: pointer,
+              value: v,
+            });
+          }}
+        />
+      );
+    case "Reference":
+      return (
+        <ComplexTypes.FHIRReferenceEditable
+          client={client}
+          resourceTypesAllowed={element.type?.[0]?.targetProfile?.map((tp) => {
+            const parts = tp.split("/");
+            return parts[parts.length - 1] as ResourceType;
+          })}
+          value={value as Reference}
           label={showLabel ? getFieldName(element.path) : undefined}
           onChange={(v) => {
             onChange({
