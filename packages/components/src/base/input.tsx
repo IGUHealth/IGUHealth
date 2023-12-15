@@ -30,6 +30,7 @@ export const Input = (props: InputProps) => {
   } = props;
   return (
     <InputContainer
+      hideBorder={hideBorder}
       disabled={inputProps.disabled}
       label={label}
       labelProps={labelProps}
