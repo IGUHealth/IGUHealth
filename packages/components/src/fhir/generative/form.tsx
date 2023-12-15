@@ -613,26 +613,30 @@ const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
           ) {
             return;
           }
-          const childProps = getValueAndPointer(childElement, pointer, value);
+          const { value: childValue, pointer: childPointer } =
+            getValueAndPointer(childElement, pointer, value);
+
           return childElement.max === "1" ? (
             <MetaValueSingular
               client={client}
-              key={childProps.pointer}
+              key={childPointer}
               sd={sd}
               elementIndex={childIndex}
               onChange={onChange}
               showInvalid={showInvalid}
-              {...childProps}
+              pointer={childPointer}
+              value={childValue}
             />
           ) : (
             <MetaValueArray
               client={client}
-              key={childProps.pointer}
+              key={childPointer}
               sd={sd}
               elementIndex={childIndex}
               showInvalid={showInvalid}
               onChange={onChange}
-              {...childProps}
+              pointer={childPointer}
+              value={childValue}
             />
           );
         })}
