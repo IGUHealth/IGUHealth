@@ -1,3 +1,3 @@
 export * from "./primitives";
 export * from "./complex";
-export * from "./generative/form.js";
+export * from "./generative/form";

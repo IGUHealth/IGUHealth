@@ -1,10 +1,11 @@
 import classNames from "classnames";
 import React, {
+  ReactNode,
   DetailedHTMLProps,
   InputHTMLAttributes,
   HTMLProps,
 } from "react";
-import { inputClassNames, DisplayIssues, Label } from "./containers";
+import { InputContainer } from "./containers";
 
 export interface InputProps
   extends DetailedHTMLProps<
@@ -15,6 +16,7 @@ export interface InputProps
   hideBorder?: boolean;
   labelProps?: HTMLProps<HTMLLabelElement>;
   label?: string;
+  icon?: ReactNode;
 }
 
 export const Input = (props: InputProps) => {
@@ -23,24 +25,27 @@ export const Input = (props: InputProps) => {
     labelProps,
     hideBorder = false,
     issues = [],
+    icon,
     ...inputProps
   } = props;
   return (
-    <div className="flex flex-col flex-grow">
-      <Label
-        {...labelProps}
-        label={label}
-        className={classNames("mr-1 ", labelProps?.className)}
-      />
-      <input
-        {...inputProps}
-        className={classNames(
-          "w-full outline-none",
-          inputClassNames({ hideBorder, issues }),
-          inputProps?.className
-        )}
-      />
-      <DisplayIssues issues={issues} />
-    </div>
+    <InputContainer
+      disabled={inputProps.disabled}
+      label={label}
+      labelProps={labelProps}
+      issues={issues}
+      inputContainerClass="bg-white"
+    >
+      <>
+        <input
+          {...inputProps}
+          className={classNames(
+            "w-full outline-none border-none group-aria-disabled:bg-gray-50",
+            inputProps?.className
+          )}
+        />
+        {icon}
+      </>
+    </InputContainer>
   );
 };

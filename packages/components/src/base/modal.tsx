@@ -56,7 +56,7 @@ export function Modal({
                   >
                     {modalTitle}
                   </Dialog.Title>
-                  {ModalContent && ModalContent(setOpen)}
+                  {isOpen && ModalContent && ModalContent(setOpen)}
                 </Dialog.Panel>
               </Transition.Child>
             </div>
