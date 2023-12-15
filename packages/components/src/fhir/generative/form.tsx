@@ -349,12 +349,13 @@ function EditorComponent({
   }
 }
 
-function isLeaf(type: string | undefined) {
+function isLeaf(type: string | undefined): boolean {
+  if (!type) return false;
   return (
-    type &&
-    (primitiveTypes.has(type) ||
-      complexTypes.has(type) ||
-      type === "http://hl7.org/fhirpath/System.String")
+    primitiveTypes.has(type) ||
+    complexTypes.has(type) ||
+    // Specialized primitive for .id and other strings that don't allow extensions.
+    type === "http://hl7.org/fhirpath/System.String"
   );
 }
 
@@ -414,6 +415,10 @@ function getElementDefinition(
   return element;
 }
 
+function isTypeChoice(element: ElementDefinition): boolean {
+  return (element.type || []).length > 1;
+}
+
 const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
   const {
     sd,
@@ -425,8 +430,14 @@ const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
     showInvalid = false,
   } = props;
   const element = getElementDefinition(sd, elementIndex);
-  if (showInvalid && element.type?.length && element.type.length < 1) {
-    return <span>TYPE CHOICES NOT SUPPORTED YET</span>;
+  if (isTypeChoice(element)) {
+    return showInvalid ? (
+      <div>
+        <span>{element.path}</span>
+        TYPE CHOICES NOT SUPPORTED YET{" "}
+        {JSON.stringify(element.type?.map((t) => t.code))}
+      </div>
+    ) : undefined;
   }
   if (!Array.isArray(value)) {
     throw new Error("Value must be an array or undefined");
@@ -554,7 +565,7 @@ const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
 
   const element = getElementDefinition(sd, elementIndex);
 
-  if (element.type?.length && element.type?.length > 1) {
+  if (isTypeChoice(element)) {
     return showInvalid ? (
       <div>
         <span>{element.path}</span>
@@ -669,7 +680,7 @@ export const FHIRGenerativeForm = ({
       )}
       onChange={onChange}
       showLabel={false}
-      showInvalid={false}
+      showInvalid={true}
     />
   );
 };
