@@ -372,16 +372,15 @@ function getChildrenElementIndices({
   const element = sd.snapshot?.element[elementIndex];
   if (!element?.path) throw new Error("Invalid element when deriving children");
 
-  let childIndex = elementIndex + 1;
-
   const childRegex = new RegExp(`^${element.path}\\.[^\\.]+$`);
 
-  while (
-    sd.snapshot?.element[childIndex]?.path &&
-    childRegex.test(sd.snapshot?.element[childIndex]?.path)
-  ) {
-    childIndices.push(childIndex);
-    childIndex++;
+  for (let i = elementIndex + 1; i < (sd.snapshot?.element.length || 0); i++) {
+    if (
+      sd.snapshot?.element[i]?.path &&
+      childRegex.test(sd.snapshot?.element[i]?.path)
+    ) {
+      childIndices.push(i);
+    }
   }
 
   return childIndices;
@@ -588,6 +587,7 @@ const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
       </div>
     );
   }
+
   return (
     <div className="">
       {showLabel && <div className="">{getFieldName(element.path)}</div>}
