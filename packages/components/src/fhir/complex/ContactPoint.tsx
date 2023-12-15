@@ -18,7 +18,7 @@ export const FHIRContactPointEditable = ({
 }: FHIRContactPointEditableProps) => {
   return (
     <InputContainer label={label} issues={issue ? [issue] : []}>
-      <div className="flex space-x-1">
+      <div className="flex flex-1 space-x-1">
         <FHIRCodeEditable
           label="Use"
           client={client}

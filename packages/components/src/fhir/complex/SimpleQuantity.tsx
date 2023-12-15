@@ -15,7 +15,7 @@ export const FHIRSimpleQuantityEditable = ({
 }: FHIRSimpleQuantityEditableProps) => {
   return (
     <InputContainer label={label} issues={issue ? [issue] : []}>
-      <div className="flex space-x-1">
+      <div className="flex flex-1 space-x-1">
         <FHIRDecimalEditable
           label="Value"
           value={value?.value}

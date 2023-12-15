@@ -15,7 +15,7 @@ export const FHIRPeriodEditable = ({
 }: FHIRPeriodEditableProps) => {
   return (
     <InputContainer label={label} issues={issue ? [issue] : []}>
-      <div className="flex space-x-1">
+      <div className="flex flex-1 space-x-1">
         <FHIRDateTimeEditable
           value={value?.start}
           label="Start"

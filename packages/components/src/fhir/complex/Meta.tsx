@@ -8,7 +8,7 @@ export interface FHIRMetaReadonlyProps {
 
 export const FHIRMetaReadOnly = ({ value }: FHIRMetaReadonlyProps) => {
   return (
-    <div className="p-1 flex space-x-1">
+    <div className="flex flex-1 space-x-1">
       <FHIRStringEditable
         value={value?.versionId}
         disabled={true}

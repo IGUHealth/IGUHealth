@@ -15,7 +15,7 @@ export const FHIRAddressEditable = ({
 }: FHIRAddressEditableProps) => {
   return (
     <InputContainer label={label} issues={issue ? [issue] : []}>
-      <div className="flex space-x-1">
+      <div className="flex flex-1 space-x-1">
         <FHIRStringEditable
           label="Line"
           value={value?.line?.[0] || ""}
