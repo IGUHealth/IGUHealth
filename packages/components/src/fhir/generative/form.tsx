@@ -16,6 +16,7 @@ import {
   StructureDefinition,
   Resource,
   ElementDefinition,
+  ElementDefinitionType,
   url,
   date,
   dateTime,
@@ -39,6 +40,7 @@ import generateJSONPatches, { Mutation } from "@iguhealth/fhir-patch-building";
 import { ClientProps } from "../types";
 import * as ComplexTypes from "../complex";
 import * as Primitives from "../primitives";
+import { Select } from "../../base";
 
 function EditorComponent({
   element,
@@ -54,6 +56,7 @@ function EditorComponent({
   showLabel: boolean;
   pointer: Loc<any, any, any>;
 } & ClientProps) {
+  const label = showLabel ? capitalize(getFieldName(element.path)) : undefined;
   switch (element.type?.[0].code) {
     case "http://hl7.org/fhirpath/System.String": {
       // Only render the root element not the ones underneath.
@@ -64,7 +67,7 @@ function EditorComponent({
           <Primitives.FHIRStringEditable
             disabled={true}
             value={value as string}
-            label={showLabel ? getFieldName(element.path) : undefined}
+            label={label}
             onChange={(v: unknown) => {
               onChange({
                 op: "replace",
@@ -80,7 +83,7 @@ function EditorComponent({
       return (
         <Primitives.FHIRStringEditable
           value={value as string}
-          label={showLabel ? getFieldName(element.path) : undefined}
+          label={label}
           onChange={(v: unknown) => {
             onChange({
               op: "replace",
@@ -96,7 +99,7 @@ function EditorComponent({
       return (
         <Primitives.FHIRBooleanEditable
           value={value as boolean}
-          label={showLabel ? getFieldName(element.path) : undefined}
+          label={label}
           onChange={(v: unknown) => {
             onChange({
               op: "replace",
@@ -110,7 +113,7 @@ function EditorComponent({
       return (
         <Primitives.FHIRUrlEditable
           value={value as url}
-          label={showLabel ? getFieldName(element.path) : undefined}
+          label={label}
           onChange={(v: unknown) => {
             onChange({
               op: "replace",
@@ -125,7 +128,7 @@ function EditorComponent({
       return (
         <Primitives.FHIRDateEditable
           value={value as date}
-          label={showLabel ? getFieldName(element.path) : undefined}
+          label={label}
           onChange={(v: unknown) => {
             onChange({
               op: "replace",
@@ -139,7 +142,7 @@ function EditorComponent({
       return (
         <Primitives.FHIRDateTimeEditable
           value={value as dateTime}
-          label={showLabel ? getFieldName(element.path) : undefined}
+          label={label}
           onChange={(v: unknown) => {
             onChange({
               op: "replace",
@@ -153,7 +156,7 @@ function EditorComponent({
       return (
         <Primitives.FHIRUriEditable
           value={value as uri}
-          label={showLabel ? getFieldName(element.path) : undefined}
+          label={label}
           onChange={(v: unknown) => {
             onChange({
               op: "replace",
@@ -168,7 +171,7 @@ function EditorComponent({
         <Primitives.FHIRCodeEditable
           client={client}
           value={value as code}
-          label={showLabel ? getFieldName(element.path) : undefined}
+          label={label}
           open={true}
           system={element.binding?.valueSet}
           onChange={(v: unknown) => {
@@ -184,7 +187,7 @@ function EditorComponent({
       return (
         <Primitives.FHIRDecimalEditable
           value={value as decimal}
-          label={showLabel ? getFieldName(element.path) : undefined}
+          label={label}
           onChange={(v: unknown) => {
             onChange({
               op: "replace",
@@ -198,7 +201,7 @@ function EditorComponent({
       return (
         <Primitives.FHIRIntegerEditable
           value={value as integer}
-          label={showLabel ? getFieldName(element.path) : undefined}
+          label={label}
           onChange={(v: unknown) => {
             onChange({
               op: "replace",
@@ -212,7 +215,7 @@ function EditorComponent({
       return (
         <ComplexTypes.FHIRAddressEditable
           value={value as Address}
-          label={showLabel ? getFieldName(element.path) : undefined}
+          label={label}
           onChange={(v: Address | undefined) => {
             onChange({
               op: "replace",
@@ -226,7 +229,7 @@ function EditorComponent({
       return (
         <ComplexTypes.FHIRAnnotationEditable
           value={value as Annotation}
-          label={showLabel ? getFieldName(element.path) : undefined}
+          label={label}
           onChange={(v: Annotation | undefined) => {
             onChange({
               op: "replace",
@@ -241,7 +244,7 @@ function EditorComponent({
         <ComplexTypes.FHIRIdentifierEditable
           client={client}
           value={value as Identifier}
-          label={showLabel ? getFieldName(element.path) : undefined}
+          label={label}
           onChange={(v: unknown) => {
             onChange({
               op: "replace",
@@ -252,13 +255,17 @@ function EditorComponent({
         />
       );
     case "Meta":
-      return <ComplexTypes.FHIRMetaReadOnly value={value as Meta} />;
+      return (
+        <div className="px-2">
+          <ComplexTypes.FHIRMetaReadOnly value={value as Meta} />
+        </div>
+      );
     case "ContactPoint":
       return (
         <ComplexTypes.FHIRContactPointEditable
           client={client}
           value={value as ContactPoint}
-          label={showLabel ? getFieldName(element.path) : undefined}
+          label={label}
           onChange={(v: unknown) => {
             onChange({
               op: "replace",
@@ -272,7 +279,7 @@ function EditorComponent({
       return (
         <ComplexTypes.FHIRHumanNameEditable
           value={value as HumanName}
-          label={showLabel ? getFieldName(element.path) : undefined}
+          label={label}
           onChange={(v: unknown) => {
             onChange({
               op: "replace",
@@ -287,7 +294,7 @@ function EditorComponent({
         <ComplexTypes.FHIRContactDetailEditable
           value={value as ContactDetail}
           client={client}
-          label={showLabel ? getFieldName(element.path) : undefined}
+          label={label}
           onChange={(v) => {
             onChange({
               op: "replace",
@@ -301,7 +308,7 @@ function EditorComponent({
       return (
         <ComplexTypes.FHIRPeriodEditable
           value={value as Period}
-          label={showLabel ? getFieldName(element.path) : undefined}
+          label={label}
           onChange={(v) => {
             onChange({
               op: "replace",
@@ -315,7 +322,7 @@ function EditorComponent({
       return (
         <ComplexTypes.FHIRSimpleQuantityEditable
           value={value as Quantity}
-          label={showLabel ? getFieldName(element.path) : undefined}
+          label={label}
           onChange={(v) => {
             onChange({
               op: "replace",
@@ -334,7 +341,7 @@ function EditorComponent({
             return parts[parts.length - 1] as ResourceType;
           })}
           value={value as Reference}
-          label={showLabel ? getFieldName(element.path) : undefined}
+          label={label}
           onChange={(v) => {
             onChange({
               op: "replace",
@@ -356,6 +363,35 @@ function isLeaf(type: string | undefined): boolean {
     complexTypes.has(type) ||
     // Specialized primitive for .id and other strings that don't allow extensions.
     type === "http://hl7.org/fhirpath/System.String"
+  );
+}
+
+function TypeChoiceTypeSelect({
+  onChange,
+  element,
+  type,
+}: {
+  element: ElementDefinition;
+  onChange: (type: ElementDefinitionType) => void;
+  type: ElementDefinitionType | undefined;
+}) {
+  if (!element.type || element.type?.length <= 1) return undefined;
+  return (
+    <div className="flex flex-1">
+      <Select
+        value={type?.code}
+        onChange={(option) => {
+          const newType = element.type?.find((t) => t.code === option.value);
+          if (newType) {
+            onChange(newType);
+          }
+        }}
+        options={(element.type || []).map((t) => ({
+          value: t.code,
+          label: t.code,
+        }))}
+      />
+    </div>
   );
 }
 
@@ -392,7 +428,7 @@ function capitalize(s: string) {
 }
 
 function getFieldName(path: string) {
-  return capitalize(path.substring(path.lastIndexOf(".") + 1));
+  return path.substring(path.lastIndexOf(".") + 1).replace("[x]", "");
 }
 
 type MetaProps<T, R> = {
@@ -403,6 +439,7 @@ type MetaProps<T, R> = {
   showLabel?: boolean;
   showInvalid?: boolean;
   onChange: (patches: Mutation<T, R>) => void;
+  type: ElementDefinitionType | undefined;
 } & ClientProps;
 
 function getElementDefinition(
@@ -419,6 +456,220 @@ function isTypeChoice(element: ElementDefinition): boolean {
   return (element.type || []).length > 1;
 }
 
+function isIndexableObject(v: unknown): v is Record<string, unknown> {
+  return typeof v === "object" && v !== null;
+}
+
+function findTypeChoiceTypeBasedOnField(
+  element: ElementDefinition,
+  value: Record<string, unknown>
+): ElementDefinitionType {
+  if (!element.type?.[0]) throw new Error("No Type found.");
+
+  if (!isTypeChoice(element)) return element.type?.[0];
+  const fieldName = getFieldName(element.path);
+  for (const type of element.type || []) {
+    const typeChoiceFieldName = `${fieldName}${capitalize(type.code)}`;
+    if (value[typeChoiceFieldName] !== undefined) return type;
+  }
+  return element.type?.[0];
+}
+
+function getTypedFieldName(
+  element: ElementDefinition,
+  type: ElementDefinitionType
+) {
+  const fieldName = getFieldName(element.path);
+  if (!isTypeChoice(element)) return fieldName;
+  return `${fieldName}${capitalize(type.code)}`;
+}
+
+function getValueAndPointer(
+  element: ElementDefinition,
+  pointer: Loc<any, any, any>,
+  value: unknown
+): {
+  value: unknown;
+  pointer: Loc<any, any, any>;
+  type: ElementDefinitionType;
+} {
+  if (Array.isArray(value))
+    throw new Error("invalid value must be object to descend");
+
+  const type = findTypeChoiceTypeBasedOnField(
+    element,
+    value as Record<string, unknown>
+  );
+
+  const field = getTypedFieldName(element, type);
+
+  return {
+    value: isIndexableObject(value) ? value[field] : undefined,
+    pointer: descend(pointer, field),
+    type: type,
+  };
+}
+
+function DisplayInvalid({
+  element,
+  value,
+  showInvalid,
+}: {
+  showInvalid: boolean;
+  element: ElementDefinition;
+  value: unknown;
+}) {
+  if (showInvalid)
+    return (
+      <div>
+        <span className="font-semibold"> {element.path}</span>
+        <span>
+          {element.type && element.type[0].code}: {JSON.stringify(value)}
+        </span>
+      </div>
+    );
+  return undefined;
+}
+
+function LabelWrapper({
+  sd,
+  elementIndex,
+  type,
+  onChange,
+  children,
+  pointer,
+  showLabel = true,
+}: MetaProps<any, any> & { children: React.ReactNode }) {
+  const element = getElementDefinition(sd, elementIndex);
+  return (
+    <div>
+      {showLabel && (
+        <div className="">{capitalize(getFieldName(element.path))}</div>
+      )}
+      {(element.type || []).length > 1 && (
+        <TypeChoiceTypeSelect
+          element={element}
+          type={type}
+          onChange={(selectedType) => {
+            if (selectedType.code !== type?.code) {
+              onChange({
+                op: "replace",
+                path: pointer,
+                value: undefined,
+              });
+              const fieldName = getTypedFieldName(element, selectedType);
+              const newPointer = descend(
+                ascend(pointer)?.parent as Loc<any, any, any>,
+                fieldName
+              );
+              onChange({
+                op: "replace",
+                path: newPointer,
+                value: {},
+              });
+            }
+          }}
+        />
+      )}
+
+      {children}
+    </div>
+  );
+}
+
+const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
+  const {
+    sd,
+    elementIndex,
+    value,
+    pointer,
+    showLabel = true,
+    showInvalid = false,
+    client,
+    onChange,
+  } = props;
+
+  const element = getElementDefinition(sd, elementIndex);
+
+  const children = getChildrenElementIndices({ sd, elementIndex });
+  if (children.length === 0) {
+    if (!isLeaf(element.type?.[0].code)) {
+      return (
+        <DisplayInvalid
+          element={element}
+          value={value}
+          showInvalid={showInvalid}
+        />
+      );
+    }
+    return (
+      <div className="mt-2">
+        <LabelWrapper {...props}>
+          <EditorComponent
+            element={element}
+            pointer={pointer}
+            client={client}
+            value={value}
+            showLabel={false}
+            onChange={onChange}
+          />
+        </LabelWrapper>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-2">
+      <LabelWrapper {...props}>
+        <div className="px-2 border space-y-2">
+          {children.map((childIndex) => {
+            const childElement = getElementDefinition(sd, childIndex);
+            // Skipping extensions and nested resources for now
+            if (
+              childElement.type?.find(
+                (t) => t.code === "Extension" || resourceTypes.has(t.code)
+              )
+            ) {
+              return;
+            }
+            const {
+              value: childValue,
+              pointer: childPointer,
+              type,
+            } = getValueAndPointer(childElement, pointer, value);
+
+            return childElement.max === "1" ? (
+              <MetaValueSingular
+                client={client}
+                type={type}
+                key={childPointer}
+                sd={sd}
+                elementIndex={childIndex}
+                onChange={onChange}
+                showInvalid={showInvalid}
+                pointer={childPointer}
+                value={childValue}
+              />
+            ) : (
+              <MetaValueArray
+                client={client}
+                type={type}
+                key={childPointer}
+                sd={sd}
+                elementIndex={childIndex}
+                showInvalid={showInvalid}
+                onChange={onChange}
+                pointer={childPointer}
+                value={childValue}
+              />
+            );
+          })}
+        </div>
+      </LabelWrapper>
+    </div>
+  );
+});
+
 const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
   const {
     sd,
@@ -428,17 +679,9 @@ const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
     onChange,
     client,
     showInvalid = false,
+    type,
   } = props;
   const element = getElementDefinition(sd, elementIndex);
-  if (isTypeChoice(element)) {
-    return showInvalid ? (
-      <div>
-        <span>{element.path}</span>
-        TYPE CHOICES NOT SUPPORTED YET{" "}
-        {JSON.stringify(element.type?.map((t) => t.code))}
-      </div>
-    ) : undefined;
-  }
   if (!Array.isArray(value)) {
     throw new Error("Value must be an array or undefined");
   }
@@ -456,7 +699,7 @@ const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
   }
   return (
     <div>
-      <label>{getFieldName(element.path)}</label>
+      <label>{capitalize(getFieldName(element.path))}</label>
       {value.map((v, i) => (
         <div
           className={classNames("mt-1 relative", {
@@ -467,6 +710,7 @@ const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
         >
           <MetaValueSingular
             client={client}
+            type={type}
             sd={sd}
             elementIndex={elementIndex}
             pointer={descend(pointer, i)}
@@ -509,142 +753,6 @@ const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
   );
 });
 
-function isIndexableObject(v: unknown): v is Record<string, unknown> {
-  return typeof v === "object" && v !== null;
-}
-
-function getValueAndPointer(
-  elementDefinition: ElementDefinition,
-  pointer: Loc<any, any, any>,
-  value: unknown
-): { value: unknown; pointer: Loc<any, any, any> } {
-  const field = elementDefinition.path.substring(
-    elementDefinition.path.lastIndexOf(".") + 1
-  );
-  if (Array.isArray(value))
-    throw new Error("invalid value must be object to descend");
-
-  return {
-    value: isIndexableObject(value) ? value[field] : undefined,
-    pointer: descend(pointer, field),
-  };
-}
-
-function DisplayInvalid({
-  element,
-  value,
-  showInvalid,
-}: {
-  showInvalid: boolean;
-  element: ElementDefinition;
-  value: unknown;
-}) {
-  if (showInvalid)
-    return (
-      <div>
-        <span className="font-semibold"> {element.path}</span>
-        <span>
-          {element.type && element.type[0].code}: {JSON.stringify(value)}
-        </span>
-      </div>
-    );
-  return undefined;
-}
-
-const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
-  const {
-    sd,
-    elementIndex,
-    value,
-    pointer,
-    showLabel = true,
-    showInvalid = false,
-    client,
-    onChange,
-  } = props;
-
-  const element = getElementDefinition(sd, elementIndex);
-
-  if (isTypeChoice(element)) {
-    return showInvalid ? (
-      <div>
-        <span>{element.path}</span>
-        TYPE CHOICES NOT SUPPORTED YET{" "}
-        {JSON.stringify(element.type?.map((t) => t.code))}
-      </div>
-    ) : undefined;
-  }
-  const children = getChildrenElementIndices({ sd, elementIndex });
-  if (children.length === 0) {
-    if (!isLeaf(element.type?.[0].code)) {
-      return (
-        <DisplayInvalid
-          element={element}
-          value={value}
-          showInvalid={showInvalid}
-        />
-      );
-    }
-    return (
-      <div className="">
-        <EditorComponent
-          element={element}
-          pointer={pointer}
-          client={client}
-          value={value}
-          showLabel={showLabel}
-          onChange={onChange}
-        />
-      </div>
-    );
-  }
-
-  return (
-    <div className="">
-      {showLabel && <div className="">{getFieldName(element.path)}</div>}
-      <div className="p-2 border space-y-2">
-        {children.map((childIndex) => {
-          const childElement = getElementDefinition(sd, childIndex);
-          // Skipping extensions and nested resources for now
-          if (
-            childElement.type?.find(
-              (t) => t.code === "Extension" || resourceTypes.has(t.code)
-            )
-          ) {
-            return;
-          }
-          const { value: childValue, pointer: childPointer } =
-            getValueAndPointer(childElement, pointer, value);
-
-          return childElement.max === "1" ? (
-            <MetaValueSingular
-              client={client}
-              key={childPointer}
-              sd={sd}
-              elementIndex={childIndex}
-              onChange={onChange}
-              showInvalid={showInvalid}
-              pointer={childPointer}
-              value={childValue}
-            />
-          ) : (
-            <MetaValueArray
-              client={client}
-              key={childPointer}
-              sd={sd}
-              elementIndex={childIndex}
-              showInvalid={showInvalid}
-              onChange={onChange}
-              pointer={childPointer}
-              value={childValue}
-            />
-          );
-        })}
-      </div>
-    </div>
-  );
-});
-
 export type Setter = (resource: Resource) => Resource;
 
 export type FHIRGenerativeFormProps = {
@@ -678,6 +786,7 @@ export const FHIRGenerativeForm = ({
       sd={structureDefinition}
       elementIndex={0}
       value={value}
+      type={structureDefinition.snapshot?.element?.[0]?.type?.[0]}
       pointer={pointer(
         structureDefinition.type as ResourceType,
         value?.id || "new"
