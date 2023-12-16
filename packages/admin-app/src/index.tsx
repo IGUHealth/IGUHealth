@@ -318,7 +318,10 @@ function Root() {
       >
         <>
           <div className="px-4 z-10 sm:px-6 lg:px-8 sticky top-0 bg-white">
-            <div className="flex h-16 items-center justify-between">
+            <div
+              className="flex items-center justify-between"
+              style={{ height: "64px" }}
+            >
               <Search />
               <div className="flex justify-center items-center space-x-8">
                 <a
@@ -358,7 +361,10 @@ function Root() {
               </div>
             </div>
           </div>
-          <div className="p-4 flex flex-1 mt-2 overflow-auto">
+          <div
+            className="p-4 flex flex-1 "
+            style={{ maxHeight: "calc(100vh - 64px)" }}
+          >
             <Toaster.Toaster />
             <Outlet />
           </div>

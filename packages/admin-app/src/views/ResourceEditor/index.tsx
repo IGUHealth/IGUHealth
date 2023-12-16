@@ -149,7 +149,7 @@ function ResourceEditorTabs() {
 export default function ResourceEditor() {
   const { resourceType, id } = useParams();
   return (
-    <div className="flex w-full flex-col">
+    <div className="flex flex-1 flex-col overflow-auto">
       <h3 className="text-slate-700 text-xl font-semibold mb-2">
         {resourceType} {id}
       </h3>
