@@ -184,8 +184,6 @@ function Root() {
   const navigate = useNavigate();
   const matches = useMatches();
 
-  console.log(matches);
-
   return (
     <>
       <SideBar.SidebarLayout
