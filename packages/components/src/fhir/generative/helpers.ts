@@ -23,7 +23,7 @@ export function getElementDefinition(
   sd: StructureDefinition,
   elementIndex: number
 ): { elementIndex: number; element: ElementDefinition } {
-  let element = sd.snapshot?.element?.[elementIndex];
+  const element = sd.snapshot?.element?.[elementIndex];
 
   if (!element)
     throw new Error(`SD did not have element at index ${elementIndex}`);

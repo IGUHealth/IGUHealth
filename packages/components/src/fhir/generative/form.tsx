@@ -21,6 +21,7 @@ import { descend, ascend, Loc, pointer, root } from "@iguhealth/fhir-pointer";
 import generateJSONPatches, { Mutation } from "@iguhealth/fhir-patch-building";
 
 import { ClientProps } from "../types";
+import { MetaProps } from "./types";
 import { TypeComponents, isTypeRenderingSupported } from "./components";
 import { Select } from "../../base";
 import { getElementDefinition } from "./helpers";
@@ -52,11 +53,11 @@ function TypeChoiceTypeSelect({
   onChange,
   element,
   type,
-}: {
+}: Readonly<{
   element: ElementDefinition;
   onChange: (type: ElementDefinitionType) => void;
   type: ElementDefinitionType | undefined;
-}) {
+}>) {
   if (!element.type || element.type?.length <= 1) return undefined;
   return (
     <div className="flex flex-1">
@@ -117,17 +118,6 @@ function capitalize(s: string) {
 function getFieldName(path: string) {
   return path.substring(path.lastIndexOf(".") + 1).replace("[x]", "");
 }
-
-type MetaProps<T, R> = {
-  sd: StructureDefinition;
-  elementIndex: number;
-  value: unknown;
-  pointer: Loc<T, R, any>;
-  showLabel?: boolean;
-  showInvalid?: boolean;
-  onChange: (patches: Mutation<T, R>) => void;
-  type: ElementDefinitionType | undefined;
-} & ClientProps;
 
 function isTypeChoice(element: ElementDefinition): boolean {
   return (element.type || []).length > 1;
