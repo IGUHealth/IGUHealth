@@ -29,234 +29,98 @@ type TypeProps = MetaProps<any, any> & {
 };
 type TypeComponent = React.FC<TypeProps>;
 
+type SharedProps<T> = {
+  label?: string;
+  value?: T;
+  onChange: (v: T | undefined) => void;
+};
+
+function deriveSharedProps<T>(props: TypeProps): SharedProps<T> {
+  return {
+    label: props.label,
+    value: props.value as T | undefined,
+    onChange: (v: T | undefined) => {
+      props.onChange({
+        op: "replace",
+        path: props.pointer,
+        value: v,
+      });
+    },
+  };
+}
+
 export const TypeComponents: Record<string, TypeComponent> = {
   "http://hl7.org/fhirpath/System.String": (props) => (
     <Primitives.FHIRStringEditable
       disabled={true}
-      label={props.label}
-      value={props.value as string}
-      onChange={(v: unknown) => {
-        props.onChange({
-          op: "replace",
-          path: props.pointer,
-          value: v,
-        });
-      }}
+      {...deriveSharedProps<string>(props)}
     />
   ),
   string: (props) => (
-    <Primitives.FHIRStringEditable
-      value={props.value as string}
-      label={props.label}
-      onChange={(v: unknown) => {
-        props.onChange({
-          op: "replace",
-          path: props.pointer,
-          value: v,
-        });
-      }}
-    />
+    <Primitives.FHIRStringEditable {...deriveSharedProps<string>(props)} />
   ),
   boolean: (props) => (
-    <Primitives.FHIRBooleanEditable
-      value={props.value as boolean}
-      label={props.label}
-      onChange={(v: unknown) => {
-        props.onChange({
-          op: "replace",
-          path: props.pointer,
-          value: v,
-        });
-      }}
-    />
+    <Primitives.FHIRBooleanEditable {...deriveSharedProps<boolean>(props)} />
   ),
   url: (props) => (
-    <Primitives.FHIRUrlEditable
-      value={props.value as url}
-      label={props.label}
-      onChange={(v: unknown) => {
-        props.onChange({
-          op: "replace",
-          path: props.pointer,
-          value: v,
-        });
-      }}
-    />
+    <Primitives.FHIRUrlEditable {...deriveSharedProps<url>(props)} />
   ),
   date: (props) => (
-    <Primitives.FHIRDateEditable
-      value={props.value as date}
-      label={props.label}
-      onChange={(v: unknown) => {
-        props.onChange({
-          op: "replace",
-          path: props.pointer,
-          value: v,
-        });
-      }}
-    />
+    <Primitives.FHIRDateEditable {...deriveSharedProps<date>(props)} />
   ),
   dateTime: (props) => (
-    <Primitives.FHIRDateTimeEditable
-      value={props.value as dateTime}
-      label={props.label}
-      onChange={(v: unknown) => {
-        props.onChange({
-          op: "replace",
-          path: props.pointer,
-          value: v,
-        });
-      }}
-    />
+    <Primitives.FHIRDateTimeEditable {...deriveSharedProps<dateTime>(props)} />
   ),
   uri: (props) => (
-    <Primitives.FHIRUriEditable
-      value={props.value as uri}
-      label={props.label}
-      onChange={(v: unknown) => {
-        props.onChange({
-          op: "replace",
-          path: props.pointer,
-          value: v,
-        });
-      }}
-    />
+    <Primitives.FHIRUriEditable {...deriveSharedProps<uri>(props)} />
   ),
   code: (props) => (
     <Primitives.FHIRCodeEditable
+      {...deriveSharedProps<code>(props)}
       client={props.client}
-      value={props.value as code}
-      label={props.label}
       open={true}
       system={props.sd.snapshot?.element[props.elementIndex].binding?.valueSet}
-      onChange={(v: unknown) => {
-        props.onChange({
-          op: "replace",
-          path: props.pointer,
-          value: v,
-        });
-      }}
     />
   ),
   decimal: (props) => (
-    <Primitives.FHIRDecimalEditable
-      value={props.value as decimal}
-      label={props.label}
-      onChange={(v: unknown) => {
-        props.onChange({
-          op: "replace",
-          path: props.pointer,
-          value: v,
-        });
-      }}
-    />
+    <Primitives.FHIRDecimalEditable {...deriveSharedProps<decimal>(props)} />
   ),
   integer: (props) => (
-    <Primitives.FHIRIntegerEditable
-      value={props.value as integer}
-      label={props.label}
-      onChange={(v: unknown) => {
-        props.onChange({
-          op: "replace",
-          path: props.pointer,
-          value: v,
-        });
-      }}
-    />
+    <Primitives.FHIRIntegerEditable {...deriveSharedProps<integer>(props)} />
   ),
   Address: (props) => (
-    <ComplexTypes.FHIRAddressEditable
-      value={props.value as Address}
-      label={props.label}
-      onChange={(v: Address | undefined) => {
-        props.onChange({
-          op: "replace",
-          path: props.pointer,
-          value: v,
-        });
-      }}
-    />
+    <ComplexTypes.FHIRAddressEditable {...deriveSharedProps<Address>(props)} />
   ),
   Annotation: (props) => (
     <ComplexTypes.FHIRAnnotationEditable
-      value={props.value as Annotation}
-      label={props.label}
-      onChange={(v: Annotation | undefined) => {
-        props.onChange({
-          op: "replace",
-          path: props.pointer,
-          value: v,
-        });
-      }}
+      {...deriveSharedProps<Annotation>(props)}
     />
   ),
   Identifier: (props) => (
     <ComplexTypes.FHIRIdentifierEditable
+      {...deriveSharedProps<Identifier>(props)}
       client={props.client}
-      value={props.value as Identifier}
-      label={props.label}
-      onChange={(v: unknown) => {
-        props.onChange({
-          op: "replace",
-          path: props.pointer,
-          value: v,
-        });
-      }}
     />
   ),
   ContactPoint: (props) => (
     <ComplexTypes.FHIRContactPointEditable
+      {...deriveSharedProps<ContactPoint>(props)}
       client={props.client}
-      value={props.value as ContactPoint}
-      label={props.label}
-      onChange={(v: unknown) => {
-        props.onChange({
-          op: "replace",
-          path: props.pointer,
-          value: v,
-        });
-      }}
     />
   ),
   HumanName: (props) => (
     <ComplexTypes.FHIRHumanNameEditable
-      value={props.value as HumanName}
-      label={props.label}
-      onChange={(v: unknown) => {
-        props.onChange({
-          op: "replace",
-          path: props.pointer,
-          value: v,
-        });
-      }}
+      {...deriveSharedProps<HumanName>(props)}
     />
   ),
   ContactDetail: (props) => (
     <ComplexTypes.FHIRContactDetailEditable
-      value={props.value as ContactDetail}
+      {...deriveSharedProps<ContactDetail>(props)}
       client={props.client}
-      label={props.label}
-      onChange={(v) => {
-        props.onChange({
-          op: "replace",
-          path: props.pointer,
-          value: v,
-        });
-      }}
     />
   ),
   Period: (props) => (
-    <ComplexTypes.FHIRPeriodEditable
-      value={props.value as Period}
-      label={props.label}
-      onChange={(v) => {
-        props.onChange({
-          op: "replace",
-          path: props.pointer,
-          value: v,
-        });
-      }}
-    />
+    <ComplexTypes.FHIRPeriodEditable {...deriveSharedProps<Period>(props)} />
   ),
   Quantity: (props) => (
     <ComplexTypes.FHIRSimpleQuantityEditable
@@ -273,6 +137,7 @@ export const TypeComponents: Record<string, TypeComponent> = {
   ),
   Reference: (props) => (
     <ComplexTypes.FHIRReferenceEditable
+      {...deriveSharedProps<Reference>(props)}
       client={props.client}
       resourceTypesAllowed={props.sd.snapshot?.element[
         props.elementIndex
@@ -280,15 +145,6 @@ export const TypeComponents: Record<string, TypeComponent> = {
         const parts = tp.split("/");
         return parts[parts.length - 1] as ResourceType;
       })}
-      value={props.value as Reference}
-      label={props.label}
-      onChange={(v) => {
-        props.onChange({
-          op: "replace",
-          path: props.pointer,
-          value: v,
-        });
-      }}
     />
   ),
 };
