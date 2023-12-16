@@ -391,10 +391,13 @@ const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
       <div className="space-y-1">
         {value.map((v, i) => (
           <div
-            className={classNames("relative", {
-              "bg-gray-50": i % 2 === 1,
-              "bg-white": i % 2 === 0,
-            })}
+            className={classNames(
+              "relative"
+              // {
+              //   "bg-gray-50": i % 2 === 1,
+              //   "bg-white": i % 2 === 0,
+              // }
+            )}
             key={`${descend(pointer, i)}`}
           >
             <MetaValueSingular
