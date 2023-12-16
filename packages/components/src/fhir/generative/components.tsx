@@ -22,6 +22,7 @@ import {
 import * as ComplexTypes from "../complex";
 import * as Primitives from "../primitives";
 
+import { getElementDefinition } from "./helpers";
 import { MetaProps } from "./types";
 
 type TypeProps = MetaProps<any, any> & {
@@ -79,7 +80,10 @@ export const TypeComponents: Record<string, TypeComponent> = {
       {...deriveSharedProps<code>(props)}
       client={props.client}
       open={true}
-      system={props.sd.snapshot?.element[props.elementIndex].binding?.valueSet}
+      system={
+        getElementDefinition(props.sd, props.elementIndex).element.binding
+          ?.valueSet
+      }
     />
   ),
   decimal: (props) => (
@@ -139,9 +143,10 @@ export const TypeComponents: Record<string, TypeComponent> = {
     <ComplexTypes.FHIRReferenceEditable
       {...deriveSharedProps<Reference>(props)}
       client={props.client}
-      resourceTypesAllowed={props.sd.snapshot?.element[
+      resourceTypesAllowed={getElementDefinition(
+        props.sd,
         props.elementIndex
-      ].type?.[0]?.targetProfile?.map((tp) => {
+      ).element.type?.[0]?.targetProfile?.map((tp) => {
         const parts = tp.split("/");
         return parts[parts.length - 1] as ResourceType;
       })}

@@ -23,13 +23,14 @@ import generateJSONPatches, { Mutation } from "@iguhealth/fhir-patch-building";
 import { ClientProps } from "../types";
 import { TypeComponents, isTypeRenderingSupported } from "./components";
 import { Select } from "../../base";
+import { getElementDefinition } from "./helpers";
 
 function EditorComponent(
   props: MetaProps<any, any> & { type: ElementDefinitionType }
 ) {
-  const element = getElementDefinition(props.sd, props.elementIndex);
+  const found = getElementDefinition(props.sd, props.elementIndex);
   const label = props.showLabel
-    ? capitalize(getFieldName(element.path))
+    ? capitalize(getFieldName(found.element.path))
     : undefined;
 
   const Comp = TypeComponents[props.type?.code];
@@ -87,12 +88,17 @@ function getChildrenElementIndices({
   elementIndex: number;
 }): number[] {
   const childIndices: number[] = [];
-  const element = sd.snapshot?.element[elementIndex];
-  if (!element?.path) throw new Error("Invalid element when deriving children");
+  const found = getElementDefinition(sd, elementIndex);
+  if (!found.element.path)
+    throw new Error("Invalid element when deriving children");
 
-  const childRegex = new RegExp(`^${element.path}\\.[^\\.]+$`);
+  const childRegex = new RegExp(`^${found.element.path}\\.[^\\.]+$`);
 
-  for (let i = elementIndex + 1; i < (sd.snapshot?.element.length || 0); i++) {
+  for (
+    let i = found.elementIndex + 1;
+    i < (sd.snapshot?.element.length || 0);
+    i++
+  ) {
     if (
       sd.snapshot?.element[i]?.path &&
       childRegex.test(sd.snapshot?.element[i]?.path)
@@ -123,16 +129,6 @@ type MetaProps<T, R> = {
   type: ElementDefinitionType | undefined;
 } & ClientProps;
 
-function getElementDefinition(
-  sd: StructureDefinition,
-  elementIndex: number
-): ElementDefinition {
-  const element = sd.snapshot?.element?.[elementIndex];
-  if (!element)
-    throw new Error(`SD did not have element at index ${elementIndex}`);
-  return element;
-}
-
 function isTypeChoice(element: ElementDefinition): boolean {
   return (element.type || []).length > 1;
 }
@@ -145,7 +141,7 @@ function findTypeChoiceTypeBasedOnField(
   element: ElementDefinition,
   value: Record<string, unknown>
 ): ElementDefinitionType {
-  if (!element.type?.[0]) throw new Error("No Type found.");
+  if (!element.type?.[0]) throw new Error(`No Type found for ${element.path}.`);
 
   if (!isTypeChoice(element)) return element.type?.[0];
   const fieldName = getFieldName(element.path);
@@ -221,16 +217,16 @@ function LabelWrapper({
   pointer,
   showLabel = true,
 }: MetaProps<any, any> & { children: React.ReactNode }) {
-  const element = getElementDefinition(sd, elementIndex);
+  const found = getElementDefinition(sd, elementIndex);
   if (!showLabel) return children;
   return (
     <div>
       <div className="flex items-center space-x-2 mb-1">
-        <div className="">{capitalize(getFieldName(element.path))}</div>
+        <div className="">{capitalize(getFieldName(found.element.path))}</div>
 
-        {(element.type || []).length > 1 && (
+        {(found.element.type || []).length > 1 && (
           <TypeChoiceTypeSelect
-            element={element}
+            element={found.element}
             type={type}
             onChange={(selectedType) => {
               if (selectedType.code !== type?.code) {
@@ -239,7 +235,10 @@ function LabelWrapper({
                   path: pointer,
                   value: undefined,
                 });
-                const fieldName = getTypedFieldName(element, selectedType);
+                const fieldName = getTypedFieldName(
+                  found.element,
+                  selectedType
+                );
                 const newPointer = descend(
                   ascend(pointer)?.parent as Loc<any, any, any>,
                   fieldName
@@ -272,14 +271,17 @@ const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
     onChange,
   } = props;
 
-  const element = getElementDefinition(sd, elementIndex);
+  const found = getElementDefinition(sd, elementIndex);
 
-  const children = getChildrenElementIndices({ sd, elementIndex });
+  const children = getChildrenElementIndices({
+    sd,
+    elementIndex: found.elementIndex,
+  });
   if (children.length === 0) {
-    if (!isLeaf(element.type?.[0].code)) {
+    if (!isLeaf(found.element.type?.[0].code)) {
       return (
         <DisplayInvalid
-          element={element}
+          element={found.element}
           value={value}
           showInvalid={showInvalid}
         />
@@ -309,7 +311,7 @@ const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
             const childElement = getElementDefinition(sd, childIndex);
             // Skipping extensions and nested resources for now
             if (
-              childElement.type?.find(
+              childElement.element.type?.find(
                 (t) => t.code === "Extension" || resourceTypes.has(t.code)
               )
             ) {
@@ -319,15 +321,15 @@ const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
               value: childValue,
               pointer: childPointer,
               type,
-            } = getValueAndPointer(childElement, pointer, value);
+            } = getValueAndPointer(childElement.element, pointer, value);
 
-            return childElement.max === "1" ? (
+            return childElement.element.max === "1" ? (
               <MetaValueSingular
                 client={client}
                 type={type}
                 key={childPointer}
                 sd={sd}
-                elementIndex={childIndex}
+                elementIndex={childElement.elementIndex}
                 onChange={onChange}
                 showInvalid={showInvalid}
                 pointer={childPointer}
@@ -339,7 +341,7 @@ const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
                 type={type}
                 key={childPointer}
                 sd={sd}
-                elementIndex={childIndex}
+                elementIndex={childElement.elementIndex}
                 showInvalid={showInvalid}
                 onChange={onChange}
                 pointer={childPointer}
@@ -369,12 +371,15 @@ const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
     throw new Error("Value must be an array or undefined");
   }
 
-  const children = getChildrenElementIndices({ sd, elementIndex });
+  const children = getChildrenElementIndices({
+    sd,
+    elementIndex: element.elementIndex,
+  });
 
-  if (!isLeaf(element.type?.[0].code) && children.length === 0) {
+  if (!isLeaf(element.element.type?.[0].code) && children.length === 0) {
     return (
       <DisplayInvalid
-        element={element}
+        element={element.element}
         value={value}
         showInvalid={showInvalid}
       />
@@ -382,7 +387,7 @@ const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
   }
   return (
     <div>
-      <label>{capitalize(getFieldName(element.path))}</label>
+      <label>{capitalize(getFieldName(element.element.path))}</label>
       <div className="space-y-1">
         {value.map((v, i) => (
           <div
@@ -396,7 +401,7 @@ const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
               client={client}
               type={type}
               sd={sd}
-              elementIndex={elementIndex}
+              elementIndex={element.elementIndex}
               pointer={descend(pointer, i)}
               value={v}
               showLabel={false}
@@ -427,7 +432,9 @@ const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
             onChange({
               path: descend(pointer, value.length),
               op: "add",
-              value: complexTypes.has(element.type?.[0].code || "") ? {} : null,
+              value: complexTypes.has(element.element.type?.[0].code || "")
+                ? {}
+                : null,
             });
           }}
         >
