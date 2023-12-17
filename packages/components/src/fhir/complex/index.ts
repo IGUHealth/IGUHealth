@@ -8,6 +8,7 @@ import { FHIRContactDetailEditable } from "./ContactDetail";
 import { FHIRAnnotationEditable } from "./Annotation";
 import { FHIRSimpleQuantityEditable } from "./SimpleQuantity";
 import { FHIRReferenceEditable } from "./Reference";
+import { FHIRRatioEditable } from "./Ratio";
 
 export {
   FHIRAddressEditable,
@@ -20,4 +21,5 @@ export {
   FHIRAnnotationEditable,
   FHIRSimpleQuantityEditable,
   FHIRReferenceEditable,
+  FHIRRatioEditable,
 };

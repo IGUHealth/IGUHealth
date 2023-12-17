@@ -9,6 +9,7 @@ import {
   Identifier,
   Period,
   Quantity,
+  Ratio,
   Reference,
   ResourceType,
   code,
@@ -124,6 +125,7 @@ export const TypeComponents: Record<string, TypeComponent> = {
       client={props.client}
     />
   ),
+
   Period: (props) => (
     <ComplexTypes.FHIRPeriodEditable {...deriveSharedProps<Period>(props)} />
   ),
@@ -152,6 +154,9 @@ export const TypeComponents: Record<string, TypeComponent> = {
         return parts[parts.length - 1] as ResourceType;
       })}
     />
+  ),
+  Ratio: (props) => (
+    <ComplexTypes.FHIRRatioEditable {...deriveSharedProps<Ratio>(props)} />
   ),
 };
 

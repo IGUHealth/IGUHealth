@@ -41,8 +41,9 @@ For storybook visit https://storybook.iguhealth.app
 | HumanName       | yes       |
 | Reference       | yes       |
 | Quantity        | yes       |
+| Ratio           | yes       |
+| Range           | no        |
 | Attachment      | no        |
-| Ratio           | no        |
 | CodeableConcept | no        |
 | Coding          | no        |
 | Money           | no        |
