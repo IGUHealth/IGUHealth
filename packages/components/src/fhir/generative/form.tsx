@@ -129,7 +129,7 @@ function isIndexableObject(v: unknown): v is Record<string, unknown> {
 
 function findTypeChoiceTypeBasedOnField(
   element: ElementDefinition,
-  value: Record<string, unknown>
+  value: Record<string, unknown> | undefined
 ): ElementDefinitionType {
   if (!element.type?.[0]) throw new Error(`No Type found for ${element.path}.`);
 
@@ -137,7 +137,7 @@ function findTypeChoiceTypeBasedOnField(
   const fieldName = getFieldName(element.path);
   for (const type of element.type || []) {
     const typeChoiceFieldName = `${fieldName}${capitalize(type.code)}`;
-    if (value[typeChoiceFieldName] !== undefined) return type;
+    if (value?.[typeChoiceFieldName] !== undefined) return type;
   }
   return element.type?.[0];
 }

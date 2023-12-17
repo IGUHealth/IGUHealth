@@ -3,12 +3,15 @@ import React from "react";
 import {
   Address,
   Annotation,
+  Coding,
   ContactDetail,
   ContactPoint,
   HumanName,
   Identifier,
   Period,
   Quantity,
+  Range,
+  Ratio,
   Reference,
   ResourceType,
   code,
@@ -124,6 +127,7 @@ export const TypeComponents: Record<string, TypeComponent> = {
       client={props.client}
     />
   ),
+
   Period: (props) => (
     <ComplexTypes.FHIRPeriodEditable {...deriveSharedProps<Period>(props)} />
   ),
@@ -151,6 +155,18 @@ export const TypeComponents: Record<string, TypeComponent> = {
         const parts = tp.split("/");
         return parts[parts.length - 1] as ResourceType;
       })}
+    />
+  ),
+  Ratio: (props) => (
+    <ComplexTypes.FHIRRatioEditable {...deriveSharedProps<Ratio>(props)} />
+  ),
+  Range: (props) => (
+    <ComplexTypes.FHIRRangeEditable {...deriveSharedProps<Range>(props)} />
+  ),
+  Coding: (props) => (
+    <ComplexTypes.FHIRCodingEditable
+      client={props.client}
+      {...deriveSharedProps<Coding>(props)}
     />
   ),
 };
