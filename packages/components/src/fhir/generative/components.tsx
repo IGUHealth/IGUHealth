@@ -9,6 +9,7 @@ import {
   Identifier,
   Period,
   Quantity,
+  Range,
   Ratio,
   Reference,
   ResourceType,
@@ -157,6 +158,9 @@ export const TypeComponents: Record<string, TypeComponent> = {
   ),
   Ratio: (props) => (
     <ComplexTypes.FHIRRatioEditable {...deriveSharedProps<Ratio>(props)} />
+  ),
+  Range: (props) => (
+    <ComplexTypes.FHIRRangeEditable {...deriveSharedProps<Range>(props)} />
   ),
 };
 
