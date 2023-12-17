@@ -1,7 +1,7 @@
 import React from "react";
 import { Ratio } from "@iguhealth/fhir-types/r4/types";
 
-import { EditableProps, ClientProps } from "../types";
+import { EditableProps } from "../types";
 import { InputContainer } from "../../base/containers";
 import { FHIRSimpleQuantityEditable } from "./SimpleQuantity";
 
