@@ -3,6 +3,7 @@ import React from "react";
 import {
   Address,
   Annotation,
+  Coding,
   ContactDetail,
   ContactPoint,
   HumanName,
@@ -161,6 +162,12 @@ export const TypeComponents: Record<string, TypeComponent> = {
   ),
   Range: (props) => (
     <ComplexTypes.FHIRRangeEditable {...deriveSharedProps<Range>(props)} />
+  ),
+  Coding: (props) => (
+    <ComplexTypes.FHIRCodingEditable
+      client={props.client}
+      {...deriveSharedProps<Coding>(props)}
+    />
   ),
 };
 

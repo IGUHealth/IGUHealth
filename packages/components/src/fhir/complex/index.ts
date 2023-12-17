@@ -10,6 +10,7 @@ import { FHIRSimpleQuantityEditable } from "./SimpleQuantity";
 import { FHIRReferenceEditable } from "./Reference";
 import { FHIRRatioEditable } from "./Ratio";
 import { FHIRRangeEditable } from "./Range";
+import { FHIRCodingEditable } from "./Coding";
 
 export {
   FHIRAddressEditable,
@@ -24,4 +25,5 @@ export {
   FHIRReferenceEditable,
   FHIRRatioEditable,
   FHIRRangeEditable,
+  FHIRCodingEditable,
 };
