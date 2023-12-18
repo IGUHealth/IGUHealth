@@ -50,7 +50,7 @@ export const FHIRAttachmentEditable = ({
             });
           }}
         />
-        {value && (
+        {value && value.data && (
           <Button
             className="ml-1"
             buttonType="secondary"
