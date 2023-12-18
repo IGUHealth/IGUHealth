@@ -1,8 +1,9 @@
 import React from "react";
 import { CodeableConcept, Coding } from "@iguhealth/fhir-types/r4/types";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 import { ClientProps, EditableProps } from "../types";
-import { InputContainer } from "../../base/containers";
+import { InputContainer, Label } from "../../base/containers";
 import { Add } from "../../base";
 import { FHIRCodingEditable } from ".";
 
@@ -39,21 +40,32 @@ export const FhirCodeableConceptEditable = ({
     >
       <div className="flex flex-col space-y-1">
         {value?.coding?.map((coding, index) => (
-          <FHIRCodingEditable
-            client={client}
-            value={coding}
-            onChange={(coding) => {
-              if (coding) {
-                const newCoding: Coding[] = [...(value?.coding || [])];
-                newCoding[index] = coding;
-                onChange?.call(this, { ...value, coding: newCoding });
-              } else {
+          <div
+            key={`${index}:${coding.code}-${coding.system}`}
+            className="relative"
+          >
+            <FHIRCodingEditable
+              client={client}
+              value={coding}
+              onChange={(coding) => {
+                if (coding) {
+                  const newCoding: Coding[] = [...(value?.coding || [])];
+                  newCoding.splice(index, 1, coding);
+                  onChange?.call(this, { ...value, coding: newCoding });
+                }
+              }}
+            />
+            <div
+              className="absolute top-1 right-1 text-slate-400 cursor-pointer hover:text-slate-500 "
+              onClick={() => {
                 const newCoding: Coding[] = [...(value?.coding || [])];
                 newCoding.splice(index, 1);
                 onChange?.call(this, { ...value, coding: newCoding });
-              }
-            }}
-          />
+              }}
+            >
+              <XMarkIcon className="h-4 w-4" />
+            </div>
+          </div>
         ))}
         <div>
           <Add
