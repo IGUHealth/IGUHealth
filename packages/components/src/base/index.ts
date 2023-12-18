@@ -10,6 +10,7 @@ import { Tabs } from "./tabs";
 import { BreadCrumbs } from "./breadcrumbs";
 import { Menu, DropDownMenu } from "./menu";
 import { Modal } from "./modal";
+import { Add } from "./Add";
 
 export {
   Button,
@@ -25,4 +26,5 @@ export {
   Menu,
   DropDownMenu,
   Modal,
+  Add,
 };

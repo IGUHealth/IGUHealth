@@ -3,7 +3,7 @@ import React, { useMemo } from "react";
 import classNames from "classnames";
 import { applyPatch } from "fast-json-patch";
 import { produce } from "immer";
-import { PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 import {
   resourceTypes,
@@ -23,7 +23,7 @@ import generateJSONPatches, { Mutation } from "@iguhealth/fhir-patch-building";
 import { ClientProps } from "../types";
 import { MetaProps } from "./types";
 import { TypeComponents, isTypeRenderingSupported } from "./components";
-import { Select } from "../../base";
+import { Select, Add } from "../../base";
 import { getElementDefinition } from "./helpers";
 
 function EditorComponent(
@@ -419,9 +419,8 @@ const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
         ))}
       </div>
       <div className="mt-1">
-        <span
-          className="flex items-center  text-slate-400 cursor-pointer hover:text-slate-500"
-          onClick={() => {
+        <Add
+          onChange={() => {
             onChange({
               path: descend(pointer, value.length),
               op: "add",
@@ -430,9 +429,7 @@ const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
                 : null,
             });
           }}
-        >
-          <PlusIcon className=" h-4 w-4" /> Add
-        </span>
+        />
       </div>
     </div>
   );
