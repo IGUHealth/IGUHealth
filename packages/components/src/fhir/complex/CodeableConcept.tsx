@@ -3,7 +3,7 @@ import { CodeableConcept, Coding } from "@iguhealth/fhir-types/r4/types";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 import { ClientProps, EditableProps } from "../types";
-import { InputContainer, Label } from "../../base/containers";
+import { InputContainer } from "../../base/containers";
 import { Add } from "../../base";
 import { FHIRCodingEditable } from ".";
 
@@ -40,10 +40,7 @@ export const FhirCodeableConceptEditable = ({
     >
       <div className="flex flex-col space-y-1">
         {value?.coding?.map((coding, index) => (
-          <div
-            key={`${index}:${coding.code}-${coding.system}`}
-            className="relative"
-          >
+          <div key={`${coding.code}-${coding.system}`} className="relative">
             <FHIRCodingEditable
               client={client}
               value={coding}

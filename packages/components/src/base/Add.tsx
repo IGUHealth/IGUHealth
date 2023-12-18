@@ -1,7 +1,7 @@
 import React from "react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 
-export function Add({ onChange }: { onChange: () => void }) {
+export function Add({ onChange }: Readonly<{ onChange: () => void }>) {
   return (
     <span
       className="flex items-center  text-slate-400 cursor-pointer hover:text-slate-500"
