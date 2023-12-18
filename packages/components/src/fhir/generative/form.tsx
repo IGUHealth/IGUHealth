@@ -296,7 +296,7 @@ const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
   return (
     <div>
       <LabelWrapper {...props}>
-        <div className="p-2 border space-y-4">
+        <div className="p-2 border rounded-md space-y-4">
           {children.map((childIndex) => {
             const childElement = getElementDefinition(sd, childIndex);
             // Skipping extensions and nested resources for now
