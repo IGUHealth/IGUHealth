@@ -49,7 +49,7 @@
  | expiry | date | Expiry date of package or container of substance | Substance.instance.expiry  
  | identifier | token | Unique identifier for the substance | Substance.identifier  
  | quantity | quantity | Amount of substance in the package | Substance.instance.quantity  
- | status | token | active / inactive | entered-in-error | Substance.status  
+ | status | token | active / inactive / entered-in-error | Substance.status  
  | substance-reference | reference | A component of the substance | (Substance.ingredient.substance.ofType(Reference))  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  

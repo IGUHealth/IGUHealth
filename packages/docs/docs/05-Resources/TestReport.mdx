@@ -16,7 +16,7 @@
  | TestReport.identifier | 0..1 | Identifier | Identifier for the TestScript assigned for external purposes outside the context of FHIR. 
  | TestReport.name | 0..1 | string | A free text natural language name identifying the executed TestScript. 
  | TestReport.status | 1..1 | code | The current state of this test report. 
- | TestReport.testScript | 1..1 | Reference | Ideally this is an absolute URL that is used to identify the version-specific TestScript that was executed, matching the `TestScript.url`. 
+ | TestReport.testScript | 1..1 | Reference | Ideally this is an absolute URL that is used to identify the version-specific TestScript that was executed, matching the \`TestScript.url\`. 
  | TestReport.result | 1..1 | code | The overall result from the execution of the TestScript. 
  | TestReport.score | 0..1 | decimal | The final score (percentage of tests passed) resulting from the execution of the TestScript. 
  | TestReport.tester | 0..1 | string | Name of the tester producing this report (Organization or individual). 

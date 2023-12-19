@@ -37,7 +37,7 @@
  | identifier | token | Business Identifier for research subject in a study | ResearchSubject.identifier  
  | individual | reference | Who is part of study | ResearchSubject.individual  
  | patient | reference | Who is part of study | ResearchSubject.individual  
- | status | token | candidate / eligible | follow-up | ineligible | not-registered | off-study | on-study | on-study-intervention | on-study-observation | pending-on-study | potential-candidate | screening | withdrawn | ResearchSubject.status  
+ | status | token | candidate / eligible / follow-up / ineligible / not-registered / off-study / on-study / on-study-intervention / on-study-observation / pending-on-study / potential-candidate / screening / withdrawn | ResearchSubject.status  
  | study | reference | Study subject is part of | ResearchSubject.study  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  

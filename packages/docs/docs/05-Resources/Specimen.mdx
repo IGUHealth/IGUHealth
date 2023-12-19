@@ -73,7 +73,7 @@
  | identifier | token | The unique identifier associated with the specimen | Specimen.identifier  
  | parent | reference | The parent of the specimen | Specimen.parent  
  | patient | reference | The patient the specimen comes from | Specimen.subject.where(resolve() is Patient)  
- | status | token | available / unavailable | unsatisfactory | entered-in-error | Specimen.status  
+ | status | token | available / unavailable / unsatisfactory / entered-in-error | Specimen.status  
  | subject | reference | The subject of the specimen | Specimen.subject  
  | type | token | The specimen type | Specimen.type  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  

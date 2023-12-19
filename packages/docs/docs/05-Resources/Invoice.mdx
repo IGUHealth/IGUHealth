@@ -67,7 +67,7 @@
  | participant-role | token | Type of involvement in creation of this Invoice | Invoice.participant.role  
  | patient | reference | Recipient(s) of goods and services | Invoice.subject.where(resolve() is Patient)  
  | recipient | reference | Recipient of this invoice | Invoice.recipient  
- | status | token | draft / issued | balanced | cancelled | entered-in-error | Invoice.status  
+ | status | token | draft / issued / balanced / cancelled / entered-in-error | Invoice.status  
  | subject | reference | Recipient(s) of goods and services | Invoice.subject  
  | totalgross | quantity | Gross total of this Invoice | Invoice.totalGross  
  | totalnet | quantity | Net total of this Invoice | Invoice.totalNet  

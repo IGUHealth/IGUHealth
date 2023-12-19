@@ -71,7 +71,7 @@
  | protocol | reference | Steps followed in executing study | ResearchStudy.protocol  
  | site | reference | Facility where study activities are conducted | ResearchStudy.site  
  | sponsor | reference | Organization that initiates and is legally responsible for the study | ResearchStudy.sponsor  
- | status | token | active / administratively-completed | approved | closed-to-accrual | closed-to-accrual-and-intervention | completed | disapproved | in-review | temporarily-closed-to-accrual | temporarily-closed-to-accrual-and-intervention | withdrawn | ResearchStudy.status  
+ | status | token | active / administratively-completed / approved / closed-to-accrual / closed-to-accrual-and-intervention / completed / disapproved / in-review / temporarily-closed-to-accrual / temporarily-closed-to-accrual-and-intervention / withdrawn | ResearchStudy.status  
  | title | string | Name for this study | ResearchStudy.title  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  

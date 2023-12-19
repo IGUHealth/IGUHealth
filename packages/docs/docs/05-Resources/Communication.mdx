@@ -65,7 +65,7 @@
  | recipient | reference | Message recipient | Communication.recipient  
  | sender | reference | Message sender | Communication.sender  
  | sent | date | When sent | Communication.sent  
- | status | token | preparation / in-progress | not-done | on-hold | stopped | completed | entered-in-error | unknown | Communication.status  
+ | status | token | preparation / in-progress / not-done / on-hold / stopped / completed / entered-in-error / unknown | Communication.status  
  | subject | reference | Focus of message | Communication.subject  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
