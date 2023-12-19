@@ -1,12 +1,9 @@
-import Koa, { DefaultContext, DefaultState, Middleware } from "koa";
+import Koa from "koa";
 import Router from "@koa/router";
 import ratelimit from "koa-ratelimit";
 import { bodyParser } from "@koa/bodyparser";
 import cors from "@koa/cors";
-import Redis from "ioredis";
 import pg from "pg";
-import jwt from "koa-jwt";
-import jwksRsa from "jwks-rsa";
 import dotEnv from "dotenv";
 
 import {
@@ -15,8 +12,8 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
-import { IGUHEALTH_ISSUER } from "./auth/token.js";
 import { LIB_VERSION } from "./version.js";
+
 import * as Sentry from "./monitoring/sentry.js";
 import type { FHIRServerCTX } from "./ctx/types.js";
 import { deriveCTX, getRedisClient, logger } from "./ctx/index.js";
@@ -24,98 +21,13 @@ import {
   KoaRequestToFHIRRequest,
   fhirResponseToKoaResponse,
 } from "./koaParsing/index.js";
-import { createCertsIfNoneExists, getJWKS } from "./auth/certifications.js";
+import {
+  createValidateUserJWTMiddleware,
+  allowPublicAccessMiddleware,
+} from "./authN/middleware.js";
+import { canUserAccessWorkspaceMiddleware } from "./authZ/middleware.js";
 
 dotEnv.config();
-
-async function createCheckJWT(): Promise<
-  Middleware<DefaultState, DefaultContext, unknown>
-> {
-  let IGUHEALTH_JWT_SECRET: ReturnType<typeof jwksRsa.koaJwtSecret> | undefined;
-  if (process.env.AUTH_SIGNING_KEY && process.env.AUTH_CERTIFICATION_LOCATION) {
-    if (process.env.NODE_ENV === "development")
-      await createCertsIfNoneExists(
-        process.env.AUTH_CERTIFICATION_LOCATION,
-        process.env.AUTH_SIGNING_KEY
-      );
-
-    const jwks = await getJWKS(process.env.AUTH_CERTIFICATION_LOCATION);
-
-    IGUHEALTH_JWT_SECRET = jwksRsa.koaJwtSecret({
-      jwksUri: "_not_used",
-      cache: true,
-      rateLimit: true,
-      jwksRequestsPerMinute: 2,
-      fetcher: async (uri) => {
-        return jwks;
-      },
-    });
-
-    // console.log(
-    //   await createToken(
-    //     await getSigningKey(
-    //       process.env.AUTH_CERTIFICATION_LOCATION,
-    //       process.env.AUTH_SIGNING_KEY
-    //     ),
-    //     {
-    //       "https://iguhealth.app/workspaces": ["system"],
-    //       sub: "iguhealth-system",
-    //       aud: ["https://iguhealth.com/api"],
-    //       scope: "openid profile email offline_access",
-    //     }
-    //   )
-    // );
-  }
-
-  const EXTERNAL_JWT_SECRET = jwksRsa.koaJwtSecret({
-    cache: true,
-    rateLimit: true,
-    jwksRequestsPerMinute: 2,
-    jwksUri: process.env.AUTH_JWK_URI as string,
-  });
-
-  return jwt({
-    tokenKey: "access_token",
-    secret: async (header: jwksRsa.TokenHeader, payload: { iss: string }) => {
-      switch (payload.iss) {
-        case process.env.AUTH_JWT_ISSUER: {
-          return EXTERNAL_JWT_SECRET(header);
-        }
-        case IGUHEALTH_ISSUER: {
-          if (IGUHEALTH_JWT_SECRET) return IGUHEALTH_JWT_SECRET(header);
-          throw new Error("IGUHealth issuer is not configured");
-        }
-        default:
-          throw new Error(`Unknown issuer '${payload.iss}'`);
-      }
-    },
-    audience: process.env.AUTH_JWT_AUDIENCE,
-    issuer: process.env.AUTH_JWT_ISSUER
-      ? [process.env.AUTH_JWT_ISSUER, IGUHEALTH_ISSUER]
-      : [IGUHEALTH_ISSUER],
-    algorithms: [
-      process.env.AUTH_JWT_ALGORITHM ? process.env.AUTH_JWT_ALGORITHM : "RS256",
-    ],
-  }) as unknown as Middleware<DefaultState, DefaultContext, unknown>;
-}
-
-async function workspaceCheck(
-  ctx: Koa.ParameterizedContext<Koa.DefaultState, Koa.DefaultContext>,
-  next: Koa.Next
-) {
-  if (!ctx.params.workspace) {
-    ctx.throw(400, "workspace is required");
-  }
-  if (
-    !ctx.state.user["https://iguhealth.app/workspaces"]?.includes(
-      ctx.params.workspace
-    )
-  ) {
-    ctx.throw(403, "workspace is not authorized");
-  }
-
-  return next();
-}
 
 async function workspaceMiddleware(
   pool: pg.Pool,
@@ -131,19 +43,10 @@ async function workspaceMiddleware(
   return [
     Sentry.tracingMiddleWare(process.env.SENTRY_SERVER_DSN),
     process.env.AUTH_JWT_ISSUER
-      ? await createCheckJWT()
-      : async (ctx, next) => {
-          ctx.state = {
-            ...ctx.state,
-            user: {
-              sub: "public-user",
-              access_token: "sec-public",
-              "https://iguhealth.app/workspaces": [ctx.params.workspace],
-            },
-          };
-          await next();
-        },
-    workspaceCheck,
+      ? await createValidateUserJWTMiddleware()
+      : allowPublicAccessMiddleware,
+
+    canUserAccessWorkspaceMiddleware,
     async (ctx, next) => {
       let span;
       const transaction = ctx.__sentry_transaction;

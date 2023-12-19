@@ -34,11 +34,11 @@ import {
   findSearchParameter,
 } from "../resourceProviders/utilities/search/parameters.js";
 import { fitsSearchCriteria } from "../resourceProviders/memory/search.js";
-import { createToken } from "../auth/token.js";
+import { createToken } from "../authN/token.js";
 import {
   createCertsIfNoneExists,
   getSigningKey,
-} from "../auth/certifications.js";
+} from "../authN/certifications.js";
 
 dotEnv.config();
 
