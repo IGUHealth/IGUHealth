@@ -5859,7 +5859,6 @@ __metadata:
     koa-mount: ^4.0.0
     koa-ratelimit: ^5.0.1
     lodash: ^4.17.21
-    oidc-provider: ^8.2.2
     openid-client: ^5.4.3
     pg: ^8.11.0
     pino: ^8.15.0
@@ -6690,15 +6689,6 @@ __metadata:
     lodash.merge: ^4.6.2
     type-is: ^1.6.18
   checksum: 53ffcff919c9989e7b6b4a467fa6d3b2055a7d0d95120244dc0ce915795a4dc94b48a27986cba1f7421cf4f42425e603a79a7021150da793e71a3b369bd9f04c
-  languageName: node
-  linkType: hard
-
-"@koa/cors@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "@koa/cors@npm:4.0.0"
-  dependencies:
-    vary: ^1.1.2
-  checksum: e0760544823532f2d71d792e3076858e38bab9b1c090abea175f1319fd91ea58a1da384a2fe7f5108f1c681e3830b01f62a1cafe271d6406751976af443187aa
   languageName: node
   linkType: hard
 
@@ -17700,25 +17690,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"got@npm:^13.0.0":
-  version: 13.0.0
-  resolution: "got@npm:13.0.0"
-  dependencies:
-    "@sindresorhus/is": ^5.2.0
-    "@szmarczak/http-timer": ^5.0.1
-    cacheable-lookup: ^7.0.0
-    cacheable-request: ^10.2.8
-    decompress-response: ^6.0.0
-    form-data-encoder: ^2.1.2
-    get-stream: ^6.0.1
-    http2-wrapper: ^2.1.10
-    lowercase-keys: ^3.0.0
-    p-cancelable: ^3.0.0
-    responselike: ^3.0.0
-  checksum: bcae6601efd710bc6c5b454c5e44bcb16fcfe57a1065e2d61ff918c1d69c3cf124984ebf509ca64ed10f0da2d2b5531b77da05aa786e75849d084fb8fbea711b
-  languageName: node
-  linkType: hard
-
 "graceful-fs@npm:4.2.10":
   version: 4.2.10
   resolution: "graceful-fs@npm:4.2.10"
@@ -20757,15 +20728,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsesc@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "jsesc@npm:3.0.2"
-  bin:
-    jsesc: bin/jsesc
-  checksum: a36d3ca40574a974d9c2063bf68c2b6141c20da8f2a36bd3279fc802563f35f0527a6c828801295bdfb2803952cf2cf387786c2c90ed564f88d5782475abfe3c
-  languageName: node
-  linkType: hard
-
 "jsesc@npm:~0.5.0":
   version: 0.5.0
   resolution: "jsesc@npm:0.5.0"
@@ -22795,15 +22757,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^4.0.2":
-  version: 4.0.2
-  resolution: "nanoid@npm:4.0.2"
-  bin:
-    nanoid: bin/nanoid.js
-  checksum: 747c399cea4664dd0be1d0ec498ffd1ef8f1f5221676fc8b577e3f46f66d9afcddb9595d63d19a2e78d0bc6cc33984f65e66bf1682c850b9e26288883d96b53f
-  languageName: node
-  linkType: hard
-
 "natural-compare-lite@npm:^1.4.0":
   version: 1.4.0
   resolution: "natural-compare-lite@npm:1.4.0"
@@ -23230,27 +23183,6 @@ __metadata:
   version: 1.1.2
   resolution: "obuf@npm:1.1.2"
   checksum: 41a2ba310e7b6f6c3b905af82c275bf8854896e2e4c5752966d64cbcd2f599cfffd5932006bcf3b8b419dfdacebb3a3912d5d94e10f1d0acab59876c8757f27f
-  languageName: node
-  linkType: hard
-
-"oidc-provider@npm:^8.2.2":
-  version: 8.2.2
-  resolution: "oidc-provider@npm:8.2.2"
-  dependencies:
-    "@koa/cors": ^4.0.0
-    "@koa/router": ^12.0.0
-    debug: ^4.3.4
-    eta: ^2.2.0
-    got: ^13.0.0
-    jose: ^4.14.4
-    jsesc: ^3.0.2
-    koa: ^2.14.2
-    nanoid: ^4.0.2
-    object-hash: ^3.0.0
-    oidc-token-hash: ^5.0.3
-    quick-lru: ^6.1.1
-    raw-body: ^2.5.2
-  checksum: 99fd34eef074542fc2cb20af9aebcf07e8cadc52b51a0cd4f0f045bcc72c516907a8774933c46b7dd6881838d7db4794fcc2ba665bd88bf2cebc35ba047c5dab
   languageName: node
   linkType: hard
 
@@ -25568,13 +25500,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"quick-lru@npm:^6.1.1":
-  version: 6.1.1
-  resolution: "quick-lru@npm:6.1.1"
-  checksum: a9c75bf1d208c1d207590e10403a75d037f9faf7857f2e0d38c294d92b40d8b400776bcb5d4dd516baa84e6f5e3baf2a16cf405e6fedc18107922f46aeae83ee
-  languageName: node
-  linkType: hard
-
 "raf@npm:^3.4.1":
   version: 3.4.1
   resolution: "raf@npm:3.4.1"
@@ -25626,7 +25551,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"raw-body@npm:^2.3.3, raw-body@npm:^2.5.2":
+"raw-body@npm:^2.3.3":
   version: 2.5.2
   resolution: "raw-body@npm:2.5.2"
   dependencies:
