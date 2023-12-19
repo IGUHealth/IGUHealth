@@ -68,6 +68,6 @@
  | identifier | token | Persistent identifier for the bundle | Bundle.identifier  
  | message | reference | The first resource in the bundle, if the bundle type is "message" - this is a message header, and this parameter provides access to search its contents | Bundle.entry[0].resource  
  | timestamp | date | When the bundle was assembled | Bundle.timestamp  
- | type | token | document / message | transaction | transaction-response | batch | batch-response | history | searchset | collection | Bundle.type  
+ | type | token | document / message / transaction / transaction-response / batch / batch-response / history / searchset / collection | Bundle.type  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  

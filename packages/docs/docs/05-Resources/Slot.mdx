@@ -19,7 +19,7 @@
  | Slot.specialty | 0..* | CodeableConcept | The specialty of a practitioner that would be required to perform the service requested in this appointment. 
  | Slot.appointmentType | 0..1 | CodeableConcept | The style of appointment or patient that may be booked in the slot (not service type). 
  | Slot.schedule | 1..1 | Reference | The schedule resource that this slot defines an interval of status information. 
- | Slot.status | 1..1 | code | busy / free | busy-unavailable | busy-tentative | entered-in-error. 
+ | Slot.status | 1..1 | code | busy / free / busy-unavailable / busy-tentative / entered-in-error. 
  | Slot.start | 1..1 | instant | Date/Time that the slot is to begin. 
  | Slot.end | 1..1 | instant | Date/Time that the slot is to conclude. 
  | Slot.overbooked | 0..1 | boolean | This slot has already been overbooked, appointments are unlikely to be accepted for this time. 

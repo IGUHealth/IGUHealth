@@ -60,12 +60,12 @@
  | medium | token | A channel of communication | CommunicationRequest.medium  
  | occurrence | date | When scheduled | (CommunicationRequest.occurrence.ofType(dateTime))  
  | patient | reference | Focus of message | CommunicationRequest.subject.where(resolve() is Patient)  
- | priority | token | routine / urgent | asap | stat | CommunicationRequest.priority  
+ | priority | token | routine / urgent / asap / stat | CommunicationRequest.priority  
  | recipient | reference | Message recipient | CommunicationRequest.recipient  
  | replaces | reference | Request(s) replaced by this request | CommunicationRequest.replaces  
  | requester | reference | Who/what is requesting service | CommunicationRequest.requester  
  | sender | reference | Message sender | CommunicationRequest.sender  
- | status | token | draft / active | on-hold | revoked | completed | entered-in-error | unknown | CommunicationRequest.status  
+ | status | token | draft / active / on-hold / revoked / completed / entered-in-error / unknown | CommunicationRequest.status  
  | subject | reference | Focus of message | CommunicationRequest.subject  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  

@@ -41,7 +41,7 @@
  | AdverseEvent.suspectEntity.causality.assessment | 0..1 | CodeableConcept | Assessment of if the entity caused the event. 
  | AdverseEvent.suspectEntity.causality.productRelatedness | 0..1 | string | AdverseEvent.suspectEntity.causalityProductRelatedness. 
  | AdverseEvent.suspectEntity.causality.author | 0..1 | Reference | AdverseEvent.suspectEntity.causalityAuthor. 
- | AdverseEvent.suspectEntity.causality.method | 0..1 | CodeableConcept | ProbabilityScale / Bayesian | Checklist. 
+ | AdverseEvent.suspectEntity.causality.method | 0..1 | CodeableConcept | ProbabilityScale / Bayesian / Checklist. 
  | AdverseEvent.subjectMedicalHistory | 0..* | Reference | AdverseEvent.subjectMedicalHistory. 
  | AdverseEvent.referenceDocument | 0..* | Reference | AdverseEvent.referenceDocument. 
  | AdverseEvent.study | 0..* | Reference | AdverseEvent.study. 
@@ -58,14 +58,14 @@
  | _source | uri | Identifies where the resource comes from | Resource.meta.source  
  | _tag | token | Tags applied to this resource | Resource.meta.tag  
  | actuality | token | actual / potential | AdverseEvent.actuality  
- | category | token | product-problem / product-quality | product-use-error | wrong-dose | incorrect-prescribing-information | wrong-technique | wrong-route-of-administration | wrong-rate | wrong-duration | wrong-time | expired-drug | medical-device-use-error | problem-different-manufacturer | unsafe-physical-environment | AdverseEvent.category  
+ | category | token | product-problem / product-quality / product-use-error / wrong-dose / incorrect-prescribing-information / wrong-technique / wrong-route-of-administration / wrong-rate / wrong-duration / wrong-time / expired-drug / medical-device-use-error / problem-different-manufacturer / unsafe-physical-environment | AdverseEvent.category  
  | date | date | When the event occurred | AdverseEvent.date  
  | event | token | Type of the event itself in relation to the subject | AdverseEvent.event  
  | location | reference | Location where adverse event occurred | AdverseEvent.location  
  | recorder | reference | Who recorded the adverse event | AdverseEvent.recorder  
  | resultingcondition | reference | Effect on the subject due to this event | AdverseEvent.resultingCondition  
  | seriousness | token | Seriousness of the event | AdverseEvent.seriousness  
- | severity | token | mild / moderate | severe | AdverseEvent.severity  
+ | severity | token | mild / moderate / severe | AdverseEvent.severity  
  | study | reference | AdverseEvent.study | AdverseEvent.study  
  | subject | reference | Subject impacted by event | AdverseEvent.subject  
  | substance | reference | Refers to the specific entity that caused the adverse event | AdverseEvent.suspectEntity.instance  

@@ -38,7 +38,7 @@
  | Device.deviceName.extension | 0..* | Extension | May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension. 
  | Device.deviceName.modifierExtension | 0..* | Extension | May be used to represent additional information that is not part of the basic definition of the element and that modifies the understanding of the element in which it is contained and/or the understanding of the containing element's descendants. Usually modifier elements provide negation or qualification. To make the use of extensions safe and manageable, there is a strict set of governance applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension. Applications processing a resource are required to check for modifier extensions.Modifier extensions SHALL NOT change the meaning of any elements on Resource or DomainResource (including cannot change the meaning of modifierExtension itself). 
  | Device.deviceName.name | 1..1 | string | The name of the device. 
- | Device.deviceName.type | 1..1 | code | The type of deviceName.UDILabelName / UserFriendlyName | PatientReportedName | ManufactureDeviceName | ModelName. 
+ | Device.deviceName.type | 1..1 | code | The type of deviceName.UDILabelName / UserFriendlyName / PatientReportedName / ManufactureDeviceName / ModelName. 
  | Device.modelNumber | 0..1 | string | The model number for the device. 
  | Device.partNumber | 0..1 | string | The part number of the device. 
  | Device.type | 0..1 | CodeableConcept | The kind or type of device. 
@@ -82,14 +82,14 @@
  | _security | token | Security Labels applied to this resource | Resource.meta.security  
  | _source | uri | Identifies where the resource comes from | Resource.meta.source  
  | _tag | token | Tags applied to this resource | Resource.meta.tag  
- | device-name | string | A server defined search that may match any of the string fields in Device.deviceName or Device.type. | Device.deviceName.name / Device.type.coding.display | Device.type.text  
+ | device-name | string | A server defined search that may match any of the string fields in Device.deviceName or Device.type. | Device.deviceName.name / Device.type.coding.display / Device.type.text  
  | identifier | token | Instance id from manufacturer, owner, and others | Device.identifier  
  | location | reference | A location, where the resource is found | Device.location  
  | manufacturer | string | The manufacturer of the device | Device.manufacturer  
  | model | string | The model of the device | Device.modelNumber  
  | organization | reference | The organization responsible for the device | Device.owner  
  | patient | reference | Patient information, if the resource is affixed to a person | Device.patient  
- | status | token | active / inactive | entered-in-error | unknown | Device.status  
+ | status | token | active / inactive / entered-in-error / unknown | Device.status  
  | type | token | The type of the device | Device.type  
  | udi-carrier | string | UDI Barcode (RFID or other technology) string in *HRF* format. | Device.udiCarrier.carrierHRF  
  | udi-di | string | The udi Device Identifier (DI) | Device.udiCarrier.deviceIdentifier  

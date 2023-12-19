@@ -2,32 +2,37 @@ import fs from "node:fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { loadArtifacts } from "@iguhealth/artifacts";
-import MemoryDatabase from "@iguhealth/server/lib/resourceProviders/memory/async.js";
 
-function createMemoryDatabase(resourceTypes) {
-  const database = MemoryDatabase({});
-  const artifactResources = resourceTypes
-    .map((resourceType) =>
-      loadArtifacts(
-        resourceType,
-        path.join(fileURLToPath(import.meta.url), "../"),
-        false
-      )
+const artifactResources = ["StructureDefinition", "SearchParameter"]
+  .map((resourceType) =>
+    loadArtifacts(
+      resourceType,
+      path.join(fileURLToPath(import.meta.url), "../"),
+      false
     )
-    .flat();
-  for (const resource of artifactResources) {
-    database.create({}, resource);
-  }
-  return database;
+  )
+  .flat();
+
+function escapeCharacters(v) {
+  return v
+    ?.replaceAll("|", "/")
+    .replace(/(\r\n|\n|\r)/gm, "")
+    .replaceAll("{", "\\{")
+    .replaceAll("}", "\\}")
+    .replaceAll("`", "\\`")
+    .replaceAll(">", "\\>")
+    .replaceAll("<", "\\<");
 }
 
-async function processStructureDefinition(memdb, structureDefinition) {
-  const parameters = await memdb.search_type({}, "SearchParameter", [
-    {
-      name: "base",
-      value: ["DomainResource", "Resource", structureDefinition.name],
-    },
-  ]);
+async function processStructureDefinition(structureDefinition) {
+  const parameters = artifactResources
+    .filter((r) => r.resourceType === "SearchParameter")
+    .filter(
+      (r) =>
+        r.base.includes(structureDefinition.name) ||
+        r.base.includes("Resource") ||
+        r.base.includes("DomainResource")
+    );
 
   let doc = `# ${structureDefinition.name}\n ## Description \n ${structureDefinition.description}\n`;
   doc = `${doc} ## Structure \n | Path | Cardinality | Type | Description \n | ---- | ----------- | ---- | -------  \n`;
@@ -36,54 +41,33 @@ async function processStructureDefinition(memdb, structureDefinition) {
     const min = element.min;
     const max = element.max;
     const type = element.type?.[0]?.code;
-    const description = element.definition
-      ?.replace("|", "/")
-      .replace(/(\r\n|\n|\r)/gm, "");
+    const description = escapeCharacters(element.definition);
     doc = `${doc} | ${path} | ${min}..${max} | ${
       type ? type : structureDefinition.name
     } | ${description} \n`;
   }
 
   doc = `${doc} ## Search Parameters \n | Name | Type | Description  | Expression  \n | ---- | ---- | ------- | ------  \n`;
-  for (const parameter of parameters.resources) {
+  for (const parameter of parameters) {
     const name = parameter.name;
     const type = parameter.type;
 
-    const description = parameter.description
-      ?.replace("|", "/")
-      .replace(/(\r\n|\n|\r)/gm, "");
+    const description = escapeCharacters(parameter.description || "");
 
-    const expression = parameter.expression
-      ?.replace("|", "/")
-      .replace(/(\r\n|\n|\r)/gm, "");
+    const expression = escapeCharacters(parameter.expression || "");
 
-    doc = `${doc} | ${name} | ${type} | ${description ? description : ""} | ${
-      expression ? expression : ""
-    }  \n`;
+    doc = `${doc} | ${name} | ${type} | ${description} | ${expression}  \n`;
   }
 
   return doc;
 }
 
-const memoryDatabase = createMemoryDatabase([
-  "StructureDefinition",
-  "SearchParameter",
-]);
+const resourceStructureDefinitions = artifactResources
+  .filter((r) => r.resourceType === "StructureDefinition")
+  .filter((r) => r.kind === "resource");
 
-const resourceStructureDefinitions = await memoryDatabase.search_type(
-  {},
-  "StructureDefinition",
-  [
-    { name: "kind", value: ["resource"] },
-    { name: "_count", value: ["1000"] },
-  ]
-);
-
-for (const structureDefinition of resourceStructureDefinitions.resources) {
-  const pathName = `./docs/Resources/${structureDefinition.name}.mdx`;
-  const content = await processStructureDefinition(
-    memoryDatabase,
-    structureDefinition
-  );
+for (const structureDefinition of resourceStructureDefinitions) {
+  const pathName = `./docs/05-Resources/${structureDefinition.name}.mdx`;
+  const content = await processStructureDefinition(structureDefinition);
   fs.writeFileSync(pathName, content);
 }

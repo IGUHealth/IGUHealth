@@ -16,7 +16,7 @@
  | Media.identifier | 0..* | Identifier | Identifiers associated with the image - these may include identifiers for the image itself, identifiers for the context of its collection (e.g. series ids) and context ids such as accession numbers or other workflow identifiers. 
  | Media.basedOn | 0..* | Reference | A procedure that is fulfilled in whole or in part by the creation of this media. 
  | Media.partOf | 0..* | Reference | A larger event of which this particular event is a component or step. 
- | Media.status | 1..1 | code | The current state of the {{title}}. 
+ | Media.status | 1..1 | code | The current state of the \{\{title\}\}. 
  | Media.type | 0..1 | CodeableConcept | A code that classifies whether the media is an image, video or audio recording or some other media category. 
  | Media.modality | 0..1 | CodeableConcept | Details of the type of the media - usually, how it was acquired (what type of device). If images sourced from a DICOM system, are wrapped in a Media resource, then this is the modality. 
  | Media.view | 0..1 | CodeableConcept | The name of the imaging view e.g. Lateral or Antero-posterior (AP). 
@@ -56,7 +56,7 @@
  | operator | reference | The person who generated the image | Media.operator  
  | patient | reference | Who/What this Media is a record of | Media.subject.where(resolve() is Patient)  
  | site | token | Observed body part | Media.bodySite  
- | status | token | preparation / in-progress | not-done | on-hold | stopped | completed | entered-in-error | unknown | Media.status  
+ | status | token | preparation / in-progress / not-done / on-hold / stopped / completed / entered-in-error / unknown | Media.status  
  | subject | reference | Who/What this Media is a record of | Media.subject  
  | type | token | Classification of media as image, video, or audio | Media.type  
  | view | token | Imaging view, e.g. Lateral or Antero-posterior | Media.view  

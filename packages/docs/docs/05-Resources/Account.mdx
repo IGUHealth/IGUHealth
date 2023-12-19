@@ -52,7 +52,7 @@
  | owner | reference | Entity managing the Account | Account.owner  
  | patient | reference | The entity that caused the expenses | Account.subject.where(resolve() is Patient)  
  | period | date | Transaction window | Account.servicePeriod  
- | status | token | active / inactive | entered-in-error | on-hold | unknown | Account.status  
+ | status | token | active / inactive / entered-in-error / on-hold / unknown | Account.status  
  | subject | reference | The entity that caused the expenses | Account.subject  
  | type | token | E.g. patient, expense, depreciation | Account.type  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  

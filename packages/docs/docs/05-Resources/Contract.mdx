@@ -45,7 +45,7 @@
  | Contract.contentDefinition.subType | 0..1 | CodeableConcept | Detailed Precusory content type. 
  | Contract.contentDefinition.publisher | 0..1 | Reference | The  individual or organization that published the Contract precursor content. 
  | Contract.contentDefinition.publicationDate | 0..1 | dateTime | The date (and optionally time) when the contract was published. The date must change when the business version changes and it must change if the status code changes. In addition, it should change when the substantive content of the contract changes. 
- | Contract.contentDefinition.publicationStatus | 1..1 | code | amended / appended | cancelled | disputed | entered-in-error | executable | executed | negotiable | offered | policy | rejected | renewed | revoked | resolved | terminated. 
+ | Contract.contentDefinition.publicationStatus | 1..1 | code | amended / appended / cancelled / disputed / entered-in-error / executable / executed / negotiable / offered / policy / rejected / renewed / revoked / resolved / terminated. 
  | Contract.contentDefinition.copyright | 0..1 | markdown | A copyright statement relating to Contract precursor content. Copyright statements are generally legal restrictions on the use and publishing of the Contract precursor content. 
  | Contract.term | 0..* | BackboneElement | One or more Contract Provisions, which may be related and conveyed as a group, and may contain nested groups. 
  | Contract.term.id | 0..1 | http://hl7.org/fhirpath/System.String | Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces. 

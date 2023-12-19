@@ -135,7 +135,7 @@
  | classification | token | Specific category assigned to the medication | MedicationKnowledge.medicineClassification.classification  
  | classification-type | token | The type of category for the medication (for example, therapeutic classification, therapeutic sub-classification) | MedicationKnowledge.medicineClassification.type  
  | code | token | Code that identifies this medication | MedicationKnowledge.code  
- | doseform | token | powder / tablets | capsule + | MedicationKnowledge.doseForm  
+ | doseform | token | powder / tablets / capsule + | MedicationKnowledge.doseForm  
  | ingredient | reference | Medication(s) or substance(s) contained in the medication | (MedicationKnowledge.ingredient.item.ofType(Reference))  
  | ingredient-code | token | Medication(s) or substance(s) contained in the medication | (MedicationKnowledge.ingredient.item.ofType(CodeableConcept))  
  | manufacturer | reference | Manufacturer of the item | MedicationKnowledge.manufacturer  
@@ -144,6 +144,6 @@
  | monograph | reference | Associated documentation about the medication | MedicationKnowledge.monograph.source  
  | monograph-type | token | The category of medication document | MedicationKnowledge.monograph.type  
  | source-cost | token | The source or owner for the price information | MedicationKnowledge.cost.source  
- | status | token | active / inactive | entered-in-error | MedicationKnowledge.status  
+ | status | token | active / inactive / entered-in-error | MedicationKnowledge.status  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  

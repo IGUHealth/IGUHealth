@@ -135,7 +135,7 @@
  | TestScript.setup.action.assert.requestMethod | 0..1 | code | The request method or HTTP operation code to compare against that used by the client system under test. 
  | TestScript.setup.action.assert.requestURL | 0..1 | string | The value to use in a comparison against the request URL path string. 
  | TestScript.setup.action.assert.resource | 0..1 | code | The type of the resource.  See http://build.fhir.org/resourcelist.html. 
- | TestScript.setup.action.assert.response | 0..1 | code | okay / created | noContent | notModified | bad | forbidden | notFound | methodNotAllowed | conflict | gone | preconditionFailed | unprocessable. 
+ | TestScript.setup.action.assert.response | 0..1 | code | okay / created / noContent / notModified / bad / forbidden / notFound / methodNotAllowed / conflict / gone / preconditionFailed / unprocessable. 
  | TestScript.setup.action.assert.responseCode | 0..1 | string | The value of the HTTP response code to be tested. 
  | TestScript.setup.action.assert.sourceId | 0..1 | id | Fixture to evaluate the XPath/JSONPath expression or the headerField  against. 
  | TestScript.setup.action.assert.validateProfileId | 0..1 | id | The ID of the Profile to validate against. 
