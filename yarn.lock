@@ -12013,7 +12013,7 @@ __metadata:
     react: ^18.2.0
     react-dom: ^18.2.0
     react-router-dom: ^6.15.0
-    react-scripts: 5.0.1
+    react-scripts: ^5.0.1
     react-window: ^1.8.10
     recoil: ^0.7.7
     tailwindcss: ^3.3.3
@@ -25913,7 +25913,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-scripts@npm:5.0.1":
+"react-scripts@npm:^5.0.1":
   version: 5.0.1
   resolution: "react-scripts@npm:5.0.1"
   dependencies:
