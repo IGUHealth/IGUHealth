@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import { expect, test } from "@jest/globals";
 import { OperationDefinition } from "@iguhealth/fhir-types/r4/types";
 
-import { testServices } from "../../resourceProviders/test_ctx";
+import { testServices } from "../../resourceProviders/test-ctx.js";
 import LocalEncryption from "./local.js";
 import { encryptValue } from "../index.js";
 

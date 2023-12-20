@@ -6,7 +6,7 @@ import parseParameters from "@iguhealth/client/url";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { expect, test } from "@jest/globals";
 
-import { testServices } from "../test_ctx.js";
+import { testServices } from "../test-ctx.js";
 import {
   SearchParameter,
   StructureDefinition,

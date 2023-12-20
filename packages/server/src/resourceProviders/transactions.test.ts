@@ -11,7 +11,7 @@ import { loadArtifacts } from "@iguhealth/artifacts";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { buildTransactionTopologicalGraph } from "./transactions";
-import { testServices } from "./test_ctx.js";
+import { testServices } from "./test-ctx.js";
 import { FHIRServerCTX } from "../ctx/types.js";
 
 function loadResources(resourceTypes: ResourceType[]): Resource[] {
@@ -20,8 +20,8 @@ function loadResources(resourceTypes: ResourceType[]): Resource[] {
       loadArtifacts(
         resourceType,
         path.join(fileURLToPath(import.meta.url), "../../"),
-        true,
-      ),
+        true
+      )
     )
     .flat();
   return artifactResources;
@@ -94,10 +94,10 @@ test("Test Cyclical", () => {
       outcomeFatal(
         "exception",
         `Transaction bundle has cycles at following indices ${JSON.stringify(
-          [],
-        )}.`,
-      ),
-    ),
+          []
+        )}.`
+      )
+    )
   );
   try {
     buildTransactionTopologicalGraph(CTX, {
