@@ -26,7 +26,7 @@ import logAuditEvent, {
   SERIOUS_FAILURE,
 } from "../logging/auditEvents.js";
 import { KoaRequestToFHIRRequest } from "../koaParsing/index.js";
-import { FHIRServerCTX } from "../ctx/types.js";
+import { Author, FHIRServerCTX, Workspace } from "../ctx/types.js";
 import {
   SearchParameterResource,
   deriveResourceTypeFilter,
@@ -389,6 +389,12 @@ function processSubscription(
   };
 }
 
+async function getActiveWorkspaces(pool: pg.Pool): Promise<Workspace[]> {
+  return (
+    await pool.query("SELECT id from workspaces where deleted = $1", [false])
+  ).rows.map((row) => row.id);
+}
+
 async function createWorker(workerID = randomUUID(), loopInterval = 500) {
   logger.info({ workerID }, `Worker started with interval '${loopInterval}'`);
 
@@ -410,11 +416,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
   /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
   while (isRunning) {
     try {
-      const activeWorkspaces = (
-        await pool.query("SELECT id from workspaces where deleted = $1", [
-          false,
-        ])
-      ).rows.map((row) => row.id);
+      const activeWorkspaces = await getActiveWorkspaces(pool);
 
       for (const workspace of activeWorkspaces) {
         const pgPool = await pool.connect();
@@ -422,7 +424,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
           const ctx = getCTX({
             pg: pgPool,
             workspace,
-            author: `system-worker-${workerID}`,
+            author: `system-worker-${workerID}` as Author,
           });
 
           const activeSubscriptionIds = (
