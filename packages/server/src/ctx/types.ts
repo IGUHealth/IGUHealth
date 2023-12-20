@@ -12,11 +12,17 @@ import { IOCache } from "../cache/interface.js";
 import { TerminologyProvider } from "../terminology/interface.js";
 import { EncryptionProvider } from "../encryption/provider/interface.js";
 
+declare const __workspace: unique symbol;
+export type Workspace = string & { [__workspace]: string };
+
+declare const __author: unique symbol;
+export type Author = string & { [__author]: string };
+
 export interface FHIRServerCTX {
   encryptionProvider?: EncryptionProvider;
   inTransaction?: boolean;
-  workspace: string;
-  author: string;
+  workspace: Workspace;
+  author: Author;
   terminologyProvider: TerminologyProvider;
   // Services setup
   logger: Logger<unknown>;

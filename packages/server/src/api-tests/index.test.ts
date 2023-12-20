@@ -711,7 +711,7 @@ test("Number prefixes", async () => {
 
 test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
   const questionnaireTemplate: Questionnaire = {
-    url: "https://genfhi.com/PREPARE",
+    url: "https://iguhealth.com/PREPARE",
     title: "TEST QUESTIONNAIRE",
     status: "active",
     resourceType: "Questionnaire",
@@ -719,7 +719,7 @@ test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
   const qrTemplate: QuestionnaireResponse = {
     status: "in-progress",
     resourceType: "QuestionnaireResponse",
-    questionnaire: "https://genfhi.com/PREPARE",
+    questionnaire: "https://iguhealth.com/PREPARE",
   };
   const resources: Resource[] = [];
   try {
@@ -746,7 +746,7 @@ test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
 
     expect(
       await client.search_type({}, "Questionnaire", [
-        { name: "url", value: ["https://genfhi.com/PREPARE"] },
+        { name: "url", value: ["https://iguhealth.com/PREPARE"] },
       ])
     ).toEqual({
       resources: [q],
@@ -762,7 +762,7 @@ test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
 
 test("Type filter", async () => {
   const questionnaireTemplate: Questionnaire = {
-    url: "https://genfhi.com/PREPARE",
+    url: "https://iguhealth.com/PREPARE",
     title: "TEST QUESTIONNAIRE",
     status: "active",
     resourceType: "Questionnaire",
@@ -770,7 +770,7 @@ test("Type filter", async () => {
   const qrTemplate: QuestionnaireResponse = {
     status: "in-progress",
     resourceType: "QuestionnaireResponse",
-    questionnaire: "https://genfhi.com/PREPARE",
+    questionnaire: "https://iguhealth.com/PREPARE",
   };
   const resources: Resource[] = [];
   try {

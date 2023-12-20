@@ -77,10 +77,12 @@ function SearchModal() {
 
   const onSelect = useMemo(() => {
     return () => {
-      navigate(`/resources/${searchResults?.[searchIndex]?.type}`);
-      setOpenModal(false);
-      setSearch("");
-      return;
+      if (searchResults?.[searchIndex]?.type) {
+        navigate(`/resources/${searchResults?.[searchIndex]?.type}`);
+        setOpenModal(false);
+        setSearch("");
+        return;
+      }
     };
   }, [searchIndex, searchResults, setOpenModal, setSearch]);
 

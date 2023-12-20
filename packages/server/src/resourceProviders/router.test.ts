@@ -3,7 +3,7 @@ import { expect, test } from "@jest/globals";
 import MemoryDatabase from "./memory/async.js";
 import RouterClient from "./router.js";
 
-import { testServices } from "./test_ctx.js";
+import { testServices } from "./test-ctx.js";
 import { FHIRRequest } from "@iguhealth/client/types";
 
 test("Test routing on resourceTypes", async () => {

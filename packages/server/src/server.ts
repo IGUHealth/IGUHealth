@@ -15,7 +15,7 @@ import {
 import { LIB_VERSION } from "./version.js";
 
 import * as Sentry from "./monitoring/sentry.js";
-import type { FHIRServerCTX } from "./ctx/types.js";
+import type { FHIRServerCTX, Workspace } from "./ctx/types.js";
 import { deriveCTX, getRedisClient, logger } from "./ctx/index.js";
 import {
   KoaRequestToFHIRRequest,
@@ -61,7 +61,7 @@ async function workspaceMiddleware(
       try {
         const serverCTX = getCTX({
           pg: client,
-          workspace: ctx.params.workspace,
+          workspace: ctx.params.workspace as Workspace,
           author: ctx.state.user.sub,
           user_access_token: ctx.state.access_token,
         });

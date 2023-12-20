@@ -8,9 +8,8 @@ import { ResourceType, AResource } from "@iguhealth/fhir-types/r4/types";
 import { loadArtifacts } from "@iguhealth/artifacts";
 
 import MemoryDatabase from "./memory/async.js";
-import RedisCache from "../cache/redis.js";
 import { IOCache } from "../cache/interface.js";
-import { FHIRServerCTX } from "../ctx/types.js";
+import { Author, FHIRServerCTX, Workspace } from "../ctx/types.js";
 import { Lock } from "../synchronization/interfaces.js";
 import { TerminologyProviderMemory } from "../terminology/index.js";
 
@@ -19,7 +18,7 @@ dotEnv.config();
 const sds = loadArtifacts(
   "StructureDefinition",
   path.join(fileURLToPath(import.meta.url), "../../"),
-  true,
+  true
 );
 
 class TestLock implements Lock<TestLock> {
@@ -43,8 +42,8 @@ class TestCache<CTX extends { workspace: string }> implements IOCache<CTX> {
 }
 
 export const testServices: FHIRServerCTX = {
-  workspace: "test",
-  author: "test-user",
+  workspace: "test" as Workspace,
+  author: "test-user" as Author,
   terminologyProvider: new TerminologyProviderMemory(),
   logger: createLogger.default(),
   capabilities: {
