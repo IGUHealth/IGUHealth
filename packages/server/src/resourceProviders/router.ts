@@ -23,10 +23,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { FHIRServerCTX } from "../ctx/types.js";
 import { deriveResourceTypeFilter } from "./utilities/search/parameters.js";
 import { fhirResponseToBundleEntry } from "./utilities/bundle.js";
-import {
-  KoaRequestToFHIRRequest,
-  fhirResponseToKoaResponse,
-} from "../koaParsing/index.js";
+import { httpRequestToFHIRRequest } from "../http/index.js";
 
 type InteractionSupported<T> = FHIRRequest["type"];
 type InteractionsSupported<T> = InteractionSupported<T>[];
@@ -204,13 +201,11 @@ function createRouterMiddleware<
                       },
                     };
                   }
-                  const fhirRequest = KoaRequestToFHIRRequest(
-                    entry.request?.url || "",
-                    {
-                      method: entry.request?.method,
-                      body: entry.resource,
-                    }
-                  );
+                  const fhirRequest = httpRequestToFHIRRequest({
+                    url: entry.request?.url || "",
+                    method: entry.request?.method,
+                    body: entry.resource,
+                  });
 
                   const fhirResponse = await args.ctx.client.request(
                     args.ctx,

@@ -3,6 +3,7 @@ import Router from "@koa/router";
 import ratelimit from "koa-ratelimit";
 import { bodyParser } from "@koa/bodyparser";
 import cors from "@koa/cors";
+import jwt from "koa-jwt";
 import pg from "pg";
 import dotEnv from "dotenv";
 
@@ -18,9 +19,9 @@ import * as Sentry from "./monitoring/sentry.js";
 import type { FHIRServerCTX, Workspace } from "./ctx/types.js";
 import { deriveCTX, getRedisClient, logger } from "./ctx/index.js";
 import {
-  KoaRequestToFHIRRequest,
-  fhirResponseToKoaResponse,
-} from "./koaParsing/index.js";
+  httpRequestToFHIRRequest,
+  fhirResponseToHTTPResponse,
+} from "./http/index.js";
 import {
   createValidateUserJWTMiddleware,
   allowPublicAccessMiddleware,
@@ -36,7 +37,7 @@ async function workspaceMiddleware(
       pg: pg.PoolClient;
     }
   ) => FHIRServerCTX
-): Promise<Router.Middleware<Koa.DefaultState, Koa.DefaultContext, unknown>[]> {
+): Promise<Koa.Middleware[]> {
   if (!process.env.AUTH_JWT_ISSUER)
     logger.warn("[WARNING] Server is publicly accessible.");
 
@@ -57,7 +58,6 @@ async function workspaceMiddleware(
         });
       }
       const client = await pool.connect();
-
       try {
         const serverCTX = getCTX({
           pg: client,
@@ -68,27 +68,23 @@ async function workspaceMiddleware(
 
         const fhirServerResponse = await serverCTX.client.request(
           serverCTX,
-          KoaRequestToFHIRRequest(
-            `${ctx.params.fhirUrl || ""}${ctx.request.querystring ? "?" : ""}${
-              ctx.request.querystring
+          httpRequestToFHIRRequest({
+            url: `${ctx.params.fhirUrl || ""}${
+              ctx.request.querystring ? `?${ctx.request.querystring}` : ""
             }`,
-            {
-              method: ctx.request.method,
-              body: (ctx.request as unknown as Record<string, unknown>).body,
-            }
-          )
+            method: ctx.request.method,
+            body: (ctx.request as unknown as Record<string, unknown>).body,
+          })
         );
 
-        const koaResponse = fhirResponseToKoaResponse(fhirServerResponse);
-        if (koaResponse.headers) {
-          ctx.set(koaResponse.headers as Record<string, string>);
-          delete koaResponse.headers;
+        const httpResponse = fhirResponseToHTTPResponse(fhirServerResponse);
+
+        ctx.status = httpResponse.status;
+        ctx.body = httpResponse.body;
+        for (const [key, value] of Object.entries(httpResponse.headers || {})) {
+          ctx.set(key, value);
         }
-        Object.keys(koaResponse).forEach(
-          (k) =>
-            (ctx[k as keyof Koa.DefaultContext] =
-              koaResponse[k as keyof Partial<Koa.Response>])
-        );
+
         await next();
       } catch (e) {
         if (isOperationError(e)) {
@@ -133,7 +129,7 @@ export default async function createServer(): Promise<
       ),
     });
   const app = new Koa();
-  const router = new Router();
+  const router = new Router<Koa.DefaultState, Koa.Context>();
   const getCTX = await deriveCTX();
   const pool = new pg.Pool({
     user: process.env["FHIR_DATABASE_USERNAME"],

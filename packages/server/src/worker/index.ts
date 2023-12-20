@@ -25,7 +25,7 @@ import logAuditEvent, {
   MAJOR_FAILURE,
   SERIOUS_FAILURE,
 } from "../logging/auditEvents.js";
-import { KoaRequestToFHIRRequest } from "../koaParsing/index.js";
+import { httpRequestToFHIRRequest } from "../http/index.js";
 import { Author, FHIRServerCTX, Workspace } from "../ctx/types.js";
 import {
   SearchParameterResource,
@@ -215,7 +215,8 @@ function processSubscription(
     });
 
     try {
-      const request = KoaRequestToFHIRRequest(subscription.criteria, {
+      const request = httpRequestToFHIRRequest({
+        url: subscription.criteria,
         method: "GET",
       });
       if (request.type !== "search-request") {

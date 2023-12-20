@@ -1,5 +1,3 @@
-import Koa from "koa";
-
 import {
   Bundle,
   Parameters,
@@ -64,12 +62,13 @@ function isBundle(v: unknown): v is Bundle {
   return false;
 }
 
-export function KoaRequestToFHIRRequest(
-  url: string,
-  request: { method: string; body?: unknown }
-): FHIRRequest {
+export function httpRequestToFHIRRequest(request: {
+  url: string;
+  method: string;
+  body?: unknown;
+}): FHIRRequest {
   const method = request.method;
-  const urlPieces = url.split("?")[0].split("/");
+  const urlPieces = request.url.split("?")[0].split("/");
 
   if (urlPieces.length === 1) {
     if (urlPieces[0] === "") {
@@ -102,7 +101,7 @@ export function KoaRequestToFHIRRequest(
         return {
           type: "search-request",
           level: "system",
-          parameters: parseParameters(url),
+          parameters: parseParameters(request.url),
         };
       } else
         throw new OperationError(outcomeError("invalid", "request is invalid"));
@@ -150,7 +149,7 @@ export function KoaRequestToFHIRRequest(
           return {
             type: "history-request",
             level: "system",
-            parameters: parseParameters(url),
+            parameters: parseParameters(request.url),
           };
         }
         // Split by Questionmark because of search parameters
@@ -159,7 +158,7 @@ export function KoaRequestToFHIRRequest(
             type: "search-request",
             level: "type",
             resourceType: urlPieces[0].split("?")[0] as ResourceType,
-            parameters: parseParameters(url),
+            parameters: parseParameters(request.url),
           };
         }
       }
@@ -197,7 +196,7 @@ export function KoaRequestToFHIRRequest(
           type: "history-request",
           level: "type",
           resourceType: urlPieces[0] as ResourceType,
-          parameters: parseParameters(url),
+          parameters: parseParameters(request.url),
         };
       } else if (resourceTypes.has(urlPieces[0])) {
         return {
@@ -266,7 +265,7 @@ export function KoaRequestToFHIRRequest(
           level: "instance",
           resourceType: urlPieces[0] as ResourceType,
           id: urlPieces[1],
-          parameters: parseParameters(url),
+          parameters: parseParameters(request.url),
         };
       }
     }
@@ -297,9 +296,15 @@ function toBundle(
   };
 }
 
-export function fhirResponseToKoaResponse(
+type HTTPResponse = {
+  status: number;
+  body?: unknown;
+  headers?: Record<string, string>;
+};
+
+export function fhirResponseToHTTPResponse(
   fhirResponse: FHIRResponse
-): Partial<Koa.Response> {
+): HTTPResponse {
   switch (fhirResponse.type) {
     case "read-response":
     case "vread-response":

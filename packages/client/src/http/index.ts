@@ -143,7 +143,7 @@ async function toHTTPRequest(
       };
     }
 
-    case "invoke-request":
+    case "invoke-request": {
       let url;
       switch (request.level) {
         case "instance":
@@ -162,6 +162,7 @@ async function toHTTPRequest(
         body: JSON.stringify(request.body),
         headers,
       };
+    }
   }
 }
 
