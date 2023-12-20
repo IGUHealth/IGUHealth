@@ -357,22 +357,13 @@ export function fhirResponseToHTTPResponse(
         body: toBundle("searchset", fhirResponse.total, fhirResponse.body),
       };
     }
-    case "capabilities-response":
-      return {
-        status: 200,
-        body: fhirResponse.body,
-      };
-    case "batch-response":
-      return {
-        status: 200,
-        body: fhirResponse.body,
-      };
     case "transaction-response":
+    case "capabilities-response":
+    case "batch-response":
+    case "invoke-response":
       return {
         status: 200,
         body: fhirResponse.body,
       };
-    case "invoke-response":
-      return { body: fhirResponse.body, status: 200 };
   }
 }

@@ -3,7 +3,6 @@ import Router from "@koa/router";
 import ratelimit from "koa-ratelimit";
 import { bodyParser } from "@koa/bodyparser";
 import cors from "@koa/cors";
-import jwt from "koa-jwt";
 import pg from "pg";
 import dotEnv from "dotenv";
 
@@ -81,7 +80,7 @@ async function workspaceMiddleware(
 
         ctx.status = httpResponse.status;
         ctx.body = httpResponse.body;
-        for (const [key, value] of Object.entries(httpResponse.headers || {})) {
+        for (const [key, value] of Object.entries(httpResponse.headers ?? {})) {
           ctx.set(key, value);
         }
 

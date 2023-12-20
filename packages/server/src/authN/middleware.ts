@@ -1,5 +1,4 @@
 import Koa from "koa";
-import type Router from "@koa/router";
 
 import jwt from "koa-jwt";
 import jwksRsa from "jwks-rsa";

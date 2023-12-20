@@ -10,8 +10,9 @@ export function fhirResponseToBundleEntry(
   return {
     response: {
       status: koaResponse.status ? koaResponse.status?.toString() : "200",
-      location: (koaResponse.headers?.Location ||
-        koaResponse.headers?.["Content-Location"]) as string | undefined,
+      location:
+        koaResponse.headers?.Location ??
+        koaResponse.headers?.["Content-Location"],
     },
     resource: koaResponse.body ? (koaResponse.body as Resource) : undefined,
   };
