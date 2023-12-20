@@ -38,7 +38,7 @@ import {
   deriveLimit,
 } from "../utilities/search/parameters.js";
 import { fhirResponseToBundleEntry } from "../utilities/bundle.js";
-import { KoaRequestToFHIRRequest } from "../../koaParsing/index.js";
+import { httpRequestToFHIRRequest } from "../../http/index.js";
 import { FHIRServerCTX } from "../../ctx/types.js";
 import { param_types_supported } from "./constants.js";
 import { executeSearchQuery } from "./search/index.js";
@@ -853,13 +853,11 @@ function createPostgresMiddleware<
                     )
                   );
                 }
-                const fhirRequest = KoaRequestToFHIRRequest(
-                  entry.request?.url || "",
-                  {
-                    method: entry.request?.method,
-                    body: entry.resource,
-                  }
-                );
+                const fhirRequest = httpRequestToFHIRRequest({
+                  url: entry.request?.url || "",
+                  method: entry.request?.method,
+                  body: entry.resource,
+                });
                 const fhirResponse = await ctx.client.request(ctx, fhirRequest);
                 const responseEntry = fhirResponseToBundleEntry(fhirResponse);
                 responseEntries[parseInt(index)] = responseEntry;

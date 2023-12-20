@@ -1,5 +1,4 @@
 import Koa from "koa";
-import type Router from "@koa/router";
 
 import jwt from "koa-jwt";
 import jwksRsa from "jwks-rsa";
@@ -7,9 +6,7 @@ import jwksRsa from "jwks-rsa";
 import { createCertsIfNoneExists, getJWKS } from "./certifications.js";
 import { IGUHEALTH_ISSUER } from "./token.js";
 
-export async function createValidateUserJWTMiddleware(): Promise<
-  Koa.Middleware<Koa.DefaultState, Koa.DefaultContext, unknown>
-> {
+export async function createValidateUserJWTMiddleware(): Promise<Koa.Middleware> {
   let IGUHEALTH_JWT_SECRET: ReturnType<typeof jwksRsa.koaJwtSecret> | undefined;
   if (process.env.AUTH_SIGNING_KEY && process.env.AUTH_CERTIFICATION_LOCATION) {
     if (process.env.NODE_ENV === "development")
@@ -60,18 +57,13 @@ export async function createValidateUserJWTMiddleware(): Promise<
     algorithms: [
       process.env.AUTH_JWT_ALGORITHM ? process.env.AUTH_JWT_ALGORITHM : "RS256",
     ],
-  }) as unknown as Koa.Middleware<
-    Koa.DefaultState,
-    Koa.DefaultContext,
-    unknown
-  >;
+  }) as unknown as Koa.Middleware;
 }
 
-export const allowPublicAccessMiddleware: Router.Middleware<
-  Koa.DefaultState,
-  Koa.DefaultContext,
-  unknown
-> = async (ctx, next) => {
+export const allowPublicAccessMiddleware: Koa.Middleware = async (
+  ctx,
+  next
+) => {
   ctx.state = {
     ...ctx.state,
     user: {
