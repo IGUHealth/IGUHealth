@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/test-data",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "fhirVersion": "r4",
   "scripts": {
     "generate-index-file": "yarn cli generate-index-file -p . -r examples-json",
