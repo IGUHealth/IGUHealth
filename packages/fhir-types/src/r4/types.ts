@@ -4384,6 +4384,7 @@ export type ResourceMap = {
   ValueSet: ValueSet;
   VerificationResult: VerificationResult;
   VisionPrescription: VisionPrescription;
+  AccessPolicy: AccessPolicy;
   ClientApplication: ClientApplication;
   Connection: Connection;
   Tenant: Tenant;
@@ -44867,6 +44868,22 @@ resourceType: "VisionPrescription"
    * Vision lens authorization
    */
   lensSpecification: Array<VisionPrescriptionLensSpecification>;
+}
+
+export interface AccessPolicy {
+resourceType: "AccessPolicy"
+  /** 
+   * Logical id of this artifact
+   */
+  id?: string;
+  /** 
+   * Metadata about the resource
+   */
+  meta?: Meta;
+  name: string;
+  _name?: Element
+  description?: string;
+  _description?: Element
 }
 
 export interface ClientApplication {

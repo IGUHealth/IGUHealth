@@ -58,6 +58,10 @@
       "resourceType": "OperationDefinition"
     },
     {
+      "filename": "r4/iguhealth/structuredefinition/accessPolicy.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
       "filename": "r4/iguhealth/structuredefinition/client-application.json",
       "resourceType": "StructureDefinition"
     },
