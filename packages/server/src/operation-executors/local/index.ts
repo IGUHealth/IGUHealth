@@ -21,20 +21,22 @@ function createExecutor(): MiddlewareAsync<
   FHIRServerCTX
 > {
   return createMiddlewareAsync<InlineOp<unknown, unknown>[], FHIRServerCTX>([
-    async (request, { ctx, state }, _next) => {
+    async (context) => {
       /* eslint-disable no-fallthrough */
-      switch (request.type) {
+      switch (context.request.type) {
         case "invoke-request": {
-          for (const op of state) {
-            if (op.code === request.operation) {
-              const parameterOutput = await op.execute(ctx, request);
+          for (const op of context.state) {
+            if (op.code === context.request.operation) {
+              const parameterOutput = await op.execute(
+                context.ctx,
+                context.request
+              );
               return {
-                ctx,
-                state,
+                ...context,
                 response: {
                   type: "invoke-response",
                   level: "system",
-                  operation: request.operation,
+                  operation: context.request.operation,
                   body: parameterOutput,
                 },
               };
@@ -43,7 +45,7 @@ function createExecutor(): MiddlewareAsync<
           throw new OperationError(
             outcomeFatal(
               "not-supported",
-              `Operation '${request.operation}' is not supported`
+              `Operation '${context.request.operation}' is not supported`
             )
           );
         }
@@ -51,7 +53,7 @@ function createExecutor(): MiddlewareAsync<
           throw new OperationError(
             outcomeFatal(
               "invalid",
-              `Invocation client only supports invoke-request not '${request.type}'`
+              `Invocation client only supports invoke-request not '${context.request.type}'`
             )
           );
       }

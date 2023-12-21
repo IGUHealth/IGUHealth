@@ -591,41 +591,43 @@ function createPostgresMiddleware<
   CTX extends FHIRServerCTX
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
-    async (request, args, next) => {
-      switch (request.type) {
+    async (context, next) => {
+      switch (context.request.type) {
         case "read-request": {
           const resource = await getResource(
-            args.state.client,
-            args.ctx,
-            request.resourceType,
-            request.id
+            context.state.client,
+            context.ctx,
+            context.request.resourceType,
+            context.request.id
           );
           return {
-            state: args.state,
-            ctx: args.ctx,
+            state: context.state,
+            ctx: context.ctx,
+            request: context.request,
             response: {
               level: "instance",
               type: "read-response",
-              resourceType: request.resourceType,
-              id: request.id,
+              resourceType: context.request.resourceType,
+              id: context.request.id,
               body: resource,
             },
           };
         }
         case "search-request": {
           const result = await executeSearchQuery(
-            args.state.client,
-            request,
-            args.ctx
+            context.state.client,
+            context.request,
+            context.ctx
           );
-          switch (request.level) {
+          switch (context.request.level) {
             case "system": {
               return {
-                state: args.state,
-                ctx: args.ctx,
+                request: context.request,
+                state: context.state,
+                ctx: context.ctx,
                 response: {
                   type: "search-response",
-                  parameters: request.parameters,
+                  parameters: context.request.parameters,
                   level: "system",
                   total: result.total,
                   body: result.resources,
@@ -634,13 +636,14 @@ function createPostgresMiddleware<
             }
             case "type": {
               return {
-                state: args.state,
-                ctx: args.ctx,
+                request: context.request,
+                state: context.state,
+                ctx: context.ctx,
                 response: {
                   type: "search-response",
-                  parameters: request.parameters,
+                  parameters: context.request.parameters,
                   level: "type",
-                  resourceType: request.resourceType,
+                  resourceType: context.request.resourceType,
                   total: result.total,
                   body: result.resources,
                 },
@@ -653,20 +656,21 @@ function createPostgresMiddleware<
         }
         case "create-request": {
           const savedResource = await saveResource(
-            args.state.client,
-            args.ctx,
+            context.state.client,
+            context.ctx,
             {
-              ...request.body,
+              ...context.request.body,
               id: v4(),
             }
           );
 
           return {
-            state: args.state,
-            ctx: args.ctx,
+            request: context.request,
+            state: context.state,
+            ctx: context.ctx,
             response: {
               level: "type",
-              resourceType: request.resourceType,
+              resourceType: context.request.resourceType,
               type: "create-response",
               body: savedResource,
             },
@@ -675,21 +679,22 @@ function createPostgresMiddleware<
 
         case "patch-request": {
           const savedResource = await patchResource(
-            args.state.client,
+            context.state.client,
             "PATCH",
-            args.ctx,
-            request.resourceType,
-            request.id,
-            request.body as Operation[]
+            context.ctx,
+            context.request.resourceType,
+            context.request.id,
+            context.request.body as Operation[]
           );
 
           return {
-            state: args.state,
-            ctx: args.ctx,
+            request: context.request,
+            state: context.state,
+            ctx: context.ctx,
             response: {
               level: "instance",
-              resourceType: request.resourceType,
-              id: request.id,
+              resourceType: context.request.resourceType,
+              id: context.request.id,
               type: "patch-response",
               body: savedResource,
             },
@@ -697,21 +702,22 @@ function createPostgresMiddleware<
         }
         case "update-request": {
           const savedResource = await patchResource(
-            args.state.client,
+            context.state.client,
             "PUT",
-            args.ctx,
-            request.resourceType,
-            request.id,
-            [{ op: "replace", path: "", value: request.body }]
+            context.ctx,
+            context.request.resourceType,
+            context.request.id,
+            [{ op: "replace", path: "", value: context.request.body }]
           );
 
           return {
-            state: args.state,
-            ctx: args.ctx,
+            request: context.request,
+            state: context.state,
+            ctx: context.ctx,
             response: {
               level: "instance",
-              resourceType: request.resourceType,
-              id: request.id,
+              resourceType: context.request.resourceType,
+              id: context.request.id,
               type: "update-response",
               body: savedResource,
             },
@@ -719,73 +725,77 @@ function createPostgresMiddleware<
         }
         case "delete-request": {
           await deleteResource(
-            args.state.client,
-            args.ctx,
-            request.resourceType,
-            request.id
+            context.state.client,
+            context.ctx,
+            context.request.resourceType,
+            context.request.id
           );
 
           return {
-            state: args.state,
-            ctx: args.ctx,
+            request: context.request,
+            state: context.state,
+            ctx: context.ctx,
             response: {
               type: "delete-response",
               level: "instance",
-              resourceType: request.resourceType,
-              id: request.id,
+              resourceType: context.request.resourceType,
+              id: context.request.id,
             },
           };
         }
 
         case "history-request": {
-          switch (request.level) {
+          switch (context.request.level) {
             case "instance": {
               const instanceHistory = await getInstanceHistory(
-                args.state.client,
-                args.ctx,
-                request.resourceType,
-                request.id,
-                request.parameters || []
+                context.state.client,
+                context.ctx,
+                context.request.resourceType,
+                context.request.id,
+                context.request.parameters || []
               );
               return {
-                state: args.state,
-                ctx: args.ctx,
+                request: context.request,
+                state: context.state,
+                ctx: context.ctx,
                 response: {
                   type: "history-response",
                   level: "instance",
-                  resourceType: request.resourceType,
-                  id: request.id,
+                  resourceType: context.request.resourceType,
+                  id: context.request.id,
                   body: instanceHistory,
                 },
               };
             }
             case "type": {
               const typeHistory = await getTypeHistory(
-                args.state.client,
-                args.ctx,
-                request.resourceType,
-                request.parameters || []
+                context.state.client,
+                context.ctx,
+                context.request.resourceType,
+                context.request.parameters || []
               );
               return {
-                state: args.state,
-                ctx: args.ctx,
+                request: context.request,
+                state: context.state,
+                ctx: context.ctx,
                 response: {
                   type: "history-response",
                   level: "type",
                   body: typeHistory,
-                  resourceType: request.resourceType,
+                  resourceType: context.request.resourceType,
                 },
               };
             }
             case "system": {
               const systemHistory = await getSystemHistory(
-                args.state.client,
-                args.ctx,
-                request.parameters || []
+                context.state.client,
+                context.ctx,
+                context.request.parameters || []
               );
               return {
-                state: args.state,
-                ctx: args.ctx,
+                request: context.request,
+                state: context.state,
+                ctx: context.ctx,
                 response: {
                   type: "history-response",
                   level: "system",
@@ -799,20 +809,20 @@ function createPostgresMiddleware<
           }
         }
         case "transaction-request": {
-          let transactionBundle = request.body;
+          let transactionBundle = context.request.body;
           const { locationsToUpdate, order } = buildTransactionTopologicalGraph(
-            args.ctx,
+            context.ctx,
             transactionBundle
           );
           if (
             (transactionBundle.entry || []).length >
-            args.state.transaction_entry_limit
+            context.state.transaction_entry_limit
           ) {
             throw new OperationError(
               outcomeError(
                 "invalid",
                 `Transaction bundle only allowed to have '${
-                  args.state.transaction_entry_limit
+                  context.state.transaction_entry_limit
                 }' entries. Current bundle has '${
                   (transactionBundle.entry || []).length
                 }'`
@@ -824,8 +834,8 @@ function createPostgresMiddleware<
           ];
           return transaction(
             ISOLATION_LEVEL.RepeatableRead,
-            args.ctx,
-            args.state.client,
+            context.ctx,
+            context.state.client,
             async (ctx) => {
               for (const index of order) {
                 const entry = transactionBundle.entry?.[parseInt(index)];
@@ -897,8 +907,9 @@ function createPostgresMiddleware<
               };
 
               return {
-                state: args.state,
-                ctx: args.ctx,
+                state: context.state,
+                ctx: context.ctx,
+                request: context.request,
                 response: {
                   type: "transaction-response",
                   level: "system",
@@ -912,7 +923,7 @@ function createPostgresMiddleware<
           throw new OperationError(
             outcomeError(
               "not-supported",
-              `Requests of type '${request.type}' are not yet supported`
+              `Requests of type '${context.request.type}' are not yet supported`
             )
           );
       }

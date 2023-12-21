@@ -193,22 +193,21 @@ const ajv = new Ajv.default({});
 const validateJSONPatch = ajv.compile(JSONPatchSchema);
 
 const validationMiddleware: Parameters<typeof RouterClient>[0][number] = async (
-  request,
-  { state, ctx },
+  context,
   next
 ) => {
-  switch (request.type) {
+  switch (context.request.type) {
     case "update-request":
     case "create-request":
     case "batch-request":
     case "invoke-request":
     case "transaction-request": {
       const outcome = await validateResource(
-        ctx,
-        getResourceTypeToValidate(request),
+        context.ctx,
+        getResourceTypeToValidate(context.request),
         {
-          mode: request.type === "create-request" ? "create" : "update",
-          resource: request.body,
+          mode: context.request.type === "create-request" ? "create" : "update",
+          resource: context.request.body,
         }
       );
       if (
@@ -221,7 +220,7 @@ const validationMiddleware: Parameters<typeof RouterClient>[0][number] = async (
       break;
     }
     case "patch-request": {
-      const valid = validateJSONPatch(request.body);
+      const valid = validateJSONPatch(context.request.body);
       if (!valid) {
         throw new OperationError(
           outcomeError("invalid", `JSON Patch is not valid.`)
@@ -231,54 +230,66 @@ const validationMiddleware: Parameters<typeof RouterClient>[0][number] = async (
     }
   }
   if (!next) throw new Error("No next");
-  return next(request, { state, ctx });
+  return next(context);
 };
 
 const capabilitiesMiddleware: Parameters<
   typeof RouterClient
->[0][number] = async (request, args, next) => {
-  if (request.type === "capabilities-request") {
+>[0][number] = async (context, next) => {
+  if (context.request.type === "capabilities-request") {
     return {
-      ...args,
+      ...context,
       response: {
         level: "system",
         type: "capabilities-response",
-        body: args.ctx.capabilities,
+        body: context.ctx.capabilities,
       },
     };
   }
   if (!next) throw new Error("next middleware was not defined");
-  return next(request, args);
+  return next(context);
 };
 
 const encryptionMiddleware: (
   resourceTypesToEncrypt: ResourceType[]
 ) => Parameters<typeof RouterClient>[0][number] =
-  (resourceTypesToEncrypt: ResourceType[]) => async (request, args, next) => {
+  (resourceTypesToEncrypt: ResourceType[]) => async (context, next) => {
     if (!next) throw new Error("next middleware was not defined");
-    if (!args.ctx.encryptionProvider) {
-      return next(request, args);
+    if (!context.ctx.encryptionProvider) {
+      return next(context);
     }
     if (
-      "resourceType" in request &&
-      resourceTypesToEncrypt.includes(request.resourceType)
+      "resourceType" in context.request &&
+      resourceTypesToEncrypt.includes(context.request.resourceType)
     ) {
-      switch (request.type) {
+      switch (context.request.type) {
         case "create-request":
         case "update-request": {
-          const encrypted = await encryptValue(args.ctx, request.body);
-          return next({ ...request, body: encrypted }, args);
+          const encrypted = await encryptValue(
+            context.ctx,
+            context.request.body
+          );
+          return next({
+            ...context,
+            request: { ...context.request, body: encrypted },
+          });
         }
         case "patch-request": {
-          const encrypted = await encryptValue(args.ctx, request.body);
-          return next({ ...request, body: encrypted }, args);
+          const encrypted = await encryptValue(
+            context.ctx,
+            context.request.body
+          );
+          return next({
+            ...context,
+            request: { ...context.request, body: encrypted },
+          });
         }
         default: {
-          return next(request, args);
+          return next(context);
         }
       }
     } else {
-      return next(request, args);
+      return next(context);
     }
   };
 
