@@ -34,40 +34,43 @@ export function createCachedClient(
       { client: ReturnType<typeof createHTTPClient> },
       Record<string, never>
     >([
-      async (request, args) => {
-        switch (request.type) {
+      async (context) => {
+        switch (context.request.type) {
           case "invoke-request": {
-            switch (request.operation) {
+            switch (context.request.operation) {
               case "expand": {
-                const requestString = JSON.stringify(request);
+                const requestString = JSON.stringify(context.request);
                 if (!cachedResponse[requestString]) {
-                  cachedResponse[requestString] = args.state.client.request(
-                    args.ctx,
-                    request
+                  cachedResponse[requestString] = context.state.client.request(
+                    context.ctx,
+                    context.request
                   );
                 }
 
                 return {
-                  ctx: args.ctx,
-                  state: args.state,
+                  ...context,
                   response: await cachedResponse[requestString],
                 };
               }
 
               default:
                 return {
-                  ctx: args.ctx,
-                  state: args.state,
-                  response: await args.state.client.request(args.ctx, request),
+                  ...context,
+                  response: await context.state.client.request(
+                    context.ctx,
+                    context.request
+                  ),
                 };
             }
           }
 
           default:
             return {
-              ctx: args.ctx,
-              state: args.state,
-              response: await args.state.client.request(args.ctx, request),
+              ...context,
+              response: await context.state.client.request(
+                context.ctx,
+                context.request
+              ),
             };
         }
       },

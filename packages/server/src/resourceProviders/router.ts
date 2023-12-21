@@ -111,14 +111,16 @@ function createRouterMiddleware<
   State extends { sources: Sources<CTX> }
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
-    async (request, args, _next) => {
-      const sources = findSource(args.state.sources, request);
-      switch (request.type) {
+    async (context) => {
+      const sources = findSource(context.state.sources, context.request);
+      switch (context.request.type) {
         // Multi-types allowed
         case "search-request": {
           const responses = (
             await Promise.all(
-              sources.map((source) => source.source.request(args.ctx, request))
+              sources.map((source) =>
+                source.source.request(context.ctx, context.request)
+              )
             )
           ).filter(
             (res): res is TypeSearchResponse | SystemSearchResponse =>
@@ -126,8 +128,7 @@ function createRouterMiddleware<
           );
 
           return {
-            state: args.state,
-            ctx: args.ctx,
+            ...context,
             response: {
               ...responses[0],
               body: responses.map((r) => r.body).flat(),
@@ -137,7 +138,9 @@ function createRouterMiddleware<
         case "history-request": {
           const responses = (
             await Promise.all(
-              sources.map((source) => source.source.request(args.ctx, request))
+              sources.map((source) =>
+                source.source.request(context.ctx, context.request)
+              )
             )
           ).filter(
             (
@@ -149,8 +152,7 @@ function createRouterMiddleware<
           );
 
           return {
-            state: args.state,
-            ctx: args.ctx,
+            ...context,
             response: {
               ...responses[0],
               body: responses.map((r) => r.body).flat(),
@@ -164,9 +166,12 @@ function createRouterMiddleware<
             await Promise.all(
               sources.map(async (source) => {
                 try {
-                  return await source.source.request(args.ctx, request);
+                  return await source.source.request(
+                    context.ctx,
+                    context.request
+                  );
                 } catch (e) {
-                  args.ctx.logger.error(e);
+                  context.ctx.logger.error(e);
                   return undefined;
                 }
               })
@@ -182,12 +187,15 @@ function createRouterMiddleware<
             throw new OperationError(
               outcomeError("not-found", `Resource not found`)
             );
-          return { state: args.state, ctx: args.ctx, response: responses[0] };
+          return {
+            ...context,
+            response: responses[0],
+          };
         }
 
         case "batch-request": {
           const entries: BundleEntry[] = await Promise.all(
-            (request.body.entry || []).map(
+            (context.request.body.entry || []).map(
               async (entry, index): Promise<BundleEntry> => {
                 try {
                   if (!entry.request?.method) {
@@ -207,8 +215,8 @@ function createRouterMiddleware<
                     body: entry.resource,
                   });
 
-                  const fhirResponse = await args.ctx.client.request(
-                    args.ctx,
+                  const fhirResponse = await context.ctx.client.request(
+                    context.ctx,
                     fhirRequest
                   );
                   return fhirResponseToBundleEntry(fhirResponse);
@@ -230,8 +238,7 @@ function createRouterMiddleware<
             )
           );
           return {
-            state: args.state,
-            ctx: args.ctx,
+            ...context,
             response: {
               type: "batch-response",
               level: "system",
@@ -259,18 +266,24 @@ function createRouterMiddleware<
               outcomeError(
                 "not-supported",
                 `No source found with support for operation '${
-                  request.type
-                }' for type '${(request as Resource).resourceType}'`
+                  context.request.type
+                }' for type '${(context.request as Resource).resourceType}'`
               )
             );
           const source = sources[0];
-          const response = await source.source.request(args.ctx, request);
-          return { state: args.state, ctx: args.ctx, response };
+          const response = await source.source.request(
+            context.ctx,
+            context.request
+          );
+          return { ...context, response };
         }
         case "capabilities-request":
         default:
           throw new OperationError(
-            outcomeError("not-supported", `Not supported '${request.type}'`)
+            outcomeError(
+              "not-supported",
+              `Not supported '${context.request.type}'`
+            )
           );
       }
     },

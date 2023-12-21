@@ -41,21 +41,21 @@ function createMemoryMiddleware<
   CTX extends AsyncMemoryCTX
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
-    async (request, args, next) => {
+    async (context) => {
       /* eslint-disable no-fallthrough */
-      switch (request.type) {
+      switch (context.request.type) {
         case "search-request": {
-          const resourceTypes = deriveResourceTypeFilter(request);
+          const resourceTypes = deriveResourceTypeFilter(context.request);
           // Remove _type as using on derived resourceTypeFilter
-          request.parameters = request.parameters.filter(
+          context.request.parameters = context.request.parameters.filter(
             (p) => p.name !== "_type"
           );
 
           const parameters = await parametersWithMetaAssociated(
             resourceTypes,
-            request.parameters,
+            context.request.parameters,
             async (resourceTypes, name) =>
-              resolveParameter(args.state.data, resourceTypes, name)
+              resolveParameter(context.state.data, resourceTypes, name)
           );
 
           // Standard parameters
@@ -64,13 +64,13 @@ function createMemoryMiddleware<
           );
 
           const resourceSet =
-            request.level === "type"
+            context.request.level === "type"
               ? Object.values(
-                  args.state.data[request.resourceType] || {}
+                  context.state.data[context.request.resourceType] || {}
                 ).filter((v): v is Resource => v !== undefined)
-              : Object.keys(args.state.data)
+              : Object.keys(context.state.data)
                   .map((k) =>
-                    Object.values(args.state.data[k as ResourceType] || {})
+                    Object.values(context.state.data[k as ResourceType] || {})
                   )
                   .filter((v): v is Resource[] => v !== undefined)
                   .flat();
@@ -78,7 +78,11 @@ function createMemoryMiddleware<
           let result = [];
           for (const resource of resourceSet || []) {
             if (
-              await fitsSearchCriteria(args.ctx, resource, resourceParameters)
+              await fitsSearchCriteria(
+                context.ctx,
+                resource,
+                resourceParameters
+              )
             ) {
               result.push(resource);
             }
@@ -107,14 +111,13 @@ function createMemoryMiddleware<
               : 50;
 
           result = result.slice(0, total);
-          switch (request.level) {
+          switch (context.request.level) {
             case "system": {
               return {
-                state: args.state,
-                ctx: args.ctx,
+                ...context,
                 response: {
-                  level: request.level,
-                  parameters: request.parameters,
+                  level: context.request.level,
+                  parameters: context.request.parameters,
                   type: "search-response",
                   body: result,
                 },
@@ -122,12 +125,11 @@ function createMemoryMiddleware<
             }
             case "type": {
               return {
-                state: args.state,
-                ctx: args.ctx,
+                ...context,
                 response: {
-                  resourceType: request.resourceType,
+                  resourceType: context.request.resourceType,
                   level: "type",
-                  parameters: request.parameters,
+                  parameters: context.request.parameters,
                   type: "search-response",
                   body: result,
                 },
@@ -136,69 +138,69 @@ function createMemoryMiddleware<
           }
         }
         case "update-request": {
-          const resource = request.body;
+          const resource = context.request.body;
           if (!resource.id)
             throw new OperationError(
               outcomeError("invalid", "Updated resource must have an id.")
             );
-          args.state.data = {
-            ...args.state.data,
+          context.state.data = {
+            ...context.state.data,
             [resource.resourceType]: {
-              ...args.state.data[resource.resourceType],
+              ...context.state.data[resource.resourceType],
               [resource.id]: resource,
             },
           };
 
           return {
-            state: args.state,
-            ctx: args.ctx,
+            ...context,
             response: {
               level: "instance",
               type: "update-response",
-              resourceType: request.resourceType,
+              resourceType: context.request.resourceType,
               id: resource.id,
               body: resource,
             },
           };
         }
         case "create-request": {
-          const resource = request.body;
-          const resources = args.state.data[request.resourceType];
+          const resource = context.request.body;
+          const resources = context.state.data[context.request.resourceType];
           if (!resource?.id) resource.id = v4();
 
-          args.state.data = {
-            ...args.state.data,
+          context.state.data = {
+            ...context.state.data,
             [resource.resourceType]: {
               ...resources,
               [resource.id]: resource,
             },
           };
           return {
-            state: args.state,
-            ctx: args.ctx,
+            ...context,
             response: {
               level: "type",
               type: "create-response",
-              resourceType: request.resourceType,
+              resourceType: context.request.resourceType,
               body: resource,
             },
           };
         }
         case "read-request": {
-          const data = args.state.data[request.resourceType]?.[request.id];
+          const data =
+            context.state.data[context.request.resourceType]?.[
+              context.request.id
+            ];
           if (!data) {
             throw new Error(
-              `Not found resource of type '${request.resourceType}' with id '${request.id}'`
+              `Not found resource of type '${context.request.resourceType}' with id '${context.request.id}'`
             );
           }
           return {
-            state: args.state,
-            ctx: args.ctx,
+            ...context,
             response: {
               level: "instance",
               type: "read-response",
-              resourceType: request.resourceType,
-              id: request.id,
+              resourceType: context.request.resourceType,
+              id: context.request.id,
               body: data,
             },
           };
@@ -207,7 +209,7 @@ function createMemoryMiddleware<
           throw new OperationError(
             outcomeError(
               "not-supported",
-              `Request not supported '${request.type}'`
+              `Request not supported '${context.request.type}'`
             )
           );
       }

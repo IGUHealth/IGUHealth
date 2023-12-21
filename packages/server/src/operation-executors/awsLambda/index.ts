@@ -362,14 +362,14 @@ function createExecutor(
   }
 ): MiddlewareAsync<unknown, FHIRServerCTX> {
   return createMiddlewareAsync<unknown, FHIRServerCTX>([
-    async (request, { ctx, state }, next) => {
+    async (context) => {
       try {
         /* eslint-disable no-fallthrough */
-        switch (request.type) {
+        switch (context.request.type) {
           case "invoke-request": {
             const operationDefinition = await resolveOperationDefinition(
-              ctx,
-              request.operation
+              context.ctx,
+              context.request.operation
             );
 
             const op = new Operation<
@@ -377,14 +377,18 @@ function createExecutor(
               Record<string, unknown>
             >(operationDefinition);
 
-            const opCTX = getOpCTX(ctx, request);
+            const opCTX = getOpCTX(context.ctx, context.request);
 
             const invocationContextOperation = validateInvocationContext(
               op.operationDefinition,
-              request
+              context.request
             );
 
-            const payload = await createPayload(ctx, op, request);
+            const payload = await createPayload(
+              context.ctx,
+              op,
+              context.request
+            );
 
             if (invocationContextOperation)
               throw new OperationError(invocationContextOperation);
@@ -392,7 +396,7 @@ function createExecutor(
               client,
               layers,
               role,
-              ctx,
+              context.ctx,
               op
             );
 
@@ -414,7 +418,7 @@ function createExecutor(
 
             if (invokeResponse.FunctionError) {
               const auditEvent = await logAuditEvent(
-                ctx,
+                context.ctx,
                 MINOR_FAILURE,
                 { reference: `OperationDefinition/${operationDefinition.id}` },
                 output.trace ? output.trace.join("\n") : "No trace present."
@@ -435,42 +439,39 @@ function createExecutor(
               output
             ) as unknown as Parameters;
 
-            switch (request.level) {
+            switch (context.request.level) {
               case "instance": {
                 return {
-                  ctx,
-                  state,
+                  ...context,
                   response: {
-                    operation: request.operation,
+                    operation: context.request.operation,
                     type: "invoke-response",
-                    level: request.level,
+                    level: context.request.level,
                     body: outputParameters,
-                    resourceType: request.resourceType,
-                    id: request.id,
+                    resourceType: context.request.resourceType,
+                    id: context.request.id,
                   },
                 };
               }
               case "type": {
                 return {
-                  ctx,
-                  state,
+                  ...context,
                   response: {
-                    operation: request.operation,
+                    operation: context.request.operation,
                     type: "invoke-response",
-                    resourceType: request.resourceType,
-                    level: request.level,
+                    resourceType: context.request.resourceType,
+                    level: context.request.level,
                     body: outputParameters,
                   },
                 };
               }
               case "system": {
                 return {
-                  ctx,
-                  state,
+                  ...context,
                   response: {
-                    operation: request.operation,
+                    operation: context.request.operation,
                     type: "invoke-response",
-                    level: request.level,
+                    level: context.request.level,
                     body: outputParameters,
                   },
                 };
@@ -481,12 +482,12 @@ function createExecutor(
             throw new OperationError(
               outcomeFatal(
                 "invalid",
-                `Invocation client only supports invoke-request not '${request.type}'`
+                `Invocation client only supports invoke-request not '${context.request.type}'`
               )
             );
         }
       } catch (e) {
-        ctx.logger.error(e);
+        context.ctx.logger.error(e);
         throw e;
       }
     },

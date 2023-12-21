@@ -34,7 +34,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     return response.body;
   }
   async request(ctx: CTX, request: FHIRRequest): Promise<FHIRResponse> {
-    const res = await this.middleware(request, { ctx, state: this.state });
+    const res = await this.middleware({ ctx, state: this.state, request });
     return res.response;
   }
   async invoke_system<Op extends IOperation<unknown, unknown>>(

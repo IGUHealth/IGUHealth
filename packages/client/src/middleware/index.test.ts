@@ -4,9 +4,9 @@ import type { ParsedParameter } from "../url";
 
 test("Test middleware Async", async () => {
   const middleware = createMiddlewareAsync<{}, {}>([
-    async (request, args, next) => {
+    async (ctx, next) => {
       if (next) {
-        const nextVal = await next(request, args);
+        const nextVal = await next(ctx);
         return {
           ...nextVal,
           response: {
@@ -19,11 +19,11 @@ test("Test middleware Async", async () => {
         };
       }
       return {
-        state: args.state,
-        ctx: args.ctx,
+        state: ctx.state,
+        ctx: ctx.ctx,
         response: {
-          parameters: (request as any).parameters
-            ? ((request as any).parameters as ParsedParameter<
+          parameters: (ctx.request as any).parameters
+            ? ((ctx.request as any).parameters as ParsedParameter<
                 string | number
               >[])
             : [],
@@ -33,13 +33,13 @@ test("Test middleware Async", async () => {
         },
       };
     },
-    async (request, args, next) => {
+    async (ctx, next) => {
       return {
-        state: args.state,
-        ctx: args.ctx,
+        state: ctx.state,
+        ctx: ctx.ctx,
         response: {
-          parameters: (request as any).parameters
-            ? ((request as any).parameters as ParsedParameter<
+          parameters: (ctx.request as any).parameters
+            ? ((ctx.request as any).parameters as ParsedParameter<
                 string | number
               >[])
             : [],
@@ -50,7 +50,8 @@ test("Test middleware Async", async () => {
       };
     },
   ]);
-  const result = middleware({} as any, { state: {}, ctx: {} });
+
+  const result = middleware({ state: {}, ctx: {}, request: {} as any });
   expect(result).toBeInstanceOf(Promise);
   expect(await result).toEqual({
     state: {},
