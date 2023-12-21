@@ -53,6 +53,7 @@ test("Test middleware Async", async () => {
   expect(result).toBeInstanceOf(Promise);
   expect(await result).toEqual({
     state: {},
+    request: {},
     ctx: {},
     response: {
       parameters: [],
