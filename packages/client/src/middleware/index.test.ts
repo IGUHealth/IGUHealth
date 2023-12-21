@@ -4,9 +4,9 @@ import type { ParsedParameter } from "../url";
 
 test("Test middleware Async", async () => {
   const middleware = createMiddlewareAsync<{}, {}>([
-    async (ctx, next) => {
+    async (context, next) => {
       if (next) {
-        const nextVal = await next(ctx);
+        const nextVal = await next(context);
         return {
           ...nextVal,
           response: {
@@ -19,11 +19,10 @@ test("Test middleware Async", async () => {
         };
       }
       return {
-        state: ctx.state,
-        ctx: ctx.ctx,
+        ...context,
         response: {
-          parameters: (ctx.request as any).parameters
-            ? ((ctx.request as any).parameters as ParsedParameter<
+          parameters: (context.request as any).parameters
+            ? ((context.request as any).parameters as ParsedParameter<
                 string | number
               >[])
             : [],
@@ -33,13 +32,12 @@ test("Test middleware Async", async () => {
         },
       };
     },
-    async (ctx, next) => {
+    async (context, next) => {
       return {
-        state: ctx.state,
-        ctx: ctx.ctx,
+        ...context,
         response: {
-          parameters: (ctx.request as any).parameters
-            ? ((ctx.request as any).parameters as ParsedParameter<
+          parameters: (context.request as any).parameters
+            ? ((context.request as any).parameters as ParsedParameter<
                 string | number
               >[])
             : [],
