@@ -5,7 +5,11 @@ import {
   SystemSearchRequest,
   TypeSearchRequest,
 } from "@iguhealth/client/types";
-import { Resource, SearchParameter } from "@iguhealth/fhir-types/r4/types";
+import {
+  Resource,
+  SearchParameter,
+  ResourceType,
+} from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../ctx/types.js";
@@ -541,11 +545,35 @@ async function calculateTotal(
 //        as latest_resources where latest_resources.deleted = false`;
 // }
 
+/* Filter to the latest version of the resource only.
+ ** Scenarios where you search for a resource type but no parameters are provided
+ ** This scenario need to filter to ensure only the latest is included.
+ ** Approach I take is to use _id parameter which all resources would have
+ ** that are current.
+ */
+async function ensureLatest(
+  ctx: FHIRServerCTX,
+  resourceTypes: ResourceType[],
+  resourceParameters: SearchParameterResource[]
+) {
+  const idParameter = (
+    await parametersWithMetaAssociated(
+      resourceTypes,
+      [{ name: "_id", modifier: "missing", value: ["false"] }],
+      async (resourceTypes, name) =>
+        (
+          await findSearchParameter(ctx, resourceTypes, name)
+        ).resources
+    )
+  ).filter((v): v is SearchParameterResource => v.type === "resource");
+
+  return resourceParameters.concat(idParameter);
+}
+
 export async function executeSearchQuery(
   client: pg.PoolClient,
   request: SystemSearchRequest | TypeSearchRequest,
-  ctx: FHIRServerCTX,
-  onlyLatest: boolean = true
+  ctx: FHIRServerCTX
 ): Promise<{ total?: number; resources: Resource[] }> {
   let values: unknown[] = [];
   let index = 1;
@@ -562,26 +590,14 @@ export async function executeSearchQuery(
       ).resources
   );
   // Standard parameters
-  let resourceParameters = parameters.filter(
-    (v): v is SearchParameterResource => v.type === "resource"
+
+  const resourceParameters = await ensureLatest(
+    ctx,
+    resourceTypes,
+    parameters.filter(
+      (v): v is SearchParameterResource => v.type === "resource"
+    )
   );
-  // Scenarios where you search for a resource type but no parameters are provided
-  // This scenario need to filter to ensure only the latest is included.
-  // Approach I take is to use _id parameter which all resources would have
-  // that are current.
-  if (onlyLatest) {
-    const idParameter = (
-      await parametersWithMetaAssociated(
-        resourceTypes,
-        [{ name: "_id", modifier: "missing", value: ["false"] }],
-        async (resourceTypes, name) =>
-          (
-            await findSearchParameter(ctx, resourceTypes, name)
-          ).resources
-      )
-    ).filter((v): v is SearchParameterResource => v.type === "resource");
-    resourceParameters = resourceParameters.concat(idParameter);
-  }
 
   const parametersResult = parameters.filter(
     (v): v is SearchParameterResult => v.type === "result"
