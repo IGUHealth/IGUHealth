@@ -183,7 +183,8 @@ function buildParameterSQL(
     ", "
   )} FROM ${search_table} WHERE parameter_url = $${index++} `;
   values = [...values, searchParameter.url];
-  let parameterClause;
+  let parameterClause: string;
+
   switch (searchParameter.type) {
     case "token": {
       switch (parameter.modifier) {
@@ -239,72 +240,78 @@ function buildParameterSQL(
       break;
     }
     case "quantity": {
-      parameterClause = parameter.value.map((value) => {
-        const parts = value.toString().split("|");
-        if (parts.length === 4) {
-          throw new OperationError(
-            outcomeError(
-              "not-supported",
-              `prefix not supported yet for parameter '${searchParameter.name}' and value '${value}'`
-            )
-          );
-        }
-        if (parts.length === 3) {
-          const [value, system, code] = parts;
-          let clauses: string[] = [];
-          if (value !== "") {
-            values = [...values, value, value];
-            clauses = [
-              ...clauses,
-              `start_value <= $${index++}`,
-              `end_value >= $${index++}`,
-            ];
+      parameterClause = parameter.value
+        .map((value) => {
+          const parts = value.toString().split("|");
+          if (parts.length === 4) {
+            throw new OperationError(
+              outcomeError(
+                "not-supported",
+                `prefix not supported yet for parameter '${searchParameter.name}' and value '${value}'`
+              )
+            );
           }
-          if (system !== "") {
-            values = [...values, system, system];
-            clauses = [
-              ...clauses,
-              `start_system = $${index++}`,
-              `end_system = $${index++}`,
-            ];
+          if (parts.length === 3) {
+            const [value, system, code] = parts;
+            let clauses: string[] = [];
+            if (value !== "") {
+              values = [...values, value, value];
+              clauses = [
+                ...clauses,
+                `start_value <= $${index++}`,
+                `end_value >= $${index++}`,
+              ];
+            }
+            if (system !== "") {
+              values = [...values, system, system];
+              clauses = [
+                ...clauses,
+                `start_system = $${index++}`,
+                `end_system = $${index++}`,
+              ];
+            }
+            if (code != "") {
+              values = [...values, code, code];
+              clauses = [
+                ...clauses,
+                `start_code = $${index++}`,
+                `end_code = $${index++}`,
+              ];
+            }
+            return clauses.join(" AND ");
+          } else {
+            throw new OperationError(
+              outcomeError(
+                "invalid",
+                "Quantity search parameters must be specified as value|system|code"
+              )
+            );
           }
-          if (code != "") {
-            values = [...values, code, code];
-            clauses = [
-              ...clauses,
-              `start_code = $${index++}`,
-              `end_code = $${index++}`,
-            ];
-          }
-          return clauses.join(" AND ");
-        } else {
-          throw new OperationError(
-            outcomeError(
-              "invalid",
-              "Quantity search parameters must be specified as value|system|code"
-            )
-          );
-        }
-      });
+        })
+        .join("OR");
       break;
     }
     case "date": {
-      parameterClause = parameter.value.map((value) => {
-        const formattedDate = dayjs(
-          value,
-          "YYYY-MM-DDThh:mm:ss+zz:zz"
-        ).toISOString();
-        values = [...values, formattedDate, formattedDate];
-        // Check the range for date
-        return `start_date <= $${index++} AND end_date >= $${index++}`;
-      });
+      parameterClause = parameter.value
+        .map((value) => {
+          const formattedDate = dayjs(
+            value,
+            "YYYY-MM-DDThh:mm:ss+zz:zz"
+          ).toISOString();
+          values = [...values, formattedDate, formattedDate];
+          // Check the range for date
+          return `start_date <= $${index++} AND end_date >= $${index++}`;
+        })
+        .join("OR");
       break;
     }
     case "uri": {
-      parameterClause = parameter.value.map((value) => {
-        values = [...values, value];
-        return `value = $${index++}`;
-      });
+      parameterClause = parameter.value
+        .map((value) => {
+          values = [...values, value];
+          return `value = $${index++}`;
+        })
+        .join("OR");
       break;
     }
     case "number":
