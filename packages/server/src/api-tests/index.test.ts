@@ -11,6 +11,7 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 import HTTPClient from "@iguhealth/client/http";
 import { evaluate } from "@iguhealth/fhirpath";
+import { OperationError } from "@iguhealth/operation-outcomes";
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system/api/v1/fhir/r4",
@@ -102,9 +103,6 @@ const practitioner: Practitioner = {
             display: "Bachelor of Science",
           },
         ],
-      },
-      issuer: {
-        display: "Example University",
       },
       period: {
         start: "1995",
@@ -237,34 +235,42 @@ async function createTestData(seed: number) {
 }
 
 test("Parameter chains", async () => {
-  const resources = (await createTestData(1)).concat(await createTestData(2));
   try {
-    const observationSearch = await client.search_type({}, "Observation", [
-      {
-        name: "patient",
-        chains: ["general-practitioner", "name"],
-        value: [`Adam1`],
-      },
-    ]);
-
-    //and $this.extension.where(url=%seedUrl).value = '1'
-    const expectedResult = evaluate(
-      "$this.where(resourceType='Observation' and $this.extension.where(url=%seedUrl).value = 1)",
-      resources,
-      {
-        variables: {
-          seedUrl: SEED_URL,
+    const resources = (await createTestData(1)).concat(await createTestData(2));
+    try {
+      const observationSearch = await client.search_type({}, "Observation", [
+        {
+          name: "patient",
+          chains: ["general-practitioner", "name"],
+          value: [`Adam1`],
         },
-      }
-    );
+      ]);
 
-    expect(observationSearch.resources).toEqual(expectedResult);
-  } finally {
-    await Promise.all(
-      resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
-      })
-    );
+      //and $this.extension.where(url=%seedUrl).value = '1'
+      const expectedResult = evaluate(
+        "$this.where(resourceType='Observation' and $this.extension.where(url=%seedUrl).value = 1)",
+        resources,
+        {
+          variables: {
+            seedUrl: SEED_URL,
+          },
+        }
+      );
+
+      expect(observationSearch.resources).toEqual(expectedResult);
+    } finally {
+      await Promise.all(
+        resources.map(async ({ resourceType, id }) => {
+          return await client.delete({}, resourceType, id as string);
+        })
+      );
+    }
+  } catch (e) {
+    if (e instanceof OperationError) {
+      e.operationOutcome &&
+        console.log(JSON.stringify(e.operationOutcome, null, 2));
+    }
+    throw e;
   }
 });
 

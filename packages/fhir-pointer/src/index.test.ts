@@ -95,6 +95,8 @@ test("root", () => {
     "given"
   );
   expect(root(nestedLoc)).toEqual("Patient|123");
+  expect(toJSONPointer(root(nestedLoc))).toEqual("");
+  expect(root(pointer("Patient", "123"))).toEqual("Patient|123");
 });
 
 test("escaping strings.", () => {
@@ -107,8 +109,9 @@ test("escaping strings.", () => {
 
 test("typedpointer", () => {
   const loc = typedPointer() as Loc<any, any>;
+  expect(toJSONPointer(loc)).toEqual("");
   const escapedLoc = descend(descend(loc, "~name"), "/test");
-  expect(escapedLoc).toEqual("/~0name/~1test");
+  expect(escapedLoc).toEqual("Unknown|unknown/~0name/~1test");
   expect(toJSONPointer(escapedLoc)).toEqual("/~0name/~1test");
   expect(get(escapedLoc, { "~name": { "/test": "test" } })).toEqual("test");
 });

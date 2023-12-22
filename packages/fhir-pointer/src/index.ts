@@ -75,13 +75,18 @@ export function ascend<T, R, P extends Parent<T>>(
 }
 
 export function toJSONPointer<T, R, P extends Parent<T>>(loc: Loc<T, R, P>) {
-  return loc.substring(loc.indexOf("/"), loc.length);
+  const indexOfLastSlash = loc.indexOf("/");
+  if (indexOfLastSlash === -1) return "";
+  return loc.substring(indexOfLastSlash, loc.length);
 }
 
 export function pathMeta<T extends Resource, R, P extends Parent<T>>(
   loc: Loc<T, R, P>
 ): { resourceType: ResourceType; id: id } {
-  const [resourceType, id] = loc.substring(0, loc.indexOf("/")).split("|");
+  const indexOfLastSlash = loc.indexOf("/");
+  const [resourceType, id] = loc
+    .substring(0, indexOfLastSlash === -1 ? loc.length : indexOfLastSlash)
+    .split("|");
   return { resourceType: resourceType as ResourceType, id };
 }
 
@@ -111,6 +116,10 @@ export function root<T extends Resource, R, P extends Parent<T>>(
   return pointer(resourceType, id) as any as Loc<T, T>;
 }
 
+function metaString(resourceType: ResourceType, id: id) {
+  return `${resourceType}|${id}`;
+}
+
 /*
  ** Creates a Loc pointer for a resource.
  */
@@ -118,9 +127,16 @@ export function pointer<T extends ResourceType>(
   resourceType: T,
   resourceId: id
 ): Loc<AResource<T>, AResource<T>> {
-  return `${resourceType}|${resourceId}` as Loc<AResource<T>, AResource<T>>;
+  return `${metaString(resourceType, resourceId)}` as Loc<
+    AResource<T>,
+    AResource<T>
+  >;
 }
 
-export function typedPointer<V, T>(path: string = ""): Loc<V, T, Parent<V>> {
-  return path as Loc<V, T, Parent<V>>;
+export function typedPointer<V, T>(): Loc<V, T, Parent<V>> {
+  return metaString("Unknown" as ResourceType, "unknown" as id) as Loc<
+    V,
+    T,
+    Parent<V>
+  >;
 }
