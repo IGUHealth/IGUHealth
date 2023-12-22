@@ -5,7 +5,11 @@ import {
   SystemSearchRequest,
   TypeSearchRequest,
 } from "@iguhealth/client/types";
-import { Resource, SearchParameter } from "@iguhealth/fhir-types/r4/types";
+import {
+  Resource,
+  SearchParameter,
+  ResourceType,
+} from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../ctx/types.js";
@@ -179,7 +183,8 @@ function buildParameterSQL(
     ", "
   )} FROM ${search_table} WHERE parameter_url = $${index++} `;
   values = [...values, searchParameter.url];
-  let parameterClause;
+  let parameterClause: string;
+
   switch (searchParameter.type) {
     case "token": {
       switch (parameter.modifier) {
@@ -198,7 +203,7 @@ function buildParameterSQL(
                 throw new OperationError(
                   outcomeError(
                     "not-supported",
-                    "For mnodifier 'missing' value of 'true' is not yet supported"
+                    "For modifier 'missing' value of 'true' is not yet supported"
                   )
                 );
               }
@@ -235,72 +240,78 @@ function buildParameterSQL(
       break;
     }
     case "quantity": {
-      parameterClause = parameter.value.map((value) => {
-        const parts = value.toString().split("|");
-        if (parts.length === 4) {
-          throw new OperationError(
-            outcomeError(
-              "not-supported",
-              `prefix not supported yet for parameter '${searchParameter.name}' and value '${value}'`
-            )
-          );
-        }
-        if (parts.length === 3) {
-          const [value, system, code] = parts;
-          let clauses: string[] = [];
-          if (value !== "") {
-            values = [...values, value, value];
-            clauses = [
-              ...clauses,
-              `start_value <= $${index++}`,
-              `end_value >= $${index++}`,
-            ];
+      parameterClause = parameter.value
+        .map((value) => {
+          const parts = value.toString().split("|");
+          if (parts.length === 4) {
+            throw new OperationError(
+              outcomeError(
+                "not-supported",
+                `prefix not supported yet for parameter '${searchParameter.name}' and value '${value}'`
+              )
+            );
           }
-          if (system !== "") {
-            values = [...values, system, system];
-            clauses = [
-              ...clauses,
-              `start_system = $${index++}`,
-              `end_system = $${index++}`,
-            ];
+          if (parts.length === 3) {
+            const [value, system, code] = parts;
+            let clauses: string[] = [];
+            if (value !== "") {
+              values = [...values, value, value];
+              clauses = [
+                ...clauses,
+                `start_value <= $${index++}`,
+                `end_value >= $${index++}`,
+              ];
+            }
+            if (system !== "") {
+              values = [...values, system, system];
+              clauses = [
+                ...clauses,
+                `start_system = $${index++}`,
+                `end_system = $${index++}`,
+              ];
+            }
+            if (code != "") {
+              values = [...values, code, code];
+              clauses = [
+                ...clauses,
+                `start_code = $${index++}`,
+                `end_code = $${index++}`,
+              ];
+            }
+            return clauses.join(" AND ");
+          } else {
+            throw new OperationError(
+              outcomeError(
+                "invalid",
+                "Quantity search parameters must be specified as value|system|code"
+              )
+            );
           }
-          if (code != "") {
-            values = [...values, code, code];
-            clauses = [
-              ...clauses,
-              `start_code = $${index++}`,
-              `end_code = $${index++}`,
-            ];
-          }
-          return clauses.join(" AND ");
-        } else {
-          throw new OperationError(
-            outcomeError(
-              "invalid",
-              "Quantity search parameters must be specified as value|system|code"
-            )
-          );
-        }
-      });
+        })
+        .join("OR");
       break;
     }
     case "date": {
-      parameterClause = parameter.value.map((value) => {
-        const formattedDate = dayjs(
-          value,
-          "YYYY-MM-DDThh:mm:ss+zz:zz"
-        ).toISOString();
-        values = [...values, formattedDate, formattedDate];
-        // Check the range for date
-        return `start_date <= $${index++} AND end_date >= $${index++}`;
-      });
+      parameterClause = parameter.value
+        .map((value) => {
+          const formattedDate = dayjs(
+            value,
+            "YYYY-MM-DDThh:mm:ss+zz:zz"
+          ).toISOString();
+          values = [...values, formattedDate, formattedDate];
+          // Check the range for date
+          return `start_date <= $${index++} AND end_date >= $${index++}`;
+        })
+        .join("OR");
       break;
     }
     case "uri": {
-      parameterClause = parameter.value.map((value) => {
-        values = [...values, value];
-        return `value = $${index++}`;
-      });
+      parameterClause = parameter.value
+        .map((value) => {
+          values = [...values, value];
+          return `value = $${index++}`;
+        })
+        .join("OR");
       break;
     }
     case "number":
@@ -531,21 +542,33 @@ async function calculateTotal(
   }
 }
 
-// OLD METHOD FOR Filters to the latest value used on end user search query
-// Note for subscription we avoid this as all values should be pushed through
-// Note this matters for empty resourcetype queries otherwise parameters would only pick the latest.
-// MIGRATED TO USE _id:missing=false as a filter instead.
-function filterToLatest(query: string): string {
-  return `SELECT * FROM (SELECT DISTINCT ON (id) id, * FROM (${query}) as all_resources 
-       ORDER BY all_resources.id, all_resources.version_id DESC) 
-       as latest_resources where latest_resources.deleted = false`;
+/* Filter to the latest version of the resource only.
+ ** Scenarios where you search for a resource type but no parameters are provided
+ ** This scenario need to filter to ensure only the latest is included.
+ ** Approach I take is to use _id parameter which all resources would have
+ ** that are current.
+ */
+async function ensureLatest(
+  ctx: FHIRServerCTX,
+  resourceTypes: ResourceType[],
+  resourceParameters: SearchParameterResource[]
+) {
+  const idParameter = (
+    await parametersWithMetaAssociated(
+      async (resourceTypes, name) =>
+        await findSearchParameter(ctx, resourceTypes, name),
+      resourceTypes,
+      [{ name: "_id", modifier: "missing", value: ["false"] }]
+    )
+  ).filter((v): v is SearchParameterResource => v.type === "resource");
+
+  return resourceParameters.concat(idParameter);
 }
 
 export async function executeSearchQuery(
   client: pg.PoolClient,
   request: SystemSearchRequest | TypeSearchRequest,
-  ctx: FHIRServerCTX,
-  onlyLatest: boolean = true
+  ctx: FHIRServerCTX
 ): Promise<{ total?: number; resources: Resource[] }> {
   let values: unknown[] = [];
   let index = 1;
@@ -553,35 +576,21 @@ export async function executeSearchQuery(
   const resourceTypes = deriveResourceTypeFilter(request);
   // Remove _type as using on derived resourceTypeFilter
   request.parameters = request.parameters.filter((p) => p.name !== "_type");
+
   const parameters = await parametersWithMetaAssociated(
-    resourceTypes,
-    request.parameters,
     async (resourceTypes, name) =>
-      (
-        await findSearchParameter(ctx, resourceTypes, name)
-      ).resources
+      await findSearchParameter(ctx, resourceTypes, name),
+    resourceTypes,
+    request.parameters
   );
-  // Standard parameters
-  let resourceParameters = parameters.filter(
-    (v): v is SearchParameterResource => v.type === "resource"
+
+  const resourceParameters = await ensureLatest(
+    ctx,
+    resourceTypes,
+    parameters.filter(
+      (v): v is SearchParameterResource => v.type === "resource"
+    )
   );
-  // Scenarios where you search for a resource type but no parameters are provided
-  // This scenario need to filter to ensure only the latest is included.
-  // Approach I take is to use _id parameter which all resources would have
-  // that are current.
-  if (onlyLatest) {
-    const idParameter = (
-      await parametersWithMetaAssociated(
-        resourceTypes,
-        [{ name: "_id", modifier: "missing", value: ["false"] }],
-        async (resourceTypes, name) =>
-          (
-            await findSearchParameter(ctx, resourceTypes, name)
-          ).resources
-      )
-    ).filter((v): v is SearchParameterResource => v.type === "resource");
-    resourceParameters = resourceParameters.concat(idParameter);
-  }
 
   const parametersResult = parameters.filter(
     (v): v is SearchParameterResult => v.type === "result"

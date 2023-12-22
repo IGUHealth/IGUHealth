@@ -280,12 +280,10 @@ function processSubscription(
       request.parameters = request.parameters.filter((p) => p.name !== "_type");
 
       const parameters = await parametersWithMetaAssociated(
-        resourceTypes,
-        request.parameters,
         async (resourceTypes, name) =>
-          (
-            await findSearchParameter(ctx, resourceTypes, name)
-          ).resources
+          await findSearchParameter(ctx, resourceTypes, name),
+        resourceTypes,
+        request.parameters
       );
 
       // Standard parameters

@@ -52,10 +52,10 @@ function createMemoryMiddleware<
           );
 
           const parameters = await parametersWithMetaAssociated(
-            resourceTypes,
-            context.request.parameters,
             async (resourceTypes, name) =>
-              resolveParameter(context.state.data, resourceTypes, name)
+              resolveParameter(context.state.data, resourceTypes, name),
+            resourceTypes,
+            context.request.parameters
           );
 
           // Standard parameters
