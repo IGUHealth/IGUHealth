@@ -199,6 +199,5 @@ export default function referenceParameter(
       },
       { values, query: "" }
     );
-    //.join(" OR ");
   }
 }
