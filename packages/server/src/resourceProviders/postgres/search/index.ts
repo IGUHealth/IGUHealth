@@ -535,11 +535,11 @@ async function calculateTotal(
 // Note for subscription we avoid this as all values should be pushed through
 // Note this matters for empty resourcetype queries otherwise parameters would only pick the latest.
 // MIGRATED TO USE _id:missing=false as a filter instead.
-function filterToLatest(query: string): string {
-  return `SELECT * FROM (SELECT DISTINCT ON (id) id, * FROM (${query}) as all_resources 
-       ORDER BY all_resources.id, all_resources.version_id DESC) 
-       as latest_resources where latest_resources.deleted = false`;
-}
+// function filterToLatest(query: string): string {
+//   return `SELECT * FROM (SELECT DISTINCT ON (id) id, * FROM (${query}) as all_resources
+//        ORDER BY all_resources.id, all_resources.version_id DESC)
+//        as latest_resources where latest_resources.deleted = false`;
+// }
 
 export async function executeSearchQuery(
   client: pg.PoolClient,
