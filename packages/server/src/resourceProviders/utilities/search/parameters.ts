@@ -194,7 +194,7 @@ export async function findSearchParameter<CTX extends FHIRServerCTX>(
   ctx: CTX,
   resourceTypes: ResourceType[],
   name: string
-): Promise<{ total?: number; resources: SearchParameter[] }> {
+): Promise<SearchParameter[]> {
   const result = await ctx.client.search_type(ctx, "SearchParameter", [
     { name: "name", value: [name] },
     {
@@ -207,16 +207,18 @@ export async function findSearchParameter<CTX extends FHIRServerCTX>(
     },
   ]);
 
-  return result;
+  return result.resources;
 }
 
-export async function parametersWithMetaAssociated(
+type ResolveSearchParameter = (
   resourceTypes: ResourceType[],
-  parameters: ParsedParameter<string | number>[],
-  resolveSearchParameter: (
-    resourceTypes: ResourceType[],
-    name: string
-  ) => Promise<SearchParameter[]>
+  name: string
+) => Promise<SearchParameter[]>;
+
+export async function parametersWithMetaAssociated(
+  resolveSearchParameter: ResolveSearchParameter,
+  resourceTypes: ResourceType[],
+  parameters: ParsedParameter<string | number>[]
 ): Promise<ParameterType[]> {
   const result = await Promise.all(
     parameters.map(async (p) => {

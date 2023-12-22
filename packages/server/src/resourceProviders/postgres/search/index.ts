@@ -535,16 +535,6 @@ async function calculateTotal(
   }
 }
 
-// OLD METHOD FOR Filters to the latest value used on end user search query
-// Note for subscription we avoid this as all values should be pushed through
-// Note this matters for empty resourcetype queries otherwise parameters would only pick the latest.
-// MIGRATED TO USE _id:missing=false as a filter instead.
-// function filterToLatest(query: string): string {
-//   return `SELECT * FROM (SELECT DISTINCT ON (id) id, * FROM (${query}) as all_resources
-//        ORDER BY all_resources.id, all_resources.version_id DESC)
-//        as latest_resources where latest_resources.deleted = false`;
-// }
-
 /* Filter to the latest version of the resource only.
  ** Scenarios where you search for a resource type but no parameters are provided
  ** This scenario need to filter to ensure only the latest is included.
@@ -558,12 +548,10 @@ async function ensureLatest(
 ) {
   const idParameter = (
     await parametersWithMetaAssociated(
-      resourceTypes,
-      [{ name: "_id", modifier: "missing", value: ["false"] }],
       async (resourceTypes, name) =>
-        (
-          await findSearchParameter(ctx, resourceTypes, name)
-        ).resources
+        await findSearchParameter(ctx, resourceTypes, name),
+      resourceTypes,
+      [{ name: "_id", modifier: "missing", value: ["false"] }]
     )
   ).filter((v): v is SearchParameterResource => v.type === "resource");
 
@@ -583,12 +571,10 @@ export async function executeSearchQuery(
   request.parameters = request.parameters.filter((p) => p.name !== "_type");
 
   const parameters = await parametersWithMetaAssociated(
-    resourceTypes,
-    request.parameters,
     async (resourceTypes, name) =>
-      (
-        await findSearchParameter(ctx, resourceTypes, name)
-      ).resources
+      await findSearchParameter(ctx, resourceTypes, name),
+    resourceTypes,
+    request.parameters
   );
 
   const resourceParameters = await ensureLatest(
