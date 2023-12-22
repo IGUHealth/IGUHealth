@@ -5,11 +5,7 @@ import {
   SystemSearchRequest,
   TypeSearchRequest,
 } from "@iguhealth/client/types";
-import {
-  Resource,
-  SearchParameter,
-  ResourceType,
-} from "@iguhealth/fhir-types/r4/types";
+import { Resource, ResourceType } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../ctx/types.js";
@@ -26,150 +22,9 @@ import {
 } from "../../utilities/search/parameters.js";
 
 import { deriveSortQuery } from "./sort.js";
+import referenceParameter from "./parameters/reference.js";
 
-function generateCanonicalReferenceSearch(
-  ctx: FHIRServerCTX,
-  parameter: SearchParameterResource,
-  values: unknown[],
-  index: number
-) {
-  const uriTablename = searchParameterToTableName("uri");
-  const targets = `(${(parameter.searchParameter.target || [])
-    .map((target) => {
-      values = [...values, target];
-      return `$${index++}`;
-    })
-    .join(",")})`;
-  return {
-    query: `(SELECT DISTINCT ON (r_id) r_id FROM ${uriTablename} WHERE resource_type in ${targets} AND workspace=$${index++} AND value = $${index++})`,
-    index,
-    values: [...values, ctx.workspace, parameter.value[0]],
-  };
-}
-
-function isChainParameter(
-  parameter: SearchParameterResource
-): parameter is SearchParameterResource & {
-  chainedParameters: SearchParameter[][];
-} {
-  if (parameter.chainedParameters && parameter.chainedParameters.length > 0)
-    return true;
-  return false;
-}
-
-function chainSQL(
-  ctx: FHIRServerCTX,
-  parameter: SearchParameterResource & {
-    chainedParameters: SearchParameter[][];
-  },
-  values: unknown[],
-  index: number
-): { index: number; values: unknown[]; query: string } {
-  const referenceParameters = [
-    [parameter.searchParameter],
-    ...parameter.chainedParameters.slice(0, -1),
-  ];
-
-  const sqlCHAIN = referenceParameters.reduce(
-    (
-      {
-        index,
-        values,
-        query,
-      }: { index: number; values: unknown[]; query: string[] },
-      parameters
-    ) => {
-      const res = parameters.reduce(
-        (
-          {
-            index,
-            values,
-            query,
-          }: { index: number; values: unknown[]; query: string[] },
-          p
-        ) => {
-          const res = buildParameterSQL(
-            ctx,
-            {
-              type: "resource",
-              name: p.name,
-              searchParameter: p,
-              value: [],
-            },
-            index,
-            values,
-            ["r_id", "reference_id"]
-          );
-          return {
-            index: res.index,
-            values: res.values,
-            query: [...query, res.query],
-          };
-        },
-        { index, values, query: [] }
-      );
-      return {
-        index: res.index,
-        values: res.values,
-        query: [...query, `(${res.query.join(" UNION ")})`],
-      };
-    },
-    { index, values, query: [] }
-  );
-
-  index = sqlCHAIN.index;
-  values = sqlCHAIN.values;
-
-  const lastParameters =
-    parameter.chainedParameters[parameter.chainedParameters.length - 1];
-
-  const lastResult = lastParameters.reduce(
-    (
-      {
-        index,
-        values,
-        query,
-      }: { index: number; values: unknown[]; query: string[] },
-      p
-    ) => {
-      const res = buildParameterSQL(
-        ctx,
-        { ...parameter, searchParameter: p, chainedParameters: [] },
-        index,
-        values,
-        ["r_id"]
-      );
-      return {
-        index: res.index,
-        values: res.values,
-        query: [...query, res.query],
-      };
-    },
-    { index, values, query: [] }
-  );
-
-  const referencesSQL = [
-    ...sqlCHAIN.query,
-    `(${lastResult.query.join(" UNION ")})`,
-  ]
-    // Reverse as we want to start from initial value and then chain up to the last reference ID.
-    .reverse()
-    .reduce((previousResult: string, query: string, index: number) => {
-      const queryAlias = `query${index}`;
-      // Previous result should include the list of ids for next reference_id.
-      // Starting at the value this would be r_id
-      return `(select r_id from ${query} as ${queryAlias} where ${queryAlias}.reference_id in ${previousResult})`;
-      //return `(select * from ${previousResult} as p where p.reference_id in (select r_id from ${query} as chain${index}))`;
-    });
-
-  return {
-    query: `r_id in (select r_id from ${referencesSQL} as referencechain)`,
-    index: lastResult.index,
-    values: lastResult.values,
-  };
-}
-
-function buildParameterSQL(
+export function buildParameterSQL(
   ctx: FHIRServerCTX,
   parameter: SearchParameterResource,
   index: number,
@@ -437,39 +292,10 @@ function buildParameterSQL(
     case "reference": {
       // SUPPORT FOR PARAMETER CHAINS
       // Example: Observation?patient.general-practitioner.name=Adam
-
-      if (isChainParameter(parameter)) {
-        const chainSql = chainSQL(ctx, parameter, values, index);
-        values = chainSql.values;
-        parameterClause = chainSql.query;
-        index = chainSql.index;
-      } else {
-        parameterClause = parameter.value
-          .map((value) => {
-            const canonicalSQL = generateCanonicalReferenceSearch(
-              ctx,
-              parameter,
-              values,
-              index
-            );
-            values = canonicalSQL.values;
-            index = canonicalSQL.index;
-            const referenceSQL = `reference_id in ${canonicalSQL.query}`;
-
-            const referenceValue = value.toString();
-            const parts = referenceValue.split("/");
-            if (parts.length === 1) {
-              values = [...values, parts[0]];
-              return `${referenceSQL} OR reference_id = $${index++}`;
-            } else if (parts.length === 2) {
-              values = [...values, parts[0], parts[1]];
-              return `${referenceSQL} OR (reference_type = $${index++} AND reference_id = $${index++})`;
-            } else {
-              return referenceSQL;
-            }
-          })
-          .join(" OR ");
-      }
+      const result = referenceParameter(ctx, parameter, values);
+      parameterClause = result.query;
+      values = result.values;
+      index = result.values.length + 1;
       break;
     }
     default:
