@@ -203,7 +203,7 @@ function buildParameterSQL(
                 throw new OperationError(
                   outcomeError(
                     "not-supported",
-                    "For mnodifier 'missing' value of 'true' is not yet supported"
+                    "For modifier 'missing' value of 'true' is not yet supported"
                   )
                 );
               }
