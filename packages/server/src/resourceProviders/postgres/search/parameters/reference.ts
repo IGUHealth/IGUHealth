@@ -46,7 +46,7 @@ function chainSQL(
   },
   values: unknown[],
   index: number
-): { index: number; values: unknown[]; query: string } {
+): FilterSQLResult {
   const referenceParameters = [
     [parameter.searchParameter],
     ...parameter.chainedParameters.slice(0, -1),
@@ -146,9 +146,49 @@ function chainSQL(
 
   return {
     query: `r_id in (select r_id from ${referencesSQL} as referencechain)`,
-    index: lastResult.index,
     values: lastResult.values,
   };
+}
+
+function sqlParameterValue(
+  ctx: FHIRServerCTX,
+  sql: FilterSQLResult,
+  parameter: SearchParameterResource,
+  parameterValue: string | number
+) {
+  const canonicalSQL = generateCanonicalReferenceSearch(
+    ctx,
+    parameter,
+    sql.values
+  );
+
+  const referenceSQL = `${
+    sql.query === "" ? "" : `${sql.query} OR `
+  } reference_id in ${canonicalSQL.query}`;
+
+  const referenceValue = parameterValue.toString();
+  const parts = referenceValue.split("/");
+
+  if (parts.length === 1) {
+    return {
+      query: `${referenceSQL} OR reference_id = $${
+        canonicalSQL.values.length + 1
+      }`,
+      values: [...canonicalSQL.values, parts[0]],
+    };
+  } else if (parts.length === 2) {
+    return {
+      query: `${referenceSQL} OR (reference_type = $${
+        canonicalSQL.values.length + 1
+      } AND reference_id = $${canonicalSQL.values.length + 2})`,
+      values: [...canonicalSQL.values, parts[0], parts[1]],
+    };
+  } else {
+    return {
+      query: referenceSQL,
+      values: canonicalSQL.values,
+    };
+  }
 }
 
 export default function referenceParameter(
@@ -162,41 +202,8 @@ export default function referenceParameter(
     return chainSQL(ctx, parameter, values, index);
   else {
     return parameter.value.reduce(
-      (filterSQLResult: FilterSQLResult, value, i): FilterSQLResult => {
-        const canonicalSQL = generateCanonicalReferenceSearch(
-          ctx,
-          parameter,
-          filterSQLResult.values
-        );
-
-        const referenceSQL = `${
-          i === 0 ? "" : `${filterSQLResult.query} OR `
-        } reference_id in ${canonicalSQL.query}`;
-
-        const referenceValue = value.toString();
-        const parts = referenceValue.split("/");
-
-        if (parts.length === 1) {
-          return {
-            query: `${referenceSQL} OR reference_id = $${
-              canonicalSQL.values.length + 1
-            }`,
-            values: [...canonicalSQL.values, parts[0]],
-          };
-        } else if (parts.length === 2) {
-          return {
-            query: `${referenceSQL} OR (reference_type = $${
-              canonicalSQL.values.length + 1
-            } AND reference_id = $${canonicalSQL.values.length + 2})`,
-            values: [...canonicalSQL.values, parts[0], parts[1]],
-          };
-        } else {
-          return {
-            query: referenceSQL,
-            values: canonicalSQL.values,
-          };
-        }
-      },
+      (sql: FilterSQLResult, value, i): FilterSQLResult =>
+        sqlParameterValue(ctx, sql, parameter, value),
       { values, query: "" }
     );
   }
