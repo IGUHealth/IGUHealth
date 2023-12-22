@@ -443,6 +443,59 @@ test("Patient with primitive on name", async () => {
   ]);
 });
 
+test("Test reference constraints", async () => {
+  const validator = createValidator(CTX, "Patient");
+  expect(
+    await validator({
+      resourceType: "Patient",
+      managingOrganization: { reference: "Condition/123" },
+    })
+  ).toEqual([
+    {
+      code: "structure",
+      diagnostics:
+        "Expected reference to be constrained by one of the following profiles 'http://hl7.org/fhir/StructureDefinition/Organization' at path '/managingOrganization' found reference of type 'Condition' instead.",
+      expression: ["/managingOrganization"],
+      severity: "error",
+    },
+  ]);
+
+  expect(
+    await validator({
+      resourceType: "Patient",
+      managingOrganization: { reference: "Organization/123" },
+    })
+  ).toEqual([]);
+
+  expect(
+    await validator({
+      resourceType: "Patient",
+      managingOrganization: {
+        reference: "Organization/123",
+        type: "Organization",
+      },
+    })
+  ).toEqual([]);
+
+  expect(
+    await validator({
+      resourceType: "Patient",
+      managingOrganization: {
+        reference: "Organization/123",
+        type: "Condition",
+      },
+    })
+  ).toEqual([
+    {
+      code: "structure",
+      diagnostics:
+        "Expected reference to be constrained by one of the following profiles 'http://hl7.org/fhir/StructureDefinition/Organization' at path '/managingOrganization' found reference of type 'Condition' instead.",
+      expression: ["/managingOrganization"],
+      severity: "error",
+    },
+  ]);
+});
+
 test("validate regexes", async () => {
   const validator = createValidator(CTX, "Account");
   const account: Account = {
@@ -518,7 +571,7 @@ test("Misaligned types", async () => {
   ]);
 });
 
-test("Type checking", async () => {
+test("string checking", async () => {
   const stringValidator = createValidator(CTX, "string");
   expect(await stringValidator("bob")).toEqual([]);
   expect(await stringValidator({})).toEqual([
@@ -529,7 +582,9 @@ test("Type checking", async () => {
       severity: "error",
     },
   ]);
+});
 
+test("Type checking", async () => {
   const patientValidator = createValidator(CTX, "Patient");
   expect(await patientValidator("test")).toEqual([
     {
