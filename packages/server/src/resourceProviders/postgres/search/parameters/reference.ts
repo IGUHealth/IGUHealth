@@ -141,7 +141,6 @@ function chainSQL(
       // Previous result should include the list of ids for next reference_id.
       // Starting at the value this would be r_id
       return `(select r_id from ${query} as ${queryAlias} where ${queryAlias}.reference_id in ${previousResult})`;
-      //return `(select * from ${previousResult} as p where p.reference_id in (select r_id from ${query} as chain${index}))`;
     });
 
   return {
