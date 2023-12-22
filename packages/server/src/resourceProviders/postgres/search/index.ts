@@ -581,6 +581,7 @@ export async function executeSearchQuery(
   const resourceTypes = deriveResourceTypeFilter(request);
   // Remove _type as using on derived resourceTypeFilter
   request.parameters = request.parameters.filter((p) => p.name !== "_type");
+
   const parameters = await parametersWithMetaAssociated(
     resourceTypes,
     request.parameters,
@@ -589,7 +590,6 @@ export async function executeSearchQuery(
         await findSearchParameter(ctx, resourceTypes, name)
       ).resources
   );
-  // Standard parameters
 
   const resourceParameters = await ensureLatest(
     ctx,
