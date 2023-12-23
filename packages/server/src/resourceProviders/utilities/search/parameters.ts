@@ -6,11 +6,18 @@ import { ParsedParameter } from "@iguhealth/client/url";
 
 import { FHIRServerCTX } from "../../../ctx/types.js";
 import { param_types_supported } from "../../postgres/constants.js";
-import {
-  SearchParameterResource,
-  SearchParameterResult,
-  ParameterType,
-} from "../../types.js";
+
+export type SearchParameterResource = ParsedParameter<string | number> & {
+  type: "resource";
+  searchParameter: SearchParameter;
+  chainedParameters?: SearchParameter[][];
+};
+
+export type SearchParameterResult = ParsedParameter<string | number> & {
+  type: "result";
+};
+
+export type ParameterType = SearchParameterResource | SearchParameterResult;
 
 export function deriveLimit(
   range: [number, number],

@@ -1,8 +1,9 @@
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+
 import { FHIRServerCTX } from "../../../../ctx/types.js";
 import { and, or } from "../../../utilities/sql.js";
-import { SearchParameterResource } from "../../../types.js";
+import { SearchParameterResource } from "../../../utilities/search/parameters.js";
 import { FilterSQLResult } from "./types.js";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 export default function quantityClauses(
   _ctx: FHIRServerCTX,

@@ -1,8 +1,10 @@
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../../ctx/types.js";
-import { searchParameterToTableName } from "../../../utilities/search/parameters.js";
-import { SearchParameterResource } from "../../../types.js";
+import {
+  SearchParameterResource,
+  searchParameterToTableName,
+} from "../../../utilities/search/parameters.js";
 import dateClauses from "./date.js";
 import numberClauses from "./number.js";
 import quantityClauses from "./quantity.js";

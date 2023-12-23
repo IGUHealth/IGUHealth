@@ -12,9 +12,9 @@ import {
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import {
-  parametersWithMetaAssociated,
   SearchParameterResource,
   SearchParameterResult,
+  parametersWithMetaAssociated,
   deriveResourceTypeFilter,
 } from "../utilities/search/parameters.js";
 import { InternalData } from "./types.js";
