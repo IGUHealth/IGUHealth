@@ -4,8 +4,8 @@ import { FHIRServerCTX } from "../../../../ctx/types.js";
 import { searchParameterToTableName } from "../../../utilities/search/parameters.js";
 import { SearchParameterResource } from "../types.js";
 import { FilterSQLResult } from "./types.js";
-import { buildParameterSQL } from "../index.js";
-import { combineSqlStatements } from "../../../utilities/sql.js";
+import { buildParameterSQL } from "./index.js";
+import { or } from "../../../utilities/sql.js";
 
 /*
  ** This function allows resolution based on canonical references.
@@ -162,11 +162,7 @@ function sqlParameterValue(
     sql.values
   );
 
-  const referenceSQL = combineSqlStatements(
-    "OR",
-    sql.query,
-    `reference_id in ${canonicalSQL.query}`
-  );
+  const referenceSQL = or(sql.query, `reference_id in ${canonicalSQL.query}`);
 
   const referenceValue = parameterValue.toString();
   const parts = referenceValue.split("/");
@@ -193,7 +189,7 @@ function sqlParameterValue(
   }
 }
 
-export default function referenceParameter(
+export default function referenceClauses(
   ctx: FHIRServerCTX,
   parameter: SearchParameterResource,
   values: unknown[]
