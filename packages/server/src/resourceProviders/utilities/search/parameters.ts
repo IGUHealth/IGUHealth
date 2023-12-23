@@ -2,22 +2,15 @@ import { ResourceType, SearchParameter } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { FHIRRequest } from "@iguhealth/client/types";
+import { ParsedParameter } from "@iguhealth/client/url";
 
 import { FHIRServerCTX } from "../../../ctx/types.js";
 import { param_types_supported } from "../../postgres/constants.js";
-import { ParsedParameter } from "@iguhealth/client/url";
-
-export type SearchParameterResource = ParsedParameter<string | number> & {
-  type: "resource";
-  searchParameter: SearchParameter;
-  chainedParameters?: SearchParameter[][];
-};
-
-export type SearchParameterResult = ParsedParameter<string | number> & {
-  type: "result";
-};
-
-export type ParameterType = SearchParameterResource | SearchParameterResult;
+import {
+  SearchParameterResource,
+  SearchParameterResult,
+  ParameterType,
+} from "../../types.js";
 
 export function deriveLimit(
   range: [number, number],

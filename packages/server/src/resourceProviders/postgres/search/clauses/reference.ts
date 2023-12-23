@@ -2,7 +2,7 @@ import { SearchParameter } from "@iguhealth/fhir-types/r4/types";
 
 import { FHIRServerCTX } from "../../../../ctx/types.js";
 import { searchParameterToTableName } from "../../../utilities/search/parameters.js";
-import { SearchParameterResource } from "../types.js";
+import { SearchParameterResource } from "../../../types.js";
 import { FilterSQLResult } from "./types.js";
 import { buildParameterSQL } from "./index.js";
 import { or } from "../../../utilities/sql.js";

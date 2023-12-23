@@ -7,7 +7,7 @@ import {
   searchParameterToTableName,
 } from "../../utilities/search/parameters.js";
 import { param_types_supported } from "../constants.js";
-import type { SearchParameterResult } from "./types.js";
+import type { SearchParameterResult } from "../../types.js";
 
 type SORT_DIRECTION = "ascending" | "descending";
 

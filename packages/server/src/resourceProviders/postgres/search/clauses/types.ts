@@ -1,5 +1,5 @@
 import { FHIRServerCTX } from "../../../../ctx/types.js";
-import { SearchParameterResource } from "../types.js";
+import { SearchParameterResource } from "../../../types.js";
 
 export type FilterSQLResult = {
   query: string;

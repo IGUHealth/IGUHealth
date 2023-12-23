@@ -1,6 +1,6 @@
 import { FHIRServerCTX } from "../../../../ctx/types.js";
 import { and, or } from "../../../utilities/sql.js";
-import { SearchParameterResource } from "../types.js";
+import { SearchParameterResource } from "../../../types.js";
 import { FilterSQLResult } from "./types.js";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
