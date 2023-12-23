@@ -21,11 +21,7 @@ import {
 } from "../../utilities/search/parameters.js";
 
 import { deriveSortQuery } from "./sort.js";
-import referenceParameter from "./parameters/reference.js";
-import numberParameter from "./parameters/number.js";
-import stringParameter from "./parameters/string.js";
-import uriParameter from "./parameters/uri.js";
-import dateParameter from "./parameters/date.js";
+import { PARAMETER_FILTERS } from "./parameters/index.js";
 
 export function buildParameterSQL(
   ctx: FHIRServerCTX,
@@ -41,151 +37,31 @@ export function buildParameterSQL(
     ", "
   )} FROM ${search_table} WHERE parameter_url = $${index++} `;
   values = [...values, searchParameter.url];
-  let parameterClause: string;
 
   switch (searchParameter.type) {
-    case "token": {
-      switch (parameter.modifier) {
-        case "missing":
-          parameterClause = parameter.value
-            .map((value) => {
-              if (value !== "true" && value !== "false") {
-                throw new OperationError(
-                  outcomeError(
-                    "invalid",
-                    `Invalid value for modifier 'missing' must be 'true' or 'false'`
-                  )
-                );
-              }
-              if (value === "true") {
-                throw new OperationError(
-                  outcomeError(
-                    "not-supported",
-                    "For modifier 'missing' value of 'true' is not yet supported"
-                  )
-                );
-              }
-              // Currently only supporting false for now. (which means value must exist)
-              return `value IS NOT NULL`;
-            })
-            .join(" OR ");
-          break;
-        default:
-          parameterClause = parameter.value
-            .map((value) => {
-              const parts = value.toString().split("|");
-              if (parts.length === 1) {
-                values = [...values, value];
-                return `value = $${index++}`;
-              }
-              if (parts.length === 2) {
-                if (parts[0] !== "" && parts[1] !== "") {
-                  values = [...values, parts[0], parts[1]];
-                  return `system = $${index++} AND value = $${index++}`;
-                } else if (parts[0] !== "" && parts[1] === "") {
-                  values = [...values, parts[0]];
-                  return `system = $${index++}`;
-                } else if (parts[0] === "" && parts[1] !== "") {
-                  values = [...values, parts[1]];
-                  return `value = $${index++}`;
-                }
-              }
-              throw new Error(`Invalid token value found '${value}'`);
-            })
-            .join(" OR ");
-          break;
-      }
-      break;
-    }
+    case "number":
+    case "string":
+    case "uri":
+    case "date":
+    case "token":
+    case "reference":
     case "quantity": {
-      parameterClause = parameter.value
-        .map((value) => {
-          const parts = value.toString().split("|");
-          if (parts.length === 4) {
-            throw new OperationError(
-              outcomeError(
-                "not-supported",
-                `prefix not supported yet for parameter '${searchParameter.name}' and value '${value}'`
-              )
-            );
-          }
-          if (parts.length === 3) {
-            const [value, system, code] = parts;
-            let clauses: string[] = [];
-            if (value !== "") {
-              values = [...values, value, value];
-              clauses = [
-                ...clauses,
-                `start_value <= $${index++}`,
-                `end_value >= $${index++}`,
-              ];
-            }
-            if (system !== "") {
-              values = [...values, system, system];
-              clauses = [
-                ...clauses,
-                `start_system = $${index++}`,
-                `end_system = $${index++}`,
-              ];
-            }
-            if (code != "") {
-              values = [...values, code, code];
-              clauses = [
-                ...clauses,
-                `start_code = $${index++}`,
-                `end_code = $${index++}`,
-              ];
-            }
-            return clauses.join(" AND ");
-          } else {
-            throw new OperationError(
-              outcomeError(
-                "invalid",
-                "Quantity search parameters must be specified as value|system|code"
-              )
-            );
-          }
-        })
-        .join("OR");
-      break;
-    }
-    case "date": {
-      const result = dateParameter(ctx, parameter, values);
-      parameterClause = result.query;
-      values = result.values;
+      const result = PARAMETER_FILTERS[searchParameter.type](
+        ctx,
+        parameter,
+        values
+      );
       index = result.values.length + 1;
-      break;
-    }
-    case "uri": {
-      const result = uriParameter(ctx, parameter, values);
-      parameterClause = result.query;
-      values = result.values;
-      index = result.values.length + 1;
-      break;
-    }
+      const query = `(${rootSelect} AND workspace=$${index++} ${
+        result.query ? `AND ${result.query}` : ""
+      })`;
 
-    case "string": {
-      const result = stringParameter(ctx, parameter, values);
-      parameterClause = result.query;
-      values = result.values;
-      index = result.values.length + 1;
-      break;
-    }
-    case "number": {
-      const result = numberParameter(ctx, parameter, values);
-      parameterClause = result.query;
-      values = result.values;
-      index = result.values.length + 1;
-      break;
-    }
-    case "reference": {
-      // SUPPORT FOR PARAMETER CHAINS
-      // Example: Observation?patient.general-practitioner.name=Adam
-      const result = referenceParameter(ctx, parameter, values);
-      parameterClause = result.query;
-      values = result.values;
-      index = result.values.length + 1;
-      break;
+      values = [...result.values, ctx.workspace];
+      return {
+        index,
+        values,
+        query,
+      };
     }
     default:
       throw new OperationError(
@@ -195,17 +71,6 @@ export function buildParameterSQL(
         )
       );
   }
-
-  const query = `(${rootSelect} AND workspace=$${index++} ${
-    parameterClause ? `AND ${parameterClause}` : ""
-  })`;
-
-  values = [...values, ctx.workspace];
-  return {
-    index,
-    values,
-    query,
-  };
 }
 
 function buildParametersSQL(
