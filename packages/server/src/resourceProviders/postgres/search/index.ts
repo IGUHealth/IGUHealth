@@ -52,9 +52,7 @@ export function buildParameterSQL(
         values
       );
       index = result.values.length + 1;
-      const query = `(${rootSelect} AND workspace=$${index++} ${
-        result.query ? `AND ${result.query}` : ""
-      })`;
+      const query = `(${rootSelect} AND workspace=$${index++} AND ${result.query})`;
 
       values = [...result.values, ctx.workspace];
       return {
