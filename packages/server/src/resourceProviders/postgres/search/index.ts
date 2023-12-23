@@ -1,5 +1,4 @@
 import pg from "pg";
-import dayjs from "dayjs";
 
 import {
   SystemSearchRequest,

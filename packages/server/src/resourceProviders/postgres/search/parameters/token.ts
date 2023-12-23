@@ -1,5 +1,3 @@
-import dayjs from "dayjs";
-
 import { FHIRServerCTX } from "../../../../ctx/types.js";
 import { or } from "../../../utilities/sql.js";
 import { SearchParameterResource } from "../types.js";
