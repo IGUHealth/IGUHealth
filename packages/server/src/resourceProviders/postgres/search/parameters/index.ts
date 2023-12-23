@@ -10,6 +10,7 @@ import referenceClauses from "./reference.js";
 import stringClauses from "./string.js";
 import tokenClauses from "./token.js";
 import uriClauses from "./uri.js";
+import { and } from "../../../utilities/sql.js";
 
 const PARAMETER_CLAUSES = {
   token: tokenClauses,
@@ -50,9 +51,11 @@ export function buildParameterSQL(
         values
       );
       index = result.values.length + 1;
-      const query = `(${rootSelect} AND workspace=$${index++} AND ${
+      const query = `(${and(
+        rootSelect,
+        `workspace=$${index++}`,
         result.query
-      })`;
+      )})`;
 
       values = [...result.values, ctx.workspace];
       return {
