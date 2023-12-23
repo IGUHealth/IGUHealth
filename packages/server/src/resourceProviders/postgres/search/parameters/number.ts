@@ -6,7 +6,7 @@ import { getDecimalPrecision } from "../../../utilities/search/parameters.js";
 import { SearchParameterResource } from "../types.js";
 import { FilterSQLResult } from "./types.js";
 
-export default function numberParameter(
+export default function numberClauses(
   _ctx: FHIRServerCTX,
   parameter: SearchParameterResource,
   values: unknown[]

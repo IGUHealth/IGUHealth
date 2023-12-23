@@ -3,22 +3,22 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { FHIRServerCTX } from "../../../../ctx/types.js";
 import { searchParameterToTableName } from "../../../utilities/search/parameters.js";
 import { SearchParameterResource } from "../types.js";
-import dateParameter from "./date.js";
-import numberParameter from "./number.js";
-import quantityParameter from "./quantity.js";
-import referenceParameter from "./reference.js";
-import stringParameter from "./string.js";
-import tokenParameter from "./token.js";
-import uriParameter from "./uri.js";
+import dateClauses from "./date.js";
+import numberClauses from "./number.js";
+import quantityClauses from "./quantity.js";
+import referenceClauses from "./reference.js";
+import stringClauses from "./string.js";
+import tokenClauses from "./token.js";
+import uriClauses from "./uri.js";
 
-const PARAMETER_FILTERS = {
-  token: tokenParameter,
-  date: dateParameter,
-  uri: uriParameter,
-  string: stringParameter,
-  number: numberParameter,
-  quantity: quantityParameter,
-  reference: referenceParameter,
+const PARAMETER_CLAUSES = {
+  token: tokenClauses,
+  date: dateClauses,
+  uri: uriClauses,
+  string: stringClauses,
+  number: numberClauses,
+  quantity: quantityClauses,
+  reference: referenceClauses,
 };
 
 export function buildParameterSQL(
@@ -44,7 +44,7 @@ export function buildParameterSQL(
     case "token":
     case "reference":
     case "quantity": {
-      const result = PARAMETER_FILTERS[searchParameter.type](
+      const result = PARAMETER_CLAUSES[searchParameter.type](
         ctx,
         parameter,
         values

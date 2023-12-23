@@ -39,7 +39,7 @@ function missingModifier(
   );
 }
 
-export default function tokenParameter(
+export default function tokenClauses(
   ctx: FHIRServerCTX,
   parameter: SearchParameterResource,
   values: unknown[]

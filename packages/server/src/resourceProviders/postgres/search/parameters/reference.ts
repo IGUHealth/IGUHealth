@@ -189,7 +189,7 @@ function sqlParameterValue(
   }
 }
 
-export default function referenceParameter(
+export default function referenceClauses(
   ctx: FHIRServerCTX,
   parameter: SearchParameterResource,
   values: unknown[]

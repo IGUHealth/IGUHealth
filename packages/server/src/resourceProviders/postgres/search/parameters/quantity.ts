@@ -6,7 +6,7 @@ import { SearchParameterResource } from "../types.js";
 import { FilterSQLResult } from "./types.js";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-export default function quantityParameter(
+export default function quantityClauses(
   _ctx: FHIRServerCTX,
   parameter: SearchParameterResource,
   values: unknown[]

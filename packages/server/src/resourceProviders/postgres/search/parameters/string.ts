@@ -3,7 +3,7 @@ import { or } from "../../../utilities/sql.js";
 import { SearchParameterResource } from "../types.js";
 import { FilterSQLResult } from "./types.js";
 
-export default function stringParameter(
+export default function stringClauses(
   _ctx: FHIRServerCTX,
   parameter: SearchParameterResource,
   values: unknown[]
