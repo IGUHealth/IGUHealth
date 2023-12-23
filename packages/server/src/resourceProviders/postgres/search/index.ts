@@ -8,18 +8,17 @@ import { Resource, ResourceType } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../ctx/types.js";
-
 import {
-  findSearchParameter,
   SearchParameterResource,
   SearchParameterResult,
+  findSearchParameter,
   parametersWithMetaAssociated,
   deriveResourceTypeFilter,
   deriveLimit,
 } from "../../utilities/search/parameters.js";
 
 import { deriveSortQuery } from "./sort.js";
-import { buildParameterSQL } from "./parameters/index.js";
+import { buildParameterSQL } from "./clauses/index.js";
 
 function buildParametersSQL(
   ctx: FHIRServerCTX,

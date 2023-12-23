@@ -1,6 +1,6 @@
 import { FHIRServerCTX } from "../../../../ctx/types.js";
 import { or } from "../../../utilities/sql.js";
-import { SearchParameterResource } from "../types.js";
+import { SearchParameterResource } from "../../../utilities/search/parameters.js";
 import { FilterSQLResult } from "./types.js";
 
 export default function stringClauses(

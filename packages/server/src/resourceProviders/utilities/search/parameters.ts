@@ -2,10 +2,10 @@ import { ResourceType, SearchParameter } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { FHIRRequest } from "@iguhealth/client/types";
+import { ParsedParameter } from "@iguhealth/client/url";
 
 import { FHIRServerCTX } from "../../../ctx/types.js";
 import { param_types_supported } from "../../postgres/constants.js";
-import { ParsedParameter } from "@iguhealth/client/url";
 
 export type SearchParameterResource = ParsedParameter<string | number> & {
   type: "resource";

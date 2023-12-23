@@ -5,9 +5,9 @@ import { FHIRServerCTX } from "../../../ctx/types.js";
 import {
   searchResources,
   searchParameterToTableName,
+  SearchParameterResult,
 } from "../../utilities/search/parameters.js";
 import { param_types_supported } from "../constants.js";
-import type { SearchParameterResult } from "./types.js";
 
 type SORT_DIRECTION = "ascending" | "descending";
 

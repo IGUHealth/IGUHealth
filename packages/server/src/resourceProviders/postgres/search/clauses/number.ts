@@ -2,8 +2,10 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../../ctx/types.js";
 import { or } from "../../../utilities/sql.js";
-import { getDecimalPrecision } from "../../../utilities/search/parameters.js";
-import { SearchParameterResource } from "../types.js";
+import {
+  SearchParameterResource,
+  getDecimalPrecision,
+} from "../../../utilities/search/parameters.js";
 import { FilterSQLResult } from "./types.js";
 
 export default function numberClauses(
