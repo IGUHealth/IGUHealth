@@ -1,13 +1,13 @@
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../../ctx/types.js";
-import { combineSqlStatements } from "../../../utilities/sql.js";
+import { or } from "../../../utilities/sql.js";
 import { getDecimalPrecision } from "../../../utilities/search/parameters.js";
 import { SearchParameterResource } from "../types.js";
 import { FilterSQLResult } from "./types.js";
 
 export default function numberParameter(
-  ctx: FHIRServerCTX,
+  _ctx: FHIRServerCTX,
   parameter: SearchParameterResource,
   values: unknown[]
 ): FilterSQLResult {
@@ -54,8 +54,7 @@ export default function numberParameter(
         case undefined: {
           let index = sql.values.length + 1;
           return {
-            query: combineSqlStatements(
-              "OR",
+            query: or(
               sql.query,
               `(value - 0.5 * 10 ^ $${index++})  <= $${index++} AND (value + 0.5 * 10 ^ $${index++}) >= $${index++}`
             ),
@@ -73,8 +72,7 @@ export default function numberParameter(
         case "ne": {
           let index = sql.values.length + 1;
           return {
-            query: combineSqlStatements(
-              "OR",
+            query: or(
               sql.query,
               `(value - 0.5 * 10 ^ $${index++})  > $${index++} OR (value + 0.5 * 10 ^ $${index++}) < $${index++}`
             ),
@@ -92,8 +90,7 @@ export default function numberParameter(
         case "gt": {
           let index = sql.values.length + 1;
           return {
-            query: combineSqlStatements(
-              "OR",
+            query: or(
               sql.query,
               `(value - 0.5 * 10 ^ $${index++}) > $${index++}`
             ),
@@ -105,8 +102,7 @@ export default function numberParameter(
           // Start at upperbound to exclude the intersection.
           let index = sql.values.length + 1;
           return {
-            query: combineSqlStatements(
-              "OR",
+            query: or(
               sql.query,
               `(value + 0.5 * 10 ^ $${index++}) < $${index++}`
             ),
@@ -119,8 +115,7 @@ export default function numberParameter(
           // Perform search as GT but use >= and start on upperbound.
           let index = sql.values.length + 1;
           return {
-            query: combineSqlStatements(
-              "OR",
+            query: or(
               sql.query,
               `(value + 0.5 * 10 ^ $${index++}) >= $${index++}`
             ),
@@ -131,8 +126,7 @@ export default function numberParameter(
           // Perform search as lt but use <= and start on lowerbound
           let index = sql.values.length + 1;
           return {
-            query: combineSqlStatements(
-              "OR",
+            query: or(
               sql.query,
               `(value - 0.5 * 10 ^ $${index++}) <= $${index++}`
             ),

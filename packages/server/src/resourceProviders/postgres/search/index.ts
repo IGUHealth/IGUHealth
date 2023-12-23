@@ -23,6 +23,9 @@ import {
 import { deriveSortQuery } from "./sort.js";
 import referenceParameter from "./parameters/reference.js";
 import numberParameter from "./parameters/number.js";
+import stringParameter from "./parameters/string.js";
+import uriParameter from "./parameters/uri.js";
+import dateParameter from "./parameters/date.js";
 
 export function buildParameterSQL(
   ctx: FHIRServerCTX,
@@ -147,50 +150,25 @@ export function buildParameterSQL(
       break;
     }
     case "date": {
-      parameterClause = parameter.value
-        .map((value) => {
-          const formattedDate = dayjs(
-            value,
-            "YYYY-MM-DDThh:mm:ss+zz:zz"
-          ).toISOString();
-          values = [...values, formattedDate, formattedDate];
-          // Check the range for date
-          return `start_date <= $${index++} AND end_date >= $${index++}`;
-        })
-        .join("OR");
+      const result = dateParameter(ctx, parameter, values);
+      parameterClause = result.query;
+      values = result.values;
+      index = result.values.length + 1;
       break;
     }
     case "uri": {
-      parameterClause = parameter.value
-        .map((value) => {
-          values = [...values, value];
-          return `value = $${index++}`;
-        })
-        .join("OR");
+      const result = uriParameter(ctx, parameter, values);
+      parameterClause = result.query;
+      values = result.values;
+      index = result.values.length + 1;
       break;
     }
 
     case "string": {
-      switch (parameter.modifier) {
-        case "exact":
-          parameterClause = parameter.value
-            .map((_value) => `value = $${index++}`)
-            .join(" OR ");
-          values = [...values, ...parameter.value];
-          break;
-        case "contains":
-          parameterClause = parameter.value
-            .map((_value) => `value ilike $${index++}`)
-            .join(" OR ");
-          values = [...values, ...parameter.value.map((v) => `%${v}%`)];
-          break;
-        default:
-          parameterClause = parameter.value
-            .map((_value) => `value ilike $${index++}`)
-            .join(" OR ");
-          values = [...values, ...parameter.value.map((v) => `${v}%`)];
-          break;
-      }
+      const result = stringParameter(ctx, parameter, values);
+      parameterClause = result.query;
+      values = result.values;
+      index = result.values.length + 1;
       break;
     }
     case "number": {
