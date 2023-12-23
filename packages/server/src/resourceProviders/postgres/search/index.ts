@@ -19,7 +19,7 @@ import {
 } from "../../utilities/search/parameters.js";
 
 import { deriveSortQuery } from "./sort.js";
-import { buildParameterSQL } from "./parameters/index.js";
+import { buildParameterSQL } from "./clauses/index.js";
 
 function buildParametersSQL(
   ctx: FHIRServerCTX,
