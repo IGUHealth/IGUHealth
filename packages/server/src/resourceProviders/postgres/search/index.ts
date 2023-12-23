@@ -14,7 +14,6 @@ import {
   findSearchParameter,
   SearchParameterResource,
   SearchParameterResult,
-  getDecimalPrecision,
   searchParameterToTableName,
   parametersWithMetaAssociated,
   deriveResourceTypeFilter,
@@ -23,6 +22,7 @@ import {
 
 import { deriveSortQuery } from "./sort.js";
 import referenceParameter from "./parameters/reference.js";
+import numberParameter from "./parameters/number.js";
 
 export function buildParameterSQL(
   ctx: FHIRServerCTX,
@@ -169,103 +169,7 @@ export function buildParameterSQL(
         .join("OR");
       break;
     }
-    case "number":
-      parameterClause = parameter.value
-        .map((value) => {
-          const result = value
-            .toString()
-            .match(
-              /^(?<prefix>eq|ne|gt|lt|ge|le|sa|eb|ap)?(?<value>(-)?[0-9]+(.[0-9]*)?)$/
-            );
 
-          if (!result) {
-            throw new OperationError(
-              outcomeError(
-                "invalid",
-                `Invalid input value '${parameter.value}' for parameter '${searchParameter.name}'`
-              )
-            );
-          }
-          const numericPortion = result?.groups?.value;
-          const prefix = result?.groups?.prefix;
-
-          if (!numericPortion) {
-            throw new OperationError(
-              outcomeError(
-                "invalid",
-                `A Number must be provided for parameter '${searchParameter.name}'`
-              )
-            );
-          }
-
-          const numberValue = parseFloat(numericPortion);
-          if (isNaN(numberValue)) {
-            throw new OperationError(
-              outcomeError(
-                "invalid",
-                `Invalid number value '${parameter.value}' for parameter '${searchParameter.name}'`
-              )
-            );
-          }
-
-          const decimalPrecision = getDecimalPrecision(numberValue);
-          switch (prefix) {
-            // the range of the search value fully contains the range of the target value
-            case "eq":
-            case undefined:
-              values = [
-                ...values,
-                -decimalPrecision,
-                numberValue,
-                -decimalPrecision,
-                numberValue,
-              ];
-              return `(value - 0.5 * 10 ^ $${index++})  <= $${index++} AND (value + 0.5 * 10 ^ $${index++}) >= $${index++}`;
-            // 	the range of the search value does not fully contain the range of the target value
-            case "ne":
-              values = [
-                ...values,
-                -decimalPrecision,
-                numberValue,
-                -decimalPrecision,
-                numberValue,
-              ];
-              return `(value - 0.5 * 10 ^ $${index++})  > $${index++} OR (value + 0.5 * 10 ^ $${index++}) < $${index++}`;
-            // the range above the search value intersects (i.e. overlaps) with the range of the target value
-            case "gt":
-              // Start at lowerbound to exclude the intersection.
-              values = [...values, -decimalPrecision, numberValue];
-              return `(value - 0.5 * 10 ^ $${index++}) > $${index++}`;
-            //	the value for the parameter in the resource is less than the provided value
-            case "lt":
-              // Start at upperbound to exclude the intersection.
-              values = [...values, -decimalPrecision, numberValue];
-              return `(value + 0.5 * 10 ^ $${index++}) < $${index++}`;
-            // the range above the search value intersects (i.e. overlaps) with the range of the target value,
-            // or the range of the search value fully contains the range of the target value
-            case "ge":
-              // Perform search as GT but use >= and start on upperbound.
-              values = [...values, -decimalPrecision, numberValue];
-              return `(value + 0.5 * 10 ^ $${index++}) >= $${index++}`;
-            case "le":
-              // Perform search as lt but use <= and start on lowerbound
-              values = [...values, -decimalPrecision, numberValue];
-              return `(value - 0.5 * 10 ^ $${index++}) <= $${index++}`;
-            case "sa":
-            case "eb":
-            case "ap":
-            default:
-              throw new OperationError(
-                outcomeError(
-                  "not-supported",
-                  `Prefix '${prefix}' not supported for parameter '${searchParameter.name}'`
-                )
-              );
-          }
-        })
-        .join(" OR ");
-
-      break;
     case "string": {
       switch (parameter.modifier) {
         case "exact":
@@ -287,6 +191,13 @@ export function buildParameterSQL(
           values = [...values, ...parameter.value.map((v) => `${v}%`)];
           break;
       }
+      break;
+    }
+    case "number": {
+      const result = numberParameter(ctx, parameter, values);
+      parameterClause = result.query;
+      values = result.values;
+      index = result.values.length + 1;
       break;
     }
     case "reference": {

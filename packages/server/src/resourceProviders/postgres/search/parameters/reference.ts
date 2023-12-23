@@ -5,6 +5,7 @@ import { searchParameterToTableName } from "../../../utilities/search/parameters
 import { SearchParameterResource } from "../types.js";
 import { FilterSQLResult } from "./types.js";
 import { buildParameterSQL } from "../index.js";
+import { combineSqlStatements } from "../../../utilities/sql.js";
 
 /*
  ** This function allows resolution based on canonical references.
@@ -161,9 +162,11 @@ function sqlParameterValue(
     sql.values
   );
 
-  const referenceSQL = `${
-    sql.query === "" ? "" : `${sql.query} OR `
-  } reference_id in ${canonicalSQL.query}`;
+  const referenceSQL = combineSqlStatements(
+    "OR",
+    sql.query,
+    `reference_id in ${canonicalSQL.query}`
+  );
 
   const referenceValue = parameterValue.toString();
   const parts = referenceValue.split("/");
