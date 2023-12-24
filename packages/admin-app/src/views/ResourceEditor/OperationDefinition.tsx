@@ -15,6 +15,7 @@ import {
   ResourceType,
   AuditEvent,
   Extension,
+  id,
 } from "@iguhealth/fhir-types/r4/types";
 import {
   Tabs,
@@ -267,7 +268,7 @@ function EnvironmentVariables({
   operation: OperationDefinition;
   onChange: OperationEditorProps["onChange"];
 }) {
-  const pointer = fpt.pointer("OperationDefinition", operation.id as string);
+  const pointer = fpt.pointer("OperationDefinition", operation.id as id);
   const operationExtensions = fpt.descend(pointer, "extension");
   const environmentExtensions = operation.extension
     ?.map((e, i): [Extension, number] => [e, i])
@@ -326,7 +327,7 @@ function EnvironmentVariables({
                         path: valuePointer,
                         value: {
                           ...ext.extension?.[0],
-                          url: "https://iguhealth.app/Extension/OperationDefinition/environment-variable-value",
+                          url: "https://iguhealth.app/Extension/OperationDefinition/environment-variable-value" as id,
                           valueString: e.target.value,
                         },
                       })
@@ -347,7 +348,7 @@ function EnvironmentVariables({
                           value: {
                             extension: [
                               {
-                                url: "https://iguhealth.app/Extension/encrypt-value",
+                                url: "https://iguhealth.app/Extension/encrypt-value" as id,
                                 valueString: "",
                               },
                             ],
@@ -399,11 +400,11 @@ function EnvironmentVariables({
                     value: {
                       extension: [
                         {
-                          url: "https://iguhealth.app/Extension/OperationDefinition/environment-variable-value",
+                          url: "https://iguhealth.app/Extension/OperationDefinition/environment-variable-value" as id,
                           valueString: "",
                         },
                       ],
-                      url: "https://iguhealth.app/Extension/OperationDefinition/environment-variable",
+                      url: "https://iguhealth.app/Extension/OperationDefinition/environment-variable" as id,
                       valueString: "",
                     },
                   })
@@ -441,7 +442,7 @@ export default function OperationDefinitionView({
       : "";
   return (
     <ResourceEditorComponent
-      id={id as string}
+      id={id as id}
       actions={actions}
       structureDefinition={structureDefinition}
       resourceType={resourceType as ResourceType}
