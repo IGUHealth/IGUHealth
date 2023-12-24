@@ -18,7 +18,6 @@ import {
   code,
   dateTime,
   canonical,
-  uri,
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -92,24 +91,24 @@ async function createResourceRestCapabilities(
 
   return {
     type: sd.type as unknown as code,
-    profile: sd.url as canonical,
+    profile: sd.url,
     interaction: [
-      { code: "read" as code },
-      { code: "update" as code },
-      { code: "delete" as code },
-      { code: "search-type" as code },
-      { code: "create" as code },
-      { code: "history-instance" as code },
+      { code: "read" },
+      { code: "update" },
+      { code: "delete" },
+      { code: "search-type" },
+      { code: "create" },
+      { code: "history-instance" },
     ],
-    versioning: "versioned" as code,
+    versioning: "versioned",
     updateCreate: false,
     searchParam: resourceParameters.resources.map((resource) => ({
       name: resource.name,
-      definition: resource.url as canonical,
+      definition: resource.url,
       type: resource.type,
       documentation: resource.description,
     })),
-  };
+  } as CapabilityStatementRestResource;
 }
 
 async function serverCapabilities(
@@ -132,21 +131,21 @@ async function serverCapabilities(
 
   return {
     resourceType: "CapabilityStatement",
-    status: "active" as code,
-    fhirVersion: "4.0.1" as code,
-    date: new Date().toISOString() as dateTime,
-    kind: "capability" as code,
-    format: ["json" as code],
+    status: "active",
+    fhirVersion: "4.0.1",
+    date: new Date().toISOString(),
+    kind: "capability",
+    format: ["json"],
     rest: [
       {
-        mode: "server" as code,
+        mode: "server",
         security: {
           cors: true,
         },
-        interaction: [{ code: "search-system" as code }],
+        interaction: [{ code: "search-system" }],
         searchParam: rootParameters.resources.map((resource) => ({
           name: resource.name,
-          definition: resource.url as canonical,
+          definition: resource.url,
           type: resource.type,
           documentation: resource.description,
         })),
@@ -155,7 +154,7 @@ async function serverCapabilities(
         ),
       },
     ],
-  };
+  } as CapabilityStatement;
 }
 
 export const logger = createLogger.default();
