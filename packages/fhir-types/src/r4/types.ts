@@ -1,25 +1,25 @@
-export type base64Binary = string & { _branding: "fhir_base64Binary"; } ;
+export type base64Binary = string & { _base64Binary: "fhir_base64Binary"; } ;
 // @ts-ignore
 export type boolean = boolean;
-export type canonical = string & { _branding: "fhir_canonical"; } ;
-export type code = string & { _branding: "fhir_code"; } ;
-export type date = string & { _branding: "fhir_date"; } ;
-export type dateTime = string & { _branding: "fhir_dateTime"; } ;
-export type decimal = number & { _branding: "fhir_decimal"; } ;
-export type id = string & { _branding: "fhir_id"; } ;
-export type instant = string & { _branding: "fhir_instant"; } ;
-export type integer = number & { _branding: "fhir_integer"; } ;
-export type markdown = string & { _branding: "fhir_markdown"; } ;
-export type oid = string & { _branding: "fhir_oid"; } ;
-export type positiveInt = number & { _branding: "fhir_positiveInt"; } ;
+export type canonical = string & { _canonical: "fhir_canonical"; }  & uri;
+export type code = string & { _code: "fhir_code"; }  & string;
+export type date = string & { _date: "fhir_date"; } ;
+export type dateTime = string & { _dateTime: "fhir_dateTime"; } ;
+export type decimal = number & { _decimal: "fhir_decimal"; } ;
+export type id = string & { _id: "fhir_id"; }  & string;
+export type instant = string & { _instant: "fhir_instant"; } ;
+export type integer = number & { _integer: "fhir_integer"; } ;
+export type markdown = string & { _markdown: "fhir_markdown"; }  & string;
+export type oid = string & { _oid: "fhir_oid"; }  & uri;
+export type positiveInt = number & { _positiveInt: "fhir_positiveInt"; }  & integer;
 // @ts-ignore
 export type string = string;
-export type time = string & { _branding: "fhir_time"; } ;
-export type unsignedInt = number & { _branding: "fhir_unsignedInt"; } ;
-export type uri = string & { _branding: "fhir_uri"; } ;
-export type url = string & { _branding: "fhir_url"; } ;
-export type uuid = string & { _branding: "fhir_uuid"; } ;
-export type xhtml = string & { _branding: "fhir_xhtml"; } ;
+export type time = string & { _time: "fhir_time"; } ;
+export type unsignedInt = number & { _unsignedInt: "fhir_unsignedInt"; }  & integer;
+export type uri = string & { _uri: "fhir_uri"; } ;
+export type url = string & { _url: "fhir_url"; }  & uri;
+export type uuid = string & { _uuid: "fhir_uuid"; }  & uri;
+export type xhtml = string & { _xhtml: "fhir_xhtml"; } ;
 
 export interface Element {
   /** 

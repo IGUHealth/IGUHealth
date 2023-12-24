@@ -1,6 +1,7 @@
 import {
   ElementDefinition,
   StructureDefinition,
+  unsignedInt,
 } from "@iguhealth/fhir-types/r4/types";
 import { traversalBottomUp } from "./sdTraversal.js";
 
@@ -88,6 +89,7 @@ function primitiveToTypescriptType(
   const primitiveValueType = primitiveSd.snapshot?.element.filter((element) =>
     element.path.endsWith(".value")
   )[0]?.type?.[0]?.code;
+  // http://hl7.org/fhir/StructureDefinition/uri
   // Skip over these primitive types as already exist in typescript
   if (primitiveValueType) {
     let primitiveType = `export type ${
@@ -99,8 +101,19 @@ function primitiveToTypescriptType(
     if (primitiveSd.id === "boolean" || primitiveSd.id === "string") {
       return `// @ts-ignore\n${primitiveType};`;
     } else {
+      let extension = "";
+      if (
+        primitiveSd.baseDefinition &&
+        primitiveSd.baseDefinition !==
+          "http://hl7.org/fhir/StructureDefinition/Element"
+      ) {
+        extension = ` & ${primitiveSd.baseDefinition.replace(
+          "http://hl7.org/fhir/StructureDefinition/",
+          ""
+        )}`;
+      }
       // For primitives that aren't string or boolean, add branding to have more type constraints.
-      return `${primitiveType} & { _branding: "fhir_${primitiveSd.id}"; } ;`;
+      return `${primitiveType} & { _${primitiveSd.id}: "fhir_${primitiveSd.id}"; } ${extension};`;
     }
   } else {
     throw new Error("No type found for primitive");
@@ -201,7 +214,7 @@ function contentReference(sd: StructureDefinition, element: ElementDefinition) {
 
 function getPrimitiveExtension(element: ElementDefinition, type: string) {
   return `${documentation(element)}  _${getElementField(
-    { ...element, min: 0 },
+    { ...element, min: 0 as unsignedInt },
     type
   )}: ${typeToTypescriptType(element, "Element")}`;
 }

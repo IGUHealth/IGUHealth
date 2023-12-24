@@ -276,7 +276,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       type: "history-request",
       level: "instance",
       resourceType: resourceType,
-      id: id,
+      id: id as id,
       parameters: parsedParameters,
     });
     if (response.type !== "history-response")
