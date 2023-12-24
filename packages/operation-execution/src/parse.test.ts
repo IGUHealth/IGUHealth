@@ -1,5 +1,10 @@
 import { expect, test } from "@jest/globals";
 
+import {
+  OperationDefinition,
+  Parameters,
+} from "@iguhealth/fhir-types/r4/types";
+
 import { Operation } from "./index";
 
 test("TEST Parse to object", async () => {
@@ -36,7 +41,7 @@ test("TEST Parse to object", async () => {
       },
     ],
     resourceType: "OperationDefinition",
-  });
+  } as OperationDefinition);
 
   expect(
     op.parseToObject("in", {
@@ -65,7 +70,7 @@ test("TEST Parse to object", async () => {
           },
         },
       ],
-    })
+    } as Parameters)
   ).toEqual({
     payload: [
       {
