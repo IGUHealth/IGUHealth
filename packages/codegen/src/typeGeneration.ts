@@ -92,13 +92,16 @@ function primitiveToTypescriptType(
   if (primitiveValueType) {
     let primitiveType = `export type ${
       primitiveSd.id
-    } = ${fhirSystemTypePredicate(primitiveValueType)};`;
+    } = ${fhirSystemTypePredicate(primitiveValueType)}`;
+
     // Avoid compiler issues by ts-ignoring boolean and string
     // which don't allow type aliasing
     if (primitiveSd.id === "boolean" || primitiveSd.id === "string") {
-      primitiveType = `// @ts-ignore\n${primitiveType}`;
+      return `// @ts-ignore\n${primitiveType};`;
+    } else {
+      // For primitives that aren't string or boolean, add branding to have more type constraints.
+      return `${primitiveType} & { _branding: "fhir_${primitiveSd.id}"; } ;`;
     }
-    return primitiveType;
   } else {
     throw new Error("No type found for primitive");
   }
@@ -126,9 +129,15 @@ function wrapAsCollection(
 }
 
 function _typeToTypescriptType(type: string): string {
-  let systemType = fhirSystemTypePredicate(type);
-  if (systemType !== undefined) {
-    return systemType;
+  // .id fields are often typed as http://hl7.org/fhirpath/System.String
+  // setting them to fhir primitive id instead
+  if (
+    fhirSystemTypePredicate(type) &&
+    type !== "http://hl7.org/fhirpath/System.String"
+  ) {
+    throw new Error("System type not supported '${type}'");
+  } else if (type === "http://hl7.org/fhirpath/System.String") {
+    return "id";
   }
   return type;
 }

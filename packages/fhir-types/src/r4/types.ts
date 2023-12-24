@@ -1,31 +1,31 @@
-export type base64Binary = string;
+export type base64Binary = string & { _branding: "fhir_base64Binary"; } ;
 // @ts-ignore
 export type boolean = boolean;
-export type canonical = string;
-export type code = string;
-export type date = string;
-export type dateTime = string;
-export type decimal = number;
-export type id = string;
-export type instant = string;
-export type integer = number;
-export type markdown = string;
-export type oid = string;
-export type positiveInt = number;
+export type canonical = string & { _branding: "fhir_canonical"; } ;
+export type code = string & { _branding: "fhir_code"; } ;
+export type date = string & { _branding: "fhir_date"; } ;
+export type dateTime = string & { _branding: "fhir_dateTime"; } ;
+export type decimal = number & { _branding: "fhir_decimal"; } ;
+export type id = string & { _branding: "fhir_id"; } ;
+export type instant = string & { _branding: "fhir_instant"; } ;
+export type integer = number & { _branding: "fhir_integer"; } ;
+export type markdown = string & { _branding: "fhir_markdown"; } ;
+export type oid = string & { _branding: "fhir_oid"; } ;
+export type positiveInt = number & { _branding: "fhir_positiveInt"; } ;
 // @ts-ignore
 export type string = string;
-export type time = string;
-export type unsignedInt = number;
-export type uri = string;
-export type url = string;
-export type uuid = string;
-export type xhtml = string;
+export type time = string & { _branding: "fhir_time"; } ;
+export type unsignedInt = number & { _branding: "fhir_unsignedInt"; } ;
+export type uri = string & { _branding: "fhir_uri"; } ;
+export type url = string & { _branding: "fhir_url"; } ;
+export type uuid = string & { _branding: "fhir_uuid"; } ;
+export type xhtml = string & { _branding: "fhir_xhtml"; } ;
 
 export interface Element {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -36,7 +36,7 @@ export interface BackboneElement {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -51,7 +51,7 @@ export interface Address {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -138,7 +138,7 @@ export interface Age {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -189,7 +189,7 @@ export interface Annotation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -228,7 +228,7 @@ export interface Attachment {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -303,7 +303,7 @@ export interface CodeableConcept {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -326,7 +326,7 @@ export interface Coding {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -377,7 +377,7 @@ export interface ContactDetail {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -400,7 +400,7 @@ export interface ContactPoint {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -447,7 +447,7 @@ export interface Contributor {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -478,7 +478,7 @@ export interface Count {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -529,7 +529,7 @@ export interface DataRequirementCodeFilter {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -567,7 +567,7 @@ export interface DataRequirementDateFilter {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -609,7 +609,7 @@ export interface DataRequirementSort {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -635,7 +635,7 @@ export interface DataRequirement {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -698,7 +698,7 @@ export interface Distance {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -749,7 +749,7 @@ export interface DosageDoseAndRate {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -783,7 +783,7 @@ export interface Dosage {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -870,7 +870,7 @@ export interface Duration {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -921,7 +921,7 @@ export interface ElementDefinitionSlicingDiscriminator {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -947,7 +947,7 @@ export interface ElementDefinitionSlicing {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -985,7 +985,7 @@ export interface ElementDefinitionBase {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -1019,7 +1019,7 @@ export interface ElementDefinitionType {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -1069,7 +1069,7 @@ export interface ElementDefinitionExample {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -1363,7 +1363,7 @@ export interface ElementDefinitionConstraint {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -1429,7 +1429,7 @@ export interface ElementDefinitionBinding {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -1463,7 +1463,7 @@ export interface ElementDefinitionMapping {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -1505,7 +1505,7 @@ export interface ElementDefinition {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -2684,7 +2684,7 @@ export interface Expression {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -2735,7 +2735,7 @@ export interface Extension {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -2743,7 +2743,7 @@ export interface Extension {
   /** 
    * identifies the meaning of the extension
    */
-  url: string;
+  url: id;
   /** 
    * Value of extension
    */
@@ -3026,7 +3026,7 @@ export interface HumanName {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -3089,7 +3089,7 @@ export interface Identifier {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -3136,7 +3136,7 @@ export interface MarketingStatus {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -3175,7 +3175,7 @@ export interface Meta {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -3226,7 +3226,7 @@ export interface Money {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -3253,7 +3253,7 @@ export interface Narrative {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -3280,7 +3280,7 @@ export interface ParameterDefinition {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -3347,7 +3347,7 @@ export interface Period {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -3374,7 +3374,7 @@ export interface Population {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -3409,7 +3409,7 @@ export interface ProdCharacteristic {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -3480,7 +3480,7 @@ export interface ProductShelfLife {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -3511,7 +3511,7 @@ export interface Quantity {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -3562,7 +3562,7 @@ export interface Range {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -3581,7 +3581,7 @@ export interface Ratio {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -3600,7 +3600,7 @@ export interface Reference {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -3639,7 +3639,7 @@ export interface RelatedArtifact {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -3702,7 +3702,7 @@ export interface SampledData {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -3765,7 +3765,7 @@ export interface Signature {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -3820,7 +3820,7 @@ export interface SubstanceAmountReferenceRange {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -3838,7 +3838,7 @@ export interface SubstanceAmount {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -3885,7 +3885,7 @@ export interface TimingRepeat {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -4019,7 +4019,7 @@ export interface Timing {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -4050,7 +4050,7 @@ export interface TriggerDefinition {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -4109,7 +4109,7 @@ export interface UsageContext {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -4140,7 +4140,7 @@ export interface Quantity {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -4191,7 +4191,7 @@ export interface Quantity {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -4400,7 +4400,7 @@ export interface AccountCoverage {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -4426,7 +4426,7 @@ export interface AccountGuarantor {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -4457,7 +4457,7 @@ resourceType: "Account"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -4556,7 +4556,7 @@ export interface ActivityDefinitionParticipant {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -4582,7 +4582,7 @@ export interface ActivityDefinitionDynamicValue {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -4609,7 +4609,7 @@ resourceType: "ActivityDefinition"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -4956,7 +4956,7 @@ export interface AdverseEventSuspectEntityCausality {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -4990,7 +4990,7 @@ export interface AdverseEventSuspectEntity {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -5013,7 +5013,7 @@ resourceType: "AdverseEvent"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -5152,7 +5152,7 @@ export interface AllergyIntoleranceReaction {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -5207,7 +5207,7 @@ resourceType: "AllergyIntolerance"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -5358,7 +5358,7 @@ export interface AppointmentParticipant {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -5401,7 +5401,7 @@ resourceType: "Appointment"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -5569,7 +5569,7 @@ resourceType: "AppointmentResponse"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -5660,7 +5660,7 @@ export interface AuditEventAgentNetwork {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -5690,7 +5690,7 @@ export interface AuditEventAgent {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -5764,7 +5764,7 @@ export interface AuditEventSource {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -5794,7 +5794,7 @@ export interface AuditEventEntityDetail {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -5832,7 +5832,7 @@ export interface AuditEventEntity {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -5895,7 +5895,7 @@ resourceType: "AuditEvent"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -5999,7 +5999,7 @@ resourceType: "Basic"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -6067,7 +6067,7 @@ resourceType: "Binary"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -6114,7 +6114,7 @@ export interface BiologicallyDerivedProductCollection {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -6148,7 +6148,7 @@ export interface BiologicallyDerivedProductProcessing {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -6190,7 +6190,7 @@ export interface BiologicallyDerivedProductManipulation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -6224,7 +6224,7 @@ export interface BiologicallyDerivedProductStorage {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -6267,7 +6267,7 @@ resourceType: "BiologicallyDerivedProduct"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -6367,7 +6367,7 @@ resourceType: "BodyStructure"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -6450,7 +6450,7 @@ export interface BundleLink {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -6480,7 +6480,7 @@ export interface BundleEntrySearch {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -6510,7 +6510,7 @@ export interface BundleEntryRequest {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -6572,7 +6572,7 @@ export interface BundleEntryResponse {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -6622,7 +6622,7 @@ export interface BundleEntry {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -6665,7 +6665,7 @@ resourceType: "Bundle"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -6732,7 +6732,7 @@ export interface CapabilityStatementSoftware {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -6770,7 +6770,7 @@ export interface CapabilityStatementImplementation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -6804,7 +6804,7 @@ export interface CapabilityStatementRestSecurity {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -6838,7 +6838,7 @@ export interface CapabilityStatementRestResourceInteraction {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -6868,7 +6868,7 @@ export interface CapabilityStatementRestResourceSearchParam {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -6914,7 +6914,7 @@ export interface CapabilityStatementRestResourceOperation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -6952,7 +6952,7 @@ export interface CapabilityStatementRestResource {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -7090,7 +7090,7 @@ export interface CapabilityStatementRestInteraction {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -7120,7 +7120,7 @@ export interface CapabilityStatementRest {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -7178,7 +7178,7 @@ export interface CapabilityStatementMessagingEndpoint {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -7204,7 +7204,7 @@ export interface CapabilityStatementMessagingSupportedMessage {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -7234,7 +7234,7 @@ export interface CapabilityStatementMessaging {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -7272,7 +7272,7 @@ export interface CapabilityStatementDocument {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -7311,7 +7311,7 @@ resourceType: "CapabilityStatement"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -7530,7 +7530,7 @@ export interface CarePlanActivityDetail {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -7652,7 +7652,7 @@ export interface CarePlanActivity {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -7687,7 +7687,7 @@ resourceType: "CarePlan"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -7850,7 +7850,7 @@ export interface CareTeamParticipant {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -7881,7 +7881,7 @@ resourceType: "CareTeam"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -7984,7 +7984,7 @@ export interface CatalogEntryRelatedEntry {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -8011,7 +8011,7 @@ resourceType: "CatalogEntry"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -8122,7 +8122,7 @@ export interface ChargeItemPerformer {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -8145,7 +8145,7 @@ resourceType: "ChargeItem"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -8332,7 +8332,7 @@ export interface ChargeItemDefinitionApplicability {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -8370,7 +8370,7 @@ export interface ChargeItemDefinitionPropertyGroupPriceComponent {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -8408,7 +8408,7 @@ export interface ChargeItemDefinitionPropertyGroup {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -8431,7 +8431,7 @@ resourceType: "ChargeItemDefinition"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -8622,7 +8622,7 @@ export interface ClaimRelated {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -8648,7 +8648,7 @@ export interface ClaimPayee {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -8670,7 +8670,7 @@ export interface ClaimCareTeam {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -8712,7 +8712,7 @@ export interface ClaimSupportingInfo {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -8786,7 +8786,7 @@ export interface ClaimDiagnosis {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -8828,7 +8828,7 @@ export interface ClaimProcedure {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -8874,7 +8874,7 @@ export interface ClaimInsurance {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -8932,7 +8932,7 @@ export interface ClaimAccident {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -8966,7 +8966,7 @@ export interface ClaimItemDetailSubDetail {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -9032,7 +9032,7 @@ export interface ClaimItemDetail {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -9102,7 +9102,7 @@ export interface ClaimItem {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -9241,7 +9241,7 @@ resourceType: "Claim"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -9404,7 +9404,7 @@ export interface ClaimResponseItemAdjudication {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -9438,7 +9438,7 @@ export interface ClaimResponseItemDetailSubDetail {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -9472,7 +9472,7 @@ export interface ClaimResponseItemDetail {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -9510,7 +9510,7 @@ export interface ClaimResponseItem {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -9548,7 +9548,7 @@ export interface ClaimResponseAddItemDetailSubDetail {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -9602,7 +9602,7 @@ export interface ClaimResponseAddItemDetail {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -9660,7 +9660,7 @@ export interface ClaimResponseAddItem {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -9782,7 +9782,7 @@ export interface ClaimResponseTotal {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -9804,7 +9804,7 @@ export interface ClaimResponsePayment {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -9846,7 +9846,7 @@ export interface ClaimResponseProcessNote {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -9888,7 +9888,7 @@ export interface ClaimResponseInsurance {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -9934,7 +9934,7 @@ export interface ClaimResponseError {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -9977,7 +9977,7 @@ resourceType: "ClaimResponse"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -10152,7 +10152,7 @@ export interface ClinicalImpressionInvestigation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -10174,7 +10174,7 @@ export interface ClinicalImpressionFinding {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -10205,7 +10205,7 @@ resourceType: "ClinicalImpression"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -10356,7 +10356,7 @@ export interface CodeSystemFilter {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -10402,7 +10402,7 @@ export interface CodeSystemProperty {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -10448,7 +10448,7 @@ export interface CodeSystemConceptDesignation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -10482,7 +10482,7 @@ export interface CodeSystemConceptProperty {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -10556,7 +10556,7 @@ export interface CodeSystemConcept {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -10607,7 +10607,7 @@ resourceType: "CodeSystem"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -10830,7 +10830,7 @@ export interface CommunicationPayload {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -10861,7 +10861,7 @@ resourceType: "Communication"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -11020,7 +11020,7 @@ export interface CommunicationRequestPayload {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -11051,7 +11051,7 @@ resourceType: "CommunicationRequest"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -11206,7 +11206,7 @@ export interface CompartmentDefinitionResource {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -11245,7 +11245,7 @@ resourceType: "CompartmentDefinition"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -11388,7 +11388,7 @@ export interface CompositionAttester {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -11422,7 +11422,7 @@ export interface CompositionRelatesTo {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -11452,7 +11452,7 @@ export interface CompositionEvent {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -11478,7 +11478,7 @@ export interface CompositionSection {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -11541,7 +11541,7 @@ resourceType: "Composition"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -11660,7 +11660,7 @@ export interface ConceptMapGroupElementTargetDependsOn {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -11706,7 +11706,7 @@ export interface ConceptMapGroupElementTarget {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -11760,7 +11760,7 @@ export interface ConceptMapGroupElement {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -11794,7 +11794,7 @@ export interface ConceptMapGroupUnmapped {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -11840,7 +11840,7 @@ export interface ConceptMapGroup {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -11895,7 +11895,7 @@ resourceType: "ConceptMap"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -12078,7 +12078,7 @@ export interface ConditionStage {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -12104,7 +12104,7 @@ export interface ConditionEvidence {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -12127,7 +12127,7 @@ resourceType: "Condition"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -12290,7 +12290,7 @@ export interface ConsentPolicy {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -12320,7 +12320,7 @@ export interface ConsentVerification {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -12354,7 +12354,7 @@ export interface ConsentProvisionActor {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -12376,7 +12376,7 @@ export interface ConsentProvisionData {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -12402,7 +12402,7 @@ export interface ConsentProvision {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -12465,7 +12465,7 @@ resourceType: "Consent"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -12572,7 +12572,7 @@ export interface ContractContentDefinition {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -12622,7 +12622,7 @@ export interface ContractTermSecurityLabel {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -12656,7 +12656,7 @@ export interface ContractTermOfferParty {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -12678,7 +12678,7 @@ export interface ContractTermOfferAnswer {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -12772,7 +12772,7 @@ export interface ContractTermOffer {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -12838,7 +12838,7 @@ export interface ContractTermAssetContext {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -12868,7 +12868,7 @@ export interface ContractTermAssetValuedItem {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -12970,7 +12970,7 @@ export interface ContractTermAsset {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -13060,7 +13060,7 @@ export interface ContractTermActionSubject {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -13082,7 +13082,7 @@ export interface ContractTermAction {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -13224,7 +13224,7 @@ export interface ContractTerm {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -13298,7 +13298,7 @@ export interface ContractSigner {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -13324,7 +13324,7 @@ export interface ContractFriendly {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -13346,7 +13346,7 @@ export interface ContractLegal {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -13368,7 +13368,7 @@ export interface ContractRule {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -13391,7 +13391,7 @@ resourceType: "Contract"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -13610,7 +13610,7 @@ export interface CoverageClass {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -13644,7 +13644,7 @@ export interface CoverageCostToBeneficiaryException {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -13666,7 +13666,7 @@ export interface CoverageCostToBeneficiary {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -13697,7 +13697,7 @@ resourceType: "Coverage"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -13832,7 +13832,7 @@ export interface CoverageEligibilityRequestSupportingInfo {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -13866,7 +13866,7 @@ export interface CoverageEligibilityRequestInsurance {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -13900,7 +13900,7 @@ export interface CoverageEligibilityRequestItemDiagnosis {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -13922,7 +13922,7 @@ export interface CoverageEligibilityRequestItem {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -13981,7 +13981,7 @@ resourceType: "CoverageEligibilityRequest"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -14100,7 +14100,7 @@ export interface CoverageEligibilityResponseInsuranceItemBenefit {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -14158,7 +14158,7 @@ export interface CoverageEligibilityResponseInsuranceItem {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -14248,7 +14248,7 @@ export interface CoverageEligibilityResponseInsurance {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -14282,7 +14282,7 @@ export interface CoverageEligibilityResponseError {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -14301,7 +14301,7 @@ resourceType: "CoverageEligibilityResponse"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -14436,7 +14436,7 @@ export interface DetectedIssueEvidence {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -14458,7 +14458,7 @@ export interface DetectedIssueMitigation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -14489,7 +14489,7 @@ resourceType: "DetectedIssue"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -14604,7 +14604,7 @@ export interface DeviceUdiCarrier {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -14666,7 +14666,7 @@ export interface DeviceDeviceName {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -14696,7 +14696,7 @@ export interface DeviceSpecialization {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -14722,7 +14722,7 @@ export interface DeviceVersion {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -14752,7 +14752,7 @@ export interface DeviceProperty {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -14779,7 +14779,7 @@ resourceType: "Device"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -14966,7 +14966,7 @@ export interface DeviceDefinitionUdiDeviceIdentifier {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -15004,7 +15004,7 @@ export interface DeviceDefinitionDeviceName {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -15034,7 +15034,7 @@ export interface DeviceDefinitionSpecialization {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -15064,7 +15064,7 @@ export interface DeviceDefinitionCapability {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -15086,7 +15086,7 @@ export interface DeviceDefinitionProperty {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -15112,7 +15112,7 @@ export interface DeviceDefinitionMaterial {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -15147,7 +15147,7 @@ resourceType: "DeviceDefinition"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -15302,7 +15302,7 @@ export interface DeviceMetricCalibration {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -15341,7 +15341,7 @@ resourceType: "DeviceMetric"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -15436,7 +15436,7 @@ export interface DeviceRequestParameter {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -15475,7 +15475,7 @@ resourceType: "DeviceRequest"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -15655,7 +15655,7 @@ resourceType: "DeviceUseStatement"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -15770,7 +15770,7 @@ export interface DiagnosticReportMedia {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -15797,7 +15797,7 @@ resourceType: "DiagnosticReport"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -15932,7 +15932,7 @@ export interface DocumentManifestRelated {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -15955,7 +15955,7 @@ resourceType: "DocumentManifest"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -16062,7 +16062,7 @@ export interface DocumentReferenceRelatesTo {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -16088,7 +16088,7 @@ export interface DocumentReferenceContent {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -16110,7 +16110,7 @@ export interface DocumentReferenceContext {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -16153,7 +16153,7 @@ resourceType: "DocumentReference"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -16276,7 +16276,7 @@ export interface EffectEvidenceSynthesisSampleSize {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -16314,7 +16314,7 @@ export interface EffectEvidenceSynthesisResultsByExposure {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -16352,7 +16352,7 @@ export interface EffectEvidenceSynthesisEffectEstimatePrecisionEstimate {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -16394,7 +16394,7 @@ export interface EffectEvidenceSynthesisEffectEstimate {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -16440,7 +16440,7 @@ export interface EffectEvidenceSynthesisCertaintyCertaintySubcomponent {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -16466,7 +16466,7 @@ export interface EffectEvidenceSynthesisCertainty {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -16493,7 +16493,7 @@ resourceType: "EffectEvidenceSynthesis"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -16712,7 +16712,7 @@ export interface EncounterStatusHistory {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -16738,7 +16738,7 @@ export interface EncounterClassHistory {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -16760,7 +16760,7 @@ export interface EncounterParticipant {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -16786,7 +16786,7 @@ export interface EncounterDiagnosis {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -16816,7 +16816,7 @@ export interface EncounterHospitalization {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -16866,7 +16866,7 @@ export interface EncounterLocation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -16901,7 +16901,7 @@ resourceType: "Encounter"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -17041,7 +17041,7 @@ resourceType: "Endpoint"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -17149,7 +17149,7 @@ resourceType: "EnrollmentRequest"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -17229,7 +17229,7 @@ resourceType: "EnrollmentResponse"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -17320,7 +17320,7 @@ export interface EpisodeOfCareStatusHistory {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -17346,7 +17346,7 @@ export interface EpisodeOfCareDiagnosis {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -17377,7 +17377,7 @@ resourceType: "EpisodeOfCare"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -17473,7 +17473,7 @@ resourceType: "EventDefinition"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -17693,7 +17693,7 @@ resourceType: "Evidence"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -17900,7 +17900,7 @@ export interface EvidenceVariableCharacteristic {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -17995,7 +17995,7 @@ resourceType: "EvidenceVariable"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -18202,7 +18202,7 @@ export interface ExampleScenarioActor {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -18248,7 +18248,7 @@ export interface ExampleScenarioInstanceVersion {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -18278,7 +18278,7 @@ export interface ExampleScenarioInstanceContainedInstance {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -18308,7 +18308,7 @@ export interface ExampleScenarioInstance {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -18362,7 +18362,7 @@ export interface ExampleScenarioProcessStepOperation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -18448,7 +18448,7 @@ export interface ExampleScenarioProcessStepAlternative {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -18482,7 +18482,7 @@ export interface ExampleScenarioProcessStep {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -18516,7 +18516,7 @@ export interface ExampleScenarioProcess {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -18567,7 +18567,7 @@ resourceType: "ExampleScenario"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -18718,7 +18718,7 @@ export interface ExplanationOfBenefitRelated {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -18744,7 +18744,7 @@ export interface ExplanationOfBenefitPayee {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -18766,7 +18766,7 @@ export interface ExplanationOfBenefitCareTeam {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -18808,7 +18808,7 @@ export interface ExplanationOfBenefitSupportingInfo {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -18882,7 +18882,7 @@ export interface ExplanationOfBenefitDiagnosis {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -18924,7 +18924,7 @@ export interface ExplanationOfBenefitProcedure {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -18970,7 +18970,7 @@ export interface ExplanationOfBenefitInsurance {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -19004,7 +19004,7 @@ export interface ExplanationOfBenefitAccident {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -19038,7 +19038,7 @@ export interface ExplanationOfBenefitItemAdjudication {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -19072,7 +19072,7 @@ export interface ExplanationOfBenefitItemDetailSubDetail {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -19150,7 +19150,7 @@ export interface ExplanationOfBenefitItemDetail {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -19232,7 +19232,7 @@ export interface ExplanationOfBenefitItem {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -19382,7 +19382,7 @@ export interface ExplanationOfBenefitAddItemDetailSubDetail {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -19436,7 +19436,7 @@ export interface ExplanationOfBenefitAddItemDetail {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -19494,7 +19494,7 @@ export interface ExplanationOfBenefitAddItem {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -19616,7 +19616,7 @@ export interface ExplanationOfBenefitTotal {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -19638,7 +19638,7 @@ export interface ExplanationOfBenefitPayment {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -19680,7 +19680,7 @@ export interface ExplanationOfBenefitProcessNote {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -19722,7 +19722,7 @@ export interface ExplanationOfBenefitBenefitBalanceFinancial {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -19772,7 +19772,7 @@ export interface ExplanationOfBenefitBenefitBalance {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -19831,7 +19831,7 @@ resourceType: "ExplanationOfBenefit"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -20074,7 +20074,7 @@ export interface FamilyMemberHistoryCondition {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -20129,7 +20129,7 @@ resourceType: "FamilyMemberHistory"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -20325,7 +20325,7 @@ resourceType: "Flag"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -20404,7 +20404,7 @@ export interface GoalTarget {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -20475,7 +20475,7 @@ resourceType: "Goal"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -20602,7 +20602,7 @@ export interface GraphDefinitionLinkTargetCompartment {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -20656,7 +20656,7 @@ export interface GraphDefinitionLinkTarget {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -20702,7 +20702,7 @@ export interface GraphDefinitionLink {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -20761,7 +20761,7 @@ resourceType: "GraphDefinition"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -20908,7 +20908,7 @@ export interface GroupCharacteristic {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -20962,7 +20962,7 @@ export interface GroupMember {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -20993,7 +20993,7 @@ resourceType: "Group"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -21097,7 +21097,7 @@ resourceType: "GuidanceResponse"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -21224,7 +21224,7 @@ export interface HealthcareServiceEligibility {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -21250,7 +21250,7 @@ export interface HealthcareServiceAvailableTime {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -21296,7 +21296,7 @@ export interface HealthcareServiceNotAvailable {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -21323,7 +21323,7 @@ resourceType: "HealthcareService"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -21486,7 +21486,7 @@ export interface ImagingStudySeriesPerformer {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -21508,7 +21508,7 @@ export interface ImagingStudySeriesInstance {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -21550,7 +21550,7 @@ export interface ImagingStudySeries {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -21633,7 +21633,7 @@ resourceType: "ImagingStudy"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -21776,7 +21776,7 @@ export interface ImmunizationPerformer {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -21798,7 +21798,7 @@ export interface ImmunizationEducation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -21844,7 +21844,7 @@ export interface ImmunizationReaction {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -21878,7 +21878,7 @@ export interface ImmunizationProtocolApplied {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -21941,7 +21941,7 @@ resourceType: "Immunization"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -22133,7 +22133,7 @@ resourceType: "ImmunizationEvaluation"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -22268,7 +22268,7 @@ export interface ImmunizationRecommendationRecommendationDateCriterion {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -22294,7 +22294,7 @@ export interface ImmunizationRecommendationRecommendation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -22389,7 +22389,7 @@ resourceType: "ImmunizationRecommendation"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -22456,7 +22456,7 @@ export interface ImplementationGuideDependsOn {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -22494,7 +22494,7 @@ export interface ImplementationGuideGlobal {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -22524,7 +22524,7 @@ export interface ImplementationGuideDefinitionGrouping {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -22554,7 +22554,7 @@ export interface ImplementationGuideDefinitionResource {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -22620,7 +22620,7 @@ export interface ImplementationGuideDefinitionPage {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -22666,7 +22666,7 @@ export interface ImplementationGuideDefinitionParameter {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -22696,7 +22696,7 @@ export interface ImplementationGuideDefinitionTemplate {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -22734,7 +22734,7 @@ export interface ImplementationGuideDefinition {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -22768,7 +22768,7 @@ export interface ImplementationGuideManifestResource {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -22810,7 +22810,7 @@ export interface ImplementationGuideManifestPage {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -22848,7 +22848,7 @@ export interface ImplementationGuideManifest {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -22895,7 +22895,7 @@ resourceType: "ImplementationGuide"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -23070,7 +23070,7 @@ export interface InsurancePlanContact {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -23100,7 +23100,7 @@ export interface InsurancePlanCoverageBenefitLimit {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -23122,7 +23122,7 @@ export interface InsurancePlanCoverageBenefit {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -23152,7 +23152,7 @@ export interface InsurancePlanCoverage {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -23178,7 +23178,7 @@ export interface InsurancePlanPlanGeneralCost {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -23216,7 +23216,7 @@ export interface InsurancePlanPlanSpecificCostBenefitCost {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -23246,7 +23246,7 @@ export interface InsurancePlanPlanSpecificCostBenefit {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -23268,7 +23268,7 @@ export interface InsurancePlanPlanSpecificCost {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -23290,7 +23290,7 @@ export interface InsurancePlanPlan {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -23329,7 +23329,7 @@ resourceType: "InsurancePlan"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -23440,7 +23440,7 @@ export interface InvoiceParticipant {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -23462,7 +23462,7 @@ export interface InvoiceLineItemPriceComponent {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -23500,7 +23500,7 @@ export interface InvoiceLineItem {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -23535,7 +23535,7 @@ resourceType: "Invoice"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -23659,7 +23659,7 @@ resourceType: "Library"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -23890,7 +23890,7 @@ export interface LinkageItem {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -23917,7 +23917,7 @@ resourceType: "Linkage"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -23976,7 +23976,7 @@ export interface ListEntry {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -24015,7 +24015,7 @@ resourceType: "List"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -24126,7 +24126,7 @@ export interface LocationPosition {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -24164,7 +24164,7 @@ export interface LocationHoursOfOperation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -24211,7 +24211,7 @@ resourceType: "Location"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -24346,7 +24346,7 @@ export interface MeasureGroupPopulation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -24376,7 +24376,7 @@ export interface MeasureGroupStratifierComponent {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -24406,7 +24406,7 @@ export interface MeasureGroupStratifier {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -24440,7 +24440,7 @@ export interface MeasureGroup {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -24474,7 +24474,7 @@ export interface MeasureSupplementalData {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -24509,7 +24509,7 @@ resourceType: "Measure"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -24812,7 +24812,7 @@ export interface MeasureReportGroupPopulation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -24842,7 +24842,7 @@ export interface MeasureReportGroupStratifierStratumComponent {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -24864,7 +24864,7 @@ export interface MeasureReportGroupStratifierStratumPopulation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -24894,7 +24894,7 @@ export interface MeasureReportGroupStratifierStratum {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -24924,7 +24924,7 @@ export interface MeasureReportGroupStratifier {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -24946,7 +24946,7 @@ export interface MeasureReportGroup {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -24977,7 +24977,7 @@ resourceType: "MeasureReport"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -25081,7 +25081,7 @@ resourceType: "Media"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -25248,7 +25248,7 @@ export interface MedicationIngredient {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -25282,7 +25282,7 @@ export interface MedicationBatch {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -25313,7 +25313,7 @@ resourceType: "Medication"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -25392,7 +25392,7 @@ export interface MedicationAdministrationPerformer {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -25414,7 +25414,7 @@ export interface MedicationAdministrationDosage {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -25461,7 +25461,7 @@ resourceType: "MedicationAdministration"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -25600,7 +25600,7 @@ export interface MedicationDispensePerformer {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -25622,7 +25622,7 @@ export interface MedicationDispenseSubstitution {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -25657,7 +25657,7 @@ resourceType: "MedicationDispense"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -25816,7 +25816,7 @@ export interface MedicationKnowledgeRelatedMedicationKnowledge {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -25838,7 +25838,7 @@ export interface MedicationKnowledgeMonograph {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -25860,7 +25860,7 @@ export interface MedicationKnowledgeIngredient {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -25894,7 +25894,7 @@ export interface MedicationKnowledgeCost {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -25924,7 +25924,7 @@ export interface MedicationKnowledgeMonitoringProgram {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -25950,7 +25950,7 @@ export interface MedicationKnowledgeAdministrationGuidelinesDosage {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -25972,7 +25972,7 @@ export interface MedicationKnowledgeAdministrationGuidelinesPatientCharacteristi
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -26002,7 +26002,7 @@ export interface MedicationKnowledgeAdministrationGuidelines {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -26032,7 +26032,7 @@ export interface MedicationKnowledgeMedicineClassification {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -26054,7 +26054,7 @@ export interface MedicationKnowledgePackaging {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -26076,7 +26076,7 @@ export interface MedicationKnowledgeDrugCharacteristic {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -26118,7 +26118,7 @@ export interface MedicationKnowledgeRegulatorySubstitution {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -26144,7 +26144,7 @@ export interface MedicationKnowledgeRegulatorySchedule {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -26162,7 +26162,7 @@ export interface MedicationKnowledgeRegulatoryMaxDispense {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -26184,7 +26184,7 @@ export interface MedicationKnowledgeRegulatory {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -26214,7 +26214,7 @@ export interface MedicationKnowledgeKinetics {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -26241,7 +26241,7 @@ resourceType: "MedicationKnowledge"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -26384,7 +26384,7 @@ export interface MedicationRequestDispenseRequestInitialFill {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -26406,7 +26406,7 @@ export interface MedicationRequestDispenseRequest {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -26452,7 +26452,7 @@ export interface MedicationRequestSubstitution {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -26483,7 +26483,7 @@ resourceType: "MedicationRequest"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -26695,7 +26695,7 @@ resourceType: "MedicationStatement"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -26826,7 +26826,7 @@ export interface MedicinalProductNameNamePart {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -26852,7 +26852,7 @@ export interface MedicinalProductNameCountryLanguage {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -26878,7 +26878,7 @@ export interface MedicinalProductName {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -26908,7 +26908,7 @@ export interface MedicinalProductManufacturingBusinessOperation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -26950,7 +26950,7 @@ export interface MedicinalProductSpecialDesignation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -27001,7 +27001,7 @@ resourceType: "MedicinalProduct"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -27128,7 +27128,7 @@ export interface MedicinalProductAuthorizationJurisdictionalAuthorization {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -27162,7 +27162,7 @@ export interface MedicinalProductAuthorizationProcedure {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -27201,7 +27201,7 @@ resourceType: "MedicinalProductAuthorization"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -27324,7 +27324,7 @@ export interface MedicinalProductContraindicationOtherTherapy {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -27351,7 +27351,7 @@ resourceType: "MedicinalProductContraindication"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -27422,7 +27422,7 @@ export interface MedicinalProductIndicationOtherTherapy {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -27449,7 +27449,7 @@ resourceType: "MedicinalProductIndication"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -27528,7 +27528,7 @@ export interface MedicinalProductIngredientSpecifiedSubstanceStrengthReferenceSt
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -27566,7 +27566,7 @@ export interface MedicinalProductIngredientSpecifiedSubstanceStrength {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -27612,7 +27612,7 @@ export interface MedicinalProductIngredientSpecifiedSubstance {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -27642,7 +27642,7 @@ export interface MedicinalProductIngredientSubstance {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -27665,7 +27665,7 @@ resourceType: "MedicinalProductIngredient"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -27736,7 +27736,7 @@ export interface MedicinalProductInteractionInteractant {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -27759,7 +27759,7 @@ resourceType: "MedicinalProductInteraction"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -27835,7 +27835,7 @@ resourceType: "MedicinalProductManufactured"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -27906,7 +27906,7 @@ export interface MedicinalProductPackagedBatchIdentifier {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -27928,7 +27928,7 @@ export interface MedicinalProductPackagedPackageItem {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -27991,7 +27991,7 @@ resourceType: "MedicinalProductPackaged"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -28074,7 +28074,7 @@ export interface MedicinalProductPharmaceuticalCharacteristics {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -28096,7 +28096,7 @@ export interface MedicinalProductPharmaceuticalRouteOfAdministrationTargetSpecie
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -28126,7 +28126,7 @@ export interface MedicinalProductPharmaceuticalRouteOfAdministrationTargetSpecie
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -28148,7 +28148,7 @@ export interface MedicinalProductPharmaceuticalRouteOfAdministration {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -28191,7 +28191,7 @@ resourceType: "MedicinalProductPharmaceutical"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -28263,7 +28263,7 @@ resourceType: "MedicinalProductUndesirableEffect"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -28326,7 +28326,7 @@ export interface MessageDefinitionFocus {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -28372,7 +28372,7 @@ export interface MessageDefinitionAllowedResponse {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -28403,7 +28403,7 @@ resourceType: "MessageDefinition"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -28618,7 +28618,7 @@ export interface MessageHeaderDestination {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -28656,7 +28656,7 @@ export interface MessageHeaderSource {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -28706,7 +28706,7 @@ export interface MessageHeaderResponse {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -28741,7 +28741,7 @@ resourceType: "MessageHeader"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -28840,7 +28840,7 @@ export interface MolecularSequenceReferenceSeq {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -28914,7 +28914,7 @@ export interface MolecularSequenceVariant {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -28972,7 +28972,7 @@ export interface MolecularSequenceQualityRoc {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -29042,7 +29042,7 @@ export interface MolecularSequenceQuality {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -29160,7 +29160,7 @@ export interface MolecularSequenceRepository {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -29222,7 +29222,7 @@ export interface MolecularSequenceStructureVariantOuter {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -29252,7 +29252,7 @@ export interface MolecularSequenceStructureVariantInner {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -29282,7 +29282,7 @@ export interface MolecularSequenceStructureVariant {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -29325,7 +29325,7 @@ resourceType: "MolecularSequence"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -29448,7 +29448,7 @@ export interface NamingSystemUniqueId {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -29499,7 +29499,7 @@ resourceType: "NamingSystem"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -29626,7 +29626,7 @@ export interface NutritionOrderOralDietNutrient {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -29648,7 +29648,7 @@ export interface NutritionOrderOralDietTexture {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -29670,7 +29670,7 @@ export interface NutritionOrderOralDiet {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -29712,7 +29712,7 @@ export interface NutritionOrderSupplement {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -29754,7 +29754,7 @@ export interface NutritionOrderEnteralFormulaAdministration {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -29784,7 +29784,7 @@ export interface NutritionOrderEnteralFormula {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -29847,7 +29847,7 @@ resourceType: "NutritionOrder"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -29982,7 +29982,7 @@ export interface ObservationReferenceRange {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -30024,7 +30024,7 @@ export interface ObservationComponent {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -30119,7 +30119,7 @@ resourceType: "Observation"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -30346,7 +30346,7 @@ export interface ObservationDefinitionQuantitativeDetails {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -30384,7 +30384,7 @@ export interface ObservationDefinitionQualifiedInterval {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -30443,7 +30443,7 @@ resourceType: "ObservationDefinition"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -30550,7 +30550,7 @@ export interface OperationDefinitionParameterBinding {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -30580,7 +30580,7 @@ export interface OperationDefinitionParameterReferencedFrom {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -30610,7 +30610,7 @@ export interface OperationDefinitionParameter {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -30700,7 +30700,7 @@ export interface OperationDefinitionOverload {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -30731,7 +30731,7 @@ resourceType: "OperationDefinition"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -30962,7 +30962,7 @@ export interface OperationOutcomeIssue {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -31021,7 +31021,7 @@ resourceType: "OperationOutcome"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -31068,7 +31068,7 @@ export interface OrganizationContact {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -31099,7 +31099,7 @@ resourceType: "Organization"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -31195,7 +31195,7 @@ resourceType: "OrganizationAffiliation"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -31290,7 +31290,7 @@ export interface ParametersParameter {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -31597,7 +31597,7 @@ resourceType: "Parameters"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -31628,7 +31628,7 @@ export interface PatientContact {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -31674,7 +31674,7 @@ export interface PatientCommunication {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -31700,7 +31700,7 @@ export interface PatientLink {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -31727,7 +31727,7 @@ resourceType: "Patient"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -31871,7 +31871,7 @@ resourceType: "PaymentNotice"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -31974,7 +31974,7 @@ export interface PaymentReconciliationDetail {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -32032,7 +32032,7 @@ export interface PaymentReconciliationProcessNote {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -32063,7 +32063,7 @@ resourceType: "PaymentReconciliation"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -32186,7 +32186,7 @@ export interface PersonLink {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -32213,7 +32213,7 @@ resourceType: "Person"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -32308,7 +32308,7 @@ export interface PlanDefinitionGoalTarget {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -32342,7 +32342,7 @@ export interface PlanDefinitionGoal {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -32384,7 +32384,7 @@ export interface PlanDefinitionActionCondition {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -32410,7 +32410,7 @@ export interface PlanDefinitionActionRelatedAction {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -32448,7 +32448,7 @@ export interface PlanDefinitionActionParticipant {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -32474,7 +32474,7 @@ export interface PlanDefinitionActionDynamicValue {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -32500,7 +32500,7 @@ export interface PlanDefinitionAction {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -32711,7 +32711,7 @@ resourceType: "PlanDefinition"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -32946,7 +32946,7 @@ export interface PractitionerQualification {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -32977,7 +32977,7 @@ resourceType: "Practitioner"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -33072,7 +33072,7 @@ export interface PractitionerRoleAvailableTime {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -33118,7 +33118,7 @@ export interface PractitionerRoleNotAvailable {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -33145,7 +33145,7 @@ resourceType: "PractitionerRole"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -33252,7 +33252,7 @@ export interface ProcedurePerformer {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -33278,7 +33278,7 @@ export interface ProcedureFocalDevice {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -33301,7 +33301,7 @@ resourceType: "Procedure"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -33492,7 +33492,7 @@ export interface ProvenanceAgent {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -33522,7 +33522,7 @@ export interface ProvenanceEntity {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -33553,7 +33553,7 @@ resourceType: "Provenance"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -33652,7 +33652,7 @@ export interface QuestionnaireItemEnableWhen {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -33750,7 +33750,7 @@ export interface QuestionnaireItemAnswerOption {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -33812,7 +33812,7 @@ export interface QuestionnaireItemInitial {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -33906,7 +33906,7 @@ export interface QuestionnaireItem {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -34029,7 +34029,7 @@ resourceType: "Questionnaire"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -34220,7 +34220,7 @@ export interface QuestionnaireResponseItemAnswer {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -34318,7 +34318,7 @@ export interface QuestionnaireResponseItem {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -34365,7 +34365,7 @@ resourceType: "QuestionnaireResponse"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -34464,7 +34464,7 @@ export interface RelatedPersonCommunication {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -34491,7 +34491,7 @@ resourceType: "RelatedPerson"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -34594,7 +34594,7 @@ export interface RequestGroupActionCondition {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -34620,7 +34620,7 @@ export interface RequestGroupActionRelatedAction {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -34658,7 +34658,7 @@ export interface RequestGroupAction {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -34813,7 +34813,7 @@ resourceType: "RequestGroup"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -34953,7 +34953,7 @@ resourceType: "ResearchDefinition"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -35208,7 +35208,7 @@ export interface ResearchElementDefinitionCharacteristic {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -35339,7 +35339,7 @@ resourceType: "ResearchElementDefinition"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -35598,7 +35598,7 @@ export interface ResearchStudyArm {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -35632,7 +35632,7 @@ export interface ResearchStudyObjective {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -35659,7 +35659,7 @@ resourceType: "ResearchStudy"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -35811,7 +35811,7 @@ resourceType: "ResearchSubject"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -35898,7 +35898,7 @@ export interface RiskAssessmentPrediction {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -35957,7 +35957,7 @@ resourceType: "RiskAssessment"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -36084,7 +36084,7 @@ export interface RiskEvidenceSynthesisSampleSize {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -36122,7 +36122,7 @@ export interface RiskEvidenceSynthesisRiskEstimatePrecisionEstimate {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -36164,7 +36164,7 @@ export interface RiskEvidenceSynthesisRiskEstimate {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -36222,7 +36222,7 @@ export interface RiskEvidenceSynthesisCertaintyCertaintySubcomponent {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -36248,7 +36248,7 @@ export interface RiskEvidenceSynthesisCertainty {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -36275,7 +36275,7 @@ resourceType: "RiskEvidenceSynthesis"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -36487,7 +36487,7 @@ resourceType: "Schedule"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -36570,7 +36570,7 @@ export interface SearchParameterComponent {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -36601,7 +36601,7 @@ resourceType: "SearchParameter"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -36837,7 +36837,7 @@ resourceType: "ServiceRequest"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -37073,7 +37073,7 @@ resourceType: "Slot"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -37180,7 +37180,7 @@ export interface SpecimenCollection {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -37234,7 +37234,7 @@ export interface SpecimenProcessing {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -37276,7 +37276,7 @@ export interface SpecimenContainer {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -37323,7 +37323,7 @@ resourceType: "Specimen"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -37426,7 +37426,7 @@ export interface SpecimenDefinitionTypeTestedContainerAdditive {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -37448,7 +37448,7 @@ export interface SpecimenDefinitionTypeTestedContainer {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -37510,7 +37510,7 @@ export interface SpecimenDefinitionTypeTestedHandling {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -37544,7 +37544,7 @@ export interface SpecimenDefinitionTypeTested {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -37603,7 +37603,7 @@ resourceType: "SpecimenDefinition"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -37674,7 +37674,7 @@ export interface StructureDefinitionMapping {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -37720,7 +37720,7 @@ export interface StructureDefinitionContext {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -37750,7 +37750,7 @@ export interface StructureDefinitionSnapshot {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -37768,7 +37768,7 @@ export interface StructureDefinitionDifferential {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -37787,7 +37787,7 @@ resourceType: "StructureDefinition"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -38010,7 +38010,7 @@ export interface StructureMapStructure {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -38056,7 +38056,7 @@ export interface StructureMapGroupInput {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -38102,7 +38102,7 @@ export interface StructureMapGroupRuleSource {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -38472,7 +38472,7 @@ export interface StructureMapGroupRuleTargetParameter {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -38526,7 +38526,7 @@ export interface StructureMapGroupRuleTarget {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -38600,7 +38600,7 @@ export interface StructureMapGroupRuleDependent {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -38630,7 +38630,7 @@ export interface StructureMapGroupRule {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -38676,7 +38676,7 @@ export interface StructureMapGroup {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -38731,7 +38731,7 @@ resourceType: "StructureMap"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -38894,7 +38894,7 @@ export interface SubscriptionChannel {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -38941,7 +38941,7 @@ resourceType: "Subscription"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -39032,7 +39032,7 @@ export interface SubstanceInstance {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -39062,7 +39062,7 @@ export interface SubstanceIngredient {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -39089,7 +39089,7 @@ resourceType: "Substance"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -39168,7 +39168,7 @@ export interface SubstanceNucleicAcidSubunitLinkage {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -39210,7 +39210,7 @@ export interface SubstanceNucleicAcidSubunitSugar {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -39244,7 +39244,7 @@ export interface SubstanceNucleicAcidSubunit {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -39303,7 +39303,7 @@ resourceType: "SubstanceNucleicAcid"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -39374,7 +39374,7 @@ export interface SubstancePolymerMonomerSetStartingMaterial {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -39408,7 +39408,7 @@ export interface SubstancePolymerMonomerSet {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -39430,7 +39430,7 @@ export interface SubstancePolymerRepeatRepeatUnitDegreeOfPolymerisation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -39452,7 +39452,7 @@ export interface SubstancePolymerRepeatRepeatUnitStructuralRepresentation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -39482,7 +39482,7 @@ export interface SubstancePolymerRepeatRepeatUnit {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -39520,7 +39520,7 @@ export interface SubstancePolymerRepeat {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -39559,7 +39559,7 @@ resourceType: "SubstancePolymer"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -39630,7 +39630,7 @@ export interface SubstanceProteinSubunit {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -39697,7 +39697,7 @@ resourceType: "SubstanceProtein"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -39764,7 +39764,7 @@ export interface SubstanceReferenceInformationGene {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -39790,7 +39790,7 @@ export interface SubstanceReferenceInformationGeneElement {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -39816,7 +39816,7 @@ export interface SubstanceReferenceInformationClassification {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -39846,7 +39846,7 @@ export interface SubstanceReferenceInformationTarget {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -39905,7 +39905,7 @@ resourceType: "SubstanceReferenceInformation"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -39972,7 +39972,7 @@ export interface SubstanceSourceMaterialFractionDescription {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -39998,7 +39998,7 @@ export interface SubstanceSourceMaterialOrganismAuthor {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -40024,7 +40024,7 @@ export interface SubstanceSourceMaterialOrganismHybrid {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -40074,7 +40074,7 @@ export interface SubstanceSourceMaterialOrganismOrganismGeneral {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -40104,7 +40104,7 @@ export interface SubstanceSourceMaterialOrganism {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -40154,7 +40154,7 @@ export interface SubstanceSourceMaterialPartDescription {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -40177,7 +40177,7 @@ resourceType: "SubstanceSourceMaterial"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -40284,7 +40284,7 @@ export interface SubstanceSpecificationMoiety {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -40342,7 +40342,7 @@ export interface SubstanceSpecificationProperty {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -40392,7 +40392,7 @@ export interface SubstanceSpecificationStructureIsotopeMolecularWeight {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -40418,7 +40418,7 @@ export interface SubstanceSpecificationStructureIsotope {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -40452,7 +40452,7 @@ export interface SubstanceSpecificationStructureRepresentation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -40482,7 +40482,7 @@ export interface SubstanceSpecificationStructure {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -40536,7 +40536,7 @@ export interface SubstanceSpecificationCode {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -40578,7 +40578,7 @@ export interface SubstanceSpecificationNameOfficial {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -40608,7 +40608,7 @@ export interface SubstanceSpecificationName {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -40674,7 +40674,7 @@ export interface SubstanceSpecificationRelationship {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -40741,7 +40741,7 @@ resourceType: "SubstanceSpecification"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -40868,7 +40868,7 @@ export interface SupplyDeliverySuppliedItem {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -40895,7 +40895,7 @@ resourceType: "SupplyDelivery"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -40998,7 +40998,7 @@ export interface SupplyRequestParameter {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -41037,7 +41037,7 @@ resourceType: "SupplyRequest"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -41168,7 +41168,7 @@ export interface TaskRestriction {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -41198,7 +41198,7 @@ export interface TaskInput {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -41492,7 +41492,7 @@ export interface TaskOutput {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -41787,7 +41787,7 @@ resourceType: "Task"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -41986,7 +41986,7 @@ export interface TerminologyCapabilitiesSoftware {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42016,7 +42016,7 @@ export interface TerminologyCapabilitiesImplementation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42046,7 +42046,7 @@ export interface TerminologyCapabilitiesCodeSystemVersionFilter {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42076,7 +42076,7 @@ export interface TerminologyCapabilitiesCodeSystemVersion {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42134,7 +42134,7 @@ export interface TerminologyCapabilitiesCodeSystem {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42168,7 +42168,7 @@ export interface TerminologyCapabilitiesExpansionParameter {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42198,7 +42198,7 @@ export interface TerminologyCapabilitiesExpansion {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42248,7 +42248,7 @@ export interface TerminologyCapabilitiesValidateCode {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42270,7 +42270,7 @@ export interface TerminologyCapabilitiesTranslation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42292,7 +42292,7 @@ export interface TerminologyCapabilitiesClosure {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42315,7 +42315,7 @@ resourceType: "TerminologyCapabilities"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -42510,7 +42510,7 @@ export interface TestReportParticipant {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42548,7 +42548,7 @@ export interface TestReportSetupActionOperation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42586,7 +42586,7 @@ export interface TestReportSetupActionAssert {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42624,7 +42624,7 @@ export interface TestReportSetupAction {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42646,7 +42646,7 @@ export interface TestReportSetup {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42664,7 +42664,7 @@ export interface TestReportTestAction {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42686,7 +42686,7 @@ export interface TestReportTest {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42720,7 +42720,7 @@ export interface TestReportTeardownAction {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42738,7 +42738,7 @@ export interface TestReportTeardown {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42757,7 +42757,7 @@ resourceType: "TestReport"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -42872,7 +42872,7 @@ export interface TestScriptOrigin {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42898,7 +42898,7 @@ export interface TestScriptDestination {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42924,7 +42924,7 @@ export interface TestScriptMetadataLink {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -42954,7 +42954,7 @@ export interface TestScriptMetadataCapability {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -43024,7 +43024,7 @@ export interface TestScriptMetadata {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -43046,7 +43046,7 @@ export interface TestScriptFixture {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -43080,7 +43080,7 @@ export interface TestScriptVariable {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -43158,7 +43158,7 @@ export interface TestScriptSetupActionOperationRequestHeader {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -43188,7 +43188,7 @@ export interface TestScriptSetupActionOperation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -43330,7 +43330,7 @@ export interface TestScriptSetupActionAssert {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -43520,7 +43520,7 @@ export interface TestScriptSetupAction {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -43542,7 +43542,7 @@ export interface TestScriptSetup {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -43560,7 +43560,7 @@ export interface TestScriptTestAction {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -43582,7 +43582,7 @@ export interface TestScriptTest {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -43616,7 +43616,7 @@ export interface TestScriptTeardownAction {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -43634,7 +43634,7 @@ export interface TestScriptTeardown {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -43653,7 +43653,7 @@ resourceType: "TestScript"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -43836,7 +43836,7 @@ export interface ValueSetComposeIncludeConceptDesignation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -43870,7 +43870,7 @@ export interface ValueSetComposeIncludeConcept {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -43904,7 +43904,7 @@ export interface ValueSetComposeIncludeFilter {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -43942,7 +43942,7 @@ export interface ValueSetComposeInclude {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -43988,7 +43988,7 @@ export interface ValueSetCompose {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -44026,7 +44026,7 @@ export interface ValueSetExpansionParameter {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -44104,7 +44104,7 @@ export interface ValueSetExpansionContains {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -44174,7 +44174,7 @@ export interface ValueSetExpansion {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -44229,7 +44229,7 @@ resourceType: "ValueSet"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -44392,7 +44392,7 @@ export interface VerificationResultPrimarySource {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -44438,7 +44438,7 @@ export interface VerificationResultAttestation {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -44496,7 +44496,7 @@ export interface VerificationResultValidator {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -44527,7 +44527,7 @@ resourceType: "VerificationResult"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -44646,7 +44646,7 @@ export interface VisionPrescriptionLensSpecificationPrism {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -44676,7 +44676,7 @@ export interface VisionPrescriptionLensSpecification {
   /** 
    * Unique id for inter-element referencing
    */
-  id?: string;
+  id?: id;
   /** 
    * Additional content defined by implementations
    */
@@ -44787,7 +44787,7 @@ resourceType: "VisionPrescription"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -44875,7 +44875,7 @@ resourceType: "AccessPolicy"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -44891,7 +44891,7 @@ resourceType: "ClientApplication"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -44907,7 +44907,7 @@ resourceType: "Connection"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
@@ -44923,7 +44923,7 @@ resourceType: "Tenant"
   /** 
    * Logical id of this artifact
    */
-  id?: string;
+  id?: id;
   /** 
    * Metadata about the resource
    */
