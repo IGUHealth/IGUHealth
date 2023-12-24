@@ -21,6 +21,7 @@ const client = HTTPClient({
 
 test("create bad patient", async () => {
   expect(
+    // @ts-ignore
     client.create({}, { resourceType: "Patient", badValue: 5 })
   ).rejects.toThrowError();
 });

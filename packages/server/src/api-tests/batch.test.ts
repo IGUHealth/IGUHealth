@@ -13,33 +13,30 @@ const client = HTTPClient({
 test("test batch", async () => {
   let response: Bundle = { resourceType: "Bundle", type: "batch", entry: [] };
   try {
-    response = await client.batch(
-      {},
-      {
-        resourceType: "Bundle",
-        type: "batch",
-        entry: [
-          {
-            request: {
-              method: "POST",
-              url: "Patient",
-            },
-            resource: {
-              resourceType: "Patient",
-            },
+    response = await client.batch({}, {
+      resourceType: "Bundle",
+      type: "batch",
+      entry: [
+        {
+          request: {
+            method: "POST",
+            url: "Patient",
           },
-          {
-            request: {
-              method: "POST",
-              url: "Practitioner",
-            },
-            resource: {
-              resourceType: "Practitioner",
-            },
+          resource: {
+            resourceType: "Patient",
           },
-        ],
-      }
-    );
+        },
+        {
+          request: {
+            method: "POST",
+            url: "Practitioner",
+          },
+          resource: {
+            resourceType: "Practitioner",
+          },
+        },
+      ],
+    } as Bundle);
     expect(response.entry?.[0].resource?.resourceType).toEqual("Patient");
     expect(response.entry?.[0].resource).toHaveProperty("id");
     expect(response.entry?.[1].resource?.resourceType).toEqual("Practitioner");
