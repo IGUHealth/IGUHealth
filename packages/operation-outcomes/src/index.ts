@@ -1,4 +1,4 @@
-import { OperationOutcome } from "@iguhealth/fhir-types/r4/types";
+import { OperationOutcome, code } from "@iguhealth/fhir-types/r4/types";
 
 export class OperationError extends Error {
   public readonly operationOutcome: OperationOutcome;
@@ -37,14 +37,15 @@ export function outcome(issues: OperationOutcome["issue"]): OperationOutcome {
 }
 
 type Issue = OperationOutcome["issue"][number];
+type IssueSeverity = "fatal" | "error" | "warning" | "information";
 
 export function issue(
-  severity: Issue["severity"],
+  severity: IssueSeverity,
   code: Issue["code"],
   diagnostics: Issue["diagnostics"],
   expression?: Issue["expression"]
 ): Issue {
-  const issue = { severity, code, diagnostics, expression };
+  const issue = { severity: severity as code, code, diagnostics, expression };
   if (expression) return { ...issue, expression };
   return issue;
 }
