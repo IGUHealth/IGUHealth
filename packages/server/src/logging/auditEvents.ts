@@ -1,4 +1,10 @@
-import { AuditEvent, Reference } from "@iguhealth/fhir-types/r4/types";
+import {
+  AuditEvent,
+  Reference,
+  code,
+  instant,
+  uri,
+} from "@iguhealth/fhir-types/r4/types";
 
 import { FHIRServerCTX } from "../ctx/types.js";
 
@@ -23,11 +29,11 @@ export default async function logAuditEvent(
   const auditEvent: AuditEvent = {
     resourceType: "AuditEvent",
     type: {
-      system: "http://hl7.org/fhir/ValueSet/audit-event-type",
-      code: "rest",
+      system: "http://hl7.org/fhir/ValueSet/audit-event-type" as uri,
+      code: "rest" as code,
     },
-    recorded: new Date().toISOString(),
-    outcome: outcome,
+    recorded: new Date().toISOString() as instant,
+    outcome: outcome as code,
     outcomeDesc: outcomeDescription,
     agent: [
       {
@@ -39,7 +45,7 @@ export default async function logAuditEvent(
     source: {
       observer: {
         identifier: {
-          system: "https://iguhealth.com",
+          system: "https://iguhealth.com" as uri,
           value: "server",
         },
       },

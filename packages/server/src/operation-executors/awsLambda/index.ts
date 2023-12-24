@@ -309,7 +309,7 @@ async function createPayload(
         request.level === "type" || request.level === "instance"
           ? request.resourceType
           : undefined,
-      id: request.level === "instance" ? request.resourceType : undefined,
+      id: request.level === "instance" ? request.id : undefined,
     },
     input: parsedBody,
   };

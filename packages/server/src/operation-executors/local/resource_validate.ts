@@ -1,5 +1,5 @@
 import { ResourceValidate } from "@iguhealth/generated-ops/r4";
-import { ResourceType } from "@iguhealth/fhir-types/r4/types";
+import { ResourceType, code, uri } from "@iguhealth/fhir-types/r4/types";
 import validate from "@iguhealth/fhir-validation";
 import {
   OperationError,
@@ -28,7 +28,7 @@ export const validateResource = async (
         );
       const issues = await validate(
         {
-          validateCode: async (url: string, code: string) => {
+          validateCode: async (url: uri, code: code) => {
             const result = await ctx.terminologyProvider.validate(ctx, {
               code,
               url,
@@ -47,8 +47,8 @@ export const validateResource = async (
 
       return outcome([
         {
-          severity: "information",
-          code: "informational",
+          severity: "information" as code,
+          code: "informational" as code,
           diagnostics: "Validation successful",
         },
       ]);

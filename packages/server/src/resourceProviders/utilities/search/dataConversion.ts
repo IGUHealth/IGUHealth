@@ -181,7 +181,7 @@ export async function toReference(
           {
             reference: reference,
             resourceType: resourceType as ResourceType,
-            id: id,
+            id: id as id,
           },
         ];
       } else {

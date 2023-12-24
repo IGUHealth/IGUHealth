@@ -2,6 +2,7 @@ import {
   ResourceType,
   Resource,
   SearchParameter,
+  id,
 } from "@iguhealth/fhir-types/r4/types";
 import { AsynchronousClient } from "@iguhealth/client";
 import { v4 } from "uuid";
@@ -165,7 +166,7 @@ function createMemoryMiddleware<
         case "create-request": {
           const resource = context.request.body;
           const resources = context.state.data[context.request.resourceType];
-          if (!resource?.id) resource.id = v4();
+          if (!resource?.id) resource.id = v4() as id;
 
           context.state.data = {
             ...context.state.data,

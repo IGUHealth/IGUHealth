@@ -6,6 +6,8 @@ import {
 import {
   OperationDefinition,
   OperationOutcome,
+  code,
+  uri,
 } from "@iguhealth/fhir-types/r4/types";
 import { evaluate } from "@iguhealth/fhirpath";
 import { OpCTX } from "@iguhealth/operation-execution";
@@ -73,8 +75,8 @@ export function getOpCTX(ctx: FHIRServerCTX, request: InvokeRequest): OpCTX {
     level: request.level,
     validateCode: async (url: string, code: string) => {
       const result = await ctx.terminologyProvider.validate(ctx, {
-        code,
-        url,
+        code: code as code,
+        url: url as uri,
       });
       return result.result;
     },
@@ -120,9 +122,9 @@ export function validateInvocationContext(
   if (issues) return issues;
 
   if (request.level === "instance" || request.level === "type") {
-    if (operation.resource?.includes("Resource")) {
+    if (operation.resource?.includes("Resource" as code)) {
       return;
-    } else if (!operation.resource?.includes(request.resourceType))
+    } else if (!operation.resource?.includes(request.resourceType as code))
       return outcomeError(
         "invalid",
         `Invalid resourcetype on invocation request '${
