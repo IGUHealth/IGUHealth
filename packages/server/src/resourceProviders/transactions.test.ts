@@ -3,6 +3,7 @@ import { fileURLToPath } from "url";
 import { test, expect } from "@jest/globals";
 
 import {
+  Bundle,
   ResourceType,
   Resource,
   AResource,
@@ -59,7 +60,7 @@ test("Generate a graph from a transaction", () => {
         },
       },
     ],
-  });
+  } as Bundle);
   expect(result).toMatchSnapshot();
   expect(result.order).toEqual(["1", "0"]);
 });
@@ -88,7 +89,7 @@ test("Test Cyclical", () => {
           },
         },
       ],
-    });
+    } as Bundle);
   }).toThrow(
     new OperationError(
       outcomeFatal(
@@ -122,7 +123,7 @@ test("Test Cyclical", () => {
           },
         },
       ],
-    });
+    } as Bundle);
   } catch (e) {
     if (e instanceof OperationError) {
       expect(e.operationOutcome.issue).toEqual([

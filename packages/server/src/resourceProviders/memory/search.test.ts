@@ -5,6 +5,7 @@ import {
   ResourceType,
   Resource,
   Observation,
+  Patient,
 } from "@iguhealth/fhir-types/r4/types";
 import { expect, test } from "@jest/globals";
 import { loadArtifacts } from "@iguhealth/artifacts";
@@ -45,7 +46,7 @@ test("TEST Name search", async () => {
     resourceType: "Patient",
     id: "test",
     name: [{ given: ["John"], family: "Doe" }],
-  });
+  } as Patient);
   const response = await memDB.search_type(CTX, "Patient", [
     { name: "given", value: ["John"] },
   ]);
@@ -82,7 +83,7 @@ test("Quantity Test", async () => {
     valueQuantity: {
       value: 15.1,
     },
-  };
+  } as Observation;
   await memDB.create(CTX, observation);
 
   expect(
@@ -133,7 +134,7 @@ test("Date Test", async () => {
     id: "ob1",
     status: "final",
     valueDateTime: "1980",
-  };
+  } as Observation;
 
   await memDB.create(CTX, observation);
 
