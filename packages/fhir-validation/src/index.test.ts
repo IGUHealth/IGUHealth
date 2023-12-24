@@ -507,7 +507,7 @@ test("validate regexes", async () => {
         priority: -1,
       },
     ],
-  };
+  } as Account;
   expect(await validator(account)).toEqual([
     {
       code: "value",
