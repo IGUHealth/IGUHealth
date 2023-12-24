@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { FHIRGenerativeForm, Setter } from "./form";
 import { createStorybookClient } from "../stories.client";
+import { Patient, StructureDefinition } from "@iguhealth/fhir-types/r4/types";
 
 const StateForm = (props: Parameters<typeof FHIRGenerativeForm>[0]) => {
   const [state, setState] = React.useState(props);
@@ -48,7 +49,7 @@ export const Primary: Story = {
         { line: ["testing", "test"], state: "WA" },
         { line: ["12345"], state: "CA" },
       ],
-    },
+    } as Patient,
     structureDefinition: {
       resourceType: "StructureDefinition",
       id: "Patient",
@@ -3485,6 +3486,6 @@ export const Primary: Story = {
           },
         ],
       },
-    },
+    } as StructureDefinition,
   },
 };

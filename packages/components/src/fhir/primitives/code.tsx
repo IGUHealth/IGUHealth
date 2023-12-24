@@ -4,14 +4,16 @@ import { ValueSetExpand } from "@iguhealth/generated-ops/r4";
 import {
   ValueSet,
   ValueSetExpansionContains,
+  code,
+  uri,
 } from "@iguhealth/fhir-types/r4/types";
 
 import { EditableProps, ClientProps } from "../types";
 import { Select, Option } from "../../base/select";
 
-export type FHIRCodeEditableProps = EditableProps<string> &
+export type FHIRCodeEditableProps = EditableProps<code> &
   ClientProps & {
-    system?: string;
+    system?: uri;
     open?: boolean;
     filter?: (option: Option) => boolean;
   };
@@ -56,7 +58,7 @@ export const FHIRCodeEditable = ({
       value={value}
       onChange={(option) =>
         option
-          ? onChange?.call(this, option.value as string)
+          ? onChange?.call(this, option.value as code)
           : onChange?.call(this, undefined)
       }
       issue={issue}

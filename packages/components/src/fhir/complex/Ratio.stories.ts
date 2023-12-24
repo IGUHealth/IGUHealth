@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { FHIRRatioEditable } from "./Ratio";
+import { Ratio } from "@iguhealth/fhir-types/r4/types";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
@@ -29,7 +30,7 @@ export const Primary: Story = {
         unit: "km",
         value: 75.2,
       },
-    },
+    } as Ratio,
     label: "Ratio",
     onChange: (value) => console.log(value),
   },

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { FHIRAttachmentEditable } from "./Attachment";
+import { Attachment } from "@iguhealth/fhir-types/r4/types";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
@@ -20,7 +21,11 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    value: { data: "test", contentType: "text/plain", title: "test.txt" },
+    value: {
+      data: "test",
+      contentType: "text/plain",
+      title: "test.txt",
+    } as Attachment,
     onChange: (value) => console.log(value),
   },
 };

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { FHIRCodeEditable } from "./code";
 import { createStorybookClient } from "../stories.client";
+import { code, uri } from "@iguhealth/fhir-types/r4/types";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
@@ -22,16 +23,16 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     client: createStorybookClient(),
-    value: "test",
+    value: "test" as code,
     onChange: (value: string | undefined) => console.log(value),
-    system: "http://hl7.org/fhir/ValueSet/gender-identity",
+    system: "http://hl7.org/fhir/ValueSet/gender-identity" as uri,
   },
 };
 
 export const OnError: Story = {
   args: {
     client: createStorybookClient(),
-    value: "test",
+    value: "test" as code,
     issue: "Bad value",
     onChange: (value) => console.log(value),
   },

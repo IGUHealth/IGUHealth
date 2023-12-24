@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { FHIRDateTimeEditable } from "./datetime";
+import { dateTime } from "@iguhealth/fhir-types/r4/types";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
@@ -23,14 +24,14 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    value: "2017-01-01",
+    value: "2017-01-01" as dateTime,
     onChange: (value) => console.log(value),
   },
 };
 
 export const OnError: Story = {
   args: {
-    value: "invalid-date",
+    value: "invalid-date" as dateTime,
     issue: "Bad value",
     onChange: (value) => console.log(value),
   },

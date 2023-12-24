@@ -2,8 +2,9 @@ import React from "react";
 
 import { EditableProps } from "../types";
 import { Input } from "../../base/input";
+import { id } from "@iguhealth/fhir-types/r4/types";
 
-export type FHIRIdEditableProps = EditableProps<string>;
+export type FHIRIdEditableProps = EditableProps<id>;
 
 const idRegex = /^[A-Za-z0-9\-.]{1,64}$/;
 
@@ -30,7 +31,7 @@ export const FHIRIdEditable = ({
       type="text"
       value={value}
       onChange={(e) => {
-        onChange?.call(this, e.target.value);
+        onChange?.call(this, e.target.value as id);
       }}
     />
   );

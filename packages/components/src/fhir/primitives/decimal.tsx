@@ -2,8 +2,9 @@ import React from "react";
 
 import { EditableProps } from "../types";
 import { Input } from "../../base/input";
+import { decimal } from "@iguhealth/fhir-types/r4/types";
 
-export type FHIRDecimalEditableProps = EditableProps<number>;
+export type FHIRDecimalEditableProps = EditableProps<decimal>;
 
 export const FHIRDecimalEditable = ({
   value,
@@ -21,7 +22,7 @@ export const FHIRDecimalEditable = ({
       onChange={(e) => {
         const value = parseFloat(e.target.value);
         if (onChange && !isNaN(value)) {
-          onChange(value);
+          onChange(value as decimal);
         }
       }}
     />

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { FHIRIdEditable } from "./id";
+import { id } from "@iguhealth/fhir-types/r4/types";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
@@ -20,21 +21,21 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    value: "test",
+    value: "test" as id,
     onChange: (value) => console.log(value),
   },
 };
 
 export const InvalidId: Story = {
   args: {
-    value: "*asdf",
+    value: "*asdf" as id,
     onChange: (value) => console.log(value),
   },
 };
 
 export const OnError: Story = {
   args: {
-    value: "test",
+    value: "test" as id,
     issue: "Bad value",
     onChange: (value) => console.log(value),
   },

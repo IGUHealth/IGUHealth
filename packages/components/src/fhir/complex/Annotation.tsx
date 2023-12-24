@@ -4,7 +4,10 @@ import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { EditableProps } from "../types";
 import { CodeMirror } from "../../base";
 import { InputContainer } from "../../base/containers";
-import { Annotation } from "@iguhealth/fhir-types/r4/types";
+import {
+  Annotation,
+  markdown as fmarkdown,
+} from "@iguhealth/fhir-types/r4/types";
 
 export type FHIRMarkdownEditableProps = EditableProps<Annotation>;
 
@@ -21,7 +24,9 @@ export const FHIRAnnotationEditable = ({
       <CodeMirror
         extensions={extensions}
         value={value?.text}
-        onChange={(text) => onChange?.call(this, { ...value, text })}
+        onChange={(text) =>
+          onChange?.call(this, { ...value, text: text as fmarkdown })
+        }
       />
     </InputContainer>
   );

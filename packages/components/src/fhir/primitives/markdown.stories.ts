@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { FHIRMarkdownEditable } from "./markdown";
+import { markdown } from "@iguhealth/fhir-types/r4/types";
 
 const meta = {
   title: "Primitives/FHIRMarkdownEditable",
@@ -17,14 +18,14 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    value: "urn:oid:1.2.3.4.5",
+    value: "urn:oid:1.2.3.4.5" as markdown,
     onChange: (value) => console.log(value),
   },
 };
 
 export const OnError: Story = {
   args: {
-    value: "urn:oid:1.2.3.4.5",
+    value: "urn:oid:1.2.3.4.5" as markdown,
     issue: "Issue",
     onChange: (value) => console.log(value),
   },

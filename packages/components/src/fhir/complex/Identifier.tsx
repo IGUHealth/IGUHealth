@@ -1,5 +1,5 @@
 import React from "react";
-import { Identifier } from "@iguhealth/fhir-types/r4/types";
+import { Identifier, uri } from "@iguhealth/fhir-types/r4/types";
 
 import { EditableProps, ClientProps } from "../types";
 import { InputContainer } from "../../base/containers";
@@ -24,7 +24,7 @@ export const FHIRIdentifierEditable = ({
           client={client}
           label="Use"
           open={true}
-          system="http://hl7.org/fhir/ValueSet/identifier-use"
+          system={"http://hl7.org/fhir/ValueSet/identifier-use" as uri}
           value={value?.use}
           onChange={(use) => {
             onChange?.call(this, { ...value, use });

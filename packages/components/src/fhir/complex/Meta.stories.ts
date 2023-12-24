@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { FHIRMetaReadOnly } from "./Meta";
+import { id, instant } from "@iguhealth/fhir-types/r4/types";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
@@ -21,8 +22,8 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     value: {
-      versionId: "1",
-      lastUpdated: "1980-01-01",
+      versionId: "1" as id,
+      lastUpdated: "1980-01-01" as instant,
     },
   },
 };

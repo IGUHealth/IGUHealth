@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { Annotation } from "@iguhealth/fhir-types/r4/types";
 
 import { FHIRAnnotationEditable } from "./Annotation";
 
@@ -17,14 +18,14 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    value: { text: "# Testing" },
+    value: { text: "# Testing" } as Annotation,
     onChange: (value) => console.log(value),
   },
 };
 
 export const OnError: Story = {
   args: {
-    value: { text: "# Testing" },
+    value: { text: "# Testing" } as Annotation,
     issue: "Issue",
     onChange: (value) => console.log(value),
   },
