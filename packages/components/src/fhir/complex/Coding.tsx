@@ -1,5 +1,5 @@
 import React from "react";
-import { Coding } from "@iguhealth/fhir-types/r4/types";
+import { Coding, uri } from "@iguhealth/fhir-types/r4/types";
 
 import { EditableProps, ClientProps } from "../types";
 import { InputContainer } from "../../base/containers";
@@ -21,7 +21,7 @@ export const FHIRCodingEditable = ({
           label="System"
           value={value?.system}
           onChange={(system) => {
-            system && onChange?.call(this, { ...value, system });
+            system && onChange?.call(this, { ...value, system: system });
           }}
         />
         <FHIRCodeEditable

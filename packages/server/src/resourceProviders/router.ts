@@ -2,6 +2,7 @@ import {
   ResourceType,
   BundleEntry,
   Resource,
+  code,
 } from "@iguhealth/fhir-types/r4/types";
 import {
   FHIRRequest,
@@ -244,7 +245,7 @@ function createRouterMiddleware<
               level: "system",
               body: {
                 resourceType: "Bundle",
-                type: "batch-response",
+                type: "batch-response" as code,
                 entry: entries,
               },
             },

@@ -4,6 +4,9 @@ import {
   StructureDefinition,
   Resource,
   ResourceType,
+  Bundle,
+  uri,
+  code,
 } from "@iguhealth/fhir-types/r4/types";
 
 import {
@@ -36,22 +39,19 @@ const ReferenceView = ({
       const resourceType = value.reference.split("/")[0];
       const id = value.reference.split("/")[1];
       client
-        .batch(
-          {},
-          {
-            resourceType: "Bundle",
-            type: "batch",
-            entry: [
-              { request: { method: "GET", url: `${resourceType}/${id}` } },
-              {
-                request: {
-                  method: "GET",
-                  url: `StructureDefinition/${resourceType}`,
-                },
+        .batch({}, {
+          resourceType: "Bundle",
+          type: "batch",
+          entry: [
+            { request: { method: "GET", url: `${resourceType}/${id}` } },
+            {
+              request: {
+                method: "GET",
+                url: `StructureDefinition/${resourceType}`,
               },
-            ],
-          }
-        )
+            },
+          ],
+        } as Bundle)
         .then((batchResponse) => {
           if (
             batchResponse.entry?.[0].resource?.resourceType === resourceType ||
@@ -136,7 +136,7 @@ const ReferenceSearch = ({
         <div className="w-36">
           <FHIRCodeEditable
             client={client}
-            value={resourceType}
+            value={resourceType as code}
             filter={(option) =>
               !resourceTypesAllowed ||
               resourceTypesAllowed.includes(
@@ -144,7 +144,7 @@ const ReferenceSearch = ({
               )
             }
             onChange={(value) => setResourceType(value as ResourceType)}
-            system="http://hl7.org/fhir/ValueSet/resource-types"
+            system={"http://hl7.org/fhir/ValueSet/resource-types" as uri}
           />
         </div>
         <div className="flex flex-1">

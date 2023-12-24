@@ -1,6 +1,7 @@
 import { expect, test } from "@jest/globals";
 
 import {
+  id,
   Observation,
   Patient,
   Practitioner,
@@ -62,7 +63,7 @@ const patient: Patient = {
   managingOrganization: {
     reference: "Organization/hl7",
   },
-};
+} as Patient;
 
 const practitioner: Practitioner = {
   name: [
@@ -115,7 +116,7 @@ const practitioner: Practitioner = {
       ],
     },
   ],
-};
+} as Practitioner;
 
 const observation: Observation = {
   id: "a8f910df-f9dd-4812-81b3-cd46bcf2ee14",
@@ -184,7 +185,7 @@ const observation: Observation = {
     end: "2023-04-02T09:30:10+01:00",
     start: "2013-04-02T09:30:10+01:00",
   },
-};
+} as Observation;
 
 const SEED_URL = "http://seed-id";
 
@@ -209,26 +210,20 @@ async function createTestData(seed: number) {
   );
   resources.push(practitionerResponse);
 
-  const patientResponse = await client.create(
-    {},
-    {
-      ...patient,
-      extension: ext,
-      generalPractitioner: [
-        { reference: `Practitioner/${practitionerResponse.id}` },
-      ],
-    }
-  );
+  const patientResponse = await client.create({}, {
+    ...patient,
+    extension: ext,
+    generalPractitioner: [
+      { reference: `Practitioner/${practitionerResponse.id}` },
+    ],
+  } as Patient);
   resources.push(patientResponse);
 
-  const observationResponse = await client.create(
-    {},
-    {
-      ...observation,
-      extension: ext,
-      subject: { reference: `Patient/${patientResponse.id}` },
-    }
-  );
+  const observationResponse = await client.create({}, {
+    ...observation,
+    extension: ext,
+    subject: { reference: `Patient/${patientResponse.id}` },
+  } as Observation);
   resources.push(observationResponse);
 
   return resources;
@@ -261,7 +256,7 @@ test("Parameter chains", async () => {
     } finally {
       await Promise.all(
         resources.map(async ({ resourceType, id }) => {
-          return await client.delete({}, resourceType, id as string);
+          return await client.delete({}, resourceType, id as id);
         })
       );
     }
@@ -278,20 +273,17 @@ test("test offsets and count", async () => {
   const resources: Resource[] = [];
   try {
     for (let i = 0; i < 10; i++) {
-      const observationResponse = await client.create(
-        {},
-        {
-          ...observation,
-          code: {
-            coding: [
-              {
-                code: "test",
-                system: "http://test.com",
-              },
-            ],
-          },
-        }
-      );
+      const observationResponse = await client.create({}, {
+        ...observation,
+        code: {
+          coding: [
+            {
+              code: "test",
+              system: "http://test.com",
+            },
+          ],
+        },
+      } as Observation);
       resources.push(observationResponse);
     }
 
@@ -312,7 +304,7 @@ test("test offsets and count", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -322,20 +314,17 @@ test("test total accurate", async () => {
   const resources: Resource[] = [];
   try {
     for (let i = 0; i < 10; i++) {
-      const observationResponse = await client.create(
-        {},
-        {
-          ...observation,
-          code: {
-            coding: [
-              {
-                code: "test",
-                system: "http://test.com",
-              },
-            ],
-          },
-        }
-      );
+      const observationResponse = await client.create({}, {
+        ...observation,
+        code: {
+          coding: [
+            {
+              code: "test",
+              system: "http://test.com",
+            },
+          ],
+        },
+      } as Observation);
       resources.push(observationResponse);
     }
 
@@ -348,7 +337,7 @@ test("test total accurate", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -358,30 +347,24 @@ test("Test sort ", async () => {
   const resources: Resource[] = [];
   try {
     for (let i = 0; i < 10; i++) {
-      const patientResponse = await client.create(
-        {},
-        {
-          resourceType: "Patient",
-          name: [
-            {
-              given: [String.fromCharCode(65 + i)],
-              family: String.fromCharCode(65 + i),
-            },
-          ],
-        }
-      );
-      const patientResponse2 = await client.create(
-        {},
-        {
-          resourceType: "Patient",
-          name: [
-            {
-              given: [String.fromCharCode(65 + i)],
-              family: String.fromCharCode(65 + i + 1),
-            },
-          ],
-        }
-      );
+      const patientResponse = await client.create({}, {
+        resourceType: "Patient",
+        name: [
+          {
+            given: [String.fromCharCode(65 + i)],
+            family: String.fromCharCode(65 + i),
+          },
+        ],
+      } as Patient);
+      const patientResponse2 = await client.create({}, {
+        resourceType: "Patient",
+        name: [
+          {
+            given: [String.fromCharCode(65 + i)],
+            family: String.fromCharCode(65 + i + 1),
+          },
+        ],
+      } as Patient);
       resources.push(patientResponse);
       resources.push(patientResponse2);
     }
@@ -446,7 +429,7 @@ test("Test sort ", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -468,21 +451,18 @@ test("Testing custom extension added to resources", async () => {
         "https://iguhealth.app/author",
       ].sort()
     );
-    const existingExtensions = await client.create(
-      {},
-      {
-        meta: {
-          extension: [
-            { url: "https://iguhealth.app/author", valueString: "test" },
-            {
-              url: "https://iguhealth.app/version-sequence",
-              valueInteger: 1,
-            },
-          ],
-        },
-        resourceType: "Patient",
-      }
-    );
+    const existingExtensions = await client.create({}, {
+      meta: {
+        extension: [
+          { url: "https://iguhealth.app/author", valueString: "test" },
+          {
+            url: "https://iguhealth.app/version-sequence",
+            valueInteger: 1,
+          },
+        ],
+      },
+      resourceType: "Patient",
+    } as Patient);
     resources.push(existingExtensions);
     expect(
       evaluate("$this.meta.extension.url", existingExtensions).sort()
@@ -493,22 +473,19 @@ test("Testing custom extension added to resources", async () => {
       ].sort()
     );
 
-    const preserveExtensions = await client.create(
-      {},
-      {
-        meta: {
-          extension: [
-            { url: "https://test.com", valueString: "test" },
-            { url: "https://iguhealth.app/author", valueString: "test" },
-            {
-              url: "https://iguhealth.app/version-sequence",
-              valueInteger: 1,
-            },
-          ],
-        },
-        resourceType: "Patient",
-      }
-    );
+    const preserveExtensions = await client.create({}, {
+      meta: {
+        extension: [
+          { url: "https://test.com", valueString: "test" },
+          { url: "https://iguhealth.app/author", valueString: "test" },
+          {
+            url: "https://iguhealth.app/version-sequence",
+            valueInteger: 1,
+          },
+        ],
+      },
+      resourceType: "Patient",
+    } as Patient);
     resources.push(preserveExtensions);
     expect(
       evaluate("$this.meta.extension.url", preserveExtensions).sort()
@@ -522,7 +499,7 @@ test("Testing custom extension added to resources", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -531,22 +508,19 @@ test("Testing custom extension added to resources", async () => {
 test("Number range", async () => {
   const resources: Resource[] = [];
   try {
-    const RiskAssessment: RiskAssessment = await client.create(
-      {},
-      {
-        status: "final",
-        subject: {
-          reference: "Patient/b248b1b2-1686-4b94-9936-37d7a5f94b51",
+    const RiskAssessment: RiskAssessment = await client.create({}, {
+      status: "final",
+      subject: {
+        reference: "Patient/b248b1b2-1686-4b94-9936-37d7a5f94b51",
+      },
+      prediction: [
+        {
+          probabilityDecimal: 1.1327,
         },
-        prediction: [
-          {
-            probabilityDecimal: 1.1327,
-          },
-        ],
-        resourceType: "RiskAssessment",
-        occurrenceDateTime: "2006-01-13T23:01:00Z",
-      }
-    );
+      ],
+      resourceType: "RiskAssessment",
+      occurrenceDateTime: "2006-01-13T23:01:00Z",
+    } as RiskAssessment);
     resources.push(RiskAssessment);
 
     expect(
@@ -583,7 +557,7 @@ test("Number range", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -592,22 +566,19 @@ test("Number range", async () => {
 test("Number prefixes", async () => {
   const resources: Resource[] = [];
   try {
-    const RiskAssessment: RiskAssessment = await client.create(
-      {},
-      {
-        status: "final",
-        subject: {
-          reference: "Patient/b248b1b2-1686-4b94-9936-37d7a5f94b51",
+    const RiskAssessment: RiskAssessment = await client.create({}, {
+      status: "final",
+      subject: {
+        reference: "Patient/b248b1b2-1686-4b94-9936-37d7a5f94b51",
+      },
+      prediction: [
+        {
+          probabilityDecimal: 1.1327,
         },
-        prediction: [
-          {
-            probabilityDecimal: 1.1327,
-          },
-        ],
-        resourceType: "RiskAssessment",
-        occurrenceDateTime: "2006-01-13T23:01:00Z",
-      }
-    );
+      ],
+      resourceType: "RiskAssessment",
+      occurrenceDateTime: "2006-01-13T23:01:00Z",
+    } as RiskAssessment);
     resources.push(RiskAssessment);
 
     // Because range is off it will not match on generic
@@ -709,7 +680,7 @@ test("Number prefixes", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -721,12 +692,12 @@ test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
     title: "TEST QUESTIONNAIRE",
     status: "active",
     resourceType: "Questionnaire",
-  };
+  } as Questionnaire;
   const qrTemplate: QuestionnaireResponse = {
     status: "in-progress",
     resourceType: "QuestionnaireResponse",
     questionnaire: "https://iguhealth.com/PREPARE",
-  };
+  } as QuestionnaireResponse;
   const resources: Resource[] = [];
   try {
     const q = await client.create({}, questionnaireTemplate);
@@ -736,7 +707,7 @@ test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
 
     expect(
       await client.search_type({}, "QuestionnaireResponse", [
-        { name: "questionnaire", value: [q.id as string] },
+        { name: "questionnaire", value: [q.id as id] },
       ])
     ).toEqual({
       resources: [qr],
@@ -760,7 +731,7 @@ test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -772,12 +743,12 @@ test("Type filter", async () => {
     title: "TEST QUESTIONNAIRE",
     status: "active",
     resourceType: "Questionnaire",
-  };
+  } as Questionnaire;
   const qrTemplate: QuestionnaireResponse = {
     status: "in-progress",
     resourceType: "QuestionnaireResponse",
     questionnaire: "https://iguhealth.com/PREPARE",
-  };
+  } as QuestionnaireResponse;
   const resources: Resource[] = [];
   try {
     const q = await client.create({}, questionnaireTemplate);
@@ -803,7 +774,7 @@ test("Type filter", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }

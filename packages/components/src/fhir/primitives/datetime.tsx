@@ -3,8 +3,9 @@ import dayjs from "dayjs";
 
 import { EditableProps } from "../types";
 import { Input } from "../../base/input";
+import { dateTime } from "@iguhealth/fhir-types/r4/types";
 
-export type FHIRDateTimeEditableProps = EditableProps<string> & {
+export type FHIRDateTimeEditableProps = EditableProps<dateTime> & {
   /**
    * String output format defaults to YYYY-MM-DDThh:mm:ssZ.
    */
@@ -40,7 +41,7 @@ export const FHIRDateTimeEditable = ({
       onChange={(e) => {
         if (onChange) {
           const dateString = dayjs(e.target.value).format(outputFormat);
-          onChange(dateString);
+          onChange(dateString as dateTime);
         }
       }}
     />

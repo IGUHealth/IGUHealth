@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { FHIRRangeEditable } from "./Range";
+import { Range } from "@iguhealth/fhir-types/r4/types";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
@@ -29,7 +30,7 @@ export const Primary: Story = {
         unit: "km",
         value: 75.2,
       },
-    },
+    } as Range,
     label: "Range",
     onChange: (value) => console.log(value),
   },

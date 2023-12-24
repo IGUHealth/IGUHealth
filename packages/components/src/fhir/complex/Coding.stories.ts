@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { FHIRCodingEditable } from "./Coding";
 import { createStorybookClient } from "../stories.client";
+import { Coding } from "@iguhealth/fhir-types/r4/types";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
@@ -25,7 +26,7 @@ export const Primary: Story = {
     value: {
       code: "male",
       system: "http://hl7.org/fhir/ValueSet/gender-identity",
-    },
+    } as Coding,
     label: "Coding",
     onChange: (value) => console.log(value),
   },

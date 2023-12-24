@@ -2,7 +2,7 @@ import { produce } from "immer";
 import jsonpatch, { Operation } from "fast-json-patch";
 
 import * as fpt from "@iguhealth/fhir-pointer";
-import { Resource } from "@iguhealth/fhir-types/r4/types";
+import { Resource, id } from "@iguhealth/fhir-types/r4/types";
 
 export interface Mutation<T, R> {
   path: fpt.Loc<T, R, any>;
@@ -43,7 +43,7 @@ function createPatchesNonExistantFields<T extends Record<string, any>, R>(
   let curValue = resource as unknown;
   let curPointer: fpt.Loc<T, any, any> = fpt.pointer(
     resource.resourceType,
-    resource.id as string
+    resource.id as id
   );
   for (let i = 0; i < fields.length; i++) {
     curPointer = fpt.descend(curPointer, fields[i]);

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { FHIRContactPointEditable } from "./ContactPoint";
 import { createStorybookClient } from "../stories.client";
+import { ContactPoint } from "@iguhealth/fhir-types/r4/types";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
@@ -28,7 +29,7 @@ export const Primary: Story = {
       use: "home",
       system: "phone",
       value: "555-555-5555",
-    },
+    } as ContactPoint,
     label: "ContactPoint",
     onChange: (value) => console.log(value),
   },

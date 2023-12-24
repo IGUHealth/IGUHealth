@@ -13,17 +13,17 @@ import { evaluate, evaluateWithMeta } from "./index";
 
 const sds: StructureDefinition[] = loadArtifacts(
   "StructureDefinition",
-  path.join(fileURLToPath(import.meta.url), ".."),
+  path.join(fileURLToPath(import.meta.url), "..")
 );
 
 function getSD(type: code) {
-  const foundSD = sds.find((sd) => sd.type === type);
+  const foundSD = sds.find((sd) => (sd.type as unknown as code) === type);
   return foundSD;
 }
 
-const metaOptions = (startingType: code) => ({
+const metaOptions = (startingType: string) => ({
   meta: {
-    type: startingType,
+    type: startingType as code,
     getSD: getSD,
   },
 });
@@ -824,7 +824,7 @@ test("Get Locations for extensions", () => {
         },
       ],
     },
-  };
+  } as OperationDefinition;
 
   const nodes = evaluateWithMeta(
     "$this.descendants().where($this.extension.url=%extUrl).value",

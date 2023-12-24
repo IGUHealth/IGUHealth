@@ -46,7 +46,7 @@ export const FHIRAttachmentEditable = ({
                 size: file.size,
                 title: file.name,
                 creation: new Date(file.lastModified).toString(),
-              });
+              } as Attachment);
             });
           }}
         />

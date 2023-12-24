@@ -12,9 +12,13 @@ import {
 import {
   Bundle,
   BundleEntry,
+  code,
+  id,
   Resource,
   ResourceType,
   SearchParameter,
+  unsignedInt,
+  uri,
 } from "@iguhealth/fhir-types/r4/types";
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { MetaValueSingular } from "@iguhealth/meta-value";
@@ -420,7 +424,7 @@ async function getInstanceHistory<CTX extends FHIRServerCTX>(
   const resourceHistory = res.rows.map((row) => ({
     resource: row.resource as Resource,
     request: {
-      url: `${row.resource.resourceType}/${row.resource.id}`,
+      url: `${row.resource.resourceType}/${row.resource.id}` as uri,
       method: row.request_method,
     },
   }));
@@ -454,7 +458,7 @@ async function getTypeHistory<CTX extends FHIRServerCTX>(
   const resourceHistory = res.rows.map((row) => ({
     resource: row.resource as Resource,
     request: {
-      url: `${row.resource.resourceType}/${row.resource.id}`,
+      url: `${row.resource.resourceType}/${row.resource.id}` as uri,
       method: row.request_method,
     },
   }));
@@ -485,7 +489,7 @@ async function getSystemHistory<CTX extends FHIRServerCTX>(
   const resourceHistory = res.rows.map((row) => ({
     resource: row.resource as Resource,
     request: {
-      url: `${row.resource.resourceType}/${row.resource.id}`,
+      url: `${row.resource.resourceType}/${row.resource.id}` as uri,
       method: row.request_method,
     },
   }));
@@ -629,7 +633,7 @@ function createPostgresMiddleware<
                   type: "search-response",
                   parameters: context.request.parameters,
                   level: "system",
-                  total: result.total,
+                  total: result.total as unsignedInt,
                   body: result.resources,
                 },
               };
@@ -644,7 +648,7 @@ function createPostgresMiddleware<
                   parameters: context.request.parameters,
                   level: "type",
                   resourceType: context.request.resourceType,
-                  total: result.total,
+                  total: result.total as unsignedInt,
                   body: result.resources,
                 },
               };
@@ -660,7 +664,7 @@ function createPostgresMiddleware<
             context.ctx,
             {
               ...context.request.body,
-              id: v4(),
+              id: v4() as id,
             }
           );
 
@@ -902,7 +906,7 @@ function createPostgresMiddleware<
 
               const transactionResponse: Bundle = {
                 resourceType: "Bundle",
-                type: "transaction-response",
+                type: "transaction-response" as code,
                 entry: responseEntries,
               };
 

@@ -1,4 +1,4 @@
-import { OperationOutcome } from "@iguhealth/fhir-types/r4/types";
+import { OperationOutcome, code } from "@iguhealth/fhir-types/r4/types";
 
 export class OperationError extends Error {
   public readonly operationOutcome: OperationOutcome;
@@ -37,20 +37,57 @@ export function outcome(issues: OperationOutcome["issue"]): OperationOutcome {
 }
 
 type Issue = OperationOutcome["issue"][number];
+type IssueSeverity = "fatal" | "error" | "warning" | "information";
+type IssueType =
+  | "invalid"
+  | "structure"
+  | "required"
+  | "value"
+  | "invariant"
+  | "security"
+  | "login"
+  | "unknown"
+  | "expired"
+  | "forbidden"
+  | "suppressed"
+  | "processing"
+  | "not-supported"
+  | "duplicate"
+  | "multiple-matches"
+  | "not-found"
+  | "too-long"
+  | "code-invalid"
+  | "extension"
+  | "too-costly"
+  | "business-rule"
+  | "conflict"
+  | "transient"
+  | "lock-error"
+  | "no-store"
+  | "exception"
+  | "timeout"
+  | "incomplete"
+  | "throttled"
+  | "informational";
 
 export function issue(
-  severity: Issue["severity"],
-  code: Issue["code"],
+  severity: IssueSeverity,
+  code: IssueType,
   diagnostics: Issue["diagnostics"],
   expression?: Issue["expression"]
 ): Issue {
-  const issue = { severity, code, diagnostics, expression };
+  const issue = {
+    severity: severity as code,
+    code: code as code,
+    diagnostics,
+    expression,
+  };
   if (expression) return { ...issue, expression };
   return issue;
 }
 
 export function issueError(
-  code: Issue["code"],
+  code: IssueType,
   diagnostics: Issue["diagnostics"],
   expression?: Issue["expression"]
 ): Issue {
@@ -58,7 +95,7 @@ export function issueError(
 }
 
 export function issueFatal(
-  code: Issue["code"],
+  code: IssueType,
   diagnostics: Issue["diagnostics"],
   expression?: Issue["expression"]
 ): Issue {
@@ -66,7 +103,7 @@ export function issueFatal(
 }
 
 export function issueWarning(
-  code: Issue["code"],
+  code: IssueType,
   diagnostics: Issue["diagnostics"],
   expression?: Issue["expression"]
 ): Issue {
@@ -74,7 +111,7 @@ export function issueWarning(
 }
 
 export function issueInfo(
-  code: Issue["code"],
+  code: IssueType,
   diagnostics: Issue["diagnostics"],
   expression?: Issue["expression"]
 ): Issue {
@@ -82,7 +119,7 @@ export function issueInfo(
 }
 
 export function outcomeError(
-  code: Issue["code"],
+  code: IssueType,
   diagnostics: Issue["diagnostics"],
   expression?: Issue["expression"]
 ): OperationOutcome {
@@ -90,7 +127,7 @@ export function outcomeError(
 }
 
 export function outcomeFatal(
-  code: Issue["code"],
+  code: IssueType,
   diagnostics: Issue["diagnostics"],
   expression?: Issue["expression"]
 ): OperationOutcome {
@@ -98,7 +135,7 @@ export function outcomeFatal(
 }
 
 export function outcomeWarning(
-  code: Issue["code"],
+  code: IssueType,
   diagnostics: Issue["diagnostics"],
   expression?: Issue["expression"]
 ): OperationOutcome {
@@ -106,7 +143,7 @@ export function outcomeWarning(
 }
 
 export function outcomeInfo(
-  code: Issue["code"],
+  code: IssueType,
   diagnostics: Issue["diagnostics"],
   expression?: Issue["expression"]
 ): OperationOutcome {

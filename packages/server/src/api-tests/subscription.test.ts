@@ -3,6 +3,9 @@ import pg from "pg";
 import dotEnv from "dotenv";
 
 import {
+  id,
+  Encounter,
+  Questionnaire,
   QuestionnaireResponse,
   Subscription,
   Resource,
@@ -63,7 +66,7 @@ test("No filter QR", async () => {
     criteria: "QuestionnaireResponse",
     language: "en",
     resourceType: "Subscription",
-  };
+  } as Subscription;
 
   const resources: Resource[] = [];
   try {
@@ -71,7 +74,7 @@ test("No filter QR", async () => {
       resourceType: "QuestionnaireResponse",
       status: "completed",
       identifier: { system: "iguhealth-system", value: "test-qr" },
-    };
+    } as QuestionnaireResponse;
     resources.push(await client.create({}, sub));
     resources.push(await client.create({}, qr));
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -82,12 +85,12 @@ test("No filter QR", async () => {
     await client2.delete(
       {},
       "QuestionnaireResponse",
-      response.resources[0].id as string
+      response.resources[0].id as id
     );
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -108,7 +111,7 @@ test("Filter patient sub ", async () => {
     criteria: "Patient?given=John",
     language: "en",
     resourceType: "Subscription",
-  };
+  } as Subscription;
 
   const resources: Resource[] = [];
   try {
@@ -134,11 +137,11 @@ test("Filter patient sub ", async () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     const response = await client2.search_type({}, "Patient", []);
     expect(response.resources.length).toEqual(1);
-    await client2.delete({}, "Patient", response.resources[0].id as string);
+    await client2.delete({}, "Patient", response.resources[0].id as id);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -159,7 +162,7 @@ test("name check", async () => {
     criteria: "Patient?name=Marko1",
     language: "en",
     resourceType: "Subscription",
-  };
+  } as Subscription;
 
   const resources: Resource[] = [];
   try {
@@ -185,11 +188,11 @@ test("name check", async () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     const response = await client2.search_type({}, "Patient", []);
     expect(response.resources.length).toEqual(1);
-    await client2.delete({}, "Patient", response.resources[0].id as string);
+    await client2.delete({}, "Patient", response.resources[0].id as id);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -202,42 +205,33 @@ test("Reference canonical", async () => {
   const resources: Resource[] = [];
   try {
     resources.push(
-      await client.create(
-        {},
-        {
-          reason: "Patient post back",
-          status: "active",
-          channel: {
-            type: "rest-hook",
-            endpoint:
-              "http://localhost:3000/w/ref-check/api/v1/fhir/r4/QuestionnaireResponse",
-          },
-          criteria: "QuestionnaireResponse?questionnaire=ahc-questionnaire",
-          language: "en",
-          resourceType: "Subscription",
-        }
-      )
+      await client.create({}, {
+        reason: "Patient post back",
+        status: "active",
+        channel: {
+          type: "rest-hook",
+          endpoint:
+            "http://localhost:3000/w/ref-check/api/v1/fhir/r4/QuestionnaireResponse",
+        },
+        criteria: "QuestionnaireResponse?questionnaire=ahc-questionnaire",
+        language: "en",
+        resourceType: "Subscription",
+      } as Subscription)
     );
     resources.push(
-      await client.create(
-        {},
-        {
-          resourceType: "Questionnaire",
-          url: "ahc-questionnaire",
-          status: "active",
-        }
-      )
+      await client.create({}, {
+        resourceType: "Questionnaire",
+        url: "ahc-questionnaire",
+        status: "active",
+      } as Questionnaire)
     );
 
     resources.push(
-      await client.create(
-        {},
-        {
-          resourceType: "QuestionnaireResponse",
-          questionnaire: "ahc-questionnaire",
-          status: "completed",
-        }
-      )
+      await client.create({}, {
+        resourceType: "QuestionnaireResponse",
+        questionnaire: "ahc-questionnaire",
+        status: "completed",
+      } as QuestionnaireResponse)
     );
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -246,14 +240,11 @@ test("Reference canonical", async () => {
 
     // Confirm additional QRS aren't getting pushed
     resources.push(
-      await client.create(
-        {},
-        {
-          resourceType: "QuestionnaireResponse",
-          questionnaire: "unknown-questionnaire",
-          status: "completed",
-        }
-      )
+      await client.create({}, {
+        resourceType: "QuestionnaireResponse",
+        questionnaire: "unknown-questionnaire",
+        status: "completed",
+      } as QuestionnaireResponse)
     );
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -261,12 +252,12 @@ test("Reference canonical", async () => {
     expect(qrs.resources.length).toEqual(1);
 
     for (const qr of qrs.resources) {
-      await client2.delete({}, "QuestionnaireResponse", qr.id as string);
+      await client2.delete({}, "QuestionnaireResponse", qr.id as id);
     }
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -283,56 +274,46 @@ test("Reference standard", async () => {
       { resourceType: "Patient" }
     );
     resources.push(patient);
-    const sub = await client.create(
-      {},
-      {
-        reason: "Patient post back",
-        status: "active",
-        channel: {
-          type: "rest-hook",
-          endpoint:
-            "http://localhost:3000/w/ref-check/api/v1/fhir/r4/Encounter",
-        },
-        criteria: `Encounter?patient=${patient.id}`,
-        language: "en",
-        resourceType: "Subscription",
-      }
-    );
+    const sub = await client.create({}, {
+      reason: "Patient post back",
+      status: "active",
+      channel: {
+        type: "rest-hook",
+        endpoint: "http://localhost:3000/w/ref-check/api/v1/fhir/r4/Encounter",
+      },
+      criteria: `Encounter?patient=${patient.id}`,
+      language: "en",
+      resourceType: "Subscription",
+    } as Subscription);
     resources.push(sub);
     resources.push(
-      await client.create(
-        {},
-        {
-          resourceType: "Encounter",
-          status: "finished",
-          class: {
-            system: "http://terminology.hl7.org/CodeSystem/v3-ActCode",
-            code: "IMP",
-            display: "inpatient encounter",
-          },
-          subject: {
-            reference: `Patient/${patient.id}`,
-          },
-        }
-      )
+      await client.create({}, {
+        resourceType: "Encounter",
+        status: "finished",
+        class: {
+          system: "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          code: "IMP",
+          display: "inpatient encounter",
+        },
+        subject: {
+          reference: `Patient/${patient.id}`,
+        },
+      } as Encounter)
     );
 
     resources.push(
-      await client.create(
-        {},
-        {
-          resourceType: "Encounter",
-          status: "finished",
-          class: {
-            system: "http://terminology.hl7.org/CodeSystem/v3-ActCode",
-            code: "IMP",
-            display: "inpatient encounter",
-          },
-          subject: {
-            reference: "Patient/1",
-          },
-        }
-      )
+      await client.create({}, {
+        resourceType: "Encounter",
+        status: "finished",
+        class: {
+          system: "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          code: "IMP",
+          display: "inpatient encounter",
+        },
+        subject: {
+          reference: "Patient/1",
+        },
+      } as Encounter)
     );
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -342,49 +323,40 @@ test("Reference standard", async () => {
       `Patient/${patient.id}`
     );
 
-    await client2.delete({}, "Encounter", encounters.resources[0].id as string);
+    await client2.delete({}, "Encounter", encounters.resources[0].id as id);
 
-    await client.update(
-      {},
-      {
-        ...sub,
-        criteria: `Encounter?patient=Patient/${patient.id}`,
-      }
-    );
+    await client.update({}, {
+      ...sub,
+      criteria: `Encounter?patient=Patient/${patient.id}`,
+    } as Subscription);
     resources.push(
-      await client.create(
-        {},
-        {
-          resourceType: "Encounter",
-          status: "finished",
-          class: {
-            system: "http://terminology.hl7.org/CodeSystem/v3-ActCode",
-            code: "IMP",
-            display: "inpatient encounter",
-          },
-          subject: {
-            reference: `Patient/${patient.id}`,
-          },
-        }
-      )
+      await client.create({}, {
+        resourceType: "Encounter",
+        status: "finished",
+        class: {
+          system: "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          code: "IMP",
+          display: "inpatient encounter",
+        },
+        subject: {
+          reference: `Patient/${patient.id}`,
+        },
+      } as Encounter)
     );
 
     resources.push(
-      await client.create(
-        {},
-        {
-          resourceType: "Encounter",
-          status: "finished",
-          class: {
-            system: "http://terminology.hl7.org/CodeSystem/v3-ActCode",
-            code: "IMP",
-            display: "inpatient encounter",
-          },
-          subject: {
-            reference: "Patient/1",
-          },
-        }
-      )
+      await client.create({}, {
+        resourceType: "Encounter",
+        status: "finished",
+        class: {
+          system: "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          code: "IMP",
+          display: "inpatient encounter",
+        },
+        subject: {
+          reference: "Patient/1",
+        },
+      } as Encounter)
     );
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -394,11 +366,11 @@ test("Reference standard", async () => {
       `Patient/${patient.id}`
     );
 
-    await client2.delete({}, "Encounter", encounters.resources[0].id as string);
+    await client2.delete({}, "Encounter", encounters.resources[0].id as id);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }

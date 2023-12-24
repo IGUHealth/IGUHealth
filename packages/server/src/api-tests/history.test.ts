@@ -1,6 +1,7 @@
 import { expect, test } from "@jest/globals";
 
 import {
+  id,
   Patient,
   Practitioner,
   Resource,
@@ -23,7 +24,7 @@ test("History test", async () => {
     resources.push(p);
     expect(p.id).toBeDefined();
     await client.update({}, p);
-    const history = await client.historyInstance({}, "Patient", p.id as string);
+    const history = await client.historyInstance({}, "Patient", p.id as id);
     expect(history.length).toEqual(2);
 
     const p2 = await client.create<Patient>({}, { resourceType: "Patient" });
@@ -49,7 +50,7 @@ test("History test", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -63,7 +64,7 @@ test("History test since versionid", async () => {
     resources.push(p);
     expect(p.id).toBeDefined();
     await client.update({}, p);
-    const history = await client.historyInstance({}, "Patient", p.id as string);
+    const history = await client.historyInstance({}, "Patient", p.id as id);
     expect(history.length).toEqual(2);
 
     const p2 = await client.create<Patient>({}, { resourceType: "Patient" });
@@ -71,7 +72,7 @@ test("History test since versionid", async () => {
     expect(p2.id).toBeDefined();
     await client.update({}, p2);
     const typeHistory = await client.historyType({}, "Patient", [
-      { name: "_since-version", value: [p.meta?.versionId as string] },
+      { name: "_since-version", value: [p.meta?.versionId as id] },
     ]);
     expect(typeHistory.length).toEqual(3);
 
@@ -83,13 +84,13 @@ test("History test since versionid", async () => {
     expect(practitioner.id).toBeDefined();
     await client.update({}, practitioner);
     const systemHistory = await client.historySystem({}, [
-      { name: "_since-version", value: [p.meta?.versionId as string] },
+      { name: "_since-version", value: [p.meta?.versionId as id] },
     ]);
     expect(systemHistory.length).toEqual(5);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }

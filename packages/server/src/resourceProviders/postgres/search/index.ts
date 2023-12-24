@@ -62,7 +62,7 @@ async function calculateTotal(
     default:
       throw new OperationError(
         outcomeError(
-          "fatal",
+          "invalid",
           "Unknown total type received must be 'none', 'estimate' or 'accurate'"
         )
       );

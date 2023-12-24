@@ -4,6 +4,7 @@ import {
   ValueSetExpansionContains,
   CodeSystemConcept,
   CodeSystem,
+  dateTime,
 } from "@iguhealth/fhir-types/r4/types";
 import {
   ValueSetValidateCode,
@@ -218,7 +219,10 @@ export class TerminologyProviderMemory implements TerminologyProvider {
       const contains = await getValuesetExpansionContains(ctx, valueset);
       valueset = {
         ...valueset,
-        expansion: { timestamp: new Date().toISOString(), contains },
+        expansion: {
+          timestamp: new Date().toISOString() as dateTime,
+          contains,
+        },
       };
     }
     return valueset;

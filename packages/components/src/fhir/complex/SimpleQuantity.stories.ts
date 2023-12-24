@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { FHIRSimpleQuantityEditable } from "./SimpleQuantity";
+import { Quantity } from "@iguhealth/fhir-types/r4/types";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
@@ -23,7 +24,7 @@ export const Primary: Story = {
     value: {
       unit: "km",
       value: 55.2,
-    },
+    } as Quantity,
     label: "Simple Quantity",
     onChange: (value) => console.log(value),
   },

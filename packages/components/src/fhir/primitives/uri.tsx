@@ -1,3 +1,33 @@
-import { FHIRStringEditable } from "./string";
+import React from "react";
 
-export { FHIRStringEditable as FHIRUriEditable };
+import { EditableProps } from "../types";
+import { Input } from "../../base/input";
+import { uri } from "@iguhealth/fhir-types/r4/types";
+
+export type FHIRStringEditableProps = EditableProps<uri> & {
+  disabled?: boolean;
+  inputProps?: Parameters<typeof Input>[0];
+};
+
+export const FHIRUriEditable = ({
+  onChange,
+  value,
+  issue,
+  label,
+  disabled = false,
+  inputProps,
+}: FHIRStringEditableProps) => {
+  return (
+    <Input
+      {...inputProps}
+      disabled={disabled}
+      label={label}
+      issues={issue ? [issue] : []}
+      type="text"
+      value={value}
+      onChange={(e) => {
+        onChange?.call(this, e.target.value as uri);
+      }}
+    />
+  );
+};

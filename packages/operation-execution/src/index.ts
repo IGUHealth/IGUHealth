@@ -4,6 +4,7 @@ import {
   Parameters,
   Resource,
   OperationDefinitionParameter,
+  code,
 } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import validate, { ValidationCTX } from "@iguhealth/fhir-validation";
@@ -98,7 +99,7 @@ function validateNoExtraFields(
   );
   const paramNames = new Set(parameters.map((param) => param.name));
   paramNames.forEach((paramName) => {
-    if (!definitionNames.has(paramName)) {
+    if (!definitionNames.has(paramName as code)) {
       throw new OperationError(
         outcomeError("invalid", `Parameter ${paramName} not supported`)
       );
@@ -178,7 +179,7 @@ function parseParameter(
     parsedParameters.length > parseInt(definition.max)
   ) {
     throw new OperationError(
-      outcomeError("too-many", `Too many parameters ${definition.name}`)
+      outcomeError("too-costly", `Too many parameters ${definition.name}`)
     );
   }
 
@@ -270,7 +271,7 @@ function validateCardinalities(
     );
   if (definition.max !== "*" && value.length > parseInt(definition.max)) {
     throw new OperationError(
-      outcomeError("too-many", `Too many parameters ${definition.name}`)
+      outcomeError("too-costly", `Too many parameters ${definition.name}`)
     );
   }
 }
@@ -348,7 +349,7 @@ async function validateParameters<
 ): Promise<OperationOutcomeIssue[]> {
   let issues: OperationOutcomeIssue[] = [];
   const definitions = (op.operationDefinition.parameter || []).filter(
-    (p) => p.use === use
+    (p) => p.use === (use as code)
   );
   if (!isRecord(value))
     return [
@@ -378,7 +379,7 @@ export interface OpCTX extends ValidationCTX {
 }
 
 export interface IOperation<I, O> {
-  code: string;
+  code: code;
   get operationDefinition(): OperationDefinition;
   parseToObject<Use extends "in" | "out">(
     use: Use,
@@ -423,7 +424,7 @@ export type OPMetadata<O> = O extends IOperation<infer Input, infer Output>
 
 export class Operation<I, O> implements IOperation<I, O> {
   private _operationDefinition: OperationDefinition;
-  code: string;
+  code: code;
   constructor(operationDefinition: OperationDefinition) {
     this.code = operationDefinition.code;
     this._operationDefinition = operationDefinition;

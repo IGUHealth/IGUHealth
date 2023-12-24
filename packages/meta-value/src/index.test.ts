@@ -13,7 +13,7 @@ import { MetaValueSingular, MetaValueArray, descend } from "./index";
 
 const sds: StructureDefinition[] = loadArtifacts(
   "StructureDefinition",
-  path.join(fileURLToPath(import.meta.url), ".."),
+  path.join(fileURLToPath(import.meta.url), "..")
 );
 
 const patientSD = sds.find(
@@ -37,7 +37,7 @@ test("Untyped", () => {
     identifier: [{ system: "mrn", value: "123" }],
     name: [{ given: ["bob"] }],
     deceasedBoolean: true,
-  };
+  } as Patient;
   const myValue = new MetaValueSingular({}, patient) as any;
 
   expect(descend(myValue, "name")?.valueOf()).toEqual([{ given: ["bob"] }]);
@@ -55,7 +55,7 @@ test("Simple Type test", () => {
     identifier: [{ system: "mrn", value: "123" }],
     name: [{ given: ["bob"] }],
     deceasedBoolean: true,
-  };
+  } as Patient;
   const myValue = new MetaValueSingular(
     {
       type: {
@@ -117,7 +117,7 @@ test("ConceptMap test", () => {
         ],
       },
     ],
-  };
+  } as ConceptMap;
   const myValue = new MetaValueSingular(
     {
       type: {
@@ -158,7 +158,7 @@ test("Location test", () => {
     identifier: [{ system: "mrn", value: "123" }],
     name: [{ given: ["bob", "frank"] }],
     deceasedBoolean: true,
-  };
+  } as Patient;
   const myValue = new MetaValueSingular(
     {
       type: {
@@ -188,7 +188,7 @@ test("typechoice", () => {
     extension: [{ url: "test", valueReference: { reference: "urn:oid:2" } }],
     resourceType: "Practitioner",
     name: [{ given: ["Bob"] }],
-  };
+  } as Practitioner;
   const myValue = new MetaValueSingular(
     {
       type: {

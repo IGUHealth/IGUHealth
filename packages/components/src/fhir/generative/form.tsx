@@ -16,6 +16,7 @@ import {
   Resource,
   ElementDefinition,
   ElementDefinitionType,
+  id,
 } from "@iguhealth/fhir-types/r4/types";
 import { descend, ascend, Loc, pointer, root } from "@iguhealth/fhir-pointer";
 import generateJSONPatches, { Mutation } from "@iguhealth/fhir-patch-building";
@@ -471,7 +472,7 @@ export const FHIRGenerativeForm = ({
       type={structureDefinition.snapshot?.element?.[0]?.type?.[0]}
       pointer={pointer(
         structureDefinition.type as ResourceType,
-        value?.id || "new"
+        value?.id || ("new" as id)
       )}
       onChange={onChange}
       showLabel={false}

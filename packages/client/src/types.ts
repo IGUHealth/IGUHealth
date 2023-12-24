@@ -6,6 +6,8 @@ import {
   BundleEntry,
   CapabilityStatement,
   Parameters,
+  code,
+  unsignedInt,
 } from "@iguhealth/fhir-types/r4/types";
 import type { ParsedParameter } from "./url.js";
 
@@ -132,19 +134,19 @@ export type SystemSearchRequest = SystemInteraction & {
 
 export type InvokeInstanceRequest = InstanceInteraction & {
   type: RequestInteractionTypes["invoke"];
-  operation: string;
+  operation: code;
   body: Parameters;
 };
 
 export type InvokeTypeRequest = TypeInteraction & {
   type: RequestInteractionTypes["invoke"];
-  operation: string;
+  operation: code;
   body: Parameters;
 };
 
 export type InvokeSystemRequest = SystemInteraction & {
   type: RequestInteractionTypes["invoke"];
-  operation: string;
+  operation: code;
   body: Parameters;
 };
 
@@ -208,7 +210,7 @@ export type CreateResponse = TypeInteraction & {
 export type TypeSearchResponse = TypeInteraction & {
   parameters: ParsedParameter<string | number>[];
   type: ResponseInteractionTypes["search"];
-  total?: number;
+  total?: unsignedInt;
   body: Resource[];
 };
 
@@ -240,25 +242,25 @@ export type SystemHistoryResponse = SystemInteraction & {
 export type SystemSearchResponse = SystemInteraction & {
   parameters: ParsedParameter<string | number>[];
   type: ResponseInteractionTypes["search"];
-  total?: number;
+  total?: unsignedInt;
   body: Resource[];
 };
 
 export type InvokeInstanceResponse = InstanceInteraction & {
   type: ResponseInteractionTypes["invoke"];
-  operation: string;
+  operation: code;
   body: Parameters;
 };
 
 export type InvokeTypeResponse = TypeInteraction & {
   type: ResponseInteractionTypes["invoke"];
-  operation: string;
+  operation: code;
   body: Parameters;
 };
 
 export type InvokeSystemResponse = SystemInteraction & {
   type: ResponseInteractionTypes["invoke"];
-  operation: string;
+  operation: code;
   body: Parameters;
 };
 

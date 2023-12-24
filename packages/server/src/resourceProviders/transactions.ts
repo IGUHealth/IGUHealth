@@ -118,7 +118,7 @@ async function retryFailedTransactions<ReturnType>(
   ctx.logger.error(`Max number of retries exceeded '${numberOfRetries}'`);
   throw new OperationError(
     outcomeFatal(
-      "internal",
+      "lock-error",
       `Could not apply transaction after '${numberOfRetries}' retries.`
     )
   );

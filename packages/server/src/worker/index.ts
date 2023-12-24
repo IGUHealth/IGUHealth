@@ -8,6 +8,7 @@ import {
   Subscription,
   BundleEntry,
   id,
+  code,
 } from "@iguhealth/fhir-types/r4/types";
 import {
   OperationError,
@@ -382,7 +383,7 @@ function processSubscription(
 
       await ctx.client.update(ctx, {
         ...subscription,
-        status: "error",
+        status: "error" as code,
       });
     }
   };

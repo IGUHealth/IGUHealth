@@ -13,8 +13,16 @@ import stringClauses from "./string.js";
 import tokenClauses from "./token.js";
 import uriClauses from "./uri.js";
 import { and } from "../../../utilities/sql.js";
+import { FilterSQLResult } from "./types.js";
 
-const PARAMETER_CLAUSES = {
+const PARAMETER_CLAUSES: Record<
+  string,
+  (
+    ctx: FHIRServerCTX,
+    parameter: SearchParameterResource,
+    values: unknown[]
+  ) => FilterSQLResult
+> = {
   token: tokenClauses,
   date: dateClauses,
   uri: uriClauses,

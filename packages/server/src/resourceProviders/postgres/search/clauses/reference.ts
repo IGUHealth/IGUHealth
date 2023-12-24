@@ -1,4 +1,4 @@
-import { SearchParameter } from "@iguhealth/fhir-types/r4/types";
+import { SearchParameter, code } from "@iguhealth/fhir-types/r4/types";
 
 import { FHIRServerCTX } from "../../../../ctx/types.js";
 import {
@@ -19,7 +19,7 @@ function generateCanonicalReferenceSearch(
   values: unknown[]
 ): FilterSQLResult {
   let index = values.length + 1;
-  const uriTablename = searchParameterToTableName("uri");
+  const uriTablename = searchParameterToTableName("uri" as code);
   const targets = `(${(parameter.searchParameter.target || [])
     .map((target) => {
       values = [...values, target];

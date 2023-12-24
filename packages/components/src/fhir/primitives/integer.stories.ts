@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { FHIRIntegerEditable } from "./integer";
+import { integer } from "@iguhealth/fhir-types/r4/types";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
@@ -23,14 +24,14 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    value: 22.2,
+    value: 22.2 as integer,
     onChange: (value) => console.log(value),
   },
 };
 
 export const OnError: Story = {
   args: {
-    value: 55,
+    value: 55 as integer,
     issue: "Bad value",
     onChange: (value) => console.log(value),
   },

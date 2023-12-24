@@ -1,6 +1,6 @@
 import { expect, test } from "@jest/globals";
 
-import { Bundle } from "@iguhealth/fhir-types/r4/types";
+import { Bundle, code } from "@iguhealth/fhir-types/r4/types";
 import HTTPClient from "@iguhealth/client/http";
 
 const client = HTTPClient({
@@ -11,35 +11,36 @@ const client = HTTPClient({
 });
 
 test("test batch", async () => {
-  let response: Bundle = { resourceType: "Bundle", type: "batch", entry: [] };
+  let response: Bundle = {
+    resourceType: "Bundle",
+    type: "batch" as code,
+    entry: [],
+  } as Bundle;
   try {
-    response = await client.batch(
-      {},
-      {
-        resourceType: "Bundle",
-        type: "batch",
-        entry: [
-          {
-            request: {
-              method: "POST",
-              url: "Patient",
-            },
-            resource: {
-              resourceType: "Patient",
-            },
+    response = await client.batch({}, {
+      resourceType: "Bundle",
+      type: "batch",
+      entry: [
+        {
+          request: {
+            method: "POST",
+            url: "Patient",
           },
-          {
-            request: {
-              method: "POST",
-              url: "Practitioner",
-            },
-            resource: {
-              resourceType: "Practitioner",
-            },
+          resource: {
+            resourceType: "Patient",
           },
-        ],
-      }
-    );
+        },
+        {
+          request: {
+            method: "POST",
+            url: "Practitioner",
+          },
+          resource: {
+            resourceType: "Practitioner",
+          },
+        },
+      ],
+    } as Bundle);
     expect(response.entry?.[0].resource?.resourceType).toEqual("Patient");
     expect(response.entry?.[0].resource).toHaveProperty("id");
     expect(response.entry?.[1].resource?.resourceType).toEqual("Practitioner");
@@ -53,7 +54,7 @@ test("test batch", async () => {
           request: { url: entry.request?.url || "", method: "DELETE" },
         };
       }),
-    };
+    } as Bundle;
     await client.batch({}, bundle);
   }
 });

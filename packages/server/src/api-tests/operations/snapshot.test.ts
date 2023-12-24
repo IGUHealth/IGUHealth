@@ -2,6 +2,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { expect, test } from "@jest/globals";
 
+import { StructureDefinition } from "@iguhealth/fhir-types/r4/types";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import HTTPClient from "@iguhealth/client/lib/http";
 import { StructureDefinitionSnapshot } from "@iguhealth/generated-ops/r4";
@@ -10,7 +11,7 @@ import usCoreDifferential from "../data/us-core-differential";
 
 const sds = loadArtifacts(
   "StructureDefinition",
-  path.join(fileURLToPath(import.meta.url), "../../../"),
+  path.join(fileURLToPath(import.meta.url), "../../../")
 );
 
 const client = HTTPClient({
@@ -57,7 +58,7 @@ test("Patient expansion", async () => {
             },
           ],
         },
-      },
+      } as StructureDefinition,
     })
     .catch((e) => e.operationOutcome);
 

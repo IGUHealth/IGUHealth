@@ -1,5 +1,5 @@
 import React from "react";
-import { ContactDetail } from "@iguhealth/fhir-types/r4/types";
+import { ContactDetail, uri } from "@iguhealth/fhir-types/r4/types";
 
 import { EditableProps, ClientProps } from "../types";
 import { InputContainer } from "../../base/containers";
@@ -29,7 +29,7 @@ export const FHIRContactDetailEditable = ({
           label="System"
           client={client}
           open={true}
-          system="http://hl7.org/fhir/ValueSet/contact-point-system"
+          system={"http://hl7.org/fhir/ValueSet/contact-point-system" as uri}
           value={value?.telecom?.[0]?.system}
           onChange={(telecomSystem) => {
             onChange?.call(this, {

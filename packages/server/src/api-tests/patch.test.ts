@@ -1,6 +1,6 @@
 import { expect, test } from "@jest/globals";
 
-import { Resource, Bundle, Patient } from "@iguhealth/fhir-types/r4/types";
+import { Resource, Bundle, Patient, id } from "@iguhealth/fhir-types/r4/types";
 import HTTPClient from "@iguhealth/client/http";
 
 const client = HTTPClient({
@@ -88,7 +88,7 @@ test("Test successfull patch", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { Identifier } from "@iguhealth/fhir-types/r4/types";
 
 import { FHIRIdentifierEditable } from "./Identifier";
 import { createStorybookClient } from "../stories.client";
@@ -26,7 +27,7 @@ export const Primary: Story = {
       use: "usual",
       system: "http://hl7.org/fhir/sid/us-ssn",
       value: "444222222",
-    },
+    } as Identifier,
     label: "Identifier",
     onChange: (value) => console.log(value),
   },

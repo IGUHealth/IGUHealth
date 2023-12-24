@@ -10,6 +10,7 @@ import {
   OperationDefinition,
   OperationOutcome,
   StructureDefinition,
+  Bundle,
 } from "@iguhealth/fhir-types/r4/types";
 
 import { getClient } from "../../db/client";
@@ -91,27 +92,24 @@ function ResourceEditorTabs() {
 
   useEffect(() => {
     client
-      .batch(
-        {},
-        {
-          type: "batch",
-          resourceType: "Bundle",
-          entry: [
-            {
-              request: {
-                method: "GET",
-                url: `${resourceType}/${id}`,
-              },
+      .batch({}, {
+        type: "batch",
+        resourceType: "Bundle",
+        entry: [
+          {
+            request: {
+              method: "GET",
+              url: `${resourceType}/${id}`,
             },
-            {
-              request: {
-                method: "GET",
-                url: `StructureDefinition/${resourceType}`,
-              },
+          },
+          {
+            request: {
+              method: "GET",
+              url: `StructureDefinition/${resourceType}`,
             },
-          ],
-        }
-      )
+          },
+        ],
+      } as Bundle)
       .then((response) => {
         setResource(response.entry?.[0]?.resource);
         setStructureDefinition(
@@ -124,7 +122,7 @@ function ResourceEditorTabs() {
     case "OperationDefinition":
       return (
         <OperationDefinitionView
-          id={id as string}
+          id={id as id}
           resourceType={resourceType as ResourceType}
           actions={actions}
           resource={resource as OperationDefinition}
@@ -135,7 +133,7 @@ function ResourceEditorTabs() {
     default:
       return (
         <ResourceEditorComponent
-          id={id as string}
+          id={id as id}
           resourceType={resourceType as ResourceType}
           actions={actions}
           resource={resource}

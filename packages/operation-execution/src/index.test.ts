@@ -23,12 +23,12 @@ import { OperationError, outcome } from "@iguhealth/operation-outcomes";
 
 const operationDefinitions = loadArtifacts(
   "OperationDefinition",
-  path.join(fileURLToPath(import.meta.url), ".."),
+  path.join(fileURLToPath(import.meta.url), "..")
 );
 
 const structureDefinitions = loadArtifacts(
   "StructureDefinition",
-  path.join(fileURLToPath(import.meta.url), ".."),
+  path.join(fileURLToPath(import.meta.url), "..")
 );
 
 const valueSetExpandOp = operationDefinitions.find(
@@ -53,7 +53,7 @@ test("parseParameters", () => {
           valueString: "test",
         },
       ],
-    })
+    } as Parameters)
   ).toEqual({
     filter: "test",
     url: "https://my-valueset.com",
@@ -77,7 +77,7 @@ test("No Extra Parameters Allowed", () => {
           valueString: "test",
         },
       ],
-    });
+    } as Parameters);
   }).toThrow();
 });
 
@@ -147,7 +147,7 @@ const operationTest: OperationDefinition = {
       ],
     },
   ],
-};
+} as OperationDefinition;
 
 test("Test Operation 1", () => {
   expect(
@@ -168,7 +168,7 @@ test("Test Operation 1", () => {
           ],
         },
       ],
-    })
+    } as Parameters)
   ).toEqual({
     test: "value1",
     test2: [5],
@@ -207,7 +207,7 @@ test("roundTrip", () => {
         ],
       },
     ],
-  };
+  } as Parameters;
   expect(
     operation.parseToParameters("in", operation.parseToObject("in", parameters))
   ).toEqual(parameters);
@@ -429,7 +429,7 @@ test("Test mapToParameters", () => {
         type: "Resource",
       },
     ],
-  };
+  } as OperationDefinition;
   expect(toParametersResource(op, "in", { payload: "test" })).toEqual({
     resourceType: "Parameters",
     parameter: [
@@ -469,7 +469,7 @@ test("Test invalid resource validation", async () => {
         type: "Resource",
       },
     ],
-  };
+  } as OperationDefinition;
   const operation: IOperation<{ payload: Resource[] }, { test: string }> =
     new Operation<{ payload: Resource[] }, { test: string }>(op);
 

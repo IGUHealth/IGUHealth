@@ -3,8 +3,9 @@ import dayjs from "dayjs";
 
 import { EditableProps } from "../types";
 import { Input } from "../../base/input";
+import { instant } from "@iguhealth/fhir-types/r4/types";
 
-export type FHIRInstantEditableProps = EditableProps<string>;
+export type FHIRInstantEditableProps = EditableProps<instant>;
 
 const instantRegex =
   /^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?(Z|(\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))$/;
@@ -38,7 +39,7 @@ export const FHIRInstantEditable = ({
           const dateString = dayjs(e.target.value).format(
             "YYYY-MM-DDThh:mm:ss.SSSZ"
           );
-          onChange(dateString);
+          onChange(dateString as instant);
         }
       }}
     />

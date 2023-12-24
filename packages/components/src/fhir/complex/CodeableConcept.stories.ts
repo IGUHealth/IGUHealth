@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { FhirCodeableConceptEditable } from "./CodeableConcept";
 import { createStorybookClient } from "../stories.client";
+import { CodeableConcept } from "@iguhealth/fhir-types/r4/types";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
@@ -27,7 +28,7 @@ export const Primary: Story = {
         { code: "test", display: "test" },
         { code: "testing2", display: "test2" },
       ],
-    },
+    } as CodeableConcept,
     onChange: (value) => console.log(value),
   },
 };

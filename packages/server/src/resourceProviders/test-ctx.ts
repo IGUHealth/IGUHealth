@@ -4,7 +4,12 @@ import { fileURLToPath } from "url";
 import createLogger from "pino";
 import dotEnv from "dotenv";
 
-import { ResourceType, AResource } from "@iguhealth/fhir-types/r4/types";
+import {
+  ResourceType,
+  AResource,
+  code,
+  dateTime,
+} from "@iguhealth/fhir-types/r4/types";
 import { loadArtifacts } from "@iguhealth/artifacts";
 
 import MemoryDatabase from "./memory/async.js";
@@ -48,11 +53,11 @@ export const testServices: FHIRServerCTX = {
   logger: createLogger.default(),
   capabilities: {
     resourceType: "CapabilityStatement",
-    status: "active",
-    kind: "instance",
-    fhirVersion: "4.0.1",
-    date: new Date().toISOString(),
-    format: ["json"],
+    status: "active" as code,
+    kind: "instance" as code,
+    fhirVersion: "4.0.1" as code,
+    date: new Date().toISOString() as dateTime,
+    format: ["json" as code],
   },
   client: MemoryDatabase({}),
   cache: new TestCache(),

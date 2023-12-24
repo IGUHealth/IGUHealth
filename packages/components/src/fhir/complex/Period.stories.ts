@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { FHIRPeriodEditable } from "./Period";
+import { Period } from "@iguhealth/fhir-types/r4/types";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
@@ -23,7 +24,7 @@ export const Primary: Story = {
     value: {
       start: "2021-01-01",
       end: "2021-01-02",
-    },
+    } as Period,
     label: "Period",
     onChange: (value) => console.log(value),
   },

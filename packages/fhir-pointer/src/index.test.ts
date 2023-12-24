@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals";
-import { Patient } from "@iguhealth/fhir-types/r4/types";
+import { Patient, id } from "@iguhealth/fhir-types/r4/types";
 import {
   Loc,
   pointer,
@@ -14,18 +14,18 @@ import {
 } from "./index";
 
 test("pointer", () => {
-  const loc = pointer("Patient", "123");
+  const loc = pointer("Patient", "123" as id);
   expect(loc).toBe("Patient|123");
 });
 
 test("ascend pointer", () => {
-  const loc = descend(pointer("Patient", "123"), "name");
+  const loc = descend(pointer("Patient", "123" as id), "name");
   expect(ascend(loc)).toEqual({ parent: "Patient|123", field: "name" });
   // @ts-ignore
   expect(ascend(ascend(loc)?.parent)).toEqual(undefined);
 
   const nestedLoc = descend(
-    descend(descend(pointer("Patient", "123"), "name"), 0),
+    descend(descend(pointer("Patient", "123" as id), "name"), 0),
     "given"
   );
   expect(nestedLoc).toEqual("Patient|123/name/0/given");
@@ -43,7 +43,7 @@ test("ascend pointer", () => {
 
 test("get function", () => {
   const nestedLoc = descend(
-    descend(descend(pointer("Patient", "123"), "name"), 0),
+    descend(descend(pointer("Patient", "123" as id), "name"), 0),
     "given"
   );
 
@@ -51,16 +51,19 @@ test("get function", () => {
     resourceType: "Patient",
     id: "123",
     name: [{ given: ["John"] }],
-  };
+  } as Patient;
 
   expect(get(nestedLoc, patient)).toEqual(["John"]);
   expect(
-    get(descend(descend(pointer("Patient", "123"), "name"), 1), patient)
+    get(descend(descend(pointer("Patient", "123" as id), "name"), 1), patient)
   ).toEqual(undefined);
 
   expect(
     get(
-      descend(descend(descend(pointer("Patient", "123"), "name"), 1), "given"),
+      descend(
+        descend(descend(pointer("Patient", "123" as id), "name"), 1),
+        "given"
+      ),
       patient
     )
   ).toEqual(undefined);
@@ -68,7 +71,7 @@ test("get function", () => {
   expect(
     get(
       descend(
-        descend(descend(pointer("Patient", "123"), "identifier"), 1),
+        descend(descend(pointer("Patient", "123" as id), "identifier"), 1),
         "system"
       ),
       patient
@@ -77,13 +80,13 @@ test("get function", () => {
 });
 
 test("path meta", () => {
-  const nestedLoc = descend(pointer("Patient", "123"), "name");
+  const nestedLoc = descend(pointer("Patient", "123" as id), "name");
   expect(pathMeta(nestedLoc)).toEqual({ resourceType: "Patient", id: "123" });
 });
 
 test("fields", () => {
   const nestedLoc = descend(
-    descend(descend(pointer("Patient", "123"), "name"), 0),
+    descend(descend(pointer("Patient", "123" as id), "name"), 0),
     "given"
   );
   expect(fields(nestedLoc)).toEqual(["name", 0, "given"]);
@@ -91,16 +94,16 @@ test("fields", () => {
 
 test("root", () => {
   const nestedLoc = descend(
-    descend(descend(pointer("Patient", "123"), "name"), 0),
+    descend(descend(pointer("Patient", "123" as id), "name"), 0),
     "given"
   );
   expect(root(nestedLoc)).toEqual("Patient|123");
   expect(toJSONPointer(root(nestedLoc))).toEqual("");
-  expect(root(pointer("Patient", "123"))).toEqual("Patient|123");
+  expect(root(pointer("Patient", "123" as id))).toEqual("Patient|123");
 });
 
 test("escaping strings.", () => {
-  const loc = pointer("Patient", "asdf") as Loc<any, any>;
+  const loc = pointer("Patient", "asdf" as id) as Loc<any, any>;
   const escapedLoc = descend(descend(loc, "~name"), "/test");
   expect(escapedLoc).toEqual("Patient|asdf/~0name/~1test");
   expect(toJSONPointer(escapedLoc)).toEqual("/~0name/~1test");

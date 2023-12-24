@@ -1,5 +1,5 @@
 import React from "react";
-import { ContactPoint } from "@iguhealth/fhir-types/r4/types";
+import { ContactPoint, uri } from "@iguhealth/fhir-types/r4/types";
 
 import { EditableProps, ClientProps } from "../types";
 import { InputContainer } from "../../base/containers";
@@ -23,7 +23,7 @@ export const FHIRContactPointEditable = ({
           label="Use"
           client={client}
           open={true}
-          system="http://hl7.org/fhir/ValueSet/contact-point-use"
+          system={"http://hl7.org/fhir/ValueSet/contact-point-use" as uri}
           value={value?.use}
           onChange={(use) => {
             onChange?.call(this, { ...value, use });
@@ -33,7 +33,7 @@ export const FHIRContactPointEditable = ({
           label="System"
           client={client}
           open={true}
-          system="http://hl7.org/fhir/ValueSet/contact-point-system"
+          system={"http://hl7.org/fhir/ValueSet/contact-point-system" as uri}
           value={value?.system}
           onChange={(system) => {
             onChange?.call(this, { ...value, system });

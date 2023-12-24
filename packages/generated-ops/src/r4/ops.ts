@@ -158,7 +158,7 @@ export namespace ActivityDefinitionApply {
         type: "Any",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace ActivityDefinitionDataRequirements {
   export type Input = Record<string, never>;
@@ -217,7 +217,7 @@ export namespace ActivityDefinitionDataRequirements {
         type: "Library",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace CapabilityStatementConforms {
   export type Input = {
@@ -328,7 +328,7 @@ export namespace CapabilityStatementConforms {
         type: "CapabilityStatement",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace CapabilityStatementImplements {
   export type Input = {
@@ -416,7 +416,7 @@ export namespace CapabilityStatementImplements {
         type: "OperationOutcome",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace CapabilityStatementSubset {
   export type Input = {
@@ -494,7 +494,7 @@ export namespace CapabilityStatementSubset {
         type: "CapabilityStatement",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace CapabilityStatementVersions {
   export type Input = Record<string, never>;
@@ -563,7 +563,7 @@ export namespace CapabilityStatementVersions {
         type: "code",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace ChargeItemDefinitionApply {
   export type Input = {
@@ -644,7 +644,7 @@ export namespace ChargeItemDefinitionApply {
         type: "Any",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace ClaimSubmit {
   export type Input = { resource: fhirTypes.Resource };
@@ -710,7 +710,7 @@ export namespace ClaimSubmit {
         type: "Resource",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace CodeSystemFindMatches {
   export type Input = {
@@ -1049,7 +1049,7 @@ export namespace CodeSystemFindMatches {
         ],
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace CodeSystemLookup {
   export type Input = {
@@ -1379,7 +1379,7 @@ export namespace CodeSystemLookup {
         ],
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace CodeSystemSubsumes {
   export type Input = {
@@ -1506,7 +1506,7 @@ export namespace CodeSystemSubsumes {
         },
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace CodeSystemValidateCode {
   export type Input = {
@@ -1688,7 +1688,7 @@ export namespace CodeSystemValidateCode {
         type: "string",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace CompositionDocument {
   export type Input = {
@@ -1769,7 +1769,7 @@ export namespace CompositionDocument {
         type: "uri",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace ConceptMapClosure {
   export type Input = {
@@ -1856,7 +1856,7 @@ export namespace ConceptMapClosure {
         type: "ConceptMap",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace ConceptMapTranslate {
   export type Input = {
@@ -2143,7 +2143,7 @@ export namespace ConceptMapTranslate {
         ],
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace CoverageEligibilityRequestSubmit {
   export type Input = { resource: fhirTypes.Resource };
@@ -2209,7 +2209,7 @@ export namespace CoverageEligibilityRequestSubmit {
         type: "Resource",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace EncounterEverything {
   export type Input = {
@@ -2298,7 +2298,7 @@ export namespace EncounterEverything {
         type: "Bundle",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace GroupEverything {
   export type Input = {
@@ -2407,7 +2407,7 @@ export namespace GroupEverything {
         type: "Bundle",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace LibraryDataRequirements {
   export type Input = { target?: fhirTypes.string };
@@ -2473,7 +2473,7 @@ export namespace LibraryDataRequirements {
         type: "Library",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace ListFind {
   export type Input = { patient: fhirTypes.id; name: fhirTypes.code };
@@ -2540,7 +2540,7 @@ export namespace ListFind {
         type: "code",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace MeasureCareGaps {
   export type Input = {
@@ -2641,7 +2641,7 @@ export namespace MeasureCareGaps {
         type: "Bundle",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace MeasureCollectData {
   export type Input = {
@@ -2776,7 +2776,7 @@ export namespace MeasureCollectData {
         type: "Resource",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace MeasureDataRequirements {
   export type Input = {
@@ -2856,7 +2856,7 @@ export namespace MeasureDataRequirements {
         type: "Library",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace MeasureEvaluateMeasure {
   export type Input = {
@@ -2989,7 +2989,7 @@ export namespace MeasureEvaluateMeasure {
         type: "MeasureReport",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace MeasureSubmitData {
   export type Input = {
@@ -3059,7 +3059,7 @@ export namespace MeasureSubmitData {
         type: "Resource",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace MedicinalProductEverything {
   export type Input = {
@@ -3138,7 +3138,7 @@ export namespace MedicinalProductEverything {
         type: "Bundle",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace MessageHeaderProcessMessage {
   export type Input = {
@@ -3228,7 +3228,7 @@ export namespace MessageHeaderProcessMessage {
         type: "Bundle",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace NamingSystemPreferredId {
   export type Input = { id: fhirTypes.string; type: fhirTypes.code };
@@ -3307,7 +3307,7 @@ export namespace NamingSystemPreferredId {
         type: "string",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace ObservationLastn {
   export type Input = { max?: fhirTypes.positiveInt };
@@ -3375,7 +3375,7 @@ export namespace ObservationLastn {
         type: "Bundle",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace ObservationStats {
   export type Input = {
@@ -3536,7 +3536,7 @@ export namespace ObservationStats {
         type: "Observation",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace PatientEverything {
   export type Input = {
@@ -3645,7 +3645,7 @@ export namespace PatientEverything {
         type: "Bundle",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace PatientMatch {
   export type Input = {
@@ -3735,7 +3735,7 @@ export namespace PatientMatch {
         type: "Bundle",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace PlanDefinitionApply {
   export type Input = {
@@ -3895,7 +3895,7 @@ export namespace PlanDefinitionApply {
         type: "CarePlan",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace PlanDefinitionDataRequirements {
   export type Input = Record<string, never>;
@@ -3954,7 +3954,7 @@ export namespace PlanDefinitionDataRequirements {
         type: "Library",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace ResourceConvert {
   export type Input = { input: fhirTypes.Resource };
@@ -4020,7 +4020,7 @@ export namespace ResourceConvert {
         type: "Resource",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace ResourceGraph {
   export type Input = { graph: fhirTypes.uri };
@@ -4086,7 +4086,7 @@ export namespace ResourceGraph {
         type: "Bundle",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace ResourceGraphql {
   export type Input = { query: fhirTypes.string };
@@ -4144,7 +4144,7 @@ export namespace ResourceGraphql {
         type: "Binary",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace ResourceMeta {
   export type Input = Record<string, never>;
@@ -4202,7 +4202,7 @@ export namespace ResourceMeta {
         type: "Meta",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace ResourceMetaAdd {
   export type Input = { meta: fhirTypes.Meta };
@@ -4267,7 +4267,7 @@ export namespace ResourceMetaAdd {
         type: "Meta",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace ResourceMetaDelete {
   export type Input = { meta: fhirTypes.Meta };
@@ -4332,7 +4332,7 @@ export namespace ResourceMetaDelete {
         type: "Meta",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace ResourceValidate {
   export type Input = {
@@ -4429,7 +4429,7 @@ export namespace ResourceValidate {
         type: "OperationOutcome",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace StructureDefinitionQuestionnaire {
   export type Input = {
@@ -4536,7 +4536,7 @@ export namespace StructureDefinitionQuestionnaire {
         type: "Questionnaire",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace StructureDefinitionSnapshot {
   export type Input = {
@@ -4614,7 +4614,7 @@ export namespace StructureDefinitionSnapshot {
         type: "StructureDefinition",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace StructureMapTransform {
   export type Input = { source?: fhirTypes.uri; content: fhirTypes.Resource };
@@ -4689,7 +4689,7 @@ export namespace StructureMapTransform {
         type: "Resource",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace ValueSetExpand {
   export type Input = {
@@ -4963,7 +4963,7 @@ export namespace ValueSetExpand {
         type: "ValueSet",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace ValueSetValidateCode {
   export type Input = {
@@ -5176,7 +5176,7 @@ export namespace ValueSetValidateCode {
         type: "string",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }
 export namespace IguhealthEncrypt {
   export type Input = { value: fhirTypes.string };
@@ -5215,5 +5215,5 @@ export namespace IguhealthEncrypt {
         type: "string",
       },
     ],
-  });
+  } as fhirTypes.OperationDefinition);
 }

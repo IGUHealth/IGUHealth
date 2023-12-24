@@ -3,6 +3,9 @@ import {
   Parameters,
   Resource,
   ResourceType,
+  code,
+  id,
+  unsignedInt,
 } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -136,7 +139,7 @@ function parseRequest1NonEmpty(
       return {
         type: "invoke-request",
         level: "system",
-        operation: urlPieces[0].slice(1),
+        operation: urlPieces[0].slice(1) as code,
         body: request.body as Parameters,
       };
     } else if (request.method === "GET") {
@@ -226,7 +229,7 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
           type: "invoke-request",
           level: "type",
           resourceType: urlPieces[0],
-          operation: urlPieces[1].slice(1),
+          operation: urlPieces[1].slice(1) as code,
           body: request.body as Parameters,
         };
       } else if (request.method === "GET") {
@@ -269,7 +272,7 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
           type: "read-request",
           level: "instance",
           resourceType: urlPieces[0],
-          id: urlPieces[1],
+          id: urlPieces[1] as id,
         };
       }
     } else if (request.method === "PUT") {
@@ -277,7 +280,7 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
         type: "update-request",
         level: "instance",
         resourceType: urlPieces[0],
-        id: urlPieces[1],
+        id: urlPieces[1] as id,
         body: request.body as Resource,
       };
     } else if (request.method === "PATCH") {
@@ -285,7 +288,7 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
         type: "patch-request",
         level: "instance",
         resourceType: urlPieces[0],
-        id: urlPieces[1],
+        id: urlPieces[1] as id,
         body: request.body as object,
       };
     } else if (request.method === "DELETE") {
@@ -293,7 +296,7 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
         type: "delete-request",
         level: "instance",
         resourceType: urlPieces[0],
-        id: urlPieces[1],
+        id: urlPieces[1] as id,
       };
     }
   }
@@ -316,8 +319,8 @@ function parseRequest3(urlPieces: string[], request: HTTPRequest): FHIRRequest {
           type: "invoke-request",
           level: "instance",
           resourceType: urlPieces[0],
-          id: urlPieces[1],
-          operation: urlPieces[2].slice(1),
+          id: urlPieces[1] as id,
+          operation: urlPieces[2].slice(1) as code,
           body: request.body as Parameters,
         };
       } else if (request.method === "GET") {
@@ -340,7 +343,7 @@ function parseRequest3(urlPieces: string[], request: HTTPRequest): FHIRRequest {
           type: "history-request",
           level: "instance",
           resourceType: urlPieces[0],
-          id: urlPieces[1],
+          id: urlPieces[1] as id,
           parameters: parseParameters(request.url),
         };
       }
@@ -363,7 +366,7 @@ function parseRequest4(
       type: "vread-request",
       level: "instance",
       resourceType: urlPieces[0],
-      id: urlPieces[1],
+      id: urlPieces[1] as id,
       versionId: urlPieces[3],
     };
   }
@@ -394,13 +397,22 @@ export function httpRequestToFHIRRequest(request: HTTPRequest): FHIRRequest {
 }
 
 function toBundle(
-  bundleType: Bundle["type"],
-  total: number | undefined,
+  bundleType:
+    | "document"
+    | "message"
+    | "transaction"
+    | "transaction-response"
+    | "batch"
+    | "batch-response"
+    | "history"
+    | "searchset"
+    | "collection",
+  total: unsignedInt | undefined,
   resources: Resource[]
 ): Bundle {
   return {
     resourceType: "Bundle",
-    type: bundleType,
+    type: bundleType as code,
     total: total,
     entry: resources.map((resource) => ({ resource })),
   };

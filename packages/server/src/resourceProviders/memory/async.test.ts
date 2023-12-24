@@ -49,7 +49,7 @@ function generateParameter(
     name: "Test",
     code: "test",
     ...fieldOverrides,
-  };
+  } as SearchParameter;
 }
 
 function generateSD(
@@ -65,7 +65,7 @@ function generateSD(
     status: "active",
     name: "SD",
     ...fieldOverrides,
-  };
+  } as StructureDefinition;
 }
 
 test("Creation and search", async () => {
@@ -75,17 +75,20 @@ test("Creation and search", async () => {
     generateParameter({
       id: "test1",
       name: "test1",
-    })
+    } as SearchParameter)
   );
   await memDb.create(
     testServices,
     generateParameter({
       id: "test2",
       name: "test2",
-    })
+    } as SearchParameter)
   );
 
-  await memDb.create(testServices, generateSD({ id: "test0", name: "test1" }));
+  await memDb.create(
+    testServices,
+    generateSD({ id: "test0", name: "test1" } as StructureDefinition)
+  );
   expect(
     (
       await memDb.search_type(
@@ -108,7 +111,7 @@ test("Creation and search", async () => {
     generateParameter({
       id: "test1",
       name: "test1",
-    }),
+    } as SearchParameter),
   ]);
 });
 

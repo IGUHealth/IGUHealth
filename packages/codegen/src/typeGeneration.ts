@@ -1,6 +1,7 @@
 import {
   ElementDefinition,
   StructureDefinition,
+  unsignedInt,
 } from "@iguhealth/fhir-types/r4/types";
 import { traversalBottomUp } from "./sdTraversal.js";
 
@@ -88,17 +89,32 @@ function primitiveToTypescriptType(
   const primitiveValueType = primitiveSd.snapshot?.element.filter((element) =>
     element.path.endsWith(".value")
   )[0]?.type?.[0]?.code;
+  // http://hl7.org/fhir/StructureDefinition/uri
   // Skip over these primitive types as already exist in typescript
   if (primitiveValueType) {
     let primitiveType = `export type ${
       primitiveSd.id
-    } = ${fhirSystemTypePredicate(primitiveValueType)};`;
+    } = ${fhirSystemTypePredicate(primitiveValueType)}`;
+
     // Avoid compiler issues by ts-ignoring boolean and string
     // which don't allow type aliasing
     if (primitiveSd.id === "boolean" || primitiveSd.id === "string") {
-      primitiveType = `// @ts-ignore\n${primitiveType}`;
+      return `// @ts-ignore\n${primitiveType};`;
+    } else {
+      let extension = "";
+      if (
+        primitiveSd.baseDefinition &&
+        primitiveSd.baseDefinition !==
+          "http://hl7.org/fhir/StructureDefinition/Element"
+      ) {
+        extension = ` & ${primitiveSd.baseDefinition.replace(
+          "http://hl7.org/fhir/StructureDefinition/",
+          ""
+        )}`;
+      }
+      // For primitives that aren't string or boolean, add branding to have more type constraints.
+      return `${primitiveType} & { _${primitiveSd.id}: "fhir_${primitiveSd.id}"; } ${extension};`;
     }
-    return primitiveType;
   } else {
     throw new Error("No type found for primitive");
   }
@@ -126,9 +142,15 @@ function wrapAsCollection(
 }
 
 function _typeToTypescriptType(type: string): string {
-  let systemType = fhirSystemTypePredicate(type);
-  if (systemType !== undefined) {
-    return systemType;
+  // .id fields are often typed as http://hl7.org/fhirpath/System.String
+  // setting them to fhir primitive id instead
+  if (
+    fhirSystemTypePredicate(type) &&
+    type !== "http://hl7.org/fhirpath/System.String"
+  ) {
+    throw new Error("System type not supported '${type}'");
+  } else if (type === "http://hl7.org/fhirpath/System.String") {
+    return "id";
   }
   return type;
 }
@@ -192,7 +214,7 @@ function contentReference(sd: StructureDefinition, element: ElementDefinition) {
 
 function getPrimitiveExtension(element: ElementDefinition, type: string) {
   return `${documentation(element)}  _${getElementField(
-    { ...element, min: 0 },
+    { ...element, min: 0 as unsignedInt },
     type
   )}: ${typeToTypescriptType(element, "Element")}`;
 }

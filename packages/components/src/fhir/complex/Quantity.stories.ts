@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { FHIRQuantityEditable } from "./Quantity";
 import { createStorybookClient } from "../stories.client";
+import { Quantity } from "@iguhealth/fhir-types/r4/types";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
@@ -26,7 +27,7 @@ export const Primary: Story = {
       comparator: ">",
       unit: "km",
       value: 55.2,
-    },
+    } as Quantity,
     label: "Quantity",
     onChange: (value) => console.log(value),
   },

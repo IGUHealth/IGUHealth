@@ -15,6 +15,10 @@ import {
   CapabilityStatement,
   CapabilityStatementRestResource,
   StructureDefinition,
+  code,
+  dateTime,
+  canonical,
+  uri,
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -87,21 +91,21 @@ async function createResourceRestCapabilities(
   ]);
 
   return {
-    type: sd.type,
-    profile: sd.url,
+    type: sd.type as unknown as code,
+    profile: sd.url as canonical,
     interaction: [
-      { code: "read" },
-      { code: "update" },
-      { code: "delete" },
-      { code: "search-type" },
-      { code: "create" },
-      { code: "history-instance" },
+      { code: "read" as code },
+      { code: "update" as code },
+      { code: "delete" as code },
+      { code: "search-type" as code },
+      { code: "create" as code },
+      { code: "history-instance" as code },
     ],
-    versioning: "versioned",
+    versioning: "versioned" as code,
     updateCreate: false,
     searchParam: resourceParameters.resources.map((resource) => ({
       name: resource.name,
-      definition: resource.url,
+      definition: resource.url as canonical,
       type: resource.type,
       documentation: resource.description,
     })),
@@ -128,33 +132,21 @@ async function serverCapabilities(
 
   return {
     resourceType: "CapabilityStatement",
-    status: "active",
-    fhirVersion: "4.0",
-    date: new Date().toISOString(),
-    kind: "capability",
-    format: ["json"],
+    status: "active" as code,
+    fhirVersion: "4.0.1" as code,
+    date: new Date().toISOString() as dateTime,
+    kind: "capability" as code,
+    format: ["json" as code],
     rest: [
       {
-        mode: "server",
+        mode: "server" as code,
         security: {
           cors: true,
-          service: [
-            {
-              coding: [
-                {
-                  system:
-                    "http://terminology.hl7.org/CodeSystem/restful-security-service",
-                  code: "OAuth",
-                  display: "OAuth",
-                },
-              ],
-            },
-          ],
         },
-        interaction: [{ code: "search-system" }],
+        interaction: [{ code: "search-system" as code }],
         searchParam: rootParameters.resources.map((resource) => ({
           name: resource.name,
-          definition: resource.url,
+          definition: resource.url as canonical,
           type: resource.type,
           documentation: resource.description,
         })),
@@ -206,7 +198,9 @@ const validationMiddleware: Parameters<typeof RouterClient>[0][number] = async (
         context.ctx,
         getResourceTypeToValidate(context.request),
         {
-          mode: context.request.type === "create-request" ? "create" : "update",
+          mode: (context.request.type === "create-request"
+            ? "create"
+            : "update") as code,
           resource: context.request.body,
         }
       );
@@ -316,7 +310,7 @@ function createResolveCanonical(
 
   return <T extends ResourceType>(type: T, url: string) => {
     const id = map.get(type)?.get(url);
-    return id ? (data[type]?.[id] as AResource<T>) : undefined;
+    return id ? (data[type]?.[id as id] as AResource<T>) : undefined;
   };
 }
 

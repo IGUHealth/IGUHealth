@@ -87,7 +87,7 @@ export function pathMeta<T extends Resource, R, P extends Parent<T>>(
   const [resourceType, id] = loc
     .substring(0, indexOfLastSlash === -1 ? loc.length : indexOfLastSlash)
     .split("|");
-  return { resourceType: resourceType as ResourceType, id };
+  return { resourceType: resourceType as ResourceType, id: id as id };
 }
 
 export function get<T extends object, R, P extends Parent<T>>(

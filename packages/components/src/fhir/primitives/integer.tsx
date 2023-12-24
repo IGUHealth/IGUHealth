@@ -2,8 +2,9 @@ import React from "react";
 
 import { EditableProps } from "../types";
 import { Input } from "../../base/input";
+import { integer } from "@iguhealth/fhir-types/r4/types";
 
-export type FHIRIntegerEditableProps = EditableProps<number>;
+export type FHIRIntegerEditableProps = EditableProps<integer>;
 
 export const FHIRIntegerEditable = ({
   value,
@@ -21,7 +22,7 @@ export const FHIRIntegerEditable = ({
       onChange={(e) => {
         const value = parseInt(e.target.value);
         if (onChange && !isNaN(value)) {
-          onChange(value);
+          onChange(value as integer);
         }
       }}
     />

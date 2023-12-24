@@ -4,6 +4,7 @@ import MemoryDatabase from "./memory/async.js";
 import RouterClient from "./router.js";
 
 import { testServices } from "./test-ctx.js";
+import { Patient, Practitioner, id } from "@iguhealth/fhir-types/r4/types";
 import { FHIRRequest } from "@iguhealth/client/types";
 
 test("Test routing on resourceTypes", async () => {
@@ -12,9 +13,14 @@ test("Test routing on resourceTypes", async () => {
     [
       {
         source: MemoryDatabase({
-          ["Patient"]: { "1": { id: "1", resourceType: "Patient" } },
+          ["Patient"]: {
+            ["1" as id]: { id: "1", resourceType: "Patient" } as Patient,
+          },
           ["Practitioner"]: {
-            "3": { id: "3", resourceType: "Practitioner" },
+            ["3" as id]: {
+              id: "3",
+              resourceType: "Practitioner",
+            } as Practitioner,
           },
         }),
         resourcesSupported: ["Patient"],
@@ -22,9 +28,14 @@ test("Test routing on resourceTypes", async () => {
       },
       {
         source: MemoryDatabase({
-          ["Patient"]: { "2": { id: "2", resourceType: "Patient" } },
+          ["Patient"]: {
+            ["2" as id]: { id: "2", resourceType: "Patient" } as Patient,
+          },
           ["Practitioner"]: {
-            "4": { id: "4", resourceType: "Practitioner" },
+            ["4" as id]: {
+              id: "4",
+              resourceType: "Practitioner",
+            } as Practitioner,
           },
         }),
         resourcesSupported: ["Practitioner"],
@@ -56,11 +67,11 @@ test("Test routing priority", async () => {
       {
         source: MemoryDatabase({
           ["Practitioner"]: {
-            "4": {
+            ["4" as id]: {
               id: "4",
               resourceType: "Practitioner",
               name: [{ given: ["TEST"] }],
-            },
+            } as Practitioner,
           },
         }),
         resourcesSupported: ["Practitioner"],
@@ -69,11 +80,11 @@ test("Test routing priority", async () => {
       {
         source: MemoryDatabase({
           ["Practitioner"]: {
-            "5": {
+            ["5" as id]: {
               id: "5",
               resourceType: "Practitioner",
               name: [{ given: ["TEST"] }],
-            },
+            } as Practitioner,
           },
         }),
         useSource: (request: FHIRRequest) => {
@@ -111,11 +122,11 @@ test("Test routing priority", async () => {
       {
         source: MemoryDatabase({
           ["Practitioner"]: {
-            "4": {
+            ["4" as id]: {
               id: "4",
               resourceType: "Practitioner",
               name: [{ given: ["TEST"] }],
-            },
+            } as Practitioner,
           },
         }),
         resourcesSupported: ["Practitioner"],
@@ -124,11 +135,11 @@ test("Test routing priority", async () => {
       {
         source: MemoryDatabase({
           ["Practitioner"]: {
-            "5": {
+            ["5" as id]: {
               id: "5",
               resourceType: "Practitioner",
               name: [{ given: ["TEST"] }],
-            },
+            } as Practitioner,
           },
         }),
         useSource: (request: FHIRRequest) => {

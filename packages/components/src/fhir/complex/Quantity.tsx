@@ -1,5 +1,5 @@
 import React from "react";
-import { Quantity } from "@iguhealth/fhir-types/r4/types";
+import { Quantity, uri } from "@iguhealth/fhir-types/r4/types";
 
 import { EditableProps, ClientProps } from "../types";
 import { InputContainer } from "../../base/containers";
@@ -25,7 +25,7 @@ export const FHIRQuantityEditable = ({
           client={client}
           label="Comparator"
           open={true}
-          system="http://hl7.org/fhir/ValueSet/quantity-comparator"
+          system={"http://hl7.org/fhir/ValueSet/quantity-comparator" as uri}
           value={value?.comparator}
           onChange={(comparator) => {
             onChange?.call(this, { ...value, comparator });
