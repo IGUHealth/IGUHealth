@@ -41,7 +41,7 @@ test("test resourceEncryption", async () => {
         },
       },
     ],
-  };
+  } as OperationDefinition;
   const encryptedOp = await encryptValue(
     { ...testServices, encryptionProvider: provider },
     operationDefinition

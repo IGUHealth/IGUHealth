@@ -11,7 +11,11 @@ const client = HTTPClient({
 });
 
 test("test batch", async () => {
-  let response: Bundle = { resourceType: "Bundle", type: "batch", entry: [] };
+  let response: Bundle = {
+    resourceType: "Bundle",
+    type: "batch",
+    entry: [],
+  } as Bundle;
   try {
     response = await client.batch({}, {
       resourceType: "Bundle",
@@ -50,7 +54,7 @@ test("test batch", async () => {
           request: { url: entry.request?.url || "", method: "DELETE" },
         };
       }),
-    };
+    } as Bundle;
     await client.batch({}, bundle);
   }
 });

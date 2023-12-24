@@ -3,6 +3,7 @@ import pg from "pg";
 import dotEnv from "dotenv";
 
 import {
+  id,
   Encounter,
   Questionnaire,
   QuestionnaireResponse,
@@ -84,12 +85,12 @@ test("No filter QR", async () => {
     await client2.delete(
       {},
       "QuestionnaireResponse",
-      response.resources[0].id as string
+      response.resources[0].id as id
     );
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -136,11 +137,11 @@ test("Filter patient sub ", async () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     const response = await client2.search_type({}, "Patient", []);
     expect(response.resources.length).toEqual(1);
-    await client2.delete({}, "Patient", response.resources[0].id as string);
+    await client2.delete({}, "Patient", response.resources[0].id as id);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -187,11 +188,11 @@ test("name check", async () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     const response = await client2.search_type({}, "Patient", []);
     expect(response.resources.length).toEqual(1);
-    await client2.delete({}, "Patient", response.resources[0].id as string);
+    await client2.delete({}, "Patient", response.resources[0].id as id);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -215,7 +216,7 @@ test("Reference canonical", async () => {
         criteria: "QuestionnaireResponse?questionnaire=ahc-questionnaire",
         language: "en",
         resourceType: "Subscription",
-      } as Patient)
+      } as QuestionnaireResponse)
     );
     resources.push(
       await client.create({}, {
@@ -226,14 +227,11 @@ test("Reference canonical", async () => {
     );
 
     resources.push(
-      (await client.create(
-        {},
-        {
-          resourceType: "QuestionnaireResponse",
-          questionnaire: "ahc-questionnaire",
-          status: "completed",
-        }
-      )) as QuestionnaireResponse
+      await client.create({}, {
+        resourceType: "QuestionnaireResponse",
+        questionnaire: "ahc-questionnaire",
+        status: "completed",
+      } as QuestionnaireResponse)
     );
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -254,12 +252,12 @@ test("Reference canonical", async () => {
     expect(qrs.resources.length).toEqual(1);
 
     for (const qr of qrs.resources) {
-      await client2.delete({}, "QuestionnaireResponse", qr.id as string);
+      await client2.delete({}, "QuestionnaireResponse", qr.id as id);
     }
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -325,7 +323,7 @@ test("Reference standard", async () => {
       `Patient/${patient.id}`
     );
 
-    await client2.delete({}, "Encounter", encounters.resources[0].id as string);
+    await client2.delete({}, "Encounter", encounters.resources[0].id as id);
 
     await client.update({}, {
       ...sub,
@@ -368,11 +366,11 @@ test("Reference standard", async () => {
       `Patient/${patient.id}`
     );
 
-    await client2.delete({}, "Encounter", encounters.resources[0].id as string);
+    await client2.delete({}, "Encounter", encounters.resources[0].id as id);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }

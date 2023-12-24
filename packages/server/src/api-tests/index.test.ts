@@ -219,14 +219,11 @@ async function createTestData(seed: number) {
   } as Patient);
   resources.push(patientResponse);
 
-  const observationResponse = await client.create(
-    {},
-    {
-      ...observation,
-      extension: ext,
-      subject: { reference: `Patient/${patientResponse.id}` },
-    }
-  );
+  const observationResponse = await client.create({}, {
+    ...observation,
+    extension: ext,
+    subject: { reference: `Patient/${patientResponse.id}` },
+  } as Observation);
   resources.push(observationResponse);
 
   return resources;

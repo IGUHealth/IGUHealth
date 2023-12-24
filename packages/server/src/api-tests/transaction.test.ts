@@ -1,7 +1,7 @@
 import { expect, test } from "@jest/globals";
 import { Patient } from "@iguhealth/fhir-types/r4/types";
 
-import { Bundle } from "@iguhealth/fhir-types/r4/types";
+import { Bundle, code } from "@iguhealth/fhir-types/r4/types";
 import HTTPClient from "@iguhealth/client/http";
 
 const client = HTTPClient({
@@ -14,8 +14,7 @@ const client = HTTPClient({
 test("test successful transaction", async () => {
   let transactionResponse: Bundle = {
     resourceType: "Bundle",
-    type: "transaction-response",
-    entry: [],
+    type: "transaction-response" as code,
   } as Bundle;
   try {
     transactionResponse = await client.transaction({}, {

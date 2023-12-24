@@ -2,6 +2,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import {
+  uri,
+  code,
   StructureDefinition,
   ResourceType,
   Resource,
@@ -18,8 +20,8 @@ function getArtifactResources(resourceTypes: ResourceType[]): Resource[] {
       loadArtifacts(
         resourceType,
         path.join(fileURLToPath(import.meta.url), "../../"),
-        true,
-      ),
+        true
+      )
     )
     .flat();
 
@@ -35,7 +37,8 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
   (resourceType) => {
     const searchParameters = artifactResources.filter(
       (r): r is SearchParameter =>
-        r.resourceType === "SearchParameter" && r.base.includes(resourceType),
+        r.resourceType === "SearchParameter" &&
+        r.base.includes(resourceType as code)
     );
     const resources = artifactResources
       .filter((r) => r.resourceType === resourceType)
@@ -55,16 +58,16 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
                     return artifactResources.find(
                       (r) =>
                         r.resourceType === "StructureDefinition" &&
-                        r.type === type,
+                        r.type === (type as unknown as uri)
                     ) as StructureDefinition | undefined;
                   },
                 },
-              },
+              }
             );
             expect([parameter.expression, evalResult]).toMatchSnapshot();
           } catch (e) {
             console.error(
-              `Expression failed to evaluate ${parameter.expression}`,
+              `Expression failed to evaluate ${parameter.expression}`
             );
             console.error(e);
             throw e;
@@ -72,5 +75,5 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
         }
       }
     }
-  },
+  }
 );
