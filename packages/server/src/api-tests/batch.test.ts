@@ -1,6 +1,6 @@
 import { expect, test } from "@jest/globals";
 
-import { Bundle } from "@iguhealth/fhir-types/r4/types";
+import { Bundle, code } from "@iguhealth/fhir-types/r4/types";
 import HTTPClient from "@iguhealth/client/http";
 
 const client = HTTPClient({
@@ -13,7 +13,7 @@ const client = HTTPClient({
 test("test batch", async () => {
   let response: Bundle = {
     resourceType: "Bundle",
-    type: "batch",
+    type: "batch" as code,
     entry: [],
   } as Bundle;
   try {

@@ -407,7 +407,7 @@ function toBundle(
     | "history"
     | "searchset"
     | "collection",
-  total: unsignedInt,
+  total: unsignedInt | undefined,
   resources: Resource[]
 ): Bundle {
   return {
@@ -476,11 +476,7 @@ export function fhirResponseToHTTPResponse(
     case "search-response": {
       return {
         status: 200,
-        body: toBundle(
-          "searchset",
-          fhirResponse.total || (0 as unsignedInt),
-          fhirResponse.body
-        ),
+        body: toBundle("searchset", fhirResponse.total, fhirResponse.body),
       };
     }
     case "transaction-response":

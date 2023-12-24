@@ -216,7 +216,7 @@ test("Reference canonical", async () => {
         criteria: "QuestionnaireResponse?questionnaire=ahc-questionnaire",
         language: "en",
         resourceType: "Subscription",
-      } as QuestionnaireResponse)
+      } as Subscription)
     );
     resources.push(
       await client.create({}, {
