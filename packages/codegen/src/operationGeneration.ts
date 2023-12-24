@@ -76,7 +76,7 @@ export function generateOp(op: OperationDefinition): string {
   const operationType = `export type ${interfaceName} = IOperation<${inputName}, ${outputName}>`;
   const operationInstance = `export const ${operationName}: ${interfaceName} = new Operation<${inputName}, ${outputName}>(${JSON.stringify(
     op
-  )})`;
+  )} as fhirTypes.OperationDefinition)`;
 
   return `export namespace ${namespace} {
   ${[inputType, outputType, operationType, operationInstance].join("\n")}}`;

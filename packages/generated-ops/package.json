@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest)",
-    "generate": "yarn cli generate-operations --output=./src/r4 && yarn prettier --write ./src/r4/**/*.ts",
+    "generate": "yarn node ../cli/lib/index.js generate-operations --output=./src/r4 && yarn prettier --write ./src/r4/**/*.ts",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "dependencies": {
