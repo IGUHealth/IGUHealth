@@ -1,4 +1,4 @@
-import { Reference, Resource } from "@iguhealth/fhir-types/r4/types";
+import { Reference, Resource, Element } from "@iguhealth/fhir-types/r4/types";
 import {
   PartialMeta,
   PartialTypeMeta,

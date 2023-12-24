@@ -3,6 +3,7 @@ import {
   Element,
   ElementDefinition,
   code,
+  uri,
 } from "@iguhealth/fhir-types/r4/types";
 import { complexTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 
@@ -66,7 +67,8 @@ function deriveNextTypeMeta(
   if (!partialMeta) return partialMeta;
   if (!partialMeta.elementIndex) partialMeta.elementIndex = 0;
   if (!partialMeta.sd && partialMeta.type)
-    partialMeta.sd = partialMeta.getSD && partialMeta.getSD(partialMeta.type);
+    partialMeta.sd =
+      partialMeta.getSD && partialMeta.getSD(partialMeta.type as code);
 
   return partialMeta.sd ? (partialMeta as TypeMeta) : undefined;
 }
@@ -120,7 +122,7 @@ function isElementDefinitionWithType(
   element: ElementDefinition,
   path: string,
   expectedType?: string
-): code | undefined {
+): uri | undefined {
   if (element.path === path) return element.type?.[0].code;
   if (
     element.type &&
@@ -219,7 +221,7 @@ function deriveNextMetaInformation(
       // In this case pull in the SD means it's a complex or resource type
       // so need to retrieve the SD.
       if (isResourceOrComplexType(type)) {
-        const sd = meta.getSD && meta.getSD(type);
+        const sd = meta.getSD && meta.getSD(type as unknown as code);
         if (!sd) {
           throw new Error(`Could not retrieve sd of type '${type}'`);
         }
