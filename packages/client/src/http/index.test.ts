@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals";
-import { OperationDefinition, code } from "@iguhealth/fhir-types/r4/types";
+import { OperationDefinition, code, id } from "@iguhealth/fhir-types/r4/types";
 
 import HTTPClient from "./index.js";
 
@@ -15,8 +15,8 @@ test("Test creating and destroying with HTTP Client", async () => {
     resourceType: "OperationDefinition",
     name: "test",
     status: "draft" as code,
-    kind: "operation",
-    code: "my-operation",
+    kind: "operation" as code,
+    code: "my-operation" as code,
     system: false,
     instance: false,
     type: false,
