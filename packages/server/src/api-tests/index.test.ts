@@ -1,6 +1,7 @@
 import { expect, test } from "@jest/globals";
 
 import {
+  id,
   Observation,
   Patient,
   Practitioner,
@@ -209,16 +210,13 @@ async function createTestData(seed: number) {
   );
   resources.push(practitionerResponse);
 
-  const patientResponse = await client.create(
-    {},
-    {
-      ...patient,
-      extension: ext,
-      generalPractitioner: [
-        { reference: `Practitioner/${practitionerResponse.id}` },
-      ],
-    }
-  );
+  const patientResponse = await client.create({}, {
+    ...patient,
+    extension: ext,
+    generalPractitioner: [
+      { reference: `Practitioner/${practitionerResponse.id}` },
+    ],
+  } as Patient);
   resources.push(patientResponse);
 
   const observationResponse = await client.create(
@@ -261,7 +259,7 @@ test("Parameter chains", async () => {
     } finally {
       await Promise.all(
         resources.map(async ({ resourceType, id }) => {
-          return await client.delete({}, resourceType, id as string);
+          return await client.delete({}, resourceType, id as id);
         })
       );
     }
@@ -278,20 +276,17 @@ test("test offsets and count", async () => {
   const resources: Resource[] = [];
   try {
     for (let i = 0; i < 10; i++) {
-      const observationResponse = await client.create(
-        {},
-        {
-          ...observation,
-          code: {
-            coding: [
-              {
-                code: "test",
-                system: "http://test.com",
-              },
-            ],
-          },
-        }
-      );
+      const observationResponse = await client.create({}, {
+        ...observation,
+        code: {
+          coding: [
+            {
+              code: "test",
+              system: "http://test.com",
+            },
+          ],
+        },
+      } as Observation);
       resources.push(observationResponse);
     }
 
@@ -312,7 +307,7 @@ test("test offsets and count", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -322,20 +317,17 @@ test("test total accurate", async () => {
   const resources: Resource[] = [];
   try {
     for (let i = 0; i < 10; i++) {
-      const observationResponse = await client.create(
-        {},
-        {
-          ...observation,
-          code: {
-            coding: [
-              {
-                code: "test",
-                system: "http://test.com",
-              },
-            ],
-          },
-        }
-      );
+      const observationResponse = await client.create({}, {
+        ...observation,
+        code: {
+          coding: [
+            {
+              code: "test",
+              system: "http://test.com",
+            },
+          ],
+        },
+      } as Observation);
       resources.push(observationResponse);
     }
 
@@ -348,7 +340,7 @@ test("test total accurate", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -358,30 +350,24 @@ test("Test sort ", async () => {
   const resources: Resource[] = [];
   try {
     for (let i = 0; i < 10; i++) {
-      const patientResponse = await client.create(
-        {},
-        {
-          resourceType: "Patient",
-          name: [
-            {
-              given: [String.fromCharCode(65 + i)],
-              family: String.fromCharCode(65 + i),
-            },
-          ],
-        }
-      );
-      const patientResponse2 = await client.create(
-        {},
-        {
-          resourceType: "Patient",
-          name: [
-            {
-              given: [String.fromCharCode(65 + i)],
-              family: String.fromCharCode(65 + i + 1),
-            },
-          ],
-        }
-      );
+      const patientResponse = await client.create({}, {
+        resourceType: "Patient",
+        name: [
+          {
+            given: [String.fromCharCode(65 + i)],
+            family: String.fromCharCode(65 + i),
+          },
+        ],
+      } as Patient);
+      const patientResponse2 = await client.create({}, {
+        resourceType: "Patient",
+        name: [
+          {
+            given: [String.fromCharCode(65 + i)],
+            family: String.fromCharCode(65 + i + 1),
+          },
+        ],
+      } as Patient);
       resources.push(patientResponse);
       resources.push(patientResponse2);
     }
@@ -446,7 +432,7 @@ test("Test sort ", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -516,7 +502,7 @@ test("Testing custom extension added to resources", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -574,7 +560,7 @@ test("Number range", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -697,7 +683,7 @@ test("Number prefixes", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -724,7 +710,7 @@ test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
 
     expect(
       await client.search_type({}, "QuestionnaireResponse", [
-        { name: "questionnaire", value: [q.id as string] },
+        { name: "questionnaire", value: [q.id as id] },
       ])
     ).toEqual({
       resources: [qr],
@@ -748,7 +734,7 @@ test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
@@ -791,7 +777,7 @@ test("Type filter", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as string);
+        return await client.delete({}, resourceType, id as id);
       })
     );
   }
