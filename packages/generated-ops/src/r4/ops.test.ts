@@ -7,6 +7,7 @@ import {
   ValueSet,
   ResourceType,
   AResource,
+  uri
 } from "@iguhealth/fhir-types/r4/types";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { OpCTX } from "@iguhealth/operation-execution/src/index.js";
@@ -34,7 +35,7 @@ test("Test ValueSet Expands", async () => {
   const valueSet: ValueSet = {
     resourceType: "ValueSet",
     status: "final",
-  };
+  } as ValueSet; 
   const output = valueSet;
 
   const invoke: Invocation = async (op, ctx, input) => {
@@ -47,7 +48,7 @@ test("Test ValueSet Expands", async () => {
     return output;
   };
 
-  expect(invoke(ValueSetExpand.Op, ctx, { url: "asdf" })).resolves.toEqual(
+  expect(invoke(ValueSetExpand.Op, ctx, { url: "asdf" as uri })).resolves.toEqual(
     output,
   );
 
@@ -72,5 +73,5 @@ test("Test ValueSet Expands", async () => {
     return output;
   };
 
-  expect(badOutput(ValueSetExpand.Op, ctx, { url: "asdf" })).rejects.toThrow();
+  expect(badOutput(ValueSetExpand.Op, ctx, { url: "asdf" as uri })).rejects.toThrow();
 });
