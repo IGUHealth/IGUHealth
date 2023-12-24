@@ -1,14 +1,14 @@
 import { expect, test } from "@jest/globals";
 import jsonpatch from "fast-json-patch";
 
-import { Patient } from "@iguhealth/fhir-types/r4/types";
+import { Patient, id } from "@iguhealth/fhir-types/r4/types";
 import { pointer, descend } from "@iguhealth/fhir-pointer";
 
 import buildPatches, { applyMutationImmutable } from "./index.js";
 
 test("Adding a value.", () => {
-  const loc = pointer("Patient", "123");
-  const patient: Patient = { resourceType: "Patient", id: "123" };
+  const loc = pointer("Patient", "123" as id);
+  const patient: Patient = { resourceType: "Patient", id: "123" } as Patient;
 
   descend(descend(descend(descend(loc, "name"), 0), "given"), 0);
   expect(
@@ -98,8 +98,8 @@ test("Adding a value.", () => {
 });
 
 test("replace", () => {
-  const loc = pointer("Patient", "123");
-  const patient: Patient = { resourceType: "Patient", id: "123" };
+  const loc = pointer("Patient", "123" as id);
+  const patient: Patient = { resourceType: "Patient", id: "123" } as Patient;
   expect(
     jsonpatch.applyPatch(
       { ...patient, name: [{ given: ["bob"] }] },
@@ -130,8 +130,8 @@ test("replace", () => {
 });
 
 test("removal", () => {
-  const loc = pointer("Patient", "123");
-  const patient: Patient = { resourceType: "Patient", id: "123" };
+  const loc = pointer("Patient", "123" as id);
+  const patient: Patient = { resourceType: "Patient", id: "123" } as Patient;
   expect(
     jsonpatch.applyPatch(
       { ...patient, name: [{ given: ["bob"] }] },
@@ -172,8 +172,8 @@ test("removal", () => {
 });
 
 test("immutable Patch", () => {
-  const loc = pointer("Patient", "123");
-  const patient: Patient = { resourceType: "Patient", id: "123" };
+  const loc = pointer("Patient", "123" as id);
+  const patient: Patient = { resourceType: "Patient", id: "123" } as Patient;
   expect(
     applyMutationImmutable(
       { ...patient, name: [{ given: ["bob"] }] },

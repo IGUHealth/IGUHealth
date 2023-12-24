@@ -21,7 +21,7 @@ test("Test creating and destroying with HTTP Client", async () => {
     instance: false,
     type: false,
     parameter: [],
-  };
+  } as OperationDefinition;
   const response = await client.create({}, operationDefinition);
   expect(response).toMatchObject({
     resourceType: "OperationDefinition",
@@ -35,5 +35,5 @@ test("Test creating and destroying with HTTP Client", async () => {
     parameter: [],
   });
 
-  await client.delete({}, "OperationDefinition", response.id as string);
+  await client.delete({}, "OperationDefinition", response.id);
 });
