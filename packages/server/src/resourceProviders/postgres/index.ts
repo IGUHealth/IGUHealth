@@ -2,6 +2,8 @@ import pg from "pg";
 import { v4 } from "uuid";
 import jsonpatch, { Operation } from "fast-json-patch";
 import dayjs from "dayjs";
+import * as db from "zapatos/db";
+import type * as s from "zapatos/schema";
 
 import { FHIRClientAsync } from "@iguhealth/client/interface";
 import { AsynchronousClient } from "@iguhealth/client";
@@ -82,7 +84,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
   client: pg.PoolClient,
   ctx: CTX,
   parameter: SearchParameter,
-  resource: Resource,
+  resource: Resource & { id: id; meta: { versionId: id } },
   evaluation: MetaValueSingular<NonNullable<unknown>>[]
 ) {
   switch (parameter.type) {
@@ -92,23 +94,28 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           .map(toQuantityRange)
           .flat()
           .map(async (value) => {
-            await client.query(
-              "INSERT INTO quantity_idx(workspace, r_id, resource_type, r_version_id, parameter_name, parameter_url, start_value, start_system, start_code, end_value, end_system, end_code) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)",
-              [
-                ctx.workspace,
-                resource.id,
-                resource.resourceType,
-                resource.meta?.versionId,
-                parameter.name,
-                parameter.url,
-                value.start?.value,
-                value.start?.system,
-                value.start?.code,
-                value.end?.value,
-                value.end?.system,
-                value.end?.code,
-              ]
-            );
+            const QUANTITY_INDEX: s.quantity_idx.Insertable = {
+              workspace: ctx.workspace,
+              r_id: resource.id,
+              resource_type: resource.resourceType,
+              r_version_id: parseInt(resource.meta.versionId),
+              parameter_name: parameter.name,
+              parameter_url: parameter.url,
+              // Note because I can use string -infinity for the start value, I need to cast it to number here even though technically string,
+              start_value: value.start?.value as number | undefined,
+              start_system: value.start?.system,
+              start_code: value.start?.code,
+              // Note because I can use string infinity for the start value, I need to cast it to number here even though technically string,
+              end_value: value.end?.value as number | undefined,
+              end_system: value.end?.system,
+              end_code: value.end?.code,
+            };
+            await db.sql<
+              s.quantity_idx.SQL,
+              void
+            >`INSERT INTO ${"quantity_idx"} (${db.cols(
+              QUANTITY_INDEX
+            )}) VALUES (${db.vals(QUANTITY_INDEX)})`.run(client);
           })
       );
       return;
@@ -119,19 +126,22 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           .map(toDateRange)
           .flat()
           .map(async (value) => {
-            await client.query(
-              "INSERT INTO date_idx(workspace, r_id, resource_type, r_version_id, parameter_name, parameter_url, start_date, end_date) VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
-              [
-                ctx.workspace,
-                resource.id,
-                resource.resourceType,
-                resource.meta?.versionId,
-                parameter.name,
-                parameter.url,
-                value.start,
-                value.end,
-              ]
-            );
+            const DATE_INDEX: s.date_idx.Insertable = {
+              workspace: ctx.workspace,
+              r_id: resource.id,
+              resource_type: resource.resourceType,
+              r_version_id: parseInt(resource.meta.versionId),
+              parameter_name: parameter.name,
+              parameter_url: parameter.url,
+              start_date: value.start as unknown as Date,
+              end_date: value.end as unknown as Date,
+            };
+            await db.sql<
+              s.date_idx.SQL,
+              void
+            >`INSERT INTO ${"date_idx"} (${db.cols(
+              DATE_INDEX
+            )}) VALUES (${db.vals(DATE_INDEX)})`.run(client);
           })
       );
       return;
@@ -148,20 +158,31 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
             ctx.logger.warn("Cannot index logical reference.");
             return;
           }
-          return await client.query(
-            "INSERT INTO reference_idx(workspace, r_id, resource_type, r_version_id, parameter_name, parameter_url, reference, reference_type, reference_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)",
-            [
-              ctx.workspace,
-              resource.id,
-              resource.resourceType,
-              resource.meta?.versionId,
-              parameter.name,
-              parameter.url,
-              reference,
-              resourceType,
-              id,
-            ]
-          );
+          if (!resourceType || !id) {
+            throw new OperationError(
+              outcomeError(
+                "exception",
+                "Resource type or id not found when indexing the resource."
+              )
+            );
+          }
+          const REFERENCE_INDEX: s.reference_idx.Insertable = {
+            workspace: ctx.workspace,
+            r_id: resource.id,
+            resource_type: resource.resourceType,
+            r_version_id: parseInt(resource.meta.versionId),
+            parameter_name: parameter.name,
+            parameter_url: parameter.url,
+            reference: reference as db.JSONValue,
+            reference_type: resourceType,
+            reference_id: id,
+          };
+          await db.sql<
+            s.reference_idx.SQL,
+            void
+          >`INSERT INTO ${"reference_idx"} (${db.cols(
+            REFERENCE_INDEX
+          )}) VALUES (${db.vals(REFERENCE_INDEX)})`.run(client);
         })
       );
       return;
@@ -172,18 +193,21 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           .map((v) => toURIParameters(parameter, v))
           .flat()
           .map(async (value) => {
-            await client.query(
-              "INSERT INTO uri_idx(workspace, r_id, resource_type, r_version_id, parameter_name, parameter_url, value) VALUES($1, $2, $3, $4, $5, $6, $7)",
-              [
-                ctx.workspace,
-                resource.id,
-                resource.resourceType,
-                resource.meta?.versionId,
-                parameter.name,
-                parameter.url,
-                value,
-              ]
-            );
+            const URI_INDEX: s.uri_idx.Insertable = {
+              workspace: ctx.workspace,
+              r_id: resource.id,
+              resource_type: resource.resourceType,
+              r_version_id: parseInt(resource.meta.versionId),
+              parameter_name: parameter.name,
+              parameter_url: parameter.url,
+              value,
+            };
+            await db.sql<
+              s.uri_idx.SQL,
+              void
+            >`INSERT INTO ${"uri_idx"} (${db.cols(
+              URI_INDEX
+            )}) VALUES (${db.vals(URI_INDEX)})`.run(client);
           })
       );
       return;
@@ -194,19 +218,22 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           .map((v) => toTokenParameters(parameter, v))
           .flat()
           .map(async (value) => {
-            await client.query(
-              "INSERT INTO token_idx(workspace, r_id, resource_type, r_version_id, parameter_name, parameter_url, system, value) VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
-              [
-                ctx.workspace,
-                resource.id,
-                resource.resourceType,
-                resource.meta?.versionId,
-                parameter.name,
-                parameter.url,
-                value.system,
-                value.code,
-              ]
-            );
+            const TOKEN_INDEX: s.token_idx.Insertable = {
+              workspace: ctx.workspace,
+              r_id: resource.id,
+              resource_type: resource.resourceType,
+              r_version_id: parseInt(resource.meta.versionId),
+              parameter_name: parameter.name,
+              parameter_url: parameter.url,
+              system: value.system,
+              value: value.code,
+            };
+            await db.sql<
+              s.token_idx.SQL,
+              void
+            >`INSERT INTO ${"token_idx"} (${db.cols(
+              TOKEN_INDEX
+            )}) VALUES (${db.vals(TOKEN_INDEX)})`.run(client);
           })
       );
       return;
@@ -214,18 +241,29 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
     case "number": {
       await Promise.all(
         evaluation.map(async (v) => {
-          await client.query(
-            "INSERT INTO number_idx(workspace, r_id, resource_type, r_version_id, parameter_name, parameter_url, value) VALUES($1, $2, $3, $4, $5, $6, $7)",
-            [
-              ctx.workspace,
-              resource.id,
-              resource.resourceType,
-              resource.meta?.versionId,
-              parameter.name,
-              parameter.url,
-              v.valueOf(),
-            ]
-          );
+          const value = v.valueOf();
+          if (typeof value !== "number")
+            throw new OperationError(
+              outcomeError(
+                "invalid",
+                "Failed to index number. Value found is not a number."
+              )
+            );
+          const NUMBER_INDEX: s.number_idx.Insertable = {
+            workspace: ctx.workspace,
+            r_id: resource.id,
+            resource_type: resource.resourceType,
+            r_version_id: parseInt(resource.meta.versionId),
+            parameter_name: parameter.name,
+            parameter_url: parameter.url,
+            value,
+          };
+          await db.sql<
+            s.number_idx.SQL,
+            void
+          >`INSERT INTO ${"number_idx"} (${db.cols(
+            NUMBER_INDEX
+          )}) VALUES (${db.vals(NUMBER_INDEX)})`.run(client);
         })
       );
       return;
@@ -237,18 +275,21 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           .map(toStringParameters)
           .flat()
           .map(async (value) => {
-            await client.query(
-              "INSERT INTO string_idx(workspace, r_id, resource_type, r_version_id, parameter_name, parameter_url, value) VALUES($1, $2, $3, $4, $5, $6, $7)",
-              [
-                ctx.workspace,
-                resource.id,
-                resource.resourceType,
-                resource.meta?.versionId,
-                parameter.name,
-                parameter.url,
-                value,
-              ]
-            );
+            const STRING_INDEX: s.string_idx.Insertable = {
+              workspace: ctx.workspace,
+              r_id: resource.id,
+              resource_type: resource.resourceType,
+              r_version_id: parseInt(resource.meta.versionId),
+              parameter_name: parameter.name,
+              parameter_url: parameter.url,
+              value,
+            };
+            await db.sql<
+              s.string_idx.SQL,
+              void
+            >`INSERT INTO ${"string_idx"} (${db.cols(
+              STRING_INDEX
+            )}) VALUES (${db.vals(STRING_INDEX)})`.run(client);
           })
       );
       return;
@@ -278,6 +319,19 @@ async function removeIndices(
   );
 }
 
+function resourceIsValidForIndexing(
+  resource: Resource
+): resource is Resource & { id: id; meta: { versionId: id } } {
+  if (
+    !resource.id ||
+    (!resource.meta?.versionId &&
+      isNaN(parseInt(resource.meta?.versionId || "")))
+  ) {
+    return false;
+  }
+  return true;
+}
+
 async function indexResource<CTX extends FHIRServerCTX>(
   client: pg.PoolClient,
   ctx: CTX,
@@ -300,6 +354,15 @@ async function indexResource<CTX extends FHIRServerCTX>(
           },
         }
       );
+
+      if (!resourceIsValidForIndexing(resource)) {
+        throw new OperationError(
+          outcomeFatal(
+            "exception",
+            "Resource id or versionId not found when indexing the resource."
+          )
+        );
+      }
       return indexSearchParameter(
         client,
         ctx,
