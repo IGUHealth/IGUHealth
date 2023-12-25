@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 import { expect, test } from "@jest/globals";
-import { OperationDefinition } from "@iguhealth/fhir-types/r4/types";
+import { OperationDefinition } from "@iguhealth/fhir-types/lib/r4/types";
 
 import { testServices } from "../../resourceProviders/test-ctx.js";
 import LocalEncryption from "./local.js";

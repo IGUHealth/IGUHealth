@@ -2,10 +2,10 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { expect, test } from "@jest/globals";
 
-import { StructureDefinition } from "@iguhealth/fhir-types/r4/types";
+import { StructureDefinition } from "@iguhealth/fhir-types/lib/r4/types";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import HTTPClient from "@iguhealth/client/lib/http";
-import { StructureDefinitionSnapshot } from "@iguhealth/generated-ops/r4";
+import { StructureDefinitionSnapshot } from "@iguhealth/generated-ops/lib/r4/ops";
 
 import usCoreDifferential from "../data/us-core-differential";
 

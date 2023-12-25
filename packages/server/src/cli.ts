@@ -1,6 +1,8 @@
 import { program } from "commander";
 // @ts-ignore
 import DBMigrate from "db-migrate";
+import * as generateSQL from "zapatos/generate";
+
 import createWorker from "./worker/index.js";
 import createServer from "./server.js";
 
@@ -16,6 +18,31 @@ async function runServer(port: number) {
 }
 
 async function run() {
+  program
+    .command("generate-pg-types")
+    .description("Generate typescript types off of postgres schema")
+    .action(async () => {
+      await generateSQL.generate({
+        db: {
+          user: process.env["FHIR_DATABASE_USERNAME"],
+          password: process.env["FHIR_DATABASE_PASSWORD"],
+          host: process.env["FHIR_DATABASE_HOST"],
+          database: process.env["FHIR_DATABASE_NAME"],
+          port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
+          ssl:
+            process.env["FHIR_DATABASE_SSL"] === "true"
+              ? {
+                  // Self signed certificate CA is not used.
+                  rejectUnauthorized: false,
+                  host: process.env["FHIR_DATABASE_HOST"],
+                  port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
+                }
+              : false,
+        },
+        outDir: "src/resourceProviders/postgres/generated",
+      });
+    });
+
   program
     .command("run")
     .description("Run either server, worker or migrate.")

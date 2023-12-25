@@ -1,16 +1,9 @@
 import { expect, test } from "@jest/globals";
-import { ValueSetExpand, ResourceValidate } from "@iguhealth/generated-ops/r4";
 import {
-  Observation,
-  Patient,
-  Practitioner,
-  Questionnaire,
-  QuestionnaireResponse,
-  Resource,
-  RiskAssessment,
-} from "@iguhealth/fhir-types/r4/types";
-import HTTPClient from "@iguhealth/client/http";
-import { evaluate } from "@iguhealth/fhirpath";
+  ValueSetExpand,
+  ResourceValidate,
+} from "@iguhealth/generated-ops/lib/r4/ops";
+import HTTPClient from "@iguhealth/client/lib/http";
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system/api/v1/fhir/r4",

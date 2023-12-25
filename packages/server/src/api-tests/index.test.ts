@@ -9,8 +9,8 @@ import {
   QuestionnaireResponse,
   Resource,
   RiskAssessment,
-} from "@iguhealth/fhir-types/r4/types";
-import HTTPClient from "@iguhealth/client/http";
+} from "@iguhealth/fhir-types/lib/r4/types";
+import HTTPClient from "@iguhealth/client/lib/http";
 import { evaluate } from "@iguhealth/fhirpath";
 import { OperationError } from "@iguhealth/operation-outcomes";
 
@@ -438,12 +438,9 @@ test("Test sort ", async () => {
 test("Testing custom extension added to resources", async () => {
   const resources: Resource[] = [];
   try {
-    const p1 = await client.create(
-      {},
-      {
-        resourceType: "Patient",
-      }
-    );
+    const p1 = await client.create({}, {
+      resourceType: "Patient",
+    } as Patient);
     resources.push(p1);
     expect(evaluate("$this.meta.extension.url", p1).sort()).toEqual(
       [

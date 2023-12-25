@@ -15,6 +15,7 @@
     "@iguhealth/operation-execution": "workspace:^"
   },
   "exports": {
+    "./lib/r4/ops": "./lib/r4/ops.js",
     "./r4": "./lib/r4/ops.js"
   },
   "devDependencies": {

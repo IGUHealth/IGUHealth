@@ -5,7 +5,7 @@ import {
   Patient,
   Practitioner,
   Resource,
-} from "@iguhealth/fhir-types/r4/types";
+} from "@iguhealth/fhir-types/lib/r4/types";
 import HTTPClient from "@iguhealth/client/lib/http";
 
 const client = HTTPClient({

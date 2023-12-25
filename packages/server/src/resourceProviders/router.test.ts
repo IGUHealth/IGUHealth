@@ -4,8 +4,8 @@ import MemoryDatabase from "./memory/async.js";
 import RouterClient from "./router.js";
 
 import { testServices } from "./test-ctx.js";
-import { Patient, Practitioner, id } from "@iguhealth/fhir-types/r4/types";
-import { FHIRRequest } from "@iguhealth/client/types";
+import { Patient, Practitioner, id } from "@iguhealth/fhir-types/lib/r4/types";
+import { FHIRRequest } from "@iguhealth/client/lib/types";
 
 test("Test routing on resourceTypes", async () => {
   const router = RouterClient(

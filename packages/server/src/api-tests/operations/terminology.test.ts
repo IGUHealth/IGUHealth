@@ -1,12 +1,12 @@
 import { expect, test } from "@jest/globals";
 
 import HTTPClient from "@iguhealth/client/lib/http";
-import { code, uri } from "@iguhealth/fhir-types/r4/types";
+import { code, uri } from "@iguhealth/fhir-types/lib/r4/types";
 import {
   ValueSetExpand,
   ValueSetValidateCode,
   CodeSystemLookup,
-} from "@iguhealth/generated-ops/r4";
+} from "@iguhealth/generated-ops/lib/r4/ops";
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system/api/v1/fhir/r4",

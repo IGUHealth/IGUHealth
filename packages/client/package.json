@@ -11,6 +11,9 @@
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "exports": {
+    "./lib/url": "./lib/url.js",
+    "./lib/types": "./lib/types.js",
+    "./lib/interface": "./lib/interface.js",
     ".": "./lib/index.js",
     "./types": "./lib/types.js",
     "./interface": "./lib/interface.js",

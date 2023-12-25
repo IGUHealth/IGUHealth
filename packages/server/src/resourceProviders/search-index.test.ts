@@ -8,8 +8,8 @@ import {
   ResourceType,
   Resource,
   SearchParameter,
-} from "@iguhealth/fhir-types/r4/types";
-import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
+} from "@iguhealth/fhir-types/lib/r4/types";
+import { resourceTypes } from "@iguhealth/fhir-types/lib/r4/sets";
 import { expect, test } from "@jest/globals";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import * as fhirpath from "@iguhealth/fhirpath";

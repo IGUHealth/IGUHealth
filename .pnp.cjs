@@ -13021,7 +13021,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ts-jest", "virtual:60d59201a81fdf9d844335582569d604f77c0cfb33012fc0d97d31d995c40a543914afd8f900018942c3e21e71ae879a5dcdf97d4008644edf9f0ce84a7e8664#npm:29.1.1"],\
             ["tsc-watch", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:6.0.4"],\
             ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"],\
-            ["uuid", "npm:9.0.0"]\
+            ["uuid", "npm:9.0.0"],\
+            ["zapatos", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:6.3.0"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -31056,6 +31057,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["json-custom-numbers", [\
+        ["npm:3.0.4", {\
+          "packageLocation": "./.yarn/cache/json-custom-numbers-npm-3.0.4-136ea984cb-48555ce815.zip/node_modules/json-custom-numbers/",\
+          "packageDependencies": [\
+            ["json-custom-numbers", "npm:3.0.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["json-parse-even-better-errors", [\
         ["npm:2.3.1", {\
           "packageLocation": "./.yarn/cache/json-parse-even-better-errors-npm-2.3.1-144d62256e-798ed4cf33.zip/node_modules/json-parse-even-better-errors/",\
@@ -43908,6 +43918,33 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/yocto-queue-npm-1.0.0-7b502f1987-2cac84540f.zip/node_modules/yocto-queue/",\
           "packageDependencies": [\
             ["yocto-queue", "npm:1.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["zapatos", [\
+        ["npm:6.3.0", {\
+          "packageLocation": "./.yarn/unplugged/zapatos-virtual-d5bb4e3861/node_modules/zapatos/",\
+          "packageDependencies": [\
+            ["zapatos", "npm:6.3.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:6.3.0", {\
+          "packageLocation": "./.yarn/unplugged/zapatos-virtual-d5bb4e3861/node_modules/zapatos/",\
+          "packageDependencies": [\
+            ["zapatos", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:6.3.0"],\
+            ["@types/pg", "npm:8.10.2"],\
+            ["@types/typescript", null],\
+            ["json-custom-numbers", "npm:3.0.4"],\
+            ["pg", "virtual:be2c7e9b4f3a6d0d1dcfc12b72ea51602a2f2526681fc8930452452be08fadb05fdfe879568f891fae9eaa13d90eca02ebb079c81e1105ccaf790ab4a6e929bb#npm:8.11.1"],\
+            ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"]\
+          ],\
+          "packagePeers": [\
+            "@types/pg",\
+            "@types/typescript",\
+            "pg",\
+            "typescript"\
           ],\
           "linkType": "HARD"\
         }]\

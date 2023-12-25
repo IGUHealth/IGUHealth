@@ -6,10 +6,10 @@ import {
   Resource,
   Observation,
   Patient,
-} from "@iguhealth/fhir-types/r4/types";
+} from "@iguhealth/fhir-types/lib/r4/types";
 import { expect, test } from "@jest/globals";
 import { loadArtifacts } from "@iguhealth/artifacts";
-import { FHIRClientAsync } from "@iguhealth/client/interface";
+import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
 
 import { testServices } from "../test-ctx.js";
 import MemoryDatabase from "./async.js";

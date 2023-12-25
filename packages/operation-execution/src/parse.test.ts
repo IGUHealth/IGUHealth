@@ -3,7 +3,7 @@ import { expect, test } from "@jest/globals";
 import {
   OperationDefinition,
   Parameters,
-} from "@iguhealth/fhir-types/r4/types";
+} from "@iguhealth/fhir-types/lib/r4/types";
 
 import { Operation } from "./index";
 
