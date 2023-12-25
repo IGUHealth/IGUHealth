@@ -10,7 +10,7 @@ import {
   Subscription,
   Resource,
   Patient,
-} from "@iguhealth/fhir-types/r4/types";
+} from "@iguhealth/fhir-types/lib/r4/types";
 import HTTPClient from "@iguhealth/client/lib/http";
 
 dotEnv.config();

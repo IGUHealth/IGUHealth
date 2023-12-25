@@ -13,6 +13,8 @@
   "author": "",
   "license": "ISC",
   "exports": {
+    "./lib/r4/types": "./lib/r4/types.js",
+    "./lib/r4/sets": "./lib/r4/sets.js",
     "./r4/sets": "./lib/r4/sets.js",
     "./r4/types": "./lib/r4/types.js"
   },

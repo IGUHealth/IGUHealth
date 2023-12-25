@@ -1,16 +1,17 @@
 import path from "path";
 import { fileURLToPath } from "url";
 
-import { ResourceType, id } from "@iguhealth/fhir-types/r4/types";
-import parseParameters from "@iguhealth/client/url";
+import {
+  ResourceType,
+  id,
+  SearchParameter,
+  StructureDefinition,
+} from "@iguhealth/fhir-types/lib/r4/types";
+import parseParameters from "@iguhealth/client/lib/url";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { expect, test } from "@jest/globals";
 
 import { testServices } from "../test-ctx.js";
-import {
-  SearchParameter,
-  StructureDefinition,
-} from "@iguhealth/fhir-types/r4/types";
 import type { InternalData } from "./types.js";
 import CreateMemoryDatabaseAsync from "./async.js";
 

@@ -5869,6 +5869,7 @@ __metadata:
     tsc-watch: ^6.0.4
     typescript: ^5.1.3
     uuid: ^9.0.0
+    zapatos: ^6.3.0
   languageName: unknown
   linkType: soft
 
@@ -20744,6 +20745,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"json-custom-numbers@npm:^3.0.4":
+  version: 3.0.4
+  resolution: "json-custom-numbers@npm:3.0.4"
+  checksum: 48555ce81505faf929ed3728db28fe2c470c805e40c202c850b5fbcc5709b7827bab041b81f7de8ee2aad32c1f82535aae6e57d39cf27eec65795af4bcb3fe1a
+  languageName: node
+  linkType: hard
+
 "json-parse-even-better-errors@npm:^2.3.0, json-parse-even-better-errors@npm:^2.3.1":
   version: 2.3.1
   resolution: "json-parse-even-better-errors@npm:2.3.1"
@@ -30674,6 +30682,21 @@ __metadata:
   version: 1.0.0
   resolution: "yocto-queue@npm:1.0.0"
   checksum: 2cac84540f65c64ccc1683c267edce396b26b1e931aa429660aefac8fbe0188167b7aee815a3c22fa59a28a58d898d1a2b1825048f834d8d629f4c2a5d443801
+  languageName: node
+  linkType: hard
+
+"zapatos@npm:^6.3.0":
+  version: 6.3.0
+  resolution: "zapatos@npm:6.3.0"
+  dependencies:
+    json-custom-numbers: ^3.0.4
+  peerDependencies:
+    "@types/pg": ">=7.14.3"
+    pg: ">=7.18.2"
+    typescript: ">=4.1"
+  bin:
+    zapatos: dist/generate/cli.js
+  checksum: 5a93c4e595dce2b9a51f369cfa6165adac0c5b92b8d4b244e970f9556e2258220a96a4466b90be4784511c61a6a1b18c536afc23646b377e2662d2f46cc2cc66
   languageName: node
   linkType: hard
 

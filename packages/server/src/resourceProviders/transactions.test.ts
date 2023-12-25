@@ -7,13 +7,12 @@ import {
   ResourceType,
   Resource,
   AResource,
-} from "@iguhealth/fhir-types/r4/types";
+} from "@iguhealth/fhir-types/lib/r4/types";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { buildTransactionTopologicalGraph } from "./transactions";
 import { testServices } from "./test-ctx.js";
-import { FHIRServerCTX } from "../ctx/types.js";
 
 function loadResources(resourceTypes: ResourceType[]): Resource[] {
   const artifactResources: Resource[] = resourceTypes
