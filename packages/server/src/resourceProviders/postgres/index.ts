@@ -263,7 +263,9 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
             void
           >`INSERT INTO ${"number_idx"} (${db.cols(
             NUMBER_INDEX
-          )}) VALUES (${db.vals(NUMBER_INDEX)})`.run(client);
+          )}) VALUES (${db.vals(NUMBER_INDEX)}) ON CONFLICT DO NOTHING`.run(
+            client
+          );
         })
       );
       return;
