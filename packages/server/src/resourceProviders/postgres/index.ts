@@ -26,7 +26,6 @@ import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { MetaValueSingular } from "@iguhealth/meta-value";
 import {
   OperationError,
-  outcome,
   outcomeError,
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
