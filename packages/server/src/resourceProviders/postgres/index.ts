@@ -275,7 +275,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           .map(toStringParameters)
           .flat()
           .map(async (value) => {
-            const NUMBER_INDEX: s.string_idx.Insertable = {
+            const STRING_INDEX: s.string_idx.Insertable = {
               workspace: ctx.workspace,
               r_id: resource.id,
               resource_type: resource.resourceType,
@@ -288,8 +288,8 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
               s.string_idx.SQL,
               void
             >`INSERT INTO ${"string_idx"} (${db.cols(
-              NUMBER_INDEX
-            )}) VALUES (${db.vals(NUMBER_INDEX)})`.run(client);
+              STRING_INDEX
+            )}) VALUES (${db.vals(STRING_INDEX)})`.run(client);
           })
       );
       return;
