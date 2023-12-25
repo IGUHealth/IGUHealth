@@ -9,6 +9,7 @@
     "build": "yarn prebuild && tsc && yarn copyfiles  -u 1 \"./src/**/*.sql\" lib",
     "ci": "yarn build & yarn node --enable-source-maps ./lib/cli.js run server & yarn node --enable-source-maps ./lib/cli.js run worker",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest) --runInBand",
+    "db-migrate": "db-migrate --sql-file -m src/resourceProviders/postgres/migrations",
     "migrate": "yarn build && yarn node --enable-source-maps  ./lib/cli.js run migrate && yarn node --enable-source-maps  ./lib/cli.js generate-pg-types",
     "watch": "yarn prebuild && yarn migrate up && yarn tsc-watch --onSuccess \"yarn node --enable-source-maps  ./lib/cli.js run both\"",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
