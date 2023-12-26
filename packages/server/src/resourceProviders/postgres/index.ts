@@ -452,6 +452,7 @@ const validHistoryParameters = ["_count", "_since", "_since-version"]; // "_at",
 function processHistoryParameters(
   parameters: ParsedParameter<string | number>[]
 ): s.resources.Whereable {
+  const sqlParams: s.resources.Whereable = {};
   const _since = parameters.find((p) => p.name === "_since");
   const _since_versionId = parameters.find((p) => p.name === "_since-version");
 
@@ -468,17 +469,16 @@ function processHistoryParameters(
     );
   }
 
-  const sqlParams: s.resources.Whereable = {};
-
   if (_since?.value[0] && typeof _since?.value[0] === "string") {
-    sqlParams["created_at"] = dayjs(
-      _since.value[0] as string,
-      "YYYY-MM-DDThh:mm:ss+zz:zz"
-    ).toDate();
+    sqlParams["created_at"] = db.sql`${db.self} >= ${db.param(
+      dayjs(_since.value[0] as string, "YYYY-MM-DDThh:mm:ss+zz:zz").toDate()
+    )}`;
   }
 
   if (_since_versionId?.value[0]) {
-    sqlParams["version_id"] = parseInt(_since_versionId.value[0].toString());
+    sqlParams["version_id"] = db.sql`${db.self} > ${db.param(
+      parseInt(_since_versionId.value[0].toString())
+    )}`;
   }
 
   return sqlParams;
