@@ -496,8 +496,8 @@ async function getInstanceHistory<CTX extends FHIRServerCTX>(
 
   const historyCols = <const>["resource", "request_method"];
   type HistoryReturn = s.resources.OnlyCols<typeof historyCols>;
-  const res = await db.sql<s.resources.SQL, HistoryReturn[]>`
-  SELECT resource, request_method 
+  const history = await db.sql<s.resources.SQL, HistoryReturn[]>`
+  SELECT ${db.cols(historyCols)}
   FROM ${"resources"} 
   WHERE
   ${{
@@ -507,7 +507,7 @@ async function getInstanceHistory<CTX extends FHIRServerCTX>(
     ...processHistoryParameters(parameters),
   }} ORDER BY ${"version_id"} DESC LIMIT ${db.vals(limit)}`.run(client);
 
-  const resourceHistory = res.map((row) => ({
+  const resourceHistory = history.map((row) => ({
     resource: row.resource as unknown as Resource,
     request: {
       url: `${(row.resource as unknown as Resource).resourceType}/${
@@ -531,8 +531,8 @@ async function getTypeHistory<CTX extends FHIRServerCTX>(
 
   const historyCols = <const>["resource", "request_method"];
   type HistoryReturn = s.resources.OnlyCols<typeof historyCols>;
-  const res = await db.sql<s.resources.SQL, HistoryReturn[]>`
-  SELECT resource, request_method 
+  const history = await db.sql<s.resources.SQL, HistoryReturn[]>`
+  SELECT ${db.cols(historyCols)}
   FROM ${"resources"} 
   WHERE
   ${{
@@ -541,7 +541,7 @@ async function getTypeHistory<CTX extends FHIRServerCTX>(
     ...processHistoryParameters(parameters),
   }} ORDER BY ${"version_id"} DESC LIMIT ${db.vals(limit)}`.run(client);
 
-  const resourceHistory = res.map((row) => ({
+  const resourceHistory = history.map((row) => ({
     resource: row.resource as unknown as Resource,
     request: {
       url: `${(row.resource as unknown as Resource).resourceType}/${
@@ -564,8 +564,8 @@ async function getSystemHistory<CTX extends FHIRServerCTX>(
 
   const historyCols = <const>["resource", "request_method"];
   type HistoryReturn = s.resources.OnlyCols<typeof historyCols>;
-  const res = await db.sql<s.resources.SQL, HistoryReturn[]>`
-  SELECT resource, request_method 
+  const history = await db.sql<s.resources.SQL, HistoryReturn[]>`
+  SELECT ${db.cols(historyCols)}
   FROM ${"resources"} 
   WHERE
   ${{
@@ -573,7 +573,7 @@ async function getSystemHistory<CTX extends FHIRServerCTX>(
     ...processHistoryParameters(parameters),
   }} ORDER BY ${"version_id"} DESC LIMIT ${db.vals(limit)}`.run(client);
 
-  const resourceHistory = res.map((row) => ({
+  const resourceHistory = history.map((row) => ({
     resource: row.resource as unknown as Resource,
     request: {
       url: `${(row.resource as unknown as Resource).resourceType}/${
