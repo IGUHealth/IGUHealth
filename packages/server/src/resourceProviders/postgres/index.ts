@@ -207,7 +207,9 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
               void
             >`INSERT INTO ${"uri_idx"} (${db.cols(
               URI_INDEX
-            )}) VALUES (${db.vals(URI_INDEX)})`.run(client);
+            )}) VALUES (${db.vals(URI_INDEX)}) ON CONFLICT DO NOTHING`.run(
+              client
+            );
           })
       );
       return;
@@ -233,7 +235,9 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
               void
             >`INSERT INTO ${"token_idx"} (${db.cols(
               TOKEN_INDEX
-            )}) VALUES (${db.vals(TOKEN_INDEX)})`.run(client);
+            )}) VALUES (${db.vals(TOKEN_INDEX)}) ON CONFLICT DO NOTHING`.run(
+              client
+            );
           })
       );
       return;

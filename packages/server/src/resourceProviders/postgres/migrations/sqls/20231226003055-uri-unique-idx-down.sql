@@ -1,0 +1,1 @@
+ALTER TABLE uri_idx DROP CONSTRAINT uri_idx_unique;
