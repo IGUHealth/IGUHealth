@@ -56,14 +56,10 @@ import {
 } from "../transactions.js";
 import { validateResource } from "../../operation-executors/local/resource_validate.js";
 import {
-  FHIRRequest,
-  FHIRResponse,
   HistoryInstanceRequest,
-  InstanceHistoryResponse,
   SystemHistoryRequest,
   TypeHistoryRequest,
 } from "@iguhealth/client/lib/types";
-import { request } from "http";
 
 async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
@@ -869,6 +865,11 @@ function createPostgresMiddleware<
                   body: history,
                 },
               };
+            }
+            default: {
+              throw new OperationError(
+                outcomeError("invalid", "Invalid history level")
+              );
             }
           }
         }
