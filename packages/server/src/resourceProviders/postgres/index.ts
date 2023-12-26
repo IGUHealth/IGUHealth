@@ -408,7 +408,7 @@ async function saveResource<CTX extends FHIRServerCTX>(
       const res = await db.sql<s.resources.SQL, ResourceReturn[]>`
       INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
         data
-      )}) RETURNING resource
+      )}) RETURNING ${db.cols(resourceCol)}
       `.run(client);
 
       await indexResource(client, ctx, res[0].resource as unknown as Resource);
@@ -423,11 +423,21 @@ async function getResource<CTX extends FHIRServerCTX>(
   resourceType: ResourceType,
   id: string
 ): Promise<Resource> {
-  const queryText = `SELECT * FROM 
-    (SELECT resource, deleted FROM resources WHERE workspace = $1 AND resource_type = $2 AND id = $3 ORDER BY version_id DESC LIMIT 1)
-     as t WHERE t.deleted = false;`;
-  const res = await client.query(queryText, [ctx.workspace, resourceType, id]);
-  if (res.rows.length === 0) {
+  const latestCols = <const>["resource", "deleted"];
+  type ResourceReturn = s.resources.OnlyCols<typeof latestCols>;
+  const getLatestVersionSQLFragment = db.sql<s.resources.SQL, ResourceReturn[]>`
+    SELECT ${db.cols(latestCols)} FROM ${"resources"} WHERE ${{
+    workspace: ctx.workspace,
+    resource_type: resourceType,
+    id: id,
+  }} ORDER BY ${"version_id"} DESC LIMIT 1
+  `;
+
+  const res = await db.sql<s.resources.SQL, s.resources.Selectable[]>`
+  SELECT * FROM (${getLatestVersionSQLFragment}) as t WHERE t.deleted = false
+  `.run(client);
+
+  if (res.length === 0) {
     throw new OperationError(
       outcomeError(
         "not-found",
@@ -435,7 +445,7 @@ async function getResource<CTX extends FHIRServerCTX>(
       )
     );
   }
-  return res.rows[0].resource as Resource;
+  return res[0].resource as unknown as Resource;
 }
 
 function processHistoryParameters(
