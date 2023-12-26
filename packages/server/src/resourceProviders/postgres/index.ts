@@ -55,6 +55,11 @@ import {
   buildTransactionTopologicalGraph,
 } from "../transactions.js";
 import { validateResource } from "../../operation-executors/local/resource_validate.js";
+import {
+  HistoryInstanceRequest,
+  SystemHistoryRequest,
+  TypeHistoryRequest,
+} from "@iguhealth/client/lib/types";
 
 async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
@@ -484,11 +489,35 @@ function processHistoryParameters(
   return sqlParams;
 }
 
-async function getInstanceHistory<CTX extends FHIRServerCTX>(
+function historyLevelFilter(
+  request: HistoryInstanceRequest | TypeHistoryRequest | SystemHistoryRequest
+): s.resources.Whereable {
+  switch (request.level) {
+    case "instance": {
+      return {
+        resource_type: request.resourceType,
+        id: request.id,
+      };
+    }
+    case "type": {
+      return {
+        resource_type: request.resourceType,
+      };
+    }
+    case "system": {
+      return {};
+    }
+    default:
+      throw new OperationError(
+        outcomeError("invalid", "Invalid history level")
+      );
+  }
+}
+
+async function getHistory<CTX extends FHIRServerCTX>(
   client: pg.PoolClient,
   ctx: CTX,
-  resourceType: ResourceType,
-  id: string,
+  filters: s.resources.Whereable,
   parameters: ParsedParameter<string | number>[]
 ): Promise<BundleEntry[]> {
   const _count = parameters.find((p) => p.name === "_count");
@@ -502,78 +531,11 @@ async function getInstanceHistory<CTX extends FHIRServerCTX>(
   WHERE
   ${{
     workspace: ctx.workspace,
-    resource_type: resourceType,
-    id,
+    ...filters,
     ...processHistoryParameters(parameters),
   }} ORDER BY ${"version_id"} DESC LIMIT ${db.param(limit)}`;
 
   const history = await historySQL.run(client);
-
-  const resourceHistory = history.map((row) => ({
-    resource: row.resource as unknown as Resource,
-    request: {
-      url: `${(row.resource as unknown as Resource).resourceType}/${
-        (row.resource as unknown as Resource).id
-      }` as uri,
-      method: row.request_method as code,
-    },
-  }));
-
-  return resourceHistory;
-}
-
-async function getTypeHistory<CTX extends FHIRServerCTX>(
-  client: pg.PoolClient,
-  ctx: CTX,
-  resourceType: ResourceType,
-  parameters: ParsedParameter<string | number>[]
-): Promise<BundleEntry[]> {
-  const _count = parameters.find((p) => p.name === "_count");
-  const limit = deriveLimit([0, 50], _count);
-
-  const historyCols = <const>["resource", "request_method"];
-  type HistoryReturn = s.resources.OnlyCols<typeof historyCols>;
-  const history = await db.sql<s.resources.SQL, HistoryReturn[]>`
-  SELECT ${db.cols(historyCols)}
-  FROM ${"resources"} 
-  WHERE
-  ${{
-    workspace: ctx.workspace,
-    resource_type: resourceType,
-    ...processHistoryParameters(parameters),
-  }} ORDER BY ${"version_id"} DESC LIMIT ${db.param(limit)}`.run(client);
-
-  const resourceHistory = history.map((row) => ({
-    resource: row.resource as unknown as Resource,
-    request: {
-      url: `${(row.resource as unknown as Resource).resourceType}/${
-        (row.resource as unknown as Resource).id
-      }` as uri,
-      method: row.request_method as code,
-    },
-  }));
-
-  return resourceHistory;
-}
-
-async function getSystemHistory<CTX extends FHIRServerCTX>(
-  client: pg.PoolClient,
-  ctx: CTX,
-  parameters: ParsedParameter<string | number>[]
-): Promise<BundleEntry[]> {
-  const _count = parameters.find((p) => p.name === "_count");
-  const limit = deriveLimit([0, 50], _count);
-
-  const historyCols = <const>["resource", "request_method"];
-  type HistoryReturn = s.resources.OnlyCols<typeof historyCols>;
-  const history = await db.sql<s.resources.SQL, HistoryReturn[]>`
-  SELECT ${db.cols(historyCols)}
-  FROM ${"resources"} 
-  WHERE
-  ${{
-    workspace: ctx.workspace,
-    ...processHistoryParameters(parameters),
-  }} ORDER BY ${"version_id"} DESC LIMIT ${db.param(limit)}`.run(client);
 
   const resourceHistory = history.map((row) => ({
     resource: row.resource as unknown as Resource,
@@ -857,15 +819,15 @@ function createPostgresMiddleware<
         }
 
         case "history-request": {
+          const history = await getHistory(
+            context.state.client,
+            context.ctx,
+            historyLevelFilter(context.request),
+            context.request.parameters || []
+          );
+
           switch (context.request.level) {
             case "instance": {
-              const instanceHistory = await getInstanceHistory(
-                context.state.client,
-                context.ctx,
-                context.request.resourceType,
-                context.request.id,
-                context.request.parameters || []
-              );
               return {
                 request: context.request,
                 state: context.state,
@@ -875,17 +837,11 @@ function createPostgresMiddleware<
                   level: "instance",
                   resourceType: context.request.resourceType,
                   id: context.request.id,
-                  body: instanceHistory,
+                  body: history,
                 },
               };
             }
             case "type": {
-              const typeHistory = await getTypeHistory(
-                context.state.client,
-                context.ctx,
-                context.request.resourceType,
-                context.request.parameters || []
-              );
               return {
                 request: context.request,
                 state: context.state,
@@ -893,17 +849,12 @@ function createPostgresMiddleware<
                 response: {
                   type: "history-response",
                   level: "type",
-                  body: typeHistory,
                   resourceType: context.request.resourceType,
+                  body: history,
                 },
               };
             }
             case "system": {
-              const systemHistory = await getSystemHistory(
-                context.state.client,
-                context.ctx,
-                context.request.parameters || []
-              );
               return {
                 request: context.request,
                 state: context.state,
@@ -911,15 +862,18 @@ function createPostgresMiddleware<
                 response: {
                   type: "history-response",
                   level: "system",
-                  body: systemHistory,
+                  body: history,
                 },
               };
             }
             default: {
-              throw new Error("Invalid history level");
+              throw new OperationError(
+                outcomeError("invalid", "Invalid history level")
+              );
             }
           }
         }
+
         case "transaction-request": {
           let transactionBundle = context.request.body;
           const { locationsToUpdate, order } = buildTransactionTopologicalGraph(
