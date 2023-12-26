@@ -44,6 +44,7 @@ export default async function logAuditEvent(
     ],
     source: {
       observer: {
+        type: "Device" as uri,
         identifier: {
           system: "https://iguhealth.com" as uri,
           value: "server",
