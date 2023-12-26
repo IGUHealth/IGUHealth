@@ -507,8 +507,6 @@ async function getInstanceHistory<CTX extends FHIRServerCTX>(
     ...processHistoryParameters(parameters),
   }} ORDER BY ${"version_id"} DESC LIMIT ${db.param(limit)}`;
 
-  console.log(historySQL.compile());
-
   const history = await historySQL.run(client);
 
   const resourceHistory = history.map((row) => ({
@@ -600,7 +598,6 @@ async function patchResource<CTX extends FHIRServerCTX>(
 ): Promise<Resource> {
   return transaction(ISOLATION_LEVEL.Serializable, ctx, client, async (ctx) => {
     const resource = await getResource(client, ctx, resourceType, id);
-    // [TODO] CHECK VALIDATION
     try {
       const newResource = jsonpatch.applyPatch(resource, patches)
         .newDocument as Resource;
