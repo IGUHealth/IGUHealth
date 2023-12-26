@@ -1,4 +1,4 @@
-/* Replace with your SQL commands */-- This migration is needed to remove duplicate entries in the string_idx table
+-- This migration is needed to remove duplicate entries in the token_idx table
 DELETE FROM
     token_idx a
         USING token_idx b
