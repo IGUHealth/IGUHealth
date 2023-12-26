@@ -620,18 +620,27 @@ async function patchResource<CTX extends FHIRServerCTX>(
       ) {
         newResource.id = resource.id;
       }
-      const queryText =
-        "INSERT INTO resources(workspace, request_method, author, resource, prev_version_id, patches) VALUES($1, $2, $3, $4, $5, $6) RETURNING resource";
-      const res = await client.query(queryText, [
-        ctx.workspace,
+
+      const data: s.resources.Insertable = {
+        workspace: ctx.workspace,
         request_method,
-        ctx.author,
-        newResource,
-        resource.meta?.versionId,
-        JSON.stringify(patches),
-      ]);
-      await indexResource(client, ctx, res.rows[0].resource as Resource);
-      return res.rows[0].resource as Resource;
+        author: ctx.author,
+        resource: newResource as unknown as db.JSONObject,
+        prev_version_id: parseInt(resource.meta?.versionId as string),
+        patches: JSON.stringify(patches),
+      };
+
+      const resourceCol = <const>["resource"];
+      type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
+      const res = await db.sql<s.resources.SQL, ResourceReturn[]>`
+        INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
+        data
+      )}) RETURNING ${db.cols(resourceCol)}`.run(client);
+
+      const patchedResource = res[0].resource as unknown as Resource;
+
+      await indexResource(client, ctx, patchedResource);
+      return patchedResource;
     } catch (e) {
       if (e instanceof OperationError) throw e;
       else {
@@ -666,17 +675,25 @@ async function deleteResource<CTX extends FHIRServerCTX>(
             `'${resourceType}' with id '${id}' was not found`
           )
         );
-      const queryText =
-        "INSERT INTO resources(workspace, request_method, author, resource, prev_version_id, deleted) VALUES($1, $2, $3, $4, $5, $6) RETURNING resource";
 
-      const res = await client.query(queryText, [
-        ctx.workspace,
-        "DELETE",
-        ctx.author,
-        resource,
-        resource.meta?.versionId,
-        true,
-      ]);
+      const data: s.resources.Insertable = {
+        workspace: ctx.workspace,
+        request_method: "DELETE",
+        author: ctx.author,
+        resource: resource as unknown as db.JSONObject,
+        prev_version_id: parseInt(resource.meta?.versionId as string),
+        deleted: true,
+      };
+
+      const resourceCol = <const>["resource"];
+      type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
+
+      const deleteResource = await db.sql<s.resources.SQL, ResourceReturn[]>`
+        INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
+        data
+      )}) RETURNING ${db.cols(resourceCol)}`;
+
+      await deleteResource.run(client);
       await removeIndices(client, ctx, resource);
     }
   );
