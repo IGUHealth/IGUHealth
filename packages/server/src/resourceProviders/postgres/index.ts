@@ -448,12 +448,11 @@ async function getResource<CTX extends FHIRServerCTX>(
   return res[0].resource as unknown as Resource;
 }
 
+const validHistoryParameters = ["_count", "_since", "_since-version"]; // "_at", "_list"]
 function processHistoryParameters(
-  query: string,
-  sqlParameters: unknown[],
   parameters: ParsedParameter<string | number>[]
-): { query: string; parameters: unknown[] } {
-  let index = sqlParameters.length + 1;
+): s.resources.Whereable {
+  const sqlParams: s.resources.Whereable = {};
   const _since = parameters.find((p) => p.name === "_since");
   const _since_versionId = parameters.find((p) => p.name === "_since-version");
 
@@ -471,23 +470,18 @@ function processHistoryParameters(
   }
 
   if (_since?.value[0] && typeof _since?.value[0] === "string") {
-    query = `${query} AND created_at >= $${index++} `;
-
-    sqlParameters = [
-      ...sqlParameters,
-      dayjs(_since.value[0] as string, "YYYY-MM-DDThh:mm:ss+zz:zz").toDate(),
-    ];
+    sqlParams["created_at"] = db.sql`${db.self} >= ${db.param(
+      dayjs(_since.value[0] as string, "YYYY-MM-DDThh:mm:ss+zz:zz").toDate()
+    )}`;
   }
 
   if (_since_versionId?.value[0]) {
-    query = `${query} AND version_id > $${index++} `;
-    sqlParameters = [...sqlParameters, _since_versionId.value[0] as string];
+    sqlParams["version_id"] = db.sql`${db.self} > ${db.param(
+      parseInt(_since_versionId.value[0].toString())
+    )}`;
   }
 
-  return {
-    query,
-    parameters: sqlParameters,
-  };
+  return sqlParams;
 }
 
 async function getInstanceHistory<CTX extends FHIRServerCTX>(
@@ -500,30 +494,35 @@ async function getInstanceHistory<CTX extends FHIRServerCTX>(
   const _count = parameters.find((p) => p.name === "_count");
   const limit = deriveLimit([0, 50], _count);
 
-  let { query, parameters: sqlParameters } = processHistoryParameters(
-    "SELECT resource, request_method FROM resources WHERE workspace = $1 AND resource_type = $2 AND id = $3",
-    [ctx.workspace, resourceType, id],
-    parameters
-  );
+  const historyCols = <const>["resource", "request_method"];
+  type HistoryReturn = s.resources.OnlyCols<typeof historyCols>;
+  const historySQL = await db.sql<s.resources.SQL, HistoryReturn[]>`
+  SELECT ${db.cols(historyCols)}
+  FROM ${"resources"} 
+  WHERE
+  ${{
+    workspace: ctx.workspace,
+    resource_type: resourceType,
+    id,
+    ...processHistoryParameters(parameters),
+  }} ORDER BY ${"version_id"} DESC LIMIT ${db.param(limit)}`;
 
-  query = `${query} ORDER BY version_id DESC LIMIT $${
-    sqlParameters.length + 1
-  }`;
-  sqlParameters = [...sqlParameters, limit];
+  console.log(historySQL.compile());
 
-  const res = await client.query(query, sqlParameters);
+  const history = await historySQL.run(client);
 
-  const resourceHistory = res.rows.map((row) => ({
-    resource: row.resource as Resource,
+  const resourceHistory = history.map((row) => ({
+    resource: row.resource as unknown as Resource,
     request: {
-      url: `${row.resource.resourceType}/${row.resource.id}` as uri,
-      method: row.request_method,
+      url: `${(row.resource as unknown as Resource).resourceType}/${
+        (row.resource as unknown as Resource).id
+      }` as uri,
+      method: row.request_method as code,
     },
   }));
+
   return resourceHistory;
 }
-
-const validHistoryParameters = ["_count", "_since", "_since-version"]; // "_at", "_list"]
 
 async function getTypeHistory<CTX extends FHIRServerCTX>(
   client: pg.PoolClient,
@@ -534,26 +533,28 @@ async function getTypeHistory<CTX extends FHIRServerCTX>(
   const _count = parameters.find((p) => p.name === "_count");
   const limit = deriveLimit([0, 50], _count);
 
-  let { query, parameters: sqlParameters } = processHistoryParameters(
-    "SELECT resource, request_method FROM resources WHERE workspace = $1 AND resource_type = $2",
-    [ctx.workspace, resourceType],
-    parameters
-  );
+  const historyCols = <const>["resource", "request_method"];
+  type HistoryReturn = s.resources.OnlyCols<typeof historyCols>;
+  const history = await db.sql<s.resources.SQL, HistoryReturn[]>`
+  SELECT ${db.cols(historyCols)}
+  FROM ${"resources"} 
+  WHERE
+  ${{
+    workspace: ctx.workspace,
+    resource_type: resourceType,
+    ...processHistoryParameters(parameters),
+  }} ORDER BY ${"version_id"} DESC LIMIT ${db.param(limit)}`.run(client);
 
-  query = `${query} ORDER BY version_id DESC LIMIT $${
-    sqlParameters.length + 1
-  }`;
-  sqlParameters = [...sqlParameters, limit];
-
-  const res = await client.query(query, sqlParameters);
-
-  const resourceHistory = res.rows.map((row) => ({
-    resource: row.resource as Resource,
+  const resourceHistory = history.map((row) => ({
+    resource: row.resource as unknown as Resource,
     request: {
-      url: `${row.resource.resourceType}/${row.resource.id}` as uri,
-      method: row.request_method,
+      url: `${(row.resource as unknown as Resource).resourceType}/${
+        (row.resource as unknown as Resource).id
+      }` as uri,
+      method: row.request_method as code,
     },
   }));
+
   return resourceHistory;
 }
 
@@ -565,26 +566,27 @@ async function getSystemHistory<CTX extends FHIRServerCTX>(
   const _count = parameters.find((p) => p.name === "_count");
   const limit = deriveLimit([0, 50], _count);
 
-  let { query, parameters: sqlParameters } = processHistoryParameters(
-    "SELECT resource, request_method FROM resources WHERE workspace = $1",
-    [ctx.workspace],
-    parameters
-  );
+  const historyCols = <const>["resource", "request_method"];
+  type HistoryReturn = s.resources.OnlyCols<typeof historyCols>;
+  const history = await db.sql<s.resources.SQL, HistoryReturn[]>`
+  SELECT ${db.cols(historyCols)}
+  FROM ${"resources"} 
+  WHERE
+  ${{
+    workspace: ctx.workspace,
+    ...processHistoryParameters(parameters),
+  }} ORDER BY ${"version_id"} DESC LIMIT ${db.param(limit)}`.run(client);
 
-  query = `${query} ORDER BY version_id DESC LIMIT $${
-    sqlParameters.length + 1
-  }`;
-  sqlParameters = [...sqlParameters, limit];
-
-  const res = await client.query(query, sqlParameters);
-
-  const resourceHistory = res.rows.map((row) => ({
-    resource: row.resource as Resource,
+  const resourceHistory = history.map((row) => ({
+    resource: row.resource as unknown as Resource,
     request: {
-      url: `${row.resource.resourceType}/${row.resource.id}` as uri,
-      method: row.request_method,
+      url: `${(row.resource as unknown as Resource).resourceType}/${
+        (row.resource as unknown as Resource).id
+      }` as uri,
+      method: row.request_method as code,
     },
   }));
+
   return resourceHistory;
 }
 
