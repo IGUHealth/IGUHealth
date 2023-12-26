@@ -496,7 +496,7 @@ async function getInstanceHistory<CTX extends FHIRServerCTX>(
 
   const historyCols = <const>["resource", "request_method"];
   type HistoryReturn = s.resources.OnlyCols<typeof historyCols>;
-  const history = await db.sql<s.resources.SQL, HistoryReturn[]>`
+  const historySQL = await db.sql<s.resources.SQL, HistoryReturn[]>`
   SELECT ${db.cols(historyCols)}
   FROM ${"resources"} 
   WHERE
@@ -505,7 +505,11 @@ async function getInstanceHistory<CTX extends FHIRServerCTX>(
     resource_type: resourceType,
     id,
     ...processHistoryParameters(parameters),
-  }} ORDER BY ${"version_id"} DESC LIMIT ${db.vals(limit)}`.run(client);
+  }} ORDER BY ${"version_id"} DESC LIMIT ${db.param(limit)}`;
+
+  console.log(historySQL.compile());
+
+  const history = await historySQL.run(client);
 
   const resourceHistory = history.map((row) => ({
     resource: row.resource as unknown as Resource,
@@ -539,7 +543,7 @@ async function getTypeHistory<CTX extends FHIRServerCTX>(
     workspace: ctx.workspace,
     resource_type: resourceType,
     ...processHistoryParameters(parameters),
-  }} ORDER BY ${"version_id"} DESC LIMIT ${db.vals(limit)}`.run(client);
+  }} ORDER BY ${"version_id"} DESC LIMIT ${db.param(limit)}`.run(client);
 
   const resourceHistory = history.map((row) => ({
     resource: row.resource as unknown as Resource,
@@ -571,7 +575,7 @@ async function getSystemHistory<CTX extends FHIRServerCTX>(
   ${{
     workspace: ctx.workspace,
     ...processHistoryParameters(parameters),
-  }} ORDER BY ${"version_id"} DESC LIMIT ${db.vals(limit)}`.run(client);
+  }} ORDER BY ${"version_id"} DESC LIMIT ${db.param(limit)}`.run(client);
 
   const resourceHistory = history.map((row) => ({
     resource: row.resource as unknown as Resource,
