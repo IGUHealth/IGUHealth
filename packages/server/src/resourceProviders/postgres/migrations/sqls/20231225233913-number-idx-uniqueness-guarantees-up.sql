@@ -1,4 +1,4 @@
-/* Replace with your SQL commands */-- This migration is needed to remove duplicate entries in the string_idx table
+-- This migration is needed to remove duplicate entries in the number_idx table
 DELETE FROM
     number_idx a
         USING number_idx b
