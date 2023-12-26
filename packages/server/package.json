@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/server",
-  "version": "0.5.77",
+  "version": "0.5.78",
   "description": "",
   "main": "./lib/server.js",
   "type": "module",
