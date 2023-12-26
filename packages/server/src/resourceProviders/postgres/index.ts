@@ -725,7 +725,7 @@ function createPostgresMiddleware<
                   type: "search-response",
                   parameters: context.request.parameters,
                   level: "system",
-                  total: result.total as unsignedInt,
+                  total: result.total as unsignedInt | undefined,
                   body: result.resources,
                 },
               };
@@ -740,7 +740,7 @@ function createPostgresMiddleware<
                   parameters: context.request.parameters,
                   level: "type",
                   resourceType: context.request.resourceType,
-                  total: result.total as unsignedInt,
+                  total: result.total as unsignedInt | undefined,
                   body: result.resources,
                 },
               };
