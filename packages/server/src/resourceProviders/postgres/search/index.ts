@@ -161,7 +161,6 @@ export async function executeSearchQuery(
   if (process.env.LOG_SQL) {
     const v = sql.compile();
     ctx.logger.info(v.text);
-    // sqlUtils.logQueryWithValues(v);
   }
 
   const res = await sql.run(client);
