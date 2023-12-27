@@ -320,6 +320,9 @@ async function validateReferenceTypeConstraint(
       )
         return [];
     } else if (value.type && value === sd?.type) return [];
+    // Allow for reference type to be undefined.
+    else if (value.type === undefined && value.reference === undefined)
+      return [];
   }
 
   return [
