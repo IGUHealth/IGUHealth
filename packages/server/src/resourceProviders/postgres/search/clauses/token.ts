@@ -1,85 +1,35 @@
-import { FHIRServerCTX } from "../../../../ctx/types.js";
-import { or } from "../../../utilities/sql.js";
-import { SearchParameterResource } from "../../../utilities/search/parameters.js";
-import { FilterSQLResult } from "./types.js";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import * as db from "zapatos/db";
+import type * as s from "zapatos/schema";
 
-function missingModifier(
-  _ctx: FHIRServerCTX,
-  parameter: SearchParameterResource,
-  values: unknown[]
-): FilterSQLResult {
-  return parameter.value.reduce(
-    (sql: FilterSQLResult, value) => {
-      if (value !== "true" && value !== "false") {
-        throw new OperationError(
-          outcomeError(
-            "invalid",
-            `Invalid value for modifier 'missing' must be 'true' or 'false'`
-          )
-        );
-      }
-      if (value === "true") {
-        throw new OperationError(
-          outcomeError(
-            "not-supported",
-            "For modifier 'missing' value of 'true' is not yet supported"
-          )
-        );
-      }
-      // Currently only supporting false for now. (which means value must exist)
-      return {
-        query: or(sql.query, `value IS NOT NULL`),
-        values: sql.values,
-      };
-    },
-    { query: "", values }
-  );
-}
+import { FHIRServerCTX } from "../../../../ctx/types.js";
+import { SearchParameterResource } from "../../../utilities/search/parameters.js";
+import { missingModifier } from "./shared.js";
 
 export default function tokenClauses(
   ctx: FHIRServerCTX,
-  parameter: SearchParameterResource,
-  values: unknown[]
-): FilterSQLResult {
+  parameter: SearchParameterResource
+): db.SQLFragment<boolean | null, unknown> {
   switch (parameter.modifier) {
     case "missing":
-      return missingModifier(ctx, parameter, values);
+      return missingModifier(ctx, parameter);
     default: {
-      let index = values.length + 1;
-      return parameter.value.reduce(
-        (sql: FilterSQLResult, value) => {
+      return db.conditions.or(
+        ...parameter.value.map((value): s.token_idx.Whereable => {
           const parts = value.toString().split("|");
           if (parts.length === 1) {
-            return {
-              query: or(sql.query, `value = $${index++}`),
-              values: [...values, value],
-            };
+            return { value: value.toString() };
           }
           if (parts.length === 2) {
             if (parts[0] !== "" && parts[1] !== "") {
-              return {
-                query: or(
-                  sql.query,
-                  `system = $${index++} AND value = $${index++}`
-                ),
-                values: [...values, parts[0], parts[1]],
-              };
+              return { system: parts[0], value: parts[1] };
             } else if (parts[0] !== "" && parts[1] === "") {
-              return {
-                query: or(sql.query, `system = $${index++}`),
-                values: [...values, parts[0]],
-              };
+              return { system: parts[0] };
             } else if (parts[0] === "" && parts[1] !== "") {
-              return {
-                query: or(sql.query, `value = $${index++}`),
-                values: [...values, parts[1]],
-              };
+              return { value: parts[1] };
             }
           }
           throw new Error(`Invalid token value found '${value}'`);
-        },
-        { query: "", values }
+        })
       );
     }
   }

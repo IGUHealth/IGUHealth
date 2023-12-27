@@ -1,3 +1,6 @@
+import type * as s from "zapatos/schema";
+import * as db from "zapatos/db";
+
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../../ctx/types.js";
@@ -12,16 +15,13 @@ import referenceClauses from "./reference.js";
 import stringClauses from "./string.js";
 import tokenClauses from "./token.js";
 import uriClauses from "./uri.js";
-import { and } from "../../../utilities/sql.js";
-import { FilterSQLResult } from "./types.js";
 
 const PARAMETER_CLAUSES: Record<
   string,
   (
     ctx: FHIRServerCTX,
-    parameter: SearchParameterResource,
-    values: unknown[]
-  ) => FilterSQLResult
+    parameter: SearchParameterResource
+  ) => db.SQLFragment<boolean | null, unknown>
 > = {
   token: tokenClauses,
   date: dateClauses,
@@ -35,17 +35,10 @@ const PARAMETER_CLAUSES: Record<
 export function buildParameterSQL(
   ctx: FHIRServerCTX,
   parameter: SearchParameterResource,
-  index: number,
-  values: unknown[],
-  columns: string[] = ["DISTINCT(r_version_id)"]
-): { index: number; query: string; values: unknown[] } {
+  columns: s.Column[] = []
+): db.SQLFragment {
   const searchParameter = parameter.searchParameter;
   const search_table = searchParameterToTableName(searchParameter.type);
-
-  const rootSelect = `SELECT ${columns.join(
-    ", "
-  )} FROM ${search_table} WHERE parameter_url = $${index++} `;
-  values = [...values, searchParameter.url];
 
   switch (searchParameter.type) {
     case "number":
@@ -55,24 +48,18 @@ export function buildParameterSQL(
     case "token":
     case "reference":
     case "quantity": {
-      const result = PARAMETER_CLAUSES[searchParameter.type](
-        ctx,
-        parameter,
-        values
-      );
-      index = result.values.length + 1;
-      const query = `(${and(
-        rootSelect,
-        `workspace=$${index++}`,
-        result.query
-      )})`;
-
-      values = [...result.values, ctx.workspace];
-      return {
-        index,
-        values,
-        query,
-      };
+      return db.sql`
+      SELECT ${
+        columns.length === 0
+          ? db.raw("DISTINCT(r_version_id)")
+          : db.cols(columns)
+      } 
+      FROM ${search_table} 
+      WHERE ${db.conditions.and(
+        { parameter_url: searchParameter.url, workspace: ctx.workspace },
+        PARAMETER_CLAUSES[searchParameter.type](ctx, parameter)
+      )}
+      `;
     }
     default:
       throw new OperationError(

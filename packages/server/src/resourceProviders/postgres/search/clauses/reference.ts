@@ -1,13 +1,13 @@
-import { SearchParameter, code } from "@iguhealth/fhir-types/r4/types";
+import * as db from "zapatos/db";
+import type * as s from "zapatos/schema";
+
+import { SearchParameter } from "@iguhealth/fhir-types/r4/types";
 
 import { FHIRServerCTX } from "../../../../ctx/types.js";
-import {
-  SearchParameterResource,
-  searchParameterToTableName,
-} from "../../../utilities/search/parameters.js";
-import { FilterSQLResult } from "./types.js";
+import { SearchParameterResource } from "../../../utilities/search/parameters.js";
+import * as sqlUtils from "../../../utilities/sql.js";
 import { buildParameterSQL } from "./index.js";
-import { or } from "../../../utilities/sql.js";
+import { missingModifier } from "./shared.js";
 
 /*
  ** This function allows resolution based on canonical references.
@@ -15,21 +15,18 @@ import { or } from "../../../utilities/sql.js";
  */
 function generateCanonicalReferenceSearch(
   ctx: FHIRServerCTX,
-  parameter: SearchParameterResource,
-  values: unknown[]
-): FilterSQLResult {
-  let index = values.length + 1;
-  const uriTablename = searchParameterToTableName("uri" as code);
-  const targets = `(${(parameter.searchParameter.target || [])
-    .map((target) => {
-      values = [...values, target];
-      return `$${index++}`;
-    })
-    .join(",")})`;
-  return {
-    query: `(SELECT DISTINCT ON (r_id) r_id FROM ${uriTablename} WHERE resource_type in ${targets} AND workspace=$${index++} AND value = $${index++})`,
-    values: [...values, ctx.workspace, parameter.value[0]],
+  parameter: SearchParameterResource
+): db.SQLFragment {
+  const where: s.uri_idx.Whereable = {
+    workspace: ctx.workspace,
+    resource_type: db.sql`${db.self} in (${sqlUtils.paramsWithComma(
+      parameter.searchParameter.target || []
+    )})`,
+    value: parameter.value[0].toString(),
   };
+
+  return db.sql<s.uri_idx.SQL>`
+    ( SELECT DISTINCT ON (${"r_id"}) ${"r_id"} FROM ${"uri_idx"} WHERE ${where} )`;
 }
 
 function isChainParameter(
@@ -46,165 +43,114 @@ function chainSQL(
   ctx: FHIRServerCTX,
   parameter: SearchParameterResource & {
     chainedParameters: SearchParameter[][];
-  },
-  values: unknown[],
-  index: number
-): FilterSQLResult {
+  }
+): db.SQLFragment<boolean | null, never> {
   const referenceParameters = [
     [parameter.searchParameter],
     ...parameter.chainedParameters.slice(0, -1),
   ];
 
-  const sqlCHAIN = referenceParameters.reduce(
-    (
-      {
-        index,
-        values,
-        query,
-      }: { index: number; values: unknown[]; query: string[] },
-      parameters
-    ) => {
-      const res = parameters.reduce(
-        (
-          {
-            index,
-            values,
-            query,
-          }: { index: number; values: unknown[]; query: string[] },
-          p
-        ) => {
-          const res = buildParameterSQL(
-            ctx,
-            {
-              type: "resource",
-              name: p.name,
-              searchParameter: p,
-              value: [],
-            },
-            index,
-            values,
-            ["r_id", "reference_id"]
-          );
-          return {
-            index: res.index,
-            values: res.values,
-            query: [...query, res.query],
-          };
+  const sqlCHAIN = referenceParameters.map((parameters) => {
+    const res = parameters.map((p): db.SQLFragment => {
+      return buildParameterSQL(
+        ctx,
+        {
+          type: "resource",
+          name: p.name,
+          searchParameter: p,
+          modifier: "missing",
+          value: ["false"],
         },
-        { index, values, query: [] }
+        ["r_id", "reference_id"]
       );
-      return {
-        index: res.index,
-        values: res.values,
-        query: [...query, `(${res.query.join(" UNION ")})`],
-      };
-    },
-    { index, values, query: [] }
-  );
-
-  index = sqlCHAIN.index;
-  values = sqlCHAIN.values;
+    });
+    return db.sql`(${db.mapWithSeparator(res, db.sql` UNION `, (c) => c)})`;
+  });
 
   const lastParameters =
     parameter.chainedParameters[parameter.chainedParameters.length - 1];
 
-  const lastResult = lastParameters.reduce(
-    (
-      {
-        index,
-        values,
-        query,
-      }: { index: number; values: unknown[]; query: string[] },
-      p
-    ) => {
-      const res = buildParameterSQL(
+  const lastResult = db.sql`(${db.mapWithSeparator(
+    lastParameters.map((p) => {
+      return buildParameterSQL(
         ctx,
         { ...parameter, searchParameter: p, chainedParameters: [] },
-        index,
-        values,
         ["r_id"]
       );
-      return {
-        index: res.index,
-        values: res.values,
-        query: [...query, res.query],
-      };
-    },
-    { index, values, query: [] }
-  );
+    }),
+    db.sql` UNION `,
+    (c) => c
+  )})`;
 
-  const referencesSQL = [
-    ...sqlCHAIN.query,
-    `(${lastResult.query.join(" UNION ")})`,
-  ]
+  const referencesSQL = [...sqlCHAIN, lastResult]
     // Reverse as we want to start from initial value and then chain up to the last reference ID.
     .reverse()
-    .reduce((previousResult: string, query: string, index: number) => {
-      const queryAlias = `query${index}`;
-      // Previous result should include the list of ids for next reference_id.
-      // Starting at the value this would be r_id
-      return `(select r_id from ${query} as ${queryAlias} where ${queryAlias}.reference_id in ${previousResult})`;
-    });
+    .reduce(
+      (
+        previousResult: db.SQLFragment,
+        query: db.SQLFragment,
+        index: number
+      ) => {
+        const queryAlias = db.raw(`query${index}`);
+        // Previous result should include the list of ids for next reference_id.
+        // Starting at the value this would be r_id
+        return db.sql`(select ${"r_id"} from ${query} as ${queryAlias} WHERE ${queryAlias}.${"reference_id"} in ${previousResult})`;
+      }
+    );
 
-  return {
-    query: `r_id in (select r_id from ${referencesSQL} as referencechain)`,
-    values: lastResult.values,
-  };
+  return db.sql`${"r_id"} in (select ${"r_id"} from ${referencesSQL} as referencechain)`;
 }
 
 function sqlParameterValue(
   ctx: FHIRServerCTX,
-  sql: FilterSQLResult,
   parameter: SearchParameterResource,
   parameterValue: string | number
 ) {
-  const canonicalSQL = generateCanonicalReferenceSearch(
+  const canonicalSQL = db.sql<s.reference_idx.SQL>`${"reference_id"} in ${generateCanonicalReferenceSearch(
     ctx,
-    parameter,
-    sql.values
-  );
-
-  const referenceSQL = or(sql.query, `reference_id in ${canonicalSQL.query}`);
+    parameter
+  )}`;
 
   const referenceValue = parameterValue.toString();
   const parts = referenceValue.split("/");
 
   if (parts.length === 1) {
-    return {
-      query: `${referenceSQL} OR reference_id = $${
-        canonicalSQL.values.length + 1
-      }`,
-      values: [...canonicalSQL.values, parts[0]],
+    const where: s.reference_idx.Whereable = {
+      reference_id: parts[0],
     };
+    return db.conditions.or(
+      canonicalSQL,
+      db.sql<s.reference_idx.SQL>`${where}`
+    );
   } else if (parts.length === 2) {
-    return {
-      query: `${referenceSQL} OR (reference_type = $${
-        canonicalSQL.values.length + 1
-      } AND reference_id = $${canonicalSQL.values.length + 2})`,
-      values: [...canonicalSQL.values, parts[0], parts[1]],
+    const where: s.reference_idx.Whereable = {
+      reference_type: parts[0],
+      reference_id: parts[1],
     };
+
+    return db.conditions.or(
+      canonicalSQL,
+      db.sql<s.reference_idx.SQL>`${where}`
+    );
   } else {
-    return {
-      query: referenceSQL,
-      values: canonicalSQL.values,
-    };
+    // In this case only perform a canonical search as could have passed a canonical url for the value.
+    return canonicalSQL;
   }
 }
 
 export default function referenceClauses(
   ctx: FHIRServerCTX,
-  parameter: SearchParameterResource,
-  values: unknown[]
-): FilterSQLResult {
-  const index = values.length + 1;
-
-  if (isChainParameter(parameter))
-    return chainSQL(ctx, parameter, values, index);
+  parameter: SearchParameterResource
+): db.SQLFragment<boolean | null, unknown> {
+  if (parameter.modifier === "missing") {
+    return missingModifier(ctx, parameter);
+  }
+  if (isChainParameter(parameter)) return chainSQL(ctx, parameter);
   else {
-    return parameter.value.reduce(
-      (sql: FilterSQLResult, value, i): FilterSQLResult =>
-        sqlParameterValue(ctx, sql, parameter, value),
-      { values, query: "" }
+    return db.conditions.or(
+      ...parameter.value.map((value) =>
+        sqlParameterValue(ctx, parameter, value)
+      )
     );
   }
 }

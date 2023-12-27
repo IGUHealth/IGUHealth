@@ -1,16 +1,16 @@
+import type * as s from "zapatos/schema";
+import * as db from "zapatos/db";
+
 import { FHIRServerCTX } from "../../../../ctx/types.js";
-import { or } from "../../../utilities/sql.js";
 import { SearchParameterResource } from "../../../utilities/search/parameters.js";
-import { FilterSQLResult } from "./types.js";
 
 export default function uriClauses(
   _ctx: FHIRServerCTX,
-  parameter: SearchParameterResource,
-  values: unknown[]
-): FilterSQLResult {
-  let index = values.length + 1;
-  return {
-    query: or(...parameter.value.map((_value) => `value = $${index++}`)),
-    values: [...values, ...parameter.value],
-  };
+  parameter: SearchParameterResource
+): db.SQLFragment<boolean | null, unknown> {
+  return db.conditions.or(
+    ...parameter.value.map(
+      (value): s.uri_idx.Whereable => ({ value: value.toString() })
+    )
+  );
 }

@@ -1,38 +1,38 @@
+import type * as s from "zapatos/schema";
+import * as db from "zapatos/db";
+
 import { FHIRServerCTX } from "../../../../ctx/types.js";
-import { or } from "../../../utilities/sql.js";
 import { SearchParameterResource } from "../../../utilities/search/parameters.js";
-import { FilterSQLResult } from "./types.js";
 
 export default function stringClauses(
   _ctx: FHIRServerCTX,
-  parameter: SearchParameterResource,
-  values: unknown[]
-): FilterSQLResult {
+  parameter: SearchParameterResource
+): db.SQLFragment<boolean | null, never> {
   switch (parameter.modifier) {
     case "exact": {
-      let index = values.length + 1;
-      return {
-        query: or(...parameter.value.map((_value) => `value = $${index++}`)),
-        values: [...values, ...parameter.value],
-      };
+      return db.conditions.or(
+        ...parameter.value.map(
+          (value): s.string_idx.Whereable => ({ value: value.toString() })
+        )
+      );
     }
     case "contains": {
-      let index = values.length + 1;
-      return {
-        query: or(
-          ...parameter.value.map((_value) => `value ilike $${index++}`)
-        ),
-        values: [...values, ...parameter.value.map((v) => `%${v}%`)],
-      };
+      return db.conditions.or(
+        ...parameter.value.map(
+          (value): s.string_idx.Whereable => ({
+            value: db.sql`${db.self} ilike ${db.param(`%${value}%`)}`,
+          })
+        )
+      );
     }
     default: {
-      let index = values.length + 1;
-      return {
-        query: or(
-          ...parameter.value.map((_value) => `value ilike $${index++}`)
-        ),
-        values: [...values, ...parameter.value.map((v) => `${v}%`)],
-      };
+      return db.conditions.or(
+        ...parameter.value.map(
+          (value): s.string_idx.Whereable => ({
+            value: db.sql`${db.self} ilike ${db.param(`${value}%`)}`,
+          })
+        )
+      );
     }
   }
 }
