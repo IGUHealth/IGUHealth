@@ -434,32 +434,7 @@ exports[`Testing validating resourceType 'AuditEvent' 1`] = `
       "system": "http://dicom.nema.org/resources/ontology/DCM",
     },
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Expected reference to be constrained by one of the following profiles 'http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/Organization, http://hl7.org/fhir/StructureDefinition/Device, http://hl7.org/fhir/StructureDefinition/Patient, http://hl7.org/fhir/StructureDefinition/RelatedPerson' at path '/agent/0/who' found reference of type 'undefined' instead.",
-      "expression": [
-        "/agent/0/who",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Expected reference to be constrained by one of the following profiles 'http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/Organization, http://hl7.org/fhir/StructureDefinition/Device, http://hl7.org/fhir/StructureDefinition/Patient, http://hl7.org/fhir/StructureDefinition/RelatedPerson' at path '/agent/1/who' found reference of type 'undefined' instead.",
-      "expression": [
-        "/agent/1/who",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Expected reference to be constrained by one of the following profiles 'http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/Organization, http://hl7.org/fhir/StructureDefinition/Device, http://hl7.org/fhir/StructureDefinition/Patient, http://hl7.org/fhir/StructureDefinition/RelatedPerson' at path '/source/observer' found reference of type 'undefined' instead.",
-      "expression": [
-        "/source/observer",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -20291,48 +20266,7 @@ exports[`Testing validating resourceType 'ClinicalImpression' 1`] = `
       "status": "generated",
     },
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Expected reference to be constrained by one of the following profiles 'http://hl7.org/fhir/StructureDefinition/Condition, http://hl7.org/fhir/StructureDefinition/AllergyIntolerance' at path '/problem/0' found reference of type 'undefined' instead.",
-      "expression": [
-        "/problem/0",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Expected reference to be constrained by one of the following profiles 'http://hl7.org/fhir/StructureDefinition/Observation, http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse, http://hl7.org/fhir/StructureDefinition/FamilyMemberHistory, http://hl7.org/fhir/StructureDefinition/DiagnosticReport, http://hl7.org/fhir/StructureDefinition/RiskAssessment, http://hl7.org/fhir/StructureDefinition/ImagingStudy, http://hl7.org/fhir/StructureDefinition/Media' at path '/investigation/0/item/0' found reference of type 'undefined' instead.",
-      "expression": [
-        "/investigation/0/item/0",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Expected reference to be constrained by one of the following profiles 'http://hl7.org/fhir/StructureDefinition/Observation, http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse, http://hl7.org/fhir/StructureDefinition/FamilyMemberHistory, http://hl7.org/fhir/StructureDefinition/DiagnosticReport, http://hl7.org/fhir/StructureDefinition/RiskAssessment, http://hl7.org/fhir/StructureDefinition/ImagingStudy, http://hl7.org/fhir/StructureDefinition/Media' at path '/investigation/0/item/1' found reference of type 'undefined' instead.",
-      "expression": [
-        "/investigation/0/item/1",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Expected reference to be constrained by one of the following profiles 'http://hl7.org/fhir/StructureDefinition/Observation, http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse, http://hl7.org/fhir/StructureDefinition/FamilyMemberHistory, http://hl7.org/fhir/StructureDefinition/DiagnosticReport, http://hl7.org/fhir/StructureDefinition/RiskAssessment, http://hl7.org/fhir/StructureDefinition/ImagingStudy, http://hl7.org/fhir/StructureDefinition/Media' at path '/investigation/0/item/2' found reference of type 'undefined' instead.",
-      "expression": [
-        "/investigation/0/item/2",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Expected reference to be constrained by one of the following profiles 'http://hl7.org/fhir/StructureDefinition/Observation, http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse, http://hl7.org/fhir/StructureDefinition/FamilyMemberHistory, http://hl7.org/fhir/StructureDefinition/DiagnosticReport, http://hl7.org/fhir/StructureDefinition/RiskAssessment, http://hl7.org/fhir/StructureDefinition/ImagingStudy, http://hl7.org/fhir/StructureDefinition/Media' at path '/investigation/0/item/3' found reference of type 'undefined' instead.",
-      "expression": [
-        "/investigation/0/item/3",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -22497,16 +22431,7 @@ exports[`Testing validating resourceType 'EpisodeOfCare' 1`] = `
       },
     ],
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Expected reference to be constrained by one of the following profiles 'http://hl7.org/fhir/StructureDefinition/ServiceRequest' at path '/referralRequest/0' found reference of type 'undefined' instead.",
-      "expression": [
-        "/referralRequest/0",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -22727,16 +22652,7 @@ exports[`Testing validating resourceType 'Goal' 1`] = `
       "status": "additional",
     },
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Expected reference to be constrained by one of the following profiles 'http://hl7.org/fhir/StructureDefinition/Condition, http://hl7.org/fhir/StructureDefinition/Observation, http://hl7.org/fhir/StructureDefinition/MedicationStatement, http://hl7.org/fhir/StructureDefinition/NutritionOrder, http://hl7.org/fhir/StructureDefinition/ServiceRequest, http://hl7.org/fhir/StructureDefinition/RiskAssessment' at path '/addresses/0' found reference of type 'undefined' instead.",
-      "expression": [
-        "/addresses/0",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -25120,16 +25036,7 @@ exports[`Testing validating resourceType 'Patient' 1`] = `
       "status": "generated",
     },
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Expected reference to be constrained by one of the following profiles 'http://hl7.org/fhir/StructureDefinition/Organization' at path '/identifier/0/assigner' found reference of type 'undefined' instead.",
-      "expression": [
-        "/identifier/0/assigner",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -25185,16 +25092,7 @@ exports[`Testing validating resourceType 'PaymentNotice' 1`] = `
       "status": "generated",
     },
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Expected reference to be constrained by one of the following profiles 'http://hl7.org/fhir/StructureDefinition/Organization' at path '/recipient' found reference of type 'undefined' instead.",
-      "expression": [
-        "/recipient",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -25309,16 +25207,7 @@ exports[`Testing validating resourceType 'Person' 1`] = `
       "status": "generated",
     },
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Expected reference to be constrained by one of the following profiles 'http://hl7.org/fhir/StructureDefinition/Organization' at path '/identifier/0/assigner' found reference of type 'undefined' instead.",
-      "expression": [
-        "/identifier/0/assigner",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -25390,16 +25279,7 @@ exports[`Testing validating resourceType 'Practitioner' 1`] = `
       "status": "generated",
     },
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Expected reference to be constrained by one of the following profiles 'http://hl7.org/fhir/StructureDefinition/Organization' at path '/qualification/0/issuer' found reference of type 'undefined' instead.",
-      "expression": [
-        "/qualification/0/issuer",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -26696,32 +26576,7 @@ exports[`Testing validating resourceType 'SupplyDelivery' 1`] = `
       "text": "Blood collect tubes blue cap",
     },
   },
-  [
-    {
-      "code": "structure",
-      "diagnostics": "Expected reference to be constrained by one of the following profiles 'http://hl7.org/fhir/StructureDefinition/SupplyDelivery, http://hl7.org/fhir/StructureDefinition/Contract' at path '/partOf/0' found reference of type 'undefined' instead.",
-      "expression": [
-        "/partOf/0",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Expected reference to be constrained by one of the following profiles 'http://hl7.org/fhir/StructureDefinition/Practitioner, http://hl7.org/fhir/StructureDefinition/PractitionerRole, http://hl7.org/fhir/StructureDefinition/Organization' at path '/supplier' found reference of type 'undefined' instead.",
-      "expression": [
-        "/supplier",
-      ],
-      "severity": "error",
-    },
-    {
-      "code": "structure",
-      "diagnostics": "Expected reference to be constrained by one of the following profiles 'http://hl7.org/fhir/StructureDefinition/Location' at path '/destination' found reference of type 'undefined' instead.",
-      "expression": [
-        "/destination",
-      ],
-      "severity": "error",
-    },
-  ],
+  [],
 ]
 `;
 
