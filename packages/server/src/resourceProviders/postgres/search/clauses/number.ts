@@ -1,20 +1,20 @@
+import type * as s from "zapatos/schema";
+import * as db from "zapatos/db";
+
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../../ctx/types.js";
-import { or } from "../../../utilities/sql.js";
 import {
   SearchParameterResource,
   getDecimalPrecision,
 } from "../../../utilities/search/parameters.js";
-import { FilterSQLResult } from "./types.js";
 
 export default function numberClauses(
   _ctx: FHIRServerCTX,
-  parameter: SearchParameterResource,
-  values: unknown[]
-): FilterSQLResult {
-  return parameter.value.reduce(
-    (sql, value) => {
+  parameter: SearchParameterResource
+): db.SQLFragment<boolean | null, never> {
+  return db.conditions.or(
+    ...parameter.value.map((value): db.SQLFragment => {
       const result = value
         .toString()
         .match(/^(?<prefix>eq|ne|gt|lt|ge|le|sa|eb|ap)?(?<value>.+)$/);
@@ -49,91 +49,43 @@ export default function numberClauses(
         );
       }
 
-      const decimalPrecision = getDecimalPrecision(numberValue);
+      const paramValue = db.param(numberValue);
+      const precision = db.param(-getDecimalPrecision(numberValue));
+
       switch (prefix) {
         // the range of the search value fully contains the range of the target value
         case "eq":
         case undefined: {
-          let index = sql.values.length + 1;
-          return {
-            query: or(
-              sql.query,
-              `(value - 0.5 * 10 ^ $${index++})  <= $${index++} AND (value + 0.5 * 10 ^ $${index++}) >= $${index++}`
-            ),
-            values: [
-              ...sql.values,
-              -decimalPrecision,
-              numberValue,
-              -decimalPrecision,
-              numberValue,
-            ],
-          };
+          return db.sql<s.number_idx.SQL>`
+          (${"value"} - 0.5 * 10 ^ ${precision}) <= ${paramValue} AND
+          (${"value"} + 0.5 * 10 ^ ${precision}) >= ${paramValue}`;
         }
 
         // 	the range of the search value does not fully contain the range of the target value
         case "ne": {
-          let index = sql.values.length + 1;
-          return {
-            query: or(
-              sql.query,
-              `(value - 0.5 * 10 ^ $${index++})  > $${index++} OR (value + 0.5 * 10 ^ $${index++}) < $${index++}`
-            ),
-            values: [
-              ...sql.values,
-              -decimalPrecision,
-              numberValue,
-              -decimalPrecision,
-              numberValue,
-            ],
-          };
+          return db.sql<s.number_idx.SQL>`
+          (${"value"} - 0.5 * 10 ^ ${precision}) > ${paramValue} OR
+          (${"value"} + 0.5 * 10 ^ ${precision}) < ${paramValue}`;
         }
 
         // the range above the search value intersects (i.e. overlaps) with the range of the target value
         case "gt": {
-          let index = sql.values.length + 1;
-          return {
-            query: or(
-              sql.query,
-              `(value - 0.5 * 10 ^ $${index++}) > $${index++}`
-            ),
-            values: [...sql.values, -decimalPrecision, numberValue],
-          };
+          return db.sql<s.number_idx.SQL>`(${"value"} - 0.5 * 10 ^ ${precision}) > ${paramValue}`;
         }
         //	the value for the parameter in the resource is less than the provided value
         case "lt": {
           // Start at upperbound to exclude the intersection.
-          let index = sql.values.length + 1;
-          return {
-            query: or(
-              sql.query,
-              `(value + 0.5 * 10 ^ $${index++}) < $${index++}`
-            ),
-            values: [...sql.values, -decimalPrecision, numberValue],
-          };
+          return db.sql<s.number_idx.SQL>`(${"value"} + 0.5 * 10 ^ ${precision}) < ${paramValue}`;
         }
         // the range above the search value intersects (i.e. overlaps) with the range of the target value,
         // or the range of the search value fully contains the range of the target value
         case "ge": {
           // Perform search as GT but use >= and start on upperbound.
-          let index = sql.values.length + 1;
-          return {
-            query: or(
-              sql.query,
-              `(value + 0.5 * 10 ^ $${index++}) >= $${index++}`
-            ),
-            values: [...sql.values, -decimalPrecision, numberValue],
-          };
+          return db.sql<s.number_idx.SQL>`(${"value"} + 0.5 * 10 ^ ${precision}) >= ${paramValue}`;
         }
         case "le": {
           // Perform search as lt but use <= and start on lowerbound
-          let index = sql.values.length + 1;
-          return {
-            query: or(
-              sql.query,
-              `(value - 0.5 * 10 ^ $${index++}) <= $${index++}`
-            ),
-            values: [...sql.values, -decimalPrecision, numberValue],
-          };
+          return db.sql<s.number_idx.SQL>`(${"value"} - 0.5 * 10 ^ ${precision}) <= ${paramValue}`;
         }
         case "sa":
         case "eb":
@@ -146,7 +98,6 @@ export default function numberClauses(
             )
           );
       }
-    },
-    { query: "", values }
+    })
   );
 }

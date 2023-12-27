@@ -1,18 +1,19 @@
+import * as db from "zapatos/db";
+import type * as s from "zapatos/schema";
+
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../../ctx/types.js";
-import { and, or } from "../../../utilities/sql.js";
 import { SearchParameterResource } from "../../../utilities/search/parameters.js";
-import { FilterSQLResult } from "./types.js";
 
 export default function quantityClauses(
   _ctx: FHIRServerCTX,
-  parameter: SearchParameterResource,
-  values: unknown[]
-): FilterSQLResult {
-  return parameter.value.reduce(
-    (sql: FilterSQLResult, value) => {
+  parameter: SearchParameterResource
+): db.SQLFragment<boolean | null, unknown> {
+  return db.conditions.or(
+    ...parameter.value.map((value) => {
       const parts = value.toString().split("|");
+      const clauses: s.quantity_idx.Whereable = {};
 
       if (parts.length === 4) {
         throw new OperationError(
@@ -23,42 +24,35 @@ export default function quantityClauses(
         );
       }
 
-      let index = sql.values.length + 1;
-
       if (parts.length === 3) {
         const [value, system, code] = parts;
-        let clauses: string[] = [];
-        let values = sql.values;
 
         if (value !== "") {
-          values = [...values, value, value];
-          clauses = [
-            ...clauses,
-            `start_value <= $${index++}`,
-            `end_value >= $${index++}`,
-          ];
+          if (isNaN(parseFloat(value))) {
+            throw new OperationError(
+              outcomeError(
+                "invalid",
+                `Invalid value for parameter '${parameter.searchParameter.name}' and value '${value}'`
+              )
+            );
+          }
+          clauses["start_value"] = db.sql`${db.self} <= ${db.param(
+            parseFloat(value)
+          )}`;
+          clauses["end_value"] = db.sql`${db.self} >= ${db.param(
+            parseFloat(value)
+          )}`;
         }
         if (system !== "") {
-          values = [...values, system, system];
-          clauses = [
-            ...clauses,
-            `start_system = $${index++}`,
-            `end_system = $${index++}`,
-          ];
+          clauses["start_system"] = system;
+          clauses["end_system"] = system;
         }
         if (code != "") {
-          values = [...values, code, code];
-          clauses = [
-            ...clauses,
-            `start_code = $${index++}`,
-            `end_code = $${index++}`,
-          ];
+          clauses["start_code"] = code;
+          clauses["end_code"] = code;
         }
 
-        return {
-          query: or(sql.query, and(...clauses)),
-          values,
-        };
+        return clauses;
       } else {
         throw new OperationError(
           outcomeError(
@@ -67,7 +61,6 @@ export default function quantityClauses(
           )
         );
       }
-    },
-    { query: "", values }
+    })
   );
 }

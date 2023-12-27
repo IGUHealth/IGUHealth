@@ -1,3 +1,6 @@
+import * as db from "zapatos/db";
+import type * as s from "zapatos/schema";
+
 import { SearchParameter, ResourceType } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -14,7 +17,7 @@ type SORT_DIRECTION = "ascending" | "descending";
 function getParameterSortColumn(
   direction: SORT_DIRECTION,
   parameter: SearchParameter
-): string {
+): s.Column {
   switch (parameter.type) {
     case "quantity":
       return direction === "ascending" ? "end_value" : "start_value";
@@ -27,14 +30,16 @@ function getParameterSortColumn(
   }
 }
 
+function getSortColumn(index: number): db.DangerousRawString {
+  return db.raw(`sort_${index}`);
+}
+
 export async function deriveSortQuery(
   ctx: FHIRServerCTX,
   resourceTypes: ResourceType[],
   sortParameter: SearchParameterResult,
-  query: string,
-  index: number,
-  values: unknown[]
-) {
+  query: db.SQLFragment
+): Promise<db.SQLFragment> {
   const sortInformation = await Promise.all(
     sortParameter.value.map(
       async (
@@ -78,34 +83,38 @@ export async function deriveSortQuery(
     )
   );
 
-  const resourceQueryAlias = "resource_result";
+  const resourceQueryAlias = db.raw("resource_result");
 
   // Need to create LEFT JOINS on the queries so we can orderby postgres.
-  const sortQueries = sortInformation.map(
-    ({ direction, parameter }, sortOrder: number) => {
+  const sortQueries = db.mapWithSeparator(
+    sortInformation.map(({ direction, parameter }, sortOrder: number) => {
       const table = searchParameterToTableName(parameter.type);
-      const sort_table_name = `sort_${sortOrder}`;
-      const column_name = getParameterSortColumn(direction, parameter);
-      const query = ` LEFT JOIN 
-        (SELECT r_id, MIN(${column_name}) AS ${sort_table_name} FROM ${table} WHERE workspace = $${index++} AND parameter_url=$${index++} GROUP BY r_id)
-        AS ${sort_table_name} 
-        ON ${sort_table_name}.r_id = ${resourceQueryAlias}.id`;
-      values = [...values, ctx.workspace, parameter.url];
-
-      return query;
-    }
+      const sort_column_name = getSortColumn(sortOrder);
+      const column_name = db.raw(getParameterSortColumn(direction, parameter));
+      return db.sql` LEFT JOIN 
+        (SELECT ${"r_id"}, MIN(${column_name}) AS ${sort_column_name} FROM ${table} 
+          WHERE workspace=${db.param(ctx.workspace)} AND
+          parameter_url=${db.param(parameter.url)} GROUP BY ${"r_id"}
+        )
+        AS ${sort_column_name} 
+        ON ${sort_column_name}.r_id = ${resourceQueryAlias}.id`;
+    }),
+    db.sql` `,
+    (c) => c
   );
 
-  const sortQuery = `
+  return db.sql`
     SELECT * FROM (
-      (${query}) as ${resourceQueryAlias} ${sortQueries.join("\n")}
+      (${query}) as ${resourceQueryAlias} ${sortQueries}
     )
-    ORDER BY ${sortInformation
-      .map(
+    ORDER BY ${db.mapWithSeparator(
+      sortInformation.map(
         ({ direction }, i) =>
-          `sort_${i} ${direction === "ascending" ? "ASC" : "DESC"} `
-      )
-      .join(",")}`;
-
-  return { query: sortQuery, index, values };
+          db.sql`${getSortColumn(i)} ${db.raw(
+            direction === "ascending" ? "ASC" : "DESC"
+          )} `
+      ),
+      db.sql`, `,
+      (c) => c
+    )}`;
 }

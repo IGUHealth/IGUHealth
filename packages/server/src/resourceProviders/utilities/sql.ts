@@ -1,14 +1,14 @@
-export function combineSqlStatements(
-  joinBy: "AND" | "OR",
-  ...sqlStrings: string[]
-) {
-  return sqlStrings.filter((sql) => sql && sql !== "").join(` ${joinBy} `);
-}
+import * as db from "zapatos/db";
 
-export function or(...sqlStrings: string[]) {
-  return combineSqlStatements("OR", ...sqlStrings);
-}
+export const paramsWithComma = (
+  arr: unknown[]
+): (db.Parameter | db.SQLFragment)[] =>
+  db.mapWithSeparator(arr, db.sql`, `, (x) => db.param(x));
 
-export function and(...sqlStrings: string[]) {
-  return combineSqlStatements("AND", ...sqlStrings);
-}
+export const logQueryWithValues = (query: db.SQLQuery) => {
+  console.log(
+    query.values.reduce((queryText: string, value, index) => {
+      return queryText.replace(`$${index + 1}`, `'${value}'`);
+    }, query.text)
+  );
+};

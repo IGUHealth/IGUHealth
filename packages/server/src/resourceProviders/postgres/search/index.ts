@@ -1,4 +1,6 @@
 import pg from "pg";
+import type * as s from "zapatos/schema";
+import * as db from "zapatos/db";
 
 import {
   SystemSearchRequest,
@@ -16,35 +18,22 @@ import {
   deriveResourceTypeFilter,
   deriveLimit,
 } from "../../utilities/search/parameters.js";
+import * as sqlUtils from "../../utilities/sql.js";
 
 import { deriveSortQuery } from "./sort.js";
 import { buildParameterSQL } from "./clauses/index.js";
 
 function buildParametersSQL(
   ctx: FHIRServerCTX,
-  parameters: SearchParameterResource[],
-  index: number,
-  values: unknown[]
-): { index: number; queries: string[]; values: unknown[] } {
-  return parameters.reduce(
-    (
-      acc: { queries: string[]; index: number; values: unknown[] },
-      parameter
-    ) => {
-      const res = buildParameterSQL(ctx, parameter, index, values);
-      index = res.index;
-      values = res.values;
-      return { queries: [...acc.queries, res.query], index, values };
-    },
-    { queries: [], index, values }
-  );
+  parameters: SearchParameterResource[]
+): db.SQLFragment[] {
+  return parameters.map((p) => buildParameterSQL(ctx, p));
 }
 
 async function calculateTotal(
   client: pg.PoolClient,
   totalType: string | number,
-  query: string,
-  values: unknown[]
+  sql: db.SQLFragment
 ): Promise<number | undefined> {
   switch (totalType) {
     case "none":
@@ -52,12 +41,11 @@ async function calculateTotal(
     case "accurate":
     case "estimate": {
       // TODO SWITCH to count_estimate for estimate
-      const result = await client.query(
-        // Need to escape out quotations with double quote so can place as query text.
-        `SELECT COUNT(qresult.resource) FROM (${query}) as qresult`,
-        values
-      );
-      return parseInt(result.rows[0].count);
+      const result = await db.sql<
+        s.resources.SQL,
+        { count: string }[]
+      >`SELECT COUNT(qresult.resource) FROM (${sql}) as qresult`.run(client);
+      return parseInt(result[0].count);
     }
     default:
       throw new OperationError(
@@ -97,9 +85,6 @@ export async function executeSearchQuery(
   request: SystemSearchRequest | TypeSearchRequest,
   ctx: FHIRServerCTX
 ): Promise<{ total?: number; resources: Resource[] }> {
-  let values: unknown[] = [];
-  let index = 1;
-
   const resourceTypes = deriveResourceTypeFilter(request);
   // Remove _type as using on derived resourceTypeFilter
   request.parameters = request.parameters.filter((p) => p.name !== "_type");
@@ -123,38 +108,7 @@ export async function executeSearchQuery(
     (v): v is SearchParameterResult => v.type === "result"
   );
 
-  const parameterQuery = buildParametersSQL(
-    ctx,
-    resourceParameters,
-    index,
-    values
-  );
-
-  values = parameterQuery.values;
-  index = parameterQuery.index;
-
-  values = [...values, ctx.workspace];
-  let queryText = `
-       SELECT * 
-       FROM resources 
-       ${parameterQuery.queries
-         .map(
-           (q, i) =>
-             `JOIN ${q} as query${i} ON query${i}.r_version_id=resources.version_id`
-         )
-         .join("\n     ")}
-       
-       WHERE resources.workspace = $${index++}
-       AND resources.resource_type ${
-         resourceTypes.length > 0
-           ? (() => {
-               values = [...values, ...resourceTypes];
-               return `in (${resourceTypes
-                 .map((t) => `$${index++}`)
-                 .join(", ")})`;
-             })()
-           : `is not null`
-       } `;
+  const parameterClauses = buildParametersSQL(ctx, resourceParameters);
 
   // Neccessary to pull latest version of resource
   // Afterwards check that the latest version is not deleted.
@@ -175,43 +129,44 @@ export async function executeSearchQuery(
         )
       : 0;
 
+  let sql = db.sql<s.resources.SQL, s.resources.Selectable[]>`
+      SELECT * 
+      FROM ${"resources"} 
+      ${parameterClauses.map((q, i) => {
+        const queryAlias = db.raw(`query${i}`);
+        return db.sql` JOIN (${q}) as ${queryAlias} ON ${queryAlias}.${"r_version_id"}=${"resources"}.${"version_id"}`;
+      })}
+      
+      WHERE ${"resources"}.${"workspace"} = ${db.param(ctx.workspace)}
+      AND ${"resources"}.${"resource_type"} ${
+    resourceTypes.length > 0
+      ? db.sql`in (${sqlUtils.paramsWithComma(resourceTypes)})`
+      : db.sql`is not null`
+  }`;
+
   // Placing total before sort clauses for perf.
   const total = await calculateTotal(
     client,
     totalParam?.value[0] || "none",
-    queryText,
-    values
+    sql
   );
 
-  if (sortBy) {
-    const res = await deriveSortQuery(
-      ctx,
-      resourceTypes,
-      sortBy,
-      queryText,
-      index,
-      values
-    );
-    queryText = res.query;
-    index = res.index;
-    values = res.values;
-  }
+  if (sortBy) sql = await deriveSortQuery(ctx, resourceTypes, sortBy, sql);
+
+  sql = await db.sql<
+    s.resources.SQL,
+    s.resources.Selectable[]
+  >`${sql} LIMIT ${db.param(limit)} OFFSET ${db.param(offset)}`;
 
   if (process.env.LOG_SQL) {
-    ctx.logger.info(
-      values.reduce((queryText: string, value, index) => {
-        return queryText.replace(`$${index + 1}`, `'${value}'`);
-      }, queryText)
-    );
+    const v = sql.compile();
+    ctx.logger.info(v.text);
   }
 
-  const res = await client.query(
-    `${queryText} LIMIT $${index++} OFFSET $${index++}`,
-    [...values, limit, offset]
-  );
+  const res = await sql.run(client);
 
   return {
     total,
-    resources: res.rows.map((row) => row.resource) as Resource[],
+    resources: res.map((r) => r.resource as unknown as Resource),
   };
 }

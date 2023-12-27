@@ -12,6 +12,7 @@
     "db-migrate": "db-migrate --sql-file -m src/resourceProviders/postgres/migrations",
     "migrate": "yarn build && yarn node --enable-source-maps  ./lib/cli.js run migrate && yarn node --enable-source-maps  ./lib/cli.js generate-pg-types",
     "watch": "yarn prebuild && yarn migrate up && yarn tsc-watch --onSuccess \"yarn node --enable-source-maps  ./lib/cli.js run both\"",
+    "watch_server": "yarn prebuild && yarn migrate up && yarn tsc-watch --onSuccess \"yarn node --enable-source-maps  ./lib/cli.js run server\"",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "dependencies": {
