@@ -102,11 +102,26 @@ export async function executeSearchQuery(
         )
       : 0;
 
-  const shouldCalculateTotal = totalParam?.value[0] || "none";
-  const cols =
-    shouldCalculateTotal === "accurate" || shouldCalculateTotal === "estimate"
-      ? ["*", "count(*) OVER () AS total_count"]
-      : ["*"];
+  const totalParamValue = totalParam?.value[0]?.toString() || "none";
+  let cols: string[] = ["*"];
+
+  switch (totalParamValue) {
+    case "none": {
+      break;
+    }
+    case "accurate":
+    case "estimate": {
+      cols = ["*", "count(*) OVER () AS total_count"];
+      break;
+    }
+    default:
+      throw new OperationError(
+        outcomeError(
+          "invalid",
+          "Unknown total type received must be 'none', 'estimate' or 'accurate'"
+        )
+      );
+  }
 
   let sql = db.sql<
     s.resources.SQL,
