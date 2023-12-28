@@ -3,7 +3,7 @@ import { v4 } from "uuid";
 import jsonpatch, { Operation } from "fast-json-patch";
 import dayjs from "dayjs";
 import * as db from "zapatos/db";
-import * as s from "zapatos/schema";
+import type * as s from "zapatos/schema";
 
 import { FHIRClientAsync } from "@iguhealth/client/interface";
 import { AsynchronousClient } from "@iguhealth/client";
