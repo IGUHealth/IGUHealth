@@ -391,7 +391,7 @@ async function indexResource<CTX extends FHIRServerCTX>(
   );
 }
 
-async function saveResource<CTX extends FHIRServerCTX>(
+async function createResource<CTX extends FHIRServerCTX>(
   client: pg.PoolClient,
   ctx: CTX,
   resource: Resource
@@ -553,7 +553,6 @@ async function getHistory<CTX extends FHIRServerCTX>(
 
 async function patchResource<CTX extends FHIRServerCTX>(
   client: pg.PoolClient,
-  request_method: "PATCH" | "PUT",
   ctx: CTX,
   resourceType: ResourceType,
   id: string,
@@ -568,6 +567,8 @@ async function patchResource<CTX extends FHIRServerCTX>(
       const outcome = await validateResource(ctx, resourceType, {
         resource: newResource,
       });
+
+      // Need to revaluate post application of patch to ensure that the resource is still valid.
       if (
         outcome.issue.filter(
           (i) => i.severity === "error" || i.severity === "fatal"
@@ -585,7 +586,7 @@ async function patchResource<CTX extends FHIRServerCTX>(
 
       const data: s.resources.Insertable = {
         workspace: ctx.workspace,
-        request_method,
+        request_method: "PATCH",
         author: ctx.author,
         resource: newResource as unknown as db.JSONObject,
         prev_version_id: parseInt(resource.meta?.versionId as string),
@@ -615,6 +616,55 @@ async function patchResource<CTX extends FHIRServerCTX>(
         );
       }
     }
+  });
+}
+
+async function updateResource<CTX extends FHIRServerCTX>(
+  client: pg.PoolClient,
+  ctx: CTX,
+  resource: Resource
+): Promise<Resource> {
+  return transaction(ISOLATION_LEVEL.Serializable, ctx, client, async (ctx) => {
+    if (!resource.id)
+      throw new OperationError(
+        outcomeError("invalid", "Resource id not found on resource")
+      );
+
+    const existingResource = await getResource(
+      client,
+      ctx,
+      resource.resourceType,
+      resource.id
+    );
+
+    if (!existingResource)
+      throw new OperationError(
+        outcomeError(
+          "not-found",
+          `'${resource.resourceType}' with id '${resource.id}' was not found`
+        )
+      );
+
+    const data: s.resources.Insertable = {
+      workspace: ctx.workspace,
+      request_method: "PUT",
+      author: ctx.author,
+      resource: resource as unknown as db.JSONObject,
+      prev_version_id: parseInt(resource.meta?.versionId as string),
+      // [TODO] probably uneccessary to insert this and can instead derive in case of syncing.
+      patches: JSON.stringify([{ op: "replace", path: "", value: resource }]),
+    };
+
+    const resourceCol = <const>["resource"];
+    type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
+    const res = await db.sql<s.resources.SQL, ResourceReturn[]>`
+        INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
+      data
+    )}) RETURNING ${db.cols(resourceCol)}`.run(client);
+
+    const updatedResource = res[0].resource as unknown as Resource;
+    await indexResource(client, ctx, updatedResource);
+    return updatedResource;
   });
 }
 
@@ -730,7 +780,7 @@ function createPostgresMiddleware<
           }
         }
         case "create-request": {
-          const savedResource = await saveResource(
+          const savedResource = await createResource(
             context.state.client,
             context.ctx,
             {
@@ -755,7 +805,6 @@ function createPostgresMiddleware<
         case "patch-request": {
           const savedResource = await patchResource(
             context.state.client,
-            "PATCH",
             context.ctx,
             context.request.resourceType,
             context.request.id,
@@ -776,13 +825,15 @@ function createPostgresMiddleware<
           };
         }
         case "update-request": {
-          const savedResource = await patchResource(
+          const savedResource = await updateResource(
             context.state.client,
-            "PUT",
             context.ctx,
-            context.request.resourceType,
-            context.request.id,
-            [{ op: "replace", path: "", value: context.request.body }]
+            // Set the id for the request body to ensure that the resource is updated correctly.
+            // Should be pased on the request.id and request.resourceType
+            {
+              ...context.request.body,
+              id: context.request.id,
+            }
           );
 
           return {
