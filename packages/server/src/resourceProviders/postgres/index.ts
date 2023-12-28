@@ -149,6 +149,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           updateColumns: db.doNothing,
         })
         .run(client);
+      return;
     }
 
     case "reference": {
@@ -279,7 +280,6 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           }
         )
         .run(client);
-
       return;
     }
 
