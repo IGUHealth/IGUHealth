@@ -94,61 +94,60 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
 ) {
   switch (parameter.type) {
     case "quantity": {
-      await Promise.all(
-        evaluation
-          .map(toQuantityRange)
-          .flat()
-          .map(async (value) => {
-            const QUANTITY_INDEX: s.quantity_idx.Insertable = {
-              workspace: ctx.workspace,
-              r_id: resource.id,
-              resource_type: resource.resourceType,
-              r_version_id: parseInt(resource.meta.versionId),
-              parameter_name: parameter.name,
-              parameter_url: parameter.url,
-              // Note because I can use string -infinity for the start value, I need to cast it to number here even though technically string,
-              start_value: value.start?.value as number | undefined,
-              start_system: value.start?.system,
-              start_code: value.start?.code,
-              // Note because I can use string infinity for the start value, I need to cast it to number here even though technically string,
-              end_value: value.end?.value as number | undefined,
-              end_system: value.end?.system,
-              end_code: value.end?.code,
-            };
-            await db.sql<
-              s.quantity_idx.SQL,
-              void
-            >`INSERT INTO ${"quantity_idx"} (${db.cols(
-              QUANTITY_INDEX
-            )}) VALUES (${db.vals(QUANTITY_INDEX)})`.run(client);
+      const quantity_indexes: s.quantity_idx.Insertable[] = evaluation
+        .map(toQuantityRange)
+        .flat()
+        .map(
+          (value): s.quantity_idx.Insertable => ({
+            workspace: ctx.workspace,
+            r_id: resource.id,
+            resource_type: resource.resourceType,
+            r_version_id: parseInt(resource.meta.versionId),
+            parameter_name: parameter.name,
+            parameter_url: parameter.url,
+            // Note because I can use string -infinity for the start value, I need to cast it to number here even though technically string,
+            start_value: value.start?.value as number | undefined,
+            start_system: value.start?.system,
+            start_code: value.start?.code,
+            // Note because I can use string infinity for the start value, I need to cast it to number here even though technically string,
+            end_value: value.end?.value as number | undefined,
+            end_system: value.end?.system,
+            end_code: value.end?.code,
           })
-      );
+        );
+
+      await db
+        .upsert(
+          "quantity_idx",
+          quantity_indexes,
+          db.constraint("quantity_idx_pkey"),
+          { updateColumns: db.doNothing }
+        )
+        .run(client);
+
       return;
     }
     case "date": {
-      await Promise.all(
-        evaluation
-          .map(toDateRange)
-          .flat()
-          .map(async (value) => {
-            const DATE_INDEX: s.date_idx.Insertable = {
-              workspace: ctx.workspace,
-              r_id: resource.id,
-              resource_type: resource.resourceType,
-              r_version_id: parseInt(resource.meta.versionId),
-              parameter_name: parameter.name,
-              parameter_url: parameter.url,
-              start_date: value.start as unknown as Date,
-              end_date: value.end as unknown as Date,
-            };
-            await db.sql<
-              s.date_idx.SQL,
-              void
-            >`INSERT INTO ${"date_idx"} (${db.cols(
-              DATE_INDEX
-            )}) VALUES (${db.vals(DATE_INDEX)})`.run(client);
+      const date_indexes = evaluation
+        .map(toDateRange)
+        .flat()
+        .map(
+          (value): s.date_idx.Insertable => ({
+            workspace: ctx.workspace,
+            r_id: resource.id,
+            resource_type: resource.resourceType,
+            r_version_id: parseInt(resource.meta.versionId),
+            parameter_name: parameter.name,
+            parameter_url: parameter.url,
+            start_date: value.start as unknown as Date,
+            end_date: value.end as unknown as Date,
           })
-      );
+        );
+      await db
+        .upsert("date_idx", date_indexes, db.constraint("date_idx_pkey"), {
+          updateColumns: db.doNothing,
+        })
+        .run(client);
       return;
     }
 
@@ -157,12 +156,15 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
         await Promise.all(evaluation.map((v) => toReference(ctx, parameter, v)))
       ).flat();
 
-      await Promise.all(
-        references.map(async ({ reference, resourceType, id }) => {
+      const reference_indexes = references
+        .filter(({ reference }) => {
           if (!reference.reference) {
             ctx.logger.warn("Cannot index logical reference.");
-            return;
+            return false;
           }
+          return true;
+        })
+        .map(({ reference, resourceType, id }): s.reference_idx.Insertable => {
           if (!resourceType || !id) {
             throw new OperationError(
               outcomeError(
@@ -171,7 +173,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
               )
             );
           }
-          const REFERENCE_INDEX: s.reference_idx.Insertable = {
+          return {
             workspace: ctx.workspace,
             r_id: resource.id,
             resource_type: resource.resourceType,
@@ -182,85 +184,27 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
             reference_type: resourceType,
             reference_id: id,
           };
-          await db.sql<
-            s.reference_idx.SQL,
-            void
-          >`INSERT INTO ${"reference_idx"} (${db.cols(
-            REFERENCE_INDEX
-          )}) VALUES (${db.vals(REFERENCE_INDEX)}) ON CONFLICT DO NOTHING`.run(
-            client
-          );
-        })
-      );
+        });
+
+      await db
+        .upsert(
+          "reference_idx",
+          reference_indexes,
+          db.constraint("reference_idx_unique"),
+          {
+            updateColumns: db.doNothing,
+          }
+        )
+        .run(client);
+
       return;
     }
     case "uri": {
-      await Promise.all(
-        evaluation
-          .map((v) => toURIParameters(parameter, v))
-          .flat()
-          .map(async (value) => {
-            const URI_INDEX: s.uri_idx.Insertable = {
-              workspace: ctx.workspace,
-              r_id: resource.id,
-              resource_type: resource.resourceType,
-              r_version_id: parseInt(resource.meta.versionId),
-              parameter_name: parameter.name,
-              parameter_url: parameter.url,
-              value,
-            };
-            await db.sql<
-              s.uri_idx.SQL,
-              void
-            >`INSERT INTO ${"uri_idx"} (${db.cols(
-              URI_INDEX
-            )}) VALUES (${db.vals(URI_INDEX)}) ON CONFLICT DO NOTHING`.run(
-              client
-            );
-          })
-      );
-      return;
-    }
-    case "token": {
-      await Promise.all(
-        evaluation
-          .map((v) => toTokenParameters(parameter, v))
-          .flat()
-          .map(async (value) => {
-            const TOKEN_INDEX: s.token_idx.Insertable = {
-              workspace: ctx.workspace,
-              r_id: resource.id,
-              resource_type: resource.resourceType,
-              r_version_id: parseInt(resource.meta.versionId),
-              parameter_name: parameter.name,
-              parameter_url: parameter.url,
-              system: value.system,
-              value: value.code,
-            };
-            await db.sql<
-              s.token_idx.SQL,
-              void
-            >`INSERT INTO ${"token_idx"} (${db.cols(
-              TOKEN_INDEX
-            )}) VALUES (${db.vals(TOKEN_INDEX)}) ON CONFLICT DO NOTHING`.run(
-              client
-            );
-          })
-      );
-      return;
-    }
-    case "number": {
-      await Promise.all(
-        evaluation.map(async (v) => {
-          const value = v.valueOf();
-          if (typeof value !== "number")
-            throw new OperationError(
-              outcomeError(
-                "invalid",
-                "Failed to index number. Value found is not a number."
-              )
-            );
-          const NUMBER_INDEX: s.number_idx.Insertable = {
+      const uri_indexes = evaluation
+        .map((v) => toURIParameters(parameter, v))
+        .flat()
+        .map(
+          (value): s.uri_idx.Insertable => ({
             workspace: ctx.workspace,
             r_id: resource.id,
             resource_type: resource.resourceType,
@@ -268,46 +212,103 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
             parameter_name: parameter.name,
             parameter_url: parameter.url,
             value,
-          };
-          await db.sql<
-            s.number_idx.SQL,
-            void
-          >`INSERT INTO ${"number_idx"} (${db.cols(
-            NUMBER_INDEX
-          )}) VALUES (${db.vals(NUMBER_INDEX)}) ON CONFLICT DO NOTHING`.run(
-            client
-          );
+          })
+        );
+
+      await db
+        .upsert("uri_idx", uri_indexes, db.constraint("uri_idx_unique"), {
+          updateColumns: db.doNothing,
         })
-      );
+        .run(client);
+
+      return;
+    }
+    case "token": {
+      const token_indexes = evaluation
+        .map((v) => toTokenParameters(parameter, v))
+        .flat()
+        .map(
+          (value): s.token_idx.Insertable => ({
+            workspace: ctx.workspace,
+            r_id: resource.id,
+            resource_type: resource.resourceType,
+            r_version_id: parseInt(resource.meta.versionId),
+            parameter_name: parameter.name,
+            parameter_url: parameter.url,
+            system: value.system,
+            value: value.code,
+          })
+        );
+
+      await db
+        .upsert("token_idx", token_indexes, db.constraint("token_idx_unique"), {
+          updateColumns: db.doNothing,
+        })
+        .run(client);
+
+      return;
+    }
+    case "number": {
+      const number_indexes = evaluation.map((v): s.number_idx.Insertable => {
+        const value = v.valueOf();
+        if (typeof value !== "number")
+          throw new OperationError(
+            outcomeError(
+              "invalid",
+              "Failed to index number. Value found is not a number."
+            )
+          );
+        return {
+          workspace: ctx.workspace,
+          r_id: resource.id,
+          resource_type: resource.resourceType,
+          r_version_id: parseInt(resource.meta.versionId),
+          parameter_name: parameter.name,
+          parameter_url: parameter.url,
+          value,
+        };
+      });
+
+      await db
+        .upsert(
+          "number_idx",
+          number_indexes,
+          db.constraint("number_idx_unique"),
+          {
+            updateColumns: db.doNothing,
+          }
+        )
+        .run(client);
       return;
     }
 
     case "string": {
-      await Promise.all(
-        evaluation
-          .map(toStringParameters)
-          .flat()
-          .map(async (value) => {
-            const STRING_INDEX: s.string_idx.Insertable = {
-              workspace: ctx.workspace,
-              r_id: resource.id,
-              resource_type: resource.resourceType,
-              r_version_id: parseInt(resource.meta.versionId),
-              parameter_name: parameter.name,
-              parameter_url: parameter.url,
-              value,
-            };
-
-            await db.sql<
-              s.string_idx.SQL,
-              void
-            >`INSERT INTO ${"string_idx"} (${db.cols(
-              STRING_INDEX
-            )}) VALUES (${db.vals(STRING_INDEX)}) ON CONFLICT DO NOTHING`.run(
-              client
-            );
+      const string_indexes = evaluation
+        .map(toStringParameters)
+        .flat()
+        .map(
+          (value): s.string_idx.Insertable => ({
+            workspace: ctx.workspace,
+            r_id: resource.id,
+            resource_type: resource.resourceType,
+            r_version_id: parseInt(resource.meta.versionId),
+            parameter_name: parameter.name,
+            parameter_url: parameter.url,
+            value,
           })
-      );
+        );
+
+      await db
+        .upsert(
+          "string_idx",
+          string_indexes,
+          db.constraint("string_idx_unique"),
+          {
+            updateColumns: db.doNothing,
+          }
+        )
+        .run(client);
+
       return;
     }
     default:
