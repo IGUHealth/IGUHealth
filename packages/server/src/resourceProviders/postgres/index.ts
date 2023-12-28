@@ -16,7 +16,6 @@ import {
   BundleEntry,
   code,
   id,
-  Quantity,
   Resource,
   ResourceType,
   SearchParameter,
