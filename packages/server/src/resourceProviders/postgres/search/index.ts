@@ -30,33 +30,6 @@ function buildParametersSQL(
   return parameters.map((p) => buildParameterSQL(ctx, p));
 }
 
-async function calculateTotal(
-  client: pg.PoolClient,
-  totalType: string | number,
-  sql: db.SQLFragment
-): Promise<number | undefined> {
-  switch (totalType) {
-    case "none":
-      return undefined;
-    case "accurate":
-    case "estimate": {
-      // TODO SWITCH to count_estimate for estimate
-      const result = await db.sql<
-        s.resources.SQL,
-        { count: string }[]
-      >`SELECT COUNT(qresult.resource) FROM (${sql}) as qresult`.run(client);
-      return parseInt(result[0].count);
-    }
-    default:
-      throw new OperationError(
-        outcomeError(
-          "invalid",
-          "Unknown total type received must be 'none', 'estimate' or 'accurate'"
-        )
-      );
-  }
-}
-
 /* Filter to the latest version of the resource only.
  ** Scenarios where you search for a resource type but no parameters are provided
  ** This scenario need to filter to ensure only the latest is included.
@@ -129,8 +102,32 @@ export async function executeSearchQuery(
         )
       : 0;
 
-  let sql = db.sql<s.resources.SQL, s.resources.Selectable[]>`
-      SELECT * 
+  const totalParamValue = totalParam?.value[0]?.toString() || "none";
+  let cols: string[] = ["*"];
+
+  switch (totalParamValue) {
+    case "none": {
+      break;
+    }
+    case "accurate":
+    case "estimate": {
+      cols = ["*", "count(*) OVER () AS total_count"];
+      break;
+    }
+    default:
+      throw new OperationError(
+        outcomeError(
+          "invalid",
+          "Unknown total type received must be 'none', 'estimate' or 'accurate'"
+        )
+      );
+  }
+
+  let sql = db.sql<
+    s.resources.SQL,
+    (s.resources.Selectable & { total_count?: string })[]
+  >`
+      SELECT ${db.mapWithSeparator(cols, db.sql`, `, (c) => db.raw(c))}
       FROM ${"resources"} 
       ${parameterClauses.map((q, i) => {
         const queryAlias = db.raw(`query${i}`);
@@ -144,16 +141,9 @@ export async function executeSearchQuery(
       : db.sql`is not null`
   }`;
 
-  // Placing total before sort clauses for perf.
-  const total = await calculateTotal(
-    client,
-    totalParam?.value[0] || "none",
-    sql
-  );
-
   if (sortBy) sql = await deriveSortQuery(ctx, resourceTypes, sortBy, sql);
 
-  sql = await db.sql<
+  sql = db.sql<
     s.resources.SQL,
     s.resources.Selectable[]
   >`${sql} LIMIT ${db.param(limit)} OFFSET ${db.param(offset)}`;
@@ -164,6 +154,14 @@ export async function executeSearchQuery(
   }
 
   const res = await sql.run(client);
+
+  const total =
+    // In case where nothing returned means that total_count col will not be present.
+    res[0] === undefined
+      ? 0
+      : res[0]?.total_count !== undefined
+      ? parseInt(res[0]?.total_count)
+      : undefined;
 
   return {
     total,
