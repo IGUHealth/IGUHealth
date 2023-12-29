@@ -338,13 +338,10 @@ async function validateParameter<Use extends "in" | "out">(
   return issues;
 }
 
-async function validateParameters<
-  T extends IOperation<unknown, unknown>,
-  Use extends "in" | "out"
->(
+async function validateParameters<T extends IOperation<unknown, unknown>>(
   ctx: ValidationCTX,
   op: T,
-  use: Use,
+  use: "in" | "out",
   value: unknown
 ): Promise<OperationOutcomeIssue[]> {
   let issues: OperationOutcomeIssue[] = [];
@@ -354,7 +351,14 @@ async function validateParameters<
   if (!isRecord(value))
     return [
       ...issues,
-      issueError("invalid", "Invalid input, input must be a Record"),
+      issueError(
+        "invalid",
+        `${
+          use === "in" ? "Input" : "Output"
+        } must be an object but instead is '${
+          value === null ? "null" : typeof value
+        }'`
+      ),
     ];
 
   issues = [...issues, ...validateRequired(definitions, value)];
@@ -362,7 +366,13 @@ async function validateParameters<
   for (const key of Object.keys(value)) {
     const paramDefinition = definitions.find((d) => d.name === key);
     if (paramDefinition === undefined) {
-      issues = [...issues, issueError("invalid", `Invalid parameter ${key}`)];
+      issues = [
+        ...issues,
+        issueError(
+          "invalid",
+          `Invalid parameter '${key}' not found in definition`
+        ),
+      ];
     } else {
       issues = [
         ...issues,
@@ -407,12 +417,6 @@ function isStrictlyReturn(op: OperationDefinition): boolean {
         resourceTypes.has(outputParameters[0].type || ""))
     );
   }
-  return false;
-}
-
-function isResource(value: unknown): value is Resource {
-  if (typeof value === "object")
-    return (value as Resource).resourceType !== undefined;
   return false;
 }
 
