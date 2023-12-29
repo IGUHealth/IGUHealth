@@ -1,7 +1,0 @@
-releases:
-  "@iguhealth/client": patch
-  "@iguhealth/components": patch
-  "@iguhealth/generated-ops": patch
-  "@iguhealth/operation-execution": patch
-  "@iguhealth/server": patch
-  admin-app: patch
