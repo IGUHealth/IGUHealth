@@ -348,14 +348,14 @@ async function validateParameters<T extends IOperation<unknown, unknown>>(
   const definitions = (op.operationDefinition.parameter || []).filter(
     (p) => p.use === (use as code)
   );
+  const parameterName = use === "in" ? "input" : "output";
+
   if (!isRecord(value))
     return [
       ...issues,
       issueError(
         "invalid",
-        `${
-          use === "in" ? "Input" : "Output"
-        } must be an object but instead is '${
+        `Invalid ${parameterName}: Must be an object but instead is '${
           value === null ? "null" : typeof value
         }'`
       ),
@@ -370,7 +370,7 @@ async function validateParameters<T extends IOperation<unknown, unknown>>(
         ...issues,
         issueError(
           "invalid",
-          `Invalid parameter '${key}' not found in definition`
+          `Invalid ${parameterName}: '${key}' not found in definition`
         ),
       ];
     } else {
