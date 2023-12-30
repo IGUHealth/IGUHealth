@@ -29,7 +29,6 @@ import {
   outcomeError,
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
-import { typeToUrl } from "@iguhealth/fhir-validation";
 
 import {
   toStringParameters,
@@ -366,8 +365,17 @@ async function indexResource<CTX extends FHIRServerCTX>(
         resource,
         {
           meta: {
-            getSD: (type: string) =>
-              ctx.resolveCanonical("StructureDefinition", typeToUrl(type)),
+            getSD: (type: uri) => {
+              const canonicalURL = ctx.resolveTypeToCanonical(type);
+              if (!canonicalURL)
+                throw new OperationError(
+                  outcomeFatal(
+                    "exception",
+                    `Could not resolve canonical url for type '${type}'`
+                  )
+                );
+              return ctx.resolveCanonical("StructureDefinition", canonicalURL);
+            },
           },
         }
       );

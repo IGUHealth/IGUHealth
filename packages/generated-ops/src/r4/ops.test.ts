@@ -7,8 +7,9 @@ import {
   ValueSet,
   ResourceType,
   AResource,
-  uri
-} from "@iguhealth/fhir-types/r4/types";
+  uri,
+  canonical
+} from "@iguhealth/fhir-types/lib/r4/types";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { OpCTX } from "@iguhealth/operation-execution/src/index.js";
 
@@ -28,6 +29,11 @@ test("Test ValueSet Expands", async () => {
       const sd = sds.find((sd) => sd.url === url);
       if (!sd) throw new Error(`Could not resolve type ${type}`);
       return sd as AResource<T>;
+    },
+    resolveTypeToCanonical(type: uri): canonical {
+      const sd = sds.find((sd) => sd.type === type);
+      if (!sd) throw new Error(`Could not resolve type ${type}`);
+      return sd.url as canonical;
     },
     level: "instance",
   };

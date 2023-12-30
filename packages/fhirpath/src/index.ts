@@ -1,4 +1,9 @@
-import { Reference, Resource, Element } from "@iguhealth/fhir-types/r4/types";
+import {
+  Reference,
+  Resource,
+  Element,
+  uri,
+} from "@iguhealth/fhir-types/r4/types";
 import {
   PartialMeta,
   PartialTypeMeta,
@@ -412,7 +417,7 @@ const equalityCheck: EvaledOperation = (
     );
   }
   return toMetaValueSingulars(
-    { type: { ...options?.meta, type: "boolean" } },
+    { type: { ...options?.meta, type: "boolean" as uri } },
     left[0].valueOf() === right[0].valueOf()
   );
 };
@@ -480,7 +485,7 @@ const fp_operations: Record<
     const typeIdentifier = expressionToTypeIdentifier(ast.right);
     return context.map((c) => {
       return new MetaValueSingular(
-        { type: { ...options?.meta, type: "boolean" } },
+        { type: { ...options?.meta, type: "boolean" as uri } },
         isType(c, typeIdentifier)
       );
     });
@@ -521,7 +526,7 @@ const fp_operations: Record<
   and: op_prevaled((left, right, options) => {
     if (typeChecking("boolean", left) && typeChecking("boolean", right)) {
       return toMetaValueSingulars(
-        { type: { ...options?.meta, type: "boolean" } },
+        { type: { ...options?.meta, type: "boolean" as uri } },
         left[0].valueOf() && right[0].valueOf()
       );
     }
@@ -531,7 +536,7 @@ const fp_operations: Record<
   "!=": op_prevaled((left, right, options) => {
     const equality = equalityCheck(left, right, options);
     return toMetaValueSingulars(
-      { type: { ...options?.meta, type: "boolean" } },
+      { type: { ...options?.meta, type: "boolean" as uri } },
       equality[0].valueOf() === false
     );
   }),

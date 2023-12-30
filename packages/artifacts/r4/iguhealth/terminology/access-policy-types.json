@@ -1,0 +1,58 @@
+{
+  "resourceType": "Bundle",
+  "id": "access-policy-types",
+  "meta": {
+    "lastUpdated": "2019-11-01T09:29:23.356+11:00"
+  },
+  "type": "collection",
+  "entry": [
+    {
+      "fullUrl": "https://iguhealth.app/fhir/CodeSystem/AccessPolicyType",
+      "resource": {
+        "id": "access-policy-type-codesystem",
+        "url": "https://iguhealth.app/fhir/CodeSystem/AccessPolicyType",
+        "resourceType": "CodeSystem",
+        "version": "4.0.1",
+        "name": "AccessPolicyType",
+        "title": "AccessPolicyType",
+        "status": "active",
+        "experimental": true,
+        "publisher": "IGUHealth",
+        "description": "Access Policy types allowed.",
+        "caseSensitive": true,
+        "valueSet": "https://iguhealth.app/fhir/ValueSet/AccessPolicyType",
+        "content": "complete",
+        "concept": [
+          {
+            "code": "fhir-rest",
+            "display": "FHIR Rest",
+            "definition": "Uses FHIR rest methods to apply access controls."
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://iguhealth.app/fhir/ValueSet/AccessPolicyType",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "access-policy-type-valueset",
+        "url": "https://iguhealth.app/fhir/ValueSet/AccessPolicyType",
+        "version": "4.0.1",
+        "name": "AccessPolicyType",
+        "title": "AccessPolicyType",
+        "status": "active",
+        "experimental": true,
+        "publisher": "IGUHealth",
+        "description": "Access Policy types allowed.",
+        "immutable": true,
+        "compose": {
+          "include": [
+            {
+              "system": "https://iguhealth.app/fhir/CodeSystem/AccessPolicyType"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

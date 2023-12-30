@@ -4388,6 +4388,7 @@ export type ResourceMap = {
   ClientApplication: ClientApplication;
   Connection: Connection;
   Tenant: Tenant;
+  User: User;
 }
 
 export type ResourceType = keyof ResourceMap
@@ -44884,6 +44885,9 @@ resourceType: "AccessPolicy"
   _name?: Element
   description?: string;
   _description?: Element
+  type: code;
+  _type?: Element
+  link?: Array<Reference>;
 }
 
 export interface ClientApplication {
@@ -44932,4 +44936,17 @@ resourceType: "Tenant"
   _name?: Element
   description?: string;
   _description?: Element
+}
+
+export interface User {
+resourceType: "User"
+  /** 
+   * Logical id of this artifact
+   */
+  id?: id;
+  /** 
+   * Metadata about the resource
+   */
+  meta?: Meta;
+  name?: Array<HumanName>;
 }

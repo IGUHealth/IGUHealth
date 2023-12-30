@@ -36,8 +36,9 @@ export const validateResource = async (
             return result.result;
           },
           resolveCanonical: ctx.resolveCanonical,
+          resolveTypeToCanonical: ctx.resolveTypeToCanonical,
         },
-        resourceType,
+        resourceType as uri,
         input.resource
       );
 

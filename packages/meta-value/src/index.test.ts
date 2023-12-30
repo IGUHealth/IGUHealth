@@ -6,7 +6,8 @@ import {
   Patient,
   ConceptMap,
   Practitioner,
-} from "@iguhealth/fhir-types/r4/types";
+  uri,
+} from "@iguhealth/fhir-types/lib/r4/types";
 import { expect, test } from "@jest/globals";
 
 import { MetaValueSingular, MetaValueArray, descend } from "./index";
@@ -59,7 +60,7 @@ test("Simple Type test", () => {
   const myValue = new MetaValueSingular(
     {
       type: {
-        type: "Patient",
+        type: "Patient" as uri,
         getSD: (type: string) => {
           const foundSD = sds.find((sd) => sd.type === type);
           return foundSD;
@@ -121,7 +122,7 @@ test("ConceptMap test", () => {
   const myValue = new MetaValueSingular(
     {
       type: {
-        type: "ConceptMap",
+        type: "ConceptMap" as uri,
         getSD: (type: string) => {
           const foundSD = sds.find((sd) => sd.type === type);
           return foundSD;
@@ -162,7 +163,7 @@ test("Location test", () => {
   const myValue = new MetaValueSingular(
     {
       type: {
-        type: "Patient",
+        type: "Patient" as uri,
         getSD: (type: string) => {
           const foundSD = sds.find((sd) => sd.type === type);
           return foundSD;
@@ -192,7 +193,7 @@ test("typechoice", () => {
   const myValue = new MetaValueSingular(
     {
       type: {
-        type: "Practitioner",
+        type: "Practitioner" as uri,
         getSD: (type: string) => {
           const foundSD = sds.find((sd) => sd.type === type);
           return foundSD;
@@ -224,7 +225,7 @@ test("Location test primitive extensions", () => {
   const patient = new MetaValueSingular(
     {
       type: {
-        type: "Practitioner",
+        type: "Practitioner" as uri,
         getSD: (type: string) => {
           const foundSD = sds.find((sd) => sd.type === type);
           return foundSD;

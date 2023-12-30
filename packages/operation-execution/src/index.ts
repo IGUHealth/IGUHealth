@@ -5,6 +5,7 @@ import {
   Resource,
   OperationDefinitionParameter,
   code,
+  uri,
 } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import validate, { ValidationCTX } from "@iguhealth/fhir-validation";
@@ -482,7 +483,7 @@ export class Operation<I, O> implements IOperation<I, O> {
 
       const fhirtype = type === "Any" ? "Resource" : type;
 
-      const issues = await validate(ctx, fhirtype, value);
+      const issues = await validate(ctx, fhirtype as uri, value);
 
       return issues;
     }

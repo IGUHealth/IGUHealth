@@ -9,6 +9,8 @@ import {
   AResource,
   code,
   dateTime,
+  uri,
+  canonical,
 } from "@iguhealth/fhir-types/r4/types";
 import { loadArtifacts } from "@iguhealth/artifacts";
 
@@ -63,6 +65,10 @@ export const testServices: FHIRServerCTX = {
   cache: new TestCache(),
   resolveCanonical: <T extends ResourceType>(type: T, url: string) => {
     return sds.find((sd) => sd.url === url) as AResource<T>;
+  },
+  resolveTypeToCanonical: (type: uri) => {
+    const sd = sds.find((sd) => sd.type === type);
+    return sd?.url as canonical;
   },
   lock: new TestLock(),
 };

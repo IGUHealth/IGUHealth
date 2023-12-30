@@ -80,6 +80,7 @@ export function getOpCTX(ctx: FHIRServerCTX, request: InvokeRequest): OpCTX {
       });
       return result.result;
     },
+    resolveTypeToCanonical: ctx.resolveTypeToCanonical,
     resolveCanonical: ctx.resolveCanonical,
   };
 }

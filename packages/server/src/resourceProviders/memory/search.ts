@@ -1,10 +1,9 @@
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween.js";
 
-import { Resource } from "@iguhealth/fhir-types/r4/types";
+import { Resource, uri } from "@iguhealth/fhir-types/r4/types";
 import * as fp from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
-import { typeToUrl } from "@iguhealth/fhir-validation";
 
 import { SearchParameterResource } from "../utilities/search/parameters.js";
 import {
@@ -14,12 +13,12 @@ import {
   toStringParameters,
   toTokenParameters,
 } from "../utilities/search/dataConversion.js";
-import { AsyncMemoryCTX } from "./types.js";
+import { FHIRServerCTX } from "../../ctx/types.js";
 
 dayjs.extend(isBetween);
 
 async function expressionSearch(
-  ctx: AsyncMemoryCTX,
+  ctx: FHIRServerCTX,
   resource: Resource,
   parameter: SearchParameterResource
 ) {
@@ -51,9 +50,18 @@ async function expressionSearch(
     resource,
     {
       meta: {
-        type: resource.resourceType,
-        getSD: (type) =>
-          ctx.resolveCanonical("StructureDefinition", typeToUrl(type)),
+        type: resource.resourceType as uri,
+        getSD: (type) => {
+          const canonical = ctx.resolveTypeToCanonical(type);
+          if (!canonical)
+            throw new OperationError(
+              outcomeError(
+                "invalid",
+                `Could not resolve canonical for type '${type}'.`
+              )
+            );
+          return ctx.resolveCanonical("StructureDefinition", canonical);
+        },
       },
     }
   );
@@ -168,7 +176,7 @@ async function expressionSearch(
 }
 
 function checkParameterWithResource(
-  ctx: AsyncMemoryCTX,
+  ctx: FHIRServerCTX,
   resource: Resource,
   parameter: SearchParameterResource
 ) {
@@ -196,7 +204,7 @@ function checkParameterWithResource(
 }
 
 export async function fitsSearchCriteria(
-  ctx: AsyncMemoryCTX,
+  ctx: FHIRServerCTX,
   resource: Resource,
   parameters: SearchParameterResource[]
 ) {
