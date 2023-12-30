@@ -58,7 +58,7 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
                     return artifactResources.find(
                       (r) =>
                         r.resourceType === "StructureDefinition" &&
-                        r.type === (type as unknown as uri)
+                        r.type === type
                     ) as StructureDefinition | undefined;
                   },
                 },

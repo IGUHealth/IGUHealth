@@ -5,7 +5,8 @@ import {
   StructureDefinition,
   OperationDefinition,
   code,
-} from "@iguhealth/fhir-types/r4/types";
+  uri,
+} from "@iguhealth/fhir-types/lib/r4/types";
 import { expect, test } from "@jest/globals";
 import { loadArtifacts } from "@iguhealth/artifacts";
 
@@ -16,14 +17,14 @@ const sds: StructureDefinition[] = loadArtifacts(
   path.join(fileURLToPath(import.meta.url), "..")
 );
 
-function getSD(type: code) {
-  const foundSD = sds.find((sd) => (sd.type as unknown as code) === type);
+function getSD(type: uri) {
+  const foundSD = sds.find((sd) => sd.type === type);
   return foundSD;
 }
 
 const metaOptions = (startingType: string) => ({
   meta: {
-    type: startingType as code,
+    type: startingType as uri,
     getSD: getSD,
   },
 });
@@ -535,7 +536,7 @@ test("resolve with is operation", () => {
       },
       {
         meta: {
-          type: "CarePlan",
+          type: "CarePlan" as uri,
           getSD,
         },
       }
@@ -648,7 +649,7 @@ test("test reference finding", () => {
       },
       {
         meta: {
-          type: "CarePlan",
+          type: "CarePlan" as uri,
           getSD,
         },
       }
@@ -673,7 +674,7 @@ test("children", () => {
       },
       {
         meta: {
-          type: "CarePlan",
+          type: "CarePlan" as uri,
           getSD,
         },
       }
@@ -698,7 +699,7 @@ test("children", () => {
       },
       {
         meta: {
-          type: "CarePlan",
+          type: "CarePlan" as uri,
           getSD,
         },
       }
@@ -718,7 +719,7 @@ test("children", () => {
       },
       {
         meta: {
-          type: "CarePlan",
+          type: "CarePlan" as uri,
           getSD,
         },
       }

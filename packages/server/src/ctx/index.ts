@@ -16,8 +16,8 @@ import {
   CapabilityStatementRestResource,
   StructureDefinition,
   code,
-  dateTime,
   canonical,
+  uri,
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -313,6 +313,25 @@ function createResolveCanonical(
   };
 }
 
+function createResolveTypeToCanonical(
+  data: InternalData<ResourceType>
+): (type: uri) => canonical | undefined {
+  const map = new Map<uri, canonical>();
+  const sds: Record<id, StructureDefinition | undefined> = data[
+    "StructureDefinition"
+  ] as Record<id, StructureDefinition | undefined>;
+
+  for (const resource of Object.values(sds || {})) {
+    if (resource?.type && resource?.url) {
+      map.set(resource.type, resource.url as canonical);
+    }
+  }
+
+  return (type: uri) => {
+    return map.get(type);
+  };
+}
+
 export function getRedisClient() {
   const redisClient = new Redis.default({
     host: process.env.REDIS_HOST,
@@ -327,7 +346,7 @@ export function getRedisClient() {
   return redisClient;
 }
 
-export async function deriveCTX(): Promise<
+export async function createGetCTXFn(): Promise<
   ({
     pg,
     workspace,
@@ -340,6 +359,7 @@ export async function deriveCTX(): Promise<
   const data = createMemoryData(MEMORY_TYPES);
   const memDBAsync = MemoryDatabaseAsync(data);
   const resolveCanonical = createResolveCanonical(data);
+  const resolveTypeToCanonical = createResolveTypeToCanonical(data);
 
   const inlineOperationExecution = InlineExecutioner([
     StructureDefinitionSnapshotInvoke,
@@ -365,7 +385,7 @@ export async function deriveCTX(): Promise<
       : undefined;
 
   const capabilities = await serverCapabilities(
-    { resolveCanonical },
+    { resolveCanonical, resolveTypeToCanonical },
     memDBAsync
   );
 
@@ -445,9 +465,10 @@ export async function deriveCTX(): Promise<
       capabilities,
       client,
       cache,
-      resolveCanonical,
       lock,
       encryptionProvider,
+      resolveCanonical,
+      resolveTypeToCanonical,
     };
   };
 }

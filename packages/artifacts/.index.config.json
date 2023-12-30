@@ -76,6 +76,18 @@
     {
       "filename": "r4/iguhealth/structuredefinition/tenant.json",
       "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "r4/iguhealth/structuredefinition/user.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "r4/iguhealth/terminology/access-policy-types.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "r4/iguhealth/terminology/access-policy-types.json",
+      "resourceType": "ValueSet"
     }
   ]
 }

@@ -2,7 +2,6 @@ import {
   StructureDefinition,
   Element,
   ElementDefinition,
-  code,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 import { complexTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
@@ -40,8 +39,8 @@ type TypeMeta = {
   sd: StructureDefinition;
   elementIndex: number;
   // Typechoice so need to maintain the type here.
-  type: string;
-  getSD?: (type: code) => StructureDefinition | undefined;
+  type: uri;
+  getSD?: (type: uri) => StructureDefinition | undefined;
 };
 
 export type Meta = { location: Location; type: TypeMeta | undefined };
@@ -67,8 +66,7 @@ function deriveNextTypeMeta(
   if (!partialMeta) return partialMeta;
   if (!partialMeta.elementIndex) partialMeta.elementIndex = 0;
   if (!partialMeta.sd && partialMeta.type)
-    partialMeta.sd =
-      partialMeta.getSD && partialMeta.getSD(partialMeta.type as code);
+    partialMeta.sd = partialMeta.getSD?.call(undefined, partialMeta.type);
 
   return partialMeta.sd ? (partialMeta as TypeMeta) : undefined;
 }
@@ -221,7 +219,7 @@ function deriveNextMetaInformation(
       // In this case pull in the SD means it's a complex or resource type
       // so need to retrieve the SD.
       if (isResourceOrComplexType(type)) {
-        const sd = meta.getSD && meta.getSD(type as unknown as code);
+        const sd = meta.getSD?.call(undefined, type);
         if (!sd) {
           throw new Error(`Could not retrieve sd of type '${type}'`);
         }
@@ -264,7 +262,9 @@ export function toMetaValueNodes<T>(
   if (isObject(value) && typeof value.resourceType === "string")
     meta = {
       ...meta,
-      type: meta.type ? { ...meta.type, type: value.resourceType } : undefined,
+      type: meta.type
+        ? { ...meta.type, type: value.resourceType as uri }
+        : undefined,
     };
   return new MetaValueSingular(meta, value, element as Element | undefined);
 }

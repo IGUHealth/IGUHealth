@@ -210,7 +210,7 @@ function Root() {
                 Custom Operations
               </SideBar.SideBarItem>
               <SideBar.SideBarItem
-                active={matches[0].params.resourceType === "Subscription"}
+                active={matches[0].params.resourceType === "Subscriptions"}
                 onClick={() => {
                   navigate("/resources/Subscription");
                 }}
@@ -220,7 +220,7 @@ function Root() {
             </SideBar.SideBarItemGroup>
             <SideBar.SideBarItemGroup className="mt-8" label="UI">
               <SideBar.SideBarItem
-                active={matches[0].params.resourceType === "Questionnaire"}
+                active={matches[0].params.resourceType === "Questionnaires"}
                 onClick={() => {
                   navigate("/resources/Questionnaire");
                 }}
@@ -229,7 +229,7 @@ function Root() {
               </SideBar.SideBarItem>
               <SideBar.SideBarItem
                 active={
-                  matches[0].params.resourceType === "QuestionnaireResponse"
+                  matches[0].params.resourceType === "QuestionnaireResponses"
                 }
                 onClick={() => {
                   navigate("/resources/QuestionnaireResponse");
@@ -240,7 +240,7 @@ function Root() {
             </SideBar.SideBarItemGroup>
             <SideBar.SideBarItemGroup className="mt-8" label="Monitoring">
               <SideBar.SideBarItem
-                active={matches[0].params.resourceType === "AuditEvent"}
+                active={matches[0].params.resourceType === "AuditEvents"}
                 onClick={() => {
                   navigate("/resources/AuditEvent");
                 }}
@@ -248,10 +248,25 @@ function Root() {
                 Audit Events
               </SideBar.SideBarItem>
             </SideBar.SideBarItemGroup>
-            {/* <SideBar.SideBarItemGroup
-              className="mt-8"
-              label="Security"
-            ></SideBar.SideBarItemGroup> */}
+
+            <SideBar.SideBarItemGroup className="mt-8" label="Security">
+              <SideBar.SideBarItem
+                active={matches[0].params.resourceType === "User"}
+                onClick={() => {
+                  navigate("/resources/User");
+                }}
+              >
+                Users
+              </SideBar.SideBarItem>
+              <SideBar.SideBarItem
+                active={matches[0].params.resourceType === "AccessPolicy"}
+                onClick={() => {
+                  navigate("/resources/AccessPolicy");
+                }}
+              >
+                Access Policies
+              </SideBar.SideBarItem>
+            </SideBar.SideBarItemGroup>
             <SideBar.SideBarItemGroup label="Data" className="mt-8">
               <SideBar.SideBarItem
                 active={
@@ -263,7 +278,9 @@ function Root() {
                       match.params.resourceType !== "Subscription" &&
                       match.params.resourceType !== "Questionnaire" &&
                       match.params.resourceType !== "QuestionnaireResponse" &&
-                      match.params.resourceType !== "AuditEvent"
+                      match.params.resourceType !== "AuditEvent" &&
+                      match.params.resourceType !== "User" &&
+                      match.params.resourceType !== "AccessPolicy"
                   ) !== undefined
                 }
                 onClick={() => {
@@ -283,7 +300,7 @@ function Root() {
                   navigate("/bundle-import");
                 }}
               >
-                Bundle
+                Bundles
               </SideBar.SideBarItem>
             </SideBar.SideBarItemGroup>
             {/* Used because want to maintain a margin of at least 8 when shrinking. */}

@@ -9,6 +9,8 @@ import {
   OperationDefinition,
   Parameters,
   Resource,
+  uri,
+  canonical,
 } from "@iguhealth/fhir-types/lib/r4/types";
 
 import {
@@ -226,6 +228,11 @@ test("execution", async () => {
       if (!sd) throw new Error(`Could not resolve url ${url}`);
       return sd as AResource<T>;
     },
+    resolveTypeToCanonical: (type: uri) => {
+      const sd = structureDefinitions.find((sd) => sd.type === type);
+      if (!sd) throw new Error(`Could not resolve type ${type}`);
+      return sd.url as canonical;
+    },
     level: "instance",
   };
 
@@ -286,6 +293,11 @@ test("paramValidation", async () => {
       const sd = structureDefinitions.find((sd) => sd.url === url);
       if (!sd) throw new Error(`Could not resolve url ${url}`);
       return sd as AResource<T>;
+    },
+    resolveTypeToCanonical: (type: uri) => {
+      const sd = structureDefinitions.find((sd) => sd.type === type);
+      if (!sd) throw new Error(`Could not resolve type ${type}`);
+      return sd.url as canonical;
     },
     level: "instance",
   };
@@ -481,6 +493,11 @@ test("Test invalid resource validation", async () => {
       const sd = structureDefinitions.find((sd) => sd.url === url);
       if (!sd) throw new Error(`Could not resolve url ${url}`);
       return sd as AResource<T>;
+    },
+    resolveTypeToCanonical: (type: uri) => {
+      const sd = structureDefinitions.find((sd) => sd.type === type);
+      if (!sd) throw new Error(`Could not resolve type ${type}`);
+      return sd.url as canonical;
     },
     level: "instance",
   };

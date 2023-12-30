@@ -20,7 +20,7 @@ import {
 } from "../utilities/search/parameters.js";
 import { InternalData } from "./types.js";
 import { fitsSearchCriteria } from "./search.js";
-import { AsyncMemoryCTX } from "./types.js";
+import { FHIRServerCTX } from "../../ctx/types.js";
 
 // Need special handling of SearchParameter to avoid infinite recursion.
 async function resolveParameter(
@@ -39,7 +39,7 @@ async function resolveParameter(
 
 function createMemoryMiddleware<
   State extends { data: InternalData<ResourceType> },
-  CTX extends AsyncMemoryCTX
+  CTX extends FHIRServerCTX
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
     async (context) => {
@@ -218,7 +218,7 @@ function createMemoryMiddleware<
   ]);
 }
 
-export default function MemoryDatabase<CTX extends AsyncMemoryCTX>(
+export default function MemoryDatabase<CTX extends FHIRServerCTX>(
   data: InternalData<ResourceType>
 ): AsynchronousClient<{ data: InternalData<ResourceType> }, CTX> {
   return new AsynchronousClient<{ data: InternalData<ResourceType> }, CTX>(

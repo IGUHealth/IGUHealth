@@ -12,9 +12,11 @@ import {
   StructureDefinition,
   ResourceType,
   Reference,
+  canonical,
+  uri,
 } from "@iguhealth/fhir-types/r4/types";
 import { primitiveTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
-import { eleIndexToChildIndices } from "@iguhealth/codegen";
+import { eleIndexToChildIndices as eleIndexToChildIndexes } from "@iguhealth/codegen";
 import {
   get,
   descend,
@@ -25,6 +27,7 @@ import {
 } from "@iguhealth/fhir-pointer";
 
 export interface ValidationCTX {
+  resolveTypeToCanonical(type: uri): canonical | undefined;
   resolveCanonical<T extends ResourceType>(
     type: T,
     url: string
@@ -246,9 +249,9 @@ function resolveContentReferenceIndex(
 function findBaseFieldAndType(
   element: ElementDefinition,
   value: object
-): [string, string] | undefined {
+): [string, uri] | undefined {
   if (element.contentReference) {
-    return [fieldName(element), element.type?.[0].code || ""];
+    return [fieldName(element), (element.type?.[0].code || "") as uri];
   }
   for (const type of element.type?.map((t) => t.code) || []) {
     const field = fieldName(element, type);
@@ -261,14 +264,17 @@ function findBaseFieldAndType(
 function determineTypesAndFields(
   element: ElementDefinition,
   value: object
-): [string, string][] {
-  let fields: [string, string][] = [];
+): [string, uri][] {
+  let fields: [string, uri][] = [];
   const base = findBaseFieldAndType(element, value);
   if (base) {
     fields.push(base);
     const [field, type] = base;
     if (isPrimitiveType(type)) {
-      const primitiveElementField: [string, string] = [`_${field}`, "Element"];
+      const primitiveElementField: [string, uri] = [
+        `_${field}`,
+        "Element" as uri,
+      ];
       if (`_${field}` in value) fields.push(primitiveElementField);
     }
   } else {
@@ -277,9 +283,9 @@ function determineTypesAndFields(
       element.type?.filter((type) => isPrimitiveType(type.code)) || [];
     for (const primType of primitives) {
       if (`_${fieldName(element, primType.code)}` in value) {
-        const primitiveElementField: [string, string] = [
+        const primitiveElementField: [string, uri] = [
           `_${fieldName(element, primType.code)}`,
-          "Element",
+          "Element" as uri,
         ];
         fields.push(primitiveElementField);
       }
@@ -344,7 +350,7 @@ async function validateComplex(
   structureDefinition: StructureDefinition,
   elementIndex: number,
   root: object,
-  childrenIndices: number[]
+  childrenIndexes: number[]
 ): Promise<OperationOutcome["issue"]> {
   // Validating root / backbone / element nested types here.
   // Need to validate that only the _field for primitives
@@ -363,10 +369,10 @@ async function validateComplex(
     ];
   }
 
-  const requiredElements = childrenIndices.filter(
+  const requiredElements = childrenIndexes.filter(
     (index) => (structureDefinition.snapshot?.element?.[index].min || 0) > 0
   );
-  const optionalElements = childrenIndices.filter(
+  const optionalElements = childrenIndexes.filter(
     (i) => requiredElements.indexOf(i) === -1
   );
 
@@ -470,7 +476,7 @@ async function validateContentReference(
   structureDefinition: StructureDefinition,
   elementIndex: number,
   root: object,
-  type: string
+  type: uri
 ) {
   const element = structureDefinition.snapshot?.element?.[
     elementIndex
@@ -501,13 +507,13 @@ async function validateSingular(
   structureDefinition: StructureDefinition,
   elementIndex: number,
   root: object,
-  type: string
+  type: uri
 ): Promise<OperationOutcome["issue"]> {
   const element = structureDefinition.snapshot?.element?.[
     elementIndex
   ] as ElementDefinition;
 
-  const childrenIndices = eleIndexToChildIndices(
+  const childrenIndixes = eleIndexToChildIndexes(
     structureDefinition.snapshot?.element || [],
     elementIndex
   );
@@ -522,7 +528,7 @@ async function validateSingular(
       root,
       type
     );
-  else if (childrenIndices.length === 0) {
+  else if (childrenIndixes.length === 0) {
     if (
       isPrimitiveType(type) ||
       type === "http://hl7.org/fhirpath/System.String"
@@ -547,7 +553,7 @@ async function validateSingular(
       structureDefinition,
       elementIndex,
       root,
-      childrenIndices
+      childrenIndixes
     );
   }
 }
@@ -557,7 +563,7 @@ async function checkFields(
   structureDefinition: StructureDefinition,
   index: number,
   root: object,
-  fields: [string, string][]
+  fields: [string, uri][]
 ): Promise<{
   fieldsFound: string[];
   issues: OperationOutcome["issue"];
@@ -593,7 +599,7 @@ async function validateElement(
   structureDefinition: StructureDefinition,
   elementIndex: number,
   root: object,
-  type: string
+  type: uri
 ): Promise<OperationOutcome["issue"]> {
   const value = get(path, root);
   const element = structureDefinition.snapshot?.element?.[elementIndex];
@@ -630,7 +636,7 @@ async function validateElement(
     // Validate each element in the array
     return (
       await Promise.all(
-        (value || []).map((v: any, i: number) => {
+        (value || []).map((_v: any, i: number) => {
           return validateSingular(
             ctx,
             descend(path, i),
@@ -654,17 +660,23 @@ async function validateElement(
   }
 }
 
-export function typeToUrl(type: string) {
-  return `http://hl7.org/fhir/StructureDefinition/${type}`;
-}
-
 export default async function validate(
   ctx: ValidationCTX,
-  type: string,
+  type: uri,
   root: unknown,
   path: Loc<any, any, any> = typedPointer<any, any>()
 ): Promise<OperationOutcome["issue"]> {
-  const sd = ctx.resolveCanonical("StructureDefinition", typeToUrl(type));
+  const canonical = ctx.resolveTypeToCanonical(type);
+  if (!canonical) {
+    throw new OperationError(
+      outcomeFatal(
+        "structure",
+        `Unable to resolve canonical for type '${type}'`,
+        [toJSONPointer(path)]
+      )
+    );
+  }
+  const sd = ctx.resolveCanonical("StructureDefinition", canonical);
   if (!sd)
     throw new OperationError(
       outcomeFatal(
@@ -673,8 +685,6 @@ export default async function validate(
         [toJSONPointer(path)]
       )
     );
-
-  const indice = 0;
 
   if (primitiveTypes.has(type))
     return validatePrimitive(ctx, undefined, root, path, type);
@@ -703,20 +713,12 @@ export default async function validate(
     ];
   }
 
-  return validateElement(
-    ctx,
-    path,
-    sd,
-    indice,
-    root,
-    // This should only be one at the root.
-    sd.snapshot?.element[indice].type?.[0].code as string
-  );
+  return validateElement(ctx, path, sd, 0, root, type);
 }
 
 export function createValidator(
   ctx: ValidationCTX,
-  type: string,
+  type: uri,
   path: Loc<any, any, any> = typedPointer()
 ): Validator {
   return (value: unknown) => {

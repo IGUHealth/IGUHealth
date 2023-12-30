@@ -21,7 +21,7 @@ import { Operation } from "@iguhealth/operation-execution";
 import * as Sentry from "../monitoring/sentry.js";
 import { LIB_VERSION } from "../version.js";
 import { resolveOperationDefinition } from "../operation-executors/utilities.js";
-import { deriveCTX, logger } from "../ctx/index.js";
+import { createGetCTXFn, logger } from "../ctx/index.js";
 import logAuditEvent, {
   MAJOR_FAILURE,
   SERIOUS_FAILURE,
@@ -399,7 +399,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
   logger.info({ workerID }, `Worker started with interval '${loopInterval}'`);
 
   // Using a pool directly because need to query up workspaces.
-  const getCTX = await deriveCTX();
+  const getCTX = await createGetCTXFn();
 
   const pool = new pg.Pool({
     user: process.env["FHIR_DATABASE_USERNAME"],

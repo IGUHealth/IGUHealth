@@ -16,7 +16,7 @@ import { LIB_VERSION } from "./version.js";
 
 import * as Sentry from "./monitoring/sentry.js";
 import type { FHIRServerCTX, Workspace } from "./ctx/types.js";
-import { deriveCTX, getRedisClient, logger } from "./ctx/index.js";
+import { createGetCTXFn, getRedisClient, logger } from "./ctx/index.js";
 import {
   httpRequestToFHIRRequest,
   fhirResponseToHTTPResponse,
@@ -129,7 +129,7 @@ export default async function createServer(): Promise<
     });
   const app = new Koa();
   const router = new Router<Koa.DefaultState, Koa.Context>();
-  const getCTX = await deriveCTX();
+  const getCTX = await createGetCTXFn();
   const pool = new pg.Pool({
     user: process.env["FHIR_DATABASE_USERNAME"],
     password: process.env["FHIR_DATABASE_PASSWORD"],

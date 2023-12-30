@@ -2,9 +2,8 @@ import graphlib from "@dagrejs/graphlib";
 import pg from "pg";
 
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
-import { Bundle, Reference } from "@iguhealth/fhir-types/r4/types";
+import { Bundle, Reference, uri } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
-import { typeToUrl } from "@iguhealth/fhir-validation";
 import { FHIRServerCTX } from "../ctx/types.js";
 
 function getTransactionFullUrls(transaction: Bundle): Record<string, number> {
@@ -47,9 +46,18 @@ export function buildTransactionTopologicalGraph(
         entry.resource,
         {
           meta: {
-            type: entry.resource.resourceType,
-            getSD: (type) =>
-              ctx.resolveCanonical("StructureDefinition", typeToUrl(type)),
+            type: entry.resource.resourceType as uri,
+            getSD: (type) => {
+              const canonical = ctx.resolveTypeToCanonical(type);
+              if (!canonical)
+                throw new OperationError(
+                  outcomeFatal(
+                    "exception",
+                    `Could not resolve canonical for type '${type}'.`
+                  )
+                );
+              return ctx.resolveCanonical("StructureDefinition", canonical);
+            },
           },
         }
       );

@@ -8,8 +8,10 @@ import {
   Resource,
   ResourceType,
   Account,
-} from "@iguhealth/fhir-types/r4/types";
-import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
+  canonical,
+  uri,
+} from "@iguhealth/fhir-types/lib/r4/types";
+import { resourceTypes } from "@iguhealth/fhir-types/lib/r4/sets";
 import { loadArtifacts } from "@iguhealth/artifacts";
 
 import { createValidator } from "./index";
@@ -38,6 +40,9 @@ const memDatabase = createMemoryDatabase([
 ] as ResourceType[]);
 
 const CTX = {
+  resolveTypeToCanonical: (type: uri): canonical => {
+    return `http://hl7.org/fhir/StructureDefinition/${type}` as canonical;
+  },
   resolveCanonical: <T extends ResourceType>(t: T, url: string) => {
     const sd = memDatabase[t].find(
       (sd) => (sd as StructureDefinition).url === url
@@ -48,7 +53,7 @@ const CTX = {
 };
 
 test("Testing validating resourceType 'Patient'", async () => {
-  const validator = createValidator(CTX, "Patient");
+  const validator = createValidator(CTX, "Patient" as uri);
 
   expect(
     await validator({
@@ -72,7 +77,7 @@ test("Testing validating resourceType 'Patient'", async () => {
 });
 
 test("test typechoice checking", async () => {
-  const validator = createValidator(CTX, "Patient");
+  const validator = createValidator(CTX, "Patient" as uri);
 
   expect(
     await validator({
@@ -112,7 +117,7 @@ test("test typechoice checking", async () => {
 });
 
 test("Primitive Extensions", async () => {
-  const validator = createValidator(CTX, "Patient");
+  const validator = createValidator(CTX, "Patient" as uri);
 
   expect(
     await validator({
@@ -164,7 +169,7 @@ test("Primitive Extensions", async () => {
 });
 
 test("Primitive extension testing", async () => {
-  const validator = createValidator(CTX, "Patient");
+  const validator = createValidator(CTX, "Patient" as uri);
 
   expect(
     await validator({
@@ -242,13 +247,13 @@ test("SearchParameter testing", async () => {
     xpathUsage: "normal",
   };
 
-  const validator = createValidator(CTX, "SearchParameter");
+  const validator = createValidator(CTX, "SearchParameter" as uri);
 
   expect(await validator(parameter)).toEqual([]);
 });
 
 test("Test cardinality ", async () => {
-  const validator = createValidator(CTX, "Patient");
+  const validator = createValidator(CTX, "Patient" as uri);
 
   expect(
     await validator({
@@ -272,7 +277,7 @@ test("Test cardinality ", async () => {
 });
 
 test("Test required ", async () => {
-  const validator = createValidator(CTX, "Patient");
+  const validator = createValidator(CTX, "Patient" as uri);
 
   expect(
     await validator({
@@ -299,7 +304,7 @@ test("Test required ", async () => {
 });
 
 test("Validate element with no primitive", async () => {
-  const validator = createValidator(CTX, "Patient");
+  const validator = createValidator(CTX, "Patient" as uri);
 
   expect(
     await validator({
@@ -359,7 +364,7 @@ test("Validate element with no primitive", async () => {
 });
 
 test("Observation nested case", async () => {
-  const validator = createValidator(CTX, "Observation");
+  const validator = createValidator(CTX, "Observation" as uri);
 
   expect(
     await validator({
@@ -415,7 +420,7 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
       .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
       .slice(0, 1);
 
-    const validator = createValidator(CTX, resourceType);
+    const validator = createValidator(CTX, resourceType as uri);
 
     for (const resource of resources) {
       const issues = await validator(resource);
@@ -426,7 +431,7 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
 );
 
 test("Patient with primitive on name", async () => {
-  const validator = createValidator(CTX, "Patient");
+  const validator = createValidator(CTX, "Patient" as uri);
 
   expect(
     await validator({
@@ -444,7 +449,7 @@ test("Patient with primitive on name", async () => {
 });
 
 test("Test reference constraints", async () => {
-  const validator = createValidator(CTX, "Patient");
+  const validator = createValidator(CTX, "Patient" as uri);
   expect(
     await validator({
       resourceType: "Patient",
@@ -497,7 +502,7 @@ test("Test reference constraints", async () => {
 });
 
 test("validate regexes", async () => {
-  const validator = createValidator(CTX, "Account");
+  const validator = createValidator(CTX, "Account" as uri);
   const account: Account = {
     resourceType: "Account",
     status: "active",
@@ -524,7 +529,7 @@ test("validate regexes", async () => {
     })
   ).toEqual([]);
 
-  const validator2 = createValidator(CTX, "Appointment");
+  const validator2 = createValidator(CTX, "Appointment" as uri);
 
   expect(
     await validator2({
@@ -554,7 +559,7 @@ test("validate regexes", async () => {
 });
 
 test("Misaligned types", async () => {
-  const validator2 = createValidator(CTX, "Appointment");
+  const validator2 = createValidator(CTX, "Appointment" as uri);
   expect(
     await validator2({
       resourceType: "Patient",
@@ -572,7 +577,7 @@ test("Misaligned types", async () => {
 });
 
 test("string checking", async () => {
-  const stringValidator = createValidator(CTX, "string");
+  const stringValidator = createValidator(CTX, "string" as uri);
   expect(await stringValidator("bob")).toEqual([]);
   expect(await stringValidator({})).toEqual([
     {
@@ -585,7 +590,7 @@ test("string checking", async () => {
 });
 
 test("Type checking", async () => {
-  const patientValidator = createValidator(CTX, "Patient");
+  const patientValidator = createValidator(CTX, "Patient" as uri);
   expect(await patientValidator("test")).toEqual([
     {
       code: "structure",

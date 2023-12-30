@@ -72,9 +72,12 @@ export function SideBar({
       )}
       aria-label="Sidebar"
     >
-      <nav className="flex flex-1 flex-col px-3 py-4 overflow-y-auto bg-gray-100">
-        {top}
-        <ul role="list" className="gap-y-2 flex flex-1 flex-col font-medium">
+      <nav className="flex flex-1 flex-col py-4 overflow-y-auto bg-gray-100">
+        <div className="px-3">{top}</div>
+        <ul
+          role="list"
+          className="px-3 gap-y-2 flex flex-1 flex-col font-medium overflow-y-auto"
+        >
           {children}
         </ul>
       </nav>
