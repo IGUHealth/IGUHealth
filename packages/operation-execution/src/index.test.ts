@@ -515,9 +515,5 @@ test("Test invalid resource validation", async () => {
 
   expect(
     invoke(operation, ctx, { payload: "asdf" } as unknown)
-  ).rejects.toThrow(
-    new Error(
-      `Could not resolve url http://hl7.org/fhir/StructureDefinition/undefined`
-    )
-  );
+  ).rejects.toThrow(new Error("Could not resolve type undefined"));
 });
