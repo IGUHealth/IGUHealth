@@ -12,7 +12,7 @@ export function Add({
         onChange();
       }}
     >
-      <PlusIcon className=" h-4 w-4" /> {children ? children : "Add"}
+      <PlusIcon className=" h-4 w-4" /> {children || "Add"}
     </span>
   );
 }
