@@ -6,7 +6,7 @@ import {
   SystemSearchRequest,
   TypeSearchRequest,
 } from "@iguhealth/client/types";
-import { Resource, ResourceType } from "@iguhealth/fhir-types/r4/types";
+import { Resource, ResourceType, id } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../ctx/types.js";
@@ -53,10 +53,132 @@ async function ensureLatest(
   return resourceParameters.concat(idParameter);
 }
 
+async function processRevInclude(
+  ctx: FHIRServerCTX,
+  param: SearchParameterResult,
+  results: Resource[]
+): Promise<Resource[]> {
+  if (param.value.length > 1)
+    throw new OperationError(
+      outcomeError(
+        "too-costly",
+        "Too many revinclude parameters only allow up to 1 at this time."
+      )
+    );
+
+  const ids = results.map((r) => r.id).filter((r): r is id => r !== undefined);
+
+  return (
+    await Promise.all(
+      param.value.map(async (v) => {
+        const revInclude = v.toString().split(":");
+        if (revInclude.length !== 2)
+          throw new OperationError(
+            outcomeError("invalid", "Invalid _revinclude parameter")
+          );
+        const resourceType = revInclude[0] as ResourceType;
+        const searchParameterRevInclude = revInclude[1];
+        const revIncludeResults = await ctx.client.search_type(
+          ctx,
+          resourceType,
+          [
+            {
+              name: searchParameterRevInclude,
+              value: ids,
+            },
+          ]
+        );
+        return revIncludeResults.resources;
+      })
+    )
+  ).flat();
+}
+
+async function processInclude(
+  client: pg.PoolClient,
+  ctx: FHIRServerCTX,
+  param: SearchParameterResult,
+  results: Resource[]
+): Promise<Resource[]> {
+  if (param.value.length > 1)
+    throw new OperationError(
+      outcomeError(
+        "too-costly",
+        "Too many revinclude parameters only allow up to 1 at this time."
+      )
+    );
+
+  return (
+    await Promise.all(
+      param.value.map(async (v) => {
+        const include = v.toString().split(":");
+        if (include.length !== 2)
+          throw new OperationError(
+            outcomeError("invalid", "Invalid _revinclude parameter")
+          );
+        const resourceType = include[0] as ResourceType;
+        const includeParameterName = include[1];
+        const includeParameterSearchParam = await ctx.client.search_type(
+          ctx,
+          "SearchParameter",
+          [
+            { name: "name", value: [includeParameterName] },
+            { name: "type", value: ["reference"] },
+            { name: "base", value: [resourceType] },
+          ]
+        );
+        if (includeParameterSearchParam.resources.length === 0)
+          throw new OperationError(
+            outcomeError(
+              "not-found",
+              `Include parameter not found with name '${includeParameterName}'`
+            )
+          );
+        if (includeParameterSearchParam.resources.length > 1)
+          throw new OperationError(
+            outcomeError(
+              "conflict",
+              `Include parameter found multiple instances with same name '${includeParameterName}'`
+            )
+          );
+
+        // Derive the id and type from the reference_idx table for the given param for the resources.
+        const idResult = await db.sql<
+          s.reference_idx.SQL,
+          s.reference_idx.Selectable[]
+        >`
+        SELECT ${"reference_id"}, ${"reference_type"}
+        FROM ${"reference_idx"} 
+        WHERE ${"r_id"} IN (${sqlUtils.paramsWithComma(
+          results.map((r) => r.id)
+        )}) AND
+        ${"parameter_url"} = ${db.param(
+          includeParameterSearchParam.resources[0].url
+        )}
+        `.run(client);
+
+        const types: string[] = [
+          ...new Set(idResult.map((r) => r.reference_type)),
+        ];
+
+        return ctx.client
+          .search_system(ctx, [
+            { name: "_type", value: types },
+            {
+              name: "_id",
+              value: idResult.map((id) => id.reference_id),
+            },
+          ])
+          .then((r) => r.resources);
+      })
+    )
+  ).flat();
+}
+
 export async function executeSearchQuery(
   client: pg.PoolClient,
-  request: SystemSearchRequest | TypeSearchRequest,
-  ctx: FHIRServerCTX
+  ctx: FHIRServerCTX,
+  request: SystemSearchRequest | TypeSearchRequest
 ): Promise<{ total?: number; resources: Resource[] }> {
   const resourceTypes = deriveResourceTypeFilter(request);
   // Remove _type as using on derived resourceTypeFilter
@@ -90,6 +212,10 @@ export async function executeSearchQuery(
   const countParam = parametersResult.find((p) => p.name === "_count");
   const offsetParam = parametersResult.find((p) => p.name === "_offset");
   const totalParam = parametersResult.find((p) => p.name === "_total");
+  const includeParam = parametersResult.find((p) => p.name === "_include");
+  const revIncludeParam = parametersResult.find(
+    (p) => p.name === "_revinclude"
+  );
 
   const limit = deriveLimit([0, 50], countParam);
 
@@ -153,18 +279,43 @@ export async function executeSearchQuery(
     ctx.logger.info(v.text);
   }
 
-  const res = await sql.run(client);
+  const result = await sql.run(client);
 
   const total =
     // In case where nothing returned means that total_count col will not be present.
-    res[0] === undefined
+    result[0] === undefined
       ? 0
-      : res[0]?.total_count !== undefined
-      ? parseInt(res[0]?.total_count)
+      : result[0]?.total_count !== undefined
+      ? parseInt(result[0]?.total_count)
       : undefined;
+
+  let resources: Resource[] = result.map(
+    (r) => r.resource as unknown as Resource
+  );
+
+  if (revIncludeParam) {
+    resources = resources.concat(
+      await processRevInclude(
+        ctx,
+        revIncludeParam,
+        result.map((r) => r.resource as unknown as Resource)
+      )
+    );
+  }
+
+  if (includeParam) {
+    resources = resources.concat(
+      await processInclude(
+        client,
+        ctx,
+        includeParam,
+        result.map((r) => r.resource as unknown as Resource)
+      )
+    );
+  }
 
   return {
     total,
-    resources: res.map((r) => r.resource as unknown as Resource),
+    resources,
   };
 }

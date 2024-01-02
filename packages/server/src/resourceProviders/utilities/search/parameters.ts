@@ -173,9 +173,9 @@ export function isSearchResultParameter(
     case "_offset":
     case "_total":
     case "_sort":
-      return true;
     case "_include":
     case "_revinclude":
+      return true;
     case "_summary":
     case "_elements":
     case "_contained":
