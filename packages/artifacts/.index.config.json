@@ -58,6 +58,26 @@
       "resourceType": "OperationDefinition"
     },
     {
+      "filename": "r4/iguhealth/searchParameter/accessPolicy/code.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "r4/iguhealth/searchParameter/accessPolicy/link.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "r4/iguhealth/searchParameter/accessPolicy/name.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "r4/iguhealth/searchParameter/accessPolicy/type.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "r4/iguhealth/searchParameter/user/link.json",
+      "resourceType": "SearchParameter"
+    },
+    {
       "filename": "r4/iguhealth/structuredefinition/accessPolicy.json",
       "resourceType": "StructureDefinition"
     },
@@ -82,11 +102,35 @@
       "resourceType": "StructureDefinition"
     },
     {
-      "filename": "r4/iguhealth/terminology/access-policy-types.json",
+      "filename": "r4/iguhealth/terminology/access-policy/fhir-api-level.json",
       "resourceType": "CodeSystem"
     },
     {
-      "filename": "r4/iguhealth/terminology/access-policy-types.json",
+      "filename": "r4/iguhealth/terminology/access-policy/fhir-api-level.json",
+      "resourceType": "ValueSet"
+    },
+    {
+      "filename": "r4/iguhealth/terminology/access-policy/fhir-api-methods.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "r4/iguhealth/terminology/access-policy/fhir-api-methods.json",
+      "resourceType": "ValueSet"
+    },
+    {
+      "filename": "r4/iguhealth/terminology/access-policy/fhir-api-parameters.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "r4/iguhealth/terminology/access-policy/fhir-api-parameters.json",
+      "resourceType": "ValueSet"
+    },
+    {
+      "filename": "r4/iguhealth/terminology/access-policy/policy-types.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "r4/iguhealth/terminology/access-policy/policy-types.json",
       "resourceType": "ValueSet"
     }
   ]

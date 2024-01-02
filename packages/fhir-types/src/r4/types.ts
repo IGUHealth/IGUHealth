@@ -44871,6 +44871,15 @@ resourceType: "VisionPrescription"
   lensSpecification: Array<VisionPrescriptionLensSpecification>;
 }
 
+export interface AccessPolicyAccessFhir {
+  method: code;
+  _method?: Element
+  level: code;
+  _level?: Element
+}
+export interface AccessPolicyAccess {
+  fhir?: Array<AccessPolicyAccessFhir>;
+}
 export interface AccessPolicy {
 resourceType: "AccessPolicy"
   /** 
@@ -44888,6 +44897,7 @@ resourceType: "AccessPolicy"
   type: code;
   _type?: Element
   link?: Array<Reference>;
+  access?: Array<AccessPolicyAccess>;
 }
 
 export interface ClientApplication {
@@ -44948,5 +44958,5 @@ resourceType: "User"
    * Metadata about the resource
    */
   meta?: Meta;
-  name?: Array<HumanName>;
+  link?: Array<Reference>;
 }
