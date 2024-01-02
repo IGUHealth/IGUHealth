@@ -22417,7 +22417,7 @@ exports[`Testing indexing resourceType 'SearchParameter' 5`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
   [
-    "An Access Policies unique code.",
+    "An access policies unique code.",
   ],
 ]
 `;
@@ -22568,7 +22568,7 @@ exports[`Testing indexing resourceType 'SearchParameter' 24`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
   [
-    "What/Who is associated with a given AccessPolicy.",
+    "What/Who is associated with a given access policy.",
   ],
 ]
 `;
@@ -22722,7 +22722,7 @@ exports[`Testing indexing resourceType 'SearchParameter' 43`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
   [
-    "An Access Policies name.",
+    "An access policies name.",
   ],
 ]
 `;
@@ -22873,7 +22873,7 @@ exports[`Testing indexing resourceType 'SearchParameter' 62`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
   [
-    "An Access Policies type.",
+    "An access policies type.",
   ],
 ]
 `;
@@ -24187,7 +24187,9 @@ exports[`Testing indexing resourceType 'StructureDefinition' 4`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 5`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
-  [],
+  [
+    "A set of rules that govern how a system resource is accessed and used.",
+  ],
 ]
 `;
 

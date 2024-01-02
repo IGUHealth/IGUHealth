@@ -11,7 +11,7 @@ import HTTPClient from "@iguhealth/client/lib/http";
 const client = HTTPClient({
   url: "http://localhost:3000/w/system/api/v1/fhir/r4",
   getAccessToken: async function () {
-    return "blah";
+    return "pub_token";
   },
 });
 

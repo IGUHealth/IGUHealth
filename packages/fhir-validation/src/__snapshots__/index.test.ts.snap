@@ -25992,7 +25992,7 @@ exports[`Testing validating resourceType 'SearchParameter' 1`] = `
       "AccessPolicy",
     ],
     "code": "code",
-    "description": "An Access Policies unique code.",
+    "description": "An access policies unique code.",
     "experimental": false,
     "expression": "AccessPolicy.code",
     "id": "AccessPolicy-code",
@@ -26191,6 +26191,7 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
     "abstract": false,
     "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Resource",
     "derivation": "specialization",
+    "description": "A set of rules that govern how a system resource is accessed and used.",
     "fhirVersion": "4.0.1",
     "id": "AccessPolicy",
     "kind": "resource",
@@ -26205,6 +26206,7 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
             "min": 0,
             "path": "AccessPolicy",
           },
+          "definition": "A set of rules that govern how a system resource is accessed and used.",
           "id": "AccessPolicy",
           "isModifier": false,
           "isSummary": false,
@@ -26270,6 +26272,7 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
           ],
         },
         {
+          "definition": "The name of the access policy.",
           "id": "AccessPolicy.name",
           "max": "1",
           "min": 1,
@@ -26281,6 +26284,7 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
           ],
         },
         {
+          "definition": "Unique identifier for an access policy.",
           "id": "AccessPolicy.code",
           "max": "1",
           "min": 1,
@@ -26292,6 +26296,7 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
           ],
         },
         {
+          "definition": "Description of the access policy.",
           "id": "AccessPolicy.description",
           "max": "1",
           "min": 0,
@@ -26307,6 +26312,7 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
             "strength": "required",
             "valueSet": "https://iguhealth.app/fhir/ValueSet/AccessPolicyType|4.0.1",
           },
+          "definition": "The type of evaluation that is performed to determine if access is granted or denied.",
           "id": "AccessPolicy.type",
           "max": "1",
           "min": 1,
@@ -26318,6 +26324,7 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
           ],
         },
         {
+          "definition": "Who the access policy applies to.",
           "id": "AccessPolicy.target",
           "max": "*",
           "min": 0,
@@ -26329,6 +26336,7 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
           ],
         },
         {
+          "definition": "Who the access policy applies to.",
           "id": "AccessPolicy.target.link",
           "max": "1",
           "min": 1,
@@ -26344,6 +26352,7 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
           ],
         },
         {
+          "definition": "The access policy rules that are evaluated to determine if access is granted or denied.",
           "id": "AccessPolicy.access",
           "max": "*",
           "min": 0,
@@ -26355,6 +26364,7 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
           ],
         },
         {
+          "definition": "The access policy rules that are evaluated to determine if access is granted or denied.",
           "id": "AccessPolicy.access.fhir",
           "max": "*",
           "min": 0,
@@ -26370,6 +26380,7 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
             "strength": "required",
             "valueSet": "https://iguhealth.app/fhir/ValueSet/AccessPolicyFHIRAPIMethod|4.0.1",
           },
+          "definition": "The FHIR Method that is evaluated to determine if access is granted or denied.",
           "id": "AccessPolicy.access.fhir.method",
           "max": "1",
           "min": 1,
@@ -26385,6 +26396,7 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
             "strength": "required",
             "valueSet": "https://iguhealth.app/fhir/ValueSet/AccessPolicyFHIRAPILevel|4.0.1",
           },
+          "definition": "The FHIR Level that is evaluated to determine if access is granted or denied.",
           "id": "AccessPolicy.access.fhir.level",
           "max": "1",
           "min": 1,
@@ -26396,6 +26408,7 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
           ],
         },
         {
+          "definition": "FHIR Parameters that are evaluated to determine if access is granted or denied.",
           "id": "AccessPolicy.access.fhir.parameter",
           "max": "*",
           "min": 0,
@@ -26411,6 +26424,7 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
             "strength": "required",
             "valueSet": "https://iguhealth.app/fhir/ValueSet/AccessPolicyFHIRAPIParameter|4.0.1",
           },
+          "definition": "The name of the FHIR Parameter that is evaluated to determine if access is granted or denied.",
           "id": "AccessPolicy.access.fhir.parameter.name",
           "max": "1",
           "min": 1,
@@ -26422,6 +26436,7 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
           ],
         },
         {
+          "definition": "The value of the FHIR Parameter that is evaluated to determine if access is granted or denied.",
           "id": "AccessPolicy.access.fhir.parameter.value",
           "max": "1",
           "min": 1,

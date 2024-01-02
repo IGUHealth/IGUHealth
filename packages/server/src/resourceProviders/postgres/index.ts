@@ -749,8 +749,8 @@ function createPostgresMiddleware<
         case "search-request": {
           const result = await executeSearchQuery(
             context.state.client,
-            context.request,
-            context.ctx
+            context.ctx,
+            context.request
           );
           switch (context.request.level) {
             case "system": {
