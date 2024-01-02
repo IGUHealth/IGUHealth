@@ -10,6 +10,7 @@
   "kind": "resource",
   "abstract": false,
   "type": "AccessPolicy",
+  "description": "A set of rules that govern how a system resource is accessed and used.",
   "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Resource",
   "derivation": "specialization",
   "snapshot": {
@@ -18,6 +19,7 @@
         "id": "AccessPolicy",
         "path": "AccessPolicy",
         "min": 0,
+        "definition": "A set of rules that govern how a system resource is accessed and used.",
         "max": "*",
         "base": {
           "path": "AccessPolicy",
@@ -87,6 +89,7 @@
       {
         "id": "AccessPolicy.name",
         "path": "AccessPolicy.name",
+        "definition": "The name of the access policy.",
         "type": [{ "code": "string" }],
         "min": 1,
         "max": "1"
@@ -94,6 +97,7 @@
       {
         "id": "AccessPolicy.code",
         "path": "AccessPolicy.code",
+        "definition": "Unique identifier for an access policy.",
         "type": [{ "code": "code" }],
         "min": 1,
         "max": "1"
@@ -101,6 +105,7 @@
       {
         "id": "AccessPolicy.description",
         "path": "AccessPolicy.description",
+        "definition": "Description of the access policy.",
         "type": [{ "code": "string" }],
         "min": 0,
         "max": "1"
@@ -108,6 +113,7 @@
       {
         "id": "AccessPolicy.type",
         "path": "AccessPolicy.type",
+        "definition": "The type of evaluation that is performed to determine if access is granted or denied.",
         "type": [{ "code": "code" }],
         "min": 1,
         "max": "1",
@@ -119,6 +125,7 @@
       {
         "id": "AccessPolicy.target",
         "path": "AccessPolicy.target",
+        "definition": "Who the access policy applies to.",
         "type": [
           {
             "code": "BackboneElement"
@@ -130,6 +137,7 @@
       {
         "id": "AccessPolicy.target.link",
         "path": "AccessPolicy.target.link",
+        "definition": "Who the access policy applies to.",
         "type": [
           {
             "code": "Reference",
@@ -145,6 +153,7 @@
       {
         "id": "AccessPolicy.access",
         "path": "AccessPolicy.access",
+        "definition": "The access policy rules that are evaluated to determine if access is granted or denied.",
         "type": [
           {
             "code": "BackboneElement"
@@ -156,6 +165,7 @@
       {
         "id": "AccessPolicy.access.fhir",
         "path": "AccessPolicy.access.fhir",
+        "definition": "The access policy rules that are evaluated to determine if access is granted or denied.",
         "type": [
           {
             "code": "BackboneElement"
@@ -167,6 +177,7 @@
       {
         "id": "AccessPolicy.access.fhir.method",
         "path": "AccessPolicy.access.fhir.method",
+        "definition": "The FHIR Method that is evaluated to determine if access is granted or denied.",
         "type": [
           {
             "code": "code"
@@ -182,6 +193,7 @@
       {
         "id": "AccessPolicy.access.fhir.level",
         "path": "AccessPolicy.access.fhir.level",
+        "definition": "The FHIR Level that is evaluated to determine if access is granted or denied.",
         "type": [
           {
             "code": "code"
@@ -197,6 +209,7 @@
       {
         "id": "AccessPolicy.access.fhir.parameter",
         "path": "AccessPolicy.access.fhir.parameter",
+        "definition": "FHIR Parameters that are evaluated to determine if access is granted or denied.",
         "type": [
           {
             "code": "BackboneElement"
@@ -208,6 +221,7 @@
       {
         "id": "AccessPolicy.access.fhir.parameter.name",
         "path": "AccessPolicy.access.fhir.parameter.name",
+        "definition": "The name of the FHIR Parameter that is evaluated to determine if access is granted or denied.",
         "type": [
           {
             "code": "code"
@@ -223,6 +237,7 @@
       {
         "id": "AccessPolicy.access.fhir.parameter.value",
         "path": "AccessPolicy.access.fhir.parameter.value",
+        "definition": "The value of the FHIR Parameter that is evaluated to determine if access is granted or denied.",
         "type": [
           {
             "code": "string"

@@ -7,7 +7,7 @@
   "status": "draft",
   "experimental": false,
   "publisher": "IGUHealth",
-  "description": "An Access Policies name.",
+  "description": "An access policies name.",
   "code": "name",
   "base": ["AccessPolicy"],
   "type": "string",

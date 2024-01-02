@@ -7,7 +7,7 @@
   "status": "draft",
   "experimental": false,
   "publisher": "IGUHealth",
-  "description": "An Access Policies type.",
+  "description": "An access policies type.",
   "code": "type",
   "base": ["AccessPolicy"],
   "type": "token",

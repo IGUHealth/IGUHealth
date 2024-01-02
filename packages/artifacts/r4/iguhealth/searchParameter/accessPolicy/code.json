@@ -7,7 +7,7 @@
   "status": "draft",
   "experimental": false,
   "publisher": "IGUHealth",
-  "description": "An Access Policies unique code.",
+  "description": "An access policies unique code.",
   "code": "code",
   "base": ["AccessPolicy"],
   "type": "token",

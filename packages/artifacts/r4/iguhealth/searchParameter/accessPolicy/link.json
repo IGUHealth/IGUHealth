@@ -7,7 +7,7 @@
   "status": "draft",
   "experimental": false,
   "publisher": "IGUHealth",
-  "description": "What/Who is associated with a given AccessPolicy.",
+  "description": "What/Who is associated with a given access policy.",
   "code": "link",
   "base": ["AccessPolicy"],
   "type": "reference",

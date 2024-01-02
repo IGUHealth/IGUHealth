@@ -1,0 +1,13 @@
+releases:
+  "@iguhealth/artifacts": patch
+
+declined:
+  - "@iguhealth/cli"
+  - "@iguhealth/codegen"
+  - "@iguhealth/fhir-json-schema"
+  - "@iguhealth/fhir-validation"
+  - "@iguhealth/fhirpath"
+  - "@iguhealth/generated-ops"
+  - "@iguhealth/meta-value"
+  - "@iguhealth/operation-execution"
+  - "@iguhealth/server"
