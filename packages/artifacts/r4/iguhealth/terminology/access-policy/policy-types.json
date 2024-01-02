@@ -1,9 +1,6 @@
 {
   "resourceType": "Bundle",
   "id": "access-policy-types",
-  "meta": {
-    "lastUpdated": "2019-11-01T09:29:23.356+11:00"
-  },
   "type": "collection",
   "entry": [
     {

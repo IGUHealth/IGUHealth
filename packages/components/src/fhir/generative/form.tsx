@@ -430,7 +430,9 @@ const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
                 : null,
             });
           }}
-        />
+        >
+          Add {capitalize(getFieldName(element.element.path))}
+        </Add>
       </div>
     </div>
   );

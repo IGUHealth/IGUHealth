@@ -1,0 +1,16 @@
+{
+  "resourceType": "SearchParameter",
+  "id": "User-link",
+  "url": "https://iguhealth.app/fhir/SearchParameter/User-link",
+  "version": "4.0.1",
+  "name": "link",
+  "status": "draft",
+  "experimental": false,
+  "publisher": "IGUHealth",
+  "description": "What/Who is associated with a given User.",
+  "code": "link",
+  "base": ["User"],
+  "type": "reference",
+  "expression": "User.link",
+  "target": ["Patient", "Practitioner"]
+}
