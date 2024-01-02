@@ -210,7 +210,7 @@ function Root() {
                 Custom Operations
               </SideBar.SideBarItem>
               <SideBar.SideBarItem
-                active={matches[0].params.resourceType === "Subscriptions"}
+                active={matches[0].params.resourceType === "Subscription"}
                 onClick={() => {
                   navigate("/resources/Subscription");
                 }}
@@ -220,7 +220,7 @@ function Root() {
             </SideBar.SideBarItemGroup>
             <SideBar.SideBarItemGroup className="mt-8" label="UI">
               <SideBar.SideBarItem
-                active={matches[0].params.resourceType === "Questionnaires"}
+                active={matches[0].params.resourceType === "Questionnaire"}
                 onClick={() => {
                   navigate("/resources/Questionnaire");
                 }}
@@ -229,7 +229,7 @@ function Root() {
               </SideBar.SideBarItem>
               <SideBar.SideBarItem
                 active={
-                  matches[0].params.resourceType === "QuestionnaireResponses"
+                  matches[0].params.resourceType === "QuestionnaireResponse"
                 }
                 onClick={() => {
                   navigate("/resources/QuestionnaireResponse");
@@ -240,7 +240,7 @@ function Root() {
             </SideBar.SideBarItemGroup>
             <SideBar.SideBarItemGroup className="mt-8" label="Monitoring">
               <SideBar.SideBarItem
-                active={matches[0].params.resourceType === "AuditEvents"}
+                active={matches[0].params.resourceType === "AuditEvent"}
                 onClick={() => {
                   navigate("/resources/AuditEvent");
                 }}

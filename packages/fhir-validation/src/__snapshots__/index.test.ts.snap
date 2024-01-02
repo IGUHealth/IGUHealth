@@ -20276,22 +20276,29 @@ exports[`Testing validating resourceType 'CodeSystem' 1`] = `
     "caseSensitive": true,
     "concept": [
       {
-        "code": "fhir-rest",
-        "definition": "Uses FHIR rest methods to apply access controls.",
-        "display": "FHIR Rest",
+        "code": "instance",
+        "display": "Instance",
+      },
+      {
+        "code": "type",
+        "display": "Type",
+      },
+      {
+        "code": "system",
+        "display": "System",
       },
     ],
     "content": "complete",
     "description": "Access Policy types allowed.",
     "experimental": true,
-    "id": "access-policy-type-codesystem",
-    "name": "AccessPolicyType",
+    "id": "access-policy-fhir-api-level-codesystem",
+    "name": "AccessPolicyFHIRAPILevel",
     "publisher": "IGUHealth",
     "resourceType": "CodeSystem",
     "status": "active",
-    "title": "AccessPolicyType",
-    "url": "https://iguhealth.app/fhir/CodeSystem/AccessPolicyType",
-    "valueSet": "https://iguhealth.app/fhir/ValueSet/AccessPolicyType",
+    "title": "AccessPolicyFHIRAPILevel",
+    "url": "https://iguhealth.app/fhir/CodeSystem/AccessPolicyFHIRAPILevel",
+    "valueSet": "https://iguhealth.app/fhir/ValueSet/AccessPolicyFHIRAPILevel",
     "version": "4.0.1",
   },
   [],
@@ -25982,47 +25989,20 @@ exports[`Testing validating resourceType 'SearchParameter' 1`] = `
 [
   {
     "base": [
-      "Account",
+      "AccessPolicy",
     ],
-    "code": "identifier",
-    "contact": [
-      {
-        "telecom": [
-          {
-            "system": "url",
-            "value": "http://hl7.org/fhir",
-          },
-        ],
-      },
-      {
-        "telecom": [
-          {
-            "system": "url",
-            "value": "http://www.hl7.org/Special/committees/pafm/index.cfm",
-          },
-        ],
-      },
-    ],
-    "date": "2019-11-01T09:29:23+11:00",
-    "description": "Account number",
+    "code": "code",
+    "description": "An Access Policies unique code.",
     "experimental": false,
-    "expression": "Account.identifier",
-    "extension": [
-      {
-        "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status",
-        "valueCode": "trial-use",
-      },
-    ],
-    "id": "Account-identifier",
-    "name": "identifier",
-    "publisher": "Health Level Seven International (Patient Administration)",
+    "expression": "AccessPolicy.code",
+    "id": "AccessPolicy-code",
+    "name": "code",
+    "publisher": "IGUHealth",
     "resourceType": "SearchParameter",
     "status": "draft",
     "type": "token",
-    "url": "http://hl7.org/fhir/SearchParameter/Account-identifier",
+    "url": "https://iguhealth.app/fhir/SearchParameter/AccessPolicy-code",
     "version": "4.0.1",
-    "xpath": "f:Account/f:identifier",
-    "xpathUsage": "normal",
   },
   [],
 ]
@@ -26301,6 +26281,17 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
           ],
         },
         {
+          "id": "AccessPolicy.code",
+          "max": "1",
+          "min": 1,
+          "path": "AccessPolicy.code",
+          "type": [
+            {
+              "code": "code",
+            },
+          ],
+        },
+        {
           "id": "AccessPolicy.description",
           "max": "1",
           "min": 0,
@@ -26313,7 +26304,6 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
         },
         {
           "binding": {
-            "description": "The use of an address.",
             "strength": "required",
             "valueSet": "https://iguhealth.app/fhir/ValueSet/AccessPolicyType|4.0.1",
           },
@@ -26328,10 +26318,21 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
           ],
         },
         {
-          "id": "AccessPolicy.link",
+          "id": "AccessPolicy.target",
           "max": "*",
           "min": 0,
-          "path": "AccessPolicy.link",
+          "path": "AccessPolicy.target",
+          "type": [
+            {
+              "code": "BackboneElement",
+            },
+          ],
+        },
+        {
+          "id": "AccessPolicy.target.link",
+          "max": "1",
+          "min": 1,
+          "path": "AccessPolicy.target.link",
           "type": [
             {
               "code": "Reference",
@@ -26339,6 +26340,95 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
                 "https://iguhealth.com/StructureDefinition/User",
                 "http://hl7.org/fhir/StructureDefinition/OperationDefinition",
               ],
+            },
+          ],
+        },
+        {
+          "id": "AccessPolicy.access",
+          "max": "*",
+          "min": 0,
+          "path": "AccessPolicy.access",
+          "type": [
+            {
+              "code": "BackboneElement",
+            },
+          ],
+        },
+        {
+          "id": "AccessPolicy.access.fhir",
+          "max": "*",
+          "min": 0,
+          "path": "AccessPolicy.access.fhir",
+          "type": [
+            {
+              "code": "BackboneElement",
+            },
+          ],
+        },
+        {
+          "binding": {
+            "strength": "required",
+            "valueSet": "https://iguhealth.app/fhir/ValueSet/AccessPolicyFHIRAPIMethod|4.0.1",
+          },
+          "id": "AccessPolicy.access.fhir.method",
+          "max": "1",
+          "min": 1,
+          "path": "AccessPolicy.access.fhir.method",
+          "type": [
+            {
+              "code": "code",
+            },
+          ],
+        },
+        {
+          "binding": {
+            "strength": "required",
+            "valueSet": "https://iguhealth.app/fhir/ValueSet/AccessPolicyFHIRAPILevel|4.0.1",
+          },
+          "id": "AccessPolicy.access.fhir.level",
+          "max": "1",
+          "min": 1,
+          "path": "AccessPolicy.access.fhir.level",
+          "type": [
+            {
+              "code": "code",
+            },
+          ],
+        },
+        {
+          "id": "AccessPolicy.access.fhir.parameter",
+          "max": "*",
+          "min": 0,
+          "path": "AccessPolicy.access.fhir.parameter",
+          "type": [
+            {
+              "code": "BackboneElement",
+            },
+          ],
+        },
+        {
+          "binding": {
+            "strength": "required",
+            "valueSet": "https://iguhealth.app/fhir/ValueSet/AccessPolicyFHIRAPIParameter|4.0.1",
+          },
+          "id": "AccessPolicy.access.fhir.parameter.name",
+          "max": "1",
+          "min": 1,
+          "path": "AccessPolicy.access.fhir.parameter.name",
+          "type": [
+            {
+              "code": "code",
+            },
+          ],
+        },
+        {
+          "id": "AccessPolicy.access.fhir.parameter.value",
+          "max": "1",
+          "min": 1,
+          "path": "AccessPolicy.access.fhir.parameter.value",
+          "type": [
+            {
+              "code": "string",
             },
           ],
         },
