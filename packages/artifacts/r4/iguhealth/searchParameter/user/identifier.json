@@ -1,0 +1,15 @@
+{
+  "resourceType": "SearchParameter",
+  "id": "User-identifier",
+  "url": "https://iguhealth.app/fhir/SearchParameter/User-identifier",
+  "version": "4.0.1",
+  "name": "identifier",
+  "status": "draft",
+  "experimental": false,
+  "publisher": "IGUHealth",
+  "description": "User identifier used to identify user based on iss / sub",
+  "code": "identifier",
+  "base": ["User"],
+  "type": "token",
+  "expression": "User.identifier"
+}

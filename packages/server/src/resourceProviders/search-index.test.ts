@@ -35,11 +35,14 @@ const artifactResources = getArtifactResources([
 test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
   `Testing indexing resourceType '%s'`,
   (resourceType) => {
-    const searchParameters = artifactResources.filter(
-      (r): r is SearchParameter =>
-        r.resourceType === "SearchParameter" &&
-        r.base.includes(resourceType as code)
-    );
+    const searchParameters = artifactResources
+      .filter(
+        (r): r is SearchParameter =>
+          r.resourceType === "SearchParameter" &&
+          r.base.includes(resourceType as code)
+      )
+      // Filtering so only hl7 or remote as these are changing.
+      .filter((r) => !r.url.startsWith("https://iguhealth"));
     const resources = artifactResources
       .filter((r) => r.resourceType === resourceType)
       .filter((r) => r.id)
