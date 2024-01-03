@@ -249,7 +249,7 @@ function Root() {
               </SideBar.SideBarItem>
             </SideBar.SideBarItemGroup>
 
-            {/* <SideBar.SideBarItemGroup className="mt-8" label="Security">
+            <SideBar.SideBarItemGroup className="mt-8" label="Security">
               <SideBar.SideBarItem
                 active={matches[0].params.resourceType === "User"}
                 onClick={() => {
@@ -266,7 +266,7 @@ function Root() {
               >
                 Access Policies
               </SideBar.SideBarItem>
-            </SideBar.SideBarItemGroup> */}
+            </SideBar.SideBarItemGroup>
             <SideBar.SideBarItemGroup label="Data" className="mt-8">
               <SideBar.SideBarItem
                 active={

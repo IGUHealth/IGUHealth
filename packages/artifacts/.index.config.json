@@ -74,6 +74,10 @@
       "resourceType": "SearchParameter"
     },
     {
+      "filename": "r4/iguhealth/searchParameter/user/identifier.json",
+      "resourceType": "SearchParameter"
+    },
+    {
       "filename": "r4/iguhealth/searchParameter/user/link.json",
       "resourceType": "SearchParameter"
     },

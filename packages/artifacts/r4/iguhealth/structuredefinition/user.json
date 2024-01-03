@@ -98,6 +98,17 @@
         ],
         "min": 0,
         "max": "*"
+      },
+      {
+        "id": "User.identifier",
+        "path": "User.identifier",
+        "type": [
+          {
+            "code": "Identifier"
+          }
+        ],
+        "min": 0,
+        "max": "*"
       }
     ]
   }
