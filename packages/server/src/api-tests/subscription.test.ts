@@ -29,17 +29,15 @@ async function createTenant(tenant: string) {
   await pgClient.connect();
   try {
     const res = await db.sql<
-      s.workspaces.SQL,
-      s.workspaces.Selectable[]
-    >`SELECT ${"id"} FROM ${"workspaces"} WHERE ${{ id: tenant }}`.run(
-      pgClient
-    );
+      s.tenants.SQL,
+      s.tenants.Selectable[]
+    >`SELECT ${"id"} FROM ${"tenants"} WHERE ${{ id: tenant }}`.run(pgClient);
 
     if (res.length === 0) {
       await db
-        .insert("workspaces", {
+        .insert("tenants", {
           id: tenant,
-          workspace: { id: "test", name: "test" },
+          tenant: { id: "test", name: "test" },
         })
         .run(pgClient);
     }

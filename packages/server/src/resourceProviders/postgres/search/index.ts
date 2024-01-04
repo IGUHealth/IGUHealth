@@ -260,7 +260,7 @@ export async function executeSearchQuery(
         return db.sql` JOIN (${q}) as ${queryAlias} ON ${queryAlias}.${"r_version_id"}=${"resources"}.${"version_id"}`;
       })}
       
-      WHERE ${"resources"}.${"workspace"} = ${db.param(ctx.tenant.id)}
+      WHERE ${"resources"}.${"tenant"} = ${db.param(ctx.tenant.id)}
       AND ${"resources"}.${"resource_type"} ${
     resourceTypes.length > 0
       ? db.sql`in (${sqlUtils.paramsWithComma(resourceTypes)})`

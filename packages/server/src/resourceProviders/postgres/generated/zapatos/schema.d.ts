@@ -36,11 +36,11 @@ declare module 'zapatos/schema' {
       */
       id: number;
       /**
-      * **date_idx.workspace**
+      * **date_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string;
+      tenant: string;
       /**
       * **date_idx.r_id**
       * - `text` in database
@@ -98,11 +98,11 @@ declare module 'zapatos/schema' {
       */
       id: number;
       /**
-      * **date_idx.workspace**
+      * **date_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string;
+      tenant: string;
       /**
       * **date_idx.r_id**
       * - `text` in database
@@ -160,11 +160,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **date_idx.workspace**
+      * **date_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **date_idx.r_id**
       * - `text` in database
@@ -222,11 +222,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-      * **date_idx.workspace**
+      * **date_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string | db.Parameter<string> | db.SQLFragment;
+      tenant: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **date_idx.r_id**
       * - `text` in database
@@ -284,11 +284,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-      * **date_idx.workspace**
+      * **date_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **date_idx.r_id**
       * - `text` in database
@@ -585,11 +585,11 @@ declare module 'zapatos/schema' {
       */
       id: number;
       /**
-      * **number_idx.workspace**
+      * **number_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string;
+      tenant: string;
       /**
       * **number_idx.r_id**
       * - `text` in database
@@ -641,11 +641,11 @@ declare module 'zapatos/schema' {
       */
       id: number;
       /**
-      * **number_idx.workspace**
+      * **number_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string;
+      tenant: string;
       /**
       * **number_idx.r_id**
       * - `text` in database
@@ -697,11 +697,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **number_idx.workspace**
+      * **number_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **number_idx.r_id**
       * - `text` in database
@@ -753,11 +753,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-      * **number_idx.workspace**
+      * **number_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string | db.Parameter<string> | db.SQLFragment;
+      tenant: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **number_idx.r_id**
       * - `text` in database
@@ -809,11 +809,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-      * **number_idx.workspace**
+      * **number_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **number_idx.r_id**
       * - `text` in database
@@ -878,11 +878,11 @@ declare module 'zapatos/schema' {
       */
       id: number;
       /**
-      * **quantity_idx.workspace**
+      * **quantity_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string;
+      tenant: string;
       /**
       * **quantity_idx.r_id**
       * - `text` in database
@@ -964,11 +964,11 @@ declare module 'zapatos/schema' {
       */
       id: number;
       /**
-      * **quantity_idx.workspace**
+      * **quantity_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string;
+      tenant: string;
       /**
       * **quantity_idx.r_id**
       * - `text` in database
@@ -1050,11 +1050,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **quantity_idx.workspace**
+      * **quantity_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **quantity_idx.r_id**
       * - `text` in database
@@ -1136,11 +1136,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-      * **quantity_idx.workspace**
+      * **quantity_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string | db.Parameter<string> | db.SQLFragment;
+      tenant: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **quantity_idx.r_id**
       * - `text` in database
@@ -1222,11 +1222,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-      * **quantity_idx.workspace**
+      * **quantity_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **quantity_idx.r_id**
       * - `text` in database
@@ -1321,11 +1321,11 @@ declare module 'zapatos/schema' {
       */
       id: number;
       /**
-      * **reference_idx.workspace**
+      * **reference_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string;
+      tenant: string;
       /**
       * **reference_idx.r_id**
       * - `text` in database
@@ -1389,11 +1389,11 @@ declare module 'zapatos/schema' {
       */
       id: number;
       /**
-      * **reference_idx.workspace**
+      * **reference_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string;
+      tenant: string;
       /**
       * **reference_idx.r_id**
       * - `text` in database
@@ -1457,11 +1457,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **reference_idx.workspace**
+      * **reference_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **reference_idx.r_id**
       * - `text` in database
@@ -1525,11 +1525,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-      * **reference_idx.workspace**
+      * **reference_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string | db.Parameter<string> | db.SQLFragment;
+      tenant: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **reference_idx.r_id**
       * - `text` in database
@@ -1593,11 +1593,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-      * **reference_idx.workspace**
+      * **reference_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **reference_idx.r_id**
       * - `text` in database
@@ -1674,11 +1674,11 @@ declare module 'zapatos/schema' {
       */
       id: string;
       /**
-      * **resources.workspace**
+      * **resources.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string;
+      tenant: string;
       /**
       * **resources.resource_type**
       * - `text` in database
@@ -1742,11 +1742,11 @@ declare module 'zapatos/schema' {
       */
       id: string;
       /**
-      * **resources.workspace**
+      * **resources.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string;
+      tenant: string;
       /**
       * **resources.resource_type**
       * - `text` in database
@@ -1810,11 +1810,11 @@ declare module 'zapatos/schema' {
       */
       id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **resources.workspace**
+      * **resources.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **resources.resource_type**
       * - `text` in database
@@ -1872,11 +1872,11 @@ declare module 'zapatos/schema' {
     }
     export interface Insertable {
       /**
-      * **resources.workspace**
+      * **resources.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string | db.Parameter<string> | db.SQLFragment;
+      tenant: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **resources.author**
       * - `text` in database
@@ -1928,11 +1928,11 @@ declare module 'zapatos/schema' {
     }
     export interface Updatable {
       /**
-      * **resources.workspace**
+      * **resources.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **resources.author**
       * - `text` in database
@@ -2003,11 +2003,11 @@ declare module 'zapatos/schema' {
       */
       id: number;
       /**
-      * **string_idx.workspace**
+      * **string_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string;
+      tenant: string;
       /**
       * **string_idx.r_id**
       * - `text` in database
@@ -2059,11 +2059,11 @@ declare module 'zapatos/schema' {
       */
       id: number;
       /**
-      * **string_idx.workspace**
+      * **string_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string;
+      tenant: string;
       /**
       * **string_idx.r_id**
       * - `text` in database
@@ -2115,11 +2115,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **string_idx.workspace**
+      * **string_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **string_idx.r_id**
       * - `text` in database
@@ -2171,11 +2171,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-      * **string_idx.workspace**
+      * **string_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string | db.Parameter<string> | db.SQLFragment;
+      tenant: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **string_idx.r_id**
       * - `text` in database
@@ -2227,11 +2227,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-      * **string_idx.workspace**
+      * **string_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **string_idx.r_id**
       * - `text` in database
@@ -2283,6 +2283,149 @@ declare module 'zapatos/schema' {
   }
 
   /**
+   * **tenants**
+   * - Table in database
+   */
+  export namespace tenants {
+    export type Table = 'tenants';
+    export interface Selectable {
+      /**
+      * **tenants.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
+      /**
+      * **tenants.tenant**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: db.JSONValue;
+      /**
+      * **tenants.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      deleted: boolean;
+      /**
+      * **tenants.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at: Date;
+    }
+    export interface JSONSelectable {
+      /**
+      * **tenants.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
+      /**
+      * **tenants.tenant**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: db.JSONValue;
+      /**
+      * **tenants.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      deleted: boolean;
+      /**
+      * **tenants.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at: db.TimestampTzString;
+    }
+    export interface Whereable {
+      /**
+      * **tenants.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tenants.tenant**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tenants.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      deleted?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tenants.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **tenants.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **tenants.tenant**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment;
+      /**
+      * **tenants.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      deleted?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
+      /**
+      * **tenants.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **tenants.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **tenants.tenant**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment>;
+      /**
+      * **tenants.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      deleted?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tenants.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'workspaces_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
    * **token_idx**
    * - Table in database
    */
@@ -2296,11 +2439,11 @@ declare module 'zapatos/schema' {
       */
       id: number;
       /**
-      * **token_idx.workspace**
+      * **token_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string;
+      tenant: string;
       /**
       * **token_idx.r_id**
       * - `text` in database
@@ -2358,11 +2501,11 @@ declare module 'zapatos/schema' {
       */
       id: number;
       /**
-      * **token_idx.workspace**
+      * **token_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string;
+      tenant: string;
       /**
       * **token_idx.r_id**
       * - `text` in database
@@ -2420,11 +2563,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **token_idx.workspace**
+      * **token_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **token_idx.r_id**
       * - `text` in database
@@ -2482,11 +2625,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-      * **token_idx.workspace**
+      * **token_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string | db.Parameter<string> | db.SQLFragment;
+      tenant: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **token_idx.r_id**
       * - `text` in database
@@ -2544,11 +2687,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-      * **token_idx.workspace**
+      * **token_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **token_idx.r_id**
       * - `text` in database
@@ -2619,11 +2762,11 @@ declare module 'zapatos/schema' {
       */
       id: number;
       /**
-      * **uri_idx.workspace**
+      * **uri_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string;
+      tenant: string;
       /**
       * **uri_idx.r_id**
       * - `text` in database
@@ -2675,11 +2818,11 @@ declare module 'zapatos/schema' {
       */
       id: number;
       /**
-      * **uri_idx.workspace**
+      * **uri_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string;
+      tenant: string;
       /**
       * **uri_idx.r_id**
       * - `text` in database
@@ -2731,11 +2874,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **uri_idx.workspace**
+      * **uri_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **uri_idx.r_id**
       * - `text` in database
@@ -2787,11 +2930,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-      * **uri_idx.workspace**
+      * **uri_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace: string | db.Parameter<string> | db.SQLFragment;
+      tenant: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **uri_idx.r_id**
       * - `text` in database
@@ -2843,11 +2986,11 @@ declare module 'zapatos/schema' {
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-      * **uri_idx.workspace**
+      * **uri_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      workspace?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **uri_idx.r_id**
       * - `text` in database
@@ -2898,166 +3041,23 @@ declare module 'zapatos/schema' {
     export type SQL = SQLExpression | SQLExpression[];
   }
 
-  /**
-   * **workspaces**
-   * - Table in database
-   */
-  export namespace workspaces {
-    export type Table = 'workspaces';
-    export interface Selectable {
-      /**
-      * **workspaces.id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      id: string;
-      /**
-      * **workspaces.workspace**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      workspace: db.JSONValue;
-      /**
-      * **workspaces.deleted**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
-      */
-      deleted: boolean;
-      /**
-      * **workspaces.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at: Date;
-    }
-    export interface JSONSelectable {
-      /**
-      * **workspaces.id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      id: string;
-      /**
-      * **workspaces.workspace**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      workspace: db.JSONValue;
-      /**
-      * **workspaces.deleted**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
-      */
-      deleted: boolean;
-      /**
-      * **workspaces.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at: db.TimestampTzString;
-    }
-    export interface Whereable {
-      /**
-      * **workspaces.id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **workspaces.workspace**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      workspace?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **workspaces.deleted**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
-      */
-      deleted?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **workspaces.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-    }
-    export interface Insertable {
-      /**
-      * **workspaces.id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      id: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **workspaces.workspace**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      workspace: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment;
-      /**
-      * **workspaces.deleted**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
-      */
-      deleted?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
-      /**
-      * **workspaces.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
-    }
-    export interface Updatable {
-      /**
-      * **workspaces.id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **workspaces.workspace**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      workspace?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment>;
-      /**
-      * **workspaces.deleted**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
-      */
-      deleted?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **workspaces.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
-    }
-    export type UniqueIndex = 'workspaces_pkey';
-    export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
-    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
-    export type SQL = SQLExpression | SQLExpression[];
-  }
-
   /* --- aggregate types --- */
 
   export namespace public {  
-    export type Table = date_idx.Table | migrations.Table | migrations_state.Table | number_idx.Table | quantity_idx.Table | reference_idx.Table | resources.Table | string_idx.Table | token_idx.Table | uri_idx.Table | workspaces.Table;
-    export type Selectable = date_idx.Selectable | migrations.Selectable | migrations_state.Selectable | number_idx.Selectable | quantity_idx.Selectable | reference_idx.Selectable | resources.Selectable | string_idx.Selectable | token_idx.Selectable | uri_idx.Selectable | workspaces.Selectable;
-    export type JSONSelectable = date_idx.JSONSelectable | migrations.JSONSelectable | migrations_state.JSONSelectable | number_idx.JSONSelectable | quantity_idx.JSONSelectable | reference_idx.JSONSelectable | resources.JSONSelectable | string_idx.JSONSelectable | token_idx.JSONSelectable | uri_idx.JSONSelectable | workspaces.JSONSelectable;
-    export type Whereable = date_idx.Whereable | migrations.Whereable | migrations_state.Whereable | number_idx.Whereable | quantity_idx.Whereable | reference_idx.Whereable | resources.Whereable | string_idx.Whereable | token_idx.Whereable | uri_idx.Whereable | workspaces.Whereable;
-    export type Insertable = date_idx.Insertable | migrations.Insertable | migrations_state.Insertable | number_idx.Insertable | quantity_idx.Insertable | reference_idx.Insertable | resources.Insertable | string_idx.Insertable | token_idx.Insertable | uri_idx.Insertable | workspaces.Insertable;
-    export type Updatable = date_idx.Updatable | migrations.Updatable | migrations_state.Updatable | number_idx.Updatable | quantity_idx.Updatable | reference_idx.Updatable | resources.Updatable | string_idx.Updatable | token_idx.Updatable | uri_idx.Updatable | workspaces.Updatable;
-    export type UniqueIndex = date_idx.UniqueIndex | migrations.UniqueIndex | migrations_state.UniqueIndex | number_idx.UniqueIndex | quantity_idx.UniqueIndex | reference_idx.UniqueIndex | resources.UniqueIndex | string_idx.UniqueIndex | token_idx.UniqueIndex | uri_idx.UniqueIndex | workspaces.UniqueIndex;
-    export type Column = date_idx.Column | migrations.Column | migrations_state.Column | number_idx.Column | quantity_idx.Column | reference_idx.Column | resources.Column | string_idx.Column | token_idx.Column | uri_idx.Column | workspaces.Column;
+    export type Table = date_idx.Table | migrations.Table | migrations_state.Table | number_idx.Table | quantity_idx.Table | reference_idx.Table | resources.Table | string_idx.Table | tenants.Table | token_idx.Table | uri_idx.Table;
+    export type Selectable = date_idx.Selectable | migrations.Selectable | migrations_state.Selectable | number_idx.Selectable | quantity_idx.Selectable | reference_idx.Selectable | resources.Selectable | string_idx.Selectable | tenants.Selectable | token_idx.Selectable | uri_idx.Selectable;
+    export type JSONSelectable = date_idx.JSONSelectable | migrations.JSONSelectable | migrations_state.JSONSelectable | number_idx.JSONSelectable | quantity_idx.JSONSelectable | reference_idx.JSONSelectable | resources.JSONSelectable | string_idx.JSONSelectable | tenants.JSONSelectable | token_idx.JSONSelectable | uri_idx.JSONSelectable;
+    export type Whereable = date_idx.Whereable | migrations.Whereable | migrations_state.Whereable | number_idx.Whereable | quantity_idx.Whereable | reference_idx.Whereable | resources.Whereable | string_idx.Whereable | tenants.Whereable | token_idx.Whereable | uri_idx.Whereable;
+    export type Insertable = date_idx.Insertable | migrations.Insertable | migrations_state.Insertable | number_idx.Insertable | quantity_idx.Insertable | reference_idx.Insertable | resources.Insertable | string_idx.Insertable | tenants.Insertable | token_idx.Insertable | uri_idx.Insertable;
+    export type Updatable = date_idx.Updatable | migrations.Updatable | migrations_state.Updatable | number_idx.Updatable | quantity_idx.Updatable | reference_idx.Updatable | resources.Updatable | string_idx.Updatable | tenants.Updatable | token_idx.Updatable | uri_idx.Updatable;
+    export type UniqueIndex = date_idx.UniqueIndex | migrations.UniqueIndex | migrations_state.UniqueIndex | number_idx.UniqueIndex | quantity_idx.UniqueIndex | reference_idx.UniqueIndex | resources.UniqueIndex | string_idx.UniqueIndex | tenants.UniqueIndex | token_idx.UniqueIndex | uri_idx.UniqueIndex;
+    export type Column = date_idx.Column | migrations.Column | migrations_state.Column | number_idx.Column | quantity_idx.Column | reference_idx.Column | resources.Column | string_idx.Column | tenants.Column | token_idx.Column | uri_idx.Column;
   
-    export type AllBaseTables = [date_idx.Table, migrations.Table, migrations_state.Table, number_idx.Table, quantity_idx.Table, reference_idx.Table, resources.Table, string_idx.Table, token_idx.Table, uri_idx.Table, workspaces.Table];
+    export type AllBaseTables = [date_idx.Table, migrations.Table, migrations_state.Table, number_idx.Table, quantity_idx.Table, reference_idx.Table, resources.Table, string_idx.Table, tenants.Table, token_idx.Table, uri_idx.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [date_idx.Table, migrations.Table, migrations_state.Table, number_idx.Table, quantity_idx.Table, reference_idx.Table, resources.Table, string_idx.Table, token_idx.Table, uri_idx.Table, workspaces.Table];
+    export type AllTablesAndViews = [date_idx.Table, migrations.Table, migrations_state.Table, number_idx.Table, quantity_idx.Table, reference_idx.Table, resources.Table, string_idx.Table, tenants.Table, token_idx.Table, uri_idx.Table];
   }
 
 
@@ -3093,9 +3093,9 @@ declare module 'zapatos/schema' {
     "reference_idx": reference_idx.Selectable;
     "resources": resources.Selectable;
     "string_idx": string_idx.Selectable;
+    "tenants": tenants.Selectable;
     "token_idx": token_idx.Selectable;
     "uri_idx": uri_idx.Selectable;
-    "workspaces": workspaces.Selectable;
   }[T];
 
   export type JSONSelectableForTable<T extends Table> = {
@@ -3107,9 +3107,9 @@ declare module 'zapatos/schema' {
     "reference_idx": reference_idx.JSONSelectable;
     "resources": resources.JSONSelectable;
     "string_idx": string_idx.JSONSelectable;
+    "tenants": tenants.JSONSelectable;
     "token_idx": token_idx.JSONSelectable;
     "uri_idx": uri_idx.JSONSelectable;
-    "workspaces": workspaces.JSONSelectable;
   }[T];
 
   export type WhereableForTable<T extends Table> = {
@@ -3121,9 +3121,9 @@ declare module 'zapatos/schema' {
     "reference_idx": reference_idx.Whereable;
     "resources": resources.Whereable;
     "string_idx": string_idx.Whereable;
+    "tenants": tenants.Whereable;
     "token_idx": token_idx.Whereable;
     "uri_idx": uri_idx.Whereable;
-    "workspaces": workspaces.Whereable;
   }[T];
 
   export type InsertableForTable<T extends Table> = {
@@ -3135,9 +3135,9 @@ declare module 'zapatos/schema' {
     "reference_idx": reference_idx.Insertable;
     "resources": resources.Insertable;
     "string_idx": string_idx.Insertable;
+    "tenants": tenants.Insertable;
     "token_idx": token_idx.Insertable;
     "uri_idx": uri_idx.Insertable;
-    "workspaces": workspaces.Insertable;
   }[T];
 
   export type UpdatableForTable<T extends Table> = {
@@ -3149,9 +3149,9 @@ declare module 'zapatos/schema' {
     "reference_idx": reference_idx.Updatable;
     "resources": resources.Updatable;
     "string_idx": string_idx.Updatable;
+    "tenants": tenants.Updatable;
     "token_idx": token_idx.Updatable;
     "uri_idx": uri_idx.Updatable;
-    "workspaces": workspaces.Updatable;
   }[T];
 
   export type UniqueIndexForTable<T extends Table> = {
@@ -3163,9 +3163,9 @@ declare module 'zapatos/schema' {
     "reference_idx": reference_idx.UniqueIndex;
     "resources": resources.UniqueIndex;
     "string_idx": string_idx.UniqueIndex;
+    "tenants": tenants.UniqueIndex;
     "token_idx": token_idx.UniqueIndex;
     "uri_idx": uri_idx.UniqueIndex;
-    "workspaces": workspaces.UniqueIndex;
   }[T];
 
   export type ColumnForTable<T extends Table> = {
@@ -3177,9 +3177,9 @@ declare module 'zapatos/schema' {
     "reference_idx": reference_idx.Column;
     "resources": resources.Column;
     "string_idx": string_idx.Column;
+    "tenants": tenants.Column;
     "token_idx": token_idx.Column;
     "uri_idx": uri_idx.Column;
-    "workspaces": workspaces.Column;
   }[T];
 
   export type SQLForTable<T extends Table> = {
@@ -3191,9 +3191,9 @@ declare module 'zapatos/schema' {
     "reference_idx": reference_idx.SQL;
     "resources": resources.SQL;
     "string_idx": string_idx.SQL;
+    "tenants": tenants.SQL;
     "token_idx": token_idx.SQL;
     "uri_idx": uri_idx.SQL;
-    "workspaces": workspaces.SQL;
   }[T];
 
 }
