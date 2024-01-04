@@ -41,6 +41,7 @@ import {
 import {
   searchResources,
   deriveLimit,
+  searchParameterToTableName,
 } from "../utilities/search/parameters.js";
 import { fhirResponseToBundleEntry } from "../utilities/bundle.js";
 import { httpRequestToFHIRRequest } from "../../http/index.js";
@@ -327,10 +328,17 @@ async function removeIndices(
 ) {
   await Promise.all(
     param_types_supported.map((type) => {
-      return client.query(
-        `DELETE FROM ${client.escapeIdentifier(type + "_idx")} WHERE r_id = $1`,
-        [resource.id]
-      );
+      return db.sql<
+        | s.number_idx.SQL
+        | s.string_idx.SQL
+        | s.uri_idx.SQL
+        | s.date_idx.SQL
+        | s.token_idx.SQL
+        | s.reference_idx.SQL
+        | s.quantity_idx.SQL
+      >`DELETE FROM ${searchParameterToTableName(type)} WHERE ${{
+        r_id: resource.id,
+      }}`.run(client);
     })
   );
 }
