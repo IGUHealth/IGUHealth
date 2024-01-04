@@ -16,7 +16,7 @@ import { loadArtifacts } from "@iguhealth/artifacts";
 
 import MemoryDatabase from "./memory/async.js";
 import { IOCache } from "../cache/interface.js";
-import { Author, FHIRServerCTX, Workspace } from "../ctx/types.js";
+import { Author, FHIRServerCTX, Tenant } from "../ctx/types.js";
 import { Lock } from "../synchronization/interfaces.js";
 import { TerminologyProviderMemory } from "../terminology/index.js";
 
@@ -34,7 +34,7 @@ class TestLock implements Lock<TestLock> {
   }
 }
 
-class TestCache<CTX extends { workspace: string }> implements IOCache<CTX> {
+class TestCache<CTX extends { tenant: Tenant }> implements IOCache<CTX> {
   _date: Record<string, unknown>;
   constructor() {
     this._date = {};
@@ -49,7 +49,7 @@ class TestCache<CTX extends { workspace: string }> implements IOCache<CTX> {
 }
 
 export const testServices: FHIRServerCTX = {
-  workspace: "test" as Workspace,
+  tenant: { id: "test", superAdmin: true } as Tenant,
   author: "test-user" as Author,
   terminologyProvider: new TerminologyProviderMemory(),
   logger: createLogger.default(),

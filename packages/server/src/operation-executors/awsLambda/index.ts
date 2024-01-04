@@ -66,7 +66,7 @@ function getLambdaTags(
   op: OperationDefinition
 ): Record<string, string> {
   return {
-    workspace: ctx.workspace,
+    tenant: ctx.tenant.id,
     id: op.id as string,
     versionId: op.meta?.versionId as string,
     operation: op.code,
@@ -85,7 +85,7 @@ async function getLambda(
     const getResources = new GetResourcesCommand({
       ResourceTypeFilters: ["lambda"],
       TagFilters: [
-        { Key: "workspace", Values: [ctx.workspace] },
+        { Key: "tenant", Values: [ctx.tenant.id] },
         { Key: "id", Values: [operation.operationDefinition.id as string] },
       ],
     });
@@ -122,7 +122,7 @@ type Payload = {
   ctx: {
     SEC_TOKEN: string;
     API_URL: string;
-    workspace: FHIRServerCTX["workspace"];
+    tenant: FHIRServerCTX["tenant"]["id"];
     level: FHIRRequest["level"];
     resourceType?: ResourceType;
     id?: id;
@@ -146,7 +146,7 @@ async function handler(event: Payload, _context: Payload["ctx"]) {
   });
 
   const ctx = {
-    workspace: event.ctx.workspace,
+    tenant: event.ctx.tenant,
     level: event.ctx.level,
     resourceType: event.ctx.resourceType,
     id: event.ctx.id,
@@ -200,7 +200,7 @@ async function createEnvironmentVariables(
             valueExt?.valueString
           ) {
             value = await ctx.encryptionProvider?.decrypt(
-              { workspace: ctx.workspace },
+              { workspace: ctx.tenant.id },
               valueExt.valueString
             );
           } else {
@@ -300,10 +300,10 @@ async function createPayload(
     ctx: {
       SEC_TOKEN: ctx.user_access_token || "not-sec",
       API_URL: new URL(
-        `/w/${ctx.workspace}/api/v1/fhir/r4`,
+        `/w/${ctx.tenant.id}/api/v1/fhir/r4`,
         process.env.API_URL
       ).href,
-      workspace: ctx.workspace,
+      tenant: ctx.tenant.id,
       level: request.level,
       resourceType:
         request.level === "type" || request.level === "instance"

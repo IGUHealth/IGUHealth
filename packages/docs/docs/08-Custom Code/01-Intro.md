@@ -5,7 +5,7 @@ The main advantages over writing custom code on the server is:
 
 - Can be tied to subscriptions for event driven workflows.
 - Do not require recompiling the server.
-- Isolated per workspace.
+- Isolated per tenant.
 
 ## Authoring
 
@@ -141,7 +141,7 @@ exports.handler = async function (ctx, param) {
 
 | Name             | Type       | Description                                                            |
 | ---------------- | ---------- | ---------------------------------------------------------------------- |
-| ctx.workspace    | string     | the workspace slug that called the operation                           |
+| ctx.tenant       | string     | The tenant id that called the operation                                |
 | ctx.level        | string     | The level of the rpc call, can be system, type or instance             |
 | ctx.resourceType | string     | If level is instance or type this will be the resourceType of the call |
 | ctx.id           | string     | If level is instance will be the id of the resource called             |

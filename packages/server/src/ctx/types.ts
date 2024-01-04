@@ -14,8 +14,12 @@ import { IOCache } from "../cache/interface.js";
 import { TerminologyProvider } from "../terminology/interface.js";
 import { EncryptionProvider } from "../encryption/provider/interface.js";
 
-declare const __workspace: unique symbol;
-export type Workspace = string & { [__workspace]: string };
+declare const __tenant: unique symbol;
+export type TenantId = string & { [__tenant]: string };
+export interface Tenant {
+  id: TenantId;
+  superAdmin: boolean;
+}
 
 declare const __author: unique symbol;
 export type Author = string & { [__author]: string };
@@ -23,7 +27,7 @@ export type Author = string & { [__author]: string };
 export interface FHIRServerCTX {
   encryptionProvider?: EncryptionProvider;
   inTransaction?: boolean;
-  workspace: Workspace;
+  tenant: Readonly<Tenant>;
   author: Author;
   terminologyProvider: TerminologyProvider;
   // Services setup

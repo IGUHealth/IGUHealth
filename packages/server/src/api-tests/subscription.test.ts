@@ -1,6 +1,8 @@
 import { expect, test } from "@jest/globals";
 import pg from "pg";
 import dotEnv from "dotenv";
+import * as db from "zapatos/db";
+import type * as s from "zapatos/schema";
 
 import {
   id,
@@ -15,7 +17,7 @@ import HTTPClient from "@iguhealth/client/lib/http";
 
 dotEnv.config();
 
-async function createWorkspace(workspace: string) {
+async function createTenant(tenant: string) {
   const pgClient = new pg.Client({
     user: process.env["FHIR_DATABASE_USERNAME"],
     password: process.env["FHIR_DATABASE_PASSWORD"],
@@ -26,24 +28,29 @@ async function createWorkspace(workspace: string) {
   });
   await pgClient.connect();
   try {
-    const res = await pgClient.query(
-      "select id from workspaces where id = $1",
-      [workspace]
+    const res = await db.sql<
+      s.workspaces.SQL,
+      s.workspaces.Selectable[]
+    >`SELECT ${"id"} FROM ${"workspaces"} WHERE ${{ id: tenant }}`.run(
+      pgClient
     );
-    if (res.rows.length === 0) {
-      await pgClient.query(
-        "INSERT INTO workspaces (id, workspace) VALUES ($1, $2)",
-        [workspace, { id: "test", name: "test" }]
-      );
+
+    if (res.length === 0) {
+      await db
+        .insert("workspace", {
+          id: tenant,
+          workspace: { id: "test", name: "test" },
+        })
+        .run(pgClient);
     }
   } finally {
     await pgClient.end();
   }
 }
 
-function createClient(workspace: string) {
+function createClient(tenant: string) {
   return HTTPClient({
-    url: `http://localhost:3000/w/${workspace}/api/v1/fhir/r4`,
+    url: `http://localhost:3000/w/${tenant}/api/v1/fhir/r4`,
     getAccessToken: async function () {
       return "pub_token";
     },
@@ -51,7 +58,7 @@ function createClient(workspace: string) {
 }
 
 test("No filter QR", async () => {
-  await createWorkspace("test");
+  await createTenant("test");
   const client = createClient("system");
   const client2 = createClient("test");
 
@@ -97,7 +104,7 @@ test("No filter QR", async () => {
 });
 
 test("Filter patient sub ", async () => {
-  await createWorkspace("test");
+  await createTenant("test");
   const client = createClient("system");
   const client2 = createClient("test");
 
@@ -148,7 +155,7 @@ test("Filter patient sub ", async () => {
 });
 
 test("name check", async () => {
-  await createWorkspace("test2");
+  await createTenant("test2");
   const client = createClient("system");
   const client2 = createClient("test2");
 
@@ -199,7 +206,7 @@ test("name check", async () => {
 });
 
 test("Reference canonical", async () => {
-  await createWorkspace("ref-check");
+  await createTenant("ref-check");
   const client = createClient("system");
   const client2 = createClient("ref-check");
   const resources: Resource[] = [];
@@ -264,7 +271,7 @@ test("Reference canonical", async () => {
 });
 
 test("Reference standard", async () => {
-  await createWorkspace("ref-check");
+  await createTenant("ref-check");
   const client = createClient("system");
   const client2 = createClient("ref-check");
   const resources: Resource[] = [];

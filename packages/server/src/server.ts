@@ -15,7 +15,6 @@ import {
 import { LIB_VERSION } from "./version.js";
 
 import * as Sentry from "./monitoring/sentry.js";
-import type { FHIRServerCTX, Workspace } from "./ctx/types.js";
 import { createGetCTXFn, getRedisClient, logger } from "./ctx/index.js";
 import {
   httpRequestToFHIRRequest,
@@ -25,17 +24,16 @@ import {
   createValidateUserJWTMiddleware,
   allowPublicAccessMiddleware,
 } from "./authN/middleware.js";
-import { canUserAccessWorkspaceMiddleware } from "./authZ/middleware.js";
+import {
+  canUserAccessTenantMiddleware,
+  findCurrentTenant,
+} from "./authZ/middleware.js";
 
 dotEnv.config();
 
-async function workspaceMiddleware(
+async function FHIRMiddleware(
   pool: pg.Pool,
-  getCTX: (
-    arg: Pick<FHIRServerCTX, "workspace" | "author" | "user_access_token"> & {
-      pg: pg.PoolClient;
-    }
-  ) => FHIRServerCTX
+  getCTX: Awaited<ReturnType<typeof createGetCTXFn>>
 ): Promise<Koa.Middleware[]> {
   if (!process.env.AUTH_JWT_ISSUER)
     logger.warn("[WARNING] Server is publicly accessible.");
@@ -46,7 +44,7 @@ async function workspaceMiddleware(
       ? await createValidateUserJWTMiddleware()
       : allowPublicAccessMiddleware,
 
-    canUserAccessWorkspaceMiddleware,
+    canUserAccessTenantMiddleware,
     async (ctx, next) => {
       let span;
       const transaction = ctx.__sentry_transaction;
@@ -57,10 +55,12 @@ async function workspaceMiddleware(
         });
       }
       const client = await pool.connect();
+      const tenant = findCurrentTenant(ctx);
+      if (!tenant) throw new Error("Error tenant does not exist in context!");
       try {
         const serverCTX = getCTX({
           pg: client,
-          workspace: ctx.params.workspace as Workspace,
+          tenant,
           author: ctx.state.user.sub,
           user_access_token: ctx.state.access_token,
         });
@@ -148,8 +148,8 @@ export default async function createServer(): Promise<
   });
 
   router.all(
-    "/w/:workspace/api/v1/fhir/r4/:fhirUrl*",
-    ...(await workspaceMiddleware(pool, getCTX))
+    "/w/:tenant/api/v1/fhir/r4/:fhirUrl*",
+    ...(await FHIRMiddleware(pool, getCTX))
   );
 
   // TODO Use an adapter  adapter,

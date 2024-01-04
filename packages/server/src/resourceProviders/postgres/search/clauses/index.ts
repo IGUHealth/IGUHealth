@@ -48,7 +48,15 @@ export function buildParameterSQL(
     case "token":
     case "reference":
     case "quantity": {
-      return db.sql`
+      return db.sql<
+        | s.number_idx.SQL
+        | s.string_idx.SQL
+        | s.uri_idx.SQL
+        | s.date_idx.SQL
+        | s.token_idx.SQL
+        | s.reference_idx.SQL
+        | s.quantity_idx.SQL
+      >`
       SELECT ${
         columns.length === 0
           ? db.raw("DISTINCT(r_version_id)")
@@ -56,7 +64,7 @@ export function buildParameterSQL(
       } 
       FROM ${search_table} 
       WHERE ${db.conditions.and(
-        { parameter_url: searchParameter.url, workspace: ctx.workspace },
+        { parameter_url: searchParameter.url, workspace: ctx.tenant.id },
         PARAMETER_CLAUSES[searchParameter.type](ctx, parameter)
       )}
       `;
