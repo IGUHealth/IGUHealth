@@ -37,7 +37,7 @@ async function createTenant(tenant: string) {
 
     if (res.length === 0) {
       await db
-        .insert("workspace", {
+        .insert("workspaces", {
           id: tenant,
           workspace: { id: "test", name: "test" },
         })
