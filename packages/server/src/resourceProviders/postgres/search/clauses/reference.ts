@@ -18,7 +18,7 @@ function generateCanonicalReferenceSearch(
   parameter: SearchParameterResource
 ): db.SQLFragment {
   const where: s.uri_idx.Whereable = {
-    workspace: ctx.tenant.id,
+    tenant: ctx.tenant.id,
     resource_type: db.sql`${db.self} in (${sqlUtils.paramsWithComma(
       parameter.searchParameter.target || []
     )})`,

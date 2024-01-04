@@ -394,8 +394,8 @@ function processSubscription(
 }
 
 async function getActiveTenants(pool: pg.Pool): Promise<TenantId[]> {
-  const tenants = await db.sql<s.workspaces.SQL, s.workspaces.Selectable[]>`
-    SELECT ${"id"} from ${"workspaces"} where ${{ deleted: false }}
+  const tenants = await db.sql<s.tenants.SQL, s.tenants.Selectable[]>`
+    SELECT ${"id"} from ${"tenants"} where ${{ deleted: false }}
   `.run(pool);
 
   return tenants.map((w) => w.id as TenantId);
