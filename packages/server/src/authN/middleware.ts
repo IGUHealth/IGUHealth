@@ -69,7 +69,9 @@ export const allowPublicAccessMiddleware: Koa.Middleware = async (
     user: {
       sub: "public-user",
       access_token: "sec-public",
-      "https://iguhealth.app/workspaces": [ctx.params.workspace],
+      "https://iguhealth.app/tenants": [
+        { id: ctx.params.tenant, superAdmin: true },
+      ],
     },
   };
   await next();

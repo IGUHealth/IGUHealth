@@ -349,10 +349,10 @@ export function getRedisClient() {
 export async function createGetCTXFn(): Promise<
   ({
     pg,
-    workspace,
+    tenant,
     author,
     user_access_token,
-  }: Pick<FHIRServerCTX, "workspace" | "author" | "user_access_token"> & {
+  }: Pick<FHIRServerCTX, "tenant" | "author" | "user_access_token"> & {
     pg: pg.PoolClient;
   }) => FHIRServerCTX
 > {
@@ -402,7 +402,7 @@ export async function createGetCTXFn(): Promise<
     LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
   });
 
-  return ({ pg, workspace, author, user_access_token }) => {
+  return ({ pg, tenant, author, user_access_token }) => {
     const client = RouterClient(
       [
         validationMiddleware,
@@ -457,7 +457,7 @@ export async function createGetCTXFn(): Promise<
     );
 
     return {
-      workspace,
+      tenant,
       author,
       user_access_token,
       logger,

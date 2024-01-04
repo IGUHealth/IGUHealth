@@ -2,6 +2,8 @@
 import dotEnv from "dotenv";
 import pg from "pg";
 import { randomUUID } from "crypto";
+import * as db from "zapatos/db";
+import * as s from "zapatos/schema";
 
 import {
   Resource,
@@ -27,7 +29,7 @@ import logAuditEvent, {
   SERIOUS_FAILURE,
 } from "../logging/auditEvents.js";
 import { httpRequestToFHIRRequest } from "../http/index.js";
-import { Author, FHIRServerCTX, Workspace } from "../ctx/types.js";
+import { Author, FHIRServerCTX, TenantId } from "../ctx/types.js";
 import {
   SearchParameterResource,
   deriveResourceTypeFilter,
@@ -156,7 +158,9 @@ async function handleSubscriptionPayload(
               {
                 header: { audience: process.env.AUTH_JWT_AUDIENCE },
                 payload: {
-                  "https://iguhealth.app/workspaces": [ctx.workspace],
+                  "https://iguhealth.app/tenants": [
+                    { id: ctx.tenant.id, superAdmin: true },
+                  ],
                   sub: `OperationDefinition/${operationDefinition.id}`,
                   aud: ["https://iguhealth.com/api"],
                   scope: "openid profile email offline_access",
@@ -185,8 +189,8 @@ async function handleSubscriptionPayload(
 }
 
 // Returns key for subscription lock.
-function subscriptionLockKey(workspace: string, subscriptionId: string) {
-  return `${workspace}:${subscriptionId}`;
+function subscriptionLockKey(tenant: string, subscriptionId: string) {
+  return `${tenant}:${subscriptionId}`;
 }
 
 function processSubscription(
@@ -211,7 +215,7 @@ function processSubscription(
     if (subscription.status !== "active") return;
     const logger = ctx.logger.child({
       worker: workerID,
-      workspace: ctx.workspace,
+      tenant: ctx.tenant.id,
       criteria: subscription.criteria,
     });
 
@@ -296,7 +300,7 @@ function processSubscription(
         await Sentry.sentryTransaction(
           process.env.SENTRY_WORKER_DSN,
           {
-            name: `${ctx.workspace}-processing-sub`,
+            name: `${ctx.tenant.id}-processing-sub`,
             op: "iguhealth.worker",
           },
           async (transaction) => {
@@ -324,7 +328,7 @@ function processSubscription(
                 transaction,
                 {
                   op: `iguhealth.worker.checkingCriteria`,
-                  name: `${ctx.workspace}-processing-sub-checking-criteria`,
+                  name: `${ctx.tenant.id}-processing-sub-checking-criteria`,
                   description:
                     "Checking if history poll fits subscription criteria",
                 },
@@ -347,7 +351,7 @@ function processSubscription(
               transaction,
               {
                 op: `iguhealth.worker.handlingPayload`,
-                name: `${ctx.workspace}-processing-sub-handling-payload`,
+                name: `${ctx.tenant.id}-processing-sub-handling-payload`,
                 description:
                   "Checking if history poll fits subscription criteria",
               },
@@ -389,18 +393,20 @@ function processSubscription(
   };
 }
 
-async function getActiveWorkspaces(pool: pg.Pool): Promise<Workspace[]> {
-  return (
-    await pool.query("SELECT id from workspaces where deleted = $1", [false])
-  ).rows.map((row) => row.id);
+async function getActiveTenants(pool: pg.Pool): Promise<TenantId[]> {
+  const tenants = await db.sql<s.workspaces.SQL, s.workspaces.Selectable[]>`
+    SELECT ${"id"} from ${"workspaces"} where ${{ deleted: false }}
+  `.run(pool);
+
+  return tenants.map((w) => w.id as TenantId);
 }
 
 async function createWorker(workerID = randomUUID(), loopInterval = 500) {
   logger.info({ workerID }, `Worker started with interval '${loopInterval}'`);
 
-  // Using a pool directly because need to query up workspaces.
   const getCTX = await createGetCTXFn();
 
+  // Using a pool directly because need to query up tenants.
   const pool = new pg.Pool({
     user: process.env["FHIR_DATABASE_USERNAME"],
     password: process.env["FHIR_DATABASE_PASSWORD"],
@@ -416,14 +422,14 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
   /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
   while (isRunning) {
     try {
-      const activeWorkspaces = await getActiveWorkspaces(pool);
+      const activeTenants = await getActiveTenants(pool);
 
-      for (const workspace of activeWorkspaces) {
+      for (const tenant of activeTenants) {
         const pgPool = await pool.connect();
         try {
           const ctx = getCTX({
             pg: pgPool,
-            workspace,
+            tenant: { id: tenant, superAdmin: true },
             author: `system-worker-${workerID}` as Author,
           });
 
@@ -438,7 +444,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
               throw new Error("Subscription ID was undefined.");
             try {
               await ctx.lock.withLock(
-                subscriptionLockKey(workspace, subscriptionId),
+                subscriptionLockKey(tenant, subscriptionId),
                 processSubscription(workerID, ctx, subscriptionId)
               );
             } catch (e) {

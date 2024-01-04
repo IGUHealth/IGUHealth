@@ -1,11 +1,12 @@
 import Redis from "ioredis";
 import { IOCache } from "./interface.js";
+import { Tenant } from "../ctx/types.js";
 
-function constructKey(workspace: string, key: string) {
-  return `${workspace}/${key}`;
+function constructKey(tenant: Tenant, key: string) {
+  return `${tenant.id}/${key}`;
 }
 
-export default class RedisCache<CTX extends { workspace: string }>
+export default class RedisCache<CTX extends { tenant: Tenant }>
   implements IOCache<CTX>
 {
   private _client: Redis.default;
@@ -13,7 +14,7 @@ export default class RedisCache<CTX extends { workspace: string }>
     this._client = client;
   }
   async get(ctx: CTX, key: string) {
-    const value = await this._client.get(constructKey(ctx.workspace, key));
+    const value = await this._client.get(constructKey(ctx.tenant, key));
     return value;
   }
   async set(ctx: CTX, key: string, value: string | number) {
@@ -22,7 +23,7 @@ export default class RedisCache<CTX extends { workspace: string }>
         `Saving to redis cache must be of type 'string' or 'number' not ${typeof value}`
       );
     }
-    await this._client.set(constructKey(ctx.workspace, key), value);
+    await this._client.set(constructKey(ctx.tenant, key), value);
     return;
   }
 }

@@ -75,7 +75,7 @@ export async function encryptValue<T extends object>(
 
       if (encryptExtensionValue[0].valueOf() !== value.valueOf()) {
         const encryptedValue = await encryptionProvider.encrypt(
-          { workspace: ctx.workspace },
+          { workspace: ctx.tenant.id },
           value.valueOf() as string
         );
         return [

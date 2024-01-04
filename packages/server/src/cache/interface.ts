@@ -1,4 +1,6 @@
-export interface IOCache<CTX extends { workspace: string }> {
+import type { Tenant } from "../ctx/types.js";
+
+export interface IOCache<CTX extends { tenant: Tenant }> {
   get(ctx: CTX, key: string): Promise<string | number | null>;
   set(ctx: CTX, key: string, value: string | number): Promise<void>;
 }

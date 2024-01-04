@@ -1,5 +1,3 @@
-import type * as s from "zapatos/schema";
-
 import { ResourceType, SearchParameter } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -55,11 +53,20 @@ export function getDecimalPrecision(value: number): number {
   return decimalPrecision;
 }
 
+type SearchTables =
+  | "date_idx"
+  | "number_idx"
+  | "quantity_idx"
+  | "reference_idx"
+  | "string_idx"
+  | "token_idx"
+  | "uri_idx";
+
 export function searchParameterToTableName(
   searchparameter_type: SearchParameter["type"]
-): s.Table {
+): SearchTables {
   if (param_types_supported.includes(searchparameter_type)) {
-    return `${searchparameter_type}_idx` as s.Table;
+    return `${searchparameter_type}_idx` as SearchTables;
   }
   throw new OperationError(
     outcomeError(
