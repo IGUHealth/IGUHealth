@@ -12,8 +12,7 @@ Access to a tenant is determined by JWT tokens. JWT tokens are expected to have 
 Requests are structured in the following format:
 URL: /w/:tenant/api/:version/fhir/:fhir_version/:\*,
 
-- **tenant:**
-  slug identifying the tenant a user is attempting to access.
+- **tenant:** slug identifying the tenant a user is attempting to access.
 - **version:** IGUHealth api version.
 - **fhir_version:** FHIR version for the request.
 
@@ -23,6 +22,6 @@ When a request comes in the tenant slug is extracted and then checked against th
 
 ### Custom Claims
 
-| Name                          | type                                 | description                                                            |
-| ----------------------------- | ------------------------------------ | ---------------------------------------------------------------------- |
-| https://iguhealth.app/tenants | {id: string, superAdmin: boolean} [] | Which tenants a user has access too and whether they are a superadmin. |
+| Name                          | type                                  | description                                                            |
+| ----------------------------- | ------------------------------------- | ---------------------------------------------------------------------- |
+| https://iguhealth.app/tenants | `{id: string, superAdmin: boolean}[]` | Which tenants a user has access too and whether they are a superadmin. |
