@@ -16,6 +16,7 @@ import {
   Quantity,
   Range,
   Reference,
+  Resource,
   ResourceType,
   SearchParameter,
   uri,
@@ -28,7 +29,6 @@ import {
 } from "@iguhealth/meta-value";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../ctx/types.js";
 import { getDecimalPrecision } from "./parameters.js";
 
 // ---------------------------------------------------------
@@ -161,9 +161,12 @@ export function toURIParameters(
 }
 
 export async function toReference(
-  ctx: FHIRServerCTX,
   parameter: SearchParameter,
-  value: MetaValueSingular<NonNullable<unknown>>
+  value: MetaValueSingular<NonNullable<unknown>>,
+  resolveCanonical?: (
+    types: ResourceType[],
+    url: canonical
+  ) => Promise<Resource | undefined>
 ): Promise<
   Array<{
     reference: Reference;
@@ -199,20 +202,24 @@ export async function toReference(
             `no target specified on canonical search parameter '${parameter.name}'`
           )
         );
-      const results = await ctx.client.search_system(ctx, [
-        { name: "_type", value: parameter.target },
-        { name: "url", value: [value.valueOf() as canonical | uri] },
-      ]);
-      if (results.resources.length !== 1) {
+      const resource = resolveCanonical
+        ? await resolveCanonical(
+            parameter.target as ResourceType[],
+            value.valueOf().toString() as canonical
+          )
+        : undefined;
+
+      if (!resource) {
         return [];
       }
+
       return [
         {
           reference: {
-            reference: `${results.resources[0].resourceType}/${results.resources[0].id}`,
+            reference: `${resource.resourceType}/${resource.id}`,
           },
-          resourceType: results.resources[0].resourceType,
-          id: results.resources[0].id,
+          resourceType: resource.resourceType,
+          id: resource.id,
           url: value.valueOf() as canonical | uri,
         },
       ];

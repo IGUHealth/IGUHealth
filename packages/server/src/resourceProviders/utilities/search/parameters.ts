@@ -3,8 +3,8 @@ import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { FHIRRequest } from "@iguhealth/client/types";
 import { ParsedParameter } from "@iguhealth/client/url";
+import { FHIRClientAsync } from "@iguhealth/client/interface";
 
-import { FHIRServerCTX } from "../../../ctx/types.js";
 import { param_types_supported } from "../../postgres/constants.js";
 
 export type SearchParameterResource = ParsedParameter<string | number> & {
@@ -199,12 +199,16 @@ export function isSearchResultParameter(
   }
 }
 
-export async function findSearchParameter<CTX extends FHIRServerCTX>(
+export async function findSearchParameter<
+  CTX,
+  Client extends FHIRClientAsync<CTX>
+>(
+  client: Client,
   ctx: CTX,
   resourceTypes: ResourceType[],
   name: string
 ): Promise<SearchParameter[]> {
-  const result = await ctx.client.search_type(ctx, "SearchParameter", [
+  const result = await client.search_type(ctx, "SearchParameter", [
     { name: "name", value: [name] },
     {
       name: "type",

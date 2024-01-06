@@ -14,7 +14,7 @@ import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 import { AsynchronousClient } from "@iguhealth/client";
 
 import { InlineOp } from "./interface.js";
-import { FHIRServerCTX } from "../../ctx/types.js";
+import { FHIRServerCTX } from "../../fhir/types.js";
 
 function createExecutor(): MiddlewareAsync<
   InlineOp<unknown, unknown>[],

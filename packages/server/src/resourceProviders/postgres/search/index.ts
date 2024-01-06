@@ -9,7 +9,7 @@ import {
 import { Resource, ResourceType, id } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../ctx/types.js";
+import { FHIRServerCTX } from "../../../fhir/types.js";
 import {
   SearchParameterResource,
   SearchParameterResult,
@@ -44,7 +44,7 @@ async function ensureLatest(
   const idParameter = (
     await parametersWithMetaAssociated(
       async (resourceTypes, name) =>
-        await findSearchParameter(ctx, resourceTypes, name),
+        await findSearchParameter(ctx.client, ctx, resourceTypes, name),
       resourceTypes,
       [{ name: "_id", modifier: "missing", value: ["false"] }]
     )
@@ -186,7 +186,7 @@ export async function executeSearchQuery(
 
   const parameters = await parametersWithMetaAssociated(
     async (resourceTypes, name) =>
-      await findSearchParameter(ctx, resourceTypes, name),
+      await findSearchParameter(ctx.client, ctx, resourceTypes, name),
     resourceTypes,
     request.parameters
   );

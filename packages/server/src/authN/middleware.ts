@@ -67,6 +67,7 @@ export const allowPublicAccessMiddleware: Koa.Middleware = async (
   ctx.state = {
     ...ctx.state,
     user: {
+      iss: IGUHEALTH_ISSUER,
       sub: "public-user",
       access_token: "sec-public",
       "https://iguhealth.app/tenants": [

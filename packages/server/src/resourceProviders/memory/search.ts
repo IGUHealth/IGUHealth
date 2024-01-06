@@ -13,12 +13,21 @@ import {
   toStringParameters,
   toTokenParameters,
 } from "../utilities/search/dataConversion.js";
-import { FHIRServerCTX } from "../../ctx/types.js";
+import { FHIRServerCTX } from "../../fhir/types.js";
 
 dayjs.extend(isBetween);
 
-async function expressionSearch(
-  ctx: FHIRServerCTX,
+interface MemorySearchCTX {
+  resolveCanonical: FHIRServerCTX["resolveCanonical"];
+  resolveTypeToCanonical: FHIRServerCTX["resolveTypeToCanonical"];
+  /*
+   ** Used to resolve remote canonicals in the toReference function.
+   */
+  resolveRemoteCanonical?: Parameters<typeof toReference>[2];
+}
+
+async function expressionSearch<CTX extends MemorySearchCTX>(
+  ctx: CTX,
   resource: Resource,
   parameter: SearchParameterResource
 ) {
@@ -103,15 +112,16 @@ async function expressionSearch(
       }
       return false;
     }
-    // case "reference": {
-    //   const references = await Promise.all(
-    //     evaluation.map((v) => toReference(ctx, parameter.searchParameter, v))
-    //   );
-    // }
     case "reference": {
       const references = (
         await Promise.all(
-          evaluation.map((v) => toReference(ctx, parameter.searchParameter, v))
+          evaluation.map((v) =>
+            toReference(
+              parameter.searchParameter,
+              v,
+              ctx.resolveRemoteCanonical
+            )
+          )
         )
       ).flat();
 
@@ -175,8 +185,8 @@ async function expressionSearch(
   }
 }
 
-function checkParameterWithResource(
-  ctx: FHIRServerCTX,
+function checkParameterWithResource<CTX extends MemorySearchCTX>(
+  ctx: CTX,
   resource: Resource,
   parameter: SearchParameterResource
 ) {
@@ -203,8 +213,8 @@ function checkParameterWithResource(
   }
 }
 
-export async function fitsSearchCriteria(
-  ctx: FHIRServerCTX,
+export async function fitsSearchCriteria<CTX extends MemorySearchCTX>(
+  ctx: CTX,
   resource: Resource,
   parameters: SearchParameterResource[]
 ) {

@@ -1,6 +1,6 @@
 import { ValueSetValidateCode } from "@iguhealth/generated-ops/r4";
 
-import { FHIRServerCTX } from "../../../ctx/types.js";
+import { FHIRServerCTX } from "../../../fhir/types.js";
 import InlineOperation from "../interface.js";
 import { FHIRRequest } from "@iguhealth/client/types";
 
