@@ -53,6 +53,9 @@ async function ensureLatest(
   return resourceParameters.concat(idParameter);
 }
 
+const getIds: (resources: Resource[]) => id[] = (resources) =>
+  resources.map((r) => r.id).filter((r): r is id => r !== undefined);
+
 async function processRevInclude(
   ctx: FHIRServerCTX,
   param: SearchParameterResult,
@@ -66,7 +69,7 @@ async function processRevInclude(
       )
     );
 
-  const ids = results.map((r) => r.id).filter((r): r is id => r !== undefined);
+  const ids = getIds(results);
   if (ids.length === 0) return [];
 
   return (
@@ -109,7 +112,7 @@ async function processInclude(
       )
     );
 
-  const ids = results.map((r) => r.id).filter((r): r is id => r !== undefined);
+  const ids = getIds(results);
   if (ids.length === 0) return [];
 
   return (
