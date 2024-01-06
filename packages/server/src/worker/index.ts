@@ -60,6 +60,8 @@ import RedisLock from "../synchronization/redis.lock.js";
 import RedisCache from "../cache/redis.js";
 import { AsynchronousClient } from "@iguhealth/client";
 import { IOCache } from "../cache/interface.js";
+import { toReference } from "../resourceProviders/utilities/search/dataConversion.js";
+import { createResolverRemoteCanonical } from "../resourceProviders/utilities/canonical.js";
 
 dotEnv.config();
 
@@ -222,6 +224,7 @@ function processSubscription(
     cache: IOCache<FHIRServerInitCTX>;
     resolveCanonical: FHIRServerCTX["resolveCanonical"];
     resolveTypeToCanonical: FHIRServerCTX["resolveTypeToCanonical"];
+    resolveRemoteCanonical: Parameters<typeof toReference>[2];
   },
   server: AsynchronousClient<unknown, FHIRServerInitCTX>,
   ctx: FHIRServerInitCTX,
@@ -494,6 +497,10 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
                   cache,
                   resolveCanonical,
                   resolveTypeToCanonical,
+                  resolveRemoteCanonical: createResolverRemoteCanonical(
+                    fhirServer,
+                    ctx
+                  ),
                 },
                 fhirServer,
                 ctx,

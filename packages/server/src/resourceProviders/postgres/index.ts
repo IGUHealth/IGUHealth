@@ -60,6 +60,7 @@ import {
   SystemHistoryRequest,
   TypeHistoryRequest,
 } from "@iguhealth/client/lib/types";
+import { createResolverRemoteCanonical } from "../utilities/canonical.js";
 
 async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
@@ -155,18 +156,11 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
       const references = (
         await Promise.all(
           evaluation.map((v) =>
-            toReference(parameter, v, async (types, url) => {
-              const value = v.valueOf();
-              if (typeof value !== "string") return undefined;
-              const results = await ctx.client.search_system(ctx, [
-                { name: "_type", value: types },
-                { name: "url", value: [url] },
-              ]);
-              if (results.resources.length !== 1) {
-                return undefined;
-              }
-              return results.resources[0];
-            })
+            toReference(
+              parameter,
+              v,
+              createResolverRemoteCanonical(ctx.client, ctx)
+            )
           )
         )
       ).flat();

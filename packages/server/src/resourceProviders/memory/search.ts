@@ -17,12 +17,16 @@ import { FHIRServerCTX } from "../../fhir/types.js";
 
 dayjs.extend(isBetween);
 
-interface ResolveCTX {
+interface MemorySearchCTX {
   resolveCanonical: FHIRServerCTX["resolveCanonical"];
   resolveTypeToCanonical: FHIRServerCTX["resolveTypeToCanonical"];
+  /*
+   ** Used to resolve remote canonicals in the toReference function.
+   */
+  resolveRemoteCanonical?: Parameters<typeof toReference>[2];
 }
 
-async function expressionSearch<CTX extends ResolveCTX>(
+async function expressionSearch<CTX extends MemorySearchCTX>(
   ctx: CTX,
   resource: Resource,
   parameter: SearchParameterResource
@@ -111,7 +115,13 @@ async function expressionSearch<CTX extends ResolveCTX>(
     case "reference": {
       const references = (
         await Promise.all(
-          evaluation.map((v) => toReference(parameter.searchParameter, v))
+          evaluation.map((v) =>
+            toReference(
+              parameter.searchParameter,
+              v,
+              ctx.resolveRemoteCanonical
+            )
+          )
         )
       ).flat();
 
@@ -175,7 +185,7 @@ async function expressionSearch<CTX extends ResolveCTX>(
   }
 }
 
-function checkParameterWithResource<CTX extends ResolveCTX>(
+function checkParameterWithResource<CTX extends MemorySearchCTX>(
   ctx: CTX,
   resource: Resource,
   parameter: SearchParameterResource
@@ -203,7 +213,7 @@ function checkParameterWithResource<CTX extends ResolveCTX>(
   }
 }
 
-export async function fitsSearchCriteria<CTX extends ResolveCTX>(
+export async function fitsSearchCriteria<CTX extends MemorySearchCTX>(
   ctx: CTX,
   resource: Resource,
   parameters: SearchParameterResource[]
