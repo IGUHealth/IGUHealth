@@ -292,47 +292,47 @@ const encryptionMiddleware: (
     }
   };
 
-const associateUserMiddleware: (
-  client: FHIRClientAsync<FHIRServerCTX>
-) => Parameters<typeof RouterClient>[0][number] =
-  (client: FHIRClientAsync<FHIRServerCTX>) => async (context, next) => {
-    if (!next) throw new Error("next middleware was not defined");
-    const usersAndAccessPolicies = (await client.search_type(
-      context.ctx,
-      "User",
-      [
-        {
-          name: "identifier",
-          value: [`${context.ctx.user.jwt.iss}|${context.ctx.user.jwt.sub}`],
-        },
-        { name: "_revinclude", value: ["AccessPolicy:link"] },
-      ]
-    )) as {
-      total?: number;
-      resources: (User | AccessPolicy)[];
-    };
-
-    if (context.ctx.user.resource === undefined) {
-      const userResource = usersAndAccessPolicies.resources.filter(
-        (v): v is User => v.resourceType === "User"
-      );
-      const accessPolicies = usersAndAccessPolicies.resources.filter(
-        (v): v is AccessPolicy => v.resourceType === "AccessPolicy"
-      );
-      return next({
-        ...context,
-        ctx: {
-          ...context.ctx,
-          user: {
-            ...context.ctx.user,
-            resource: userResource[0] || null,
-            accessPolicies: accessPolicies || null,
-          },
-        },
-      });
-    }
-    return next(context);
+const associateUserMiddleware: MiddlewareAsync<
+  FHIRServerState,
+  FHIRServerCTX | FHIRServerInitCTX
+> = async (context, next) => {
+  if (!isServerCTX(context.ctx)) throw new Error();
+  if (!next) throw new Error("next middleware was not defined");
+  const usersAndAccessPolicies = (await context.ctx.client.search_type(
+    context.ctx,
+    "User",
+    [
+      {
+        name: "identifier",
+        value: [`${context.ctx.user.jwt.iss}|${context.ctx.user.jwt.sub}`],
+      },
+      { name: "_revinclude", value: ["AccessPolicy:link"] },
+    ]
+  )) as {
+    total?: number;
+    resources: (User | AccessPolicy)[];
   };
+
+  const userResource = usersAndAccessPolicies.resources.filter(
+    (r): r is User => r.resourceType === "User"
+  );
+
+  const accessPolicies = usersAndAccessPolicies.resources.filter(
+    (r): r is AccessPolicy => r.resourceType === "AccessPolicy"
+  );
+
+  return next({
+    ...context,
+    ctx: {
+      ...context.ctx,
+      user: {
+        ...context.ctx.user,
+        resource: userResource[0] || null,
+        accessPolicies: accessPolicies || null,
+      },
+    },
+  });
+};
 
 export function createResolveCanonical(
   data: InternalData<ResourceType>
@@ -394,8 +394,14 @@ export function getRedisClient() {
   return redisClient;
 }
 
+function isServerCTX(
+  ctx: FHIRServerCTX | FHIRServerInitCTX
+): ctx is FHIRServerCTX {
+  return "client" in ctx;
+}
+
 async function createFHIRMiddleware(): Promise<
-  MiddlewareAsync<FHIRServerState, FHIRServerInitCTX>
+  MiddlewareAsync<FHIRServerState, FHIRServerInitCTX | FHIRServerCTX>
 > {
   const data = createMemoryData(MEMORY_TYPES);
   const memDBAsync = MemoryDatabaseAsync(data);
@@ -448,7 +454,7 @@ async function createFHIRMiddleware(): Promise<
   };
 
   return createMiddlewareAsync([
-    async (context, _next) => {
+    async (context, next) => {
       let pgPoolClient: pg.PoolClient | undefined;
       try {
         pgPoolClient = await context.state.pool.connect();
@@ -507,25 +513,38 @@ async function createFHIRMiddleware(): Promise<
           ]
         );
 
-        return {
+        if (!next)
+          throw new Error("Server middleware initiation does not have next.");
+
+        return next({
           state: context.state,
-          ctx: context.ctx,
+          ctx: {
+            ...services,
+            ...context.ctx,
+            client,
+            logger: context.state.logger,
+            lock: context.state.lock,
+            cache: context.state.cache,
+          },
           request: context.request,
-          response: await client.request(
-            {
-              ...services,
-              ...context.ctx,
-              client,
-              logger: context.state.logger,
-              lock: context.state.lock,
-              cache: context.state.cache,
-            },
-            context.request
-          ),
-        };
+        });
       } finally {
         if (pgPoolClient) pgPoolClient.release();
       }
+    },
+    associateUserMiddleware,
+    async (context, _next) => {
+      if (!isServerCTX(context.ctx)) throw new Error("Must be server context.");
+
+      return {
+        state: context.state,
+        ctx: context.ctx,
+        request: context.request,
+        response: await context.ctx.client.request(
+          context.ctx,
+          context.request
+        ),
+      };
     },
   ]);
 }
