@@ -67,6 +67,7 @@ async function processRevInclude(
     );
 
   const ids = results.map((r) => r.id).filter((r): r is id => r !== undefined);
+  if (ids.length === 0) return [];
 
   return (
     await Promise.all(
@@ -108,13 +109,16 @@ async function processInclude(
       )
     );
 
+  const ids = results.map((r) => r.id).filter((r): r is id => r !== undefined);
+  if (ids.length === 0) return [];
+
   return (
     await Promise.all(
       param.value.map(async (v) => {
         const include = v.toString().split(":");
         if (include.length !== 2)
           throw new OperationError(
-            outcomeError("invalid", "Invalid _revinclude parameter")
+            outcomeError("invalid", "Invalid _include parameter")
           );
         const resourceType = include[0] as ResourceType;
         const includeParameterName = include[1];
@@ -149,9 +153,7 @@ async function processInclude(
         >`
         SELECT ${"reference_id"}, ${"reference_type"}
         FROM ${"reference_idx"} 
-        WHERE ${"r_id"} IN (${sqlUtils.paramsWithComma(
-          results.map((r) => r.id)
-        )}) AND
+        WHERE ${"r_id"} IN (${sqlUtils.paramsWithComma(ids)}) AND
         ${"parameter_url"} = ${db.param(
           includeParameterSearchParam.resources[0].url
         )}
