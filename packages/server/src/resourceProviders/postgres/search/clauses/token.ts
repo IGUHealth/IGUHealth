@@ -1,7 +1,7 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
-import { FHIRServerCTX } from "../../../../ctx/types.js";
+import { FHIRServerCTX } from "../../../../fhir/types.js";
 import { SearchParameterResource } from "../../../utilities/search/parameters.js";
 import { missingModifier } from "./shared.js";
 

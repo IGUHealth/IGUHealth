@@ -5,8 +5,9 @@ import {
   instant,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
+import { FHIRClientAsync } from "@iguhealth/client/interface";
 
-import { FHIRServerCTX } from "../ctx/types.js";
+import { FHIRServerInitCTX } from "../fhir/types.js";
 
 export type OUTCOMES = {
   SUCCESS: "0";
@@ -20,8 +21,12 @@ export const MINOR_FAILURE: OUTCOMES["MINOR_FAILURE"] = "4";
 export const SERIOUS_FAILURE: OUTCOMES["SERIOUS_FAILURE"] = "8";
 export const MAJOR_FAILURE: OUTCOMES["MAJOR_FAILURE"] = "12";
 
-export default async function logAuditEvent(
-  ctx: FHIRServerCTX,
+export default async function logAuditEvent<
+  CTX extends FHIRServerInitCTX,
+  Client extends FHIRClientAsync<CTX>
+>(
+  client: Client,
+  ctx: CTX,
   outcome: OUTCOMES[keyof OUTCOMES],
   entity: Reference,
   outcomeDescription: string
@@ -37,8 +42,8 @@ export default async function logAuditEvent(
     outcomeDesc: outcomeDescription,
     agent: [
       {
-        altId: ctx.author,
-        name: ctx.author,
+        altId: ctx.user.jwt.sub,
+        name: ctx.user.jwt.sub,
         requestor: true,
       },
     ],
@@ -57,6 +62,6 @@ export default async function logAuditEvent(
     ],
   };
 
-  const savedAuditEvent = await ctx.client.create(ctx, auditEvent);
+  const savedAuditEvent = await client.create(ctx, auditEvent);
   return savedAuditEvent;
 }

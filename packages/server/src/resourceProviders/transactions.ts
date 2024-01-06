@@ -4,7 +4,7 @@ import pg from "pg";
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { Bundle, Reference, uri } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
-import { FHIRServerCTX } from "../ctx/types.js";
+import { FHIRServerCTX } from "../fhir/types.js";
 
 function getTransactionFullUrls(transaction: Bundle): Record<string, number> {
   const record: Record<string, number> = {};

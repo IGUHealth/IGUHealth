@@ -20,7 +20,7 @@ import {
 } from "../utilities/search/parameters.js";
 import { InternalData } from "./types.js";
 import { fitsSearchCriteria } from "./search.js";
-import { FHIRServerCTX } from "../../ctx/types.js";
+import { FHIRServerCTX } from "../../fhir/types.js";
 
 // Need special handling of SearchParameter to avoid infinite recursion.
 async function resolveParameter(

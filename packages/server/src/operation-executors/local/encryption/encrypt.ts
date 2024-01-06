@@ -1,7 +1,7 @@
 import { FHIRRequest } from "@iguhealth/client/types";
 import { IguhealthEncrypt } from "@iguhealth/generated-ops/r4";
 
-import { FHIRServerCTX } from "../../../ctx/types.js";
+import { FHIRServerCTX } from "../../../fhir/types.js";
 import InlineOperation from "../interface.js";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 

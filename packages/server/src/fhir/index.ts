@@ -18,40 +18,46 @@ import {
   code,
   canonical,
   uri,
+  User,
+  AccessPolicy,
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { FHIRRequest } from "@iguhealth/client/types";
 
 import { createPostgresClient } from "../resourceProviders/postgres/index.js";
-import { FHIRServerCTX } from "./types.js";
+import { FHIRServerCTX, FHIRServerInitCTX, FHIRServerState } from "./types.js";
 import { InternalData } from "../resourceProviders/memory/types.js";
 import MemoryDatabaseAsync from "../resourceProviders/memory/async.js";
 import RouterClient from "../resourceProviders/router.js";
-import RedisLock from "../synchronization/redis.lock.js";
 import InlineExecutioner from "../operation-executors/local/index.js";
 import StructureDefinitionSnapshotInvoke from "../operation-executors/local/structureDefinition/snapshot.js";
 import IguhealthEncryptInvoke from "../operation-executors/local/encryption/encrypt.js";
-import ResourceValidateInvoke from "../operation-executors/local/resource_validate.js";
+import ResourceValidateInvoke, {
+  validateResource,
+} from "../operation-executors/local/resource_validate.js";
 import ValueSetExpandInvoke from "../operation-executors/local/terminology/expand.js";
 import ValueSetValidateInvoke from "../operation-executors/local/terminology/validate.js";
 import CodeSystemLookupInvoke from "../operation-executors/local/terminology/lookup.js";
 import AWSLambdaExecutioner from "../operation-executors/awsLambda/index.js";
-import RedisCache from "../cache/redis.js";
 import { TerminologyProviderMemory } from "../terminology/index.js";
 import { AWSKMSProvider } from "../encryption/provider/kms.js";
 import { encryptValue } from "../encryption/index.js";
-import { validateResource } from "../operation-executors/local/resource_validate.js";
 import JSONPatchSchema from "../schemas/jsonpatch.schema.js";
+import {
+  MiddlewareAsync,
+  createMiddlewareAsync,
+} from "@iguhealth/client/middleware";
+import { AsynchronousClient } from "@iguhealth/client";
 
-const MEMORY_TYPES: ResourceType[] = [
+export const MEMORY_TYPES: ResourceType[] = [
   "StructureDefinition",
   "SearchParameter",
   "ValueSet",
   "CodeSystem",
 ];
 
-function createMemoryData(
+export function createMemoryData(
   resourceTypes: ResourceType[]
 ): InternalData<ResourceType> {
   const artifactResources: Resource[] = resourceTypes
@@ -286,13 +292,55 @@ const encryptionMiddleware: (
     }
   };
 
-function createResolveCanonical(
+const associateUserMiddleware: (
+  client: FHIRClientAsync<FHIRServerCTX>
+) => Parameters<typeof RouterClient>[0][number] =
+  (client: FHIRClientAsync<FHIRServerCTX>) => async (context, next) => {
+    if (!next) throw new Error("next middleware was not defined");
+    const usersAndAccessPolicies = (await client.search_type(
+      context.ctx,
+      "User",
+      [
+        {
+          name: "identifier",
+          value: [`${context.ctx.user.jwt.iss}|${context.ctx.user.jwt.sub}`],
+        },
+        { name: "_revinclude", value: ["AccessPolicy:link"] },
+      ]
+    )) as {
+      total?: number;
+      resources: (User | AccessPolicy)[];
+    };
+
+    if (context.ctx.user.resource === undefined) {
+      const userResource = usersAndAccessPolicies.resources.filter(
+        (v): v is User => v.resourceType === "User"
+      );
+      const accessPolicies = usersAndAccessPolicies.resources.filter(
+        (v): v is AccessPolicy => v.resourceType === "AccessPolicy"
+      );
+      return next({
+        ...context,
+        ctx: {
+          ...context.ctx,
+          user: {
+            ...context.ctx.user,
+            resource: userResource[0] || null,
+            accessPolicies: accessPolicies || null,
+          },
+        },
+      });
+    }
+    return next(context);
+  };
+
+export function createResolveCanonical(
   data: InternalData<ResourceType>
 ): <T extends ResourceType>(type: T, url: string) => AResource<T> | undefined {
   const map = new Map<ResourceType, Map<string, string>>();
   for (const resourceType of Object.keys(data)) {
     for (const resource of Object.values(
-      data[resourceType as ResourceType] || {}
+      data[resourceType as ResourceType] ?? {}
     )) {
       if ((resource as { url: string })?.url) {
         if (!map.has(resourceType as ResourceType)) {
@@ -313,7 +361,7 @@ function createResolveCanonical(
   };
 }
 
-function createResolveTypeToCanonical(
+export function createResolveTypeToCanonical(
   data: InternalData<ResourceType>
 ): (type: uri) => canonical | undefined {
   const map = new Map<uri, canonical>();
@@ -346,15 +394,8 @@ export function getRedisClient() {
   return redisClient;
 }
 
-export async function createGetCTXFn(): Promise<
-  ({
-    pg,
-    tenant,
-    author,
-    user_access_token,
-  }: Pick<FHIRServerCTX, "tenant" | "author" | "user_access_token"> & {
-    pg: pg.PoolClient;
-  }) => FHIRServerCTX
+async function createFHIRMiddleware(): Promise<
+  MiddlewareAsync<FHIRServerState, FHIRServerInitCTX>
 > {
   const data = createMemoryData(MEMORY_TYPES);
   const memDBAsync = MemoryDatabaseAsync(data);
@@ -389,11 +430,6 @@ export async function createGetCTXFn(): Promise<
     memDBAsync
   );
 
-  const redisClient = getRedisClient();
-
-  const cache = new RedisCache(redisClient);
-  const lock = new RedisLock(redisClient);
-
   const lambdaExecutioner = AWSLambdaExecutioner({
     AWS_REGION: process.env.AWS_REGION as string,
     AWS_ACCESS_KEY_ID: process.env.AWS_LAMBDA_ACCESS_KEY_ID as string,
@@ -402,73 +438,98 @@ export async function createGetCTXFn(): Promise<
     LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
   });
 
-  return ({ pg, tenant, author, user_access_token }) => {
-    const client = RouterClient(
-      [
-        validationMiddleware,
-        capabilitiesMiddleware,
-        encryptionMiddleware(["OperationDefinition"]),
-      ],
-      [
-        // OP INVOCATION
-        {
-          useSource: (request) => {
-            return (
-              request.type === "invoke-request" &&
-              inlineOperationExecution
-                .supportedOperations()
-                .map((op) => op.code)
-                .includes(request.operation)
-            );
-          },
-          source: inlineOperationExecution,
-        },
-        {
-          resourcesSupported: [...resourceTypes] as ResourceType[],
-          interactionsSupported: ["invoke-request"],
-          source: lambdaExecutioner,
-        },
-        {
-          resourcesSupported: MEMORY_TYPES,
-          interactionsSupported: ["read-request", "search-request"],
-          source: memDBAsync,
-        },
-        {
-          resourcesSupported: [...resourceTypes].filter(
-            (type) => MEMORY_TYPES.indexOf(type as ResourceType) === -1
-          ) as ResourceType[],
-          interactionsSupported: [
-            "read-request",
-            "search-request",
-            "create-request",
-            "patch-request",
-            "update-request",
-            "delete-request",
-            "history-request",
-            "transaction-request",
-          ],
-          source: createPostgresClient(pg, {
-            transaction_entry_limit: parseInt(
-              process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20"
-            ),
-          }),
-        },
-      ]
-    );
+  const services = {
+    capabilities,
+    terminologyProvider,
+    encryptionProvider,
 
-    return {
-      tenant,
-      author,
-      user_access_token,
-      logger,
-      terminologyProvider,
-      capabilities,
-      client,
-      cache,
-      lock,
-      encryptionProvider,
-      resolveCanonical,
-      resolveTypeToCanonical,
-    };
+    resolveCanonical,
+    resolveTypeToCanonical,
   };
+
+  return createMiddlewareAsync([
+    async (context, _next) => {
+      let pgPoolClient: pg.PoolClient | undefined;
+      try {
+        pgPoolClient = await context.state.pool.connect();
+        const fhirPostgreSQL = createPostgresClient(pgPoolClient, {
+          transaction_entry_limit: parseInt(
+            process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20"
+          ),
+        });
+
+        const client = RouterClient(
+          [
+            validationMiddleware,
+            capabilitiesMiddleware,
+            encryptionMiddleware(["OperationDefinition"]),
+          ],
+          [
+            // OP INVOCATION
+            {
+              useSource: (request) => {
+                return (
+                  request.type === "invoke-request" &&
+                  inlineOperationExecution
+                    .supportedOperations()
+                    .map((op) => op.code)
+                    .includes(request.operation)
+                );
+              },
+              source: inlineOperationExecution,
+            },
+            {
+              resourcesSupported: [...resourceTypes] as ResourceType[],
+              interactionsSupported: ["invoke-request"],
+              source: lambdaExecutioner,
+            },
+            {
+              resourcesSupported: MEMORY_TYPES,
+              interactionsSupported: ["read-request", "search-request"],
+              source: memDBAsync,
+            },
+            {
+              resourcesSupported: [...resourceTypes].filter(
+                (type) => MEMORY_TYPES.indexOf(type as ResourceType) === -1
+              ) as ResourceType[],
+              interactionsSupported: [
+                "read-request",
+                "search-request",
+                "create-request",
+                "patch-request",
+                "update-request",
+                "delete-request",
+                "history-request",
+                "transaction-request",
+              ],
+              source: fhirPostgreSQL,
+            },
+          ]
+        );
+
+        return {
+          state: context.state,
+          ctx: context.ctx,
+          request: context.request,
+          response: await client.request(
+            {
+              ...services,
+              ...context.ctx,
+              client,
+              logger: context.state.logger,
+              lock: context.state.lock,
+              cache: context.state.cache,
+            },
+            context.request
+          ),
+        };
+      } finally {
+        if (pgPoolClient) pgPoolClient.release();
+      }
+    },
+  ]);
+}
+
+export async function createFHIRServer(state: FHIRServerState) {
+  return new AsynchronousClient(state, await createFHIRMiddleware());
 }

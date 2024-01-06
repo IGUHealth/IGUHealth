@@ -2,6 +2,7 @@
 import dotEnv from "dotenv";
 import pg from "pg";
 import { randomUUID } from "crypto";
+import type { Logger } from "pino";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
@@ -23,13 +24,26 @@ import { Operation } from "@iguhealth/operation-execution";
 import * as Sentry from "../monitoring/sentry.js";
 import { LIB_VERSION } from "../version.js";
 import { resolveOperationDefinition } from "../operation-executors/utilities.js";
-import { createGetCTXFn, logger } from "../ctx/index.js";
+import {
+  MEMORY_TYPES,
+  createFHIRServer,
+  createMemoryData,
+  createResolveCanonical,
+  createResolveTypeToCanonical,
+  getRedisClient,
+  logger,
+} from "../fhir/index.js";
 import logAuditEvent, {
   MAJOR_FAILURE,
   SERIOUS_FAILURE,
 } from "../logging/auditEvents.js";
 import { httpRequestToFHIRRequest } from "../http/index.js";
-import { Author, FHIRServerCTX, TenantId } from "../ctx/types.js";
+import {
+  FHIRServerCTX,
+  FHIRServerInitCTX,
+  JWT,
+  TenantId,
+} from "../fhir/types.js";
 import {
   SearchParameterResource,
   deriveResourceTypeFilter,
@@ -37,11 +51,15 @@ import {
   findSearchParameter,
 } from "../resourceProviders/utilities/search/parameters.js";
 import { fitsSearchCriteria } from "../resourceProviders/memory/search.js";
-import { createToken } from "../authN/token.js";
+import { IGUHEALTH_ISSUER, createToken } from "../authN/token.js";
 import {
   createCertsIfNoneExists,
   getSigningKey,
 } from "../authN/certifications.js";
+import RedisLock from "../synchronization/redis.lock.js";
+import RedisCache from "../cache/redis.js";
+import { AsynchronousClient } from "@iguhealth/client";
+import { IOCache } from "../cache/interface.js";
 
 dotEnv.config();
 
@@ -85,7 +103,8 @@ function getVersionSequence(resource: Resource): number {
 }
 
 async function handleSubscriptionPayload(
-  ctx: FHIRServerCTX,
+  server: AsynchronousClient<unknown, FHIRServerInitCTX>,
+  ctx: FHIRServerInitCTX,
   subscription: Subscription,
   payload: Resource[]
 ): Promise<void> {
@@ -132,6 +151,7 @@ async function handleSubscriptionPayload(
       )[0];
       if (typeof operation !== "string") {
         logAuditEvent(
+          server,
           ctx,
           MAJOR_FAILURE,
           { reference: `Subscription/${subscription.id}` },
@@ -142,6 +162,7 @@ async function handleSubscriptionPayload(
         );
       }
       const operationDefinition = await resolveOperationDefinition(
+        server,
         ctx,
         operation
       );
@@ -169,13 +190,14 @@ async function handleSubscriptionPayload(
             )
           : undefined;
 
-      const output = await ctx.client.invoke_system(
+      await server.invoke_system(
         new Operation(operationDefinition),
-        { ...ctx, user_access_token },
+        { ...ctx, user: { ...ctx.user, accessToken: user_access_token } },
         {
           payload,
         }
       );
+
       return;
     }
     default:
@@ -194,17 +216,20 @@ function subscriptionLockKey(tenant: string, subscriptionId: string) {
 }
 
 function processSubscription(
-  workerID: string,
-  ctx: FHIRServerCTX,
+  services: {
+    workerID: string;
+    logger: Logger<unknown>;
+    cache: IOCache<FHIRServerInitCTX>;
+    resolveCanonical: FHIRServerCTX["resolveCanonical"];
+    resolveTypeToCanonical: FHIRServerCTX["resolveTypeToCanonical"];
+  },
+  server: AsynchronousClient<unknown, FHIRServerInitCTX>,
+  ctx: FHIRServerInitCTX,
   subscriptionId: id
 ) {
   return async () => {
     // Reread here in event that concurrent process has altered the id.
-    const subscription = await ctx.client.read(
-      ctx,
-      "Subscription",
-      subscriptionId
-    );
+    const subscription = await server.read(ctx, "Subscription", subscriptionId);
     if (!subscription)
       throw new OperationError(
         outcomeError(
@@ -213,8 +238,8 @@ function processSubscription(
         )
       );
     if (subscription.status !== "active") return;
-    const logger = ctx.logger.child({
-      worker: workerID,
+    const logger = services.logger.child({
+      worker: services.workerID,
       tenant: ctx.tenant.id,
       criteria: subscription.criteria,
     });
@@ -244,7 +269,10 @@ function processSubscription(
         );
       }
 
-      const cachedSubID = await ctx.cache.get(ctx, `${subscription.id}_latest`);
+      const cachedSubID = await services.cache.get(
+        ctx,
+        `${subscription.id}_latest`
+      );
 
       const latestVersionIdForSub = cachedSubID
         ? cachedSubID
@@ -255,7 +283,7 @@ function processSubscription(
 
       switch (request.level) {
         case "system": {
-          historyPoll = await ctx.client.historySystem(ctx, [
+          historyPoll = await server.historySystem(ctx, [
             {
               name: "_since-version",
               value: [latestVersionIdForSub],
@@ -264,16 +292,12 @@ function processSubscription(
           break;
         }
         case "type": {
-          historyPoll = await ctx.client.historyType(
-            ctx,
-            request.resourceType,
-            [
-              {
-                name: "_since-version",
-                value: [latestVersionIdForSub],
-              },
-            ]
-          );
+          historyPoll = await server.historyType(ctx, request.resourceType, [
+            {
+              name: "_since-version",
+              value: [latestVersionIdForSub],
+            },
+          ]);
           break;
         }
       }
@@ -286,7 +310,7 @@ function processSubscription(
 
       const parameters = await parametersWithMetaAssociated(
         async (resourceTypes, name) =>
-          await findSearchParameter(ctx, resourceTypes, name),
+          await findSearchParameter(server, ctx, resourceTypes, name),
         resourceTypes,
         request.parameters
       );
@@ -336,7 +360,7 @@ function processSubscription(
                   if (
                     entry.resource &&
                     (await fitsSearchCriteria(
-                      ctx,
+                      services,
                       entry.resource,
                       resourceParameters
                     ))
@@ -356,11 +380,16 @@ function processSubscription(
                   "Checking if history poll fits subscription criteria",
               },
               async (_span) => {
-                await handleSubscriptionPayload(ctx, subscription, payload);
+                await handleSubscriptionPayload(
+                  server,
+                  ctx,
+                  subscription,
+                  payload
+                );
               }
             );
 
-            await ctx.cache.set(
+            await services.cache.set(
               ctx,
               `${subscription.id}_latest`,
               getVersionSequence(
@@ -379,13 +408,14 @@ function processSubscription(
         errorDescription = e.outcome.issue.map((i) => i.details).join(". ");
       }
       await logAuditEvent(
+        server,
         ctx,
         SERIOUS_FAILURE,
         { reference: `Subscription/${subscription.id}` },
         errorDescription
       );
 
-      await ctx.client.update(ctx, {
+      await server.update(ctx, {
         ...subscription,
         status: "error" as code,
       });
@@ -404,7 +434,9 @@ async function getActiveTenants(pool: pg.Pool): Promise<TenantId[]> {
 async function createWorker(workerID = randomUUID(), loopInterval = 500) {
   logger.info({ workerID }, `Worker started with interval '${loopInterval}'`);
 
-  const getCTX = await createGetCTXFn();
+  const data = createMemoryData(MEMORY_TYPES);
+  const resolveCanonical = createResolveCanonical(data);
+  const resolveTypeToCanonical = createResolveTypeToCanonical(data);
 
   // Using a pool directly because need to query up tenants.
   const pool = new pg.Pool({
@@ -414,8 +446,15 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
     database: process.env["FHIR_DATABASE_NAME"],
     port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
   });
-
-  pool.connect();
+  const redis = getRedisClient();
+  const lock = new RedisLock(redis);
+  const cache = new RedisCache(redis);
+  const fhirServer = await createFHIRServer({
+    pool,
+    lock,
+    cache,
+    logger,
+  });
 
   let isRunning = true;
 
@@ -425,34 +464,45 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
       const activeTenants = await getActiveTenants(pool);
 
       for (const tenant of activeTenants) {
-        const pgPool = await pool.connect();
-        try {
-          const ctx = getCTX({
-            pg: pgPool,
-            tenant: { id: tenant, superAdmin: true },
-            author: `system-worker-${workerID}` as Author,
-          });
+        const ctx = {
+          tenant: { id: tenant, superAdmin: true },
+          user: {
+            jwt: {
+              iss: IGUHEALTH_ISSUER,
+              sub: `system-worker-${workerID}`,
+            } as JWT,
+          },
+        };
 
-          const activeSubscriptionIds = (
-            await ctx.client.search_type(ctx, "Subscription", [
-              { name: "status", value: ["active"] },
-            ])
-          ).resources.map((r) => r.id);
-          for (const subscriptionId of activeSubscriptionIds) {
-            // Use lock to avoid duplication on sub processing (could have two concurrent subs running in unison otherwise).
-            if (!subscriptionId)
-              throw new Error("Subscription ID was undefined.");
-            try {
-              await ctx.lock.withLock(
-                subscriptionLockKey(tenant, subscriptionId),
-                processSubscription(workerID, ctx, subscriptionId)
-              );
-            } catch (e) {
-              ctx.logger.error(e);
-            }
+        const activeSubscriptionIds = (
+          await fhirServer.search_type(ctx, "Subscription", [
+            { name: "status", value: ["active"] },
+          ])
+        ).resources.map((r) => r.id);
+
+        for (const subscriptionId of activeSubscriptionIds) {
+          // Use lock to avoid duplication on sub processing (could have two concurrent subs running in unison otherwise).
+          if (!subscriptionId)
+            throw new Error("Subscription ID was undefined.");
+          try {
+            await lock.withLock(
+              subscriptionLockKey(tenant, subscriptionId),
+              processSubscription(
+                {
+                  workerID,
+                  logger,
+                  cache,
+                  resolveCanonical,
+                  resolveTypeToCanonical,
+                },
+                fhirServer,
+                ctx,
+                subscriptionId
+              )
+            );
+          } catch (e) {
+            logger.error(e);
           }
-        } finally {
-          pgPool.release();
         }
       }
     } catch (e) {

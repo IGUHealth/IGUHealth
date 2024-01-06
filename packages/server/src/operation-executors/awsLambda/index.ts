@@ -36,7 +36,7 @@ import {
   OperationDefinition,
 } from "@iguhealth/fhir-types/r4/types";
 
-import { FHIRServerCTX } from "../../ctx/types.js";
+import { FHIRServerCTX } from "../../fhir/types.js";
 import { InvokeRequest } from "@iguhealth/client/types";
 import {
   resolveOperationDefinition,
@@ -298,7 +298,7 @@ async function createPayload(
 
   return {
     ctx: {
-      SEC_TOKEN: ctx.user_access_token || "not-sec",
+      SEC_TOKEN: ctx.user.accessToken || "not-sec",
       API_URL: new URL(
         `/w/${ctx.tenant.id}/api/v1/fhir/r4`,
         process.env.API_URL
@@ -368,6 +368,7 @@ function createExecutor(
         switch (context.request.type) {
           case "invoke-request": {
             const operationDefinition = await resolveOperationDefinition(
+              context.ctx.client,
               context.ctx,
               context.request.operation
             );
@@ -418,6 +419,7 @@ function createExecutor(
 
             if (invokeResponse.FunctionError) {
               const auditEvent = await logAuditEvent(
+                context.ctx.client,
                 context.ctx,
                 MINOR_FAILURE,
                 { reference: `OperationDefinition/${operationDefinition.id}` },

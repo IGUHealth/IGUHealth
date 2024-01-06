@@ -7,15 +7,17 @@ import pg from "pg";
 import dotEnv from "dotenv";
 
 import {
+  OperationError,
   isOperationError,
   issueSeverityToStatusCodes,
   outcomeError,
+  outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
 import { LIB_VERSION } from "./version.js";
-
+import RedisLock from "./synchronization/redis.lock.js";
 import * as Sentry from "./monitoring/sentry.js";
-import { createGetCTXFn, getRedisClient, logger } from "./ctx/index.js";
+import { createFHIRServer, getRedisClient, logger } from "./fhir/index.js";
 import {
   httpRequestToFHIRRequest,
   fhirResponseToHTTPResponse,
@@ -28,22 +30,26 @@ import {
   canUserAccessTenantMiddleware,
   findCurrentTenant,
 } from "./authZ/middleware.js";
+import RedisCache from "./cache/redis.js";
 
 dotEnv.config();
 
-async function FHIRMiddleware(
-  pool: pg.Pool,
-  getCTX: Awaited<ReturnType<typeof createGetCTXFn>>
-): Promise<Koa.Middleware[]> {
+async function KoaFHIRMiddleware(pool: pg.Pool): Promise<Koa.Middleware[]> {
   if (!process.env.AUTH_JWT_ISSUER)
     logger.warn("[WARNING] Server is publicly accessible.");
+  const redis = getRedisClient();
+  const fhirServer = await createFHIRServer({
+    pool,
+    lock: new RedisLock(redis),
+    cache: new RedisCache(redis),
+    logger,
+  });
 
   return [
     Sentry.tracingMiddleWare(process.env.SENTRY_SERVER_DSN),
     process.env.AUTH_JWT_ISSUER
       ? await createValidateUserJWTMiddleware()
       : allowPublicAccessMiddleware,
-
     canUserAccessTenantMiddleware,
     async (ctx, next) => {
       let span;
@@ -54,19 +60,21 @@ async function FHIRMiddleware(
           op: "fhirserver",
         });
       }
-      const client = await pool.connect();
       const tenant = findCurrentTenant(ctx);
       if (!tenant) throw new Error("Error tenant does not exist in context!");
       try {
-        const serverCTX = getCTX({
-          pg: client,
-          tenant,
-          author: ctx.state.user.sub,
-          user_access_token: ctx.state.access_token,
-        });
-
-        const fhirServerResponse = await serverCTX.client.request(
-          serverCTX,
+        if (
+          typeof ctx.state.user.sub !== "string" ||
+          typeof ctx.state.user.iss !== "string"
+        )
+          throw new OperationError(
+            outcomeFatal("security", "JWT must have both sub and iss.")
+          );
+        const response = await fhirServer.request(
+          {
+            tenant,
+            user: { jwt: ctx.state.user, accessToken: ctx.state.access_token },
+          },
           httpRequestToFHIRRequest({
             url: `${ctx.params.fhirUrl || ""}${
               ctx.request.querystring ? `?${ctx.request.querystring}` : ""
@@ -76,7 +84,7 @@ async function FHIRMiddleware(
           })
         );
 
-        const httpResponse = fhirResponseToHTTPResponse(fhirServerResponse);
+        const httpResponse = fhirResponseToHTTPResponse(response);
 
         ctx.status = httpResponse.status;
         ctx.body = httpResponse.body;
@@ -109,7 +117,6 @@ async function FHIRMiddleware(
         if (span) {
           span.finish();
         }
-        client.release();
       }
     },
   ];
@@ -129,7 +136,7 @@ export default async function createServer(): Promise<
     });
   const app = new Koa();
   const router = new Router<Koa.DefaultState, Koa.Context>();
-  const getCTX = await createGetCTXFn();
+
   const pool = new pg.Pool({
     user: process.env["FHIR_DATABASE_USERNAME"],
     password: process.env["FHIR_DATABASE_PASSWORD"],
@@ -149,7 +156,7 @@ export default async function createServer(): Promise<
 
   router.all(
     "/w/:tenant/api/v1/fhir/r4/:fhirUrl*",
-    ...(await FHIRMiddleware(pool, getCTX))
+    ...(await KoaFHIRMiddleware(pool))
   );
 
   // TODO Use an adapter  adapter,

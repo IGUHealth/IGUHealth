@@ -11,15 +11,20 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 import { evaluate } from "@iguhealth/fhirpath";
 import { OpCTX } from "@iguhealth/operation-execution";
-
+import { FHIRClientAsync } from "@iguhealth/client/interface";
 import { InvokeRequest } from "@iguhealth/client/types";
-import { FHIRServerCTX } from "../ctx/types.js";
 
-export async function resolveOperationDefinition(
-  ctx: FHIRServerCTX,
+import { FHIRServerCTX } from "../fhir/types.js";
+
+export async function resolveOperationDefinition<
+  CTX,
+  Client extends FHIRClientAsync<CTX>
+>(
+  client: Client,
+  ctx: CTX,
   operationCode: string
 ): Promise<OperationDefinition> {
-  const operationDefinition = await ctx.client.search_type(
+  const operationDefinition = await client.search_type(
     ctx,
     "OperationDefinition",
     [{ name: "code", value: [operationCode] }]

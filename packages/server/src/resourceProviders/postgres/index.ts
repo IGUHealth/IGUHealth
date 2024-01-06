@@ -45,7 +45,7 @@ import {
 } from "../utilities/search/parameters.js";
 import { fhirResponseToBundleEntry } from "../utilities/bundle.js";
 import { httpRequestToFHIRRequest } from "../../http/index.js";
-import { FHIRServerCTX } from "../../ctx/types.js";
+import { FHIRServerCTX } from "../../fhir/types.js";
 import { param_types_supported } from "./constants.js";
 import { executeSearchQuery } from "./search/index.js";
 import { ParsedParameter } from "@iguhealth/client/url";
@@ -153,7 +153,22 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
 
     case "reference": {
       const references = (
-        await Promise.all(evaluation.map((v) => toReference(ctx, parameter, v)))
+        await Promise.all(
+          evaluation.map((v) =>
+            toReference(parameter, v, async (types, url) => {
+              const value = v.valueOf();
+              if (typeof value !== "string") return undefined;
+              const results = await ctx.client.search_system(ctx, [
+                { name: "_type", value: types },
+                { name: "url", value: [url] },
+              ]);
+              if (results.resources.length !== 1) {
+                return undefined;
+              }
+              return results.resources[0];
+            })
+          )
+        )
       ).flat();
 
       const reference_indexes = references
@@ -421,7 +436,7 @@ async function createResource<CTX extends FHIRServerCTX>(
       const data: s.resources.Insertable = {
         tenant: ctx.tenant.id,
         request_method: "POST",
-        author: ctx.author,
+        author: ctx.user.jwt.sub,
         resource: resource as unknown as db.JSONObject,
       };
       // the <const> prevents generalization to string[]
@@ -603,7 +618,7 @@ async function patchResource<CTX extends FHIRServerCTX>(
       const data: s.resources.Insertable = {
         tenant: ctx.tenant.id,
         request_method: "PATCH",
-        author: ctx.author,
+        author: ctx.user.jwt.sub,
         resource: newResource as unknown as db.JSONObject,
         prev_version_id: parseInt(resource.meta?.versionId as string),
         patches: JSON.stringify(patches),
@@ -664,7 +679,7 @@ async function updateResource<CTX extends FHIRServerCTX>(
     const data: s.resources.Insertable = {
       tenant: ctx.tenant.id,
       request_method: "PUT",
-      author: ctx.author,
+      author: ctx.user.jwt.sub,
       resource: resource as unknown as db.JSONObject,
       prev_version_id: parseInt(resource.meta?.versionId as string),
       // [TODO] probably uneccessary to insert this and can instead derive in case of syncing.
@@ -707,7 +722,7 @@ async function deleteResource<CTX extends FHIRServerCTX>(
       const data: s.resources.Insertable = {
         tenant: ctx.tenant.id,
         request_method: "DELETE",
-        author: ctx.author,
+        author: ctx.user.jwt.sub,
         resource: resource as unknown as db.JSONObject,
         prev_version_id: parseInt(resource.meta?.versionId as string),
         deleted: true,

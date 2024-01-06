@@ -2,7 +2,7 @@ import { Resource, Extension } from "@iguhealth/fhir-types/r4/types";
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import jsonpatch, { Operation } from "fast-json-patch";
 
-import { FHIRServerCTX } from "../ctx/types.js";
+import { FHIRServerCTX } from "../fhir/types.js";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 function toFP(loc: (string | number)[]) {

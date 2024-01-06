@@ -1,4 +1,4 @@
-import type { Tenant } from "../ctx/types.js";
+import type { Tenant } from "../fhir/types.js";
 
 export interface IOCache<CTX extends { tenant: Tenant }> {
   get(ctx: CTX, key: string): Promise<string | number | null>;
