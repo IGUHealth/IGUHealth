@@ -1,5 +1,5 @@
 import { test, expect } from "@jest/globals";
-import parseFHIRSearch from "./url.js";
+import parseFHIRSearch, { escapeParameter, unescapeParameter } from "./url.js";
 
 test("Test resource level", () => {
   expect(parseFHIRSearch("Patient?name:text=bob")).toEqual([
@@ -18,4 +18,13 @@ test("Test System level", () => {
       value: ["1980-01-01"],
     },
   ]);
+});
+
+test("TEST ESCAPING", () => {
+  expect(escapeParameter("test|123")).toEqual("test\\|123");
+  expect(unescapeParameter(escapeParameter("test|123"))).toEqual("test|123");
+  expect(escapeParameter("test\\123")).toEqual("test\\\\123");
+  expect(unescapeParameter(escapeParameter("test\\123"))).toEqual("test\\123");
+  expect(escapeParameter("test$123")).toEqual("test\\$123");
+  expect(escapeParameter("test,123")).toEqual("test\\,123");
 });
