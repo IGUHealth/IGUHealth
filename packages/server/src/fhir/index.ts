@@ -5,6 +5,7 @@ import pg from "pg";
 import Redis from "ioredis";
 import Ajv from "ajv";
 
+import { escapeParameter } from "@iguhealth/client/url";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
@@ -304,7 +305,11 @@ const associateUserMiddleware: MiddlewareAsync<
     [
       {
         name: "identifier",
-        value: [`${context.ctx.user.jwt.iss}|${context.ctx.user.jwt.sub}`],
+        value: [
+          `${escapeParameter(context.ctx.user.jwt.iss)}|${escapeParameter(
+            context.ctx.user.jwt.sub
+          )}`,
+        ],
       },
       { name: "_revinclude", value: ["AccessPolicy:link"] },
     ]

@@ -1,6 +1,32 @@
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-const SPECIAL_CHARACTERS = ["\\", "|", "$", ","];
+type SPECIAL_CHARACTER = "\\" | "|" | "$" | ",";
+const SPECIAL_CHARACTERS: SPECIAL_CHARACTER[] = ["\\", "|", "$", ","];
+
+/**
+ * Returns string with split pieces and unescapes special characters from the split piece.
+ * @param parameter Parameter to be split
+ * @param specialCharacter One of special characters that get escaped on parameter.
+ */
+export function splitParameter(
+  parameter: string,
+  specialCharacter: SPECIAL_CHARACTER
+): string[] {
+  const specialCharEg = new RegExp(`\\${specialCharacter}`, "g");
+  let prevIndex = -1;
+  let pieces = [];
+  let match;
+
+  while ((match = specialCharEg.exec(parameter))) {
+    if (match.index === 0 || parameter[match.index - 1] !== "\\") {
+      pieces.push(parameter.substring(prevIndex + 1, match.index));
+      prevIndex = match.index;
+    }
+  }
+  pieces.push(parameter.substring(prevIndex + 1));
+
+  return pieces.map(unescapeParameter);
+}
 
 /**
  * Escapes a parameter values special characters

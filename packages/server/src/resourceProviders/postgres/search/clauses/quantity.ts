@@ -2,9 +2,12 @@ import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import { splitParameter } from "@iguhealth/client/url";
 
 import { FHIRServerCTX } from "../../../../fhir/types.js";
 import { SearchParameterResource } from "../../../utilities/search/parameters.js";
+
+// /[^\\]\|/g
 
 export default function quantityClauses(
   _ctx: FHIRServerCTX,
@@ -12,7 +15,7 @@ export default function quantityClauses(
 ): db.SQLFragment<boolean | null, unknown> {
   return db.conditions.or(
     ...parameter.value.map((value) => {
-      const parts = value.toString().split("|");
+      const parts = splitParameter(value.toString(), "|");
       const clauses: s.quantity_idx.Whereable = {};
 
       if (parts.length === 4) {

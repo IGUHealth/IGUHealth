@@ -12,6 +12,8 @@ import {
   CodeSystemLookup,
 } from "@iguhealth/generated-ops/r4";
 
+import { splitParameter } from "@iguhealth/client/url";
+
 import { FHIRServerCTX } from "../fhir/types.js";
 import { TerminologyProvider } from "./interface.js";
 
@@ -20,11 +22,7 @@ import ExpandOutput = ValueSetExpand.Output;
 
 import ValidateInput = ValueSetValidateCode.Input;
 import ValidateOutput = ValueSetValidateCode.Output;
-import {
-  OperationError,
-  outcome,
-  outcomeError,
-} from "@iguhealth/operation-outcomes";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 function inlineCodesetToValuesetExpansion(
   include: ValueSetComposeInclude
@@ -193,7 +191,7 @@ export class TerminologyProviderMemory implements TerminologyProvider {
     if (input.valueSet) {
       valueset = input.valueSet;
     } else if (input.url) {
-      const [url, url_version] = input.url.split("|");
+      const [url, url_version] = splitParameter(input.url, "|");
       const version = url_version ? url_version : input.valueSetVersion;
 
       const valuesetSearch = await ctx.client.search_type(

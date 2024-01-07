@@ -1,6 +1,8 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
+import { splitParameter } from "@iguhealth/client/url";
+
 import { FHIRServerCTX } from "../../../../fhir/types.js";
 import { SearchParameterResource } from "../../../utilities/search/parameters.js";
 import { missingModifier } from "./shared.js";
@@ -15,7 +17,7 @@ export default function tokenClauses(
     default: {
       return db.conditions.or(
         ...parameter.value.map((value): s.token_idx.Whereable => {
-          const parts = value.toString().split("|");
+          const parts = splitParameter(value.toString(), "|");
           if (parts.length === 1) {
             return { value: value.toString() };
           }
