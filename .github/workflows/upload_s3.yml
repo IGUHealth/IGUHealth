@@ -1,0 +1,107 @@
+name: S3 Uploads
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
+
+jobs:
+  build_story_book:
+    name: Upload Admin UI to S3
+    runs-on: ubuntu-latest
+    # These permissions are needed to interact with GitHub's OIDC Token endpoint.
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node 19
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19.6.0
+          cache: "yarn"
+
+      - name: EnableCorePack
+        run: corepack enable
+
+      - name: Yarn v3
+        run: corepack prepare yarn@3.6.1 --activate
+
+      - name: Version Check
+        run: yarn version check
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Compile dependencies
+        run: yarn workspaces foreach -Rpt --from '@iguhealth/components' run build
+
+      - name: Compile storybook
+        run: yarn workspace @iguhealth/components build-storybook
+
+      - name: Configure AWS credentials from Test account
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::611909812228:role/iguhealth_github_action_user
+          aws-region: us-east-1
+      - name: Copy files to the production website with the AWS CLI
+        run: |
+          aws s3 sync packages/components/storybook-static s3://storybook.iguhealth.app
+
+  build_admin_app:
+    name: Upload Admin UI to S3
+    runs-on: ubuntu-latest
+    # These permissions are needed to interact with GitHub's OIDC Token endpoint.
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node 19
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19.6.0
+          cache: "yarn"
+
+      - name: EnableCorePack
+        run: corepack enable
+
+      - name: Yarn v3
+        run: corepack prepare yarn@3.6.1 --activate
+
+      - name: Version Check
+        run: yarn version check
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: "Create env file"
+        run: |
+          touch packages/admin-app/.env
+          echo REACT_APP_AUTH0_DOMAIN=${{ secrets.ADMIN_APP_DOMAIN }} >> packages/admin-app/.env
+          echo REACT_APP_AUTH0_CLIENT_ID=${{ secrets.ADMIN_APP_CLIENT_ID }} >> packages/admin-app/.env
+          echo REACT_APP_FHIR_BASE_URL=${{ secrets.ADMIN_APP_FHIR_URL }} >> packages/admin-app/.env
+
+      - name: Compile
+        run: yarn workspaces foreach -Rpt --from '@iguhealth/admin-app' run build
+
+      - name: Configure AWS credentials from Test account
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::611909812228:role/iguhealth_github_action_user
+          aws-region: us-east-1
+
+      - name: Copy files to the production website with the AWS CLI
+        run: |
+          aws s3 sync packages/admin-app/build s3://admin-notovox.iguhealth.app

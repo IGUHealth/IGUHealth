@@ -5522,6 +5522,46 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@iguhealth/admin-app@workspace:packages/admin-app":
+  version: 0.0.0-use.local
+  resolution: "@iguhealth/admin-app@workspace:packages/admin-app"
+  dependencies:
+    "@auth0/auth0-react": ^2.2.1
+    "@codemirror/commands": ^6.3.0
+    "@codemirror/lang-javascript": ^6.2.1
+    "@codemirror/lang-json": ^6.0.1
+    "@codemirror/view": ^6.18.0
+    "@headlessui/react": ^1.7.17
+    "@heroicons/react": ^2.0.18
+    "@iguhealth/client": "workspace:^"
+    "@iguhealth/components": "workspace:^"
+    "@iguhealth/fhir-patch-building": "workspace:^"
+    "@iguhealth/fhir-pointer": "workspace:^"
+    "@iguhealth/fhir-types": "workspace:^"
+    "@iguhealth/generated-ops": "workspace:^"
+    "@iguhealth/operation-execution": "workspace:^"
+    "@testing-library/jest-dom": ^6.1.3
+    "@testing-library/react": ^13.0.0
+    "@testing-library/user-event": ^13.2.1
+    "@types/jest": ^27.0.1
+    "@types/node": ^16.7.13
+    "@types/react": ^18.0.0
+    "@types/react-dom": ^18.0.0
+    "@types/react-window": ^1.8.8
+    classnames: ^2.3.2
+    codemirror: ^6.0.1
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    react-router-dom: ^6.15.0
+    react-scripts: ^5.0.1
+    react-window: ^1.8.10
+    recoil: ^0.7.7
+    tailwindcss: ^3.3.3
+    typescript: ^4.4.2
+    web-vitals: ^2.1.0
+  languageName: unknown
+  linkType: soft
+
 "@iguhealth/artifacts@workspace:^, @iguhealth/artifacts@workspace:packages/artifacts":
   version: 0.0.0-use.local
   resolution: "@iguhealth/artifacts@workspace:packages/artifacts"
@@ -11982,46 +12022,6 @@ __metadata:
   checksum: 07ed91cf6423bf5dca4ee63977bc7635e91b8d21829c00829d48dce4c6932e1b19e6cfcbe44f1931c956e68795ae97183fc775913883fa48ce88a1ac11fb2034
   languageName: node
   linkType: hard
-
-"admin-app@workspace:packages/admin-app":
-  version: 0.0.0-use.local
-  resolution: "admin-app@workspace:packages/admin-app"
-  dependencies:
-    "@auth0/auth0-react": ^2.2.1
-    "@codemirror/commands": ^6.3.0
-    "@codemirror/lang-javascript": ^6.2.1
-    "@codemirror/lang-json": ^6.0.1
-    "@codemirror/view": ^6.18.0
-    "@headlessui/react": ^1.7.17
-    "@heroicons/react": ^2.0.18
-    "@iguhealth/client": "workspace:^"
-    "@iguhealth/components": "workspace:^"
-    "@iguhealth/fhir-patch-building": "workspace:^"
-    "@iguhealth/fhir-pointer": "workspace:^"
-    "@iguhealth/fhir-types": "workspace:^"
-    "@iguhealth/generated-ops": "workspace:^"
-    "@iguhealth/operation-execution": "workspace:^"
-    "@testing-library/jest-dom": ^6.1.3
-    "@testing-library/react": ^13.0.0
-    "@testing-library/user-event": ^13.2.1
-    "@types/jest": ^27.0.1
-    "@types/node": ^16.7.13
-    "@types/react": ^18.0.0
-    "@types/react-dom": ^18.0.0
-    "@types/react-window": ^1.8.8
-    classnames: ^2.3.2
-    codemirror: ^6.0.1
-    react: ^18.2.0
-    react-dom: ^18.2.0
-    react-router-dom: ^6.15.0
-    react-scripts: ^5.0.1
-    react-window: ^1.8.10
-    recoil: ^0.7.7
-    tailwindcss: ^3.3.3
-    typescript: ^4.4.2
-    web-vitals: ^2.1.0
-  languageName: unknown
-  linkType: soft
 
 "agent-base@npm:5":
   version: 5.1.1

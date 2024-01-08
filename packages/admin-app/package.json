@@ -1,5 +1,5 @@
 {
-  "name": "admin-app",
+  "name": "@iguhealth/admin-app",
   "version": "0.1.47",
   "private": true,
   "type": "module",
