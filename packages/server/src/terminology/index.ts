@@ -14,7 +14,7 @@ import {
 
 import { splitParameter } from "@iguhealth/client/url";
 
-import { FHIRServerCTX } from "../fhir/types.js";
+import { FHIRServerCTX } from "../fhir/context.js";
 import { TerminologyProvider } from "./interface.js";
 
 import ExpandInput = ValueSetExpand.Input;

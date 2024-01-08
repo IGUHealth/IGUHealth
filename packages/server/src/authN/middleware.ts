@@ -5,6 +5,7 @@ import jwksRsa from "jwks-rsa";
 
 import { createCertsIfNoneExists, getJWKS } from "./certifications.js";
 import { IGUHEALTH_ISSUER } from "./token.js";
+import { Tenant } from "../fhir/context.js";
 
 export async function createValidateUserJWTMiddleware(): Promise<Koa.Middleware> {
   let IGUHEALTH_JWT_SECRET: ReturnType<typeof jwksRsa.koaJwtSecret> | undefined;
@@ -71,7 +72,7 @@ export const allowPublicAccessMiddleware: Koa.Middleware = async (
       sub: "public-user",
       access_token: "sec-public",
       "https://iguhealth.app/tenants": [
-        { id: ctx.params.tenant, superAdmin: true },
+        { id: ctx.params.tenant, userRole: "SUPER_ADMIN" } as Tenant,
       ],
     },
   };

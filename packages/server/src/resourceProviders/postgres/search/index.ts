@@ -9,7 +9,7 @@ import {
 import { Resource, ResourceType, id } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../fhir/types.js";
+import { FHIRServerCTX } from "../../../fhir/context.js";
 import {
   SearchParameterResource,
   SearchParameterResult,

@@ -12,16 +12,17 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
 
-import { Lock } from "../synchronization/interfaces.js";
-import { IOCache } from "../cache/interface.js";
-import { TerminologyProvider } from "../terminology/interface.js";
-import { EncryptionProvider } from "../encryption/provider/interface.js";
+import { Lock } from "../synchronization/interfaces.ts";
+import { IOCache } from "../cache/interface.ts";
+import { TerminologyProvider } from "../terminology/interface.ts";
+import { EncryptionProvider } from "../encryption/provider/interface.ts";
+import { SUPER_ADMIN, USER } from "./roles.js";
 
 declare const __tenant: unique symbol;
 export type TenantId = string & { [__tenant]: string };
 export interface Tenant {
   id: TenantId;
-  superAdmin: boolean;
+  userRole: SUPER_ADMIN | USER;
 }
 
 declare const __subject: unique symbol;

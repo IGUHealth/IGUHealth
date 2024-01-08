@@ -36,7 +36,7 @@ import {
   OperationDefinition,
 } from "@iguhealth/fhir-types/r4/types";
 
-import { FHIRServerCTX } from "../../fhir/types.js";
+import { FHIRServerCTX } from "../../fhir/context.js";
 import { InvokeRequest } from "@iguhealth/client/types";
 import {
   resolveOperationDefinition,

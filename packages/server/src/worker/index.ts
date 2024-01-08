@@ -42,8 +42,9 @@ import {
   FHIRServerCTX,
   FHIRServerInitCTX,
   JWT,
+  Tenant,
   TenantId,
-} from "../fhir/types.js";
+} from "../fhir/context.js";
 import {
   SearchParameterResource,
   deriveResourceTypeFilter,
@@ -182,7 +183,7 @@ async function handleSubscriptionPayload(
                 header: { audience: process.env.AUTH_JWT_AUDIENCE },
                 payload: {
                   "https://iguhealth.app/tenants": [
-                    { id: ctx.tenant.id, superAdmin: true },
+                    { id: ctx.tenant.id, userRole: "SUPER_ADMIN" } as Tenant,
                   ],
                   sub: `OperationDefinition/${operationDefinition.id}`,
                   aud: ["https://iguhealth.com/api"],
@@ -468,7 +469,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
 
       for (const tenant of activeTenants) {
         const ctx = {
-          tenant: { id: tenant, superAdmin: true },
+          tenant: { id: tenant, userRole: "SUPER_ADMIN" } as Tenant,
           user: {
             jwt: {
               iss: IGUHEALTH_ISSUER,

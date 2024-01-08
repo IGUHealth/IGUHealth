@@ -21,7 +21,7 @@ import {
 import { FHIRClient } from "@iguhealth/client/interface";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../fhir/types.js";
+import { FHIRServerCTX } from "../fhir/context.js";
 import { deriveResourceTypeFilter } from "./utilities/search/parameters.js";
 import { fhirResponseToBundleEntry } from "./utilities/bundle.js";
 import { httpRequestToFHIRRequest } from "../http/index.js";

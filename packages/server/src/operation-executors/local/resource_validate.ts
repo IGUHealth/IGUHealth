@@ -6,7 +6,7 @@ import {
   outcomeError,
   outcome,
 } from "@iguhealth/operation-outcomes";
-import { FHIRServerCTX } from "../../fhir/types.js";
+import { FHIRServerCTX } from "../../fhir/context.js";
 import InlineOperation from "./interface.js";
 import { TypeInteraction } from "@iguhealth/client/types";
 

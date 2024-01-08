@@ -4,7 +4,7 @@ import type * as s from "zapatos/schema";
 import { SearchParameter, ResourceType } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../fhir/types.js";
+import { FHIRServerCTX } from "../../../fhir/context.js";
 import {
   searchResources,
   searchParameterToTableName,
