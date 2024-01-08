@@ -41,10 +41,10 @@ jobs:
         run: yarn install
 
       - name: Compile dependencies
-        run: yarn workspaces foreach -Rpt run build
+        run: yarn workspaces foreach -pt --topological-dev run build
 
       - name: Compile storybook
-        run: yarn workspaces foreach -pt --topological-dev run build
+        run: yarn workspace @iguhealth/components build-storybook
 
       - name: Configure AWS credentials from Test account
         uses: aws-actions/configure-aws-credentials@v4
