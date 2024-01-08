@@ -86,7 +86,7 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: "Create env file"
+      - name: Create env file
         run: |
           touch packages/admin-app/.env
           echo REACT_APP_AUTH0_DOMAIN=${{ secrets.ADMIN_APP_DOMAIN }} >> packages/admin-app/.env
