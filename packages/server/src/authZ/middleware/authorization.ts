@@ -47,8 +47,6 @@ function accessPolicyMethodToRequestType(
       return "history-request";
     case "create":
       return "create-request";
-    case "search":
-      return "search-request";
     case "capabilities":
       return "capabilities-request";
     case "batch":
