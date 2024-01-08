@@ -6,6 +6,7 @@ import {
 } from "../../fhir/types.js";
 import { FHIRRequest } from "@iguhealth/client/lib/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import { userInfo } from "os";
 
 function isServerCTX(
   ctx: FHIRServerCTX | FHIRServerInitCTX
@@ -13,8 +14,17 @@ function isServerCTX(
   return "client" in ctx;
 }
 
+/**
+ * Evaluates a users access to request. If super admin bypasses accesspolicy evaluation.
+ * Else access based on policies associated to a user.
+ * @param ctx Server context.
+ * @param request  The FHIR request being made.
+ * @returns boolean as to whether or not a user is being granted access.
+ */
 function canUserMakeRequest(ctx: FHIRServerCTX, request: FHIRRequest): boolean {
-  return true;
+  if (ctx.user.superAdmin) return true;
+
+  return false;
 }
 
 /**

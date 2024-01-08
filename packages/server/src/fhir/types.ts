@@ -39,6 +39,7 @@ export interface FHIRServerInitCTX {
   // User information
   tenant: Readonly<Tenant>;
   user: {
+    role: "superAdmin" | "user";
     resource?: User | null;
     jwt: JWT;
     accessPolicies?: AccessPolicy[];
