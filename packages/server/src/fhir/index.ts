@@ -27,7 +27,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { FHIRRequest } from "@iguhealth/client/types";
 
 import { createPostgresClient } from "../resourceProviders/postgres/index.js";
-import { FHIRServerCTX, FHIRServerInitCTX, FHIRServerState } from "./types.js";
+import { FHIRServerCTX, FHIRServerInitCTX, FHIRServerState } from "./context.js";
 import { InternalData } from "../resourceProviders/memory/types.js";
 import MemoryDatabaseAsync from "../resourceProviders/memory/async.js";
 import RouterClient from "../resourceProviders/router.js";

@@ -172,7 +172,7 @@
           }
         ],
         "min": 0,
-        "max": "*"
+        "max": "1"
       },
       {
         "id": "AccessPolicy.access.fhir.method",
@@ -189,6 +189,22 @@
           "strength": "required",
           "valueSet": "https://iguhealth.app/fhir/ValueSet/AccessPolicyFHIRAPIMethod|4.0.1"
         }
+      },
+      {
+        "id": "AccessPolicy.access.fhir.resourceType",
+        "path": "AccessPolicy.access.fhir.resourceType",
+        "binding": {
+          "strength": "required",
+          "description": "One of the resource types defined as part of this version of FHIR.",
+          "valueSet": "http://hl7.org/fhir/ValueSet/resource-types|4.0.1"
+        },
+        "type": [
+          {
+            "code": "code"
+          }
+        ],
+        "min": 0,
+        "max": "*"
       },
       {
         "id": "AccessPolicy.access.fhir.level",

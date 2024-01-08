@@ -26366,7 +26366,7 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
         {
           "definition": "The access policy rules that are evaluated to determine if access is granted or denied.",
           "id": "AccessPolicy.access.fhir",
-          "max": "*",
+          "max": "1",
           "min": 0,
           "path": "AccessPolicy.access.fhir",
           "type": [
@@ -26385,6 +26385,22 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
           "max": "1",
           "min": 1,
           "path": "AccessPolicy.access.fhir.method",
+          "type": [
+            {
+              "code": "code",
+            },
+          ],
+        },
+        {
+          "binding": {
+            "description": "One of the resource types defined as part of this version of FHIR.",
+            "strength": "required",
+            "valueSet": "http://hl7.org/fhir/ValueSet/resource-types|4.0.1",
+          },
+          "id": "AccessPolicy.access.fhir.resourceType",
+          "max": "*",
+          "min": 0,
+          "path": "AccessPolicy.access.fhir.resourceType",
           "type": [
             {
               "code": "code",

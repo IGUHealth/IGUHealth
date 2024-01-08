@@ -7,7 +7,7 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
 
-import { FHIRServerInitCTX } from "../fhir/types.js";
+import { FHIRServerInitCTX } from "../fhir/context.js";
 
 export type OUTCOMES = {
   SUCCESS: "0";

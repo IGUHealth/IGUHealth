@@ -44883,12 +44883,14 @@ export interface AccessPolicyAccessFhirParameter {
 export interface AccessPolicyAccessFhir {
   method: code;
   _method?: Element
+  resourceType?: Array<code>;
+  _resourceType?: Array<Element>
   level: code;
   _level?: Element
   parameter?: Array<AccessPolicyAccessFhirParameter>;
 }
 export interface AccessPolicyAccess {
-  fhir?: Array<AccessPolicyAccessFhir>;
+  fhir?: AccessPolicyAccessFhir;
 }
 export interface AccessPolicy {
 resourceType: "AccessPolicy"
@@ -44971,4 +44973,5 @@ resourceType: "User"
    */
   meta?: Meta;
   link?: Array<Reference>;
+  identifier?: Array<Identifier>;
 }

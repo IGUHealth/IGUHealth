@@ -1,7 +1,7 @@
 import type * as s from "zapatos/schema";
 import * as db from "zapatos/db";
 
-import { FHIRServerCTX } from "../../../../fhir/types.js";
+import { FHIRServerCTX } from "../../../../fhir/context.js";
 import { SearchParameterResource } from "../../../utilities/search/parameters.js";
 
 export default function stringClauses(

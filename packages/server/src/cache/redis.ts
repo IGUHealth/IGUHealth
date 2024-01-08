@@ -1,6 +1,6 @@
 import Redis from "ioredis";
 import { IOCache } from "./interface.js";
-import { Tenant } from "../fhir/types.js";
+import { Tenant } from "../fhir/context.js";
 
 function constructKey(tenant: Tenant, key: string) {
   return `${tenant.id}/${key}`;

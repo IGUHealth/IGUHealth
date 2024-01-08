@@ -13,7 +13,7 @@ import {
   toStringParameters,
   toTokenParameters,
 } from "../utilities/search/dataConversion.js";
-import { FHIRServerCTX } from "../../fhir/types.js";
+import { FHIRServerCTX } from "../../fhir/context.js";
 
 dayjs.extend(isBetween);
 

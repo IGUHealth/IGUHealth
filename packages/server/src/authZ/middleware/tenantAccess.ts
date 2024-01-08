@@ -1,5 +1,5 @@
 import Koa from "koa";
-import type { Tenant } from "../fhir/types.js";
+import type { Tenant } from "../../fhir/context.js";
 
 export function findCurrentTenant(
   ctx: Koa.ParameterizedContext<Koa.DefaultState, Koa.DefaultContext>

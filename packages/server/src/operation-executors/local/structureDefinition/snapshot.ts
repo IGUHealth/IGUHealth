@@ -2,7 +2,7 @@ import { StructureDefinitionSnapshot } from "@iguhealth/generated-ops/r4";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { StructureDefinition } from "@iguhealth/fhir-types/r4/types";
 
-import { FHIRServerCTX } from "../../../fhir/types.js";
+import { FHIRServerCTX } from "../../../fhir/context.js";
 import InlineOperation from "../interface.js";
 import { FHIRRequest } from "@iguhealth/client/types";
 
