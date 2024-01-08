@@ -29,7 +29,7 @@ import {
 import {
   canUserAccessTenantMiddleware,
   findCurrentTenant,
-} from "./authZ/middleware.js";
+} from "./authZ/middleware/tenantAccess.js";
 import RedisCache from "./cache/redis.js";
 
 dotEnv.config();
