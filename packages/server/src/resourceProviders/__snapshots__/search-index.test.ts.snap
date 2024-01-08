@@ -24357,6 +24357,7 @@ exports[`Testing indexing resourceType 'StructureDefinition' 24`] = `
     "AccessPolicy.access",
     "AccessPolicy.access.fhir",
     "AccessPolicy.access.fhir.method",
+    "AccessPolicy.access.fhir.resourceType",
     "AccessPolicy.access.fhir.level",
     "AccessPolicy.access.fhir.parameter",
     "AccessPolicy.access.fhir.parameter.name",
@@ -24380,6 +24381,7 @@ exports[`Testing indexing resourceType 'StructureDefinition' 26`] = `
   [
     "https://iguhealth.app/fhir/ValueSet/AccessPolicyType|4.0.1",
     "https://iguhealth.app/fhir/ValueSet/AccessPolicyFHIRAPIMethod|4.0.1",
+    "http://hl7.org/fhir/ValueSet/resource-types|4.0.1",
     "https://iguhealth.app/fhir/ValueSet/AccessPolicyFHIRAPILevel|4.0.1",
     "https://iguhealth.app/fhir/ValueSet/AccessPolicyFHIRAPIParameter|4.0.1",
   ],
