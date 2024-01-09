@@ -46,7 +46,7 @@ jobs:
       - name: Compile storybook
         run: yarn workspace @iguhealth/components build-storybook
 
-      - name: Configure AWS credentials from Test account
+      - name: Configure AWS credentials from Github account
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::611909812228:role/iguhealth_github_action_user
@@ -96,7 +96,7 @@ jobs:
       - name: Compile
         run: yarn workspaces foreach -pt --topological-dev run build
 
-      - name: Configure AWS credentials from Test account
+      - name: Configure AWS credentials from Github account
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::611909812228:role/iguhealth_github_action_user
