@@ -41,6 +41,9 @@ jobs:
         run: yarn install
 
       - name: Compile dependencies
+        run: yarn workspaces foreach -pt --topological-dev run build
+
+      - name: Compile documentation
         run: yarn generate-documentation
 
       - name: Configure AWS credentials from Github account
