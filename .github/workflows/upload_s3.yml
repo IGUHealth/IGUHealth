@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build_api_reference:
-    name: Upload Storybook to S3
+    name: Upload API Reference
     runs-on: ubuntu-latest
     # These permissions are needed to interact with GitHub's OIDC Token endpoint.
     permissions:
@@ -54,7 +54,7 @@ jobs:
           aws s3 sync ./docs s3://api-reference.iguhealth.app
 
   build_docs:
-    name: Upload Storybook to S3
+    name: Upload Docs
     runs-on: ubuntu-latest
     # These permissions are needed to interact with GitHub's OIDC Token endpoint.
     permissions:
