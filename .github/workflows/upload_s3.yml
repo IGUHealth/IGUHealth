@@ -9,6 +9,93 @@ permissions:
   contents: read # This is required for actions/checkout
 
 jobs:
+  build_api_reference:
+    name: Upload Storybook to S3
+    runs-on: ubuntu-latest
+    # These permissions are needed to interact with GitHub's OIDC Token endpoint.
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node 19
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19.6.0
+          cache: "yarn"
+
+      - name: EnableCorePack
+        run: corepack enable
+
+      - name: Yarn v3
+        run: corepack prepare yarn@3.6.1 --activate
+
+      - name: Version Check
+        run: yarn version check
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Compile dependencies
+        run: yarn generate-documentation
+
+      - name: Configure AWS credentials from Github account
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::611909812228:role/iguhealth_github_action_user
+          aws-region: us-east-1
+
+      - name: Copy files to the production website with the AWS CLI
+        run: |
+          aws s3 sync ./docs s3://api-reference.iguhealth.app
+
+  build_docs:
+    name: Upload Storybook to S3
+    runs-on: ubuntu-latest
+    # These permissions are needed to interact with GitHub's OIDC Token endpoint.
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node 19
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19.6.0
+          cache: "yarn"
+
+      - name: EnableCorePack
+        run: corepack enable
+
+      - name: Yarn v3
+        run: corepack prepare yarn@3.6.1 --activate
+
+      - name: Version Check
+        run: yarn version check
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Compile dependencies
+        run: yarn workspaces foreach -pt --topological-dev run build
+
+      - name: Configure AWS credentials from Github account
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::611909812228:role/iguhealth_github_action_user
+          aws-region: us-east-1
+      - name: Copy files to the production website with the AWS CLI
+        run: |
+          aws s3 sync packages/docs/build s3://docs.iguhealth.app
+
   build_story_book:
     name: Upload Storybook to S3
     runs-on: ubuntu-latest
