@@ -4,7 +4,7 @@ import type * as s from "zapatos/schema";
 import { SearchParameter, ResourceType } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../fhir/context.js";
+import { FHIRServerCTX, asSystemCTX } from "../../../fhir/context.js";
 import {
   searchResources,
   searchParameterToTableName,
@@ -54,7 +54,7 @@ export async function deriveSortQuery(
           direction = "descending";
         }
         const searchParameter = await ctx.client.search_type(
-          ctx,
+          asSystemCTX(ctx),
           "SearchParameter",
           [
             { name: "name", value: [paramName] },

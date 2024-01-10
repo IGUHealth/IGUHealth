@@ -9,7 +9,7 @@ import {
 import { Resource, ResourceType, id } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../fhir/context.js";
+import { FHIRServerCTX, asSystemCTX } from "../../../fhir/context.js";
 import {
   SearchParameterResource,
   SearchParameterResult,
@@ -126,7 +126,7 @@ async function processInclude(
         const resourceType = include[0] as ResourceType;
         const includeParameterName = include[1];
         const includeParameterSearchParam = await ctx.client.search_type(
-          ctx,
+          asSystemCTX(ctx),
           "SearchParameter",
           [
             { name: "name", value: [includeParameterName] },
@@ -191,13 +191,18 @@ export async function executeSearchQuery(
 
   const parameters = await parametersWithMetaAssociated(
     async (resourceTypes, name) =>
-      await findSearchParameter(ctx.client, ctx, resourceTypes, name),
+      await findSearchParameter(
+        ctx.client,
+        asSystemCTX(ctx),
+        resourceTypes,
+        name
+      ),
     resourceTypes,
     request.parameters
   );
 
   const resourceParameters = await ensureLatest(
-    ctx,
+    asSystemCTX(ctx),
     resourceTypes,
     parameters.filter(
       (v): v is SearchParameterResource => v.type === "resource"
