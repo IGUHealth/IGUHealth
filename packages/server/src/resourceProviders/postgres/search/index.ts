@@ -30,17 +30,17 @@ function buildParametersSQL(
   return parameters.map((p) => buildParameterSQL(ctx, p));
 }
 
-/* Filter to the latest version of the resource only.
- ** Scenarios where you search for a resource type but no parameters are provided
- ** This scenario need to filter to ensure only the latest is included.
- ** Approach I take is to use _id parameter which all resources would have
- ** that are current.
+/**
+ * Returns Parameter for _id search parameter that is not missing (allows filter for latest).
+ * @param ctx Server context (should be system as this is returning Parameter for latest)
+ * @param resourceTypes The resource Types to search for
+ * @param resourceParameters Current search parameters
+ * @returns
  */
-async function ensureLatest(
+async function getParameterForLatestId(
   ctx: FHIRServerCTX,
-  resourceTypes: ResourceType[],
-  resourceParameters: SearchParameterResource[]
-) {
+  resourceTypes: ResourceType[]
+): Promise<SearchParameterResource[]> {
   const idParameter = (
     await parametersWithMetaAssociated(
       async (resourceTypes, name) =>
@@ -50,7 +50,7 @@ async function ensureLatest(
     )
   ).filter((v): v is SearchParameterResource => v.type === "resource");
 
-  return resourceParameters.concat(idParameter);
+  return idParameter;
 }
 
 const getIds: (resources: Resource[]) => id[] = (resources) =>
@@ -201,13 +201,9 @@ export async function executeSearchQuery(
     request.parameters
   );
 
-  const resourceParameters = await ensureLatest(
-    asSystemCTX(ctx),
-    resourceTypes,
-    parameters.filter(
-      (v): v is SearchParameterResource => v.type === "resource"
-    )
-  );
+  const resourceParameters = parameters
+    .filter((v): v is SearchParameterResource => v.type === "resource")
+    .concat(await getParameterForLatestId(asSystemCTX(ctx), resourceTypes));
 
   const parametersResult = parameters.filter(
     (v): v is SearchParameterResult => v.type === "result"
