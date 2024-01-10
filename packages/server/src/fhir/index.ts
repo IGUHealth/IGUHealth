@@ -27,7 +27,12 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { FHIRRequest } from "@iguhealth/client/types";
 
 import { createPostgresClient } from "../resourceProviders/postgres/index.js";
-import { FHIRServerCTX, FHIRServerInitCTX, FHIRServerState } from "./context.js";
+import {
+  FHIRServerCTX,
+  FHIRServerInitCTX,
+  FHIRServerState,
+  asSystemCTX,
+} from "./context.js";
 import { InternalData } from "../resourceProviders/memory/types.js";
 import MemoryDatabaseAsync from "../resourceProviders/memory/async.js";
 import RouterClient from "../resourceProviders/router.js";
@@ -50,6 +55,7 @@ import {
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import { AsynchronousClient } from "@iguhealth/client";
+import { createAuthorizationMiddleWare } from "../authZ/middleware/authorization.js";
 
 export const MEMORY_TYPES: ResourceType[] = [
   "StructureDefinition",
@@ -187,13 +193,23 @@ function getResourceTypeToValidate(request: FHIRRequest): ResourceType {
   }
 }
 
+/**
+ * Used for JSON PATCH validation which is non FHIR data.
+ */
 const ajv = new Ajv.default({});
 const validateJSONPatch = ajv.compile(JSONPatchSchema);
 
-const validationMiddleware: Parameters<typeof RouterClient>[0][number] = async (
-  context,
-  next
-) => {
+/**
+ * Type manipulation to get state of a routerclient used for subsequent middlewares.
+ */
+type RouterState = Parameters<
+  Parameters<typeof RouterClient>[0][number]
+>[0]["state"];
+
+const validationMiddleware: MiddlewareAsync<
+  RouterState,
+  FHIRServerCTX
+> = async (context, next) => {
   switch (context.request.type) {
     case "update-request":
     case "create-request":
@@ -201,7 +217,7 @@ const validationMiddleware: Parameters<typeof RouterClient>[0][number] = async (
     case "invoke-request":
     case "transaction-request": {
       const outcome = await validateResource(
-        context.ctx,
+        asSystemCTX(context.ctx),
         getResourceTypeToValidate(context.request),
         {
           mode: (context.request.type === "create-request"
@@ -233,9 +249,10 @@ const validationMiddleware: Parameters<typeof RouterClient>[0][number] = async (
   return next(context);
 };
 
-const capabilitiesMiddleware: Parameters<
-  typeof RouterClient
->[0][number] = async (context, next) => {
+const capabilitiesMiddleware: MiddlewareAsync<
+  RouterState,
+  FHIRServerCTX
+> = async (context, next) => {
   if (context.request.type === "capabilities-request") {
     return {
       ...context,
@@ -252,7 +269,7 @@ const capabilitiesMiddleware: Parameters<
 
 const encryptionMiddleware: (
   resourceTypesToEncrypt: ResourceType[]
-) => Parameters<typeof RouterClient>[0][number] =
+) => MiddlewareAsync<RouterState, FHIRServerCTX> =
   (resourceTypesToEncrypt: ResourceType[]) => async (context, next) => {
     if (!next) throw new Error("next middleware was not defined");
     if (!context.ctx.encryptionProvider) {
@@ -299,8 +316,9 @@ const associateUserMiddleware: MiddlewareAsync<
 > = async (context, next) => {
   if (!isServerCTX(context.ctx)) throw new Error();
   if (!next) throw new Error("next middleware was not defined");
+
   const usersAndAccessPolicies = (await context.ctx.client.search_type(
-    context.ctx,
+    asSystemCTX(context.ctx),
     "User",
     [
       {
@@ -474,6 +492,7 @@ async function createFHIRMiddleware(): Promise<
             validationMiddleware,
             capabilitiesMiddleware,
             encryptionMiddleware(["OperationDefinition"]),
+            createAuthorizationMiddleWare<RouterState>(),
           ],
           [
             // OP INVOCATION

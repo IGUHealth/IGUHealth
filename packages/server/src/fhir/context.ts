@@ -12,11 +12,12 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
 
-import { Lock } from "../synchronization/interfaces.ts";
-import { IOCache } from "../cache/interface.ts";
-import { TerminologyProvider } from "../terminology/interface.ts";
-import { EncryptionProvider } from "../encryption/provider/interface.ts";
+import type { Lock } from "../synchronization/interfaces.js";
+import type { IOCache } from "../cache/interface.js";
+import type { TerminologyProvider } from "../terminology/interface.js";
+import type { EncryptionProvider } from "../encryption/provider/interface.js";
 import { SUPER_ADMIN, USER } from "./roles.js";
+import { IGUHEALTH_ISSUER } from "../authN/token.js";
 
 declare const __tenant: unique symbol;
 export type TenantId = string & { [__tenant]: string };
@@ -79,4 +80,26 @@ export interface FHIRServerCTX extends FHIRServerInitCTX {
     type: T,
     url: string
   ) => AResource<T> | undefined;
+}
+
+/**
+ * For certain operations like parameter retrievals must treat context as a system user.
+ * To bypass any access control checks, we can use this function to create a new context.
+ * @param ctx The current context
+ * @returns A new context with the user set to system.
+ */
+export function asSystemCTX(ctx: FHIRServerCTX): FHIRServerCTX {
+  return {
+    ...ctx,
+    tenant: {
+      ...ctx.tenant,
+      userRole: "SUPER_ADMIN",
+    },
+    user: {
+      jwt: {
+        iss: IGUHEALTH_ISSUER,
+        sub: "system",
+      } as JWT,
+    },
+  };
 }

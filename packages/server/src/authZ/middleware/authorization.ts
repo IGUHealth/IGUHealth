@@ -1,14 +1,8 @@
 import type { MiddlewareAsync } from "@iguhealth/client/middleware";
-import { FHIRServerCTX, FHIRServerInitCTX } from "../../fhir/context.js";
+import { FHIRServerCTX } from "../../fhir/context.js";
 import { FHIRRequest } from "@iguhealth/client/lib/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { AccessPolicyAccess, code } from "@iguhealth/fhir-types/r4/types";
-
-function isServerCTX(
-  ctx: FHIRServerCTX | FHIRServerInitCTX
-): ctx is FHIRServerCTX {
-  return "client" in ctx;
-}
 
 /**
  * Determine whether or not the policy access has access to the resource type.
@@ -99,6 +93,7 @@ function evaluateAccessPolicy(
     // [TODO] should probably add this to context to state in the request why access was granted.
     if (access) return true;
   }
+
   return false;
 }
 
@@ -120,16 +115,17 @@ function canUserMakeRequest(ctx: FHIRServerCTX, request: FHIRRequest): boolean {
  * @param next Next middleware
  * @returns context with response.
  */
-export const authorizationMiddleware: MiddlewareAsync<
-  unknown,
-  FHIRServerCTX | FHIRServerInitCTX
-> = async (context, next) => {
-  if (!isServerCTX(context.ctx)) throw new Error(`Invalid context`);
-  if (!next) throw new Error("Next must be present on access policy access");
+export function createAuthorizationMiddleWare<T>(): MiddlewareAsync<
+  T,
+  FHIRServerCTX
+> {
+  return async (context, next) => {
+    if (!next) throw new Error("Next must be present on access policy access");
 
-  if (canUserMakeRequest(context.ctx, context.request)) {
-    return next(context);
-  }
+    if (canUserMakeRequest(context.ctx, context.request)) {
+      return next(context);
+    }
 
-  throw new OperationError(outcomeError("security", "access-denied"));
-};
+    throw new OperationError(outcomeError("security", "access-denied"));
+  };
+}

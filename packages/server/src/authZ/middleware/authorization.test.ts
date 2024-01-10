@@ -5,8 +5,10 @@ import { FHIRRequest } from "@iguhealth/client/lib/types";
 
 import { testServices } from "../../resourceProviders/test-ctx";
 import { FHIRServerCTX } from "../../fhir/context";
-import { authorizationMiddleware } from "./authorization";
+import { createAuthorizationMiddleWare } from "./authorization";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+
+const authorizationMiddleware = createAuthorizationMiddleWare();
 
 test("Authorization test for read access on resource based on type and method", async () => {
   const ctx: FHIRServerCTX = {
@@ -34,7 +36,9 @@ test("Authorization test for read access on resource based on type and method", 
     },
   };
 
-  const responder: typeof authorizationMiddleware = async (context) => {
+  const responder: ReturnType<typeof createAuthorizationMiddleWare> = async (
+    context
+  ) => {
     return {
       ...context,
       response: {

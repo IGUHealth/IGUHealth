@@ -45,7 +45,7 @@ import {
 } from "../utilities/search/parameters.js";
 import { fhirResponseToBundleEntry } from "../utilities/bundle.js";
 import { httpRequestToFHIRRequest } from "../../http/index.js";
-import { FHIRServerCTX } from "../../fhir/context.js";
+import { asSystemCTX, FHIRServerCTX } from "../../fhir/context.js";
 import { param_types_supported } from "./constants.js";
 import { executeSearchQuery } from "./search/index.js";
 import { ParsedParameter } from "@iguhealth/client/url";
@@ -82,8 +82,13 @@ async function getAllParametersForResource<CTX extends FHIRServerCTX>(
     parameters = [...parameters, { name: "name", value: names }];
   }
 
-  return (await ctx.client.search_type(ctx, "SearchParameter", parameters))
-    .resources;
+  return (
+    await ctx.client.search_type(
+      asSystemCTX(ctx),
+      "SearchParameter",
+      parameters
+    )
+  ).resources;
 }
 
 async function indexSearchParameter<CTX extends FHIRServerCTX>(
