@@ -8,14 +8,14 @@ import { FHIRResponse } from "@iguhealth/client/types";
 type CachedClient = AsynchronousClient<
   {
     client: AsynchronousClient<
-      { client: ReturnType<typeof createCachedClient> },
+      { client: ReturnType<typeof createAdminAppClient> },
       Record<string, never>
     >;
   },
   Record<string, never>
 >;
 
-export const getClient = atom<ReturnType<typeof createCachedClient>>({
+export const getClient = atom<ReturnType<typeof createAdminAppClient>>({
   key: "client",
   default: undefined,
 });
@@ -25,7 +25,7 @@ const cachedResponse: Record<string, Promise<FHIRResponse>> = {};
 /*
  ** Cache select calls for performance improvements (notably expansions).
  */
-export function createCachedClient(
+export function createAdminAppClient(
   client: ReturnType<typeof createHTTPClient>
 ): CachedClient {
   return new AsynchronousClient(

@@ -28,16 +28,11 @@ export interface NavigationProps {
 }
 
 interface ProfileDropdownProps {
-  onNavigation?: (nav: NavigationItem) => void;
-  navigation: NavigationItem[];
   user?: { imageUrl?: string; email?: string; name?: string };
+  children?: React.ReactNode;
 }
 
-export const ProfileDropdown = ({
-  user,
-  navigation,
-  onNavigation = () => {},
-}: ProfileDropdownProps) => {
+export const ProfileDropdown = ({ user, children }: ProfileDropdownProps) => {
   return (
     <Menu as="div" className="relative ml-3">
       <div>
@@ -63,27 +58,9 @@ export const ProfileDropdown = ({
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          {navigation.map((item) => (
-            <Menu.Item key={item.name}>
-              {({ active }) => (
-                <a
-                  onClick={() => onNavigation(item)}
-                  href={item.href}
-                  className={classNames(
-                    "cursor-pointer block px-4 py-2 text-sm",
-                    {
-                      "text-slate-800 hover:bg-gray-200": !active,
-                      "text-blue-800 bg-blue-100 ": active,
-                    }
-                  )}
-                >
-                  {item.name}
-                </a>
-              )}
-            </Menu.Item>
-          ))}
-        </Menu.Items>
+        <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          {children}
+        </div>
       </Transition>
     </Menu>
   );
@@ -140,7 +117,7 @@ export const Navigation = ({
               <div className="hidden md:block">
                 <div className="ml-4 flex items-center md:ml-6">
                   {/* Profile dropdown */}
-                  <ProfileDropdown navigation={userNavigation} user={user} />
+                  <ProfileDropdown user={user} />
                 </div>
               </div>
               <div className="-mr-2 md:hidden">

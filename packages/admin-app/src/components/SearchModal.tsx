@@ -3,7 +3,7 @@ import { FixedSizeList as List } from "react-window";
 import classNames from "classnames";
 import { RecoilState, atom, useRecoilState, useRecoilValue } from "recoil";
 import { Dialog, Transition } from "@headlessui/react";
-import { useNavigate } from "react-router-dom";
+import { generatePath, useNavigate, useParams } from "react-router-dom";
 
 import { CapabilityStatementRestResource } from "@iguhealth/fhir-types/r4/types";
 
@@ -62,6 +62,7 @@ function SearchResultItem({
 
 function SearchModal() {
   const capabilities = useRecoilValue(getCapabilities);
+  const params = useParams();
   const [search, setSearch] = useState("");
   const [openModal, setOpenModal] = useRecoilState(openSearchModalAtom);
   const [searchIndex, setSearchIndex] = useRecoilState(currentIndex);
@@ -78,7 +79,12 @@ function SearchModal() {
   const onSelect = useMemo(() => {
     return () => {
       if (searchResults?.[searchIndex]?.type) {
-        navigate(`/resources/${searchResults?.[searchIndex]?.type}`);
+        navigate(
+          generatePath("/w/:tenant/resources/:resourceType", {
+            tenant: params.tenant as string,
+            resourceType: searchResults?.[searchIndex]?.type,
+          })
+        );
         setOpenModal(false);
         setSearch("");
         return;
