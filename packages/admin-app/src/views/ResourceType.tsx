@@ -44,9 +44,16 @@ export default function ResourceTypeView() {
           setData(response.resources);
         })
         .catch((e) => {
+          setIsLoading(false);
           if (e instanceof OperationError) {
             Toaster.error(
-              e.operationOutcome.issue.map((i) => i.diagnostics).join("")
+              `'${params.resourceType}': ${e.operationOutcome.issue
+                .map((i) => i.diagnostics)
+                .join("")}`
+            );
+          } else {
+            Toaster.error(
+              `Request for resource '${params.resourceType}' failed`
             );
           }
         });
