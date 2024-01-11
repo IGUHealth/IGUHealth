@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, generatePath } from "react-router-dom";
 
 import { Toaster } from "@iguhealth/components";
 import {
@@ -23,6 +23,7 @@ function ResourceEditorTabs() {
   const [structureDefinition, setStructureDefinition] = useState<
     StructureDefinition | undefined
   >(undefined);
+  const params = useParams();
   const navigate = useNavigate();
 
   const { resourceType, id } = useParams();
@@ -60,9 +61,16 @@ function ResourceEditorTabs() {
               return message;
             },
           }).then((value) =>
-            navigate(`/resources/${resourceType}/${(value as Resource).id}`, {
-              replace: true,
-            })
+            navigate(
+              generatePath("/w/:tenant/resources/:resourceType/:id", {
+                tenant: params.tenant as string,
+                resourceType: resourceType as string,
+                id: (value as Resource).id as string,
+              }),
+              {
+                replace: true,
+              }
+            )
           );
         } catch (e) {
           Toaster.error(`${e}`);
@@ -85,7 +93,14 @@ function ResourceEditorTabs() {
           error: (error) => {
             return `${error}`;
           },
-        }).then(() => navigate(`/resources/${resourceType}`));
+        }).then(() =>
+          navigate(
+            generatePath("/w/:tenant/resources/:resourceType", {
+              tenant: params.tenant as string,
+              resourceType: resourceType as string,
+            })
+          )
+        );
       },
     },
   ];

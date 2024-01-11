@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
-import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
+import { Auth0Provider, User, useAuth0 } from "@auth0/auth0-react";
 import {
   ArrowLeftOnRectangleIcon,
   Cog6ToothIcon,
@@ -12,7 +12,10 @@ import {
   RouterProvider,
   useNavigate,
   useMatches,
+  useParams,
+  generatePath,
 } from "react-router-dom";
+import classNames from "classnames";
 
 import createHTTPClient from "@iguhealth/client/http";
 import {
@@ -23,7 +26,7 @@ import {
 } from "@iguhealth/components";
 import "@iguhealth/components/dist/index.css";
 
-import { getClient, createCachedClient } from "./db/client";
+import { getClient, createAdminAppClient } from "./db/client";
 import Settings from "./views/Settings";
 import BundleImport from "./views/BundleImport";
 import EmptyWorkspace from "./views/EmptyWorkspace";
@@ -69,14 +72,17 @@ function LoginWrapper() {
 
 function ServiceSetup({ children }: { children: React.ReactNode }) {
   const auth0 = useAuth0();
+  const tenant = useParams().tenant as string;
   const [c, setClient] = useRecoilState(getClient);
 
   React.useEffect(() => {
     setClient(
-      createCachedClient(
+      createAdminAppClient(
         createHTTPClient({
           getAccessToken: () => auth0.getAccessTokenSilently(),
-          url: process.env.REACT_APP_FHIR_BASE_URL || "",
+          url:
+            (process.env.REACT_APP_FHIR_BASE_URL || "") +
+            `/w/${tenant}/api/v1/fhir/r4`,
         })
       )
     );
@@ -85,17 +91,31 @@ function ServiceSetup({ children }: { children: React.ReactNode }) {
   return <>{c ? <>{children}</> : undefined}</>;
 }
 
+interface Tenant {
+  id: string;
+}
+
+function getTenants(user: User | undefined): Tenant[] {
+  return user?.["https://iguhealth.app/tenants"] as Tenant[];
+}
+
 function WorkspaceCheck() {
   const navigate = useNavigate();
+  const params = useParams();
   const matches = useMatches();
   const auth0 = useAuth0();
 
+  const tenants = getTenants(auth0.user);
+
   useEffect(() => {
     if (
-      auth0.user?.["https://iguhealth.app/workspaces"].length === 0 &&
+      tenants.length === 0 &&
       matches.find((match) => match.id === "empty-workspace") === undefined
     ) {
       navigate("/no-workspace", { replace: true });
+    }
+    if (!params.tenant) {
+      navigate(`/w/${tenants[0].id}`, { replace: true });
     }
   }, [auth0.user, navigate, matches]);
 
@@ -145,28 +165,28 @@ const router = createBrowserRouter([
                 element: <EmptyWorkspace />,
               },
               {
-                path: "/",
+                path: "/w/:tenant/",
                 element: (
                   <ServiceSetup>
                     <Root />
                   </ServiceSetup>
                 ),
                 children: [
-                  { id: "settings", path: "/settings", element: <Settings /> },
-                  { id: "root", path: "/", element: <Resources /> },
+                  { id: "settings", path: "settings", element: <Settings /> },
+                  { id: "root", path: "", element: <Resources /> },
                   {
                     id: "types",
-                    path: "/resources/:resourceType",
+                    path: "resources/:resourceType",
                     element: <ResourceType />,
                   },
                   {
                     id: "instance",
-                    path: "/resources/:resourceType/:id",
+                    path: "resources/:resourceType/:id",
                     element: <ResourceEditor />,
                   },
                   {
                     id: "bundle-import",
-                    path: "/bundle-import",
+                    path: "bundle-import",
                     element: <BundleImport />,
                   },
                 ],
@@ -180,9 +200,11 @@ const router = createBrowserRouter([
 ]);
 
 function Root() {
-  const auth0Info = useAuth0();
+  const auth0 = useAuth0();
   const navigate = useNavigate();
+  const params = useParams();
   const matches = useMatches();
+  const tenants = getTenants(auth0.user);
 
   return (
     <>
@@ -191,7 +213,13 @@ function Root() {
           <SideBar.SideBar
             top={
               <div
-                onClick={() => navigate("/")}
+                onClick={() =>
+                  navigate(
+                    generatePath("/w/:tenant/", {
+                      tenant: params.tenant as string,
+                    })
+                  )
+                }
                 className="cursor-pointer w-16 h-16 p-2 mt-4"
               >
                 <Logo />
@@ -204,7 +232,12 @@ function Root() {
                   matches[0].params.resourceType === "OperationDefinition"
                 }
                 onClick={() => {
-                  navigate("/resources/OperationDefinition");
+                  navigate(
+                    generatePath("/w/:tenant/resources/:resourceType", {
+                      tenant: params.tenant as string,
+                      resourceType: "OperationDefinition",
+                    })
+                  );
                 }}
               >
                 Custom Operations
@@ -212,7 +245,12 @@ function Root() {
               <SideBar.SideBarItem
                 active={matches[0].params.resourceType === "Subscription"}
                 onClick={() => {
-                  navigate("/resources/Subscription");
+                  navigate(
+                    generatePath("/w/:tenant/resources/:resourceType", {
+                      tenant: params.tenant as string,
+                      resourceType: "Subscription",
+                    })
+                  );
                 }}
               >
                 Subscriptions
@@ -222,7 +260,12 @@ function Root() {
               <SideBar.SideBarItem
                 active={matches[0].params.resourceType === "Questionnaire"}
                 onClick={() => {
-                  navigate("/resources/Questionnaire");
+                  navigate(
+                    generatePath("/w/:tenant/resources/:resourceType", {
+                      tenant: params.tenant as string,
+                      resourceType: "Questionnaire",
+                    })
+                  );
                 }}
               >
                 Questionnaires
@@ -232,7 +275,12 @@ function Root() {
                   matches[0].params.resourceType === "QuestionnaireResponse"
                 }
                 onClick={() => {
-                  navigate("/resources/QuestionnaireResponse");
+                  navigate(
+                    generatePath("/w/:tenant/resources/:resourceType", {
+                      tenant: params.tenant as string,
+                      resourceType: "QuestionnaireResponse",
+                    })
+                  );
                 }}
               >
                 Questionnaire Responses
@@ -242,7 +290,12 @@ function Root() {
               <SideBar.SideBarItem
                 active={matches[0].params.resourceType === "AuditEvent"}
                 onClick={() => {
-                  navigate("/resources/AuditEvent");
+                  navigate(
+                    generatePath("/w/:tenant/resources/:resourceType", {
+                      tenant: params.tenant as string,
+                      resourceType: "AuditEvent",
+                    })
+                  );
                 }}
               >
                 Audit Events
@@ -253,7 +306,12 @@ function Root() {
               <SideBar.SideBarItem
                 active={matches[0].params.resourceType === "User"}
                 onClick={() => {
-                  navigate("/resources/User");
+                  navigate(
+                    generatePath("/w/:tenant/resources/:resourceType", {
+                      tenant: params.tenant as string,
+                      resourceType: "User",
+                    })
+                  );
                 }}
               >
                 Users
@@ -261,7 +319,12 @@ function Root() {
               <SideBar.SideBarItem
                 active={matches[0].params.resourceType === "AccessPolicy"}
                 onClick={() => {
-                  navigate("/resources/AccessPolicy");
+                  navigate(
+                    generatePath("/w/:tenant/resources/:resourceType", {
+                      tenant: params.tenant as string,
+                      resourceType: "AccessPolicy",
+                    })
+                  );
                 }}
               >
                 Access Policies
@@ -284,7 +347,11 @@ function Root() {
                   ) !== undefined
                 }
                 onClick={() => {
-                  navigate("/");
+                  navigate(
+                    generatePath("/w/:tenant", {
+                      tenant: params.tenant as string,
+                    })
+                  );
                 }}
               >
                 All Resources
@@ -297,7 +364,11 @@ function Root() {
                   undefined
                 }
                 onClick={() => {
-                  navigate("/bundle-import");
+                  navigate(
+                    generatePath("/w/:tenant/bundle-import", {
+                      tenant: params.tenant as string,
+                    })
+                  );
                 }}
               >
                 Bundles
@@ -311,14 +382,20 @@ function Root() {
                 active={
                   matches.find((match) => match.id === "settings") !== undefined
                 }
-                onClick={() => navigate("/settings")}
+                onClick={() =>
+                  navigate(
+                    generatePath("/w/:tenant/settings", {
+                      tenant: params.tenant as string,
+                    })
+                  )
+                }
               >
                 Settings
               </SideBar.SideBarItem>
               <SideBar.SideBarItem
                 logo={<ArrowLeftOnRectangleIcon />}
                 onClick={() =>
-                  auth0Info.logout({
+                  auth0.logout({
                     logoutParams: {
                       returnTo: window.location.origin,
                     },
@@ -348,31 +425,88 @@ function Root() {
                 </a>
                 <ProfileDropdown
                   user={{
-                    email: auth0Info.user?.email,
-                    name: auth0Info.user?.name,
-                    imageUrl: auth0Info.user?.picture,
+                    email: auth0.user?.email,
+                    name: auth0.user?.name,
+                    imageUrl: auth0.user?.picture,
                   }}
-                  navigation={[
-                    { id: "settings", name: "Settings" },
-                    { id: "sign-out", name: "Sign out" },
-                  ]}
-                  onNavigation={(item) => {
-                    switch (item.id) {
-                      case "settings": {
-                        navigate("/settings");
-                        return;
-                      }
-                      case "sign-out": {
-                        auth0Info.logout({
-                          logoutParams: {
-                            returnTo: window.location.origin,
-                          },
-                        });
-                        return;
-                      }
-                    }
-                  }}
-                />
+                >
+                  <div>
+                    <div>
+                      <div className="mt-1">
+                        <div className="p-2 text-sm text-slate-600 font-semibold">
+                          Tenants
+                        </div>
+                      </div>
+
+                      <table className="border-collapse bg-gray-50 w-full">
+                        {tenants.map((t) => (
+                          <tr
+                            key={t.id}
+                            className="border border-r-0 border-l-0 cursor-pointer"
+                            onClick={() => {
+                              window.location.href = generatePath(
+                                "/w/:tenant",
+                                {
+                                  tenant: t.id,
+                                }
+                              );
+                            }}
+                          >
+                            <td
+                              className={classNames(
+                                "hover:bg-blue-100 text-xs hover:text-blue-800 p-2 text-slate-800",
+                                {
+                                  "bg-blue-100 text-xs text-blue-800 p-2":
+                                    params.tenant === t.id,
+                                }
+                              )}
+                            >
+                              {t.id}
+                            </td>
+                          </tr>
+                        ))}
+                      </table>
+                    </div>
+                    <div className="mt-2">
+                      <a
+                        className={classNames(
+                          "cursor-pointer block px-4 py-2 text-sm  hover:text-blue-800 hover:bg-blue-100",
+                          {
+                            "text-slate-800":
+                              matches.find(
+                                (match) => match.id === "settings"
+                              ) === undefined,
+                            "bg-blue-100 text-blue-800":
+                              matches.find(
+                                (match) => match.id === "settings"
+                              ) !== undefined,
+                          }
+                        )}
+                        onClick={() => {
+                          navigate(
+                            generatePath("/w/:tenant/settings", {
+                              tenant: params.tenant as string,
+                            })
+                          );
+                        }}
+                      >
+                        Settings
+                      </a>
+                      <a
+                        className="cursor-pointer block px-4 py-2 text-sm text-slate-800 hover:text-blue-800 hover:bg-blue-100"
+                        onClick={() => {
+                          auth0.logout({
+                            logoutParams: {
+                              returnTo: window.location.origin,
+                            },
+                          });
+                        }}
+                      >
+                        Sign out
+                      </a>
+                    </div>
+                  </div>
+                </ProfileDropdown>
               </div>
             </div>
           </div>

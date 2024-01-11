@@ -1,7 +1,12 @@
 import React, { useEffect, useMemo } from "react";
 
 import { useRecoilValue } from "recoil";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import {
+  generatePath,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
 
 import { Table, Button, Input } from "@iguhealth/components";
@@ -96,7 +101,15 @@ export default function ResourceTypeView() {
           className="ml-2 font-medium"
           buttonSize="small"
           buttonType="secondary"
-          onClick={() => navigate(`/resources/${params.resourceType}/new`)}
+          onClick={() =>
+            navigate(
+              generatePath("/w/:tenant/resources/:resourceType/:id", {
+                tenant: params.tenant as string,
+                resourceType: params.resourceType as string,
+                id: "new",
+              })
+            )
+          }
         >
           <div className="flex items-center justify-center ">
             <PlusIcon className="w-4 h-4 mr-1" /> <span>New</span>
@@ -109,9 +122,11 @@ export default function ResourceTypeView() {
           data={data || []}
           onRowClick={(row) => {
             navigate(
-              `/resources/${(row as Resource).resourceType}/${
-                (row as Resource).id
-              }`
+              generatePath("/w/:tenant/resources/:resourceType/:id", {
+                tenant: params.tenant as string,
+                resourceType: params.resourceType as string,
+                id: (row as Resource).id as string,
+              })
             );
           }}
           columns={[
