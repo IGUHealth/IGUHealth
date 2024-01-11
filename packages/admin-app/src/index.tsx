@@ -469,7 +469,7 @@ function Root() {
                     </div>
                     <div className="mt-2">
                       <div
-                        role="button"
+                        role="link"
                         className={classNames(
                           "cursor-pointer block px-4 py-2 text-sm  hover:text-blue-800 hover:bg-blue-100",
                           {
@@ -494,7 +494,7 @@ function Root() {
                         Settings
                       </div>
                       <div
-                        role="button"
+                        role="link"
                         className="cursor-pointer block px-4 py-2 text-sm text-slate-800 hover:text-blue-800 hover:bg-blue-100"
                         onClick={() => {
                           auth0.logout({
