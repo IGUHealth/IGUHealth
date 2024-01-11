@@ -44,7 +44,9 @@ export default function ResourceTypeView() {
           setData(response.resources);
         })
         .catch((e) => {
+          setData(undefined);
           setIsLoading(false);
+
           if (e instanceof OperationError) {
             Toaster.error(
               `'${params.resourceType}': ${e.operationOutcome.issue
