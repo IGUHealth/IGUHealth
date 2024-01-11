@@ -468,8 +468,7 @@ function Root() {
                       </table>
                     </div>
                     <div className="mt-2">
-                      <div
-                        role="link"
+                      <a
                         className={classNames(
                           "cursor-pointer block px-4 py-2 text-sm  hover:text-blue-800 hover:bg-blue-100",
                           {
@@ -492,9 +491,8 @@ function Root() {
                         }}
                       >
                         Settings
-                      </div>
-                      <div
-                        role="link"
+                      </a>
+                      <a
                         className="cursor-pointer block px-4 py-2 text-sm text-slate-800 hover:text-blue-800 hover:bg-blue-100"
                         onClick={() => {
                           auth0.logout({
@@ -505,7 +503,7 @@ function Root() {
                         }}
                       >
                         Sign out
-                      </div>
+                      </a>
                     </div>
                   </div>
                 </ProfileDropdown>
