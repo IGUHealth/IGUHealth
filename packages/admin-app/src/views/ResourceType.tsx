@@ -9,12 +9,14 @@ import {
 } from "react-router-dom";
 import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
 
+import { Toaster } from "@iguhealth/components";
 import { Table, Button, Input } from "@iguhealth/components";
 import {
   SearchParameter,
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/r4/types";
+import { OperationError } from "@iguhealth/operation-outcomes";
 
 import { getClient } from "../db/client";
 
@@ -41,7 +43,13 @@ export default function ResourceTypeView() {
           setIsLoading(false);
           setData(response.resources);
         })
-        .catch((e) => console.error(e));
+        .catch((e) => {
+          if (e instanceof OperationError) {
+            Toaster.error(
+              e.operationOutcome.issue.map((i) => i.diagnostics).join("")
+            );
+          }
+        });
     },
     [setIsLoading, setData, client, params.resourceType]
   );
