@@ -74,6 +74,10 @@
       "resourceType": "SearchParameter"
     },
     {
+      "filename": "r4/iguhealth/searchParameter/resource-parameters.json",
+      "resourceType": "SearchParameter"
+    },
+    {
       "filename": "r4/iguhealth/searchParameter/user/identifier.json",
       "resourceType": "SearchParameter"
     },
@@ -87,18 +91,6 @@
     },
     {
       "filename": "r4/iguhealth/structuredefinition/client-application.json",
-      "resourceType": "StructureDefinition"
-    },
-    {
-      "filename": "r4/iguhealth/structuredefinition/connection.json",
-      "resourceType": "StructureDefinition"
-    },
-    {
-      "filename": "r4/iguhealth/structuredefinition/parameters.json",
-      "resourceType": "SearchParameter"
-    },
-    {
-      "filename": "r4/iguhealth/structuredefinition/tenant.json",
       "resourceType": "StructureDefinition"
     },
     {
