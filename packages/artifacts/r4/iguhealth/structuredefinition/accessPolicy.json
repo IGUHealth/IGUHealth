@@ -196,7 +196,7 @@
         "binding": {
           "strength": "required",
           "description": "One of the resource types defined as part of this version of FHIR.",
-          "valueSet": "http://hl7.org/fhir/ValueSet/resource-types|4.0.1"
+          "valueSet": "https://iguhealth.app/fhir/ValueSet/ResourceTypes|4.0.1"
         },
         "type": [
           {

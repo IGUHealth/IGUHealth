@@ -26395,7 +26395,7 @@ exports[`Testing validating resourceType 'StructureDefinition' 1`] = `
           "binding": {
             "description": "One of the resource types defined as part of this version of FHIR.",
             "strength": "required",
-            "valueSet": "http://hl7.org/fhir/ValueSet/resource-types|4.0.1",
+            "valueSet": "https://iguhealth.app/fhir/ValueSet/ResourceTypes|4.0.1",
           },
           "id": "AccessPolicy.access.fhir.resourceType",
           "max": "*",
