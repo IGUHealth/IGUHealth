@@ -8,7 +8,6 @@
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: no test specified\"",
-    "generate-index": "yarn node ../cli/lib/index.js generate-index-file -p . -r r4 --ignore r4/hl7/profiles-others.json r4/hl7/dataelements.json r4/hl7/extension-definitions.json",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "fhirVersion": [
@@ -25,6 +24,6 @@
   "files": [
     "lib/**",
     "r4/**",
-    ".index.config.json"
+    ".index.json"
   ]
 }

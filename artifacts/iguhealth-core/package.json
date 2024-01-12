@@ -1,0 +1,22 @@
+{
+  "name": "@iguhealth/iguhealth.fhir.r4.core",
+  "packageManager": "yarn@3.6.3",
+  "version": "0.1.0",
+  "canonical": "https://iguhealth.app/fhir/ImplementationGuide/iguhealth.fhir.r4.core",
+  "url": "https://iguhealth.app/fhir/ImplementationGuide/iguhealth.fhir.r4.core",
+  "title": "IGUHealth Core resources",
+  "description": "IGUHEALTH package that contains core iguhealth R4 resources.",
+  "fhirVersions": [
+    "4.0.1"
+  ],
+  "author": "IGUHealth",
+  "maintainers": [
+    {
+      "name": "IGUHealth",
+      "email": "dev@iguhealth.app"
+    }
+  ],
+  "scripts": {
+    "generate-index": "yarn node ../../packages/cli/lib/index.js generate-index-file -p . -r r4"
+  }
+}

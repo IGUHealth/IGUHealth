@@ -1,7 +1,9 @@
 {
   "name": "@iguhealth/test-data",
   "version": "0.1.21",
-  "fhirVersion": "r4",
+  "fhirVersions": [
+    "4.0.1"
+  ],
   "scripts": {
     "generate-index-file": "yarn cli generate-index-file -p . -r examples-json",
     "publish": "yarn npm publish --access public --tolerate-republish"
@@ -11,7 +13,7 @@
   },
   "files": [
     "lib/**",
-    ".index.config.json",
+    ".index.json",
     "examples-json/**"
   ]
 }

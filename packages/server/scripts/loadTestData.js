@@ -24,11 +24,11 @@ async function loadTestData() {
   const promises = [];
   for (let i = 0; i < 30; i++) {
     for (const resourceType of resourceTypesToCheck) {
-      const resources = loadArtifacts(
+      const resources = loadArtifacts({
         resourceType,
-        path.join(fileURLToPath(import.meta.url), "../../"),
-        true
-      );
+        packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
+        silence: true,
+      });
 
       for (const resource of resources) {
         try {

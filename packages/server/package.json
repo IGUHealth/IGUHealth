@@ -26,6 +26,8 @@
     "@iguhealth/fhir-validation": "workspace:^",
     "@iguhealth/fhirpath": "workspace:^",
     "@iguhealth/generated-ops": "workspace:^",
+    "@iguhealth/hl7.fhir.r4.core": "workspace:^",
+    "@iguhealth/iguhealth.fhir.r4.core": "workspace:^",
     "@iguhealth/meta-value": "workspace:^",
     "@iguhealth/operation-execution": "workspace:^",
     "@iguhealth/operation-outcomes": "workspace:^",

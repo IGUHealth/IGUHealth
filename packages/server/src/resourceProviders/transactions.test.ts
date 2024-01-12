@@ -17,11 +17,11 @@ import { testServices } from "./test-ctx.js";
 function loadResources(resourceTypes: ResourceType[]): Resource[] {
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
-      loadArtifacts(
+      loadArtifacts({
         resourceType,
-        path.join(fileURLToPath(import.meta.url), "../../"),
-        true
-      )
+        packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
+        silence: true,
+      })
     )
     .flat();
   return artifactResources;

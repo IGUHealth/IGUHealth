@@ -21,10 +21,10 @@ program
     if (options.version !== "r4") {
       throw new Error("Currently only support r4");
     }
-    const structureDefinitions = loadArtifacts(
-      "StructureDefinition",
-      path.join(fileURLToPath(import.meta.url), "../../")
-    );
+    const structureDefinitions = loadArtifacts({
+      resourceType: "StructureDefinition",
+      packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
+    });
 
     mkdirSync(options.output, { recursive: true });
     const generatedTypes = generateTypes(options.version, structureDefinitions);
@@ -43,10 +43,10 @@ program
     if (options.version !== "r4") {
       throw new Error("Currently only support r4");
     }
-    const operationDefinitions = loadArtifacts(
-      "OperationDefinition",
-      path.join(fileURLToPath(import.meta.url), "../../")
-    );
+    const operationDefinitions = loadArtifacts({
+      resourceType: "OperationDefinition",
+      packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
+    });
 
     mkdirSync(options.output, { recursive: true });
 
@@ -71,7 +71,7 @@ program
       options.ignore
     );
     console.log("generating index file");
-    const indexLoc = path.join(options.packagedir, ".index.config.json");
+    const indexLoc = path.join(options.packagedir, ".index.json");
     writeFileSync(indexLoc, JSON.stringify(indexFile, null, 2));
     console.log(`index generated and saved at '${indexLoc}'`);
   });

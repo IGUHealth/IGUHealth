@@ -15,10 +15,10 @@ import { OpCTX } from "@iguhealth/operation-execution/src/index.js";
 
 import { ValueSetExpand } from "./ops.js";
 
-const sds = loadArtifacts(
-  "StructureDefinition",
-  path.join(fileURLToPath(import.meta.url), "../../"),
-);
+const sds = loadArtifacts({
+  resourceType: "StructureDefinition",
+  packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
+});
 
 test("Test ValueSet Expands", async () => {
   const ctx: OpCTX = {

@@ -12,10 +12,10 @@ import { loadArtifacts } from "@iguhealth/artifacts";
 
 import { evaluate, evaluateWithMeta } from "./index";
 
-const sds: StructureDefinition[] = loadArtifacts(
-  "StructureDefinition",
-  path.join(fileURLToPath(import.meta.url), "..")
-);
+const sds: StructureDefinition[] = loadArtifacts({
+  resourceType: "StructureDefinition",
+  packageLocation: path.join(fileURLToPath(import.meta.url), ".."),
+});
 
 function getSD(type: uri) {
   const foundSD = sds.find((sd) => sd.type === type);

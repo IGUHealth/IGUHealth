@@ -69,10 +69,10 @@ export function createMemoryData(
 ): InternalData<ResourceType> {
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
-      loadArtifacts(
+      loadArtifacts({
         resourceType,
-        path.join(fileURLToPath(import.meta.url), "../../../")
-      )
+        packageLocation: path.join(fileURLToPath(import.meta.url), "../../../"),
+      })
     )
     .flat();
   let data: InternalData<ResourceType> = {};

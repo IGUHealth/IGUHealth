@@ -24,11 +24,12 @@ function createMemoryDatabase(
     Resource[]
   >;
   for (const resourceType of resourceTypes) {
-    const resources = loadArtifacts(
-      resourceType,
-      path.join(fileURLToPath(import.meta.url), ".."),
-      true
-    );
+    const resources = loadArtifacts({
+      resourceType: resourceType,
+      packageLocation: path.join(fileURLToPath(import.meta.url), ".."),
+      silence: true,
+      onlyPackages: ["@iguhealth/hl7.fhir.r4.core", "@iguhealth/test-data"],
+    });
     data[resourceType] = resources;
   }
 

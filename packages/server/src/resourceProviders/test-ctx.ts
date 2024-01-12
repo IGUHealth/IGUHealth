@@ -22,11 +22,11 @@ import { TerminologyProviderMemory } from "../terminology/index.js";
 
 dotEnv.config();
 
-const sds = loadArtifacts(
-  "StructureDefinition",
-  path.join(fileURLToPath(import.meta.url), "../../"),
-  true
-);
+const sds = loadArtifacts({
+  resourceType: "StructureDefinition",
+  packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
+  silence: true,
+});
 
 class TestLock implements Lock<TestLock> {
   async withLock(lockId: string, body: (v: TestLock) => Promise<void>) {

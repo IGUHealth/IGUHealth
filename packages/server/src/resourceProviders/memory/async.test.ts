@@ -15,16 +15,16 @@ import { testServices } from "../test-ctx.js";
 import type { InternalData } from "./types.js";
 import CreateMemoryDatabaseAsync from "./async.js";
 
-const artifactParameters = loadArtifacts(
-  "SearchParameter",
-  path.join(fileURLToPath(import.meta.url), "../../../"),
-  true
-);
-const sds = loadArtifacts(
-  "StructureDefinition",
-  path.join(fileURLToPath(import.meta.url), "../../../"),
-  true
-);
+const artifactParameters = loadArtifacts({
+  resourceType: "SearchParameter",
+  packageLocation: path.join(fileURLToPath(import.meta.url), "../../../"),
+  silence: true,
+});
+const sds = loadArtifacts({
+  resourceType: "StructureDefinition",
+  packageLocation: path.join(fileURLToPath(import.meta.url), "../../../"),
+  silence: true,
+});
 
 let data: InternalData<ResourceType> = {};
 for (const resource of [...artifactParameters, ...sds]) {
