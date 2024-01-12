@@ -128,6 +128,14 @@
     {
       "filename": "r4/iguhealth/terminology/access-policy/policy-types.json",
       "resourceType": "ValueSet"
+    },
+    {
+      "filename": "r4/iguhealth/terminology/access-policy/resource_type.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "r4/iguhealth/terminology/access-policy/resource_type.json",
+      "resourceType": "ValueSet"
     }
   ]
 }
