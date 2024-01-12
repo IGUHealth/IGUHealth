@@ -2756,9 +2756,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 83`] = `
 exports[`Testing indexing resourceType 'CodeSystem' 84`] = `
 [
   "CapabilityStatement.date | CodeSystem.date | CompartmentDefinition.date | ConceptMap.date | GraphDefinition.date | ImplementationGuide.date | MessageDefinition.date | NamingSystem.date | OperationDefinition.date | SearchParameter.date | StructureDefinition.date | StructureMap.date | TerminologyCapabilities.date | ValueSet.date",
-  [
-    "2019-11-01T09:29:23+11:00",
-  ],
+  [],
 ]
 `;
 
@@ -2766,7 +2764,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 85`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
   [
-    "A list of the base types defined by this version of the FHIR specification - types that are defined, but for which only specializations actually are created.",
+    "IGUHealth custom types",
   ],
 ]
 `;
@@ -2782,7 +2780,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 87`] = `
 [
   "CapabilityStatement.name | CodeSystem.name | CompartmentDefinition.name | ConceptMap.name | GraphDefinition.name | ImplementationGuide.name | MessageDefinition.name | NamingSystem.name | OperationDefinition.name | SearchParameter.name | StructureDefinition.name | StructureMap.name | TerminologyCapabilities.name | ValueSet.name",
   [
-    "AbstractType",
+    "Custom types",
   ],
 ]
 `;
@@ -2791,7 +2789,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 88`] = `
 [
   "CapabilityStatement.publisher | CodeSystem.publisher | CompartmentDefinition.publisher | ConceptMap.publisher | GraphDefinition.publisher | ImplementationGuide.publisher | MessageDefinition.publisher | NamingSystem.publisher | OperationDefinition.publisher | SearchParameter.publisher | StructureDefinition.publisher | StructureMap.publisher | TerminologyCapabilities.publisher | ValueSet.publisher",
   [
-    "HL7 (FHIR Project)",
+    "IGUHealth",
   ],
 ]
 `;
@@ -2809,7 +2807,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 90`] = `
 [
   "CapabilityStatement.title | CodeSystem.title | ConceptMap.title | ImplementationGuide.title | MessageDefinition.title | OperationDefinition.title | StructureDefinition.title | StructureMap.title | TerminologyCapabilities.title | ValueSet.title",
   [
-    "AbstractType",
+    "Custom Types",
   ],
 ]
 `;
@@ -2818,7 +2816,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 91`] = `
 [
   "CapabilityStatement.url | CodeSystem.url | CompartmentDefinition.url | ConceptMap.url | GraphDefinition.url | ImplementationGuide.url | MessageDefinition.url | OperationDefinition.url | SearchParameter.url | StructureDefinition.url | StructureMap.url | TerminologyCapabilities.url | ValueSet.url",
   [
-    "http://hl7.org/fhir/abstract-types",
+    "https://iguhealth.app/fhir/CodeSystem/IGUHealthCustomTypes",
   ],
 ]
 `;
@@ -2850,7 +2848,8 @@ exports[`Testing indexing resourceType 'CodeSystem' 95`] = `
 [
   "CodeSystem.concept.code",
   [
-    "Type",
+    "AccessPolicy",
+    "User",
     "Any",
   ],
 ]
@@ -2890,7 +2889,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 100`] = `
 [
   "CodeSystem.url",
   [
-    "http://hl7.org/fhir/abstract-types",
+    "https://iguhealth.app/fhir/CodeSystem/IGUHealthCustomTypes",
   ],
 ]
 `;
@@ -2929,7 +2928,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 105`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
   [
-    "Indicates whether the account is available to be used.",
+    "A list of the base types defined by this version of the FHIR specification - types that are defined, but for which only specializations actually are created.",
   ],
 ]
 `;
@@ -2945,7 +2944,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 107`] = `
 [
   "CapabilityStatement.name | CodeSystem.name | CompartmentDefinition.name | ConceptMap.name | GraphDefinition.name | ImplementationGuide.name | MessageDefinition.name | NamingSystem.name | OperationDefinition.name | SearchParameter.name | StructureDefinition.name | StructureMap.name | TerminologyCapabilities.name | ValueSet.name",
   [
-    "AccountStatus",
+    "AbstractType",
   ],
 ]
 `;
@@ -2963,7 +2962,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 109`] = `
 [
   "CapabilityStatement.status | CodeSystem.status | CompartmentDefinition.status | ConceptMap.status | GraphDefinition.status | ImplementationGuide.status | MessageDefinition.status | NamingSystem.status | OperationDefinition.status | SearchParameter.status | StructureDefinition.status | StructureMap.status | TerminologyCapabilities.status | ValueSet.status",
   [
-    "draft",
+    "active",
   ],
 ]
 `;
@@ -2972,7 +2971,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 110`] = `
 [
   "CapabilityStatement.title | CodeSystem.title | ConceptMap.title | ImplementationGuide.title | MessageDefinition.title | OperationDefinition.title | StructureDefinition.title | StructureMap.title | TerminologyCapabilities.title | ValueSet.title",
   [
-    "AccountStatus",
+    "AbstractType",
   ],
 ]
 `;
@@ -2981,7 +2980,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 111`] = `
 [
   "CapabilityStatement.url | CodeSystem.url | CompartmentDefinition.url | ConceptMap.url | GraphDefinition.url | ImplementationGuide.url | MessageDefinition.url | OperationDefinition.url | SearchParameter.url | StructureDefinition.url | StructureMap.url | TerminologyCapabilities.url | ValueSet.url",
   [
-    "http://hl7.org/fhir/account-status",
+    "http://hl7.org/fhir/abstract-types",
   ],
 ]
 `;
@@ -3013,11 +3012,8 @@ exports[`Testing indexing resourceType 'CodeSystem' 115`] = `
 [
   "CodeSystem.concept.code",
   [
-    "active",
-    "inactive",
-    "entered-in-error",
-    "on-hold",
-    "unknown",
+    "Type",
+    "Any",
   ],
 ]
 `;
@@ -3034,12 +3030,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 116`] = `
 exports[`Testing indexing resourceType 'CodeSystem' 117`] = `
 [
   "CodeSystem.identifier | ConceptMap.identifier | MessageDefinition.identifier | StructureDefinition.identifier | StructureMap.identifier | ValueSet.identifier",
-  [
-    {
-      "system": "urn:ietf:rfc:3986",
-      "value": "urn:oid:2.16.840.1.113883.4.642.4.727",
-    },
-  ],
+  [],
 ]
 `;
 
@@ -3061,7 +3052,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 120`] = `
 [
   "CodeSystem.url",
   [
-    "http://hl7.org/fhir/account-status",
+    "http://hl7.org/fhir/abstract-types",
   ],
 ]
 `;
@@ -3100,7 +3091,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 125`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
   [
-    "Defines behavior for an action or a group for how many times that item may be repeated.",
+    "Indicates whether the account is available to be used.",
   ],
 ]
 `;
@@ -3116,7 +3107,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 127`] = `
 [
   "CapabilityStatement.name | CodeSystem.name | CompartmentDefinition.name | ConceptMap.name | GraphDefinition.name | ImplementationGuide.name | MessageDefinition.name | NamingSystem.name | OperationDefinition.name | SearchParameter.name | StructureDefinition.name | StructureMap.name | TerminologyCapabilities.name | ValueSet.name",
   [
-    "ActionCardinalityBehavior",
+    "AccountStatus",
   ],
 ]
 `;
@@ -3143,7 +3134,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 130`] = `
 [
   "CapabilityStatement.title | CodeSystem.title | ConceptMap.title | ImplementationGuide.title | MessageDefinition.title | OperationDefinition.title | StructureDefinition.title | StructureMap.title | TerminologyCapabilities.title | ValueSet.title",
   [
-    "ActionCardinalityBehavior",
+    "AccountStatus",
   ],
 ]
 `;
@@ -3152,7 +3143,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 131`] = `
 [
   "CapabilityStatement.url | CodeSystem.url | CompartmentDefinition.url | ConceptMap.url | GraphDefinition.url | ImplementationGuide.url | MessageDefinition.url | OperationDefinition.url | SearchParameter.url | StructureDefinition.url | StructureMap.url | TerminologyCapabilities.url | ValueSet.url",
   [
-    "http://hl7.org/fhir/action-cardinality-behavior",
+    "http://hl7.org/fhir/account-status",
   ],
 ]
 `;
@@ -3184,8 +3175,11 @@ exports[`Testing indexing resourceType 'CodeSystem' 135`] = `
 [
   "CodeSystem.concept.code",
   [
-    "single",
-    "multiple",
+    "active",
+    "inactive",
+    "entered-in-error",
+    "on-hold",
+    "unknown",
   ],
 ]
 `;
@@ -3205,7 +3199,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 137`] = `
   [
     {
       "system": "urn:ietf:rfc:3986",
-      "value": "urn:oid:2.16.840.1.113883.4.642.4.808",
+      "value": "urn:oid:2.16.840.1.113883.4.642.4.727",
     },
   ],
 ]
@@ -3229,7 +3223,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 140`] = `
 [
   "CodeSystem.url",
   [
-    "http://hl7.org/fhir/action-cardinality-behavior",
+    "http://hl7.org/fhir/account-status",
   ],
 ]
 `;
@@ -3268,7 +3262,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 145`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
   [
-    "Defines the kinds of conditions that can appear on actions.",
+    "Defines behavior for an action or a group for how many times that item may be repeated.",
   ],
 ]
 `;
@@ -3284,7 +3278,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 147`] = `
 [
   "CapabilityStatement.name | CodeSystem.name | CompartmentDefinition.name | ConceptMap.name | GraphDefinition.name | ImplementationGuide.name | MessageDefinition.name | NamingSystem.name | OperationDefinition.name | SearchParameter.name | StructureDefinition.name | StructureMap.name | TerminologyCapabilities.name | ValueSet.name",
   [
-    "ActionConditionKind",
+    "ActionCardinalityBehavior",
   ],
 ]
 `;
@@ -3311,7 +3305,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 150`] = `
 [
   "CapabilityStatement.title | CodeSystem.title | ConceptMap.title | ImplementationGuide.title | MessageDefinition.title | OperationDefinition.title | StructureDefinition.title | StructureMap.title | TerminologyCapabilities.title | ValueSet.title",
   [
-    "ActionConditionKind",
+    "ActionCardinalityBehavior",
   ],
 ]
 `;
@@ -3320,7 +3314,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 151`] = `
 [
   "CapabilityStatement.url | CodeSystem.url | CompartmentDefinition.url | ConceptMap.url | GraphDefinition.url | ImplementationGuide.url | MessageDefinition.url | OperationDefinition.url | SearchParameter.url | StructureDefinition.url | StructureMap.url | TerminologyCapabilities.url | ValueSet.url",
   [
-    "http://hl7.org/fhir/action-condition-kind",
+    "http://hl7.org/fhir/action-cardinality-behavior",
   ],
 ]
 `;
@@ -3352,9 +3346,8 @@ exports[`Testing indexing resourceType 'CodeSystem' 155`] = `
 [
   "CodeSystem.concept.code",
   [
-    "applicability",
-    "start",
-    "stop",
+    "single",
+    "multiple",
   ],
 ]
 `;
@@ -3374,7 +3367,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 157`] = `
   [
     {
       "system": "urn:ietf:rfc:3986",
-      "value": "urn:oid:2.16.840.1.113883.4.642.4.816",
+      "value": "urn:oid:2.16.840.1.113883.4.642.4.808",
     },
   ],
 ]
@@ -3398,7 +3391,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 160`] = `
 [
   "CodeSystem.url",
   [
-    "http://hl7.org/fhir/action-condition-kind",
+    "http://hl7.org/fhir/action-cardinality-behavior",
   ],
 ]
 `;
@@ -3437,7 +3430,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 165`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
   [
-    "Defines organization behavior of a group.",
+    "Defines the kinds of conditions that can appear on actions.",
   ],
 ]
 `;
@@ -3453,7 +3446,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 167`] = `
 [
   "CapabilityStatement.name | CodeSystem.name | CompartmentDefinition.name | ConceptMap.name | GraphDefinition.name | ImplementationGuide.name | MessageDefinition.name | NamingSystem.name | OperationDefinition.name | SearchParameter.name | StructureDefinition.name | StructureMap.name | TerminologyCapabilities.name | ValueSet.name",
   [
-    "ActionGroupingBehavior",
+    "ActionConditionKind",
   ],
 ]
 `;
@@ -3480,7 +3473,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 170`] = `
 [
   "CapabilityStatement.title | CodeSystem.title | ConceptMap.title | ImplementationGuide.title | MessageDefinition.title | OperationDefinition.title | StructureDefinition.title | StructureMap.title | TerminologyCapabilities.title | ValueSet.title",
   [
-    "ActionGroupingBehavior",
+    "ActionConditionKind",
   ],
 ]
 `;
@@ -3489,7 +3482,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 171`] = `
 [
   "CapabilityStatement.url | CodeSystem.url | CompartmentDefinition.url | ConceptMap.url | GraphDefinition.url | ImplementationGuide.url | MessageDefinition.url | OperationDefinition.url | SearchParameter.url | StructureDefinition.url | StructureMap.url | TerminologyCapabilities.url | ValueSet.url",
   [
-    "http://hl7.org/fhir/action-grouping-behavior",
+    "http://hl7.org/fhir/action-condition-kind",
   ],
 ]
 `;
@@ -3521,9 +3514,9 @@ exports[`Testing indexing resourceType 'CodeSystem' 175`] = `
 [
   "CodeSystem.concept.code",
   [
-    "visual-group",
-    "logical-group",
-    "sentence-group",
+    "applicability",
+    "start",
+    "stop",
   ],
 ]
 `;
@@ -3543,7 +3536,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 177`] = `
   [
     {
       "system": "urn:ietf:rfc:3986",
-      "value": "urn:oid:2.16.840.1.113883.4.642.4.800",
+      "value": "urn:oid:2.16.840.1.113883.4.642.4.816",
     },
   ],
 ]
@@ -3567,7 +3560,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 180`] = `
 [
   "CodeSystem.url",
   [
-    "http://hl7.org/fhir/action-grouping-behavior",
+    "http://hl7.org/fhir/action-condition-kind",
   ],
 ]
 `;
@@ -3606,7 +3599,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 185`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
   [
-    "The type of participant for the action.",
+    "Defines organization behavior of a group.",
   ],
 ]
 `;
@@ -3622,7 +3615,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 187`] = `
 [
   "CapabilityStatement.name | CodeSystem.name | CompartmentDefinition.name | ConceptMap.name | GraphDefinition.name | ImplementationGuide.name | MessageDefinition.name | NamingSystem.name | OperationDefinition.name | SearchParameter.name | StructureDefinition.name | StructureMap.name | TerminologyCapabilities.name | ValueSet.name",
   [
-    "ActionParticipantType",
+    "ActionGroupingBehavior",
   ],
 ]
 `;
@@ -3649,7 +3642,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 190`] = `
 [
   "CapabilityStatement.title | CodeSystem.title | ConceptMap.title | ImplementationGuide.title | MessageDefinition.title | OperationDefinition.title | StructureDefinition.title | StructureMap.title | TerminologyCapabilities.title | ValueSet.title",
   [
-    "ActionParticipantType",
+    "ActionGroupingBehavior",
   ],
 ]
 `;
@@ -3658,7 +3651,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 191`] = `
 [
   "CapabilityStatement.url | CodeSystem.url | CompartmentDefinition.url | ConceptMap.url | GraphDefinition.url | ImplementationGuide.url | MessageDefinition.url | OperationDefinition.url | SearchParameter.url | StructureDefinition.url | StructureMap.url | TerminologyCapabilities.url | ValueSet.url",
   [
-    "http://hl7.org/fhir/action-participant-type",
+    "http://hl7.org/fhir/action-grouping-behavior",
   ],
 ]
 `;
@@ -3690,10 +3683,9 @@ exports[`Testing indexing resourceType 'CodeSystem' 195`] = `
 [
   "CodeSystem.concept.code",
   [
-    "patient",
-    "practitioner",
-    "related-person",
-    "device",
+    "visual-group",
+    "logical-group",
+    "sentence-group",
   ],
 ]
 `;
@@ -3713,7 +3705,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 197`] = `
   [
     {
       "system": "urn:ietf:rfc:3986",
-      "value": "urn:oid:2.16.840.1.113883.4.642.4.812",
+      "value": "urn:oid:2.16.840.1.113883.4.642.4.800",
     },
   ],
 ]
@@ -3737,7 +3729,7 @@ exports[`Testing indexing resourceType 'CodeSystem' 200`] = `
 [
   "CodeSystem.url",
   [
-    "http://hl7.org/fhir/action-participant-type",
+    "http://hl7.org/fhir/action-grouping-behavior",
   ],
 ]
 `;
@@ -24381,7 +24373,7 @@ exports[`Testing indexing resourceType 'StructureDefinition' 26`] = `
   [
     "https://iguhealth.app/fhir/ValueSet/AccessPolicyType|4.0.1",
     "https://iguhealth.app/fhir/ValueSet/AccessPolicyFHIRAPIMethod|4.0.1",
-    "http://hl7.org/fhir/ValueSet/resource-types|4.0.1",
+    "https://iguhealth.app/fhir/ValueSet/ResourceTypes|4.0.1",
     "https://iguhealth.app/fhir/ValueSet/AccessPolicyFHIRAPILevel|4.0.1",
     "https://iguhealth.app/fhir/ValueSet/AccessPolicyFHIRAPIParameter|4.0.1",
   ],
