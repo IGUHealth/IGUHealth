@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/test-data",
-  "version": "0.1.21",
+  "version": "0.1.22",
   "fhirVersions": [
     "4.0.1"
   ],
