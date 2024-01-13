@@ -12,10 +12,10 @@ import { expect, test } from "@jest/globals";
 
 import { MetaValueSingular, MetaValueArray, descend } from "./index";
 
-const sds: StructureDefinition[] = loadArtifacts(
-  "StructureDefinition",
-  path.join(fileURLToPath(import.meta.url), "..")
-);
+const sds: StructureDefinition[] = loadArtifacts({
+  resourceType: "StructureDefinition",
+  packageLocation: path.join(fileURLToPath(import.meta.url), ".."),
+});
 
 const patientSD = sds.find(
   (sd) => sd.type === "Patient"

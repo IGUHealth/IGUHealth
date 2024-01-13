@@ -17,11 +17,13 @@ import * as fhirpath from "@iguhealth/fhirpath";
 function getArtifactResources(resourceTypes: ResourceType[]): Resource[] {
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
-      loadArtifacts(
+      loadArtifacts({
         resourceType,
-        path.join(fileURLToPath(import.meta.url), "../../"),
-        true
-      )
+        packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
+        // silence: true,
+        // Limiting to strictly hl7 packages as iguhealth packages changing constantly for snapshots.
+        onlyPackages: ["@iguhealth/hl7.fhir.r4.core", "@iguhealth/test-data"],
+      })
     )
     .flat();
 
@@ -35,19 +37,21 @@ const artifactResources = getArtifactResources([
 test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
   `Testing indexing resourceType '%s'`,
   (resourceType) => {
-    const searchParameters = artifactResources
-      .filter(
-        (r): r is SearchParameter =>
-          r.resourceType === "SearchParameter" &&
-          r.base.includes(resourceType as code)
-      )
-      // Filtering so only hl7 or remote as these are changing.
-      .filter((r) => !r.url.startsWith("https://iguhealth"));
+    const searchParameters = artifactResources.filter(
+      (r): r is SearchParameter =>
+        r.resourceType === "SearchParameter" &&
+        r.base.includes(resourceType as code)
+    );
+
     const resources = artifactResources
       .filter((r) => r.resourceType === resourceType)
       .filter((r) => r.id)
       .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
       .slice(0, 10);
+    console.log(
+      resourceType,
+      searchParameters.map((s) => s.name)
+    );
     for (const resource of resources) {
       for (const parameter of searchParameters) {
         if (parameter.expression) {

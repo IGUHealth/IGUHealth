@@ -5,11 +5,11 @@ import { loadArtifacts } from "@iguhealth/artifacts";
 
 const artifactResources = ["StructureDefinition", "SearchParameter"]
   .map((resourceType) =>
-    loadArtifacts(
-      resourceType,
-      path.join(fileURLToPath(import.meta.url), "../"),
-      false
-    )
+    loadArtifacts({
+      resourceType: resourceType,
+      packageLocation: path.join(fileURLToPath(import.meta.url), "../"),
+      silence: false,
+    })
   )
   .flat();
 

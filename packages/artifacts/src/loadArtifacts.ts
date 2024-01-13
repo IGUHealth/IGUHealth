@@ -34,15 +34,26 @@ function flattenOrInclude<T extends ResourceType>(
   }
   return [];
 }
-/*
- ** Interface used to search dependencies for .index.config.json files and load their contents.
+
+interface LoadArtifactOptions<T extends ResourceType> {
+  resourceType: T;
+  packageLocation: string;
+  silence?: boolean;
+  onlyPackages?: string[];
+}
+
+/**
+ * Interface used to search dependencies for .index.json files and load their contents.
+ * @param options Artifact Load options
+ * @returns A list of resources of type T
  */
-export default function loadArtifacts<T extends ResourceType>(
-  resourceType: T,
-  location: string,
-  silence = false
-): AResource<T>[] {
-  const requirer = createRequire(location);
+export default function loadArtifacts<T extends ResourceType>({
+  resourceType,
+  packageLocation,
+  silence,
+  onlyPackages,
+}: LoadArtifactOptions<T>): AResource<T>[] {
+  const requirer = createRequire(packageLocation);
   const packageJSON: PackageJSON = requirer("./package.json");
   let deps = { ...packageJSON.dependencies };
   // https://jestjs.io/docs/environment-variables
@@ -58,7 +69,11 @@ export default function loadArtifacts<T extends ResourceType>(
     .filter((d) => {
       try {
         const depPackage = requirer(`${d}/package.json`);
-        return !!depPackage.fhirVersion;
+        // Filter according to onlyPackages if provided.
+        if (onlyPackages && !onlyPackages.includes(d)) {
+          return false;
+        }
+        return !!depPackage.fhirVersions;
       } catch (e) {
         return false;
       }
@@ -67,11 +82,9 @@ export default function loadArtifacts<T extends ResourceType>(
       try {
         if (!silence)
           console.log(
-            ` '${d}' Loading package contents from .index.config.json for resourceType '${resourceType}'`
+            ` '${d}' Loading package contents from .index.json for resourceType '${resourceType}'`
           );
-        const indexFile: IndexFile | undefined = requirer(
-          `${d}/.index.config.json`
-        );
+        const indexFile: IndexFile | undefined = requirer(`${d}/.index.json`);
         if (indexFile?.files) {
           const fileInfos = resourceType
             ? indexFile.files.filter(

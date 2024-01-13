@@ -16,6 +16,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:."\
       },\
       {\
+        "name": "@iguhealth/hl7.fhir.r4.core",\
+        "reference": "workspace:artifacts/hl7-core"\
+      },\
+      {\
+        "name": "@iguhealth/iguhealth.fhir.r4.core",\
+        "reference": "workspace:artifacts/iguhealth-core"\
+      },\
+      {\
+        "name": "@iguhealth/test-data",\
+        "reference": "workspace:artifacts/test-data"\
+      },\
+      {\
         "name": "@iguhealth/admin-app",\
         "reference": "workspace:packages/admin-app"\
       },\
@@ -42,10 +54,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       {\
         "name": "@iguhealth/docs",\
         "reference": "workspace:packages/docs"\
-      },\
-      {\
-        "name": "@iguhealth/fhir-json-schema",\
-        "reference": "workspace:packages/fhir-json-schema"\
       },\
       {\
         "name": "@iguhealth/fhir-patch-building",\
@@ -86,10 +94,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       {\
         "name": "@iguhealth/server",\
         "reference": "workspace:packages/server"\
-      },\
-      {\
-        "name": "@iguhealth/test-data",\
-        "reference": "workspace:packages/test-data-r4"\
       }\
     ],\
     "enableTopLevelFallback": true,\
@@ -102,18 +106,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@iguhealth/codegen", ["workspace:packages/codegen"]],\
       ["@iguhealth/components", ["virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#workspace:packages/components", "workspace:packages/components"]],\
       ["@iguhealth/docs", ["workspace:packages/docs"]],\
-      ["@iguhealth/fhir-json-schema", ["workspace:packages/fhir-json-schema"]],\
       ["@iguhealth/fhir-patch-building", ["workspace:packages/fhir-patch-building"]],\
       ["@iguhealth/fhir-pointer", ["workspace:packages/fhir-pointer"]],\
       ["@iguhealth/fhir-types", ["workspace:packages/fhir-types"]],\
       ["@iguhealth/fhir-validation", ["workspace:packages/fhir-validation"]],\
       ["@iguhealth/fhirpath", ["workspace:packages/fhirpath"]],\
       ["@iguhealth/generated-ops", ["workspace:packages/generated-ops"]],\
+      ["@iguhealth/hl7.fhir.r4.core", ["workspace:artifacts/hl7-core"]],\
+      ["@iguhealth/iguhealth.fhir.r4.core", ["workspace:artifacts/iguhealth-core"]],\
       ["@iguhealth/meta-value", ["workspace:packages/meta-value"]],\
       ["@iguhealth/operation-execution", ["workspace:packages/operation-execution"]],\
       ["@iguhealth/operation-outcomes", ["workspace:packages/operation-outcomes"]],\
       ["@iguhealth/server", ["workspace:packages/server"]],\
-      ["@iguhealth/test-data", ["workspace:packages/test-data-r4"]],\
+      ["@iguhealth/test-data", ["workspace:artifacts/test-data"]],\
       ["iguhealth-workspace", ["workspace:."]]\
     ],\
     "fallbackPool": [\
@@ -12642,6 +12647,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
             ["@iguhealth/codegen", "workspace:packages/codegen"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
+            ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"],\
+            ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/iguhealth-core"],\
             ["@types/node", "npm:20.4.0"],\
             ["commander", "npm:11.0.0"],\
             ["typescript", "patch:typescript@npm%3A5.1.3#~builtin<compat/typescript>::version=5.1.3&hash=5da071"]\
@@ -12819,6 +12826,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@docusaurus/types", "virtual:9f288d48d2ea76719e04b1b7e59356fc6efd647c59fb847eff6fa2e56b3608f12273a918949e2afe8f77891c06fb4b346f8580227efcb8876b86b9519ca03ad2#npm:3.0.1"],\
             ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
+            ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"],\
+            ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/iguhealth-core"],\
             ["@iguhealth/server", "workspace:packages/server"],\
             ["@mdx-js/react", "virtual:9f288d48d2ea76719e04b1b7e59356fc6efd647c59fb847eff6fa2e56b3608f12273a918949e2afe8f77891c06fb4b346f8580227efcb8876b86b9519ca03ad2#npm:3.0.0"],\
             ["@tsconfig/docusaurus", "npm:1.0.7"],\
@@ -12827,22 +12836,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:18.2.0"],\
             ["react-dom", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:18.2.0"],\
             ["ts-node", "virtual:9f288d48d2ea76719e04b1b7e59356fc6efd647c59fb847eff6fa2e56b3608f12273a918949e2afe8f77891c06fb4b346f8580227efcb8876b86b9519ca03ad2#npm:10.9.1"],\
-            ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"]\
-          ],\
-          "linkType": "SOFT"\
-        }]\
-      ]],\
-      ["@iguhealth/fhir-json-schema", [\
-        ["workspace:packages/fhir-json-schema", {\
-          "packageLocation": "./packages/fhir-json-schema/",\
-          "packageDependencies": [\
-            ["@iguhealth/fhir-json-schema", "workspace:packages/fhir-json-schema"],\
-            ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
-            ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
-            ["@types/jest", "npm:29.5.2"],\
-            ["ajv", "npm:6.12.6"],\
-            ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.6.0"],\
-            ["ts-jest", "virtual:60d59201a81fdf9d844335582569d604f77c0cfb33012fc0d97d31d995c40a543914afd8f900018942c3e21e71ae879a5dcdf97d4008644edf9f0ce84a7e8664#npm:29.1.1"],\
             ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"]\
           ],\
           "linkType": "SOFT"\
@@ -12900,8 +12893,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@iguhealth/codegen", "workspace:packages/codegen"],\
             ["@iguhealth/fhir-pointer", "workspace:packages/fhir-pointer"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
+            ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"],\
+            ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/iguhealth-core"],\
             ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
-            ["@iguhealth/test-data", "workspace:packages/test-data-r4"],\
+            ["@iguhealth/test-data", "workspace:artifacts/test-data"],\
             ["@jest/globals", "npm:29.6.0"],\
             ["@types/jest", "npm:29.5.2"],\
             ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.6.0"],\
@@ -12919,6 +12914,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
             ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
+            ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"],\
+            ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/iguhealth-core"],\
             ["@iguhealth/meta-value", "workspace:packages/meta-value"],\
             ["@jest/globals", "npm:29.6.0"],\
             ["@types/jest", "npm:29.5.2"],\
@@ -12939,12 +12936,32 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
             ["@iguhealth/cli", "workspace:packages/cli"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
+            ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"],\
+            ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/iguhealth-core"],\
             ["@iguhealth/operation-execution", "workspace:packages/operation-execution"],\
             ["@jest/globals", "npm:29.6.4"],\
             ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.6.0"],\
             ["prettier", "npm:3.0.0"],\
             ["ts-jest", "virtual:bd052f6d2ea0542c4a6f41366c0fdef70992cc6dfb14e51001469da079ed0f67a3800084b190578dccfa8584c45e2848c42c650c5953aaa4861649bf8d412102#npm:29.1.1"],\
             ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@iguhealth/hl7.fhir.r4.core", [\
+        ["workspace:artifacts/hl7-core", {\
+          "packageLocation": "./artifacts/hl7-core/",\
+          "packageDependencies": [\
+            ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@iguhealth/iguhealth.fhir.r4.core", [\
+        ["workspace:artifacts/iguhealth-core", {\
+          "packageLocation": "./artifacts/iguhealth-core/",\
+          "packageDependencies": [\
+            ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/iguhealth-core"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -12956,6 +12973,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@iguhealth/meta-value", "workspace:packages/meta-value"],\
             ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
+            ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"],\
+            ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/iguhealth-core"],\
             ["@jest/globals", "npm:29.6.0"],\
             ["@types/jest", "npm:29.5.2"],\
             ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.6.0"],\
@@ -12974,6 +12993,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@iguhealth/fhir-pointer", "workspace:packages/fhir-pointer"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
             ["@iguhealth/fhir-validation", "workspace:packages/fhir-validation"],\
+            ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"],\
+            ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/iguhealth-core"],\
             ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
             ["@jest/globals", "npm:29.6.1"],\
             ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.6.0"],\
@@ -13014,10 +13035,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@iguhealth/fhir-validation", "workspace:packages/fhir-validation"],\
             ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
             ["@iguhealth/generated-ops", "workspace:packages/generated-ops"],\
+            ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"],\
+            ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/iguhealth-core"],\
             ["@iguhealth/meta-value", "workspace:packages/meta-value"],\
             ["@iguhealth/operation-execution", "workspace:packages/operation-execution"],\
             ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
-            ["@iguhealth/test-data", "workspace:packages/test-data-r4"],\
+            ["@iguhealth/test-data", "workspace:artifacts/test-data"],\
             ["@jest/globals", "npm:29.6.1"],\
             ["@koa/bodyparser", "npm:5.0.0"],\
             ["@koa/cors", "npm:5.0.0"],\
@@ -13071,10 +13094,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@iguhealth/test-data", [\
-        ["workspace:packages/test-data-r4", {\
-          "packageLocation": "./packages/test-data-r4/",\
+        ["workspace:artifacts/test-data", {\
+          "packageLocation": "./artifacts/test-data/",\
           "packageDependencies": [\
-            ["@iguhealth/test-data", "workspace:packages/test-data-r4"],\
+            ["@iguhealth/test-data", "workspace:artifacts/test-data"],\
             ["@iguhealth/cli", "workspace:packages/cli"]\
           ],\
           "linkType": "SOFT"\

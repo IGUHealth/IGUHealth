@@ -23,15 +23,15 @@ import {
 } from "./index";
 import { OperationError, outcome } from "@iguhealth/operation-outcomes";
 
-const operationDefinitions = loadArtifacts(
-  "OperationDefinition",
-  path.join(fileURLToPath(import.meta.url), "..")
-);
+const operationDefinitions = loadArtifacts({
+  resourceType: "OperationDefinition",
+  packageLocation: path.join(fileURLToPath(import.meta.url), ".."),
+});
 
-const structureDefinitions = loadArtifacts(
-  "StructureDefinition",
-  path.join(fileURLToPath(import.meta.url), "..")
-);
+const structureDefinitions = loadArtifacts({
+  resourceType: "StructureDefinition",
+  packageLocation: path.join(fileURLToPath(import.meta.url), ".."),
+});
 
 const valueSetExpandOp = operationDefinitions.find(
   (op) => op.id === "ValueSet-expand"

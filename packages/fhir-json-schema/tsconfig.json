@@ -1,8 +1,0 @@
-{
-  "extends": "../../config/base.tsconfig.json",
-  "exclude": ["./**/*.test.ts", "lib/*", "jest.config.js"],
-  "compilerOptions": {
-    "outDir": "lib",
-    "declaration": true
-  }
-}

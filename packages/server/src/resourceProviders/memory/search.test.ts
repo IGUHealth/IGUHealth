@@ -21,11 +21,11 @@ function createMemoryDatabase(
   const database = MemoryDatabase({});
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
-      loadArtifacts(
+      loadArtifacts({
         resourceType,
-        path.join(fileURLToPath(import.meta.url), "../../../"),
-        true
-      )
+        packageLocation: path.join(fileURLToPath(import.meta.url), "../../../"),
+        silence: true,
+      })
     )
     .flat();
   for (const resource of artifactResources) {

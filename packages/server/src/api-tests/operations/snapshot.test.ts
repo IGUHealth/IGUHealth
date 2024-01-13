@@ -9,10 +9,10 @@ import { StructureDefinitionSnapshot } from "@iguhealth/generated-ops/lib/r4/ops
 
 import usCoreDifferential from "../data/us-core-differential";
 
-const sds = loadArtifacts(
-  "StructureDefinition",
-  path.join(fileURLToPath(import.meta.url), "../../../")
-);
+const sds = loadArtifacts({
+  resourceType: "StructureDefinition",
+  packageLocation: path.join(fileURLToPath(import.meta.url), "../../../"),
+});
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system/api/v1/fhir/r4",
