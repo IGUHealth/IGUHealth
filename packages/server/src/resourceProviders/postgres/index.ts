@@ -1,5 +1,5 @@
 import pg from "pg";
-import { v4 } from "uuid";
+import { nanoid } from "nanoid";
 import jsonpatch, { Operation } from "fast-json-patch";
 import dayjs from "dayjs";
 import * as db from "zapatos/db";
@@ -815,7 +815,7 @@ function createPostgresMiddleware<
             context.ctx,
             {
               ...context.request.body,
-              id: v4() as id,
+              id: nanoid() as id,
             }
           );
 
