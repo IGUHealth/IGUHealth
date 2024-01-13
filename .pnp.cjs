@@ -13078,6 +13078,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["koa-mount", "npm:4.0.0"],\
             ["koa-ratelimit", "npm:5.0.1"],\
             ["lodash", "npm:4.17.21"],\
+            ["nanoid", "npm:5.0.4"],\
             ["openid-client", "npm:5.4.3"],\
             ["pg", "virtual:be2c7e9b4f3a6d0d1dcfc12b72ea51602a2f2526681fc8930452452be08fadb05fdfe879568f891fae9eaa13d90eca02ebb079c81e1105ccaf790ab4a6e929bb#npm:8.11.1"],\
             ["pino", "npm:8.15.0"],\
@@ -13087,7 +13088,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ts-jest", "virtual:60d59201a81fdf9d844335582569d604f77c0cfb33012fc0d97d31d995c40a543914afd8f900018942c3e21e71ae879a5dcdf97d4008644edf9f0ce84a7e8664#npm:29.1.1"],\
             ["tsc-watch", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:6.0.4"],\
             ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"],\
-            ["uuid", "npm:9.0.0"],\
             ["zapatos", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:6.3.0"]\
           ],\
           "linkType": "SOFT"\
@@ -33316,6 +33316,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/nanoid-npm-3.3.7-98824ba130-d36c427e53.zip/node_modules/nanoid/",\
           "packageDependencies": [\
             ["nanoid", "npm:3.3.7"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:5.0.4", {\
+          "packageLocation": "./.yarn/cache/nanoid-npm-5.0.4-0c697f9311-cf09cca377.zip/node_modules/nanoid/",\
+          "packageDependencies": [\
+            ["nanoid", "npm:5.0.4"]\
           ],\
           "linkType": "HARD"\
         }]\

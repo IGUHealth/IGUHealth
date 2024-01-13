@@ -55,13 +55,13 @@
     "koa-mount": "^4.0.0",
     "koa-ratelimit": "^5.0.1",
     "lodash": "^4.17.21",
+    "nanoid": "^5.0.4",
     "openid-client": "^5.4.3",
     "pg": "^8.11.0",
     "pino": "^8.15.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "redlock": "v5.0.0-beta.2",
-    "uuid": "^9.0.0",
     "zapatos": "^6.3.0"
   },
   "devDependencies": {
