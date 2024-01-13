@@ -134,8 +134,6 @@ export default async function createServer(): Promise<
         process.env.SENTRY_PROFILES_SAMPLE_RATE || "0.1"
       ),
     });
-  const app = new Koa();
-  const router = new Router<Koa.DefaultState, Koa.Context>();
 
   const pool = new pg.Pool({
     user: process.env["FHIR_DATABASE_USERNAME"],
@@ -154,13 +152,25 @@ export default async function createServer(): Promise<
         : false,
   });
 
-  router.all(
-    "/w/:tenant/api/v1/fhir/r4/:fhirUrl*",
-    ...(await KoaFHIRMiddleware(pool))
-  );
+  const app = new Koa();
+  const router = new Router<Koa.DefaultState, Koa.Context>();
+  const tenantRoutes = new Router<Koa.DefaultState, Koa.Context>({
+    prefix: "/w/:tenant/",
+  });
+  const tenantaAPIV1 = new Router<Koa.DefaultState, Koa.Context>({
+    prefix: "api/v1/",
+  });
+  const fhirR4API = new Router<Koa.DefaultState, Koa.Context>({
+    prefix: "fhir/r4",
+  });
+  fhirR4API.all("/:fhirUrl*", ...(await KoaFHIRMiddleware(pool)));
 
-  // TODO Use an adapter  adapter,
-  //const provider = new Provider(ISSUER, { ...configuration });
+  tenantaAPIV1.use(fhirR4API.routes());
+  tenantaAPIV1.use(fhirR4API.allowedMethods());
+  tenantRoutes.use(tenantaAPIV1.routes());
+  tenantRoutes.use(tenantaAPIV1.allowedMethods());
+  router.use(tenantRoutes.routes());
+  router.use(tenantRoutes.allowedMethods());
 
   app
     .use(
