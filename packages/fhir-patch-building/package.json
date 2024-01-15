@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/fhir-patch-building",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "JSON Patch building with typesafe fhir pointers.",
   "type": "module",
   "packageManager": "yarn@3.6.3",

@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/fhir-types",
-  "version": "0.2.20",
+  "version": "0.2.21",
   "description": "",
   "type": "module",
   "scripts": {
