@@ -1,20 +1,20 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { generatePath, useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { useParams, useNavigate, generatePath } from "react-router-dom";
 
 import { Toaster } from "@iguhealth/components";
 import {
-  id,
-  ResourceType,
-  Resource,
+  Bundle,
   OperationDefinition,
   OperationOutcome,
+  Resource,
+  ResourceType,
   StructureDefinition,
-  Bundle,
+  id,
 } from "@iguhealth/fhir-types/r4/types";
 
-import { getClient } from "../../db/client";
 import ResourceEditorComponent from "../../components/ResourceEditor";
+import { getClient } from "../../db/client";
 import OperationDefinitionView from "./OperationDefinition";
 
 function ResourceEditorTabs() {
@@ -69,8 +69,8 @@ function ResourceEditorTabs() {
               }),
               {
                 replace: true,
-              }
-            )
+              },
+            ),
           );
         } catch (e) {
           Toaster.error(`${e}`);
@@ -85,7 +85,7 @@ function ResourceEditorTabs() {
         const deletingResource = client.delete(
           {},
           resourceType as ResourceType,
-          id as id
+          id as id,
         );
         Toaster.promise(deletingResource, {
           loading: "Deleting Resource",
@@ -98,8 +98,8 @@ function ResourceEditorTabs() {
             generatePath("/w/:tenant/resources/:resourceType", {
               tenant: params.tenant as string,
               resourceType: resourceType as string,
-            })
-          )
+            }),
+          ),
         );
       },
     },
@@ -128,7 +128,7 @@ function ResourceEditorTabs() {
       .then((response) => {
         setResource(response.entry?.[0]?.resource);
         setStructureDefinition(
-          response.entry?.[1]?.resource as StructureDefinition
+          response.entry?.[1]?.resource as StructureDefinition,
         );
       });
   }, [resourceType, id]);

@@ -1,9 +1,10 @@
 import { expect, test } from "@jest/globals";
-import {
-  ValueSetExpand,
-  ResourceValidate,
-} from "@iguhealth/generated-ops/lib/r4/ops";
+
 import HTTPClient from "@iguhealth/client/lib/http";
+import {
+  ResourceValidate,
+  ValueSetExpand,
+} from "@iguhealth/generated-ops/lib/r4/ops";
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system/api/v1/fhir/r4",
@@ -15,7 +16,7 @@ const client = HTTPClient({
 test("create bad patient", async () => {
   expect(
     // @ts-ignore
-    client.create({}, { resourceType: "Patient", badValue: 5 })
+    client.create({}, { resourceType: "Patient", badValue: 5 }),
   ).rejects.toThrowError();
 });
 
@@ -30,7 +31,7 @@ test("Bad expansion", async () => {
 
   expect(
     // @ts-ignore
-    client.invoke_type(ValueSetExpand.Op, {}, "ValueSet", badExpansion)
+    client.invoke_type(ValueSetExpand.Op, {}, "ValueSet", badExpansion),
   ).rejects.toThrow();
 });
 
@@ -42,7 +43,7 @@ test("ValidationOperation", async () => {
       {},
       "Patient",
       // @ts-ignore
-      { resource: badPatient }
+      { resource: badPatient },
     )
     .catch((e) => {
       throw e.operationOutcome;
@@ -64,7 +65,7 @@ test("ValidationOperation", async () => {
     ResourceValidate.Op,
     {},
     "Patient",
-    { resource: { resourceType: "Patient", name: [{ given: ["bob"] }] } }
+    { resource: { resourceType: "Patient", name: [{ given: ["bob"] }] } },
   );
 
   expect(successfulInvocation).resolves.toEqual({
@@ -82,7 +83,7 @@ test("ValidationOperation", async () => {
     ResourceValidate.Op,
     {},
     "Practitioner",
-    { resource: { resourceType: "Patient", name: [{ given: ["bob"] }] } }
+    { resource: { resourceType: "Patient", name: [{ given: ["bob"] }] } },
   );
 
   expect(invalidType).resolves.toEqual({
@@ -104,7 +105,7 @@ test("Invalid Operation Payload", async () => {
     // @ts-ignore
     client.invoke_system(ValueSetExpand.Op, {}, { url: 5 }).catch((e) => {
       throw e.operationOutcome;
-    })
+    }),
   ).rejects.toEqual({
     issue: [
       {

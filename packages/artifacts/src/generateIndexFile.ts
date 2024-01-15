@@ -1,5 +1,5 @@
-import path from "path";
 import fs from "node:fs";
+import path from "path";
 
 import { Bundle } from "@iguhealth/fhir-types/r4/types";
 
@@ -28,7 +28,7 @@ function checkBundleResourceTypesAlign(b: Bundle): boolean {
 export default function generateIndexFile(
   root: string,
   artifactLocations: string[],
-  ignore: string[] = []
+  ignore: string[] = [],
 ) {
   // Read artifactLocation and recursively walk the directory tree reading all files from root
   // For each file, read the contents and parse the JSON
@@ -47,14 +47,14 @@ export default function generateIndexFile(
       const bundle = json as Bundle;
       // Add to index
       const resourceTypes = new Set(
-        bundle.entry?.map((entry) => entry.resource?.resourceType)
+        bundle.entry?.map((entry) => entry.resource?.resourceType),
       );
 
       index.files = (index.files || []).concat(
         [...resourceTypes].map((resourceType) => ({
           filename: file,
           resourceType,
-        }))
+        })),
       );
     } else if (json.resourceType) {
       // Add to index

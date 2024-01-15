@@ -2,7 +2,7 @@ import { FHIRRequest, FHIRResponse } from "../types.js";
 
 export type MiddlewareAsync<State, CTX> = (
   ctx: { state: State; ctx: CTX; request: FHIRRequest },
-  next?: MiddlewareAsync<State, CTX>
+  next?: MiddlewareAsync<State, CTX>,
 ) => Promise<{
   ctx: CTX;
   state: State;
@@ -11,7 +11,7 @@ export type MiddlewareAsync<State, CTX> = (
 }>;
 
 export function createMiddlewareAsync<State, CTX>(
-  middleware: MiddlewareAsync<State, CTX>[]
+  middleware: MiddlewareAsync<State, CTX>[],
 ): MiddlewareAsync<State, CTX> {
   return (request) => {
     const [first, ...rest] = middleware;

@@ -1,10 +1,11 @@
-import { Lock } from "./interfaces.js";
 import Redis, { RedisOptions } from "ioredis";
 import Redlock, {
-  Settings,
   RedlockAbortSignal,
   ResourceLockedError,
+  Settings,
 } from "redlock";
+
+import { Lock } from "./interfaces.js";
 
 const defaultSettings: Settings = {
   // The expected clock drift; for more details see:
@@ -35,7 +36,7 @@ export default class RedisLock implements Lock<RedlockAbortSignal> {
       // You should have one client for each independent redis node
       // or cluster.
       [client],
-      lockSettings
+      lockSettings,
     );
 
     this._lock.on("error", (error: unknown) => {
@@ -51,7 +52,7 @@ export default class RedisLock implements Lock<RedlockAbortSignal> {
 
   async withLock(
     lockId: string,
-    body: (ctx: RedlockAbortSignal) => Promise<void>
+    body: (ctx: RedlockAbortSignal) => Promise<void>,
   ): Promise<void> {
     await this._lock.using([lockId], 5000, body);
   }

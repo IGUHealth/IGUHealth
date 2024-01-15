@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+
 import { EncryptionProvider } from "./interface.js";
 
 export default class LocalEncryption implements EncryptionProvider {
@@ -21,12 +22,12 @@ export default class LocalEncryption implements EncryptionProvider {
   }
   async encrypt(
     context: Record<string, string>,
-    data: string
+    data: string,
   ): Promise<string> {
     const cipher = crypto.createCipheriv(
       this._alg,
       Buffer.from(this._key),
-      this._iv
+      this._iv,
     );
     let encrypted = cipher.update(data);
     encrypted = Buffer.concat([encrypted, cipher.final()]);
@@ -34,13 +35,13 @@ export default class LocalEncryption implements EncryptionProvider {
   }
   async decrypt(
     context: Record<string, string>,
-    data: string
+    data: string,
   ): Promise<string> {
     const encryptedText = Buffer.from(data, "hex");
     const decipher = crypto.createDecipheriv(
       this._alg,
       Buffer.from(this._key),
-      this._iv
+      this._iv,
     );
     let decrypted = decipher.update(encryptedText);
     decrypted = Buffer.concat([decrypted, decipher.final()]);

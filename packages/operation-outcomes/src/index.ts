@@ -12,7 +12,7 @@ export class OperationError extends Error {
 }
 
 export function issueSeverityToStatusCodes(
-  severity: Issue["severity"]
+  severity: Issue["severity"],
 ): number {
   switch (severity) {
     case "fatal":
@@ -74,7 +74,7 @@ export function issue(
   severity: IssueSeverity,
   code: IssueType,
   diagnostics: Issue["diagnostics"],
-  expression?: Issue["expression"]
+  expression?: Issue["expression"],
 ): Issue {
   const issue = {
     severity: severity as code,
@@ -89,7 +89,7 @@ export function issue(
 export function issueError(
   code: IssueType,
   diagnostics: Issue["diagnostics"],
-  expression?: Issue["expression"]
+  expression?: Issue["expression"],
 ): Issue {
   return issue("error", code, diagnostics, expression);
 }
@@ -97,7 +97,7 @@ export function issueError(
 export function issueFatal(
   code: IssueType,
   diagnostics: Issue["diagnostics"],
-  expression?: Issue["expression"]
+  expression?: Issue["expression"],
 ): Issue {
   return issue("fatal", code, diagnostics, expression);
 }
@@ -105,7 +105,7 @@ export function issueFatal(
 export function issueWarning(
   code: IssueType,
   diagnostics: Issue["diagnostics"],
-  expression?: Issue["expression"]
+  expression?: Issue["expression"],
 ): Issue {
   return issue("warning", code, diagnostics, expression);
 }
@@ -113,7 +113,7 @@ export function issueWarning(
 export function issueInfo(
   code: IssueType,
   diagnostics: Issue["diagnostics"],
-  expression?: Issue["expression"]
+  expression?: Issue["expression"],
 ): Issue {
   return issue("information", code, diagnostics, expression);
 }
@@ -121,7 +121,7 @@ export function issueInfo(
 export function outcomeError(
   code: IssueType,
   diagnostics: Issue["diagnostics"],
-  expression?: Issue["expression"]
+  expression?: Issue["expression"],
 ): OperationOutcome {
   return outcome([issueError(code, diagnostics, expression)]);
 }
@@ -129,7 +129,7 @@ export function outcomeError(
 export function outcomeFatal(
   code: IssueType,
   diagnostics: Issue["diagnostics"],
-  expression?: Issue["expression"]
+  expression?: Issue["expression"],
 ): OperationOutcome {
   return outcome([issueFatal(code, diagnostics, expression)]);
 }
@@ -137,7 +137,7 @@ export function outcomeFatal(
 export function outcomeWarning(
   code: IssueType,
   diagnostics: Issue["diagnostics"],
-  expression?: Issue["expression"]
+  expression?: Issue["expression"],
 ): OperationOutcome {
   return outcome([issueWarning(code, diagnostics, expression)]);
 }
@@ -145,7 +145,7 @@ export function outcomeWarning(
 export function outcomeInfo(
   code: IssueType,
   diagnostics: Issue["diagnostics"],
-  expression?: Issue["expression"]
+  expression?: Issue["expression"],
 ): OperationOutcome {
   return outcome([issueInfo(code, diagnostics, expression)]);
 }

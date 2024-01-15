@@ -1,10 +1,11 @@
-import crypto from "node:crypto";
 import { expect, test } from "@jest/globals";
+import crypto from "node:crypto";
+
 import { OperationDefinition } from "@iguhealth/fhir-types/lib/r4/types";
 
 import { testServices } from "../../resourceProviders/test-ctx.js";
-import LocalEncryption from "./local.js";
 import { encryptValue } from "../index.js";
+import LocalEncryption from "./local.js";
 
 const key = crypto.randomBytes(32);
 const iv = crypto.randomBytes(16);
@@ -13,7 +14,7 @@ const provider = new LocalEncryption({ key, iv });
 test("testLocal Encryption", async () => {
   expect(await provider.encrypt({}, "v")).not.toEqual("v");
   expect(await provider.decrypt({}, await provider.encrypt({}, "v"))).toEqual(
-    "v"
+    "v",
   );
 });
 
@@ -44,17 +45,17 @@ test("test resourceEncryption", async () => {
   } as OperationDefinition;
   const encryptedOp = await encryptValue(
     { ...testServices, encryptionProvider: provider },
-    operationDefinition
+    operationDefinition,
   );
 
   expect(encryptedOp.extension?.[0].valueString).not.toEqual("secret");
   expect(encryptedOp.extension?.[0]?.valueString).toEqual(
-    encryptedOp.extension?.[0]?._valueString?.extension?.[0]?.valueString
+    encryptedOp.extension?.[0]?._valueString?.extension?.[0]?.valueString,
   );
   expect(
     await provider.decrypt(
       {},
-      encryptedOp.extension?.[0]?.valueString as string
-    )
+      encryptedOp.extension?.[0]?.valueString as string,
+    ),
   ).toEqual("secret");
 });

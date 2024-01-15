@@ -1,8 +1,9 @@
-import type { MiddlewareAsync } from "@iguhealth/client/middleware";
-import { FHIRServerCTX } from "../../fhir/context.js";
 import { FHIRRequest } from "@iguhealth/client/lib/types";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import type { MiddlewareAsync } from "@iguhealth/client/middleware";
 import { AccessPolicyAccess, code } from "@iguhealth/fhir-types/r4/types";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+
+import { FHIRServerCTX } from "../../fhir/context.js";
 
 /**
  * Determine whether or not the policy access has access to the resource type.
@@ -12,11 +13,11 @@ import { AccessPolicyAccess, code } from "@iguhealth/fhir-types/r4/types";
  */
 function validateFHIRResourceTypeAccess(
   policyAccess: AccessPolicyAccess,
-  request: FHIRRequest
+  request: FHIRRequest,
 ): boolean {
   if (!("resourceType" in request)) return false;
   return (policyAccess.fhir?.resourceType ?? []).includes(
-    request.resourceType as code
+    request.resourceType as code,
   );
 }
 
@@ -26,7 +27,7 @@ function validateFHIRResourceTypeAccess(
  * @returns FHIRRequest type.
  */
 function accessPolicyMethodToRequestType(
-  method: code | undefined
+  method: code | undefined,
 ): FHIRRequest["type"] | undefined {
   switch (method) {
     case "vread":
@@ -64,7 +65,7 @@ function accessPolicyMethodToRequestType(
  */
 function validateFHIRMethodAccess(
   policyAccess: AccessPolicyAccess,
-  request: FHIRRequest
+  request: FHIRRequest,
 ): boolean {
   return (
     accessPolicyMethodToRequestType(policyAccess.fhir?.method) === request.type
@@ -80,7 +81,7 @@ function validateFHIRMethodAccess(
  */
 function evaluateAccessPolicy(
   ctx: FHIRServerCTX,
-  request: FHIRRequest
+  request: FHIRRequest,
 ): boolean {
   for (const accessPolicy of ctx.user.accessPolicies ?? []) {
     const access = accessPolicy.access?.find((access) => {

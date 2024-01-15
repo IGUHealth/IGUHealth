@@ -1,27 +1,38 @@
 # Overview
+
 This document describes the security practices and policies for our software.
 
 ## Code security
 
 ### Static code analysis
-We use Snyk for static code analysis. Snyk does code analysis on a weekly basis and reports any vulnerabilities found in the codebase. 
-We use the Snyk CLI to scan the codebase for vulnerabilities for each pull request and when releasing the latest version of our software.
 
+We use Snyk for static code analysis. Snyk does code analysis on a weekly basis and reports any vulnerabilities found in the codebase.
+We use the Snyk CLI to scan the codebase for vulnerabilities for each pull request and when releasing the latest version of our software.
 
 ## Monitoring
 
 ### Application
+
 We use [sentry](https://sentry.io/welcome/) for both error monitoring and performance monitoring for both frontend and backend code.
+
 ### Infrastructure
 
 ## Compliance
+
 ### CIS
+
 ### HIPAA
 
 ## Encryption
+
 ### Rest
+
 All data is stored encrypted at rest.
+
 ### In transit
+
 All data is encrypted in transit using TLS 1.2 or higher.
+
 ### Secret Encryption
+
 We follow best-practices by generating a data key for each secret which is used to encrypt the secret and is itself encrypted with a wrapping key that is stored on AWS KMS by default.

@@ -1,9 +1,10 @@
 import React from "react";
+
 import { HumanName } from "@iguhealth/fhir-types/r4/types";
 
-import { EditableProps } from "../types";
 import { InputContainer } from "../../base/containers";
 import { FHIRStringEditable } from "../primitives/string";
+import { EditableProps } from "../types";
 
 export type FHIRHumanNameEditableProps = EditableProps<HumanName>;
 

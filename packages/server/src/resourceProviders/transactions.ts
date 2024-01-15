@@ -1,9 +1,10 @@
 import graphlib from "@dagrejs/graphlib";
 import pg from "pg";
 
-import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { Bundle, Reference, uri } from "@iguhealth/fhir-types/r4/types";
+import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
+
 import { FHIRServerCTX } from "../fhir/context.js";
 
 function getTransactionFullUrls(transaction: Bundle): Record<string, number> {
@@ -24,7 +25,7 @@ type LocationsToUpdate = {
 
 export function buildTransactionTopologicalGraph(
   ctx: FHIRServerCTX,
-  transaction: Bundle
+  transaction: Bundle,
 ): {
   order: string[];
   locationsToUpdate: LocationsToUpdate;
@@ -53,13 +54,13 @@ export function buildTransactionTopologicalGraph(
                 throw new OperationError(
                   outcomeFatal(
                     "exception",
-                    `Could not resolve canonical for type '${type}'.`
-                  )
+                    `Could not resolve canonical for type '${type}'.`,
+                  ),
                 );
               return ctx.resolveCanonical("StructureDefinition", canonical);
             },
           },
-        }
+        },
       );
 
       const bundleDependencies = resourceReferences.filter((v) => {
@@ -76,8 +77,8 @@ export function buildTransactionTopologicalGraph(
           throw new OperationError(
             outcomeFatal(
               "exception",
-              "Transaction processing could not find dependents location."
-            )
+              "Transaction processing could not find dependents location.",
+            ),
           );
 
         const bundleEntryLocation = ["entry", idx, "resource", ...location];
@@ -93,8 +94,8 @@ export function buildTransactionTopologicalGraph(
         "exception",
         `Transaction bundle has cycles at following indice paths ${cycles
           .map((cycle) => cycle.join("->"))
-          .join(", ")}.`
-      )
+          .join(", ")}.`,
+      ),
     );
   }
   return { locationsToUpdate, graph, order: graphlib.alg.topsort(graph) };
@@ -103,7 +104,7 @@ export function buildTransactionTopologicalGraph(
 async function retryFailedTransactions<ReturnType>(
   ctx: FHIRServerCTX,
   numberOfRetries: number,
-  execute: () => Promise<ReturnType>
+  execute: () => Promise<ReturnType>,
 ): Promise<ReturnType> {
   for (let i = 0; i < numberOfRetries; i++) {
     try {
@@ -127,8 +128,8 @@ async function retryFailedTransactions<ReturnType>(
   throw new OperationError(
     outcomeFatal(
       "lock-error",
-      `Could not apply transaction after '${numberOfRetries}' retries.`
-    )
+      `Could not apply transaction after '${numberOfRetries}' retries.`,
+    ),
   );
 }
 
@@ -172,7 +173,7 @@ function begin(isolation_level: ISOLATION_LEVEL) {
     }
     default: {
       throw new OperationError(
-        outcomeFatal("exception", `Invalid isolation level ${isolation_level}`)
+        outcomeFatal("exception", `Invalid isolation level ${isolation_level}`),
       );
     }
   }
@@ -183,7 +184,7 @@ export async function transaction<T>(
   ctx: FHIRServerCTX,
 
   client: pg.PoolClient,
-  body: (ctx: FHIRServerCTX) => Promise<T>
+  body: (ctx: FHIRServerCTX) => Promise<T>,
 ): Promise<T> {
   if (ctx.inTransaction) return body(ctx);
   return retryFailedTransactions(ctx, 5, async () => {

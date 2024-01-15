@@ -1,5 +1,5 @@
-import React, { HTMLProps } from "react";
 import classNames from "classnames";
+import React, { HTMLProps } from "react";
 
 export const inputClassNames = ({
   hideBorder,
@@ -19,7 +19,7 @@ export const inputClassNames = ({
       "border-slate-300": issues.length === 0 ? true : false,
       "text-red-500": issues.length !== 0 ? true : false,
       "border-red-500": issues.length !== 0 ? true : false,
-    }
+    },
   );
 
 export const DisplayIssues = ({ issues }: { issues: string[] }) => {
@@ -73,7 +73,7 @@ export const InputContainer = ({
     <div
       className={classNames(
         inputClassNames({ hideBorder, issues }),
-        inputContainerClass
+        inputContainerClass,
       )}
     >
       {children}

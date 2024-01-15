@@ -1,11 +1,10 @@
-import Koa, { Middleware } from "koa";
-
-import jwt from "koa-jwt";
 import jwksRsa from "jwks-rsa";
+import Koa, { Middleware } from "koa";
+import jwt from "koa-jwt";
 
+import { Tenant } from "../fhir/context.js";
 import { createCertsIfNoneExists, getJWKS } from "./certifications.js";
 import { IGUHEALTH_ISSUER } from "./token.js";
-import { Tenant } from "../fhir/context.js";
 
 export async function createValidateUserJWTMiddleware<T, C>(): Promise<
   Koa.Middleware<T, C>
@@ -15,7 +14,7 @@ export async function createValidateUserJWTMiddleware<T, C>(): Promise<
     if (process.env.NODE_ENV === "development")
       await createCertsIfNoneExists(
         process.env.AUTH_CERTIFICATION_LOCATION,
-        process.env.AUTH_SIGNING_KEY
+        process.env.AUTH_SIGNING_KEY,
       );
 
     const jwks = await getJWKS(process.env.AUTH_CERTIFICATION_LOCATION);
@@ -65,7 +64,7 @@ export async function createValidateUserJWTMiddleware<T, C>(): Promise<
 
 export const allowPublicAccessMiddleware: Koa.Middleware = async (
   ctx,
-  next
+  next,
 ) => {
   ctx.state = {
     ...ctx.state,

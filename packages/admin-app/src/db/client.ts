@@ -1,8 +1,8 @@
 import { atom } from "recoil";
 
-import { createMiddlewareAsync } from "@iguhealth/client/middleware";
-import createHTTPClient from "@iguhealth/client/http";
 import { AsynchronousClient } from "@iguhealth/client";
+import createHTTPClient from "@iguhealth/client/http";
+import { createMiddlewareAsync } from "@iguhealth/client/middleware";
 import { FHIRResponse } from "@iguhealth/client/types";
 
 type CachedClient = AsynchronousClient<
@@ -26,7 +26,7 @@ const cachedResponse: Record<string, Promise<FHIRResponse>> = {};
  ** Cache select calls for performance improvements (notably expansions).
  */
 export function createAdminAppClient(
-  client: ReturnType<typeof createHTTPClient>
+  client: ReturnType<typeof createHTTPClient>,
 ): CachedClient {
   return new AsynchronousClient(
     { client: client },
@@ -43,7 +43,7 @@ export function createAdminAppClient(
                 if (!cachedResponse[requestString]) {
                   cachedResponse[requestString] = context.state.client.request(
                     context.ctx,
-                    context.request
+                    context.request,
                   );
                 }
 
@@ -58,7 +58,7 @@ export function createAdminAppClient(
                   ...context,
                   response: await context.state.client.request(
                     context.ctx,
-                    context.request
+                    context.request,
                   ),
                 };
             }
@@ -69,11 +69,11 @@ export function createAdminAppClient(
               ...context,
               response: await context.state.client.request(
                 context.ctx,
-                context.request
+                context.request,
               ),
             };
         }
       },
-    ])
+    ]),
   );
 }

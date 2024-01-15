@@ -1,10 +1,11 @@
 import classNames from "classnames";
 import React, {
-  ReactNode,
   DetailedHTMLProps,
-  InputHTMLAttributes,
   HTMLProps,
+  InputHTMLAttributes,
+  ReactNode,
 } from "react";
+
 import { InputContainer } from "./containers";
 
 export interface InputProps
@@ -42,7 +43,7 @@ export const Input = (props: InputProps) => {
           {...inputProps}
           className={classNames(
             "w-full outline-none border-none group-aria-disabled:bg-gray-50",
-            inputProps?.className
+            inputProps?.className,
           )}
         />
         {icon}

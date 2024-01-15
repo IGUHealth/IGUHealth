@@ -1,12 +1,12 @@
 import { expect, test } from "@jest/globals";
 
+import HTTPClient from "@iguhealth/client/lib/http";
 import {
   Bundle,
   Observation,
   Patient,
   Practitioner,
 } from "@iguhealth/fhir-types/lib/r4/types";
-import HTTPClient from "@iguhealth/client/lib/http";
 import { evaluate } from "@iguhealth/fhirpath";
 import { OperationError } from "@iguhealth/operation-outcomes";
 
@@ -152,10 +152,10 @@ test("revinclude test", async () => {
 
     expect(revIncludeResponse1.resources?.length).toEqual(3);
     expect(revIncludeResponse1.resources?.[1].resourceType).toEqual(
-      "Observation"
+      "Observation",
     );
     expect(revIncludeResponse1.resources?.[2].resourceType).toEqual(
-      "Observation"
+      "Observation",
     );
 
     const practitioner = transactionResponse.entry
@@ -175,7 +175,7 @@ test("revinclude test", async () => {
 
     expect(revIncludeResponse2.resources?.length).toEqual(2);
     expect(revIncludeResponse2.resources?.[0].resourceType).toEqual(
-      "Practitioner"
+      "Practitioner",
     );
     expect(revIncludeResponse2.resources?.[1].resourceType).toEqual("Patient");
   } finally {

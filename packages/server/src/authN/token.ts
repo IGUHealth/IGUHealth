@@ -10,7 +10,7 @@ export async function createToken(
   keyData: {
     header: { audience: string };
     payload: Record<string, unknown>;
-  }
+  },
 ): Promise<string> {
   const signedJWT = await new jose.SignJWT(keyData.payload)
     .setProtectedHeader({ kid: privatekey.kid, alg: "RS256" })

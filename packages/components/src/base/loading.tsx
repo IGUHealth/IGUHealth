@@ -1,5 +1,5 @@
-import React from "react";
 import classNames from "classnames";
+import React from "react";
 
 export const Loading = ({ className = "h-8 w-8" }: { className?: string }) => {
   return (

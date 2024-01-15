@@ -1,6 +1,6 @@
-import { readFileSync, writeFileSync, mkdirSync, readdirSync } from "node:fs";
-import path from "node:path";
 import * as jose from "jose";
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import path from "node:path";
 
 export async function generateKeyPair(alg: string = "RS256") {
   const { privateKey, publicKey } = await jose.generateKeyPair(alg);
@@ -18,7 +18,7 @@ export const ALGORITHMS = {
 export async function createCertifications(
   directory: string,
   kid: string,
-  alg: string = ALGORITHMS.RS256
+  alg: string = ALGORITHMS.RS256,
 ) {
   mkdirSync(directory, { recursive: true });
 
@@ -42,7 +42,7 @@ export async function createCertifications(
  */
 export async function getJWKS(
   directory: string,
-  alg: string = ALGORITHMS.RS256
+  alg: string = ALGORITHMS.RS256,
 ) {
   const publicKeyPaths = readdirSync(directory);
   const keys = await Promise.all(
@@ -53,14 +53,14 @@ export async function getJWKS(
       .map(async (pubKeyPath) => {
         const pubKey = await jose.importSPKI(
           readFileSync(path.join(directory, pubKeyPath), "utf-8"),
-          alg
+          alg,
         );
 
         const kid = path.parse(pubKeyPath).name;
         const pubJWK = await jose.exportJWK(pubKey);
 
         return { ...pubJWK, alg, use: "sig", kid };
-      })
+      }),
   );
 
   return {
@@ -74,12 +74,12 @@ export async function getJWKS(
 export async function getSigningKey(
   directory: string,
   kid: string,
-  alg = ALGORITHMS.RS256
+  alg = ALGORITHMS.RS256,
 ) {
   const privateKeyPath = path.join(directory, `${kid}.p8`);
   const privateKey = await jose.importPKCS8(
     readFileSync(privateKeyPath, "utf-8"),
-    alg
+    alg,
   );
 
   return { kid, key: privateKey };
@@ -93,7 +93,7 @@ export async function getSigningKey(
 export async function createCertsIfNoneExists(
   directory: string,
   kid: string,
-  alg = ALGORITHMS.RS256
+  alg = ALGORITHMS.RS256,
 ) {
   try {
     await getSigningKey(directory, kid, alg);

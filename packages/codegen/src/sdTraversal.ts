@@ -1,12 +1,13 @@
 import {
-  StructureDefinition,
   ElementDefinition,
+  StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
+
 type VisitorFunction<T> = (element: ElementDefinition, children: T[]) => T[];
 
 export function eleIndexToChildIndices(
   elements: Array<ElementDefinition>,
-  index?: number
+  index?: number,
 ): Array<number> {
   if (index === undefined) {
     return eleIndexToChildIndices(elements, 0);
@@ -30,7 +31,7 @@ export function eleIndexToChildIndices(
 function traversalSdElements<T>(
   elements: Array<ElementDefinition>,
   index: number,
-  visitorFunction: VisitorFunction<T>
+  visitorFunction: VisitorFunction<T>,
 ) {
   const childIndices = eleIndexToChildIndices(elements, index);
   const childTraversalValues: any[] = childIndices
@@ -43,7 +44,7 @@ function traversalSdElements<T>(
 
 export function traversalBottomUp<T>(
   sd: StructureDefinition,
-  visitorFunction: VisitorFunction<T>
+  visitorFunction: VisitorFunction<T>,
 ) {
   const elements = sd.snapshot?.element;
   if (!elements) throw new Error("StructureDefinition has no elements");

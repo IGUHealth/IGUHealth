@@ -1,18 +1,18 @@
+import { expect, test } from "@jest/globals";
 import path from "path";
 import { fileURLToPath } from "url";
-import { test, expect } from "@jest/globals";
 
-import {
-  Bundle,
-  ResourceType,
-  Resource,
-  AResource,
-} from "@iguhealth/fhir-types/lib/r4/types";
 import { loadArtifacts } from "@iguhealth/artifacts";
+import {
+  AResource,
+  Bundle,
+  Resource,
+  ResourceType,
+} from "@iguhealth/fhir-types/lib/r4/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import { buildTransactionTopologicalGraph } from "./transactions";
 import { testServices } from "./test-ctx.js";
+import { buildTransactionTopologicalGraph } from "./transactions";
 
 function loadResources(resourceTypes: ResourceType[]): Resource[] {
   const artifactResources: Resource[] = resourceTypes
@@ -21,7 +21,7 @@ function loadResources(resourceTypes: ResourceType[]): Resource[] {
         resourceType,
         packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
         silence: true,
-      })
+      }),
     )
     .flat();
   return artifactResources;
@@ -94,10 +94,10 @@ test("Test Cyclical", () => {
       outcomeFatal(
         "exception",
         `Transaction bundle has cycles at following indices ${JSON.stringify(
-          []
-        )}.`
-      )
-    )
+          [],
+        )}.`,
+      ),
+    ),
   );
   try {
     buildTransactionTopologicalGraph(CTX, {

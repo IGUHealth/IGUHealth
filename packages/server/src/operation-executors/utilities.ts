@@ -1,8 +1,5 @@
-import {
-  OperationError,
-  outcomeError,
-  outcomeFatal,
-} from "@iguhealth/operation-outcomes";
+import { FHIRClientAsync } from "@iguhealth/client/interface";
+import { InvokeRequest } from "@iguhealth/client/types";
 import {
   OperationDefinition,
   OperationOutcome,
@@ -11,37 +8,40 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 import { evaluate } from "@iguhealth/fhirpath";
 import { OpCTX } from "@iguhealth/operation-execution";
-import { FHIRClientAsync } from "@iguhealth/client/interface";
-import { InvokeRequest } from "@iguhealth/client/types";
+import {
+  OperationError,
+  outcomeError,
+  outcomeFatal,
+} from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../fhir/context.js";
 
 export async function resolveOperationDefinition<
   CTX,
-  Client extends FHIRClientAsync<CTX>
+  Client extends FHIRClientAsync<CTX>,
 >(
   client: Client,
   ctx: CTX,
-  operationCode: string
+  operationCode: string,
 ): Promise<OperationDefinition> {
   const operationDefinition = await client.search_type(
     ctx,
     "OperationDefinition",
-    [{ name: "code", value: [operationCode] }]
+    [{ name: "code", value: [operationCode] }],
   );
   if (operationDefinition.resources.length === 0)
     throw new OperationError(
       outcomeError(
         "not-found",
-        `Operation with code '${operationCode}' was not found.`
-      )
+        `Operation with code '${operationCode}' was not found.`,
+      ),
     );
   if (operationDefinition.resources.length > 1)
     throw new OperationError(
       outcomeError(
         "invalid",
-        `Operation with code '${operationCode}' had several operation definitions present.`
-      )
+        `Operation with code '${operationCode}' had several operation definitions present.`,
+      ),
     );
 
   return operationDefinition.resources[0];
@@ -52,7 +52,7 @@ const EXT_URL =
 
 export async function getOperationCode(
   ctx: FHIRServerCTX,
-  operation: OperationDefinition
+  operation: OperationDefinition,
 ): Promise<string | undefined> {
   const code = evaluate(
     "$this.extension.where(url=%codeUrl).valueString",
@@ -61,15 +61,15 @@ export async function getOperationCode(
       variables: {
         codeUrl: EXT_URL,
       },
-    }
+    },
   );
   if (code.length === 0) return undefined;
   if (typeof code[0] !== "string")
     throw new OperationError(
       outcomeFatal(
         "invalid",
-        "Expected code to be a string for operation '${operation.id}'"
-      )
+        "Expected code to be a string for operation '${operation.id}'",
+      ),
     );
 
   return code[0];
@@ -96,7 +96,7 @@ function validateLevel(operation: OperationDefinition, request: InvokeRequest) {
       if (!operation.system)
         return outcomeError(
           "invalid",
-          "Operation does not support system level invocation"
+          "Operation does not support system level invocation",
         );
 
       break;
@@ -105,7 +105,7 @@ function validateLevel(operation: OperationDefinition, request: InvokeRequest) {
       if (!operation.type) {
         return outcomeError(
           "invalid",
-          "Operation does not support type level invocation"
+          "Operation does not support type level invocation",
         );
       }
       break;
@@ -113,7 +113,7 @@ function validateLevel(operation: OperationDefinition, request: InvokeRequest) {
       if (!operation.instance) {
         return outcomeError(
           "invalid",
-          "Operation does not support instance level invocation"
+          "Operation does not support instance level invocation",
         );
       }
       break;
@@ -122,7 +122,7 @@ function validateLevel(operation: OperationDefinition, request: InvokeRequest) {
 
 export function validateInvocationContext(
   operation: OperationDefinition,
-  request: InvokeRequest
+  request: InvokeRequest,
 ): OperationOutcome | undefined {
   const issues = validateLevel(operation, request);
   if (issues) return issues;
@@ -135,7 +135,7 @@ export function validateInvocationContext(
         "invalid",
         `Invalid resourcetype on invocation request '${
           request.resourceType
-        }' expected one of '${operation.resource?.join(", ")}'`
+        }' expected one of '${operation.resource?.join(", ")}'`,
       );
   }
 }

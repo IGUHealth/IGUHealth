@@ -5,15 +5,15 @@ import { Resource, uri } from "@iguhealth/fhir-types/r4/types";
 import * as fp from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { SearchParameterResource } from "../utilities/search/parameters.js";
+import { FHIRServerCTX } from "../../fhir/context.js";
 import {
-  toReference,
   toDateRange,
   toQuantityRange,
+  toReference,
   toStringParameters,
   toTokenParameters,
 } from "../utilities/search/dataConversion.js";
-import { FHIRServerCTX } from "../../fhir/context.js";
+import { SearchParameterResource } from "../utilities/search/parameters.js";
 
 dayjs.extend(isBetween);
 
@@ -29,29 +29,29 @@ interface MemorySearchCTX {
 async function expressionSearch<CTX extends MemorySearchCTX>(
   ctx: CTX,
   resource: Resource,
-  parameter: SearchParameterResource
+  parameter: SearchParameterResource,
 ) {
   if (!parameter.searchParameter.expression)
     throw new OperationError(
       outcomeError(
         "invalid",
-        `Parameter '${parameter.name}' did not have an expression associated with it.`
-      )
+        `Parameter '${parameter.name}' did not have an expression associated with it.`,
+      ),
     );
   if (parameter.chainedParameters)
     throw new OperationError(
       outcomeError(
         "not-supported",
-        "Chained parameters are not supported in memory search."
-      )
+        "Chained parameters are not supported in memory search.",
+      ),
     );
 
   if (parameter.modifier)
     throw new OperationError(
       outcomeError(
         "not-supported",
-        "Modifiers are not supported in memory search."
-      )
+        "Modifiers are not supported in memory search.",
+      ),
     );
 
   const evaluation = fp.evaluateWithMeta(
@@ -66,13 +66,13 @@ async function expressionSearch<CTX extends MemorySearchCTX>(
             throw new OperationError(
               outcomeError(
                 "invalid",
-                `Could not resolve canonical for type '${type}'.`
-              )
+                `Could not resolve canonical for type '${type}'.`,
+              ),
             );
           return ctx.resolveCanonical("StructureDefinition", canonical);
         },
       },
-    }
+    },
   );
   switch (parameter.searchParameter.type) {
     case "number": {
@@ -119,9 +119,9 @@ async function expressionSearch<CTX extends MemorySearchCTX>(
             toReference(
               parameter.searchParameter,
               v,
-              ctx.resolveRemoteCanonical
-            )
-          )
+              ctx.resolveRemoteCanonical,
+            ),
+          ),
         )
       ).flat();
 
@@ -130,13 +130,13 @@ async function expressionSearch<CTX extends MemorySearchCTX>(
 
         if (pieces.length === 1) {
           const foundRef = references.find(
-            (r) => r.id === pieces[0] || r.url === pieces[0]
+            (r) => r.id === pieces[0] || r.url === pieces[0],
           );
           if (foundRef) return true;
         }
         if (pieces.length === 2) {
           const foundRef = references.find(
-            (r) => r.resourceType === pieces[0] && r.id === pieces[1]
+            (r) => r.resourceType === pieces[0] && r.id === pieces[1],
           );
           if (foundRef) return true;
         }
@@ -178,8 +178,8 @@ async function expressionSearch<CTX extends MemorySearchCTX>(
       throw new OperationError(
         outcomeError(
           "not-supported",
-          `Memory search does not support '${parameter.searchParameter.type}' yet.`
-        )
+          `Memory search does not support '${parameter.searchParameter.type}' yet.`,
+        ),
       );
     }
   }
@@ -188,7 +188,7 @@ async function expressionSearch<CTX extends MemorySearchCTX>(
 function checkParameterWithResource<CTX extends MemorySearchCTX>(
   ctx: CTX,
   resource: Resource,
-  parameter: SearchParameterResource
+  parameter: SearchParameterResource,
 ) {
   switch (parameter.name) {
     // Special handling for performance reason on heavily used parameters
@@ -216,7 +216,7 @@ function checkParameterWithResource<CTX extends MemorySearchCTX>(
 export async function fitsSearchCriteria<CTX extends MemorySearchCTX>(
   ctx: CTX,
   resource: Resource,
-  parameters: SearchParameterResource[]
+  parameters: SearchParameterResource[],
 ) {
   for (const param of parameters) {
     if (!(await checkParameterWithResource(ctx, resource, param))) return false;

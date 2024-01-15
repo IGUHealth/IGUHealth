@@ -1,9 +1,9 @@
-import { ResourceType, SearchParameter } from "@iguhealth/fhir-types/r4/types";
-import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import { FHIRClientAsync } from "@iguhealth/client/interface";
 import { FHIRRequest } from "@iguhealth/client/types";
 import { ParsedParameter } from "@iguhealth/client/url";
-import { FHIRClientAsync } from "@iguhealth/client/interface";
+import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
+import { ResourceType, SearchParameter } from "@iguhealth/fhir-types/r4/types";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { param_types_supported } from "../../postgres/constants.js";
 
@@ -21,7 +21,7 @@ export type ParameterType = SearchParameterResource | SearchParameterResult;
 
 export function deriveLimit(
   range: [number, number],
-  userLimit?: ParsedParameter<string | number>
+  userLimit?: ParsedParameter<string | number>,
 ): number {
   const limit =
     userLimit &&
@@ -29,9 +29,9 @@ export function deriveLimit(
       ? Math.min(
           Math.max(
             parseInt((userLimit.value && userLimit.value[0]).toString()),
-            range[0]
+            range[0],
           ),
-          range[1]
+          range[1],
         )
       : range[1];
 
@@ -39,7 +39,7 @@ export function deriveLimit(
 }
 
 export function searchResources(
-  resourceTypes: ResourceType[]
+  resourceTypes: ResourceType[],
 ): (ResourceType | string)[] {
   const searchTypes = ["Resource", "DomainResource"];
   if (resourceTypes.length > 0) {
@@ -63,7 +63,7 @@ type SearchTables =
   | "uri_idx";
 
 export function searchParameterToTableName(
-  searchparameter_type: SearchParameter["type"]
+  searchparameter_type: SearchParameter["type"],
 ): SearchTables {
   if (param_types_supported.includes(searchparameter_type)) {
     return `${searchparameter_type}_idx` as SearchTables;
@@ -71,8 +71,8 @@ export function searchParameterToTableName(
   throw new OperationError(
     outcomeError(
       "not-supported",
-      `Search Parameter of type '${searchparameter_type}' is not supported`
-    )
+      `Search Parameter of type '${searchparameter_type}' is not supported`,
+    ),
   );
 }
 
@@ -97,8 +97,8 @@ export function deriveResourceTypeFilter(request: FHIRRequest): ResourceType[] {
       throw new OperationError(
         outcomeError(
           "not-supported",
-          `Resource Type '${type}' is not supported`
-        )
+          `Resource Type '${type}' is not supported`,
+        ),
       );
     }
   }
@@ -110,7 +110,7 @@ export function deriveResourceTypeFilter(request: FHIRRequest): ResourceType[] {
  * Given type with heirarchy of inherited types (DomainResource, Resource)
  */
 export function typesToSearch(
-  resourceTypes: ResourceType[]
+  resourceTypes: ResourceType[],
 ): (ResourceType | string)[] {
   const searchTypes = ["Resource", "DomainResource"];
   if (resourceTypes.length > 0) {
@@ -123,8 +123,8 @@ async function associateChainedParameters(
   parsedParameter: SearchParameterResource,
   resolveSearchParameter: (
     resourceTypes: ResourceType[],
-    name: string
-  ) => Promise<SearchParameter[]>
+    name: string,
+  ) => Promise<SearchParameter[]>,
 ): Promise<SearchParameterResource> {
   if (!parsedParameter.chains) return parsedParameter;
 
@@ -139,8 +139,8 @@ async function associateChainedParameters(
           throw new OperationError(
             outcomeError(
               "invalid",
-              `SearchParameter with name '${l.name}' is not a reference.`
-            )
+              `SearchParameter with name '${l.name}' is not a reference.`,
+            ),
           );
         return l.target || [];
       })
@@ -148,15 +148,15 @@ async function associateChainedParameters(
 
     const chainParameter = await resolveSearchParameter(
       targets as ResourceType[],
-      chain
+      chain,
     );
 
     if (chainParameter.length === 0)
       throw new OperationError(
         outcomeError(
           "not-found",
-          `SearchParameter with name '${chain}' not found in chain.`
-        )
+          `SearchParameter with name '${chain}' not found in chain.`,
+        ),
       );
     last = chainParameter;
     chainedParameters.push(chainParameter);
@@ -169,7 +169,7 @@ async function associateChainedParameters(
 }
 
 export function isSearchResultParameter(
-  parameter: ParsedParameter<string | number>
+  parameter: ParsedParameter<string | number>,
 ) {
   // List pulled from https://hl7.org/fhir/r4/search.htm
   // These parameters do not have associated search parameter and instead require hard logic.
@@ -190,8 +190,8 @@ export function isSearchResultParameter(
       throw new OperationError(
         outcomeError(
           "not-supported",
-          `Parameter of type '${parameter.name}' is not yet supported.`
-        )
+          `Parameter of type '${parameter.name}' is not yet supported.`,
+        ),
       );
     }
     default:
@@ -201,12 +201,12 @@ export function isSearchResultParameter(
 
 export async function findSearchParameter<
   CTX,
-  Client extends FHIRClientAsync<CTX>
+  Client extends FHIRClientAsync<CTX>,
 >(
   client: Client,
   ctx: CTX,
   resourceTypes: ResourceType[],
-  name: string
+  name: string,
 ): Promise<SearchParameter[]> {
   const result = await client.search_type(ctx, "SearchParameter", [
     { name: "name", value: [name] },
@@ -225,13 +225,13 @@ export async function findSearchParameter<
 
 type ResolveSearchParameter = (
   resourceTypes: ResourceType[],
-  name: string
+  name: string,
 ) => Promise<SearchParameter[]>;
 
 export async function parametersWithMetaAssociated(
   resolveSearchParameter: ResolveSearchParameter,
   resourceTypes: ResourceType[],
-  parameters: ParsedParameter<string | number>[]
+  parameters: ParsedParameter<string | number>[],
 ): Promise<ParameterType[]> {
   const result = await Promise.all(
     parameters.map(async (p) => {
@@ -242,7 +242,7 @@ export async function parametersWithMetaAssociated(
 
       const searchParameterSearchResult = await resolveSearchParameter(
         resourceTypes,
-        p.name
+        p.name,
       );
 
       if (searchParameterSearchResult.length === 0) {
@@ -251,8 +251,8 @@ export async function parametersWithMetaAssociated(
             "not-found",
             `SearchParameter with name '${
               p.name
-            }' not found for types '${resourceTypes.join(", ")}'.`
-          )
+            }' not found for types '${resourceTypes.join(", ")}'.`,
+          ),
         );
       }
 
@@ -260,8 +260,8 @@ export async function parametersWithMetaAssociated(
         throw new OperationError(
           outcomeError(
             "invalid",
-            `SearchParameter with name '${p.name}' found multiple parameters.`
-          )
+            `SearchParameter with name '${p.name}' found multiple parameters.`,
+          ),
         );
 
       const searchParameter = searchParameterSearchResult[0];
@@ -271,7 +271,7 @@ export async function parametersWithMetaAssociated(
         searchParameter: searchParameter,
       };
       return associateChainedParameters(param, resolveSearchParameter);
-    })
+    }),
   );
 
   return result;

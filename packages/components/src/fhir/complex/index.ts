@@ -1,18 +1,18 @@
 import { FHIRAddressEditable } from "./Address";
-import { FHIRIdentifierEditable } from "./Identifier";
+import { FHIRAnnotationEditable } from "./Annotation";
+import { FHIRAttachmentEditable } from "./Attachment";
+import { FhirCodeableConceptEditable } from "./CodeableConcept";
+import { FHIRCodingEditable } from "./Coding";
+import { FHIRContactDetailEditable } from "./ContactDetail";
 import { FHIRContactPointEditable } from "./ContactPoint";
 import { FHIRHumanNameEditable } from "./HumanName";
+import { FHIRIdentifierEditable } from "./Identifier";
 import { FHIRMetaReadOnly } from "./Meta";
 import { FHIRPeriodEditable } from "./Period";
-import { FHIRContactDetailEditable } from "./ContactDetail";
-import { FHIRAnnotationEditable } from "./Annotation";
-import { FHIRSimpleQuantityEditable } from "./SimpleQuantity";
-import { FHIRReferenceEditable } from "./Reference";
-import { FHIRRatioEditable } from "./Ratio";
 import { FHIRRangeEditable } from "./Range";
-import { FHIRCodingEditable } from "./Coding";
-import { FhirCodeableConceptEditable } from "./CodeableConcept";
-import { FHIRAttachmentEditable } from "./Attachment";
+import { FHIRRatioEditable } from "./Ratio";
+import { FHIRReferenceEditable } from "./Reference";
+import { FHIRSimpleQuantityEditable } from "./SimpleQuantity";
 
 export {
   FHIRAddressEditable,

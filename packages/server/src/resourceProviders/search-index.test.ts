@@ -1,17 +1,17 @@
+import { expect, test } from "@jest/globals";
 import path from "path";
 import { fileURLToPath } from "url";
 
-import {
-  uri,
-  code,
-  StructureDefinition,
-  ResourceType,
-  Resource,
-  SearchParameter,
-} from "@iguhealth/fhir-types/lib/r4/types";
-import { resourceTypes } from "@iguhealth/fhir-types/lib/r4/sets";
-import { expect, test } from "@jest/globals";
 import { loadArtifacts } from "@iguhealth/artifacts";
+import { resourceTypes } from "@iguhealth/fhir-types/lib/r4/sets";
+import {
+  Resource,
+  ResourceType,
+  SearchParameter,
+  StructureDefinition,
+  code,
+  uri,
+} from "@iguhealth/fhir-types/lib/r4/types";
 import * as fhirpath from "@iguhealth/fhirpath";
 
 function getArtifactResources(resourceTypes: ResourceType[]): Resource[] {
@@ -23,7 +23,7 @@ function getArtifactResources(resourceTypes: ResourceType[]): Resource[] {
         // silence: true,
         // Limiting to strictly hl7 packages as iguhealth packages changing constantly for snapshots.
         onlyPackages: ["@iguhealth/hl7.fhir.r4.core", "@iguhealth/test-data"],
-      })
+      }),
     )
     .flat();
 
@@ -40,7 +40,7 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
     const searchParameters = artifactResources.filter(
       (r): r is SearchParameter =>
         r.resourceType === "SearchParameter" &&
-        r.base.includes(resourceType as code)
+        r.base.includes(resourceType as code),
     );
 
     const resources = artifactResources
@@ -50,7 +50,7 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
       .slice(0, 10);
     console.log(
       resourceType,
-      searchParameters.map((s) => s.name)
+      searchParameters.map((s) => s.name),
     );
     for (const resource of resources) {
       for (const parameter of searchParameters) {
@@ -65,16 +65,16 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
                     return artifactResources.find(
                       (r) =>
                         r.resourceType === "StructureDefinition" &&
-                        r.type === type
+                        r.type === type,
                     ) as StructureDefinition | undefined;
                   },
                 },
-              }
+              },
             );
             expect([parameter.expression, evalResult]).toMatchSnapshot();
           } catch (e) {
             console.error(
-              `Expression failed to evaluate ${parameter.expression}`
+              `Expression failed to evaluate ${parameter.expression}`,
             );
             console.error(e);
             throw e;
@@ -82,5 +82,5 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
         }
       }
     }
-  }
+  },
 );

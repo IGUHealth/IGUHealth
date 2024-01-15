@@ -1,7 +1,7 @@
-import React, { Fragment, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import classNames from "classnames";
+import React, { Fragment, useState } from "react";
 
 import { DisplayIssues, Label, inputClassNames } from "./containers";
 
@@ -32,7 +32,7 @@ export const Select = ({
           option.label
             .toLowerCase()
             .replace(/\s+/g, "")
-            .includes(query.toLowerCase().replace(/\s+/g, ""))
+            .includes(query.toLowerCase().replace(/\s+/g, "")),
         );
 
   return (
@@ -58,14 +58,14 @@ export const Select = ({
                 inputClassNames({
                   hideBorder: false,
                   issues: issue ? [issue] : [],
-                })
+                }),
               )}
               displayValue={(option: Option) => option && option.label}
               onChange={(event) => setQuery(event.target.value)}
             />
             <Combobox.Button
               className={classNames(
-                "absolute inset-y-0 right-0 flex items-center pr-2"
+                "absolute inset-y-0 right-0 flex items-center pr-2",
               )}
             >
               <ChevronUpDownIcon
@@ -93,7 +93,7 @@ export const Select = ({
                     {
                       "bg-teal-600 text-white": active,
                       "text-gray-900": !active,
-                    }
+                    },
                   )
                 }
               >
@@ -109,7 +109,7 @@ export const Select = ({
                     {
                       "bg-teal-600 text-white": active,
                       "text-gray-900": !active,
-                    }
+                    },
                   )
                 }
                 value={option}
@@ -131,7 +131,7 @@ export const Select = ({
                           {
                             "text-white": active,
                             "text-teal-600": !active,
-                          }
+                          },
                         )}
                       >
                         <CheckIcon className="h-5 w-5" aria-hidden="true" />

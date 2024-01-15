@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useRecoilValue } from "recoil";
 import { generatePath, useNavigate, useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 
+import { Button, Input, Toaster } from "@iguhealth/components";
 import { Bundle, OperationOutcome } from "@iguhealth/fhir-types/r4/types";
-import { Input, Button, Toaster } from "@iguhealth/components";
 
 import { getClient } from "../db/client";
 
@@ -84,7 +84,7 @@ export default function BatchImportView() {
                   navigate(
                     generatePath("/w/:tenant/", {
                       tenant: params.tenant as string,
-                    })
+                    }),
                   );
                 });
               }

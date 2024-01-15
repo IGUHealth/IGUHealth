@@ -1,8 +1,9 @@
 import { expect, test } from "@jest/globals";
+import dotEnv from "dotenv";
+
+import { getRedisClient } from "../fhir/index.js";
 import PostgresLock from "./postgres.lock.js";
 import RedisLock from "./redis.lock.js";
-import { getRedisClient } from "../fhir/index.js";
-import dotEnv from "dotenv";
 
 dotEnv.config();
 
@@ -33,7 +34,7 @@ test("redisLock", async () => {
         sharedValue--;
 
         expect(sharedValue).toEqual(0);
-      })
+      }),
     );
   }
   await Promise.all(promises);
@@ -66,7 +67,7 @@ test("Test PostgresLock", async () => {
         sharedValue--;
 
         expect(sharedValue).toEqual(0);
-      })
+      }),
     );
   }
 

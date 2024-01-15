@@ -1,64 +1,64 @@
-import path from "path";
-import { fileURLToPath } from "url";
-import createLogger from "pino";
-import pg from "pg";
-import Redis from "ioredis";
 import Ajv from "ajv";
+import Redis from "ioredis";
 import type * as koa from "koa";
+import path from "path";
+import pg from "pg";
+import createLogger from "pino";
+import { fileURLToPath } from "url";
 
-import { escapeParameter } from "@iguhealth/client/url";
 import { loadArtifacts } from "@iguhealth/artifacts";
+import { AsynchronousClient } from "@iguhealth/client";
+import { FHIRClientAsync } from "@iguhealth/client/interface";
+import {
+  MiddlewareAsync,
+  createMiddlewareAsync,
+} from "@iguhealth/client/middleware";
+import { FHIRRequest } from "@iguhealth/client/types";
+import { escapeParameter } from "@iguhealth/client/url";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
   AResource,
-  id,
-  ResourceType,
-  Resource,
+  AccessPolicy,
   CapabilityStatement,
   CapabilityStatementRestResource,
+  Resource,
+  ResourceType,
   StructureDefinition,
-  code,
-  canonical,
-  uri,
   User,
-  AccessPolicy,
+  canonical,
+  code,
+  id,
+  uri,
 } from "@iguhealth/fhir-types/r4/types";
-import { FHIRClientAsync } from "@iguhealth/client/interface";
 import {
   OperationError,
   outcomeError,
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
-import { FHIRRequest } from "@iguhealth/client/types";
 
+import { createAuthorizationMiddleWare } from "../authZ/middleware/authorization.js";
 import { findCurrentTenant } from "../authZ/middleware/tenantAccess.js";
-import { createPostgresClient } from "../resourceProviders/postgres/index.js";
-import { FHIRServerCTX, asSystemCTX, JWT } from "./context.js";
-import { InternalData } from "../resourceProviders/memory/types.js";
-import MemoryDatabaseAsync from "../resourceProviders/memory/async.js";
-import RouterClient from "../resourceProviders/router.js";
-import InlineExecutioner from "../operation-executors/local/index.js";
-import StructureDefinitionSnapshotInvoke from "../operation-executors/local/structureDefinition/snapshot.js";
+import RedisCache from "../cache/redis.js";
+import { encryptValue } from "../encryption/index.js";
+import { AWSKMSProvider } from "../encryption/provider/kms.js";
+import AWSLambdaExecutioner from "../operation-executors/awsLambda/index.js";
 import IguhealthEncryptInvoke from "../operation-executors/local/encryption/encrypt.js";
+import InlineExecutioner from "../operation-executors/local/index.js";
 import ResourceValidateInvoke, {
   validateResource,
 } from "../operation-executors/local/resource_validate.js";
+import StructureDefinitionSnapshotInvoke from "../operation-executors/local/structureDefinition/snapshot.js";
 import ValueSetExpandInvoke from "../operation-executors/local/terminology/expand.js";
-import ValueSetValidateInvoke from "../operation-executors/local/terminology/validate.js";
 import CodeSystemLookupInvoke from "../operation-executors/local/terminology/lookup.js";
-import AWSLambdaExecutioner from "../operation-executors/awsLambda/index.js";
-import { TerminologyProviderMemory } from "../terminology/index.js";
-import { AWSKMSProvider } from "../encryption/provider/kms.js";
-import { encryptValue } from "../encryption/index.js";
+import ValueSetValidateInvoke from "../operation-executors/local/terminology/validate.js";
+import MemoryDatabaseAsync from "../resourceProviders/memory/async.js";
+import { InternalData } from "../resourceProviders/memory/types.js";
+import { createPostgresClient } from "../resourceProviders/postgres/index.js";
+import RouterClient from "../resourceProviders/router.js";
 import JSONPatchSchema from "../schemas/jsonpatch.schema.js";
-import {
-  MiddlewareAsync,
-  createMiddlewareAsync,
-} from "@iguhealth/client/middleware";
-import { AsynchronousClient } from "@iguhealth/client";
-import { createAuthorizationMiddleWare } from "../authZ/middleware/authorization.js";
 import RedisLock from "../synchronization/redis.lock.js";
-import RedisCache from "../cache/redis.js";
+import { TerminologyProviderMemory } from "../terminology/index.js";
+import { FHIRServerCTX, JWT, asSystemCTX } from "./context.js";
 
 export const MEMORY_TYPES: ResourceType[] = [
   "StructureDefinition",
@@ -68,14 +68,14 @@ export const MEMORY_TYPES: ResourceType[] = [
 ];
 
 export function createMemoryData(
-  resourceTypes: ResourceType[]
+  resourceTypes: ResourceType[],
 ): InternalData<ResourceType> {
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
       loadArtifacts({
         resourceType,
         packageLocation: path.join(fileURLToPath(import.meta.url), "../../../"),
-      })
+      }),
     )
     .flat();
   let data: InternalData<ResourceType> = {};
@@ -95,7 +95,7 @@ export function createMemoryData(
 async function createResourceRestCapabilities(
   ctx: Partial<FHIRServerCTX>,
   memdb: FHIRClientAsync<unknown>,
-  sd: StructureDefinition
+  sd: StructureDefinition,
 ): Promise<CapabilityStatementRestResource> {
   const resourceParameters = await memdb.search_type(ctx, "SearchParameter", [
     { name: "_count", value: [1000] },
@@ -129,7 +129,7 @@ async function createResourceRestCapabilities(
 
 export async function serverCapabilities(
   ctx: Partial<FHIRServerCTX>,
-  memdb: FHIRClientAsync<unknown>
+  memdb: FHIRClientAsync<unknown>,
 ): Promise<CapabilityStatement> {
   const sds = (
     await memdb.search_type({}, "StructureDefinition", [
@@ -166,7 +166,7 @@ export async function serverCapabilities(
           documentation: resource.description,
         })),
         resource: await Promise.all(
-          sds.map((sd) => createResourceRestCapabilities(ctx, memdb, sd))
+          sds.map((sd) => createResourceRestCapabilities(ctx, memdb, sd)),
         ),
       },
     ],
@@ -190,8 +190,8 @@ function getResourceTypeToValidate(request: FHIRRequest): ResourceType {
       throw new OperationError(
         outcomeError(
           "invalid",
-          `cannot validate resource type '${request.type}'`
-        )
+          `cannot validate resource type '${request.type}'`,
+        ),
       );
   }
 }
@@ -227,11 +227,11 @@ const validationMiddleware: MiddlewareAsync<
             ? "create"
             : "update") as code,
           resource: context.request.body,
-        }
+        },
       );
       if (
         outcome.issue.find(
-          (i) => i.severity === "fatal" || i.severity === "error"
+          (i) => i.severity === "fatal" || i.severity === "error",
         )
       ) {
         throw new OperationError(outcome);
@@ -242,7 +242,7 @@ const validationMiddleware: MiddlewareAsync<
       const valid = validateJSONPatch(context.request.body);
       if (!valid) {
         throw new OperationError(
-          outcomeError("invalid", `JSON Patch is not valid.`)
+          outcomeError("invalid", `JSON Patch is not valid.`),
         );
       }
       break;
@@ -271,7 +271,7 @@ const capabilitiesMiddleware: MiddlewareAsync<
 };
 
 const encryptionMiddleware: (
-  resourceTypesToEncrypt: ResourceType[]
+  resourceTypesToEncrypt: ResourceType[],
 ) => MiddlewareAsync<RouterState, FHIRServerCTX> =
   (resourceTypesToEncrypt: ResourceType[]) => async (context, next) => {
     if (!next) throw new Error("next middleware was not defined");
@@ -287,7 +287,7 @@ const encryptionMiddleware: (
         case "update-request": {
           const encrypted = await encryptValue(
             context.ctx,
-            context.request.body
+            context.request.body,
           );
           return next({
             ...context,
@@ -297,7 +297,7 @@ const encryptionMiddleware: (
         case "patch-request": {
           const encrypted = await encryptValue(
             context.ctx,
-            context.request.body
+            context.request.body,
           );
           return next({
             ...context,
@@ -315,7 +315,7 @@ const encryptionMiddleware: (
 
 const associateUserMiddleware: MiddlewareAsync<unknown, FHIRServerCTX> = async (
   context,
-  next
+  next,
 ) => {
   if (!next) throw new Error("next middleware was not defined");
 
@@ -327,23 +327,23 @@ const associateUserMiddleware: MiddlewareAsync<unknown, FHIRServerCTX> = async (
         name: "identifier",
         value: [
           `${escapeParameter(context.ctx.user.jwt.iss)}|${escapeParameter(
-            context.ctx.user.jwt.sub
+            context.ctx.user.jwt.sub,
           )}`,
         ],
       },
       { name: "_revinclude", value: ["AccessPolicy:link"] },
-    ]
+    ],
   )) as {
     total?: number;
     resources: (User | AccessPolicy)[];
   };
 
   const userResource = usersAndAccessPolicies.resources.filter(
-    (r): r is User => r.resourceType === "User"
+    (r): r is User => r.resourceType === "User",
   );
 
   const accessPolicies = usersAndAccessPolicies.resources.filter(
-    (r): r is AccessPolicy => r.resourceType === "AccessPolicy"
+    (r): r is AccessPolicy => r.resourceType === "AccessPolicy",
   );
 
   return next({
@@ -360,12 +360,12 @@ const associateUserMiddleware: MiddlewareAsync<unknown, FHIRServerCTX> = async (
 };
 
 export function createResolveCanonical(
-  data: InternalData<ResourceType>
+  data: InternalData<ResourceType>,
 ): <T extends ResourceType>(type: T, url: string) => AResource<T> | undefined {
   const map = new Map<ResourceType, Map<string, string>>();
   for (const resourceType of Object.keys(data)) {
     for (const resource of Object.values(
-      data[resourceType as ResourceType] ?? {}
+      data[resourceType as ResourceType] ?? {},
     )) {
       if ((resource as { url: string })?.url) {
         if (!map.has(resourceType as ResourceType)) {
@@ -387,7 +387,7 @@ export function createResolveCanonical(
 }
 
 export function createResolveTypeToCanonical(
-  data: InternalData<ResourceType>
+  data: InternalData<ResourceType>,
 ): (type: uri) => canonical | undefined {
   const map = new Map<uri, canonical>();
   const sds: Record<id, StructureDefinition | undefined> = data[
@@ -432,12 +432,12 @@ export async function createFHIRClient(sources: RouterState["sources"]) {
       encryptionMiddleware(["OperationDefinition"]),
       createAuthorizationMiddleWare<RouterState>(),
     ],
-    sources
+    sources,
   );
 }
 
 export async function createFHIRServices(
-  pool: pg.Pool
+  pool: pg.Pool,
 ): Promise<Omit<FHIRServerCTX, "tenant" | "user">> {
   const data = createMemoryData(MEMORY_TYPES);
   const memDBAsync = MemoryDatabaseAsync(data);
@@ -481,7 +481,7 @@ export async function createFHIRServices(
   const cache = new RedisCache(redis);
   const capabilities = await serverCapabilities(
     { resolveCanonical, resolveTypeToCanonical },
-    memDBAsync
+    memDBAsync,
   );
   const client = await createFHIRClient([
     // OP INVOCATION
@@ -509,7 +509,7 @@ export async function createFHIRServices(
     },
     {
       resourcesSupported: [...resourceTypes].filter(
-        (type) => MEMORY_TYPES.indexOf(type as ResourceType) === -1
+        (type) => MEMORY_TYPES.indexOf(type as ResourceType) === -1,
       ) as ResourceType[],
       interactionsSupported: [
         "read-request",
@@ -523,7 +523,7 @@ export async function createFHIRServices(
       ],
       source: createPostgresClient(pool, {
         transaction_entry_limit: parseInt(
-          process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20"
+          process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
         ),
       }),
     },
@@ -547,9 +547,9 @@ export async function createKoaFHIRMiddleware<
     access_token?: string;
     user: { [key: string]: unknown };
   },
-  KoaContext
+  KoaContext,
 >(
-  pool: pg.Pool
+  pool: pg.Pool,
 ): Promise<
   koa.Middleware<KoaState, KoaContext & { FHIRContext: FHIRServerCTX }>
 > {
@@ -560,7 +560,7 @@ export async function createKoaFHIRMiddleware<
       typeof ctx.state.user.iss !== "string"
     )
       throw new OperationError(
-        outcomeFatal("security", "JWT must have both sub and iss.")
+        outcomeFatal("security", "JWT must have both sub and iss."),
       );
 
     const tenant = findCurrentTenant(ctx);
@@ -591,7 +591,7 @@ async function createFHIRMiddleware(): Promise<
         request: context.request,
         response: await context.ctx.client.request(
           context.ctx,
-          context.request
+          context.request,
         ),
       };
     },

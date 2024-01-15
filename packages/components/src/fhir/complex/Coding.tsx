@@ -1,9 +1,10 @@
 import React from "react";
+
 import { Coding, uri } from "@iguhealth/fhir-types/r4/types";
 
-import { EditableProps, ClientProps } from "../types";
 import { InputContainer } from "../../base/containers";
 import { FHIRCodeEditable, FHIRUriEditable } from "../primitives";
+import { ClientProps, EditableProps } from "../types";
 
 export type FHIRCodingEditableProps = EditableProps<Coding> & ClientProps;
 

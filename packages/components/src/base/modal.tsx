@@ -1,5 +1,5 @@
-import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import React from "react";
 import { Fragment, useState } from "react";
 
 export function Modal({
@@ -9,10 +9,10 @@ export function Modal({
 }: {
   modalTitle?: string;
   ModalContent?: (
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>,
   ) => React.ReactNode;
   children: (
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>,
   ) => React.ReactNode;
 }) {
   const [isOpen, setOpen] = useState(false);

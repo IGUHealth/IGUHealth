@@ -1,18 +1,18 @@
 import {
-  Parameters,
-  OperationDefinition,
-} from "@iguhealth/fhir-types/r4/types";
-import { IOperation, Operation } from "@iguhealth/operation-execution";
-
-import { FHIRServerCTX } from "../../fhir/context.js";
-import {
   FHIRRequest,
   InvokeRequest,
   InvokeResponse,
 } from "@iguhealth/client/types";
+import {
+  OperationDefinition,
+  Parameters,
+} from "@iguhealth/fhir-types/r4/types";
+import { IOperation, Operation } from "@iguhealth/operation-execution";
+import { OperationError, outcome } from "@iguhealth/operation-outcomes";
+
+import { FHIRServerCTX } from "../../fhir/context.js";
 import { getOpCTX } from "../utilities.js";
 import { validateInvocationContext } from "../utilities.js";
-import { OperationError, outcome } from "@iguhealth/operation-outcomes";
 
 type Input<T> = T extends IOperation<infer Input, unknown> ? Input : never;
 type Output<T> = T extends IOperation<unknown, infer Output> ? Output : never;
@@ -20,11 +20,14 @@ type Output<T> = T extends IOperation<unknown, infer Output> ? Output : never;
 export class InlineOp<T, V> extends Operation<T, V> {
   private _execute: (
     ctx: FHIRServerCTX,
-    request: InvokeRequest
+    request: InvokeRequest,
   ) => Promise<Parameters>;
   constructor(
     definition: OperationDefinition,
-    execute: (ctx: FHIRServerCTX, request: InvokeRequest) => Promise<Parameters>
+    execute: (
+      ctx: FHIRServerCTX,
+      request: InvokeRequest,
+    ) => Promise<Parameters>,
   ) {
     super(definition);
     this._execute = execute;
@@ -35,21 +38,21 @@ export class InlineOp<T, V> extends Operation<T, V> {
 }
 
 export default function InlineOperation<
-  OP extends IOperation<unknown, unknown>
+  OP extends IOperation<unknown, unknown>,
 >(
   op: OP,
   executor: (
     ctx: FHIRServerCTX,
     request: FHIRRequest,
-    v: Input<OP>
-  ) => Promise<Output<OP>>
+    v: Input<OP>,
+  ) => Promise<Output<OP>>,
 ): InlineOp<Input<OP>, Output<OP>> {
   return new InlineOp(
     op.operationDefinition,
     async (ctx: FHIRServerCTX, request: InvokeRequest) => {
       const invocationOperationOutcome = validateInvocationContext(
         op.operationDefinition,
-        request
+        request,
       );
 
       if (invocationOperationOutcome) {
@@ -60,7 +63,7 @@ export default function InlineOperation<
       const inputIssues = await op.validate(
         getOpCTX(ctx, request),
         "in",
-        input
+        input,
       );
       if (inputIssues.length > 0)
         throw new OperationError(outcome(inputIssues));
@@ -69,13 +72,13 @@ export default function InlineOperation<
       const outputIssues = await op.validate(
         getOpCTX(ctx, request),
         "out",
-        result
+        result,
       );
 
       if (outputIssues.length > 0)
         throw new OperationError(outcome(outputIssues));
 
       return op.parseToParameters("out", result) as Parameters;
-    }
+    },
   );
 }

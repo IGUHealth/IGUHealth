@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { FHIRCodingEditable } from "./Coding";
-import { createStorybookClient } from "../stories.client";
 import { Coding } from "@iguhealth/fhir-types/r4/types";
+
+import { createStorybookClient } from "../stories.client";
+import { FHIRCodingEditable } from "./Coding";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {

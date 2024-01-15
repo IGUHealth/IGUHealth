@@ -1,10 +1,10 @@
-import { Resource, BundleEntry, uri } from "@iguhealth/fhir-types/r4/types";
 import { FHIRResponse } from "@iguhealth/client/types";
+import { BundleEntry, Resource, uri } from "@iguhealth/fhir-types/r4/types";
 
 import { fhirResponseToHTTPResponse } from "../../http/index.js";
 
 export function fhirResponseToBundleEntry(
-  fhirResponse: FHIRResponse
+  fhirResponse: FHIRResponse,
 ): BundleEntry {
   const koaResponse = fhirResponseToHTTPResponse(fhirResponse);
   return {

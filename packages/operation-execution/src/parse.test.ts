@@ -70,7 +70,7 @@ test("TEST Parse to object", async () => {
           },
         },
       ],
-    } as Parameters)
+    } as Parameters),
   ).toEqual({
     payload: [
       {

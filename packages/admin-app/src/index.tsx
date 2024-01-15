@@ -1,44 +1,43 @@
-import React, { useEffect } from "react";
-import ReactDOM from "react-dom/client";
 import { Auth0Provider, User, useAuth0 } from "@auth0/auth0-react";
 import {
   ArrowLeftOnRectangleIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
-import { RecoilRoot, useRecoilState } from "recoil";
+import classNames from "classnames";
+import React, { useEffect } from "react";
+import ReactDOM from "react-dom/client";
 import {
   Outlet,
-  createBrowserRouter,
   RouterProvider,
-  useNavigate,
-  useMatches,
-  useParams,
+  createBrowserRouter,
   generatePath,
+  useMatches,
+  useNavigate,
+  useParams,
 } from "react-router-dom";
-import classNames from "classnames";
+import { RecoilRoot, useRecoilState } from "recoil";
 
 import createHTTPClient from "@iguhealth/client/http";
 import {
-  SideBar,
   Loading,
-  Toaster,
   ProfileDropdown,
+  SideBar,
+  Toaster,
 } from "@iguhealth/components";
 import "@iguhealth/components/dist/index.css";
 
-import { getClient, createAdminAppClient } from "./db/client";
-import Settings from "./views/Settings";
-import BundleImport from "./views/BundleImport";
-import EmptyWorkspace from "./views/EmptyWorkspace";
-import Resources from "./views/Resources";
-import ResourceType from "./views/ResourceType";
-import ResourceEditor from "./views/ResourceEditor/index";
-import reportWebVitals from "./reportWebVitals";
 import { Logo } from "./components/Logo";
 import Search from "./components/Search";
 import SearchModal from "./components/SearchModal";
-
+import { createAdminAppClient, getClient } from "./db/client";
 import "./index.css";
+import reportWebVitals from "./reportWebVitals";
+import BundleImport from "./views/BundleImport";
+import EmptyWorkspace from "./views/EmptyWorkspace";
+import ResourceEditor from "./views/ResourceEditor/index";
+import ResourceType from "./views/ResourceType";
+import Resources from "./views/Resources";
+import Settings from "./views/Settings";
 
 function LoginWrapper() {
   const auth0Info = useAuth0();
@@ -83,8 +82,8 @@ function ServiceSetup({ children }: { children: React.ReactNode }) {
           url:
             (process.env.REACT_APP_FHIR_BASE_URL || "") +
             `/w/${tenant}/api/v1/fhir/r4`,
-        })
-      )
+        }),
+      ),
     );
   }, [setClient]);
 
@@ -217,7 +216,7 @@ function Root() {
                   navigate(
                     generatePath("/w/:tenant/", {
                       tenant: params.tenant as string,
-                    })
+                    }),
                   )
                 }
                 className="cursor-pointer w-16 h-16 p-2 mt-4"
@@ -236,7 +235,7 @@ function Root() {
                     generatePath("/w/:tenant/resources/:resourceType", {
                       tenant: params.tenant as string,
                       resourceType: "OperationDefinition",
-                    })
+                    }),
                   );
                 }}
               >
@@ -249,7 +248,7 @@ function Root() {
                     generatePath("/w/:tenant/resources/:resourceType", {
                       tenant: params.tenant as string,
                       resourceType: "Subscription",
-                    })
+                    }),
                   );
                 }}
               >
@@ -264,7 +263,7 @@ function Root() {
                     generatePath("/w/:tenant/resources/:resourceType", {
                       tenant: params.tenant as string,
                       resourceType: "Questionnaire",
-                    })
+                    }),
                   );
                 }}
               >
@@ -279,7 +278,7 @@ function Root() {
                     generatePath("/w/:tenant/resources/:resourceType", {
                       tenant: params.tenant as string,
                       resourceType: "QuestionnaireResponse",
-                    })
+                    }),
                   );
                 }}
               >
@@ -294,7 +293,7 @@ function Root() {
                     generatePath("/w/:tenant/resources/:resourceType", {
                       tenant: params.tenant as string,
                       resourceType: "AuditEvent",
-                    })
+                    }),
                   );
                 }}
               >
@@ -310,7 +309,7 @@ function Root() {
                     generatePath("/w/:tenant/resources/:resourceType", {
                       tenant: params.tenant as string,
                       resourceType: "User",
-                    })
+                    }),
                   );
                 }}
               >
@@ -323,7 +322,7 @@ function Root() {
                     generatePath("/w/:tenant/resources/:resourceType", {
                       tenant: params.tenant as string,
                       resourceType: "AccessPolicy",
-                    })
+                    }),
                   );
                 }}
               >
@@ -343,14 +342,14 @@ function Root() {
                       match.params.resourceType !== "QuestionnaireResponse" &&
                       match.params.resourceType !== "AuditEvent" &&
                       match.params.resourceType !== "User" &&
-                      match.params.resourceType !== "AccessPolicy"
+                      match.params.resourceType !== "AccessPolicy",
                   ) !== undefined
                 }
                 onClick={() => {
                   navigate(
                     generatePath("/w/:tenant", {
                       tenant: params.tenant as string,
-                    })
+                    }),
                   );
                 }}
               >
@@ -367,7 +366,7 @@ function Root() {
                   navigate(
                     generatePath("/w/:tenant/bundle-import", {
                       tenant: params.tenant as string,
-                    })
+                    }),
                   );
                 }}
               >
@@ -386,7 +385,7 @@ function Root() {
                   navigate(
                     generatePath("/w/:tenant/settings", {
                       tenant: params.tenant as string,
-                    })
+                    }),
                   )
                 }
               >
@@ -448,7 +447,7 @@ function Root() {
                                 "/w/:tenant",
                                 {
                                   tenant: t.id,
-                                }
+                                },
                               );
                             }}
                           >
@@ -458,7 +457,7 @@ function Root() {
                                 {
                                   "bg-blue-100 text-xs text-blue-800 p-2":
                                     params.tenant === t.id,
-                                }
+                                },
                               )}
                             >
                               {t.id}
@@ -474,19 +473,19 @@ function Root() {
                           {
                             "text-slate-800":
                               matches.find(
-                                (match) => match.id === "settings"
+                                (match) => match.id === "settings",
                               ) === undefined,
                             "bg-blue-100 text-blue-800":
                               matches.find(
-                                (match) => match.id === "settings"
+                                (match) => match.id === "settings",
                               ) !== undefined,
-                          }
+                          },
                         )}
                         onClick={() => {
                           navigate(
                             generatePath("/w/:tenant/settings", {
                               tenant: params.tenant as string,
-                            })
+                            }),
                           );
                         }}
                       >
@@ -533,7 +532,7 @@ function App() {
 export default App;
 
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
+  document.getElementById("root") as HTMLElement,
 );
 
 root.render(
@@ -541,7 +540,7 @@ root.render(
     <RecoilRoot>
       <App />
     </RecoilRoot>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function

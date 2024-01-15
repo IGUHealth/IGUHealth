@@ -1,36 +1,36 @@
+import { eleIndexToChildIndices as eleIndexToChildIndexes } from "@iguhealth/codegen";
 import {
-  OperationError,
-  outcomeError,
-  outcomeFatal,
-  issueError,
-} from "@iguhealth/operation-outcomes";
+  Loc,
+  descend,
+  get,
+  root,
+  toJSONPointer,
+  typedPointer,
+} from "@iguhealth/fhir-pointer";
+import { primitiveTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
   AResource,
-  Resource,
   ElementDefinition,
   OperationOutcome,
-  StructureDefinition,
-  ResourceType,
   Reference,
+  Resource,
+  ResourceType,
+  StructureDefinition,
   canonical,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
-import { primitiveTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
-import { eleIndexToChildIndices as eleIndexToChildIndexes } from "@iguhealth/codegen";
 import {
-  get,
-  descend,
-  root,
-  Loc,
-  typedPointer,
-  toJSONPointer,
-} from "@iguhealth/fhir-pointer";
+  OperationError,
+  issueError,
+  outcomeError,
+  outcomeFatal,
+} from "@iguhealth/operation-outcomes";
 
 export interface ValidationCTX {
   resolveTypeToCanonical(type: uri): canonical | undefined;
   resolveCanonical<T extends ResourceType>(
     type: T,
-    url: string
+    url: string,
   ): AResource<T> | undefined;
   validateCode?(system: string, code: string): Promise<boolean>;
 }
@@ -59,7 +59,7 @@ async function validatePrimitive(
   element: ElementDefinition | undefined,
   rootValue: unknown,
   path: Loc<object, any, any>,
-  type: string
+  type: string,
 ): Promise<OperationOutcome["issue"]> {
   let value;
   if (validateIsObject(rootValue)) value = get(path, rootValue);
@@ -69,7 +69,7 @@ async function validatePrimitive(
       issueError(
         "structure",
         `Expected primitive type '${type}' at path '${toJSONPointer(path)}'`,
-        [toJSONPointer(path)]
+        [toJSONPointer(path)],
       ),
     ];
   }
@@ -95,9 +95,9 @@ async function validatePrimitive(
           issueError(
             "structure",
             `Expected primitive type '${type}' at path '${toJSONPointer(
-              path
+              path,
             )}'`,
-            [toJSONPointer(path)]
+            [toJSONPointer(path)],
           ),
         ];
       }
@@ -106,9 +106,9 @@ async function validatePrimitive(
           issueError(
             "value",
             `Invalid value '${value}' at path '${toJSONPointer(
-              path
+              path,
             )}'. Value must conform to regex '${REGEX[type]}'`,
-            [toJSONPointer(path)]
+            [toJSONPointer(path)],
           ),
         ];
       }
@@ -122,9 +122,9 @@ async function validatePrimitive(
           issueError(
             "structure",
             `Expected primitive type '${type}' at path '${toJSONPointer(
-              path
+              path,
             )}'`,
-            [toJSONPointer(path)]
+            [toJSONPointer(path)],
           ),
         ];
       }
@@ -139,9 +139,9 @@ async function validatePrimitive(
           issueError(
             "structure",
             `Expected primitive type '${type}' at path '${toJSONPointer(
-              path
+              path,
             )}'`,
-            [toJSONPointer(path)]
+            [toJSONPointer(path)],
           ),
         ];
       }
@@ -153,9 +153,9 @@ async function validatePrimitive(
             issueError(
               "structure",
               `Code '${value}' is not in value set '${valueSet}' at path '${toJSONPointer(
-                path
+                path,
               )}'`,
-              [toJSONPointer(path)]
+              [toJSONPointer(path)],
             ),
           ];
         }
@@ -172,9 +172,9 @@ async function validatePrimitive(
           issueError(
             "structure",
             `Expected primitive type '${type}' at path '${toJSONPointer(
-              path
+              path,
             )}'`,
-            [toJSONPointer(path)]
+            [toJSONPointer(path)],
           ),
         ];
       }
@@ -183,9 +183,9 @@ async function validatePrimitive(
           issueError(
             "value",
             `Invalid value '${value}' at path '${toJSONPointer(
-              path
+              path,
             )}'. Value must conform to regex '${REGEX[type]}'`,
-            [toJSONPointer(path)]
+            [toJSONPointer(path)],
           ),
         ];
       }
@@ -196,14 +196,14 @@ async function validatePrimitive(
         outcomeError(
           "structure",
           `Unknown primitive type '${type}' at path '${toJSONPointer(path)}'`,
-          [toJSONPointer(path)]
-        )
+          [toJSONPointer(path)],
+        ),
       );
   }
 }
 
 function isElement(
-  element: ElementDefinition | undefined
+  element: ElementDefinition | undefined,
 ): element is ElementDefinition {
   if (!element) return false;
   return true;
@@ -233,22 +233,22 @@ function isPrimitiveType(type: string) {
 
 function resolveContentReferenceIndex(
   sd: StructureDefinition,
-  element: ElementDefinition
+  element: ElementDefinition,
 ): number {
   const contentReference = element.contentReference?.split("#")[1];
   const referenceElementIndex = sd.snapshot?.element.findIndex(
-    (element) => element.id === contentReference
+    (element) => element.id === contentReference,
   );
   if (!referenceElementIndex)
     throw new Error(
-      "unable to resolve contentreference: '" + element.contentReference + "'"
+      "unable to resolve contentreference: '" + element.contentReference + "'",
     );
   return referenceElementIndex;
 }
 
 function findBaseFieldAndType(
   element: ElementDefinition,
-  value: object
+  value: object,
 ): [string, uri] | undefined {
   if (element.contentReference) {
     return [fieldName(element), (element.type?.[0].code || "") as uri];
@@ -263,7 +263,7 @@ function findBaseFieldAndType(
 
 function determineTypesAndFields(
   element: ElementDefinition,
-  value: object
+  value: object,
 ): [string, uri][] {
   let fields: [string, uri][] = [];
   const base = findBaseFieldAndType(element, value);
@@ -298,13 +298,13 @@ async function validateReferenceTypeConstraint(
   ctx: ValidationCTX,
   root: object,
   path: Loc<object, any, any>,
-  element: ElementDefinition
+  element: ElementDefinition,
 ): Promise<OperationOutcome["issue"]> {
   // [Note] because element should already be validated as reference this can be considered safe?
   let value = get(path, root) as Reference;
 
   const referenceProfiles = element.type?.find(
-    (t) => t.code === "Reference"
+    (t) => t.code === "Reference",
   )?.targetProfile;
   if (referenceProfiles === undefined || referenceProfiles?.length === 0)
     return [];
@@ -335,11 +335,11 @@ async function validateReferenceTypeConstraint(
     issueError(
       "structure",
       `Expected reference to be constrained by one of the following profiles '${referenceProfiles?.join(
-        ", "
+        ", ",
       )}' at path '${toJSONPointer(path)}' found reference of type '${
         value.type ? value.type : value.reference?.split("/")[0]
       }' instead.`,
-      [toJSONPointer(path)]
+      [toJSONPointer(path)],
     ),
   ];
 }
@@ -350,7 +350,7 @@ async function validateComplex(
   structureDefinition: StructureDefinition,
   elementIndex: number,
   root: object,
-  childrenIndexes: number[]
+  childrenIndexes: number[],
 ): Promise<OperationOutcome["issue"]> {
   // Validating root / backbone / element nested types here.
   // Need to validate that only the _field for primitives
@@ -364,16 +364,16 @@ async function validateComplex(
       issueError(
         "structure",
         `Invalid type '${typeof value}' at path '${toJSONPointer(path)}`,
-        [toJSONPointer(path)]
+        [toJSONPointer(path)],
       ),
     ];
   }
 
   const requiredElements = childrenIndexes.filter(
-    (index) => (structureDefinition.snapshot?.element?.[index].min || 0) > 0
+    (index) => (structureDefinition.snapshot?.element?.[index].min || 0) > 0,
   );
   const optionalElements = childrenIndexes.filter(
-    (i) => requiredElements.indexOf(i) === -1
+    (i) => requiredElements.indexOf(i) === -1,
   );
 
   let issues = (
@@ -388,9 +388,9 @@ async function validateComplex(
             issueError(
               "structure",
               `Missing required field '${child.path}' at path '${toJSONPointer(
-                path
+                path,
               )}'`,
-              [toJSONPointer(path)]
+              [toJSONPointer(path)],
             ),
           ];
         }
@@ -400,11 +400,11 @@ async function validateComplex(
           structureDefinition,
           index,
           root,
-          fields
+          fields,
         );
         foundFields = foundFields.concat(fieldsFound);
         return issues;
-      })
+      }),
     )
   ).flat();
 
@@ -423,18 +423,18 @@ async function validateComplex(
             structureDefinition,
             index,
             root,
-            fields
+            fields,
           );
           foundFields = foundFields.concat(fieldsFound);
           return issues;
-        })
+        }),
       )
     ).flat(),
   ];
 
   // Check for additional fields
   let additionalFields = Object.keys(value).filter(
-    (field) => foundFields.indexOf(field) === -1
+    (field) => foundFields.indexOf(field) === -1,
   );
 
   if (elementIndex === 0 && structureDefinition.kind === "resource") {
@@ -447,8 +447,8 @@ async function validateComplex(
           }' at path '${toJSONPointer(path)}' found type '${
             value.resourceType
           }'`,
-          [toJSONPointer(path)]
-        )
+          [toJSONPointer(path)],
+        ),
       );
     }
     additionalFields = additionalFields.filter((v) => v !== "resourceType");
@@ -460,9 +460,9 @@ async function validateComplex(
       issueError(
         "structure",
         `Additional fields found at path '${toJSONPointer(
-          path
+          path,
         )}': '${additionalFields.join(", ")}'`,
-        [toJSONPointer(path)]
+        [toJSONPointer(path)],
       ),
     ];
   }
@@ -476,7 +476,7 @@ async function validateContentReference(
   structureDefinition: StructureDefinition,
   elementIndex: number,
   root: object,
-  type: uri
+  type: uri,
 ) {
   const element = structureDefinition.snapshot?.element?.[
     elementIndex
@@ -486,8 +486,8 @@ async function validateContentReference(
     throw new OperationError(
       outcomeFatal(
         "structure",
-        `Element at ${elementIndex} is not a content reference`
-      )
+        `Element at ${elementIndex} is not a content reference`,
+      ),
     );
   }
 
@@ -497,7 +497,7 @@ async function validateContentReference(
     structureDefinition,
     resolveContentReferenceIndex(structureDefinition, element),
     root,
-    type
+    type,
   );
 }
 
@@ -507,7 +507,7 @@ async function validateSingular(
   structureDefinition: StructureDefinition,
   elementIndex: number,
   root: object,
-  type: uri
+  type: uri,
 ): Promise<OperationOutcome["issue"]> {
   const element = structureDefinition.snapshot?.element?.[
     elementIndex
@@ -515,7 +515,7 @@ async function validateSingular(
 
   const childrenIndixes = eleIndexToChildIndexes(
     structureDefinition.snapshot?.element || [],
-    elementIndex
+    elementIndex,
   );
 
   // Leaf validation
@@ -526,7 +526,7 @@ async function validateSingular(
       structureDefinition,
       elementIndex,
       root,
-      type
+      type,
     );
   else if (childrenIndixes.length === 0) {
     if (
@@ -553,7 +553,7 @@ async function validateSingular(
       structureDefinition,
       elementIndex,
       root,
-      childrenIndixes
+      childrenIndixes,
     );
   }
 }
@@ -563,7 +563,7 @@ async function checkFields(
   structureDefinition: StructureDefinition,
   index: number,
   root: object,
-  fields: [string, uri][]
+  fields: [string, uri][],
 ): Promise<{
   fieldsFound: string[];
   issues: OperationOutcome["issue"];
@@ -580,9 +580,9 @@ async function checkFields(
           structureDefinition,
           index,
           root,
-          type
+          type,
         );
-      })
+      }),
     )
   ).flat();
 
@@ -599,7 +599,7 @@ async function validateElement(
   structureDefinition: StructureDefinition,
   elementIndex: number,
   root: object,
-  type: uri
+  type: uri,
 ): Promise<OperationOutcome["issue"]> {
   const value = get(path, root);
   const element = structureDefinition.snapshot?.element?.[elementIndex];
@@ -609,8 +609,8 @@ async function validateElement(
       outcomeFatal(
         "structure",
         `Element not found at ${elementIndex} for StructureDefinition ${structureDefinition.id}`,
-        [toJSONPointer(path)]
-      )
+        [toJSONPointer(path)],
+      ),
     );
   }
 
@@ -627,7 +627,7 @@ async function validateElement(
         `Element at path '${toJSONPointer(path)}' is expected to be ${
           isArray ? "an array" : "a singular value"
         }.`,
-        [toJSONPointer(path)]
+        [toJSONPointer(path)],
       ),
     ];
   }
@@ -643,9 +643,9 @@ async function validateElement(
             structureDefinition,
             elementIndex,
             root,
-            type
+            type,
           );
-        })
+        }),
       )
     ).flat();
   } else {
@@ -655,7 +655,7 @@ async function validateElement(
       structureDefinition,
       elementIndex,
       root,
-      type
+      type,
     );
   }
 }
@@ -664,7 +664,7 @@ export default async function validate(
   ctx: ValidationCTX,
   type: uri,
   root: unknown,
-  path: Loc<any, any, any> = typedPointer<any, any>()
+  path: Loc<any, any, any> = typedPointer<any, any>(),
 ): Promise<OperationOutcome["issue"]> {
   const canonical = ctx.resolveTypeToCanonical(type);
   if (!canonical) {
@@ -672,8 +672,8 @@ export default async function validate(
       outcomeFatal(
         "structure",
         `Unable to resolve canonical for type '${type}'`,
-        [toJSONPointer(path)]
-      )
+        [toJSONPointer(path)],
+      ),
     );
   }
   const sd = ctx.resolveCanonical("StructureDefinition", canonical);
@@ -682,8 +682,8 @@ export default async function validate(
       outcomeFatal(
         "structure",
         `Unable to resolve canonical for type '${type}'`,
-        [toJSONPointer(path)]
-      )
+        [toJSONPointer(path)],
+      ),
     );
 
   if (primitiveTypes.has(type))
@@ -694,7 +694,7 @@ export default async function validate(
       issueError(
         "structure",
         `Value must be an object when validating '${type}'. Instead found type of '${typeof root}'`,
-        [toJSONPointer(path)]
+        [toJSONPointer(path)],
       ),
     ];
 
@@ -708,7 +708,7 @@ export default async function validate(
         `ResourceType '${
           (root as Resource).resourceType
         }' does not match expected type '${type}'`,
-        [toJSONPointer(path)]
+        [toJSONPointer(path)],
       ),
     ];
   }
@@ -719,7 +719,7 @@ export default async function validate(
 export function createValidator(
   ctx: ValidationCTX,
   type: uri,
-  path: Loc<any, any, any> = typedPointer()
+  path: Loc<any, any, any> = typedPointer(),
 ): Validator {
   return (value: unknown) => {
     return validate(ctx, type, value, path);

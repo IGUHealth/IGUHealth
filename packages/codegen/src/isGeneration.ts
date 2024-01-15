@@ -5,7 +5,7 @@ import {
 
 function generateTypeSet(
   name: string,
-  sds: Readonly<Array<StructureDefinition>>
+  sds: Readonly<Array<StructureDefinition>>,
 ) {
   return `export const ${name}: Set<string>  = new Set([${sds
     .map((sd) => `"${sd.id}"`)
@@ -14,25 +14,25 @@ function generateTypeSet(
 
 export function generateSets(
   version: "r4",
-  structureDefinitions: Readonly<Array<StructureDefinition>>
+  structureDefinitions: Readonly<Array<StructureDefinition>>,
 ): string {
   // Ignore templates for now during type generation.
   structureDefinitions = structureDefinitions.filter(
-    (sd) => sd.kind !== "logical"
+    (sd) => sd.kind !== "logical",
   );
 
   const primitiveTypes = structureDefinitions.filter(
-    (sd) => sd.kind === "primitive-type"
+    (sd) => sd.kind === "primitive-type",
   );
   const complexTypes = structureDefinitions.filter(
-    (sd) => sd.kind === "complex-type"
+    (sd) => sd.kind === "complex-type",
   );
   const resourceTypes = structureDefinitions.filter(
-    (sd) => sd.kind === "resource"
+    (sd) => sd.kind === "resource",
   );
 
   return `${generateTypeSet("resourceTypes", resourceTypes)}\n${generateTypeSet(
     "complexTypes",
-    complexTypes
+    complexTypes,
   )}\n${generateTypeSet("primitiveTypes", primitiveTypes)}\n`;
 }

@@ -1,14 +1,14 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
-import { SearchParameter, ResourceType } from "@iguhealth/fhir-types/r4/types";
+import { ResourceType, SearchParameter } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX, asSystemCTX } from "../../../fhir/context.js";
 import {
-  searchResources,
-  searchParameterToTableName,
   SearchParameterResult,
+  searchParameterToTableName,
+  searchResources,
 } from "../../utilities/search/parameters.js";
 import { param_types_supported } from "../constants.js";
 
@@ -16,7 +16,7 @@ type SORT_DIRECTION = "ascending" | "descending";
 
 function getParameterSortColumn(
   direction: SORT_DIRECTION,
-  parameter: SearchParameter
+  parameter: SearchParameter,
 ): s.Column {
   switch (parameter.type) {
     case "quantity":
@@ -38,12 +38,12 @@ export async function deriveSortQuery(
   ctx: FHIRServerCTX,
   resourceTypes: ResourceType[],
   sortParameter: SearchParameterResult,
-  query: db.SQLFragment
+  query: db.SQLFragment,
 ): Promise<db.SQLFragment> {
   const sortInformation = await Promise.all(
     sortParameter.value.map(
       async (
-        paramName
+        paramName,
       ): Promise<{
         direction: SORT_DIRECTION;
         parameter: SearchParameter;
@@ -66,21 +66,21 @@ export async function deriveSortQuery(
               name: "base",
               value: searchResources(resourceTypes),
             },
-          ]
+          ],
         );
         if (searchParameter.resources.length === 0)
           throw new OperationError(
             outcomeError(
               "not-found",
-              `SearchParameter with name '${paramName}' not found.`
-            )
+              `SearchParameter with name '${paramName}' not found.`,
+            ),
           );
         return {
           direction,
           parameter: searchParameter.resources[0],
         };
-      }
-    )
+      },
+    ),
   );
 
   const resourceQueryAlias = db.raw("resource_result");
@@ -100,7 +100,7 @@ export async function deriveSortQuery(
         ON ${sort_column_name}.r_id = ${resourceQueryAlias}.id`;
     }),
     db.sql` `,
-    (c) => c
+    (c) => c,
   );
 
   return db.sql`
@@ -111,10 +111,10 @@ export async function deriveSortQuery(
       sortInformation.map(
         ({ direction }, i) =>
           db.sql`${getSortColumn(i)} ${db.raw(
-            direction === "ascending" ? "ASC" : "DESC"
-          )} `
+            direction === "ascending" ? "ASC" : "DESC",
+          )} `,
       ),
       db.sql`, `,
-      (c) => c
+      (c) => c,
     )}`;
 }

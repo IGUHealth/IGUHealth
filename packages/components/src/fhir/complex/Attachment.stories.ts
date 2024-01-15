@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { FHIRAttachmentEditable } from "./Attachment";
 import { Attachment } from "@iguhealth/fhir-types/r4/types";
+
+import { FHIRAttachmentEditable } from "./Attachment";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {

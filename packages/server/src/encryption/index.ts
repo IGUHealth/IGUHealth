@@ -1,9 +1,10 @@
-import { Resource, Extension } from "@iguhealth/fhir-types/r4/types";
-import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import jsonpatch, { Operation } from "fast-json-patch";
 
-import { FHIRServerCTX } from "../fhir/context.js";
+import { Extension, Resource } from "@iguhealth/fhir-types/r4/types";
+import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+
+import { FHIRServerCTX } from "../fhir/context.js";
 
 function toFP(loc: (string | number)[]) {
   let FP = "$this";
@@ -18,12 +19,12 @@ export const ENCRYPTION_URL = "https://iguhealth.app/Extension/encrypt-value";
 
 export async function encryptValue<T extends object>(
   ctx: FHIRServerCTX,
-  resource: T
+  resource: T,
 ): Promise<T> {
   const encryptionProvider = ctx.encryptionProvider;
   if (!encryptionProvider)
     throw new OperationError(
-      outcomeError("invalid", "No encryption provider configured.")
+      outcomeError("invalid", "No encryption provider configured."),
     );
 
   const encryptionLocations = evaluateWithMeta(
@@ -33,7 +34,7 @@ export async function encryptValue<T extends object>(
       variables: {
         extUrl: ENCRYPTION_URL,
       },
-    }
+    },
   );
   const operations = await Promise.all(
     encryptionLocations.map(async (value): Promise<Operation[]> => {
@@ -44,15 +45,15 @@ export async function encryptValue<T extends object>(
           variables: {
             extUrl: ENCRYPTION_URL,
           },
-        }
+        },
       );
       if (encryptExtensionValue.length < 1) {
         throw new OperationError(
           outcomeError(
             "invalid",
             "Could not find extension at location to encrypt.",
-            [toFP(value.location())]
-          )
+            [toFP(value.location())],
+          ),
         );
       }
       if (encryptExtensionValue.length > 1) {
@@ -60,8 +61,8 @@ export async function encryptValue<T extends object>(
           outcomeError(
             "invalid",
             "Error multiple encryption extensions found at location.",
-            [toFP(value.location())]
-          )
+            [toFP(value.location())],
+          ),
         );
       }
 
@@ -69,14 +70,14 @@ export async function encryptValue<T extends object>(
         throw new OperationError(
           outcomeError("invalid", "Cannot encrypt a non string value.", [
             toFP(value.location()),
-          ])
+          ]),
         );
       }
 
       if (encryptExtensionValue[0].valueOf() !== value.valueOf()) {
         const encryptedValue = await encryptionProvider.encrypt(
           { workspace: ctx.tenant.id },
-          value.valueOf() as string
+          value.valueOf() as string,
         );
         return [
           {
@@ -93,7 +94,7 @@ export async function encryptValue<T extends object>(
       }
 
       return [];
-    })
+    }),
   );
 
   const value = jsonpatch.applyPatch(resource, operations.flat());

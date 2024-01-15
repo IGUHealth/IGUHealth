@@ -1,8 +1,9 @@
 import React from "react";
 
-import { EditableProps } from "../types";
-import { Input } from "../../base/input";
 import { id } from "@iguhealth/fhir-types/r4/types";
+
+import { Input } from "../../base/input";
+import { EditableProps } from "../types";
 
 export type FHIRIdEditableProps = EditableProps<id>;
 

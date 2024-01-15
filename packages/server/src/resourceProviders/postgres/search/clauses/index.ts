@@ -1,5 +1,5 @@
-import type * as s from "zapatos/schema";
 import * as db from "zapatos/db";
+import type * as s from "zapatos/schema";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -20,7 +20,7 @@ const PARAMETER_CLAUSES: Record<
   string,
   (
     ctx: FHIRServerCTX,
-    parameter: SearchParameterResource
+    parameter: SearchParameterResource,
   ) => db.SQLFragment<boolean | null, unknown>
 > = {
   token: tokenClauses,
@@ -35,7 +35,7 @@ const PARAMETER_CLAUSES: Record<
 export function buildParameterSQL(
   ctx: FHIRServerCTX,
   parameter: SearchParameterResource,
-  columns: s.Column[] = []
+  columns: s.Column[] = [],
 ): db.SQLFragment {
   const searchParameter = parameter.searchParameter;
   const search_table = searchParameterToTableName(searchParameter.type);
@@ -65,7 +65,7 @@ export function buildParameterSQL(
       FROM ${search_table} 
       WHERE ${db.conditions.and(
         { parameter_url: searchParameter.url, tenant: ctx.tenant.id },
-        PARAMETER_CLAUSES[searchParameter.type](ctx, parameter)
+        PARAMETER_CLAUSES[searchParameter.type](ctx, parameter),
       )}
       `;
     }
@@ -73,8 +73,8 @@ export function buildParameterSQL(
       throw new OperationError(
         outcomeError(
           "not-supported",
-          `Parameter of type '${searchParameter.type}' is not yet supported.`
-        )
+          `Parameter of type '${searchParameter.type}' is not yet supported.`,
+        ),
       );
   }
 }

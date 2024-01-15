@@ -9,7 +9,7 @@ import { missingModifier } from "./shared.js";
 
 export default function tokenClauses(
   ctx: FHIRServerCTX,
-  parameter: SearchParameterResource
+  parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, unknown> {
   switch (parameter.modifier) {
     case "missing":
@@ -31,7 +31,7 @@ export default function tokenClauses(
             }
           }
           throw new Error(`Invalid token value found '${value}'`);
-        })
+        }),
       );
     }
   }

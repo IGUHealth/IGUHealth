@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { FHIRUriEditable } from "./uri";
 import { uri } from "@iguhealth/fhir-types/r4/types";
+
+import { FHIRUriEditable } from "./uri";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {

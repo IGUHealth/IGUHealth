@@ -1,8 +1,8 @@
 import React from "react";
-import { useRecoilValue } from "recoil";
 import { generatePath, useNavigate, useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 
-import { Table, Loading } from "@iguhealth/components";
+import { Loading, Table } from "@iguhealth/components";
 import { CapabilityStatementRestResource } from "@iguhealth/fhir-types/r4/types";
 
 import { getCapabilities } from "../db/capabilities";
@@ -22,7 +22,7 @@ const DisplayResources = () => {
             generatePath("/w/:tenant/resources/:resourceType", {
               tenant: params.tenant as string,
               resourceType: (row as CapabilityStatementRestResource).type,
-            })
+            }),
           );
         }}
         columns={[

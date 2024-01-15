@@ -1,14 +1,15 @@
 import {
   KMS,
   KmsKeyringNode,
-  buildClient,
   MessageHeader,
+  buildClient,
 } from "@aws-crypto/client-node";
+
 import { EncryptionProvider } from "./interface.js";
 
 function isVerifiedContext(
   messageHeader: MessageHeader,
-  context: Record<string, string>
+  context: Record<string, string>,
 ) {
   const { encryptionContext } = messageHeader;
 
@@ -45,7 +46,7 @@ export class AWSKMSProvider implements EncryptionProvider {
   }
   async encrypt(
     context: Record<string, string>,
-    data: string
+    data: string,
   ): Promise<string> {
     const encryptedData = await this._client.encrypt(this._keyRing, data, {
       encryptionContext: context,
@@ -55,11 +56,11 @@ export class AWSKMSProvider implements EncryptionProvider {
 
   async decrypt(
     context: Record<string, string>,
-    data: string
+    data: string,
   ): Promise<string> {
     const { plaintext, messageHeader } = await this._client.decrypt(
       this._keyRing,
-      Buffer.from(data, "base64")
+      Buffer.from(data, "base64"),
     );
 
     if (!isVerifiedContext(messageHeader, context))

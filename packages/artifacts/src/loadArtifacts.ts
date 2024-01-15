@@ -1,12 +1,14 @@
-import { createRequire } from "node:module";
-import {
-  Resource,
-  Bundle,
-  ResourceType,
-  AResource,
-} from "@iguhealth/fhir-types/r4/types";
-import { IndexFile, PackageJSON } from "./types.js";
 import { deepStrictEqual } from "node:assert";
+import { createRequire } from "node:module";
+
+import {
+  AResource,
+  Bundle,
+  Resource,
+  ResourceType,
+} from "@iguhealth/fhir-types/r4/types";
+
+import { IndexFile, PackageJSON } from "./types.js";
 
 function isBundle(r: Resource): r is Bundle {
   return r?.resourceType === "Bundle";
@@ -14,19 +16,19 @@ function isBundle(r: Resource): r is Bundle {
 
 function isType<T extends ResourceType>(
   type: T,
-  r: Resource | undefined
+  r: Resource | undefined,
 ): r is AResource<T> {
   return r !== undefined && r.resourceType === type;
 }
 
 function flattenOrInclude<T extends ResourceType>(
   type: T,
-  resource: Resource
+  resource: Resource,
 ): AResource<T>[] {
   if (isBundle(resource)) {
     let resources = (resource.entry || [])?.map((entry) => entry.resource);
     return resources.filter((r: Resource | undefined): r is AResource<T> =>
-      isType(type, r)
+      isType(type, r),
     );
   }
   if (isType(type, resource)) {
@@ -82,7 +84,7 @@ export default function loadArtifacts<T extends ResourceType>({
       try {
         if (!silence)
           console.log(
-            ` '${d}' Loading package contents from .index.json for resourceType '${resourceType}'`
+            ` '${d}' Loading package contents from .index.json for resourceType '${resourceType}'`,
           );
         const indexFile: IndexFile | undefined = requirer(`${d}/.index.json`);
         if (indexFile?.files) {
@@ -90,14 +92,14 @@ export default function loadArtifacts<T extends ResourceType>({
             ? indexFile.files.filter(
                 (metaInfo) =>
                   metaInfo.resourceType &&
-                  resourceType === metaInfo.resourceType
+                  resourceType === metaInfo.resourceType,
               )
             : indexFile.files;
           return fileInfos
             .map((r) => {
               return flattenOrInclude(
                 resourceType,
-                requirer(`${d}/${r.filename}`)
+                requirer(`${d}/${r.filename}`),
               );
             })
             .flat();

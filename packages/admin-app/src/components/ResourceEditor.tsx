@@ -1,25 +1,25 @@
-import { useEffect, useState, useMemo } from "react";
-import { useParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { basicSetup } from "codemirror";
 import { json } from "@codemirror/lang-json";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { basicSetup } from "codemirror";
+import { useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 
 import {
-  StructureDefinition,
+  Button,
+  CodeMirror,
+  DropDownMenu,
+  FHIRGenerativeForm,
+  Table,
+  Tabs,
+} from "@iguhealth/components";
+import {
   BundleEntry,
   Resource,
   ResourceType,
+  StructureDefinition,
   id,
 } from "@iguhealth/fhir-types/r4/types";
-import {
-  CodeMirror,
-  DropDownMenu,
-  Button,
-  Tabs,
-  Table,
-  FHIRGenerativeForm,
-} from "@iguhealth/components";
 
 import { getClient } from "../db/client";
 
@@ -128,12 +128,12 @@ export default function ResourceEditorComponent({
               ? resource
               : ({
                   resourceType: structureDefinition?.type,
-                } as Resource)
+                } as Resource),
           );
           return newResource;
         });
     },
-    [structureDefinition, onChange]
+    [structureDefinition, onChange],
   );
 
   return (

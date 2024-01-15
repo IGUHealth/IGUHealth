@@ -1,14 +1,15 @@
 import {
-  id,
-  Resource,
-  ResourceType,
   Bundle,
   BundleEntry,
   CapabilityStatement,
   Parameters,
+  Resource,
+  ResourceType,
   code,
+  id,
   unsignedInt,
 } from "@iguhealth/fhir-types/r4/types";
+
 import type { ParsedParameter } from "./url.js";
 
 export type REQUEST_METHOD = "PUT" | "POST" | "DELETE" | "PATCH";

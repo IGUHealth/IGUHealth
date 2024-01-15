@@ -3,6 +3,7 @@ import {
   StructureDefinition,
   unsignedInt,
 } from "@iguhealth/fhir-types/r4/types";
+
 import { traversalBottomUp } from "./sdTraversal.js";
 
 export const primitiveTypes: Set<string> = new Set([
@@ -84,10 +85,10 @@ function getElementField(element: ElementDefinition, type?: string) {
 }
 
 function primitiveToTypescriptType(
-  primitiveSd: StructureDefinition
+  primitiveSd: StructureDefinition,
 ): string | void {
   const primitiveValueType = primitiveSd.snapshot?.element.filter((element) =>
-    element.path.endsWith(".value")
+    element.path.endsWith(".value"),
   )[0]?.type?.[0]?.code;
   // http://hl7.org/fhir/StructureDefinition/uri
   // Skip over these primitive types as already exist in typescript
@@ -109,7 +110,7 @@ function primitiveToTypescriptType(
       ) {
         extension = ` & ${primitiveSd.baseDefinition.replace(
           "http://hl7.org/fhir/StructureDefinition/",
-          ""
+          "",
         )}`;
       }
       // For primitives that aren't string or boolean, add branding to have more type constraints.
@@ -132,7 +133,7 @@ function isCollection(elementDefinition: ElementDefinition) {
 
 function wrapAsCollection(
   elementDefinition: ElementDefinition,
-  typescriptString: string
+  typescriptString: string,
 ) {
   if (isCollection(elementDefinition)) {
     return `Array<${typescriptString}>`;
@@ -157,7 +158,7 @@ function _typeToTypescriptType(type: string): string {
 
 function typeToTypescriptType(
   elementDefinition: ElementDefinition,
-  type: string
+  type: string,
 ) {
   const typescriptType = _typeToTypescriptType(type);
   return wrapAsCollection(elementDefinition, typescriptType);
@@ -181,11 +182,11 @@ function getInterfaceName(element: ElementDefinition) {
 function contentReference(sd: StructureDefinition, element: ElementDefinition) {
   const contentReference = element.contentReference?.split("#")[1];
   const referenceElement = sd.snapshot?.element.filter(
-    (element) => element.id === contentReference
+    (element) => element.id === contentReference,
   )[0];
   if (!referenceElement)
     throw new Error(
-      "unable to resolve contentreference: '" + element.contentReference + "'"
+      "unable to resolve contentreference: '" + element.contentReference + "'",
     );
   let referenceTypescriptType;
   if (isNested(referenceElement)) {
@@ -194,7 +195,7 @@ function contentReference(sd: StructureDefinition, element: ElementDefinition) {
     let type = referenceElement.type?.[0]?.code;
     if (type === undefined) {
       throw new Error(
-        "No type found for content reference: '" + referenceElement.id + "'"
+        "No type found for content reference: '" + referenceElement.id + "'",
       );
     }
     referenceTypescriptType = typeToTypescriptType(referenceElement, type);
@@ -207,7 +208,7 @@ function contentReference(sd: StructureDefinition, element: ElementDefinition) {
 
   return [
     `${documentation(element)}  ${getElementField(
-      element
+      element,
     )}: ${referenceTypescriptType};`,
   ];
 }
@@ -215,7 +216,7 @@ function contentReference(sd: StructureDefinition, element: ElementDefinition) {
 function getPrimitiveExtension(element: ElementDefinition, type: string) {
   return `${documentation(element)}  _${getElementField(
     { ...element, min: 0 as unsignedInt },
-    type
+    type,
   )}: ${typeToTypescriptType(element, "Element")}`;
 }
 
@@ -228,7 +229,7 @@ function processLeaf(sd: StructureDefinition, element: ElementDefinition) {
         const fields = [
           `${documentation(element)}  ${getElementField(
             element,
-            type.code
+            type.code,
           )}: ${typeToTypescriptType(element, type.code)};`,
         ];
         if (primitiveTypes.has(type.code)) {
@@ -240,12 +241,12 @@ function processLeaf(sd: StructureDefinition, element: ElementDefinition) {
   }
   const fields = [
     `${documentation(element)}  ${getElementField(
-      element
+      element,
     )}: ${typeToTypescriptType(element, element.type?.[0]?.code as string)};`,
   ];
   if (primitiveTypes.has(element.type?.[0]?.code as string)) {
     fields.push(
-      getPrimitiveExtension(element, element.type?.[0]?.code as string)
+      getPrimitiveExtension(element, element.type?.[0]?.code as string),
     );
   }
   return fields;
@@ -259,7 +260,7 @@ interface ComplexTypeOutput {
 function processComplexToTypescript(
   sd: StructureDefinition,
   element: ElementDefinition,
-  children: string[]
+  children: string[],
 ): ComplexTypeOutput {
   const interfaceName = getInterfaceName(element);
   // for resources include the resourceType filed
@@ -273,14 +274,14 @@ ${children.join("\n")}
 }`,
     field: [
       `${documentation(element)}  ${getElementField(
-        element
+        element,
       )}: ${wrapAsCollection(element, interfaceName)};`,
     ],
   };
 }
 
 function resourceOrComplexFhirToTypescript(
-  sd: StructureDefinition
+  sd: StructureDefinition,
 ): string | void {
   let typescriptTypes = "";
   traversalBottomUp(sd, (element, children: string[]): string[] => {
@@ -290,7 +291,7 @@ function resourceOrComplexFhirToTypescript(
       let { typescriptInterface, field } = processComplexToTypescript(
         sd,
         element,
-        children
+        children,
       );
       typescriptTypes = `${typescriptTypes}\n${typescriptInterface}`;
       return field;
@@ -320,7 +321,7 @@ function abstractResourceTypes(resourcesSds: StructureDefinition[]) {
     return `${ResourceMap}\n${ResourceType}\n${AResource}\n${ConcreteType}\n${abstractResourceTypes
       .map(
         (abstractResource) =>
-          `export type ${abstractResource.id} = ConcreteType`
+          `export type ${abstractResource.id} = ConcreteType`,
       )
       .join("\n")}`;
   }
@@ -329,29 +330,31 @@ function abstractResourceTypes(resourcesSds: StructureDefinition[]) {
 
 export function generateTypes(
   version: "r4",
-  structureDefinitions: Readonly<Array<StructureDefinition>>
+  structureDefinitions: Readonly<Array<StructureDefinition>>,
 ): string {
   const primitiveTypes = structureDefinitions.filter(
-    (sd) => sd.kind === "primitive-type"
+    (sd) => sd.kind === "primitive-type",
   );
   const complexTypes = structureDefinitions.filter(
-    (sd) => sd.kind === "complex-type"
+    (sd) => sd.kind === "complex-type",
   );
   const resourceTypes = structureDefinitions.filter(
-    (sd) => sd.kind === "resource"
+    (sd) => sd.kind === "resource",
   );
 
   const typescriptTypes: string = primitiveTypes
     .map(primitiveToTypescriptType)
     .filter((type) => type)
     .concat(
-      complexTypes.map(resourceOrComplexFhirToTypescript).filter((type) => type)
+      complexTypes
+        .map(resourceOrComplexFhirToTypescript)
+        .filter((type) => type),
     )
     .concat(abstractResourceTypes(resourceTypes))
     .concat(
       getNonAbstractResourceTypes(resourceTypes)
         .map(resourceOrComplexFhirToTypescript)
-        .filter((type) => type)
+        .filter((type) => type),
     )
     .join("\n");
   return typescriptTypes;

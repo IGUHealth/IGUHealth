@@ -1,18 +1,18 @@
+import { splitParameter } from "@iguhealth/client/url";
 import {
+  CodeSystem,
+  CodeSystemConcept,
   ValueSet,
   ValueSetComposeInclude,
   ValueSetExpansionContains,
-  CodeSystemConcept,
-  CodeSystem,
   dateTime,
 } from "@iguhealth/fhir-types/r4/types";
 import {
-  ValueSetValidateCode,
-  ValueSetExpand,
   CodeSystemLookup,
+  ValueSetExpand,
+  ValueSetValidateCode,
 } from "@iguhealth/generated-ops/r4";
-
-import { splitParameter } from "@iguhealth/client/url";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../fhir/context.js";
 import { TerminologyProvider } from "./interface.js";
@@ -22,10 +22,9 @@ import ExpandOutput = ValueSetExpand.Output;
 
 import ValidateInput = ValueSetValidateCode.Input;
 import ValidateOutput = ValueSetValidateCode.Output;
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 function inlineCodesetToValuesetExpansion(
-  include: ValueSetComposeInclude
+  include: ValueSetComposeInclude,
 ): ValueSetExpansionContains[] | undefined {
   return include.concept?.map((concept) => {
     return {
@@ -43,7 +42,7 @@ function areCodesInline(include: ValueSetComposeInclude) {
 
 function codeSystemConceptToValuesetExpansion(
   codesystem: CodeSystem,
-  concepts: CodeSystemConcept[]
+  concepts: CodeSystemConcept[],
 ): ValueSetExpansionContains[] {
   return concepts.map((concept) => {
     return {
@@ -62,7 +61,7 @@ function codeSystemConceptToValuesetExpansion(
 
 async function getValuesetExpansionContains(
   ctx: FHIRServerCTX,
-  valueSet: ValueSet
+  valueSet: ValueSet,
 ): Promise<ValueSetExpansionContains[]> {
   let expansion: ValueSetExpansionContains[] = [];
   for (const include of valueSet.compose?.include || []) {
@@ -78,12 +77,12 @@ async function getValuesetExpansionContains(
           ValueSetExpand.Op,
           ctx,
           "ValueSet",
-          { url: includeValueSet }
+          { url: includeValueSet },
         );
         expansion = expansion.concat(
           expandedValueSet?.expansion?.contains
             ? expandedValueSet?.expansion?.contains
-            : []
+            : [],
         );
       }
     } else if (include.system) {
@@ -94,33 +93,33 @@ async function getValuesetExpansionContains(
         throw new OperationError(
           outcomeError(
             "invalid",
-            `CodeSystem '${include.system}' returned duplicate results so cannot be used to expand valueset '${valueSet.id}'`
-          )
+            `CodeSystem '${include.system}' returned duplicate results so cannot be used to expand valueset '${valueSet.id}'`,
+          ),
         );
       }
       if (codeSystemSearch.resources.length < 1) {
         throw new OperationError(
           outcomeError(
             "not-found",
-            `Could not find codesystem ${include.system}`
-          )
+            `Could not find codesystem ${include.system}`,
+          ),
         );
       }
       const codesystem = codeSystemSearch.resources[0];
       const codesystemExpansion = codeSystemConceptToValuesetExpansion(
         codesystem,
-        codesystem.concept ? codesystem.concept : []
+        codesystem.concept ? codesystem.concept : [],
       );
 
       expansion = expansion.concat(
-        codesystemExpansion ? codesystemExpansion : []
+        codesystemExpansion ? codesystemExpansion : [],
       );
     } else {
       throw new OperationError(
         outcomeError(
           "not-supported",
-          `Could not expand valueset ${valueSet.id}`
-        )
+          `Could not expand valueset ${valueSet.id}`,
+        ),
       );
     }
   }
@@ -130,7 +129,7 @@ async function getValuesetExpansionContains(
 
 function checkforCode(
   contains: ValueSetExpansionContains[] | undefined,
-  code: string | undefined
+  code: string | undefined,
 ): boolean {
   if (!code) return false;
   if (!contains) {
@@ -145,7 +144,7 @@ function checkforCode(
 
 function findConcept(
   concepts: CodeSystemConcept[],
-  code: string
+  code: string,
 ): CodeSystemConcept | undefined {
   for (const concept of concepts) {
     if (concept.code === code) {
@@ -163,7 +162,7 @@ export class TerminologyProviderMemory implements TerminologyProvider {
   constructor() {}
   async validate(
     ctx: FHIRServerCTX,
-    input: ValidateInput
+    input: ValidateInput,
   ): Promise<ValidateOutput> {
     const valueset = await this.expand(ctx, {
       url: input.url,
@@ -173,13 +172,13 @@ export class TerminologyProviderMemory implements TerminologyProvider {
 
     if (!valueset) {
       throw new OperationError(
-        outcomeError("not-found", "ValueSet was not found.")
+        outcomeError("not-found", "ValueSet was not found."),
       );
     }
 
     const doesCodeExists = checkforCode(
       valueset.expansion?.contains,
-      input.code
+      input.code,
     );
 
     return {
@@ -198,8 +197,8 @@ export class TerminologyProviderMemory implements TerminologyProvider {
         ctx,
         "ValueSet",
         [{ name: "url", value: [url] }].concat(
-          version ? [{ name: "version", value: [version] }] : []
-        )
+          version ? [{ name: "version", value: [version] }] : [],
+        ),
       );
 
       if (valuesetSearch.resources.length === 1) {
@@ -209,7 +208,7 @@ export class TerminologyProviderMemory implements TerminologyProvider {
 
     if (!valueset) {
       throw new OperationError(
-        outcomeError("not-found", "ValueSet was not found.")
+        outcomeError("not-found", "ValueSet was not found."),
       );
     }
 
@@ -227,11 +226,11 @@ export class TerminologyProviderMemory implements TerminologyProvider {
   }
   async lookup(
     ctx: FHIRServerCTX,
-    input: CodeSystemLookup.Input
+    input: CodeSystemLookup.Input,
   ): Promise<CodeSystemLookup.Output> {
     if (!input.system || !input.code) {
       throw new OperationError(
-        outcomeError("invalid", "Invalid input must have both system and code")
+        outcomeError("invalid", "Invalid input must have both system and code"),
       );
     }
     const codeSystem = await ctx.client.search_type(ctx, "CodeSystem", [
@@ -241,16 +240,16 @@ export class TerminologyProviderMemory implements TerminologyProvider {
       throw new OperationError(
         outcomeError(
           "not-found",
-          `Could not find code system with url: '${input.system}'`
-        )
+          `Could not find code system with url: '${input.system}'`,
+        ),
       );
     }
     if (codeSystem.resources.length > 1) {
       throw new OperationError(
         outcomeError(
           "invalid",
-          `Found conflicting code systems with url: '${input.system}'`
-        )
+          `Found conflicting code systems with url: '${input.system}'`,
+        ),
       );
     }
 
@@ -262,8 +261,8 @@ export class TerminologyProviderMemory implements TerminologyProvider {
       throw new OperationError(
         outcomeError(
           "not-found",
-          `Could not find code '${input.code}' in code system '${input.system}'`
-        )
+          `Could not find code '${input.code}' in code system '${input.system}'`,
+        ),
       );
 
     return {

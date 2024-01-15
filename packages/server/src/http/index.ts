@@ -1,3 +1,6 @@
+import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
+import parseParameters from "@iguhealth/client/url";
+import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
   Bundle,
   Parameters,
@@ -7,10 +10,7 @@ import {
   id,
   unsignedInt,
 } from "@iguhealth/fhir-types/r4/types";
-import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
-import parseParameters from "@iguhealth/client/url";
-import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
 
 /*
  ** For Summary of types see:
@@ -68,7 +68,7 @@ function isBundle(v: unknown): v is Bundle {
 function verifyResourceType(r: string): r is ResourceType {
   if (!resourceTypes.has(r))
     throw new OperationError(
-      outcomeError("invalid", `Invalid resource type '${r}'`)
+      outcomeError("invalid", `Invalid resource type '${r}'`),
     );
   return true;
 }
@@ -85,17 +85,17 @@ batch	              /	                                  POST	R	Bundle	O	N/A
 */
 function parseRequest1Empty(
   urlPieces: string[],
-  request: HTTPRequest
+  request: HTTPRequest,
 ): FHIRRequest {
   if (request.method === "POST") {
     if (!isBundle(request.body)) {
       throw new OperationError(
-        outcomeError("invalid", "POST request must be a bundle")
+        outcomeError("invalid", "POST request must be a bundle"),
       );
     }
     if (request.body.type !== "transaction" && request.body.type !== "batch") {
       throw new OperationError(
-        outcomeError("invalid", "POST request must be a transaction or batch")
+        outcomeError("invalid", "POST request must be a transaction or batch"),
       );
     }
     return {
@@ -114,7 +114,7 @@ function parseRequest1Empty(
     };
   } else
     throw new OperationError(
-      outcomeError("invalid", "Request could not be parsed at type level.")
+      outcomeError("invalid", "Request could not be parsed at type level."),
     );
 }
 
@@ -132,7 +132,7 @@ history-system	    /_history	                          GET	N/A	N/A	N/A	N/A
 */
 function parseRequest1NonEmpty(
   urlPieces: string[],
-  request: HTTPRequest
+  request: HTTPRequest,
 ): FHIRRequest {
   if (urlPieces[0].startsWith("$")) {
     if (request.method === "POST") {
@@ -146,21 +146,21 @@ function parseRequest1NonEmpty(
       throw new OperationError(
         outcomeError(
           "not-supported",
-          "Operation GET requests not yet supported"
-        )
+          "Operation GET requests not yet supported",
+        ),
       );
     }
     throw new OperationError(
       outcomeError(
         "invalid",
-        `Invalid method for invocation '${request.method}'`
-      )
+        `Invalid method for invocation '${request.method}'`,
+      ),
     );
   }
   if (request.method === "POST") {
     if (urlPieces[0] === "_search") {
       throw new OperationError(
-        outcomeError("not-supported", "Search via post not supported.")
+        outcomeError("not-supported", "Search via post not supported."),
       );
     }
     if (verifyResourceType(urlPieces[0])) {
@@ -197,7 +197,7 @@ function parseRequest1NonEmpty(
     }
   }
   throw new OperationError(
-    outcomeError("invalid", "Request could not be parsed at system level.")
+    outcomeError("invalid", "Request could not be parsed at system level."),
   );
 }
 
@@ -236,27 +236,27 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
         throw new OperationError(
           outcomeError(
             "not-supported",
-            "Operation GET requests not yet supported"
-          )
+            "Operation GET requests not yet supported",
+          ),
         );
       }
       throw new OperationError(
         outcomeError(
           "invalid",
-          `Invalid method for invocation '${request.method}'`
-        )
+          `Invalid method for invocation '${request.method}'`,
+        ),
       );
     } else if (request.method === "POST") {
       if (urlPieces[1] === "_search") {
         throw new OperationError(
-          outcomeError("not-supported", "Search via post not supported.")
+          outcomeError("not-supported", "Search via post not supported."),
         );
       } else {
         throw new OperationError(
           outcomeError(
             "invalid",
-            "To create new resources run post at resource root."
-          )
+            "To create new resources run post at resource root.",
+          ),
         );
       }
     } else if (request.method === "GET") {
@@ -301,7 +301,7 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
     }
   }
   throw new OperationError(
-    outcomeError("invalid", "Request could not be parsed at type level.")
+    outcomeError("invalid", "Request could not be parsed at type level."),
   );
 }
 
@@ -327,15 +327,15 @@ function parseRequest3(urlPieces: string[], request: HTTPRequest): FHIRRequest {
         throw new OperationError(
           outcomeError(
             "not-supported",
-            "Operation GET requests not yet supported"
-          )
+            "Operation GET requests not yet supported",
+          ),
         );
       }
       throw new OperationError(
         outcomeError(
           "invalid",
-          `Invalid method for invocation '${request.method}'`
-        )
+          `Invalid method for invocation '${request.method}'`,
+        ),
       );
     } else if (request.method === "GET") {
       if (urlPieces[2] === "_history") {
@@ -350,7 +350,7 @@ function parseRequest3(urlPieces: string[], request: HTTPRequest): FHIRRequest {
     }
   }
   throw new OperationError(
-    outcomeError("invalid", "Request could not be parsed at type level.")
+    outcomeError("invalid", "Request could not be parsed at type level."),
   );
 }
 
@@ -359,7 +359,7 @@ vread            	  /[type]/[id]/_history/[vid]	        GET‡	N/A	N/A	N/A	N/A
 */
 function parseRequest4(
   urlPieces: string[],
-  _request: HTTPRequest
+  _request: HTTPRequest,
 ): FHIRRequest {
   if (verifyResourceType(urlPieces[0]) && urlPieces[2] === "_history") {
     return {
@@ -371,7 +371,7 @@ function parseRequest4(
     };
   }
   throw new OperationError(
-    outcomeError("invalid", "Request could not be parsed at version level.")
+    outcomeError("invalid", "Request could not be parsed at version level."),
   );
 }
 
@@ -390,8 +390,8 @@ export function httpRequestToFHIRRequest(request: HTTPRequest): FHIRRequest {
       throw new OperationError(
         outcomeError(
           "invalid",
-          "Request is malformed and must be conformant with FHIR Standard."
-        )
+          "Request is malformed and must be conformant with FHIR Standard.",
+        ),
       );
   }
 }
@@ -408,7 +408,7 @@ function toBundle(
     | "searchset"
     | "collection",
   total: unsignedInt | undefined,
-  resources: Resource[]
+  resources: Resource[],
 ): Bundle {
   return {
     resourceType: "Bundle",
@@ -425,7 +425,7 @@ type HTTPResponse = {
 };
 
 export function fhirResponseToHTTPResponse(
-  fhirResponse: FHIRResponse
+  fhirResponse: FHIRResponse,
 ): HTTPResponse {
   switch (fhirResponse.type) {
     case "read-response":

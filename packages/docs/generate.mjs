@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "path";
 import { fileURLToPath } from "url";
+
 import { loadArtifacts } from "@iguhealth/artifacts";
 
 const artifactResources = ["StructureDefinition", "SearchParameter"]
@@ -9,7 +10,7 @@ const artifactResources = ["StructureDefinition", "SearchParameter"]
       resourceType: resourceType,
       packageLocation: path.join(fileURLToPath(import.meta.url), "../"),
       silence: false,
-    })
+    }),
   )
   .flat();
 
@@ -31,7 +32,7 @@ async function processStructureDefinition(structureDefinition) {
       (r) =>
         r.base.includes(structureDefinition.name) ||
         r.base.includes("Resource") ||
-        r.base.includes("DomainResource")
+        r.base.includes("DomainResource"),
     );
 
   let doc = `# ${structureDefinition.name}\n ## Description \n ${structureDefinition.description}\n`;

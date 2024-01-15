@@ -1,5 +1,5 @@
-import { produce } from "immer";
 import jsonpatch, { Operation } from "fast-json-patch";
+import { produce } from "immer";
 
 import * as fpt from "@iguhealth/fhir-pointer";
 import { Resource, id } from "@iguhealth/fhir-types/r4/types";
@@ -12,20 +12,20 @@ export interface Mutation<T, R> {
 
 function getValue<T extends object, R>(
   value: T,
-  pointer: fpt.Loc<T, R, any>
+  pointer: fpt.Loc<T, R, any>,
 ): R {
   return fpt.get(pointer, value);
 }
 
 function valueExists<T extends object, R>(
   value: T,
-  json_pointer: fpt.Loc<T, R, any>
+  json_pointer: fpt.Loc<T, R, any>,
 ) {
   return getValue(value, json_pointer) !== undefined;
 }
 
 function deriveNextValuePlaceHolder(
-  fields: (string | number | symbol)[]
+  fields: (string | number | symbol)[],
 ): Array<unknown> | Record<string, unknown> {
   if (typeof fields[1] === "number") {
     return [];
@@ -35,7 +35,7 @@ function deriveNextValuePlaceHolder(
 
 function createPatchesNonExistantFields<T extends Record<string, any>, R>(
   resource: T,
-  path: fpt.Loc<T, R, any>
+  path: fpt.Loc<T, R, any>,
 ) {
   const fields = fpt.fields(path);
 
@@ -43,7 +43,7 @@ function createPatchesNonExistantFields<T extends Record<string, any>, R>(
   let curValue = resource as unknown;
   let curPointer: fpt.Loc<T, any, any> = fpt.pointer(
     resource.resourceType,
-    resource.id as id
+    resource.id as id,
   );
   for (let i = 0; i < fields.length; i++) {
     curPointer = fpt.descend(curPointer, fields[i]);
@@ -61,7 +61,7 @@ function createPatchesNonExistantFields<T extends Record<string, any>, R>(
 
 export default function buildPatches<T extends Resource, R>(
   value: T,
-  mutation: Mutation<T, R>
+  mutation: Mutation<T, R>,
 ): Operation[] {
   // Builds patches with a given mutation to include non existant values up to the point in the path
   // where the mutation occurs
@@ -127,14 +127,14 @@ export default function buildPatches<T extends Resource, R>(
 
 export function applyMutation<T extends Resource, R>(
   value: T,
-  mutation: Mutation<T, R>
+  mutation: Mutation<T, R>,
 ): T {
   return jsonpatch.applyPatch(value, buildPatches(value, mutation)).newDocument;
 }
 
 export function applyMutationImmutable<T extends Resource, R>(
   value: T,
-  mutation: Mutation<T, R>
+  mutation: Mutation<T, R>,
 ): T {
   return produce(value, (v) => {
     applyMutation(v as T, mutation);

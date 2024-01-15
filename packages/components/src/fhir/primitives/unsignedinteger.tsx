@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
-import { EditableProps } from "../types";
 import { Input } from "../../base/input";
+import { EditableProps } from "../types";
 
 export type FHIRUnsignedIntegerEditableProps = EditableProps<number>;
 
@@ -16,7 +16,7 @@ export const FHIRUnsignedIntegerEditable = ({
     const issues: string[] = [];
     if (value !== undefined && value < 0) {
       issues.push(
-        `Invalid value: unsigned integers must be greater than or equal to 0`
+        `Invalid value: unsigned integers must be greater than or equal to 0`,
       );
     }
     if (issue) issues.push(issue);

@@ -1,25 +1,25 @@
-import React from "react";
 import {
+  MagnifyingGlassCircleIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
+import React from "react";
+
+import {
+  Bundle,
   Reference,
-  StructureDefinition,
   Resource,
   ResourceType,
-  Bundle,
-  uri,
+  StructureDefinition,
   code,
+  uri,
 } from "@iguhealth/fhir-types/r4/types";
 
-import {
-  MagnifyingGlassIcon,
-  MagnifyingGlassCircleIcon,
-} from "@heroicons/react/24/outline";
-
-import { EditableProps, ClientProps } from "../types";
+import { FHIRCodeEditable } from "..";
+import { Input, Loading } from "../../base";
 import { InputContainer } from "../../base/containers";
 import { Modal } from "../../base/modal";
 import { FHIRGenerativeForm } from "../generative/form";
-import { Input, Loading } from "../../base";
-import { FHIRCodeEditable } from "..";
+import { ClientProps, EditableProps } from "../types";
 
 export type FHIRReferenceEditableProps = EditableProps<Reference> &
   ClientProps & {
@@ -140,7 +140,7 @@ const ReferenceSearch = ({
             filter={(option) =>
               !resourceTypesAllowed ||
               resourceTypesAllowed.includes(
-                option.value.toString() as ResourceType
+                option.value.toString() as ResourceType,
               )
             }
             onChange={(value) => setResourceType(value as ResourceType)}

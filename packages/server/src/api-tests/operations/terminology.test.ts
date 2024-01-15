@@ -3,9 +3,9 @@ import { expect, test } from "@jest/globals";
 import HTTPClient from "@iguhealth/client/lib/http";
 import { code, uri } from "@iguhealth/fhir-types/lib/r4/types";
 import {
+  CodeSystemLookup,
   ValueSetExpand,
   ValueSetValidateCode,
-  CodeSystemLookup,
 } from "@iguhealth/generated-ops/lib/r4/ops";
 
 const client = HTTPClient({
@@ -22,7 +22,7 @@ test("Hl7 Gender expansion", async () => {
     "ValueSet",
     {
       url: "http://hl7.org/fhir/ValueSet/administrative-gender|4.0.1" as uri,
-    }
+    },
   );
 
   expect(valuesetExpanded?.expansion?.contains).toEqual([
@@ -87,7 +87,7 @@ test("Hl7 Gender validation", async () => {
     {
       url: "http://hl7.org/fhir/ValueSet/administrative-gender|4.0.1" as uri,
       code: "male" as code,
-    }
+    },
   );
   expect(validationSuccess).toEqual({ result: true });
   const validationFail = await client.invoke_type(
@@ -97,7 +97,7 @@ test("Hl7 Gender validation", async () => {
     {
       url: "http://hl7.org/fhir/ValueSet/administrative-gender|4.0.1" as uri,
       code: "mae" as code,
-    }
+    },
   );
   expect(validationFail).toEqual({ result: false });
 });
@@ -110,7 +110,7 @@ test("nested test", async () => {
     {
       url: "http://hl7.org/fhir/ValueSet/name-use|4.0.1" as uri,
       code: "maiden" as code,
-    }
+    },
   );
   expect(validationSuccess).toEqual({ result: true });
   const validationFail = await client.invoke_type(
@@ -120,7 +120,7 @@ test("nested test", async () => {
     {
       url: "http://hl7.org/fhir/ValueSet/name-use|4.0.1" as uri,
       code: "maide" as code,
-    }
+    },
   );
   expect(validationFail).toEqual({ result: false });
 
@@ -130,7 +130,7 @@ test("nested test", async () => {
     "ValueSet",
     {
       url: "http://hl7.org/fhir/ValueSet/name-use|4.0.1" as uri,
-    }
+    },
   );
 
   expect(expansion?.expansion?.contains).toEqual([
@@ -189,7 +189,7 @@ test("Hl7 Name Lookup", async () => {
     {
       system: "http://hl7.org/fhir/name-use" as uri,
       code: "maiden" as code,
-    }
+    },
   );
 
   expect(lookupName).toEqual({
@@ -205,7 +205,7 @@ test("Hl7 Name Lookup", async () => {
     {
       system: "http://hl7.org/fhir/name-use" as uri,
       code: "not-there" as code,
-    }
+    },
   );
   expect(lookupName2).rejects.toThrow();
 });

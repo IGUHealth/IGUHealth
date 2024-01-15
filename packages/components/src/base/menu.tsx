@@ -1,6 +1,6 @@
-import React, { DetailedHTMLProps, HTMLAttributes } from "react";
 import { Menu } from "@headlessui/react";
 import classNames from "classnames";
+import React, { DetailedHTMLProps, HTMLAttributes } from "react";
 
 interface Link
   extends DetailedHTMLProps<
@@ -32,7 +32,7 @@ function DropDownMenu({ links, children }: DropdownMenuProps) {
                       active
                         ? "bg-blue-600 text-white"
                         : "text-blue-600 hover:bg-blue-600 hover:text-white",
-                      link.className
+                      link.className,
                     )}
                   >
                     {link.label}

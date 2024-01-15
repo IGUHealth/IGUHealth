@@ -1,12 +1,12 @@
-import React from "react";
-import type { Meta, StoryObj } from "@storybook/react";
 import {
-  Squares2X2Icon,
-  Square3Stack3DIcon,
   InboxArrowDownIcon,
+  Square3Stack3DIcon,
+  Squares2X2Icon,
 } from "@heroicons/react/24/outline";
+import type { Meta, StoryObj } from "@storybook/react";
+import React from "react";
 
-import { SidebarLayout, SideBar as SideBar, SideBarItem } from "./Sidebar";
+import { SideBar, SideBarItem, SidebarLayout } from "./Sidebar";
 
 const LOGO = () => (
   <svg viewBox="0 0 187 164" fill="none" xmlns="http://www.w3.org/2000/svg">

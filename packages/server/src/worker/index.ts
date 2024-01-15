@@ -1,36 +1,31 @@
 // Backend Processes used for subscriptions and cron jobs.
+import { randomUUID } from "crypto";
 import dotEnv from "dotenv";
 import pg from "pg";
-import { randomUUID } from "crypto";
-
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
+import { AsynchronousClient } from "@iguhealth/client";
 import {
+  BundleEntry,
   Resource,
   Subscription,
-  BundleEntry,
-  id,
   code,
+  id,
 } from "@iguhealth/fhir-types/r4/types";
+import { evaluate } from "@iguhealth/fhirpath";
+import { Operation } from "@iguhealth/operation-execution";
 import {
   OperationError,
   isOperationError,
   outcomeError,
 } from "@iguhealth/operation-outcomes";
-import { evaluate } from "@iguhealth/fhirpath";
-import { Operation } from "@iguhealth/operation-execution";
-import { AsynchronousClient } from "@iguhealth/client";
 
-import * as Sentry from "../monitoring/sentry.js";
-import { LIB_VERSION } from "../version.js";
-import { resolveOperationDefinition } from "../operation-executors/utilities.js";
-import { createFHIRServer, logger, createFHIRServices } from "../fhir/index.js";
-import logAuditEvent, {
-  MAJOR_FAILURE,
-  SERIOUS_FAILURE,
-} from "../logging/auditEvents.js";
-import { httpRequestToFHIRRequest } from "../http/index.js";
+import {
+  createCertsIfNoneExists,
+  getSigningKey,
+} from "../authN/certifications.js";
+import { IGUHEALTH_ISSUER, createToken } from "../authN/token.js";
 import {
   FHIRServerCTX,
   FHIRServerInitCTX,
@@ -38,19 +33,23 @@ import {
   Tenant,
   TenantId,
 } from "../fhir/context.js";
+import { createFHIRServer, createFHIRServices, logger } from "../fhir/index.js";
+import { httpRequestToFHIRRequest } from "../http/index.js";
+import logAuditEvent, {
+  MAJOR_FAILURE,
+  SERIOUS_FAILURE,
+} from "../logging/auditEvents.js";
+import * as Sentry from "../monitoring/sentry.js";
+import { resolveOperationDefinition } from "../operation-executors/utilities.js";
+import { fitsSearchCriteria } from "../resourceProviders/memory/search.js";
+import { createResolverRemoteCanonical } from "../resourceProviders/utilities/canonical.js";
 import {
   SearchParameterResource,
   deriveResourceTypeFilter,
-  parametersWithMetaAssociated,
   findSearchParameter,
+  parametersWithMetaAssociated,
 } from "../resourceProviders/utilities/search/parameters.js";
-import { fitsSearchCriteria } from "../resourceProviders/memory/search.js";
-import { IGUHEALTH_ISSUER, createToken } from "../authN/token.js";
-import {
-  createCertsIfNoneExists,
-  getSigningKey,
-} from "../authN/certifications.js";
-import { createResolverRemoteCanonical } from "../resourceProviders/utilities/canonical.js";
+import { LIB_VERSION } from "../version.js";
 
 dotEnv.config();
 
@@ -61,17 +60,17 @@ if (
 ) {
   await createCertsIfNoneExists(
     process.env.AUTH_CERTIFICATION_LOCATION,
-    process.env.AUTH_SIGNING_KEY
+    process.env.AUTH_SIGNING_KEY,
   );
 }
 
 if (process.env.SENTRY_WORKER_DSN)
   Sentry.enableSentry(process.env.SENTRY_WORKER_DSN, LIB_VERSION, {
     tracesSampleRate: parseFloat(
-      process.env.SENTRY_TRACES_SAMPLE_RATE || "0.1"
+      process.env.SENTRY_TRACES_SAMPLE_RATE || "0.1",
     ),
     profilesSampleRate: parseFloat(
-      process.env.SENTRY_PROFILES_SAMPLE_RATE || "0.1"
+      process.env.SENTRY_PROFILES_SAMPLE_RATE || "0.1",
     ),
   });
 
@@ -83,7 +82,7 @@ function getVersionSequence(resource: Resource): number {
       variables: {
         sequenceUrl: "https://iguhealth.app/version-sequence",
       },
-    }
+    },
   )[0];
 
   if (typeof evaluation !== "number") {
@@ -97,7 +96,7 @@ async function handleSubscriptionPayload(
   server: AsynchronousClient<unknown, FHIRServerInitCTX>,
   ctx: FHIRServerInitCTX,
   subscription: Subscription,
-  payload: Resource[]
+  payload: Resource[],
 ): Promise<void> {
   const channelType = evaluate(
     "$this.channel.type | $this.channel.type.extension.where(url=%typeUrl).value",
@@ -106,14 +105,14 @@ async function handleSubscriptionPayload(
       variables: {
         typeUrl: "https://iguhealth.app/Subscription/channel-type",
       },
-    }
+    },
   )[0];
 
   switch (channelType) {
     case "rest-hook": {
       if (!subscription.channel.endpoint) {
         throw new OperationError(
-          outcomeError("invalid", `Subscription channel is missing endpoint.`)
+          outcomeError("invalid", `Subscription channel is missing endpoint.`),
         );
       }
 
@@ -124,8 +123,8 @@ async function handleSubscriptionPayload(
             // headers: subscription.channel.header,
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(resource),
-          })
-        )
+          }),
+        ),
       );
       return;
     }
@@ -138,7 +137,7 @@ async function handleSubscriptionPayload(
           variables: {
             operationUrl: OPERATION_URL,
           },
-        }
+        },
       )[0];
       if (typeof operation !== "string") {
         logAuditEvent(
@@ -146,16 +145,16 @@ async function handleSubscriptionPayload(
           ctx,
           MAJOR_FAILURE,
           { reference: `Subscription/${subscription.id}` },
-          `No Operation was specified, specifiy via extension '${OPERATION_URL}' with valueCode of operation code.`
+          `No Operation was specified, specifiy via extension '${OPERATION_URL}' with valueCode of operation code.`,
         );
         throw new OperationError(
-          outcomeError("invalid", "Subscription contained invalid operation")
+          outcomeError("invalid", "Subscription contained invalid operation"),
         );
       }
       const operationDefinition = await resolveOperationDefinition(
         server,
         ctx,
-        operation
+        operation,
       );
 
       const user_access_token =
@@ -165,7 +164,7 @@ async function handleSubscriptionPayload(
           ? await createToken(
               await getSigningKey(
                 process.env.AUTH_CERTIFICATION_LOCATION,
-                process.env.AUTH_SIGNING_KEY
+                process.env.AUTH_SIGNING_KEY,
               ),
               {
                 header: { audience: process.env.AUTH_JWT_AUDIENCE },
@@ -177,7 +176,7 @@ async function handleSubscriptionPayload(
                   aud: ["https://iguhealth.com/api"],
                   scope: "openid profile email offline_access",
                 },
-              }
+              },
             )
           : undefined;
 
@@ -186,7 +185,7 @@ async function handleSubscriptionPayload(
         { ...ctx, user: { ...ctx.user, accessToken: user_access_token } },
         {
           payload,
-        }
+        },
       );
 
       return;
@@ -195,8 +194,8 @@ async function handleSubscriptionPayload(
       throw new OperationError(
         outcomeError(
           `not-supported`,
-          `'${channelType}' is not supported for subscription.`
-        )
+          `'${channelType}' is not supported for subscription.`,
+        ),
       );
   }
 }
@@ -211,7 +210,7 @@ function processSubscription(
   ctx: FHIRServerCTX,
   server: AsynchronousClient<unknown, FHIRServerInitCTX>,
 
-  subscriptionId: id
+  subscriptionId: id,
 ) {
   return async () => {
     // Reread here in event that concurrent process has altered the id.
@@ -220,8 +219,8 @@ function processSubscription(
       throw new OperationError(
         outcomeError(
           "not-found",
-          `Subscription with id '${subscriptionId}' not found.`
-        )
+          `Subscription with id '${subscriptionId}' not found.`,
+        ),
       );
     if (subscription.status !== "active") return;
     const logger = ctx.logger.child({
@@ -239,8 +238,8 @@ function processSubscription(
         throw new OperationError(
           outcomeError(
             "invalid",
-            `Criteria must be a search request but found ${request.type}`
-          )
+            `Criteria must be a search request but found ${request.type}`,
+          ),
         );
       }
 
@@ -250,8 +249,8 @@ function processSubscription(
         throw new OperationError(
           outcomeError(
             "invalid",
-            `Criteria cannot include _sort. Sorting must be based order resource was updated.`
-          )
+            `Criteria cannot include _sort. Sorting must be based order resource was updated.`,
+          ),
         );
       }
 
@@ -295,12 +294,12 @@ function processSubscription(
         async (resourceTypes, name) =>
           await findSearchParameter(server, ctx, resourceTypes, name),
         resourceTypes,
-        request.parameters
+        request.parameters,
       );
 
       // Standard parameters
       const resourceParameters = parameters.filter(
-        (v): v is SearchParameterResource => v.type === "resource"
+        (v): v is SearchParameterResource => v.type === "resource",
       );
 
       if (historyPoll.length > 0) {
@@ -309,8 +308,8 @@ function processSubscription(
           throw new OperationError(
             outcomeError(
               "invalid",
-              "history poll returned entry missing resource."
-            )
+              "history poll returned entry missing resource.",
+            ),
           );
 
         // Do reverse as ordering is the latest update first.
@@ -321,8 +320,8 @@ function processSubscription(
             throw new OperationError(
               outcomeError(
                 "invalid",
-                "history poll returned entry missing resource."
-              )
+                "history poll returned entry missing resource.",
+              ),
             );
 
           if (
@@ -333,7 +332,7 @@ function processSubscription(
                 resolveRemoteCanonical: createResolverRemoteCanonical(ctx),
               },
               entry.resource,
-              resourceParameters
+              resourceParameters,
             ))
           ) {
             payload.push(entry.resource);
@@ -344,8 +343,8 @@ function processSubscription(
           ctx,
           `${subscription.id}_latest`,
           getVersionSequence(
-            historyPoll[historyPoll.length - 1].resource as Resource
-          )
+            historyPoll[historyPoll.length - 1].resource as Resource,
+          ),
         );
       }
     } catch (e) {
@@ -361,7 +360,7 @@ function processSubscription(
         ctx,
         SERIOUS_FAILURE,
         { reference: `Subscription/${subscription.id}` },
-        errorDescription
+        errorDescription,
       );
 
       await server.update(ctx, {
@@ -421,7 +420,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
           try {
             await fhirServices.lock.withLock(
               subscriptionLockKey(tenant, subscriptionId),
-              processSubscription(workerID, ctx, fhirServer, subscriptionId)
+              processSubscription(workerID, ctx, fhirServer, subscriptionId),
             );
           } catch (e) {
             logger.error(e);

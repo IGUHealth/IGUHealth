@@ -1,7 +1,7 @@
 import React from "react";
 
-import { EditableProps } from "../types";
 import { Input } from "../../base/input";
+import { EditableProps } from "../types";
 
 export type FHIRBooleanEditableProps = EditableProps<boolean>;
 

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
 
-import { EditableProps } from "../types";
-import { Input } from "../../base/input";
 import { instant } from "@iguhealth/fhir-types/r4/types";
+
+import { Input } from "../../base/input";
+import { EditableProps } from "../types";
 
 export type FHIRInstantEditableProps = EditableProps<instant>;
 
@@ -32,12 +33,12 @@ export const FHIRInstantEditable = ({
       issues={issues}
       type="datetime-local"
       value={dayjs(value, "YYYY-MM-DDThh:mm:ss.SSSZ").format(
-        "YYYY-MM-DDThh:mm:ss.SSS"
+        "YYYY-MM-DDThh:mm:ss.SSS",
       )}
       onChange={(e) => {
         if (onChange) {
           const dateString = dayjs(e.target.value).format(
-            "YYYY-MM-DDThh:mm:ss.SSSZ"
+            "YYYY-MM-DDThh:mm:ss.SSSZ",
           );
           onChange(dateString as instant);
         }

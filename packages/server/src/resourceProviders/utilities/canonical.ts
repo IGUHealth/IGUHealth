@@ -1,8 +1,8 @@
-import type { toReference } from "./search/dataConversion.js";
 import { FHIRServerCTX } from "../../fhir/context.js";
+import type { toReference } from "./search/dataConversion.js";
 
 export function createResolverRemoteCanonical(
-  ctx: FHIRServerCTX
+  ctx: FHIRServerCTX,
 ): Parameters<typeof toReference>[2] {
   return async (types, url) => {
     const results = await ctx.client.search_system(ctx, [

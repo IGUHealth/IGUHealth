@@ -1,24 +1,23 @@
+import dotEnv from "dotenv";
 import path from "path";
+import createLogger from "pino";
 import { fileURLToPath } from "url";
 
-import createLogger from "pino";
-import dotEnv from "dotenv";
-
+import { loadArtifacts } from "@iguhealth/artifacts";
 import {
-  ResourceType,
   AResource,
+  ResourceType,
+  canonical,
   code,
   dateTime,
   uri,
-  canonical,
 } from "@iguhealth/fhir-types/r4/types";
-import { loadArtifacts } from "@iguhealth/artifacts";
 
-import MemoryDatabase from "./memory/async.js";
 import { IOCache } from "../cache/interface.js";
-import { JWT, FHIRServerCTX, Tenant } from "../fhir/context.js";
+import { FHIRServerCTX, JWT, Tenant } from "../fhir/context.js";
 import { Lock } from "../synchronization/interfaces.js";
 import { TerminologyProviderMemory } from "../terminology/index.js";
+import MemoryDatabase from "./memory/async.js";
 
 dotEnv.config();
 

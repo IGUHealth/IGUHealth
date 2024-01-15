@@ -20,7 +20,7 @@ export type SEARCH_INDEX_VALUE_BASED =
 
 export function missingModifier(
   _ctx: FHIRServerCTX,
-  parameter: SearchParameterResource
+  parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, unknown> {
   return db.conditions.or(
     ...parameter.value.map((value): SEARCH_INDEX_WHEREABLE => {
@@ -28,16 +28,16 @@ export function missingModifier(
         throw new OperationError(
           outcomeError(
             "invalid",
-            `Invalid value for modifier 'missing' must be 'true' or 'false'`
-          )
+            `Invalid value for modifier 'missing' must be 'true' or 'false'`,
+          ),
         );
       }
       if (value === "true") {
         throw new OperationError(
           outcomeError(
             "not-supported",
-            "For modifier 'missing' value of 'true' is not yet supported"
-          )
+            "For modifier 'missing' value of 'true' is not yet supported",
+          ),
         );
       }
       switch (parameter.searchParameter.type) {
@@ -75,10 +75,10 @@ export function missingModifier(
           throw new OperationError(
             outcomeError(
               "not-supported",
-              `Parameter of type '${parameter.searchParameter.type}' is not yet supported for missing modifier.`
-            )
+              `Parameter of type '${parameter.searchParameter.type}' is not yet supported for missing modifier.`,
+            ),
           );
       }
-    })
+    }),
   );
 }

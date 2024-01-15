@@ -1,5 +1,5 @@
-import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
+import Tabs from "@theme/Tabs";
 
 # Serverless
 
@@ -10,6 +10,7 @@ Install [@iguhealth/server](https://www.npmjs.com/package/@iguhealth/server?acti
 
 ```js
 import serverless from "serverless-http";
+
 import createServer from "@iguhealth/server";
 
 const server = await createServer();
@@ -132,7 +133,7 @@ resource "aws_lambda_permission" "api_gw" {
 
   source_arn = "${aws_apigatewayv2_api.this.execution_arn}/*/*"
 }
-  
+
 ```
 
   </TabItem>

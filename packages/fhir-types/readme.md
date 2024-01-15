@@ -5,7 +5,8 @@ Typescript types generated off of FHIR StructureDefinitions.
 ## Usage
 
 ```typescript
-import { Patient, Observation, id } from "@iguhealth/fhir-types/r4/types";
+import { Observation, Patient, id } from "@iguhealth/fhir-types/r4/types";
+
 const patient: Patient = {
   name: [
     {
@@ -66,6 +67,7 @@ These are utilities that can be useful
 
 ```typescript
 import { primitiveTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
+
 function isPrimitiveType(type: string) {
   returnprimitiveTypes.has(type);
 }
