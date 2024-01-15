@@ -2,7 +2,7 @@
 import dotEnv from "dotenv";
 import pg from "pg";
 import { randomUUID } from "crypto";
-import type { Logger } from "pino";
+
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
@@ -20,19 +20,12 @@ import {
 } from "@iguhealth/operation-outcomes";
 import { evaluate } from "@iguhealth/fhirpath";
 import { Operation } from "@iguhealth/operation-execution";
+import { AsynchronousClient } from "@iguhealth/client";
 
 import * as Sentry from "../monitoring/sentry.js";
 import { LIB_VERSION } from "../version.js";
 import { resolveOperationDefinition } from "../operation-executors/utilities.js";
-import {
-  MEMORY_TYPES,
-  createFHIRServer,
-  createMemoryData,
-  createResolveCanonical,
-  createResolveTypeToCanonical,
-  getRedisClient,
-  logger,
-} from "../fhir/index.js";
+import { createFHIRServer, logger, createFHIRServices } from "../fhir/index.js";
 import logAuditEvent, {
   MAJOR_FAILURE,
   SERIOUS_FAILURE,
@@ -57,11 +50,6 @@ import {
   createCertsIfNoneExists,
   getSigningKey,
 } from "../authN/certifications.js";
-import RedisLock from "../synchronization/redis.lock.js";
-import RedisCache from "../cache/redis.js";
-import { AsynchronousClient } from "@iguhealth/client";
-import { IOCache } from "../cache/interface.js";
-import { toReference } from "../resourceProviders/utilities/search/dataConversion.js";
 import { createResolverRemoteCanonical } from "../resourceProviders/utilities/canonical.js";
 
 dotEnv.config();
@@ -219,16 +207,10 @@ function subscriptionLockKey(tenant: string, subscriptionId: string) {
 }
 
 function processSubscription(
-  services: {
-    workerID: string;
-    logger: Logger<unknown>;
-    cache: IOCache<FHIRServerInitCTX>;
-    resolveCanonical: FHIRServerCTX["resolveCanonical"];
-    resolveTypeToCanonical: FHIRServerCTX["resolveTypeToCanonical"];
-    resolveRemoteCanonical: Parameters<typeof toReference>[2];
-  },
+  workerID: string,
+  ctx: FHIRServerCTX,
   server: AsynchronousClient<unknown, FHIRServerInitCTX>,
-  ctx: FHIRServerInitCTX,
+
   subscriptionId: id
 ) {
   return async () => {
@@ -242,8 +224,8 @@ function processSubscription(
         )
       );
     if (subscription.status !== "active") return;
-    const logger = services.logger.child({
-      worker: services.workerID,
+    const logger = ctx.logger.child({
+      worker: workerID,
       tenant: ctx.tenant.id,
       criteria: subscription.criteria,
     });
@@ -273,10 +255,7 @@ function processSubscription(
         );
       }
 
-      const cachedSubID = await services.cache.get(
-        ctx,
-        `${subscription.id}_latest`
-      );
+      const cachedSubID = await ctx.cache.get(ctx, `${subscription.id}_latest`);
 
       const latestVersionIdForSub = cachedSubID
         ? cachedSubID
@@ -325,82 +304,48 @@ function processSubscription(
       );
 
       if (historyPoll.length > 0) {
-        await Sentry.sentryTransaction(
-          process.env.SENTRY_WORKER_DSN,
-          {
-            name: `${ctx.tenant.id}-processing-sub`,
-            op: "iguhealth.worker",
-          },
-          async (transaction) => {
-            logger.info(`PROCESSING Subscription '${subscription.id}'`);
-            if (historyPoll[0].resource === undefined)
-              throw new OperationError(
-                outcomeError(
-                  "invalid",
-                  "history poll returned entry missing resource."
-                )
-              );
+        logger.info(`PROCESSING Subscription '${subscription.id}'`);
+        if (historyPoll[0].resource === undefined)
+          throw new OperationError(
+            outcomeError(
+              "invalid",
+              "history poll returned entry missing resource."
+            )
+          );
 
-            // Do reverse as ordering is the latest update first.
-            const payload: Resource[] = [];
+        // Do reverse as ordering is the latest update first.
+        const payload: Resource[] = [];
 
-            for (const entry of historyPoll) {
-              if (entry.resource === undefined)
-                throw new OperationError(
-                  outcomeError(
-                    "invalid",
-                    "history poll returned entry missing resource."
-                  )
-                );
-              await Sentry.sentrySpan(
-                transaction,
-                {
-                  op: `iguhealth.worker.checkingCriteria`,
-                  name: `${ctx.tenant.id}-processing-sub-checking-criteria`,
-                  description:
-                    "Checking if history poll fits subscription criteria",
-                },
-                async (_span) => {
-                  if (
-                    entry.resource &&
-                    (await fitsSearchCriteria(
-                      services,
-                      entry.resource,
-                      resourceParameters
-                    ))
-                  ) {
-                    payload.push(entry.resource);
-                  }
-                }
-              );
-            }
-
-            await Sentry.sentrySpan(
-              transaction,
-              {
-                op: `iguhealth.worker.handlingPayload`,
-                name: `${ctx.tenant.id}-processing-sub-handling-payload`,
-                description:
-                  "Checking if history poll fits subscription criteria",
-              },
-              async (_span) => {
-                await handleSubscriptionPayload(
-                  server,
-                  ctx,
-                  subscription,
-                  payload
-                );
-              }
-            );
-
-            await services.cache.set(
-              ctx,
-              `${subscription.id}_latest`,
-              getVersionSequence(
-                historyPoll[historyPoll.length - 1].resource as Resource
+        for (const entry of historyPoll) {
+          if (entry.resource === undefined)
+            throw new OperationError(
+              outcomeError(
+                "invalid",
+                "history poll returned entry missing resource."
               )
             );
+
+          if (
+            entry.resource &&
+            (await fitsSearchCriteria(
+              {
+                ...ctx,
+                resolveRemoteCanonical: createResolverRemoteCanonical(ctx),
+              },
+              entry.resource,
+              resourceParameters
+            ))
+          ) {
+            payload.push(entry.resource);
           }
+        }
+        await handleSubscriptionPayload(server, ctx, subscription, payload);
+        await ctx.cache.set(
+          ctx,
+          `${subscription.id}_latest`,
+          getVersionSequence(
+            historyPoll[historyPoll.length - 1].resource as Resource
+          )
         );
       }
     } catch (e) {
@@ -437,11 +382,6 @@ async function getActiveTenants(pool: pg.Pool): Promise<TenantId[]> {
 
 async function createWorker(workerID = randomUUID(), loopInterval = 500) {
   logger.info({ workerID }, `Worker started with interval '${loopInterval}'`);
-
-  const data = createMemoryData(MEMORY_TYPES);
-  const resolveCanonical = createResolveCanonical(data);
-  const resolveTypeToCanonical = createResolveTypeToCanonical(data);
-
   // Using a pool directly because need to query up tenants.
   const pool = new pg.Pool({
     user: process.env["FHIR_DATABASE_USERNAME"],
@@ -450,25 +390,17 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
     database: process.env["FHIR_DATABASE_NAME"],
     port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
   });
-  const redis = getRedisClient();
-  const lock = new RedisLock(redis);
-  const cache = new RedisCache(redis);
-  const fhirServer = await createFHIRServer({
-    pool,
-    lock,
-    cache,
-    logger,
-  });
 
+  const fhirServices = await createFHIRServices(pool);
+  const fhirServer = await createFHIRServer();
   let isRunning = true;
-
   /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
   while (isRunning) {
     try {
       const activeTenants = await getActiveTenants(pool);
-
       for (const tenant of activeTenants) {
         const ctx = {
+          ...fhirServices,
           tenant: { id: tenant, userRole: "SUPER_ADMIN" } as Tenant,
           user: {
             jwt: {
@@ -477,36 +409,19 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
             } as JWT,
           },
         };
-
         const activeSubscriptionIds = (
           await fhirServer.search_type(ctx, "Subscription", [
             { name: "status", value: ["active"] },
           ])
         ).resources.map((r) => r.id);
-
         for (const subscriptionId of activeSubscriptionIds) {
           // Use lock to avoid duplication on sub processing (could have two concurrent subs running in unison otherwise).
           if (!subscriptionId)
             throw new Error("Subscription ID was undefined.");
           try {
-            await lock.withLock(
+            await fhirServices.lock.withLock(
               subscriptionLockKey(tenant, subscriptionId),
-              processSubscription(
-                {
-                  workerID,
-                  logger,
-                  cache,
-                  resolveCanonical,
-                  resolveTypeToCanonical,
-                  resolveRemoteCanonical: createResolverRemoteCanonical(
-                    fhirServer,
-                    ctx
-                  ),
-                },
-                fhirServer,
-                ctx,
-                subscriptionId
-              )
+              processSubscription(workerID, ctx, fhirServer, subscriptionId)
             );
           } catch (e) {
             logger.error(e);
@@ -519,7 +434,6 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
       await new Promise((resolve) => setTimeout(resolve, loopInterval));
     }
   }
-
   return () => {
     isRunning = false;
   };

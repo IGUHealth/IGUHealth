@@ -1,4 +1,4 @@
-import Koa from "koa";
+import Koa, { Middleware } from "koa";
 
 import jwt from "koa-jwt";
 import jwksRsa from "jwks-rsa";
@@ -7,7 +7,9 @@ import { createCertsIfNoneExists, getJWKS } from "./certifications.js";
 import { IGUHEALTH_ISSUER } from "./token.js";
 import { Tenant } from "../fhir/context.js";
 
-export async function createValidateUserJWTMiddleware(): Promise<Koa.Middleware> {
+export async function createValidateUserJWTMiddleware<T, C>(): Promise<
+  Koa.Middleware<T, C>
+> {
   let IGUHEALTH_JWT_SECRET: ReturnType<typeof jwksRsa.koaJwtSecret> | undefined;
   if (process.env.AUTH_SIGNING_KEY && process.env.AUTH_CERTIFICATION_LOCATION) {
     if (process.env.NODE_ENV === "development")
@@ -58,7 +60,7 @@ export async function createValidateUserJWTMiddleware(): Promise<Koa.Middleware>
     algorithms: [
       process.env.AUTH_JWT_ALGORITHM ? process.env.AUTH_JWT_ALGORITHM : "RS256",
     ],
-  }) as unknown as Koa.Middleware;
+  }) as unknown as Middleware<T, C>;
 }
 
 export const allowPublicAccessMiddleware: Koa.Middleware = async (

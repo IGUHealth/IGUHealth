@@ -48,13 +48,6 @@ export interface FHIRServerInitCTX {
   };
 }
 
-export interface FHIRServerState {
-  pool: pg.Pool;
-  cache: IOCache<FHIRServerCTX>;
-  logger: Logger<unknown>;
-  lock: Lock<unknown>;
-}
-
 export interface FHIRServerCTX extends FHIRServerInitCTX {
   // Server Information
   capabilities: CapabilityStatement;

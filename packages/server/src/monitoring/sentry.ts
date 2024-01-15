@@ -72,6 +72,8 @@ export async function sentrySpan<T>(
   }
 }
 
+
+
 // this tracing middleware creates a transaction per request
 export const tracingMiddleWare =
   (dsn: string | undefined) =>

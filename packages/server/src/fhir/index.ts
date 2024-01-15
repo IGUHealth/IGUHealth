@@ -4,6 +4,7 @@ import createLogger from "pino";
 import pg from "pg";
 import Redis from "ioredis";
 import Ajv from "ajv";
+import type * as koa from "koa";
 
 import { escapeParameter } from "@iguhealth/client/url";
 import { loadArtifacts } from "@iguhealth/artifacts";
@@ -23,16 +24,16 @@ import {
   AccessPolicy,
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  outcomeError,
+  outcomeFatal,
+} from "@iguhealth/operation-outcomes";
 import { FHIRRequest } from "@iguhealth/client/types";
 
+import { findCurrentTenant } from "../authZ/middleware/tenantAccess.js";
 import { createPostgresClient } from "../resourceProviders/postgres/index.js";
-import {
-  FHIRServerCTX,
-  FHIRServerInitCTX,
-  FHIRServerState,
-  asSystemCTX,
-} from "./context.js";
+import { FHIRServerCTX, asSystemCTX, JWT } from "./context.js";
 import { InternalData } from "../resourceProviders/memory/types.js";
 import MemoryDatabaseAsync from "../resourceProviders/memory/async.js";
 import RouterClient from "../resourceProviders/router.js";
@@ -56,6 +57,8 @@ import {
 } from "@iguhealth/client/middleware";
 import { AsynchronousClient } from "@iguhealth/client";
 import { createAuthorizationMiddleWare } from "../authZ/middleware/authorization.js";
+import RedisLock from "../synchronization/redis.lock.js";
+import RedisCache from "../cache/redis.js";
 
 export const MEMORY_TYPES: ResourceType[] = [
   "StructureDefinition",
@@ -124,7 +127,7 @@ async function createResourceRestCapabilities(
   } as CapabilityStatementRestResource;
 }
 
-async function serverCapabilities(
+export async function serverCapabilities(
   ctx: Partial<FHIRServerCTX>,
   memdb: FHIRClientAsync<unknown>
 ): Promise<CapabilityStatement> {
@@ -310,11 +313,10 @@ const encryptionMiddleware: (
     }
   };
 
-const associateUserMiddleware: MiddlewareAsync<
-  FHIRServerState,
-  FHIRServerCTX | FHIRServerInitCTX
-> = async (context, next) => {
-  if (!isServerCTX(context.ctx)) throw new Error();
+const associateUserMiddleware: MiddlewareAsync<unknown, FHIRServerCTX> = async (
+  context,
+  next
+) => {
   if (!next) throw new Error("next middleware was not defined");
 
   const usersAndAccessPolicies = (await context.ctx.client.search_type(
@@ -417,19 +419,28 @@ export function getRedisClient() {
   return redisClient;
 }
 
-function isServerCTX(
-  ctx: FHIRServerCTX | FHIRServerInitCTX
-): ctx is FHIRServerCTX {
-  return "client" in ctx;
+/**
+ * Creates the root ctx.client. Includes the expected middleware like validation and capabilities by default.
+ * @param sources Client sources
+ * @returns FHIRClientAsync instance
+ */
+export async function createFHIRClient(sources: RouterState["sources"]) {
+  return RouterClient(
+    [
+      validationMiddleware,
+      capabilitiesMiddleware,
+      encryptionMiddleware(["OperationDefinition"]),
+      createAuthorizationMiddleWare<RouterState>(),
+    ],
+    sources
+  );
 }
 
-async function createFHIRMiddleware(): Promise<
-  MiddlewareAsync<FHIRServerState, FHIRServerInitCTX | FHIRServerCTX>
-> {
+export async function createFHIRServices(
+  pool: pg.Pool
+): Promise<Omit<FHIRServerCTX, "tenant" | "user">> {
   const data = createMemoryData(MEMORY_TYPES);
   const memDBAsync = MemoryDatabaseAsync(data);
-  const resolveCanonical = createResolveCanonical(data);
-  const resolveTypeToCanonical = createResolveTypeToCanonical(data);
 
   const inlineOperationExecution = InlineExecutioner([
     StructureDefinitionSnapshotInvoke,
@@ -439,6 +450,18 @@ async function createFHIRMiddleware(): Promise<
     ValueSetValidateInvoke,
     CodeSystemLookupInvoke,
   ]);
+
+  const lambdaExecutioner = AWSLambdaExecutioner({
+    AWS_REGION: process.env.AWS_REGION as string,
+    AWS_ACCESS_KEY_ID: process.env.AWS_LAMBDA_ACCESS_KEY_ID as string,
+    AWS_ACCESS_KEY_SECRET: process.env.AWS_LAMBDA_ACCESS_KEY_SECRET as string,
+    LAMBDA_ROLE: process.env.AWS_LAMBDA_ROLE as string,
+    LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
+  });
+
+  const resolveCanonical = createResolveCanonical(data);
+  const resolveTypeToCanonical = createResolveTypeToCanonical(data);
+  const redis = getRedisClient();
   const terminologyProvider = new TerminologyProviderMemory();
   const encryptionProvider =
     process.env.ENCRYPTION_TYPE === "aws"
@@ -454,112 +477,114 @@ async function createFHIRMiddleware(): Promise<
         })
       : undefined;
 
+  const lock = new RedisLock(redis);
+  const cache = new RedisCache(redis);
   const capabilities = await serverCapabilities(
     { resolveCanonical, resolveTypeToCanonical },
     memDBAsync
   );
+  const client = await createFHIRClient([
+    // OP INVOCATION
+    {
+      useSource: (request) => {
+        return (
+          request.type === "invoke-request" &&
+          inlineOperationExecution
+            .supportedOperations()
+            .map((op) => op.code)
+            .includes(request.operation)
+        );
+      },
+      source: inlineOperationExecution,
+    },
+    {
+      resourcesSupported: [...resourceTypes] as ResourceType[],
+      interactionsSupported: ["invoke-request"],
+      source: lambdaExecutioner,
+    },
+    {
+      resourcesSupported: MEMORY_TYPES,
+      interactionsSupported: ["read-request", "search-request"],
+      source: memDBAsync,
+    },
+    {
+      resourcesSupported: [...resourceTypes].filter(
+        (type) => MEMORY_TYPES.indexOf(type as ResourceType) === -1
+      ) as ResourceType[],
+      interactionsSupported: [
+        "read-request",
+        "search-request",
+        "create-request",
+        "patch-request",
+        "update-request",
+        "delete-request",
+        "history-request",
+        "transaction-request",
+      ],
+      source: createPostgresClient(pool, {
+        transaction_entry_limit: parseInt(
+          process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20"
+        ),
+      }),
+    },
+  ]);
 
-  const lambdaExecutioner = AWSLambdaExecutioner({
-    AWS_REGION: process.env.AWS_REGION as string,
-    AWS_ACCESS_KEY_ID: process.env.AWS_LAMBDA_ACCESS_KEY_ID as string,
-    AWS_ACCESS_KEY_SECRET: process.env.AWS_LAMBDA_ACCESS_KEY_SECRET as string,
-    LAMBDA_ROLE: process.env.AWS_LAMBDA_ROLE as string,
-    LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
-  });
-
-  const services = {
+  return {
+    logger: logger, // .child({ tenant: ctx.params.tenant }),
+    lock,
+    cache,
     capabilities,
     terminologyProvider,
     encryptionProvider,
-
     resolveCanonical,
     resolveTypeToCanonical,
+    client,
   };
+}
 
+export async function createKoaFHIRMiddleware<
+  KoaState extends {
+    access_token?: string;
+    user: { [key: string]: unknown };
+  },
+  KoaContext
+>(
+  pool: pg.Pool
+): Promise<
+  koa.Middleware<KoaState, KoaContext & { FHIRContext: FHIRServerCTX }>
+> {
+  const fhirServices = await createFHIRServices(pool);
+  return async (ctx, next) => {
+    if (
+      typeof ctx.state.user.sub !== "string" ||
+      typeof ctx.state.user.iss !== "string"
+    )
+      throw new OperationError(
+        outcomeFatal("security", "JWT must have both sub and iss.")
+      );
+
+    const tenant = findCurrentTenant(ctx);
+    if (!tenant) throw new Error("Error tenant does not exist in context!");
+
+    ctx.FHIRContext = {
+      tenant,
+      user: {
+        jwt: ctx.state.user as JWT,
+        accessToken: ctx.state.access_token,
+      },
+      ...fhirServices,
+    };
+
+    await next();
+  };
+}
+
+async function createFHIRMiddleware(): Promise<
+  MiddlewareAsync<unknown, FHIRServerCTX>
+> {
   return createMiddlewareAsync([
-    async (context, next) => {
-      let pgPoolClient: pg.PoolClient | undefined;
-      try {
-        pgPoolClient = await context.state.pool.connect();
-        const fhirPostgreSQL = createPostgresClient(pgPoolClient, {
-          transaction_entry_limit: parseInt(
-            process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20"
-          ),
-        });
-
-        const client = RouterClient(
-          [
-            validationMiddleware,
-            capabilitiesMiddleware,
-            encryptionMiddleware(["OperationDefinition"]),
-            createAuthorizationMiddleWare<RouterState>(),
-          ],
-          [
-            // OP INVOCATION
-            {
-              useSource: (request) => {
-                return (
-                  request.type === "invoke-request" &&
-                  inlineOperationExecution
-                    .supportedOperations()
-                    .map((op) => op.code)
-                    .includes(request.operation)
-                );
-              },
-              source: inlineOperationExecution,
-            },
-            {
-              resourcesSupported: [...resourceTypes] as ResourceType[],
-              interactionsSupported: ["invoke-request"],
-              source: lambdaExecutioner,
-            },
-            {
-              resourcesSupported: MEMORY_TYPES,
-              interactionsSupported: ["read-request", "search-request"],
-              source: memDBAsync,
-            },
-            {
-              resourcesSupported: [...resourceTypes].filter(
-                (type) => MEMORY_TYPES.indexOf(type as ResourceType) === -1
-              ) as ResourceType[],
-              interactionsSupported: [
-                "read-request",
-                "search-request",
-                "create-request",
-                "patch-request",
-                "update-request",
-                "delete-request",
-                "history-request",
-                "transaction-request",
-              ],
-              source: fhirPostgreSQL,
-            },
-          ]
-        );
-
-        if (!next)
-          throw new Error("Server middleware initiation does not have next.");
-
-        return next({
-          state: context.state,
-          ctx: {
-            ...services,
-            ...context.ctx,
-            client,
-            logger: context.state.logger,
-            lock: context.state.lock,
-            cache: context.state.cache,
-          },
-          request: context.request,
-        });
-      } finally {
-        if (pgPoolClient) pgPoolClient.release();
-      }
-    },
     associateUserMiddleware,
     async (context, _next) => {
-      if (!isServerCTX(context.ctx)) throw new Error("Must be server context.");
-
       return {
         state: context.state,
         ctx: context.ctx,
@@ -573,6 +598,6 @@ async function createFHIRMiddleware(): Promise<
   ]);
 }
 
-export async function createFHIRServer(state: FHIRServerState) {
-  return new AsynchronousClient(state, await createFHIRMiddleware());
+export async function createFHIRServer() {
+  return new AsynchronousClient({}, await createFHIRMiddleware());
 }
