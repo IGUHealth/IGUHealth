@@ -3,8 +3,8 @@ import { program } from "commander";
 import DBMigrate from "db-migrate";
 import * as generateSQL from "zapatos/generate";
 
-import createWorker from "./worker/index.js";
 import createServer from "./server.js";
+import createWorker from "./worker/index.js";
 
 interface DBMigrate {
   up: () => Promise<void>;

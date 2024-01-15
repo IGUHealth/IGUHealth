@@ -1,34 +1,34 @@
 /* eslint @typescript-eslint/no-explicit-any: 0 */
-import React, { useMemo } from "react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import { applyPatch } from "fast-json-patch";
 import { produce } from "immer";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import React, { useMemo } from "react";
 
+import generateJSONPatches, { Mutation } from "@iguhealth/fhir-patch-building";
+import { Loc, ascend, descend, pointer, root } from "@iguhealth/fhir-pointer";
 import {
-  resourceTypes,
   complexTypes,
   primitiveTypes,
+  resourceTypes,
 } from "@iguhealth/fhir-types/r4/sets";
 import {
-  ResourceType,
-  StructureDefinition,
-  Resource,
   ElementDefinition,
   ElementDefinitionType,
+  Resource,
+  ResourceType,
+  StructureDefinition,
   id,
 } from "@iguhealth/fhir-types/r4/types";
-import { descend, ascend, Loc, pointer, root } from "@iguhealth/fhir-pointer";
-import generateJSONPatches, { Mutation } from "@iguhealth/fhir-patch-building";
 
+import { Add, Select } from "../../base";
 import { ClientProps } from "../types";
-import { MetaProps } from "./types";
 import { TypeComponents, isTypeRenderingSupported } from "./components";
-import { Select, Add } from "../../base";
 import { getElementDefinition } from "./helpers";
+import { MetaProps } from "./types";
 
 function EditorComponent(
-  props: MetaProps<any, any> & { type: ElementDefinitionType }
+  props: MetaProps<any, any> & { type: ElementDefinitionType },
 ) {
   const found = getElementDefinition(props.sd, props.elementIndex);
   const label = props.showLabel
@@ -130,7 +130,7 @@ function isIndexableObject(v: unknown): v is Record<string, unknown> {
 
 function findTypeChoiceTypeBasedOnField(
   element: ElementDefinition,
-  value: Record<string, unknown> | undefined
+  value: Record<string, unknown> | undefined,
 ): ElementDefinitionType {
   if (!element.type?.[0]) throw new Error(`No Type found for ${element.path}.`);
 
@@ -145,7 +145,7 @@ function findTypeChoiceTypeBasedOnField(
 
 function getTypedFieldName(
   element: ElementDefinition,
-  type: ElementDefinitionType
+  type: ElementDefinitionType,
 ) {
   const fieldName = getFieldName(element.path);
   if (!isTypeChoice(element)) return fieldName;
@@ -155,7 +155,7 @@ function getTypedFieldName(
 function getValueAndPointer(
   element: ElementDefinition,
   pointer: Loc<any, any, any>,
-  value: unknown
+  value: unknown,
 ): {
   value: unknown;
   pointer: Loc<any, any, any>;
@@ -166,7 +166,7 @@ function getValueAndPointer(
 
   const type = findTypeChoiceTypeBasedOnField(
     element,
-    value as Record<string, unknown>
+    value as Record<string, unknown>,
   );
 
   const field = getTypedFieldName(element, type);
@@ -228,11 +228,11 @@ function LabelWrapper({
                 });
                 const fieldName = getTypedFieldName(
                   found.element,
-                  selectedType
+                  selectedType,
                 );
                 const newPointer = descend(
                   ascend(pointer)?.parent as Loc<any, any, any>,
-                  fieldName
+                  fieldName,
                 );
                 onChange({
                   op: "replace",
@@ -303,7 +303,7 @@ const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
             // Skipping extensions and nested resources for now
             if (
               childElement.element.type?.find(
-                (t) => t.code === "Extension" || resourceTypes.has(t.code)
+                (t) => t.code === "Extension" || resourceTypes.has(t.code),
               )
             ) {
               return;
@@ -383,7 +383,7 @@ const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
         {value.map((v, i) => (
           <div
             className={classNames(
-              "relative"
+              "relative",
               // {
               //   "bg-gray-50": i % 2 === 1,
               //   "bg-white": i % 2 === 0,
@@ -474,7 +474,7 @@ export const FHIRGenerativeForm = ({
       type={structureDefinition.snapshot?.element?.[0]?.type?.[0]}
       pointer={pointer(
         structureDefinition.type as ResourceType,
-        value?.id || ("new" as id)
+        value?.id || ("new" as id),
       )}
       onChange={onChange}
       showLabel={false}

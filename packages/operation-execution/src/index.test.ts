@@ -1,27 +1,27 @@
+import { expect, test } from "@jest/globals";
 import path from "path";
 import { fileURLToPath } from "url";
-import { expect, test } from "@jest/globals";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import {
-  ResourceType,
   AResource,
   OperationDefinition,
   Parameters,
   Resource,
-  uri,
+  ResourceType,
   canonical,
+  uri,
 } from "@iguhealth/fhir-types/lib/r4/types";
+import { OperationError, outcome } from "@iguhealth/operation-outcomes";
 
 import {
-  parseParameters,
-  Operation,
   IOperation,
   Invocation,
   OpCTX,
+  Operation,
+  parseParameters,
   toParametersResource,
 } from "./index";
-import { OperationError, outcome } from "@iguhealth/operation-outcomes";
 
 const operationDefinitions = loadArtifacts({
   resourceType: "OperationDefinition",
@@ -34,7 +34,7 @@ const structureDefinitions = loadArtifacts({
 });
 
 const valueSetExpandOp = operationDefinitions.find(
-  (op) => op.id === "ValueSet-expand"
+  (op) => op.id === "ValueSet-expand",
 );
 
 if (!valueSetExpandOp)
@@ -55,7 +55,7 @@ test("parseParameters", () => {
           valueString: "test",
         },
       ],
-    } as Parameters)
+    } as Parameters),
   ).toEqual({
     filter: "test",
     url: "https://my-valueset.com",
@@ -170,7 +170,7 @@ test("Test Operation 1", () => {
           ],
         },
       ],
-    } as Parameters)
+    } as Parameters),
   ).toEqual({
     test: "value1",
     test2: [5],
@@ -211,7 +211,10 @@ test("roundTrip", () => {
     ],
   } as Parameters;
   expect(
-    operation.parseToParameters("in", operation.parseToObject("in", parameters))
+    operation.parseToParameters(
+      "in",
+      operation.parseToObject("in", parameters),
+    ),
   ).toEqual(parameters);
 });
 
@@ -222,7 +225,7 @@ test("execution", async () => {
   const ctx: OpCTX = {
     resolveCanonical<T extends ResourceType>(
       type: T,
-      url: string
+      url: string,
     ): AResource<T> {
       const sd = structureDefinitions.find((sd) => sd.url === url);
       if (!sd) throw new Error(`Could not resolve url ${url}`);
@@ -257,8 +260,8 @@ test("execution", async () => {
       operation,
       ctx,
       // @ts-ignore
-      { test: "asdf", bad: "value" }
-    )
+      { test: "asdf", bad: "value" },
+    ),
   ).rejects.toThrow();
 
   const invokeBadOutput: Invocation = async (op, ctx, input) => {
@@ -288,7 +291,7 @@ test("paramValidation", async () => {
   const ctx: OpCTX = {
     resolveCanonical<T extends ResourceType>(
       type: T,
-      url: string
+      url: string,
     ): AResource<T> {
       const sd = structureDefinitions.find((sd) => sd.url === url);
       if (!sd) throw new Error(`Could not resolve url ${url}`);
@@ -317,8 +320,8 @@ test("paramValidation", async () => {
     invoke(operation, ctx, { test: "asdf", name: { given: "Bob" } }).catch(
       (e) => {
         throw e.operationOutcome;
-      }
-    )
+      },
+    ),
   ).rejects.toEqual({
     issue: [
       {
@@ -332,7 +335,7 @@ test("paramValidation", async () => {
   });
 
   expect(
-    invoke(operation, ctx, { test: "test", name: { given: ["Bob"] } })
+    invoke(operation, ctx, { test: "test", name: { given: ["Bob"] } }),
   ).resolves.toEqual({ testOut: "test" });
 
   expect(
@@ -340,7 +343,7 @@ test("paramValidation", async () => {
       test: "test",
       name: { given: ["Bob"] },
       patient: { resourceType: "Patien", name: [{ given: ["Hello"] }] },
-    })
+    }),
   ).rejects.toThrow();
 
   expect(
@@ -348,7 +351,7 @@ test("paramValidation", async () => {
       test: "test",
       name: { given: ["Bob"] },
       patient: { resourceType: "Patient", name: [{ given: ["Hello"] }] },
-    })
+    }),
   ).resolves.toEqual({ testOut: "test" });
 
   expect(
@@ -358,7 +361,7 @@ test("paramValidation", async () => {
       patient: { resourceType: "Patient", name: [{ given: [4] }] },
     }).catch((e) => {
       throw e.operationOutcome;
-    })
+    }),
   ).rejects.toEqual({
     issue: [
       {
@@ -389,7 +392,7 @@ test("paramValidation", async () => {
           },
         ],
       },
-    })
+    }),
   ).resolves.toEqual({ testOut: "test" });
 
   expect(
@@ -409,7 +412,7 @@ test("paramValidation", async () => {
           },
         ],
       },
-    })
+    }),
   ).rejects.toThrow();
 });
 
@@ -488,7 +491,7 @@ test("Test invalid resource validation", async () => {
   const ctx: OpCTX = {
     resolveCanonical<T extends ResourceType>(
       type: T,
-      url: string
+      url: string,
     ): AResource<T> {
       const sd = structureDefinitions.find((sd) => sd.url === url);
       if (!sd) throw new Error(`Could not resolve url ${url}`);
@@ -505,7 +508,7 @@ test("Test invalid resource validation", async () => {
   const invoke = async (
     op: IOperation<{ payload: Resource[] }, { test: string }>,
     ctx: OpCTX,
-    input: unknown
+    input: unknown,
   ) => {
     await op.validate(ctx, "in", input);
     const output = { test: "whatever" };
@@ -514,6 +517,6 @@ test("Test invalid resource validation", async () => {
   };
 
   expect(
-    invoke(operation, ctx, { payload: "asdf" } as unknown)
+    invoke(operation, ctx, { payload: "asdf" } as unknown),
   ).rejects.toThrow(new Error("Could not resolve type undefined"));
 });

@@ -1,11 +1,11 @@
-import React, { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
-  XMarkIcon,
   UserCircleIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import classNames from "classnames";
+import React, { Fragment } from "react";
 
 interface NavigationItem
   extends React.DetailedHTMLProps<
@@ -104,7 +104,7 @@ export const Navigation = ({
                           active === item.name
                             ? "bg-blue-700 text-white"
                             : "text-blue-700 hover:bg-blue-700 hover:text-white",
-                          "cursor-pointer rounded-md px-3 py-2 text-sm font-medium"
+                          "cursor-pointer rounded-md px-3 py-2 text-sm font-medium",
                         )}
                         aria-current={active === item.name ? "page" : undefined}
                       >
@@ -146,7 +146,7 @@ export const Navigation = ({
                     active === item.name
                       ? "bg-blue-700 text-white"
                       : "text-blue-700 hover:bg-blue-700 hover:text-white",
-                    "block rounded-md px-3 py-2 text-base font-medium"
+                    "block rounded-md px-3 py-2 text-base font-medium",
                   )}
                   aria-current={item.name === active ? "page" : undefined}
                 >
@@ -180,7 +180,7 @@ export const Navigation = ({
                     href={item.href}
                     className={classNames(
                       "block rounded-md px-3 py-2 text-base font-medium",
-                      "text-blue-700 hover:bg-blue-700 hover:text-white"
+                      "text-blue-700 hover:bg-blue-700 hover:text-white",
                     )}
                   >
                     {item.name}

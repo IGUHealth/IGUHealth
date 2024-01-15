@@ -1,9 +1,9 @@
-import { useMemo, useState, Fragment, useEffect, CSSProperties } from "react";
-import { FixedSizeList as List } from "react-window";
-import classNames from "classnames";
-import { RecoilState, atom, useRecoilState, useRecoilValue } from "recoil";
 import { Dialog, Transition } from "@headlessui/react";
+import classNames from "classnames";
+import { CSSProperties, Fragment, useEffect, useMemo, useState } from "react";
 import { generatePath, useNavigate, useParams } from "react-router-dom";
+import { FixedSizeList as List } from "react-window";
+import { RecoilState, atom, useRecoilState, useRecoilValue } from "recoil";
 
 import { CapabilityStatementRestResource } from "@iguhealth/fhir-types/r4/types";
 
@@ -83,7 +83,7 @@ function SearchModal() {
           generatePath("/w/:tenant/resources/:resourceType", {
             tenant: params.tenant as string,
             resourceType: searchResults?.[searchIndex]?.type,
-          })
+          }),
         );
         setOpenModal(false);
         setSearch("");
@@ -104,7 +104,7 @@ function SearchModal() {
       if (openModal) {
         if (e.key === "ArrowDown") {
           setSearchIndex((v) =>
-            Math.min(v + 1, searchResults ? searchResults.length - 1 : 0)
+            Math.min(v + 1, searchResults ? searchResults.length - 1 : 0),
           );
           return;
         }

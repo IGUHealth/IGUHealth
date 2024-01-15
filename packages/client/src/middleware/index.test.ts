@@ -1,6 +1,7 @@
 import { expect, test } from "@jest/globals";
-import { createMiddlewareAsync } from "./index.js";
+
 import type { ParsedParameter } from "../url";
+import { createMiddlewareAsync } from "./index.js";
 
 test("Test middleware Async", async () => {
   const middleware = createMiddlewareAsync<{}, {}>([

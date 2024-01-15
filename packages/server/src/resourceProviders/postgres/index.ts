@@ -65,7 +65,7 @@ import { createResolverRemoteCanonical } from "../utilities/canonical.js";
 async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
   resourceTypes: ResourceType[],
-  names?: string[]
+  names?: string[],
 ): Promise<SearchParameter[]> {
   let parameters = [
     {
@@ -86,7 +86,7 @@ async function getAllParametersForResource<CTX extends FHIRServerCTX>(
     await ctx.client.search_type(
       asSystemCTX(ctx),
       "SearchParameter",
-      parameters
+      parameters,
     )
   ).resources;
 }
@@ -96,7 +96,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
   ctx: CTX,
   parameter: SearchParameter,
   resource: Resource & { id: id; meta: { versionId: id } },
-  evaluation: MetaValueSingular<NonNullable<unknown>>[]
+  evaluation: MetaValueSingular<NonNullable<unknown>>[],
 ) {
   switch (parameter.type) {
     case "quantity": {
@@ -119,7 +119,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
             end_value: value.end?.value as number | undefined,
             end_system: value.end?.system,
             end_code: value.end?.code,
-          })
+          }),
         );
 
       await db
@@ -127,7 +127,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           "quantity_idx",
           quantity_indexes,
           db.constraint("quantity_idx_pkey"),
-          { updateColumns: db.doNothing }
+          { updateColumns: db.doNothing },
         )
         .run(client);
 
@@ -147,7 +147,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
             parameter_url: parameter.url,
             start_date: value.start as unknown as Date,
             end_date: value.end as unknown as Date,
-          })
+          }),
         );
       await db
         .upsert("date_idx", date_indexes, db.constraint("date_idx_pkey"), {
@@ -161,8 +161,8 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
       const references = (
         await Promise.all(
           evaluation.map((v) =>
-            toReference(parameter, v, createResolverRemoteCanonical(ctx))
-          )
+            toReference(parameter, v, createResolverRemoteCanonical(ctx)),
+          ),
         )
       ).flat();
 
@@ -179,8 +179,8 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
             throw new OperationError(
               outcomeError(
                 "exception",
-                "Resource type or id not found when indexing the resource."
-              )
+                "Resource type or id not found when indexing the resource.",
+              ),
             );
           }
           return {
@@ -203,7 +203,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           db.constraint("reference_idx_unique"),
           {
             updateColumns: db.doNothing,
-          }
+          },
         )
         .run(client);
 
@@ -222,7 +222,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
             parameter_name: parameter.name,
             parameter_url: parameter.url,
             value,
-          })
+          }),
         );
 
       await db
@@ -247,7 +247,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
             parameter_url: parameter.url,
             system: value.system,
             value: value.code,
-          })
+          }),
         );
 
       await db
@@ -265,8 +265,8 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           throw new OperationError(
             outcomeError(
               "invalid",
-              "Failed to index number. Value found is not a number."
-            )
+              "Failed to index number. Value found is not a number.",
+            ),
           );
         return {
           tenant: ctx.tenant.id,
@@ -286,7 +286,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           db.constraint("number_idx_unique"),
           {
             updateColumns: db.doNothing,
-          }
+          },
         )
         .run(client);
       return;
@@ -305,7 +305,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
             parameter_name: parameter.name,
             parameter_url: parameter.url,
             value,
-          })
+          }),
         );
 
       await db
@@ -315,7 +315,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           db.constraint("string_idx_unique"),
           {
             updateColumns: db.doNothing,
-          }
+          },
         )
         .run(client);
 
@@ -325,8 +325,8 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
       throw new OperationError(
         outcomeError(
           "not-supported",
-          `Parameters of type '${parameter.type}' are not yet supported.`
-        )
+          `Parameters of type '${parameter.type}' are not yet supported.`,
+        ),
       );
   }
 }
@@ -334,7 +334,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
 async function removeIndices(
   client: pg.PoolClient,
   _ctx: FHIRServerCTX,
-  resource: Resource
+  resource: Resource,
 ) {
   await Promise.all(
     param_types_supported.map((type) => {
@@ -349,12 +349,12 @@ async function removeIndices(
       >`DELETE FROM ${searchParameterToTableName(type)} WHERE ${{
         r_id: resource.id,
       }}`.run(client);
-    })
+    }),
   );
 }
 
 function resourceIsValidForIndexing(
-  resource: Resource
+  resource: Resource,
 ): resource is Resource & { id: id; meta: { versionId: id } } {
   if (
     !resource.id ||
@@ -369,7 +369,7 @@ function resourceIsValidForIndexing(
 async function indexResource<CTX extends FHIRServerCTX>(
   client: pg.PoolClient,
   ctx: CTX,
-  resource: Resource
+  resource: Resource,
 ) {
   await removeIndices(client, ctx, resource);
   const searchParameters = await getAllParametersForResource(ctx, [
@@ -389,21 +389,21 @@ async function indexResource<CTX extends FHIRServerCTX>(
                 throw new OperationError(
                   outcomeFatal(
                     "exception",
-                    `Could not resolve canonical url for type '${type}'`
-                  )
+                    `Could not resolve canonical url for type '${type}'`,
+                  ),
                 );
               return ctx.resolveCanonical("StructureDefinition", canonicalURL);
             },
           },
-        }
+        },
       );
 
       if (!resourceIsValidForIndexing(resource)) {
         throw new OperationError(
           outcomeFatal(
             "exception",
-            "Resource id or versionId not found when indexing the resource."
-          )
+            "Resource id or versionId not found when indexing the resource.",
+          ),
         );
       }
       return indexSearchParameter(
@@ -411,16 +411,16 @@ async function indexResource<CTX extends FHIRServerCTX>(
         ctx,
         searchParameter,
         resource,
-        evaluation
+        evaluation,
       );
-    })
+    }),
   );
 }
 
 async function createResource<CTX extends FHIRServerCTX>(
   client: pg.PoolClient,
   ctx: CTX,
-  resource: Resource
+  resource: Resource,
 ): Promise<Resource> {
   return transaction(
     /* Only insertion don't need a guarantee around state of data */
@@ -439,13 +439,13 @@ async function createResource<CTX extends FHIRServerCTX>(
       type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
       const res = await db.sql<s.resources.SQL, ResourceReturn[]>`
       INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
-        data
+        data,
       )}) RETURNING ${db.cols(resourceCol)}
       `.run(client);
 
       await indexResource(client, ctx, res[0].resource as unknown as Resource);
       return res[0].resource as unknown as Resource;
-    }
+    },
   );
 }
 
@@ -453,16 +453,16 @@ async function getResource<CTX extends FHIRServerCTX>(
   client: pg.PoolClient,
   ctx: CTX,
   resourceType: ResourceType,
-  id: string
+  id: string,
 ): Promise<Resource> {
   const latestCols = <const>["resource", "deleted"];
   type ResourceReturn = s.resources.OnlyCols<typeof latestCols>;
   const getLatestVersionSQLFragment = db.sql<s.resources.SQL, ResourceReturn[]>`
     SELECT ${db.cols(latestCols)} FROM ${"resources"} WHERE ${{
-    tenant: ctx.tenant.id,
-    resource_type: resourceType,
-    id: id,
-  }} ORDER BY ${"version_id"} DESC LIMIT 1
+      tenant: ctx.tenant.id,
+      resource_type: resourceType,
+      id: id,
+    }} ORDER BY ${"version_id"} DESC LIMIT 1
   `;
 
   const res = await db.sql<s.resources.SQL, s.resources.Selectable[]>`
@@ -473,8 +473,8 @@ async function getResource<CTX extends FHIRServerCTX>(
     throw new OperationError(
       outcomeError(
         "not-found",
-        `'${resourceType}' with id '${id}' was not found`
-      )
+        `'${resourceType}' with id '${id}' was not found`,
+      ),
     );
   }
   return res[0].resource as unknown as Resource;
@@ -482,34 +482,34 @@ async function getResource<CTX extends FHIRServerCTX>(
 
 const validHistoryParameters = ["_count", "_since", "_since-version"]; // "_at", "_list"]
 function processHistoryParameters(
-  parameters: ParsedParameter<string | number>[]
+  parameters: ParsedParameter<string | number>[],
 ): s.resources.Whereable {
   const sqlParams: s.resources.Whereable = {};
   const _since = parameters.find((p) => p.name === "_since");
   const _since_versionId = parameters.find((p) => p.name === "_since-version");
 
   const invalidParameters = parameters.filter(
-    (p) => validHistoryParameters.indexOf(p.name) === -1
+    (p) => validHistoryParameters.indexOf(p.name) === -1,
   );
 
   if (invalidParameters.length !== 0) {
     throw new OperationError(
       outcomeError(
         "invalid",
-        `Invalid parameters: ${invalidParameters.map((p) => p.name).join(", ")}`
-      )
+        `Invalid parameters: ${invalidParameters.map((p) => p.name).join(", ")}`,
+      ),
     );
   }
 
   if (_since?.value[0] && typeof _since?.value[0] === "string") {
     sqlParams["created_at"] = db.sql`${db.self} >= ${db.param(
-      dayjs(_since.value[0] as string, "YYYY-MM-DDThh:mm:ss+zz:zz").toDate()
+      dayjs(_since.value[0] as string, "YYYY-MM-DDThh:mm:ss+zz:zz").toDate(),
     )}`;
   }
 
   if (_since_versionId?.value[0]) {
     sqlParams["version_id"] = db.sql`${db.self} > ${db.param(
-      parseInt(_since_versionId.value[0].toString())
+      parseInt(_since_versionId.value[0].toString()),
     )}`;
   }
 
@@ -517,7 +517,7 @@ function processHistoryParameters(
 }
 
 function historyLevelFilter(
-  request: HistoryInstanceRequest | TypeHistoryRequest | SystemHistoryRequest
+  request: HistoryInstanceRequest | TypeHistoryRequest | SystemHistoryRequest,
 ): s.resources.Whereable {
   switch (request.level) {
     case "instance": {
@@ -536,7 +536,7 @@ function historyLevelFilter(
     }
     default:
       throw new OperationError(
-        outcomeError("invalid", "Invalid history level")
+        outcomeError("invalid", "Invalid history level"),
       );
   }
 }
@@ -545,7 +545,7 @@ async function getHistory<CTX extends FHIRServerCTX>(
   client: pg.PoolClient,
   ctx: CTX,
   filters: s.resources.Whereable,
-  parameters: ParsedParameter<string | number>[]
+  parameters: ParsedParameter<string | number>[],
 ): Promise<BundleEntry[]> {
   const _count = parameters.find((p) => p.name === "_count");
   const limit = deriveLimit([0, 50], _count);
@@ -582,7 +582,7 @@ async function patchResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
   resourceType: ResourceType,
   id: string,
-  patches: Operation[]
+  patches: Operation[],
 ): Promise<Resource> {
   return transaction(ISOLATION_LEVEL.Serializable, ctx, client, async (ctx) => {
     const resource = await getResource(client, ctx, resourceType, id);
@@ -597,7 +597,7 @@ async function patchResource<CTX extends FHIRServerCTX>(
       // Need to revaluate post application of patch to ensure that the resource is still valid.
       if (
         outcome.issue.filter(
-          (i) => i.severity === "error" || i.severity === "fatal"
+          (i) => i.severity === "error" || i.severity === "fatal",
         ).length > 0
       ) {
         throw new OperationError(outcome);
@@ -623,8 +623,8 @@ async function patchResource<CTX extends FHIRServerCTX>(
       type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
       const res = await db.sql<s.resources.SQL, ResourceReturn[]>`
         INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
-        data
-      )}) RETURNING ${db.cols(resourceCol)}`.run(client);
+          data,
+        )}) RETURNING ${db.cols(resourceCol)}`.run(client);
 
       const patchedResource = res[0].resource as unknown as Resource;
 
@@ -637,8 +637,8 @@ async function patchResource<CTX extends FHIRServerCTX>(
         throw new OperationError(
           outcomeError(
             "structure",
-            `Patch could not be applied to the given resource '${resourceType}/${id}'`
-          )
+            `Patch could not be applied to the given resource '${resourceType}/${id}'`,
+          ),
         );
       }
     }
@@ -648,27 +648,27 @@ async function patchResource<CTX extends FHIRServerCTX>(
 async function updateResource<CTX extends FHIRServerCTX>(
   client: pg.PoolClient,
   ctx: CTX,
-  resource: Resource
+  resource: Resource,
 ): Promise<Resource> {
   return transaction(ISOLATION_LEVEL.Serializable, ctx, client, async (ctx) => {
     if (!resource.id)
       throw new OperationError(
-        outcomeError("invalid", "Resource id not found on resource")
+        outcomeError("invalid", "Resource id not found on resource"),
       );
 
     const existingResource = await getResource(
       client,
       ctx,
       resource.resourceType,
-      resource.id
+      resource.id,
     );
 
     if (!existingResource)
       throw new OperationError(
         outcomeError(
           "not-found",
-          `'${resource.resourceType}' with id '${resource.id}' was not found`
-        )
+          `'${resource.resourceType}' with id '${resource.id}' was not found`,
+        ),
       );
 
     const data: s.resources.Insertable = {
@@ -685,8 +685,8 @@ async function updateResource<CTX extends FHIRServerCTX>(
     type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
     const res = await db.sql<s.resources.SQL, ResourceReturn[]>`
         INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
-      data
-    )}) RETURNING ${db.cols(resourceCol)}`.run(client);
+          data,
+        )}) RETURNING ${db.cols(resourceCol)}`.run(client);
 
     const updatedResource = res[0].resource as unknown as Resource;
     await indexResource(client, ctx, updatedResource);
@@ -698,7 +698,7 @@ async function deleteResource<CTX extends FHIRServerCTX>(
   client: pg.PoolClient,
   ctx: CTX,
   resourceType: ResourceType,
-  id: string
+  id: string,
 ) {
   return transaction(
     ISOLATION_LEVEL.RepeatableRead,
@@ -710,8 +710,8 @@ async function deleteResource<CTX extends FHIRServerCTX>(
         throw new OperationError(
           outcomeError(
             "not-found",
-            `'${resourceType}' with id '${id}' was not found`
-          )
+            `'${resourceType}' with id '${id}' was not found`,
+          ),
         );
 
       const data: s.resources.Insertable = {
@@ -728,12 +728,12 @@ async function deleteResource<CTX extends FHIRServerCTX>(
 
       const deleteResource = await db.sql<s.resources.SQL, ResourceReturn[]>`
         INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
-        data
-      )}) RETURNING ${db.cols(resourceCol)}`;
+          data,
+        )}) RETURNING ${db.cols(resourceCol)}`;
 
       await deleteResource.run(client);
       await removeIndices(client, ctx, resource);
-    }
+    },
   );
 }
 
@@ -743,7 +743,7 @@ function createPostgresMiddleware<
     _client?: pg.PoolClient;
     transaction_entry_limit: number;
   },
-  CTX extends FHIRServerCTX
+  CTX extends FHIRServerCTX,
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
     async (context, next) => {
@@ -759,7 +759,7 @@ function createPostgresMiddleware<
               context.state._client,
               context.ctx,
               context.request.resourceType,
-              context.request.id
+              context.request.id,
             );
             return {
               state: context.state,
@@ -778,7 +778,7 @@ function createPostgresMiddleware<
             const result = await executeSearchQuery(
               context.state._client,
               context.ctx,
-              context.request
+              context.request,
             );
             switch (context.request.level) {
               case "system": {
@@ -822,7 +822,7 @@ function createPostgresMiddleware<
               {
                 ...context.request.body,
                 id: nanoid() as id,
-              }
+              },
             );
 
             return {
@@ -844,7 +844,7 @@ function createPostgresMiddleware<
               context.ctx,
               context.request.resourceType,
               context.request.id,
-              context.request.body as Operation[]
+              context.request.body as Operation[],
             );
 
             return {
@@ -869,7 +869,7 @@ function createPostgresMiddleware<
               {
                 ...context.request.body,
                 id: context.request.id,
-              }
+              },
             );
 
             return {
@@ -890,7 +890,7 @@ function createPostgresMiddleware<
               context.state._client,
               context.ctx,
               context.request.resourceType,
-              context.request.id
+              context.request.id,
             );
 
             return {
@@ -911,7 +911,7 @@ function createPostgresMiddleware<
               context.state._client,
               context.ctx,
               historyLevelFilter(context.request),
-              context.request.parameters || []
+              context.request.parameters || [],
             );
 
             switch (context.request.level) {
@@ -956,7 +956,7 @@ function createPostgresMiddleware<
               }
               default: {
                 throw new OperationError(
-                  outcomeError("invalid", "Invalid history level")
+                  outcomeError("invalid", "Invalid history level"),
                 );
               }
             }
@@ -977,8 +977,8 @@ function createPostgresMiddleware<
                     context.state.transaction_entry_limit
                   }' entries. Current bundle has '${
                     (transactionBundle.entry || []).length
-                  }'`
-                )
+                  }'`,
+                ),
               );
             }
             const responseEntries: BundleEntry[] = [
@@ -995,24 +995,24 @@ function createPostgresMiddleware<
                     throw new OperationError(
                       outcomeFatal(
                         "exception",
-                        "invalid entry in transaction processing."
-                      )
+                        "invalid entry in transaction processing.",
+                      ),
                     );
 
                   if (!entry.request?.method) {
                     throw new OperationError(
                       outcomeError(
                         "invalid",
-                        `No request.method found at index '${index}'`
-                      )
+                        `No request.method found at index '${index}'`,
+                      ),
                     );
                   }
                   if (!entry.request?.url) {
                     throw new OperationError(
                       outcomeError(
                         "invalid",
-                        `No request.url found at index '${index}'`
-                      )
+                        `No request.url found at index '${index}'`,
+                      ),
                     );
                   }
                   const fhirRequest = httpRequestToFHIRRequest({
@@ -1022,7 +1022,7 @@ function createPostgresMiddleware<
                   });
                   const fhirResponse = await ctx.client.request(
                     ctx,
-                    fhirRequest
+                    fhirRequest,
                   );
                   const responseEntry = fhirResponseToBundleEntry(fhirResponse);
                   responseEntries[parseInt(index)] = responseEntry;
@@ -1034,8 +1034,8 @@ function createPostgresMiddleware<
                             throw new OperationError(
                               outcomeFatal(
                                 "exception",
-                                "response location not found during transaction processing"
-                              )
+                                "response location not found during transaction processing",
+                              ),
                             );
                           return {
                             path: `/${loc.join("/")}`,
@@ -1044,14 +1044,14 @@ function createPostgresMiddleware<
                               reference: responseEntry.response?.location,
                             },
                           };
-                        }
+                        },
                       )
                     : [];
 
                   // Update transaction bundle with applied references.
                   transactionBundle = jsonpatch.applyPatch(
                     transactionBundle,
-                    patches
+                    patches,
                   ).newDocument;
                 }
 
@@ -1071,15 +1071,15 @@ function createPostgresMiddleware<
                     body: transactionResponse,
                   },
                 };
-              }
+              },
             );
           }
           default:
             throw new OperationError(
               outcomeError(
                 "not-supported",
-                `Requests of type '${context.request.type}' are not yet supported`
-              )
+                `Requests of type '${context.request.type}' are not yet supported`,
+              ),
             );
         }
       } finally {
@@ -1096,7 +1096,7 @@ export function createPostgresClient<CTX extends FHIRServerCTX>(
   pool: pg.Pool,
   { transaction_entry_limit }: { transaction_entry_limit: number } = {
     transaction_entry_limit: 20,
-  }
+  },
 ): FHIRClientAsync<CTX> {
   return new AsynchronousClient<
     { pool: pg.Pool; _client?: pg.PoolClient; transaction_entry_limit: number },

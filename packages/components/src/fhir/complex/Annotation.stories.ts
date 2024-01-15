@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+
 import { Annotation } from "@iguhealth/fhir-types/r4/types";
 
 import { FHIRAnnotationEditable } from "./Annotation";

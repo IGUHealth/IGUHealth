@@ -15,12 +15,12 @@ import { missingModifier } from "./shared.js";
  */
 function generateCanonicalReferenceSearch(
   ctx: FHIRServerCTX,
-  parameter: SearchParameterResource
+  parameter: SearchParameterResource,
 ): db.SQLFragment {
   const where: s.uri_idx.Whereable = {
     tenant: ctx.tenant.id,
     resource_type: db.sql`${db.self} in (${sqlUtils.paramsWithComma(
-      parameter.searchParameter.target || []
+      parameter.searchParameter.target || [],
     )})`,
     value: parameter.value[0].toString(),
   };
@@ -30,7 +30,7 @@ function generateCanonicalReferenceSearch(
 }
 
 function isChainParameter(
-  parameter: SearchParameterResource
+  parameter: SearchParameterResource,
 ): parameter is SearchParameterResource & {
   chainedParameters: SearchParameter[][];
 } {
@@ -43,7 +43,7 @@ function chainSQL(
   ctx: FHIRServerCTX,
   parameter: SearchParameterResource & {
     chainedParameters: SearchParameter[][];
-  }
+  },
 ): db.SQLFragment<boolean | null, never> {
   const referenceParameters = [
     [parameter.searchParameter],
@@ -61,7 +61,7 @@ function chainSQL(
           modifier: "missing",
           value: ["false"],
         },
-        ["r_id", "reference_id"]
+        ["r_id", "reference_id"],
       );
     });
     return db.sql`(${db.mapWithSeparator(res, db.sql` UNION `, (c) => c)})`;
@@ -75,11 +75,11 @@ function chainSQL(
       return buildParameterSQL(
         ctx,
         { ...parameter, searchParameter: p, chainedParameters: [] },
-        ["r_id"]
+        ["r_id"],
       );
     }),
     db.sql` UNION `,
-    (c) => c
+    (c) => c,
   )})`;
 
   const referencesSQL = [...sqlCHAIN, lastResult]
@@ -89,13 +89,13 @@ function chainSQL(
       (
         previousResult: db.SQLFragment,
         query: db.SQLFragment,
-        index: number
+        index: number,
       ) => {
         const queryAlias = db.raw(`query${index}`);
         // Previous result should include the list of ids for next reference_id.
         // Starting at the value this would be r_id
         return db.sql`(select ${"r_id"} from ${query} as ${queryAlias} WHERE ${queryAlias}.${"reference_id"} in ${previousResult})`;
-      }
+      },
     );
 
   return db.sql`${"r_id"} in (select ${"r_id"} from ${referencesSQL} as referencechain)`;
@@ -104,11 +104,11 @@ function chainSQL(
 function sqlParameterValue(
   ctx: FHIRServerCTX,
   parameter: SearchParameterResource,
-  parameterValue: string | number
+  parameterValue: string | number,
 ) {
   const canonicalSQL = db.sql<s.reference_idx.SQL>`${"reference_id"} in ${generateCanonicalReferenceSearch(
     ctx,
-    parameter
+    parameter,
   )}`;
 
   const referenceValue = parameterValue.toString();
@@ -120,7 +120,7 @@ function sqlParameterValue(
     };
     return db.conditions.or(
       canonicalSQL,
-      db.sql<s.reference_idx.SQL>`${where}`
+      db.sql<s.reference_idx.SQL>`${where}`,
     );
   } else if (parts.length === 2) {
     const where: s.reference_idx.Whereable = {
@@ -130,7 +130,7 @@ function sqlParameterValue(
 
     return db.conditions.or(
       canonicalSQL,
-      db.sql<s.reference_idx.SQL>`${where}`
+      db.sql<s.reference_idx.SQL>`${where}`,
     );
   } else {
     // In this case only perform a canonical search as could have passed a canonical url for the value.
@@ -140,7 +140,7 @@ function sqlParameterValue(
 
 export default function referenceClauses(
   ctx: FHIRServerCTX,
-  parameter: SearchParameterResource
+  parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, unknown> {
   if (parameter.modifier === "missing") {
     return missingModifier(ctx, parameter);
@@ -149,8 +149,8 @@ export default function referenceClauses(
   else {
     return db.conditions.or(
       ...parameter.value.map((value) =>
-        sqlParameterValue(ctx, parameter, value)
-      )
+        sqlParameterValue(ctx, parameter, value),
+      ),
     );
   }
 }

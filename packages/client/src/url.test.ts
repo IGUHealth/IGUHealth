@@ -1,8 +1,9 @@
-import { test, expect } from "@jest/globals";
+import { expect, test } from "@jest/globals";
+
 import parseFHIRSearch, {
   escapeParameter,
-  unescapeParameter,
   splitParameter,
+  unescapeParameter,
 } from "./url.js";
 
 test("Test resource level", () => {
@@ -13,7 +14,7 @@ test("Test resource level", () => {
 
 test("Test System level", () => {
   expect(
-    parseFHIRSearch("Patient?name:text=bob&lastUpdated:not-in=1980-01-01")
+    parseFHIRSearch("Patient?name:text=bob&lastUpdated:not-in=1980-01-01"),
   ).toEqual([
     { name: "name", modifier: "text", value: ["bob"] },
     {

@@ -1,10 +1,10 @@
+import { expect, test } from "@jest/globals";
 import path from "path";
 import { fileURLToPath } from "url";
-import { expect, test } from "@jest/globals";
 
-import { StructureDefinition } from "@iguhealth/fhir-types/lib/r4/types";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import HTTPClient from "@iguhealth/client/lib/http";
+import { StructureDefinition } from "@iguhealth/fhir-types/lib/r4/types";
 import { StructureDefinitionSnapshot } from "@iguhealth/generated-ops/lib/r4/ops";
 
 import usCoreDifferential from "../data/us-core-differential";
@@ -73,12 +73,14 @@ test("us-core-snapshot", async () => {
     .catch((e) => console.error(e.operationOutcome));
 
   const idSets = new Set(
-    sds.find((sd) => sd.url === PATIENT_URL)?.snapshot?.element.map((e) => e.id)
+    sds
+      .find((sd) => sd.url === PATIENT_URL)
+      ?.snapshot?.element.map((e) => e.id),
   );
 
   usCoreDifferential?.differential?.element?.forEach((e) => idSets.add(e.id));
 
   expect(usCoreSnapshot?.snapshot?.element.map((e) => e.id).sort()).toEqual(
-    Array.from(idSets).sort()
+    Array.from(idSets).sort(),
   );
 });

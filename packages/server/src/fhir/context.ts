@@ -1,22 +1,22 @@
 import type { Logger } from "pino";
 
+import { FHIRClientAsync } from "@iguhealth/client/interface";
 import {
-  ResourceType,
   AResource,
-  CapabilityStatement,
-  User,
   AccessPolicy,
+  CapabilityStatement,
+  ResourceType,
+  User,
   canonical,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
-import { FHIRClientAsync } from "@iguhealth/client/interface";
 
-import type { Lock } from "../synchronization/interfaces.js";
-import type { IOCache } from "../cache/interface.js";
-import type { TerminologyProvider } from "../terminology/interface.js";
-import type { EncryptionProvider } from "../encryption/provider/interface.js";
-import { SUPER_ADMIN, USER } from "./roles.js";
 import { IGUHEALTH_ISSUER } from "../authN/token.js";
+import type { IOCache } from "../cache/interface.js";
+import type { EncryptionProvider } from "../encryption/provider/interface.js";
+import type { Lock } from "../synchronization/interfaces.js";
+import type { TerminologyProvider } from "../terminology/interface.js";
+import { SUPER_ADMIN, USER } from "./roles.js";
 
 declare const __tenant: unique symbol;
 export type TenantId = string & { [__tenant]: string };
@@ -70,7 +70,7 @@ export interface FHIRServerCTX extends FHIRServerInitCTX {
   resolveTypeToCanonical: (type: uri) => canonical | undefined;
   resolveCanonical: <T extends ResourceType>(
     type: T,
-    url: string
+    url: string,
   ) => AResource<T> | undefined;
 }
 

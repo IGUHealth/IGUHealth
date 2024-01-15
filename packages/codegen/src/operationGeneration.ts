@@ -1,8 +1,8 @@
-import { OperationDefinition } from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
+import { OperationDefinition } from "@iguhealth/fhir-types/r4/types";
 
 function generateParameterType(
-  parameters: NonNullable<OperationDefinition["parameter"]>
+  parameters: NonNullable<OperationDefinition["parameter"]>,
 ): string {
   if (parameters.length === 0) return `Record<string, never>`;
   const fields = parameters
@@ -34,12 +34,12 @@ function getName(op: OperationDefinition): string {
     op.id
       .split("-")
       .map((s) => capitalize(s))
-      .join("")
+      .join(""),
   );
 }
 
 function generateOutput(
-  parameters: NonNullable<OperationDefinition["parameter"]>
+  parameters: NonNullable<OperationDefinition["parameter"]>,
 ): string {
   if (
     parameters.length === 1 &&
@@ -62,20 +62,20 @@ export function generateOp(op: OperationDefinition): string {
   const outputName = `Output`;
   const inputParameters = (op.parameter || []).filter((op) => op.use === "in");
   const outputParameters = (op.parameter || []).filter(
-    (op) => op.use === "out"
+    (op) => op.use === "out",
   );
 
   const inputType = `export type ${inputName} = ${generateParameterType(
-    inputParameters
+    inputParameters,
   )}`;
 
   const outputType = `export type ${outputName} = ${generateOutput(
-    outputParameters
+    outputParameters,
   )}`;
 
   const operationType = `export type ${interfaceName} = IOperation<${inputName}, ${outputName}>`;
   const operationInstance = `export const ${operationName}: ${interfaceName} = new Operation<${inputName}, ${outputName}>(${JSON.stringify(
-    op
+    op,
   )} as fhirTypes.OperationDefinition)`;
 
   return `export namespace ${namespace} {
@@ -84,7 +84,7 @@ export function generateOp(op: OperationDefinition): string {
 
 export default async function operationGeneration(
   fhirVersion: string,
-  operations: Readonly<Array<OperationDefinition>>
+  operations: Readonly<Array<OperationDefinition>>,
 ): Promise<string> {
   if (fhirVersion !== "r4") throw new Error("Only support r4");
   const code = [

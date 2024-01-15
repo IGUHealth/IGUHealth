@@ -1,12 +1,12 @@
 import { expect, test } from "@jest/globals";
 
-import { AccessPolicy, Patient, id } from "@iguhealth/fhir-types/lib/r4/types";
 import { FHIRRequest } from "@iguhealth/client/lib/types";
-
-import { testServices } from "../../resourceProviders/test-ctx";
-import { FHIRServerCTX } from "../../fhir/context";
-import { createAuthorizationMiddleWare } from "./authorization";
+import { AccessPolicy, Patient, id } from "@iguhealth/fhir-types/lib/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+
+import { FHIRServerCTX } from "../../fhir/context";
+import { testServices } from "../../resourceProviders/test-ctx";
+import { createAuthorizationMiddleWare } from "./authorization";
 
 const authorizationMiddleware = createAuthorizationMiddleWare();
 
@@ -37,7 +37,7 @@ test("Authorization test for read access on resource based on type and method", 
   };
 
   const responder: ReturnType<typeof createAuthorizationMiddleWare> = async (
-    context
+    context,
   ) => {
     return {
       ...context,
@@ -67,9 +67,9 @@ test("Authorization test for read access on resource based on type and method", 
             id: "1",
           } as FHIRRequest,
         },
-        responder
+        responder,
       )
-    ).response
+    ).response,
   ).toEqual({
     type: "read-response",
     level: "instance",
@@ -93,7 +93,7 @@ test("Authorization test for read access on resource based on type and method", 
             resourceType: "Patient",
           } as FHIRRequest,
         },
-        responder
+        responder,
       );
     } catch (e) {
       // @ts-ignore

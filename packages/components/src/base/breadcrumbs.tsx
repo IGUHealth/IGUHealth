@@ -1,5 +1,5 @@
-import React from "react";
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
+import React from "react";
 
 export interface BreadCrumbsProps {
   breadcrumbs: React.ReactNode[];

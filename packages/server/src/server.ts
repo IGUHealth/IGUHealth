@@ -1,11 +1,11 @@
-import Koa from "koa";
-import Router from "@koa/router";
-import ratelimit from "koa-ratelimit";
 import { bodyParser } from "@koa/bodyparser";
 import cors from "@koa/cors";
-import pg from "pg";
-import dotEnv from "dotenv";
+import Router from "@koa/router";
 import type * as Sentry from "@sentry/node";
+import dotEnv from "dotenv";
+import Koa from "koa";
+import ratelimit from "koa-ratelimit";
+import pg from "pg";
 
 import {
   isOperationError,
@@ -13,9 +13,12 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
-import { LIB_VERSION } from "./version.js";
-
-import * as MonitoringSentry from "./monitoring/sentry.js";
+import {
+  allowPublicAccessMiddleware,
+  createValidateUserJWTMiddleware,
+} from "./authN/middleware.js";
+import { canUserAccessTenantMiddleware } from "./authZ/middleware/tenantAccess.js";
+import { FHIRServerCTX } from "./fhir/context.js";
 import {
   createFHIRServer,
   createKoaFHIRMiddleware,
@@ -23,15 +26,11 @@ import {
   logger,
 } from "./fhir/index.js";
 import {
-  httpRequestToFHIRRequest,
   fhirResponseToHTTPResponse,
+  httpRequestToFHIRRequest,
 } from "./http/index.js";
-import {
-  createValidateUserJWTMiddleware,
-  allowPublicAccessMiddleware,
-} from "./authN/middleware.js";
-import { canUserAccessTenantMiddleware } from "./authZ/middleware/tenantAccess.js";
-import { FHIRServerCTX } from "./fhir/context.js";
+import * as MonitoringSentry from "./monitoring/sentry.js";
+import { LIB_VERSION } from "./version.js";
 
 dotEnv.config();
 
@@ -46,7 +45,7 @@ interface IGUHealthKoaBaseContext extends Koa.BaseContext {
 }
 
 async function KoaFHIRMiddleware<T extends KoaFHIRMiddlewareState>(
-  pool: pg.Pool
+  pool: pg.Pool,
 ): Promise<
   Koa.Middleware<
     T,
@@ -84,7 +83,7 @@ async function KoaFHIRMiddleware<T extends KoaFHIRMiddlewareState>(
             }`,
             method: ctx.request.method,
             body: (ctx.request as unknown as Record<string, unknown>).body,
-          })
+          }),
         );
         const httpResponse = fhirResponseToHTTPResponse(response);
         ctx.status = httpResponse.status;
@@ -107,7 +106,7 @@ async function KoaFHIRMiddleware<T extends KoaFHIRMiddlewareState>(
 
           const operationOutcome = outcomeError(
             "invalid",
-            "internal server error"
+            "internal server error",
           );
           ctx.status = operationOutcome.issue
             .map((i) => issueSeverityToStatusCodes(i.severity))
@@ -129,10 +128,10 @@ export default async function createServer(): Promise<
   if (process.env.SENTRY_SERVER_DSN)
     MonitoringSentry.enableSentry(process.env.SENTRY_SERVER_DSN, LIB_VERSION, {
       tracesSampleRate: parseFloat(
-        process.env.SENTRY_TRACES_SAMPLE_RATE || "0.1"
+        process.env.SENTRY_TRACES_SAMPLE_RATE || "0.1",
       ),
       profilesSampleRate: parseFloat(
-        process.env.SENTRY_PROFILES_SAMPLE_RATE || "0.1"
+        process.env.SENTRY_PROFILES_SAMPLE_RATE || "0.1",
       ),
     });
 
@@ -167,10 +166,8 @@ export default async function createServer(): Promise<
   });
   fhirR4API.all(
     "/:fhirUrl*",
-    ...(await KoaFHIRMiddleware<KoaFHIRMiddlewareState>(pool))
+    ...(await KoaFHIRMiddleware<KoaFHIRMiddlewareState>(pool)),
   );
-
-  router.get("/", (ctx) => {});
 
   tenantaAPIV1.use(fhirR4API.routes());
   tenantaAPIV1.use(fhirR4API.allowedMethods());
@@ -202,7 +199,7 @@ export default async function createServer(): Promise<
         // blacklist: (ctx) => {
         //   // some logic that returns a boolean
         // },
-      })
+      }),
     )
     .use(cors())
     .use(bodyParser())

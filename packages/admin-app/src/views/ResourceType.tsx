@@ -1,20 +1,19 @@
+import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useMemo } from "react";
-
-import { useRecoilValue } from "recoil";
 import {
   generatePath,
   useNavigate,
   useParams,
   useSearchParams,
 } from "react-router-dom";
-import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { useRecoilValue } from "recoil";
 
 import { Toaster } from "@iguhealth/components";
-import { Table, Button, Input } from "@iguhealth/components";
+import { Button, Input, Table } from "@iguhealth/components";
 import {
-  SearchParameter,
   Resource,
   ResourceType,
+  SearchParameter,
 } from "@iguhealth/fhir-types/r4/types";
 import { OperationError } from "@iguhealth/operation-outcomes";
 
@@ -51,16 +50,16 @@ export default function ResourceTypeView() {
             Toaster.error(
               `'${params.resourceType}': ${e.operationOutcome.issue
                 .map((i) => i.diagnostics)
-                .join("")}`
+                .join("")}`,
             );
           } else {
             Toaster.error(
-              `Request for resource '${params.resourceType}' failed`
+              `Request for resource '${params.resourceType}' failed`,
             );
           }
         });
     },
-    [setIsLoading, setData, client, params.resourceType]
+    [setIsLoading, setData, client, params.resourceType],
   );
 
   useEffect(() => {
@@ -124,7 +123,7 @@ export default function ResourceTypeView() {
                 tenant: params.tenant as string,
                 resourceType: params.resourceType as string,
                 id: "new",
-              })
+              }),
             )
           }
         >
@@ -143,7 +142,7 @@ export default function ResourceTypeView() {
                 tenant: params.tenant as string,
                 resourceType: params.resourceType as string,
                 id: (row as Resource).id as string,
-              })
+              }),
             );
           }}
           columns={[
@@ -151,7 +150,7 @@ export default function ResourceTypeView() {
               .filter((s) => s.expression)
               .map(
                 (
-                  searchParameter
+                  searchParameter,
                 ): {
                   selectorType: "fhirpath";
                   selector: string;
@@ -160,7 +159,7 @@ export default function ResourceTypeView() {
                   name: searchParameter.name,
                   selector: searchParameter.expression as string,
                   selectorType: "fhirpath",
-                })
+                }),
               ),
           ]}
         />

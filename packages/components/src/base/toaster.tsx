@@ -1,6 +1,6 @@
-import React from "react";
-import toast, { Toaster, DefaultToastOptions } from "react-hot-toast";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import React from "react";
+import toast, { DefaultToastOptions, Toaster } from "react-hot-toast";
 
 import { Loading } from "./loading";
 

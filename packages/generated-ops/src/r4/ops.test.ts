@@ -1,16 +1,16 @@
+import { expect, test } from "@jest/globals";
 import path from "node:path";
 import { fileURLToPath } from "url";
-import { expect, test } from "@jest/globals";
 
-import { Invocation } from "@iguhealth/operation-execution";
-import {
-  ValueSet,
-  ResourceType,
-  AResource,
-  uri,
-  canonical
-} from "@iguhealth/fhir-types/lib/r4/types";
 import { loadArtifacts } from "@iguhealth/artifacts";
+import {
+  AResource,
+  ResourceType,
+  ValueSet,
+  canonical,
+  uri,
+} from "@iguhealth/fhir-types/lib/r4/types";
+import { Invocation } from "@iguhealth/operation-execution";
 import { OpCTX } from "@iguhealth/operation-execution/src/index.js";
 
 import { ValueSetExpand } from "./ops.js";
@@ -41,7 +41,7 @@ test("Test ValueSet Expands", async () => {
   const valueSet: ValueSet = {
     resourceType: "ValueSet",
     status: "final",
-  } as ValueSet; 
+  } as ValueSet;
   const output = valueSet;
 
   const invoke: Invocation = async (op, ctx, input) => {
@@ -54,9 +54,9 @@ test("Test ValueSet Expands", async () => {
     return output;
   };
 
-  expect(invoke(ValueSetExpand.Op, ctx, { url: "asdf" as uri })).resolves.toEqual(
-    output,
-  );
+  expect(
+    invoke(ValueSetExpand.Op, ctx, { url: "asdf" as uri }),
+  ).resolves.toEqual(output);
 
   expect(
     invoke(
@@ -79,5 +79,7 @@ test("Test ValueSet Expands", async () => {
     return output;
   };
 
-  expect(badOutput(ValueSetExpand.Op, ctx, { url: "asdf" as uri })).rejects.toThrow();
+  expect(
+    badOutput(ValueSetExpand.Op, ctx, { url: "asdf" as uri }),
+  ).rejects.toThrow();
 });

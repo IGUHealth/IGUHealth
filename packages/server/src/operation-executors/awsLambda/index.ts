@@ -1,61 +1,58 @@
 import {
-  LambdaClient,
-  GetFunctionCommand,
   CreateFunctionCommand,
-  UpdateFunctionCodeCommand,
-  InvokeCommand,
-  TagResourceCommand,
-  UpdateFunctionConfigurationCommand,
   DeleteFunctionCommand,
+  GetFunctionCommand,
+  InvokeCommand,
+  LambdaClient,
+  TagResourceCommand,
+  UpdateFunctionCodeCommand,
+  UpdateFunctionConfigurationCommand,
 } from "@aws-sdk/client-lambda";
-
 import {
-  ResourceGroupsTaggingAPI,
   GetResourcesCommand,
+  ResourceGroupsTaggingAPI,
 } from "@aws-sdk/client-resource-groups-tagging-api";
-
-import { configDotenv } from "dotenv";
 import AdmZip from "adm-zip";
+import { configDotenv } from "dotenv";
 
-import { Operation } from "@iguhealth/operation-execution";
 import { AsynchronousClient } from "@iguhealth/client";
 import {
   MiddlewareAsync,
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import { FHIRRequest } from "@iguhealth/client/types";
+import { InvokeRequest } from "@iguhealth/client/types";
+import {
+  OperationDefinition,
+  Parameters,
+  ResourceType,
+  id,
+} from "@iguhealth/fhir-types/r4/types";
+import { Operation } from "@iguhealth/operation-execution";
 import {
   OperationError,
   outcome,
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
-import {
-  ResourceType,
-  id,
-  Parameters,
-  OperationDefinition,
-} from "@iguhealth/fhir-types/r4/types";
 
 import { FHIRServerCTX } from "../../fhir/context.js";
-import { InvokeRequest } from "@iguhealth/client/types";
+import logAuditEvent, { MINOR_FAILURE } from "../../logging/auditEvents.js";
 import {
-  resolveOperationDefinition,
-  getOperationCode,
   getOpCTX,
+  getOperationCode,
+  resolveOperationDefinition,
   validateInvocationContext,
 } from "../utilities.js";
-
-import logAuditEvent, { MINOR_FAILURE } from "../../logging/auditEvents.js";
 
 configDotenv();
 function getLambdaFunctionName(
   ctx: FHIRServerCTX,
-  operation: Operation<unknown, unknown>
+  operation: Operation<unknown, unknown>,
 ): string {
   const definition = operation.operationDefinition;
   if (!definition.meta)
     throw new OperationError(
-      outcomeFatal("invalid", "OperationDefinition.meta is required")
+      outcomeFatal("invalid", "OperationDefinition.meta is required"),
     );
 
   return `iguhealth_custom_op_${definition.id}`;
@@ -63,7 +60,7 @@ function getLambdaFunctionName(
 
 function getLambdaTags(
   ctx: FHIRServerCTX,
-  op: OperationDefinition
+  op: OperationDefinition,
 ): Record<string, string> {
   return {
     tenant: ctx.tenant.id,
@@ -79,7 +76,7 @@ async function getLambda(
     tagging: ResourceGroupsTaggingAPI;
   },
   ctx: FHIRServerCTX,
-  operation: Operation<unknown, unknown>
+  operation: Operation<unknown, unknown>,
 ) {
   try {
     const getResources = new GetResourcesCommand({
@@ -100,7 +97,7 @@ async function getLambda(
 
     if (taggingResponse.ResourceTagMappingList.length > 1) {
       throw new OperationError(
-        outcomeFatal("invalid", "Duplicate functions found for operation")
+        outcomeFatal("invalid", "Duplicate functions found for operation"),
       );
     }
 
@@ -166,7 +163,7 @@ function createZipFile(code: string): Buffer {
   zip.addFile(
     "index.js",
     Buffer.alloc(setupCode.length, setupCode),
-    "executable"
+    "executable",
   );
 
   return zip.toBuffer();
@@ -174,7 +171,7 @@ function createZipFile(code: string): Buffer {
 
 async function createEnvironmentVariables(
   ctx: FHIRServerCTX,
-  operationDefinition: OperationDefinition
+  operationDefinition: OperationDefinition,
 ): Promise<Record<string, string>> {
   const environment = (
     await Promise.all(
@@ -182,32 +179,32 @@ async function createEnvironmentVariables(
         .filter(
           (ext) =>
             ext.url ===
-            "https://iguhealth.app/Extension/OperationDefinition/environment-variable"
+            "https://iguhealth.app/Extension/OperationDefinition/environment-variable",
         )
         .map(async (ext) => {
           const key = ext.valueString;
           const valueExt = ext.extension?.find(
             (ext) =>
               ext.url ===
-              "https://iguhealth.app/Extension/OperationDefinition/environment-variable-value"
+              "https://iguhealth.app/Extension/OperationDefinition/environment-variable-value",
           );
 
           let value;
           if (
             valueExt?._valueString?.extension?.find(
-              (e) => e.url === "https://iguhealth.app/Extension/encrypt-value"
+              (e) => e.url === "https://iguhealth.app/Extension/encrypt-value",
             ) &&
             valueExt?.valueString
           ) {
             value = await ctx.encryptionProvider?.decrypt(
               { workspace: ctx.tenant.id },
-              valueExt.valueString
+              valueExt.valueString,
             );
           } else {
             value = valueExt?.valueString;
           }
           return [key, value];
-        })
+        }),
     )
   ).reduce((acc, [key, value]) => {
     if (!key || !value) return acc;
@@ -225,7 +222,7 @@ async function createOrUpdateLambda(
   layers: string[],
   role: string,
   ctx: FHIRServerCTX,
-  operation: Operation<unknown, unknown>
+  operation: Operation<unknown, unknown>,
 ) {
   const lambdaName = getLambdaFunctionName(ctx, operation);
   await ctx.lock.withLock(lambdaName, async () => {
@@ -239,12 +236,12 @@ async function createOrUpdateLambda(
 
     const operationCode = await getOperationCode(
       ctx,
-      operation.operationDefinition
+      operation.operationDefinition,
     );
 
     if (!operationCode)
       throw new OperationError(
-        outcomeFatal("invalid", "Could not get operation code")
+        outcomeFatal("invalid", "Could not get operation code"),
       );
 
     const zip = createZipFile(operationCode);
@@ -254,7 +251,7 @@ async function createOrUpdateLambda(
       await client.lambda.send(
         new DeleteFunctionCommand({
           FunctionName: lambdaName,
-        })
+        }),
       );
     }
     const createFunction = new CreateFunctionCommand({
@@ -271,7 +268,7 @@ async function createOrUpdateLambda(
       Environment: {
         Variables: await createEnvironmentVariables(
           ctx,
-          operation.operationDefinition
+          operation.operationDefinition,
         ),
       },
     });
@@ -285,7 +282,7 @@ async function createOrUpdateLambda(
 async function createPayload(
   ctx: FHIRServerCTX,
   op: Operation<Record<string, unknown>, Record<string, unknown>>,
-  request: InvokeRequest
+  request: InvokeRequest,
 ): Promise<Payload> {
   const parsedBody = op.parseToObject("in", request.body);
   const opCTX = getOpCTX(ctx, request);
@@ -301,7 +298,7 @@ async function createPayload(
       SEC_TOKEN: ctx.user.accessToken || "not-sec",
       API_URL: new URL(
         `/w/${ctx.tenant.id}/api/v1/fhir/r4`,
-        process.env.API_URL
+        process.env.API_URL,
       ).href,
       tenant: ctx.tenant.id,
       level: request.level,
@@ -323,7 +320,7 @@ async function confirmLambdaExistsAndReady(
   layers: string[],
   role: string,
   ctx: FHIRServerCTX,
-  op: Operation<unknown, unknown>
+  op: Operation<unknown, unknown>,
 ) {
   let lambda = await getLambda(client, ctx, op);
   // Setup creation if lambda does not exist.
@@ -345,7 +342,7 @@ async function confirmLambdaExistsAndReady(
     lambda = await getLambda(client, ctx, op);
     if (lambda?.Configuration?.LastUpdateStatus === "Failed") {
       throw new OperationError(
-        outcomeFatal("exception", "Lambda failed to update.")
+        outcomeFatal("exception", "Lambda failed to update."),
       );
     }
   }
@@ -359,7 +356,7 @@ function createExecutor(
   client: {
     lambda: LambdaClient;
     tagging: ResourceGroupsTaggingAPI;
-  }
+  },
 ): MiddlewareAsync<unknown, FHIRServerCTX> {
   return createMiddlewareAsync<unknown, FHIRServerCTX>([
     async (context) => {
@@ -370,7 +367,7 @@ function createExecutor(
             const operationDefinition = await resolveOperationDefinition(
               context.ctx.client,
               context.ctx,
-              context.request.operation
+              context.request.operation,
             );
 
             const op = new Operation<
@@ -382,13 +379,13 @@ function createExecutor(
 
             const invocationContextOperation = validateInvocationContext(
               op.operationDefinition,
-              context.request
+              context.request,
             );
 
             const payload = await createPayload(
               context.ctx,
               op,
-              context.request
+              context.request,
             );
 
             if (invocationContextOperation)
@@ -398,7 +395,7 @@ function createExecutor(
               layers,
               role,
               context.ctx,
-              op
+              op,
             );
 
             const invoke = new InvokeCommand({
@@ -412,8 +409,8 @@ function createExecutor(
               throw new OperationError(
                 outcomeFatal(
                   "invalid",
-                  "No payload returned from lambda invocation"
-                )
+                  "No payload returned from lambda invocation",
+                ),
               );
             const output = JSON.parse(payloadString);
 
@@ -423,13 +420,13 @@ function createExecutor(
                 context.ctx,
                 MINOR_FAILURE,
                 { reference: `OperationDefinition/${operationDefinition.id}` },
-                output.trace ? output.trace.join("\n") : "No trace present."
+                output.trace ? output.trace.join("\n") : "No trace present.",
               );
               throw new OperationError(
                 outcomeFatal(
                   "invalid",
-                  `Lambda function returned error: '${invokeResponse.FunctionError}' More info captured in 'AuditEvent/${auditEvent.id}'`
-                )
+                  `Lambda function returned error: '${invokeResponse.FunctionError}' More info captured in 'AuditEvent/${auditEvent.id}'`,
+                ),
               );
             }
 
@@ -438,7 +435,7 @@ function createExecutor(
 
             const outputParameters = op.parseToParameters(
               "out",
-              output
+              output,
             ) as unknown as Parameters;
 
             switch (context.request.level) {
@@ -484,8 +481,8 @@ function createExecutor(
             throw new OperationError(
               outcomeFatal(
                 "invalid",
-                `Invocation client only supports invoke-request not '${context.request.type}'`
-              )
+                `Invocation client only supports invoke-request not '${context.request.type}'`,
+              ),
             );
         }
       } catch (e) {
@@ -531,6 +528,6 @@ export default function createLambdaExecutioner({
     createExecutor(LAYERS, LAMBDA_ROLE, {
       lambda: lambdaClient,
       tagging: taggingClient,
-    })
+    }),
   );
 }

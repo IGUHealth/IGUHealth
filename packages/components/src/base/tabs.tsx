@@ -1,6 +1,6 @@
-import React from "react";
 import { Tab } from "@headlessui/react";
 import classNames from "classnames";
+import React from "react";
 
 export interface Tab {
   id: number | string;
@@ -29,7 +29,7 @@ export const Tabs = ({ tabs, rightSide }: TabsProps) => {
                     "py-2.5 text-sm font-medium leading-5 border-b-2 outline-none",
                     selected
                       ? "text-blue-600  border-blue-600"
-                      : "text-slate-600 hover:text-slate-700 border-transparent"
+                      : "text-slate-600 hover:text-slate-700 border-transparent",
                   )
                 }
               >

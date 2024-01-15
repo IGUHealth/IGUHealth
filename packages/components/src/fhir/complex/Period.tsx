@@ -1,9 +1,10 @@
 import React from "react";
+
 import { Period } from "@iguhealth/fhir-types/r4/types";
 
-import { EditableProps } from "../types";
 import { InputContainer } from "../../base/containers";
 import { FHIRDateTimeEditable } from "../primitives/datetime";
+import { EditableProps } from "../types";
 
 export type FHIRPeriodEditableProps = EditableProps<Period>;
 

@@ -1,15 +1,15 @@
+import { descend, typedPointer } from "@iguhealth/fhir-pointer";
+import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
   OperationDefinition,
+  OperationDefinitionParameter,
   OperationOutcomeIssue,
   Parameters,
   Resource,
-  OperationDefinitionParameter,
   code,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
-import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import validate, { ValidationCTX } from "@iguhealth/fhir-validation";
-import { descend, typedPointer } from "@iguhealth/fhir-pointer";
 import {
   OperationError,
   issueError,
@@ -25,7 +25,7 @@ function capitalize(string: string) {
 export function mapToParameter(
   definition: NonNullable<ParameterDefinitions[number]>,
   use: "out" | "in",
-  valueMap: any
+  valueMap: any,
 ): NonNullable<Parameters["parameter"]> {
   const isArray = definition.max !== "1";
   let value = valueMap[definition.name];
@@ -52,8 +52,8 @@ export function mapToParameter(
           throw new OperationError(
             outcomeError(
               "invalid",
-              `No type or part found on parameter definition ${definition.name}`
-            )
+              `No type or part found on parameter definition ${definition.name}`,
+            ),
           );
       }
 
@@ -65,7 +65,7 @@ export function mapToParameter(
           })
           .flat(),
       };
-    }
+    },
   );
 
   return params;
@@ -74,7 +74,7 @@ export function mapToParameter(
 export function toParametersResource(
   operationDefinition: OperationDefinition,
   use: "out" | "in",
-  value: Record<string, unknown>
+  value: Record<string, unknown>,
 ): Parameters {
   const definitions =
     operationDefinition.parameter?.filter((param) => param.use === use) || [];
@@ -91,18 +91,18 @@ export function toParametersResource(
 function validateNoExtraFields(
   definitions: ParameterDefinitions,
   use: "out" | "in",
-  parameters: NonNullable<Parameters["parameter"]>
+  parameters: NonNullable<Parameters["parameter"]>,
 ) {
   const definitionNames = new Set(
     definitions
       .filter((d) => d.use === use)
-      .map((definition) => definition.name)
+      .map((definition) => definition.name),
   );
   const paramNames = new Set(parameters.map((param) => param.name));
   paramNames.forEach((paramName) => {
     if (!definitionNames.has(paramName as code)) {
       throw new OperationError(
-        outcomeError("invalid", `Parameter ${paramName} not supported`)
+        outcomeError("invalid", `Parameter ${paramName} not supported`),
       );
     }
   });
@@ -111,7 +111,7 @@ function validateNoExtraFields(
 function parseParameter(
   definition: ParameterDefinitions[number],
   use: "out" | "in",
-  parameters: NonNullable<Parameters["parameter"]>
+  parameters: NonNullable<Parameters["parameter"]>,
 ) {
   const isRequired = definition.min > 1;
   const isArray = definition.max !== "1";
@@ -129,8 +129,8 @@ function parseParameter(
             throw new OperationError(
               outcomeError(
                 "invalid",
-                `No type found on parameter definition ${definition.name}`
-              )
+                `No type found on parameter definition ${definition.name}`,
+              ),
             );
           }
           // if (definition.searchType)
@@ -148,8 +148,8 @@ function parseParameter(
           throw new OperationError(
             outcomeError(
               "invalid",
-              `No type or part found on parameter definition ${definition.name}`
-            )
+              `No type or part found on parameter definition ${definition.name}`,
+            ),
           );
         validateNoExtraFields(definition.part, use, param.part || []);
         return (definition.part || []).reduce(
@@ -158,14 +158,14 @@ function parseParameter(
               paramDefinition,
               use,
               (param.part || []).filter(
-                (param) => param.name === paramDefinition.name
-              )
+                (param) => param.name === paramDefinition.name,
+              ),
             );
             if (parsedParam !== undefined)
               acc[paramDefinition.name] = parsedParam;
             return acc;
           },
-          {}
+          {},
         );
       }
     })
@@ -173,14 +173,14 @@ function parseParameter(
 
   if (isRequired && parsedParameters.length === 0)
     throw new OperationError(
-      outcomeError("required", `Missing required parameter ${definition.name}`)
+      outcomeError("required", `Missing required parameter ${definition.name}`),
     );
   if (
     definition.max !== "*" &&
     parsedParameters.length > parseInt(definition.max)
   ) {
     throw new OperationError(
-      outcomeError("too-costly", `Too many parameters ${definition.name}`)
+      outcomeError("too-costly", `Too many parameters ${definition.name}`),
     );
   }
 
@@ -193,7 +193,7 @@ function parseParameter(
 export function parseParameters(
   operationDefinition: OperationDefinition,
   use: "out" | "in",
-  parameters: Parameters
+  parameters: Parameters,
 ) {
   const paramDefinitions =
     operationDefinition.parameter?.filter((param) => param.use === use) || [];
@@ -202,19 +202,19 @@ export function parseParameters(
     (parametersParsed: Record<string, unknown>, parameterDefinition) => {
       const curParameters =
         parameters.parameter?.filter(
-          (param) => param.name === parameterDefinition.name
+          (param) => param.name === parameterDefinition.name,
         ) || [];
       const parsedParam = parseParameter(
         parameterDefinition,
         use,
-        curParameters
+        curParameters,
       );
       if (parsedParam !== undefined) {
         parametersParsed[parameterDefinition.name] = parsedParam;
       }
       return parametersParsed;
     },
-    {}
+    {},
   );
 
   return parametersParsed;
@@ -235,44 +235,44 @@ function isRecord(input: unknown): input is Record<string, unknown> {
 
 function validateRequired(
   definitions: NonNullable<OperationDefinition["parameter"]>,
-  value: Record<string, unknown>
+  value: Record<string, unknown>,
 ): OperationOutcomeIssue[] {
   return definitions
     .filter((d) => d.min > 0)
     .reduce(
       (
         issues: OperationOutcomeIssue[],
-        definition: OperationDefinitionParameter
+        definition: OperationDefinitionParameter,
       ) => {
         if (!(definition.name in value))
           return [
             ...issues,
             issueError(
               "required",
-              `Missing required parameter '${definition.name}'`
+              `Missing required parameter '${definition.name}'`,
             ),
           ];
 
         return issues;
       },
-      []
+      [],
     );
 }
 
 function validateCardinalities(
   definition: NonNullable<OperationDefinition["parameter"]>[number],
-  value: unknown[]
+  value: unknown[],
 ) {
   if (definition.min > value.length)
     throw new OperationError(
       outcomeError(
         "required",
-        `Must have '${definition.min}' minimum for field ${definition.min}`
-      )
+        `Must have '${definition.min}' minimum for field ${definition.min}`,
+      ),
     );
   if (definition.max !== "*" && value.length > parseInt(definition.max)) {
     throw new OperationError(
-      outcomeError("too-costly", `Too many parameters ${definition.name}`)
+      outcomeError("too-costly", `Too many parameters ${definition.name}`),
     );
   }
 }
@@ -281,7 +281,7 @@ async function validateParameter<Use extends "in" | "out">(
   ctx: ValidationCTX,
   paramDefinition: NonNullable<OperationDefinition["parameter"]>[number],
   use: Use,
-  value: any
+  value: any,
 ): Promise<OperationOutcomeIssue[]> {
   let arr: Array<any> = (value = Array.isArray(value) ? value : [value]);
   validateCardinalities(paramDefinition, value);
@@ -303,7 +303,7 @@ async function validateParameter<Use extends "in" | "out">(
           ctx,
           type,
           arr,
-          descend(typedPointer<typeof arr, (typeof arr)[number]>(), index)
+          descend(typedPointer<typeof arr, (typeof arr)[number]>(), index),
         )),
       ];
     } else {
@@ -312,7 +312,7 @@ async function validateParameter<Use extends "in" | "out">(
           ...issues,
           issueError(
             "invalid",
-            `Invalid definition '${paramDefinition.name}' must have either part or type`
+            `Invalid definition '${paramDefinition.name}' must have either part or type`,
           ),
         ];
       } else {
@@ -324,7 +324,7 @@ async function validateParameter<Use extends "in" | "out">(
               ...issues,
               issueError(
                 "invalid",
-                `Parameter ${part.name} must be an object found: '${value}'`
+                `Parameter ${part.name} must be an object found: '${value}'`,
               ),
             ];
           }
@@ -343,11 +343,11 @@ async function validateParameters<T extends IOperation<unknown, unknown>>(
   ctx: ValidationCTX,
   op: T,
   use: "in" | "out",
-  value: unknown
+  value: unknown,
 ): Promise<OperationOutcomeIssue[]> {
   let issues: OperationOutcomeIssue[] = [];
   const definitions = (op.operationDefinition.parameter || []).filter(
-    (p) => p.use === (use as code)
+    (p) => p.use === (use as code),
   );
   const parameterName = use === "in" ? "input" : "output";
 
@@ -358,7 +358,7 @@ async function validateParameters<T extends IOperation<unknown, unknown>>(
         "invalid",
         `Invalid ${parameterName}: Must be an object but instead is '${
           value === null ? "null" : typeof value
-        }'`
+        }'`,
       ),
     ];
 
@@ -371,7 +371,7 @@ async function validateParameters<T extends IOperation<unknown, unknown>>(
         ...issues,
         issueError(
           "invalid",
-          `Invalid ${parameterName}: '${key}' not found in definition`
+          `Invalid ${parameterName}: '${key}' not found in definition`,
         ),
       ];
     } else {
@@ -394,16 +394,16 @@ export interface IOperation<I, O> {
   get operationDefinition(): OperationDefinition;
   parseToObject<Use extends "in" | "out">(
     use: Use,
-    input: unknown
+    input: unknown,
   ): InputOutput<I, O>[Use];
   parseToParameters<Use extends "in" | "out">(
     use: Use,
-    input: InputOutput<I, O>[Use]
+    input: InputOutput<I, O>[Use],
   ): Parameters | I | O;
   validate<Use extends "in" | "out">(
     ctx: OpCTX,
     use: Use,
-    value: unknown
+    value: unknown,
   ): Promise<OperationOutcomeIssue[]>;
 }
 
@@ -423,9 +423,10 @@ function isStrictlyReturn(op: OperationDefinition): boolean {
 
 export type Executor<CTX, I, O> = (ctx: CTX, input: I) => Promise<O>;
 
-export type OPMetadata<O> = O extends IOperation<infer Input, infer Output>
-  ? { Input: Input; Output: Output }
-  : never;
+export type OPMetadata<O> =
+  O extends IOperation<infer Input, infer Output>
+    ? { Input: Input; Output: Output }
+    : never;
 
 export class Operation<I, O> implements IOperation<I, O> {
   private _operationDefinition: OperationDefinition;
@@ -439,7 +440,7 @@ export class Operation<I, O> implements IOperation<I, O> {
   }
   parseToObject<Use extends "in" | "out">(
     use: Use,
-    input: Parameters | Resource
+    input: Parameters | Resource,
   ): InputOutput<I, O>[Use] {
     if (
       use === "out" &&
@@ -450,7 +451,7 @@ export class Operation<I, O> implements IOperation<I, O> {
     }
     if (!isParameters(input)) {
       throw new OperationError(
-        outcomeError("invalid", "Invalid input, input must be a Parameters")
+        outcomeError("invalid", "Invalid input, input must be a Parameters"),
       );
     }
     const output = parseParameters(this._operationDefinition, use, input);
@@ -468,13 +469,13 @@ export class Operation<I, O> implements IOperation<I, O> {
     return toParametersResource(
       this._operationDefinition,
       use,
-      input as Record<string, unknown>
+      input as Record<string, unknown>,
     );
   }
   async validate<Use extends "in" | "out">(
     ctx: OpCTX,
     use: Use,
-    value: unknown
+    value: unknown,
   ): Promise<OperationOutcomeIssue[]> {
     if (isStrictlyReturn(this.operationDefinition) && use === "out") {
       const type =
@@ -493,9 +494,9 @@ export class Operation<I, O> implements IOperation<I, O> {
 
 export type Invocation = <
   T extends IOperation<unknown, unknown>,
-  CTX extends OpCTX
+  CTX extends OpCTX,
 >(
   op: T,
   ctx: CTX,
-  input: OPMetadata<T>["Input"]
+  input: OPMetadata<T>["Input"],
 ) => Promise<OPMetadata<T>["Output"]>;

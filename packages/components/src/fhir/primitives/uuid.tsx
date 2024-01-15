@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-import { EditableProps } from "../types";
 import { Input } from "../../base/input";
+import { EditableProps } from "../types";
 
 type UUID = `${string}-${string}-${string}-${string}`;
 

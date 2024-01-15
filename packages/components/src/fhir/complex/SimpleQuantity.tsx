@@ -1,9 +1,10 @@
 import React from "react";
+
 import { Quantity } from "@iguhealth/fhir-types/r4/types";
 
-import { EditableProps } from "../types";
 import { InputContainer } from "../../base/containers";
-import { FHIRStringEditable, FHIRDecimalEditable } from "../primitives";
+import { FHIRDecimalEditable, FHIRStringEditable } from "../primitives";
+import { EditableProps } from "../types";
 
 export type FHIRSimpleQuantityEditableProps = EditableProps<Quantity>;
 

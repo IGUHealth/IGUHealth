@@ -10,7 +10,7 @@ const SPECIAL_CHARACTERS: SPECIAL_CHARACTER[] = ["\\", "|", "$", ","];
  */
 export function splitParameter(
   parameter: string,
-  specialCharacter: SPECIAL_CHARACTER
+  specialCharacter: SPECIAL_CHARACTER,
 ): string[] {
   const specialCharEg = new RegExp(`\\${specialCharacter}`, "g");
   let prevIndex = -1;
@@ -39,7 +39,7 @@ export function escapeParameter(parameter: string): string {
     (parameter: string, character: string): string => {
       return parameter.replaceAll(character, `\\${character}`);
     },
-    parameter
+    parameter,
   );
 }
 
@@ -54,7 +54,7 @@ export function unescapeParameter(parameter: string): string {
     (parameter: string, character: string): string => {
       return parameter.replaceAll(`\\${character}`, character);
     },
-    parameter
+    parameter,
   );
 }
 
@@ -79,7 +79,7 @@ export function parseQuery(queryParams: string): ParsedParameter<string>[] {
         .reduce(
           (
             parameters,
-            [key, value]
+            [key, value],
           ): Record<string, ParsedParameter<string>> => {
             const chains = key.split(".");
 
@@ -96,7 +96,7 @@ export function parseQuery(queryParams: string): ParsedParameter<string>[] {
 
             return { ...parameters, [searchParam.name]: searchParam };
           },
-          {}
+          {},
         );
 
   return Object.values(parameters);
@@ -108,7 +108,7 @@ export function parseQuery(queryParams: string): ParsedParameter<string>[] {
  * @returns Record of parsed parameters with name modifier and value.
  */
 export default function parseUrl(
-  url: string
+  url: string,
 ): ParsedParameter<string | number>[] {
   const chunks = url.split("?");
   if (chunks.length > 2)

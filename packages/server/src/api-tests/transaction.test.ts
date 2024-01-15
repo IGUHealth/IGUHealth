@@ -1,6 +1,7 @@
 import { expect, test } from "@jest/globals";
-import { Patient, Bundle, code } from "@iguhealth/fhir-types/lib/r4/types";
+
 import HTTPClient from "@iguhealth/client/lib/http";
+import { Bundle, Patient, code } from "@iguhealth/fhir-types/lib/r4/types";
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system/api/v1/fhir/r4",
@@ -45,7 +46,7 @@ test("test successful transaction", async () => {
     } as Bundle);
 
     expect(
-      (transactionResponse.entry?.[0].resource as Patient)?.generalPractitioner
+      (transactionResponse.entry?.[0].resource as Patient)?.generalPractitioner,
     ).toEqual([
       {
         reference: `${transactionResponse.entry?.[1].resource?.resourceType}/${transactionResponse.entry?.[1].resource?.id}`,

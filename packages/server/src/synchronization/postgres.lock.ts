@@ -1,6 +1,6 @@
 // Locking mechanisms
-
 import pg from "pg";
+
 import { Lock } from "./interfaces.js";
 
 function hash(str: string): number {

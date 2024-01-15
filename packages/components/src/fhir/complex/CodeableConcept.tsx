@@ -1,11 +1,12 @@
-import React from "react";
-import { CodeableConcept, Coding } from "@iguhealth/fhir-types/r4/types";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import React from "react";
 
-import { ClientProps, EditableProps } from "../types";
-import { InputContainer } from "../../base/containers";
-import { Add } from "../../base";
+import { CodeableConcept, Coding } from "@iguhealth/fhir-types/r4/types";
+
 import { FHIRCodingEditable } from ".";
+import { Add } from "../../base";
+import { InputContainer } from "../../base/containers";
+import { ClientProps, EditableProps } from "../types";
 
 const convertFileToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {

@@ -1,19 +1,19 @@
 import { expect, test } from "@jest/globals";
-import pg from "pg";
 import dotEnv from "dotenv";
+import pg from "pg";
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
+import HTTPClient from "@iguhealth/client/lib/http";
 import {
-  id,
   Encounter,
+  Patient,
   Questionnaire,
   QuestionnaireResponse,
-  Subscription,
   Resource,
-  Patient,
+  Subscription,
+  id,
 } from "@iguhealth/fhir-types/lib/r4/types";
-import HTTPClient from "@iguhealth/client/lib/http";
 
 dotEnv.config();
 
@@ -90,13 +90,13 @@ test("No filter QR", async () => {
     await client2.delete(
       {},
       "QuestionnaireResponse",
-      response.resources[0].id as id
+      response.resources[0].id as id,
     );
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
         return await client.delete({}, resourceType, id as id);
-      })
+      }),
     );
   }
 });
@@ -127,8 +127,8 @@ test("Filter patient sub ", async () => {
         {
           resourceType: "Patient",
           name: [{ given: ["John"] }],
-        }
-      )
+        },
+      ),
     );
     resources.push(
       await client.create(
@@ -136,8 +136,8 @@ test("Filter patient sub ", async () => {
         {
           resourceType: "Patient",
           name: [{ given: ["David"] }],
-        }
-      )
+        },
+      ),
     );
     await new Promise((resolve) => setTimeout(resolve, 2000));
     const response = await client2.search_type({}, "Patient", []);
@@ -147,7 +147,7 @@ test("Filter patient sub ", async () => {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
         return await client.delete({}, resourceType, id as id);
-      })
+      }),
     );
   }
 });
@@ -178,8 +178,8 @@ test("name check", async () => {
         {
           resourceType: "Patient",
           name: [{ given: ["Marko1"] }],
-        }
-      )
+        },
+      ),
     );
     resources.push(
       await client.create(
@@ -187,8 +187,8 @@ test("name check", async () => {
         {
           resourceType: "Patient",
           name: [{ given: ["David"] }],
-        }
-      )
+        },
+      ),
     );
     await new Promise((resolve) => setTimeout(resolve, 2000));
     const response = await client2.search_type({}, "Patient", []);
@@ -198,7 +198,7 @@ test("name check", async () => {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
         return await client.delete({}, resourceType, id as id);
-      })
+      }),
     );
   }
 });
@@ -221,14 +221,14 @@ test("Reference canonical", async () => {
         criteria: "QuestionnaireResponse?questionnaire=ahc-questionnaire",
         language: "en",
         resourceType: "Subscription",
-      } as Subscription)
+      } as Subscription),
     );
     resources.push(
       await client.create({}, {
         resourceType: "Questionnaire",
         url: "ahc-questionnaire",
         status: "active",
-      } as Questionnaire)
+      } as Questionnaire),
     );
 
     resources.push(
@@ -236,7 +236,7 @@ test("Reference canonical", async () => {
         resourceType: "QuestionnaireResponse",
         questionnaire: "ahc-questionnaire",
         status: "completed",
-      } as QuestionnaireResponse)
+      } as QuestionnaireResponse),
     );
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -249,7 +249,7 @@ test("Reference canonical", async () => {
         resourceType: "QuestionnaireResponse",
         questionnaire: "unknown-questionnaire",
         status: "completed",
-      } as QuestionnaireResponse)
+      } as QuestionnaireResponse),
     );
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -263,7 +263,7 @@ test("Reference canonical", async () => {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
         return await client.delete({}, resourceType, id as id);
-      })
+      }),
     );
   }
 });
@@ -276,7 +276,7 @@ test("Reference standard", async () => {
   try {
     const patient: Patient = await client.create(
       {},
-      { resourceType: "Patient" }
+      { resourceType: "Patient" },
     );
     resources.push(patient);
     const sub = await client.create({}, {
@@ -303,7 +303,7 @@ test("Reference standard", async () => {
         subject: {
           reference: `Patient/${patient.id}`,
         },
-      } as Encounter)
+      } as Encounter),
     );
 
     resources.push(
@@ -318,14 +318,14 @@ test("Reference standard", async () => {
         subject: {
           reference: "Patient/1",
         },
-      } as Encounter)
+      } as Encounter),
     );
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
     let encounters = await client2.search_type({}, "Encounter", []);
     expect(encounters.resources.length).toEqual(1);
     expect(encounters.resources[0]?.subject?.reference).toEqual(
-      `Patient/${patient.id}`
+      `Patient/${patient.id}`,
     );
 
     await client2.delete({}, "Encounter", encounters.resources[0].id as id);
@@ -346,7 +346,7 @@ test("Reference standard", async () => {
         subject: {
           reference: `Patient/${patient.id}`,
         },
-      } as Encounter)
+      } as Encounter),
     );
 
     resources.push(
@@ -361,14 +361,14 @@ test("Reference standard", async () => {
         subject: {
           reference: "Patient/1",
         },
-      } as Encounter)
+      } as Encounter),
     );
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
     encounters = await client2.search_type({}, "Encounter", []);
     expect(encounters.resources.length).toEqual(1);
     expect(encounters.resources[0]?.subject?.reference).toEqual(
-      `Patient/${patient.id}`
+      `Patient/${patient.id}`,
     );
 
     await client2.delete({}, "Encounter", encounters.resources[0].id as id);
@@ -376,7 +376,7 @@ test("Reference standard", async () => {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
         return await client.delete({}, resourceType, id as id);
-      })
+      }),
     );
   }
 }, 10000);

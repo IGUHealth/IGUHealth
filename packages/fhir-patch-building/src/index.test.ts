@@ -1,8 +1,8 @@
 import { expect, test } from "@jest/globals";
 import jsonpatch from "fast-json-patch";
 
+import { descend, pointer } from "@iguhealth/fhir-pointer";
 import { Patient, id } from "@iguhealth/fhir-types/r4/types";
-import { pointer, descend } from "@iguhealth/fhir-pointer";
 
 import buildPatches, { applyMutationImmutable } from "./index.js";
 
@@ -16,7 +16,7 @@ test("Adding a value.", () => {
       op: "add",
       path: descend(descend(descend(descend(loc, "name"), 0), "given"), 0),
       value: "test",
-    })
+    }),
   ).toEqual([
     {
       op: "add",
@@ -45,7 +45,7 @@ test("Adding a value.", () => {
       op: "add",
       path: descend(loc, "name"),
       value: [{ given: ["John"] }],
-    })
+    }),
   ).toEqual([
     {
       op: "add",
@@ -61,8 +61,8 @@ test("Adding a value.", () => {
         op: "add",
         path: descend(descend(descend(descend(loc, "name"), 0), "given"), 1),
         value: "Jake",
-      }
-    )
+      },
+    ),
   ).toEqual([
     {
       op: "add",
@@ -80,9 +80,9 @@ test("Adding a value.", () => {
           op: "add",
           path: descend(descend(descend(descend(loc, "name"), 0), "given"), 1),
           value: "Jake",
-        }
-      )
-    ).newDocument
+        },
+      ),
+    ).newDocument,
   ).toEqual({ ...patient, name: [{ given: ["bob", "Jake"] }] });
 
   expect(
@@ -92,8 +92,8 @@ test("Adding a value.", () => {
         op: "add",
         path: descend(descend(descend(descend(loc, "name"), 0), "given"), 0),
         value: "test",
-      })
-    ).newDocument
+      }),
+    ).newDocument,
   ).toEqual({ ...patient, name: [{ given: ["test"] }] });
 });
 
@@ -109,9 +109,9 @@ test("replace", () => {
           op: "replace",
           path: descend(descend(descend(descend(loc, "name"), 0), "given"), 0),
           value: "Jake",
-        }
-      )
-    ).newDocument
+        },
+      ),
+    ).newDocument,
   ).toEqual({ ...patient, name: [{ given: ["Jake"] }] });
 
   expect(
@@ -123,9 +123,9 @@ test("replace", () => {
           op: "replace",
           path: descend(descend(descend(descend(loc, "name"), 0), "given"), 1),
           value: "Jake",
-        }
-      )
-    ).newDocument
+        },
+      ),
+    ).newDocument,
   ).toEqual({ ...patient, name: [{ given: ["bob", "Jake"] }] });
 });
 
@@ -140,9 +140,9 @@ test("removal", () => {
         {
           op: "remove",
           path: descend(descend(descend(descend(loc, "name"), 0), "given"), 0),
-        }
-      )
-    ).newDocument
+        },
+      ),
+    ).newDocument,
   ).toEqual({ ...patient, name: [{ given: [] }] });
 
   expect(
@@ -153,9 +153,9 @@ test("removal", () => {
         {
           op: "remove",
           path: descend(descend(descend(descend(loc, "name"), 0), "given"), 1),
-        }
-      )
-    ).newDocument
+        },
+      ),
+    ).newDocument,
   ).toEqual({ ...patient, name: [{ given: ["bob"] }] });
   expect(
     jsonpatch.applyPatch(
@@ -165,9 +165,9 @@ test("removal", () => {
         {
           op: "remove",
           path: descend(descend(descend(loc, "identifier"), 0), "system"),
-        }
-      )
-    ).newDocument
+        },
+      ),
+    ).newDocument,
   ).toEqual({ ...patient, name: [{ given: ["bob"] }] });
 });
 
@@ -181,7 +181,7 @@ test("immutable Patch", () => {
         op: "replace",
         path: descend(descend(descend(descend(loc, "name"), 0), "given"), 1),
         value: "Jake",
-      }
-    )
+      },
+    ),
   ).toEqual({ ...patient, name: [{ given: ["bob", "Jake"] }] });
 });

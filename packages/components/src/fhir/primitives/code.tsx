@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
 
-import { ValueSetExpand } from "@iguhealth/generated-ops/r4";
 import {
   ValueSet,
   ValueSetExpansionContains,
   code,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
+import { ValueSetExpand } from "@iguhealth/generated-ops/r4";
 
-import { EditableProps, ClientProps } from "../types";
-import { Select, Option } from "../../base/select";
+import { Option, Select } from "../../base/select";
+import { ClientProps, EditableProps } from "../types";
 
 export type FHIRCodeEditableProps = EditableProps<code> &
   ClientProps & {

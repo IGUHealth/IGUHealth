@@ -22,7 +22,7 @@ export interface TableProps {
 function extract(
   data: unknown,
   selector: string,
-  selectorType: SelectorType
+  selectorType: SelectorType,
 ): string {
   switch (selectorType) {
     case "fhirpath": {

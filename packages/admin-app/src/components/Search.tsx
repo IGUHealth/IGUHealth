@@ -1,7 +1,7 @@
 import React from "react";
-import { openSearchModalAtom } from "./SearchModal";
-
 import { useSetRecoilState } from "recoil";
+
+import { openSearchModalAtom } from "./SearchModal";
 
 function Search() {
   const openSearchModal = useSetRecoilState(openSearchModalAtom);

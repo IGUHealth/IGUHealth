@@ -1,8 +1,8 @@
 import path from "node:path";
 import { fileURLToPath } from "url";
 
-import createHTTPClient from "@iguhealth/client/http";
 import { loadArtifacts } from "@iguhealth/artifacts";
+import createHTTPClient from "@iguhealth/client/http";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 
 const client = createHTTPClient({
@@ -17,7 +17,7 @@ const resourceTypesToCheck = [...resourceTypes].filter(
     v !== "CodeSystem" &&
     v !== "ValueSet" &&
     v !== "StructureDefinition" &&
-    v !== "SearchParameter"
+    v !== "SearchParameter",
 );
 
 async function loadTestData() {

@@ -1,11 +1,12 @@
-import React from "react";
 import fileDownload from "js-file-download";
+import React from "react";
+
 import { Attachment } from "@iguhealth/fhir-types/r4/types";
 
-import { EditableProps } from "../types";
-import { InputContainer } from "../../base/containers";
 import { Button } from "../../base/button";
+import { InputContainer } from "../../base/containers";
 import { Input } from "../../base/input";
+import { EditableProps } from "../types";
 
 const convertFileToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -61,7 +62,7 @@ export const FHIRAttachmentEditable = ({
               fileDownload(
                 data as string,
                 value?.title || "data",
-                value?.contentType
+                value?.contentType,
               );
             }}
             children="Download"

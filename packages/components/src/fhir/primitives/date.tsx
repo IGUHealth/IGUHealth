@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
 
-import { EditableProps } from "../types";
-import { Input } from "../../base/input";
 import { date } from "@iguhealth/fhir-types/r4/types";
+
+import { Input } from "../../base/input";
+import { EditableProps } from "../types";
 
 export type FHIRDateEditableProps = EditableProps<date> & {
   /**

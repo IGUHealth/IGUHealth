@@ -1,6 +1,6 @@
 import pg from "pg";
-import type * as s from "zapatos/schema";
 import * as db from "zapatos/db";
+import type * as s from "zapatos/schema";
 
 import {
   SystemSearchRequest,
@@ -13,19 +13,18 @@ import { FHIRServerCTX, asSystemCTX } from "../../../fhir/context.js";
 import {
   SearchParameterResource,
   SearchParameterResult,
+  deriveLimit,
+  deriveResourceTypeFilter,
   findSearchParameter,
   parametersWithMetaAssociated,
-  deriveResourceTypeFilter,
-  deriveLimit,
 } from "../../utilities/search/parameters.js";
 import * as sqlUtils from "../../utilities/sql.js";
-
-import { deriveSortQuery } from "./sort.js";
 import { buildParameterSQL } from "./clauses/index.js";
+import { deriveSortQuery } from "./sort.js";
 
 function buildParametersSQL(
   ctx: FHIRServerCTX,
-  parameters: SearchParameterResource[]
+  parameters: SearchParameterResource[],
 ): db.SQLFragment[] {
   return parameters.map((p) => buildParameterSQL(ctx, p));
 }
@@ -39,14 +38,14 @@ function buildParametersSQL(
  */
 async function getParameterForLatestId(
   ctx: FHIRServerCTX,
-  resourceTypes: ResourceType[]
+  resourceTypes: ResourceType[],
 ): Promise<SearchParameterResource[]> {
   const idParameter = (
     await parametersWithMetaAssociated(
       async (resourceTypes, name) =>
         await findSearchParameter(ctx.client, ctx, resourceTypes, name),
       resourceTypes,
-      [{ name: "_id", modifier: "missing", value: ["false"] }]
+      [{ name: "_id", modifier: "missing", value: ["false"] }],
     )
   ).filter((v): v is SearchParameterResource => v.type === "resource");
 
@@ -59,14 +58,14 @@ const getIds: (resources: Resource[]) => id[] = (resources) =>
 async function processRevInclude(
   ctx: FHIRServerCTX,
   param: SearchParameterResult,
-  results: Resource[]
+  results: Resource[],
 ): Promise<Resource[]> {
   if (param.value.length > 1)
     throw new OperationError(
       outcomeError(
         "too-costly",
-        "Too many revinclude parameters only allow up to 1 at this time."
-      )
+        "Too many revinclude parameters only allow up to 1 at this time.",
+      ),
     );
 
   const ids = getIds(results);
@@ -78,7 +77,7 @@ async function processRevInclude(
         const revInclude = v.toString().split(":");
         if (revInclude.length !== 2)
           throw new OperationError(
-            outcomeError("invalid", "Invalid _revinclude parameter")
+            outcomeError("invalid", "Invalid _revinclude parameter"),
           );
         const resourceType = revInclude[0] as ResourceType;
         const searchParameterRevInclude = revInclude[1];
@@ -90,10 +89,10 @@ async function processRevInclude(
               name: searchParameterRevInclude,
               value: ids,
             },
-          ]
+          ],
         );
         return revIncludeResults.resources;
-      })
+      }),
     )
   ).flat();
 }
@@ -102,14 +101,14 @@ async function processInclude(
   client: pg.PoolClient,
   ctx: FHIRServerCTX,
   param: SearchParameterResult,
-  results: Resource[]
+  results: Resource[],
 ): Promise<Resource[]> {
   if (param.value.length > 1)
     throw new OperationError(
       outcomeError(
         "too-costly",
-        "Too many revinclude parameters only allow up to 1 at this time."
-      )
+        "Too many revinclude parameters only allow up to 1 at this time.",
+      ),
     );
 
   const ids = getIds(results);
@@ -121,7 +120,7 @@ async function processInclude(
         const include = v.toString().split(":");
         if (include.length !== 2)
           throw new OperationError(
-            outcomeError("invalid", "Invalid _include parameter")
+            outcomeError("invalid", "Invalid _include parameter"),
           );
         const resourceType = include[0] as ResourceType;
         const includeParameterName = include[1];
@@ -132,21 +131,21 @@ async function processInclude(
             { name: "name", value: [includeParameterName] },
             { name: "type", value: ["reference"] },
             { name: "base", value: [resourceType] },
-          ]
+          ],
         );
         if (includeParameterSearchParam.resources.length === 0)
           throw new OperationError(
             outcomeError(
               "not-found",
-              `Include parameter not found with name '${includeParameterName}'`
-            )
+              `Include parameter not found with name '${includeParameterName}'`,
+            ),
           );
         if (includeParameterSearchParam.resources.length > 1)
           throw new OperationError(
             outcomeError(
               "conflict",
-              `Include parameter found multiple instances with same name '${includeParameterName}'`
-            )
+              `Include parameter found multiple instances with same name '${includeParameterName}'`,
+            ),
           );
 
         // Derive the id and type from the reference_idx table for the given param for the resources.
@@ -158,7 +157,7 @@ async function processInclude(
         FROM ${"reference_idx"} 
         WHERE ${"r_id"} IN (${sqlUtils.paramsWithComma(ids)}) AND
         ${"parameter_url"} = ${db.param(
-          includeParameterSearchParam.resources[0].url
+          includeParameterSearchParam.resources[0].url,
         )}
         `.run(client);
 
@@ -175,7 +174,7 @@ async function processInclude(
             },
           ])
           .then((r) => r.resources);
-      })
+      }),
     )
   ).flat();
 }
@@ -183,7 +182,7 @@ async function processInclude(
 export async function executeSearchQuery(
   client: pg.PoolClient,
   ctx: FHIRServerCTX,
-  request: SystemSearchRequest | TypeSearchRequest
+  request: SystemSearchRequest | TypeSearchRequest,
 ): Promise<{ total?: number; resources: Resource[] }> {
   const resourceTypes = deriveResourceTypeFilter(request);
   // Remove _type as using on derived resourceTypeFilter
@@ -195,10 +194,10 @@ export async function executeSearchQuery(
         ctx.client,
         asSystemCTX(ctx),
         resourceTypes,
-        name
+        name,
       ),
     resourceTypes,
-    request.parameters
+    request.parameters,
   );
 
   const resourceParameters = parameters
@@ -206,7 +205,7 @@ export async function executeSearchQuery(
     .concat(await getParameterForLatestId(asSystemCTX(ctx), resourceTypes));
 
   const parametersResult = parameters.filter(
-    (v): v is SearchParameterResult => v.type === "result"
+    (v): v is SearchParameterResult => v.type === "result",
   );
 
   const parameterClauses = buildParametersSQL(ctx, resourceParameters);
@@ -220,7 +219,7 @@ export async function executeSearchQuery(
   const totalParam = parametersResult.find((p) => p.name === "_total");
   const includeParam = parametersResult.find((p) => p.name === "_include");
   const revIncludeParam = parametersResult.find(
-    (p) => p.name === "_revinclude"
+    (p) => p.name === "_revinclude",
   );
 
   const limit = deriveLimit([0, 50], countParam);
@@ -230,7 +229,7 @@ export async function executeSearchQuery(
     !isNaN(parseInt((offsetParam.value && offsetParam.value[0]).toString()))
       ? Math.max(
           parseInt((offsetParam.value && offsetParam.value[0]).toString()),
-          0
+          0,
         )
       : 0;
 
@@ -250,8 +249,8 @@ export async function executeSearchQuery(
       throw new OperationError(
         outcomeError(
           "invalid",
-          "Unknown total type received must be 'none', 'estimate' or 'accurate'"
-        )
+          "Unknown total type received must be 'none', 'estimate' or 'accurate'",
+        ),
       );
   }
 
@@ -268,10 +267,10 @@ export async function executeSearchQuery(
       
       WHERE ${"resources"}.${"tenant"} = ${db.param(ctx.tenant.id)}
       AND ${"resources"}.${"resource_type"} ${
-    resourceTypes.length > 0
-      ? db.sql`in (${sqlUtils.paramsWithComma(resourceTypes)})`
-      : db.sql`is not null`
-  }`;
+        resourceTypes.length > 0
+          ? db.sql`in (${sqlUtils.paramsWithComma(resourceTypes)})`
+          : db.sql`is not null`
+      }`;
 
   if (sortBy) sql = await deriveSortQuery(ctx, resourceTypes, sortBy, sql);
 
@@ -292,11 +291,11 @@ export async function executeSearchQuery(
     result[0] === undefined
       ? 0
       : result[0]?.total_count !== undefined
-      ? parseInt(result[0]?.total_count)
-      : undefined;
+        ? parseInt(result[0]?.total_count)
+        : undefined;
 
   let resources: Resource[] = result.map(
-    (r) => r.resource as unknown as Resource
+    (r) => r.resource as unknown as Resource,
   );
 
   if (revIncludeParam) {
@@ -304,8 +303,8 @@ export async function executeSearchQuery(
       await processRevInclude(
         ctx,
         revIncludeParam,
-        result.map((r) => r.resource as unknown as Resource)
-      )
+        result.map((r) => r.resource as unknown as Resource),
+      ),
     );
   }
 
@@ -315,8 +314,8 @@ export async function executeSearchQuery(
         client,
         ctx,
         includeParam,
-        result.map((r) => r.resource as unknown as Resource)
-      )
+        result.map((r) => r.resource as unknown as Resource),
+      ),
     );
   }
 

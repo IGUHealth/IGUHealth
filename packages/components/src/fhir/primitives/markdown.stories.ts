@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { FHIRMarkdownEditable } from "./markdown";
 import { markdown } from "@iguhealth/fhir-types/r4/types";
+
+import { FHIRMarkdownEditable } from "./markdown";
 
 const meta = {
   title: "Primitives/FHIRMarkdownEditable",

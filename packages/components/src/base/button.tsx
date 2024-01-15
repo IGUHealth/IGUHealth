@@ -51,7 +51,7 @@ export const Button = ({
         "btn",
         btnTypeClass(type ? type : "primary"),
         btnSize(size ? size : "medium"),
-        props.className
+        props.className,
       )}
     >
       {children}

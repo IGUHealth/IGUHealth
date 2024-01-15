@@ -1,8 +1,9 @@
 import React from "react";
 
-import { EditableProps } from "../types";
-import { Input } from "../../base/input";
 import { url } from "@iguhealth/fhir-types/r4/types";
+
+import { Input } from "../../base/input";
+import { EditableProps } from "../types";
 
 export type FHIRStringEditableProps = EditableProps<url> & {
   disabled?: boolean;

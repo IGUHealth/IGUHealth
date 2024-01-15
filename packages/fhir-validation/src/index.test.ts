@@ -1,23 +1,23 @@
+import { expect, test } from "@jest/globals";
 import path from "path";
 import { fileURLToPath } from "url";
-import { expect, test } from "@jest/globals";
 
+import { loadArtifacts } from "@iguhealth/artifacts";
+import { resourceTypes } from "@iguhealth/fhir-types/lib/r4/sets";
 import {
   AResource,
-  StructureDefinition,
+  Account,
   Resource,
   ResourceType,
-  Account,
+  StructureDefinition,
   canonical,
   uri,
 } from "@iguhealth/fhir-types/lib/r4/types";
-import { resourceTypes } from "@iguhealth/fhir-types/lib/r4/sets";
-import { loadArtifacts } from "@iguhealth/artifacts";
 
 import { createValidator } from "./index";
 
 function createMemoryDatabase(
-  resourceTypes: ResourceType[]
+  resourceTypes: ResourceType[],
 ): Record<ResourceType, Resource[]> {
   const data: Record<ResourceType, Resource[]> = {} as Record<
     ResourceType,
@@ -46,7 +46,7 @@ const CTX = {
   },
   resolveCanonical: <T extends ResourceType>(t: T, url: string) => {
     const sd = memDatabase[t].find(
-      (sd) => (sd as StructureDefinition).url === url
+      (sd) => (sd as StructureDefinition).url === url,
     );
     if (!sd) throw new Error(`Couldn't find sd with url '${url}'`);
     return sd as AResource<T>;
@@ -65,7 +65,7 @@ test("Testing validating resourceType 'Patient'", async () => {
           system: 5,
         },
       ],
-    })
+    }),
   ).toEqual([
     {
       severity: "error",
@@ -85,7 +85,7 @@ test("test typechoice checking", async () => {
       resourceType: "Patient",
       deceasedBoolean: "hello",
       deceasedDateTime: "1980-01-01",
-    })
+    }),
   ).toEqual([
     {
       code: "structure",
@@ -106,14 +106,14 @@ test("test typechoice checking", async () => {
     await validator({
       resourceType: "Patient",
       deceasedBoolean: true,
-    })
+    }),
   ).toEqual([]);
 
   expect(
     await validator({
       resourceType: "Patient",
       deceasedDateTime: "1980-01-01",
-    })
+    }),
   ).toEqual([]);
 });
 
@@ -137,7 +137,7 @@ test("Primitive Extensions", async () => {
           },
         },
       ],
-    })
+    }),
   ).toEqual([]);
 
   expect(
@@ -157,7 +157,7 @@ test("Primitive Extensions", async () => {
           },
         },
       ],
-    })
+    }),
   ).toEqual([
     {
       code: "structure",
@@ -181,7 +181,7 @@ test("Primitive extension testing", async () => {
           _given: [{ id: "123" }],
         },
       ],
-    })
+    }),
   ).toEqual([]);
   expect(
     await validator({
@@ -192,7 +192,7 @@ test("Primitive extension testing", async () => {
           _given: [{ id: 5 }],
         },
       ],
-    })
+    }),
   ).toEqual([
     {
       code: "structure",
@@ -265,7 +265,7 @@ test("Test cardinality ", async () => {
           given: "Bob",
         },
       ],
-    })
+    }),
   ).toEqual([
     {
       code: "structure",
@@ -285,7 +285,7 @@ test("Test required ", async () => {
       resourceType: "Patient",
       id: "5",
       link: [{}],
-    })
+    }),
   ).toEqual([
     {
       code: "structure",
@@ -312,7 +312,7 @@ test("Validate element with no primitive", async () => {
       resourceType: "Patient",
       id: "5",
       name: [{ _given: [{ id: 5 }] }],
-    })
+    }),
   ).toEqual([
     {
       code: "structure",
@@ -328,7 +328,7 @@ test("Validate element with no primitive", async () => {
       resourceType: "Patient",
       id: "5",
       name: [{ _given: [{ id: "5" }] }],
-    })
+    }),
   ).toEqual([]);
 
   expect(
@@ -336,7 +336,7 @@ test("Validate element with no primitive", async () => {
       resourceType: "Patient",
       id: "5",
       name: [{ _given: { id: "5" } }],
-    })
+    }),
   ).toEqual([
     {
       code: "structure",
@@ -352,7 +352,7 @@ test("Validate element with no primitive", async () => {
       resourceType: "Patient",
       id: "5",
       _deceasedBoolean: [{ _given: { id: "5" } }],
-    })
+    }),
   ).toEqual([
     {
       code: "structure",
@@ -396,7 +396,7 @@ test("Observation nested case", async () => {
           },
         ],
       },
-    })
+    }),
   ).toEqual([
     {
       severity: "error",
@@ -412,7 +412,7 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
   `Testing validating resourceType '%s'`,
   async (resourceType) => {
     const structureDefinition = memDatabase["StructureDefinition"].filter(
-      (sd) => sd.id === resourceType
+      (sd) => sd.id === resourceType,
     );
     const sd = structureDefinition[0];
 
@@ -428,7 +428,7 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
 
       expect([resource, issues]).toMatchSnapshot();
     }
-  }
+  },
 );
 
 test("Patient with primitive on name", async () => {
@@ -438,7 +438,7 @@ test("Patient with primitive on name", async () => {
     await validator({
       resourceType: "Patient",
       name: [1],
-    })
+    }),
   ).toEqual([
     {
       code: "structure",
@@ -455,7 +455,7 @@ test("Test reference constraints", async () => {
     await validator({
       resourceType: "Patient",
       managingOrganization: { reference: "Condition/123" },
-    })
+    }),
   ).toEqual([
     {
       code: "structure",
@@ -470,7 +470,7 @@ test("Test reference constraints", async () => {
     await validator({
       resourceType: "Patient",
       managingOrganization: { reference: "Organization/123" },
-    })
+    }),
   ).toEqual([]);
 
   expect(
@@ -480,7 +480,7 @@ test("Test reference constraints", async () => {
         reference: "Organization/123",
         type: "Organization",
       },
-    })
+    }),
   ).toEqual([]);
 
   expect(
@@ -490,7 +490,7 @@ test("Test reference constraints", async () => {
         reference: "Organization/123",
         type: "Condition",
       },
-    })
+    }),
   ).toEqual([
     {
       code: "structure",
@@ -527,7 +527,7 @@ test("validate regexes", async () => {
     await validator({
       ...account,
       coverage: [{ coverage: { reference: "Coverage/122" }, priority: 1 }],
-    })
+    }),
   ).toEqual([]);
 
   const validator2 = createValidator(CTX, "Appointment" as uri);
@@ -538,7 +538,7 @@ test("validate regexes", async () => {
       status: "active",
       participant: [{ status: "active", actor: { reference: "Patient/1" } }],
       priority: -1,
-    })
+    }),
   ).toEqual([
     {
       code: "value",
@@ -555,7 +555,7 @@ test("validate regexes", async () => {
       status: "active",
       participant: [{ status: "active", actor: { reference: "Patient/1" } }],
       priority: 0,
-    })
+    }),
   ).toEqual([]);
 });
 
@@ -565,7 +565,7 @@ test("Misaligned types", async () => {
     await validator2({
       resourceType: "Patient",
       name: [{ given: ["bob"] }],
-    })
+    }),
   ).toEqual([
     {
       code: "invalid",

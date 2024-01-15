@@ -1,14 +1,14 @@
+import { expect, test } from "@jest/globals";
 import path from "path";
 import { fileURLToPath } from "url";
 
+import { loadArtifacts } from "@iguhealth/artifacts";
 import {
-  StructureDefinition,
   OperationDefinition,
+  StructureDefinition,
   code,
   uri,
 } from "@iguhealth/fhir-types/lib/r4/types";
-import { expect, test } from "@jest/globals";
-import { loadArtifacts } from "@iguhealth/artifacts";
 
 import { evaluate, evaluateWithMeta } from "./index";
 
@@ -45,8 +45,8 @@ test("Variable tests", () => {
     evaluate(
       "%hello.test",
       {},
-      { variables: { hello: [{ test: 4 }, { test: 3 }] } }
-    )
+      { variables: { hello: [{ test: 4 }, { test: 3 }] } },
+    ),
   ).toEqual([4, 3]);
 
   expect(
@@ -57,8 +57,8 @@ test("Variable tests", () => {
         variables: (name: string) => {
           return [{ test: 4 }, { test: 3 }];
         },
-      }
-    )
+      },
+    ),
   ).toEqual([4, 3]);
 });
 
@@ -78,8 +78,8 @@ test("PrimitiveExtensions", () => {
             { test: 3 },
           ],
         },
-      }
-    )
+      },
+    ),
   ).toEqual([true]);
 });
 
@@ -174,7 +174,7 @@ test("allTrue", () => {
     true,
   ]);
   expect(
-    evaluate("$this.test.allTrue()", { test: [true, true, false] })
+    evaluate("$this.test.allTrue()", { test: [true, true, false] }),
   ).toEqual([false]);
 
   expect(evaluate("$this.test.allTrue()", { test: [true, true, 1] })).toEqual([
@@ -189,7 +189,7 @@ test("anyTrue", () => {
     true,
   ]);
   expect(
-    evaluate("$this.test.anyTrue()", { test: [true, true, false] })
+    evaluate("$this.test.anyTrue()", { test: [true, true, false] }),
   ).toEqual([true]);
   expect(evaluate("$this.test.anyTrue()", { test: [true, true, 1] })).toEqual([
     true,
@@ -217,32 +217,32 @@ test("subsetOf", () => {
   expect(
     evaluate("%set2.subsetOf(%set1)", undefined, {
       variables: { set1: [0, 1, false], set2: [0, -1], set3: ["none"] },
-    })
+    }),
   ).toEqual([false]);
   expect(
     evaluate("%set2.subsetOf(%set1)", undefined, {
       variables: { set1: [0, 1, false], set2: [0], set3: ["none"] },
-    })
+    }),
   ).toEqual([true]);
   expect(
     evaluate("%set2.subsetOf(%set1)", undefined, {
       variables: { set1: [0, 1, false], set2: [0, 1], set3: ["none"] },
-    })
+    }),
   ).toEqual([true]);
   expect(
     evaluate("%set2.subsetOf(%set1)", undefined, {
       variables: { set1: [0, 1, false], set2: [0, 1, false], set3: ["none"] },
-    })
+    }),
   ).toEqual([true]);
   expect(
     evaluate("%set1.subsetOf(%set2)", undefined, {
       variables: { set1: [0, 1, false], set2: [0, 1], set3: ["none"] },
-    })
+    }),
   ).toEqual([false]);
   expect(
     evaluate("%set3.subsetOf(%set2)", undefined, {
       variables: { set1: [0, 1, false], set2: [0, 1], set3: ["none"] },
-    })
+    }),
   ).toEqual([false]);
 });
 
@@ -250,13 +250,13 @@ test("supersetOf", () => {
   expect(
     evaluate("%set1.supersetOf(%set2)", undefined, {
       variables: { set1: [0, 1, false], set2: [0, 1], set3: ["none"] },
-    })
+    }),
   ).toEqual([true]);
 
   expect(
     evaluate("%set2.supersetOf(%set1)", undefined, {
       variables: { set1: [0, 1, false], set2: [0, 1], set3: ["none"] },
-    })
+    }),
   ).toEqual([false]);
 });
 
@@ -272,8 +272,8 @@ test("distinct", () => {
       [{ v: 1 }, { v: 1 }, 2],
       {
         variables: { set1: [1, 1, 2] },
-      }
-    )
+      },
+    ),
   ).toEqual([false]);
 
   expect(evaluate("$this.isDistinct()", [{ v: 1 }, { v: 1 }, 2])).toEqual([
@@ -296,7 +296,7 @@ test("select", () => {
     evaluate("$this.select($this.name.given + ' ' + $this.name.family)", [
       { name: { given: ["Bob"], family: "Jameson" } },
       { name: { given: ["Jason"], family: "Kyle" } },
-    ])
+    ]),
   ).toEqual(["Bob Jameson", "Jason Kyle"]);
 });
 
@@ -307,7 +307,7 @@ test("repeat", () => {
         resourceType: "Questionnaire",
         item: [{ id: "1", item: [{ id: "2", item: { id: "4" } }] }],
       },
-    ])
+    ]),
   ).toEqual([
     { id: "1", item: [{ id: "2", item: { id: "4" } }] },
     { id: "2", item: { id: "4" } },
@@ -322,8 +322,8 @@ test("indexed", () => {
   expect(evaluate("$this.test[0]", { test: [1, 2, 3] })).toEqual([1]);
   expect(
     evaluateWithMeta("$this.test[0]", { test: [1, 2, 3] }).map((v) =>
-      v.location()
-    )
+      v.location(),
+    ),
   ).toEqual([["test", 0]]);
 });
 
@@ -338,13 +338,13 @@ test("ofType", () => {
     evaluate("ofType(Patient)", [
       { resourceType: "Patient" },
       { resourceType: "MedicationRequest" },
-    ])
+    ]),
   ).toEqual([{ resourceType: "Patient" }]);
   expect(
     evaluate("ofType(HumanName)", [
       { resourceType: "Patient" },
       { resourceType: "MedicationRequest" },
-    ])
+    ]),
   ).toEqual([]);
 });
 
@@ -356,8 +356,8 @@ test("Return Type meta", () => {
         resourceType: "Patient",
         name: [{ given: ["bob"], family: "jameson" }],
       },
-      metaOptions("Patient")
-    ).map((v) => v.meta()?.type)
+      metaOptions("Patient"),
+    ).map((v) => v.meta()?.type),
   ).toEqual(["HumanName"]);
 
   expect(
@@ -367,8 +367,8 @@ test("Return Type meta", () => {
         resourceType: "Patient",
         name: [{ given: ["bob"], family: "jameson" }],
       },
-      metaOptions("Patient")
-    ).map((v) => v.meta()?.type)
+      metaOptions("Patient"),
+    ).map((v) => v.meta()?.type),
   ).toEqual(["string"]);
 
   expect(
@@ -379,8 +379,8 @@ test("Return Type meta", () => {
         name: [{ given: ["bob"], family: "jameson" }],
         identifier: [{ system: "mrn", value: "123" }],
       },
-      metaOptions("Patient")
-    ).map((v) => v.meta()?.type)
+      metaOptions("Patient"),
+    ).map((v) => v.meta()?.type),
   ).toEqual(["Identifier"]);
 
   expect(
@@ -391,8 +391,8 @@ test("Return Type meta", () => {
         name: [{ given: ["bob"], family: "jameson" }],
         identifier: [{ system: "mrn", value: "123" }],
       },
-      metaOptions("Patient")
-    ).map((v) => v.meta()?.type)
+      metaOptions("Patient"),
+    ).map((v) => v.meta()?.type),
   ).toEqual(["string"]);
 
   expect(
@@ -403,8 +403,8 @@ test("Return Type meta", () => {
         name: [{ given: ["bob"], family: "jameson" }],
         identifier: [{ system: "mrn", value: "123" }],
       },
-      metaOptions("Patient")
-    ).map((v) => v.meta()?.type)
+      metaOptions("Patient"),
+    ).map((v) => v.meta()?.type),
   ).toEqual(["uri"]);
 });
 
@@ -418,8 +418,8 @@ test("Typechoice meta", () => {
         deceasedBoolean: false,
         identifier: [{ system: "mrn", value: "123" }],
       },
-      metaOptions("Patient")
-    ).map((v) => v.meta()?.type)
+      metaOptions("Patient"),
+    ).map((v) => v.meta()?.type),
   ).toEqual(["boolean"]);
 
   expect(
@@ -431,8 +431,8 @@ test("Typechoice meta", () => {
         deceasedDateTime: "1980-01-01T00:00:00Z",
         identifier: [{ system: "mrn", value: "123" }],
       },
-      metaOptions("Patient")
-    ).map((v) => v.meta()?.type)
+      metaOptions("Patient"),
+    ).map((v) => v.meta()?.type),
   ).toEqual(["dateTime"]);
 });
 
@@ -448,8 +448,8 @@ test("is operator", () => {
         meta: {
           getSD,
         },
-      }
-    )
+      },
+    ),
   ).toEqual([]);
 
   expect(
@@ -463,8 +463,8 @@ test("is operator", () => {
         meta: {
           getSD,
         },
-      }
-    )
+      },
+    ),
   ).toEqual(["1980-01-01T00:00:00Z"]);
 });
 
@@ -480,8 +480,8 @@ test("term with TypeIdentifier", () => {
         meta: {
           getSD,
         },
-      }
-    )
+      },
+    ),
   ).toEqual([]);
 
   expect(
@@ -495,8 +495,8 @@ test("term with TypeIdentifier", () => {
         meta: {
           getSD,
         },
-      }
-    )
+      },
+    ),
   ).toEqual(["1980-01-01T00:00:00Z"]);
 });
 
@@ -505,7 +505,7 @@ test("term with TypeIdentifier 'Resource'", () => {
     evaluate("Resource.name", {
       resourceType: "Patient",
       name: [{ given: ["bob"], family: "waterson" }],
-    })
+    }),
   ).toEqual([{ given: ["bob"], family: "waterson" }]);
 });
 
@@ -521,8 +521,8 @@ test("union operation", () => {
         meta: {
           getSD,
         },
-      }
-    )
+      },
+    ),
   ).toEqual(["bob", "waterson"]);
 });
 
@@ -539,8 +539,8 @@ test("resolve with is operation", () => {
           type: "CarePlan" as uri,
           getSD,
         },
-      }
-    )
+      },
+    ),
   ).toEqual([{ reference: "Patient/123" }]);
 });
 
@@ -600,7 +600,7 @@ test("Subscription extension test", () => {
       variables: {
         typeUrl: "https://iguhealth.app/Subscription/channel-type",
       },
-    })
+    }),
   ).toEqual(["operation"]);
 
   expect(
@@ -608,7 +608,7 @@ test("Subscription extension test", () => {
       variables: {
         typeUrl: "https://iguhealth.app/Subscription/operation-code",
       },
-    })
+    }),
   ).toEqual(["test-1"]);
 
   expect(
@@ -619,8 +619,8 @@ test("Subscription extension test", () => {
         variables: {
           typeUrl: "https://iguhealth.app/Subscription/operation-code",
         },
-      }
-    ).map((v) => v.location())
+      },
+    ).map((v) => v.location()),
   ).toEqual([["channel", "_type", "extension", 1, "valueCode"]]);
   expect(
     evaluateWithMeta(
@@ -630,8 +630,8 @@ test("Subscription extension test", () => {
         variables: {
           typeUrl: "https://iguhealth.app/Subscription/channel-type",
         },
-      }
-    ).map((v) => v.location())
+      },
+    ).map((v) => v.location()),
   ).toEqual([["channel", "_type", "extension", 0, "valueCode"]]);
 });
 
@@ -652,8 +652,8 @@ test("test reference finding", () => {
           type: "CarePlan" as uri,
           getSD,
         },
-      }
-    ).map((v) => v.location())
+      },
+    ).map((v) => v.location()),
   ).toEqual([
     ["subject", 0],
     ["subject", 2],
@@ -677,8 +677,8 @@ test("children", () => {
           type: "CarePlan" as uri,
           getSD,
         },
-      }
-    )
+      },
+    ),
   ).toEqual([
     "CarePlan",
     { reference: "Patient/123" },
@@ -702,8 +702,8 @@ test("children", () => {
           type: "CarePlan" as uri,
           getSD,
         },
-      }
-    ).map((v) => v.location())
+      },
+    ).map((v) => v.location()),
   ).toEqual([["resourceType"], ["subject", 0], ["subject", 1], ["subject", 2]]);
 
   expect(
@@ -722,8 +722,8 @@ test("children", () => {
           type: "CarePlan" as uri,
           getSD,
         },
-      }
-    ).map((v) => v.location())
+      },
+    ).map((v) => v.location()),
   ).toEqual([
     ["subject", 0],
     ["subject", 1],
@@ -741,8 +741,8 @@ test("descendants", () => {
         deceasedBoolean: false,
         identifier: [{ system: "mrn", value: "123" }],
       },
-      metaOptions("Patient")
-    )
+      metaOptions("Patient"),
+    ),
   ).toEqual([
     "Patient",
     {
@@ -769,8 +769,8 @@ test("descendants", () => {
         deceasedBoolean: false,
         identifier: [{ system: "mrn", value: "123" }],
       },
-      metaOptions("Patient")
-    )
+      metaOptions("Patient"),
+    ),
   ).toEqual([
     {
       system: "mrn",
@@ -786,8 +786,8 @@ test("descendants", () => {
         deceasedBoolean: false,
         identifier: [{ system: "mrn", value: "123" }],
       },
-      metaOptions("Patient")
-    )
+      metaOptions("Patient"),
+    ),
   ).toEqual(["bob", "jameson", "123"]);
 });
 
@@ -802,8 +802,8 @@ test("descendants with type filter", () => {
         resourceType: "Practitioner",
         name: [{ given: ["Bob"] }],
       },
-      metaOptions("Patient")
-    )
+      metaOptions("Patient"),
+    ),
   ).toEqual([{ reference: "urn:oid:2" }]);
 });
 
@@ -834,7 +834,7 @@ test("Get Locations for extensions", () => {
       variables: {
         extUrl: "https://iguhealth.app/Extension/encrypted-value",
       },
-    }
+    },
   );
   expect(nodes.map((n) => n.valueOf())).toEqual(["Test"]);
   expect(nodes.map((n) => n.location())).toEqual([["name"]]);

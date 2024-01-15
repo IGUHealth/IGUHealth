@@ -1,8 +1,3 @@
-import { MiddlewareAsync, createMiddlewareAsync } from "../middleware/index.js";
-import { AsynchronousClient } from "../index.js";
-import { FHIRRequest, FHIRResponse } from "../types.js";
-import { ParsedParameter } from "../url.js";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import {
   Bundle,
   CapabilityStatement,
@@ -10,6 +5,12 @@ import {
   Parameters,
   Resource,
 } from "@iguhealth/fhir-types/r4/types";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+
+import { AsynchronousClient } from "../index.js";
+import { MiddlewareAsync, createMiddlewareAsync } from "../middleware/index.js";
+import { FHIRRequest, FHIRResponse } from "../types.js";
+import { ParsedParameter } from "../url.js";
 
 type HTTPClientState = {
   getAccessToken?: () => Promise<string>;
@@ -18,7 +19,7 @@ type HTTPClientState = {
 };
 
 function parametersToQueryString(
-  parameters: ParsedParameter<string | number>[]
+  parameters: ParsedParameter<string | number>[],
 ): string {
   return parameters
     .map((p) => {
@@ -30,7 +31,7 @@ function parametersToQueryString(
 
 async function toHTTPRequest(
   state: HTTPClientState,
-  request: FHIRRequest
+  request: FHIRRequest,
 ): Promise<{
   url: string;
   headers?: Record<string, string>;
@@ -168,7 +169,7 @@ async function toHTTPRequest(
 
 async function httpResponseToFHIRResponse(
   request: FHIRRequest,
-  response: Response
+  response: Response,
 ): Promise<FHIRResponse> {
   if (response.status >= 400) {
     try {
@@ -403,7 +404,7 @@ function httpMiddleware(): MiddlewareAsync<HTTPClientState, {}> {
 }
 
 export default function createHTTPClient(
-  initialState: HTTPClientState
+  initialState: HTTPClientState,
 ): AsynchronousClient<HTTPClientState, {}> {
   // Removing trailing slash
   if (initialState.url.endsWith("/"))

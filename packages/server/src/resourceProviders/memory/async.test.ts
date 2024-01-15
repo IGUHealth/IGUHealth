@@ -1,19 +1,19 @@
+import { expect, test } from "@jest/globals";
 import path from "path";
 import { fileURLToPath } from "url";
 
+import { loadArtifacts } from "@iguhealth/artifacts";
+import parseParameters from "@iguhealth/client/lib/url";
 import {
   ResourceType,
-  id,
   SearchParameter,
   StructureDefinition,
+  id,
 } from "@iguhealth/fhir-types/lib/r4/types";
-import parseParameters from "@iguhealth/client/lib/url";
-import { loadArtifacts } from "@iguhealth/artifacts";
-import { expect, test } from "@jest/globals";
 
 import { testServices } from "../test-ctx.js";
-import type { InternalData } from "./types.js";
 import CreateMemoryDatabaseAsync from "./async.js";
+import type { InternalData } from "./types.js";
 
 const artifactParameters = loadArtifacts({
   resourceType: "SearchParameter",
@@ -38,7 +38,7 @@ for (const resource of [...artifactParameters, ...sds]) {
 }
 
 function generateParameter(
-  fieldOverrides: Partial<SearchParameter>
+  fieldOverrides: Partial<SearchParameter>,
 ): SearchParameter {
   return {
     resourceType: "SearchParameter",
@@ -54,7 +54,7 @@ function generateParameter(
 }
 
 function generateSD(
-  fieldOverrides: Partial<StructureDefinition>
+  fieldOverrides: Partial<StructureDefinition>,
 ): StructureDefinition {
   return {
     resourceType: "StructureDefinition",
@@ -76,28 +76,28 @@ test("Creation and search", async () => {
     generateParameter({
       id: "test1",
       name: "test1",
-    } as SearchParameter)
+    } as SearchParameter),
   );
   await memDb.create(
     testServices,
     generateParameter({
       id: "test2",
       name: "test2",
-    } as SearchParameter)
+    } as SearchParameter),
   );
 
   await memDb.create(
     testServices,
-    generateSD({ id: "test0", name: "test1" } as StructureDefinition)
+    generateSD({ id: "test0", name: "test1" } as StructureDefinition),
   );
   expect(
     (
       await memDb.search_type(
         testServices,
         "SearchParameter",
-        parseParameters("SearchParameter?name=test")
+        parseParameters("SearchParameter?name=test"),
       )
-    ).resources
+    ).resources,
   ).toEqual([]);
 
   expect(
@@ -105,9 +105,9 @@ test("Creation and search", async () => {
       await memDb.search_type(
         testServices,
         "SearchParameter",
-        parseParameters("SearchParameter?name=test1")
+        parseParameters("SearchParameter?name=test1"),
       )
-    ).resources
+    ).resources,
   ).toEqual([
     generateParameter({
       id: "test1",
@@ -125,7 +125,7 @@ test("artifactParameters", async () => {
     await memDb.search_type(
       testServices,
       "SearchParameter",
-      parseParameters("SearchParameter?base=Patient,Resource,DomainResource")
+      parseParameters("SearchParameter?base=Patient,Resource,DomainResource"),
     )
   ).resources;
   expect(parameters.length).toEqual(34);
@@ -135,9 +135,9 @@ test("artifactParameters", async () => {
       await memDb.search_type(
         testServices,
         "SearchParameter",
-        parseParameters("SearchParameter?base=DomainResource")
+        parseParameters("SearchParameter?base=DomainResource"),
       )
-    ).resources.map((s) => (s as SearchParameter).name)
+    ).resources.map((s) => (s as SearchParameter).name),
   ).toEqual(["_text"]);
 
   expect(
@@ -145,9 +145,9 @@ test("artifactParameters", async () => {
       await memDb.search_type(
         testServices,
         "SearchParameter",
-        parseParameters("SearchParameter?base=Resource")
+        parseParameters("SearchParameter?base=Resource"),
       )
-    ).resources.map((s) => (s as SearchParameter).name)
+    ).resources.map((s) => (s as SearchParameter).name),
   ).toEqual([
     "_content",
     "_id",
@@ -166,9 +166,9 @@ test("artifactParameters", async () => {
       await memDb.search_type(
         testServices,
         "SearchParameter",
-        parseParameters("SearchParameter?base=Patient")
+        parseParameters("SearchParameter?base=Patient"),
       )
-    ).resources.map((s) => s.id)
+    ).resources.map((s) => s.id),
   ).toMatchSnapshot();
 
   expect(
@@ -177,10 +177,10 @@ test("artifactParameters", async () => {
         testServices,
         "SearchParameter",
         parseParameters(
-          "SearchParameter?base=Patient,Resource,DomainResource&type=string"
-        )
+          "SearchParameter?base=Patient,Resource,DomainResource&type=string",
+        ),
       )
-    ).resources.map((s) => s.id)
+    ).resources.map((s) => s.id),
   ).toMatchSnapshot();
 
   expect(
@@ -189,9 +189,9 @@ test("artifactParameters", async () => {
         testServices,
         "SearchParameter",
         parseParameters(
-          "SearchParameter?base=Patient,Resource,DomainResource&type=date"
-        )
+          "SearchParameter?base=Patient,Resource,DomainResource&type=date",
+        ),
       )
-    ).resources.map((s) => s.id)
+    ).resources.map((s) => s.id),
   ).toMatchSnapshot();
 });

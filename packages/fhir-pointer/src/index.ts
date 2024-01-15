@@ -16,16 +16,17 @@ type Parent<B> = Loc<B, unknown, any> | null;
 export type Loc<
   B,
   T,
-  P extends Loc<B, unknown, Parent<B>> | null = null
+  P extends Loc<B, unknown, Parent<B>> | null = null,
 > = string & _Loc<B, T> & { [__parent]: P };
 
 /*
  ** Access field in potentially Nullable V
  ** If V is nullable then set the return type to potentially nullable as well.
  */
-type NullGuard<V, Field extends keyof NonNullable<V>> = V extends NonNullable<V>
-  ? NonNullable<V>[Field]
-  : NonNullable<V>[Field] | undefined;
+type NullGuard<V, Field extends keyof NonNullable<V>> =
+  V extends NonNullable<V>
+    ? NonNullable<V>[Field]
+    : NonNullable<V>[Field] | undefined;
 
 // See [https://datatracker.ietf.org/doc/html/rfc6901#section-3] for reference.
 function escapeField(field: string) {
@@ -43,7 +44,7 @@ export function descend<
   T,
   R,
   P extends Parent<T>,
-  Field extends keyof NonNullable<R>
+  Field extends keyof NonNullable<R>,
 >(loc: Loc<T, R, P>, field: Field): Loc<T, NullGuard<R, Field>, typeof loc> {
   return `${loc}/${escapeField(String(field))}` as Loc<
     T,
@@ -58,7 +59,7 @@ type ReturnType<L> = L extends Loc<infer B, infer T, infer P> ? T : any;
  ** Ascend Loc pointer to parent.
  */
 export function ascend<T, R, P extends Parent<T>>(
-  loc: Loc<T, R, P>
+  loc: Loc<T, R, P>,
 ):
   | { parent: NonNullable<P>; field: NonNullable<keyof ReturnType<P>> }
   | undefined {
@@ -81,7 +82,7 @@ export function toJSONPointer<T, R, P extends Parent<T>>(loc: Loc<T, R, P>) {
 }
 
 export function pathMeta<T extends Resource, R, P extends Parent<T>>(
-  loc: Loc<T, R, P>
+  loc: Loc<T, R, P>,
 ): { resourceType: ResourceType; id: id } {
   const indexOfLastSlash = loc.indexOf("/");
   const [resourceType, id] = loc
@@ -92,13 +93,13 @@ export function pathMeta<T extends Resource, R, P extends Parent<T>>(
 
 export function get<T extends object, R, P extends Parent<T>>(
   loc: Loc<T, R, P>,
-  v: T
+  v: T,
 ): R {
   return jsonpointer.get(v, toJSONPointer(loc)) as R;
 }
 
 export function fields<T extends object, R, P extends Parent<T>>(
-  loc: Loc<T, R, P>
+  loc: Loc<T, R, P>,
 ) {
   let asc = ascend(loc);
   let fields = [];
@@ -110,7 +111,7 @@ export function fields<T extends object, R, P extends Parent<T>>(
 }
 
 export function root<T extends Resource, R, P extends Parent<T>>(
-  loc: Loc<T, R, P>
+  loc: Loc<T, R, P>,
 ): Loc<T, T> {
   const { resourceType, id } = pathMeta(loc);
   return pointer(resourceType, id) as any as Loc<T, T>;
@@ -125,7 +126,7 @@ function metaString(resourceType: ResourceType, id: id) {
  */
 export function pointer<T extends ResourceType>(
   resourceType: T,
-  resourceId: id
+  resourceId: id,
 ): Loc<AResource<T>, AResource<T>> {
   return `${metaString(resourceType, resourceId)}` as Loc<
     AResource<T>,

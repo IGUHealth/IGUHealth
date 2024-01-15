@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
 import fileDownload from "js-file-download";
+import React, { useEffect, useState } from "react";
 
-import { EditableProps } from "../types";
-import { InputContainer } from "../../base/containers";
 import { Button } from "../../base/button";
+import { InputContainer } from "../../base/containers";
 import { Input } from "../../base/input";
+import { EditableProps } from "../types";
 
 const convertFileToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {

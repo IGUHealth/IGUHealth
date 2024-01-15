@@ -1,19 +1,20 @@
-import { ResourceValidate } from "@iguhealth/generated-ops/r4";
+import { TypeInteraction } from "@iguhealth/client/types";
 import { ResourceType, code, uri } from "@iguhealth/fhir-types/r4/types";
 import validate from "@iguhealth/fhir-validation";
+import { ResourceValidate } from "@iguhealth/generated-ops/r4";
 import {
   OperationError,
-  outcomeError,
   outcome,
+  outcomeError,
 } from "@iguhealth/operation-outcomes";
+
 import { FHIRServerCTX } from "../../fhir/context.js";
 import InlineOperation from "./interface.js";
-import { TypeInteraction } from "@iguhealth/client/types";
 
 export const validateResource = async (
   ctx: FHIRServerCTX,
   resourceType: ResourceType,
-  input: ResourceValidate.Input
+  input: ResourceValidate.Input,
 ) => {
   const mode = input.mode ? input.mode : "no-action";
   switch (mode) {
@@ -24,7 +25,7 @@ export const validateResource = async (
       if (!input.resource)
         return outcomeError(
           "invalid",
-          "No resource provided during validation"
+          "No resource provided during validation",
         );
       const issues = await validate(
         {
@@ -39,7 +40,7 @@ export const validateResource = async (
           resolveTypeToCanonical: ctx.resolveTypeToCanonical,
         },
         resourceType as uri,
-        input.resource
+        input.resource,
       );
 
       if (issues.length > 0) {
@@ -58,8 +59,8 @@ export const validateResource = async (
       throw new OperationError(
         outcomeError(
           "invalid",
-          "Invalid mode '${mode}' was passed to validation operation"
-        )
+          "Invalid mode '${mode}' was passed to validation operation",
+        ),
       );
   }
 };
@@ -68,6 +69,6 @@ export default InlineOperation(ResourceValidate.Op, (ctx, request, input) => {
   return validateResource(
     ctx,
     (request as TypeInteraction).resourceType,
-    input
+    input,
   );
 });

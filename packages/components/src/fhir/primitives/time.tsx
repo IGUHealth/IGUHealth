@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-import { EditableProps } from "../types";
 import { Input } from "../../base/input";
+import { EditableProps } from "../types";
 
 export type FHIRTimeEditableProps = EditableProps<string>;
 

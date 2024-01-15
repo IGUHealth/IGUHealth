@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { useAuth0, User } from "@auth0/auth0-react";
-import { Input, Button, Toaster, Loading } from "@iguhealth/components";
+import { User, useAuth0 } from "@auth0/auth0-react";
+import React, { useEffect, useState } from "react";
+
+import { Button, Input, Loading, Toaster } from "@iguhealth/components";
 
 function copytoClipboard(token: string | undefined) {
   if (token) {

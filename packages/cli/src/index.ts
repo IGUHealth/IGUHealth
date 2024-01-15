@@ -1,10 +1,10 @@
 import { Command } from "commander";
-import { writeFileSync, mkdirSync } from "fs";
+import { mkdirSync, writeFileSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { loadArtifacts, generateIndexFile } from "@iguhealth/artifacts";
 
-import { generateSets, generateTypes, generateOps } from "@iguhealth/codegen";
+import { generateIndexFile, loadArtifacts } from "@iguhealth/artifacts";
+import { generateOps, generateSets, generateTypes } from "@iguhealth/codegen";
 
 const program = new Command();
 program
@@ -52,7 +52,7 @@ program
 
     const generatedOpCode = await generateOps(
       options.version,
-      operationDefinitions
+      operationDefinitions,
     );
 
     writeFileSync(path.join(options.output, "ops.ts"), generatedOpCode);
@@ -68,7 +68,7 @@ program
     const indexFile = generateIndexFile(
       options.packagedir,
       [options.resources],
-      options.ignore
+      options.ignore,
     );
     console.log("generating index file");
     const indexLoc = path.join(options.packagedir, ".index.json");

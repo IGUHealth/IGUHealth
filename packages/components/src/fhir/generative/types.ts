@@ -1,10 +1,10 @@
 /* eslint @typescript-eslint/no-explicit-any: 0 */
-import {
-  StructureDefinition,
-  ElementDefinitionType,
-} from "@iguhealth/fhir-types/r4/types";
-import { Loc } from "@iguhealth/fhir-pointer";
 import { Mutation } from "@iguhealth/fhir-patch-building";
+import { Loc } from "@iguhealth/fhir-pointer";
+import {
+  ElementDefinitionType,
+  StructureDefinition,
+} from "@iguhealth/fhir-types/r4/types";
 
 import { ClientProps } from "../types";
 

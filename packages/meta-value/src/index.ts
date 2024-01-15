@@ -1,10 +1,10 @@
+import { complexTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
-  StructureDefinition,
   Element,
   ElementDefinition,
+  StructureDefinition,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
-import { complexTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 
 //
 function isResourceOrComplexType(type: string): boolean {
@@ -20,15 +20,15 @@ function isResourceOrComplexType(type: string): boolean {
 
 function resolveContentReferenceIndex(
   sd: StructureDefinition,
-  element: ElementDefinition
+  element: ElementDefinition,
 ): number {
   const contentReference = element.contentReference?.split("#")[1];
   const referenceElementIndex = sd.snapshot?.element.findIndex(
-    (element) => element.id === contentReference
+    (element) => element.id === contentReference,
   );
   if (!referenceElementIndex)
     throw new Error(
-      "unable to resolve contentreference: '" + element.contentReference + "'"
+      "unable to resolve contentreference: '" + element.contentReference + "'",
     );
   return referenceElementIndex;
 }
@@ -61,7 +61,7 @@ type FHIRPathPrimitive<T extends RawPrimitive> = Element & {
 };
 
 function deriveNextTypeMeta(
-  partialMeta: PartialTypeMeta | undefined
+  partialMeta: PartialTypeMeta | undefined,
 ): TypeMeta | undefined {
   if (!partialMeta) return partialMeta;
   if (!partialMeta.elementIndex) partialMeta.elementIndex = 0;
@@ -77,7 +77,7 @@ function isFPPrimitive(v: unknown): v is FHIRPathPrimitive<RawPrimitive> {
 
 function toFPPrimitive<T extends RawPrimitive>(
   value: T,
-  element?: Element
+  element?: Element,
 ): FHIRPathPrimitive<T> {
   return { ...element, value, _type_: "primitive" };
 }
@@ -101,12 +101,12 @@ function isArray<T>(v: T | T[]): v is T[] {
 
 function getField<T extends { [key: string]: unknown }>(
   value: T,
-  field: string
+  field: string,
 ): string | undefined {
   if (value.hasOwnProperty(field)) return field;
   const foundField = Object.keys(value).find(
     (k) =>
-      k.startsWith(field.toString()) || k.startsWith(`_${field.toString()}`)
+      k.startsWith(field.toString()) || k.startsWith(`_${field.toString()}`),
   );
 
   return foundField?.startsWith("_") ? foundField.substring(1) : foundField;
@@ -119,7 +119,7 @@ function getField<T extends { [key: string]: unknown }>(
 function isElementDefinitionWithType(
   element: ElementDefinition,
   path: string,
-  expectedType?: string
+  expectedType?: string,
 ): uri | undefined {
   if (element.path === path) return element.type?.[0].code;
   if (
@@ -145,7 +145,7 @@ function capitalize(v: string) {
 function searchElementIndexAndType(
   snapshotElements: ElementDefinition[],
   path: string,
-  elementIndex: number
+  elementIndex: number,
 ): { index: number; type: string } | undefined {
   for (let i = elementIndex + 1; i < snapshotElements.length; i++) {
     const elementToCheck = snapshotElements[i];
@@ -156,7 +156,7 @@ function searchElementIndexAndType(
       for (const type of elementToCheck.type) {
         const elementToCheckPath = elementToCheck.path.replace(
           "[x]",
-          capitalize(type.code)
+          capitalize(type.code),
         );
         if (path === elementToCheckPath) return { index: i, type: type.code };
       }
@@ -172,7 +172,7 @@ function searchElementIndexAndType(
  */
 function deriveNextMetaInformation(
   meta: TypeMeta | undefined,
-  computedField: string
+  computedField: string,
 ): TypeMeta | undefined {
   if (meta?.elementIndex === undefined) return undefined;
 
@@ -182,7 +182,7 @@ function deriveNextMetaInformation(
   const foundIndexAndType = searchElementIndexAndType(
     meta.sd?.snapshot?.element || [],
     nextElementPath,
-    meta.elementIndex
+    meta.elementIndex,
   );
 
   if (foundIndexAndType) {
@@ -197,7 +197,7 @@ function deriveNextMetaInformation(
     if (nextElement.contentReference) {
       const referenceElementIndex = resolveContentReferenceIndex(
         meta.sd,
-        nextElement
+        nextElement,
       );
       const referenceElement = meta.sd.snapshot?.element[referenceElementIndex];
       const type = referenceElement?.type?.[0].code;
@@ -213,7 +213,7 @@ function deriveNextMetaInformation(
       const type = isElementDefinitionWithType(
         nextElement,
         nextElementPath,
-        nextType
+        nextType,
       );
       if (!type) return undefined;
       // In this case pull in the SD means it's a complex or resource type
@@ -246,7 +246,7 @@ function deriveNextMetaInformation(
 export function toMetaValueNodes<T>(
   meta: PartialMeta,
   value: T | T[],
-  element?: Element | Element[]
+  element?: Element | Element[],
 ): MetaValueSingular<T> | MetaValueArray<T> | undefined {
   if (value instanceof MetaValueArray || value instanceof MetaValueSingular)
     return value;
@@ -254,7 +254,7 @@ export function toMetaValueNodes<T>(
     return new MetaValueArray(
       meta,
       value,
-      element && isArray(element) ? element : undefined
+      element && isArray(element) ? element : undefined,
     );
   }
   if (value === undefined && element === undefined) return undefined;
@@ -297,7 +297,7 @@ function descendLoc<T>(v: MetaValueSingular<T>, field: string): Location {
 
 export function descend<T>(
   node: MetaValueSingular<T>,
-  field: string
+  field: string,
 ): MetaValue<unknown> | undefined {
   const internalValue = node.internalValue;
   if (isObject(internalValue)) {
@@ -326,7 +326,7 @@ export class MetaValueSingular<T> implements MetaValue<T> {
     if (isRawPrimitive(value) || element !== undefined) {
       this._value = toFPPrimitive(
         isRawPrimitive(value) ? value : undefined,
-        element
+        element,
       );
     } else {
       this._value = value;
@@ -366,7 +366,7 @@ export class MetaValueArray<T> implements MetaValue<Array<T>> {
           location: meta?.location ? [...meta.location, i] : [],
         },
         v,
-        element ? element[i] : undefined
+        element ? element[i] : undefined,
       );
     });
     this._meta = {

@@ -46,7 +46,7 @@ import { AsynchronousClient } from "@iguhealth/client/lib/index.js";
 
 return new AsynchronousClient<StateType, CTX>(
   initialState,
-  createMiddlewareAsync<State, CTX>(middlewarefunctions)
+  createMiddlewareAsync<State, CTX>(middlewarefunctions),
 );
 ```
 
@@ -63,7 +63,7 @@ import { SynchronousClient } from "@iguhealth/client";
 
 return new SynchronousClient<StateType, CTX>(
   initialState,
-  createMiddlewareSync<State, CTX>(middlewarefunctions)
+  createMiddlewareSync<State, CTX>(middlewarefunctions),
 );
 ```
 
@@ -77,12 +77,12 @@ export interface FHIRClientAsync<CTX> {
   request(ctx: CTX, request: FHIRRequest): Promise<FHIRResponse>;
   search_system(
     ctx: CTX,
-    parameters: ParsedParameter<string | number>[]
+    parameters: ParsedParameter<string | number>[],
   ): Promise<{ total?: number; resources: Resource[] }>;
   search_type<T extends ResourceType>(
     ctx: CTX,
     type: T,
-    parameters: ParsedParameter<string | number>[]
+    parameters: ParsedParameter<string | number>[],
   ): Promise<{ total?: number; resources: AResource<T>[] }>;
   create<T extends Resource>(ctx: CTX, resource: T): Promise<T>;
   update<T extends Resource>(ctx: CTX, resource: T): Promise<T>;
@@ -90,42 +90,42 @@ export interface FHIRClientAsync<CTX> {
   read<T extends ResourceType>(
     ctx: CTX,
     resourceType: T,
-    id: id
+    id: id,
   ): Promise<AResource<T> | undefined>;
   vread<T extends ResourceType>(
     ctx: CTX,
     resourceType: T,
     id: id,
-    versionId: id
+    versionId: id,
   ): Promise<AResource<T> | undefined>;
   delete(ctx: CTX, resourceType: ResourceType, id: id): Promise<void>;
   historySystem(ctx: CTX): Promise<Resource[]>;
   historyType<T extends ResourceType>(
     ctx: CTX,
-    resourceType: T
+    resourceType: T,
   ): Promise<AResource<T>[]>;
   historyInstance<T extends ResourceType>(
     ctx: CTX,
     resourceType: T,
-    id: id
+    id: id,
   ): Promise<AResource<T>[]>;
   invoke_system<Op extends IOperation<any, any>>(
     op: Op,
     ctx: CTX,
-    input: OPMetadata<Op>["Input"]
+    input: OPMetadata<Op>["Input"],
   ): Promise<OPMetadata<Op>["Output"]>;
   invoke_type<Op extends IOperation<any, any>, Type extends ResourceType>(
     op: Op,
     ctx: CTX,
     resourceType: Type,
-    input: OPMetadata<Op>["Input"]
+    input: OPMetadata<Op>["Input"],
   ): Promise<OPMetadata<Op>["Output"]>;
   invoke_instance<Op extends IOperation<any, any>, Type extends ResourceType>(
     op: Op,
     ctx: CTX,
     resourceType: Type,
     id: id,
-    input: OPMetadata<Op>["Input"]
+    input: OPMetadata<Op>["Input"],
   ): Promise<OPMetadata<Op>["Output"]>;
 }
 ```
@@ -134,9 +134,9 @@ export interface FHIRClientAsync<CTX> {
 
 ```typescript
 import { expect, test } from "@jest/globals";
-import { OperationDefinition } from "@iguhealth/fhir-types/r4/types";
 
 import HTTPClient from "@iguhealth/client/http";
+import { OperationDefinition } from "@iguhealth/fhir-types/r4/types";
 
 const client = HTTPClient({
   url: "FHIR_API_ROOT_URL",

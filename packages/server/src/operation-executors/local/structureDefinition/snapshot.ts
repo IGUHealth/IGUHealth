@@ -1,10 +1,10 @@
+import { FHIRRequest } from "@iguhealth/client/types";
+import { StructureDefinition } from "@iguhealth/fhir-types/r4/types";
 import { StructureDefinitionSnapshot } from "@iguhealth/generated-ops/r4";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
-import { StructureDefinition } from "@iguhealth/fhir-types/r4/types";
 
 import { FHIRServerCTX } from "../../../fhir/context.js";
 import InlineOperation from "../interface.js";
-import { FHIRRequest } from "@iguhealth/client/types";
 
 function findLastIndex<T>(collection: T[], predicate: (item: T) => boolean) {
   let index = -1;
@@ -22,8 +22,8 @@ async function generateSnapshot(ctx: FHIRServerCTX, sd: StructureDefinition) {
     throw new OperationError(
       outcomeError(
         "invalid",
-        "StructureDefinitionSnapshot requires a differential to generate a snapshot"
-      )
+        "StructureDefinitionSnapshot requires a differential to generate a snapshot",
+      ),
     );
   // slice so I'm not altering the original when injecting values with splice.
   const baseSnapshotElements = sd.baseDefinition
@@ -36,7 +36,7 @@ async function generateSnapshot(ctx: FHIRServerCTX, sd: StructureDefinition) {
   for (const element of sd.differential.element) {
     const existingElementIndex = findLastIndex(
       baseSnapshotElements,
-      (e) => e.id === element.id
+      (e) => e.id === element.id,
     );
 
     if (existingElementIndex !== -1) {
@@ -46,15 +46,15 @@ async function generateSnapshot(ctx: FHIRServerCTX, sd: StructureDefinition) {
       });
     } else {
       const index = findLastIndex(baseSnapshotElements, (e) =>
-        element.path.startsWith(e.path)
+        element.path.startsWith(e.path),
       );
 
       if (index === -1)
         throw new OperationError(
           outcomeError(
             "invalid",
-            `Could not find element with path '${element.path}' in base snapshot`
-          )
+            `Could not find element with path '${element.path}' in base snapshot`,
+          ),
         );
 
       // Place behind last element found.
@@ -72,8 +72,8 @@ const StructureDefinitionSnapshotInvoke = InlineOperation(
       throw new OperationError(
         outcomeError(
           "invalid",
-          "StructureDefinitionSnapshot requires either a definition or url parameter"
-        )
+          "StructureDefinitionSnapshot requires either a definition or url parameter",
+        ),
       );
     }
     const sd: StructureDefinition | undefined = input.definition
@@ -84,13 +84,13 @@ const StructureDefinitionSnapshotInvoke = InlineOperation(
       throw new OperationError(
         outcomeError(
           "invalid",
-          "StructureDefinitionSnapshot could not find StructureDefinition"
-        )
+          "StructureDefinitionSnapshot could not find StructureDefinition",
+        ),
       );
     }
 
     return generateSnapshot(ctx, sd);
-  }
+  },
 );
 
 export default StructureDefinitionSnapshotInvoke;

@@ -1,12 +1,12 @@
 import { expect, test } from "@jest/globals";
 
+import HTTPClient from "@iguhealth/client/lib/http";
 import {
-  id,
   Patient,
   Practitioner,
   Resource,
+  id,
 } from "@iguhealth/fhir-types/lib/r4/types";
-import HTTPClient from "@iguhealth/client/lib/http";
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system/api/v1/fhir/r4",
@@ -38,7 +38,7 @@ test("History test", async () => {
 
     const practitioner = await client.create<Practitioner>(
       {},
-      { resourceType: "Practitioner" }
+      { resourceType: "Practitioner" },
     );
     resources.push(practitioner);
     expect(practitioner.id).toBeDefined();
@@ -51,7 +51,7 @@ test("History test", async () => {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
         return await client.delete({}, resourceType, id as id);
-      })
+      }),
     );
   }
 });
@@ -78,7 +78,7 @@ test("History test since versionid", async () => {
 
     const practitioner = await client.create<Practitioner>(
       {},
-      { resourceType: "Practitioner" }
+      { resourceType: "Practitioner" },
     );
     resources.push(practitioner);
     expect(practitioner.id).toBeDefined();
@@ -91,7 +91,7 @@ test("History test since versionid", async () => {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
         return await client.delete({}, resourceType, id as id);
-      })
+      }),
     );
   }
 });

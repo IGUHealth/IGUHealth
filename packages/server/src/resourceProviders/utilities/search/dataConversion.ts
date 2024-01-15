@@ -1,17 +1,13 @@
 import dayjs from "dayjs";
 
+import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
   Address,
-  canonical,
   CodeableConcept,
   Coding,
   ContactPoint,
-  date,
-  dateTime,
   HumanName,
-  id,
   Identifier,
-  instant,
   Period,
   Quantity,
   Range,
@@ -19,13 +15,17 @@ import {
   Resource,
   ResourceType,
   SearchParameter,
+  canonical,
+  date,
+  dateTime,
+  id,
+  instant,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
-import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
-  descend,
   MetaValueArray,
   MetaValueSingular,
+  descend,
 } from "@iguhealth/meta-value";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -38,7 +38,7 @@ import { getDecimalPrecision } from "./parameters.js";
 // ---------------------------------------------------------
 
 export function toStringParameters(
-  value: MetaValueSingular<NonNullable<unknown>>
+  value: MetaValueSingular<NonNullable<unknown>>,
 ): string[] {
   switch (value.meta()?.type) {
     // Even though spec states won't encounter this it does. [ImplementationGuide.description]
@@ -84,7 +84,7 @@ export function toStringParameters(
 
 export function toTokenParameters(
   parameter: SearchParameter,
-  value: MetaValueSingular<NonNullable<unknown>>
+  value: MetaValueSingular<NonNullable<unknown>>,
 ): Array<{ system?: string; code?: string }> {
   switch (value.meta()?.type) {
     case "Coding": {
@@ -134,14 +134,14 @@ export function toTokenParameters(
       throw new Error(
         `Unknown token parameter of type '${
           value.meta()?.type
-        }' '${value.valueOf()}' indexing '${parameter.url}'`
+        }' '${value.valueOf()}' indexing '${parameter.url}'`,
       );
   }
 }
 
 export function toURIParameters(
   param: SearchParameter,
-  value: MetaValueSingular<NonNullable<unknown>>
+  value: MetaValueSingular<NonNullable<unknown>>,
 ): string[] {
   switch (value.meta()?.type) {
     case "uri":
@@ -155,7 +155,7 @@ export function toURIParameters(
       throw new Error(
         `Unknown uri parameter of type '${
           value.meta()?.type
-        }' '${value.valueOf()}' indexing '${param.url}'`
+        }' '${value.valueOf()}' indexing '${param.url}'`,
       );
   }
 }
@@ -165,8 +165,8 @@ export async function toReference(
   value: MetaValueSingular<NonNullable<unknown>>,
   resolveCanonical?: (
     types: ResourceType[],
-    url: canonical
-  ) => Promise<Resource | undefined>
+    url: canonical,
+  ) => Promise<Resource | undefined>,
 ): Promise<
   Array<{
     reference: Reference;
@@ -199,13 +199,13 @@ export async function toReference(
         throw new OperationError(
           outcomeError(
             "invalid",
-            `no target specified on canonical search parameter '${parameter.name}'`
-          )
+            `no target specified on canonical search parameter '${parameter.name}'`,
+          ),
         );
       const resource = resolveCanonical
         ? await resolveCanonical(
             parameter.target as ResourceType[],
-            value.valueOf().toString() as canonical
+            value.valueOf().toString() as canonical,
           )
         : undefined;
 
@@ -229,7 +229,7 @@ export async function toReference(
       throw new Error(
         `Unknown reference parameter of type '${
           value.meta()?.type
-        }' indexing '${parameter.url}'`
+        }' indexing '${parameter.url}'`,
       );
   }
 }
@@ -261,12 +261,12 @@ function getPrecision(v: date | dateTime) {
     throw new Error(`could not determine precision level of '${v}'`);
   }
   throw new OperationError(
-    outcomeError("invalid", `Invalid date or dateTime format '${v}'`)
+    outcomeError("invalid", `Invalid date or dateTime format '${v}'`),
   );
 }
 
 export function toDateRange(
-  value: MetaValueSingular<NonNullable<unknown>>
+  value: MetaValueSingular<NonNullable<unknown>>,
 ): { start: string; end: string }[] {
   switch (value.meta()?.type) {
     case "Period": {
@@ -357,7 +357,7 @@ function getQuantityRange(value: number): { start: number; end: number } {
 }
 
 export function toQuantityRange(
-  value: MetaValueSingular<NonNullable<unknown>>
+  value: MetaValueSingular<NonNullable<unknown>>,
 ): { start: QuantityIndex; end: QuantityIndex }[] {
   switch (value.meta()?.type) {
     case "Range": {
@@ -399,7 +399,7 @@ export function toQuantityRange(
     }
     default:
       throw new Error(
-        `Unable to index as quantity value '${value.meta()?.type}'`
+        `Unable to index as quantity value '${value.meta()?.type}'`,
       );
   }
 }

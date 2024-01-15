@@ -1,7 +1,7 @@
 import { expect, test } from "@jest/globals";
 
+import HTTPClient from "@iguhealth/client/lib/http";
 import {
-  id,
   Observation,
   Patient,
   Practitioner,
@@ -9,8 +9,8 @@ import {
   QuestionnaireResponse,
   Resource,
   RiskAssessment,
+  id,
 } from "@iguhealth/fhir-types/lib/r4/types";
-import HTTPClient from "@iguhealth/client/lib/http";
 import { evaluate } from "@iguhealth/fhirpath";
 import { OperationError } from "@iguhealth/operation-outcomes";
 
@@ -206,7 +206,7 @@ async function createTestData(seed: number) {
           given: [`Adam${seed}`],
         },
       ],
-    }
+    },
   );
   resources.push(practitionerResponse);
 
@@ -249,7 +249,7 @@ test("Parameter chains", async () => {
           variables: {
             seedUrl: SEED_URL,
           },
-        }
+        },
       );
 
       expect(observationSearch.resources).toEqual(expectedResult);
@@ -257,7 +257,7 @@ test("Parameter chains", async () => {
       await Promise.all(
         resources.map(async ({ resourceType, id }) => {
           return await client.delete({}, resourceType, id as id);
-        })
+        }),
       );
     }
   } catch (e) {
@@ -298,14 +298,14 @@ test("test offsets and count", async () => {
       { name: "_offset", value: [1] },
     ]);
     expect(observationSearch1.resources[1].id).toEqual(
-      observationSearch2.resources[0].id
+      observationSearch2.resources[0].id,
     );
     expect(observationSearch2.resources.length).toEqual(3);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
         return await client.delete({}, resourceType, id as id);
-      })
+      }),
     );
   }
 });
@@ -338,7 +338,7 @@ test("test total accurate", async () => {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
         return await client.delete({}, resourceType, id as id);
-      })
+      }),
     );
   }
 });
@@ -374,7 +374,7 @@ test("Test sort ", async () => {
     ]);
 
     expect(
-      patientSearch.resources.map((v) => evaluate("$this.name.given", v)[0])[0]
+      patientSearch.resources.map((v) => evaluate("$this.name.given", v)[0])[0],
     ).toEqual("A");
 
     const patientSearch2 = await client.search_type({}, "Patient", [
@@ -382,7 +382,9 @@ test("Test sort ", async () => {
     ]);
 
     expect(
-      patientSearch2.resources.map((v) => evaluate("$this.name.given", v)[0])[0]
+      patientSearch2.resources.map(
+        (v) => evaluate("$this.name.given", v)[0],
+      )[0],
     ).toEqual("J");
 
     const mutliSort1 = await client.search_type({}, "Patient", [
@@ -390,7 +392,7 @@ test("Test sort ", async () => {
     ]);
 
     const resmultiSort1 = mutliSort1.resources.map(
-      (v) => evaluate("$this.name.family", v)[0]
+      (v) => evaluate("$this.name.family", v)[0],
     );
 
     expect([resmultiSort1[0], resmultiSort1[1]]).toEqual(["K", "J"]);
@@ -430,7 +432,7 @@ test("Test sort ", async () => {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
         return await client.delete({}, resourceType, id as id);
-      })
+      }),
     );
   }
 });
@@ -446,7 +448,7 @@ test("Testing custom extension added to resources", async () => {
       [
         "https://iguhealth.app/version-sequence",
         "https://iguhealth.app/author",
-      ].sort()
+      ].sort(),
     );
     const existingExtensions = await client.create({}, {
       meta: {
@@ -462,12 +464,12 @@ test("Testing custom extension added to resources", async () => {
     } as Patient);
     resources.push(existingExtensions);
     expect(
-      evaluate("$this.meta.extension.url", existingExtensions).sort()
+      evaluate("$this.meta.extension.url", existingExtensions).sort(),
     ).toEqual(
       [
         "https://iguhealth.app/version-sequence",
         "https://iguhealth.app/author",
-      ].sort()
+      ].sort(),
     );
 
     const preserveExtensions = await client.create({}, {
@@ -485,19 +487,19 @@ test("Testing custom extension added to resources", async () => {
     } as Patient);
     resources.push(preserveExtensions);
     expect(
-      evaluate("$this.meta.extension.url", preserveExtensions).sort()
+      evaluate("$this.meta.extension.url", preserveExtensions).sort(),
     ).toEqual(
       [
         "https://iguhealth.app/version-sequence",
         "https://iguhealth.app/author",
         "https://test.com",
-      ].sort()
+      ].sort(),
     );
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
         return await client.delete({}, resourceType, id as id);
-      })
+      }),
     );
   }
 });
@@ -525,7 +527,7 @@ test("Number range", async () => {
         await client.search_type({}, "RiskAssessment", [
           { name: "probability", value: [1.133] },
         ])
-      ).resources[0].id
+      ).resources[0].id,
     ).toEqual(RiskAssessment.id);
 
     expect(
@@ -533,7 +535,7 @@ test("Number range", async () => {
         await client.search_type({}, "RiskAssessment", [
           { name: "probability", value: [1.134] },
         ])
-      ).resources.length
+      ).resources.length,
     ).toEqual(0);
 
     expect(
@@ -541,7 +543,7 @@ test("Number range", async () => {
         await client.search_type({}, "RiskAssessment", [
           { name: "probability", value: [1.13] },
         ])
-      ).resources[0].id
+      ).resources[0].id,
     ).toEqual(RiskAssessment.id);
 
     expect(
@@ -549,13 +551,13 @@ test("Number range", async () => {
         await client.search_type({}, "RiskAssessment", [
           { name: "probability", value: [1.14] },
         ])
-      ).resources.length
+      ).resources.length,
     ).toEqual(0);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
         return await client.delete({}, resourceType, id as id);
-      })
+      }),
     );
   }
 });
@@ -584,7 +586,7 @@ test("Number prefixes", async () => {
         await client.search_type({}, "RiskAssessment", [
           { name: "probability", value: ["gt1"] },
         ])
-      ).resources.length
+      ).resources.length,
     ).toEqual(0);
 
     expect(
@@ -592,7 +594,7 @@ test("Number prefixes", async () => {
         await client.search_type({}, "RiskAssessment", [
           { name: "probability", value: ["gt1.12"] },
         ])
-      ).resources[0].id
+      ).resources[0].id,
     ).toEqual(RiskAssessment.id);
 
     expect(
@@ -600,7 +602,7 @@ test("Number prefixes", async () => {
         await client.search_type({}, "RiskAssessment", [
           { name: "probability", value: ["gt1.13"] },
         ])
-      ).resources.length
+      ).resources.length,
     ).toEqual(0);
 
     expect(
@@ -608,7 +610,7 @@ test("Number prefixes", async () => {
         await client.search_type({}, "RiskAssessment", [
           { name: "probability", value: ["ge1.13"] },
         ])
-      ).resources[0].id
+      ).resources[0].id,
     ).toEqual(RiskAssessment.id);
 
     expect(
@@ -616,7 +618,7 @@ test("Number prefixes", async () => {
         await client.search_type({}, "RiskAssessment", [
           { name: "probability", value: ["gt-1"] },
         ])
-      ).resources[0].id
+      ).resources[0].id,
     ).toEqual(RiskAssessment.id);
 
     expect(
@@ -624,7 +626,7 @@ test("Number prefixes", async () => {
         await client.search_type({}, "RiskAssessment", [
           { name: "probability", value: ["lt1.14"] },
         ])
-      ).resources[0].id
+      ).resources[0].id,
     ).toEqual(RiskAssessment.id);
 
     expect(
@@ -632,7 +634,7 @@ test("Number prefixes", async () => {
         await client.search_type({}, "RiskAssessment", [
           { name: "probability", value: ["lt1.133"] },
         ])
-      ).resources.length
+      ).resources.length,
     ).toEqual(0);
 
     expect(
@@ -640,7 +642,7 @@ test("Number prefixes", async () => {
         await client.search_type({}, "RiskAssessment", [
           { name: "probability", value: ["le1.133"] },
         ])
-      ).resources[0].id
+      ).resources[0].id,
     ).toEqual(RiskAssessment.id);
 
     expect(
@@ -648,7 +650,7 @@ test("Number prefixes", async () => {
         await client.search_type({}, "RiskAssessment", [
           { name: "probability", value: ["lt1.130"] },
         ])
-      ).resources.length
+      ).resources.length,
     ).toEqual(0);
 
     expect(
@@ -656,7 +658,7 @@ test("Number prefixes", async () => {
         await client.search_type({}, "RiskAssessment", [
           { name: "probability", value: ["ne1.13"] },
         ])
-      ).resources.length
+      ).resources.length,
     ).toEqual(0);
 
     expect(
@@ -664,7 +666,7 @@ test("Number prefixes", async () => {
         await client.search_type({}, "RiskAssessment", [
           { name: "probability", value: ["eq1.13"] },
         ])
-      ).resources[0].id
+      ).resources[0].id,
     ).toEqual(RiskAssessment.id);
 
     expect(
@@ -672,13 +674,13 @@ test("Number prefixes", async () => {
         await client.search_type({}, "RiskAssessment", [
           { name: "probability", value: ["1.13"] },
         ])
-      ).resources[0].id
+      ).resources[0].id,
     ).toEqual(RiskAssessment.id);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
         return await client.delete({}, resourceType, id as id);
-      })
+      }),
     );
   }
 });
@@ -705,7 +707,7 @@ test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
     expect(
       await client.search_type({}, "QuestionnaireResponse", [
         { name: "questionnaire", value: [q.id as id] },
-      ])
+      ]),
     ).toEqual({
       resources: [qr],
     });
@@ -713,7 +715,7 @@ test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
     expect(
       await client.search_type({}, "QuestionnaireResponse", [
         { name: "questionnaire", value: [q.url as string] },
-      ])
+      ]),
     ).toEqual({
       resources: [qr],
     });
@@ -721,7 +723,7 @@ test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
     expect(
       await client.search_type({}, "Questionnaire", [
         { name: "url", value: ["https://iguhealth.com/PREPARE"] },
-      ])
+      ]),
     ).toEqual({
       resources: [q],
     });
@@ -729,7 +731,7 @@ test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
         return await client.delete({}, resourceType, id as id);
-      })
+      }),
     );
   }
 });
@@ -756,7 +758,7 @@ test("Type filter", async () => {
     expect(
       await client.search_system({}, [
         { name: "_type", value: ["QuestionnaireResponse"] },
-      ])
+      ]),
     ).toEqual({
       resources: [qr],
     });
@@ -764,7 +766,7 @@ test("Type filter", async () => {
     expect(
       await client.search_system({}, [
         { name: "_type", value: ["Questionnaire"] },
-      ])
+      ]),
     ).toEqual({
       resources: [q],
     });
@@ -772,7 +774,7 @@ test("Type filter", async () => {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
         return await client.delete({}, resourceType, id as id);
-      })
+      }),
     );
   }
 });
@@ -784,7 +786,7 @@ test("Memory type test", async () => {
     [
       { name: "kind", value: ["primitive-type"] },
       { name: "name", value: ["base64Binary"] },
-    ]
+    ],
   );
   expect(primitiveSDSearch.resources.length).toEqual(1);
   expect(primitiveSDSearch.resources[0].id).toEqual("base64Binary");
@@ -794,7 +796,7 @@ test("Memory type test with _count", async () => {
   const primitiveSDSearch = await client.search_type(
     {},
     "StructureDefinition",
-    [{ name: "_count", value: ["1"] }]
+    [{ name: "_count", value: ["1"] }],
   );
   expect(primitiveSDSearch.resources.length).toEqual(1);
 });

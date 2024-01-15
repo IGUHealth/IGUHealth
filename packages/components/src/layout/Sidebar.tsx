@@ -1,5 +1,5 @@
-import React from "react";
 import classNames from "classnames";
+import React from "react";
 
 export interface SideBarItemProps
   extends React.DetailedHTMLProps<
@@ -21,7 +21,7 @@ export function SideBarItem(props: SideBarItemProps) {
           {
             "text-slate-800 hover:bg-gray-200": !active,
             "text-blue-800 bg-blue-100 ": active,
-          }
+          },
         )}
       >
         {logo && (
@@ -68,7 +68,7 @@ export function SideBar({
       id="sidebar-multi-level-sidebar"
       className={classNames(
         "flex fixed top-0 left-0 z-40 w-64 h-screen transition-transform",
-        { "translate-x-0": isOpen, "-translate-x-full": !isOpen }
+        { "translate-x-0": isOpen, "-translate-x-full": !isOpen },
       )}
       aria-label="Sidebar"
     >

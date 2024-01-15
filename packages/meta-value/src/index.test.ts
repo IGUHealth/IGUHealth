@@ -1,16 +1,17 @@
+import { expect, test } from "@jest/globals";
 import path from "path";
 import { fileURLToPath } from "url";
+
 import { loadArtifacts } from "@iguhealth/artifacts";
 import {
-  StructureDefinition,
-  Patient,
   ConceptMap,
+  Patient,
   Practitioner,
+  StructureDefinition,
   uri,
 } from "@iguhealth/fhir-types/lib/r4/types";
-import { expect, test } from "@jest/globals";
 
-import { MetaValueSingular, MetaValueArray, descend } from "./index";
+import { MetaValueArray, MetaValueSingular, descend } from "./index";
 
 const sds: StructureDefinition[] = loadArtifacts({
   resourceType: "StructureDefinition",
@@ -18,12 +19,12 @@ const sds: StructureDefinition[] = loadArtifacts({
 });
 
 const patientSD = sds.find(
-  (sd) => sd.type === "Patient"
+  (sd) => sd.type === "Patient",
 ) as StructureDefinition;
 
 function flattenedDescend<T>(
   node: MetaValueSingular<T>,
-  field: string
+  field: string,
 ): MetaValueSingular<unknown>[] {
   const v = descend(node, field);
   if (v instanceof MetaValueArray) return v.toArray();
@@ -67,14 +68,14 @@ test("Simple Type test", () => {
         },
       },
     },
-    patient
+    patient,
   ) as any;
 
   expect(descend(myValue, "name")?.valueOf()).toEqual([{ given: ["bob"] }]);
   expect(descend(myValue, "name")?.meta()?.type).toEqual("HumanName");
   expect(descend(myValue, "identifier")?.meta()?.type).toEqual("Identifier");
   expect(descend(myValue, "id")?.meta()?.type).toEqual(
-    "http://hl7.org/fhirpath/System.String"
+    "http://hl7.org/fhirpath/System.String",
   );
   expect(descend(myValue, "deceased")?.valueOf()).toEqual(true);
   expect(descend(myValue, "deceased")?.meta()?.type).toEqual("boolean");
@@ -129,7 +130,7 @@ test("ConceptMap test", () => {
         },
       },
     },
-    cm
+    cm,
   ) as any;
   //ConceptMap.group.element.target.product.property
   let cur = flattenedDescend(myValue, "group");
@@ -170,7 +171,7 @@ test("Location test", () => {
         },
       },
     },
-    patient
+    patient,
   );
   let cur = flattenedDescend(myValue, "name");
   cur = flattenedDescend(cur[0], "given");
@@ -200,7 +201,7 @@ test("typechoice", () => {
         },
       },
     },
-    practitioner
+    practitioner,
   );
 
   let cur = flattenedDescend(myValue, "extension");
@@ -248,7 +249,7 @@ test("Location test primitive extensions", () => {
       _deceasedBoolean: {
         extension: [{ url: "https://test.com", valueString: "boolean" }],
       },
-    }
+    },
   );
 
   let cur = flattenedDescend(patient, "deceased");

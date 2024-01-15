@@ -1,5 +1,5 @@
-import type * as s from "zapatos/schema";
 import * as db from "zapatos/db";
+import type * as s from "zapatos/schema";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -11,7 +11,7 @@ import {
 
 export default function numberClauses(
   _ctx: FHIRServerCTX,
-  parameter: SearchParameterResource
+  parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, never> {
   return db.conditions.or(
     ...parameter.value.map((value): db.SQLFragment => {
@@ -23,8 +23,8 @@ export default function numberClauses(
         throw new OperationError(
           outcomeError(
             "invalid",
-            `Invalid input value '${parameter.value}' for parameter '${parameter.searchParameter.name}'`
-          )
+            `Invalid input value '${parameter.value}' for parameter '${parameter.searchParameter.name}'`,
+          ),
         );
       }
       const numericPortion = result?.groups?.value;
@@ -34,8 +34,8 @@ export default function numberClauses(
         throw new OperationError(
           outcomeError(
             "invalid",
-            `A Number must be provided for parameter '${parameter.searchParameter.name}'`
-          )
+            `A Number must be provided for parameter '${parameter.searchParameter.name}'`,
+          ),
         );
       }
 
@@ -44,8 +44,8 @@ export default function numberClauses(
         throw new OperationError(
           outcomeError(
             "invalid",
-            `Invalid number value '${parameter.value}' for parameter '${parameter.searchParameter.name}'`
-          )
+            `Invalid number value '${parameter.value}' for parameter '${parameter.searchParameter.name}'`,
+          ),
         );
       }
 
@@ -94,10 +94,10 @@ export default function numberClauses(
           throw new OperationError(
             outcomeError(
               "not-supported",
-              `Prefix '${prefix}' not supported for parameter '${parameter.searchParameter.name}'`
-            )
+              `Prefix '${prefix}' not supported for parameter '${parameter.searchParameter.name}'`,
+            ),
           );
       }
-    })
+    }),
   );
 }

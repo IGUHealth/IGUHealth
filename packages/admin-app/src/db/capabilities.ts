@@ -1,4 +1,5 @@
 import { selector } from "recoil";
+
 import { getClient } from "./client";
 
 export const getCapabilities = selector({

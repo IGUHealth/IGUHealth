@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { FHIRRangeEditable } from "./Range";
 import { Range } from "@iguhealth/fhir-types/r4/types";
+
+import { FHIRRangeEditable } from "./Range";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {

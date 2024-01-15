@@ -1,13 +1,15 @@
 import { expect, test } from "@jest/globals";
+
 import { Patient, id } from "@iguhealth/fhir-types/r4/types";
+
 import {
   Loc,
-  pointer,
-  descend,
   ascend,
+  descend,
+  fields,
   get,
   pathMeta,
-  fields,
+  pointer,
   root,
   toJSONPointer,
   typedPointer,
@@ -26,7 +28,7 @@ test("ascend pointer", () => {
 
   const nestedLoc = descend(
     descend(descend(pointer("Patient", "123" as id), "name"), 0),
-    "given"
+    "given",
   );
   expect(nestedLoc).toEqual("Patient|123/name/0/given");
   expect(ascend(nestedLoc)).toEqual({
@@ -44,7 +46,7 @@ test("ascend pointer", () => {
 test("get function", () => {
   const nestedLoc = descend(
     descend(descend(pointer("Patient", "123" as id), "name"), 0),
-    "given"
+    "given",
   );
 
   const patient: Patient = {
@@ -55,27 +57,27 @@ test("get function", () => {
 
   expect(get(nestedLoc, patient)).toEqual(["John"]);
   expect(
-    get(descend(descend(pointer("Patient", "123" as id), "name"), 1), patient)
+    get(descend(descend(pointer("Patient", "123" as id), "name"), 1), patient),
   ).toEqual(undefined);
 
   expect(
     get(
       descend(
         descend(descend(pointer("Patient", "123" as id), "name"), 1),
-        "given"
+        "given",
       ),
-      patient
-    )
+      patient,
+    ),
   ).toEqual(undefined);
 
   expect(
     get(
       descend(
         descend(descend(pointer("Patient", "123" as id), "identifier"), 1),
-        "system"
+        "system",
       ),
-      patient
-    )
+      patient,
+    ),
   ).toEqual(undefined);
 });
 
@@ -87,7 +89,7 @@ test("path meta", () => {
 test("fields", () => {
   const nestedLoc = descend(
     descend(descend(pointer("Patient", "123" as id), "name"), 0),
-    "given"
+    "given",
   );
   expect(fields(nestedLoc)).toEqual(["name", 0, "given"]);
 });
@@ -95,7 +97,7 @@ test("fields", () => {
 test("root", () => {
   const nestedLoc = descend(
     descend(descend(pointer("Patient", "123" as id), "name"), 0),
-    "given"
+    "given",
   );
   expect(root(nestedLoc)).toEqual("Patient|123");
   expect(toJSONPointer(root(nestedLoc))).toEqual("");

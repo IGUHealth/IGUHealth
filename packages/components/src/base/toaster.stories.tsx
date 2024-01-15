@@ -1,8 +1,8 @@
-import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
+import React from "react";
 
 import { Button } from "./button";
-import { promise, Toaster } from "./toaster";
+import { Toaster, promise } from "./toaster";
 
 const TestPromise = ({
   success,
@@ -26,7 +26,7 @@ const TestPromise = ({
               loading: loading,
               success: () => success,
               error: (err) => `This just happened: ${err.toString()}`,
-            }
+            },
           );
         }}
       />

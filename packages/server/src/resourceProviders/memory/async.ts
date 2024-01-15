@@ -1,45 +1,46 @@
+import { nanoid } from "nanoid";
+
+import { AsynchronousClient } from "@iguhealth/client";
 import {
-  ResourceType,
+  MiddlewareAsync,
+  createMiddlewareAsync,
+} from "@iguhealth/client/middleware";
+import {
   Resource,
+  ResourceType,
   SearchParameter,
   id,
 } from "@iguhealth/fhir-types/r4/types";
-import { AsynchronousClient } from "@iguhealth/client";
-import { nanoid } from "nanoid";
-import {
-  createMiddlewareAsync,
-  MiddlewareAsync,
-} from "@iguhealth/client/middleware";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { FHIRServerCTX } from "../../fhir/context.js";
 import {
   SearchParameterResource,
   SearchParameterResult,
-  parametersWithMetaAssociated,
   deriveResourceTypeFilter,
+  parametersWithMetaAssociated,
 } from "../utilities/search/parameters.js";
-import { InternalData } from "./types.js";
 import { fitsSearchCriteria } from "./search.js";
-import { FHIRServerCTX } from "../../fhir/context.js";
+import { InternalData } from "./types.js";
 
 // Need special handling of SearchParameter to avoid infinite recursion.
 async function resolveParameter(
   data: InternalData<ResourceType>,
   resourceTypes: ResourceType[],
-  name: string
+  name: string,
 ) {
   const params = Object.values(data?.["SearchParameter"] || {}).filter(
     (p): p is SearchParameter =>
       p?.resourceType === "SearchParameter" &&
       p?.name === name &&
-      p?.base?.some((b) => resourceTypes.includes(b as ResourceType))
+      p?.base?.some((b) => resourceTypes.includes(b as ResourceType)),
   );
   return params;
 }
 
 function createMemoryMiddleware<
   State extends { data: InternalData<ResourceType> },
-  CTX extends FHIRServerCTX
+  CTX extends FHIRServerCTX,
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
     async (context) => {
@@ -49,29 +50,29 @@ function createMemoryMiddleware<
           const resourceTypes = deriveResourceTypeFilter(context.request);
           // Remove _type as using on derived resourceTypeFilter
           context.request.parameters = context.request.parameters.filter(
-            (p) => p.name !== "_type"
+            (p) => p.name !== "_type",
           );
 
           const parameters = await parametersWithMetaAssociated(
             async (resourceTypes, name) =>
               resolveParameter(context.state.data, resourceTypes, name),
             resourceTypes,
-            context.request.parameters
+            context.request.parameters,
           );
 
           // Standard parameters
           const resourceParameters = parameters.filter(
-            (v): v is SearchParameterResource => v.type === "resource"
+            (v): v is SearchParameterResource => v.type === "resource",
           );
 
           const resourceSet =
             context.request.level === "type"
               ? Object.values(
-                  context.state.data[context.request.resourceType] || {}
+                  context.state.data[context.request.resourceType] || {},
                 ).filter((v): v is Resource => v !== undefined)
               : Object.keys(context.state.data)
                   .map((k) =>
-                    Object.values(context.state.data[k as ResourceType] || {})
+                    Object.values(context.state.data[k as ResourceType] || {}),
                   )
                   .filter((v): v is Resource[] => v !== undefined)
                   .flat();
@@ -82,7 +83,7 @@ function createMemoryMiddleware<
               await fitsSearchCriteria(
                 context.ctx,
                 resource,
-                resourceParameters
+                resourceParameters,
               )
             ) {
               result.push(resource);
@@ -90,17 +91,17 @@ function createMemoryMiddleware<
           }
 
           const parametersResult = parameters.filter(
-            (v): v is SearchParameterResult => v.type === "result"
+            (v): v is SearchParameterResult => v.type === "result",
           );
 
           const offsetParam = parametersResult.find(
-            (v) => v.name === "_offset"
+            (v) => v.name === "_offset",
           );
 
           if (offsetParam) {
             if (isNaN(parseInt(offsetParam.value[0].toString())))
               throw new OperationError(
-                outcomeError("invalid", "_offset must be a single number")
+                outcomeError("invalid", "_offset must be a single number"),
               );
             result = result.slice(parseInt(offsetParam.value[0].toString()));
           }
@@ -142,7 +143,7 @@ function createMemoryMiddleware<
           const resource = context.request.body;
           if (!resource.id)
             throw new OperationError(
-              outcomeError("invalid", "Updated resource must have an id.")
+              outcomeError("invalid", "Updated resource must have an id."),
             );
           context.state.data = {
             ...context.state.data,
@@ -192,7 +193,7 @@ function createMemoryMiddleware<
             ];
           if (!data) {
             throw new Error(
-              `Not found resource of type '${context.request.resourceType}' with id '${context.request.id}'`
+              `Not found resource of type '${context.request.resourceType}' with id '${context.request.id}'`,
             );
           }
           return {
@@ -210,8 +211,8 @@ function createMemoryMiddleware<
           throw new OperationError(
             outcomeError(
               "not-supported",
-              `Request not supported '${context.request.type}'`
-            )
+              `Request not supported '${context.request.type}'`,
+            ),
           );
       }
     },
@@ -219,10 +220,10 @@ function createMemoryMiddleware<
 }
 
 export default function MemoryDatabase<CTX extends FHIRServerCTX>(
-  data: InternalData<ResourceType>
+  data: InternalData<ResourceType>,
 ): AsynchronousClient<{ data: InternalData<ResourceType> }, CTX> {
   return new AsynchronousClient<{ data: InternalData<ResourceType> }, CTX>(
     { data: data },
-    createMemoryMiddleware()
+    createMemoryMiddleware(),
   );
 }

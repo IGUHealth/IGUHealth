@@ -1,37 +1,37 @@
+import { indentLess, insertTab } from "@codemirror/commands";
+import { javascript } from "@codemirror/lang-javascript";
+import { json } from "@codemirror/lang-json";
+import { keymap } from "@codemirror/view";
+import { basicSetup } from "codemirror";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { basicSetup } from "codemirror";
-import { json } from "@codemirror/lang-json";
-import { javascript } from "@codemirror/lang-javascript";
-import { insertTab, indentLess } from "@codemirror/commands";
-import { keymap } from "@codemirror/view";
 
-import * as fpt from "@iguhealth/fhir-pointer";
-import * as fpb from "@iguhealth/fhir-patch-building";
-import { Operation } from "@iguhealth/operation-execution";
 import {
-  OperationOutcome,
-  OperationDefinition,
-  ResourceType,
+  Button,
+  CodeMirror,
+  Input,
+  Loading,
+  Modal,
+  Table,
+  Tabs,
+  Toaster,
+} from "@iguhealth/components";
+import * as fpb from "@iguhealth/fhir-patch-building";
+import * as fpt from "@iguhealth/fhir-pointer";
+import {
   AuditEvent,
   Extension,
+  OperationDefinition,
+  OperationOutcome,
+  ResourceType,
   id,
 } from "@iguhealth/fhir-types/r4/types";
-import {
-  Tabs,
-  CodeMirror,
-  Toaster,
-  Modal,
-  Button,
-  Loading,
-  Input,
-  Table,
-} from "@iguhealth/components";
+import { Operation } from "@iguhealth/operation-execution";
 
-import { getClient } from "../../db/client";
 import ResourceEditorComponent, {
   AdditionalContent,
 } from "../../components/ResourceEditor";
+import { getClient } from "../../db/client";
 
 const extensions = [
   basicSetup,
@@ -190,13 +190,13 @@ const InvocationModal = ({
                     try {
                       if (!operation) {
                         throw new Error(
-                          "Must have operation to trigger invocation"
+                          "Must have operation to trigger invocation",
                         );
                       }
                       const invocation = client.invoke_system(
                         new Operation(operation),
                         {},
-                        JSON.parse(parameters)
+                        JSON.parse(parameters),
                       );
                       Toaster.promise(invocation, {
                         loading: "Invocation",
@@ -275,7 +275,7 @@ function EnvironmentVariables({
     .filter(
       ([e]) =>
         e.url ===
-        "https://iguhealth.app/Extension/OperationDefinition/environment-variable"
+        "https://iguhealth.app/Extension/OperationDefinition/environment-variable",
     )
     .map(([, i]) => fpt.descend(operationExtensions, i));
 
@@ -295,7 +295,7 @@ function EnvironmentVariables({
           if (!ext) throw new Error("Ext not on pointer");
           const valuePointer = fpt.descend(
             fpt.descend(pointer, "extension"),
-            0
+            0,
           );
 
           const isSecret = ext.extension?.[0]._valueString !== undefined;
@@ -311,7 +311,7 @@ function EnvironmentVariables({
                         op: "replace",
                         path: fpt.descend(pointer, "valueString"),
                         value: e.target.value,
-                      })
+                      }),
                     );
                   }}
                 />
@@ -330,7 +330,7 @@ function EnvironmentVariables({
                           url: "https://iguhealth.app/Extension/OperationDefinition/environment-variable-value" as id,
                           valueString: e.target.value,
                         },
-                      })
+                      }),
                     );
                   }}
                 />
@@ -353,14 +353,14 @@ function EnvironmentVariables({
                               },
                             ],
                           },
-                        })
+                        }),
                       );
                     } else {
                       onChange(
                         fpb.applyMutationImmutable(operation, {
                           op: "remove",
                           path: fpt.descend(valuePointer, "_valueString"),
-                        })
+                        }),
                       );
                     }
                   }}
@@ -373,7 +373,7 @@ function EnvironmentVariables({
                       fpb.applyMutationImmutable(operation, {
                         op: "remove",
                         path: pointer,
-                      })
+                      }),
                     );
                   }}
                   className="text-red-600 font-semibold cursor-pointer hover:text-red-500"
@@ -395,7 +395,7 @@ function EnvironmentVariables({
                     op: "add",
                     path: fpt.descend(
                       operationExtensions,
-                      operationExtensions.length
+                      operationExtensions.length,
                     ),
                     value: {
                       extension: [
@@ -407,7 +407,7 @@ function EnvironmentVariables({
                       url: "https://iguhealth.app/Extension/OperationDefinition/environment-variable" as id,
                       valueString: "",
                     },
-                  })
+                  }),
                 );
               }}
             >
@@ -432,12 +432,12 @@ export default function OperationDefinitionView({
     resource?.extension?.find(
       (e) =>
         e.url ===
-        "https://iguhealth.github.io/fhir-operation-definition/operation-code"
+        "https://iguhealth.github.io/fhir-operation-definition/operation-code",
     ) !== undefined
       ? resource?.extension?.filter(
           (e) =>
             e.url ===
-            "https://iguhealth.github.io/fhir-operation-definition/operation-code"
+            "https://iguhealth.github.io/fhir-operation-definition/operation-code",
         )[0].valueString || ""
       : "";
   return (
@@ -471,7 +471,7 @@ export default function OperationDefinitionView({
                     ...(resource?.extension?.filter(
                       (e) =>
                         e.url !==
-                        "https://iguhealth.github.io/fhir-operation-definition/operation-code"
+                        "https://iguhealth.github.io/fhir-operation-definition/operation-code",
                     ) || []),
                     {
                       url: "https://iguhealth.github.io/fhir-operation-definition/operation-code",

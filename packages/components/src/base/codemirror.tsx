@@ -1,4 +1,3 @@
-import React, { useEffect, useRef, useState } from "react";
 import {
   Annotation,
   EditorState,
@@ -6,6 +5,7 @@ import {
   StateEffect,
 } from "@codemirror/state";
 import { EditorView, ViewUpdate } from "@codemirror/view";
+import React, { useEffect, useRef, useState } from "react";
 
 const SyncAnnotation = Annotation.define();
 
@@ -41,7 +41,7 @@ function resync(view: EditorView | undefined, value: string | undefined = "") {
 }
 
 function createUpdateListener(
-  onChange: CodeMirrorProps["onChange"]
+  onChange: CodeMirrorProps["onChange"],
 ): Extension {
   const updateListener = EditorView.updateListener.of((update) => {
     if (update.docChanged) {
@@ -138,7 +138,7 @@ export const CodeMirror = ({
             extensions,
             theme,
             onChange,
-          })
+          }),
         ),
       });
     }

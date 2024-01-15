@@ -1,22 +1,23 @@
 import {
+  Element,
   Reference,
   Resource,
-  Element,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 import {
-  PartialMeta,
-  PartialTypeMeta,
   MetaValueArray,
   MetaValueSingular,
+  PartialMeta,
+  PartialTypeMeta,
   descend,
   toMetaValueNodes,
 } from "@iguhealth/meta-value";
+
 import { parse } from "./parser.js";
 
 function flattenedDescend<T>(
   node: MetaValueSingular<T>,
-  field: string
+  field: string,
 ): MetaValueSingular<unknown>[] {
   const v = descend(node, field);
   if (v instanceof MetaValueArray) return v.toArray();
@@ -27,7 +28,7 @@ function flattenedDescend<T>(
 function toMetaValueSingulars<T>(
   meta: PartialMeta | undefined,
   value: T | T[],
-  element?: Element | Element[]
+  element?: Element | Element[],
 ): MetaValueSingular<T>[] {
   const node = toMetaValueNodes(meta ? meta : {}, value, element);
   if (node instanceof MetaValueArray) return node.toArray();
@@ -46,7 +47,7 @@ function flatten<T>(arr: T[][]): T[] {
 
 function getVariableValue(
   name: string,
-  options?: Options
+  options?: Options,
 ): MetaValueSingular<unknown>[] {
   let value;
   if (options?.variables instanceof Function) {
@@ -79,7 +80,7 @@ const fp_functions: Record<
   (
     ast: any,
     context: MetaValueSingular<unknown>[],
-    options?: Options
+    options?: Options,
   ) => MetaValueSingular<unknown>[]
 > = {
   // [EXISTENCE FUNCTIONS]
@@ -88,7 +89,7 @@ const fp_functions: Record<
     if (ast.next.length === 1) {
       return toMetaValueSingulars(
         { type: options?.meta },
-        _evaluate(ast.next[0], context, options).length > 0
+        _evaluate(ast.next[0], context, options).length > 0,
       );
     }
     return toMetaValueSingulars({ type: options?.meta }, context.length > 0);
@@ -102,31 +103,31 @@ const fp_functions: Record<
       { type: options?.meta },
       flatten(context.map((v) => _evaluate(ast.next[0], [v], options)))
         .map((v) => v.valueOf())
-        .reduce((acc, v) => acc && v, true)
+        .reduce((acc, v) => acc && v, true),
     );
   },
   allTrue(ast, context, options) {
     return toMetaValueSingulars(
       { type: options?.meta },
-      context.reduce((acc, v) => v.valueOf() === true && acc, true)
+      context.reduce((acc, v) => v.valueOf() === true && acc, true),
     );
   },
   anyTrue(ast, context, options) {
     return toMetaValueSingulars(
       { type: options?.meta },
-      context.reduce((acc, v) => v.valueOf() === true || acc, false)
+      context.reduce((acc, v) => v.valueOf() === true || acc, false),
     );
   },
   allFalse(ast, context, options) {
     return toMetaValueSingulars(
       { type: options?.meta },
-      context.reduce((acc, v) => v.valueOf() === false && acc, true)
+      context.reduce((acc, v) => v.valueOf() === false && acc, true),
     );
   },
   anyFalse(ast, context, options) {
     return toMetaValueSingulars(
       { type: options?.meta },
-      context.reduce((acc, v) => v.valueOf() === false || acc, false)
+      context.reduce((acc, v) => v.valueOf() === false || acc, false),
     );
   },
   subsetOf(ast, context, options) {
@@ -140,8 +141,8 @@ const fp_functions: Record<
             const result = equalityCheck([v1], [v2], options);
             return result[0].valueOf();
           }) !== undefined,
-        true
-      )
+        true,
+      ),
     );
   },
   // Conceptionally this is the opposite of subsetOf.
@@ -156,8 +157,8 @@ const fp_functions: Record<
             const result = equalityCheck([v1], [v2], options);
             return result[0].valueOf();
           }) !== undefined,
-        true
-      )
+        true,
+      ),
     );
   },
   count(ast, context, options) {
@@ -167,21 +168,21 @@ const fp_functions: Record<
     const map = context
       .map(
         (
-          v: MetaValueSingular<unknown>
+          v: MetaValueSingular<unknown>,
         ): [string, MetaValueSingular<unknown>] => [
           JSON.stringify(v.valueOf()),
           v,
-        ]
+        ],
       )
       .reduce(
         (
           m: { [key: string]: MetaValueSingular<unknown> },
-          [k, v]: [string, MetaValueSingular<unknown>]
+          [k, v]: [string, MetaValueSingular<unknown>],
         ) => {
           m[k] = v;
           return m;
         },
-        {}
+        {},
       );
     return Object.values(map);
   },
@@ -189,7 +190,7 @@ const fp_functions: Record<
     const distinct = fp_functions.distinct(undefined, context, options);
     return toMetaValueSingulars(
       { type: options?.meta },
-      context.length === distinct.length
+      context.length === distinct.length,
     );
   },
   // [FILTER FUNCTIONS]
@@ -212,7 +213,7 @@ const fp_functions: Record<
         const v = node.valueOf();
         const keys = Object.keys(v || {});
         return flatten(keys.map((k) => flattenedDescend(node, k)));
-      })
+      }),
     );
 
     return children;
@@ -228,7 +229,7 @@ const fp_functions: Record<
     return flatten(
       context.map((v) => {
         return _evaluate(selection, [v], options);
-      })
+      }),
     );
   },
   repeat(ast, context, options) {
@@ -250,7 +251,7 @@ const fp_functions: Record<
   as(ast, context, options) {
     assert(
       context.length <= 1,
-      "as function must have a length of 1 for context."
+      "as function must have a length of 1 for context.",
     );
     const parameters = ast.next;
     const typeIdentifier = expressionToTypeIdentifier(parameters[0]);
@@ -265,7 +266,7 @@ const fp_functions: Record<
 function evaluateInvocation(
   ast: any,
   context: MetaValueSingular<unknown>[],
-  options?: Options
+  options?: Options,
 ): MetaValueSingular<unknown>[] {
   switch (ast.value.type) {
     case "Index":
@@ -289,7 +290,7 @@ function evaluateInvocation(
 function _evaluateTermStart(
   ast: any,
   context: MetaValueSingular<unknown>[],
-  options?: Options
+  options?: Options,
 ): MetaValueSingular<unknown>[] {
   switch (ast.value.type) {
     case "Invocation":
@@ -315,7 +316,7 @@ function _evaluateTermStart(
 function evaluateProperty(
   ast: any,
   context: MetaValueSingular<unknown>[],
-  options?: Options
+  options?: Options,
 ): MetaValueSingular<unknown>[] {
   switch (ast.type) {
     case "Invocation":
@@ -335,7 +336,7 @@ function evaluateProperty(
 function evaluateSingular(
   ast: any,
   context: MetaValueSingular<unknown>[],
-  options?: Options
+  options?: Options,
 ): MetaValueSingular<unknown>[] {
   const start = _evaluateTermStart(ast, context, options);
   if (ast.next) {
@@ -343,7 +344,7 @@ function evaluateSingular(
       (context: MetaValueSingular<unknown>[], next: any) => {
         return evaluateProperty(next, context, options);
       },
-      start
+      start,
     );
   }
   return start;
@@ -352,16 +353,16 @@ function evaluateSingular(
 type OperatorType<op_type> = op_type extends "number"
   ? number
   : op_type extends "string"
-  ? string
-  : op_type extends "boolean"
-  ? boolean
-  : unknown;
+    ? string
+    : op_type extends "boolean"
+      ? boolean
+      : unknown;
 
 type ValidOperandType = "number" | "string" | "boolean";
 
 function typeChecking<T extends ValidOperandType, U>(
   typeChecking: T,
-  args: MetaValueSingular<unknown>[]
+  args: MetaValueSingular<unknown>[],
 ): args is MetaValueSingular<OperatorType<T>>[] {
   return args.reduce((acc: boolean, v: MetaValueSingular<unknown>) => {
     if (typeof v.valueOf() !== typeChecking) return false;
@@ -374,7 +375,7 @@ export class InvalidOperandError extends Error {
   private operator: string;
   constructor(args: unknown[], operator: string) {
     super(
-      `Invalid operands for operator: '${operator}' Found types '${typeof args[0]}' and '${typeof args[1]}'`
+      `Invalid operands for operator: '${operator}' Found types '${typeof args[0]}' and '${typeof args[1]}'`,
     );
     this.args = args;
     this.operator = operator;
@@ -384,15 +385,15 @@ export class InvalidOperandError extends Error {
 type EvaledOperation = (
   left: MetaValueSingular<unknown>[],
   right: MetaValueSingular<unknown>[],
-  options?: Options
+  options?: Options,
 ) => MetaValueSingular<unknown>[];
 
 function op_prevaled(
-  operation_function: EvaledOperation
+  operation_function: EvaledOperation,
 ): (
   ast: any,
   context: MetaValueSingular<unknown>[],
-  options?: Options
+  options?: Options,
 ) => MetaValueSingular<unknown>[] {
   return (ast, context, options) => {
     const left = _evaluate(ast.left, context, options);
@@ -405,7 +406,7 @@ function op_prevaled(
 const equalityCheck: EvaledOperation = (
   left,
   right,
-  options
+  options,
 ): MetaValueSingular<boolean>[] => {
   // TODO improve Deep Equals speed.
   if (left.length !== right.length)
@@ -413,12 +414,12 @@ const equalityCheck: EvaledOperation = (
   if (typeof left[0].valueOf() === "object") {
     return toMetaValueSingulars(
       { type: options?.meta },
-      JSON.stringify(left[0].valueOf()) === JSON.stringify(right[0].valueOf())
+      JSON.stringify(left[0].valueOf()) === JSON.stringify(right[0].valueOf()),
     );
   }
   return toMetaValueSingulars(
     { type: { ...options?.meta, type: "boolean" as uri } },
-    left[0].valueOf() === right[0].valueOf()
+    left[0].valueOf() === right[0].valueOf(),
   );
 };
 
@@ -436,7 +437,7 @@ function filterByType<T>(type: string, context: MetaValueSingular<T>[]) {
   // Special handling for type 'Resource' and 'DomainResource' abstract types
   if (type === "Resource" || type === "DomainResource") {
     return context.filter(
-      (v) => (v.valueOf() as Resource).resourceType !== undefined
+      (v) => (v.valueOf() as Resource).resourceType !== undefined,
     );
   }
   return context.filter((v) => {
@@ -449,19 +450,19 @@ const fp_operations: Record<
   (
     ast: any,
     context: MetaValueSingular<unknown>[],
-    options?: Options
+    options?: Options,
   ) => MetaValueSingular<unknown>[]
 > = {
   "+": op_prevaled((left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
       return toMetaValueSingulars(
         { type: options?.meta },
-        left[0].valueOf() + right[0].valueOf()
+        left[0].valueOf() + right[0].valueOf(),
       );
     } else if (typeChecking("string", left) && typeChecking("string", right)) {
       return toMetaValueSingulars(
         { type: options?.meta },
-        left[0].valueOf() + right[0].valueOf()
+        left[0].valueOf() + right[0].valueOf(),
       );
     } else {
       throw new InvalidOperandError([left[0], right[0]], "+");
@@ -471,7 +472,7 @@ const fp_operations: Record<
     const left = _evaluate(ast.left, context, options);
     if (left.length > 1)
       throw new Error(
-        "The 'as' operator left hand operand must be equal to length 1"
+        "The 'as' operator left hand operand must be equal to length 1",
       );
     const typeIdentifier = expressionToTypeIdentifier(ast.right);
     return filterByType(typeIdentifier, left);
@@ -480,13 +481,13 @@ const fp_operations: Record<
     const left = _evaluate(ast.left, context, options);
     if (left.length > 1)
       throw new Error(
-        "The 'is' operator left hand operand must be equal to length 1"
+        "The 'is' operator left hand operand must be equal to length 1",
       );
     const typeIdentifier = expressionToTypeIdentifier(ast.right);
     return context.map((c) => {
       return new MetaValueSingular(
         { type: { ...options?.meta, type: "boolean" as uri } },
-        isType(c, typeIdentifier)
+        isType(c, typeIdentifier),
       );
     });
   },
@@ -494,7 +495,7 @@ const fp_operations: Record<
     if (typeChecking("number", left) && typeChecking("number", right)) {
       return toMetaValueSingulars(
         { type: options?.meta },
-        left[0].valueOf() - right[0].valueOf()
+        left[0].valueOf() - right[0].valueOf(),
       );
     } else {
       throw new InvalidOperandError([left[0], right[0]], "-");
@@ -504,7 +505,7 @@ const fp_operations: Record<
     if (typeChecking("number", left) && typeChecking("number", right)) {
       return toMetaValueSingulars(
         { type: options?.meta },
-        left[0].valueOf() * right[0].valueOf()
+        left[0].valueOf() * right[0].valueOf(),
       );
     } else {
       throw new InvalidOperandError([left[0], right[0]], "*");
@@ -514,7 +515,7 @@ const fp_operations: Record<
     if (typeChecking("number", left) && typeChecking("number", right)) {
       return toMetaValueSingulars(
         { type: options?.meta },
-        left[0].valueOf() / right[0].valueOf()
+        left[0].valueOf() / right[0].valueOf(),
       );
     } else {
       throw new InvalidOperandError([left[0], right[0]], "/");
@@ -527,7 +528,7 @@ const fp_operations: Record<
     if (typeChecking("boolean", left) && typeChecking("boolean", right)) {
       return toMetaValueSingulars(
         { type: { ...options?.meta, type: "boolean" as uri } },
-        left[0].valueOf() && right[0].valueOf()
+        left[0].valueOf() && right[0].valueOf(),
       );
     }
     throw new InvalidOperandError([left[0], right[0]], "/");
@@ -537,7 +538,7 @@ const fp_operations: Record<
     const equality = equalityCheck(left, right, options);
     return toMetaValueSingulars(
       { type: { ...options?.meta, type: "boolean" as uri } },
-      equality[0].valueOf() === false
+      equality[0].valueOf() === false,
     );
   }),
 };
@@ -545,7 +546,7 @@ const fp_operations: Record<
 function evaluateOperation(
   ast: any,
   context: MetaValueSingular<unknown>[],
-  options?: Options
+  options?: Options,
 ): MetaValueSingular<unknown>[] {
   const operator = fp_operations[ast.operator];
   if (operator) return operator(ast, context, options);
@@ -555,7 +556,7 @@ function evaluateOperation(
 function _evaluate(
   ast: any,
   context: MetaValueSingular<unknown>[],
-  options?: Options
+  options?: Options,
 ): MetaValueSingular<unknown>[] {
   switch (ast.value.type) {
     case "Operation": {
@@ -581,7 +582,7 @@ const cachedAST: Record<string, any> = {};
 export function evaluateWithMeta(
   expression: string,
   ctx: unknown,
-  options?: Options
+  options?: Options,
 ): MetaValueSingular<NonNullable<unknown>>[] {
   if (!cachedAST[expression]) {
     const ast = parse(expression);
@@ -590,18 +591,18 @@ export function evaluateWithMeta(
   return _evaluate(
     cachedAST[expression],
     toMetaValueSingulars({ type: options?.meta }, ctx),
-    options
+    options,
   ).filter(
     (
-      v: MetaValueSingular<unknown>
-    ): v is MetaValueSingular<NonNullable<unknown>> => nonNullable(v.valueOf())
+      v: MetaValueSingular<unknown>,
+    ): v is MetaValueSingular<NonNullable<unknown>> => nonNullable(v.valueOf()),
   );
 }
 
 export function evaluate(
   expression: string,
   ctx: unknown,
-  options?: Options
+  options?: Options,
 ): NonNullable<unknown>[] {
   return evaluateWithMeta(expression, ctx, options).map((v) => v.valueOf());
 }

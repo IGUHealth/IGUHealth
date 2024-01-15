@@ -1,13 +1,13 @@
-import type Koa from "koa";
-import pg from "pg";
 import * as Sentry from "@sentry/node";
 import { ProfilingIntegration } from "@sentry/profiling-node";
 import { stripUrlQueryAndFragment } from "@sentry/utils";
+import type Koa from "koa";
+import pg from "pg";
 
 export function enableSentry(
   sentryDSN: string,
   release: string,
-  options: Partial<Sentry.NodeOptions> = {}
+  options: Partial<Sentry.NodeOptions> = {},
 ) {
   Sentry.init({
     dsn: sentryDSN,
@@ -45,7 +45,7 @@ export const onKoaError = (err: unknown, ctx: Koa.DefaultContext) => {
 export async function sentryTransaction<T>(
   dsn: string | undefined,
   transactionContext: Parameters<typeof Sentry.startTransaction>[0],
-  body: (transaction: Sentry.Transaction | undefined) => Promise<T>
+  body: (transaction: Sentry.Transaction | undefined) => Promise<T>,
 ): Promise<T> {
   if (!dsn) return body(undefined);
   const transaction = Sentry.startTransaction(transactionContext);
@@ -60,7 +60,7 @@ export async function sentryTransaction<T>(
 export async function sentrySpan<T>(
   transaction: Sentry.Transaction | Sentry.Span | undefined,
   spanContext: Parameters<typeof Sentry.startSpan>[0],
-  body: (span: Sentry.Span | undefined) => Promise<T>
+  body: (span: Sentry.Span | undefined) => Promise<T>,
 ): Promise<T> {
   if (!transaction) return body(undefined);
   const span = transaction.startChild(spanContext);
@@ -71,8 +71,6 @@ export async function sentrySpan<T>(
     span.finish();
   }
 }
-
-
 
 // this tracing middleware creates a transaction per request
 export const tracingMiddleWare =
@@ -86,7 +84,7 @@ export const tracingMiddleWare =
       let traceparentData;
       if (ctx.request.get("sentry-trace")) {
         traceparentData = Sentry.extractTraceparentData(
-          ctx.request.get("sentry-trace")
+          ctx.request.get("sentry-trace"),
         );
       }
 
@@ -109,7 +107,7 @@ export const tracingMiddleWare =
           if (ctx._matchedRoute) {
             const mountPath = ctx.mountPath || "";
             transaction.setName(
-              `${reqMethod} ${mountPath}${ctx._matchedRoute}`
+              `${reqMethod} ${mountPath}${ctx._matchedRoute}`,
             );
           }
           transaction.setHttpStatus(ctx.status);

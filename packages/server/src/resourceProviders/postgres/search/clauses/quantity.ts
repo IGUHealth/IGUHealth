@@ -1,8 +1,8 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { splitParameter } from "@iguhealth/client/url";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../../fhir/context.js";
 import { SearchParameterResource } from "../../../utilities/search/parameters.js";
@@ -11,7 +11,7 @@ import { SearchParameterResource } from "../../../utilities/search/parameters.js
 
 export default function quantityClauses(
   _ctx: FHIRServerCTX,
-  parameter: SearchParameterResource
+  parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, unknown> {
   return db.conditions.or(
     ...parameter.value.map((value) => {
@@ -22,8 +22,8 @@ export default function quantityClauses(
         throw new OperationError(
           outcomeError(
             "not-supported",
-            `prefix not supported yet for parameter '${parameter.searchParameter.name}' and value '${value}'`
-          )
+            `prefix not supported yet for parameter '${parameter.searchParameter.name}' and value '${value}'`,
+          ),
         );
       }
 
@@ -35,15 +35,15 @@ export default function quantityClauses(
             throw new OperationError(
               outcomeError(
                 "invalid",
-                `Invalid value for parameter '${parameter.searchParameter.name}' and value '${value}'`
-              )
+                `Invalid value for parameter '${parameter.searchParameter.name}' and value '${value}'`,
+              ),
             );
           }
           clauses["start_value"] = db.sql`${db.self} <= ${db.param(
-            parseFloat(value)
+            parseFloat(value),
           )}`;
           clauses["end_value"] = db.sql`${db.self} >= ${db.param(
-            parseFloat(value)
+            parseFloat(value),
           )}`;
         }
         if (system !== "") {
@@ -60,10 +60,10 @@ export default function quantityClauses(
         throw new OperationError(
           outcomeError(
             "invalid",
-            "Quantity search parameters must be specified as value|system|code"
-          )
+            "Quantity search parameters must be specified as value|system|code",
+          ),
         );
       }
-    })
+    }),
   );
 }

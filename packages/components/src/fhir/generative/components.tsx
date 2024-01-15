@@ -1,5 +1,6 @@
 /* eslint @typescript-eslint/no-explicit-any: 0 */
 import React from "react";
+
 import {
   Address,
   Annotation,
@@ -27,7 +28,6 @@ import {
 
 import * as ComplexTypes from "../complex";
 import * as Primitives from "../primitives";
-
 import { getElementDefinition } from "./helpers";
 import { MetaProps } from "./types";
 
@@ -152,7 +152,7 @@ export const TypeComponents: Record<string, TypeComponent> = {
       client={props.client}
       resourceTypesAllowed={getElementDefinition(
         props.sd,
-        props.elementIndex
+        props.elementIndex,
       ).element.type?.[0]?.targetProfile?.map((tp) => {
         const parts = tp.split("/");
         return parts[parts.length - 1] as ResourceType;

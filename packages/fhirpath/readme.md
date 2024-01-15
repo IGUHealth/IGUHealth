@@ -22,7 +22,7 @@ Returns a @iguhealth/meta-value singular value which contains data along with me
 function evaluateWithMeta(
   expression: string,
   ctx: unknown,
-  options?: Options
+  options?: Options,
 ): MetaValueSingular<NonNullable<unknown>>[];
 ```
 
@@ -63,8 +63,8 @@ expect(
           return foundSD;
         },
       },
-    }
-  ).map((v) => v.meta()?.type)
+    },
+  ).map((v) => v.meta()?.type),
 ).toEqual(["HumanName"]);
 ```
 
