@@ -1,4 +1,3 @@
-import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
 import type { toReference } from "./search/dataConversion.js";
 import { FHIRServerCTX } from "../../fhir/context.js";
 

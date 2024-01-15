@@ -1,5 +1,4 @@
 import type { Logger } from "pino";
-import type pg from "pg";
 
 import {
   ResourceType,
