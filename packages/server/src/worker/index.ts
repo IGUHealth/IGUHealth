@@ -33,7 +33,7 @@ import {
   Tenant,
   TenantId,
 } from "../fhir/context.js";
-import { createFHIRServer, createFHIRServices, logger } from "../fhir/index.js";
+import { createFHIRServer, createFHIRServices } from "../fhir/index.js";
 import { httpRequestToFHIRRequest } from "../http/index.js";
 import logAuditEvent, {
   MAJOR_FAILURE,
@@ -223,6 +223,7 @@ function processSubscription(
         ),
       );
     if (subscription.status !== "active") return;
+
     const logger = ctx.logger.child({
       worker: workerID,
       tenant: ctx.tenant.id,
@@ -380,7 +381,6 @@ async function getActiveTenants(pool: pg.Pool): Promise<TenantId[]> {
 }
 
 async function createWorker(workerID = randomUUID(), loopInterval = 500) {
-  logger.info({ workerID }, `Worker started with interval '${loopInterval}'`);
   // Using a pool directly because need to query up tenants.
   const pool = new pg.Pool({
     user: process.env["FHIR_DATABASE_USERNAME"],
@@ -393,6 +393,11 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
   const fhirServices = await createFHIRServices(pool);
   const fhirServer = await createFHIRServer();
   let isRunning = true;
+
+  fhirServices.logger.info(
+    { workerID },
+    `Worker started with interval '${loopInterval}'`,
+  );
   /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
   while (isRunning) {
     try {
@@ -423,12 +428,12 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
               processSubscription(workerID, ctx, fhirServer, subscriptionId),
             );
           } catch (e) {
-            logger.error(e);
+            fhirServices.logger.error(e);
           }
         }
       }
     } catch (e) {
-      logger.error(e);
+      fhirServices.logger.error(e);
     } finally {
       await new Promise((resolve) => setTimeout(resolve, loopInterval));
     }

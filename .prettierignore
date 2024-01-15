@@ -1,6 +1,9 @@
 packages/fhirpath/src/parser.ts
 .yarn
 
+# Generated Schemas 
+packages/server/src/resourceProviders/postgres/generated/zapatos/**
+
 **/*.json
 **/*.md
 **/*.mdx

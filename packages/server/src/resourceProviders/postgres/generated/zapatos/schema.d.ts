@@ -7,13 +7,13 @@ Copyright (C) 2020 - 2023 George MacKerron
 Released under the MIT licence: see LICENCE file
 */
 
-declare module "zapatos/schema" {
-  import type * as db from "zapatos/db";
+declare module 'zapatos/schema' {
+
+  import type * as db from 'zapatos/db';
 
   // got a type error on schemaVersionCanary below? update by running `npx zapatos`
-  export interface schemaVersionCanary extends db.SchemaVersionCanary {
-    version: 104;
-  }
+  export interface schemaVersionCanary extends db.SchemaVersionCanary { version: 104 }
+
 
   /* === schema: public === */
 
@@ -27,499 +27,321 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace date_idx {
-    export type Table = "date_idx";
+    export type Table = 'date_idx';
     export interface Selectable {
       /**
-       * **date_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('date_idx_id_seq'::regclass)`
-       */
+      * **date_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('date_idx_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **date_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **date_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string;
       /**
-       * **date_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **date_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string;
       /**
-       * **date_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
-       */
+      * **date_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
+      */
       r_version_id: number;
       /**
-       * **date_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **date_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string;
       /**
-       * **date_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **date_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string;
       /**
-       * **date_idx.start_date**
-       * - `timestamptz` in database
-       * - `NOT NULL`, no default
-       */
+      * **date_idx.start_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, no default
+      */
       start_date: Date;
       /**
-       * **date_idx.end_date**
-       * - `timestamptz` in database
-       * - `NOT NULL`, no default
-       */
+      * **date_idx.end_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, no default
+      */
       end_date: Date;
       /**
-       * **date_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
+      * **date_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
       created_at: Date;
       /**
-       * **date_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **date_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string;
     }
     export interface JSONSelectable {
       /**
-       * **date_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('date_idx_id_seq'::regclass)`
-       */
+      * **date_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('date_idx_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **date_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **date_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string;
       /**
-       * **date_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **date_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string;
       /**
-       * **date_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
-       */
+      * **date_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
+      */
       r_version_id: number;
       /**
-       * **date_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **date_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string;
       /**
-       * **date_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **date_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string;
       /**
-       * **date_idx.start_date**
-       * - `timestamptz` in database
-       * - `NOT NULL`, no default
-       */
+      * **date_idx.start_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, no default
+      */
       start_date: db.TimestampTzString;
       /**
-       * **date_idx.end_date**
-       * - `timestamptz` in database
-       * - `NOT NULL`, no default
-       */
+      * **date_idx.end_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, no default
+      */
       end_date: db.TimestampTzString;
       /**
-       * **date_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
+      * **date_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
       created_at: db.TimestampTzString;
       /**
-       * **date_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **date_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string;
     }
     export interface Whereable {
       /**
-       * **date_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('date_idx_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **date_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('date_idx_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **date_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      tenant?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **date_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **date_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      r_id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **date_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **date_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **date_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **date_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **date_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **date_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_url?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **date_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **date_idx.start_date**
-       * - `timestamptz` in database
-       * - `NOT NULL`, no default
-       */
-      start_date?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **date_idx.start_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, no default
+      */
+      start_date?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **date_idx.end_date**
-       * - `timestamptz` in database
-       * - `NOT NULL`, no default
-       */
-      end_date?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **date_idx.end_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, no default
+      */
+      end_date?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **date_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **date_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **date_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      resource_type?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **date_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **date_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('date_idx_id_seq'::regclass)`
-       */
+      * **date_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('date_idx_id_seq'::regclass)`
+      */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **date_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **date_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **date_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **date_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **date_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment;
+      * **date_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **date_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **date_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **date_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **date_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **date_idx.start_date**
-       * - `timestamptz` in database
-       * - `NOT NULL`, no default
-       */
-      start_date:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.SQLFragment;
+      * **date_idx.start_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, no default
+      */
+      start_date: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment;
       /**
-       * **date_idx.end_date**
-       * - `timestamptz` in database
-       * - `NOT NULL`, no default
-       */
-      end_date:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.SQLFragment;
+      * **date_idx.end_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, no default
+      */
+      end_date: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment;
       /**
-       * **date_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.DefaultType
-        | db.SQLFragment;
+      * **date_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
-       * **date_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **date_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **date_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('date_idx_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **date_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('date_idx_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **date_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      tenant?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **date_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **date_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      r_id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **date_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **date_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **date_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **date_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **date_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **date_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_url?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **date_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **date_idx.start_date**
-       * - `timestamptz` in database
-       * - `NOT NULL`, no default
-       */
-      start_date?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.SQLFragment
-          >;
+      * **date_idx.start_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, no default
+      */
+      start_date?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment>;
       /**
-       * **date_idx.end_date**
-       * - `timestamptz` in database
-       * - `NOT NULL`, no default
-       */
-      end_date?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.SQLFragment
-          >;
+      * **date_idx.end_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, no default
+      */
+      end_date?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment>;
       /**
-       * **date_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **date_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
-       * **date_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      resource_type?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **date_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
-    export type UniqueIndex = "date_idx_pkey";
+    export type UniqueIndex = 'date_idx_pkey';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -528,172 +350,111 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace migrations {
-    export type Table = "migrations";
+    export type Table = 'migrations';
     export interface Selectable {
       /**
-       * **migrations.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('migrations_id_seq'::regclass)`
-       */
+      * **migrations.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('migrations_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **migrations.name**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **migrations.name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       name: string;
       /**
-       * **migrations.run_on**
-       * - `timestamp` in database
-       * - `NOT NULL`, no default
-       */
+      * **migrations.run_on**
+      * - `timestamp` in database
+      * - `NOT NULL`, no default
+      */
       run_on: Date;
     }
     export interface JSONSelectable {
       /**
-       * **migrations.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('migrations_id_seq'::regclass)`
-       */
+      * **migrations.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('migrations_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **migrations.name**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **migrations.name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       name: string;
       /**
-       * **migrations.run_on**
-       * - `timestamp` in database
-       * - `NOT NULL`, no default
-       */
+      * **migrations.run_on**
+      * - `timestamp` in database
+      * - `NOT NULL`, no default
+      */
       run_on: db.TimestampString;
     }
     export interface Whereable {
       /**
-       * **migrations.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('migrations_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **migrations.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('migrations_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **migrations.name**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **migrations.name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **migrations.run_on**
-       * - `timestamp` in database
-       * - `NOT NULL`, no default
-       */
-      run_on?:
-        | (db.TimestampString | Date)
-        | db.Parameter<db.TimestampString | Date>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (db.TimestampString | Date)
-            | db.Parameter<db.TimestampString | Date>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **migrations.run_on**
+      * - `timestamp` in database
+      * - `NOT NULL`, no default
+      */
+      run_on?: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **migrations.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('migrations_id_seq'::regclass)`
-       */
+      * **migrations.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('migrations_id_seq'::regclass)`
+      */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **migrations.name**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **migrations.name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       name: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **migrations.run_on**
-       * - `timestamp` in database
-       * - `NOT NULL`, no default
-       */
-      run_on:
-        | (db.TimestampString | Date)
-        | db.Parameter<db.TimestampString | Date>
-        | db.SQLFragment;
+      * **migrations.run_on**
+      * - `timestamp` in database
+      * - `NOT NULL`, no default
+      */
+      run_on: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **migrations.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('migrations_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **migrations.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('migrations_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **migrations.name**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **migrations.name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **migrations.run_on**
-       * - `timestamp` in database
-       * - `NOT NULL`, no default
-       */
-      run_on?:
-        | (db.TimestampString | Date)
-        | db.Parameter<db.TimestampString | Date>
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (db.TimestampString | Date)
-            | db.Parameter<db.TimestampString | Date>
-            | db.SQLFragment
-          >;
+      * **migrations.run_on**
+      * - `timestamp` in database
+      * - `NOT NULL`, no default
+      */
+      run_on?: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.SQLFragment<any, (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment>;
     }
-    export type UniqueIndex = "migrations_pkey";
+    export type UniqueIndex = 'migrations_pkey';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -702,168 +463,111 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace migrations_state {
-    export type Table = "migrations_state";
+    export type Table = 'migrations_state';
     export interface Selectable {
       /**
-       * **migrations_state.key**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **migrations_state.key**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       key: string;
       /**
-       * **migrations_state.value**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **migrations_state.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       value: string;
       /**
-       * **migrations_state.run_on**
-       * - `timestamp` in database
-       * - `NOT NULL`, no default
-       */
+      * **migrations_state.run_on**
+      * - `timestamp` in database
+      * - `NOT NULL`, no default
+      */
       run_on: Date;
     }
     export interface JSONSelectable {
       /**
-       * **migrations_state.key**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **migrations_state.key**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       key: string;
       /**
-       * **migrations_state.value**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **migrations_state.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       value: string;
       /**
-       * **migrations_state.run_on**
-       * - `timestamp` in database
-       * - `NOT NULL`, no default
-       */
+      * **migrations_state.run_on**
+      * - `timestamp` in database
+      * - `NOT NULL`, no default
+      */
       run_on: db.TimestampString;
     }
     export interface Whereable {
       /**
-       * **migrations_state.key**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      key?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **migrations_state.key**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      key?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **migrations_state.value**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      value?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **migrations_state.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **migrations_state.run_on**
-       * - `timestamp` in database
-       * - `NOT NULL`, no default
-       */
-      run_on?:
-        | (db.TimestampString | Date)
-        | db.Parameter<db.TimestampString | Date>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (db.TimestampString | Date)
-            | db.Parameter<db.TimestampString | Date>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **migrations_state.run_on**
+      * - `timestamp` in database
+      * - `NOT NULL`, no default
+      */
+      run_on?: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **migrations_state.key**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **migrations_state.key**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       key: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **migrations_state.value**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **migrations_state.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       value: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **migrations_state.run_on**
-       * - `timestamp` in database
-       * - `NOT NULL`, no default
-       */
-      run_on:
-        | (db.TimestampString | Date)
-        | db.Parameter<db.TimestampString | Date>
-        | db.SQLFragment;
+      * **migrations_state.run_on**
+      * - `timestamp` in database
+      * - `NOT NULL`, no default
+      */
+      run_on: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **migrations_state.key**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      key?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **migrations_state.key**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      key?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **migrations_state.value**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      value?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **migrations_state.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **migrations_state.run_on**
-       * - `timestamp` in database
-       * - `NOT NULL`, no default
-       */
-      run_on?:
-        | (db.TimestampString | Date)
-        | db.Parameter<db.TimestampString | Date>
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (db.TimestampString | Date)
-            | db.Parameter<db.TimestampString | Date>
-            | db.SQLFragment
-          >;
+      * **migrations_state.run_on**
+      * - `timestamp` in database
+      * - `NOT NULL`, no default
+      */
+      run_on?: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.SQLFragment<any, (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment>;
     }
-    export type UniqueIndex = "migrations_state_pkey";
+    export type UniqueIndex = 'migrations_state_pkey';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -872,446 +576,291 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace number_idx {
-    export type Table = "number_idx";
+    export type Table = 'number_idx';
     export interface Selectable {
       /**
-       * **number_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('number_idx_id_seq'::regclass)`
-       */
+      * **number_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('number_idx_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **number_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **number_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string;
       /**
-       * **number_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **number_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string;
       /**
-       * **number_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
-       */
+      * **number_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
+      */
       r_version_id: number;
       /**
-       * **number_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **number_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string;
       /**
-       * **number_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **number_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string;
       /**
-       * **number_idx.value**
-       * - `numeric` in database
-       * - `NOT NULL`, no default
-       */
+      * **number_idx.value**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
       value: db.NumericString;
       /**
-       * **number_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
+      * **number_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
       created_at: Date;
       /**
-       * **number_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **number_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string;
     }
     export interface JSONSelectable {
       /**
-       * **number_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('number_idx_id_seq'::regclass)`
-       */
+      * **number_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('number_idx_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **number_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **number_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string;
       /**
-       * **number_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **number_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string;
       /**
-       * **number_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
-       */
+      * **number_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
+      */
       r_version_id: number;
       /**
-       * **number_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **number_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string;
       /**
-       * **number_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **number_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string;
       /**
-       * **number_idx.value**
-       * - `numeric` in database
-       * - `NOT NULL`, no default
-       */
+      * **number_idx.value**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
       value: number;
       /**
-       * **number_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
+      * **number_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
       created_at: db.TimestampTzString;
       /**
-       * **number_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **number_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string;
     }
     export interface Whereable {
       /**
-       * **number_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('number_idx_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **number_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('number_idx_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **number_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      tenant?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **number_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **number_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      r_id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **number_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **number_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **number_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **number_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **number_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **number_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_url?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **number_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **number_idx.value**
-       * - `numeric` in database
-       * - `NOT NULL`, no default
-       */
-      value?:
-        | (number | db.NumericString)
-        | db.Parameter<number | db.NumericString>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (number | db.NumericString)
-            | db.Parameter<number | db.NumericString>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **number_idx.value**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **number_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **number_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **number_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      resource_type?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **number_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **number_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('number_idx_id_seq'::regclass)`
-       */
+      * **number_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('number_idx_id_seq'::regclass)`
+      */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **number_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **number_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **number_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **number_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **number_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment;
+      * **number_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **number_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **number_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **number_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **number_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **number_idx.value**
-       * - `numeric` in database
-       * - `NOT NULL`, no default
-       */
-      value:
-        | (number | db.NumericString)
-        | db.Parameter<number | db.NumericString>
-        | db.SQLFragment;
+      * **number_idx.value**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      value: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment;
       /**
-       * **number_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.DefaultType
-        | db.SQLFragment;
+      * **number_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
-       * **number_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **number_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **number_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('number_idx_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **number_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('number_idx_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **number_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      tenant?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **number_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **number_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      r_id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **number_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **number_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **number_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **number_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **number_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **number_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_url?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **number_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **number_idx.value**
-       * - `numeric` in database
-       * - `NOT NULL`, no default
-       */
-      value?:
-        | (number | db.NumericString)
-        | db.Parameter<number | db.NumericString>
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (number | db.NumericString)
-            | db.Parameter<number | db.NumericString>
-            | db.SQLFragment
-          >;
+      * **number_idx.value**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment>;
       /**
-       * **number_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **number_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
-       * **number_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      resource_type?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **number_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
-    export type UniqueIndex = "number_idx_pkey" | "number_idx_unique";
+    export type UniqueIndex = 'number_idx_pkey' | 'number_idx_unique';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -1320,735 +869,441 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace quantity_idx {
-    export type Table = "quantity_idx";
+    export type Table = 'quantity_idx';
     export interface Selectable {
       /**
-       * **quantity_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('quantity_idx_id_seq'::regclass)`
-       */
+      * **quantity_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('quantity_idx_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **quantity_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **quantity_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string;
       /**
-       * **quantity_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **quantity_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string;
       /**
-       * **quantity_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
-       */
+      * **quantity_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
+      */
       r_version_id: number;
       /**
-       * **quantity_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **quantity_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string;
       /**
-       * **quantity_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **quantity_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string;
       /**
-       * **quantity_idx.start_value**
-       * - `numeric` in database
-       * - Nullable, no default
-       */
+      * **quantity_idx.start_value**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
       start_value: db.NumericString | null;
       /**
-       * **quantity_idx.start_system**
-       * - `text` in database
-       * - Nullable, no default
-       */
+      * **quantity_idx.start_system**
+      * - `text` in database
+      * - Nullable, no default
+      */
       start_system: string | null;
       /**
-       * **quantity_idx.start_code**
-       * - `text` in database
-       * - Nullable, no default
-       */
+      * **quantity_idx.start_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
       start_code: string | null;
       /**
-       * **quantity_idx.end_value**
-       * - `numeric` in database
-       * - Nullable, no default
-       */
+      * **quantity_idx.end_value**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
       end_value: db.NumericString | null;
       /**
-       * **quantity_idx.end_system**
-       * - `text` in database
-       * - Nullable, no default
-       */
+      * **quantity_idx.end_system**
+      * - `text` in database
+      * - Nullable, no default
+      */
       end_system: string | null;
       /**
-       * **quantity_idx.end_code**
-       * - `text` in database
-       * - Nullable, no default
-       */
+      * **quantity_idx.end_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
       end_code: string | null;
       /**
-       * **quantity_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
+      * **quantity_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
       created_at: Date;
       /**
-       * **quantity_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **quantity_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string;
     }
     export interface JSONSelectable {
       /**
-       * **quantity_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('quantity_idx_id_seq'::regclass)`
-       */
+      * **quantity_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('quantity_idx_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **quantity_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **quantity_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string;
       /**
-       * **quantity_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **quantity_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string;
       /**
-       * **quantity_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
-       */
+      * **quantity_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
+      */
       r_version_id: number;
       /**
-       * **quantity_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **quantity_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string;
       /**
-       * **quantity_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **quantity_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string;
       /**
-       * **quantity_idx.start_value**
-       * - `numeric` in database
-       * - Nullable, no default
-       */
+      * **quantity_idx.start_value**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
       start_value: number | null;
       /**
-       * **quantity_idx.start_system**
-       * - `text` in database
-       * - Nullable, no default
-       */
+      * **quantity_idx.start_system**
+      * - `text` in database
+      * - Nullable, no default
+      */
       start_system: string | null;
       /**
-       * **quantity_idx.start_code**
-       * - `text` in database
-       * - Nullable, no default
-       */
+      * **quantity_idx.start_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
       start_code: string | null;
       /**
-       * **quantity_idx.end_value**
-       * - `numeric` in database
-       * - Nullable, no default
-       */
+      * **quantity_idx.end_value**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
       end_value: number | null;
       /**
-       * **quantity_idx.end_system**
-       * - `text` in database
-       * - Nullable, no default
-       */
+      * **quantity_idx.end_system**
+      * - `text` in database
+      * - Nullable, no default
+      */
       end_system: string | null;
       /**
-       * **quantity_idx.end_code**
-       * - `text` in database
-       * - Nullable, no default
-       */
+      * **quantity_idx.end_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
       end_code: string | null;
       /**
-       * **quantity_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
+      * **quantity_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
       created_at: db.TimestampTzString;
       /**
-       * **quantity_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **quantity_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string;
     }
     export interface Whereable {
       /**
-       * **quantity_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('quantity_idx_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **quantity_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('quantity_idx_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **quantity_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      tenant?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **quantity_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **quantity_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      r_id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **quantity_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **quantity_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **quantity_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **quantity_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **quantity_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **quantity_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_url?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **quantity_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **quantity_idx.start_value**
-       * - `numeric` in database
-       * - Nullable, no default
-       */
-      start_value?:
-        | (number | db.NumericString)
-        | db.Parameter<number | db.NumericString>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (number | db.NumericString)
-            | db.Parameter<number | db.NumericString>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **quantity_idx.start_value**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **quantity_idx.start_system**
-       * - `text` in database
-       * - Nullable, no default
-       */
-      start_system?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **quantity_idx.start_system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      start_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **quantity_idx.start_code**
-       * - `text` in database
-       * - Nullable, no default
-       */
-      start_code?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **quantity_idx.start_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      start_code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **quantity_idx.end_value**
-       * - `numeric` in database
-       * - Nullable, no default
-       */
-      end_value?:
-        | (number | db.NumericString)
-        | db.Parameter<number | db.NumericString>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (number | db.NumericString)
-            | db.Parameter<number | db.NumericString>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **quantity_idx.end_value**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      end_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **quantity_idx.end_system**
-       * - `text` in database
-       * - Nullable, no default
-       */
-      end_system?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **quantity_idx.end_system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      end_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **quantity_idx.end_code**
-       * - `text` in database
-       * - Nullable, no default
-       */
-      end_code?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **quantity_idx.end_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      end_code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **quantity_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **quantity_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **quantity_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      resource_type?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **quantity_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **quantity_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('quantity_idx_id_seq'::regclass)`
-       */
+      * **quantity_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('quantity_idx_id_seq'::regclass)`
+      */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **quantity_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **quantity_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **quantity_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **quantity_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **quantity_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment;
+      * **quantity_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **quantity_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **quantity_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **quantity_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **quantity_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **quantity_idx.start_value**
-       * - `numeric` in database
-       * - Nullable, no default
-       */
-      start_value?:
-        | (number | db.NumericString)
-        | db.Parameter<number | db.NumericString>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **quantity_idx.start_value**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **quantity_idx.start_system**
-       * - `text` in database
-       * - Nullable, no default
-       */
-      start_system?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **quantity_idx.start_system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      start_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **quantity_idx.start_code**
-       * - `text` in database
-       * - Nullable, no default
-       */
-      start_code?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **quantity_idx.start_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      start_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **quantity_idx.end_value**
-       * - `numeric` in database
-       * - Nullable, no default
-       */
-      end_value?:
-        | (number | db.NumericString)
-        | db.Parameter<number | db.NumericString>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **quantity_idx.end_value**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      end_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **quantity_idx.end_system**
-       * - `text` in database
-       * - Nullable, no default
-       */
-      end_system?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **quantity_idx.end_system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      end_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **quantity_idx.end_code**
-       * - `text` in database
-       * - Nullable, no default
-       */
-      end_code?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **quantity_idx.end_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      end_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **quantity_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.DefaultType
-        | db.SQLFragment;
+      * **quantity_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
-       * **quantity_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **quantity_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **quantity_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('quantity_idx_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **quantity_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('quantity_idx_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **quantity_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      tenant?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **quantity_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **quantity_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      r_id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **quantity_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **quantity_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **quantity_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **quantity_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **quantity_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **quantity_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_url?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **quantity_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **quantity_idx.start_value**
-       * - `numeric` in database
-       * - Nullable, no default
-       */
-      start_value?:
-        | (number | db.NumericString)
-        | db.Parameter<number | db.NumericString>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (number | db.NumericString)
-            | db.Parameter<number | db.NumericString>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **quantity_idx.start_value**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **quantity_idx.start_system**
-       * - `text` in database
-       * - Nullable, no default
-       */
-      start_system?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | string
-            | db.Parameter<string>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **quantity_idx.start_system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      start_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **quantity_idx.start_code**
-       * - `text` in database
-       * - Nullable, no default
-       */
-      start_code?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | string
-            | db.Parameter<string>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **quantity_idx.start_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      start_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **quantity_idx.end_value**
-       * - `numeric` in database
-       * - Nullable, no default
-       */
-      end_value?:
-        | (number | db.NumericString)
-        | db.Parameter<number | db.NumericString>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (number | db.NumericString)
-            | db.Parameter<number | db.NumericString>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **quantity_idx.end_value**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      end_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **quantity_idx.end_system**
-       * - `text` in database
-       * - Nullable, no default
-       */
-      end_system?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | string
-            | db.Parameter<string>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **quantity_idx.end_system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      end_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **quantity_idx.end_code**
-       * - `text` in database
-       * - Nullable, no default
-       */
-      end_code?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | string
-            | db.Parameter<string>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **quantity_idx.end_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      end_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **quantity_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **quantity_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
-       * **quantity_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      resource_type?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **quantity_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
-    export type UniqueIndex = "quantity_idx_pkey";
+    export type UniqueIndex = 'quantity_idx_pkey';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -2057,525 +1312,351 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace reference_idx {
-    export type Table = "reference_idx";
+    export type Table = 'reference_idx';
     export interface Selectable {
       /**
-       * **reference_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('reference_idx_id_seq'::regclass)`
-       */
+      * **reference_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('reference_idx_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **reference_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string;
       /**
-       * **reference_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string;
       /**
-       * **reference_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
-       */
+      * **reference_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
+      */
       r_version_id: number;
       /**
-       * **reference_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string;
       /**
-       * **reference_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string;
       /**
-       * **reference_idx.reference**
-       * - `jsonb` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.reference**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
       reference: db.JSONValue;
       /**
-       * **reference_idx.reference_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.reference_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       reference_type: string;
       /**
-       * **reference_idx.reference_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.reference_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       reference_id: string;
       /**
-       * **reference_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
+      * **reference_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
       created_at: Date;
       /**
-       * **reference_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string;
     }
     export interface JSONSelectable {
       /**
-       * **reference_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('reference_idx_id_seq'::regclass)`
-       */
+      * **reference_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('reference_idx_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **reference_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string;
       /**
-       * **reference_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string;
       /**
-       * **reference_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
-       */
+      * **reference_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
+      */
       r_version_id: number;
       /**
-       * **reference_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string;
       /**
-       * **reference_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string;
       /**
-       * **reference_idx.reference**
-       * - `jsonb` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.reference**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
       reference: db.JSONValue;
       /**
-       * **reference_idx.reference_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.reference_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       reference_type: string;
       /**
-       * **reference_idx.reference_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.reference_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       reference_id: string;
       /**
-       * **reference_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
+      * **reference_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
       created_at: db.TimestampTzString;
       /**
-       * **reference_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string;
     }
     export interface Whereable {
       /**
-       * **reference_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('reference_idx_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **reference_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('reference_idx_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **reference_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      tenant?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **reference_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **reference_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      r_id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **reference_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **reference_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **reference_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **reference_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **reference_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **reference_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_url?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **reference_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **reference_idx.reference**
-       * - `jsonb` in database
-       * - `NOT NULL`, no default
-       */
-      reference?:
-        | db.JSONValue
-        | db.Parameter<db.JSONValue>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | db.JSONValue
-            | db.Parameter<db.JSONValue>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **reference_idx.reference**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      reference?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **reference_idx.reference_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      reference_type?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **reference_idx.reference_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      reference_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **reference_idx.reference_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      reference_id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **reference_idx.reference_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      reference_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **reference_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **reference_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **reference_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      resource_type?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **reference_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **reference_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('reference_idx_id_seq'::regclass)`
-       */
+      * **reference_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('reference_idx_id_seq'::regclass)`
+      */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **reference_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **reference_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **reference_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment;
+      * **reference_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **reference_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **reference_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **reference_idx.reference**
-       * - `jsonb` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.reference**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
       reference: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment;
       /**
-       * **reference_idx.reference_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.reference_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       reference_type: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **reference_idx.reference_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.reference_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       reference_id: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **reference_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.DefaultType
-        | db.SQLFragment;
+      * **reference_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
-       * **reference_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **reference_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **reference_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('reference_idx_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **reference_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('reference_idx_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **reference_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      tenant?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **reference_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **reference_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      r_id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **reference_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **reference_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **reference_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **reference_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **reference_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **reference_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_url?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **reference_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **reference_idx.reference**
-       * - `jsonb` in database
-       * - `NOT NULL`, no default
-       */
-      reference?:
-        | db.JSONValue
-        | db.Parameter<db.JSONValue>
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment
-          >;
+      * **reference_idx.reference**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      reference?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment>;
       /**
-       * **reference_idx.reference_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      reference_type?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **reference_idx.reference_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      reference_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **reference_idx.reference_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      reference_id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **reference_idx.reference_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      reference_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **reference_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **reference_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
-       * **reference_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      resource_type?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **reference_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
-    export type UniqueIndex = "reference_idx_pkey" | "reference_idx_unique";
+    export type UniqueIndex = 'reference_idx_pkey' | 'reference_idx_unique';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -2584,545 +1665,327 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace resources {
-    export type Table = "resources";
+    export type Table = 'resources';
     export interface Selectable {
       /**
-       * **resources.id**
-       * - `text` in database
-       * - Generated column
-       */
+      * **resources.id**
+      * - `text` in database
+      * - Generated column
+      */
       id: string;
       /**
-       * **resources.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **resources.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string;
       /**
-       * **resources.resource_type**
-       * - `text` in database
-       * - Generated column
-       */
+      * **resources.resource_type**
+      * - `text` in database
+      * - Generated column
+      */
       resource_type: string;
       /**
-       * **resources.author**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **resources.author**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       author: string;
       /**
-       * **resources.version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
-       */
+      * **resources.version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
+      */
       version_id: number;
       /**
-       * **resources.resource**
-       * - `jsonb` in database
-       * - `NOT NULL`, no default
-       */
+      * **resources.resource**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
       resource: db.JSONValue;
       /**
-       * **resources.deleted**
-       * - `bool` in database
-       * - `NOT NULL`, default: `false`
-       */
+      * **resources.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
       deleted: boolean;
       /**
-       * **resources.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
+      * **resources.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
       created_at: Date;
       /**
-       * **resources.patches**
-       * - `jsonb` in database
-       * - Nullable, no default
-       */
+      * **resources.patches**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
       patches: db.JSONValue | null;
       /**
-       * **resources.prev_version_id**
-       * - `int8` in database
-       * - Nullable, no default
-       */
+      * **resources.prev_version_id**
+      * - `int8` in database
+      * - Nullable, no default
+      */
       prev_version_id: db.Int8String | null;
       /**
-       * **resources.request_method**
-       * - `varchar` in database
-       * - Nullable, default: `'PUT'::character varying`
-       */
+      * **resources.request_method**
+      * - `varchar` in database
+      * - Nullable, default: `'PUT'::character varying`
+      */
       request_method: string | null;
     }
     export interface JSONSelectable {
       /**
-       * **resources.id**
-       * - `text` in database
-       * - Generated column
-       */
+      * **resources.id**
+      * - `text` in database
+      * - Generated column
+      */
       id: string;
       /**
-       * **resources.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **resources.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string;
       /**
-       * **resources.resource_type**
-       * - `text` in database
-       * - Generated column
-       */
+      * **resources.resource_type**
+      * - `text` in database
+      * - Generated column
+      */
       resource_type: string;
       /**
-       * **resources.author**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **resources.author**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       author: string;
       /**
-       * **resources.version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
-       */
+      * **resources.version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
+      */
       version_id: number;
       /**
-       * **resources.resource**
-       * - `jsonb` in database
-       * - `NOT NULL`, no default
-       */
+      * **resources.resource**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
       resource: db.JSONValue;
       /**
-       * **resources.deleted**
-       * - `bool` in database
-       * - `NOT NULL`, default: `false`
-       */
+      * **resources.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
       deleted: boolean;
       /**
-       * **resources.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
+      * **resources.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
       created_at: db.TimestampTzString;
       /**
-       * **resources.patches**
-       * - `jsonb` in database
-       * - Nullable, no default
-       */
+      * **resources.patches**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
       patches: db.JSONValue | null;
       /**
-       * **resources.prev_version_id**
-       * - `int8` in database
-       * - Nullable, no default
-       */
+      * **resources.prev_version_id**
+      * - `int8` in database
+      * - Nullable, no default
+      */
       prev_version_id: number | null;
       /**
-       * **resources.request_method**
-       * - `varchar` in database
-       * - Nullable, default: `'PUT'::character varying`
-       */
+      * **resources.request_method**
+      * - `varchar` in database
+      * - Nullable, default: `'PUT'::character varying`
+      */
       request_method: string | null;
     }
     export interface Whereable {
       /**
-       * **resources.id**
-       * - `text` in database
-       * - Generated column
-       */
-      id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **resources.id**
+      * - `text` in database
+      * - Generated column
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **resources.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      tenant?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **resources.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **resources.resource_type**
-       * - `text` in database
-       * - Generated column
-       */
-      resource_type?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **resources.resource_type**
+      * - `text` in database
+      * - Generated column
+      */
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **resources.author**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      author?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **resources.author**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      author?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **resources.version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
-       */
-      version_id?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **resources.version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
+      */
+      version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **resources.resource**
-       * - `jsonb` in database
-       * - `NOT NULL`, no default
-       */
-      resource?:
-        | db.JSONValue
-        | db.Parameter<db.JSONValue>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | db.JSONValue
-            | db.Parameter<db.JSONValue>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **resources.resource**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      resource?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **resources.deleted**
-       * - `bool` in database
-       * - `NOT NULL`, default: `false`
-       */
-      deleted?:
-        | boolean
-        | db.Parameter<boolean>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn
-          >;
+      * **resources.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      deleted?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **resources.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **resources.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **resources.patches**
-       * - `jsonb` in database
-       * - Nullable, no default
-       */
-      patches?:
-        | db.JSONValue
-        | db.Parameter<db.JSONValue>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | db.JSONValue
-            | db.Parameter<db.JSONValue>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **resources.patches**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      patches?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **resources.prev_version_id**
-       * - `int8` in database
-       * - Nullable, no default
-       */
-      prev_version_id?:
-        | (number | db.Int8String)
-        | db.Parameter<number | db.Int8String>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (number | db.Int8String)
-            | db.Parameter<number | db.Int8String>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **resources.prev_version_id**
+      * - `int8` in database
+      * - Nullable, no default
+      */
+      prev_version_id?: (number | db.Int8String) | db.Parameter<(number | db.Int8String)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.Int8String) | db.Parameter<(number | db.Int8String)> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **resources.request_method**
-       * - `varchar` in database
-       * - Nullable, default: `'PUT'::character varying`
-       */
-      request_method?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **resources.request_method**
+      * - `varchar` in database
+      * - Nullable, default: `'PUT'::character varying`
+      */
+      request_method?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **resources.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **resources.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **resources.author**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **resources.author**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       author: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **resources.version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
-       */
-      version_id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment;
+      * **resources.version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
+      */
+      version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **resources.resource**
-       * - `jsonb` in database
-       * - `NOT NULL`, no default
-       */
+      * **resources.resource**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
       resource: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment;
       /**
-       * **resources.deleted**
-       * - `bool` in database
-       * - `NOT NULL`, default: `false`
-       */
-      deleted?:
-        | boolean
-        | db.Parameter<boolean>
-        | db.DefaultType
-        | db.SQLFragment;
+      * **resources.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      deleted?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
       /**
-       * **resources.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.DefaultType
-        | db.SQLFragment;
+      * **resources.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
-       * **resources.patches**
-       * - `jsonb` in database
-       * - Nullable, no default
-       */
-      patches?:
-        | db.JSONValue
-        | db.Parameter<db.JSONValue>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **resources.patches**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      patches?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **resources.prev_version_id**
-       * - `int8` in database
-       * - Nullable, no default
-       */
-      prev_version_id?:
-        | (number | db.Int8String)
-        | db.Parameter<number | db.Int8String>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **resources.prev_version_id**
+      * - `int8` in database
+      * - Nullable, no default
+      */
+      prev_version_id?: (number | db.Int8String) | db.Parameter<(number | db.Int8String)> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **resources.request_method**
-       * - `varchar` in database
-       * - Nullable, default: `'PUT'::character varying`
-       */
-      request_method?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **resources.request_method**
+      * - `varchar` in database
+      * - Nullable, default: `'PUT'::character varying`
+      */
+      request_method?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **resources.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      tenant?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **resources.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **resources.author**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      author?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **resources.author**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      author?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **resources.version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
-       */
-      version_id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **resources.version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
+      */
+      version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **resources.resource**
-       * - `jsonb` in database
-       * - `NOT NULL`, no default
-       */
-      resource?:
-        | db.JSONValue
-        | db.Parameter<db.JSONValue>
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment
-          >;
+      * **resources.resource**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      resource?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment>;
       /**
-       * **resources.deleted**
-       * - `bool` in database
-       * - `NOT NULL`, default: `false`
-       */
-      deleted?:
-        | boolean
-        | db.Parameter<boolean>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment
-          >;
+      * **resources.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      deleted?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
       /**
-       * **resources.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **resources.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
-       * **resources.patches**
-       * - `jsonb` in database
-       * - Nullable, no default
-       */
-      patches?:
-        | db.JSONValue
-        | db.Parameter<db.JSONValue>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | db.JSONValue
-            | db.Parameter<db.JSONValue>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **resources.patches**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      patches?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **resources.prev_version_id**
-       * - `int8` in database
-       * - Nullable, no default
-       */
-      prev_version_id?:
-        | (number | db.Int8String)
-        | db.Parameter<number | db.Int8String>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (number | db.Int8String)
-            | db.Parameter<number | db.Int8String>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **resources.prev_version_id**
+      * - `int8` in database
+      * - Nullable, no default
+      */
+      prev_version_id?: (number | db.Int8String) | db.Parameter<(number | db.Int8String)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (number | db.Int8String) | db.Parameter<(number | db.Int8String)> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **resources.request_method**
-       * - `varchar` in database
-       * - Nullable, default: `'PUT'::character varying`
-       */
-      request_method?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | string
-            | db.Parameter<string>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **resources.request_method**
+      * - `varchar` in database
+      * - Nullable, default: `'PUT'::character varying`
+      */
+      request_method?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = "resources_pkey";
+    export type UniqueIndex = 'resources_pkey';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -3131,435 +1994,291 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace string_idx {
-    export type Table = "string_idx";
+    export type Table = 'string_idx';
     export interface Selectable {
       /**
-       * **string_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('string_idx_id_seq'::regclass)`
-       */
+      * **string_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('string_idx_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **string_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **string_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string;
       /**
-       * **string_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **string_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string;
       /**
-       * **string_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
-       */
+      * **string_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
+      */
       r_version_id: number;
       /**
-       * **string_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **string_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string;
       /**
-       * **string_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **string_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string;
       /**
-       * **string_idx.value**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **string_idx.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       value: string;
       /**
-       * **string_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
+      * **string_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
       created_at: Date;
       /**
-       * **string_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **string_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string;
     }
     export interface JSONSelectable {
       /**
-       * **string_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('string_idx_id_seq'::regclass)`
-       */
+      * **string_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('string_idx_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **string_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **string_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string;
       /**
-       * **string_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **string_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string;
       /**
-       * **string_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
-       */
+      * **string_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
+      */
       r_version_id: number;
       /**
-       * **string_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **string_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string;
       /**
-       * **string_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **string_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string;
       /**
-       * **string_idx.value**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **string_idx.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       value: string;
       /**
-       * **string_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
+      * **string_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
       created_at: db.TimestampTzString;
       /**
-       * **string_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **string_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string;
     }
     export interface Whereable {
       /**
-       * **string_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('string_idx_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **string_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('string_idx_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **string_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      tenant?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **string_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **string_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      r_id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **string_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **string_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **string_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **string_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **string_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **string_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_url?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **string_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **string_idx.value**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      value?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **string_idx.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **string_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **string_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **string_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      resource_type?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **string_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **string_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('string_idx_id_seq'::regclass)`
-       */
+      * **string_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('string_idx_id_seq'::regclass)`
+      */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **string_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **string_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **string_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **string_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **string_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment;
+      * **string_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **string_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **string_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **string_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **string_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **string_idx.value**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **string_idx.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       value: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **string_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.DefaultType
-        | db.SQLFragment;
+      * **string_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
-       * **string_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **string_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **string_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('string_idx_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **string_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('string_idx_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **string_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      tenant?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **string_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **string_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      r_id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **string_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **string_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **string_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **string_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **string_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **string_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_url?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **string_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **string_idx.value**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      value?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **string_idx.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **string_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **string_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
-       * **string_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      resource_type?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **string_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
-    export type UniqueIndex = "string_idx_pkey" | "string_idx_unique";
+    export type UniqueIndex = 'string_idx_pkey' | 'string_idx_unique';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -3568,227 +2287,141 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace tenants {
-    export type Table = "tenants";
+    export type Table = 'tenants';
     export interface Selectable {
       /**
-       * **tenants.id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **tenants.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       id: string;
       /**
-       * **tenants.tenant**
-       * - `jsonb` in database
-       * - `NOT NULL`, no default
-       */
+      * **tenants.tenant**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
       tenant: db.JSONValue;
       /**
-       * **tenants.deleted**
-       * - `bool` in database
-       * - `NOT NULL`, default: `false`
-       */
+      * **tenants.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
       deleted: boolean;
       /**
-       * **tenants.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
+      * **tenants.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
       created_at: Date;
     }
     export interface JSONSelectable {
       /**
-       * **tenants.id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **tenants.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       id: string;
       /**
-       * **tenants.tenant**
-       * - `jsonb` in database
-       * - `NOT NULL`, no default
-       */
+      * **tenants.tenant**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
       tenant: db.JSONValue;
       /**
-       * **tenants.deleted**
-       * - `bool` in database
-       * - `NOT NULL`, default: `false`
-       */
+      * **tenants.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
       deleted: boolean;
       /**
-       * **tenants.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
+      * **tenants.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
       created_at: db.TimestampTzString;
     }
     export interface Whereable {
       /**
-       * **tenants.id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **tenants.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **tenants.tenant**
-       * - `jsonb` in database
-       * - `NOT NULL`, no default
-       */
-      tenant?:
-        | db.JSONValue
-        | db.Parameter<db.JSONValue>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | db.JSONValue
-            | db.Parameter<db.JSONValue>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **tenants.tenant**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **tenants.deleted**
-       * - `bool` in database
-       * - `NOT NULL`, default: `false`
-       */
-      deleted?:
-        | boolean
-        | db.Parameter<boolean>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn
-          >;
+      * **tenants.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      deleted?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **tenants.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **tenants.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **tenants.id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **tenants.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       id: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **tenants.tenant**
-       * - `jsonb` in database
-       * - `NOT NULL`, no default
-       */
+      * **tenants.tenant**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
       tenant: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment;
       /**
-       * **tenants.deleted**
-       * - `bool` in database
-       * - `NOT NULL`, default: `false`
-       */
-      deleted?:
-        | boolean
-        | db.Parameter<boolean>
-        | db.DefaultType
-        | db.SQLFragment;
+      * **tenants.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      deleted?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
       /**
-       * **tenants.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.DefaultType
-        | db.SQLFragment;
+      * **tenants.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **tenants.id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **tenants.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **tenants.tenant**
-       * - `jsonb` in database
-       * - `NOT NULL`, no default
-       */
-      tenant?:
-        | db.JSONValue
-        | db.Parameter<db.JSONValue>
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment
-          >;
+      * **tenants.tenant**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment>;
       /**
-       * **tenants.deleted**
-       * - `bool` in database
-       * - `NOT NULL`, default: `false`
-       */
-      deleted?:
-        | boolean
-        | db.Parameter<boolean>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment
-          >;
+      * **tenants.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      deleted?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
       /**
-       * **tenants.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **tenants.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = "workspaces_pkey";
+    export type UniqueIndex = 'workspaces_pkey';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -3797,505 +2430,321 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace token_idx {
-    export type Table = "token_idx";
+    export type Table = 'token_idx';
     export interface Selectable {
       /**
-       * **token_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('token_idx_id_seq'::regclass)`
-       */
+      * **token_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('token_idx_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **token_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **token_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string;
       /**
-       * **token_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **token_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string;
       /**
-       * **token_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
-       */
+      * **token_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
+      */
       r_version_id: number;
       /**
-       * **token_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **token_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string;
       /**
-       * **token_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **token_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string;
       /**
-       * **token_idx.system**
-       * - `text` in database
-       * - Nullable, no default
-       */
+      * **token_idx.system**
+      * - `text` in database
+      * - Nullable, no default
+      */
       system: string | null;
       /**
-       * **token_idx.value**
-       * - `text` in database
-       * - Nullable, no default
-       */
+      * **token_idx.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
       value: string | null;
       /**
-       * **token_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
+      * **token_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
       created_at: Date;
       /**
-       * **token_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **token_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string;
     }
     export interface JSONSelectable {
       /**
-       * **token_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('token_idx_id_seq'::regclass)`
-       */
+      * **token_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('token_idx_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **token_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **token_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string;
       /**
-       * **token_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **token_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string;
       /**
-       * **token_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
-       */
+      * **token_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
+      */
       r_version_id: number;
       /**
-       * **token_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **token_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string;
       /**
-       * **token_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **token_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string;
       /**
-       * **token_idx.system**
-       * - `text` in database
-       * - Nullable, no default
-       */
+      * **token_idx.system**
+      * - `text` in database
+      * - Nullable, no default
+      */
       system: string | null;
       /**
-       * **token_idx.value**
-       * - `text` in database
-       * - Nullable, no default
-       */
+      * **token_idx.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
       value: string | null;
       /**
-       * **token_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
+      * **token_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
       created_at: db.TimestampTzString;
       /**
-       * **token_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **token_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string;
     }
     export interface Whereable {
       /**
-       * **token_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('token_idx_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **token_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('token_idx_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **token_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      tenant?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **token_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **token_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      r_id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **token_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **token_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **token_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **token_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **token_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **token_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_url?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **token_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **token_idx.system**
-       * - `text` in database
-       * - Nullable, no default
-       */
-      system?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **token_idx.system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **token_idx.value**
-       * - `text` in database
-       * - Nullable, no default
-       */
-      value?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **token_idx.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **token_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **token_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **token_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      resource_type?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **token_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **token_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('token_idx_id_seq'::regclass)`
-       */
+      * **token_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('token_idx_id_seq'::regclass)`
+      */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **token_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **token_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **token_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **token_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **token_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment;
+      * **token_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **token_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **token_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **token_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **token_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **token_idx.system**
-       * - `text` in database
-       * - Nullable, no default
-       */
-      system?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **token_idx.system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **token_idx.value**
-       * - `text` in database
-       * - Nullable, no default
-       */
-      value?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **token_idx.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **token_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.DefaultType
-        | db.SQLFragment;
+      * **token_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
-       * **token_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **token_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **token_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('token_idx_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **token_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('token_idx_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **token_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      tenant?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **token_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **token_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      r_id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **token_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **token_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **token_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **token_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **token_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **token_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_url?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **token_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **token_idx.system**
-       * - `text` in database
-       * - Nullable, no default
-       */
-      system?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | string
-            | db.Parameter<string>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **token_idx.system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **token_idx.value**
-       * - `text` in database
-       * - Nullable, no default
-       */
-      value?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | string
-            | db.Parameter<string>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **token_idx.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **token_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **token_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
-       * **token_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      resource_type?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **token_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
-    export type UniqueIndex = "token_idx_pkey" | "token_idx_unique";
+    export type UniqueIndex = 'token_idx_pkey' | 'token_idx_unique';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -4304,572 +2753,318 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace uri_idx {
-    export type Table = "uri_idx";
+    export type Table = 'uri_idx';
     export interface Selectable {
       /**
-       * **uri_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('uri_idx_id_seq'::regclass)`
-       */
+      * **uri_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('uri_idx_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **uri_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **uri_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string;
       /**
-       * **uri_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **uri_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string;
       /**
-       * **uri_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
-       */
+      * **uri_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
+      */
       r_version_id: number;
       /**
-       * **uri_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **uri_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string;
       /**
-       * **uri_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **uri_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string;
       /**
-       * **uri_idx.value**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **uri_idx.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       value: string;
       /**
-       * **uri_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
+      * **uri_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
       created_at: Date;
       /**
-       * **uri_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **uri_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string;
     }
     export interface JSONSelectable {
       /**
-       * **uri_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('uri_idx_id_seq'::regclass)`
-       */
+      * **uri_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('uri_idx_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **uri_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **uri_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string;
       /**
-       * **uri_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **uri_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string;
       /**
-       * **uri_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
-       */
+      * **uri_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
+      */
       r_version_id: number;
       /**
-       * **uri_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **uri_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string;
       /**
-       * **uri_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **uri_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string;
       /**
-       * **uri_idx.value**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **uri_idx.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       value: string;
       /**
-       * **uri_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
+      * **uri_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
       created_at: db.TimestampTzString;
       /**
-       * **uri_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **uri_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string;
     }
     export interface Whereable {
       /**
-       * **uri_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('uri_idx_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **uri_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('uri_idx_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **uri_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      tenant?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **uri_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **uri_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      r_id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **uri_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **uri_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **uri_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **uri_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **uri_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **uri_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_url?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **uri_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **uri_idx.value**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      value?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **uri_idx.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **uri_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **uri_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **uri_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      resource_type?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **uri_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **uri_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('uri_idx_id_seq'::regclass)`
-       */
+      * **uri_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('uri_idx_id_seq'::regclass)`
+      */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **uri_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **uri_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       tenant: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **uri_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **uri_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **uri_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment;
+      * **uri_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **uri_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **uri_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_name: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **uri_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **uri_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       parameter_url: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **uri_idx.value**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **uri_idx.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       value: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **uri_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.DefaultType
-        | db.SQLFragment;
+      * **uri_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
-       * **uri_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
+      * **uri_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
       resource_type: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **uri_idx.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('uri_idx_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **uri_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('uri_idx_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **uri_idx.tenant**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      tenant?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **uri_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **uri_idx.r_id**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      r_id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **uri_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **uri_idx.r_version_id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
-       */
-      r_version_id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **uri_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **uri_idx.parameter_name**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **uri_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **uri_idx.parameter_url**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      parameter_url?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **uri_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **uri_idx.value**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      value?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **uri_idx.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **uri_idx.created_at**
-       * - `timestamptz` in database
-       * - `NOT NULL`, default: `now()`
-       */
-      created_at?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **uri_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
-       * **uri_idx.resource_type**
-       * - `text` in database
-       * - `NOT NULL`, no default
-       */
-      resource_type?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **uri_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
-    export type UniqueIndex = "uri_idx_pkey" | "uri_idx_unique";
+    export type UniqueIndex = 'uri_idx_pkey' | 'uri_idx_unique';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
   /* --- aggregate types --- */
 
-  export namespace public {
-    export type Table =
-      | date_idx.Table
-      | migrations.Table
-      | migrations_state.Table
-      | number_idx.Table
-      | quantity_idx.Table
-      | reference_idx.Table
-      | resources.Table
-      | string_idx.Table
-      | tenants.Table
-      | token_idx.Table
-      | uri_idx.Table;
-    export type Selectable =
-      | date_idx.Selectable
-      | migrations.Selectable
-      | migrations_state.Selectable
-      | number_idx.Selectable
-      | quantity_idx.Selectable
-      | reference_idx.Selectable
-      | resources.Selectable
-      | string_idx.Selectable
-      | tenants.Selectable
-      | token_idx.Selectable
-      | uri_idx.Selectable;
-    export type JSONSelectable =
-      | date_idx.JSONSelectable
-      | migrations.JSONSelectable
-      | migrations_state.JSONSelectable
-      | number_idx.JSONSelectable
-      | quantity_idx.JSONSelectable
-      | reference_idx.JSONSelectable
-      | resources.JSONSelectable
-      | string_idx.JSONSelectable
-      | tenants.JSONSelectable
-      | token_idx.JSONSelectable
-      | uri_idx.JSONSelectable;
-    export type Whereable =
-      | date_idx.Whereable
-      | migrations.Whereable
-      | migrations_state.Whereable
-      | number_idx.Whereable
-      | quantity_idx.Whereable
-      | reference_idx.Whereable
-      | resources.Whereable
-      | string_idx.Whereable
-      | tenants.Whereable
-      | token_idx.Whereable
-      | uri_idx.Whereable;
-    export type Insertable =
-      | date_idx.Insertable
-      | migrations.Insertable
-      | migrations_state.Insertable
-      | number_idx.Insertable
-      | quantity_idx.Insertable
-      | reference_idx.Insertable
-      | resources.Insertable
-      | string_idx.Insertable
-      | tenants.Insertable
-      | token_idx.Insertable
-      | uri_idx.Insertable;
-    export type Updatable =
-      | date_idx.Updatable
-      | migrations.Updatable
-      | migrations_state.Updatable
-      | number_idx.Updatable
-      | quantity_idx.Updatable
-      | reference_idx.Updatable
-      | resources.Updatable
-      | string_idx.Updatable
-      | tenants.Updatable
-      | token_idx.Updatable
-      | uri_idx.Updatable;
-    export type UniqueIndex =
-      | date_idx.UniqueIndex
-      | migrations.UniqueIndex
-      | migrations_state.UniqueIndex
-      | number_idx.UniqueIndex
-      | quantity_idx.UniqueIndex
-      | reference_idx.UniqueIndex
-      | resources.UniqueIndex
-      | string_idx.UniqueIndex
-      | tenants.UniqueIndex
-      | token_idx.UniqueIndex
-      | uri_idx.UniqueIndex;
-    export type Column =
-      | date_idx.Column
-      | migrations.Column
-      | migrations_state.Column
-      | number_idx.Column
-      | quantity_idx.Column
-      | reference_idx.Column
-      | resources.Column
-      | string_idx.Column
-      | tenants.Column
-      | token_idx.Column
-      | uri_idx.Column;
-
-    export type AllBaseTables = [
-      date_idx.Table,
-      migrations.Table,
-      migrations_state.Table,
-      number_idx.Table,
-      quantity_idx.Table,
-      reference_idx.Table,
-      resources.Table,
-      string_idx.Table,
-      tenants.Table,
-      token_idx.Table,
-      uri_idx.Table,
-    ];
+  export namespace public {  
+    export type Table = date_idx.Table | migrations.Table | migrations_state.Table | number_idx.Table | quantity_idx.Table | reference_idx.Table | resources.Table | string_idx.Table | tenants.Table | token_idx.Table | uri_idx.Table;
+    export type Selectable = date_idx.Selectable | migrations.Selectable | migrations_state.Selectable | number_idx.Selectable | quantity_idx.Selectable | reference_idx.Selectable | resources.Selectable | string_idx.Selectable | tenants.Selectable | token_idx.Selectable | uri_idx.Selectable;
+    export type JSONSelectable = date_idx.JSONSelectable | migrations.JSONSelectable | migrations_state.JSONSelectable | number_idx.JSONSelectable | quantity_idx.JSONSelectable | reference_idx.JSONSelectable | resources.JSONSelectable | string_idx.JSONSelectable | tenants.JSONSelectable | token_idx.JSONSelectable | uri_idx.JSONSelectable;
+    export type Whereable = date_idx.Whereable | migrations.Whereable | migrations_state.Whereable | number_idx.Whereable | quantity_idx.Whereable | reference_idx.Whereable | resources.Whereable | string_idx.Whereable | tenants.Whereable | token_idx.Whereable | uri_idx.Whereable;
+    export type Insertable = date_idx.Insertable | migrations.Insertable | migrations_state.Insertable | number_idx.Insertable | quantity_idx.Insertable | reference_idx.Insertable | resources.Insertable | string_idx.Insertable | tenants.Insertable | token_idx.Insertable | uri_idx.Insertable;
+    export type Updatable = date_idx.Updatable | migrations.Updatable | migrations_state.Updatable | number_idx.Updatable | quantity_idx.Updatable | reference_idx.Updatable | resources.Updatable | string_idx.Updatable | tenants.Updatable | token_idx.Updatable | uri_idx.Updatable;
+    export type UniqueIndex = date_idx.UniqueIndex | migrations.UniqueIndex | migrations_state.UniqueIndex | number_idx.UniqueIndex | quantity_idx.UniqueIndex | reference_idx.UniqueIndex | resources.UniqueIndex | string_idx.UniqueIndex | tenants.UniqueIndex | token_idx.UniqueIndex | uri_idx.UniqueIndex;
+    export type Column = date_idx.Column | migrations.Column | migrations_state.Column | number_idx.Column | quantity_idx.Column | reference_idx.Column | resources.Column | string_idx.Column | tenants.Column | token_idx.Column | uri_idx.Column;
+  
+    export type AllBaseTables = [date_idx.Table, migrations.Table, migrations_state.Table, number_idx.Table, quantity_idx.Table, reference_idx.Table, resources.Table, string_idx.Table, tenants.Table, token_idx.Table, uri_idx.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [
-      date_idx.Table,
-      migrations.Table,
-      migrations_state.Table,
-      number_idx.Table,
-      quantity_idx.Table,
-      reference_idx.Table,
-      resources.Table,
-      string_idx.Table,
-      tenants.Table,
-      token_idx.Table,
-      uri_idx.Table,
-    ];
+    export type AllTablesAndViews = [date_idx.Table, migrations.Table, migrations_state.Table, number_idx.Table, quantity_idx.Table, reference_idx.Table, resources.Table, string_idx.Table, tenants.Table, token_idx.Table, uri_idx.Table];
   }
+
+
 
   /* === global aggregate types === */
 
-  export type Schema = "public";
+  export type Schema = 'public';
   export type Table = public.Table;
   export type Selectable = public.Selectable;
   export type JSONSelectable = public.JSONSelectable;
@@ -4879,124 +3074,126 @@ declare module "zapatos/schema" {
   export type UniqueIndex = public.UniqueIndex;
   export type Column = public.Column;
 
-  export type AllSchemas = ["public"];
+  export type AllSchemas = ['public'];
   export type AllBaseTables = [...public.AllBaseTables];
   export type AllForeignTables = [...public.AllForeignTables];
   export type AllViews = [...public.AllViews];
   export type AllMaterializedViews = [...public.AllMaterializedViews];
   export type AllTablesAndViews = [...public.AllTablesAndViews];
 
+
   /* === lookups === */
 
   export type SelectableForTable<T extends Table> = {
-    date_idx: date_idx.Selectable;
-    migrations: migrations.Selectable;
-    migrations_state: migrations_state.Selectable;
-    number_idx: number_idx.Selectable;
-    quantity_idx: quantity_idx.Selectable;
-    reference_idx: reference_idx.Selectable;
-    resources: resources.Selectable;
-    string_idx: string_idx.Selectable;
-    tenants: tenants.Selectable;
-    token_idx: token_idx.Selectable;
-    uri_idx: uri_idx.Selectable;
+    "date_idx": date_idx.Selectable;
+    "migrations": migrations.Selectable;
+    "migrations_state": migrations_state.Selectable;
+    "number_idx": number_idx.Selectable;
+    "quantity_idx": quantity_idx.Selectable;
+    "reference_idx": reference_idx.Selectable;
+    "resources": resources.Selectable;
+    "string_idx": string_idx.Selectable;
+    "tenants": tenants.Selectable;
+    "token_idx": token_idx.Selectable;
+    "uri_idx": uri_idx.Selectable;
   }[T];
 
   export type JSONSelectableForTable<T extends Table> = {
-    date_idx: date_idx.JSONSelectable;
-    migrations: migrations.JSONSelectable;
-    migrations_state: migrations_state.JSONSelectable;
-    number_idx: number_idx.JSONSelectable;
-    quantity_idx: quantity_idx.JSONSelectable;
-    reference_idx: reference_idx.JSONSelectable;
-    resources: resources.JSONSelectable;
-    string_idx: string_idx.JSONSelectable;
-    tenants: tenants.JSONSelectable;
-    token_idx: token_idx.JSONSelectable;
-    uri_idx: uri_idx.JSONSelectable;
+    "date_idx": date_idx.JSONSelectable;
+    "migrations": migrations.JSONSelectable;
+    "migrations_state": migrations_state.JSONSelectable;
+    "number_idx": number_idx.JSONSelectable;
+    "quantity_idx": quantity_idx.JSONSelectable;
+    "reference_idx": reference_idx.JSONSelectable;
+    "resources": resources.JSONSelectable;
+    "string_idx": string_idx.JSONSelectable;
+    "tenants": tenants.JSONSelectable;
+    "token_idx": token_idx.JSONSelectable;
+    "uri_idx": uri_idx.JSONSelectable;
   }[T];
 
   export type WhereableForTable<T extends Table> = {
-    date_idx: date_idx.Whereable;
-    migrations: migrations.Whereable;
-    migrations_state: migrations_state.Whereable;
-    number_idx: number_idx.Whereable;
-    quantity_idx: quantity_idx.Whereable;
-    reference_idx: reference_idx.Whereable;
-    resources: resources.Whereable;
-    string_idx: string_idx.Whereable;
-    tenants: tenants.Whereable;
-    token_idx: token_idx.Whereable;
-    uri_idx: uri_idx.Whereable;
+    "date_idx": date_idx.Whereable;
+    "migrations": migrations.Whereable;
+    "migrations_state": migrations_state.Whereable;
+    "number_idx": number_idx.Whereable;
+    "quantity_idx": quantity_idx.Whereable;
+    "reference_idx": reference_idx.Whereable;
+    "resources": resources.Whereable;
+    "string_idx": string_idx.Whereable;
+    "tenants": tenants.Whereable;
+    "token_idx": token_idx.Whereable;
+    "uri_idx": uri_idx.Whereable;
   }[T];
 
   export type InsertableForTable<T extends Table> = {
-    date_idx: date_idx.Insertable;
-    migrations: migrations.Insertable;
-    migrations_state: migrations_state.Insertable;
-    number_idx: number_idx.Insertable;
-    quantity_idx: quantity_idx.Insertable;
-    reference_idx: reference_idx.Insertable;
-    resources: resources.Insertable;
-    string_idx: string_idx.Insertable;
-    tenants: tenants.Insertable;
-    token_idx: token_idx.Insertable;
-    uri_idx: uri_idx.Insertable;
+    "date_idx": date_idx.Insertable;
+    "migrations": migrations.Insertable;
+    "migrations_state": migrations_state.Insertable;
+    "number_idx": number_idx.Insertable;
+    "quantity_idx": quantity_idx.Insertable;
+    "reference_idx": reference_idx.Insertable;
+    "resources": resources.Insertable;
+    "string_idx": string_idx.Insertable;
+    "tenants": tenants.Insertable;
+    "token_idx": token_idx.Insertable;
+    "uri_idx": uri_idx.Insertable;
   }[T];
 
   export type UpdatableForTable<T extends Table> = {
-    date_idx: date_idx.Updatable;
-    migrations: migrations.Updatable;
-    migrations_state: migrations_state.Updatable;
-    number_idx: number_idx.Updatable;
-    quantity_idx: quantity_idx.Updatable;
-    reference_idx: reference_idx.Updatable;
-    resources: resources.Updatable;
-    string_idx: string_idx.Updatable;
-    tenants: tenants.Updatable;
-    token_idx: token_idx.Updatable;
-    uri_idx: uri_idx.Updatable;
+    "date_idx": date_idx.Updatable;
+    "migrations": migrations.Updatable;
+    "migrations_state": migrations_state.Updatable;
+    "number_idx": number_idx.Updatable;
+    "quantity_idx": quantity_idx.Updatable;
+    "reference_idx": reference_idx.Updatable;
+    "resources": resources.Updatable;
+    "string_idx": string_idx.Updatable;
+    "tenants": tenants.Updatable;
+    "token_idx": token_idx.Updatable;
+    "uri_idx": uri_idx.Updatable;
   }[T];
 
   export type UniqueIndexForTable<T extends Table> = {
-    date_idx: date_idx.UniqueIndex;
-    migrations: migrations.UniqueIndex;
-    migrations_state: migrations_state.UniqueIndex;
-    number_idx: number_idx.UniqueIndex;
-    quantity_idx: quantity_idx.UniqueIndex;
-    reference_idx: reference_idx.UniqueIndex;
-    resources: resources.UniqueIndex;
-    string_idx: string_idx.UniqueIndex;
-    tenants: tenants.UniqueIndex;
-    token_idx: token_idx.UniqueIndex;
-    uri_idx: uri_idx.UniqueIndex;
+    "date_idx": date_idx.UniqueIndex;
+    "migrations": migrations.UniqueIndex;
+    "migrations_state": migrations_state.UniqueIndex;
+    "number_idx": number_idx.UniqueIndex;
+    "quantity_idx": quantity_idx.UniqueIndex;
+    "reference_idx": reference_idx.UniqueIndex;
+    "resources": resources.UniqueIndex;
+    "string_idx": string_idx.UniqueIndex;
+    "tenants": tenants.UniqueIndex;
+    "token_idx": token_idx.UniqueIndex;
+    "uri_idx": uri_idx.UniqueIndex;
   }[T];
 
   export type ColumnForTable<T extends Table> = {
-    date_idx: date_idx.Column;
-    migrations: migrations.Column;
-    migrations_state: migrations_state.Column;
-    number_idx: number_idx.Column;
-    quantity_idx: quantity_idx.Column;
-    reference_idx: reference_idx.Column;
-    resources: resources.Column;
-    string_idx: string_idx.Column;
-    tenants: tenants.Column;
-    token_idx: token_idx.Column;
-    uri_idx: uri_idx.Column;
+    "date_idx": date_idx.Column;
+    "migrations": migrations.Column;
+    "migrations_state": migrations_state.Column;
+    "number_idx": number_idx.Column;
+    "quantity_idx": quantity_idx.Column;
+    "reference_idx": reference_idx.Column;
+    "resources": resources.Column;
+    "string_idx": string_idx.Column;
+    "tenants": tenants.Column;
+    "token_idx": token_idx.Column;
+    "uri_idx": uri_idx.Column;
   }[T];
 
   export type SQLForTable<T extends Table> = {
-    date_idx: date_idx.SQL;
-    migrations: migrations.SQL;
-    migrations_state: migrations_state.SQL;
-    number_idx: number_idx.SQL;
-    quantity_idx: quantity_idx.SQL;
-    reference_idx: reference_idx.SQL;
-    resources: resources.SQL;
-    string_idx: string_idx.SQL;
-    tenants: tenants.SQL;
-    token_idx: token_idx.SQL;
-    uri_idx: uri_idx.SQL;
+    "date_idx": date_idx.SQL;
+    "migrations": migrations.SQL;
+    "migrations_state": migrations_state.SQL;
+    "number_idx": number_idx.SQL;
+    "quantity_idx": quantity_idx.SQL;
+    "reference_idx": reference_idx.SQL;
+    "resources": resources.SQL;
+    "string_idx": string_idx.SQL;
+    "tenants": tenants.SQL;
+    "token_idx": token_idx.SQL;
+    "uri_idx": uri_idx.SQL;
   }[T];
+
 }
