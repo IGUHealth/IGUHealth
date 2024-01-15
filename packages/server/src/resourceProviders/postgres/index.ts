@@ -161,11 +161,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
       const references = (
         await Promise.all(
           evaluation.map((v) =>
-            toReference(
-              parameter,
-              v,
-              createResolverRemoteCanonical(ctx.client, ctx)
-            )
+            toReference(parameter, v, createResolverRemoteCanonical(ctx))
           )
         )
       ).flat();
@@ -742,351 +738,368 @@ async function deleteResource<CTX extends FHIRServerCTX>(
 }
 
 function createPostgresMiddleware<
-  State extends { client: pg.PoolClient; transaction_entry_limit: number },
+  State extends {
+    pool: pg.Pool;
+    _client?: pg.PoolClient;
+    transaction_entry_limit: number;
+  },
   CTX extends FHIRServerCTX
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
     async (context, next) => {
-      switch (context.request.type) {
-        case "read-request": {
-          const resource = await getResource(
-            context.state.client,
-            context.ctx,
-            context.request.resourceType,
-            context.request.id
-          );
-          return {
-            state: context.state,
-            ctx: context.ctx,
-            request: context.request,
-            response: {
-              level: "instance",
-              type: "read-response",
-              resourceType: context.request.resourceType,
-              id: context.request.id,
-              body: resource,
-            },
-          };
+      let shouldReleasePGClient = false;
+      try {
+        if (!context.state._client) {
+          shouldReleasePGClient = true;
+          context.state._client = await context.state.pool.connect();
         }
-        case "search-request": {
-          const result = await executeSearchQuery(
-            context.state.client,
-            context.ctx,
-            context.request
-          );
-          switch (context.request.level) {
-            case "system": {
-              return {
-                request: context.request,
-                state: context.state,
-                ctx: context.ctx,
-                response: {
-                  type: "search-response",
-                  parameters: context.request.parameters,
-                  level: "system",
-                  total: result.total as unsignedInt | undefined,
-                  body: result.resources,
-                },
-              };
-            }
-            case "type": {
-              return {
-                request: context.request,
-                state: context.state,
-                ctx: context.ctx,
-                response: {
-                  type: "search-response",
-                  parameters: context.request.parameters,
-                  level: "type",
-                  resourceType: context.request.resourceType,
-                  total: result.total as unsignedInt | undefined,
-                  body: result.resources,
-                },
-              };
-            }
-            default: {
-              throw new Error("Invalid search level");
+        switch (context.request.type) {
+          case "read-request": {
+            const resource = await getResource(
+              context.state._client,
+              context.ctx,
+              context.request.resourceType,
+              context.request.id
+            );
+            return {
+              state: context.state,
+              ctx: context.ctx,
+              request: context.request,
+              response: {
+                level: "instance",
+                type: "read-response",
+                resourceType: context.request.resourceType,
+                id: context.request.id,
+                body: resource,
+              },
+            };
+          }
+          case "search-request": {
+            const result = await executeSearchQuery(
+              context.state._client,
+              context.ctx,
+              context.request
+            );
+            switch (context.request.level) {
+              case "system": {
+                return {
+                  request: context.request,
+                  state: context.state,
+                  ctx: context.ctx,
+                  response: {
+                    type: "search-response",
+                    parameters: context.request.parameters,
+                    level: "system",
+                    total: result.total as unsignedInt | undefined,
+                    body: result.resources,
+                  },
+                };
+              }
+              case "type": {
+                return {
+                  request: context.request,
+                  state: context.state,
+                  ctx: context.ctx,
+                  response: {
+                    type: "search-response",
+                    parameters: context.request.parameters,
+                    level: "type",
+                    resourceType: context.request.resourceType,
+                    total: result.total as unsignedInt | undefined,
+                    body: result.resources,
+                  },
+                };
+              }
+              default: {
+                throw new Error("Invalid search level");
+              }
             }
           }
-        }
-        case "create-request": {
-          const savedResource = await createResource(
-            context.state.client,
-            context.ctx,
-            {
-              ...context.request.body,
-              id: nanoid() as id,
+          case "create-request": {
+            const savedResource = await createResource(
+              context.state._client,
+              context.ctx,
+              {
+                ...context.request.body,
+                id: nanoid() as id,
+              }
+            );
+
+            return {
+              request: context.request,
+              state: context.state,
+              ctx: context.ctx,
+              response: {
+                level: "type",
+                resourceType: context.request.resourceType,
+                type: "create-response",
+                body: savedResource,
+              },
+            };
+          }
+
+          case "patch-request": {
+            const savedResource = await patchResource(
+              context.state._client,
+              context.ctx,
+              context.request.resourceType,
+              context.request.id,
+              context.request.body as Operation[]
+            );
+
+            return {
+              request: context.request,
+              state: context.state,
+              ctx: context.ctx,
+              response: {
+                level: "instance",
+                resourceType: context.request.resourceType,
+                id: context.request.id,
+                type: "patch-response",
+                body: savedResource,
+              },
+            };
+          }
+          case "update-request": {
+            const savedResource = await updateResource(
+              context.state._client,
+              context.ctx,
+              // Set the id for the request body to ensure that the resource is updated correctly.
+              // Should be pased on the request.id and request.resourceType
+              {
+                ...context.request.body,
+                id: context.request.id,
+              }
+            );
+
+            return {
+              request: context.request,
+              state: context.state,
+              ctx: context.ctx,
+              response: {
+                level: "instance",
+                resourceType: context.request.resourceType,
+                id: context.request.id,
+                type: "update-response",
+                body: savedResource,
+              },
+            };
+          }
+          case "delete-request": {
+            await deleteResource(
+              context.state._client,
+              context.ctx,
+              context.request.resourceType,
+              context.request.id
+            );
+
+            return {
+              request: context.request,
+              state: context.state,
+              ctx: context.ctx,
+              response: {
+                type: "delete-response",
+                level: "instance",
+                resourceType: context.request.resourceType,
+                id: context.request.id,
+              },
+            };
+          }
+
+          case "history-request": {
+            const history = await getHistory(
+              context.state._client,
+              context.ctx,
+              historyLevelFilter(context.request),
+              context.request.parameters || []
+            );
+
+            switch (context.request.level) {
+              case "instance": {
+                return {
+                  request: context.request,
+                  state: context.state,
+                  ctx: context.ctx,
+                  response: {
+                    type: "history-response",
+                    level: "instance",
+                    resourceType: context.request.resourceType,
+                    id: context.request.id,
+                    body: history,
+                  },
+                };
+              }
+              case "type": {
+                return {
+                  request: context.request,
+                  state: context.state,
+                  ctx: context.ctx,
+                  response: {
+                    type: "history-response",
+                    level: "type",
+                    resourceType: context.request.resourceType,
+                    body: history,
+                  },
+                };
+              }
+              case "system": {
+                return {
+                  request: context.request,
+                  state: context.state,
+                  ctx: context.ctx,
+                  response: {
+                    type: "history-response",
+                    level: "system",
+                    body: history,
+                  },
+                };
+              }
+              default: {
+                throw new OperationError(
+                  outcomeError("invalid", "Invalid history level")
+                );
+              }
             }
-          );
+          }
 
-          return {
-            request: context.request,
-            state: context.state,
-            ctx: context.ctx,
-            response: {
-              level: "type",
-              resourceType: context.request.resourceType,
-              type: "create-response",
-              body: savedResource,
-            },
-          };
-        }
-
-        case "patch-request": {
-          const savedResource = await patchResource(
-            context.state.client,
-            context.ctx,
-            context.request.resourceType,
-            context.request.id,
-            context.request.body as Operation[]
-          );
-
-          return {
-            request: context.request,
-            state: context.state,
-            ctx: context.ctx,
-            response: {
-              level: "instance",
-              resourceType: context.request.resourceType,
-              id: context.request.id,
-              type: "patch-response",
-              body: savedResource,
-            },
-          };
-        }
-        case "update-request": {
-          const savedResource = await updateResource(
-            context.state.client,
-            context.ctx,
-            // Set the id for the request body to ensure that the resource is updated correctly.
-            // Should be pased on the request.id and request.resourceType
-            {
-              ...context.request.body,
-              id: context.request.id,
-            }
-          );
-
-          return {
-            request: context.request,
-            state: context.state,
-            ctx: context.ctx,
-            response: {
-              level: "instance",
-              resourceType: context.request.resourceType,
-              id: context.request.id,
-              type: "update-response",
-              body: savedResource,
-            },
-          };
-        }
-        case "delete-request": {
-          await deleteResource(
-            context.state.client,
-            context.ctx,
-            context.request.resourceType,
-            context.request.id
-          );
-
-          return {
-            request: context.request,
-            state: context.state,
-            ctx: context.ctx,
-            response: {
-              type: "delete-response",
-              level: "instance",
-              resourceType: context.request.resourceType,
-              id: context.request.id,
-            },
-          };
-        }
-
-        case "history-request": {
-          const history = await getHistory(
-            context.state.client,
-            context.ctx,
-            historyLevelFilter(context.request),
-            context.request.parameters || []
-          );
-
-          switch (context.request.level) {
-            case "instance": {
-              return {
-                request: context.request,
-                state: context.state,
-                ctx: context.ctx,
-                response: {
-                  type: "history-response",
-                  level: "instance",
-                  resourceType: context.request.resourceType,
-                  id: context.request.id,
-                  body: history,
-                },
-              };
-            }
-            case "type": {
-              return {
-                request: context.request,
-                state: context.state,
-                ctx: context.ctx,
-                response: {
-                  type: "history-response",
-                  level: "type",
-                  resourceType: context.request.resourceType,
-                  body: history,
-                },
-              };
-            }
-            case "system": {
-              return {
-                request: context.request,
-                state: context.state,
-                ctx: context.ctx,
-                response: {
-                  type: "history-response",
-                  level: "system",
-                  body: history,
-                },
-              };
-            }
-            default: {
+          case "transaction-request": {
+            let transactionBundle = context.request.body;
+            const { locationsToUpdate, order } =
+              buildTransactionTopologicalGraph(context.ctx, transactionBundle);
+            if (
+              (transactionBundle.entry || []).length >
+              context.state.transaction_entry_limit
+            ) {
               throw new OperationError(
-                outcomeError("invalid", "Invalid history level")
+                outcomeError(
+                  "invalid",
+                  `Transaction bundle only allowed to have '${
+                    context.state.transaction_entry_limit
+                  }' entries. Current bundle has '${
+                    (transactionBundle.entry || []).length
+                  }'`
+                )
               );
             }
-          }
-        }
+            const responseEntries: BundleEntry[] = [
+              ...new Array((transactionBundle.entry || []).length),
+            ];
+            return transaction(
+              ISOLATION_LEVEL.RepeatableRead,
+              context.ctx,
+              context.state._client,
+              async (ctx) => {
+                for (const index of order) {
+                  const entry = transactionBundle.entry?.[parseInt(index)];
+                  if (!entry)
+                    throw new OperationError(
+                      outcomeFatal(
+                        "exception",
+                        "invalid entry in transaction processing."
+                      )
+                    );
 
-        case "transaction-request": {
-          let transactionBundle = context.request.body;
-          const { locationsToUpdate, order } = buildTransactionTopologicalGraph(
-            context.ctx,
-            transactionBundle
-          );
-          if (
-            (transactionBundle.entry || []).length >
-            context.state.transaction_entry_limit
-          ) {
-            throw new OperationError(
-              outcomeError(
-                "invalid",
-                `Transaction bundle only allowed to have '${
-                  context.state.transaction_entry_limit
-                }' entries. Current bundle has '${
-                  (transactionBundle.entry || []).length
-                }'`
-              )
+                  if (!entry.request?.method) {
+                    throw new OperationError(
+                      outcomeError(
+                        "invalid",
+                        `No request.method found at index '${index}'`
+                      )
+                    );
+                  }
+                  if (!entry.request?.url) {
+                    throw new OperationError(
+                      outcomeError(
+                        "invalid",
+                        `No request.url found at index '${index}'`
+                      )
+                    );
+                  }
+                  const fhirRequest = httpRequestToFHIRRequest({
+                    url: entry.request?.url || "",
+                    method: entry.request?.method,
+                    body: entry.resource,
+                  });
+                  const fhirResponse = await ctx.client.request(
+                    ctx,
+                    fhirRequest
+                  );
+                  const responseEntry = fhirResponseToBundleEntry(fhirResponse);
+                  responseEntries[parseInt(index)] = responseEntry;
+                  // Generate patches to update the transaction references.
+                  const patches = entry.fullUrl
+                    ? (locationsToUpdate[entry.fullUrl] || []).map(
+                        (loc): Operation => {
+                          if (!responseEntry.response?.location)
+                            throw new OperationError(
+                              outcomeFatal(
+                                "exception",
+                                "response location not found during transaction processing"
+                              )
+                            );
+                          return {
+                            path: `/${loc.join("/")}`,
+                            op: "replace",
+                            value: {
+                              reference: responseEntry.response?.location,
+                            },
+                          };
+                        }
+                      )
+                    : [];
+
+                  // Update transaction bundle with applied references.
+                  transactionBundle = jsonpatch.applyPatch(
+                    transactionBundle,
+                    patches
+                  ).newDocument;
+                }
+
+                const transactionResponse: Bundle = {
+                  resourceType: "Bundle",
+                  type: "transaction-response" as code,
+                  entry: responseEntries,
+                };
+
+                return {
+                  state: context.state,
+                  ctx: context.ctx,
+                  request: context.request,
+                  response: {
+                    type: "transaction-response",
+                    level: "system",
+                    body: transactionResponse,
+                  },
+                };
+              }
             );
           }
-          const responseEntries: BundleEntry[] = [
-            ...new Array((transactionBundle.entry || []).length),
-          ];
-          return transaction(
-            ISOLATION_LEVEL.RepeatableRead,
-            context.ctx,
-            context.state.client,
-            async (ctx) => {
-              for (const index of order) {
-                const entry = transactionBundle.entry?.[parseInt(index)];
-                if (!entry)
-                  throw new OperationError(
-                    outcomeFatal(
-                      "exception",
-                      "invalid entry in transaction processing."
-                    )
-                  );
-
-                if (!entry.request?.method) {
-                  throw new OperationError(
-                    outcomeError(
-                      "invalid",
-                      `No request.method found at index '${index}'`
-                    )
-                  );
-                }
-                if (!entry.request?.url) {
-                  throw new OperationError(
-                    outcomeError(
-                      "invalid",
-                      `No request.url found at index '${index}'`
-                    )
-                  );
-                }
-                const fhirRequest = httpRequestToFHIRRequest({
-                  url: entry.request?.url || "",
-                  method: entry.request?.method,
-                  body: entry.resource,
-                });
-                const fhirResponse = await ctx.client.request(ctx, fhirRequest);
-                const responseEntry = fhirResponseToBundleEntry(fhirResponse);
-                responseEntries[parseInt(index)] = responseEntry;
-                // Generate patches to update the transaction references.
-                const patches = entry.fullUrl
-                  ? (locationsToUpdate[entry.fullUrl] || []).map(
-                      (loc): Operation => {
-                        if (!responseEntry.response?.location)
-                          throw new OperationError(
-                            outcomeFatal(
-                              "exception",
-                              "response location not found during transaction processing"
-                            )
-                          );
-                        return {
-                          path: `/${loc.join("/")}`,
-                          op: "replace",
-                          value: {
-                            reference: responseEntry.response?.location,
-                          },
-                        };
-                      }
-                    )
-                  : [];
-
-                // Update transaction bundle with applied references.
-                transactionBundle = jsonpatch.applyPatch(
-                  transactionBundle,
-                  patches
-                ).newDocument;
-              }
-
-              const transactionResponse: Bundle = {
-                resourceType: "Bundle",
-                type: "transaction-response" as code,
-                entry: responseEntries,
-              };
-
-              return {
-                state: context.state,
-                ctx: context.ctx,
-                request: context.request,
-                response: {
-                  type: "transaction-response",
-                  level: "system",
-                  body: transactionResponse,
-                },
-              };
-            }
-          );
+          default:
+            throw new OperationError(
+              outcomeError(
+                "not-supported",
+                `Requests of type '${context.request.type}' are not yet supported`
+              )
+            );
         }
-        default:
-          throw new OperationError(
-            outcomeError(
-              "not-supported",
-              `Requests of type '${context.request.type}' are not yet supported`
-            )
-          );
+      } finally {
+        if (shouldReleasePGClient) {
+          context.state._client?.release();
+          context.state._client = undefined;
+        }
       }
     },
   ]);
 }
 
 export function createPostgresClient<CTX extends FHIRServerCTX>(
-  client: pg.PoolClient,
+  pool: pg.Pool,
   { transaction_entry_limit }: { transaction_entry_limit: number } = {
     transaction_entry_limit: 20,
   }
 ): FHIRClientAsync<CTX> {
   return new AsynchronousClient<
-    { client: pg.PoolClient; transaction_entry_limit: number },
+    { pool: pg.Pool; _client?: pg.PoolClient; transaction_entry_limit: number },
     CTX
-  >({ client, transaction_entry_limit }, createPostgresMiddleware());
+  >({ pool, transaction_entry_limit }, createPostgresMiddleware());
 }

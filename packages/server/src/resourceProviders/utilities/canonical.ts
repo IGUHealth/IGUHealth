@@ -1,12 +1,11 @@
-import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
 import type { toReference } from "./search/dataConversion.js";
+import { FHIRServerCTX } from "../../fhir/context.js";
 
-export function createResolverRemoteCanonical<
-  CTX,
-  Client extends FHIRClientAsync<CTX>
->(client: Client, ctx: CTX): Parameters<typeof toReference>[2] {
+export function createResolverRemoteCanonical(
+  ctx: FHIRServerCTX
+): Parameters<typeof toReference>[2] {
   return async (types, url) => {
-    const results = await client.search_system(ctx, [
+    const results = await ctx.client.search_system(ctx, [
       { name: "_type", value: types },
       { name: "url", value: [url] },
     ]);

@@ -5,19 +5,23 @@ import { bodyParser } from "@koa/bodyparser";
 import cors from "@koa/cors";
 import pg from "pg";
 import dotEnv from "dotenv";
+import type * as Sentry from "@sentry/node";
 
 import {
-  OperationError,
   isOperationError,
   issueSeverityToStatusCodes,
   outcomeError,
-  outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
 import { LIB_VERSION } from "./version.js";
-import RedisLock from "./synchronization/redis.lock.js";
-import * as Sentry from "./monitoring/sentry.js";
-import { createFHIRServer, getRedisClient, logger } from "./fhir/index.js";
+
+import * as MonitoringSentry from "./monitoring/sentry.js";
+import {
+  createFHIRServer,
+  createKoaFHIRMiddleware,
+  getRedisClient,
+  logger,
+} from "./fhir/index.js";
 import {
   httpRequestToFHIRRequest,
   fhirResponseToHTTPResponse,
@@ -26,31 +30,41 @@ import {
   createValidateUserJWTMiddleware,
   allowPublicAccessMiddleware,
 } from "./authN/middleware.js";
-import {
-  canUserAccessTenantMiddleware,
-  findCurrentTenant,
-} from "./authZ/middleware/tenantAccess.js";
-import RedisCache from "./cache/redis.js";
+import { canUserAccessTenantMiddleware } from "./authZ/middleware/tenantAccess.js";
+import { FHIRServerCTX } from "./fhir/context.js";
 
 dotEnv.config();
 
-async function KoaFHIRMiddleware(pool: pg.Pool): Promise<Koa.Middleware[]> {
+interface KoaFHIRMiddlewareState extends Koa.DefaultState {
+  user: { [key: string]: unknown };
+  access_token: string;
+}
+
+interface IGUHealthKoaBaseContext extends Koa.BaseContext {
+  FHIRContext: FHIRServerCTX;
+  __sentry_transaction?: Sentry.Transaction;
+}
+
+async function KoaFHIRMiddleware<T extends KoaFHIRMiddlewareState>(
+  pool: pg.Pool
+): Promise<
+  Koa.Middleware<
+    T,
+    IGUHealthKoaBaseContext &
+      Router.RouterParamContext<T, IGUHealthKoaBaseContext>
+  >[]
+> {
   if (!process.env.AUTH_JWT_ISSUER)
     logger.warn("[WARNING] Server is publicly accessible.");
-  const redis = getRedisClient();
-  const fhirServer = await createFHIRServer({
-    pool,
-    lock: new RedisLock(redis),
-    cache: new RedisCache(redis),
-    logger,
-  });
+  const fhirServer = await createFHIRServer();
 
   return [
-    Sentry.tracingMiddleWare(process.env.SENTRY_SERVER_DSN),
+    MonitoringSentry.tracingMiddleWare(process.env.SENTRY_SERVER_DSN),
     process.env.AUTH_JWT_ISSUER
       ? await createValidateUserJWTMiddleware()
       : allowPublicAccessMiddleware,
     canUserAccessTenantMiddleware,
+    await createKoaFHIRMiddleware(pool),
     async (ctx, next) => {
       let span;
       const transaction = ctx.__sentry_transaction;
@@ -60,21 +74,10 @@ async function KoaFHIRMiddleware(pool: pg.Pool): Promise<Koa.Middleware[]> {
           op: "fhirserver",
         });
       }
-      const tenant = findCurrentTenant(ctx);
-      if (!tenant) throw new Error("Error tenant does not exist in context!");
+
       try {
-        if (
-          typeof ctx.state.user.sub !== "string" ||
-          typeof ctx.state.user.iss !== "string"
-        )
-          throw new OperationError(
-            outcomeFatal("security", "JWT must have both sub and iss.")
-          );
         const response = await fhirServer.request(
-          {
-            tenant,
-            user: { jwt: ctx.state.user, accessToken: ctx.state.access_token },
-          },
+          ctx.FHIRContext,
           httpRequestToFHIRRequest({
             url: `${ctx.params.fhirUrl || ""}${
               ctx.request.querystring ? `?${ctx.request.querystring}` : ""
@@ -83,9 +86,7 @@ async function KoaFHIRMiddleware(pool: pg.Pool): Promise<Koa.Middleware[]> {
             body: (ctx.request as unknown as Record<string, unknown>).body,
           })
         );
-
         const httpResponse = fhirResponseToHTTPResponse(response);
-
         ctx.status = httpResponse.status;
         ctx.body = httpResponse.body;
         for (const [key, value] of Object.entries(httpResponse.headers ?? {})) {
@@ -102,7 +103,7 @@ async function KoaFHIRMiddleware(pool: pg.Pool): Promise<Koa.Middleware[]> {
           ctx.body = operationOutcome;
         } else {
           logger.error(e);
-          Sentry.logError(e, ctx);
+          MonitoringSentry.logError(e, ctx);
 
           const operationOutcome = outcomeError(
             "invalid",
@@ -126,7 +127,7 @@ export default async function createServer(): Promise<
   Koa<Koa.DefaultState, Koa.DefaultContext>
 > {
   if (process.env.SENTRY_SERVER_DSN)
-    Sentry.enableSentry(process.env.SENTRY_SERVER_DSN, LIB_VERSION, {
+    MonitoringSentry.enableSentry(process.env.SENTRY_SERVER_DSN, LIB_VERSION, {
       tracesSampleRate: parseFloat(
         process.env.SENTRY_TRACES_SAMPLE_RATE || "0.1"
       ),
@@ -153,17 +154,23 @@ export default async function createServer(): Promise<
   });
 
   const app = new Koa();
-  const router = new Router<Koa.DefaultState, Koa.Context>();
-  const tenantRoutes = new Router<Koa.DefaultState, Koa.Context>({
+  const router = new Router<Koa.DefaultState, IGUHealthKoaBaseContext>();
+  const tenantRoutes = new Router<Koa.DefaultState, IGUHealthKoaBaseContext>({
     prefix: "/w/:tenant/",
   });
-  const tenantaAPIV1 = new Router<Koa.DefaultState, Koa.Context>({
+  const tenantaAPIV1 = new Router<Koa.DefaultState, IGUHealthKoaBaseContext>({
     prefix: "api/v1/",
   });
-  const fhirR4API = new Router<Koa.DefaultState, Koa.Context>({
+  tenantaAPIV1.use();
+  const fhirR4API = new Router<Koa.DefaultState, IGUHealthKoaBaseContext>({
     prefix: "fhir/r4",
   });
-  fhirR4API.all("/:fhirUrl*", ...(await KoaFHIRMiddleware(pool)));
+  fhirR4API.all(
+    "/:fhirUrl*",
+    ...(await KoaFHIRMiddleware<KoaFHIRMiddlewareState>(pool))
+  );
+
+  router.get("/", (ctx) => {});
 
   tenantaAPIV1.use(fhirR4API.routes());
   tenantaAPIV1.use(fhirR4API.allowedMethods());
@@ -218,7 +225,7 @@ export default async function createServer(): Promise<
 
   logger.info("Running app");
 
-  app.on("error", Sentry.onKoaError);
+  app.on("error", MonitoringSentry.onKoaError);
 
   return app;
 }

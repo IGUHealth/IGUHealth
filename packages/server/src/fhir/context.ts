@@ -1,5 +1,4 @@
 import type { Logger } from "pino";
-import type pg from "pg";
 
 import {
   ResourceType,
@@ -46,13 +45,6 @@ export interface FHIRServerInitCTX {
     accessPolicies?: AccessPolicy[];
     accessToken?: string;
   };
-}
-
-export interface FHIRServerState {
-  pool: pg.Pool;
-  cache: IOCache<FHIRServerCTX>;
-  logger: Logger<unknown>;
-  lock: Lock<unknown>;
 }
 
 export interface FHIRServerCTX extends FHIRServerInitCTX {
