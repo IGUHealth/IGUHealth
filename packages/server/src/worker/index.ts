@@ -409,7 +409,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
       for (const tenant of activeTenants) {
         const ctx = {
           ...fhirServices,
-          tenant: tenant as TenantId,
+          tenant: tenant,
           user: {
             role: "SUPER_ADMIN" as SUPER_ADMIN,
             jwt: {

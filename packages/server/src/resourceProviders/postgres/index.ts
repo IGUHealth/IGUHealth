@@ -501,9 +501,10 @@ function processHistoryParameters(
     );
   }
 
+
   if (_since?.value[0] && typeof _since?.value[0] === "string") {
     sqlParams["created_at"] = db.sql`${db.self} >= ${db.param(
-      dayjs(_since.value[0] as string, "YYYY-MM-DDThh:mm:ss+zz:zz").toDate(),
+      dayjs(_since.value[0], "YYYY-MM-DDThh:mm:ss+zz:zz").toDate(),
     )}`;
   }
 

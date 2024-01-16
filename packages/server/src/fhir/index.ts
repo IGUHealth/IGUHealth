@@ -30,14 +30,9 @@ import {
   id,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
-import {
-  OperationError,
-  outcomeError,
-  outcomeFatal,
-} from "@iguhealth/operation-outcomes";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { createAuthorizationMiddleWare } from "../authZ/middleware/authorization.js";
-import { findCurrentTenant } from "../authZ/middleware/tenantAccess.js";
 import RedisCache from "../cache/redis.js";
 import { encryptValue } from "../encryption/index.js";
 import { AWSKMSProvider } from "../encryption/provider/kms.js";
@@ -58,7 +53,7 @@ import RouterClient from "../resourceProviders/router.js";
 import JSONPatchSchema from "../schemas/jsonpatch.schema.js";
 import RedisLock from "../synchronization/redis.lock.js";
 import { TerminologyProviderMemory } from "../terminology/index.js";
-import { FHIRServerCTX, JWT, asSystemCTX } from "./context.js";
+import { FHIRServerCTX, asSystemCTX } from "./context.js";
 
 export const MEMORY_TYPES: ResourceType[] = [
   "StructureDefinition",

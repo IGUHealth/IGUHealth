@@ -1,6 +1,5 @@
 import jsonpatch, { Operation } from "fast-json-patch";
 
-import { Extension, Resource } from "@iguhealth/fhir-types/r4/types";
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
