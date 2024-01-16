@@ -93,7 +93,7 @@ export async function deriveSortQuery(
       const column_name = db.raw(getParameterSortColumn(direction, parameter));
       return db.sql` LEFT JOIN 
         (SELECT ${"r_id"}, MIN(${column_name}) AS ${sort_column_name} FROM ${table} 
-          WHERE ${"tenant"}=${db.param(ctx.tenant.id)} AND
+          WHERE ${"tenant"}=${db.param(ctx.tenant)} AND
           parameter_url=${db.param(parameter.url)} GROUP BY ${"r_id"}
         )
         AS ${sort_column_name} 

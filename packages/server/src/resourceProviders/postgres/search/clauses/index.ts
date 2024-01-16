@@ -64,7 +64,7 @@ export function buildParameterSQL(
       } 
       FROM ${search_table} 
       WHERE ${db.conditions.and(
-        { parameter_url: searchParameter.url, tenant: ctx.tenant.id },
+        { parameter_url: searchParameter.url, tenant: ctx.tenant },
         PARAMETER_CLAUSES[searchParameter.type](ctx, parameter),
       )}
       `;

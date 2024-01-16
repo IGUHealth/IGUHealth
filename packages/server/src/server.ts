@@ -20,8 +20,8 @@ import {
 import { canUserAccessTenantMiddleware } from "./authZ/middleware/tenantAccess.js";
 import { FHIRServerCTX } from "./fhir/context.js";
 import {
-  createFHIRServer,
-  createKoaFHIRMiddleware,
+  createFHIRAPI,
+  createKoaFHIRContextMiddleware,
   getRedisClient,
   logger,
 } from "./fhir/index.js";
@@ -44,9 +44,13 @@ interface IGUHealthKoaBaseContext extends Koa.BaseContext {
   __sentry_transaction?: Sentry.Transaction;
 }
 
-async function KoaFHIRMiddleware<T extends KoaFHIRMiddlewareState>(
-  pool: pg.Pool,
-): Promise<
+/**
+ * Koa middleware that handles FHIR API requests. [Note expectation is ctx.FHIRContext is set.]
+ * @returns Koa.Middleware[] that can be used to handle FHIR requests.
+ */
+async function FHIRAPIKoaMiddleware<
+  T extends KoaFHIRMiddlewareState,
+>(): Promise<
   Koa.Middleware<
     T,
     IGUHealthKoaBaseContext &
@@ -55,7 +59,7 @@ async function KoaFHIRMiddleware<T extends KoaFHIRMiddlewareState>(
 > {
   if (!process.env.AUTH_JWT_ISSUER)
     logger.warn("[WARNING] Server is publicly accessible.");
-  const fhirServer = await createFHIRServer();
+  const fhirAPI = await createFHIRAPI();
 
   return [
     MonitoringSentry.tracingMiddleWare(process.env.SENTRY_SERVER_DSN),
@@ -63,7 +67,7 @@ async function KoaFHIRMiddleware<T extends KoaFHIRMiddlewareState>(
       ? await createValidateUserJWTMiddleware()
       : allowPublicAccessMiddleware,
     canUserAccessTenantMiddleware,
-    await createKoaFHIRMiddleware(pool),
+
     async (ctx, next) => {
       let span;
       const transaction = ctx.__sentry_transaction;
@@ -75,7 +79,7 @@ async function KoaFHIRMiddleware<T extends KoaFHIRMiddlewareState>(
       }
 
       try {
-        const response = await fhirServer.request(
+        const response = await fhirAPI.request(
           ctx.FHIRContext,
           httpRequestToFHIRRequest({
             url: `${ctx.params.fhirUrl || ""}${
@@ -160,13 +164,13 @@ export default async function createServer(): Promise<
   const tenantaAPIV1 = new Router<Koa.DefaultState, IGUHealthKoaBaseContext>({
     prefix: "api/v1/",
   });
-  tenantaAPIV1.use();
+  tenantaAPIV1.use(await createKoaFHIRContextMiddleware(pool));
   const fhirR4API = new Router<Koa.DefaultState, IGUHealthKoaBaseContext>({
     prefix: "fhir/r4",
   });
   fhirR4API.all(
     "/:fhirUrl*",
-    ...(await KoaFHIRMiddleware<KoaFHIRMiddlewareState>(pool)),
+    ...(await FHIRAPIKoaMiddleware<KoaFHIRMiddlewareState>()),
   );
 
   tenantaAPIV1.use(fhirR4API.routes());

@@ -530,7 +530,7 @@ export async function createFHIRServices(
   ]);
 
   return {
-    logger: logger, // .child({ tenant: ctx.params.tenant }),
+    logger: logger,
     lock,
     cache,
     capabilities,
@@ -542,7 +542,7 @@ export async function createFHIRServices(
   };
 }
 
-export async function createKoaFHIRMiddleware<
+export async function createKoaFHIRContextMiddleware<
   KoaState extends {
     access_token?: string;
     user: { [key: string]: unknown };
@@ -551,40 +551,24 @@ export async function createKoaFHIRMiddleware<
 >(
   pool: pg.Pool,
 ): Promise<
-  koa.Middleware<KoaState, KoaContext & { FHIRContext: FHIRServerCTX }>
+  koa.Middleware<
+    KoaState,
+    KoaContext & { FHIRContext: Omit<FHIRServerCTX, "user" | "tenant"> }
+  >
 > {
   const fhirServices = await createFHIRServices(pool);
   return async (ctx, next) => {
-    if (
-      typeof ctx.state.user.sub !== "string" ||
-      typeof ctx.state.user.iss !== "string"
-    )
-      throw new OperationError(
-        outcomeFatal("security", "JWT must have both sub and iss."),
-      );
-
-    const tenant = findCurrentTenant(ctx);
-    if (!tenant) throw new Error("Error tenant does not exist in context!");
-
-    ctx.FHIRContext = {
-      tenant,
-      user: {
-        jwt: ctx.state.user as JWT,
-        accessToken: ctx.state.access_token,
-      },
-      ...fhirServices,
-    };
-
+    ctx.FHIRContext = fhirServices;
     await next();
   };
 }
 
-async function createFHIRMiddleware(): Promise<
+async function fhirAPIMiddleware(): Promise<
   MiddlewareAsync<unknown, FHIRServerCTX>
 > {
   return createMiddlewareAsync([
     associateUserMiddleware,
-    async (context, _next) => {
+    async (context) => {
       return {
         state: context.state,
         ctx: context.ctx,
@@ -598,6 +582,6 @@ async function createFHIRMiddleware(): Promise<
   ]);
 }
 
-export async function createFHIRServer() {
-  return new AsynchronousClient({}, await createFHIRMiddleware());
+export async function createFHIRAPI() {
+  return new AsynchronousClient({}, await fhirAPIMiddleware());
 }

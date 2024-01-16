@@ -30,10 +30,11 @@ import {
   FHIRServerCTX,
   FHIRServerInitCTX,
   JWT,
-  Tenant,
+  TenantClaim,
   TenantId,
 } from "../fhir/context.js";
-import { createFHIRServer, createFHIRServices } from "../fhir/index.js";
+import { createFHIRAPI, createFHIRServices } from "../fhir/index.js";
+import { SUPER_ADMIN } from "../fhir/roles.js";
 import { httpRequestToFHIRRequest } from "../http/index.js";
 import logAuditEvent, {
   MAJOR_FAILURE,
@@ -170,7 +171,10 @@ async function handleSubscriptionPayload(
                 header: { audience: process.env.AUTH_JWT_AUDIENCE },
                 payload: {
                   "https://iguhealth.app/tenants": [
-                    { id: ctx.tenant.id, userRole: "SUPER_ADMIN" } as Tenant,
+                    {
+                      id: ctx.tenant,
+                      userRole: "SUPER_ADMIN",
+                    } as TenantClaim,
                   ],
                   sub: `OperationDefinition/${operationDefinition.id}`,
                   aud: ["https://iguhealth.com/api"],
@@ -226,7 +230,7 @@ function processSubscription(
 
     const logger = ctx.logger.child({
       worker: workerID,
-      tenant: ctx.tenant.id,
+      tenant: ctx.tenant,
       criteria: subscription.criteria,
     });
 
@@ -391,7 +395,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
   });
 
   const fhirServices = await createFHIRServices(pool);
-  const fhirServer = await createFHIRServer();
+  const fhirServer = await createFHIRAPI();
   let isRunning = true;
 
   fhirServices.logger.info(
@@ -405,8 +409,9 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
       for (const tenant of activeTenants) {
         const ctx = {
           ...fhirServices,
-          tenant: { id: tenant, userRole: "SUPER_ADMIN" } as Tenant,
+          tenant: tenant as TenantId,
           user: {
+            role: "SUPER_ADMIN" as SUPER_ADMIN,
             jwt: {
               iss: IGUHEALTH_ISSUER,
               sub: `system-worker-${workerID}`,

@@ -4,9 +4,6 @@ import {
   GetFunctionCommand,
   InvokeCommand,
   LambdaClient,
-  TagResourceCommand,
-  UpdateFunctionCodeCommand,
-  UpdateFunctionConfigurationCommand,
 } from "@aws-sdk/client-lambda";
 import {
   GetResourcesCommand,
@@ -63,7 +60,7 @@ function getLambdaTags(
   op: OperationDefinition,
 ): Record<string, string> {
   return {
-    tenant: ctx.tenant.id,
+    tenant: ctx.tenant,
     id: op.id as string,
     versionId: op.meta?.versionId as string,
     operation: op.code,
@@ -82,7 +79,7 @@ async function getLambda(
     const getResources = new GetResourcesCommand({
       ResourceTypeFilters: ["lambda"],
       TagFilters: [
-        { Key: "tenant", Values: [ctx.tenant.id] },
+        { Key: "tenant", Values: [ctx.tenant] },
         { Key: "id", Values: [operation.operationDefinition.id as string] },
       ],
     });
@@ -119,7 +116,7 @@ type Payload = {
   ctx: {
     SEC_TOKEN: string;
     API_URL: string;
-    tenant: FHIRServerCTX["tenant"]["id"];
+    tenant: FHIRServerCTX["tenant"];
     level: FHIRRequest["level"];
     resourceType?: ResourceType;
     id?: id;
@@ -197,7 +194,7 @@ async function createEnvironmentVariables(
             valueExt?.valueString
           ) {
             value = await ctx.encryptionProvider?.decrypt(
-              { workspace: ctx.tenant.id },
+              { workspace: ctx.tenant },
               valueExt.valueString,
             );
           } else {
@@ -296,11 +293,9 @@ async function createPayload(
   return {
     ctx: {
       SEC_TOKEN: ctx.user.accessToken || "not-sec",
-      API_URL: new URL(
-        `/w/${ctx.tenant.id}/api/v1/fhir/r4`,
-        process.env.API_URL,
-      ).href,
-      tenant: ctx.tenant.id,
+      API_URL: new URL(`/w/${ctx.tenant}/api/v1/fhir/r4`, process.env.API_URL)
+        .href,
+      tenant: ctx.tenant,
       level: request.level,
       resourceType:
         request.level === "type" || request.level === "instance"

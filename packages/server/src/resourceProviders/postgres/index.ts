@@ -105,7 +105,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
         .flat()
         .map(
           (value): s.quantity_idx.Insertable => ({
-            tenant: ctx.tenant.id,
+            tenant: ctx.tenant,
             r_id: resource.id,
             resource_type: resource.resourceType,
             r_version_id: parseInt(resource.meta.versionId),
@@ -139,7 +139,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
         .flat()
         .map(
           (value): s.date_idx.Insertable => ({
-            tenant: ctx.tenant.id,
+            tenant: ctx.tenant,
             r_id: resource.id,
             resource_type: resource.resourceType,
             r_version_id: parseInt(resource.meta.versionId),
@@ -184,7 +184,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
             );
           }
           return {
-            tenant: ctx.tenant.id,
+            tenant: ctx.tenant,
             r_id: resource.id,
             resource_type: resource.resourceType,
             r_version_id: parseInt(resource.meta.versionId),
@@ -215,7 +215,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
         .flat()
         .map(
           (value): s.uri_idx.Insertable => ({
-            tenant: ctx.tenant.id,
+            tenant: ctx.tenant,
             r_id: resource.id,
             resource_type: resource.resourceType,
             r_version_id: parseInt(resource.meta.versionId),
@@ -239,7 +239,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
         .flat()
         .map(
           (value): s.token_idx.Insertable => ({
-            tenant: ctx.tenant.id,
+            tenant: ctx.tenant,
             r_id: resource.id,
             resource_type: resource.resourceType,
             r_version_id: parseInt(resource.meta.versionId),
@@ -269,7 +269,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
             ),
           );
         return {
-          tenant: ctx.tenant.id,
+          tenant: ctx.tenant,
           r_id: resource.id,
           resource_type: resource.resourceType,
           r_version_id: parseInt(resource.meta.versionId),
@@ -298,7 +298,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
         .flat()
         .map(
           (value): s.string_idx.Insertable => ({
-            tenant: ctx.tenant.id,
+            tenant: ctx.tenant,
             r_id: resource.id,
             resource_type: resource.resourceType,
             r_version_id: parseInt(resource.meta.versionId),
@@ -429,7 +429,7 @@ async function createResource<CTX extends FHIRServerCTX>(
     client,
     async (ctx) => {
       const data: s.resources.Insertable = {
-        tenant: ctx.tenant.id,
+        tenant: ctx.tenant,
         request_method: "POST",
         author: ctx.user.jwt.sub,
         resource: resource as unknown as db.JSONObject,
@@ -459,7 +459,7 @@ async function getResource<CTX extends FHIRServerCTX>(
   type ResourceReturn = s.resources.OnlyCols<typeof latestCols>;
   const getLatestVersionSQLFragment = db.sql<s.resources.SQL, ResourceReturn[]>`
     SELECT ${db.cols(latestCols)} FROM ${"resources"} WHERE ${{
-      tenant: ctx.tenant.id,
+      tenant: ctx.tenant,
       resource_type: resourceType,
       id: id,
     }} ORDER BY ${"version_id"} DESC LIMIT 1
@@ -557,7 +557,7 @@ async function getHistory<CTX extends FHIRServerCTX>(
   FROM ${"resources"} 
   WHERE
   ${{
-    tenant: ctx.tenant.id,
+    tenant: ctx.tenant,
     ...filters,
     ...processHistoryParameters(parameters),
   }} ORDER BY ${"version_id"} DESC LIMIT ${db.param(limit)}`;
@@ -611,7 +611,7 @@ async function patchResource<CTX extends FHIRServerCTX>(
       }
 
       const data: s.resources.Insertable = {
-        tenant: ctx.tenant.id,
+        tenant: ctx.tenant,
         request_method: "PATCH",
         author: ctx.user.jwt.sub,
         resource: newResource as unknown as db.JSONObject,
@@ -672,7 +672,7 @@ async function updateResource<CTX extends FHIRServerCTX>(
       );
 
     const data: s.resources.Insertable = {
-      tenant: ctx.tenant.id,
+      tenant: ctx.tenant,
       request_method: "PUT",
       author: ctx.user.jwt.sub,
       resource: resource as unknown as db.JSONObject,
@@ -715,7 +715,7 @@ async function deleteResource<CTX extends FHIRServerCTX>(
         );
 
       const data: s.resources.Insertable = {
-        tenant: ctx.tenant.id,
+        tenant: ctx.tenant,
         request_method: "DELETE",
         author: ctx.user.jwt.sub,
         resource: resource as unknown as db.JSONObject,
