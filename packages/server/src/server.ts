@@ -157,28 +157,26 @@ export default async function createServer(): Promise<
   });
 
   const app = new Koa();
-  const router = new Router<Koa.DefaultState, IGUHealthKoaBaseContext>();
-  const tenantRoutes = new Router<Koa.DefaultState, IGUHealthKoaBaseContext>({
-    prefix: "/w/:tenant/",
+  const rootRouter = new Router<Koa.DefaultState, IGUHealthKoaBaseContext>();
+
+  const tenantRouter = new Router<Koa.DefaultState, IGUHealthKoaBaseContext>({
+    prefix: "/w/:tenant",
   });
-  const tenantaAPIV1 = new Router<Koa.DefaultState, IGUHealthKoaBaseContext>({
-    prefix: "api/v1/",
-  });
-  tenantaAPIV1.use(await createKoaFHIRContextMiddleware(pool));
-  const fhirR4API = new Router<Koa.DefaultState, IGUHealthKoaBaseContext>({
-    prefix: "fhir/r4",
-  });
-  fhirR4API.all(
-    "/:fhirUrl*",
+  const tenantAPIRouter = new Router<Koa.DefaultState, IGUHealthKoaBaseContext>(
+    {
+      prefix: "/api/v1",
+    },
+  );
+  tenantAPIRouter.use("/", await createKoaFHIRContextMiddleware(pool));
+  tenantAPIRouter.all(
+    "/fhir/r4/:fhirUrl*",
     ...(await FHIRAPIKoaMiddleware<KoaFHIRMiddlewareState>()),
   );
+  tenantRouter.use(tenantAPIRouter.routes());
+  tenantRouter.use(tenantAPIRouter.allowedMethods());
 
-  tenantaAPIV1.use(fhirR4API.routes());
-  tenantaAPIV1.use(fhirR4API.allowedMethods());
-  tenantRoutes.use(tenantaAPIV1.routes());
-  tenantRoutes.use(tenantaAPIV1.allowedMethods());
-  router.use(tenantRoutes.routes());
-  router.use(tenantRoutes.allowedMethods());
+  rootRouter.use(tenantRouter.routes());
+  rootRouter.use(tenantRouter.allowedMethods());
 
   app
     .use(
@@ -221,8 +219,8 @@ export default async function createServer(): Promise<
       const ms = Date.now() - start;
       ctx.set("X-Response-Time", `${ms}ms`);
     })
-    .use(router.routes())
-    .use(router.allowedMethods());
+    .use(rootRouter.routes())
+    .use(rootRouter.allowedMethods());
 
   logger.info("Running app");
 
