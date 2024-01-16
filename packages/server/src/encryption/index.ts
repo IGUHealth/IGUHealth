@@ -1,6 +1,5 @@
 import jsonpatch, { Operation } from "fast-json-patch";
 
-import { Extension, Resource } from "@iguhealth/fhir-types/r4/types";
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -76,7 +75,7 @@ export async function encryptValue<T extends object>(
 
       if (encryptExtensionValue[0].valueOf() !== value.valueOf()) {
         const encryptedValue = await encryptionProvider.encrypt(
-          { workspace: ctx.tenant.id },
+          { workspace: ctx.tenant },
           value.valueOf() as string,
         );
         return [

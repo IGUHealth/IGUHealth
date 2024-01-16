@@ -106,7 +106,7 @@ function evaluateAccessPolicy(
  * @returns boolean as to whether or not a user is being granted access.
  */
 function canUserMakeRequest(ctx: FHIRServerCTX, request: FHIRRequest): boolean {
-  if (ctx.tenant.userRole === "SUPER_ADMIN") return true;
+  if (ctx.user.role === "SUPER_ADMIN") return true;
   return evaluateAccessPolicy(ctx, request);
 }
 

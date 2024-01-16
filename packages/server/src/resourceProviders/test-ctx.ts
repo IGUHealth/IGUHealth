@@ -14,7 +14,7 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 
 import { IOCache } from "../cache/interface.js";
-import { FHIRServerCTX, JWT, Tenant } from "../fhir/context.js";
+import { FHIRServerCTX, JWT, TenantId } from "../fhir/context.js";
 import { Lock } from "../synchronization/interfaces.js";
 import { TerminologyProviderMemory } from "../terminology/index.js";
 import MemoryDatabase from "./memory/async.js";
@@ -33,7 +33,7 @@ class TestLock implements Lock<TestLock> {
   }
 }
 
-class TestCache<CTX extends { tenant: Tenant }> implements IOCache<CTX> {
+class TestCache<CTX extends { tenant: TenantId }> implements IOCache<CTX> {
   _date: Record<string, unknown>;
   constructor() {
     this._date = {};
@@ -48,8 +48,8 @@ class TestCache<CTX extends { tenant: Tenant }> implements IOCache<CTX> {
 }
 
 export const testServices: FHIRServerCTX = {
-  tenant: { id: "test", userRole: "SUPER_ADMIN" } as Tenant,
-  user: { jwt: { iss: "test", sub: "test-user" } as JWT },
+  tenant: "tenant" as TenantId,
+  user: { role: "SUPER_ADMIN", jwt: { iss: "test", sub: "test-user" } as JWT },
   terminologyProvider: new TerminologyProviderMemory(),
   logger: createLogger.default(),
   capabilities: {

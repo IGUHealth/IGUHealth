@@ -2,7 +2,7 @@ import jwksRsa from "jwks-rsa";
 import Koa, { Middleware } from "koa";
 import jwt from "koa-jwt";
 
-import { Tenant } from "../fhir/context.js";
+import { TenantClaim } from "../fhir/context.js";
 import { createCertsIfNoneExists, getJWKS } from "./certifications.js";
 import { IGUHEALTH_ISSUER } from "./token.js";
 
@@ -73,7 +73,7 @@ export const allowPublicAccessMiddleware: Koa.Middleware = async (
       sub: "public-user",
       access_token: "sec-public",
       "https://iguhealth.app/tenants": [
-        { id: ctx.params.tenant, userRole: "SUPER_ADMIN" } as Tenant,
+        { id: ctx.params.tenant, userRole: "SUPER_ADMIN" } as TenantClaim,
       ],
     },
   };

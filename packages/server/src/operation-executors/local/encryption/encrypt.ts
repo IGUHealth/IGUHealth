@@ -14,7 +14,7 @@ const IguhealthEncryptInvoke = InlineOperation(
       );
     return {
       encryptedValue: await ctx.encryptionProvider.encrypt(
-        { workspace: ctx.tenant.id },
+        { workspace: ctx.tenant },
         input.value,
       ),
     };

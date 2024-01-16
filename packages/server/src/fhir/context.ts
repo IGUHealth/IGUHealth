@@ -20,7 +20,7 @@ import { SUPER_ADMIN, USER } from "./roles.js";
 
 declare const __tenant: unique symbol;
 export type TenantId = string & { [__tenant]: string };
-export interface Tenant {
+export interface TenantClaim {
   id: TenantId;
   userRole: SUPER_ADMIN | USER;
 }
@@ -33,18 +33,22 @@ export type Issuer = string & { [__iss]: string };
 export interface JWT {
   sub: Subject;
   iss: Issuer;
+  "https://iguhealth.app/tenants": TenantClaim[];
   [key: string]: unknown;
+}
+
+export interface UserContext {
+  role: SUPER_ADMIN | USER;
+  jwt: JWT;
+  resource?: User | null;
+  accessPolicies?: AccessPolicy[];
+  accessToken?: string;
 }
 
 export interface FHIRServerInitCTX {
   // User information
-  tenant: Readonly<Tenant>;
-  user: {
-    resource?: User | null;
-    jwt: JWT;
-    accessPolicies?: AccessPolicy[];
-    accessToken?: string;
-  };
+  tenant: TenantId;
+  user: UserContext;
 }
 
 export interface FHIRServerCTX extends FHIRServerInitCTX {
@@ -83,11 +87,9 @@ export interface FHIRServerCTX extends FHIRServerInitCTX {
 export function asSystemCTX(ctx: FHIRServerCTX): FHIRServerCTX {
   return {
     ...ctx,
-    tenant: {
-      ...ctx.tenant,
-      userRole: "SUPER_ADMIN",
-    },
+    tenant: ctx.tenant,
     user: {
+      role: "SUPER_ADMIN",
       jwt: {
         iss: IGUHEALTH_ISSUER,
         sub: "system",

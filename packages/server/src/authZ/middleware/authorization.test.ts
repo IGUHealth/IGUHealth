@@ -13,12 +13,11 @@ const authorizationMiddleware = createAuthorizationMiddleWare();
 test("Authorization test for read access on resource based on type and method", async () => {
   const ctx: FHIRServerCTX = {
     ...testServices,
-    tenant: {
-      ...testServices.tenant,
-      userRole: "USER",
-    },
+    tenant: testServices.tenant,
+
     user: {
       ...testServices.user,
+      role: "USER",
       accessPolicies: [
         {
           resourceType: "AccessPolicy",

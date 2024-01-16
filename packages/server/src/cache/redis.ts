@@ -1,13 +1,13 @@
 import Redis from "ioredis";
 
-import { Tenant } from "../fhir/context.js";
+import { TenantId } from "../fhir/context.js";
 import { IOCache } from "./interface.js";
 
-function constructKey(tenant: Tenant, key: string) {
-  return `${tenant.id}/${key}`;
+function constructKey(tenant: TenantId, key: string) {
+  return `${tenant}/${key}`;
 }
 
-export default class RedisCache<CTX extends { tenant: Tenant }>
+export default class RedisCache<CTX extends { tenant: TenantId }>
   implements IOCache<CTX>
 {
   private _client: Redis.default;
