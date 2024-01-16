@@ -747,7 +747,7 @@ function createPostgresMiddleware<
   CTX extends FHIRServerCTX,
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
-    async (context, next) => {
+    async (context) => {
       let shouldReleasePGClient = false;
       try {
         if (!context.state._client) {

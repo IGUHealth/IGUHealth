@@ -1,3 +1,4 @@
+import Router from "@koa/router";
 import Ajv from "ajv";
 import Redis from "ioredis";
 import type * as koa from "koa";
@@ -53,7 +54,7 @@ import RouterClient from "../resourceProviders/router.js";
 import JSONPatchSchema from "../schemas/jsonpatch.schema.js";
 import RedisLock from "../synchronization/redis.lock.js";
 import { TerminologyProviderMemory } from "../terminology/index.js";
-import { FHIRServerCTX, asSystemCTX } from "./context.js";
+import { FHIRServerCTX, TenantId, asSystemCTX } from "./context.js";
 
 export const MEMORY_TYPES: ResourceType[] = [
   "StructureDefinition",
@@ -537,23 +538,32 @@ export async function createFHIRServices(
   };
 }
 
+type FHIRContext<C> = C & {
+  FHIRContext: Omit<FHIRServerCTX, "user">;
+};
+
 export async function createKoaFHIRContextMiddleware<
-  KoaState extends {
+  State extends {
     access_token?: string;
     user: { [key: string]: unknown };
   },
-  KoaContext,
+  Context,
 >(
   pool: pg.Pool,
 ): Promise<
   koa.Middleware<
-    KoaState,
-    KoaContext & { FHIRContext: Omit<FHIRServerCTX, "user" | "tenant"> }
+    State,
+    FHIRContext<Context> &
+      Router.RouterParamContext<State, FHIRContext<Context>>
   >
 > {
   const fhirServices = await createFHIRServices(pool);
   return async (ctx, next) => {
-    ctx.FHIRContext = fhirServices;
+    if (!ctx.params.tenant) ctx.throw(400, "tenant is required");
+    ctx.FHIRContext = {
+      ...fhirServices,
+      tenant: ctx.params.tenant as TenantId,
+    };
     await next();
   };
 }
