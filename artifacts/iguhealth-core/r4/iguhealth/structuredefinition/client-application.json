@@ -97,6 +97,22 @@
         "type": [{ "code": "string" }],
         "min": 0,
         "max": "1"
+      },
+      {
+        "id": "ClientApplication.grantType",
+        "path": "ClientApplication.grantType",
+        "definition": "The grant type for this client application.",
+        "type": [
+          {
+            "code": "code"
+          }
+        ],
+        "binding": {
+          "strength": "required",
+          "valueSet": "https://iguhealth.app/fhir/ValueSet/ClientApplicationGrantType|4.0.1"
+        },
+        "min": 1,
+        "max": "1"
       }
     ]
   }
