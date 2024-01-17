@@ -420,7 +420,7 @@ export function getRedisClient() {
  * @param sources Client sources
  * @returns FHIRClientAsync instance
  */
-export async function createFHIRClient(sources: RouterState["sources"]) {
+async function createFHIRClient(sources: RouterState["sources"]) {
   return RouterClient(
     [
       validationMiddleware,
@@ -538,7 +538,7 @@ export async function createFHIRServices(
   };
 }
 
-type FHIRContext<C> = C & {
+export type KoaFHIRContext<C> = C & {
   FHIRContext: Omit<FHIRServerCTX, "user">;
 };
 
@@ -553,8 +553,8 @@ export async function createKoaFHIRContextMiddleware<
 ): Promise<
   koa.Middleware<
     State,
-    FHIRContext<Context> &
-      Router.RouterParamContext<State, FHIRContext<Context>>
+    KoaFHIRContext<Context> &
+      Router.RouterParamContext<State, KoaFHIRContext<Context>>
   >
 > {
   const fhirServices = await createFHIRServices(pool);

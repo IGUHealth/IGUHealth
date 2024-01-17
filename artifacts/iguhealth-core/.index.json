@@ -46,27 +46,35 @@
       "resourceType": "StructureDefinition"
     },
     {
-      "filename": "r4/iguhealth/terminology/access-policy/fhir-api-level.json",
+      "filename": "r4/iguhealth/terminology/access-policy/authentication/grant_type.json",
       "resourceType": "CodeSystem"
     },
     {
-      "filename": "r4/iguhealth/terminology/access-policy/fhir-api-level.json",
+      "filename": "r4/iguhealth/terminology/access-policy/authentication/grant_type.json",
       "resourceType": "ValueSet"
     },
     {
-      "filename": "r4/iguhealth/terminology/access-policy/fhir-api-methods.json",
+      "filename": "r4/iguhealth/terminology/access-policy/authorization/fhir-api-level.json",
       "resourceType": "CodeSystem"
     },
     {
-      "filename": "r4/iguhealth/terminology/access-policy/fhir-api-methods.json",
+      "filename": "r4/iguhealth/terminology/access-policy/authorization/fhir-api-level.json",
       "resourceType": "ValueSet"
     },
     {
-      "filename": "r4/iguhealth/terminology/access-policy/fhir-api-parameters.json",
+      "filename": "r4/iguhealth/terminology/access-policy/authorization/fhir-api-methods.json",
       "resourceType": "CodeSystem"
     },
     {
-      "filename": "r4/iguhealth/terminology/access-policy/fhir-api-parameters.json",
+      "filename": "r4/iguhealth/terminology/access-policy/authorization/fhir-api-methods.json",
+      "resourceType": "ValueSet"
+    },
+    {
+      "filename": "r4/iguhealth/terminology/access-policy/authorization/fhir-api-parameters.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "r4/iguhealth/terminology/access-policy/authorization/fhir-api-parameters.json",
       "resourceType": "ValueSet"
     },
     {

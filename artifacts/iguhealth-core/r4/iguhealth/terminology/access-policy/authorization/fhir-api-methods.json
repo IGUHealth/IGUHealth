@@ -1,6 +1,5 @@
 {
   "resourceType": "Bundle",
-  "id": "access-policy-fhir-api-methods",
   "type": "collection",
   "entry": [
     {
