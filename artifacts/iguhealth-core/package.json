@@ -1,7 +1,7 @@
 {
   "name": "@iguhealth/iguhealth.fhir.r4.core",
   "packageManager": "yarn@3.6.3",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "canonical": "https://iguhealth.app/fhir/ImplementationGuide/iguhealth.fhir.r4.core",
   "url": "https://iguhealth.app/fhir/ImplementationGuide/iguhealth.fhir.r4.core",
   "title": "IGUHealth Core resources",
