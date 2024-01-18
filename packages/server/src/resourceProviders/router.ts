@@ -19,7 +19,12 @@ import {
   ResourceType,
   code,
 } from "@iguhealth/fhir-types/r4/types";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  issueSeverityToStatusCodes,
+  outcomeError,
+  outcomeFatal,
+} from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../fhir/context.js";
 import { httpRequestToFHIRRequest } from "../http/index.js";
@@ -222,16 +227,23 @@ function createRouterMiddleware<
                   );
                   return fhirResponseToBundleEntry(fhirResponse);
                 } catch (e) {
+                  if (e instanceof OperationError) {
+                    return {
+                      response: {
+                        status: issueSeverityToStatusCodes(
+                          e.operationOutcome.issue?.[0]?.severity,
+                        ).toString(),
+                        outcome: e.operationOutcome,
+                      },
+                    };
+                  }
                   return {
                     response: {
                       status: "500",
-                      outcome:
-                        e instanceof OperationError
-                          ? e.operationOutcome
-                          : outcomeError(
-                              "invalid",
-                              `invalid entry in batch at index '${index}'`,
-                            ),
+                      outcome: outcomeFatal(
+                        "unknown",
+                        "An unknown error occured.",
+                      ),
                     },
                   };
                 }
