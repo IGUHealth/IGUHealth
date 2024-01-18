@@ -231,7 +231,7 @@ function createRouterMiddleware<
                     return {
                       response: {
                         status: issueSeverityToStatusCodes(
-                          e.operationOutcome.issue[0].severity,
+                          e.operationOutcome.issue?.[0]?.severity,
                         ).toString(),
                         outcome: e.operationOutcome,
                       },
