@@ -1,31 +1,37 @@
 import Koa from "koa";
 
-import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  outcomeError,
+  outcomeFatal,
+} from "@iguhealth/operation-outcomes";
 
-import type { FHIRServerCTX, JWT, TenantClaim } from "../../fhir/context.js";
+import type { JWT, TenantClaim } from "../../fhir/context.js";
+import { KoaFHIRContext } from "../../fhir/koa.js";
 
-function findCurrentTenant<
-  Context extends Koa.DefaultContext & { FHIRContext: FHIRServerCTX },
->(ctx: Context): TenantClaim | undefined {
+function findCurrentTenant<Context extends Koa.DefaultContext>(
+  ctx: KoaFHIRContext<Context>,
+): TenantClaim | undefined {
   return ctx.state.user["https://iguhealth.app/tenants"]?.find(
     (t: TenantClaim) => t.id === ctx.FHIRContext.tenant,
   );
 }
 
-export async function canUserAccessTenantMiddleware<
+export async function verifyAndAssociateUserFHIRContext<
   State extends Koa.DefaultState,
-  Context extends Koa.DefaultContext & { FHIRContext: FHIRServerCTX },
+  Context extends KoaFHIRContext<Koa.DefaultContext>,
 >(ctx: Koa.ParameterizedContext<State, Context>, next: Koa.Next) {
   if (!ctx.FHIRContext.tenant) {
-    ctx.throw(400, "tenant is required");
+    throw new OperationError(outcomeError("invalid", "No tenant present."));
   }
 
   const tenantClaim = findCurrentTenant(ctx);
-
   if (tenantClaim === undefined) {
-    ctx.throw(
-      403,
-      `User is not authorized to access tenant ${ctx.params.tenant}`,
+    throw new OperationError(
+      outcomeError(
+        "security",
+        `User is not authorized to access tenant ${ctx.params.tenant}`,
+      ),
     );
   }
 
@@ -45,5 +51,5 @@ export async function canUserAccessTenantMiddleware<
       accessToken: ctx.state.access_token,
     },
   };
-  return next();
+  await next();
 }

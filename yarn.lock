@@ -5908,6 +5908,7 @@ __metadata:
     "@types/adm-zip": ^0.5.0
     "@types/jest": ^29.5.2
     "@types/koa": ^2.13.6
+    "@types/koa-bodyparser": ^4.3.12
     "@types/koa-mount": ^4.0.2
     "@types/koa-ratelimit": ^5.0.3
     "@types/koa__cors": ^4.0.0
@@ -10980,6 +10981,15 @@ __metadata:
   version: 1.0.2
   resolution: "@types/keygrip@npm:1.0.2"
   checksum: 60bc2738a4f107070ee3d96f44709cb38f3a96c7ccabab09f56c1b2b4d85f869fd8fb9f1f2937e863d0e9e781f005c2223b823bf32b859185b4f52370c352669
+  languageName: node
+  linkType: hard
+
+"@types/koa-bodyparser@npm:^4.3.12":
+  version: 4.3.12
+  resolution: "@types/koa-bodyparser@npm:4.3.12"
+  dependencies:
+    "@types/koa": "*"
+  checksum: 645cc253c6b9b2e98252b1cdc75a4812cd6d3c228e426f9893a755324b7a6936559ec659a0ff288cb2642340b3cc4e2110167f24b84efc8e3b89c04fe67ed883
   languageName: node
   linkType: hard
 

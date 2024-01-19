@@ -4,7 +4,7 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "generate": "yarn node ../cli/lib/index.js generate-types-artifacts --output=./src/r4",
+    "generate": "yarn node ../cli/lib/index.js generate-types-artifacts --output=./src/r4 && yarn build",
     "build": "tsc",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },

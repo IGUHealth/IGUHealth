@@ -1,7 +1,6 @@
 import { bodyParser } from "@koa/bodyparser";
 import cors from "@koa/cors";
 import Router from "@koa/router";
-import type * as Sentry from "@sentry/node";
 import dotEnv from "dotenv";
 import Koa from "koa";
 import ratelimit from "koa-ratelimit";
@@ -17,14 +16,15 @@ import {
   allowPublicAccessMiddleware,
   createValidateUserJWTMiddleware,
 } from "./authN/middleware.js";
-import { canUserAccessTenantMiddleware } from "./authZ/middleware/tenantAccess.js";
-import { FHIRServerCTX } from "./fhir/context.js";
+import { createOIDCRouter } from "./authN/oauth2/operations.js";
+import { verifyAndAssociateUserFHIRContext } from "./authZ/middleware/tenantAccess.js";
 import {
   createFHIRAPI,
   createKoaFHIRContextMiddleware,
   getRedisClient,
   logger,
 } from "./fhir/index.js";
+import { KoaFHIRContext, isFHIRServerAuthorizedUserCTX } from "./fhir/koa.js";
 import {
   fhirResponseToHTTPResponse,
   httpRequestToFHIRRequest,
@@ -39,11 +39,6 @@ interface KoaFHIRMiddlewareState extends Koa.DefaultState {
   access_token: string;
 }
 
-interface IGUHealthKoaBaseContext extends Koa.BaseContext {
-  FHIRContext: FHIRServerCTX;
-  __sentry_transaction?: Sentry.Transaction;
-}
-
 /**
  * Koa middleware that handles FHIR API requests. [Note expectation is ctx.FHIRContext is set.]
  * @returns Koa.Middleware[] that can be used to handle FHIR requests.
@@ -53,8 +48,8 @@ async function FHIRAPIKoaMiddleware<
 >(): Promise<
   Koa.Middleware<
     T,
-    IGUHealthKoaBaseContext &
-      Router.RouterParamContext<T, IGUHealthKoaBaseContext>
+    KoaFHIRContext<Koa.DefaultContext> &
+      Router.RouterParamContext<T, KoaFHIRContext<Koa.DefaultContext>>
   >[]
 > {
   if (!process.env.AUTH_JWT_ISSUER)
@@ -66,7 +61,7 @@ async function FHIRAPIKoaMiddleware<
     process.env.AUTH_JWT_ISSUER
       ? await createValidateUserJWTMiddleware()
       : allowPublicAccessMiddleware,
-    canUserAccessTenantMiddleware,
+    verifyAndAssociateUserFHIRContext,
 
     async (ctx, next) => {
       let span;
@@ -76,6 +71,9 @@ async function FHIRAPIKoaMiddleware<
           description: "FHIR MIDDLEWARE",
           op: "fhirserver",
         });
+      }
+      if (!isFHIRServerAuthorizedUserCTX(ctx.FHIRContext)) {
+        throw new Error("FHIR Context is not authorized");
       }
 
       try {
@@ -95,28 +93,7 @@ async function FHIRAPIKoaMiddleware<
         for (const [key, value] of Object.entries(httpResponse.headers ?? {})) {
           ctx.set(key, value);
         }
-
         await next();
-      } catch (e) {
-        if (isOperationError(e)) {
-          const operationOutcome = e.outcome;
-          ctx.status = operationOutcome.issue
-            .map((i) => issueSeverityToStatusCodes(i.severity))
-            .sort()[operationOutcome.issue.length - 1];
-          ctx.body = operationOutcome;
-        } else {
-          logger.error(e);
-          MonitoringSentry.logError(e, ctx);
-
-          const operationOutcome = outcomeError(
-            "invalid",
-            "internal server error",
-          );
-          ctx.status = operationOutcome.issue
-            .map((i) => issueSeverityToStatusCodes(i.severity))
-            .sort()[operationOutcome.issue.length - 1];
-          ctx.body = operationOutcome;
-        }
       } finally {
         if (span) {
           span.finish();
@@ -124,6 +101,38 @@ async function FHIRAPIKoaMiddleware<
       }
     },
   ];
+}
+
+function createErrorHandlingMiddleware<T>(): Koa.Middleware<
+  T,
+  KoaFHIRContext<Koa.DefaultContext> &
+    Router.RouterParamContext<T, KoaFHIRContext<Koa.DefaultContext>>
+> {
+  return async function errorHandlingMiddleware(ctx, next) {
+    try {
+      await next();
+    } catch (e) {
+      if (isOperationError(e)) {
+        const operationOutcome = e.outcome;
+        ctx.status = operationOutcome.issue
+          .map((i) => issueSeverityToStatusCodes(i.severity))
+          .sort()[operationOutcome.issue.length - 1];
+        ctx.body = operationOutcome;
+      } else {
+        logger.error(e);
+        MonitoringSentry.logError(e, ctx);
+
+        const operationOutcome = outcomeError(
+          "invalid",
+          "internal server error",
+        );
+        ctx.status = operationOutcome.issue
+          .map((i) => issueSeverityToStatusCodes(i.severity))
+          .sort()[operationOutcome.issue.length - 1];
+        ctx.body = operationOutcome;
+      }
+    }
+  };
 }
 
 export default async function createServer(): Promise<
@@ -157,23 +166,46 @@ export default async function createServer(): Promise<
   });
 
   const app = new Koa();
-  const rootRouter = new Router<Koa.DefaultState, IGUHealthKoaBaseContext>();
+  const rootRouter = new Router<
+    Koa.DefaultState,
+    KoaFHIRContext<Koa.DefaultContext>
+  >();
 
-  const tenantRouter = new Router<Koa.DefaultState, IGUHealthKoaBaseContext>({
+  const tenantRouter = new Router<
+    Koa.DefaultState,
+    KoaFHIRContext<Koa.DefaultContext>
+  >({
     prefix: "/w/:tenant",
   });
-  const tenantAPIRouter = new Router<Koa.DefaultState, IGUHealthKoaBaseContext>(
-    {
-      prefix: "/api/v1",
-    },
+
+  const tenantAPIV1Router = new Router<
+    Koa.DefaultState,
+    KoaFHIRContext<Koa.DefaultContext>
+  >({
+    prefix: "/api/v1",
+  });
+
+  tenantAPIV1Router.use(
+    "/",
+    // Error handling middleware. Checks for OperationError and converts to OperationOutcome with status based on level and/or code.
+    createErrorHandlingMiddleware(),
+    // Associate FHIR Context for all routes
+    // [NOTE] for oidc we pull in fhir data so we need to associate the context on top of non fhir apis.
+    await createKoaFHIRContextMiddleware(pool),
   );
-  tenantAPIRouter.use("/", await createKoaFHIRContextMiddleware(pool));
-  tenantAPIRouter.all(
+
+  // Instantiate OIDC routes
+  const oidcRouter = createOIDCRouter();
+  tenantAPIV1Router.use(oidcRouter.routes());
+  tenantAPIV1Router.use(oidcRouter.allowedMethods());
+
+  // FHIR API Endpoint
+  tenantAPIV1Router.all(
     "/fhir/r4/:fhirUrl*",
     ...(await FHIRAPIKoaMiddleware<KoaFHIRMiddlewareState>()),
   );
-  tenantRouter.use(tenantAPIRouter.routes());
-  tenantRouter.use(tenantAPIRouter.allowedMethods());
+  tenantRouter.use(tenantAPIV1Router.routes());
+  tenantRouter.use(tenantAPIV1Router.allowedMethods());
 
   rootRouter.use(tenantRouter.routes());
   rootRouter.use(tenantRouter.allowedMethods());
@@ -222,9 +254,9 @@ export default async function createServer(): Promise<
     .use(rootRouter.routes())
     .use(rootRouter.allowedMethods());
 
-  logger.info("Running app");
-
   app.on("error", MonitoringSentry.onKoaError);
+
+  logger.info("Running app");
 
   return app;
 }

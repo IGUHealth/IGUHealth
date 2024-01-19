@@ -15,17 +15,14 @@ import {
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import { FHIRRequest } from "@iguhealth/client/types";
-import { escapeParameter } from "@iguhealth/client/url";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
   AResource,
-  AccessPolicy,
   CapabilityStatement,
   CapabilityStatementRestResource,
   Resource,
   ResourceType,
   StructureDefinition,
-  User,
   canonical,
   code,
   id,
@@ -33,6 +30,7 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { associateUserMiddleware } from "../authZ/middleware/associateUser.js";
 import { createAuthorizationMiddleWare } from "../authZ/middleware/authorization.js";
 import RedisCache from "../cache/redis.js";
 import { encryptValue } from "../encryption/index.js";
@@ -55,6 +53,7 @@ import JSONPatchSchema from "../schemas/jsonpatch.schema.js";
 import RedisLock from "../synchronization/redis.lock.js";
 import { TerminologyProviderMemory } from "../terminology/index.js";
 import { FHIRServerCTX, TenantId, asSystemCTX } from "./context.js";
+import { KoaFHIRContext } from "./koa.js";
 
 export const MEMORY_TYPES: ResourceType[] = [
   "StructureDefinition",
@@ -309,52 +308,6 @@ const encryptionMiddleware: (
     }
   };
 
-const associateUserMiddleware: MiddlewareAsync<unknown, FHIRServerCTX> = async (
-  context,
-  next,
-) => {
-  if (!next) throw new Error("next middleware was not defined");
-
-  const usersAndAccessPolicies = (await context.ctx.client.search_type(
-    asSystemCTX(context.ctx),
-    "User",
-    [
-      {
-        name: "identifier",
-        value: [
-          `${escapeParameter(context.ctx.user.jwt.iss)}|${escapeParameter(
-            context.ctx.user.jwt.sub,
-          )}`,
-        ],
-      },
-      { name: "_revinclude", value: ["AccessPolicy:link"] },
-    ],
-  )) as {
-    total?: number;
-    resources: (User | AccessPolicy)[];
-  };
-
-  const userResource = usersAndAccessPolicies.resources.filter(
-    (r): r is User => r.resourceType === "User",
-  );
-
-  const accessPolicies = usersAndAccessPolicies.resources.filter(
-    (r): r is AccessPolicy => r.resourceType === "AccessPolicy",
-  );
-
-  return next({
-    ...context,
-    ctx: {
-      ...context.ctx,
-      user: {
-        ...context.ctx.user,
-        resource: userResource[0] || null,
-        accessPolicies: accessPolicies || null,
-      },
-    },
-  });
-};
-
 export function createResolveCanonical(
   data: InternalData<ResourceType>,
 ): <T extends ResourceType>(type: T, url: string) => AResource<T> | undefined {
@@ -538,10 +491,6 @@ export async function createFHIRServices(
   };
 }
 
-export type KoaFHIRContext<C> = C & {
-  FHIRContext: Omit<FHIRServerCTX, "user">;
-};
-
 export async function createKoaFHIRContextMiddleware<
   State extends {
     access_token?: string;
@@ -559,7 +508,10 @@ export async function createKoaFHIRContextMiddleware<
 > {
   const fhirServices = await createFHIRServices(pool);
   return async (ctx, next) => {
-    if (!ctx.params.tenant) ctx.throw(400, "tenant is required");
+    if (!ctx.params.tenant)
+      throw new OperationError(
+        outcomeError("invalid", "No tenant present in request."),
+      );
     ctx.FHIRContext = {
       ...fhirServices,
       tenant: ctx.params.tenant as TenantId,

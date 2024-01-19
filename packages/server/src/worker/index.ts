@@ -26,13 +26,7 @@ import {
   getSigningKey,
 } from "../authN/certifications.js";
 import { IGUHEALTH_ISSUER, createToken } from "../authN/token.js";
-import {
-  FHIRServerCTX,
-  FHIRServerInitCTX,
-  JWT,
-  TenantClaim,
-  TenantId,
-} from "../fhir/context.js";
+import { FHIRServerCTX, JWT, TenantClaim, TenantId } from "../fhir/context.js";
 import { createFHIRAPI, createFHIRServices } from "../fhir/index.js";
 import { SUPER_ADMIN } from "../fhir/roles.js";
 import { httpRequestToFHIRRequest } from "../http/index.js";
@@ -94,8 +88,8 @@ function getVersionSequence(resource: Resource): number {
 }
 
 async function handleSubscriptionPayload(
-  server: AsynchronousClient<unknown, FHIRServerInitCTX>,
-  ctx: FHIRServerInitCTX,
+  server: AsynchronousClient<unknown, FHIRServerCTX>,
+  ctx: FHIRServerCTX,
   subscription: Subscription,
   payload: Resource[],
 ): Promise<void> {
@@ -212,7 +206,7 @@ function subscriptionLockKey(tenant: string, subscriptionId: string) {
 function processSubscription(
   workerID: string,
   ctx: FHIRServerCTX,
-  server: AsynchronousClient<unknown, FHIRServerInitCTX>,
+  server: AsynchronousClient<unknown, FHIRServerCTX>,
 
   subscriptionId: id,
 ) {

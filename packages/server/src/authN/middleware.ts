@@ -6,6 +6,10 @@ import { TenantClaim } from "../fhir/context.js";
 import { createCertsIfNoneExists, getJWKS } from "./certifications.js";
 import { IGUHEALTH_ISSUER } from "./token.js";
 
+/**
+ *
+ * @returns Koa middleware that validates the user JWT.
+ */
 export async function createValidateUserJWTMiddleware<T, C>(): Promise<
   Koa.Middleware<T, C>
 > {
@@ -62,6 +66,11 @@ export async function createValidateUserJWTMiddleware<T, C>(): Promise<
   }) as unknown as Middleware<T, C>;
 }
 
+/**
+ * Middleware that allows full system access to all tenants (used on public server)
+ * @param ctx Koa.Context
+ * @param next Koa.Next
+ */
 export const allowPublicAccessMiddleware: Koa.Middleware = async (
   ctx,
   next,

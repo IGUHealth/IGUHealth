@@ -45,15 +45,11 @@ export interface UserContext {
   accessToken?: string;
 }
 
-export interface FHIRServerInitCTX {
-  // User information
-  tenant: TenantId;
-  user: UserContext;
-}
-
-export interface FHIRServerCTX extends FHIRServerInitCTX {
+export interface FHIRServerCTX {
   // Server Information
   capabilities: CapabilityStatement;
+  tenant: TenantId;
+  user: UserContext;
 
   // FHIR Client
   client: FHIRClientAsync<FHIRServerCTX>;
@@ -84,7 +80,7 @@ export interface FHIRServerCTX extends FHIRServerInitCTX {
  * @param ctx The current context
  * @returns A new context with the user set to system.
  */
-export function asSystemCTX(ctx: FHIRServerCTX): FHIRServerCTX {
+export function asSystemCTX(ctx: Omit<FHIRServerCTX, "user">): FHIRServerCTX {
   return {
     ...ctx,
     tenant: ctx.tenant,

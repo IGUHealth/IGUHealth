@@ -7,7 +7,7 @@ import {
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 
-import { FHIRServerInitCTX } from "../fhir/context.js";
+import { FHIRServerCTX } from "../fhir/context.js";
 
 export type OUTCOMES = {
   SUCCESS: "0";
@@ -22,7 +22,7 @@ export const SERIOUS_FAILURE: OUTCOMES["SERIOUS_FAILURE"] = "8";
 export const MAJOR_FAILURE: OUTCOMES["MAJOR_FAILURE"] = "12";
 
 export default async function logAuditEvent<
-  CTX extends FHIRServerInitCTX,
+  CTX extends FHIRServerCTX,
   Client extends FHIRClientAsync<CTX>,
 >(
   client: Client,
