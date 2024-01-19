@@ -122,14 +122,8 @@ function createErrorHandlingMiddleware<T>(): Koa.Middleware<
         logger.error(e);
         MonitoringSentry.logError(e, ctx);
 
-        const operationOutcome = outcomeError(
-          "invalid",
-          "internal server error",
-        );
-        ctx.status = operationOutcome.issue
-          .map((i) => issueSeverityToStatusCodes(i.severity))
-          .sort()[operationOutcome.issue.length - 1];
-        ctx.body = operationOutcome;
+        // Resend to default koa error handler.
+        throw e;
       }
     }
   };
