@@ -13072,6 +13072,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/adm-zip", "npm:0.5.0"],\
             ["@types/jest", "npm:29.5.2"],\
             ["@types/koa", "npm:2.13.6"],\
+            ["@types/koa-bodyparser", "npm:4.3.12"],\
             ["@types/koa-mount", "npm:4.0.2"],\
             ["@types/koa-ratelimit", "npm:5.0.3"],\
             ["@types/koa__cors", "npm:4.0.0"],\
@@ -19261,6 +19262,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/keygrip", "npm:1.0.2"],\
             ["@types/koa-compose", "npm:3.2.5"],\
             ["@types/node", "npm:20.3.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/koa-bodyparser", [\
+        ["npm:4.3.12", {\
+          "packageLocation": "./.yarn/cache/@types-koa-bodyparser-npm-4.3.12-167659149b-645cc253c6.zip/node_modules/@types/koa-bodyparser/",\
+          "packageDependencies": [\
+            ["@types/koa-bodyparser", "npm:4.3.12"],\
+            ["@types/koa", "npm:2.13.6"]\
           ],\
           "linkType": "HARD"\
         }]\

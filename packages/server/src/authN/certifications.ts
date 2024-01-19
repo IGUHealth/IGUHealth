@@ -2,6 +2,11 @@ import * as jose from "jose";
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
+/**
+ * Generates a keypair using the provided algorithm.
+ * @param alg
+ * @returns privateKey and publicKey generated using jose library.
+ */
 export async function generateKeyPair(alg: string = "RS256") {
   const { privateKey, publicKey } = await jose.generateKeyPair(alg);
   return { privateKey, publicKey };
@@ -11,9 +16,13 @@ export const ALGORITHMS = {
   RS256: "RS256",
 };
 
-/*
- ** Saves certifications as follows:
- ** private keys as /${directory}/{kid}.p8 and public keys as /${directory}/{kid}.spki
+/**
+ * Saves certifications as follows:
+ * private keys as /${directory}/{kid}.p8 and public keys as /${directory}/{kid}.spki
+ * @param directory
+ * @param kid
+ * @param alg
+ * @returns
  */
 export async function createCertifications(
   directory: string,
@@ -36,9 +45,11 @@ export async function createCertifications(
   };
 }
 
-/*
- ** Returns a JSON Web Key Set with all public keys in the directory
- ** Uses filename to distinguish between keys (sets the kid field in the JWK).
+/**
+ *
+ * @param directory
+ * @param alg
+ * @returns JSON Web Key Set with all public keys in the directory. Uses filename to distinguish between keys (sets the kid field in the JWK).
  */
 export async function getJWKS(
   directory: string,
@@ -68,8 +79,12 @@ export async function getJWKS(
   };
 }
 
-/*
- ** Returns the private key for a given kid.
+/**
+ *
+ * @param directory
+ * @param kid
+ * @param alg
+ * @returns Returns the private key for a given kid.
  */
 export async function getSigningKey(
   directory: string,
@@ -85,10 +100,13 @@ export async function getSigningKey(
   return { kid, key: privateKey };
 }
 
-/*
- ** Create certifications if not exist. Saves by default
- ** private keys under /${directory}/{kid}.p8 and public keys under /${directory}/{kid}.spki.
- ** Should only be used in development environment as these should be injected in environment in prod.
+/**
+ * Create certifications if not exist. Saves by default
+ * private keys under /${directory}/{kid}.p8 and public keys under /${directory}/{kid}.spki.
+ * Should only be used in development environment as these should be injected in environment in prod.
+ * @param directory
+ * @param kid
+ * @param alg
  */
 export async function createCertsIfNoneExists(
   directory: string,

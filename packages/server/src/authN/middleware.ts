@@ -6,16 +6,23 @@ import { TenantClaim } from "../fhir/context.js";
 import { createCertsIfNoneExists, getJWKS } from "./certifications.js";
 import { IGUHEALTH_ISSUER } from "./token.js";
 
+/**
+ *
+ * @returns Koa middleware that validates the user JWT.
+ */
 export async function createValidateUserJWTMiddleware<T, C>(): Promise<
   Koa.Middleware<T, C>
 > {
   let IGUHEALTH_JWT_SECRET: ReturnType<typeof jwksRsa.koaJwtSecret> | undefined;
-  if (process.env.AUTH_SIGNING_KEY && process.env.AUTH_CERTIFICATION_LOCATION) {
-    if (process.env.NODE_ENV === "development")
-      await createCertsIfNoneExists(
-        process.env.AUTH_CERTIFICATION_LOCATION,
-        process.env.AUTH_SIGNING_KEY,
-      );
+  if (
+    process.env.NODE_ENV === "development" &&
+    process.env.AUTH_SIGNING_KEY &&
+    process.env.AUTH_CERTIFICATION_LOCATION
+  ) {
+    await createCertsIfNoneExists(
+      process.env.AUTH_CERTIFICATION_LOCATION,
+      process.env.AUTH_SIGNING_KEY,
+    );
 
     const jwks = await getJWKS(process.env.AUTH_CERTIFICATION_LOCATION);
 
@@ -62,6 +69,11 @@ export async function createValidateUserJWTMiddleware<T, C>(): Promise<
   }) as unknown as Middleware<T, C>;
 }
 
+/**
+ * Middleware that allows full system access to all tenants (used on public server)
+ * @param ctx Koa.Context
+ * @param next Koa.Next
+ */
 export const allowPublicAccessMiddleware: Koa.Middleware = async (
   ctx,
   next,

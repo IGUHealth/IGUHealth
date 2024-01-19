@@ -328,6 +328,19 @@ function Root() {
               >
                 Access Policies
               </SideBar.SideBarItem>
+              <SideBar.SideBarItem
+                active={matches[0].params.resourceType === "ClientApplication"}
+                onClick={() => {
+                  navigate(
+                    generatePath("/w/:tenant/resources/:resourceType", {
+                      tenant: params.tenant as string,
+                      resourceType: "ClientApplication",
+                    }),
+                  );
+                }}
+              >
+                Client Applications
+              </SideBar.SideBarItem>
             </SideBar.SideBarItemGroup>
             <SideBar.SideBarItemGroup label="Data" className="mt-8">
               <SideBar.SideBarItem
@@ -342,7 +355,8 @@ function Root() {
                       match.params.resourceType !== "QuestionnaireResponse" &&
                       match.params.resourceType !== "AuditEvent" &&
                       match.params.resourceType !== "User" &&
-                      match.params.resourceType !== "AccessPolicy",
+                      match.params.resourceType !== "AccessPolicy" &&
+                      match.params.resourceType !== "ClientApplication",
                   ) !== undefined
                 }
                 onClick={() => {

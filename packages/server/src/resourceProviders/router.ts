@@ -31,12 +31,12 @@ import { httpRequestToFHIRRequest } from "../http/index.js";
 import { fhirResponseToBundleEntry } from "./utilities/bundle.js";
 import { deriveResourceTypeFilter } from "./utilities/search/parameters.js";
 
-type InteractionSupported<T> = FHIRRequest["type"];
-type InteractionsSupported<T> = InteractionSupported<T>[];
+type InteractionSupported = FHIRRequest["type"];
+type InteractionsSupported = InteractionSupported[];
 
 type Source<CTX> = {
   resourcesSupported?: ResourceType[];
-  interactionsSupported?: InteractionsSupported<CTX>;
+  interactionsSupported?: InteractionsSupported;
   useSource?: (request: FHIRRequest) => boolean;
   source: FHIRClient<CTX>;
 };

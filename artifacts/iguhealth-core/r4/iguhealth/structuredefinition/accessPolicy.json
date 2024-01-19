@@ -142,6 +142,7 @@
           {
             "code": "Reference",
             "targetProfile": [
+              "https://iguhealth.com/StructureDefinition/ClientApplication",
               "https://iguhealth.com/StructureDefinition/User",
               "http://hl7.org/fhir/StructureDefinition/OperationDefinition"
             ]

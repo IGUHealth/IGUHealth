@@ -71,6 +71,7 @@
     "@types/adm-zip": "^0.5.0",
     "@types/jest": "^29.5.2",
     "@types/koa": "^2.13.6",
+    "@types/koa-bodyparser": "^4.3.12",
     "@types/koa-mount": "^4.0.2",
     "@types/koa__cors": "^4.0.0",
     "@types/koa__router": "^12.0.0",

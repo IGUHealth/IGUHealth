@@ -44928,6 +44928,8 @@ resourceType: "ClientApplication"
   _description?: Element
   grantType: code;
   _grantType?: Element
+  secret: string;
+  _secret?: Element
 }
 
 export interface User {

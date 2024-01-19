@@ -1,6 +1,13 @@
+import Router from "@koa/router";
 import type * as Koa from "koa";
 
-import { KoaFHIRContext } from "../../fhir/index.js";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+
+import { KoaFHIRContext } from "../../fhir/koa.js";
+import { getSigningKey } from "../certifications.js";
+import { createToken } from "../token.js";
+import { getCredentialsBasicHeader } from "../utilities.js";
+import { createClientInjectMiddleware } from "./middleware/client_find.js";
 
 type AuthorizationRequestBody = {
   response_type: "token";
@@ -70,17 +77,17 @@ export function authorizationEndpoint<
   return async (ctx) => {
     const body = (ctx.request as unknown as Record<string, unknown>).body;
     if (!isRecord(body)) {
-      ctx.throw(400, "invalid_request", {
-        description: "Body must be a record.",
-      });
-      return;
+      throw new OperationError(
+        outcomeError("invalid", "Body must be a record."),
+      );
     }
 
     if (!validateAuthorizationCodeBody(body)) {
-      ctx.throw(400, "Invalid authorization request");
-      return;
+      throw new OperationError(
+        outcomeError("invalid", "Invalid authorization request"),
+      );
     }
-    const { response_type, client_id, redirect_uri, scope, state } = body;
+    // const { response_type, client_id, redirect_uri, scope, state } = body;
     throw new Error("Not Implemented");
   };
 }
@@ -95,11 +102,17 @@ export function tokenEndpoint<
   return async (ctx) => {
     const body = (ctx.request as unknown as Record<string, unknown>).body;
     if (!isRecord(body)) {
-      ctx.throw(400, "invalid_request", {
-        description: "Body must be a record.",
-      });
-      return;
+      throw new OperationError(
+        outcomeError("invalid", "Body must be a record."),
+      );
     }
+
+    if (!ctx.oidc.client) {
+      throw new OperationError(
+        outcomeError("invalid", "Could not find client in context."),
+      );
+    }
+
     switch (body.grant_type) {
       // https://www.rfc-editor.org/rfc/rfc6749.html#section-4.1
       case "authorization_code": {
@@ -111,8 +124,79 @@ export function tokenEndpoint<
       }
       // https://www.rfc-editor.org/rfc/rfc6749.html#section-4.4
       case "client_credentials": {
-        throw new Error("Not Implemented");
+        const credentials = getCredentialsBasicHeader(ctx.request);
+
+        if (ctx.oidc.client.grantType !== "client_credentials") {
+          throw new OperationError(
+            outcomeError(
+              "invalid",
+              "Grant type must be client_credentials for registered client.",
+            ),
+          );
+        }
+
+        if (!credentials) {
+          throw new OperationError(
+            outcomeError("invalid", "Could not find credentials in request."),
+          );
+        }
+
+        if (credentials?.client_id !== ctx.oidc.client?.id) {
+          throw new OperationError(
+            outcomeError("security", "Invalid credentials for client."),
+          );
+        }
+
+        if (credentials?.client_secret !== ctx.oidc.client.secret) {
+          throw new OperationError(
+            outcomeError("security", "Invalid credentials for client."),
+          );
+        }
+
+        ctx.body = {
+          access_token: await createToken(
+            await getSigningKey(
+              process.env.AUTH_CERTIFICATION_LOCATION as string,
+              process.env.AUTH_SIGNING_KEY as string,
+            ),
+            {
+              header: { audience: process.env.AUTH_JWT_AUDIENCE as string },
+              payload: {
+                "https://iguhealth.app/tenants": [
+                  {
+                    id: ctx.tenant,
+                    userRole: "User",
+                  },
+                ],
+                sub: `${ctx.oidc.client.resourceType}/${ctx.oidc.client.id}`,
+                aud: ["https://iguhealth.com/api"],
+                scope: "openid profile email offline_access",
+              },
+            },
+          ),
+          token_type: "Bearer",
+          expires_in: 7200,
+        };
+        ctx.status = 200;
+        ctx.set("Content-Type", "application/json");
+        break;
+      }
+      default: {
+        throw new OperationError(
+          outcomeError("invalid", "Grant type not supported"),
+        );
       }
     }
   };
+}
+
+/**
+ * Creates a router for oidc endpoints.
+ * @returns Router for oidc endpoints.
+ */
+export function createOIDCRouter<State, C>(): Router<State, KoaFHIRContext<C>> {
+  const oidcRouter = new Router<State, KoaFHIRContext<C>>({ prefix: "/oidc" });
+  oidcRouter.post("/token", createClientInjectMiddleware(), tokenEndpoint());
+
+  return oidcRouter;
 }
