@@ -14,12 +14,15 @@ export async function createValidateUserJWTMiddleware<T, C>(): Promise<
   Koa.Middleware<T, C>
 > {
   let IGUHEALTH_JWT_SECRET: ReturnType<typeof jwksRsa.koaJwtSecret> | undefined;
-  if (process.env.AUTH_SIGNING_KEY && process.env.AUTH_CERTIFICATION_LOCATION) {
-    if (process.env.NODE_ENV === "development")
-      await createCertsIfNoneExists(
-        process.env.AUTH_CERTIFICATION_LOCATION,
-        process.env.AUTH_SIGNING_KEY,
-      );
+  if (
+    process.env.NODE_ENV === "development" &&
+    process.env.AUTH_SIGNING_KEY &&
+    process.env.AUTH_CERTIFICATION_LOCATION
+  ) {
+    await createCertsIfNoneExists(
+      process.env.AUTH_CERTIFICATION_LOCATION,
+      process.env.AUTH_SIGNING_KEY,
+    );
 
     const jwks = await getJWKS(process.env.AUTH_CERTIFICATION_LOCATION);
 
