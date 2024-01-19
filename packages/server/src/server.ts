@@ -9,7 +9,6 @@ import pg from "pg";
 import {
   isOperationError,
   issueSeverityToStatusCodes,
-  outcomeError,
 } from "@iguhealth/operation-outcomes";
 
 import {
