@@ -14,7 +14,7 @@ let dbmigrate: DBMigrate;
 
 async function runServer(port: number) {
   const server = await createServer();
-  return server.listen(3000);
+  return server.listen(port);
 }
 
 async function run() {

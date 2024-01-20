@@ -164,11 +164,12 @@ export function tokenEndpoint<
               payload: {
                 "https://iguhealth.app/tenants": [
                   {
-                    id: ctx.tenant,
+                    id: ctx.FHIRContext.tenant,
                     userRole: "User",
                   },
                 ],
-                sub: `${ctx.oidc.client.resourceType}/${ctx.oidc.client.id}`,
+                "https://iguhealth.app/resourceType": "ClientApplication",
+                sub: ctx.oidc.client.id,
                 aud: ["https://iguhealth.com/api"],
                 scope: "openid profile email offline_access",
               },
