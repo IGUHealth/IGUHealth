@@ -21,6 +21,7 @@ test("Authorization test for read access on resource based on type and method", 
       accessPolicies: [
         {
           resourceType: "AccessPolicy",
+          type: "fhir-rest",
           access: [
             {
               fhir: {
