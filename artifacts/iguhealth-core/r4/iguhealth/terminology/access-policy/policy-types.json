@@ -24,6 +24,11 @@
             "code": "fhir-rest",
             "display": "FHIR Rest",
             "definition": "Uses FHIR rest methods to apply access controls."
+          },
+          {
+            "code": "full-access",
+            "display": "Full Access",
+            "definition": "Grants full access to all resources."
           }
         ]
       }

@@ -1,7 +1,11 @@
 import { FHIRRequest } from "@iguhealth/client/lib/types";
 import type { MiddlewareAsync } from "@iguhealth/client/middleware";
 import { AccessPolicyAccess, code } from "@iguhealth/fhir-types/r4/types";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  outcomeError,
+  outcomeFatal,
+} from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../fhir/context.js";
 
@@ -15,10 +19,66 @@ function validateFHIRResourceTypeAccess(
   policyAccess: AccessPolicyAccess,
   request: FHIRRequest,
 ): boolean {
-  if (!("resourceType" in request)) return false;
-  return (policyAccess.fhir?.resourceType ?? []).includes(
-    request.resourceType as code,
-  );
+  switch (request.level) {
+    case "system": {
+      switch (request.type) {
+        case "invoke-request":
+        case "history-request": {
+          return (
+            policyAccess.fhir?.resourceType?.includes("Any" as code) || false
+          );
+        }
+        case "search-request": {
+          if (policyAccess.fhir?.resourceType?.includes("Any" as code)) {
+            return true;
+          }
+          const _type = request.parameters
+            .filter((v) => v.name === "_type")
+            .flatMap((p) => p.value);
+
+          if (_type.length === 0) return false;
+          for (const type of _type) {
+            if (
+              !policyAccess.fhir?.resourceType?.includes(
+                type.toString() as code,
+              )
+            ) {
+              return false;
+            }
+          }
+          return true;
+        }
+
+        // Capabilities does not require a resource type.
+        case "capabilities-request": {
+          return true;
+        }
+
+        // Batch and transaction hit authorization again per request.
+        case "transaction-request":
+        case "batch-request": {
+          return true;
+        }
+        default:
+          throw new OperationError(
+            outcomeFatal(
+              "invalid",
+              "Invalid request.type on system access policy evaluation",
+            ),
+          );
+      }
+    }
+
+    case "instance":
+    case "type": {
+      // Special code "Any" means access to all resource types.
+      if (policyAccess.fhir?.resourceType?.includes("Any" as code)) return true;
+
+      return (policyAccess.fhir?.resourceType ?? []).includes(
+        request.resourceType as code,
+      );
+    }
+  }
 }
 
 /**
@@ -84,15 +144,30 @@ function evaluateAccessPolicy(
   request: FHIRRequest,
 ): boolean {
   for (const accessPolicy of ctx.user.accessPolicies ?? []) {
-    const access = accessPolicy.access?.find((access) => {
-      return (
-        validateFHIRMethodAccess(access, request) &&
-        validateFHIRResourceTypeAccess(access, request)
-      );
-    });
-
-    // [TODO] should probably add this to context to state in the request why access was granted.
-    if (access) return true;
+    switch (accessPolicy.type) {
+      case "fhir-rest": {
+        const access = accessPolicy.access?.find((access) => {
+          return (
+            validateFHIRMethodAccess(access, request) &&
+            validateFHIRResourceTypeAccess(access, request)
+          );
+        });
+        // [TODO] should probably add this to context to state in the request why access was granted.
+        if (access) return true;
+        break;
+      }
+      case "full-access": {
+        return true;
+      }
+      default: {
+        throw new OperationError(
+          outcomeError(
+            "invalid",
+            "Could not evaluate access policy with given accessType.",
+          ),
+        );
+      }
+    }
   }
 
   return false;

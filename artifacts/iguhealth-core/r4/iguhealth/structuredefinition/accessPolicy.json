@@ -208,22 +208,6 @@
         "max": "*"
       },
       {
-        "id": "AccessPolicy.access.fhir.level",
-        "path": "AccessPolicy.access.fhir.level",
-        "definition": "The FHIR Level that is evaluated to determine if access is granted or denied.",
-        "type": [
-          {
-            "code": "code"
-          }
-        ],
-        "binding": {
-          "strength": "required",
-          "valueSet": "https://iguhealth.app/fhir/ValueSet/AccessPolicyFHIRAPILevel|4.0.1"
-        },
-        "min": 1,
-        "max": "1"
-      },
-      {
         "id": "AccessPolicy.access.fhir.parameter",
         "path": "AccessPolicy.access.fhir.parameter",
         "definition": "FHIR Parameters that are evaluated to determine if access is granted or denied.",
