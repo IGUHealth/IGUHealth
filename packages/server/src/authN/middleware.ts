@@ -14,18 +14,14 @@ export async function createValidateUserJWTMiddleware<T, C>(): Promise<
   Koa.Middleware<T, C>
 > {
   let IGUHEALTH_JWT_SECRET: ReturnType<typeof jwksRsa.koaJwtSecret> | undefined;
-  if (
-    process.env.NODE_ENV === "development" &&
-    process.env.AUTH_SIGNING_KEY &&
-    process.env.AUTH_CERTIFICATION_LOCATION
-  ) {
-    await createCertsIfNoneExists(
-      process.env.AUTH_CERTIFICATION_LOCATION,
-      process.env.AUTH_SIGNING_KEY,
-    );
-
+  if (process.env.AUTH_SIGNING_KEY && process.env.AUTH_CERTIFICATION_LOCATION) {
+    if (process.env.NODE_ENV === "development") {
+      await createCertsIfNoneExists(
+        process.env.AUTH_CERTIFICATION_LOCATION,
+        process.env.AUTH_SIGNING_KEY,
+      );
+    }
     const jwks = await getJWKS(process.env.AUTH_CERTIFICATION_LOCATION);
-
     IGUHEALTH_JWT_SECRET = jwksRsa.koaJwtSecret({
       jwksUri: "_not_used",
       cache: true,
@@ -84,6 +80,7 @@ export const allowPublicAccessMiddleware: Koa.Middleware = async (
       iss: IGUHEALTH_ISSUER,
       sub: "public-user",
       access_token: "sec-public",
+      "https://iguhealth.app/resourceType": "User",
       "https://iguhealth.app/tenants": [
         { id: ctx.params.tenant, userRole: "SUPER_ADMIN" } as TenantClaim,
       ],

@@ -1,12 +1,13 @@
 import { MiddlewareAsync } from "@iguhealth/client/middleware";
 import { escapeParameter } from "@iguhealth/client/url";
-import { AccessPolicy, User } from "@iguhealth/fhir-types/r4/types";
+import { AccessPolicy, User, id } from "@iguhealth/fhir-types/r4/types";
+import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX, asSystemCTX } from "../../fhir/context.js";
 
 /**
  * Middleware to associate the user and access policies with the request.
- * Middlware uses JWT iss and sub to find the user resource and _revinclude to find the access policies.
+ * Middlware uses JWT iss and sub to find the contextual user resource and _revinclude to find the access policies.
  *
  * @param context FHIRServerCTX
  * @param next Next chain in middleware.
@@ -18,42 +19,113 @@ export const associateUserMiddleware: MiddlewareAsync<
 > = async (context, next) => {
   if (!next) throw new Error("next middleware was not defined");
 
-  const usersAndAccessPolicies = (await context.ctx.client.search_type(
-    asSystemCTX(context.ctx),
-    "User",
-    [
-      {
-        name: "identifier",
-        value: [
-          `${escapeParameter(context.ctx.user.jwt.iss)}|${escapeParameter(
-            context.ctx.user.jwt.sub,
-          )}`,
+  switch (context.ctx.user.jwt["https://iguhealth.app/resourceType"]) {
+    case "User": {
+      const usersAndAccessPolicies = (await context.ctx.client.search_type(
+        asSystemCTX(context.ctx),
+        "User",
+        [
+          {
+            name: "identifier",
+            value: [
+              `${escapeParameter(context.ctx.user.jwt.iss)}|${escapeParameter(
+                context.ctx.user.jwt.sub,
+              )}`,
+            ],
+          },
+          { name: "_revinclude", value: ["AccessPolicy:link"] },
         ],
-      },
-      { name: "_revinclude", value: ["AccessPolicy:link"] },
-    ],
-  )) as {
-    total?: number;
-    resources: (User | AccessPolicy)[];
-  };
+      )) as {
+        total?: number;
+        resources: (User | AccessPolicy)[];
+      };
 
-  const userResource = usersAndAccessPolicies.resources.filter(
-    (r): r is User => r.resourceType === "User",
-  );
+      const userResource = usersAndAccessPolicies.resources.filter(
+        (r): r is User => r.resourceType === "User",
+      );
 
-  const accessPolicies = usersAndAccessPolicies.resources.filter(
-    (r): r is AccessPolicy => r.resourceType === "AccessPolicy",
-  );
+      const accessPolicies = usersAndAccessPolicies.resources.filter(
+        (r): r is AccessPolicy => r.resourceType === "AccessPolicy",
+      );
+      return next({
+        ...context,
+        ctx: {
+          ...context.ctx,
+          user: {
+            ...context.ctx.user,
+            resource: userResource[0] || null,
+            accessPolicies: accessPolicies || null,
+          },
+        },
+      });
+    }
 
-  return next({
-    ...context,
-    ctx: {
-      ...context.ctx,
-      user: {
-        ...context.ctx.user,
-        resource: userResource[0] || null,
-        accessPolicies: accessPolicies || null,
-      },
-    },
-  });
+    case "ClientApplication": {
+      const clientApplication = await context.ctx.client.read(
+        asSystemCTX(context.ctx),
+        "ClientApplication",
+        context.ctx.user.jwt.sub as string as id,
+      );
+
+      const accessPolicies = await context.ctx.client.search_type(
+        asSystemCTX(context.ctx),
+        "AccessPolicy",
+        [
+          {
+            name: "link",
+            value: [`ClientApplication/${context.ctx.user.jwt.sub}`],
+          },
+        ],
+      );
+
+      return next({
+        ...context,
+        ctx: {
+          ...context.ctx,
+          user: {
+            ...context.ctx.user,
+            resource: clientApplication,
+            accessPolicies: accessPolicies.resources,
+          },
+        },
+      });
+    }
+    case "OperationDefinition": {
+      const operationDefinition = await context.ctx.client.read(
+        asSystemCTX(context.ctx),
+        "OperationDefinition",
+        context.ctx.user.jwt.sub as string as id,
+      );
+
+      const accessPolicies = await context.ctx.client.search_type(
+        asSystemCTX(context.ctx),
+        "AccessPolicy",
+        [
+          {
+            name: "link",
+            value: [`OperationDefinition/${context.ctx.user.jwt.sub}`],
+          },
+        ],
+      );
+
+      return next({
+        ...context,
+        ctx: {
+          ...context.ctx,
+          user: {
+            ...context.ctx.user,
+            resource: operationDefinition,
+            accessPolicies: accessPolicies.resources,
+          },
+        },
+      });
+    }
+    default:
+      throw new OperationError(
+        outcomeFatal(
+          "invalid",
+          `Invalid resource type set on JWT '${context.ctx.user.jwt["https://iguhealth.app/resourceType"]}'`,
+        ),
+      );
+  }
 };

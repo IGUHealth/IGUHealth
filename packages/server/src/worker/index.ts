@@ -170,7 +170,8 @@ async function handleSubscriptionPayload(
                       userRole: "SUPER_ADMIN",
                     } as TenantClaim,
                   ],
-                  sub: `OperationDefinition/${operationDefinition.id}`,
+                  "https://iguhealth.app/resourceType": "OperationDefinition",
+                  sub: operationDefinition.id,
                   aud: ["https://iguhealth.com/api"],
                   scope: "openid profile email offline_access",
                 },
@@ -409,6 +410,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
             jwt: {
               iss: IGUHEALTH_ISSUER,
               sub: `system-worker-${workerID}`,
+              "https://iguhealth.app/resourceType": "User",
             } as JWT,
           },
         };

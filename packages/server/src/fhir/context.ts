@@ -5,6 +5,8 @@ import {
   AResource,
   AccessPolicy,
   CapabilityStatement,
+  ClientApplication,
+  OperationDefinition,
   ResourceType,
   User,
   canonical,
@@ -33,6 +35,7 @@ export type Issuer = string & { [__iss]: string };
 export interface JWT {
   sub: Subject;
   iss: Issuer;
+  "https://iguhealth.app/resourceType": ResourceType;
   "https://iguhealth.app/tenants": TenantClaim[];
   [key: string]: unknown;
 }
@@ -40,7 +43,7 @@ export interface JWT {
 export interface UserContext {
   role: SUPER_ADMIN | USER;
   jwt: JWT;
-  resource?: User | null;
+  resource?: User | ClientApplication | OperationDefinition | null;
   accessPolicies?: AccessPolicy[];
   accessToken?: string;
 }
