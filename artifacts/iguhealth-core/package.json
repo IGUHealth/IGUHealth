@@ -17,6 +17,6 @@
     }
   ],
   "scripts": {
-    "generate-index": "yarn node ../../packages/cli/lib/index.js generate-index-file -p . -r r4"
+    "generate-index": "yarn node ../../packages/cli/lib/index.js generate index-file -p . -r r4"
   }
 }

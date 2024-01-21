@@ -41,8 +41,10 @@ program
   .description("IGUHEALTH CLI interface.")
   .version("0.8.0");
 
-program
-  .command("generate-types-artifacts")
+const generation = program.command("generate");
+
+generation
+  .command("types-artifacts")
   .description("Generates typescript types off profiles")
   .option("-o, --output <output>", "output file")
   .option("-v, --version <version>", "FHIR Profiles to use", "r4")
@@ -63,8 +65,8 @@ program
     writeFileSync(path.join(options.output, "sets.ts"), generatedSets);
   });
 
-program
-  .command("generate-operations")
+generation
+  .command("operations")
   .description("Generate Operation types and classes")
   .option("-o, --output <output>", "output file")
   .option("-v, --version <version>", "FHIR Profiles to use", "r4")
@@ -87,8 +89,8 @@ program
     writeFileSync(path.join(options.output, "ops.ts"), generatedOpCode);
   });
 
-program
-  .command("generate-index-file")
+generation
+  .command("index-file")
   .description("Generate a FHIR npm package index file ")
   .option("-p, --packagedir <packagedir>", "")
   .option("-r, --resources <resources>", "")
