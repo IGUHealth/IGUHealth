@@ -98,10 +98,12 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
 
   async search_system(
     ctx: CTX,
-    parameters: ParsedParameter<string | number>[] | string,
+    parameters?: ParsedParameter<string | number>[] | string,
   ): Promise<{ total?: number; resources: Resource[] }> {
     const parsedParameters: ParsedParameter<string | number>[] =
-      typeof parameters === "string" ? parseQuery(parameters) : parameters;
+      typeof parameters === "string" || parameters === undefined
+        ? parseQuery(parameters)
+        : parameters;
     const response = await this.request(ctx, {
       type: "search-request",
       level: "system",
@@ -114,10 +116,12 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   async search_type<T extends ResourceType>(
     ctx: CTX,
     resourceType: T,
-    parameters: ParsedParameter<string | number>[] | string,
+    parameters?: ParsedParameter<string | number>[] | string,
   ): Promise<{ total?: number; resources: AResource<T>[] }> {
     const parsedParameters: ParsedParameter<string | number>[] =
-      typeof parameters === "string" ? parseQuery(parameters) : parameters;
+      typeof parameters === "string" || parameters === undefined
+        ? parseQuery(parameters)
+        : parameters;
     const response = await this.request(ctx, {
       type: "search-request",
       level: "type",

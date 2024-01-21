@@ -736,6 +736,18 @@ test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
   }
 });
 
+test("Type filter Memory", async () => {
+  expect([
+    ...new Set(
+      (
+        await client.search_system({}, [
+          { name: "_type", value: ["SearchParameter"] },
+        ])
+      ).resources.map((v) => v.resourceType),
+    ),
+  ]).toEqual(["SearchParameter"]);
+});
+
 test("Type filter", async () => {
   const questionnaireTemplate: Questionnaire = {
     url: "https://iguhealth.com/PREPARE",
