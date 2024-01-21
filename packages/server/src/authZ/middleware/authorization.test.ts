@@ -1,7 +1,12 @@
 import { expect, test } from "@jest/globals";
 
 import { FHIRRequest } from "@iguhealth/client/lib/types";
-import { AccessPolicy, Patient, id } from "@iguhealth/fhir-types/lib/r4/types";
+import {
+  AccessPolicy,
+  Patient,
+  code,
+  id,
+} from "@iguhealth/fhir-types/lib/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../fhir/context";
@@ -21,11 +26,12 @@ test("Authorization test for read access on resource based on type and method", 
       accessPolicies: [
         {
           resourceType: "AccessPolicy",
-          type: "fhir-rest",
+          type: "fhir-rest" as code,
+          name: "test-policy",
+          code: "test-policy" as code,
           access: [
             {
               fhir: {
-                level: "type",
                 method: "read",
                 resourceType: ["Patient"],
               },
