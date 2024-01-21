@@ -12676,6 +12676,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@iguhealth/cli", "workspace:packages/cli"],\
             ["@iarna/toml", "npm:2.2.5"],\
             ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
+            ["@iguhealth/client", "workspace:packages/client"],\
             ["@iguhealth/codegen", "workspace:packages/codegen"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
             ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"],\

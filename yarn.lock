@@ -5607,6 +5607,7 @@ __metadata:
   dependencies:
     "@iarna/toml": ^2.2.5
     "@iguhealth/artifacts": "workspace:^"
+    "@iguhealth/client": "workspace:^"
     "@iguhealth/codegen": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
     "@iguhealth/hl7.fhir.r4.core": "workspace:^"

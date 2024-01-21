@@ -1,5 +1,6 @@
 import { Command } from "commander";
 
+import { apiCommands } from "./api.js";
 import { codeGenerationCommands } from "./codeGeneration.js";
 import { configurationCommands } from "./config.js";
 
@@ -12,5 +13,6 @@ program
 
 configurationCommands(program.command("config"));
 codeGenerationCommands(program.command("generate"));
+apiCommands(program.command("api"));
 
 program.parse();
