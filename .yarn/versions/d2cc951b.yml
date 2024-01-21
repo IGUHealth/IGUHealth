@@ -1,7 +1,0 @@
-releases:
-  "@iguhealth/cli": patch
-
-declined:
-  - "@iguhealth/test-data"
-  - "@iguhealth/generated-ops"
-  - "@iguhealth/server"
