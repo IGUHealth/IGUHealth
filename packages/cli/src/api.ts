@@ -1,10 +1,11 @@
 import { confirm } from "@inquirer/prompts";
 import { Command } from "commander";
+import fs from "node:fs";
 import path from "node:path";
 
 import httpClient from "@iguhealth/client/http";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
-import { ResourceType } from "@iguhealth/fhir-types/r4/types";
+import { Bundle, Resource, ResourceType } from "@iguhealth/fhir-types/r4/types";
 
 import {
   CONFIG_LOCATION,
@@ -84,12 +85,119 @@ function createClient(location: string) {
   });
 }
 
+function dataCommand(command: Command) {
+  command
+    .option("-f, --file <file>", "File for resource")
+    .option("-d, --data <data>", "Data for resource");
+  return command;
+}
+
+type MutationOptions = { file?: string; data?: string };
+
+function readData(option: MutationOptions): unknown {
+  if (option.file) {
+    return JSON.parse(fs.readFileSync(option.file, "utf-8"));
+  }
+  if (option.data) {
+    return JSON.parse(option.data);
+  }
+  throw new Error("No resource provided");
+}
+
+function isBundle(value: unknown): value is Bundle {
+  return (value as Record<string, unknown>)?.resourceType === "Bundle";
+}
+
 export function apiCommands(command: Command) {
   command.command("capabilities").action(async () => {
     const client = createClient(CONFIG_LOCATION);
     const capabilities = await client.capabilities({});
     console.log(JSON.stringify(capabilities, null, 2));
   });
+
+  dataCommand(
+    command.command("create").action(async (options) => {
+      const resourceToSave = readData(options);
+      const client = createClient(CONFIG_LOCATION);
+      if (!resourceToSave) {
+        throw new Error("No resource provided to save");
+      }
+      const resource = await client.create({}, resourceToSave as Resource);
+      console.log(JSON.stringify(resource, null, 2));
+    }),
+  );
+
+  dataCommand(
+    command.command("update").action(async (options) => {
+      const resourceToSave = readData(options);
+      const client = createClient(CONFIG_LOCATION);
+      if (!resourceToSave) {
+        throw new Error("No resource provided to save");
+      }
+      const resource = await client.update({}, resourceToSave as Resource);
+      console.log(JSON.stringify(resource, null, 2));
+    }),
+  );
+
+  dataCommand(
+    command.command("update").action(async (options) => {
+      const resourceToSave = readData(options);
+      const client = createClient(CONFIG_LOCATION);
+      if (!resourceToSave) {
+        throw new Error("No resource provided to save");
+      }
+      const resource = await client.update({}, resourceToSave as Resource);
+      console.log(JSON.stringify(resource, null, 2));
+    }),
+  );
+
+  dataCommand(
+    command.command("batch").action(async (options) => {
+      const batchBundle = readData(options);
+      const client = createClient(CONFIG_LOCATION);
+      if (!batchBundle) {
+        throw new Error("No resource provided to save");
+      }
+      if (!isBundle(batchBundle))
+        throw new Error("invalid resource type must be a 'Bundle'.");
+      const resource = await client.batch({}, batchBundle);
+      console.log(JSON.stringify(resource, null, 2));
+    }),
+  );
+
+  dataCommand(
+    command.command("transaction").action(async (options) => {
+      const transaction = readData(options);
+      const client = createClient(CONFIG_LOCATION);
+      if (!transaction) {
+        throw new Error("No resource provided to save");
+      }
+      if (!isBundle(transaction))
+        throw new Error("invalid resource type must be a 'Bundle'.");
+      const resource = await client.transaction({}, transaction);
+      console.log(JSON.stringify(resource, null, 2));
+    }),
+  );
+
+  //   mutationCommand(
+  //     command
+  //       .command("patch")
+  //       .argument("<resourceType>", "Resource Type")
+  //       .argument("<id>", "Resource ID")
+  //       .action(async (resourceType, id, options) => {
+  //         const patches = readData(options);
+  //         const client = createClient(CONFIG_LOCATION);
+
+  //         if (!validateResourceType(resourceType))
+  //           throw new Error("Invalid resource type");
+
+  //         if (!patches) {
+  //           throw new Error("No patches provided.");
+  //         }
+  //         const resource = await client.patch({}, resourceType, id, patches);
+  //         console.log(JSON.stringify(resource, null, 2));
+  //       }),
+  //   );
 
   command
     .command("delete")
