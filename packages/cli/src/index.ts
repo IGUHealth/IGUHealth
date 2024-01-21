@@ -37,8 +37,8 @@ console.log(
 const program = new Command();
 
 program
-  .name("FHIR Code Generation")
-  .description("CLI to generate code based off fhir artifacts.")
+  .name("IGUHEALTH CLI Tool")
+  .description("IGUHEALTH CLI interface.")
   .version("0.8.0");
 
 program
