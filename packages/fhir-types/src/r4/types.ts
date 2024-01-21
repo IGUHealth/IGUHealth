@@ -44883,8 +44883,6 @@ export interface AccessPolicyAccessFhir {
   _method?: Element
   resourceType?: Array<code>;
   _resourceType?: Array<Element>
-  level: code;
-  _level?: Element
   parameter?: Array<AccessPolicyAccessFhirParameter>;
 }
 export interface AccessPolicyAccess {
