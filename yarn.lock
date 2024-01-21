@@ -5616,7 +5616,7 @@ __metadata:
     commander: ^11.0.0
     typescript: 5.1.3
   bin:
-    cli: lib/index.js
+    iguhealth: lib/iguhealth.js
   languageName: unknown
   linkType: soft
 
