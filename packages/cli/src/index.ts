@@ -1,3 +1,4 @@
+import toml from "@iarna/toml";
 import { Command } from "commander";
 import { mkdirSync, writeFileSync } from "fs";
 import path from "path";
@@ -6,7 +7,35 @@ import { fileURLToPath } from "url";
 import { generateIndexFile, loadArtifacts } from "@iguhealth/artifacts";
 import { generateOps, generateSets, generateTypes } from "@iguhealth/codegen";
 
+const CONFIG_LOCATION = "~/.iguhealth/config.toml";
+
+console.log(
+  toml.stringify({
+    tenants: [
+      {
+        id: "1",
+        name: "Tenant1",
+        auth: {
+          type: "client_credentials",
+          client_id: "123",
+          client_secret: "123",
+        },
+      },
+      {
+        id: "2",
+        name: "Tenant2",
+        auth: {
+          type: "client_credentials",
+          client_id: "123",
+          client_secret: "123",
+        },
+      },
+    ],
+  }),
+);
+
 const program = new Command();
+
 program
   .name("FHIR Code Generation")
   .description("CLI to generate code based off fhir artifacts.")
