@@ -1,16 +1,20 @@
 {
   "name": "@iguhealth/cli",
-  "bin": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "bin": {
+    "iguhealth": "lib/iguhealth.js"
+  },
+  "types": "lib/iguhealth.d.ts",
   "version": "0.1.25",
   "target": "node",
   "type": "module",
   "dependencies": {
+    "@iarna/toml": "^2.2.5",
     "@iguhealth/artifacts": "workspace:^",
     "@iguhealth/codegen": "workspace:^",
     "@iguhealth/fhir-types": "workspace:^",
     "@iguhealth/hl7.fhir.r4.core": "workspace:^",
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^",
+    "@inquirer/prompts": "^3.3.0",
     "@types/node": "^20.4.0",
     "commander": "^11.0.0"
   },
@@ -18,7 +22,7 @@
     "typescript": "5.1.3"
   },
   "scripts": {
-    "build": "tsc && node executable.js ./lib/index.js && chmod +x ./lib/index.js",
+    "build": "tsc && node executable.js ./lib/iguhealth.js && chmod +x ./lib/iguhealth.js",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "files": [

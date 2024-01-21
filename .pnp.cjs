@@ -12605,6 +12605,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@iarna/toml", [\
+        ["npm:2.2.5", {\
+          "packageLocation": "./.yarn/cache/@iarna-toml-npm-2.2.5-6da1399e8e-b63b2b2c4f.zip/node_modules/@iarna/toml/",\
+          "packageDependencies": [\
+            ["@iarna/toml", "npm:2.2.5"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@iguhealth/admin-app", [\
         ["workspace:packages/admin-app", {\
           "packageLocation": "./packages/admin-app/",\
@@ -12665,11 +12674,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/cli/",\
           "packageDependencies": [\
             ["@iguhealth/cli", "workspace:packages/cli"],\
+            ["@iarna/toml", "npm:2.2.5"],\
             ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
             ["@iguhealth/codegen", "workspace:packages/codegen"],\
             ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
             ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"],\
             ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/iguhealth-core"],\
+            ["@inquirer/prompts", "npm:3.3.0"],\
             ["@types/node", "npm:20.4.0"],\
             ["commander", "npm:11.0.0"],\
             ["typescript", "patch:typescript@npm%3A5.1.3#~builtin<compat/typescript>::version=5.1.3&hash=5da071"]\
@@ -13123,6 +13134,159 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@iguhealth/cli", "workspace:packages/cli"]\
           ],\
           "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@inquirer/checkbox", [\
+        ["npm:1.5.0", {\
+          "packageLocation": "./.yarn/cache/@inquirer-checkbox-npm-1.5.0-019a7579cf-3137452567.zip/node_modules/@inquirer/checkbox/",\
+          "packageDependencies": [\
+            ["@inquirer/checkbox", "npm:1.5.0"],\
+            ["@inquirer/core", "npm:5.1.1"],\
+            ["@inquirer/type", "npm:1.1.5"],\
+            ["ansi-escapes", "npm:4.3.2"],\
+            ["chalk", "npm:4.1.2"],\
+            ["figures", "npm:3.2.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@inquirer/confirm", [\
+        ["npm:2.0.15", {\
+          "packageLocation": "./.yarn/cache/@inquirer-confirm-npm-2.0.15-e5fbf9193f-82b56d8431.zip/node_modules/@inquirer/confirm/",\
+          "packageDependencies": [\
+            ["@inquirer/confirm", "npm:2.0.15"],\
+            ["@inquirer/core", "npm:5.1.1"],\
+            ["@inquirer/type", "npm:1.1.5"],\
+            ["chalk", "npm:4.1.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@inquirer/core", [\
+        ["npm:5.1.1", {\
+          "packageLocation": "./.yarn/cache/@inquirer-core-npm-5.1.1-3eee9a122a-4fde57d39e.zip/node_modules/@inquirer/core/",\
+          "packageDependencies": [\
+            ["@inquirer/core", "npm:5.1.1"],\
+            ["@inquirer/type", "npm:1.1.5"],\
+            ["@types/mute-stream", "npm:0.0.4"],\
+            ["@types/node", "npm:20.11.5"],\
+            ["@types/wrap-ansi", "npm:3.0.0"],\
+            ["ansi-escapes", "npm:4.3.2"],\
+            ["chalk", "npm:4.1.2"],\
+            ["cli-spinners", "npm:2.9.2"],\
+            ["cli-width", "npm:4.1.0"],\
+            ["figures", "npm:3.2.0"],\
+            ["mute-stream", "npm:1.0.0"],\
+            ["run-async", "npm:3.0.0"],\
+            ["signal-exit", "npm:4.1.0"],\
+            ["strip-ansi", "npm:6.0.1"],\
+            ["wrap-ansi", "npm:6.2.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@inquirer/editor", [\
+        ["npm:1.2.13", {\
+          "packageLocation": "./.yarn/cache/@inquirer-editor-npm-1.2.13-d5440bf51c-1e3dacbfec.zip/node_modules/@inquirer/editor/",\
+          "packageDependencies": [\
+            ["@inquirer/editor", "npm:1.2.13"],\
+            ["@inquirer/core", "npm:5.1.1"],\
+            ["@inquirer/type", "npm:1.1.5"],\
+            ["chalk", "npm:4.1.2"],\
+            ["external-editor", "npm:3.1.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@inquirer/expand", [\
+        ["npm:1.1.14", {\
+          "packageLocation": "./.yarn/cache/@inquirer-expand-npm-1.1.14-0484c3506c-ef49b2aaba.zip/node_modules/@inquirer/expand/",\
+          "packageDependencies": [\
+            ["@inquirer/expand", "npm:1.1.14"],\
+            ["@inquirer/core", "npm:5.1.1"],\
+            ["@inquirer/type", "npm:1.1.5"],\
+            ["chalk", "npm:4.1.2"],\
+            ["figures", "npm:3.2.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@inquirer/input", [\
+        ["npm:1.2.14", {\
+          "packageLocation": "./.yarn/cache/@inquirer-input-npm-1.2.14-c72d261b4b-664eb2d4da.zip/node_modules/@inquirer/input/",\
+          "packageDependencies": [\
+            ["@inquirer/input", "npm:1.2.14"],\
+            ["@inquirer/core", "npm:5.1.1"],\
+            ["@inquirer/type", "npm:1.1.5"],\
+            ["chalk", "npm:4.1.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@inquirer/password", [\
+        ["npm:1.1.14", {\
+          "packageLocation": "./.yarn/cache/@inquirer-password-npm-1.1.14-b9ee328969-4cf7b2e51e.zip/node_modules/@inquirer/password/",\
+          "packageDependencies": [\
+            ["@inquirer/password", "npm:1.1.14"],\
+            ["@inquirer/input", "npm:1.2.14"],\
+            ["@inquirer/type", "npm:1.1.5"],\
+            ["ansi-escapes", "npm:4.3.2"],\
+            ["chalk", "npm:4.1.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@inquirer/prompts", [\
+        ["npm:3.3.0", {\
+          "packageLocation": "./.yarn/cache/@inquirer-prompts-npm-3.3.0-afedc49337-62c5c804bb.zip/node_modules/@inquirer/prompts/",\
+          "packageDependencies": [\
+            ["@inquirer/prompts", "npm:3.3.0"],\
+            ["@inquirer/checkbox", "npm:1.5.0"],\
+            ["@inquirer/confirm", "npm:2.0.15"],\
+            ["@inquirer/core", "npm:5.1.1"],\
+            ["@inquirer/editor", "npm:1.2.13"],\
+            ["@inquirer/expand", "npm:1.1.14"],\
+            ["@inquirer/input", "npm:1.2.14"],\
+            ["@inquirer/password", "npm:1.1.14"],\
+            ["@inquirer/rawlist", "npm:1.2.14"],\
+            ["@inquirer/select", "npm:1.3.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@inquirer/rawlist", [\
+        ["npm:1.2.14", {\
+          "packageLocation": "./.yarn/cache/@inquirer-rawlist-npm-1.2.14-a569ebb5b0-f2dac1b12d.zip/node_modules/@inquirer/rawlist/",\
+          "packageDependencies": [\
+            ["@inquirer/rawlist", "npm:1.2.14"],\
+            ["@inquirer/core", "npm:5.1.1"],\
+            ["@inquirer/type", "npm:1.1.5"],\
+            ["chalk", "npm:4.1.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@inquirer/select", [\
+        ["npm:1.3.1", {\
+          "packageLocation": "./.yarn/cache/@inquirer-select-npm-1.3.1-92cafaad95-4cdf7a814c.zip/node_modules/@inquirer/select/",\
+          "packageDependencies": [\
+            ["@inquirer/select", "npm:1.3.1"],\
+            ["@inquirer/core", "npm:5.1.1"],\
+            ["@inquirer/type", "npm:1.1.5"],\
+            ["ansi-escapes", "npm:4.3.2"],\
+            ["chalk", "npm:4.1.2"],\
+            ["figures", "npm:3.2.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@inquirer/type", [\
+        ["npm:1.1.5", {\
+          "packageLocation": "./.yarn/cache/@inquirer-type-npm-1.1.5-93b3fe74a0-5417e10978.zip/node_modules/@inquirer/type/",\
+          "packageDependencies": [\
+            ["@inquirer/type", "npm:1.1.5"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@ioredis/commands", [\
@@ -19399,6 +19563,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@types/mute-stream", [\
+        ["npm:0.0.4", {\
+          "packageLocation": "./.yarn/cache/@types-mute-stream-npm-0.0.4-3e79ac07f9-af8d83ad7b.zip/node_modules/@types/mute-stream/",\
+          "packageDependencies": [\
+            ["@types/mute-stream", "npm:0.0.4"],\
+            ["@types/node", "npm:20.3.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@types/node", [\
         ["npm:16.18.38", {\
           "packageLocation": "./.yarn/cache/@types-node-npm-16.18.38-55313aa2bd-a3baa141e4.zip/node_modules/@types/node/",\
@@ -19425,6 +19599,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-npm-20.10.1-55cf8269a8-9dfdcd2496.zip/node_modules/@types/node/",\
           "packageDependencies": [\
             ["@types/node", "npm:20.10.1"],\
+            ["undici-types", "npm:5.26.5"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:20.11.5", {\
+          "packageLocation": "./.yarn/cache/@types-node-npm-20.11.5-b807d46a1a-a542727de1.zip/node_modules/@types/node/",\
+          "packageDependencies": [\
+            ["@types/node", "npm:20.11.5"],\
             ["undici-types", "npm:5.26.5"]\
           ],\
           "linkType": "HARD"\
@@ -19798,6 +19980,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-uuid-npm-9.0.2-f2a5f65979-1754bcf344.zip/node_modules/@types/uuid/",\
           "packageDependencies": [\
             ["@types/uuid", "npm:9.0.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/wrap-ansi", [\
+        ["npm:3.0.0", {\
+          "packageLocation": "./.yarn/cache/@types-wrap-ansi-npm-3.0.0-b7f3369360-492f061009.zip/node_modules/@types/wrap-ansi/",\
+          "packageDependencies": [\
+            ["@types/wrap-ansi", "npm:3.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -22870,6 +23061,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["chardet", [\
+        ["npm:0.7.0", {\
+          "packageLocation": "./.yarn/cache/chardet-npm-0.7.0-27933dd6c7-6fd5da1f5d.zip/node_modules/chardet/",\
+          "packageDependencies": [\
+            ["chardet", "npm:0.7.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["check-types", [\
         ["npm:11.2.2", {\
           "packageLocation": "./.yarn/cache/check-types-npm-11.2.2-1f3d6117bc-61ed60d59e.zip/node_modules/check-types/",\
@@ -23032,6 +23232,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["cli-spinners", "npm:2.9.0"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:2.9.2", {\
+          "packageLocation": "./.yarn/cache/cli-spinners-npm-2.9.2-be9c08efee-1bd588289b.zip/node_modules/cli-spinners/",\
+          "packageDependencies": [\
+            ["cli-spinners", "npm:2.9.2"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["cli-table3", [\
@@ -23041,6 +23248,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["cli-table3", "npm:0.6.3"],\
             ["@colors/colors", "npm:1.5.0"],\
             ["string-width", "npm:4.2.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["cli-width", [\
+        ["npm:4.1.0", {\
+          "packageLocation": "./.yarn/cache/cli-width-npm-4.1.0-c08b53be83-0a79cff2db.zip/node_modules/cli-width/",\
+          "packageDependencies": [\
+            ["cli-width", "npm:4.1.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -26557,6 +26773,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["external-editor", [\
+        ["npm:3.1.0", {\
+          "packageLocation": "./.yarn/cache/external-editor-npm-3.1.0-878e7807af-1c2a616a73.zip/node_modules/external-editor/",\
+          "packageDependencies": [\
+            ["external-editor", "npm:3.1.0"],\
+            ["chardet", "npm:0.7.0"],\
+            ["iconv-lite", "npm:0.4.24"],\
+            ["tmp", "npm:0.0.33"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["extract-zip", [\
         ["npm:1.7.0", {\
           "packageLocation": "./.yarn/cache/extract-zip-npm-1.7.0-1a60d4ee7c-011bab660d.zip/node_modules/extract-zip/",\
@@ -26735,6 +26963,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/fetch-retry-npm-5.0.6-34cc015715-4ad8bca6ec.zip/node_modules/fetch-retry/",\
           "packageDependencies": [\
             ["fetch-retry", "npm:5.0.6"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["figures", [\
+        ["npm:3.2.0", {\
+          "packageLocation": "./.yarn/cache/figures-npm-3.2.0-85d357e955-85a6ad29e9.zip/node_modules/figures/",\
+          "packageDependencies": [\
+            ["figures", "npm:3.2.0"],\
+            ["escape-string-regexp", "npm:1.0.5"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -33364,6 +33602,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["mute-stream", [\
+        ["npm:1.0.0", {\
+          "packageLocation": "./.yarn/cache/mute-stream-npm-1.0.0-b6e846d471-36fc968b0e.zip/node_modules/mute-stream/",\
+          "packageDependencies": [\
+            ["mute-stream", "npm:1.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["mz", [\
         ["npm:2.7.0", {\
           "packageLocation": "./.yarn/cache/mz-npm-2.7.0-ec3cef4ec2-8427de0ece.zip/node_modules/mz/",\
@@ -34022,6 +34269,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["log-symbols", "npm:4.1.0"],\
             ["strip-ansi", "npm:6.0.1"],\
             ["wcwidth", "npm:1.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["os-tmpdir", [\
+        ["npm:1.0.2", {\
+          "packageLocation": "./.yarn/cache/os-tmpdir-npm-1.0.2-e305b0689b-5666560f7b.zip/node_modules/os-tmpdir/",\
+          "packageDependencies": [\
+            ["os-tmpdir", "npm:1.0.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -39236,6 +39492,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["run-async", [\
+        ["npm:3.0.0", {\
+          "packageLocation": "./.yarn/cache/run-async-npm-3.0.0-bfba9a6e47-280c03d5a8.zip/node_modules/run-async/",\
+          "packageDependencies": [\
+            ["run-async", "npm:3.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["run-parallel", [\
         ["npm:1.2.0", {\
           "packageLocation": "./.yarn/cache/run-parallel-npm-1.2.0-3f47ff2034-cb4f97ad25.zip/node_modules/run-parallel/",\
@@ -39779,6 +40044,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/signal-exit-npm-4.0.2-e3f0e8ed25-41f5928431.zip/node_modules/signal-exit/",\
           "packageDependencies": [\
             ["signal-exit", "npm:4.0.2"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:4.1.0", {\
+          "packageLocation": "./.yarn/cache/signal-exit-npm-4.1.0-61fb957687-64c757b498.zip/node_modules/signal-exit/",\
+          "packageDependencies": [\
+            ["signal-exit", "npm:4.1.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -41272,6 +41544,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tiny-warning-npm-1.0.3-750b7a07c4-da62c4acac.zip/node_modules/tiny-warning/",\
           "packageDependencies": [\
             ["tiny-warning", "npm:1.0.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["tmp", [\
+        ["npm:0.0.33", {\
+          "packageLocation": "./.yarn/cache/tmp-npm-0.0.33-bcbf65df2a-902d7aceb7.zip/node_modules/tmp/",\
+          "packageDependencies": [\
+            ["tmp", "npm:0.0.33"],\
+            ["os-tmpdir", "npm:1.0.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -43720,6 +44002,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["wrap-ansi", [\
+        ["npm:6.2.0", {\
+          "packageLocation": "./.yarn/cache/wrap-ansi-npm-6.2.0-439a7246d8-6cd96a4101.zip/node_modules/wrap-ansi/",\
+          "packageDependencies": [\
+            ["wrap-ansi", "npm:6.2.0"],\
+            ["ansi-styles", "npm:4.3.0"],\
+            ["string-width", "npm:4.2.3"],\
+            ["strip-ansi", "npm:6.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:7.0.0", {\
           "packageLocation": "./.yarn/cache/wrap-ansi-npm-7.0.0-ad6e1a0554-a790b846fd.zip/node_modules/wrap-ansi/",\
           "packageDependencies": [\

@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "generate-r4": "bun ts-node src/index.ts generate-types-artifacts --output ../fhir-types/r4",
+    "generate-r4": "bun ts-node src/index.ts generate types-artifacts --output ../fhir-types/r4",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "keywords": [],
