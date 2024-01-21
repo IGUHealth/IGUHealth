@@ -1,5 +1,5 @@
 {
-  "entryPoints": ["packages/*"],
+  "entryPoints": ["packages/*", "artifacts/*"],
   "name": "IGUHealth",
   "entryPointStrategy": "packages",
   "includeVersion": false
