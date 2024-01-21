@@ -13131,8 +13131,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         ["workspace:artifacts/test-data", {\
           "packageLocation": "./artifacts/test-data/",\
           "packageDependencies": [\
-            ["@iguhealth/test-data", "workspace:artifacts/test-data"],\
-            ["@iguhealth/cli", "workspace:packages/cli"]\
+            ["@iguhealth/test-data", "workspace:artifacts/test-data"]\
           ],\
           "linkType": "SOFT"\
         }]\

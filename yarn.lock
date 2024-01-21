@@ -5963,8 +5963,6 @@ __metadata:
 "@iguhealth/test-data@workspace:^, @iguhealth/test-data@workspace:artifacts/test-data":
   version: 0.0.0-use.local
   resolution: "@iguhealth/test-data@workspace:artifacts/test-data"
-  dependencies:
-    "@iguhealth/cli": "workspace:^"
   languageName: unknown
   linkType: soft
 
