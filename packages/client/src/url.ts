@@ -14,7 +14,7 @@ export function splitParameter(
 ): string[] {
   const specialCharEg = new RegExp(`\\${specialCharacter}`, "g");
   let prevIndex = -1;
-  let pieces = [];
+  const pieces = [];
   let match;
 
   while ((match = specialCharEg.exec(parameter))) {
@@ -70,9 +70,11 @@ export type ParsedParameter<T> = {
  * @param queryParams Raw query parameters pulled off url
  * @returns Record of parsed parameters with name modifier and value.
  */
-export function parseQuery(queryParams: string): ParsedParameter<string>[] {
+export function parseQuery(
+  queryParams: string | undefined,
+): ParsedParameter<string>[] {
   const parameters = !queryParams
-    ? {}
+    ? []
     : queryParams
         .split("&")
         .map((param) => param.split("="))
@@ -83,9 +85,9 @@ export function parseQuery(queryParams: string): ParsedParameter<string>[] {
           ): Record<string, ParsedParameter<string>> => {
             const chains = key.split(".");
 
-            let [name, modifier] = chains[0].split(":");
+            const [name, modifier] = chains[0].split(":");
 
-            let searchParam: ParsedParameter<string> = {
+            const searchParam: ParsedParameter<string> = {
               name,
               modifier,
               value: value.split(","),

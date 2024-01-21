@@ -70,7 +70,10 @@ function createMemoryMiddleware<
               ? Object.values(
                   context.state.data[context.request.resourceType] || {},
                 ).filter((v): v is Resource => v !== undefined)
-              : Object.keys(context.state.data)
+              : (resourceTypes.length > 0
+                  ? resourceTypes
+                  : Object.keys(context.state.data)
+                )
                   .map((k) =>
                     Object.values(context.state.data[k as ResourceType] || {}),
                   )

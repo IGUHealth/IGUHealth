@@ -172,13 +172,9 @@ async function httpResponseToFHIRResponse(
   response: Response,
 ): Promise<FHIRResponse> {
   if (response.status >= 400) {
-    try {
-      if (!response.body) throw new Error(response.statusText);
-      const oo = (await response.json()) as OperationOutcome;
-      throw new OperationError(oo);
-    } catch (e) {
-      throw e;
-    }
+    if (!response.body) throw new Error(response.statusText);
+    const oo = (await response.json()) as OperationOutcome;
+    throw new OperationError(oo);
   }
   switch (request.type) {
     case "invoke-request": {
@@ -385,8 +381,8 @@ async function httpResponseToFHIRResponse(
   }
 }
 
-function httpMiddleware(): MiddlewareAsync<HTTPClientState, {}> {
-  return createMiddlewareAsync<HTTPClientState, {}>([
+function httpMiddleware(): MiddlewareAsync<HTTPClientState, unknown> {
+  return createMiddlewareAsync<HTTPClientState, unknown>([
     async (context) => {
       const httpRequest = await toHTTPRequest(context.state, context.request);
       const response = await fetch(httpRequest.url, {
@@ -405,10 +401,13 @@ function httpMiddleware(): MiddlewareAsync<HTTPClientState, {}> {
 
 export default function createHTTPClient(
   initialState: HTTPClientState,
-): AsynchronousClient<HTTPClientState, {}> {
+): AsynchronousClient<HTTPClientState, unknown> {
   // Removing trailing slash
   if (initialState.url.endsWith("/"))
     initialState.url = initialState.url.slice(0, -1);
   const middleware = httpMiddleware();
-  return new AsynchronousClient<HTTPClientState, {}>(initialState, middleware);
+  return new AsynchronousClient<HTTPClientState, unknown>(
+    initialState,
+    middleware,
+  );
 }
