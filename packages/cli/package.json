@@ -4,7 +4,7 @@
     "iguhealth": "lib/iguhealth.js"
   },
   "types": "lib/iguhealth.d.ts",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "target": "node",
   "type": "module",
   "dependencies": {
