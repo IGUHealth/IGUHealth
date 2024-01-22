@@ -1,0 +1,6 @@
+releases:
+  "@iguhealth/cli": patch
+
+declined:
+  - "@iguhealth/generated-ops"
+  - "@iguhealth/server"

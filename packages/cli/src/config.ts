@@ -88,13 +88,15 @@ export function configurationCommands(command: Command) {
     });
 
   command
-    .command("current-tenant")
+    .command("show-tenant")
     .description("Display the current tenant.")
     .action(async () => {
       const config = loadConfig(CONFIG_LOCATION);
       const currentTenant = getCurrentTenant(CONFIG_LOCATION, config);
       if (currentTenant) {
-        console.log(currentTenant.name);
+        console.log(`API URL: '${currentTenant.api_origin}'`);
+        console.log(`Tenant Id: '${currentTenant.id}'`);
+        console.log(`Tenant Name: '${currentTenant.name}'`);
       } else {
         console.log("No tenant configured");
       }
