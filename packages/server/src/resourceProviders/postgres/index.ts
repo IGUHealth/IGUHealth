@@ -586,9 +586,9 @@ async function patchResource<CTX extends FHIRServerCTX>(
   patches: Operation[],
 ): Promise<Resource> {
   return transaction(ISOLATION_LEVEL.Serializable, ctx, client, async (ctx) => {
-    const resource = await getResource(client, ctx, resourceType, id);
+    const existingResource = await getResource(client, ctx, resourceType, id);
     try {
-      const newResource = jsonpatch.applyPatch(resource, patches)
+      const newResource = jsonpatch.applyPatch(existingResource, patches)
         .newDocument as Resource;
 
       const outcome = await validateResource(ctx, resourceType, {
@@ -605,10 +605,9 @@ async function patchResource<CTX extends FHIRServerCTX>(
       }
 
       if (
-        newResource.resourceType !== resource.resourceType ||
-        newResource.id !== resource.id
+        newResource.id !== existingResource.id
       ) {
-        newResource.id = resource.id;
+        newResource.id = existingResource.id;
       }
 
       const data: s.resources.Insertable = {
@@ -616,7 +615,7 @@ async function patchResource<CTX extends FHIRServerCTX>(
         request_method: "PATCH",
         author: ctx.user.jwt.sub,
         resource: newResource as unknown as db.JSONObject,
-        prev_version_id: parseInt(resource.meta?.versionId as string),
+        prev_version_id: parseInt(existingResource.meta?.versionId as string),
         patches: JSON.stringify(patches),
       };
 
@@ -677,7 +676,7 @@ async function updateResource<CTX extends FHIRServerCTX>(
       request_method: "PUT",
       author: ctx.user.jwt.sub,
       resource: resource as unknown as db.JSONObject,
-      prev_version_id: parseInt(resource.meta?.versionId as string),
+      prev_version_id: parseInt(existingResource.meta?.versionId as string),
       // [TODO] probably uneccessary to insert this and can instead derive in case of syncing.
       patches: JSON.stringify([{ op: "replace", path: "", value: resource }]),
     };

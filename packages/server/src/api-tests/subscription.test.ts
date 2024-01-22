@@ -330,10 +330,15 @@ test("Reference standard", async () => {
 
     await client2.delete({}, "Encounter", encounters.resources[0].id as id);
 
-    await client.update({}, {
-      ...sub,
-      criteria: `Encounter?patient=Patient/${patient.id}`,
-    } as Subscription);
+    await client.update(
+      {},
+      "Subscription",
+      sub.id as id,
+      {
+        ...sub,
+        criteria: `Encounter?patient=Patient/${patient.id}`,
+      } as Subscription,
+    );
     resources.push(
       await client.create({}, {
         resourceType: "Encounter",

@@ -146,40 +146,42 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       throw new Error("Unexpected response type");
     return response.body as T;
   }
-  async update<T extends Resource>(ctx: CTX, resource: T): Promise<T> {
+  async update<T extends ResourceType>(
+    ctx: CTX,
+    resourceType: T,
+    id: id,
+    resource: AResource<T>,
+  ): Promise<AResource<T>> {
     if (resource.id === undefined)
       throw new Error("Cannot update resource without id");
     const response = await this.request(ctx, {
       type: "update-request",
       level: "instance",
-      resourceType: resource.resourceType,
-      id: resource.id,
+      resourceType,
+      id,
       body: resource,
     });
     if (response.type !== "update-response")
       throw new Error("Unexpected response type");
-    return response.body as T;
+    return response.body as AResource<T>;
   }
   // [ADD JSON PATCH TYPES]
-  async patch<T extends Resource>(
+  async patch<T extends ResourceType>(
     ctx: CTX,
-    resource: T,
+    resourceType: T,
+    id: id,
     patches: any,
-  ): Promise<T> {
-    if (resource.id === undefined)
-      throw new OperationError(
-        outcomeError("invalid", "Cannot patch resource without id"),
-      );
+  ): Promise<AResource<T>> {
     const response = await this.request(ctx, {
       type: "patch-request",
       level: "instance",
-      resourceType: resource.resourceType,
-      id: resource.id,
+      resourceType: resourceType,
+      id: id,
       body: patches,
     });
     if (response.type !== "patch-response")
       throw new Error("Unexpected response type");
-    return response.body as T;
+    return response.body as AResource<T>;
   }
   async read<T extends ResourceType>(
     ctx: CTX,

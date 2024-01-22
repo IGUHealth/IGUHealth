@@ -23,7 +23,7 @@ test("Test successfull patch", async () => {
     resources.push(patient);
 
     const patientUpdated = await client
-      .patch({}, patient, [
+      .patch({}, patient.resourceType, patient.id as id, [
         { op: "add", path: "/name", value: [] },
         { op: "add", path: "/name/0", value: {} },
         { op: "add", path: "/name/0/family", value: "Smith" },
@@ -35,7 +35,9 @@ test("Test successfull patch", async () => {
     expect(patientUpdated.name).toEqual([{ family: "Smith" }]);
 
     const OOFAILURE = await client
-      .patch({}, patient, [{ op: "add", path: "/d", value: "Smith" }])
+      .patch({}, patient.resourceType, patient.id as id, [
+        { op: "add", path: "/d", value: "Smith" },
+      ])
       .catch((e) => {
         return e.operationOutcome;
       });
@@ -53,7 +55,9 @@ test("Test successfull patch", async () => {
     });
 
     const invalidPatchData = await client
-      .patch({}, patient, [{ z: "add", path: "/d", value: "Smith" }])
+      .patch({}, patient.resourceType, patient.id as id, [
+        { z: "add", path: "/d", value: "Smith" },
+      ])
       .catch((e) => {
         return e.operationOutcome;
       });
@@ -70,7 +74,9 @@ test("Test successfull patch", async () => {
     });
 
     const invalidAppliedPatch = await client
-      .patch({}, patient, [{ op: "add", path: "/d/1", value: "Z" }])
+      .patch({}, patient.resourceType, patient.id as id, [
+        { op: "add", path: "/d/1", value: "Z" },
+      ])
       .catch((e) => {
         return e.operationOutcome;
       });

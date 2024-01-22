@@ -40,11 +40,16 @@ function ResourceEditorTabs() {
                   ...resource,
                   resourceType, // Validate that resourceTypes align.
                 } as Resource)
-              : client.update({}, {
-                  ...resource,
-                  resourceType,
-                  id,
-                } as Resource)
+              : client.update(
+                  {},
+                  resourceType as ResourceType,
+                  id as id,
+                  {
+                    ...resource,
+                    resourceType,
+                    id,
+                  } as Resource,
+                )
           ).then((response) => {
             setResource(response);
             return response;
