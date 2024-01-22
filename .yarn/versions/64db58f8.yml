@@ -1,0 +1,6 @@
+releases:
+  "@iguhealth/admin-app": minor
+  "@iguhealth/cli": major
+  "@iguhealth/components": minor
+  "@iguhealth/generated-ops": minor
+  "@iguhealth/server": minor
