@@ -225,7 +225,6 @@ export function apiCommands(command: Command) {
   command
     .command("search_system")
     .argument("[query]", "query")
-    .description("Initializes the configuration file")
     .action(async (query: string | undefined) => {
       const client = createClient(CONFIG_LOCATION);
       const searchResponse = await client.search_system({}, query);
@@ -236,7 +235,6 @@ export function apiCommands(command: Command) {
     .command("search_type")
     .argument("<resourceType>", "Resource Type")
     .argument("[query]", "query")
-    .description("Initializes the configuration file")
     .action(async (resourceType: string, query: string | undefined) => {
       const client = createClient(CONFIG_LOCATION);
       if (!validateResourceType(resourceType))
