@@ -8,6 +8,7 @@ import path from "node:path";
 export const CONFIG_LOCATION = path.join(homedir(), ".iguhealth/config.toml");
 
 export interface Tenant extends JsonMap {
+  api_origin: string;
   id: string;
   name: string;
   auth: {
@@ -18,15 +19,33 @@ export interface Tenant extends JsonMap {
 }
 
 export interface Config extends JsonMap {
-  api_url: string;
   lastUpdated: string;
-  defaultTenant: Tenant["id"];
+  defaultTenant: Tenant["name"];
   tenants: Tenant[];
 }
 
+function initializeConfig(location: string): Config {
+  console.log("Initializing configuration file");
+
+  const initialConfig: Config = {
+    defaultTenant: "",
+    lastUpdated: new Date().toISOString(),
+    tenants: [],
+  };
+
+  saveConfig(location, initialConfig);
+  return initialConfig;
+}
+
 export function loadConfig(location: string): Config {
-  const configuration = fs.readFileSync(location, "utf8");
-  return toml.parse(configuration) as Config;
+  let config: Config | undefined;
+  try {
+    const configuration = fs.readFileSync(location, "utf8");
+    config = toml.parse(configuration) as Config;
+  } catch (e) {
+    config = initializeConfig(location);
+  }
+  return config;
 }
 
 export function saveConfig(location: string, config: Config) {
@@ -43,54 +62,74 @@ export function getCurrentTenant(
   if (!config.defaultTenant) {
     config = {
       ...config,
-      defaultTenant: config.tenants[0]?.id,
+      defaultTenant: config.tenants[0]?.name,
     };
     saveConfig(location, config);
   }
 
-  return config.tenants.find((tenant) => tenant.id === config.defaultTenant);
-}
-
-async function initializeConfig(location: string) {
-  console.log("Initializing configuration file");
-
-  const initialConfig: Config = {
-    api_url: await inquirer.input({
-      message: "Root API URL:",
-      default: "https://api.iguhealth.app",
-    }),
-    defaultTenant: "",
-    lastUpdated: new Date().toISOString(),
-    tenants: [],
-  };
-
-  saveConfig(location, initialConfig);
+  return config.tenants.find((tenant) => tenant.name === config.defaultTenant);
 }
 
 export function configurationCommands(command: Command) {
   command
-    .command("init")
-    .description("Initializes the configuration file")
+    .command("switch-tenant")
+    .description("Switch tenant to use to add a tenant use add-tenant")
     .action(async () => {
-      console.log("Initializing configuration file");
-      await initializeConfig(CONFIG_LOCATION);
+      const config = loadConfig(CONFIG_LOCATION);
+      const defaultTenant = await inquirer.select({
+        message: "Switch tenant to use",
+        choices: config.tenants.map((t) => ({
+          name: t.name,
+          value: t.name,
+        })),
+      });
+
+      saveConfig(CONFIG_LOCATION, { ...config, defaultTenant });
+    });
+
+  command
+    .command("show-current-tenant")
+    .description("Display current default tenant.")
+    .action(async () => {
+      const config = loadConfig(CONFIG_LOCATION);
+      const currentTenant = getCurrentTenant(CONFIG_LOCATION, config);
+      if (currentTenant) {
+        console.log(currentTenant.name);
+      } else {
+        console.log("No tenant configured");
+      }
     });
 
   command
     .command("add-tenant")
     .description("Add a tenant to the configuration file")
     .action(async () => {
+      const config = loadConfig(CONFIG_LOCATION);
+
+      const apiOrigin = await inquirer.input({
+        message: "Enter the API origin example:",
+        default: "https://api.iguhealth.app",
+      });
+
       const id = await inquirer.input({ message: "Enter tenant id:" });
-      const name = await inquirer.input({ message: "Enter tenant name:" });
+      const name = await inquirer.input({
+        message: "Enter tenant name:",
+        validate: async (value) => {
+          const existingTenant = config.tenants.find((t) => t.name === value);
+          return existingTenant !== undefined
+            ? `Tenant with name '${value}' already exists. Must be unique.`
+            : true;
+        },
+      });
       const client_id = await inquirer.input({
         message: "Enter client id:",
       });
-      const client_secret = await inquirer.input({
+      const client_secret = await inquirer.password({
         message: "Enter client secret:",
       });
-      const config = loadConfig(CONFIG_LOCATION);
 
       config.tenants.push({
+        api_origin: apiOrigin,
         id,
         name,
         auth: {

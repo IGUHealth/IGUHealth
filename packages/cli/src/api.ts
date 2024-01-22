@@ -64,11 +64,11 @@ function createClient(location: string) {
   if (!tenant) throw new Error("No tenant configured run config add-tenant.");
 
   return httpClient({
-    url: getFHIRAPIURL(config.api_url, tenant.id).toString(),
+    url: getFHIRAPIURL(tenant.api_origin, tenant.id).toString(),
     getAccessToken: async function () {
       const response = await fetch(
         concatenateURLPaths(
-          getTenantAPIURL(config.api_url, tenant.id),
+          getTenantAPIURL(tenant.api_origin, tenant.id),
           "/oidc/token",
         ),
         {
