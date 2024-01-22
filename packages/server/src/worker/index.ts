@@ -111,12 +111,20 @@ async function handleSubscriptionPayload(
         );
       }
 
+      const headers = subscription.channel.header
+        ?.map((h) => h.split(":").map((h) => h.trim()))
+        .reduce((acc: Record<string, string>, [key, value]) => {
+          if (!key || !value) return acc;
+          acc[key] = value;
+          return acc;
+        }, {});
+
       await Promise.all(
         payload.map((resource) =>
           fetch(subscription.channel.endpoint as string, {
             method: "POST",
             // headers: subscription.channel.header,
-            headers: { "Content-Type": "application/json" },
+            headers: { ...headers, "Content-Type": "application/json" },
             body: JSON.stringify(resource),
           }),
         ),
