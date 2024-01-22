@@ -88,8 +88,8 @@ export function configurationCommands(command: Command) {
     });
 
   command
-    .command("show-current-tenant")
-    .description("Display current default tenant.")
+    .command("current-tenant")
+    .description("Display the current tenant.")
     .action(async () => {
       const config = loadConfig(CONFIG_LOCATION);
       const currentTenant = getCurrentTenant(CONFIG_LOCATION, config);
