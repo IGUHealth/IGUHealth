@@ -23,14 +23,14 @@ test("History test", async () => {
 
     resources.push(p);
     expect(p.id).toBeDefined();
-    await client.update({}, p);
+    await client.update({}, p.resourceType, p.id as id, p);
     const history = await client.historyInstance({}, "Patient", p.id as id);
     expect(history.length).toEqual(2);
 
     const p2 = await client.create<Patient>({}, { resourceType: "Patient" });
     resources.push(p2);
     expect(p2.id).toBeDefined();
-    await client.update({}, p2);
+    await client.update({}, p2.resourceType, p2.id as id, p2);
     const typeHistory = await client.historyType({}, "Patient", [
       { name: "_since", value: [time] },
     ]);
@@ -42,7 +42,12 @@ test("History test", async () => {
     );
     resources.push(practitioner);
     expect(practitioner.id).toBeDefined();
-    await client.update({}, practitioner);
+    await client.update(
+      {},
+      practitioner.resourceType,
+      practitioner.id as id,
+      practitioner,
+    );
     const systemHistory = await client.historySystem({}, [
       { name: "_since", value: [time] },
     ]);
@@ -63,14 +68,14 @@ test("History test since versionid", async () => {
 
     resources.push(p);
     expect(p.id).toBeDefined();
-    await client.update({}, p);
+    await client.update({}, p.resourceType, p.id as id, p);
     const history = await client.historyInstance({}, "Patient", p.id as id);
     expect(history.length).toEqual(2);
 
     const p2 = await client.create<Patient>({}, { resourceType: "Patient" });
     resources.push(p2);
     expect(p2.id).toBeDefined();
-    await client.update({}, p2);
+    await client.update({}, p2.resourceType, p2.id as id, p2);
     const typeHistory = await client.historyType({}, "Patient", [
       { name: "_since-version", value: [p.meta?.versionId as id] },
     ]);
@@ -82,7 +87,12 @@ test("History test since versionid", async () => {
     );
     resources.push(practitioner);
     expect(practitioner.id).toBeDefined();
-    await client.update({}, practitioner);
+    await client.update(
+      {},
+      practitioner.resourceType,
+      practitioner.id as id,
+      practitioner,
+    );
     const systemHistory = await client.historySystem({}, [
       { name: "_since-version", value: [p.meta?.versionId as id] },
     ]);

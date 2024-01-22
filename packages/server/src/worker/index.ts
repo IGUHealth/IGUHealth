@@ -363,7 +363,7 @@ function processSubscription(
         errorDescription,
       );
 
-      await server.update(ctx, {
+      await server.update(ctx, "Subscription", subscription.id as id, {
         ...subscription,
         status: "error" as code,
       });
