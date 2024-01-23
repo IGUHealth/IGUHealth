@@ -51,15 +51,15 @@ async function FHIRAPIKoaMiddleware<
       Router.RouterParamContext<T, KoaFHIRContext<Koa.DefaultContext>>
   >[]
 > {
-  if (!process.env.AUTH_JWT_ISSUER)
+  if (!process.env.AUTH_EXTERNAL_JWT_ISSUER)
     logger.warn("[WARNING] Server is publicly accessible.");
   const fhirAPI = await createFHIRAPI();
 
   return [
     MonitoringSentry.tracingMiddleWare(process.env.SENTRY_SERVER_DSN),
-    process.env.AUTH_JWT_ISSUER
-      ? await createValidateUserJWTMiddleware()
-      : allowPublicAccessMiddleware,
+    process.env.AUTH_PUBLIC_ACCESS === "true"
+      ? allowPublicAccessMiddleware
+      : await createValidateUserJWTMiddleware(),
     verifyAndAssociateUserFHIRContext,
 
     async (ctx, next) => {

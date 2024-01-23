@@ -156,8 +156,8 @@ export function tokenEndpoint<
         ctx.body = {
           access_token: await createToken(
             await getSigningKey(
-              process.env.AUTH_CERTIFICATION_LOCATION as string,
-              process.env.AUTH_SIGNING_KEY as string,
+              process.env.AUTH_LOCAL_CERTIFICATION_LOCATION as string,
+              process.env.AUTH_LOCAL_SIGNING_KEY as string,
             ),
             {
               header: { audience: process.env.AUTH_JWT_AUDIENCE as string },

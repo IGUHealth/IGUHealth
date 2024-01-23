@@ -95,7 +95,7 @@ spec:
                 secretKeyRef:
                   name: iguhealth-secrets
                   key: api-url
-            - name: AUTH_JWK_URI
+            - name: AUTH_EXTERNAL_JWK_URI
               valueFrom:
                 secretKeyRef:
                   name: iguhealth-secrets
@@ -110,7 +110,7 @@ spec:
                 secretKeyRef:
                   name: iguhealth-secrets
                   key: auth-jwt-audience
-            - name: AUTH_JWT_ISSUER
+            - name: AUTH_EXTERNAL_JWT_ISSUER
               valueFrom:
                 secretKeyRef:
                   name: iguhealth-secrets

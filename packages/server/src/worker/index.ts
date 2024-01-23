@@ -49,13 +49,13 @@ import { LIB_VERSION } from "../version.js";
 dotEnv.config();
 
 if (
-  process.env.AUTH_SIGNING_KEY &&
-  process.env.AUTH_CERTIFICATION_LOCATION &&
+  process.env.AUTH_LOCAL_SIGNING_KEY &&
+  process.env.AUTH_LOCAL_CERTIFICATION_LOCATION &&
   process.env.NODE_ENV === "development"
 ) {
   await createCertsIfNoneExists(
-    process.env.AUTH_CERTIFICATION_LOCATION,
-    process.env.AUTH_SIGNING_KEY,
+    process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
+    process.env.AUTH_LOCAL_SIGNING_KEY,
   );
 }
 
@@ -161,13 +161,13 @@ async function handleSubscriptionPayload(
       );
 
       const user_access_token =
-        process.env.AUTH_CERTIFICATION_LOCATION &&
-        process.env.AUTH_SIGNING_KEY &&
+        process.env.AUTH_LOCAL_CERTIFICATION_LOCATION &&
+        process.env.AUTH_LOCAL_SIGNING_KEY &&
         process.env.AUTH_JWT_AUDIENCE
           ? await createToken(
               await getSigningKey(
-                process.env.AUTH_CERTIFICATION_LOCATION,
-                process.env.AUTH_SIGNING_KEY,
+                process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
+                process.env.AUTH_LOCAL_SIGNING_KEY,
               ),
               {
                 header: { audience: process.env.AUTH_JWT_AUDIENCE },
