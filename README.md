@@ -58,16 +58,36 @@ Optional depending on whether you are executing custom code for operations
 
 #### AUTHENTICATION
 
-Authentication environment variables
+Shared environment variables
 
-| name                        | description                                            | required | defaults                  |
-| --------------------------- | ------------------------------------------------------ | -------- | ------------------------- |
-| AUTH_JWK_URI                | JWK remote url to pull JSON WEB Key Set.               | true     |                           |
-| AUTH_JWT_AUDIENCE           | String representing audience for jwt.                  | false    | https://iguhealth.app/api |
-| AUTH_JWT_ISSUER             | Issuer of the JWT.                                     | true     |                           |
-| AUTH_JWT_ALGORITHM          |                                                        | false    | RS256                     |
-| AUTH_CERTIFICATION_LOCATION | Location for local certifications for IGUHEALTH ISSUER | false    |                           |
-| AUTH_SIGNING_KEY            | The signing key used to generate new local tokens      | false    |                           |
+| name               | description                           | required | defaults                  |
+| ------------------ | ------------------------------------- | -------- | ------------------------- |
+| AUTH_JWT_AUDIENCE  | String representing audience for jwt. | false    | https://iguhealth.app/api |
+| AUTH_JWT_ALGORITHM |                                       | false    | RS256                     |
+
+##### Unsafe
+
+| name               | description                                                   | required | defaults |
+| ------------------ | ------------------------------------------------------------- | -------- | -------- |
+| AUTH_PUBLIC_ACCESS | Sets the server to allow full public access when set to true. | false    |          |
+
+##### Local Authentication
+
+Local Auth variables.
+
+| name                              | description                                            | required | defaults |
+| --------------------------------- | ------------------------------------------------------ | -------- | -------- |
+| AUTH_LOCAL_CERTIFICATION_LOCATION | Location for local certifications for IGUHEALTH ISSUER | false    |          |
+| AUTH_LOCAL_SIGNING_KEY            | The signing key used to generate new local tokens      | false    |          |
+
+##### External Authentication
+
+External Auth variables.
+
+| name                     | description                              | required | defaults |
+| ------------------------ | ---------------------------------------- | -------- | -------- |
+| AUTH_EXTERNAL_JWK_URI    | JWK remote url to pull JSON WEB Key Set. | false    |          |
+| AUTH_EXTERNAL_JWT_ISSUER | Issuer of the JWT.                       | true     |          |
 
 #### Encryption
 

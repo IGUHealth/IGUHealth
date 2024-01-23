@@ -14,14 +14,17 @@ export async function createValidateUserJWTMiddleware<T, C>(): Promise<
   Koa.Middleware<T, C>
 > {
   let IGUHEALTH_JWT_SECRET: ReturnType<typeof jwksRsa.koaJwtSecret> | undefined;
-  if (process.env.AUTH_SIGNING_KEY && process.env.AUTH_CERTIFICATION_LOCATION) {
+  if (
+    process.env.AUTH_LOCAL_SIGNING_KEY &&
+    process.env.AUTH_LOCAL_CERTIFICATION_LOCATION
+  ) {
     if (process.env.NODE_ENV === "development") {
       await createCertsIfNoneExists(
-        process.env.AUTH_CERTIFICATION_LOCATION,
-        process.env.AUTH_SIGNING_KEY,
+        process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
+        process.env.AUTH_LOCAL_SIGNING_KEY,
       );
     }
-    const jwks = await getJWKS(process.env.AUTH_CERTIFICATION_LOCATION);
+    const jwks = await getJWKS(process.env.AUTH_LOCAL_CERTIFICATION_LOCATION);
     IGUHEALTH_JWT_SECRET = jwksRsa.koaJwtSecret({
       jwksUri: "_not_used",
       cache: true,
@@ -33,18 +36,28 @@ export async function createValidateUserJWTMiddleware<T, C>(): Promise<
     });
   }
 
-  const EXTERNAL_JWT_SECRET = jwksRsa.koaJwtSecret({
-    cache: true,
-    rateLimit: true,
-    jwksRequestsPerMinute: 2,
-    jwksUri: process.env.AUTH_JWK_URI as string,
-  });
+  let EXTERNAL_JWT_SECRET: ReturnType<typeof jwksRsa.koaJwtSecret> | undefined;
+
+  if (
+    process.env.AUTH_EXTERNAL_JWK_URI &&
+    process.env.AUTH_EXTERNAL_JWT_ISSUER
+  ) {
+    EXTERNAL_JWT_SECRET = jwksRsa.koaJwtSecret({
+      cache: true,
+      rateLimit: true,
+      jwksRequestsPerMinute: 2,
+      jwksUri: process.env.AUTH_EXTERNAL_JWK_URI as string,
+    });
+  }
 
   return jwt({
     tokenKey: "access_token",
     secret: async (header: jwksRsa.TokenHeader, payload: { iss: string }) => {
       switch (payload.iss) {
-        case process.env.AUTH_JWT_ISSUER: {
+        case process.env.AUTH_EXTERNAL_JWT_ISSUER: {
+          if (!EXTERNAL_JWT_SECRET) {
+            throw new Error("External JWT secret is not configured");
+          }
           return EXTERNAL_JWT_SECRET(header);
         }
         case IGUHEALTH_ISSUER: {
@@ -56,8 +69,8 @@ export async function createValidateUserJWTMiddleware<T, C>(): Promise<
       }
     },
     audience: process.env.AUTH_JWT_AUDIENCE,
-    issuer: process.env.AUTH_JWT_ISSUER
-      ? [process.env.AUTH_JWT_ISSUER, IGUHEALTH_ISSUER]
+    issuer: process.env.AUTH_EXTERNAL_JWT_ISSUER
+      ? [process.env.AUTH_EXTERNAL_JWT_ISSUER, IGUHEALTH_ISSUER]
       : [IGUHEALTH_ISSUER],
     algorithms: [
       process.env.AUTH_JWT_ALGORITHM ? process.env.AUTH_JWT_ALGORITHM : "RS256",
