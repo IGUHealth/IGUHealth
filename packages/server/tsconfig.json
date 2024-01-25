@@ -2,6 +2,7 @@
   "extends": "../../config/base.tsconfig.json",
   "exclude": ["./**/*.test.ts", "lib/*", "jest.config.js", "scripts/*"],
   "compilerOptions": {
+    "jsx": "react" /* Specify what JSX code is generated. */,
     "rootDir": "src",
     "outDir": "lib"
   }
