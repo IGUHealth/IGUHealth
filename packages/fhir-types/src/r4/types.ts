@@ -44942,4 +44942,11 @@ resourceType: "User"
   meta?: Meta;
   link?: Array<Reference>;
   identifier?: Array<Identifier>;
+  role: code;
+  _role?: Element
+  contact?: Array<ContactPoint>;
+  username: string;
+  _username?: Element
+  password?: string;
+  _password?: Element
 }
