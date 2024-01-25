@@ -1,5 +1,8 @@
 import Router from "@koa/router";
 import type * as Koa from "koa";
+import { PassThrough } from "node:stream";
+import React from "react";
+import { renderToPipeableStream } from "react-dom/server";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -8,6 +11,9 @@ import { getSigningKey } from "../certifications.js";
 import { createToken } from "../token.js";
 import { getCredentialsBasicHeader } from "../utilities.js";
 import { createClientInjectMiddleware } from "./middleware/client_find.js";
+import Login from "./views/login.js";
+
+// import Login from "./views/login.jsx";
 
 type AuthorizationRequestBody = {
   response_type: "token";
@@ -195,8 +201,28 @@ export function tokenEndpoint<
  * Creates a router for oidc endpoints.
  * @returns Router for oidc endpoints.
  */
-export function createOIDCRouter<State, C>(): Router<State, KoaFHIRContext<C>> {
-  const oidcRouter = new Router<State, KoaFHIRContext<C>>({ prefix: "/oidc" });
+export function createOIDCRouter<State, C>(
+  prefix: string,
+): Router<State, KoaFHIRContext<C>> {
+  const oidcRouter = new Router<State, KoaFHIRContext<C>>({ prefix });
+
+  oidcRouter.get("/interaction/login", (ctx) => {
+    const stream = new PassThrough();
+
+    const { pipe } = renderToPipeableStream(React.createElement(Login), {
+      // bootstrapScripts: ["/main.js"],
+      onShellReady() {
+        ctx.respond = false;
+        ctx.status = 200;
+        ctx.set("content-type", "text/html");
+        pipe(stream);
+        stream.end();
+      },
+    });
+
+    ctx.body = stream;
+  });
+
   oidcRouter.post("/token", createClientInjectMiddleware(), tokenEndpoint());
 
   return oidcRouter;

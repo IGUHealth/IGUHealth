@@ -15,7 +15,7 @@ import {
   allowPublicAccessMiddleware,
   createValidateUserJWTMiddleware,
 } from "./authN/middleware.js";
-import { createOIDCRouter } from "./authN/oauth2/operations.js";
+import { createOIDCRouter } from "./authN/oidc/routes.js";
 import { verifyAndAssociateUserFHIRContext } from "./authZ/middleware/tenantAccess.js";
 import {
   createFHIRAPI,
@@ -188,7 +188,7 @@ export default async function createServer(): Promise<
   );
 
   // Instantiate OIDC routes
-  const oidcRouter = createOIDCRouter();
+  const oidcRouter = createOIDCRouter("/oidc");
 
   tenantAPIV1Router.use(oidcRouter.routes());
   tenantAPIV1Router.use(oidcRouter.allowedMethods());
@@ -249,6 +249,9 @@ export default async function createServer(): Promise<
     .use(rootRouter.allowedMethods());
 
   app.on("error", MonitoringSentry.onKoaError);
+  app.on("error", (e) => {
+    logger.error(e);
+  });
 
   logger.info("Running app");
 
