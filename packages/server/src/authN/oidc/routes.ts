@@ -13,8 +13,6 @@ import { getCredentialsBasicHeader } from "../utilities.js";
 import { createClientInjectMiddleware } from "./middleware/client_find.js";
 import Login from "./views/login.js";
 
-// import Login from "./views/login.jsx";
-
 type AuthorizationRequestBody = {
   response_type: "token";
   client_id: string;
