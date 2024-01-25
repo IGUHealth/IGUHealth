@@ -109,6 +109,54 @@
         ],
         "min": 0,
         "max": "*"
+      },
+      {
+        "id": "User.role",
+        "path": "User.role",
+        "type": [
+          {
+            "code": "code"
+          }
+        ],
+        "binding": {
+          "strength": "required",
+          "valueSet": "https://iguhealth.app/fhir/ValueSet/UserRole|4.0.1"
+        },
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "id": "User.contact",
+        "path": "User.contact",
+        "type": [
+          {
+            "code": "ContactPoint"
+          }
+        ],
+        "min": 0,
+        "max": "*"
+      },
+      {
+        "id": "User.username",
+        "path": "User.username",
+        "type": [
+          {
+            "code": "string"
+          }
+        ],
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "id": "User.password",
+        "path": "User.password",
+        "type": [
+          {
+            "code": "string"
+          }
+        ],
+        "min": 0,
+        "max": "1"
       }
     ]
   }

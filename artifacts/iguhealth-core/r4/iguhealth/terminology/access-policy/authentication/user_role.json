@@ -1,0 +1,61 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "fullUrl": "https://iguhealth.app/fhir/CodeSystem/UserRole",
+      "resource": {
+        "id": "user-role-codesystem",
+        "url": "https://iguhealth.app/fhir/CodeSystem/UserRole",
+        "resourceType": "CodeSystem",
+        "version": "4.0.1",
+        "name": "UserRole",
+        "title": "UserRole",
+        "status": "active",
+        "experimental": true,
+        "publisher": "IGUHealth",
+        "description": "Grant types allowed.",
+        "caseSensitive": true,
+        "valueSet": "https://iguhealth.app/fhir/ValueSet/UserRole",
+        "content": "complete",
+        "concept": [
+          {
+            "code": "owner",
+            "display": "Owner"
+          },
+          {
+            "code": "super_admin",
+            "display": "Super Admin"
+          },
+          {
+            "code": "user",
+            "display": "User"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://iguhealth.app/fhir/ValueSet/UserRole",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "user-role-valueset",
+        "url": "https://iguhealth.app/fhir/ValueSet/UserRole",
+        "version": "4.0.1",
+        "name": "UserRole",
+        "title": "UserRole",
+        "status": "active",
+        "experimental": true,
+        "publisher": "IGUHealth",
+        "description": "Grant Types allowed.",
+        "immutable": true,
+        "compose": {
+          "include": [
+            {
+              "system": "https://iguhealth.app/fhir/CodeSystem/UserRole"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

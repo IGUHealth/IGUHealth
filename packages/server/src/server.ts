@@ -189,6 +189,7 @@ export default async function createServer(): Promise<
 
   // Instantiate OIDC routes
   const oidcRouter = createOIDCRouter();
+
   tenantAPIV1Router.use(oidcRouter.routes());
   tenantAPIV1Router.use(oidcRouter.allowedMethods());
 
