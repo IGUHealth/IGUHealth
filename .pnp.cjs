@@ -13640,7 +13640,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/koa-ratelimit", "npm:5.0.3"],\
             ["@types/koa__cors", "npm:4.0.0"],\
             ["@types/koa__router", "npm:12.0.4"],\
-            ["@types/lodash", "npm:4.14.202"],\
             ["@types/node", "npm:20.11.7"],\
             ["@types/pg", "npm:8.11.0"],\
             ["@types/react", "npm:18.2.48"],\
@@ -13663,7 +13662,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["koa-body", "npm:6.0.1"],\
             ["koa-jwt", "npm:4.0.4"],\
             ["koa-ratelimit", "npm:5.0.1"],\
-            ["lodash", "npm:4.17.21"],\
             ["nanoid", "npm:5.0.4"],\
             ["openid-client", "npm:5.6.4"],\
             ["pg", "virtual:e1c816e034cd0b5bef17034e9e60dba4c6f6bd1e447e5d5f077a6e02f3c218a3aaa8202d4d85c4dd3c28000c7590795b5b64dd548cd70ed74b3a6563e160e159#npm:8.11.3"],\
@@ -20188,13 +20186,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-lodash-npm-4.14.195-a2a8254638-39b75ca635.zip/node_modules/@types/lodash/",\
           "packageDependencies": [\
             ["@types/lodash", "npm:4.14.195"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:4.14.202", {\
-          "packageLocation": "./.yarn/cache/@types-lodash-npm-4.14.202-76de3e302b-a91acf3564.zip/node_modules/@types/lodash/",\
-          "packageDependencies": [\
-            ["@types/lodash", "npm:4.14.202"]\
           ],\
           "linkType": "HARD"\
         }]\

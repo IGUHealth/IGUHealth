@@ -6815,7 +6815,6 @@ __metadata:
     "@types/koa-ratelimit": ^5.0.3
     "@types/koa__cors": ^4.0.0
     "@types/koa__router": ^12.0.4
-    "@types/lodash": ^4.14.202
     "@types/node": ^20.11.7
     "@types/pg": ^8.11.0
     "@types/react": ^18.2.48
@@ -6838,7 +6837,6 @@ __metadata:
     koa-body: ^6.0.1
     koa-jwt: ^4.0.4
     koa-ratelimit: ^5.0.1
-    lodash: ^4.17.21
     nanoid: ^5.0.4
     openid-client: ^5.6.4
     pg: ^8.11.3
@@ -12197,13 +12195,6 @@ __metadata:
   version: 4.14.195
   resolution: "@types/lodash@npm:4.14.195"
   checksum: 39b75ca635b3fa943d17d3d3aabc750babe4c8212485a4df166fe0516e39288e14b0c60afc6e21913cc0e5a84734633c71e617e2bd14eaa1cf51b8d7799c432e
-  languageName: node
-  linkType: hard
-
-"@types/lodash@npm:^4.14.202":
-  version: 4.14.202
-  resolution: "@types/lodash@npm:4.14.202"
-  checksum: a91acf3564a568c6f199912f3eb2c76c99c5a0d7e219394294213b3f2d54f672619f0fde4da22b29dc5d4c31457cd799acc2e5cb6bd90f9af04a1578483b6ff7
   languageName: node
   linkType: hard
 
