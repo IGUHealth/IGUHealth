@@ -32,7 +32,7 @@
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^",
     "@iguhealth/server": "workspace:^",
     "@tsconfig/docusaurus": "^1.0.5",
-    "ts-node": "^10.9.1",
+    "ts-node": "^10.9.2",
     "typescript": "5.2.2"
   },
   "browserslist": {

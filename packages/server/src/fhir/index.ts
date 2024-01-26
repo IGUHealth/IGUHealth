@@ -4,7 +4,7 @@ import Redis from "ioredis";
 import type * as koa from "koa";
 import path from "path";
 import pg from "pg";
-import createLogger from "pino";
+import { pino } from "pino";
 import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
@@ -168,7 +168,7 @@ export async function serverCapabilities(
   } as CapabilityStatement;
 }
 
-export const logger = createLogger.default();
+export const logger = pino<string>();
 
 function getResourceTypeToValidate(request: FHIRRequest): ResourceType {
   switch (request.type) {
