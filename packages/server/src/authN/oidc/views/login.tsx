@@ -6,7 +6,7 @@ export default function Login() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Login etc..</title>
+        <title>IGUHEALTH Login</title>
       </head>
       <body>
         <div>Login from REACT/SERVER TEST</div>

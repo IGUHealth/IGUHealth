@@ -69,7 +69,7 @@ function createClient(location: string) {
       const response = await fetch(
         concatenateURLPaths(
           getTenantAPIURL(tenant.api_origin, tenant.id),
-          "/oidc/token",
+          "/auth/oidc/token",
         ),
         {
           method: "POST",
