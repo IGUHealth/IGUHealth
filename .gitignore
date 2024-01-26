@@ -44,3 +44,4 @@ dist-ssr
 *.sln
 *.sw?
 certifications/
+.yarn/install-state.gz
