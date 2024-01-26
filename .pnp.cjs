@@ -13068,7 +13068,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@jest/globals", "npm:29.6.1"],\
             ["@koa/bodyparser", "npm:5.0.0"],\
             ["@koa/cors", "npm:5.0.0"],\
-            ["@koa/router", "npm:12.0.0"],\
+            ["@koa/router", "npm:12.0.1"],\
             ["@sentry/node", "npm:7.98.0"],\
             ["@sentry/profiling-node", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:1.3.5"],\
             ["@sentry/utils", "npm:7.98.0"],\
@@ -14148,10 +14148,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@koa/router", [\
-        ["npm:12.0.0", {\
-          "packageLocation": "./.yarn/cache/@koa-router-npm-12.0.0-005bd8a616-5529629f75.zip/node_modules/@koa/router/",\
+        ["npm:12.0.1", {\
+          "packageLocation": "./.yarn/cache/@koa-router-npm-12.0.1-6a9764e4df-4b8d3940cb.zip/node_modules/@koa/router/",\
           "packageDependencies": [\
-            ["@koa/router", "npm:12.0.0"],\
+            ["@koa/router", "npm:12.0.1"],\
+            ["debug", "virtual:feb0771c9f8eadaf509cfed41e14a8bebbea5442233275c1c87085111077a08ef71eb773b899665b154d8203a55a489610a54117ae059fce5f5b8b844493b1b1#npm:4.3.4"],\
             ["http-errors", "npm:2.0.0"],\
             ["koa-compose", "npm:4.1.0"],\
             ["methods", "npm:1.1.2"],\
