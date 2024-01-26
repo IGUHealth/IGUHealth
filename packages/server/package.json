@@ -72,7 +72,7 @@
     "@types/koa-bodyparser": "^4.3.12",
     "@types/koa-ratelimit": "^5.0.3",
     "@types/koa__cors": "^4.0.0",
-    "@types/koa__router": "^12.0.0",
+    "@types/koa__router": "^12.0.4",
     "@types/lodash": "^4.14.195",
     "@types/node": "^20.11.7",
     "@types/pg": "^8.10.2",

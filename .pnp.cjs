@@ -13078,7 +13078,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/koa-bodyparser", "npm:4.3.12"],\
             ["@types/koa-ratelimit", "npm:5.0.3"],\
             ["@types/koa__cors", "npm:4.0.0"],\
-            ["@types/koa__router", "npm:12.0.0"],\
+            ["@types/koa__router", "npm:12.0.4"],\
             ["@types/lodash", "npm:4.14.195"],\
             ["@types/node", "npm:20.11.7"],\
             ["@types/pg", "npm:8.10.2"],\
@@ -19440,10 +19440,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/koa__router", [\
-        ["npm:12.0.0", {\
-          "packageLocation": "./.yarn/cache/@types-koa__router-npm-12.0.0-eacee91aaa-ebfee772f7.zip/node_modules/@types/koa__router/",\
+        ["npm:12.0.4", {\
+          "packageLocation": "./.yarn/cache/@types-koa__router-npm-12.0.4-812b24cc2a-0740e3c8dc.zip/node_modules/@types/koa__router/",\
           "packageDependencies": [\
-            ["@types/koa__router", "npm:12.0.0"],\
+            ["@types/koa__router", "npm:12.0.4"],\
             ["@types/koa", "npm:2.13.6"]\
           ],\
           "linkType": "HARD"\
