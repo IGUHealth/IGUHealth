@@ -5912,13 +5912,11 @@ __metadata:
     "@types/jest": ^29.5.2
     "@types/koa": ^2.13.6
     "@types/koa-bodyparser": ^4.3.12
-    "@types/koa-mount": ^4.0.2
     "@types/koa-ratelimit": ^5.0.3
     "@types/koa__cors": ^4.0.0
     "@types/koa__router": ^12.0.0
     "@types/lodash": ^4.14.195
     "@types/node": ^20.11.7
-    "@types/oidc-provider": ^8.2.0
     "@types/pg": ^8.10.2
     "@types/react": ^18.2.48
     "@types/react-dom": ^18.2.18
@@ -5939,7 +5937,6 @@ __metadata:
     koa: ^2.14.2
     koa-body: ^6.0.1
     koa-jwt: ^4.0.4
-    koa-mount: ^4.0.0
     koa-ratelimit: ^5.0.1
     lodash: ^4.17.21
     nanoid: ^5.0.4
@@ -11113,15 +11110,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/koa-mount@npm:^4.0.2":
-  version: 4.0.2
-  resolution: "@types/koa-mount@npm:4.0.2"
-  dependencies:
-    "@types/koa": "*"
-  checksum: 6f376035ae2d9fffb964c01356e10cb3b66d18ff22d5b928da4deed5b86ccac3dd82122c1bd784c528009cc49e899569a1dfe0707df5d803f4417fd3aa769820
-  languageName: node
-  linkType: hard
-
 "@types/koa-ratelimit@npm:^5.0.3":
   version: 5.0.3
   resolution: "@types/koa-ratelimit@npm:5.0.3"
@@ -11310,15 +11298,6 @@ __metadata:
   version: 2.4.1
   resolution: "@types/normalize-package-data@npm:2.4.1"
   checksum: e87bccbf11f95035c89a132b52b79ce69a1e3652fe55962363063c9c0dae0fe2477ebc585e03a9652adc6f381d24ba5589cc5e51849df4ced3d3e004a7d40ed5
-  languageName: node
-  linkType: hard
-
-"@types/oidc-provider@npm:^8.2.0":
-  version: 8.2.0
-  resolution: "@types/oidc-provider@npm:8.2.0"
-  dependencies:
-    "@types/koa": "*"
-  checksum: 4c71ee082555df313cc78e08ac05121daee29d4e56807f5ae38ac16f30e1ad547b08b5b57f53c187e3c496041b0626ff8f4569bec234d60b69c371d39f6aa7ec
   languageName: node
   linkType: hard
 
@@ -15117,7 +15096,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:4, debug@npm:^4.0.0, debug@npm:^4.0.1, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.3, debug@npm:^4.3.4":
+"debug@npm:4, debug@npm:^4.0.0, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.3, debug@npm:^4.3.4":
   version: 4.3.4
   resolution: "debug@npm:4.3.4"
   dependencies:
@@ -21222,16 +21201,6 @@ __metadata:
     koa-unless: ^1.0.7
     p-any: ^2.1.0
   checksum: 7edcc063d80d4fdf78ac5315c5046e3f34c76c81df35dae6970197bfd4e08f7130104691d62e19f250a22880e46bc7cba8dd33eae39426e23f6baecef00bbb7e
-  languageName: node
-  linkType: hard
-
-"koa-mount@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "koa-mount@npm:4.0.0"
-  dependencies:
-    debug: ^4.0.1
-    koa-compose: ^4.1.0
-  checksum: c7e8c5cca4d2ccc4742e63c81b86b44f0290075148897b5d633acdd137e90f554c60c232fbc62e843eaedb913b67c5a49367c1142e290b8cfd9c28eb4a0480ec
   languageName: node
   linkType: hard
 

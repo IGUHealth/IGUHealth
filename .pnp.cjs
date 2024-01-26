@@ -13076,13 +13076,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:29.5.2"],\
             ["@types/koa", "npm:2.13.6"],\
             ["@types/koa-bodyparser", "npm:4.3.12"],\
-            ["@types/koa-mount", "npm:4.0.2"],\
             ["@types/koa-ratelimit", "npm:5.0.3"],\
             ["@types/koa__cors", "npm:4.0.0"],\
             ["@types/koa__router", "npm:12.0.0"],\
             ["@types/lodash", "npm:4.14.195"],\
             ["@types/node", "npm:20.11.7"],\
-            ["@types/oidc-provider", "npm:8.2.0"],\
             ["@types/pg", "npm:8.10.2"],\
             ["@types/react", "npm:18.2.48"],\
             ["@types/react-dom", "npm:18.2.18"],\
@@ -13103,7 +13101,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["koa", "npm:2.14.2"],\
             ["koa-body", "npm:6.0.1"],\
             ["koa-jwt", "npm:4.0.4"],\
-            ["koa-mount", "npm:4.0.0"],\
             ["koa-ratelimit", "npm:5.0.1"],\
             ["lodash", "npm:4.17.21"],\
             ["nanoid", "npm:5.0.4"],\
@@ -19420,16 +19417,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["@types/koa-mount", [\
-        ["npm:4.0.2", {\
-          "packageLocation": "./.yarn/cache/@types-koa-mount-npm-4.0.2-1f20290a94-6f376035ae.zip/node_modules/@types/koa-mount/",\
-          "packageDependencies": [\
-            ["@types/koa-mount", "npm:4.0.2"],\
-            ["@types/koa", "npm:2.13.6"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["@types/koa-ratelimit", [\
         ["npm:5.0.3", {\
           "packageLocation": "./.yarn/cache/@types-koa-ratelimit-npm-5.0.3-5c677ee2b1-1f3077d741.zip/node_modules/@types/koa-ratelimit/",\
@@ -19620,16 +19607,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-normalize-package-data-npm-2.4.1-c31c56ae6a-e87bccbf11.zip/node_modules/@types/normalize-package-data/",\
           "packageDependencies": [\
             ["@types/normalize-package-data", "npm:2.4.1"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@types/oidc-provider", [\
-        ["npm:8.2.0", {\
-          "packageLocation": "./.yarn/cache/@types-oidc-provider-npm-8.2.0-1292ff3df2-4c71ee0825.zip/node_modules/@types/oidc-provider/",\
-          "packageDependencies": [\
-            ["@types/oidc-provider", "npm:8.2.0"],\
-            ["@types/koa", "npm:2.13.6"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -31640,17 +31617,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jsonwebtoken", "npm:9.0.1"],\
             ["koa-unless", "npm:1.0.7"],\
             ["p-any", "npm:2.1.0"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["koa-mount", [\
-        ["npm:4.0.0", {\
-          "packageLocation": "./.yarn/cache/koa-mount-npm-4.0.0-c8a47bd44e-c7e8c5cca4.zip/node_modules/koa-mount/",\
-          "packageDependencies": [\
-            ["koa-mount", "npm:4.0.0"],\
-            ["debug", "virtual:feb0771c9f8eadaf509cfed41e14a8bebbea5442233275c1c87085111077a08ef71eb773b899665b154d8203a55a489610a54117ae059fce5f5b8b844493b1b1#npm:4.3.4"],\
-            ["koa-compose", "npm:4.1.0"]\
           ],\
           "linkType": "HARD"\
         }]\
