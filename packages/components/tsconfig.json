@@ -3,9 +3,9 @@
   "exclude": ["./**/*.test.ts", "lib/*", "jest.config.js"],
   "compilerOptions": {
     "outDir": "lib",
-    "rootDir": ".",
+    "rootDir": "src",
     "moduleResolution": "bundler",
     "module": "esnext",
-    "jsx": "react"
-  }
+    "jsx": "react",
+  },
 }
