@@ -19,13 +19,13 @@
     "@iguhealth/operation-execution": "workspace:^",
     "@iguhealth/operation-outcomes": "workspace:^",
     "@testing-library/jest-dom": "^6.3.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.76",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.11.7",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
-    "classnames": "^2.3.2",
+    "classnames": "^2.5.1",
     "codemirror": "^6.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -34,7 +34,7 @@
     "react-window": "^1.8.10",
     "recoil": "^0.7.7",
     "typescript": "5.2.2",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^3.5.2"
   },
   "scripts": {
     "start": "PORT=3001 react-scripts start",
