@@ -14,13 +14,13 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^20.3.1",
+    "@types/node": "^20.11.7",
     "typescript": "5.2.2"
   },
   "dependencies": {
     "@iguhealth/artifacts": "workspace:^",
     "@iguhealth/fhir-types": "workspace:^",
-    "commander": "^10.0.1"
+    "commander": "^11.1.0"
   },
   "files": [
     "lib/**"
