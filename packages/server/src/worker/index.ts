@@ -160,32 +160,35 @@ async function handleSubscriptionPayload(
         operation,
       );
 
-      const user_access_token =
-        process.env.AUTH_LOCAL_CERTIFICATION_LOCATION &&
-        process.env.AUTH_LOCAL_SIGNING_KEY &&
-        process.env.AUTH_JWT_AUDIENCE
-          ? await createToken(
-              await getSigningKey(
-                process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
-                process.env.AUTH_LOCAL_SIGNING_KEY,
-              ),
+      if (
+        !process.env.AUTH_LOCAL_CERTIFICATION_LOCATION ||
+        !process.env.AUTH_LOCAL_SIGNING_KEY ||
+        !process.env.AUTH_JWT_AUDIENCE
+      ) {
+        throw new Error("Missing environment variables for JWT creation.");
+      }
+
+      const user_access_token = await createToken(
+        await getSigningKey(
+          process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
+          process.env.AUTH_LOCAL_SIGNING_KEY,
+        ),
+        {
+          header: { audience: process.env.AUTH_JWT_AUDIENCE },
+          payload: {
+            "https://iguhealth.app/tenants": [
               {
-                header: { audience: process.env.AUTH_JWT_AUDIENCE },
-                payload: {
-                  "https://iguhealth.app/tenants": [
-                    {
-                      id: ctx.tenant,
-                      userRole: "SUPER_ADMIN",
-                    } as TenantClaim,
-                  ],
-                  "https://iguhealth.app/resourceType": "OperationDefinition",
-                  sub: operationDefinition.id,
-                  aud: ["https://iguhealth.com/api"],
-                  scope: "openid profile email offline_access",
-                },
-              },
-            )
-          : undefined;
+                id: ctx.tenant,
+                userRole: "SUPER_ADMIN",
+              } as TenantClaim,
+            ],
+            "https://iguhealth.app/resourceType": "OperationDefinition",
+            sub: operationDefinition.id,
+            aud: ["https://iguhealth.com/api"],
+            scope: "openid profile email offline_access",
+          },
+        },
+      );
 
       await server.invoke_system(
         new Operation(operationDefinition),
