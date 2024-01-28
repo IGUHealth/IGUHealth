@@ -41,7 +41,7 @@ jobs:
         run: yarn install
 
       - name: Compile dependencies
-        run: yarn workspaces foreach -pt --topological-dev run build
+        run: yarn workspaces foreach -A -pt --topological-dev run build
 
       - name: Compile documentation
         run: yarn generate-documentation
@@ -88,7 +88,7 @@ jobs:
         run: yarn install
 
       - name: Compile dependencies
-        run: yarn workspaces foreach -pt --topological-dev run build
+        run: yarn workspaces foreach -A -pt --topological-dev run build
 
       - name: Configure AWS credentials from Github account
         uses: aws-actions/configure-aws-credentials@v4
@@ -131,7 +131,7 @@ jobs:
         run: yarn install
 
       - name: Compile dependencies
-        run: yarn workspaces foreach -pt --topological-dev run build
+        run: yarn workspaces foreach -A -pt --topological-dev run build
 
       - name: Compile storybook
         run: yarn workspace @iguhealth/components build-storybook
@@ -184,7 +184,7 @@ jobs:
           echo REACT_APP_FHIR_BASE_URL=${{ secrets.ADMIN_APP_FHIR_URL }} >> packages/admin-app/.env
 
       - name: Compile
-        run: yarn workspaces foreach -pt --topological-dev run build
+        run: yarn workspaces foreach -A -pt --topological-dev run build
 
       - name: Configure AWS credentials from Github account
         uses: aws-actions/configure-aws-credentials@v4
