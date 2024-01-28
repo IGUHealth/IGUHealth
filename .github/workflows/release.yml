@@ -60,10 +60,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Node 19
+      - name: Set up Node
         uses: actions/setup-node@v3
         with:
-          node-version: 19.6.0
+          node-version: 20.9.0
           cache: "yarn"
           registry-url: "https://registry.npmjs.org"
 
