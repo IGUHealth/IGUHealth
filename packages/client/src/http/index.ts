@@ -174,7 +174,6 @@ async function httpResponseToFHIRResponse(
   if (response.status >= 400) {
     if (!response.body) throw new Error(response.statusText);
     const oo = (await response.json()) as OperationOutcome;
-    console.error(JSON.stringify(oo));
     throw new OperationError(oo);
   }
   switch (request.type) {
