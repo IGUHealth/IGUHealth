@@ -24,7 +24,7 @@ function parametersToQueryString(
   return parameters
     .map((p) => {
       const name = p.chains ? [p.name, ...p.chains].join(".") : p.name;
-      return `${name}${p.modifier ? `:${p.modifier}` : ""}=${p.value}`;
+      return `${name}${p.modifier ? `:${p.modifier}` : ""}=${p.value.map((v) => encodeURIComponent(v)).join(",")}`;
     })
     .join("&");
 }

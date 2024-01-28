@@ -90,7 +90,7 @@ export function parseQuery(
             const searchParam: ParsedParameter<string> = {
               name,
               modifier,
-              value: value.split(","),
+              value: value.split(",").map((v) => decodeURIComponent(v)),
             };
 
             if (chains.length > 1) searchParam.chains = chains.slice(1);
