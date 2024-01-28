@@ -825,13 +825,26 @@ test("Encoding test", async () => {
   try {
     const q = await client.create({}, questionnaireTemplate);
     resources.push(q);
+    const q2 = await client.create(
+      {},
+      { ...questionnaireTemplate, title: "test&encoding=3" },
+    );
+    resources.push(q2);
 
     expect(
-      await client.search_system({}, [
+      await client.search_type({}, "Questionnaire", [
         { name: "title", value: ["test/encoding=123"] },
       ]),
     ).toEqual({
       resources: [q],
+    });
+
+    expect(
+      await client.search_type({}, "Questionnaire", [
+        { name: "title", value: ["test&encoding=3"] },
+      ]),
+    ).toEqual({
+      resources: [q2],
     });
   } finally {
     await Promise.all(
