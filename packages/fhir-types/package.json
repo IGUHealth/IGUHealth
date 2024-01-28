@@ -19,7 +19,7 @@
     "./r4/types": "./lib/r4/types.js"
   },
   "devDependencies": {
-    "@types/node": "^20.11.7",
+    "@types/node": "^20.11.8",
     "typescript": "5.2.2"
   },
   "files": [
