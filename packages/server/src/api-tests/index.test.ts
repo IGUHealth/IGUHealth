@@ -812,3 +812,32 @@ test("Memory type test with _count", async () => {
   );
   expect(primitiveSDSearch.resources.length).toEqual(1);
 });
+
+test("Encoding test", async () => {
+  const questionnaireTemplate: Questionnaire = {
+    url: "https://iguhealth.com/PREPARE",
+    title: "test/encoding=123",
+    status: "active",
+    resourceType: "Questionnaire",
+  } as Questionnaire;
+
+  const resources: Resource[] = [];
+  try {
+    const q = await client.create({}, questionnaireTemplate);
+    resources.push(q);
+
+    expect(
+      await client.search_system({}, [
+        { name: "title", value: ["test/encoding=123"] },
+      ]),
+    ).toEqual({
+      resources: [q],
+    });
+  } finally {
+    await Promise.all(
+      resources.map(async ({ resourceType, id }) => {
+        return await client.delete({}, resourceType, id as id);
+      }),
+    );
+  }
+});
