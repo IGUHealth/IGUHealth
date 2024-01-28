@@ -1,5 +1,5 @@
 import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
-import parseParameters from "@iguhealth/client/url";
+import parseUrl from "@iguhealth/client/url";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
   Bundle,
@@ -110,7 +110,7 @@ function parseRequest1Empty(
     return {
       type: "search-request",
       level: "system",
-      parameters: parseParameters(request.url),
+      parameters: parseUrl(request.url),
     };
   } else
     throw new OperationError(
@@ -181,7 +181,7 @@ function parseRequest1NonEmpty(
       return {
         type: "history-request",
         level: "system",
-        parameters: parseParameters(request.url),
+        parameters: parseUrl(request.url),
       };
     }
 
@@ -192,7 +192,7 @@ function parseRequest1NonEmpty(
         type: "search-request",
         level: "type",
         resourceType,
-        parameters: parseParameters(request.url),
+        parameters: parseUrl(request.url),
       };
     }
   }
@@ -265,7 +265,7 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
           type: "history-request",
           level: "type",
           resourceType: urlPieces[0],
-          parameters: parseParameters(request.url),
+          parameters: parseUrl(request.url),
         };
       } else if (resourceTypes.has(urlPieces[0])) {
         return {
@@ -344,7 +344,7 @@ function parseRequest3(urlPieces: string[], request: HTTPRequest): FHIRRequest {
           level: "instance",
           resourceType: urlPieces[0],
           id: urlPieces[1] as id,
-          parameters: parseParameters(request.url),
+          parameters: parseUrl(request.url),
         };
       }
     }
