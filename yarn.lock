@@ -6541,7 +6541,7 @@ __metadata:
     "@types/jest": ^29.5.11
     "@types/node": ^20.11.8
     "@types/react": ^18.0.0
-    "@types/react-dom": ^18.0.0
+    "@types/react-dom": ^18.2.18
     "@types/react-window": ^1.8.8
     classnames: ^2.5.1
     codemirror: ^6.0.1
@@ -6645,7 +6645,7 @@ __metadata:
     "@storybook/react-webpack5": ^7.6.10
     "@storybook/testing-library": ^0.2.2
     "@storybook/theming": ^7.6.10
-    "@types/react": ^18.2.21
+    "@types/react": ^18.2.48
     autoprefixer: ^10.4.17
     classnames: ^2.5.1
     codemirror: ^6.0.1
@@ -12692,7 +12692,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^18.0.0, @types/react@npm:^18.2.21":
+"@types/react@npm:^18.0.0":
   version: 18.2.21
   resolution: "@types/react@npm:18.2.21"
   dependencies:

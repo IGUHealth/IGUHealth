@@ -24,7 +24,7 @@
     "@types/jest": "^29.5.11",
     "@types/node": "^20.11.8",
     "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
+    "@types/react-dom": "^18.2.18",
     "classnames": "^2.5.1",
     "codemirror": "^6.0.1",
     "react": "^18.2.0",
