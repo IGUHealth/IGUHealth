@@ -20,7 +20,7 @@
     "commander": "^11.1.0"
   },
   "devDependencies": {
-    "typescript": "5.2.2"
+    "typescript": "5.3.3"
   },
   "scripts": {
     "build": "tsc && node executable.js ./lib/iguhealth.js && chmod +x ./lib/iguhealth.js",
