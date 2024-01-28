@@ -20,7 +20,7 @@ jobs:
       - name: Set up Node 19
         uses: actions/setup-node@v3
         with:
-          node-version: 19.6.0
+          node-version: 21.6.1
           cache: "yarn"
 
       - name: EnableCorePack
@@ -86,7 +86,7 @@ jobs:
       - name: Set up Node 19
         uses: actions/setup-node@v3
         with:
-          node-version: 19.6.0
+          node-version: 21.6.1
           cache: "yarn"
 
       - name: EnableCorePack
