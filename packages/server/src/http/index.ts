@@ -87,35 +87,46 @@ function parseRequest1Empty(
   urlPieces: string[],
   request: HTTPRequest,
 ): FHIRRequest {
-  if (request.method === "POST") {
-    if (!isBundle(request.body)) {
+  switch (request.method) {
+    case "POST": {
+      if (!isBundle(request.body)) {
+        throw new OperationError(
+          outcomeError("invalid", "POST request must be a bundle"),
+        );
+      }
+      if (
+        request.body.type !== "transaction" &&
+        request.body.type !== "batch"
+      ) {
+        throw new OperationError(
+          outcomeError(
+            "invalid",
+            "POST request must be a transaction or batch",
+          ),
+        );
+      }
+      return {
+        type:
+          request.body.type === "transaction"
+            ? "transaction-request"
+            : "batch-request",
+        level: "system",
+        body: request.body,
+      };
+    }
+    case "GET": {
+      return {
+        type: "search-request",
+        level: "system",
+        parameters: parseUrl(request.url),
+      };
+    }
+    default: {
       throw new OperationError(
-        outcomeError("invalid", "POST request must be a bundle"),
+        outcomeError("invalid", "Request could not be parsed at type level."),
       );
     }
-    if (request.body.type !== "transaction" && request.body.type !== "batch") {
-      throw new OperationError(
-        outcomeError("invalid", "POST request must be a transaction or batch"),
-      );
-    }
-    return {
-      type:
-        request.body.type === "transaction"
-          ? "transaction-request"
-          : "batch-request",
-      level: "system",
-      body: request.body,
-    };
-  } else if (request.method === "GET") {
-    return {
-      type: "search-request",
-      level: "system",
-      parameters: parseUrl(request.url),
-    };
-  } else
-    throw new OperationError(
-      outcomeError("invalid", "Request could not be parsed at type level."),
-    );
+  }
 }
 
 /* 
@@ -134,66 +145,79 @@ function parseRequest1NonEmpty(
   urlPieces: string[],
   request: HTTPRequest,
 ): FHIRRequest {
-  if (urlPieces[0].startsWith("$")) {
-    if (request.method === "POST") {
-      return {
-        type: "invoke-request",
-        level: "system",
-        operation: urlPieces[0].slice(1) as code,
-        body: request.body as Parameters,
-      };
-    } else if (request.method === "GET") {
+  switch (true) {
+    case urlPieces[0].startsWith("$"): {
+      switch (request.method) {
+        case "POST": {
+          return {
+            type: "invoke-request",
+            level: "system",
+            operation: urlPieces[0].slice(1) as code,
+            body: request.body as Parameters,
+          };
+        }
+        case "GET": {
+          throw new OperationError(
+            outcomeError(
+              "not-supported",
+              "Operation GET requests not yet supported",
+            ),
+          );
+        }
+      }
       throw new OperationError(
         outcomeError(
-          "not-supported",
-          "Operation GET requests not yet supported",
+          "invalid",
+          `Invalid method for invocation '${request.method}'`,
         ),
       );
     }
-    throw new OperationError(
-      outcomeError(
-        "invalid",
-        `Invalid method for invocation '${request.method}'`,
-      ),
-    );
-  }
-  if (request.method === "POST") {
-    if (urlPieces[0] === "_search") {
+    case request.method === "POST": {
+      if (urlPieces[0] === "_search") {
+        throw new OperationError(
+          outcomeError("not-supported", "Search via post not supported."),
+        );
+      }
+      if (verifyResourceType(urlPieces[0])) {
+        return {
+          type: "create-request",
+          level: "type",
+          resourceType: urlPieces[0],
+          body: request.body as Parameters,
+        };
+      }
       throw new OperationError(
-        outcomeError("not-supported", "Search via post not supported."),
+        outcomeError("invalid", `Invalid resource type ${urlPieces[0]}`),
       );
     }
-    if (verifyResourceType(urlPieces[0])) {
-      return {
-        type: "create-request",
-        level: "type",
-        resourceType: urlPieces[0],
-        body: request.body as Parameters,
-      };
-    }
-  } else if (request.method === "GET") {
-    if (urlPieces[0] === "metadata")
-      return {
-        type: "capabilities-request",
-        level: "system",
-      };
-    if (urlPieces[0] === "_history") {
-      return {
-        type: "history-request",
-        level: "system",
-        parameters: parseUrl(request.url),
-      };
-    }
-
-    // Split by Questionmark because of search parameters
-    const resourceType = urlPieces[0].split("?")[0];
-    if (verifyResourceType(resourceType)) {
-      return {
-        type: "search-request",
-        level: "type",
-        resourceType,
-        parameters: parseUrl(request.url),
-      };
+    case request.method === "GET": {
+      switch (true) {
+        case urlPieces[0] === "metadata": {
+          return {
+            type: "capabilities-request",
+            level: "system",
+          };
+        }
+        case urlPieces[0] === "_history": {
+          return {
+            type: "history-request",
+            level: "system",
+            parameters: parseUrl(request.url),
+          };
+        }
+        default: {
+          // Split by Questionmark because of search parameters
+          const resourceType = urlPieces[0].split("?")[0];
+          if (verifyResourceType(resourceType)) {
+            return {
+              type: "search-request",
+              level: "type",
+              resourceType,
+              parameters: parseUrl(request.url),
+            };
+          }
+        }
+      }
     }
   }
   throw new OperationError(
@@ -223,81 +247,101 @@ history-type	      /[type]/_history	                  GET	N/A	N/A	N/A	N/A
 */
 function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
   if (verifyResourceType(urlPieces[0])) {
-    if (urlPieces[1].startsWith("$")) {
-      if (request.method === "POST") {
-        return {
-          type: "invoke-request",
-          level: "type",
-          resourceType: urlPieces[0],
-          operation: urlPieces[1].slice(1) as code,
-          body: request.body as Parameters,
-        };
-      } else if (request.method === "GET") {
-        throw new OperationError(
-          outcomeError(
-            "not-supported",
-            "Operation GET requests not yet supported",
-          ),
-        );
+    switch (true) {
+      case urlPieces[1].startsWith("$"): {
+        switch (request.method) {
+          case "POST": {
+            return {
+              type: "invoke-request",
+              level: "type",
+              resourceType: urlPieces[0],
+              operation: urlPieces[1].slice(1) as code,
+              body: request.body as Parameters,
+            };
+          }
+          case "GET": {
+            throw new OperationError(
+              outcomeError(
+                "not-supported",
+                "Operation GET requests not yet supported",
+              ),
+            );
+          }
+          default: {
+            throw new OperationError(
+              outcomeError(
+                "invalid",
+                `Invalid method for invocation '${request.method}'`,
+              ),
+            );
+          }
+        }
       }
-      throw new OperationError(
-        outcomeError(
-          "invalid",
-          `Invalid method for invocation '${request.method}'`,
-        ),
-      );
-    } else if (request.method === "POST") {
-      if (urlPieces[1] === "_search") {
-        throw new OperationError(
-          outcomeError("not-supported", "Search via post not supported."),
-        );
-      } else {
-        throw new OperationError(
-          outcomeError(
-            "invalid",
-            "To create new resources run post at resource root.",
-          ),
-        );
+      case request.method === "POST": {
+        if (urlPieces[1] === "_search") {
+          throw new OperationError(
+            outcomeError("not-supported", "Search via post not supported."),
+          );
+        } else {
+          throw new OperationError(
+            outcomeError(
+              "invalid",
+              "To create new resources run post at resource root.",
+            ),
+          );
+        }
       }
-    } else if (request.method === "GET") {
-      if (urlPieces[1] === "_history") {
+      case request.method === "GET": {
+        switch (true) {
+          case urlPieces[1] === "_history": {
+            return {
+              type: "history-request",
+              level: "type",
+              resourceType: urlPieces[0],
+              parameters: parseUrl(request.url),
+            };
+          }
+          case resourceTypes.has(urlPieces[0]): {
+            return {
+              type: "read-request",
+              level: "instance",
+              resourceType: urlPieces[0],
+              id: urlPieces[1] as id,
+            };
+          }
+          default: {
+            throw new OperationError(
+              outcomeError("invalid", `Invalid resource type ${urlPieces[0]}`),
+            );
+          }
+        }
+      }
+      case request.method === "PUT": {
         return {
-          type: "history-request",
-          level: "type",
+          type: "update-request",
+          level: "instance",
           resourceType: urlPieces[0],
-          parameters: parseUrl(request.url),
+          id: urlPieces[1] as id,
+          body: request.body as Resource,
         };
-      } else if (resourceTypes.has(urlPieces[0])) {
+      }
+      case request.method === "PATCH": {
         return {
-          type: "read-request",
+          type: "patch-request",
+          level: "instance",
+          resourceType: urlPieces[0],
+          id: urlPieces[1] as id,
+          body: request.body as object,
+        };
+      }
+      case request.method === "DELETE": {
+        return {
+          type: "delete-request",
           level: "instance",
           resourceType: urlPieces[0],
           id: urlPieces[1] as id,
         };
       }
-    } else if (request.method === "PUT") {
-      return {
-        type: "update-request",
-        level: "instance",
-        resourceType: urlPieces[0],
-        id: urlPieces[1] as id,
-        body: request.body as Resource,
-      };
-    } else if (request.method === "PATCH") {
-      return {
-        type: "patch-request",
-        level: "instance",
-        resourceType: urlPieces[0],
-        id: urlPieces[1] as id,
-        body: request.body as object,
-      };
-    } else if (request.method === "DELETE") {
-      return {
-        type: "delete-request",
-        level: "instance",
-        resourceType: urlPieces[0],
-        id: urlPieces[1] as id,
-      };
     }
   }
   throw new OperationError(
@@ -313,39 +357,47 @@ history-instance	  /[type]/[id]/_history	              GET	N/A	N/A	N/A	N/A
 */
 function parseRequest3(urlPieces: string[], request: HTTPRequest): FHIRRequest {
   if (verifyResourceType(urlPieces[0])) {
-    if (urlPieces[2].startsWith("$")) {
-      if (request.method === "POST") {
-        return {
-          type: "invoke-request",
-          level: "instance",
-          resourceType: urlPieces[0],
-          id: urlPieces[1] as id,
-          operation: urlPieces[2].slice(1) as code,
-          body: request.body as Parameters,
-        };
-      } else if (request.method === "GET") {
-        throw new OperationError(
-          outcomeError(
-            "not-supported",
-            "Operation GET requests not yet supported",
-          ),
-        );
+    switch (true) {
+      case urlPieces[2].startsWith("$"): {
+        switch (request.method) {
+          case "POST": {
+            return {
+              type: "invoke-request",
+              level: "instance",
+              resourceType: urlPieces[0],
+              id: urlPieces[1] as id,
+              operation: urlPieces[2].slice(1) as code,
+              body: request.body as Parameters,
+            };
+          }
+          case "GET": {
+            throw new OperationError(
+              outcomeError(
+                "not-supported",
+                "Operation GET requests not yet supported",
+              ),
+            );
+          }
+          default: {
+            throw new OperationError(
+              outcomeError(
+                "invalid",
+                `Invalid method for invocation '${request.method}'`,
+              ),
+            );
+          }
+        }
       }
-      throw new OperationError(
-        outcomeError(
-          "invalid",
-          `Invalid method for invocation '${request.method}'`,
-        ),
-      );
-    } else if (request.method === "GET") {
-      if (urlPieces[2] === "_history") {
-        return {
-          type: "history-request",
-          level: "instance",
-          resourceType: urlPieces[0],
-          id: urlPieces[1] as id,
-          parameters: parseUrl(request.url),
-        };
+      case request.method === "GET": {
+        if (urlPieces[2] === "_history") {
+          return {
+            type: "history-request",
+            level: "instance",
+            resourceType: urlPieces[0],
+            id: urlPieces[1] as id,
+            parameters: parseUrl(request.url),
+          };
+        }
       }
     }
   }
