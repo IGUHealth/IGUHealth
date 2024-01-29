@@ -212,9 +212,14 @@ function LabelWrapper({
   if (!showLabel) return children;
   return (
     <div>
-      <div className="flex items-center space-x-2 mb-1">
-        <div className="">{capitalize(getFieldName(found.element.path))}</div>
-
+      <div className="flex items-center space-x-2">
+        <div className="">
+          {capitalize(
+            getFieldName(found.element.path)
+              .replace(/([A-Z])/g, " $1")
+              .trim(),
+          )}
+        </div>
         {(found.element.type || []).length > 1 && (
           <TypeChoiceTypeSelect
             element={found.element}
@@ -244,6 +249,8 @@ function LabelWrapper({
           />
         )}
       </div>
+
+      <div className="text-gray-400 text-xs mb-1">{found.element.short}</div>
 
       {children}
     </div>
@@ -378,62 +385,63 @@ const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
   }
   return (
     <div>
-      <label>{capitalize(getFieldName(element.element.path))}</label>
-      <div className="space-y-1">
-        {value.map((v, i) => (
-          <div
-            className={classNames(
-              "relative",
-              // {
-              //   "bg-gray-50": i % 2 === 1,
-              //   "bg-white": i % 2 === 0,
-              // }
-            )}
-            key={`${descend(pointer, i)}`}
+      <LabelWrapper {...props}>
+        <div className="space-y-1">
+          {value.map((v, i) => (
+            <div
+              className={classNames(
+                "relative",
+                // {
+                //   "bg-gray-50": i % 2 === 1,
+                //   "bg-white": i % 2 === 0,
+                // }
+              )}
+              key={`${descend(pointer, i)}`}
+            >
+              <MetaValueSingular
+                client={client}
+                type={type}
+                sd={sd}
+                elementIndex={element.elementIndex}
+                pointer={descend(pointer, i)}
+                value={v}
+                showLabel={false}
+                showInvalid={showInvalid}
+                onChange={onChange}
+              />
+              {value.length > 0 && (
+                <div
+                  className="absolute top-1 right-1 text-slate-400 cursor-pointer hover:text-slate-500 "
+                  onClick={() => {
+                    onChange({
+                      path: descend(pointer, i),
+                      op: "remove",
+                      value: v,
+                    });
+                  }}
+                >
+                  <XMarkIcon className="h-4 w-4" />
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+        <div className="mt-1">
+          <Add
+            onChange={() => {
+              onChange({
+                path: descend(pointer, value.length),
+                op: "add",
+                value: complexTypes.has(element.element.type?.[0].code || "")
+                  ? {}
+                  : null,
+              });
+            }}
           >
-            <MetaValueSingular
-              client={client}
-              type={type}
-              sd={sd}
-              elementIndex={element.elementIndex}
-              pointer={descend(pointer, i)}
-              value={v}
-              showLabel={false}
-              showInvalid={showInvalid}
-              onChange={onChange}
-            />
-            {value.length > 0 && (
-              <div
-                className="absolute top-1 right-1 text-slate-400 cursor-pointer hover:text-slate-500 "
-                onClick={() => {
-                  onChange({
-                    path: descend(pointer, i),
-                    op: "remove",
-                    value: v,
-                  });
-                }}
-              >
-                <XMarkIcon className="h-4 w-4" />
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-      <div className="mt-1">
-        <Add
-          onChange={() => {
-            onChange({
-              path: descend(pointer, value.length),
-              op: "add",
-              value: complexTypes.has(element.element.type?.[0].code || "")
-                ? {}
-                : null,
-            });
-          }}
-        >
-          Add {capitalize(getFieldName(element.element.path))}
-        </Add>
-      </div>
+            Add {capitalize(getFieldName(element.element.path))}
+          </Add>
+        </div>
+      </LabelWrapper>
     </div>
   );
 });
