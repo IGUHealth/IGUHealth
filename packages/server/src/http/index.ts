@@ -164,15 +164,13 @@ function parseRequest1NonEmpty(
             ),
           );
         }
-        default: {
-          throw new OperationError(
-            outcomeError(
-              "invalid",
-              `Invalid method for invocation '${request.method}'`,
-            ),
-          );
-        }
       }
+      throw new OperationError(
+        outcomeError(
+          "invalid",
+          `Invalid method for invocation '${request.method}'`,
+        ),
+      );
     }
     case request.method === "POST": {
       if (urlPieces[0] === "_search") {
