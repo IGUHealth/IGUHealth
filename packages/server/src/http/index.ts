@@ -188,6 +188,9 @@ function parseRequest1NonEmpty(
           body: request.body as Parameters,
         };
       }
+      throw new OperationError(
+        outcomeError("invalid", `Invalid resource type ${urlPieces[0]}`),
+      );
     }
     case request.method === "GET": {
       switch (true) {
