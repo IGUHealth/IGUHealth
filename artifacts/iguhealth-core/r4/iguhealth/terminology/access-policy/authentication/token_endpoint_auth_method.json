@@ -1,0 +1,57 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "fullUrl": "https://iguhealth.app/fhir/CodeSystem/ClientApplicationTokenAuthMethod",
+      "resource": {
+        "id": "clientapplication-token-auth-method-codesystem",
+        "url": "https://iguhealth.app/fhir/CodeSystem/ClientApplicationTokenAuthMethod",
+        "resourceType": "CodeSystem",
+        "version": "4.0.1",
+        "name": "ClientApplicationTokenAuthMethod",
+        "title": "ClientApplicationTokenAuthMethod",
+        "status": "active",
+        "experimental": true,
+        "publisher": "IGUHealth",
+        "description": "Token auth methods allowed.",
+        "caseSensitive": true,
+        "valueSet": "https://iguhealth.app/fhir/ValueSet/ClientApplicationTokenAuthMethod",
+        "content": "complete",
+        "concept": [
+          {
+            "code": "none",
+            "display": "None"
+          },
+          {
+            "code": "client_secret_basic",
+            "display": "Basic"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://iguhealth.app/fhir/ValueSet/ClientApplicationTokenAuthMethod",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "clientapplication-token-auth-method-valueset",
+        "url": "https://iguhealth.app/fhir/ValueSet/ClientApplicationTokenAuthMethod",
+        "version": "4.0.1",
+        "name": "ClientApplicationTokenAuthMethod",
+        "title": "ClientApplicationTokenAuthMethod",
+        "status": "active",
+        "experimental": true,
+        "publisher": "IGUHealth",
+        "description": "Token auth methods allowed.",
+        "immutable": true,
+        "compose": {
+          "include": [
+            {
+              "system": "https://iguhealth.app/fhir/CodeSystem/ClientApplicationTokenAuthMethod"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -54,6 +54,22 @@
       "resourceType": "ValueSet"
     },
     {
+      "filename": "r4/iguhealth/terminology/access-policy/authentication/response_types.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "r4/iguhealth/terminology/access-policy/authentication/response_types.json",
+      "resourceType": "ValueSet"
+    },
+    {
+      "filename": "r4/iguhealth/terminology/access-policy/authentication/token_endpoint_auth_method.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "r4/iguhealth/terminology/access-policy/authentication/token_endpoint_auth_method.json",
+      "resourceType": "ValueSet"
+    },
+    {
       "filename": "r4/iguhealth/terminology/access-policy/authentication/user_role.json",
       "resourceType": "CodeSystem"
     },

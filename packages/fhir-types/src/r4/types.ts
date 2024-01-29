@@ -44926,8 +44926,58 @@ resourceType: "ClientApplication"
   _description?: Element
   grantType: code;
   _grantType?: Element
+  tokenEndpointAuthMethod: code;
+  _tokenEndpointAuthMethod?: Element
+  responseTypes: code;
+  _responseTypes?: Element
   secret: string;
   _secret?: Element
+  redirectUri?: Array<string>;
+  _redirectUri?: Array<Element>
+  /** 
+   * URL string of a web page providing information about the client.
+   */
+  uri?: uri;
+  /** 
+   * URL string of a web page providing information about the client.
+   */
+  _uri?: Element
+  /** 
+   * URL string that references a logo for the client.
+   */
+  logoUri?: uri;
+  /** 
+   * URL string that references a logo for the client.
+   */
+  _logoUri?: Element
+  /** 
+   * String containing a space-separated list of scope values (as described in Section 3.3 of OAuth 2.0 [RFC6749]) that the client can use when requesting access tokens.
+   */
+  scope?: string;
+  /** 
+   * String containing a space-separated list of scope values (as described in Section 3.3 of OAuth 2.0 [RFC6749]) that the client can use when requesting access tokens.
+   */
+  _scope?: Element
+  /** 
+   * Array of strings representing ways to contact people responsible for this client, typically email addresses.
+   */
+  contact?: ContactPoint;
+  /** 
+   * URL string that points to a human-readable terms of service document for the client that describes a contractual relationship between the end-user and the client that the end-user accepts when authorizing the client.
+   */
+  tosUri?: uri;
+  /** 
+   * URL string that points to a human-readable terms of service document for the client that describes a contractual relationship between the end-user and the client that the end-user accepts when authorizing the client.
+   */
+  _tosUri?: Element
+  /** 
+   * URL string that points to a human-readable privacy policy document that describes how the deployment organization collects, uses, retains, and discloses personal data.
+   */
+  policyUri?: uri;
+  /** 
+   * URL string that points to a human-readable privacy policy document that describes how the deployment organization collects, uses, retains, and discloses personal data.
+   */
+  _policyUri?: Element
 }
 
 export interface User {

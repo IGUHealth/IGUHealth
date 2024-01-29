@@ -212,9 +212,14 @@ function LabelWrapper({
   if (!showLabel) return children;
   return (
     <div>
-      <div className="flex items-center space-x-2 mb-1">
-        <div className="">{capitalize(getFieldName(found.element.path))}</div>
-
+      <div className="flex items-center space-x-2">
+        <div className="">
+          {capitalize(
+            getFieldName(found.element.path)
+              .replace(/([A-Z])/g, " $1")
+              .trim(),
+          )}
+        </div>
         {(found.element.type || []).length > 1 && (
           <TypeChoiceTypeSelect
             element={found.element}
@@ -244,6 +249,8 @@ function LabelWrapper({
           />
         )}
       </div>
+
+      <div className="text-gray-400 text-xs mb-1">{found.element.short}</div>
 
       {children}
     </div>
