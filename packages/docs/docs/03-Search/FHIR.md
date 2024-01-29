@@ -31,8 +31,8 @@ This is an overview of what we support from the FHIR search [specification](http
 | \_type          | Yes       | Filter system search on a specific set of resource types.                                                       |
 | \_sort          | Yes       | Set the parameter to use for sorting. We also support sorting priority based on comma seperation of parameters. |
 | \_count         | Yes       | Max it can be set to is 50.                                                                                     |
-| \_include       | No        | Include related resources in bundle. Include resources referenced by current resource.                          |
-| \_revinclude    | no        | Include related resources in Bundle. Include resources that reference current resource.                         |
+| \_include       | yes       | Include related resources in bundle. Include resources referenced by current resource.                          |
+| \_revinclude    | yes       | Include related resources in Bundle. Include resources that reference current resource.                         |
 | \_summary       | No        | Return a portion of the resource                                                                                |
 | \_total         | Yes       | Return the total count of parameters matching query (including resources not returned by \_count limitation).   |
 | \_element       | No        | Return summary based on parameters                                                                              |
