@@ -3,6 +3,7 @@ import { escapeParameter } from "@iguhealth/client/url";
 import { AccessPolicy, User, id } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
+import { CUSTOM_CLAIMS } from "../../authN/token.js";
 import { FHIRServerCTX, asSystemCTX } from "../../fhir/context.js";
 
 /**
@@ -19,7 +20,7 @@ export const associateUserMiddleware: MiddlewareAsync<
 > = async (context, next) => {
   if (!next) throw new Error("next middleware was not defined");
 
-  switch (context.ctx.user.jwt["https://iguhealth.app/resourceType"]) {
+  switch (context.ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE]) {
     case "User": {
       const usersAndAccessPolicies = (await context.ctx.client.search_type(
         asSystemCTX(context.ctx),
@@ -124,7 +125,7 @@ export const associateUserMiddleware: MiddlewareAsync<
       throw new OperationError(
         outcomeFatal(
           "invalid",
-          `Invalid resource type set on JWT '${context.ctx.user.jwt["https://iguhealth.app/resourceType"]}'`,
+          `Invalid resource type set on JWT '${context.ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE]}'`,
         ),
       );
   }

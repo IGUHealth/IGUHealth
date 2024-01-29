@@ -6,13 +6,14 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import type { JWT, TenantClaim } from "../../fhir/context.js";
+import { CUSTOM_CLAIMS, JWT } from "../../authN/token.js";
+import type { TenantClaim } from "../../fhir/context.js";
 import { KoaFHIRContext } from "../../fhir/koa.js";
 
 function findCurrentTenant<Context extends Koa.DefaultContext>(
   ctx: KoaFHIRContext<Context>,
 ): TenantClaim | undefined {
-  return ctx.state.user["https://iguhealth.app/tenants"]?.find(
+  return ctx.state.user[CUSTOM_CLAIMS.TENANTS]?.find(
     (t: TenantClaim) => t.id === ctx.FHIRContext.tenant,
   );
 }
