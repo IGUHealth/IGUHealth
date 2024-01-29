@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/artifacts",
-  "version": "0.1.30",
+  "version": "0.1.31",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
