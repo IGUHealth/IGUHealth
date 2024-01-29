@@ -4,7 +4,11 @@ import jwt from "koa-jwt";
 
 import { TenantClaim } from "../fhir/context.js";
 import { createCertsIfNoneExists, getJWKS } from "./certifications.js";
-import { IGUHEALTH_ISSUER } from "./token.js";
+import {
+  CUSTOM_CLAIMS,
+  IGUHEALTH_AUDIENCE,
+  IGUHEALTH_ISSUER,
+} from "./token.js";
 
 /**
  *
@@ -68,7 +72,7 @@ export async function createValidateUserJWTMiddleware<T, C>(): Promise<
           throw new Error(`Unknown issuer '${payload.iss}'`);
       }
     },
-    audience: process.env.AUTH_JWT_AUDIENCE,
+    audience: IGUHEALTH_AUDIENCE,
     issuer: process.env.AUTH_EXTERNAL_JWT_ISSUER
       ? [process.env.AUTH_EXTERNAL_JWT_ISSUER, IGUHEALTH_ISSUER]
       : [IGUHEALTH_ISSUER],
@@ -93,8 +97,8 @@ export const allowPublicAccessMiddleware: Koa.Middleware = async (
       iss: IGUHEALTH_ISSUER,
       sub: "public-user",
       access_token: "sec-public",
-      "https://iguhealth.app/resourceType": "User",
-      "https://iguhealth.app/tenants": [
+      [CUSTOM_CLAIMS.RESOURCE_TYPE]: "User",
+      [CUSTOM_CLAIMS.TENANTS]: [
         { id: ctx.params.tenant, userRole: "SUPER_ADMIN" } as TenantClaim,
       ],
     },

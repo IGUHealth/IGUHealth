@@ -13,35 +13,22 @@ import {
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 
-import { IGUHEALTH_ISSUER } from "../authN/token.js";
+import { IGUHEALTH_ISSUER, JWT } from "../authN/token.js";
 import type { IOCache } from "../cache/interface.js";
 import type { EncryptionProvider } from "../encryption/provider/interface.js";
 import type { Lock } from "../synchronization/interfaces.js";
 import type { TerminologyProvider } from "../terminology/interface.js";
-import { SUPER_ADMIN, USER } from "./roles.js";
+import { ROLE } from "./roles.js";
 
 declare const __tenant: unique symbol;
 export type TenantId = string & { [__tenant]: string };
 export interface TenantClaim {
   id: TenantId;
-  userRole: SUPER_ADMIN | USER;
-}
-
-declare const __subject: unique symbol;
-export type Subject = string & { [__subject]: string };
-declare const __iss: unique symbol;
-export type Issuer = string & { [__iss]: string };
-
-export interface JWT {
-  sub: Subject;
-  iss: Issuer;
-  "https://iguhealth.app/resourceType": ResourceType;
-  "https://iguhealth.app/tenants": TenantClaim[];
-  [key: string]: unknown;
+  userRole: ROLE;
 }
 
 export interface UserContext {
-  role: SUPER_ADMIN | USER;
+  role: ROLE;
   jwt: JWT;
   resource?: User | ClientApplication | OperationDefinition | null;
   accessPolicies?: AccessPolicy[];

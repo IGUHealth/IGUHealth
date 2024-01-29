@@ -13,8 +13,9 @@ import {
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 
+import { JWT } from "../authN/token.js";
 import { IOCache } from "../cache/interface.js";
-import { FHIRServerCTX, JWT, TenantId } from "../fhir/context.js";
+import { FHIRServerCTX, TenantId } from "../fhir/context.js";
 import { Lock } from "../synchronization/interfaces.js";
 import { TerminologyProviderMemory } from "../terminology/index.js";
 import MemoryDatabase from "./memory/async.js";

@@ -25,10 +25,15 @@ import {
   createCertsIfNoneExists,
   getSigningKey,
 } from "../authN/certifications.js";
-import { IGUHEALTH_ISSUER, createToken } from "../authN/token.js";
-import { FHIRServerCTX, JWT, TenantClaim, TenantId } from "../fhir/context.js";
+import {
+  CUSTOM_CLAIMS,
+  IGUHEALTH_ISSUER,
+  JWT,
+  createToken,
+} from "../authN/token.js";
+import { FHIRServerCTX, TenantId } from "../fhir/context.js";
 import { createFHIRAPI, createFHIRServices } from "../fhir/index.js";
-import { SUPER_ADMIN } from "../fhir/roles.js";
+import { SUPER_ADMIN_ROLE } from "../fhir/roles.js";
 import { httpRequestToFHIRRequest } from "../http/index.js";
 import logAuditEvent, {
   MAJOR_FAILURE,
@@ -162,33 +167,22 @@ async function handleSubscriptionPayload(
 
       if (
         !process.env.AUTH_LOCAL_CERTIFICATION_LOCATION ||
-        !process.env.AUTH_LOCAL_SIGNING_KEY ||
-        !process.env.AUTH_JWT_AUDIENCE
+        !process.env.AUTH_LOCAL_SIGNING_KEY
       ) {
         throw new Error("Missing environment variables for JWT creation.");
       }
-
-      const user_access_token = await createToken(
-        await getSigningKey(
-          process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
-          process.env.AUTH_LOCAL_SIGNING_KEY,
-        ),
-        {
-          header: { audience: process.env.AUTH_JWT_AUDIENCE },
-          payload: {
-            "https://iguhealth.app/tenants": [
-              {
-                id: ctx.tenant,
-                userRole: "SUPER_ADMIN",
-              } as TenantClaim,
-            ],
-            "https://iguhealth.app/resourceType": "OperationDefinition",
-            sub: operationDefinition.id,
-            aud: ["https://iguhealth.com/api"],
-            scope: "openid profile email offline_access",
-          },
-        },
+      const signingKey = await getSigningKey(
+        process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
+        process.env.AUTH_LOCAL_SIGNING_KEY,
       );
+
+      const user_access_token = await createToken(signingKey, {
+        tenant: ctx.tenant,
+        role: "SUPER_ADMIN",
+        resourceType: "OperationDefinition",
+        sub: operationDefinition.id,
+        scope: "openid profile email offline_access",
+      });
 
       await server.invoke_system(
         new Operation(operationDefinition),
@@ -417,11 +411,11 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
           ...fhirServices,
           tenant: tenant,
           user: {
-            role: "SUPER_ADMIN" as SUPER_ADMIN,
+            role: "SUPER_ADMIN" as SUPER_ADMIN_ROLE,
             jwt: {
               iss: IGUHEALTH_ISSUER,
               sub: `system-worker-${workerID}`,
-              "https://iguhealth.app/resourceType": "User",
+              [CUSTOM_CLAIMS.RESOURCE_TYPE]: "User",
             } as JWT,
           },
         };

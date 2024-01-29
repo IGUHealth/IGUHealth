@@ -156,29 +156,18 @@ export function tokenEndpoint<
             outcomeError("security", "Invalid credentials for client."),
           );
         }
-
+        const signingKey = await getSigningKey(
+          process.env.AUTH_LOCAL_CERTIFICATION_LOCATION as string,
+          process.env.AUTH_LOCAL_SIGNING_KEY as string,
+        );
         ctx.body = {
-          access_token: await createToken(
-            await getSigningKey(
-              process.env.AUTH_LOCAL_CERTIFICATION_LOCATION as string,
-              process.env.AUTH_LOCAL_SIGNING_KEY as string,
-            ),
-            {
-              header: { audience: process.env.AUTH_JWT_AUDIENCE as string },
-              payload: {
-                "https://iguhealth.app/tenants": [
-                  {
-                    id: ctx.FHIRContext.tenant,
-                    userRole: "User",
-                  },
-                ],
-                "https://iguhealth.app/resourceType": "ClientApplication",
-                sub: ctx.oidc.client.id,
-                aud: ["https://iguhealth.com/api"],
-                scope: "openid profile email offline_access",
-              },
-            },
-          ),
+          access_token: await createToken(signingKey, {
+            tenant: ctx.FHIRContext.tenant,
+            role: "USER",
+            resourceType: "ClientApplication",
+            sub: ctx.oidc.client.id,
+            scope: "openid profile email offline_access",
+          }),
           token_type: "Bearer",
           expires_in: 7200,
         };
