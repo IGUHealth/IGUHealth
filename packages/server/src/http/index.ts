@@ -308,6 +308,11 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
               id: urlPieces[1] as id,
             };
           }
+          default: {
+            throw new OperationError(
+              outcomeError("invalid", `Invalid resource type ${urlPieces[0]}`),
+            );
+          }
         }
       }
       case request.method === "PUT": {
