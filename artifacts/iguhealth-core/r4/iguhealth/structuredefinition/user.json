@@ -87,6 +87,7 @@
       {
         "id": "User.link",
         "path": "User.link",
+        "short": "The clinical resource linked to this user.",
         "type": [
           {
             "code": "Reference",
@@ -102,6 +103,7 @@
       {
         "id": "User.identifier",
         "path": "User.identifier",
+        "short": "The identifier of the user. You can tie the iss and sub to user.identifier.system and user.identifier.value.",
         "type": [
           {
             "code": "Identifier"
@@ -113,6 +115,7 @@
       {
         "id": "User.role",
         "path": "User.role",
+        "short": "The users role. Note that owner and superadmin roles are granted full access.",
         "type": [
           {
             "code": "code"
@@ -128,6 +131,7 @@
       {
         "id": "User.contact",
         "path": "User.contact",
+        "short": "The users contact information.",
         "type": [
           {
             "code": "ContactPoint"
@@ -139,6 +143,7 @@
       {
         "id": "User.username",
         "path": "User.username",
+        "short": "The users username for database authentication.",
         "type": [
           {
             "code": "string"
@@ -150,6 +155,7 @@
       {
         "id": "User.password",
         "path": "User.password",
+        "short": "The users password for database authentication.",
         "type": [
           {
             "code": "string"
