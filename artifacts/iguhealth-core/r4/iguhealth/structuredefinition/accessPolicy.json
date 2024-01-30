@@ -108,6 +108,7 @@
         "id": "AccessPolicy.description",
         "path": "AccessPolicy.description",
         "definition": "Description of the access policy.",
+        "short": "Description of the access policy.",
         "type": [{ "code": "string" }],
         "min": 0,
         "max": "1"

@@ -44870,22 +44870,55 @@ resourceType: "VisionPrescription"
 }
 
 export interface AccessPolicyTarget {
+  /** 
+   * The target reference of the access policy applies to.
+   */
   link: Reference;
 }
 export interface AccessPolicyAccessFhirParameter {
+  /** 
+   * The name of the FHIR parameter.
+   */
   name: code;
+  /** 
+   * The name of the FHIR parameter.
+   */
   _name?: Element
+  /** 
+   * The value of the FHIR parameter.
+   */
   value: string;
+  /** 
+   * The value of the FHIR parameter.
+   */
   _value?: Element
 }
 export interface AccessPolicyAccessFhir {
+  /** 
+   * The FHIR Method that is evaluated to determine if access is granted or denied.
+   */
   method: code;
+  /** 
+   * The FHIR Method that is evaluated to determine if access is granted or denied.
+   */
   _method?: Element
+  /** 
+   * FHIR resource types that are granted access.
+   */
   resourceType?: Array<code>;
+  /** 
+   * FHIR resource types that are granted access.
+   */
   _resourceType?: Array<Element>
+  /** 
+   * FHIR Parameters that are evaluated to determine if access is granted or denied.
+   */
   parameter?: Array<AccessPolicyAccessFhirParameter>;
 }
 export interface AccessPolicyAccess {
+  /** 
+   * FHIR Based rules to determine if access is granted or denied.
+   */
   fhir?: AccessPolicyAccessFhir;
 }
 export interface AccessPolicy {
@@ -44898,15 +44931,45 @@ resourceType: "AccessPolicy"
    * Metadata about the resource
    */
   meta?: Meta;
+  /** 
+   * The name of the access policy.
+   */
   name: string;
+  /** 
+   * The name of the access policy.
+   */
   _name?: Element
+  /** 
+   * Unique identifier for the access policy.
+   */
   code: code;
+  /** 
+   * Unique identifier for the access policy.
+   */
   _code?: Element
+  /** 
+   * Description of the access policy.
+   */
   description?: string;
+  /** 
+   * Description of the access policy.
+   */
   _description?: Element
+  /** 
+   * The type of evaluation that is performed to determine if access is granted or denied.
+   */
   type: code;
+  /** 
+   * The type of evaluation that is performed to determine if access is granted or denied.
+   */
   _type?: Element
+  /** 
+   * Who the access policy applies to.
+   */
   target?: Array<AccessPolicyTarget>;
+  /** 
+   * Access policy rules that are evaluated to determine if access is granted or denied.
+   */
   access?: Array<AccessPolicyAccess>;
 }
 
@@ -44920,19 +44983,61 @@ resourceType: "ClientApplication"
    * Metadata about the resource
    */
   meta?: Meta;
+  /** 
+   * The name of the client to be presented to the end-user.
+   */
   name: string;
+  /** 
+   * The name of the client to be presented to the end-user.
+   */
   _name?: Element
+  /** 
+   * The description of the client to be presented to the end-user.
+   */
   description?: string;
+  /** 
+   * The description of the client to be presented to the end-user.
+   */
   _description?: Element
+  /** 
+   * Auth 2.0 grant type strings that the client can use at the token endpoint.
+   */
   grantType: code;
+  /** 
+   * Auth 2.0 grant type strings that the client can use at the token endpoint.
+   */
   _grantType?: Element
+  /** 
+   * String indicator of the requested authentication method for the token endpoint.
+   */
   tokenEndpointAuthMethod: code;
+  /** 
+   * String indicator of the requested authentication method for the token endpoint.
+   */
   _tokenEndpointAuthMethod?: Element
+  /** 
+   * OAuth 2.0 response type strings that the client can use at the authorization endpoint.
+   */
   responseTypes: code;
+  /** 
+   * OAuth 2.0 response type strings that the client can use at the authorization endpoint.
+   */
   _responseTypes?: Element
+  /** 
+   * This value is used by confidential clients to authenticate to the token endpoint, as described in OAuth 2.0 [RFC6749], Section 2.3.1.
+   */
   secret: string;
+  /** 
+   * This value is used by confidential clients to authenticate to the token endpoint, as described in OAuth 2.0 [RFC6749], Section 2.3.1.
+   */
   _secret?: Element
+  /** 
+   * Array of redirection URI strings for use in redirect-based flows such as the authorization code and implicit flows.  As required by Section 2 of OAuth 2.0 [RFC6749], clients using flows with redirection MUST register their redirection URI values. Authorization servers that support dynamic registration for redirect-based flows MUST implement support for this metadata value.
+   */
   redirectUri?: Array<string>;
+  /** 
+   * Array of redirection URI strings for use in redirect-based flows such as the authorization code and implicit flows.  As required by Section 2 of OAuth 2.0 [RFC6749], clients using flows with redirection MUST register their redirection URI values. Authorization servers that support dynamic registration for redirect-based flows MUST implement support for this metadata value.
+   */
   _redirectUri?: Array<Element>
   /** 
    * URL string of a web page providing information about the client.
@@ -44990,13 +45095,40 @@ resourceType: "User"
    * Metadata about the resource
    */
   meta?: Meta;
+  /** 
+   * The clinical resource linked to this user.
+   */
   link?: Array<Reference>;
+  /** 
+   * The identifier of the user. You can tie the iss and sub to user.identifier.system and user.identifier.value.
+   */
   identifier?: Array<Identifier>;
+  /** 
+   * The users role. Note that owner and superadmin roles are granted full access.
+   */
   role: code;
+  /** 
+   * The users role. Note that owner and superadmin roles are granted full access.
+   */
   _role?: Element
+  /** 
+   * The users contact information.
+   */
   contact?: Array<ContactPoint>;
+  /** 
+   * The users username for database authentication.
+   */
   username: string;
+  /** 
+   * The users username for database authentication.
+   */
   _username?: Element
+  /** 
+   * The users password for database authentication.
+   */
   password?: string;
+  /** 
+   * The users password for database authentication.
+   */
   _password?: Element
 }

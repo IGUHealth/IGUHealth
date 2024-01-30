@@ -88,6 +88,7 @@
       {
         "id": "ClientApplication.name",
         "path": "ClientApplication.name",
+        "short": "The name of the client to be presented to the end-user.",
         "type": [{ "code": "string" }],
         "min": 1,
         "max": "1"
@@ -95,6 +96,7 @@
       {
         "id": "ClientApplication.description",
         "path": "ClientApplication.description",
+        "short": "The description of the client to be presented to the end-user.",
         "type": [{ "code": "string" }],
         "min": 0,
         "max": "1"
@@ -102,6 +104,7 @@
       {
         "id": "ClientApplication.grantType",
         "path": "ClientApplication.grantType",
+        "short": "Auth 2.0 grant type strings that the client can use at the token endpoint.",
         "definition": "The grant type for this client application.",
         "type": [
           {
@@ -118,6 +121,7 @@
       {
         "id": "ClientApplication.tokenEndpointAuthMethod",
         "path": "ClientApplication.tokenEndpointAuthMethod",
+        "short": "String indicator of the requested authentication method for the token endpoint.",
         "type": [
           {
             "code": "code"
@@ -133,6 +137,7 @@
       {
         "id": "ClientApplication.responseTypes",
         "path": "ClientApplication.responseTypes",
+        "short": "OAuth 2.0 response type strings that the client can use at the authorization endpoint.",
         "type": [
           {
             "code": "code"
@@ -148,6 +153,7 @@
       {
         "id": "ClientApplication.secret",
         "path": "ClientApplication.secret",
+        "short": "This value is used by confidential clients to authenticate to the token endpoint, as described in OAuth 2.0 [RFC6749], Section 2.3.1.",
         "definition": "For client credentials (or other confidential authentication methods), the client secret.",
         "type": [
           {
@@ -161,6 +167,7 @@
         "id": "ClientApplication.redirectUri",
         "path": "ClientApplication.redirectUri",
         "definition": "Array of redirection URI strings for use in redirect-based flows such as the authorization code and implicit flows.  As required by Section 2 of OAuth 2.0 [RFC6749], clients using flows with redirection MUST register their redirection URI values. Authorization servers that support dynamic registration for redirect-based flows MUST implement support for this metadata value.",
+        "short": "Array of redirection URI strings for use in redirect-based flows such as the authorization code and implicit flows.  As required by Section 2 of OAuth 2.0 [RFC6749], clients using flows with redirection MUST register their redirection URI values. Authorization servers that support dynamic registration for redirect-based flows MUST implement support for this metadata value.",
         "type": [{ "code": "string" }],
         "min": 0,
         "max": "5"
