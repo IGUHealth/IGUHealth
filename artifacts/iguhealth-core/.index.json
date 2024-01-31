@@ -42,7 +42,7 @@
       "resourceType": "StructureDefinition"
     },
     {
-      "filename": "r4/iguhealth/structuredefinition/user.json",
+      "filename": "r4/iguhealth/structuredefinition/membership.json",
       "resourceType": "StructureDefinition"
     },
     {

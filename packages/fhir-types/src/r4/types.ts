@@ -4386,7 +4386,7 @@ export type ResourceMap = {
   VisionPrescription: VisionPrescription;
   AccessPolicy: AccessPolicy;
   ClientApplication: ClientApplication;
-  User: User;
+  Membership: Membership;
 }
 
 export type ResourceType = keyof ResourceMap
@@ -45085,8 +45085,8 @@ resourceType: "ClientApplication"
   _policyUri?: Element
 }
 
-export interface User {
-resourceType: "User"
+export interface Membership {
+resourceType: "Membership"
   /** 
    * Logical id of this artifact
    */
@@ -45096,39 +45096,23 @@ resourceType: "User"
    */
   meta?: Meta;
   /** 
-   * The clinical resource linked to this user.
+   * The clinical resource linked to this Membership.
    */
   link?: Array<Reference>;
   /** 
-   * The identifier of the user. You can tie the iss and sub to user.identifier.system and user.identifier.value.
+   * The identifier of the Membership. You can tie the iss and sub to Membership.identifier.system and Membership.identifier.value.
    */
   identifier?: Array<Identifier>;
   /** 
-   * The users role. Note that owner and superadmin roles are granted full access.
+   * The Memberships role. Note that owner and superadmin roles are granted full access.
    */
   role: code;
   /** 
-   * The users role. Note that owner and superadmin roles are granted full access.
+   * The Memberships role. Note that owner and superadmin roles are granted full access.
    */
   _role?: Element
   /** 
-   * The users contact information.
+   * The Memberships contact information.
    */
   contact?: Array<ContactPoint>;
-  /** 
-   * The users username for database authentication.
-   */
-  username: string;
-  /** 
-   * The users username for database authentication.
-   */
-  _username?: Element
-  /** 
-   * The users password for database authentication.
-   */
-  password?: string;
-  /** 
-   * The users password for database authentication.
-   */
-  _password?: Element
 }
