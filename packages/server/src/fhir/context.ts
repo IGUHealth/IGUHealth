@@ -6,9 +6,9 @@ import {
   AccessPolicy,
   CapabilityStatement,
   ClientApplication,
+  Membership,
   OperationDefinition,
   ResourceType,
-  User,
   canonical,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
@@ -30,7 +30,7 @@ export interface TenantClaim {
 export interface UserContext {
   role: ROLE;
   jwt: JWT;
-  resource?: User | ClientApplication | OperationDefinition | null;
+  resource?: Membership | ClientApplication | OperationDefinition | null;
   accessPolicies?: AccessPolicy[];
   accessToken?: string;
 }

@@ -1,6 +1,6 @@
 import { MiddlewareAsync } from "@iguhealth/client/middleware";
 import { escapeParameter } from "@iguhealth/client/url";
-import { AccessPolicy, User, id } from "@iguhealth/fhir-types/r4/types";
+import { AccessPolicy, Membership, id } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { CUSTOM_CLAIMS } from "../../authN/token.js";
@@ -21,10 +21,10 @@ export const associateUserMiddleware: MiddlewareAsync<
   if (!next) throw new Error("next middleware was not defined");
 
   switch (context.ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE]) {
-    case "User": {
+    case "Membership": {
       const usersAndAccessPolicies = (await context.ctx.client.search_type(
         asSystemCTX(context.ctx),
-        "User",
+        "Membership",
         [
           {
             name: "identifier",
@@ -38,11 +38,11 @@ export const associateUserMiddleware: MiddlewareAsync<
         ],
       )) as {
         total?: number;
-        resources: (User | AccessPolicy)[];
+        resources: (Membership | AccessPolicy)[];
       };
 
       const userResource = usersAndAccessPolicies.resources.filter(
-        (r): r is User => r.resourceType === "User",
+        (r): r is Membership => r.resourceType === "Membership",
       );
 
       const accessPolicies = usersAndAccessPolicies.resources.filter(
