@@ -354,7 +354,7 @@ function Root() {
                       match.params.resourceType !== "Questionnaire" &&
                       match.params.resourceType !== "QuestionnaireResponse" &&
                       match.params.resourceType !== "AuditEvent" &&
-                      match.params.resourceType !== "User" &&
+                      match.params.resourceType !== "Membership" &&
                       match.params.resourceType !== "AccessPolicy" &&
                       match.params.resourceType !== "ClientApplication",
                   ) !== undefined
