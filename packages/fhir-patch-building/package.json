@@ -3,7 +3,7 @@
   "version": "0.0.22",
   "description": "JSON Patch building with typesafe fhir pointers.",
   "type": "module",
-  "packageManager": "yarn@4.0.2",
+  "packageManager": "yarn@4.1.0",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {

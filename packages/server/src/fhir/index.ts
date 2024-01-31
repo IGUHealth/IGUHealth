@@ -1,6 +1,6 @@
 import Router from "@koa/router";
 import Ajv from "ajv";
-import Redis from "ioredis";
+import { Redis } from "ioredis";
 import type * as koa from "koa";
 import path from "path";
 import pg from "pg";
@@ -355,7 +355,7 @@ export function createResolveTypeToCanonical(
 }
 
 export function getRedisClient() {
-  const redisClient = new Redis.default({
+  const redisClient = new Redis({
     host: process.env.REDIS_HOST,
     port: parseInt(process.env.REDIS_PORT || "6739"),
     tls:

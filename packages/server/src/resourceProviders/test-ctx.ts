@@ -1,6 +1,6 @@
 import dotEnv from "dotenv";
 import path from "path";
-import createLogger from "pino";
+import { pino } from "pino";
 import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
@@ -52,7 +52,7 @@ export const testServices: FHIRServerCTX = {
   tenant: "tenant" as TenantId,
   user: { role: "SUPER_ADMIN", jwt: { iss: "test", sub: "test-user" } as JWT },
   terminologyProvider: new TerminologyProviderMemory(),
-  logger: createLogger.default(),
+  logger: pino<string>(),
   capabilities: {
     resourceType: "CapabilityStatement",
     status: "active" as code,

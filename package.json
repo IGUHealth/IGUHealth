@@ -1,7 +1,7 @@
 {
   "name": "iguhealth-workspace",
   "author": "",
-  "packageManager": "yarn@4.0.2",
+  "packageManager": "yarn@4.1.0",
   "main": "index.js",
   "scripts": {
     "configure": "yarn node configure_packages.cjs",
@@ -10,9 +10,9 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
-    "@types/node": "^20.11.8",
-    "@typescript-eslint/eslint-plugin": "^6.19.1",
-    "@typescript-eslint/parser": "^6.19.1",
+    "@types/node": "^20.11.13",
+    "@typescript-eslint/eslint-plugin": "^6.20.0",
+    "@typescript-eslint/parser": "^6.20.0",
     "eslint": "^8.56.0",
     "prettier": "^3.2.4",
     "ts-node": "^10.9.2",
