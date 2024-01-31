@@ -1,7 +1,7 @@
 {
   "name": "@iguhealth/hl7.fhir.r4.core",
   "packageManager": "yarn@4.0.2",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "canonical": "https://iguhealth.app/fhir/ImplementationGuide/iguhealth.hl7.fhir.r4.core",
   "url": "https://iguhealth.app/fhir/ImplementationGuide/iguhealth.hl7.fhir.r4.core",
   "title": "Hl7 Core resources",

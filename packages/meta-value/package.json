@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/meta-value",
-  "version": "0.1.36",
+  "version": "0.1.37",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/fhir-validation",
-  "version": "0.3.45",
+  "version": "0.3.46",
   "packageManager": "yarn@4.0.2",
   "type": "module",
   "main": "lib/index.js",

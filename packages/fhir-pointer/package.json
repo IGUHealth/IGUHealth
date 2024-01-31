@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/fhir-pointer",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "FHIR Pointer allows creation and manipulation of pointers to fhir-types.",
   "type": "module",
   "packageManager": "yarn@4.0.2",
