@@ -1,0 +1,19 @@
+releases:
+  "@iguhealth/admin-app": minor
+  "@iguhealth/artifacts": minor
+  "@iguhealth/cli": minor
+  "@iguhealth/client": minor
+  "@iguhealth/codegen": minor
+  "@iguhealth/components": minor
+  "@iguhealth/fhir-patch-building": minor
+  "@iguhealth/fhir-pointer": minor
+  "@iguhealth/fhir-types": minor
+  "@iguhealth/fhir-validation": minor
+  "@iguhealth/fhirpath": minor
+  "@iguhealth/generated-ops": minor
+  "@iguhealth/hl7.fhir.r4.core": minor
+  "@iguhealth/iguhealth.fhir.r4.core": minor
+  "@iguhealth/meta-value": minor
+  "@iguhealth/operation-execution": minor
+  "@iguhealth/operation-outcomes": minor
+  "@iguhealth/server": minor
