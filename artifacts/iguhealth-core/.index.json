@@ -22,15 +22,15 @@
       "resourceType": "SearchParameter"
     },
     {
+      "filename": "r4/iguhealth/searchParameter/membership/identifier.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "r4/iguhealth/searchParameter/membership/link.json",
+      "resourceType": "SearchParameter"
+    },
+    {
       "filename": "r4/iguhealth/searchParameter/resource-parameters.json",
-      "resourceType": "SearchParameter"
-    },
-    {
-      "filename": "r4/iguhealth/searchParameter/user/identifier.json",
-      "resourceType": "SearchParameter"
-    },
-    {
-      "filename": "r4/iguhealth/searchParameter/user/link.json",
       "resourceType": "SearchParameter"
     },
     {
