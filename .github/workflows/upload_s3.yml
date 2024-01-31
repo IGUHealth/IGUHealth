@@ -32,7 +32,7 @@ jobs:
         run: corepack enable
 
       - name: Yarn v3
-        run: corepack prepare yarn@3.6.1 --activate
+        run: corepack prepare yarn@4.0.2 --activate
 
       - name: Version Check
         run: yarn version check
@@ -79,7 +79,7 @@ jobs:
         run: corepack enable
 
       - name: Yarn v3
-        run: corepack prepare yarn@3.6.1 --activate
+        run: corepack prepare yarn@4.0.2 --activate
 
       - name: Version Check
         run: yarn version check
@@ -122,7 +122,7 @@ jobs:
         run: corepack enable
 
       - name: Yarn v3
-        run: corepack prepare yarn@3.6.1 --activate
+        run: corepack prepare yarn@4.0.2 --activate
 
       - name: Version Check
         run: yarn version check
@@ -168,7 +168,7 @@ jobs:
         run: corepack enable
 
       - name: Yarn v3
-        run: corepack prepare yarn@3.6.1 --activate
+        run: corepack prepare yarn@4.0.2 --activate
 
       - name: Version Check
         run: yarn version check
