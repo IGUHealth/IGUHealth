@@ -97,7 +97,7 @@ export const allowPublicAccessMiddleware: Koa.Middleware = async (
       iss: IGUHEALTH_ISSUER,
       sub: "public-user",
       access_token: "sec-public",
-      [CUSTOM_CLAIMS.RESOURCE_TYPE]: "User",
+      [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
       [CUSTOM_CLAIMS.TENANTS]: [
         { id: ctx.params.tenant, userRole: "SUPER_ADMIN" } as TenantClaim,
       ],
