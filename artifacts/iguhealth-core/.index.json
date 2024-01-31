@@ -22,15 +22,15 @@
       "resourceType": "SearchParameter"
     },
     {
+      "filename": "r4/iguhealth/searchParameter/membership/identifier.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "r4/iguhealth/searchParameter/membership/link.json",
+      "resourceType": "SearchParameter"
+    },
+    {
       "filename": "r4/iguhealth/searchParameter/resource-parameters.json",
-      "resourceType": "SearchParameter"
-    },
-    {
-      "filename": "r4/iguhealth/searchParameter/user/identifier.json",
-      "resourceType": "SearchParameter"
-    },
-    {
-      "filename": "r4/iguhealth/searchParameter/user/link.json",
       "resourceType": "SearchParameter"
     },
     {
@@ -42,7 +42,7 @@
       "resourceType": "StructureDefinition"
     },
     {
-      "filename": "r4/iguhealth/structuredefinition/user.json",
+      "filename": "r4/iguhealth/structuredefinition/membership.json",
       "resourceType": "StructureDefinition"
     },
     {
@@ -54,6 +54,14 @@
       "resourceType": "ValueSet"
     },
     {
+      "filename": "r4/iguhealth/terminology/access-policy/authentication/membership_role.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "r4/iguhealth/terminology/access-policy/authentication/membership_role.json",
+      "resourceType": "ValueSet"
+    },
+    {
       "filename": "r4/iguhealth/terminology/access-policy/authentication/response_types.json",
       "resourceType": "CodeSystem"
     },
@@ -67,14 +75,6 @@
     },
     {
       "filename": "r4/iguhealth/terminology/access-policy/authentication/token_endpoint_auth_method.json",
-      "resourceType": "ValueSet"
-    },
-    {
-      "filename": "r4/iguhealth/terminology/access-policy/authentication/user_role.json",
-      "resourceType": "CodeSystem"
-    },
-    {
-      "filename": "r4/iguhealth/terminology/access-policy/authentication/user_role.json",
       "resourceType": "ValueSet"
     },
     {

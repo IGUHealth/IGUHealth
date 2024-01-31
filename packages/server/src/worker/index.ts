@@ -415,7 +415,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
             jwt: {
               iss: IGUHEALTH_ISSUER,
               sub: `system-worker-${workerID}`,
-              [CUSTOM_CLAIMS.RESOURCE_TYPE]: "User",
+              [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
             } as JWT,
           },
         };

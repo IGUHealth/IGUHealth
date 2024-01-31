@@ -3,20 +3,20 @@
   "type": "collection",
   "entry": [
     {
-      "fullUrl": "https://iguhealth.app/fhir/CodeSystem/UserRole",
+      "fullUrl": "https://iguhealth.app/fhir/CodeSystem/MembershipRole",
       "resource": {
-        "id": "user-role-codesystem",
-        "url": "https://iguhealth.app/fhir/CodeSystem/UserRole",
+        "id": "membership-role-codesystem",
+        "url": "https://iguhealth.app/fhir/CodeSystem/MembershipRole",
         "resourceType": "CodeSystem",
         "version": "4.0.1",
-        "name": "UserRole",
-        "title": "UserRole",
+        "name": "MembershipRole",
+        "title": "MembershipRole",
         "status": "active",
         "experimental": true,
         "publisher": "IGUHealth",
         "description": "Grant types allowed.",
         "caseSensitive": true,
-        "valueSet": "https://iguhealth.app/fhir/ValueSet/UserRole",
+        "valueSet": "https://iguhealth.app/fhir/ValueSet/MembershipRole",
         "content": "complete",
         "concept": [
           {
@@ -28,21 +28,21 @@
             "display": "Super Admin"
           },
           {
-            "code": "user",
-            "display": "User"
+            "code": "Membership",
+            "display": "Membership"
           }
         ]
       }
     },
     {
-      "fullUrl": "https://iguhealth.app/fhir/ValueSet/UserRole",
+      "fullUrl": "https://iguhealth.app/fhir/ValueSet/MembershipRole",
       "resource": {
         "resourceType": "ValueSet",
-        "id": "user-role-valueset",
-        "url": "https://iguhealth.app/fhir/ValueSet/UserRole",
+        "id": "membership-role-valueset",
+        "url": "https://iguhealth.app/fhir/ValueSet/MembershipRole",
         "version": "4.0.1",
-        "name": "UserRole",
-        "title": "UserRole",
+        "name": "MembershipRole",
+        "title": "MembershipRole",
         "status": "active",
         "experimental": true,
         "publisher": "IGUHealth",
@@ -51,7 +51,7 @@
         "compose": {
           "include": [
             {
-              "system": "https://iguhealth.app/fhir/CodeSystem/UserRole"
+              "system": "https://iguhealth.app/fhir/CodeSystem/MembershipRole"
             }
           ]
         }

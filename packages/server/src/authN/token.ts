@@ -3,7 +3,7 @@ import * as jose from "jose";
 import {
   ClientApplication,
   OperationDefinition,
-  User,
+  Membership,
 } from "@iguhealth/fhir-types/lib/r4/types";
 
 import { TenantClaim, TenantId } from "../fhir/context.js";
@@ -20,7 +20,7 @@ export const CUSTOM_CLAIMS = {
   TENANTS: <const>"https://iguhealth.app/tenants",
   RESOURCE_TYPE: <const>"https://iguhealth.app/resourceType",
 };
-export type JWT_RESOURCE_TYPES = OperationDefinition["resourceType"] | ClientApplication["resourceType"] | User["resourceType"]
+export type JWT_RESOURCE_TYPES = OperationDefinition["resourceType"] | ClientApplication["resourceType"] | Membership["resourceType"]
 
 export interface JWT {
   sub: Subject;
@@ -39,7 +39,7 @@ export async function createToken(
     tenant: TenantId;
     role: ROLE;
     resourceType: JWT_RESOURCE_TYPES;
-    sub: OperationDefinition["id"] | ClientApplication["id"] | User["id"];
+    sub: OperationDefinition["id"] | ClientApplication["id"] | Membership["id"];
     scope: string;
   },
 ): Promise<string> {

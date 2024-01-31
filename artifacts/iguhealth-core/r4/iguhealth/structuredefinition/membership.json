@@ -1,26 +1,26 @@
 {
   "resourceType": "StructureDefinition",
-  "id": "User",
-  "url": "https://iguhealth.com/StructureDefinition/User",
+  "id": "Membership",
+  "url": "https://iguhealth.com/StructureDefinition/Membership",
   "version": "4.0.1",
-  "name": "User",
+  "name": "Membership",
   "status": "active",
   "publisher": "IGUHealth",
   "fhirVersion": "4.0.1",
   "kind": "resource",
   "abstract": false,
-  "type": "User",
+  "type": "Membership",
   "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Resource",
   "derivation": "specialization",
   "snapshot": {
     "element": [
       {
-        "id": "User",
-        "path": "User",
+        "id": "Membership",
+        "path": "Membership",
         "min": 0,
         "max": "*",
         "base": {
-          "path": "User",
+          "path": "Membership",
           "min": 0,
           "max": "*"
         },
@@ -28,8 +28,8 @@
         "isSummary": false
       },
       {
-        "id": "User.id",
-        "path": "User.id",
+        "id": "Membership.id",
+        "path": "Membership.id",
         "short": "Logical id of this artifact",
         "definition": "The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes.",
         "comment": "The only time that a resource does not have an id is when it is being submitted to the server using a create operation.",
@@ -55,8 +55,8 @@
         "isSummary": true
       },
       {
-        "id": "User.meta",
-        "path": "User.meta",
+        "id": "Membership.meta",
+        "path": "Membership.meta",
         "short": "Metadata about the resource",
         "definition": "The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource.",
         "min": 0,
@@ -85,9 +85,9 @@
         "isSummary": true
       },
       {
-        "id": "User.link",
-        "path": "User.link",
-        "short": "The clinical resource linked to this user.",
+        "id": "Membership.link",
+        "path": "Membership.link",
+        "short": "The clinical resource linked to this Membership.",
         "type": [
           {
             "code": "Reference",
@@ -101,9 +101,9 @@
         "max": "*"
       },
       {
-        "id": "User.identifier",
-        "path": "User.identifier",
-        "short": "The identifier of the user. You can tie the iss and sub to user.identifier.system and user.identifier.value.",
+        "id": "Membership.identifier",
+        "path": "Membership.identifier",
+        "short": "The identifier of the Membership. You can tie the iss and sub to Membership.identifier.system and Membership.identifier.value.",
         "type": [
           {
             "code": "Identifier"
@@ -113,9 +113,9 @@
         "max": "*"
       },
       {
-        "id": "User.role",
-        "path": "User.role",
-        "short": "The users role. Note that owner and superadmin roles are granted full access.",
+        "id": "Membership.role",
+        "path": "Membership.role",
+        "short": "The Memberships role. Note that owner and superadmin roles are granted full access.",
         "type": [
           {
             "code": "code"
@@ -123,15 +123,15 @@
         ],
         "binding": {
           "strength": "required",
-          "valueSet": "https://iguhealth.app/fhir/ValueSet/UserRole|4.0.1"
+          "valueSet": "https://iguhealth.app/fhir/ValueSet/MembershipRole|4.0.1"
         },
         "min": 1,
         "max": "1"
       },
       {
-        "id": "User.contact",
-        "path": "User.contact",
-        "short": "The users contact information.",
+        "id": "Membership.contact",
+        "path": "Membership.contact",
+        "short": "The Memberships contact information.",
         "type": [
           {
             "code": "ContactPoint"
@@ -139,30 +139,6 @@
         ],
         "min": 0,
         "max": "*"
-      },
-      {
-        "id": "User.username",
-        "path": "User.username",
-        "short": "The users username for database authentication.",
-        "type": [
-          {
-            "code": "string"
-          }
-        ],
-        "min": 1,
-        "max": "1"
-      },
-      {
-        "id": "User.password",
-        "path": "User.password",
-        "short": "The users password for database authentication.",
-        "type": [
-          {
-            "code": "string"
-          }
-        ],
-        "min": 0,
-        "max": "1"
       }
     ]
   }

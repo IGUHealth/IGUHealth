@@ -303,17 +303,17 @@ function Root() {
 
             <SideBar.SideBarItemGroup className="mt-8" label="Security">
               <SideBar.SideBarItem
-                active={matches[0].params.resourceType === "User"}
+                active={matches[0].params.resourceType === "Membership"}
                 onClick={() => {
                   navigate(
                     generatePath("/w/:tenant/resources/:resourceType", {
                       tenant: params.tenant as string,
-                      resourceType: "User",
+                      resourceType: "Membership",
                     }),
                   );
                 }}
               >
-                Users
+                Membership
               </SideBar.SideBarItem>
               <SideBar.SideBarItem
                 active={matches[0].params.resourceType === "AccessPolicy"}
