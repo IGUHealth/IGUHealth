@@ -2,7 +2,7 @@
   "name": "@iguhealth/operation-execution",
   "version": "0.3.46",
   "description": "Package to create operation definition executables.",
-  "packageManager": "yarn@3.6.1",
+  "packageManager": "yarn@4.0.2",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

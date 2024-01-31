@@ -3,7 +3,7 @@
   "version": "0.0.21",
   "description": "FHIR Pointer allows creation and manipulation of pointers to fhir-types.",
   "type": "module",
-  "packageManager": "yarn@3.6.3",
+  "packageManager": "yarn@4.0.2",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
