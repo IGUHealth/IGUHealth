@@ -2,7 +2,7 @@
   "name": "@iguhealth/generated-ops",
   "packageManager": "yarn@4.1.0",
   "main": "./lib/index.js",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "type": "module",
   "types": "./lib/index.d.ts",
   "scripts": {

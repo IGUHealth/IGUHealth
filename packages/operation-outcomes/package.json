@@ -1,7 +1,7 @@
 {
   "name": "@iguhealth/operation-outcomes",
   "packageManager": "yarn@4.1.0",
-  "version": "0.1.28",
+  "version": "0.2.0",
   "type": "module",
   "description": "",
   "main": "lib/index.js",
