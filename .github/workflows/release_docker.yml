@@ -6,9 +6,10 @@ on:
 env:
   REGISTRY: ghcr.io
   SERVER_IMAGE_NAME: iguhealth
+  ADMIN_APP_IMAGE_NAME: admin-app
 
 jobs:
-  docker:
+  server:
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -45,6 +46,51 @@ jobs:
           # This changes all uppercase characters to lowercase.
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           # Pulls image from server package.json which is set in previous step.
+          VERSION=$(echo "${{fromJson(steps.package_json_version.outputs.packageJson).version}}")
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          docker tag $IMAGE_NAME $IMAGE_ID:latest
+          docker push $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:latest
+
+  admin-app:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+      #
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply versioning
+        run: yarn version apply -R --all
+
+      - name: Build image
+        run: |
+          IMAGE_NAME=$(echo $ADMIN_APP_IMAGE_NAME | tr '[A-Z]' '[a-z]')
+          docker build . --file docker/admin-app/admin-app.dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+        #
+
+      - id: package_json_version
+        run: |
+          content=`cat ./packages/admin-app/package.json`
+          content="${content//'%'/'%25'}"
+          content="${content//$'\n'/'%0A'}"
+          content="${content//$'\r'/'%0D'}"
+          # end of optional handling for multi line json
+          echo "::set-output name=packageJson::$content"
+
+      - name: Push image
+        run: |
+          IMAGE_NAME=$(echo $ADMIN_APP_IMAGE_NAME | tr '[A-Z]' '[a-z]')
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+          # This changes all uppercase characters to lowercase.
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          # Pulls image from admin-app package.json which is set in previous step.
           VERSION=$(echo "${{fromJson(steps.package_json_version.outputs.packageJson).version}}")
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
