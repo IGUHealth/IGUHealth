@@ -5,8 +5,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  SERVER_IMAGE_NAME: iguhealth
-  ADMIN_APP_IMAGE_NAME: admin-app
+  SERVER_IMAGE_NAME: iguhealth/iguhealth
+  ADMIN_APP_IMAGE_NAME: iguhealth/admin-app
 
 jobs:
   server:
