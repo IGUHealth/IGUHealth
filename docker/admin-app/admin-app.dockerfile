@@ -7,4 +7,4 @@ RUN yarn workspaces foreach -ptR --topological-dev --from @iguhealth/admin-app r
 FROM nginx
 EXPOSE 80
 COPY docker/admin-app/nginx.conf /etc/nginx/nginx.conf
-COPY --from=node /packages/admin-app/build /usr/share/nginx/html
+COPY --from=node /app/packages/admin-app/build /usr/share/nginx/html
