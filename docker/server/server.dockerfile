@@ -1,14 +1,13 @@
 FROM node:20.9.0-slim
-
 COPY . /app
 WORKDIR /app
 RUN yarn install
 RUN yarn workspaces foreach -ptR --topological-dev --from @iguhealth/server run build
 
-COPY docker_entrypoint.sh /usr/local/bin/docker_entrypoint
-RUN chmod +x /usr/local/bin/docker_entrypoint
+COPY docker/server/entrypoint.sh /usr/local/bin/entrypoint
+RUN chmod +x /usr/local/bin/entrypoint
 
 ENV NODE_ENV=production
-ENTRYPOINT ["docker_entrypoint"]
+ENTRYPOINT ["entrypoint"]
 
 CMD ["server"]
