@@ -29,6 +29,11 @@ import "@iguhealth/components/dist/index.css";
 import { Logo } from "./components/Logo";
 import Search from "./components/Search";
 import SearchModal from "./components/SearchModal";
+import {
+  REACT_APP_AUTH0_CLIENT_ID,
+  REACT_APP_AUTH0_DOMAIN,
+  REACT_APP_FHIR_BASE_URL,
+} from "./config";
 import { createAdminAppClient, getClient } from "./db/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
@@ -79,9 +84,7 @@ function ServiceSetup({ children }: { children: React.ReactNode }) {
       createAdminAppClient(
         createHTTPClient({
           getAccessToken: () => auth0.getAccessTokenSilently(),
-          url:
-            (process.env.REACT_APP_FHIR_BASE_URL || "") +
-            `/w/${tenant}/api/v1/fhir/r4`,
+          url: REACT_APP_FHIR_BASE_URL + `/w/${tenant}/api/v1/fhir/r4`,
         }),
       ),
     );
@@ -130,8 +133,8 @@ function Auth0Wrapper() {
   return (
     <Auth0Provider
       useRefreshTokens
-      domain={process.env.REACT_APP_AUTH0_DOMAIN || ""}
-      clientId={process.env.REACT_APP_AUTH0_CLIENT_ID || ""}
+      domain={REACT_APP_AUTH0_DOMAIN || ""}
+      clientId={REACT_APP_AUTH0_CLIENT_ID || ""}
       onRedirectCallback={(appState) => {
         navigate(appState?.returnTo || "/");
       }}
