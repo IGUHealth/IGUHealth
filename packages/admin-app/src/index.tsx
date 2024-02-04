@@ -128,9 +128,6 @@ function WorkspaceCheck() {
     ) {
       navigate("/no-workspace", { replace: true });
     }
-    // if (!params.tenant) {
-    //   navigate(`/w/${tenants[0].id}`, { replace: true });
-    // }
   }, [auth0.user, navigate, matches]);
 
   return (
