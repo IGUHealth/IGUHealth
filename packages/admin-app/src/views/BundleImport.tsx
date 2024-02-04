@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { generatePath, useNavigate, useParams } from "react-router-dom";
+import { generatePath, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import { Button, Input, Toaster } from "@iguhealth/components";
@@ -25,7 +25,6 @@ const getData = (file: File): Promise<string> => {
 };
 
 export default function BatchImportView() {
-  const params = useParams();
   const navigate = useNavigate();
   const client = useRecoilValue(getClient);
   const [bundle, setBundle] = useState<Bundle>();
@@ -81,11 +80,7 @@ export default function BatchImportView() {
                     return message;
                   },
                 }).then(() => {
-                  navigate(
-                    generatePath("/w/:tenant/", {
-                      tenant: params.tenant as string,
-                    }),
-                  );
+                  navigate(generatePath("/", {}));
                 });
               }
             }}

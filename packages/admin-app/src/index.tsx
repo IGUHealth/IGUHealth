@@ -13,7 +13,6 @@ import {
   generatePath,
   useMatches,
   useNavigate,
-  useParams,
 } from "react-router-dom";
 import { RecoilRoot, useRecoilState } from "recoil";
 
@@ -43,6 +42,14 @@ import ResourceEditor from "./views/ResourceEditor/index";
 import ResourceType from "./views/ResourceType";
 import Resources from "./views/Resources";
 import Settings from "./views/Settings";
+
+// Could potentially use HOST=iguhealth.localhost but instead just going to default redirect to system.iguhealth.localhost
+if (
+  process.env.NODE_ENV === "development" &&
+  window.location.hostname === "localhost"
+) {
+  window.location.href = `http://system.iguhealth.localhost:${window.location.port}`;
+}
 
 function LoginWrapper() {
   const auth0Info = useAuth0();
@@ -76,7 +83,7 @@ function LoginWrapper() {
 
 function ServiceSetup({ children }: { children: React.ReactNode }) {
   const auth0 = useAuth0();
-  const tenant = useParams().tenant as string;
+  const tenant = deriveTenantID();
   const [c, setClient] = useRecoilState(getClient);
 
   React.useEffect(() => {
@@ -101,9 +108,14 @@ function getTenants(user: User | undefined): Tenant[] {
   return user?.["https://iguhealth.app/tenants"] as Tenant[];
 }
 
+function deriveTenantID() {
+  const host = window.location.host;
+  const tenantID = host.split(".")[0];
+  return tenantID;
+}
+
 function WorkspaceCheck() {
   const navigate = useNavigate();
-  const params = useParams();
   const matches = useMatches();
   const auth0 = useAuth0();
 
@@ -116,9 +128,9 @@ function WorkspaceCheck() {
     ) {
       navigate("/no-workspace", { replace: true });
     }
-    if (!params.tenant) {
-      navigate(`/w/${tenants[0].id}`, { replace: true });
-    }
+    // if (!params.tenant) {
+    //   navigate(`/w/${tenants[0].id}`, { replace: true });
+    // }
   }, [auth0.user, navigate, matches]);
 
   return (
@@ -130,6 +142,7 @@ function WorkspaceCheck() {
 
 function Auth0Wrapper() {
   const navigate = useNavigate();
+
   return (
     <Auth0Provider
       useRefreshTokens
@@ -167,7 +180,7 @@ const router = createBrowserRouter([
                 element: <EmptyWorkspace />,
               },
               {
-                path: "/w/:tenant/",
+                path: "/",
                 element: (
                   <ServiceSetup>
                     <Root />
@@ -204,7 +217,6 @@ const router = createBrowserRouter([
 function Root() {
   const auth0 = useAuth0();
   const navigate = useNavigate();
-  const params = useParams();
   const matches = useMatches();
   const tenants = getTenants(auth0.user);
 
@@ -215,13 +227,7 @@ function Root() {
           <SideBar.SideBar
             top={
               <div
-                onClick={() =>
-                  navigate(
-                    generatePath("/w/:tenant/", {
-                      tenant: params.tenant as string,
-                    }),
-                  )
-                }
+                onClick={() => navigate(generatePath("/", {}))}
                 className="cursor-pointer w-16 h-16 p-2 mt-4"
               >
                 <Logo />
@@ -235,8 +241,7 @@ function Root() {
                 }
                 onClick={() => {
                   navigate(
-                    generatePath("/w/:tenant/resources/:resourceType", {
-                      tenant: params.tenant as string,
+                    generatePath("/resources/:resourceType", {
                       resourceType: "OperationDefinition",
                     }),
                   );
@@ -248,8 +253,7 @@ function Root() {
                 active={matches[0].params.resourceType === "Subscription"}
                 onClick={() => {
                   navigate(
-                    generatePath("/w/:tenant/resources/:resourceType", {
-                      tenant: params.tenant as string,
+                    generatePath("/resources/:resourceType", {
                       resourceType: "Subscription",
                     }),
                   );
@@ -263,8 +267,7 @@ function Root() {
                 active={matches[0].params.resourceType === "Questionnaire"}
                 onClick={() => {
                   navigate(
-                    generatePath("/w/:tenant/resources/:resourceType", {
-                      tenant: params.tenant as string,
+                    generatePath("/resources/:resourceType", {
                       resourceType: "Questionnaire",
                     }),
                   );
@@ -278,8 +281,7 @@ function Root() {
                 }
                 onClick={() => {
                   navigate(
-                    generatePath("/w/:tenant/resources/:resourceType", {
-                      tenant: params.tenant as string,
+                    generatePath("/resources/:resourceType", {
                       resourceType: "QuestionnaireResponse",
                     }),
                   );
@@ -293,8 +295,7 @@ function Root() {
                 active={matches[0].params.resourceType === "AuditEvent"}
                 onClick={() => {
                   navigate(
-                    generatePath("/w/:tenant/resources/:resourceType", {
-                      tenant: params.tenant as string,
+                    generatePath("/resources/:resourceType", {
                       resourceType: "AuditEvent",
                     }),
                   );
@@ -309,8 +310,7 @@ function Root() {
                 active={matches[0].params.resourceType === "Membership"}
                 onClick={() => {
                   navigate(
-                    generatePath("/w/:tenant/resources/:resourceType", {
-                      tenant: params.tenant as string,
+                    generatePath("/resources/:resourceType", {
                       resourceType: "Membership",
                     }),
                   );
@@ -322,8 +322,7 @@ function Root() {
                 active={matches[0].params.resourceType === "AccessPolicy"}
                 onClick={() => {
                   navigate(
-                    generatePath("/w/:tenant/resources/:resourceType", {
-                      tenant: params.tenant as string,
+                    generatePath("/resources/:resourceType", {
                       resourceType: "AccessPolicy",
                     }),
                   );
@@ -335,8 +334,7 @@ function Root() {
                 active={matches[0].params.resourceType === "ClientApplication"}
                 onClick={() => {
                   navigate(
-                    generatePath("/w/:tenant/resources/:resourceType", {
-                      tenant: params.tenant as string,
+                    generatePath("/resources/:resourceType", {
                       resourceType: "ClientApplication",
                     }),
                   );
@@ -363,11 +361,7 @@ function Root() {
                   ) !== undefined
                 }
                 onClick={() => {
-                  navigate(
-                    generatePath("/w/:tenant", {
-                      tenant: params.tenant as string,
-                    }),
-                  );
+                  navigate(generatePath("/", {}));
                 }}
               >
                 All Resources
@@ -380,11 +374,7 @@ function Root() {
                   undefined
                 }
                 onClick={() => {
-                  navigate(
-                    generatePath("/w/:tenant/bundle-import", {
-                      tenant: params.tenant as string,
-                    }),
-                  );
+                  navigate(generatePath("/bundle-import", {}));
                 }}
               >
                 Bundles
@@ -398,13 +388,7 @@ function Root() {
                 active={
                   matches.find((match) => match.id === "settings") !== undefined
                 }
-                onClick={() =>
-                  navigate(
-                    generatePath("/w/:tenant/settings", {
-                      tenant: params.tenant as string,
-                    }),
-                  )
-                }
+                onClick={() => navigate(generatePath("/settings", {}))}
               >
                 Settings
               </SideBar.SideBarItem>
@@ -460,12 +444,10 @@ function Root() {
                             key={t.id}
                             className="border border-r-0 border-l-0 cursor-pointer"
                             onClick={() => {
-                              window.location.href = generatePath(
-                                "/w/:tenant",
-                                {
-                                  tenant: t.id,
-                                },
-                              );
+                              const host = window.location.host.split(".");
+                              window.location.href = `${window.location.protocol}//${t.id}.${host
+                                .slice(1)
+                                .join(".")}`;
                             }}
                           >
                             <td
@@ -473,7 +455,7 @@ function Root() {
                                 "hover:bg-blue-100 text-xs hover:text-blue-800 p-2 text-slate-800",
                                 {
                                   "bg-blue-100 text-xs text-blue-800 p-2":
-                                    params.tenant === t.id,
+                                    deriveTenantID() === t.id,
                                 },
                               )}
                             >
@@ -499,11 +481,7 @@ function Root() {
                           },
                         )}
                         onClick={() => {
-                          navigate(
-                            generatePath("/w/:tenant/settings", {
-                              tenant: params.tenant as string,
-                            }),
-                          );
+                          navigate(generatePath("/settings", {}));
                         }}
                       >
                         Settings

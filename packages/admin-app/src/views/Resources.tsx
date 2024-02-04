@@ -1,5 +1,5 @@
 import React from "react";
-import { generatePath, useNavigate, useParams } from "react-router-dom";
+import { generatePath, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import { Loading, Table } from "@iguhealth/components";
@@ -8,7 +8,6 @@ import { CapabilityStatementRestResource } from "@iguhealth/fhir-types/r4/types"
 import { getCapabilities } from "../db/capabilities";
 
 const DisplayResources = () => {
-  const params = useParams();
   const navigate = useNavigate();
   const capabilities = useRecoilValue(getCapabilities);
 
@@ -19,8 +18,7 @@ const DisplayResources = () => {
         data={capabilities?.rest?.[0].resource || []}
         onRowClick={(row) => {
           navigate(
-            generatePath("/w/:tenant/resources/:resourceType", {
-              tenant: params.tenant as string,
+            generatePath("/resources/:resourceType", {
               resourceType: (row as CapabilityStatementRestResource).type,
             }),
           );
