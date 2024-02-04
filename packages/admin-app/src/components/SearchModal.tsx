@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import classNames from "classnames";
 import { CSSProperties, Fragment, useEffect, useMemo, useState } from "react";
-import { generatePath, useNavigate, useParams } from "react-router-dom";
+import { generatePath, useNavigate } from "react-router-dom";
 import { FixedSizeList as List } from "react-window";
 import { RecoilState, atom, useRecoilState, useRecoilValue } from "recoil";
 
@@ -62,7 +62,6 @@ function SearchResultItem({
 
 function SearchModal() {
   const capabilities = useRecoilValue(getCapabilities);
-  const params = useParams();
   const [search, setSearch] = useState("");
   const [openModal, setOpenModal] = useRecoilState(openSearchModalAtom);
   const [searchIndex, setSearchIndex] = useRecoilState(currentIndex);
@@ -80,8 +79,7 @@ function SearchModal() {
     return () => {
       if (searchResults?.[searchIndex]?.type) {
         navigate(
-          generatePath("/w/:tenant/resources/:resourceType", {
-            tenant: params.tenant as string,
+          generatePath("/resources/:resourceType", {
             resourceType: searchResults?.[searchIndex]?.type,
           }),
         );

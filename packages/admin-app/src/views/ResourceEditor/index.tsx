@@ -23,7 +23,6 @@ function ResourceEditorTabs() {
   const [structureDefinition, setStructureDefinition] = useState<
     StructureDefinition | undefined
   >(undefined);
-  const params = useParams();
   const navigate = useNavigate();
 
   const { resourceType, id } = useParams();
@@ -67,8 +66,7 @@ function ResourceEditorTabs() {
             },
           }).then((value) =>
             navigate(
-              generatePath("/w/:tenant/resources/:resourceType/:id", {
-                tenant: params.tenant as string,
+              generatePath("/resources/:resourceType/:id", {
                 resourceType: resourceType as string,
                 id: (value as Resource).id as string,
               }),
@@ -100,8 +98,7 @@ function ResourceEditorTabs() {
           },
         }).then(() =>
           navigate(
-            generatePath("/w/:tenant/resources/:resourceType", {
-              tenant: params.tenant as string,
+            generatePath("/resources/:resourceType", {
               resourceType: resourceType as string,
             }),
           ),

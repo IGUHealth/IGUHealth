@@ -119,8 +119,7 @@ export default function ResourceTypeView() {
           buttonType="secondary"
           onClick={() =>
             navigate(
-              generatePath("/w/:tenant/resources/:resourceType/:id", {
-                tenant: params.tenant as string,
+              generatePath("/resources/:resourceType/:id", {
                 resourceType: params.resourceType as string,
                 id: "new",
               }),
@@ -138,8 +137,7 @@ export default function ResourceTypeView() {
           data={data || []}
           onRowClick={(row) => {
             navigate(
-              generatePath("/w/:tenant/resources/:resourceType/:id", {
-                tenant: params.tenant as string,
+              generatePath("/resources/:resourceType/:id", {
                 resourceType: params.resourceType as string,
                 id: (row as Resource).id as string,
               }),
