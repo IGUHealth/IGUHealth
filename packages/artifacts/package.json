@@ -18,7 +18,7 @@
   "license": "ISC",
   "devDependencies": {
     "@iguhealth/fhir-types": "workspace:^",
-    "@types/node": "^20.11.13",
+    "@types/node": "^20.11.16",
     "typescript": "5.3.3"
   },
   "files": [
