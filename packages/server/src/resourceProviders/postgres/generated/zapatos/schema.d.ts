@@ -2326,6 +2326,12 @@ declare module 'zapatos/schema' {
       */
       phone_number: string | null;
       /**
+      * **tenant_owners.email_verified**
+      * - `bool` in database
+      * - Nullable, default: `false`
+      */
+      email_verified: boolean | null;
+      /**
       * **tenant_owners.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -2375,6 +2381,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       phone_number: string | null;
+      /**
+      * **tenant_owners.email_verified**
+      * - `bool` in database
+      * - Nullable, default: `false`
+      */
+      email_verified: boolean | null;
       /**
       * **tenant_owners.created_at**
       * - `timestamptz` in database
@@ -2426,6 +2438,12 @@ declare module 'zapatos/schema' {
       */
       phone_number?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
+      * **tenant_owners.email_verified**
+      * - `bool` in database
+      * - Nullable, default: `false`
+      */
+      email_verified?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **tenant_owners.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -2476,6 +2494,12 @@ declare module 'zapatos/schema' {
       */
       phone_number?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
+      * **tenant_owners.email_verified**
+      * - `bool` in database
+      * - Nullable, default: `false`
+      */
+      email_verified?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment;
+      /**
       * **tenant_owners.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
@@ -2525,6 +2549,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       phone_number?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tenant_owners.email_verified**
+      * - `bool` in database
+      * - Nullable, default: `false`
+      */
+      email_verified?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **tenant_owners.created_at**
       * - `timestamptz` in database

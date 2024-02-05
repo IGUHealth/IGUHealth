@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS tenant_owners  (
   first_name TEXT,
   last_name TEXT,
   phone_number TEXT,
+  email_verified BOOLEAN DEFAULT FALSE,
   -- System fields
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
