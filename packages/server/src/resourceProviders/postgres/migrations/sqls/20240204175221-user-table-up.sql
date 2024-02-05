@@ -1,5 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
+--;;
 
 CREATE TABLE IF NOT EXISTS tenant_owners  (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
