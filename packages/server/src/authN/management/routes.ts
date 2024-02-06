@@ -30,7 +30,6 @@ export function createManagementRouter(prefix: string) {
     try {
       ctx.status = 201;
     } catch (e) {
-      ctx.body = e;
       ctx.status = 500;
     } finally {
       // console.log()
@@ -47,7 +46,6 @@ export function createManagementRouter(prefix: string) {
       // ctx.body = tenant;
       ctx.status = 201;
     } catch (e) {
-      ctx.body = e;
       ctx.status = 500;
     } finally {
       // console.log()
