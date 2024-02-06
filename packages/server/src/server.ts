@@ -11,6 +11,7 @@ import {
   issueSeverityToStatusCodes,
 } from "@iguhealth/operation-outcomes";
 
+import { createManagementRouter } from "./authN/management/routes.js";
 import {
   allowPublicAccessMiddleware,
   createValidateUserJWTMiddleware,
@@ -166,6 +167,10 @@ export default async function createServer(): Promise<
   >();
 
   rootRouter.use("/", await createKoaFHIRServices(pool));
+
+  const managementRouter = createManagementRouter("/api/v1/management");
+  rootRouter.use(managementRouter.routes());
+  rootRouter.use(managementRouter.allowedMethods());
 
   const tenantRouter = new Router<
     Koa.DefaultState,

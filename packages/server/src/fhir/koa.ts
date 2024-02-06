@@ -1,15 +1,19 @@
+import * as db from "zapatos/db";
+
 import { ClientApplication } from "@iguhealth/fhir-types/r4/types";
 
 import { FHIRServerCTX } from "./context.js";
 
-export type KoaFHIRContext<C> = C & {
-  oidc: {
-    client?: ClientApplication;
+export type KoaFHIRContext<C> = C &
+  KoaFHIRServicesContext<C> & {
+    oidc: {
+      client?: ClientApplication;
+    };
+    FHIRContext: Omit<FHIRServerCTX, "user"> | FHIRServerCTX;
   };
-  FHIRContext: Omit<FHIRServerCTX, "user"> | FHIRServerCTX;
-};
 
 export type KoaFHIRServicesContext<C> = C & {
+  postgres: db.Queryable;
   FHIRContext: Omit<FHIRServerCTX, "user" | "tenant">;
 };
 

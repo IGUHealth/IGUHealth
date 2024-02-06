@@ -1,5 +1,6 @@
 import dotEnv from "dotenv";
 import path from "path";
+import pg from "pg";
 import { pino } from "pino";
 import { fileURLToPath } from "url";
 

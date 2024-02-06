@@ -503,6 +503,7 @@ export async function createKoaFHIRServices<State, Context>(
   const fhirServices = await createFHIRServices(pool);
 
   return async (ctx, next) => {
+    ctx.postgres = pool;
     ctx.FHIRContext = fhirServices;
     await next();
   };
