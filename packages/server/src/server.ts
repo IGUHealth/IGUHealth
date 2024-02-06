@@ -165,6 +165,8 @@ export default async function createServer(): Promise<
     KoaFHIRContext<Koa.DefaultContext>
   >();
 
+  rootRouter.use("/", await createKoaFHIRServices(pool));
+
   const tenantRouter = new Router<
     Koa.DefaultState,
     KoaFHIRContext<Koa.DefaultContext>
@@ -185,7 +187,7 @@ export default async function createServer(): Promise<
     createErrorHandlingMiddleware(),
     // Associate FHIR Context for all routes
     // [NOTE] for oidc we pull in fhir data so we need to associate the context on top of non fhir apis.
-    await createKoaFHIRServices(pool),
+
     await createKoaFHIRContextMiddleware(),
   );
 
