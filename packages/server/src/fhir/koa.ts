@@ -9,6 +9,10 @@ export type KoaFHIRContext<C> = C & {
   FHIRContext: Omit<FHIRServerCTX, "user"> | FHIRServerCTX;
 };
 
+export type KoaFHIRServicesContext<C> = C & {
+  FHIRContext: Omit<FHIRServerCTX, "user" | "tenant">;
+};
+
 /**
  * Verifies whether ctx is FHIRServerCTX with user.
  * @param ctx CTX that should be verified as user associated

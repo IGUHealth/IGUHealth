@@ -18,7 +18,24 @@ export function createManagementRouter(prefix: string) {
    * Signup a new user with an associated tenant.
    * Need to also validate the user's email.
    */
-  managementRouter.post("/signup", async (ctx) => {
+  managementRouter.post("/user/signup", async (ctx) => {
+    try {
+      // const tenant = await createTenant(client, ctx.request.body);
+      // ctx.body = tenant;
+      ctx.status = 201;
+    } catch (e) {
+      ctx.body = e;
+      ctx.status = 500;
+    } finally {
+      //client.release();
+    }
+  });
+
+  /**
+   * Signup a new user with an associated tenant.
+   * Need to also validate the user's email.
+   */
+  managementRouter.post("/user/login", async (ctx) => {
     try {
       // const tenant = await createTenant(client, ctx.request.body);
       // ctx.body = tenant;

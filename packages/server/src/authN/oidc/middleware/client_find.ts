@@ -30,6 +30,7 @@ export function createClientInjectMiddleware<
       "ClientApplication",
       clientId as id,
     );
+    
     if (!client) {
       throw new OperationError(
         outcomeError("not-found", "No client was registered with given id."),

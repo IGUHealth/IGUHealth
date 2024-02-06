@@ -20,6 +20,7 @@ import { verifyAndAssociateUserFHIRContext } from "./authZ/middleware/tenantAcce
 import {
   createFHIRAPI,
   createKoaFHIRContextMiddleware,
+  createKoaFHIRServices,
   getRedisClient,
   logger,
 } from "./fhir/index.js";
@@ -184,7 +185,8 @@ export default async function createServer(): Promise<
     createErrorHandlingMiddleware(),
     // Associate FHIR Context for all routes
     // [NOTE] for oidc we pull in fhir data so we need to associate the context on top of non fhir apis.
-    await createKoaFHIRContextMiddleware(pool),
+    await createKoaFHIRServices(pool),
+    await createKoaFHIRContextMiddleware(),
   );
 
   // Instantiate OIDC routes

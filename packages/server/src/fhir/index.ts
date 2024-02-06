@@ -53,7 +53,7 @@ import JSONPatchSchema from "../schemas/jsonpatch.schema.js";
 import RedisLock from "../synchronization/redis.lock.js";
 import { TerminologyProviderMemory } from "../terminology/index.js";
 import { FHIRServerCTX, TenantId, asSystemCTX } from "./context.js";
-import { KoaFHIRContext } from "./koa.js";
+import { KoaFHIRContext, KoaFHIRServicesContext } from "./koa.js";
 
 export const MEMORY_TYPES: ResourceType[] = [
   "StructureDefinition",
@@ -491,29 +491,50 @@ export async function createFHIRServices(
   };
 }
 
+export async function createKoaFHIRServices<State, Context>(
+  pool: pg.Pool,
+): Promise<
+  koa.Middleware<
+    State,
+    KoaFHIRServicesContext<Context> &
+      Router.RouterParamContext<State, KoaFHIRServicesContext<Context>>
+  >
+> {
+  const fhirServices = await createFHIRServices(pool);
+
+  return async (ctx, next) => {
+    ctx.FHIRContext = fhirServices;
+    await next();
+  };
+}
+
 export async function createKoaFHIRContextMiddleware<
   State extends {
     access_token?: string;
     user: { [key: string]: unknown };
   },
-  Context,
->(
-  pool: pg.Pool,
-): Promise<
+  Context extends KoaFHIRServicesContext<unknown>,
+>(): Promise<
   koa.Middleware<
     State,
     KoaFHIRContext<Context> &
       Router.RouterParamContext<State, KoaFHIRContext<Context>>
   >
 > {
-  const fhirServices = await createFHIRServices(pool);
   return async (ctx, next) => {
     if (!ctx.params.tenant)
       throw new OperationError(
         outcomeError("invalid", "No tenant present in request."),
       );
+
+    if (!ctx.FHIRContext) {
+      throw new OperationError(
+        outcomeError("invariant", "FHIR Context not set"),
+      );
+    }
+
     ctx.FHIRContext = {
-      ...fhirServices,
+      ...ctx.FHIRContext,
       tenant: ctx.params.tenant as TenantId,
     };
     await next();
