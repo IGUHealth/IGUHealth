@@ -3,8 +3,12 @@ import cors from "@koa/cors";
 import Router from "@koa/router";
 import dotEnv from "dotenv";
 import Koa from "koa";
+import mount from "koa-mount";
 import ratelimit from "koa-ratelimit";
+import serve from "koa-static";
+import path from "node:path";
 import pg from "pg";
+import { fileURLToPath } from "url";
 
 import {
   isOperationError,
@@ -214,6 +218,14 @@ export default async function createServer(): Promise<
   rootRouter.use(tenantRouter.allowedMethods());
 
   app
+    .use(
+      mount(
+        "/public",
+        serve(
+          path.join(path.dirname(fileURLToPath(import.meta.url)), "public"),
+        ),
+      ),
+    )
     .use(
       ratelimit({
         driver: "redis",

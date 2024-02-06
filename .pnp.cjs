@@ -15040,7 +15040,9 @@ const RAW_RUNTIME_STATE =
           ["@types/jest", "npm:29.5.12"],\
           ["@types/koa", "npm:2.13.6"],\
           ["@types/koa-bodyparser", "npm:4.3.12"],\
+          ["@types/koa-mount", "npm:4.0.5"],\
           ["@types/koa-ratelimit", "npm:5.0.3"],\
+          ["@types/koa-static", "npm:4.0.4"],\
           ["@types/koa__cors", "npm:5.0.0"],\
           ["@types/koa__router", "npm:12.0.4"],\
           ["@types/node", "npm:20.11.16"],\
@@ -15064,7 +15066,9 @@ const RAW_RUNTIME_STATE =
           ["koa", "npm:2.15.0"],\
           ["koa-body", "npm:6.0.1"],\
           ["koa-jwt", "npm:4.0.4"],\
+          ["koa-mount", "npm:4.0.0"],\
           ["koa-ratelimit", "npm:5.1.0"],\
+          ["koa-static", "npm:5.0.0"],\
           ["nanoid", "npm:5.0.5"],\
           ["openid-client", "npm:5.6.4"],\
           ["pg", "virtual:e1c816e034cd0b5bef17034e9e60dba4c6f6bd1e447e5d5f077a6e02f3c218a3aaa8202d4d85c4dd3c28000c7590795b5b64dd548cd70ed74b3a6563e160e159#npm:8.11.3"],\
@@ -15072,6 +15076,7 @@ const RAW_RUNTIME_STATE =
           ["react", "npm:18.2.0"],\
           ["react-dom", "virtual:6d98418b7f1f0997f8af970804dfb325929b5f0d95d031afc1b57e4adca24764e76779350d5a22c4936639a9cc77b139cc71f1b7768a59ab9debc032eecad65e#npm:18.2.0"],\
           ["redlock", "patch:redlock@npm%3A5.0.0-beta.2#./.yarn/patches/redlock-npm-5.0.0-beta.2-e67212c5e7.patch::version=5.0.0-beta.2&hash=d307ea&locator=iguhealth-workspace%40workspace%3A."],\
+          ["tailwindcss", "npm:3.4.1"],\
           ["ts-jest", "virtual:60d59201a81fdf9d844335582569d604f77c0cfb33012fc0d97d31d995c40a543914afd8f900018942c3e21e71ae879a5dcdf97d4008644edf9f0ce84a7e8664#npm:29.1.2"],\
           ["tsc-watch", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:6.0.4"],\
           ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"],\
@@ -23414,6 +23419,16 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@types/koa-mount", [\
+      ["npm:4.0.5", {\
+        "packageLocation": "./.yarn/cache/@types-koa-mount-npm-4.0.5-38ca5acfe0-2b794f618b.zip/node_modules/@types/koa-mount/",\
+        "packageDependencies": [\
+          ["@types/koa-mount", "npm:4.0.5"],\
+          ["@types/koa", "npm:2.13.6"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@types/koa-ratelimit", [\
       ["npm:5.0.3", {\
         "packageLocation": "./.yarn/cache/@types-koa-ratelimit-npm-5.0.3-5c677ee2b1-1f3077d741.zip/node_modules/@types/koa-ratelimit/",\
@@ -23422,6 +23437,27 @@ const RAW_RUNTIME_STATE =
           ["@types/koa", "npm:2.13.6"],\
           ["@types/node", "npm:20.3.3"],\
           ["ioredis", "npm:5.3.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/koa-send", [\
+      ["npm:4.1.6", {\
+        "packageLocation": "./.yarn/cache/@types-koa-send-npm-4.1.6-803aa0a977-d46d207f1d.zip/node_modules/@types/koa-send/",\
+        "packageDependencies": [\
+          ["@types/koa-send", "npm:4.1.6"],\
+          ["@types/koa", "npm:2.13.6"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/koa-static", [\
+      ["npm:4.0.4", {\
+        "packageLocation": "./.yarn/cache/@types-koa-static-npm-4.0.4-72ad58a98a-99087a9b6f.zip/node_modules/@types/koa-static/",\
+        "packageDependencies": [\
+          ["@types/koa-static", "npm:4.0.4"],\
+          ["@types/koa", "npm:2.13.6"],\
+          ["@types/koa-send", "npm:4.1.6"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -35712,6 +35748,17 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["koa-mount", [\
+      ["npm:4.0.0", {\
+        "packageLocation": "./.yarn/cache/koa-mount-npm-4.0.0-c8a47bd44e-c7e8c5cca4.zip/node_modules/koa-mount/",\
+        "packageDependencies": [\
+          ["koa-mount", "npm:4.0.0"],\
+          ["debug", "virtual:1ff4b5f90832ba0a9c93ba1223af226e44ba70c1126a3740d93562b97bc36544e896a5e95908196f7458713e6a6089a34bfc67362fc6df7fa093bd06c878be47#npm:4.3.4"],\
+          ["koa-compose", "npm:4.1.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["koa-ratelimit", [\
       ["npm:5.1.0", {\
         "packageLocation": "./.yarn/cache/koa-ratelimit-npm-5.1.0-1ab589a18d-09c718b727.zip/node_modules/koa-ratelimit/",\
@@ -35720,6 +35767,29 @@ const RAW_RUNTIME_STATE =
           ["async-ratelimiter", "npm:1.3.12"],\
           ["debug", "virtual:1ff4b5f90832ba0a9c93ba1223af226e44ba70c1126a3740d93562b97bc36544e896a5e95908196f7458713e6a6089a34bfc67362fc6df7fa093bd06c878be47#npm:4.3.4"],\
           ["ms", "npm:2.1.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["koa-send", [\
+      ["npm:5.0.1", {\
+        "packageLocation": "./.yarn/cache/koa-send-npm-5.0.1-1b37331b00-a9fbaadbe0.zip/node_modules/koa-send/",\
+        "packageDependencies": [\
+          ["koa-send", "npm:5.0.1"],\
+          ["debug", "virtual:1ff4b5f90832ba0a9c93ba1223af226e44ba70c1126a3740d93562b97bc36544e896a5e95908196f7458713e6a6089a34bfc67362fc6df7fa093bd06c878be47#npm:4.3.4"],\
+          ["http-errors", "npm:1.8.1"],\
+          ["resolve-path", "npm:1.4.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["koa-static", [\
+      ["npm:5.0.0", {\
+        "packageLocation": "./.yarn/cache/koa-static-npm-5.0.0-4248438d52-8d9b9c4d2b.zip/node_modules/koa-static/",\
+        "packageDependencies": [\
+          ["koa-static", "npm:5.0.0"],\
+          ["debug", "virtual:65bed195431eadffc59e2238eb20cc12d9a1665bc7458ce780a9320ff795091b03cb5c4c2094938315ddd967b5b02c0f1df67b3ed435c69b7457092b7cc06ed8#npm:3.2.7"],\
+          ["koa-send", "npm:5.0.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -43792,6 +43862,17 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/resolve-from-npm-5.0.0-15c9db4d33-be18a5e4d7.zip/node_modules/resolve-from/",\
         "packageDependencies": [\
           ["resolve-from", "npm:5.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["resolve-path", [\
+      ["npm:1.4.0", {\
+        "packageLocation": "./.yarn/cache/resolve-path-npm-1.4.0-796e63d898-1a39f569ee.zip/node_modules/resolve-path/",\
+        "packageDependencies": [\
+          ["resolve-path", "npm:1.4.0"],\
+          ["http-errors", "npm:1.6.3"],\
+          ["path-is-absolute", "npm:1.0.1"]\
         ],\
         "linkType": "HARD"\
       }]\
