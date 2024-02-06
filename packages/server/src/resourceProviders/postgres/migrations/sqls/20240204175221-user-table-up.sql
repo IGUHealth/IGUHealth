@@ -4,6 +4,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 CREATE TABLE IF NOT EXISTS tenant_owners  (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant text NOT NULL,
   -- Login credentials
   email TEXT NOT NULL UNIQUE,
   password TEXT NOT NULL,
@@ -14,7 +15,11 @@ CREATE TABLE IF NOT EXISTS tenant_owners  (
   email_verified BOOLEAN DEFAULT FALSE,
   -- System fields
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+  CONSTRAINT fk_tenant
+      FOREIGN KEY(tenant) 
+	  REFERENCES tenants(id)
 );
 
 --;;

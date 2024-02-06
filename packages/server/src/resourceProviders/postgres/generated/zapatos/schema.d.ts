@@ -2296,6 +2296,12 @@ declare module 'zapatos/schema' {
       */
       id: string;
       /**
+      * **tenant_owners.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string;
+      /**
       * **tenant_owners.email**
       * - `text` in database
       * - `NOT NULL`, no default
@@ -2351,6 +2357,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       id: string;
+      /**
+      * **tenant_owners.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string;
       /**
       * **tenant_owners.email**
       * - `text` in database
@@ -2408,6 +2420,12 @@ declare module 'zapatos/schema' {
       */
       id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
+      * **tenant_owners.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **tenant_owners.email**
       * - `text` in database
       * - `NOT NULL`, no default
@@ -2464,6 +2482,12 @@ declare module 'zapatos/schema' {
       */
       id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
       /**
+      * **tenant_owners.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string | db.Parameter<string> | db.SQLFragment;
+      /**
       * **tenant_owners.email**
       * - `text` in database
       * - `NOT NULL`, no default
@@ -2519,6 +2543,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tenant_owners.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **tenant_owners.email**
       * - `text` in database

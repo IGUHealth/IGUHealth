@@ -6,12 +6,12 @@ import { KoaFHIRContext } from "../../fhir/koa.js";
 /**
  * Management api for creating tenants and managing tenant owners.
  */
-export function createManagementRouter() {
+export function createManagementRouter(prefix: string) {
   const managementRouter = new Router<
     Koa.DefaultState,
     KoaFHIRContext<Koa.DefaultContext>
   >({
-    prefix: "/management",
+    prefix,
   });
 
   /**
