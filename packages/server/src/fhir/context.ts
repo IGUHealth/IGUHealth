@@ -1,4 +1,5 @@
 import type { Logger } from "pino";
+import * as db from "zapatos/db";
 
 import { FHIRClientAsync } from "@iguhealth/client/interface";
 import {

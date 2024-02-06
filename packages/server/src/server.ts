@@ -11,6 +11,7 @@ import {
   issueSeverityToStatusCodes,
 } from "@iguhealth/operation-outcomes";
 
+import { createManagementRouter } from "./authN/management/routes.js";
 import {
   allowPublicAccessMiddleware,
   createValidateUserJWTMiddleware,
@@ -20,6 +21,7 @@ import { verifyAndAssociateUserFHIRContext } from "./authZ/middleware/tenantAcce
 import {
   createFHIRAPI,
   createKoaFHIRContextMiddleware,
+  createKoaFHIRServices,
   getRedisClient,
   logger,
 } from "./fhir/index.js";
@@ -164,6 +166,12 @@ export default async function createServer(): Promise<
     KoaFHIRContext<Koa.DefaultContext>
   >();
 
+  rootRouter.use("/", await createKoaFHIRServices(pool));
+
+  const managementRouter = createManagementRouter("/api/v1/management");
+  rootRouter.use(managementRouter.routes());
+  rootRouter.use(managementRouter.allowedMethods());
+
   const tenantRouter = new Router<
     Koa.DefaultState,
     KoaFHIRContext<Koa.DefaultContext>
@@ -184,7 +192,8 @@ export default async function createServer(): Promise<
     createErrorHandlingMiddleware(),
     // Associate FHIR Context for all routes
     // [NOTE] for oidc we pull in fhir data so we need to associate the context on top of non fhir apis.
-    await createKoaFHIRContextMiddleware(pool),
+
+    await createKoaFHIRContextMiddleware(),
   );
 
   // Instantiate OIDC routes
