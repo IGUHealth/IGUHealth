@@ -4,7 +4,7 @@ import { AccessPolicy, Membership, id } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { CUSTOM_CLAIMS } from "../../authN/token.js";
-import { FHIRServerCTX, asSystemCTX } from "../../fhir/context.js";
+import { FHIRServerCTX, asSystemCTX } from "../../fhir-context/context.js";
 
 /**
  * Middleware to associate the user and access policies with the request.

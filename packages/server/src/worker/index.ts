@@ -31,24 +31,24 @@ import {
   JWT,
   createToken,
 } from "../authN/token.js";
-import { FHIRServerCTX, TenantId } from "../fhir/context.js";
-import { createFHIRAPI, createFHIRServices } from "../fhir/index.js";
-import { SUPER_ADMIN_ROLE } from "../fhir/roles.js";
-import { httpRequestToFHIRRequest } from "../http/index.js";
+import { FHIRServerCTX, TenantId } from "../fhir-context/context.js";
+import { createFHIRAPI, createFHIRServices } from "../fhir-context/index.js";
+import { SUPER_ADMIN_ROLE } from "../fhir-context/roles.js";
+import { httpRequestToFHIRRequest } from "../fhir-http/index.js";
 import logAuditEvent, {
   MAJOR_FAILURE,
   SERIOUS_FAILURE,
-} from "../logging/auditEvents.js";
-import * as Sentry from "../monitoring/sentry.js";
-import { resolveOperationDefinition } from "../operation-executors/utilities.js";
-import { fitsSearchCriteria } from "../resourceProviders/memory/search.js";
-import { createResolverRemoteCanonical } from "../resourceProviders/utilities/canonical.js";
+} from "../fhir-logging/auditEvents.js";
+import { resolveOperationDefinition } from "../fhir-operation-executors/utilities.js";
+import { fitsSearchCriteria } from "../fhir-storage/providers/memory/search.js";
+import { createResolverRemoteCanonical } from "../fhir-storage/utilities/canonical.js";
 import {
   SearchParameterResource,
   deriveResourceTypeFilter,
   findSearchParameter,
   parametersWithMetaAssociated,
-} from "../resourceProviders/utilities/search/parameters.js";
+} from "../fhir-storage/utilities/search/parameters.js";
+import * as Sentry from "../monitoring/sentry.js";
 import { LIB_VERSION } from "../version.js";
 
 dotEnv.config();

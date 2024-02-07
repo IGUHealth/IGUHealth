@@ -7,8 +7,8 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { CUSTOM_CLAIMS, JWT } from "../../authN/token.js";
-import type { TenantClaim } from "../../fhir/context.js";
-import { KoaFHIRContext } from "../../fhir/koa.js";
+import type { TenantClaim } from "../../fhir-context/context.js";
+import { KoaFHIRContext } from "../../fhir-context/koa.js";
 
 function findCurrentTenant<Context extends Koa.DefaultContext>(
   ctx: KoaFHIRContext<Context>,

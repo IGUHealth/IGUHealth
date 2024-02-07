@@ -2,7 +2,7 @@ import jwksRsa from "jwks-rsa";
 import Koa, { Middleware } from "koa";
 import jwt from "koa-jwt";
 
-import { TenantClaim } from "../fhir/context.js";
+import { TenantClaim } from "../fhir-context/context.js";
 import { createCertsIfNoneExists, getJWKS } from "./certifications.js";
 import {
   CUSTOM_CLAIMS,

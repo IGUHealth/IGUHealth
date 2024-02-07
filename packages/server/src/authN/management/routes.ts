@@ -1,7 +1,7 @@
 import Router from "@koa/router";
 import type * as Koa from "koa";
 
-import { KoaFHIRServicesContext } from "../../fhir/koa.js";
+import { KoaFHIRServicesContext } from "../../fhir-context/koa.js";
 
 /**
  * Management api for creating tenants and managing tenant owners.
