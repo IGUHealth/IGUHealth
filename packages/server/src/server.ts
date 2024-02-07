@@ -222,7 +222,7 @@ export default async function createServer(): Promise<
       mount(
         "/public",
         serve(
-          path.join(path.dirname(fileURLToPath(import.meta.url)), "public"),
+          path.join(path.dirname(fileURLToPath(import.meta.url)), "../public"),
         ),
       ),
     )

@@ -5,8 +5,8 @@
   "main": "./lib/server.js",
   "type": "module",
   "scripts": {
-    "build-css": "yarn tailwindcss -i ./index.css -o ./lib/public/css/index.css --minify",
-    "watch-css": "yarn tailwindcss -i ./index.css -o ./lib/public/css/index.css --watch",
+    "build-css": "yarn tailwindcss -i ./index.css -o ./public/css/index.css --minify",
+    "watch-css": "yarn tailwindcss -i ./index.css -o ./public/css/index.css --watch",
     "prebuild": "node -p \"'export const LIB_VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/version.ts",
     "build": "yarn prebuild && tsc && yarn copyfiles  -u 1 \"./src/**/*.sql\" lib && yarn build-css",
     "ci": "yarn build & yarn node --enable-source-maps ./lib/cli.js run server & yarn node --enable-source-maps ./lib/cli.js run worker",
@@ -91,6 +91,7 @@
     "typescript": "5.3.3"
   },
   "files": [
+    "public/**",
     "package.json",
     "src/**",
     "database.json",
