@@ -11,7 +11,7 @@
     "build": "yarn prebuild && tsc && yarn copyfiles  -u 1 \"./src/**/*.sql\" lib && yarn build-css",
     "ci": "yarn build & yarn node --enable-source-maps ./lib/cli.js run server & yarn node --enable-source-maps ./lib/cli.js run worker",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest) --runInBand",
-    "db-migrate": "db-migrate --sql-file -m src/resourceProviders/postgres/migrations",
+    "db-migrate": "db-migrate --sql-file -m src/fhir-storage/providers/postgres/migrations",
     "migrate": "yarn build && yarn node --enable-source-maps  ./lib/cli.js run migrate && yarn node --enable-source-maps  ./lib/cli.js generate-pg-types",
     "watch": "yarn prebuild && yarn migrate up && yarn tsc-watch --onSuccess \"yarn node --enable-source-maps  ./lib/cli.js run both\"",
     "watch_server": "yarn prebuild && yarn migrate up && yarn tsc-watch --onSuccess \"yarn node --enable-source-maps  ./lib/cli.js run server\"",

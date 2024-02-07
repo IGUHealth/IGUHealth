@@ -39,7 +39,7 @@ async function run() {
                 }
               : false,
         },
-        outDir: "src/resourceProviders/postgres/generated",
+        outDir: "src/fhir-storage/providers/postgres/generated",
       });
     });
 
@@ -68,7 +68,8 @@ async function run() {
           dbmigrate = DBMigrate.getInstance(true, {
             cmdOptions: {
               "sql-file": true,
-              "migrations-dir": "src/resourceProviders/postgres/migrations",
+              "migrations-dir":
+                "src/fhir-storage/providers/postgres/migrations",
             },
           });
           await dbmigrate.up();
