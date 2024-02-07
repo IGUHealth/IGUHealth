@@ -6,7 +6,8 @@ export default function Login() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>IGUHEALTH Login</title>
+        <title>IGUHealth Login</title>
+        <link rel="icon" href="/public/img/logo.svg" />
         <link rel="stylesheet" href="/public/css/index.css"></link>
       </head>
       <body>
