@@ -28,12 +28,15 @@ import {
   createKoaFHIRServices,
   getRedisClient,
   logger,
-} from "./fhir/index.js";
-import { KoaFHIRContext, isFHIRServerAuthorizedUserCTX } from "./fhir/koa.js";
+} from "./fhir-context/index.js";
+import {
+  KoaFHIRContext,
+  isFHIRServerAuthorizedUserCTX,
+} from "./fhir-context/koa.js";
 import {
   fhirResponseToHTTPResponse,
   httpRequestToFHIRRequest,
-} from "./http/index.js";
+} from "./fhir-http/index.js";
 import * as MonitoringSentry from "./monitoring/sentry.js";
 import { LIB_VERSION } from "./version.js";
 

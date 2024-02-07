@@ -3,8 +3,8 @@ import * as Koa from "koa";
 import { id } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { asSystemCTX } from "../../../fhir/context.js";
-import { KoaFHIRContext } from "../../../fhir/koa.js";
+import { asSystemCTX } from "../../../fhir-context/context.js";
+import { KoaFHIRContext } from "../../../fhir-context/koa.js";
 import { getClientId } from "../../utilities.js";
 
 /**
@@ -30,7 +30,7 @@ export function createClientInjectMiddleware<
       "ClientApplication",
       clientId as id,
     );
-    
+
     if (!client) {
       throw new OperationError(
         outcomeError("not-found", "No client was registered with given id."),

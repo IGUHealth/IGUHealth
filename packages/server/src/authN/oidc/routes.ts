@@ -6,7 +6,7 @@ import { renderToPipeableStream } from "react-dom/server";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaFHIRContext } from "../../fhir/koa.js";
+import { KoaFHIRContext } from "../../fhir-context/koa.js";
 import { getSigningKey } from "../certifications.js";
 import { createToken } from "../token.js";
 import { getCredentialsBasicHeader } from "../utilities.js";

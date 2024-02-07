@@ -1,0 +1,22 @@
+import {
+  CodeSystemLookup,
+  ValueSetExpand,
+  ValueSetValidateCode,
+} from "@iguhealth/generated-ops/r4";
+
+import { FHIRServerCTX } from "../fhir-context/context.js";
+
+export interface TerminologyProvider {
+  expand(
+    ctx: FHIRServerCTX,
+    input: ValueSetExpand.Input,
+  ): Promise<ValueSetExpand.Output>;
+  validate(
+    ctx: FHIRServerCTX,
+    input: ValueSetValidateCode.Input,
+  ): Promise<ValueSetValidateCode.Output>;
+  lookup(
+    ctx: FHIRServerCTX,
+    input: CodeSystemLookup.Input,
+  ): Promise<CodeSystemLookup.Output>;
+}

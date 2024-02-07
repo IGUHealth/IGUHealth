@@ -89,6 +89,13 @@ External Auth variables.
 | AUTH_EXTERNAL_JWK_URI    | JWK remote url to pull JSON WEB Key Set. | false    |          |
 | AUTH_EXTERNAL_JWT_ISSUER | Issuer of the JWT.                       | true     |          |
 
+#### Email
+
+| name             | description                                                            | required | defaults                                      |
+| ---------------- | ---------------------------------------------------------------------- | -------- | --------------------------------------------- |
+| EMAIL_PROVIDER   | Set the email provider                                                 | false    | none (currently only sendgrid option allowed) |
+| SENDGRID_API_KEY | Set the sendgrid api key (only used on email provider set to sendgrid) | false    | none                                          |
+
 #### Encryption
 
 Encryption is used for user passed in secrets (for example an external token for a service ). We currently only support encyrption via AWS KMS
