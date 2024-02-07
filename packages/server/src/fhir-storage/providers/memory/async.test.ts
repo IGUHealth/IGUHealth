@@ -17,12 +17,12 @@ import type { InternalData } from "./types.js";
 
 const artifactParameters = loadArtifacts({
   resourceType: "SearchParameter",
-  packageLocation: path.join(fileURLToPath(import.meta.url), "../../../"),
+  packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
   silence: true,
 });
 const sds = loadArtifacts({
   resourceType: "StructureDefinition",
-  packageLocation: path.join(fileURLToPath(import.meta.url), "../../../"),
+  packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
   silence: true,
 });
 
