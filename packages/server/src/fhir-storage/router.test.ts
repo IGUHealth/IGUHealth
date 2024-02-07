@@ -3,7 +3,7 @@ import { expect, test } from "@jest/globals";
 import { FHIRRequest } from "@iguhealth/client/lib/types";
 import { Patient, Practitioner, id } from "@iguhealth/fhir-types/lib/r4/types";
 
-import MemoryDatabase from "./memory/async.js";
+import MemoryDatabase from "./providers/memory/async.js";
 import RouterClient from "./router.js";
 import { testServices } from "./test-ctx.js";
 

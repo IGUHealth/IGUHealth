@@ -3,7 +3,7 @@ import crypto from "node:crypto";
 
 import { OperationDefinition } from "@iguhealth/fhir-types/lib/r4/types";
 
-import { testServices } from "../../fhir-storage/providers/test-ctx.js";
+import { testServices } from "../../fhir-storage/test-ctx.js";
 import { encryptValue } from "../index.js";
 import LocalEncryption from "./local.js";
 

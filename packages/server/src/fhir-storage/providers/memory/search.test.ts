@@ -11,8 +11,8 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/lib/r4/types";
 
-import { FHIRServerCTX } from "../../fhir/context.js";
-import { testServices } from "../test-ctx.js";
+import { FHIRServerCTX } from "../../../fhir-context/context.js";
+import { testServices } from "../../test-ctx.js";
 import MemoryDatabase from "./async.js";
 
 function createMemoryDatabase(

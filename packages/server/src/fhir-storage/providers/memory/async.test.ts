@@ -11,7 +11,7 @@ import {
   id,
 } from "@iguhealth/fhir-types/lib/r4/types";
 
-import { testServices } from "../test-ctx.js";
+import { testServices } from "../../test-ctx.js";
 import CreateMemoryDatabaseAsync from "./async.js";
 import type { InternalData } from "./types.js";
 

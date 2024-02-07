@@ -7,10 +7,9 @@ import {
   code,
   id,
 } from "@iguhealth/fhir-types/lib/r4/types";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { testServices } from "../../fhir-storage/providers/test-ctx";
-import { FHIRServerCTX } from "../../fhir/context";
+import { FHIRServerCTX } from "../../fhir-context/context";
+import { testServices } from "../../fhir-storage/test-ctx";
 import { createAuthorizationMiddleWare } from "./authorization";
 
 const authorizationMiddleware = createAuthorizationMiddleWare();
