@@ -102,7 +102,7 @@ const RAW_RUNTIME_STATE =
     ["@iguhealth/cli", ["workspace:packages/cli"]],\
     ["@iguhealth/client", ["workspace:packages/client"]],\
     ["@iguhealth/codegen", ["workspace:packages/codegen"]],\
-    ["@iguhealth/components", ["virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#workspace:packages/components", "workspace:packages/components"]],\
+    ["@iguhealth/components", ["virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#workspace:packages/components", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#workspace:packages/components", "workspace:packages/components"]],\
     ["@iguhealth/docs", ["workspace:packages/docs"]],\
     ["@iguhealth/fhir-patch-building", ["workspace:packages/fhir-patch-building"]],\
     ["@iguhealth/fhir-pointer", ["workspace:packages/fhir-pointer"]],\
@@ -14745,6 +14745,75 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
+      ["virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#workspace:packages/components", {\
+        "packageLocation": "./.yarn/__virtual__/@iguhealth-components-virtual-19e8a7c2a4/1/packages/components/",\
+        "packageDependencies": [\
+          ["@iguhealth/components", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#workspace:packages/components"],\
+          ["@babel/preset-env", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:7.23.9"],\
+          ["@babel/preset-react", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:7.23.3"],\
+          ["@babel/preset-typescript", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:7.23.3"],\
+          ["@codemirror/lang-markdown", "npm:6.2.4"],\
+          ["@codemirror/state", "npm:6.4.0"],\
+          ["@codemirror/theme-one-dark", null],\
+          ["@codemirror/view", "npm:6.23.1"],\
+          ["@headlessui/react", "virtual:6d98418b7f1f0997f8af970804dfb325929b5f0d95d031afc1b57e4adca24764e76779350d5a22c4936639a9cc77b139cc71f1b7768a59ab9debc032eecad65e#npm:1.7.18"],\
+          ["@heroicons/react", "virtual:6d98418b7f1f0997f8af970804dfb325929b5f0d95d031afc1b57e4adca24764e76779350d5a22c4936639a9cc77b139cc71f1b7768a59ab9debc032eecad65e#npm:2.1.1"],\
+          ["@iguhealth/client", "workspace:packages/client"],\
+          ["@iguhealth/fhir-patch-building", "workspace:packages/fhir-patch-building"],\
+          ["@iguhealth/fhir-pointer", "workspace:packages/fhir-pointer"],\
+          ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
+          ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
+          ["@iguhealth/generated-ops", "workspace:packages/generated-ops"],\
+          ["@rollup/plugin-commonjs", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:25.0.7"],\
+          ["@rollup/plugin-node-resolve", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:15.2.3"],\
+          ["@rollup/plugin-typescript", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:11.1.6"],\
+          ["@storybook/addon-essentials", "virtual:6d98418b7f1f0997f8af970804dfb325929b5f0d95d031afc1b57e4adca24764e76779350d5a22c4936639a9cc77b139cc71f1b7768a59ab9debc032eecad65e#npm:7.6.12"],\
+          ["@storybook/addon-interactions", "npm:7.6.12"],\
+          ["@storybook/addon-links", "virtual:6d98418b7f1f0997f8af970804dfb325929b5f0d95d031afc1b57e4adca24764e76779350d5a22c4936639a9cc77b139cc71f1b7768a59ab9debc032eecad65e#npm:7.6.12"],\
+          ["@storybook/addon-onboarding", "virtual:6d98418b7f1f0997f8af970804dfb325929b5f0d95d031afc1b57e4adca24764e76779350d5a22c4936639a9cc77b139cc71f1b7768a59ab9debc032eecad65e#npm:1.0.11"],\
+          ["@storybook/addon-styling", "virtual:6d98418b7f1f0997f8af970804dfb325929b5f0d95d031afc1b57e4adca24764e76779350d5a22c4936639a9cc77b139cc71f1b7768a59ab9debc032eecad65e#npm:1.3.7"],\
+          ["@storybook/blocks", "virtual:6d98418b7f1f0997f8af970804dfb325929b5f0d95d031afc1b57e4adca24764e76779350d5a22c4936639a9cc77b139cc71f1b7768a59ab9debc032eecad65e#npm:7.6.12"],\
+          ["@storybook/manager-api", "npm:7.6.12"],\
+          ["@storybook/react", "virtual:6d98418b7f1f0997f8af970804dfb325929b5f0d95d031afc1b57e4adca24764e76779350d5a22c4936639a9cc77b139cc71f1b7768a59ab9debc032eecad65e#npm:7.6.12"],\
+          ["@storybook/react-webpack5", "virtual:6d98418b7f1f0997f8af970804dfb325929b5f0d95d031afc1b57e4adca24764e76779350d5a22c4936639a9cc77b139cc71f1b7768a59ab9debc032eecad65e#npm:7.6.12"],\
+          ["@storybook/testing-library", "npm:0.2.2"],\
+          ["@storybook/theming", "virtual:6d98418b7f1f0997f8af970804dfb325929b5f0d95d031afc1b57e4adca24764e76779350d5a22c4936639a9cc77b139cc71f1b7768a59ab9debc032eecad65e#npm:7.6.12"],\
+          ["@types/codemirror__state", null],\
+          ["@types/codemirror__theme-one-dark", null],\
+          ["@types/codemirror__view", null],\
+          ["@types/react", "npm:18.2.52"],\
+          ["autoprefixer", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:10.4.17"],\
+          ["classnames", "npm:2.5.1"],\
+          ["codemirror", "npm:6.0.1"],\
+          ["dayjs", "npm:1.11.10"],\
+          ["fast-json-patch", "npm:3.1.1"],\
+          ["immer", "npm:10.0.3"],\
+          ["js-file-download", "npm:0.4.12"],\
+          ["postcss", "npm:8.4.33"],\
+          ["postcss-cli", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:11.0.0"],\
+          ["react", "npm:18.2.0"],\
+          ["react-dom", "virtual:6d98418b7f1f0997f8af970804dfb325929b5f0d95d031afc1b57e4adca24764e76779350d5a22c4936639a9cc77b139cc71f1b7768a59ab9debc032eecad65e#npm:18.2.0"],\
+          ["react-hot-toast", "virtual:6d98418b7f1f0997f8af970804dfb325929b5f0d95d031afc1b57e4adca24764e76779350d5a22c4936639a9cc77b139cc71f1b7768a59ab9debc032eecad65e#npm:2.4.1"],\
+          ["rollup", "npm:4.9.6"],\
+          ["rollup-plugin-dts", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:6.1.0"],\
+          ["rollup-plugin-peer-deps-external", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:2.2.4"],\
+          ["rollup-plugin-postcss", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:4.0.2"],\
+          ["rollup-plugin-terser", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:7.0.2"],\
+          ["storybook", "npm:7.6.12"],\
+          ["tailwindcss", "npm:3.4.1"],\
+          ["tslib", "npm:2.6.2"],\
+          ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"]\
+        ],\
+        "packagePeers": [\
+          "@codemirror/theme-one-dark",\
+          "@types/codemirror__state",\
+          "@types/codemirror__theme-one-dark",\
+          "@types/codemirror__view",\
+          "@types/react",\
+          "react"\
+        ],\
+        "linkType": "SOFT"\
+      }],\
       ["workspace:packages/components", {\
         "packageLocation": "./packages/components/",\
         "packageDependencies": [\
@@ -15019,6 +15088,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
           ["@iguhealth/cli", "workspace:packages/cli"],\
           ["@iguhealth/client", "workspace:packages/client"],\
+          ["@iguhealth/components", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#workspace:packages/components"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
           ["@iguhealth/fhir-validation", "workspace:packages/fhir-validation"],\
           ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\

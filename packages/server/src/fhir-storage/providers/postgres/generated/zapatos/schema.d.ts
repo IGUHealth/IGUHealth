@@ -18,9 +18,276 @@ declare module 'zapatos/schema' {
   /* === schema: public === */
 
   /* --- enums --- */
-  /* (none) */
+
+  export type code_type = 'oauth2_code_grant' | 'password_reset' | 'signup_confirmation';
+  export namespace every {
+    export type code_type = ['oauth2_code_grant', 'password_reset', 'signup_confirmation'];
+  }
 
   /* --- tables --- */
+
+  /**
+   * **authorization_code**
+   * - Table in database
+   */
+  export namespace authorization_code {
+    export type Table = 'authorization_code';
+    export interface Selectable {
+      /**
+      * **authorization_code.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `gen_random_uuid()`
+      */
+      id: string;
+      /**
+      * **authorization_code.type**
+      * - `code_type` in database
+      * - `NOT NULL`, no default
+      */
+      type: code_type;
+      /**
+      * **authorization_code.code**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      code: string;
+      /**
+      * **authorization_code.user_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      user_id: string;
+      /**
+      * **authorization_code.client_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      client_id: string | null;
+      /**
+      * **authorization_code.tenant**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tenant: string | null;
+      /**
+      * **authorization_code.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at: Date;
+      /**
+      * **authorization_code.duration_valid_seconds**
+      * - `interval` in database
+      * - `NOT NULL`, no default
+      */
+      duration_valid_seconds: string;
+    }
+    export interface JSONSelectable {
+      /**
+      * **authorization_code.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `gen_random_uuid()`
+      */
+      id: string;
+      /**
+      * **authorization_code.type**
+      * - `code_type` in database
+      * - `NOT NULL`, no default
+      */
+      type: code_type;
+      /**
+      * **authorization_code.code**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      code: string;
+      /**
+      * **authorization_code.user_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      user_id: string;
+      /**
+      * **authorization_code.client_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      client_id: string | null;
+      /**
+      * **authorization_code.tenant**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tenant: string | null;
+      /**
+      * **authorization_code.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at: db.TimestampTzString;
+      /**
+      * **authorization_code.duration_valid_seconds**
+      * - `interval` in database
+      * - `NOT NULL`, no default
+      */
+      duration_valid_seconds: string;
+    }
+    export interface Whereable {
+      /**
+      * **authorization_code.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `gen_random_uuid()`
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **authorization_code.type**
+      * - `code_type` in database
+      * - `NOT NULL`, no default
+      */
+      type?: code_type | db.Parameter<code_type> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, code_type | db.Parameter<code_type> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **authorization_code.code**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **authorization_code.user_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      user_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **authorization_code.client_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      client_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **authorization_code.tenant**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **authorization_code.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **authorization_code.duration_valid_seconds**
+      * - `interval` in database
+      * - `NOT NULL`, no default
+      */
+      duration_valid_seconds?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **authorization_code.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `gen_random_uuid()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
+      * **authorization_code.type**
+      * - `code_type` in database
+      * - `NOT NULL`, no default
+      */
+      type: code_type | db.Parameter<code_type> | db.SQLFragment;
+      /**
+      * **authorization_code.code**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      code: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **authorization_code.user_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      user_id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **authorization_code.client_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      client_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **authorization_code.tenant**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tenant?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **authorization_code.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **authorization_code.duration_valid_seconds**
+      * - `interval` in database
+      * - `NOT NULL`, no default
+      */
+      duration_valid_seconds: string | db.Parameter<string> | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **authorization_code.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `gen_random_uuid()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **authorization_code.type**
+      * - `code_type` in database
+      * - `NOT NULL`, no default
+      */
+      type?: code_type | db.Parameter<code_type> | db.SQLFragment | db.SQLFragment<any, code_type | db.Parameter<code_type> | db.SQLFragment>;
+      /**
+      * **authorization_code.code**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      code?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **authorization_code.user_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      user_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **authorization_code.client_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      client_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **authorization_code.tenant**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tenant?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **authorization_code.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **authorization_code.duration_valid_seconds**
+      * - `interval` in database
+      * - `NOT NULL`, no default
+      */
+      duration_valid_seconds?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'authorization_code_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
 
   /**
    * **date_idx**
@@ -3367,20 +3634,20 @@ declare module 'zapatos/schema' {
   /* --- aggregate types --- */
 
   export namespace public {  
-    export type Table = date_idx.Table | migrations.Table | migrations_state.Table | number_idx.Table | quantity_idx.Table | reference_idx.Table | resources.Table | string_idx.Table | tenant_owners.Table | tenants.Table | token_idx.Table | uri_idx.Table;
-    export type Selectable = date_idx.Selectable | migrations.Selectable | migrations_state.Selectable | number_idx.Selectable | quantity_idx.Selectable | reference_idx.Selectable | resources.Selectable | string_idx.Selectable | tenant_owners.Selectable | tenants.Selectable | token_idx.Selectable | uri_idx.Selectable;
-    export type JSONSelectable = date_idx.JSONSelectable | migrations.JSONSelectable | migrations_state.JSONSelectable | number_idx.JSONSelectable | quantity_idx.JSONSelectable | reference_idx.JSONSelectable | resources.JSONSelectable | string_idx.JSONSelectable | tenant_owners.JSONSelectable | tenants.JSONSelectable | token_idx.JSONSelectable | uri_idx.JSONSelectable;
-    export type Whereable = date_idx.Whereable | migrations.Whereable | migrations_state.Whereable | number_idx.Whereable | quantity_idx.Whereable | reference_idx.Whereable | resources.Whereable | string_idx.Whereable | tenant_owners.Whereable | tenants.Whereable | token_idx.Whereable | uri_idx.Whereable;
-    export type Insertable = date_idx.Insertable | migrations.Insertable | migrations_state.Insertable | number_idx.Insertable | quantity_idx.Insertable | reference_idx.Insertable | resources.Insertable | string_idx.Insertable | tenant_owners.Insertable | tenants.Insertable | token_idx.Insertable | uri_idx.Insertable;
-    export type Updatable = date_idx.Updatable | migrations.Updatable | migrations_state.Updatable | number_idx.Updatable | quantity_idx.Updatable | reference_idx.Updatable | resources.Updatable | string_idx.Updatable | tenant_owners.Updatable | tenants.Updatable | token_idx.Updatable | uri_idx.Updatable;
-    export type UniqueIndex = date_idx.UniqueIndex | migrations.UniqueIndex | migrations_state.UniqueIndex | number_idx.UniqueIndex | quantity_idx.UniqueIndex | reference_idx.UniqueIndex | resources.UniqueIndex | string_idx.UniqueIndex | tenant_owners.UniqueIndex | tenants.UniqueIndex | token_idx.UniqueIndex | uri_idx.UniqueIndex;
-    export type Column = date_idx.Column | migrations.Column | migrations_state.Column | number_idx.Column | quantity_idx.Column | reference_idx.Column | resources.Column | string_idx.Column | tenant_owners.Column | tenants.Column | token_idx.Column | uri_idx.Column;
+    export type Table = authorization_code.Table | date_idx.Table | migrations.Table | migrations_state.Table | number_idx.Table | quantity_idx.Table | reference_idx.Table | resources.Table | string_idx.Table | tenant_owners.Table | tenants.Table | token_idx.Table | uri_idx.Table;
+    export type Selectable = authorization_code.Selectable | date_idx.Selectable | migrations.Selectable | migrations_state.Selectable | number_idx.Selectable | quantity_idx.Selectable | reference_idx.Selectable | resources.Selectable | string_idx.Selectable | tenant_owners.Selectable | tenants.Selectable | token_idx.Selectable | uri_idx.Selectable;
+    export type JSONSelectable = authorization_code.JSONSelectable | date_idx.JSONSelectable | migrations.JSONSelectable | migrations_state.JSONSelectable | number_idx.JSONSelectable | quantity_idx.JSONSelectable | reference_idx.JSONSelectable | resources.JSONSelectable | string_idx.JSONSelectable | tenant_owners.JSONSelectable | tenants.JSONSelectable | token_idx.JSONSelectable | uri_idx.JSONSelectable;
+    export type Whereable = authorization_code.Whereable | date_idx.Whereable | migrations.Whereable | migrations_state.Whereable | number_idx.Whereable | quantity_idx.Whereable | reference_idx.Whereable | resources.Whereable | string_idx.Whereable | tenant_owners.Whereable | tenants.Whereable | token_idx.Whereable | uri_idx.Whereable;
+    export type Insertable = authorization_code.Insertable | date_idx.Insertable | migrations.Insertable | migrations_state.Insertable | number_idx.Insertable | quantity_idx.Insertable | reference_idx.Insertable | resources.Insertable | string_idx.Insertable | tenant_owners.Insertable | tenants.Insertable | token_idx.Insertable | uri_idx.Insertable;
+    export type Updatable = authorization_code.Updatable | date_idx.Updatable | migrations.Updatable | migrations_state.Updatable | number_idx.Updatable | quantity_idx.Updatable | reference_idx.Updatable | resources.Updatable | string_idx.Updatable | tenant_owners.Updatable | tenants.Updatable | token_idx.Updatable | uri_idx.Updatable;
+    export type UniqueIndex = authorization_code.UniqueIndex | date_idx.UniqueIndex | migrations.UniqueIndex | migrations_state.UniqueIndex | number_idx.UniqueIndex | quantity_idx.UniqueIndex | reference_idx.UniqueIndex | resources.UniqueIndex | string_idx.UniqueIndex | tenant_owners.UniqueIndex | tenants.UniqueIndex | token_idx.UniqueIndex | uri_idx.UniqueIndex;
+    export type Column = authorization_code.Column | date_idx.Column | migrations.Column | migrations_state.Column | number_idx.Column | quantity_idx.Column | reference_idx.Column | resources.Column | string_idx.Column | tenant_owners.Column | tenants.Column | token_idx.Column | uri_idx.Column;
   
-    export type AllBaseTables = [date_idx.Table, migrations.Table, migrations_state.Table, number_idx.Table, quantity_idx.Table, reference_idx.Table, resources.Table, string_idx.Table, tenant_owners.Table, tenants.Table, token_idx.Table, uri_idx.Table];
+    export type AllBaseTables = [authorization_code.Table, date_idx.Table, migrations.Table, migrations_state.Table, number_idx.Table, quantity_idx.Table, reference_idx.Table, resources.Table, string_idx.Table, tenant_owners.Table, tenants.Table, token_idx.Table, uri_idx.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [date_idx.Table, migrations.Table, migrations_state.Table, number_idx.Table, quantity_idx.Table, reference_idx.Table, resources.Table, string_idx.Table, tenant_owners.Table, tenants.Table, token_idx.Table, uri_idx.Table];
+    export type AllTablesAndViews = [authorization_code.Table, date_idx.Table, migrations.Table, migrations_state.Table, number_idx.Table, quantity_idx.Table, reference_idx.Table, resources.Table, string_idx.Table, tenant_owners.Table, tenants.Table, token_idx.Table, uri_idx.Table];
   }
 
 
@@ -3408,6 +3675,7 @@ declare module 'zapatos/schema' {
   /* === lookups === */
 
   export type SelectableForTable<T extends Table> = {
+    "authorization_code": authorization_code.Selectable;
     "date_idx": date_idx.Selectable;
     "migrations": migrations.Selectable;
     "migrations_state": migrations_state.Selectable;
@@ -3423,6 +3691,7 @@ declare module 'zapatos/schema' {
   }[T];
 
   export type JSONSelectableForTable<T extends Table> = {
+    "authorization_code": authorization_code.JSONSelectable;
     "date_idx": date_idx.JSONSelectable;
     "migrations": migrations.JSONSelectable;
     "migrations_state": migrations_state.JSONSelectable;
@@ -3438,6 +3707,7 @@ declare module 'zapatos/schema' {
   }[T];
 
   export type WhereableForTable<T extends Table> = {
+    "authorization_code": authorization_code.Whereable;
     "date_idx": date_idx.Whereable;
     "migrations": migrations.Whereable;
     "migrations_state": migrations_state.Whereable;
@@ -3453,6 +3723,7 @@ declare module 'zapatos/schema' {
   }[T];
 
   export type InsertableForTable<T extends Table> = {
+    "authorization_code": authorization_code.Insertable;
     "date_idx": date_idx.Insertable;
     "migrations": migrations.Insertable;
     "migrations_state": migrations_state.Insertable;
@@ -3468,6 +3739,7 @@ declare module 'zapatos/schema' {
   }[T];
 
   export type UpdatableForTable<T extends Table> = {
+    "authorization_code": authorization_code.Updatable;
     "date_idx": date_idx.Updatable;
     "migrations": migrations.Updatable;
     "migrations_state": migrations_state.Updatable;
@@ -3483,6 +3755,7 @@ declare module 'zapatos/schema' {
   }[T];
 
   export type UniqueIndexForTable<T extends Table> = {
+    "authorization_code": authorization_code.UniqueIndex;
     "date_idx": date_idx.UniqueIndex;
     "migrations": migrations.UniqueIndex;
     "migrations_state": migrations_state.UniqueIndex;
@@ -3498,6 +3771,7 @@ declare module 'zapatos/schema' {
   }[T];
 
   export type ColumnForTable<T extends Table> = {
+    "authorization_code": authorization_code.Column;
     "date_idx": date_idx.Column;
     "migrations": migrations.Column;
     "migrations_state": migrations_state.Column;
@@ -3513,6 +3787,7 @@ declare module 'zapatos/schema' {
   }[T];
 
   export type SQLForTable<T extends Table> = {
+    "authorization_code": authorization_code.SQL;
     "date_idx": date_idx.SQL;
     "migrations": migrations.SQL;
     "migrations_state": migrations_state.SQL;

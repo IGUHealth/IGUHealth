@@ -1,8 +1,13 @@
+import { createRequire } from "module";
+import fs from "node:fs";
 import React from "react";
 
-import { Login } from "@iguhealth/components";
+const require = createRequire(import.meta.url);
+const indexCSS = fs
+  .readFileSync(require.resolve("@iguhealth/components/dist/index.css"))
+  .toString();
 
-export default function () {
+export default function Base({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
@@ -11,10 +16,9 @@ export default function () {
         <title>IGUHealth Login</title>
         <link rel="icon" href="/public/img/logo.svg" />
         <link rel="stylesheet" href="/public/css/index.css"></link>
+        <style>{indexCSS}</style>
       </head>
-      <body>
-        <Login logo="/public/img/logo.svg" action="#" />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

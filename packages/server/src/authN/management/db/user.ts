@@ -1,7 +1,7 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
-const USER_QUERY_COLS = <const>["email", "first_name", "last_name"];
+const USER_QUERY_COLS = <const>["email", "first_name", "last_name", "email_verified"];
 type USER_RETURN = s.tenant_owners.OnlyCols<typeof USER_QUERY_COLS>;
 
 export async function findManagementUserByEmailPassword(
@@ -24,6 +24,24 @@ export async function findManagementUserByEmailPassword(
   return user[0];
 }
 
+
+export async function findManagementUserByEmail(
+  client: db.Queryable,
+  email: string,
+): Promise<USER_RETURN | undefined> {
+  const where: s.tenant_owners.Whereable = {
+    email: email,
+  };
+  const user = await db.sql<
+    s.tenant_owners.SQL,
+    USER_RETURN[]
+  >`SELECT ${db.cols(USER_QUERY_COLS)} FROM ${"tenant_owners"} WHERE ${where}`.run(client);
+
+  // Sanity check should never happen given unique check on email.
+  if(user.length > 1) throw new Error("Multiple users found with the same email and password");
+
+  return user[0];
+}
 
 export async function createManagementUser(user: s.tenant_owners.Insertable, client: db.Queryable) {
   const insertedUser = await db.insert("tenant_owners", user).run(client);

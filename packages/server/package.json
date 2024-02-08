@@ -25,6 +25,7 @@
     "@iguhealth/artifacts": "workspace:^",
     "@iguhealth/cli": "workspace:^",
     "@iguhealth/client": "workspace:^",
+    "@iguhealth/components": "workspace:^",
     "@iguhealth/fhir-validation": "workspace:^",
     "@iguhealth/fhirpath": "workspace:^",
     "@iguhealth/generated-ops": "workspace:^",

@@ -173,9 +173,13 @@ export default async function createServer(): Promise<
     KoaFHIRContext<Koa.DefaultContext>
   >();
 
-  rootRouter.use("/", await createKoaFHIRServices(pool));
+  rootRouter.use(
+    "/",
+    createErrorHandlingMiddleware(),
+    await createKoaFHIRServices(pool),
+  );
 
-  const managementRouter = createManagementRouter("/api/v1/management");
+  const managementRouter = createManagementRouter("/management");
   rootRouter.use(managementRouter.routes());
   rootRouter.use(managementRouter.allowedMethods());
 
@@ -196,7 +200,7 @@ export default async function createServer(): Promise<
   tenantAPIV1Router.use(
     "/",
     // Error handling middleware. Checks for OperationError and converts to OperationOutcome with status based on level and/or code.
-    createErrorHandlingMiddleware(),
+
     // Associate FHIR Context for all routes
     // [NOTE] for oidc we pull in fhir data so we need to associate the context on top of non fhir apis.
 
