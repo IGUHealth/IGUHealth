@@ -10,6 +10,7 @@ packages/server/src/version.ts
 storybook-static/
 .docusaurus
 .dccache
+packages/server/public/**/*.css
 
 # Typedoc generation ignore
 docs/

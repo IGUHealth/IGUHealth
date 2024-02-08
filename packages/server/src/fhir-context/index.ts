@@ -496,9 +496,9 @@ export async function createFHIRServices(
 export function createEmailProvider(): EmailProvider | undefined {
   switch (process.env.EMAIL_PROVIDER) {
     case "sendgrid": {
-      if (!process.env.SENDGRID_API_KEY)
-        throw new Error("SENDGRID_API_KEY not set");
-      return new SendGrid(process.env.SENDGRID_API_KEY as string);
+      if (!process.env.EMAIL_SENDGRID_API_KEY)
+        throw new Error("EMAIL_SENDGRID_API_KEY not set");
+      return new SendGrid(process.env.EMAIL_SENDGRID_API_KEY as string);
     }
     default:
       return undefined;

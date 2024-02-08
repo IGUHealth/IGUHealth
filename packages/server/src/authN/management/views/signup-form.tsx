@@ -1,8 +1,8 @@
 import React from "react";
 
-import { Login } from "@iguhealth/components";
+import { SignupForm } from "@iguhealth/components";
 
-export default function () {
+export default function ({ action }: { action: string }) {
   return (
     <html lang="en">
       <head>
@@ -13,7 +13,7 @@ export default function () {
         <link rel="stylesheet" href="/public/css/index.css"></link>
       </head>
       <body>
-        <Login logo="/public/img/logo.svg" action="#" />
+        <SignupForm logo="/public/img/logo.svg" action={action} />
       </body>
     </html>
   );
