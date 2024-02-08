@@ -34,16 +34,13 @@ const EMAIL_REGEX =
 // Pulled from https://github.com/manishsaraan/email-validator/blob/master/index.js
 function validateEmail(email: string | undefined): email is Email {
   if (!email) return false;
-
   const emailParts = email.split("@");
-
   if (emailParts.length !== 2) return false;
 
   const account = emailParts[0];
   const address = emailParts[1];
 
-  if (account.length > 64) return false;
-  else if (address.length > 255) return false;
+  if (account.length > 64 || address.length > 255) return false;
 
   const domainParts = address.split(".");
 
@@ -77,7 +74,7 @@ export function createManagementRouter(prefix: string) {
     const stream = new PassThrough();
 
     const signupURL = managementRouter.url(ROUTES.SIGNUP_POST);
-    if (!(typeof signupURL === "string")) throw signupURL;
+    if (typeof signupURL !== "string") throw signupURL;
 
     const { pipe } = renderToPipeableStream(
       React.createElement(SignupFormView, { action: signupURL }),
@@ -158,8 +155,7 @@ export function createManagementRouter(prefix: string) {
         {},
         { query: { code: code.code } },
       );
-      if (!(typeof emailVerificationURL === "string"))
-        throw emailVerificationURL;
+      if (typeof emailVerificationURL !== "string") throw emailVerificationURL;
 
       ctx.emailProvider.sendEmail({
         from: process.env.EMAIL_FROM,
@@ -169,12 +165,12 @@ export function createManagementRouter(prefix: string) {
       });
 
       const alertUserEmailURL = managementRouter.url(ROUTES.FEEDBACK_EMAIL_GET);
-      if (!(typeof alertUserEmailURL === "string")) throw alertUserEmailURL;
+      if (typeof alertUserEmailURL !== "string") throw alertUserEmailURL;
 
       ctx.redirect(alertUserEmailURL);
     } else {
       const loginURL = managementRouter.url(ROUTES.LOGIN_GET);
-      if (!(typeof loginURL === "string")) throw loginURL;
+      if (typeof loginURL !== "string") throw loginURL;
       ctx.redirect(loginURL);
     }
   });

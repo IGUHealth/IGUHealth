@@ -7,7 +7,9 @@ const indexCSS = fs
   .readFileSync(require.resolve("@iguhealth/components/dist/index.css"))
   .toString();
 
-export default function Base({ children }: { children: React.ReactNode }) {
+export default function Base({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <head>
