@@ -5,12 +5,17 @@ import { PassThrough } from "stream";
 
 import Base from "./base.js";
 
-export function render(ctx: Koa.Context, Component: React.ReactElement) {
+/**
+ * Render a react element to a Koa context with base html wrapped.
+ * @param ctx Koa context (will set body with rendered react).
+ * @param element The react element to render.
+ */
+export function render(ctx: Koa.Context, element: React.ReactElement) {
   const stream = new PassThrough();
 
   const { pipe } = renderToPipeableStream(
     React.createElement(Base, {
-      children: Component,
+      children: element,
     }),
     {
       // bootstrapScripts: ["/main.js"],
