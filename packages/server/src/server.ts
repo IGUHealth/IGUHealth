@@ -7,9 +7,13 @@ import mount from "koa-mount";
 import ratelimit from "koa-ratelimit";
 import serve from "koa-static";
 import path from "node:path";
+import { PassThrough } from "node:stream";
 import pg from "pg";
+import React from "react";
+import { renderToPipeableStream } from "react-dom/server";
 import { fileURLToPath } from "url";
 
+import { FHIROperationOutcomeDisplay } from "@iguhealth/components";
 import {
   isOperationError,
   issueSeverityToStatusCodes,
@@ -39,6 +43,7 @@ import {
 } from "./fhir-http/index.js";
 import * as MonitoringSentry from "./monitoring/sentry.js";
 import { LIB_VERSION } from "./version.js";
+import Base from "./views/base.js";
 
 dotEnv.config();
 
@@ -125,7 +130,35 @@ function createErrorHandlingMiddleware<T>(): Koa.Middleware<
         ctx.status = operationOutcome.issue
           .map((i) => issueSeverityToStatusCodes(i.severity))
           .sort()[operationOutcome.issue.length - 1];
-        ctx.body = operationOutcome;
+
+        console.log("type:", ctx.request.type);
+        if (ctx.request.type === "text/html" || ctx.request.type === "") {
+          const stream = new PassThrough();
+
+          const { pipe } = renderToPipeableStream(
+            React.createElement(Base, {
+              children: React.createElement(FHIROperationOutcomeDisplay, {
+                logo: "/public/img/logo.svg",
+                title: "IGUHealth",
+                operationOutcome,
+              }),
+            }),
+            {
+              // bootstrapScripts: ["/main.js"],
+              onShellReady() {
+                ctx.respond = false;
+                ctx.status = 200;
+                ctx.set("content-type", "text/html");
+                pipe(stream);
+                stream.end();
+              },
+            },
+          );
+
+          ctx.body = stream;
+        } else {
+          ctx.body = operationOutcome;
+        }
       } else {
         logger.error(e);
         MonitoringSentry.logError(e, ctx);

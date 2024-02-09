@@ -18,7 +18,7 @@ export default function Base({
         <title>IGUHealth Login</title>
         <link rel="icon" href="/public/img/logo.svg" />
         <link rel="stylesheet" href="/public/css/index.css"></link>
-        <style>{indexCSS}</style>
+        <style dangerouslySetInnerHTML={{ __html: indexCSS }}></style>
       </head>
       <body>{children}</body>
     </html>

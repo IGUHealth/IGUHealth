@@ -7,6 +7,7 @@ import { PassThrough } from "stream";
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
+import { Feedback, SignupForm } from "@iguhealth/components";
 import {
   OperationError,
   outcomeError,
@@ -14,10 +15,9 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { KoaFHIRServicesContext } from "../../fhir-context/koa.js";
+import Base from "../../views/base.js";
 import { createAuthorizationCode } from "./db/code.js";
 import { findManagementUserByEmail } from "./db/user.js";
-import Feedback from "./views/feedback.js";
-import SignupFormView from "./views/signup-form.js";
 
 type Email = string & { _emailBrand: never };
 
@@ -77,7 +77,12 @@ export function createManagementRouter(prefix: string) {
     if (typeof signupURL !== "string") throw signupURL;
 
     const { pipe } = renderToPipeableStream(
-      React.createElement(SignupFormView, { action: signupURL }),
+      React.createElement(Base, {
+        children: React.createElement(SignupForm, {
+          logo: "/public/img/logo.svg",
+          action: signupURL,
+        }),
+      }),
       {
         // bootstrapScripts: ["/main.js"],
         onShellReady() {
@@ -194,12 +199,14 @@ export function createManagementRouter(prefix: string) {
       const stream = new PassThrough();
 
       const { pipe } = renderToPipeableStream(
-        React.createElement(Feedback, {
-          logo: "/public/img/logo.svg",
-          title: "IGUHealth",
-          header: "Email Verification",
-          content:
-            "We have sent an email to your email address. Please verify your email address to login.",
+        React.createElement(Base, {
+          children: React.createElement(Feedback, {
+            logo: "/public/img/logo.svg",
+            title: "IGUHealth",
+            header: "Email Verification",
+            content:
+              "We have sent an email to your email address. Please verify your email address to login.",
+          }),
         }),
         {
           // bootstrapScripts: ["/main.js"],
