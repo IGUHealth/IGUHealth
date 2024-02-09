@@ -1,10 +1,11 @@
+import { nanoid } from "nanoid";
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
 const USER_QUERY_COLS = <const>["email", "first_name", "last_name", "email_verified"];
 type USER_RETURN = s.tenant_owners.OnlyCols<typeof USER_QUERY_COLS>;
 
-export async function findManagementUserByEmailPassword(
+export async function login(
   client: db.Queryable,
   email: string,
   password: string,
@@ -43,11 +44,6 @@ export async function findManagementUserByEmail(
   return user[0];
 }
 
-export async function createManagementUser(user: s.tenant_owners.Insertable, client: db.Queryable) {
-  const insertedUser = await db.insert("tenant_owners", user).run(client);
-  return insertedUser;
-}
-
 /**
  * Update a given user by email (note email is used for the Update query and will not update here).
  * @param client Queryable client
@@ -60,3 +56,41 @@ export async function updateManagementUser(client: db.Queryable, email: string, 
    return updatedUser[0];
 }
 
+/**
+ * Creates a new user + tenant and associates user to tenant as owner within a transaction.
+ * @param client Queryable postgres instance
+ * @param email New users email
+ * @param password New users password
+ * @returns Newly created user object.
+ */
+export async function createUser(client: db.Queryable, email: string, password: string): Promise<s.tenant_owners.JSONSelectable> {
+  return await db.serializable(client, async (txnClient) => {
+    const tenant = await db
+      .insert("tenants", {
+        id: nanoid(),
+        tenant: {
+          id: nanoid(),
+          name: "Default",
+        },
+      })
+      .run(txnClient);
+
+    const user = await db
+      .insert("tenant_owners", {
+        email: email,
+        password: password,
+        email_verified: false,
+      })
+      .run(txnClient);
+
+    await db
+      .insert("tenant_owners_to_tenants", {
+        tenant_id: tenant.id,
+        user_email: user.email,
+        role: "owner",
+      })
+      .run(txnClient);
+
+    return user;
+  });
+}
