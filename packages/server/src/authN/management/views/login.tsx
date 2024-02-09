@@ -2,7 +2,7 @@ import React from "react";
 
 import { Login } from "@iguhealth/components";
 
-import Base from "./base.js";
+import Base from "../../../views/base.js";
 
 export default function () {
   return (
