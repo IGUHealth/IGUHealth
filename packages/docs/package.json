@@ -1,5 +1,10 @@
 {
   "name": "@iguhealth/docs",
+  "homepage": "https://docs.iguhealth.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IGUHealth/IGUHealth.git"
+  },
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",

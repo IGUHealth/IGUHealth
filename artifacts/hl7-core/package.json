@@ -1,7 +1,12 @@
 {
   "name": "@iguhealth/hl7.fhir.r4.core",
-  "packageManager": "yarn@4.1.0",
   "version": "0.2.0",
+  "homepage": "https://docs.iguhealth.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IGUHealth/IGUHealth.git"
+  },
+  "packageManager": "yarn@4.1.0",
   "canonical": "https://iguhealth.app/fhir/ImplementationGuide/iguhealth.hl7.fhir.r4.core",
   "url": "https://iguhealth.app/fhir/ImplementationGuide/iguhealth.hl7.fhir.r4.core",
   "title": "Hl7 Core resources",
