@@ -1,7 +1,7 @@
 {
   "name": "@iguhealth/test-data",
   "packageManager": "yarn@4.1.0",
-  "version": "0.1.29",
+  "version": "0.1.30",
   "homepage": "https://docs.iguhealth.app",
   "repository": {
     "type": "git",
