@@ -23,6 +23,10 @@ declare module 'zapatos/schema' {
   export namespace every {
     export type code_type = ['oauth2_code_grant', 'password_reset', 'signup_confirmation'];
   }
+  export type user_role = 'owner';
+  export namespace every {
+    export type user_role = ['owner'];
+  }
 
   /* --- tables --- */
 
@@ -2563,12 +2567,6 @@ declare module 'zapatos/schema' {
       */
       id: string;
       /**
-      * **tenant_owners.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string;
-      /**
       * **tenant_owners.email**
       * - `text` in database
       * - `NOT NULL`, no default
@@ -2624,12 +2622,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       id: string;
-      /**
-      * **tenant_owners.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string;
       /**
       * **tenant_owners.email**
       * - `text` in database
@@ -2687,12 +2679,6 @@ declare module 'zapatos/schema' {
       */
       id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **tenant_owners.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **tenant_owners.email**
       * - `text` in database
       * - `NOT NULL`, no default
@@ -2748,12 +2734,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
-      /**
-      * **tenant_owners.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **tenant_owners.email**
       * - `text` in database
@@ -2811,12 +2791,6 @@ declare module 'zapatos/schema' {
       */
       id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
       /**
-      * **tenant_owners.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
       * **tenant_owners.email**
       * - `text` in database
       * - `NOT NULL`, no default
@@ -2866,6 +2840,119 @@ declare module 'zapatos/schema' {
       updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'tenant_owners_email_key' | 'tenant_owners_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **tenant_owners_to_tenants**
+   * - Table in database
+   */
+  export namespace tenant_owners_to_tenants {
+    export type Table = 'tenant_owners_to_tenants';
+    export interface Selectable {
+      /**
+      * **tenant_owners_to_tenants.user_email**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      user_email: string;
+      /**
+      * **tenant_owners_to_tenants.tenant_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant_id: string;
+      /**
+      * **tenant_owners_to_tenants.role**
+      * - `user_role` in database
+      * - `NOT NULL`, default: `'owner'::user_role`
+      */
+      role: user_role;
+    }
+    export interface JSONSelectable {
+      /**
+      * **tenant_owners_to_tenants.user_email**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      user_email: string;
+      /**
+      * **tenant_owners_to_tenants.tenant_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant_id: string;
+      /**
+      * **tenant_owners_to_tenants.role**
+      * - `user_role` in database
+      * - `NOT NULL`, default: `'owner'::user_role`
+      */
+      role: user_role;
+    }
+    export interface Whereable {
+      /**
+      * **tenant_owners_to_tenants.user_email**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      user_email?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tenant_owners_to_tenants.tenant_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tenant_owners_to_tenants.role**
+      * - `user_role` in database
+      * - `NOT NULL`, default: `'owner'::user_role`
+      */
+      role?: user_role | db.Parameter<user_role> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, user_role | db.Parameter<user_role> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **tenant_owners_to_tenants.user_email**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      user_email: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **tenant_owners_to_tenants.tenant_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant_id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **tenant_owners_to_tenants.role**
+      * - `user_role` in database
+      * - `NOT NULL`, default: `'owner'::user_role`
+      */
+      role?: user_role | db.Parameter<user_role> | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **tenant_owners_to_tenants.user_email**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      user_email?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **tenant_owners_to_tenants.tenant_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **tenant_owners_to_tenants.role**
+      * - `user_role` in database
+      * - `NOT NULL`, default: `'owner'::user_role`
+      */
+      role?: user_role | db.Parameter<user_role> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, user_role | db.Parameter<user_role> | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'tenant_owners_to_tenants_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
@@ -3634,20 +3721,20 @@ declare module 'zapatos/schema' {
   /* --- aggregate types --- */
 
   export namespace public {  
-    export type Table = authorization_code.Table | date_idx.Table | migrations.Table | migrations_state.Table | number_idx.Table | quantity_idx.Table | reference_idx.Table | resources.Table | string_idx.Table | tenant_owners.Table | tenants.Table | token_idx.Table | uri_idx.Table;
-    export type Selectable = authorization_code.Selectable | date_idx.Selectable | migrations.Selectable | migrations_state.Selectable | number_idx.Selectable | quantity_idx.Selectable | reference_idx.Selectable | resources.Selectable | string_idx.Selectable | tenant_owners.Selectable | tenants.Selectable | token_idx.Selectable | uri_idx.Selectable;
-    export type JSONSelectable = authorization_code.JSONSelectable | date_idx.JSONSelectable | migrations.JSONSelectable | migrations_state.JSONSelectable | number_idx.JSONSelectable | quantity_idx.JSONSelectable | reference_idx.JSONSelectable | resources.JSONSelectable | string_idx.JSONSelectable | tenant_owners.JSONSelectable | tenants.JSONSelectable | token_idx.JSONSelectable | uri_idx.JSONSelectable;
-    export type Whereable = authorization_code.Whereable | date_idx.Whereable | migrations.Whereable | migrations_state.Whereable | number_idx.Whereable | quantity_idx.Whereable | reference_idx.Whereable | resources.Whereable | string_idx.Whereable | tenant_owners.Whereable | tenants.Whereable | token_idx.Whereable | uri_idx.Whereable;
-    export type Insertable = authorization_code.Insertable | date_idx.Insertable | migrations.Insertable | migrations_state.Insertable | number_idx.Insertable | quantity_idx.Insertable | reference_idx.Insertable | resources.Insertable | string_idx.Insertable | tenant_owners.Insertable | tenants.Insertable | token_idx.Insertable | uri_idx.Insertable;
-    export type Updatable = authorization_code.Updatable | date_idx.Updatable | migrations.Updatable | migrations_state.Updatable | number_idx.Updatable | quantity_idx.Updatable | reference_idx.Updatable | resources.Updatable | string_idx.Updatable | tenant_owners.Updatable | tenants.Updatable | token_idx.Updatable | uri_idx.Updatable;
-    export type UniqueIndex = authorization_code.UniqueIndex | date_idx.UniqueIndex | migrations.UniqueIndex | migrations_state.UniqueIndex | number_idx.UniqueIndex | quantity_idx.UniqueIndex | reference_idx.UniqueIndex | resources.UniqueIndex | string_idx.UniqueIndex | tenant_owners.UniqueIndex | tenants.UniqueIndex | token_idx.UniqueIndex | uri_idx.UniqueIndex;
-    export type Column = authorization_code.Column | date_idx.Column | migrations.Column | migrations_state.Column | number_idx.Column | quantity_idx.Column | reference_idx.Column | resources.Column | string_idx.Column | tenant_owners.Column | tenants.Column | token_idx.Column | uri_idx.Column;
+    export type Table = authorization_code.Table | date_idx.Table | migrations.Table | migrations_state.Table | number_idx.Table | quantity_idx.Table | reference_idx.Table | resources.Table | string_idx.Table | tenant_owners.Table | tenant_owners_to_tenants.Table | tenants.Table | token_idx.Table | uri_idx.Table;
+    export type Selectable = authorization_code.Selectable | date_idx.Selectable | migrations.Selectable | migrations_state.Selectable | number_idx.Selectable | quantity_idx.Selectable | reference_idx.Selectable | resources.Selectable | string_idx.Selectable | tenant_owners.Selectable | tenant_owners_to_tenants.Selectable | tenants.Selectable | token_idx.Selectable | uri_idx.Selectable;
+    export type JSONSelectable = authorization_code.JSONSelectable | date_idx.JSONSelectable | migrations.JSONSelectable | migrations_state.JSONSelectable | number_idx.JSONSelectable | quantity_idx.JSONSelectable | reference_idx.JSONSelectable | resources.JSONSelectable | string_idx.JSONSelectable | tenant_owners.JSONSelectable | tenant_owners_to_tenants.JSONSelectable | tenants.JSONSelectable | token_idx.JSONSelectable | uri_idx.JSONSelectable;
+    export type Whereable = authorization_code.Whereable | date_idx.Whereable | migrations.Whereable | migrations_state.Whereable | number_idx.Whereable | quantity_idx.Whereable | reference_idx.Whereable | resources.Whereable | string_idx.Whereable | tenant_owners.Whereable | tenant_owners_to_tenants.Whereable | tenants.Whereable | token_idx.Whereable | uri_idx.Whereable;
+    export type Insertable = authorization_code.Insertable | date_idx.Insertable | migrations.Insertable | migrations_state.Insertable | number_idx.Insertable | quantity_idx.Insertable | reference_idx.Insertable | resources.Insertable | string_idx.Insertable | tenant_owners.Insertable | tenant_owners_to_tenants.Insertable | tenants.Insertable | token_idx.Insertable | uri_idx.Insertable;
+    export type Updatable = authorization_code.Updatable | date_idx.Updatable | migrations.Updatable | migrations_state.Updatable | number_idx.Updatable | quantity_idx.Updatable | reference_idx.Updatable | resources.Updatable | string_idx.Updatable | tenant_owners.Updatable | tenant_owners_to_tenants.Updatable | tenants.Updatable | token_idx.Updatable | uri_idx.Updatable;
+    export type UniqueIndex = authorization_code.UniqueIndex | date_idx.UniqueIndex | migrations.UniqueIndex | migrations_state.UniqueIndex | number_idx.UniqueIndex | quantity_idx.UniqueIndex | reference_idx.UniqueIndex | resources.UniqueIndex | string_idx.UniqueIndex | tenant_owners.UniqueIndex | tenant_owners_to_tenants.UniqueIndex | tenants.UniqueIndex | token_idx.UniqueIndex | uri_idx.UniqueIndex;
+    export type Column = authorization_code.Column | date_idx.Column | migrations.Column | migrations_state.Column | number_idx.Column | quantity_idx.Column | reference_idx.Column | resources.Column | string_idx.Column | tenant_owners.Column | tenant_owners_to_tenants.Column | tenants.Column | token_idx.Column | uri_idx.Column;
   
-    export type AllBaseTables = [authorization_code.Table, date_idx.Table, migrations.Table, migrations_state.Table, number_idx.Table, quantity_idx.Table, reference_idx.Table, resources.Table, string_idx.Table, tenant_owners.Table, tenants.Table, token_idx.Table, uri_idx.Table];
+    export type AllBaseTables = [authorization_code.Table, date_idx.Table, migrations.Table, migrations_state.Table, number_idx.Table, quantity_idx.Table, reference_idx.Table, resources.Table, string_idx.Table, tenant_owners.Table, tenant_owners_to_tenants.Table, tenants.Table, token_idx.Table, uri_idx.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [authorization_code.Table, date_idx.Table, migrations.Table, migrations_state.Table, number_idx.Table, quantity_idx.Table, reference_idx.Table, resources.Table, string_idx.Table, tenant_owners.Table, tenants.Table, token_idx.Table, uri_idx.Table];
+    export type AllTablesAndViews = [authorization_code.Table, date_idx.Table, migrations.Table, migrations_state.Table, number_idx.Table, quantity_idx.Table, reference_idx.Table, resources.Table, string_idx.Table, tenant_owners.Table, tenant_owners_to_tenants.Table, tenants.Table, token_idx.Table, uri_idx.Table];
   }
 
 
@@ -3685,6 +3772,7 @@ declare module 'zapatos/schema' {
     "resources": resources.Selectable;
     "string_idx": string_idx.Selectable;
     "tenant_owners": tenant_owners.Selectable;
+    "tenant_owners_to_tenants": tenant_owners_to_tenants.Selectable;
     "tenants": tenants.Selectable;
     "token_idx": token_idx.Selectable;
     "uri_idx": uri_idx.Selectable;
@@ -3701,6 +3789,7 @@ declare module 'zapatos/schema' {
     "resources": resources.JSONSelectable;
     "string_idx": string_idx.JSONSelectable;
     "tenant_owners": tenant_owners.JSONSelectable;
+    "tenant_owners_to_tenants": tenant_owners_to_tenants.JSONSelectable;
     "tenants": tenants.JSONSelectable;
     "token_idx": token_idx.JSONSelectable;
     "uri_idx": uri_idx.JSONSelectable;
@@ -3717,6 +3806,7 @@ declare module 'zapatos/schema' {
     "resources": resources.Whereable;
     "string_idx": string_idx.Whereable;
     "tenant_owners": tenant_owners.Whereable;
+    "tenant_owners_to_tenants": tenant_owners_to_tenants.Whereable;
     "tenants": tenants.Whereable;
     "token_idx": token_idx.Whereable;
     "uri_idx": uri_idx.Whereable;
@@ -3733,6 +3823,7 @@ declare module 'zapatos/schema' {
     "resources": resources.Insertable;
     "string_idx": string_idx.Insertable;
     "tenant_owners": tenant_owners.Insertable;
+    "tenant_owners_to_tenants": tenant_owners_to_tenants.Insertable;
     "tenants": tenants.Insertable;
     "token_idx": token_idx.Insertable;
     "uri_idx": uri_idx.Insertable;
@@ -3749,6 +3840,7 @@ declare module 'zapatos/schema' {
     "resources": resources.Updatable;
     "string_idx": string_idx.Updatable;
     "tenant_owners": tenant_owners.Updatable;
+    "tenant_owners_to_tenants": tenant_owners_to_tenants.Updatable;
     "tenants": tenants.Updatable;
     "token_idx": token_idx.Updatable;
     "uri_idx": uri_idx.Updatable;
@@ -3765,6 +3857,7 @@ declare module 'zapatos/schema' {
     "resources": resources.UniqueIndex;
     "string_idx": string_idx.UniqueIndex;
     "tenant_owners": tenant_owners.UniqueIndex;
+    "tenant_owners_to_tenants": tenant_owners_to_tenants.UniqueIndex;
     "tenants": tenants.UniqueIndex;
     "token_idx": token_idx.UniqueIndex;
     "uri_idx": uri_idx.UniqueIndex;
@@ -3781,6 +3874,7 @@ declare module 'zapatos/schema' {
     "resources": resources.Column;
     "string_idx": string_idx.Column;
     "tenant_owners": tenant_owners.Column;
+    "tenant_owners_to_tenants": tenant_owners_to_tenants.Column;
     "tenants": tenants.Column;
     "token_idx": token_idx.Column;
     "uri_idx": uri_idx.Column;
@@ -3797,6 +3891,7 @@ declare module 'zapatos/schema' {
     "resources": resources.SQL;
     "string_idx": string_idx.SQL;
     "tenant_owners": tenant_owners.SQL;
+    "tenant_owners_to_tenants": tenant_owners_to_tenants.SQL;
     "tenants": tenants.SQL;
     "token_idx": token_idx.SQL;
     "uri_idx": uri_idx.SQL;

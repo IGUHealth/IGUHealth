@@ -119,23 +119,35 @@ export function createManagementRouter(prefix: string) {
     let user = await findManagementUserByEmail(ctx.postgres, body.email);
 
     if (!user) {
-      const newTenant: s.tenants.Insertable = {
-        id: nanoid(),
-        tenant: {
-          id: nanoid(),
-          name: "Default",
-        },
-      };
+      user = await db.serializable(ctx.postgres, async (txnClient) => {
+        const tenant = await db
+          .insert("tenants", {
+            id: nanoid(),
+            tenant: {
+              id: nanoid(),
+              name: "Default",
+            },
+          })
+          .run(txnClient);
 
-      const tenant = await db.insert("tenants", newTenant).run(ctx.postgres);
-      const newUser: s.tenant_owners.Insertable = {
-        tenant: tenant.id,
-        email: body.email,
-        password: body.password,
-        email_verified: false,
-      };
+        const user = await db
+          .insert("tenant_owners", {
+            email: body.email as string,
+            password: body.password as string,
+            email_verified: false,
+          })
+          .run(txnClient);
 
-      user = await db.insert("tenant_owners", newUser).run(ctx.postgres);
+        const _associateUserToTenant = await db
+          .insert("tenant_owners_to_tenants", {
+            tenant_id: tenant.id,
+            user_email: user.email,
+            role: "owner",
+          })
+          .run(txnClient);
+
+        return user;
+      });
     }
 
     if (!process.env.EMAIL_FROM) {
