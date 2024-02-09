@@ -4,14 +4,15 @@ import { PassThrough } from "node:stream";
 import React from "react";
 import { renderToPipeableStream } from "react-dom/server";
 
+import { Login } from "@iguhealth/components";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaFHIRContext } from "../../fhir-context/koa.js";
+import Base from "../../views/base.js";
 import { getSigningKey } from "../certifications.js";
 import { createToken } from "../token.js";
 import { getCredentialsBasicHeader } from "../utilities.js";
 import { createClientInjectMiddleware } from "./middleware/client_find.js";
-import Login from "./views/login.js";
 
 type AuthorizationRequestBody = {
   response_type: "token";
@@ -196,16 +197,24 @@ export function createOIDCRouter<State, C>(
   oidcRouter.get("/interaction/login", (ctx) => {
     const stream = new PassThrough();
 
-    const { pipe } = renderToPipeableStream(React.createElement(Login), {
-      // bootstrapScripts: ["/main.js"],
-      onShellReady() {
-        ctx.respond = false;
-        ctx.status = 200;
-        ctx.set("content-type", "text/html");
-        pipe(stream);
-        stream.end();
+    const { pipe } = renderToPipeableStream(
+      React.createElement(Base, {
+        children: React.createElement(Login, {
+          logo: "/public/img/logo.svg",
+          action: "#",
+        }),
+      }),
+      {
+        // bootstrapScripts: ["/main.js"],
+        onShellReady() {
+          ctx.respond = false;
+          ctx.status = 200;
+          ctx.set("content-type", "text/html");
+          pipe(stream);
+          stream.end();
+        },
       },
-    });
+    );
 
     ctx.body = stream;
   });
