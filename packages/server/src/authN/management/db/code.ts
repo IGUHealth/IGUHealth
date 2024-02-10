@@ -6,11 +6,12 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 export async function createAuthorizationCode(
   client: db.Queryable,
+  type: s.code_type,
   email: string,
 ): Promise<s.authorization_code.JSONSelectable> {
   const codeToInsert: s.authorization_code.Insertable = {
     user_id: email,
-    type: "signup_confirmation",
+    type,
     code: randomBytes(32).toString("hex"),
     // 15 minutes
     duration_valid_seconds: "15 minutes",
@@ -53,4 +54,27 @@ export async function findAuthorizationCode(
   }
 
   return code;
+}
+
+export async function doesCodeAlreadyExistForUser(
+  client: db.Queryable,
+  email: string,
+  type: s.code_type,
+): Promise<boolean> {
+  const where: s.authorization_code.Whereable = {
+    user_id: email,
+    type,
+  };
+
+  const foundCode = await db.sql<
+    s.authorization_code.SQL,
+    Array<
+      (s.authorization_code.Selectable & { is_expired: boolean }) | undefined
+    >
+  >`SELECT *, NOW() > ${"created_at"} + ${"duration_valid_seconds"} as is_expired FROM ${"authorization_code"} WHERE ${where}`.run(
+    client,
+  );
+  const activeCodes = foundCode.filter((v) => !v?.is_expired);
+
+  return activeCodes.length > 0;
 }

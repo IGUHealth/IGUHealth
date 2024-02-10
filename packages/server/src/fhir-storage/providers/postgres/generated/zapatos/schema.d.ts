@@ -19,9 +19,9 @@ declare module 'zapatos/schema' {
 
   /* --- enums --- */
 
-  export type code_type = 'oauth2_code_grant' | 'password_reset' | 'signup_confirmation';
+  export type code_type = 'oauth2_code_grant' | 'password_reset';
   export namespace every {
-    export type code_type = ['oauth2_code_grant', 'password_reset', 'signup_confirmation'];
+    export type code_type = ['oauth2_code_grant', 'password_reset'];
   }
   export type user_role = 'owner';
   export namespace every {
@@ -2575,9 +2575,9 @@ declare module 'zapatos/schema' {
       /**
       * **tenant_owners.password**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
-      password: string;
+      password: string | null;
       /**
       * **tenant_owners.first_name**
       * - `text` in database
@@ -2631,9 +2631,9 @@ declare module 'zapatos/schema' {
       /**
       * **tenant_owners.password**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
-      password: string;
+      password: string | null;
       /**
       * **tenant_owners.first_name**
       * - `text` in database
@@ -2687,7 +2687,7 @@ declare module 'zapatos/schema' {
       /**
       * **tenant_owners.password**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
       password?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
@@ -2743,9 +2743,9 @@ declare module 'zapatos/schema' {
       /**
       * **tenant_owners.password**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
-      password: string | db.Parameter<string> | db.SQLFragment;
+      password?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **tenant_owners.first_name**
       * - `text` in database
@@ -2799,9 +2799,9 @@ declare module 'zapatos/schema' {
       /**
       * **tenant_owners.password**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
-      password?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      password?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **tenant_owners.first_name**
       * - `text` in database

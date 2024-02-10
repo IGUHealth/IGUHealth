@@ -19,7 +19,7 @@ import {
   issueSeverityToStatusCodes,
 } from "@iguhealth/operation-outcomes";
 
-import { createManagementRouter } from "./authN/management/routes.js";
+import { createManagementRouter } from "./authN/management/index.js";
 import {
   allowPublicAccessMiddleware,
   createValidateUserJWTMiddleware,
