@@ -1,16 +1,26 @@
 import React from "react";
 
-export type SignupProps = {
+import { OperationOutcome } from "@iguhealth/fhir-types/r4/types";
+
+import { OperationOutcomeIssueDisplay } from "../fhir/resources/OperationOutcome";
+
+export type PasswordResetProps = {
   title?: string;
+  header?: string;
+  error?: OperationOutcome;
   logo?: string;
   action: string;
+  code: string;
 };
 
-export const SignupForm = ({
+export const PasswordResetForm = ({
   title = "IGUHealth",
+  header = "Password Reset",
+  code,
   logo,
+  error,
   action,
-}: SignupProps) => {
+}: PasswordResetProps) => {
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -24,26 +34,54 @@ export const SignupForm = ({
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Signup
+              {header}
             </h1>
+            {error && (
+              <div className="spacing-y-2">
+                {error?.issue?.map((issue) => (
+                  <OperationOutcomeIssueDisplay
+                    key={issue.diagnostics || issue.code}
+                    hideCode={true}
+                    issue={issue}
+                  />
+                ))}
+              </div>
+            )}
             <form
               className="space-y-4 md:space-y-6"
               action={action}
               method="POST"
             >
+              <input type="hidden" name="code" id="code" value={code} />
               <div>
                 <label
-                  htmlFor="email"
+                  htmlFor="password"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Enter your email
+                  Enter your Password
                 </label>
                 <input
-                  type="email"
-                  name="email"
-                  id="email"
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder="••••••••"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="name@company.com"
+                  required={true}
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="passwordConfirm"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Confirm your Password
+                </label>
+                <input
+                  type="password"
+                  name="passwordConfirm"
+                  id="passwordConfirm"
+                  placeholder="••••••••"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required={true}
                 />
               </div>

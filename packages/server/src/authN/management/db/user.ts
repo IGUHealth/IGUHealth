@@ -39,7 +39,7 @@ export async function findManagementUserByEmail(
   >`SELECT ${db.cols(USER_QUERY_COLS)} FROM ${"tenant_owners"} WHERE ${where}`.run(client);
 
   // Sanity check should never happen given unique check on email.
-  if(user.length > 1) throw new Error("Multiple users found with the same email and password");
+  if(user.length > 1) throw new Error("Multiple users found with the same email.");
 
   return user[0];
 }
@@ -60,10 +60,9 @@ export async function updateManagementUser(client: db.Queryable, email: string, 
  * Creates a new user + tenant and associates user to tenant as owner within a transaction.
  * @param client Queryable postgres instance
  * @param email New users email
- * @param password New users password
  * @returns Newly created user object.
  */
-export async function createUser(client: db.Queryable, email: string, password: string): Promise<s.tenant_owners.JSONSelectable> {
+export async function createUser(client: db.Queryable, email: string): Promise<s.tenant_owners.JSONSelectable> {
   return await db.serializable(client, async (txnClient) => {
     const tenant = await db
       .insert("tenants", {
@@ -78,7 +77,6 @@ export async function createUser(client: db.Queryable, email: string, password: 
     const user = await db
       .insert("tenant_owners", {
         email: email,
-        password: password,
         email_verified: false,
       })
       .run(txnClient);

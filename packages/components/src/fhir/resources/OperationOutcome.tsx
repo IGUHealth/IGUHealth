@@ -9,17 +9,21 @@ function capitalize(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-const OperationOutcomeIssueDisplay = ({
+export const OperationOutcomeIssueDisplay = ({
+  hideCode = false,
   issue,
 }: {
+  hideCode?: boolean;
   issue: OperationOutcomeIssue;
 }) => (
   <div>
-    <div className="p-4 space-y-2 md:space-y-2 ">
-      <h1 className="text-xl font-bold leading-tight tracking-tight text-red-500 md:text-2xl">
-        {capitalize(issue.code)}
-      </h1>
-    </div>
+    {!hideCode && (
+      <div className="p-4 space-y-2 md:space-y-2 ">
+        <h1 className="text-xl font-bold leading-tight tracking-tight text-red-500 md:text-2xl">
+          {capitalize(issue.code)}
+        </h1>
+      </div>
+    )}
 
     <div className="space-y-4 md:space-y-6">
       <p className="p-4 mb-2 text-sm font-medium text-red-500">

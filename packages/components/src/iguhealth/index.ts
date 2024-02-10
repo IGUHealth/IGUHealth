@@ -1,5 +1,4 @@
-import { Feedback } from "./Feedback";
-import { Login } from "./Login";
-import { SignupForm } from "./Signup";
-
-export { Login, SignupForm, Feedback };
+export * from "./Feedback";
+export * from "./Login";
+export * from "./Signup";
+export * from "./PasswordReset";
