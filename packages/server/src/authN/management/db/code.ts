@@ -14,7 +14,7 @@ export async function createAuthorizationCode(
     type,
     code: randomBytes(32).toString("hex"),
     // 15 minutes
-    duration_valid_seconds: "15 minutes",
+    expires_in: "15 minutes",
   };
 
   const code = await db.insert("authorization_code", codeToInsert).run(client);
@@ -37,7 +37,7 @@ export async function findAuthorizationCode(
     Array<
       (s.authorization_code.Selectable & { is_expired: boolean }) | undefined
     >
-  >`SELECT *, NOW() > ${"created_at"} + ${"duration_valid_seconds"} as is_expired FROM ${"authorization_code"} WHERE ${where}`.run(
+  >`SELECT *, NOW() > ${"created_at"} + ${"expires_in"} as is_expired FROM ${"authorization_code"} WHERE ${where}`.run(
     client,
   );
 
@@ -66,15 +66,12 @@ export async function doesCodeAlreadyExistForUser(
     type,
   };
 
-  const foundCode = await db.sql<
+  const activeCodes = await db.sql<
     s.authorization_code.SQL,
-    Array<
-      (s.authorization_code.Selectable & { is_expired: boolean }) | undefined
-    >
-  >`SELECT *, NOW() > ${"created_at"} + ${"duration_valid_seconds"} as is_expired FROM ${"authorization_code"} WHERE ${where}`.run(
+    s.authorization_code.Selectable[]
+  >`SELECT * FROM ${"authorization_code"} WHERE ${where} AND NOW() < (${"created_at"} + ${"expires_in"})`.run(
     client,
   );
-  const activeCodes = foundCode.filter((v) => !v?.is_expired);
 
   return activeCodes.length > 0;
 }

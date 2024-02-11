@@ -80,11 +80,11 @@ declare module 'zapatos/schema' {
       */
       created_at: Date;
       /**
-      * **authorization_code.duration_valid_seconds**
+      * **authorization_code.expires_in**
       * - `interval` in database
       * - `NOT NULL`, no default
       */
-      duration_valid_seconds: string;
+      expires_in: string;
     }
     export interface JSONSelectable {
       /**
@@ -130,11 +130,11 @@ declare module 'zapatos/schema' {
       */
       created_at: db.TimestampTzString;
       /**
-      * **authorization_code.duration_valid_seconds**
+      * **authorization_code.expires_in**
       * - `interval` in database
       * - `NOT NULL`, no default
       */
-      duration_valid_seconds: string;
+      expires_in: string;
     }
     export interface Whereable {
       /**
@@ -180,11 +180,11 @@ declare module 'zapatos/schema' {
       */
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **authorization_code.duration_valid_seconds**
+      * **authorization_code.expires_in**
       * - `interval` in database
       * - `NOT NULL`, no default
       */
-      duration_valid_seconds?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      expires_in?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -230,11 +230,11 @@ declare module 'zapatos/schema' {
       */
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
-      * **authorization_code.duration_valid_seconds**
+      * **authorization_code.expires_in**
       * - `interval` in database
       * - `NOT NULL`, no default
       */
-      duration_valid_seconds: string | db.Parameter<string> | db.SQLFragment;
+      expires_in: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -280,11 +280,11 @@ declare module 'zapatos/schema' {
       */
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
-      * **authorization_code.duration_valid_seconds**
+      * **authorization_code.expires_in**
       * - `interval` in database
       * - `NOT NULL`, no default
       */
-      duration_valid_seconds?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      expires_in?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
     export type UniqueIndex = 'authorization_code_pkey';
     export type Column = keyof Selectable;
