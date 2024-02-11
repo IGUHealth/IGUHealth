@@ -13,7 +13,6 @@ export async function createAuthorizationCode(
     user_id: email,
     type,
     code: randomBytes(32).toString("hex"),
-    // 15 minutes
     expires_in: "15 minutes",
   };
 
