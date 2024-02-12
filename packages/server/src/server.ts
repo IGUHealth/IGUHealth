@@ -7,10 +7,8 @@ import mount from "koa-mount";
 import ratelimit from "koa-ratelimit";
 import serve from "koa-static";
 import path from "node:path";
-import { PassThrough } from "node:stream";
 import pg from "pg";
 import React from "react";
-import { renderToPipeableStream } from "react-dom/server";
 import { fileURLToPath } from "url";
 
 import { FHIROperationOutcomeDisplay } from "@iguhealth/components";
@@ -43,7 +41,7 @@ import {
 } from "./fhir-http/index.js";
 import * as MonitoringSentry from "./monitoring/sentry.js";
 import { LIB_VERSION } from "./version.js";
-import Base from "./views/base.js";
+import * as views from "./views/index.js";
 
 dotEnv.config();
 
@@ -127,38 +125,31 @@ function createErrorHandlingMiddleware<T>(): Koa.Middleware<
     } catch (e) {
       if (isOperationError(e)) {
         const operationOutcome = e.outcome;
-        ctx.status = operationOutcome.issue
+        const status = operationOutcome.issue
           .map((i) => issueSeverityToStatusCodes(i.severity))
           .sort()[operationOutcome.issue.length - 1];
 
-        console.log("type:", ctx.request.type);
-        if (ctx.request.type === "text/html" || ctx.request.type === "") {
-          const stream = new PassThrough();
-
-          const { pipe } = renderToPipeableStream(
-            React.createElement(Base, {
-              children: React.createElement(FHIROperationOutcomeDisplay, {
+        switch (ctx.accepts("json", "html", "text")) {
+          case "json": {
+            ctx.body = operationOutcome;
+            ctx.status = status;
+            return;
+          }
+          case "text":
+          case "html": {
+            views.render(
+              ctx,
+              React.createElement(FHIROperationOutcomeDisplay, {
                 logo: "/public/img/logo.svg",
                 title: "IGUHealth",
                 operationOutcome,
               }),
-            }),
-            {
-              // bootstrapScripts: ["/main.js"],
-              onShellReady() {
-                ctx.respond = false;
-                ctx.status = 200;
-                ctx.set("content-type", "text/html");
-                pipe(stream);
-                stream.end();
-              },
-            },
-          );
-
-          ctx.body = stream;
-        } else {
-          ctx.body = operationOutcome;
+            );
+            ctx.status = status;
+            return;
+          }
         }
+        throw new Error("Media type not supported");
       } else {
         logger.error(e);
         MonitoringSentry.logError(e, ctx);
