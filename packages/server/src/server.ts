@@ -7,10 +7,8 @@ import mount from "koa-mount";
 import ratelimit from "koa-ratelimit";
 import serve from "koa-static";
 import path from "node:path";
-import { PassThrough } from "node:stream";
 import pg from "pg";
 import React from "react";
-import { renderToPipeableStream } from "react-dom/server";
 import { fileURLToPath } from "url";
 
 import { FHIROperationOutcomeDisplay } from "@iguhealth/components";
@@ -43,8 +41,7 @@ import {
 } from "./fhir-http/index.js";
 import * as MonitoringSentry from "./monitoring/sentry.js";
 import { LIB_VERSION } from "./version.js";
-import Base from "./views/base.js";
-import { render } from "./views/index.js";
+import * as views from "./views/index.js";
 
 dotEnv.config();
 
@@ -140,7 +137,7 @@ function createErrorHandlingMiddleware<T>(): Koa.Middleware<
           }
           case "text":
           case "html": {
-            render(
+            views.render(
               ctx,
               React.createElement(FHIROperationOutcomeDisplay, {
                 logo: "/public/img/logo.svg",
