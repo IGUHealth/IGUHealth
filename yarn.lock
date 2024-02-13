@@ -6910,7 +6910,9 @@ __metadata:
     "@types/koa": "npm:^2.13.6"
     "@types/koa-bodyparser": "npm:^4.3.12"
     "@types/koa-mount": "npm:^4.0.5"
+    "@types/koa-passport": "npm:^6.0.3"
     "@types/koa-ratelimit": "npm:^5.0.3"
+    "@types/koa-session": "npm:^6.4.5"
     "@types/koa-static": "npm:^4.0.4"
     "@types/koa__cors": "npm:^5.0.0"
     "@types/koa__router": "npm:^12.0.4"
@@ -6937,7 +6939,9 @@ __metadata:
     koa-body: "npm:^6.0.1"
     koa-jwt: "npm:^4.0.4"
     koa-mount: "npm:^4.0.0"
+    koa-passport: "npm:^6.0.0"
     koa-ratelimit: "npm:^5.1.0"
+    koa-session: "npm:^6.4.0"
     koa-static: "npm:^5.0.0"
     nanoid: "npm:^5.0.5"
     openid-client: "npm:^5.6.4"
@@ -12551,6 +12555,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/koa-passport@npm:^6.0.3":
+  version: 6.0.3
+  resolution: "@types/koa-passport@npm:6.0.3"
+  dependencies:
+    "@types/koa": "npm:*"
+    "@types/passport": "npm:*"
+  checksum: 10/a7a3c47b11db062f436716ec1f3db9a6816f2c142aff8e81462a5705fee80936e1acdf6946f8d702fe3a9c0cbee845685c21bf888b4ab067f8f6c46f2bf36668
+  languageName: node
+  linkType: hard
+
 "@types/koa-ratelimit@npm:^5.0.3":
   version: 5.0.3
   resolution: "@types/koa-ratelimit@npm:5.0.3"
@@ -12568,6 +12582,16 @@ __metadata:
   dependencies:
     "@types/koa": "npm:*"
   checksum: 10/d46d207f1d826ccd74bf3a02180d0475be8456eb3a2244244d19cb3f1737251e163d73958fdcd12111e03c7c0545cc89e7888a6ef2ba370ebf2b2e804efaaaf1
+  languageName: node
+  linkType: hard
+
+"@types/koa-session@npm:^6.4.5":
+  version: 6.4.5
+  resolution: "@types/koa-session@npm:6.4.5"
+  dependencies:
+    "@types/cookies": "npm:*"
+    "@types/koa": "npm:*"
+  checksum: 10/89b6db1bac59368f35db2b5cd879bb38e3866aea14eb6cdda26e687480857927b051a79acb0d80eb15faa81a74920aeb79475d5680b7d2744b5adbdd19e353cf
   languageName: node
   linkType: hard
 
@@ -12765,6 +12789,15 @@ __metadata:
   version: 4.0.0
   resolution: "@types/parse-json@npm:4.0.0"
   checksum: 10/4df9de98150d2978afc2161482a3a8e6617883effba3223324f079de97ba7eabd7d84b90ced11c3f82b0c08d4a8383f678c9f73e9c41258f769b3fa234a2bb4f
+  languageName: node
+  linkType: hard
+
+"@types/passport@npm:*":
+  version: 1.0.16
+  resolution: "@types/passport@npm:1.0.16"
+  dependencies:
+    "@types/express": "npm:*"
+  checksum: 10/0ee7b9a46192cb60fb4e49038417b0c10b38e50204ed05b5204b3ea9a73e25da34ca8fe05205eaf42fe977610cdbd3a0d5f2228f8661fe0b303bc758fa2a158f
   languageName: node
   linkType: hard
 
@@ -15052,7 +15085,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"buffer@npm:^5.5.0":
+"buffer@npm:^5.1.0, buffer@npm:^5.5.0":
   version: 5.7.1
   resolution: "buffer@npm:5.7.1"
   dependencies:
@@ -16089,7 +16122,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"core-util-is@npm:~1.0.0":
+"core-util-is@npm:^1.0.2, core-util-is@npm:~1.0.0":
   version: 1.0.3
   resolution: "core-util-is@npm:1.0.3"
   checksum: 10/9de8597363a8e9b9952491ebe18167e3b36e7707569eed0ebf14f8bba773611376466ae34575bca8cfe3c767890c859c74056084738f09d4e4a6f902b2ad7d99
@@ -16141,6 +16174,15 @@ __metadata:
     nan: "npm:^2.14.1"
     node-gyp: "npm:latest"
   checksum: 10/f39e11d1898025f98da7e51945b1095d58e2a16ff0c1835de95ecfb4ca60d3427667b38094ccf021cca8c5df69a05a4bba29aae8344426af3e06daf06ce0bbf4
+  languageName: node
+  linkType: hard
+
+"crc@npm:^3.8.0":
+  version: 3.8.0
+  resolution: "crc@npm:3.8.0"
+  dependencies:
+    buffer: "npm:^5.1.0"
+  checksum: 10/3a43061e692113d60fbaf5e438c5f6aa3374fe2368244a75cc083ecee6762513bcee8583f67c2c56feea0b0c72b41b7304fbd3c1e26cfcfaec310b9a18543fa8
   languageName: node
   linkType: hard
 
@@ -20670,6 +20712,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-class-hotfix@npm:~0.0.6":
+  version: 0.0.6
+  resolution: "is-class-hotfix@npm:0.0.6"
+  checksum: 10/20668eb1a27f14346202ec6708072834d44c68d51b2121a20f92ba47a2379af4e8ac704f513fb01a67deaee404594278d83eeb48250b3fb682b2ef5248aa9340
+  languageName: node
+  linkType: hard
+
 "is-core-module@npm:^2.11.0, is-core-module@npm:^2.12.0, is-core-module@npm:^2.9.0":
   version: 2.12.1
   resolution: "is-core-module@npm:2.12.1"
@@ -21013,6 +21062,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-type-of@npm:^1.2.1":
+  version: 1.4.0
+  resolution: "is-type-of@npm:1.4.0"
+  dependencies:
+    core-util-is: "npm:^1.0.2"
+    is-class-hotfix: "npm:~0.0.6"
+    isstream: "npm:~0.1.2"
+  checksum: 10/9d8ca64d0cb00da0bffe1c52c8883e6a1581377a0152d5a1ddbfcdd46fafac9ad713ad07866de73218160c36217ed482a83a700f52e13dc385f88c50c5fc51fd
+  languageName: node
+  linkType: hard
+
 "is-typed-array@npm:^1.1.10, is-typed-array@npm:^1.1.3, is-typed-array@npm:^1.1.9":
   version: 1.1.10
   resolution: "is-typed-array@npm:1.1.10"
@@ -21114,6 +21174,13 @@ __metadata:
   version: 3.0.1
   resolution: "isobject@npm:3.0.1"
   checksum: 10/db85c4c970ce30693676487cca0e61da2ca34e8d4967c2e1309143ff910c207133a969f9e4ddb2dc6aba670aabce4e0e307146c310350b298e74a31f7d464703
+  languageName: node
+  linkType: hard
+
+"isstream@npm:~0.1.2":
+  version: 0.1.2
+  resolution: "isstream@npm:0.1.2"
+  checksum: 10/22d9c181015226d4534a227539256897bbbcb7edd1066ca4fc4d3a06dbd976325dfdd16b3983c7d236a89f256805c1a685a772e0364e98873d3819b064ad35a1
   languageName: node
   linkType: hard
 
@@ -22800,6 +22867,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"koa-passport@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "koa-passport@npm:6.0.0"
+  dependencies:
+    passport: "npm:^0.6.0"
+  checksum: 10/4482e4b3d2d847ebbee07408390edc76859389128e9544d79a616de5fb6c5bfc62ef14a52257e62b6f2d77bd9f602d749e8bf412ac676c3e58f0d74081619b5e
+  languageName: node
+  linkType: hard
+
 "koa-ratelimit@npm:^5.1.0":
   version: 5.1.0
   resolution: "koa-ratelimit@npm:5.1.0"
@@ -22819,6 +22895,18 @@ __metadata:
     http-errors: "npm:^1.7.3"
     resolve-path: "npm:^1.4.0"
   checksum: 10/a9fbaadbe0f50efd157a733df4a1cc2b3b79b0cdf12e67c718641e6038d1792c0bebe40913e6d4ceb707d970301155be3859b98d1ef08b0fd1766f7326b82853
+  languageName: node
+  linkType: hard
+
+"koa-session@npm:^6.4.0":
+  version: 6.4.0
+  resolution: "koa-session@npm:6.4.0"
+  dependencies:
+    crc: "npm:^3.8.0"
+    debug: "npm:^4.3.3"
+    is-type-of: "npm:^1.2.1"
+    uuid: "npm:^8.3.2"
+  checksum: 10/b313837a083bf742a735819b44fc41f58fce9bc09a73f3086530c8be49b53f40a1443bfed5ba126af7819e4fe1c4190a256cefafc9576de3ae5dc9c6884fa707
   languageName: node
   linkType: hard
 
@@ -25399,6 +25487,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"passport-strategy@npm:1.x.x":
+  version: 1.0.0
+  resolution: "passport-strategy@npm:1.0.0"
+  checksum: 10/5086693f2508e538dffa55a338c89fe8192fb5f4478c71f80cd5890b8573419a098f4fec88b505374f60bbe9049f6f24b9f3992678612528a3370b4dc73354a2
+  languageName: node
+  linkType: hard
+
+"passport@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "passport@npm:0.6.0"
+  dependencies:
+    passport-strategy: "npm:1.x.x"
+    pause: "npm:0.0.1"
+    utils-merge: "npm:^1.0.1"
+  checksum: 10/5051e1d773ac0d802d4d71315f5fee566b8765b9731396b60c1d6822b7983bef31ae2f51af94d973ade94fb040efae0816e736e534b55294d0fbd10efcdf2d36
+  languageName: node
+  linkType: hard
+
 "path-browserify@npm:^1.0.1":
   version: 1.0.1
   resolution: "path-browserify@npm:1.0.1"
@@ -25532,6 +25638,13 @@ __metadata:
   dependencies:
     through: "npm:~2.3"
   checksum: 10/1407efadfe814b5c487e4b28d6139cb7e03ee5d25fbb5f89a68f2053e81f05ce6b2bec196eeb3d46ef2c856f785016d14816b0d0e3c3abd1b64311c5c20660dc
+  languageName: node
+  linkType: hard
+
+"pause@npm:0.0.1":
+  version: 0.0.1
+  resolution: "pause@npm:0.0.1"
+  checksum: 10/e96ee581b68085e6f2ba5adbcb4d4a41fe88e5b514061e76df2fe1905f0f65f4fe5a843b538e9551122c6b9184ff4be266c2ee0ea4614702f9a3d04466d9f462
   languageName: node
   linkType: hard
 
@@ -31353,7 +31466,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"utils-merge@npm:1.0.1":
+"utils-merge@npm:1.0.1, utils-merge@npm:^1.0.1":
   version: 1.0.1
   resolution: "utils-merge@npm:1.0.1"
   checksum: 10/5d6949693d58cb2e636a84f3ee1c6e7b2f9c16cb1d42d0ecb386d8c025c69e327205aa1c69e2868cc06a01e5e20681fbba55a4e0ed0cce913d60334024eae798

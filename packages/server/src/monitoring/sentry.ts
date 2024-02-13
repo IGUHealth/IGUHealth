@@ -3,6 +3,8 @@ import { stripUrlQueryAndFragment } from "@sentry/utils";
 import type Koa from "koa";
 import pg from "pg";
 
+import { KoaFHIRContext } from "../fhir-context/koa.js";
+
 export function enableSentry(
   sentryDSN: string,
   release: string,
@@ -71,9 +73,14 @@ export async function sentrySpan<T>(
 }
 
 // this tracing middleware creates a transaction per request
-export const tracingMiddleWare =
-  (dsn: string | undefined) =>
-  async (ctx: Koa.DefaultContext, next: Koa.Next) => {
+export function tracingMiddleWare<
+  State extends Koa.DefaultState,
+  Context extends KoaFHIRContext<Koa.DefaultContext>,
+>(dsn: string | undefined): Koa.Middleware<State, Context> {
+  return async (
+    ctx: Koa.ParameterizedContext<State, Context>,
+    next: Koa.Next,
+  ) => {
     if (dsn) {
       const reqMethod = (ctx.method || "").toUpperCase();
       const reqUrl = ctx.url && stripUrlQueryAndFragment(ctx.url);
@@ -92,6 +99,8 @@ export const tracingMiddleWare =
         ...traceparentData,
       });
 
+      // [FIXME]
+      // @ts-ignore
       ctx.__sentry_transaction = transaction;
 
       // We put the transaction on the scope so users can attach children to it
@@ -116,3 +125,4 @@ export const tracingMiddleWare =
 
     await next();
   };
+}
