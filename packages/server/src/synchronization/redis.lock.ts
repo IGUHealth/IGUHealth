@@ -1,4 +1,4 @@
-import Redis, { RedisOptions } from "ioredis";
+import Redis from "ioredis";
 import Redlock, {
   RedlockAbortSignal,
   ResourceLockedError,
