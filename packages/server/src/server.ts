@@ -1,8 +1,6 @@
 import { bodyParser } from "@koa/bodyparser";
 import cors from "@koa/cors";
 import Router from "@koa/router";
-import Ajv from "ajv";
-import dotEnv from "dotenv";
 import Koa from "koa";
 import mount from "koa-mount";
 import ratelimit from "koa-ratelimit";
