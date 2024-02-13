@@ -250,8 +250,6 @@ export default async function createServer(): Promise<
   rootRouter.use(tenantRouter.routes());
   rootRouter.use(tenantRouter.allowedMethods());
 
-  app.keys = [];
-
   app
     .use(
       mount(
@@ -287,7 +285,6 @@ export default async function createServer(): Promise<
     )
     .use(cors())
     .use(bodyParser())
-    .use(session({}, app))
     .use(async (ctx, next) => {
       await next();
       const rt = ctx.response.get("X-Response-Time");
