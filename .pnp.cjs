@@ -15131,7 +15131,6 @@ const RAW_RUNTIME_STATE =
           ["@koa/router", "npm:12.0.1"],\
           ["@sendgrid/mail", "npm:8.1.0"],\
           ["@sentry/node", "npm:7.100.1"],\
-          ["@sentry/profiling-node", "npm:7.100.1"],\
           ["@sentry/utils", "npm:7.100.1"],\
           ["@types/adm-zip", "npm:0.5.5"],\
           ["@types/jest", "npm:29.5.12"],\
@@ -18777,18 +18776,6 @@ const RAW_RUNTIME_STATE =
           ["@sentry/core", "npm:7.100.1"],\
           ["@sentry/types", "npm:7.100.1"],\
           ["@sentry/utils", "npm:7.100.1"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@sentry/profiling-node", [\
-      ["npm:7.100.1", {\
-        "packageLocation": "./.yarn/unplugged/@sentry-profiling-node-npm-7.100.1-5a8801f42b/node_modules/@sentry/profiling-node/",\
-        "packageDependencies": [\
-          ["@sentry/profiling-node", "npm:7.100.1"],\
-          ["detect-libc", "npm:2.0.2"],\
-          ["node-abi", "npm:3.54.0"],\
-          ["node-gyp", "npm:9.4.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -29335,15 +29322,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["detect-libc", [\
-      ["npm:2.0.2", {\
-        "packageLocation": "./.yarn/cache/detect-libc-npm-2.0.2-03afa59137-6118f30c0c.zip/node_modules/detect-libc/",\
-        "packageDependencies": [\
-          ["detect-libc", "npm:2.0.2"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["detect-newline", [\
       ["npm:3.1.0", {\
         "packageLocation": "./.yarn/cache/detect-newline-npm-3.1.0-6d33fa8d37-ae6cd429c4.zip/node_modules/detect-newline/",\
@@ -38173,16 +38151,6 @@ const RAW_RUNTIME_STATE =
           ["no-case", "npm:3.0.4"],\
           ["lower-case", "npm:2.0.2"],\
           ["tslib", "npm:2.6.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["node-abi", [\
-      ["npm:3.54.0", {\
-        "packageLocation": "./.yarn/cache/node-abi-npm-3.54.0-b13bba5e2d-b8cf226033.zip/node_modules/node-abi/",\
-        "packageDependencies": [\
-          ["node-abi", "npm:3.54.0"],\
-          ["semver", "npm:7.5.3"]\
         ],\
         "linkType": "HARD"\
       }]\

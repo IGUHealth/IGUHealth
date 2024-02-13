@@ -6946,7 +6946,6 @@ __metadata:
     "@koa/router": "npm:^12.0.1"
     "@sendgrid/mail": "npm:^8.1.0"
     "@sentry/node": "npm:^7.100.1"
-    "@sentry/profiling-node": "npm:^7.100.1"
     "@sentry/utils": "npm:^7.100.1"
     "@types/adm-zip": "npm:^0.5.5"
     "@types/jest": "npm:^29.5.12"
@@ -9056,19 +9055,6 @@ __metadata:
     "@sentry/types": "npm:7.100.1"
     "@sentry/utils": "npm:7.100.1"
   checksum: 10/3f2918e26211d2ada476c6c99e6ef5f6d4a2b5549de22919dddf80a5c4c447f81e5b145400003fee8d5ddaaa972dba89be32a229cf3b637bfac57c3035dc0bed
-  languageName: node
-  linkType: hard
-
-"@sentry/profiling-node@npm:^7.100.1":
-  version: 7.100.1
-  resolution: "@sentry/profiling-node@npm:7.100.1"
-  dependencies:
-    detect-libc: "npm:^2.0.2"
-    node-abi: "npm:^3.52.0"
-    node-gyp: "npm:latest"
-  bin:
-    sentry-prune-profiler-binaries: scripts/prune-profiler-binaries.js
-  checksum: 10/7c9e506a9f35f90bc504f22fa557581c22e8646157c844d21ea1d827d26283639534feb702bcc18fdbb4374ccd4a58b47dfd3c84111737f09fc529a7981ece05
   languageName: node
   linkType: hard
 
@@ -16963,13 +16949,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"detect-libc@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "detect-libc@npm:2.0.2"
-  checksum: 10/6118f30c0c425b1e56b9d2609f29bec50d35a6af0b762b6ad127271478f3bbfda7319ce869230cf1a351f2b219f39332cde290858553336d652c77b970f15de8
-  languageName: node
-  linkType: hard
-
 "detect-newline@npm:^3.0.0":
   version: 3.1.0
   resolution: "detect-newline@npm:3.1.0"
@@ -24702,15 +24681,6 @@ __metadata:
     lower-case: "npm:^2.0.2"
     tslib: "npm:^2.0.3"
   checksum: 10/0b2ebc113dfcf737d48dde49cfebf3ad2d82a8c3188e7100c6f375e30eafbef9e9124aadc3becef237b042fd5eb0aad2fd78669c20972d045bbe7fea8ba0be5c
-  languageName: node
-  linkType: hard
-
-"node-abi@npm:^3.52.0":
-  version: 3.54.0
-  resolution: "node-abi@npm:3.54.0"
-  dependencies:
-    semver: "npm:^7.3.5"
-  checksum: 10/b8cf226033172b68bb8dccf7d19bd654238189968e4af98952c8327155d11c1164fcc49f154b61f8fcdc4e07d4ba91cab5d8a3c6b9719bebe879e169bdce7b22
   languageName: node
   linkType: hard
 

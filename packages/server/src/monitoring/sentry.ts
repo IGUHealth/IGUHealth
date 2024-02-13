@@ -1,5 +1,4 @@
 import * as Sentry from "@sentry/node";
-import { ProfilingIntegration } from "@sentry/profiling-node";
 import { stripUrlQueryAndFragment } from "@sentry/utils";
 import type Koa from "koa";
 import pg from "pg";
@@ -15,7 +14,6 @@ export function enableSentry(
     integrations: [
       // Automatically instrument Node.js libraries and frameworks
       new Sentry.Integrations.Postgres({ module: pg }),
-      new ProfilingIntegration(),
     ],
     // Performance Monitoring
     tracesSampleRate: 1.0,

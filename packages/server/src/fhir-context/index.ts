@@ -53,7 +53,7 @@ import { InternalData } from "../fhir-storage/providers/memory/types.js";
 import { createPostgresClient } from "../fhir-storage/providers/postgres/index.js";
 import RouterClient from "../fhir-storage/router.js";
 import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
-import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" assert { type: "json" };
+import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with { type: "json" };
 import RedisLock from "../synchronization/redis.lock.js";
 import { FHIRServerCTX, TenantId, asSystemCTX } from "./context.js";
 import { KoaFHIRContext, KoaFHIRServicesContext } from "./koa.js";

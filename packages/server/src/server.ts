@@ -41,7 +41,7 @@ import {
   httpRequestToFHIRRequest,
 } from "./fhir-http/index.js";
 import type { IGUHealthEnvironment } from "./json-schemas/schemas/environment.schema.js";
-import IGUHealthEnvironmentSchema from "./json-schemas/schemas/environment.schema.json" assert { type: "json" };
+import IGUHealthEnvironmentSchema from "./json-schemas/schemas/environment.schema.json" with { type: "json" };
 import * as MonitoringSentry from "./monitoring/sentry.js";
 import { LIB_VERSION } from "./version.js";
 import * as views from "./views/index.js";
