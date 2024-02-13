@@ -1,10 +1,14 @@
 import { program } from "commander";
 // @ts-ignore
 import DBMigrate from "db-migrate";
+import { exec } from "node:child_process";
+import util from "node:util";
 import * as generateSQL from "zapatos/generate";
 
 import createServer from "./server.js";
 import createWorker from "./worker/index.js";
+
+const execPromise = util.promisify(exec);
 
 interface DBMigrate {
   up: () => Promise<void>;
@@ -19,28 +23,36 @@ async function runServer(port: number) {
 
 async function run() {
   program
-    .command("generate-pg-types")
-    .description("Generate typescript types off of postgres schema")
+    .command("generate-types")
+    .description(
+      "Generate typescript types off of postgres schema and json schemas",
+    )
     .action(async () => {
       await generateSQL.generate({
         db: {
-          user: process.env["FHIR_DATABASE_USERNAME"],
-          password: process.env["FHIR_DATABASE_PASSWORD"],
-          host: process.env["FHIR_DATABASE_HOST"],
-          database: process.env["FHIR_DATABASE_NAME"],
-          port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
+          user: process.env.FHIR_DATABASE_USERNAME,
+          password: process.env.FHIR_DATABASE_PASSWORD,
+          host: process.env.FHIR_DATABASE_HOST,
+          database: process.env.FHIR_DATABASE_NAME,
+          port: parseInt(process.env.FHIR_DATABASE_PORT || "5432"),
           ssl:
-            process.env["FHIR_DATABASE_SSL"] === "true"
+            process.env.FHIR_DATABASE_SSL === "true"
               ? {
                   // Self signed certificate CA is not used.
                   rejectUnauthorized: false,
-                  host: process.env["FHIR_DATABASE_HOST"],
-                  port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
+                  host: process.env.FHIR_DATABASE_HOST,
+                  port: parseInt(process.env.FHIR_DATABASE_PORT || "5432"),
                 }
               : false,
         },
         outDir: "src/fhir-storage/providers/postgres/generated",
       });
+      const res = await execPromise(
+        "yarn json2ts -i 'src/json-schemas/schemas/*.json' -o src/json-schemas/schemas",
+      );
+      if (res.stderr) {
+        throw new Error(res.stderr);
+      }
     });
 
   program

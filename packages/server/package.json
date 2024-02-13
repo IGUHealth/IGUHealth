@@ -17,7 +17,7 @@
     "ci": "yarn build & yarn node --enable-source-maps ./lib/cli.js run server & yarn node --enable-source-maps ./lib/cli.js run worker",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest) --runInBand",
     "db-migrate": "db-migrate --sql-file -m src/fhir-storage/providers/postgres/migrations",
-    "migrate": "yarn build && yarn node --enable-source-maps  ./lib/cli.js run migrate && yarn node --enable-source-maps  ./lib/cli.js generate-pg-types",
+    "migrate": "yarn build && yarn node --enable-source-maps  ./lib/cli.js run migrate && yarn node --enable-source-maps  ./lib/cli.js generate-types",
     "watch": "yarn prebuild && yarn migrate up && yarn tsc-watch --onSuccess \"yarn node --enable-source-maps  ./lib/cli.js run both\"",
     "watch_server": "yarn prebuild && yarn migrate up && yarn tsc-watch --onSuccess \"yarn node --enable-source-maps  ./lib/cli.js run server\"",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
@@ -44,7 +44,6 @@
     "@koa/router": "^12.0.1",
     "@sendgrid/mail": "^8.1.0",
     "@sentry/node": "^7.100.1",
-    "@sentry/profiling-node": "^7.100.1",
     "@sentry/utils": "^7.100.1",
     "adm-zip": "^0.5.10",
     "ajv": "^8.12.0",
@@ -56,6 +55,7 @@
     "fast-json-patch": "3.1.1",
     "ioredis": "^5.3.2",
     "jose": "^5.2.1",
+    "json-schema-to-typescript": "^13.1.2",
     "jwks-rsa": "^3.1.0",
     "koa": "^2.15.0",
     "koa-body": "^6.0.1",
@@ -73,6 +73,9 @@
     "zapatos": "^6.3.0"
   },
   "devDependencies": {
+    "@babel/plugin-syntax-import-attributes": "^7.23.3",
+    "@babel/preset-env": "^7.23.9",
+    "@babel/preset-typescript": "^7.23.3",
     "@iguhealth/fhir-types": "workspace:^",
     "@iguhealth/test-data": "workspace:^",
     "@jest/globals": "^29.7.0",

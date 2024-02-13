@@ -1,4 +1,4 @@
-FROM node:20.9.0-slim
+FROM node:21.6.1-slim
 COPY . /app
 WORKDIR /app
 RUN yarn install
