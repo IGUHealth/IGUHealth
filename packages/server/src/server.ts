@@ -1,6 +1,7 @@
 import { bodyParser } from "@koa/bodyparser";
 import cors from "@koa/cors";
 import Router from "@koa/router";
+import Ajv from "ajv";
 import dotEnv from "dotenv";
 import Koa from "koa";
 import mount from "koa-mount";
@@ -39,11 +40,23 @@ import {
   fhirResponseToHTTPResponse,
   httpRequestToFHIRRequest,
 } from "./fhir-http/index.js";
+import type { IGUHealthEnvironment } from "./json-schemas/schemas/environment.schema.js";
+import IGUHealthEnvironmentSchema from "./json-schemas/schemas/environment.schema.json" assert { type: "json" };
 import * as MonitoringSentry from "./monitoring/sentry.js";
 import { LIB_VERSION } from "./version.js";
 import * as views from "./views/index.js";
 
 dotEnv.config();
+const ajv = new Ajv.default({});
+const environmentValidator = ajv.compile(IGUHealthEnvironmentSchema);
+const envValid = environmentValidator(process.env);
+if (!envValid) throw new Error(ajv.errorsText(environmentValidator.errors));
+
+declare global {
+  namespace NodeJS {
+    interface ProcessEnv extends IGUHealthEnvironment {}
+  }
+}
 
 interface KoaFHIRMiddlewareState extends Koa.DefaultState {
   user: { [key: string]: unknown };

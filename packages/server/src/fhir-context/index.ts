@@ -7,6 +7,7 @@ import pg from "pg";
 import { pino } from "pino";
 import { fileURLToPath } from "url";
 
+
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
@@ -52,7 +53,7 @@ import { InternalData } from "../fhir-storage/providers/memory/types.js";
 import { createPostgresClient } from "../fhir-storage/providers/postgres/index.js";
 import RouterClient from "../fhir-storage/router.js";
 import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
-import JSONPatchSchema from "../json-schemas/jsonpatch.schema.js";
+import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" assert { type: "json" };
 import RedisLock from "../synchronization/redis.lock.js";
 import { FHIRServerCTX, TenantId, asSystemCTX } from "./context.js";
 import { KoaFHIRContext, KoaFHIRServicesContext } from "./koa.js";
@@ -239,7 +240,7 @@ const validationMiddleware: MiddlewareAsync<
       const valid = validateJSONPatch(context.request.body);
       if (!valid) {
         throw new OperationError(
-          outcomeError("invalid", `JSON Patch is not valid.`),
+          outcomeError("invalid", ajv.errorsText(validateJSONPatch.errors)),
         );
       }
       break;

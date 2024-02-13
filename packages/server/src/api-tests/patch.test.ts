@@ -66,7 +66,8 @@ test("Test successfull patch", async () => {
       issue: [
         {
           code: "invalid",
-          diagnostics: "JSON Patch is not valid.",
+          diagnostics:
+            "data/0 must have required property 'op', data/0 must have required property 'op', data/0 must have required property 'from', data/0 must match exactly one schema in oneOf",
           severity: "error",
         },
       ],

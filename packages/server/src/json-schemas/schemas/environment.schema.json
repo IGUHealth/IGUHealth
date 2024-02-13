@@ -1,0 +1,191 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "IGUHealthEnvironment",
+  "type": "object",
+  "$id": "https://IGUHealth.app/environment-variables",
+  "additionalProperties": true,
+  "required": [
+    "FHIR_DATABASE_NAME",
+    "FHIR_DATABASE_HOST",
+    "FHIR_DATABASE_PORT",
+    "FHIR_DATABASE_PASSWORD",
+    "FHIR_DATABASE_USERNAME",
+    "REDIS_HOST",
+    "REDIS_PORT"
+  ],
+  "properties": {
+    "FHIR_DATABASE_NAME": {
+      "type": "string",
+      "description": "Postgres database name. ",
+      "default": "iguhealth"
+    },
+    "FHIR_DATABASE_HOST": {
+      "type": "string",
+      "description": "Postgres host",
+      "default": "localhost"
+    },
+    "FHIR_DATABASE_PORT": {
+      "type": "string",
+      "pattern": "[0-9]{4}",
+      "description": "Postgres port",
+      "default": "5432"
+    },
+    "FHIR_DATABASE_PASSWORD": {
+      "type": "string",
+      "description": "postgres password",
+      "default": ""
+    },
+    "FHIR_DATABASE_USERNAME": {
+      "type": "string",
+      "description": "postgres username",
+      "default": "postgres"
+    },
+    "FHIR_DATABASE_SSL": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Whether Postgres connection is SSL",
+      "default": "false"
+    },
+    "REDIS_HOST": {
+      "type": "string",
+      "description": "Redis host",
+      "default": "127.0.0.1"
+    },
+    "REDIS_PORT": {
+      "type": "string",
+      "pattern": "[0-9]{4}",
+      "description": "Redis port",
+      "default": "6379"
+    },
+    "REDIS_SSL": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Whether Redis connection is SSL",
+      "default": "false"
+    },
+
+    "API_URL": {
+      "type": "string",
+      "description": "Current url where API is hosted from (used in operation execution clients)."
+    },
+
+    "AWS_REGION": {
+      "type": "string",
+      "description": "AWS Region where you want lambdas to be executed from."
+    },
+    "AWS_LAMBDA_ROLE": {
+      "type": "string",
+      "description": "Execution role of lambda functions."
+    },
+    "AWS_LAMBDA_ACCESS_KEY_ID": {
+      "type": "string",
+      "description": "Access key id for lambda (must have permission to invoke and create lambda functions)"
+    },
+    "AWS_LAMBDA_ACCESS_KEY_SECRET": {
+      "type": "string",
+      "description": "Access key secret for lambda (must have permission to invoke and create lambda functions)."
+    },
+    "AWS_LAMBDA_LAYER_ARN": {
+      "type": "string",
+      "description": "ARN Layer for lambda (current expectation is layer installed with all @iguhealth packages)."
+    },
+
+    "AUTH_JWT_AUDIENCE": {
+      "type": "string",
+      "description": "String representing audience for jwt.",
+      "default": "https://iguhealth.app/api"
+    },
+    "AUTH_JWT_ALGORITHM": {
+      "type": "string",
+      "description": "AUTH JWT ALGOrithm for jwt.",
+      "default": "RS256"
+    },
+
+    "AUTH_PUBLIC_ACCESS": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Sets the server to allow full public access when set to true.",
+      "default": "false"
+    },
+
+    "AUTH_LOCAL_CERTIFICATION_LOCATION": {
+      "type": "string",
+      "description": "Location for local certifications for IGUHEALTH ISSUER"
+    },
+    "AUTH_LOCAL_SIGNING_KEY": {
+      "type": "string",
+      "description": "The signing key used to generate new local tokens"
+    },
+
+    "AUTH_EXTERNAL_JWK_URI": {
+      "type": "string",
+      "description": "JWK remote url to pull JSON WEB Key Set."
+    },
+    "AUTH_EXTERNAL_JWT_ISSUER": {
+      "type": "string",
+      "description": "Issuer of the JWT."
+    },
+
+    "EMAIL_PROVIDER": {
+      "type": "string",
+      "enum": ["sendgrid"],
+      "description": "Set the email provider"
+    },
+    "SENDGRID_API_KEY": {
+      "type": "string",
+      "description": "Set the sendgrid api key (only used on email provider set to sendgrid)"
+    },
+
+    "ENCRYPTION_TYPE": {
+      "type": "string",
+      "enum": ["aws"],
+      "description": "The type of encryption (used to encrypt user secrets)"
+    },
+    "AWS_KMS_ACCESS_KEY_ID": {
+      "type": "string",
+      "description": "KMS client access key ID"
+    },
+    "AWS_KMS_ACCESS_KEY_SECRET": {
+      "type": "string",
+      "description": "KMS client access key secret"
+    },
+    "AWS_ENCRYPTION_GENERATOR_KEY": {
+      "type": "string",
+      "description": "KMS key used to generate data keys on keyring"
+    },
+    "AWS_ENCRYPTION_KEY": {
+      "type": "string",
+      "description": "Additional KMS key used for encryption"
+    },
+
+    "RATE_LIMIT_MAX": {
+      "type": "string",
+      "pattern": "[0-9]{3}",
+      "description": "Rate limiting amount per minute",
+      "default": "100"
+    },
+    "POSTGRES_TRANSACTION_ENTRY_LIMIT": {
+      "type": "string",
+      "pattern": "[0-9]{2}",
+      "description": "Postgres transaction entry limit",
+      "default": "20"
+    },
+
+    "SENTRY_SERVER_DSN": {
+      "type": "string",
+      "description": "Sentry DSN URL for monitoring errors and performance."
+    },
+    "SENTRY_WORKER_DSN": {
+      "type": "string",
+      "description": "Sentry Worker for monitoring errors and performance on worker"
+    },
+    "SENTRY_TRACES_SAMPLE_RATE": {
+      "type": "string",
+      "description": "Sentry sample rate."
+    },
+    "SENTRY_PROFILES_SAMPLE_RATE": {
+      "type": "string",
+      "description": "Sentry profiles rate."
+    }
+  }
+}
