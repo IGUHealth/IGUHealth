@@ -15146,7 +15146,6 @@ const RAW_RUNTIME_STATE =
           ["@types/react", "npm:18.2.55"],\
           ["@types/react-dom", "npm:18.2.19"],\
           ["@types/uuid", "npm:9.0.8"],\
-          ["add", "npm:2.0.6"],\
           ["adm-zip", "npm:0.5.10"],\
           ["ajv", "npm:8.12.0"],\
           ["commander", "npm:12.0.0"],\
@@ -15178,7 +15177,6 @@ const RAW_RUNTIME_STATE =
           ["ts-jest", "virtual:60d59201a81fdf9d844335582569d604f77c0cfb33012fc0d97d31d995c40a543914afd8f900018942c3e21e71ae879a5dcdf97d4008644edf9f0ce84a7e8664#npm:29.1.2"],\
           ["tsc-watch", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:6.0.4"],\
           ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"],\
-          ["yarn", "npm:1.22.21"],\
           ["zapatos", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:6.3.0"]\
         ],\
         "linkType": "SOFT"\
@@ -24994,15 +24992,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/acorn-walk-npm-8.2.0-2f2cac3177-e69f7234f2.zip/node_modules/acorn-walk/",\
         "packageDependencies": [\
           ["acorn-walk", "npm:8.2.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["add", [\
-      ["npm:2.0.6", {\
-        "packageLocation": "./.yarn/cache/add-npm-2.0.6-c96b78d852-1d2c0780a6.zip/node_modules/add/",\
-        "packageDependencies": [\
-          ["add", "npm:2.0.6"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -49421,15 +49410,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/yargs-parser-npm-21.1.1-8fdc003314-9dc2c217ea.zip/node_modules/yargs-parser/",\
         "packageDependencies": [\
           ["yargs-parser", "npm:21.1.1"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["yarn", [\
-      ["npm:1.22.21", {\
-        "packageLocation": "./.yarn/unplugged/yarn-npm-1.22.21-a16dc97569/node_modules/yarn/",\
-        "packageDependencies": [\
-          ["yarn", "npm:1.22.21"]\
         ],\
         "linkType": "HARD"\
       }]\

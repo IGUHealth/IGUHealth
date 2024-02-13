@@ -6961,7 +6961,6 @@ __metadata:
     "@types/react": "npm:^18.2.55"
     "@types/react-dom": "npm:^18.2.19"
     "@types/uuid": "npm:9.0.8"
-    add: "npm:^2.0.6"
     adm-zip: "npm:^0.5.10"
     ajv: "npm:^8.12.0"
     commander: "npm:^12.0.0"
@@ -6993,7 +6992,6 @@ __metadata:
     ts-jest: "npm:^29.1.2"
     tsc-watch: "npm:^6.0.4"
     typescript: "npm:5.3.3"
-    yarn: "npm:^1.22.21"
     zapatos: "npm:^6.3.0"
   languageName: unknown
   linkType: soft
@@ -13720,13 +13718,6 @@ __metadata:
   bin:
     acorn: bin/acorn
   checksum: 10/522310c20fdc3c271caed3caf0f06c51d61cb42267279566edd1d58e83dbc12eebdafaab666a0f0be1b7ad04af9c6bc2a6f478690a9e6391c3c8b165ada917dd
-  languageName: node
-  linkType: hard
-
-"add@npm:^2.0.6":
-  version: 2.0.6
-  resolution: "add@npm:2.0.6"
-  checksum: 10/1d2c0780a660edfc161b7784a846865b28dcd8514cc6042c8e283298f379cd3b150412b67a12603a4ac885912f05759f3e2993c27219f85d1face316ffc0b175
   languageName: node
   linkType: hard
 
@@ -32548,16 +32539,6 @@ __metadata:
     y18n: "npm:^5.0.5"
     yargs-parser: "npm:^21.1.1"
   checksum: 10/abb3e37678d6e38ea85485ed86ebe0d1e3464c640d7d9069805ea0da12f69d5a32df8e5625e370f9c96dd1c2dc088ab2d0a4dd32af18222ef3c4224a19471576
-  languageName: node
-  linkType: hard
-
-"yarn@npm:^1.22.21":
-  version: 1.22.21
-  resolution: "yarn@npm:1.22.21"
-  bin:
-    yarn: bin/yarn.js
-    yarnpkg: bin/yarn.js
-  checksum: 10/aeb5f2bc47983ba55e7a23e588f3cf63a40153477e4f469e35f14e89b28711cba45761efffc58403139d2470fc35324eb6b0626dbfae3bdca99d7dde9debadd0
   languageName: node
   linkType: hard
 
