@@ -6,6 +6,7 @@ import dotEnv from "dotenv";
 import Koa from "koa";
 import mount from "koa-mount";
 import ratelimit from "koa-ratelimit";
+import session from "koa-session";
 import serve from "koa-static";
 import path from "node:path";
 import pg from "pg";
@@ -25,6 +26,7 @@ import {
 } from "./authN/middleware.js";
 import { createOIDCRouter } from "./authN/oidc/routes.js";
 import { verifyAndAssociateUserFHIRContext } from "./authZ/middleware/tenantAccess.js";
+import loadEnv from "./env.js";
 import {
   createFHIRAPI,
   createKoaFHIRContextMiddleware,
@@ -40,23 +42,11 @@ import {
   fhirResponseToHTTPResponse,
   httpRequestToFHIRRequest,
 } from "./fhir-http/index.js";
-import type { IGUHealthEnvironment } from "./json-schemas/schemas/environment.schema.js";
-import IGUHealthEnvironmentSchema from "./json-schemas/schemas/environment.schema.json" with { type: "json" };
 import * as MonitoringSentry from "./monitoring/sentry.js";
 import { LIB_VERSION } from "./version.js";
 import * as views from "./views/index.js";
 
-dotEnv.config();
-const ajv = new Ajv.default({});
-const environmentValidator = ajv.compile(IGUHealthEnvironmentSchema);
-const envValid = environmentValidator(process.env);
-if (!envValid) throw new Error(ajv.errorsText(environmentValidator.errors));
-
-declare global {
-  namespace NodeJS {
-    interface ProcessEnv extends IGUHealthEnvironment {}
-  }
-}
+loadEnv();
 
 interface KoaFHIRMiddlewareState extends Koa.DefaultState {
   user: { [key: string]: unknown };
@@ -74,57 +64,47 @@ async function FHIRAPIKoaMiddleware<
     T,
     KoaFHIRContext<Koa.DefaultContext> &
       Router.RouterParamContext<T, KoaFHIRContext<Koa.DefaultContext>>
-  >[]
+  >
 > {
-  if (!process.env.AUTH_EXTERNAL_JWT_ISSUER)
-    logger.warn("[WARNING] Server is publicly accessible.");
   const fhirAPI = await createFHIRAPI();
 
-  return [
-    MonitoringSentry.tracingMiddleWare(process.env.SENTRY_SERVER_DSN),
-    process.env.AUTH_PUBLIC_ACCESS === "true"
-      ? allowPublicAccessMiddleware
-      : await createValidateUserJWTMiddleware(),
-    verifyAndAssociateUserFHIRContext,
+  return async (ctx, next) => {
+    let span;
+    const transaction = ctx.__sentry_transaction;
+    if (transaction) {
+      span = transaction.startChild({
+        description: "FHIR MIDDLEWARE",
+        op: "fhirserver",
+      });
+    }
+    if (!isFHIRServerAuthorizedUserCTX(ctx.FHIRContext)) {
+      throw new Error("FHIR Context is not authorized");
+    }
 
-    async (ctx, next) => {
-      let span;
-      const transaction = ctx.__sentry_transaction;
-      if (transaction) {
-        span = transaction.startChild({
-          description: "FHIR MIDDLEWARE",
-          op: "fhirserver",
-        });
+    try {
+      const response = await fhirAPI.request(
+        ctx.FHIRContext,
+        httpRequestToFHIRRequest({
+          url: `${ctx.params.fhirUrl || ""}${
+            ctx.request.querystring ? `?${ctx.request.querystring}` : ""
+          }`,
+          method: ctx.request.method,
+          body: (ctx.request as unknown as Record<string, unknown>).body,
+        }),
+      );
+      const httpResponse = fhirResponseToHTTPResponse(response);
+      ctx.status = httpResponse.status;
+      ctx.body = httpResponse.body;
+      for (const [key, value] of Object.entries(httpResponse.headers ?? {})) {
+        ctx.set(key, value);
       }
-      if (!isFHIRServerAuthorizedUserCTX(ctx.FHIRContext)) {
-        throw new Error("FHIR Context is not authorized");
+      await next();
+    } finally {
+      if (span) {
+        span.finish();
       }
-
-      try {
-        const response = await fhirAPI.request(
-          ctx.FHIRContext,
-          httpRequestToFHIRRequest({
-            url: `${ctx.params.fhirUrl || ""}${
-              ctx.request.querystring ? `?${ctx.request.querystring}` : ""
-            }`,
-            method: ctx.request.method,
-            body: (ctx.request as unknown as Record<string, unknown>).body,
-          }),
-        );
-        const httpResponse = fhirResponseToHTTPResponse(response);
-        ctx.status = httpResponse.status;
-        ctx.body = httpResponse.body;
-        for (const [key, value] of Object.entries(httpResponse.headers ?? {})) {
-          ctx.set(key, value);
-        }
-        await next();
-      } finally {
-        if (span) {
-          span.finish();
-        }
-      }
-    },
-  ];
+    }
+  };
 }
 
 function createErrorHandlingMiddleware<T>(): Koa.Middleware<
@@ -253,13 +233,26 @@ export default async function createServer(): Promise<
   // FHIR API Endpoint
   tenantAPIV1Router.all(
     "/fhir/r4/:fhirUrl*",
-    ...(await FHIRAPIKoaMiddleware<KoaFHIRMiddlewareState>()),
+    // MonitoringSentry.tracingMiddleWare<KoaFHIRMiddlewareState>(process.env.SENTRY_SERVER_DSN),
+    process.env.AUTH_PUBLIC_ACCESS === "true"
+      ? allowPublicAccessMiddleware
+      : await createValidateUserJWTMiddleware({
+          AUTH_LOCAL_CERTIFICATION_LOCATION:
+            process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
+          AUTH_LOCAL_SIGNING_KEY: process.env.AUTH_LOCAL_SIGNING_KEY,
+          AUTH_EXTERNAL_JWT_ISSUER: process.env.AUTH_EXTERNAL_JWT_ISSUER,
+          AUTH_EXTERNAL_JWK_URI: process.env.AUTH_EXTERNAL_JWK_URI,
+        }),
+    verifyAndAssociateUserFHIRContext,
+    await FHIRAPIKoaMiddleware<KoaFHIRMiddlewareState>(),
   );
   tenantRouter.use(tenantAPIV1Router.routes());
   tenantRouter.use(tenantAPIV1Router.allowedMethods());
 
   rootRouter.use(tenantRouter.routes());
   rootRouter.use(tenantRouter.allowedMethods());
+
+  app.keys = [];
 
   app
     .use(
@@ -296,9 +289,7 @@ export default async function createServer(): Promise<
     )
     .use(cors())
     .use(bodyParser())
-    // .use(routes(provider).routes())
-    // .use(mount(provider.app))
-
+    .use(session({}, app))
     .use(async (ctx, next) => {
       await next();
       const rt = ctx.response.get("X-Response-Time");

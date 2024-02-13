@@ -15033,7 +15033,9 @@ const RAW_RUNTIME_STATE =
           ["@types/koa", "npm:2.13.6"],\
           ["@types/koa-bodyparser", "npm:4.3.12"],\
           ["@types/koa-mount", "npm:4.0.5"],\
+          ["@types/koa-passport", "npm:6.0.3"],\
           ["@types/koa-ratelimit", "npm:5.0.3"],\
+          ["@types/koa-session", "npm:6.4.5"],\
           ["@types/koa-static", "npm:4.0.4"],\
           ["@types/koa__cors", "npm:5.0.0"],\
           ["@types/koa__router", "npm:12.0.4"],\
@@ -15060,7 +15062,9 @@ const RAW_RUNTIME_STATE =
           ["koa-body", "npm:6.0.1"],\
           ["koa-jwt", "npm:4.0.4"],\
           ["koa-mount", "npm:4.0.0"],\
+          ["koa-passport", "npm:6.0.0"],\
           ["koa-ratelimit", "npm:5.1.0"],\
+          ["koa-session", "npm:6.4.0"],\
           ["koa-static", "npm:5.0.0"],\
           ["nanoid", "npm:5.0.5"],\
           ["openid-client", "npm:5.6.4"],\
@@ -23459,6 +23463,17 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@types/koa-passport", [\
+      ["npm:6.0.3", {\
+        "packageLocation": "./.yarn/cache/@types-koa-passport-npm-6.0.3-469c12ce31-a7a3c47b11.zip/node_modules/@types/koa-passport/",\
+        "packageDependencies": [\
+          ["@types/koa-passport", "npm:6.0.3"],\
+          ["@types/koa", "npm:2.13.6"],\
+          ["@types/passport", "npm:1.0.16"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@types/koa-ratelimit", [\
       ["npm:5.0.3", {\
         "packageLocation": "./.yarn/cache/@types-koa-ratelimit-npm-5.0.3-5c677ee2b1-1f3077d741.zip/node_modules/@types/koa-ratelimit/",\
@@ -23476,6 +23491,17 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@types-koa-send-npm-4.1.6-803aa0a977-d46d207f1d.zip/node_modules/@types/koa-send/",\
         "packageDependencies": [\
           ["@types/koa-send", "npm:4.1.6"],\
+          ["@types/koa", "npm:2.13.6"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/koa-session", [\
+      ["npm:6.4.5", {\
+        "packageLocation": "./.yarn/cache/@types-koa-session-npm-6.4.5-e5a838c750-89b6db1bac.zip/node_modules/@types/koa-session/",\
+        "packageDependencies": [\
+          ["@types/koa-session", "npm:6.4.5"],\
+          ["@types/cookies", "npm:0.7.7"],\
           ["@types/koa", "npm:2.13.6"]\
         ],\
         "linkType": "HARD"\
@@ -23681,6 +23707,16 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@types-parse-json-npm-4.0.0-298522afa6-4df9de9815.zip/node_modules/@types/parse-json/",\
         "packageDependencies": [\
           ["@types/parse-json", "npm:4.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/passport", [\
+      ["npm:1.0.16", {\
+        "packageLocation": "./.yarn/cache/@types-passport-npm-1.0.16-7f245434f2-0ee7b9a461.zip/node_modules/@types/passport/",\
+        "packageDependencies": [\
+          ["@types/passport", "npm:1.0.16"],\
+          ["@types/express", "npm:4.17.17"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -28054,6 +28090,16 @@ const RAW_RUNTIME_STATE =
           ["cpu-features", "npm:0.0.2"],\
           ["nan", "npm:2.17.0"],\
           ["node-gyp", "npm:9.4.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["crc", [\
+      ["npm:3.8.0", {\
+        "packageLocation": "./.yarn/cache/crc-npm-3.8.0-ff6ff34fbe-3a43061e69.zip/node_modules/crc/",\
+        "packageDependencies": [\
+          ["crc", "npm:3.8.0"],\
+          ["buffer", "npm:5.7.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -33616,6 +33662,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["is-class-hotfix", [\
+      ["npm:0.0.6", {\
+        "packageLocation": "./.yarn/cache/is-class-hotfix-npm-0.0.6-0576f63809-20668eb1a2.zip/node_modules/is-class-hotfix/",\
+        "packageDependencies": [\
+          ["is-class-hotfix", "npm:0.0.6"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["is-core-module", [\
       ["npm:2.12.1", {\
         "packageLocation": "./.yarn/cache/is-core-module-npm-2.12.1-ce74e89160-35d5f90c95.zip/node_modules/is-core-module/",\
@@ -34020,6 +34075,18 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["is-type-of", [\
+      ["npm:1.4.0", {\
+        "packageLocation": "./.yarn/cache/is-type-of-npm-1.4.0-ab70d0a1cf-9d8ca64d0c.zip/node_modules/is-type-of/",\
+        "packageDependencies": [\
+          ["is-type-of", "npm:1.4.0"],\
+          ["core-util-is", "npm:1.0.3"],\
+          ["is-class-hotfix", "npm:0.0.6"],\
+          ["isstream", "npm:0.1.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["is-typed-array", [\
       ["npm:1.1.10", {\
         "packageLocation": "./.yarn/cache/is-typed-array-npm-1.1.10-fe4ef83cdc-2392b2473b.zip/node_modules/is-typed-array/",\
@@ -34138,6 +34205,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/isobject-npm-3.0.1-8145901fd2-db85c4c970.zip/node_modules/isobject/",\
         "packageDependencies": [\
           ["isobject", "npm:3.0.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["isstream", [\
+      ["npm:0.1.2", {\
+        "packageLocation": "./.yarn/cache/isstream-npm-0.1.2-8581c75385-22d9c18101.zip/node_modules/isstream/",\
+        "packageDependencies": [\
+          ["isstream", "npm:0.1.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -36001,6 +36077,16 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["koa-passport", [\
+      ["npm:6.0.0", {\
+        "packageLocation": "./.yarn/cache/koa-passport-npm-6.0.0-83a51e8d92-4482e4b3d2.zip/node_modules/koa-passport/",\
+        "packageDependencies": [\
+          ["koa-passport", "npm:6.0.0"],\
+          ["passport", "npm:0.6.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["koa-ratelimit", [\
       ["npm:5.1.0", {\
         "packageLocation": "./.yarn/cache/koa-ratelimit-npm-5.1.0-1ab589a18d-09c718b727.zip/node_modules/koa-ratelimit/",\
@@ -36021,6 +36107,19 @@ const RAW_RUNTIME_STATE =
           ["debug", "virtual:1ff4b5f90832ba0a9c93ba1223af226e44ba70c1126a3740d93562b97bc36544e896a5e95908196f7458713e6a6089a34bfc67362fc6df7fa093bd06c878be47#npm:4.3.4"],\
           ["http-errors", "npm:1.8.1"],\
           ["resolve-path", "npm:1.4.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["koa-session", [\
+      ["npm:6.4.0", {\
+        "packageLocation": "./.yarn/cache/koa-session-npm-6.4.0-73aca92418-b313837a08.zip/node_modules/koa-session/",\
+        "packageDependencies": [\
+          ["koa-session", "npm:6.4.0"],\
+          ["crc", "npm:3.8.0"],\
+          ["debug", "virtual:1ff4b5f90832ba0a9c93ba1223af226e44ba70c1126a3740d93562b97bc36544e896a5e95908196f7458713e6a6089a34bfc67362fc6df7fa093bd06c878be47#npm:4.3.4"],\
+          ["is-type-of", "npm:1.4.0"],\
+          ["uuid", "npm:8.3.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -38913,6 +39012,27 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["passport", [\
+      ["npm:0.6.0", {\
+        "packageLocation": "./.yarn/cache/passport-npm-0.6.0-0a57682d5b-5051e1d773.zip/node_modules/passport/",\
+        "packageDependencies": [\
+          ["passport", "npm:0.6.0"],\
+          ["passport-strategy", "npm:1.0.0"],\
+          ["pause", "npm:0.0.1"],\
+          ["utils-merge", "npm:1.0.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["passport-strategy", [\
+      ["npm:1.0.0", {\
+        "packageLocation": "./.yarn/cache/passport-strategy-npm-1.0.0-5648a82a66-5086693f25.zip/node_modules/passport-strategy/",\
+        "packageDependencies": [\
+          ["passport-strategy", "npm:1.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["path-browserify", [\
       ["npm:1.0.1", {\
         "packageLocation": "./.yarn/cache/path-browserify-npm-1.0.1-f975d99a99-7e7368a520.zip/node_modules/path-browserify/",\
@@ -39053,6 +39173,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/pathe-npm-1.1.1-71e289b0d9-603decdf75.zip/node_modules/pathe/",\
         "packageDependencies": [\
           ["pathe", "npm:1.1.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["pause", [\
+      ["npm:0.0.1", {\
+        "packageLocation": "./.yarn/cache/pause-npm-0.0.1-0c421a299d-e96ee581b6.zip/node_modules/pause/",\
+        "packageDependencies": [\
+          ["pause", "npm:0.0.1"]\
         ],\
         "linkType": "HARD"\
       }]\

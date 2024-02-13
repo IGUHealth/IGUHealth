@@ -10,61 +10,88 @@ import {
   IGUHEALTH_ISSUER,
 } from "./token.js";
 
-/**
- *
- * @returns Koa middleware that validates the user JWT.
- */
-export async function createValidateUserJWTMiddleware<T, C>(): Promise<
-  Koa.Middleware<T, C>
-> {
-  let IGUHEALTH_JWT_SECRET: ReturnType<typeof jwksRsa.koaJwtSecret> | undefined;
-  if (
-    process.env.AUTH_LOCAL_SIGNING_KEY &&
-    process.env.AUTH_LOCAL_CERTIFICATION_LOCATION
-  ) {
+async function createLocalJWTSecret(
+  AUTH_LOCAL_CERTIFICATION_LOCATION: string | undefined,
+  AUTH_LOCAL_SIGNING_KEY: string | undefined,
+): Promise<ReturnType<typeof jwksRsa.koaJwtSecret> | undefined> {
+  if (AUTH_LOCAL_SIGNING_KEY && AUTH_LOCAL_CERTIFICATION_LOCATION) {
     if (process.env.NODE_ENV === "development") {
       await createCertsIfNoneExists(
-        process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
-        process.env.AUTH_LOCAL_SIGNING_KEY,
+        AUTH_LOCAL_CERTIFICATION_LOCATION,
+        AUTH_LOCAL_SIGNING_KEY,
       );
     }
-    const jwks = await getJWKS(process.env.AUTH_LOCAL_CERTIFICATION_LOCATION);
-    IGUHEALTH_JWT_SECRET = jwksRsa.koaJwtSecret({
+
+    const jwks = await getJWKS(AUTH_LOCAL_CERTIFICATION_LOCATION);
+    return jwksRsa.koaJwtSecret({
       jwksUri: "_not_used",
       cache: true,
       rateLimit: true,
       jwksRequestsPerMinute: 2,
-      fetcher: async (_uri) => {
+      fetcher: async () => {
         return jwks;
       },
     });
   }
 
-  let EXTERNAL_JWT_SECRET: ReturnType<typeof jwksRsa.koaJwtSecret> | undefined;
+  return undefined;
+}
 
-  if (
-    process.env.AUTH_EXTERNAL_JWK_URI &&
-    process.env.AUTH_EXTERNAL_JWT_ISSUER
-  ) {
-    EXTERNAL_JWT_SECRET = jwksRsa.koaJwtSecret({
+function createExternalJWTSecret(
+  AUTH_EXTERNAL_JWT_ISSUER: string | undefined,
+  AUTH_EXTERNAL_JWK_URI: string | undefined,
+): (ReturnType<typeof jwksRsa.koaJwtSecret> & { issuer: string }) | undefined {
+  if (AUTH_EXTERNAL_JWT_ISSUER && AUTH_EXTERNAL_JWK_URI) {
+    const secret = jwksRsa.koaJwtSecret({
       cache: true,
       rateLimit: true,
       jwksRequestsPerMinute: 2,
-      jwksUri: process.env.AUTH_EXTERNAL_JWK_URI as string,
+      jwksUri: AUTH_EXTERNAL_JWK_URI,
     });
+    return Object.assign(secret, { issuer: AUTH_EXTERNAL_JWT_ISSUER });
   }
+  return undefined;
+}
+
+interface ValidateUserJWTMiddlewareOptions {
+  AUTH_LOCAL_CERTIFICATION_LOCATION?: string;
+  AUTH_LOCAL_SIGNING_KEY?: string;
+  AUTH_EXTERNAL_JWK_URI?: string;
+  AUTH_EXTERNAL_JWT_ISSUER?: string;
+}
+
+/**
+ *
+ * @returns Koa middleware that validates the user JWT.
+ */
+export async function createValidateUserJWTMiddleware<T, C>({
+  AUTH_LOCAL_CERTIFICATION_LOCATION,
+  AUTH_LOCAL_SIGNING_KEY,
+  AUTH_EXTERNAL_JWT_ISSUER,
+  AUTH_EXTERNAL_JWK_URI,
+}: ValidateUserJWTMiddlewareOptions): Promise<Koa.Middleware<T, C>> {
+  const IGUHEALTH_JWT_SECRET = await createLocalJWTSecret(
+    AUTH_LOCAL_CERTIFICATION_LOCATION,
+    AUTH_LOCAL_SIGNING_KEY,
+  );
+
+  const EXTERNAL_JWT_SECRET = createExternalJWTSecret(
+    AUTH_EXTERNAL_JWT_ISSUER,
+    AUTH_EXTERNAL_JWK_URI,
+  );
 
   return jwt({
     tokenKey: "access_token",
     secret: async (header: jwksRsa.TokenHeader, payload: { iss: string }) => {
-      switch (payload.iss) {
-        case process.env.AUTH_EXTERNAL_JWT_ISSUER: {
+      switch (true) {
+        case EXTERNAL_JWT_SECRET &&
+          EXTERNAL_JWT_SECRET?.issuer === payload.iss: {
           if (!EXTERNAL_JWT_SECRET) {
             throw new Error("External JWT secret is not configured");
           }
           return EXTERNAL_JWT_SECRET(header);
         }
-        case IGUHEALTH_ISSUER: {
+        case payload.iss === IGUHEALTH_ISSUER: {
           if (IGUHEALTH_JWT_SECRET) return IGUHEALTH_JWT_SECRET(header);
           throw new Error("IGUHealth issuer is not configured");
         }
