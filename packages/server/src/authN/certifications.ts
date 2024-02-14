@@ -1,4 +1,5 @@
 import * as jose from "jose";
+import { KeyObject } from "node:crypto";
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
@@ -90,9 +91,9 @@ export async function getSigningKey(
   directory: string,
   kid: string,
   alg = ALGORITHMS.RS256,
-) {
+): Promise<{ key: KeyObject; kid: string }> {
   const privateKeyPath = path.join(directory, `${kid}.p8`);
-  const privateKey = await jose.importPKCS8(
+  const privateKey = await jose.importPKCS8<KeyObject & jose.KeyLike>(
     readFileSync(privateKeyPath, "utf-8"),
     alg,
   );

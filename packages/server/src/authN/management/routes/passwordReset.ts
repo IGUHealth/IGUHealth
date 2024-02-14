@@ -1,13 +1,19 @@
 import React from "react";
 import * as db from "zapatos/db";
 
-import { Feedback, PasswordResetForm } from "@iguhealth/components";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import { EmailForm, Feedback, PasswordResetForm } from "@iguhealth/components";
+import {
+  OperationError,
+  outcomeError,
+  outcomeFatal,
+} from "@iguhealth/operation-outcomes";
 
 import * as views from "../../../views/index.js";
 import { ROUTES } from "../constants.js";
 import * as dbCode from "../db/code.js";
+import * as dbUser from "../db/user.js";
 import type { ManagementRouteHandler } from "../index.js";
+import { validateEmail } from "../utilities.js";
 
 export const passwordResetGET: ManagementRouteHandler = async (ctx) => {
   const queryCode = ctx.request.query.code;
@@ -30,7 +36,9 @@ export const passwordResetGET: ManagementRouteHandler = async (ctx) => {
     );
   }
 
-  const passwordResetPostUrl = ctx.router.url(ROUTES.PASSWORD_RESET_POST);
+  const passwordResetPostUrl = ctx.router.url(
+    ROUTES.PASSWORD_RESET_VERIFY_POST,
+  );
   if (passwordResetPostUrl instanceof Error) throw passwordResetPostUrl;
 
   views.render(
@@ -53,7 +61,9 @@ export const passwordResetPOST: ManagementRouteHandler = async (ctx) => {
   if (!body?.code) {
     throw new OperationError(outcomeError("invalid", "Code not found."));
   }
-  const passwordResetPostUrl = ctx.router.url(ROUTES.PASSWORD_RESET_POST);
+  const passwordResetPostUrl = ctx.router.url(
+    ROUTES.PASSWORD_RESET_VERIFY_POST,
+  );
   if (passwordResetPostUrl instanceof Error) throw passwordResetPostUrl;
 
   if (!body?.password) {
@@ -105,8 +115,6 @@ export const passwordResetPOST: ManagementRouteHandler = async (ctx) => {
   }
 
   db.serializable(ctx.postgres, async (txnClient) => {
-    console.log("pass:", body.password);
-
     await db
       .update(
         "tenant_owners",
@@ -124,6 +132,99 @@ export const passwordResetPOST: ManagementRouteHandler = async (ctx) => {
       title: "IGUHealth",
       header: "Password Reset",
       content: "Your password has been set.",
+    }),
+  );
+};
+
+export const passwordResetInitiateGet: ManagementRouteHandler = async (ctx) => {
+  const passwordResetInitiatePostURL = ctx.router.url(
+    ROUTES.PASSWORD_RESET_INITIATE_POST,
+  );
+  if (typeof passwordResetInitiatePostURL !== "string")
+    throw passwordResetInitiatePostURL;
+
+  views.render(
+    ctx,
+    React.createElement(EmailForm, {
+      logo: "/public/img/logo.svg",
+      header: "Password Reset",
+      action: passwordResetInitiatePostURL,
+    }),
+  );
+};
+
+/**
+ * Initiates password reset process by sending an email to the user with a link to reset their password.
+ * @param ctx Koa fhir context
+ */
+export const passwordResetInitiatePOST: ManagementRouteHandler = async (
+  ctx,
+) => {
+  const body = ctx.request.body as
+    | { email?: string; password?: string }
+    | undefined;
+
+  if (!ctx.emailProvider)
+    throw new OperationError(
+      outcomeFatal(
+        "not-supported",
+        "Email verification is not supported on this instance.",
+      ),
+    );
+
+  if (!validateEmail(body?.email)) {
+    throw new OperationError(
+      outcomeError("invalid", "Must have a valid email address."),
+    );
+  }
+
+  let user = await dbUser.findManagementUserByEmail(ctx.postgres, body.email);
+  if (!user) {
+    user = await dbUser.createUser(ctx.postgres, body.email);
+  }
+
+  if (!process.env.EMAIL_FROM) {
+    throw new OperationError(
+      outcomeFatal("invariant", "EMAIL_FROM environment variable is not set."),
+    );
+  }
+
+  if (
+    !(await dbCode.doesCodeAlreadyExistForUser(
+      ctx.postgres,
+      user.email,
+      "password_reset",
+    ))
+  ) {
+    const code = await dbCode.createAuthorizationCode(
+      ctx.postgres,
+      "password_reset",
+      user.email,
+    );
+
+    const emailVerificationURL = ctx.router.url(
+      ROUTES.PASSWORD_RESET_VERIFY_GET,
+      {},
+      { query: { code: code.code } },
+    );
+    if (typeof emailVerificationURL !== "string") throw emailVerificationURL;
+
+    await ctx.emailProvider.sendEmail({
+      from: process.env.EMAIL_FROM,
+      to: user.email,
+      subject: "IGUHealth Email Verification",
+      html: `Follow the following link to verify your email and set your password. <a href="${process.env.API_URL}${emailVerificationURL}" clicktracking="off">  Here </a>`,
+    });
+  }
+
+  views.render(
+    ctx,
+    React.createElement(Feedback, {
+      logo: "/public/img/logo.svg",
+      title: "IGUHealth",
+      header: "Email Verification",
+      content:
+        "We have sent an email to your email address. Please verify your email address to login.",
     }),
   );
 };

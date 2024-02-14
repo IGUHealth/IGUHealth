@@ -15030,6 +15030,7 @@ const RAW_RUNTIME_STATE =
           ["@sentry/utils", "npm:7.100.1"],\
           ["@types/adm-zip", "npm:0.5.5"],\
           ["@types/jest", "npm:29.5.12"],\
+          ["@types/keygrip", "npm:1.0.6"],\
           ["@types/koa", "npm:2.13.6"],\
           ["@types/koa-bodyparser", "npm:4.3.12"],\
           ["@types/koa-mount", "npm:4.0.5"],\
@@ -15040,6 +15041,7 @@ const RAW_RUNTIME_STATE =
           ["@types/koa__cors", "npm:5.0.0"],\
           ["@types/koa__router", "npm:12.0.4"],\
           ["@types/node", "npm:20.11.17"],\
+          ["@types/passport-local", "npm:1.0.38"],\
           ["@types/pg", "npm:8.11.0"],\
           ["@types/react", "npm:18.2.55"],\
           ["@types/react-dom", "npm:18.2.19"],\
@@ -15058,6 +15060,7 @@ const RAW_RUNTIME_STATE =
           ["jose", "npm:5.2.2"],\
           ["json-schema-to-typescript", "npm:13.1.2"],\
           ["jwks-rsa", "npm:3.1.0"],\
+          ["keygrip", "npm:1.1.0"],\
           ["koa", "npm:2.15.0"],\
           ["koa-body", "npm:6.0.1"],\
           ["koa-jwt", "npm:4.0.4"],\
@@ -15068,6 +15071,7 @@ const RAW_RUNTIME_STATE =
           ["koa-static", "npm:5.0.0"],\
           ["nanoid", "npm:5.0.5"],\
           ["openid-client", "npm:5.6.4"],\
+          ["passport-local", "npm:1.0.0"],\
           ["pg", "virtual:e1c816e034cd0b5bef17034e9e60dba4c6f6bd1e447e5d5f077a6e02f3c218a3aaa8202d4d85c4dd3c28000c7590795b5b64dd548cd70ed74b3a6563e160e159#npm:8.11.3"],\
           ["pino", "npm:8.18.0"],\
           ["react", "npm:18.2.0"],\
@@ -23414,6 +23418,13 @@ const RAW_RUNTIME_STATE =
           ["@types/keygrip", "npm:1.0.2"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:1.0.6", {\
+        "packageLocation": "./.yarn/cache/@types-keygrip-npm-1.0.6-25e224891d-d157f60bf9.zip/node_modules/@types/keygrip/",\
+        "packageDependencies": [\
+          ["@types/keygrip", "npm:1.0.6"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["@types/koa", [\
@@ -23717,6 +23728,29 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@types/passport", "npm:1.0.16"],\
           ["@types/express", "npm:4.17.17"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/passport-local", [\
+      ["npm:1.0.38", {\
+        "packageLocation": "./.yarn/cache/@types-passport-local-npm-1.0.38-e5beccb1f8-d333956699.zip/node_modules/@types/passport-local/",\
+        "packageDependencies": [\
+          ["@types/passport-local", "npm:1.0.38"],\
+          ["@types/express", "npm:4.17.17"],\
+          ["@types/passport", "npm:1.0.16"],\
+          ["@types/passport-strategy", "npm:0.2.38"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/passport-strategy", [\
+      ["npm:0.2.38", {\
+        "packageLocation": "./.yarn/cache/@types-passport-strategy-npm-0.2.38-6460f7e728-b580e16518.zip/node_modules/@types/passport-strategy/",\
+        "packageDependencies": [\
+          ["@types/passport-strategy", "npm:0.2.38"],\
+          ["@types/express", "npm:4.17.17"],\
+          ["@types/passport", "npm:1.0.16"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -39020,6 +39054,16 @@ const RAW_RUNTIME_STATE =
           ["passport-strategy", "npm:1.0.0"],\
           ["pause", "npm:0.0.1"],\
           ["utils-merge", "npm:1.0.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["passport-local", [\
+      ["npm:1.0.0", {\
+        "packageLocation": "./.yarn/cache/passport-local-npm-1.0.0-ed89961a0c-86dc08b12f.zip/node_modules/passport-local/",\
+        "packageDependencies": [\
+          ["passport-local", "npm:1.0.0"],\
+          ["passport-strategy", "npm:1.0.0"]\
         ],\
         "linkType": "HARD"\
       }]\

@@ -1,5 +1,6 @@
 import Router from "@koa/router";
 import type * as Koa from "koa";
+import koaPassport from "koa-passport";
 
 import { KoaFHIRServicesContext } from "../../fhir-context/koa.js";
 import { ROUTES } from "./constants.js";
@@ -20,6 +21,13 @@ export function createManagementRouter(prefix: string) {
     prefix,
   });
 
+  managementRouter.use(koaPassport.initialize());
+  managementRouter.use(koaPassport.session());
+  managementRouter.use(async (ctx, next) => {
+    console.log("authMethods:", ctx.isAuthenticated(), ctx.isUnauthenticated());
+    return next();
+  });
+
   managementRouter.get(
     ROUTES.SIGNUP_GET,
     "/interaction/signup",
@@ -27,31 +35,34 @@ export function createManagementRouter(prefix: string) {
   );
 
   managementRouter.post(
-    ROUTES.SIGNUP_POST,
-    "/interaction/signup",
-    routes.signupPOST,
+    ROUTES.PASSWORD_RESET_INITIATE_POST,
+    "/interaction/password-reset",
+    routes.passwordResetInitiatePOST,
   );
 
   managementRouter.get(
-    ROUTES.PASSWORD_RESET_GET,
+    ROUTES.PASSWORD_RESET_INITIATE_GET,
     "/interaction/password-reset",
+    routes.passwordResetInitiateGet,
+  );
+
+  managementRouter.get(
+    ROUTES.PASSWORD_RESET_VERIFY_GET,
+    "/interaction/password-reset-verify",
     routes.passwordResetGET,
   );
 
   managementRouter.post(
-    ROUTES.PASSWORD_RESET_POST,
-    "/interaction/password-reset",
+    ROUTES.PASSWORD_RESET_VERIFY_POST,
+    "/interaction/password-reset-verify",
     routes.passwordResetPOST,
   );
-
-  /**
-   * Signup a new user with an associated tenant.
-   * Need to also validate the user's email.
-   */
-  managementRouter.get(ROUTES.LOGIN_GET, "/interaction/login", async (ctx) => {
-    ctx.status = 200;
-    ctx.body = "LOGIN";
-  });
+  managementRouter.get(ROUTES.LOGIN_GET, "/interaction/login", routes.loginGet);
+  managementRouter.post(
+    ROUTES.LOGIN_POST,
+    "/interaction/login",
+    routes.loginPost,
+  );
 
   return managementRouter;
 }

@@ -1,8 +1,20 @@
 import React from "react";
 
-export type LoginProps = { title?: string; logo?: string; action: string };
+export type LoginProps = {
+  title?: string;
+  logo?: string;
+  action: string;
+  signupURL?: string;
+  forgotPasswordURL?: string;
+};
 
-export const Login = ({ title = "IGUHealth", logo, action }: LoginProps) => (
+export const Login = ({
+  title = "IGUHealth",
+  logo,
+  action,
+  signupURL,
+  forgotPasswordURL,
+}: LoginProps) => (
   <section className="bg-gray-50 dark:bg-gray-900">
     <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
       <a
@@ -74,12 +86,14 @@ export const Login = ({ title = "IGUHealth", logo, action }: LoginProps) => (
                   </label>
                 </div>
               </div>
-              <a
-                href="#"
-                className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
-              >
-                Forgot password?
-              </a>
+              {forgotPasswordURL && (
+                <a
+                  href={forgotPasswordURL}
+                  className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
+                >
+                  Forgot password?
+                </a>
+              )}
             </div>
             <button
               type="submit"
@@ -87,15 +101,17 @@ export const Login = ({ title = "IGUHealth", logo, action }: LoginProps) => (
             >
               Sign in
             </button>
-            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-              Don’t have an account yet?{" "}
-              <a
-                href="#"
-                className="font-medium text-blue-600 hover:underline dark:text-blue-500"
-              >
-                Sign up
-              </a>
-            </p>
+            {signupURL && (
+              <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                Don’t have an account yet?{" "}
+                <a
+                  href={signupURL}
+                  className="font-medium text-blue-600 hover:underline dark:text-blue-500"
+                >
+                  Sign up
+                </a>
+              </p>
+            )}
           </form>
         </div>
       </div>
