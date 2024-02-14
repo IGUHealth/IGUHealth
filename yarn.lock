@@ -6907,6 +6907,7 @@ __metadata:
     "@sentry/utils": "npm:^7.100.1"
     "@types/adm-zip": "npm:^0.5.5"
     "@types/jest": "npm:^29.5.12"
+    "@types/keygrip": "npm:^1.0.6"
     "@types/koa": "npm:^2.13.6"
     "@types/koa-bodyparser": "npm:^4.3.12"
     "@types/koa-mount": "npm:^4.0.5"
@@ -6917,6 +6918,7 @@ __metadata:
     "@types/koa__cors": "npm:^5.0.0"
     "@types/koa__router": "npm:^12.0.4"
     "@types/node": "npm:^20.11.17"
+    "@types/passport-local": "npm:^1.0.38"
     "@types/pg": "npm:^8.11.0"
     "@types/react": "npm:^18.2.55"
     "@types/react-dom": "npm:^18.2.19"
@@ -6935,6 +6937,7 @@ __metadata:
     jose: "npm:^5.2.2"
     json-schema-to-typescript: "npm:^13.1.2"
     jwks-rsa: "npm:^3.1.0"
+    keygrip: "npm:^1.1.0"
     koa: "npm:^2.15.0"
     koa-body: "npm:^6.0.1"
     koa-jwt: "npm:^4.0.4"
@@ -6945,6 +6948,7 @@ __metadata:
     koa-static: "npm:^5.0.0"
     nanoid: "npm:^5.0.5"
     openid-client: "npm:^5.6.4"
+    passport-local: "npm:^1.0.0"
     pg: "npm:^8.11.3"
     pino: "npm:^8.18.0"
     react: "npm:^18.2.0"
@@ -12528,6 +12532,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/keygrip@npm:^1.0.6":
+  version: 1.0.6
+  resolution: "@types/keygrip@npm:1.0.6"
+  checksum: 10/d157f60bf920492347791d2b26d530d5069ce05796549fbacd4c24d66ffbebbcb0ab67b21e7a1b80a593b9fd4b67dc4843dec04c12bbc2e0fddfb8577a826c41
+  languageName: node
+  linkType: hard
+
 "@types/koa-bodyparser@npm:^4.3.12":
   version: 4.3.12
   resolution: "@types/koa-bodyparser@npm:4.3.12"
@@ -12789,6 +12800,27 @@ __metadata:
   version: 4.0.0
   resolution: "@types/parse-json@npm:4.0.0"
   checksum: 10/4df9de98150d2978afc2161482a3a8e6617883effba3223324f079de97ba7eabd7d84b90ced11c3f82b0c08d4a8383f678c9f73e9c41258f769b3fa234a2bb4f
+  languageName: node
+  linkType: hard
+
+"@types/passport-local@npm:^1.0.38":
+  version: 1.0.38
+  resolution: "@types/passport-local@npm:1.0.38"
+  dependencies:
+    "@types/express": "npm:*"
+    "@types/passport": "npm:*"
+    "@types/passport-strategy": "npm:*"
+  checksum: 10/d33395669960d47644b7c094c3ef59bba84e7aa4ee9bc820570027b922c1b7ff9b3f45ac8c11226f6861d2ef795c34b9498ab6f8e29693b51dafb64edd8b9879
+  languageName: node
+  linkType: hard
+
+"@types/passport-strategy@npm:*":
+  version: 0.2.38
+  resolution: "@types/passport-strategy@npm:0.2.38"
+  dependencies:
+    "@types/express": "npm:*"
+    "@types/passport": "npm:*"
+  checksum: 10/b580e165182b137a6e57b6b7511904e6c875a5e372f08679ec54f456dc5c2a72d86f23d9373a52d8286b207fe8240946686f9e3d50b0bc1b4f7316f336a06fa2
   languageName: node
   linkType: hard
 
@@ -22776,7 +22808,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"keygrip@npm:~1.1.0":
+"keygrip@npm:^1.1.0, keygrip@npm:~1.1.0":
   version: 1.1.0
   resolution: "keygrip@npm:1.1.0"
   dependencies:
@@ -25484,6 +25516,15 @@ __metadata:
     no-case: "npm:^3.0.4"
     tslib: "npm:^2.0.3"
   checksum: 10/ba98bfd595fc91ef3d30f4243b1aee2f6ec41c53b4546bfa3039487c367abaa182471dcfc830a1f9e1a0df00c14a370514fa2b3a1aacc68b15a460c31116873e
+  languageName: node
+  linkType: hard
+
+"passport-local@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "passport-local@npm:1.0.0"
+  dependencies:
+    passport-strategy: "npm:1.x.x"
+  checksum: 10/86dc08b12f05f0ce1bb109780ccb0377eff45bbba70aa9c0d65f092b3ef476d344c0443517db2e9f3e5ec0ca849171ab25fb622164e0f69a677173af42b9bba7
   languageName: node
   linkType: hard
 

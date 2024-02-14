@@ -3,7 +3,7 @@ import Koa, { Middleware } from "koa";
 import jwt from "koa-jwt";
 
 import { TenantClaim } from "../fhir-context/context.js";
-import { createCertsIfNoneExists, getJWKS } from "./certifications.js";
+import { getJWKS } from "./certifications.js";
 import {
   CUSTOM_CLAIMS,
   IGUHEALTH_AUDIENCE,
@@ -15,13 +15,6 @@ async function createLocalJWTSecret(
   AUTH_LOCAL_SIGNING_KEY: string | undefined,
 ): Promise<ReturnType<typeof jwksRsa.koaJwtSecret> | undefined> {
   if (AUTH_LOCAL_SIGNING_KEY && AUTH_LOCAL_CERTIFICATION_LOCATION) {
-    if (process.env.NODE_ENV === "development") {
-      await createCertsIfNoneExists(
-        AUTH_LOCAL_CERTIFICATION_LOCATION,
-        AUTH_LOCAL_SIGNING_KEY,
-      );
-    }
-
     const jwks = await getJWKS(AUTH_LOCAL_CERTIFICATION_LOCATION);
     return jwksRsa.koaJwtSecret({
       jwksUri: "_not_used",

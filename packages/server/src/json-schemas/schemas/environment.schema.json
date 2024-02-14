@@ -11,9 +11,15 @@
     "FHIR_DATABASE_PASSWORD",
     "FHIR_DATABASE_USERNAME",
     "REDIS_HOST",
-    "REDIS_PORT"
+    "REDIS_PORT",
+    "SESSION_COOKIE_SECRETS"
   ],
   "properties": {
+    "SESSION_COOKIE_SECRETS": {
+      "type": "string",
+      "description": "Secret used to sign session cookies",
+      "default": "iguhealth"
+    },
     "FHIR_DATABASE_NAME": {
       "type": "string",
       "description": "Postgres database name. ",

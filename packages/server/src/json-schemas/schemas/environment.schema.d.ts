@@ -7,6 +7,10 @@
 
 export interface IGUHealthEnvironment {
   /**
+   * Secret used to sign session cookies
+   */
+  SESSION_COOKIE_SECRETS: string;
+  /**
    * Postgres database name.
    */
   FHIR_DATABASE_NAME: string;

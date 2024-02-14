@@ -17,6 +17,7 @@ import {
   issueSeverityToStatusCodes,
 } from "@iguhealth/operation-outcomes";
 
+import { createCertsIfNoneExists } from "./authN/certifications.js";
 import { createManagementRouter } from "./authN/management/index.js";
 import {
   allowPublicAccessMiddleware,
@@ -165,6 +166,17 @@ export default async function createServer(): Promise<
       ),
     });
 
+  if (
+    process.env.NODE_ENV === "development" &&
+    process.env.AUTH_LOCAL_CERTIFICATION_LOCATION &&
+    process.env.AUTH_LOCAL_SIGNING_KEY
+  ) {
+    await createCertsIfNoneExists(
+      process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
+      process.env.AUTH_LOCAL_SIGNING_KEY,
+    );
+  }
+
   const pool = new pg.Pool({
     user: process.env["FHIR_DATABASE_USERNAME"],
     password: process.env["FHIR_DATABASE_PASSWORD"],
@@ -183,6 +195,8 @@ export default async function createServer(): Promise<
   });
 
   const app = new Koa();
+  app.keys = process.env.SESSION_COOKIE_SECRETS.split(":").map((s) => s.trim());
+
   const rootRouter = new Router<
     Koa.DefaultState,
     KoaFHIRContext<Koa.DefaultContext>
@@ -285,6 +299,7 @@ export default async function createServer(): Promise<
     )
     .use(cors())
     .use(bodyParser())
+    .use(session({}, app))
     .use(async (ctx, next) => {
       await next();
       const rt = ctx.response.get("X-Response-Time");

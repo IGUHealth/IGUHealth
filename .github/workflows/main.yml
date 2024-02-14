@@ -115,6 +115,7 @@ jobs:
           FHIR_DATABASE_USERNAME: postgres
           REDIS_HOST: localhost
           REDIS_PORT: 6379
+          SESSION_COOKIE_SECRETS: "session-secret"
           RATE_LIMIT_MAX: 10000000
 
       - name: Run tests and collect coverage
@@ -127,6 +128,7 @@ jobs:
           FHIR_DATABASE_PASSWORD: "postgres"
           FHIR_DATABASE_USERNAME: postgres
           REDIS_HOST: localhost
+          SESSION_COOKIE_SECRETS: "session-secret"
           REDIS_PORT: 6379
 
       - name: Upload coverage to Codecov
