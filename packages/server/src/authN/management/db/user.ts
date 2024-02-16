@@ -2,21 +2,21 @@ import { nanoid } from "nanoid";
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
-const USER_QUERY_COLS = <const>["email", "first_name", "last_name", "email_verified"];
-type USER_RETURN = s.tenant_owners.OnlyCols<typeof USER_QUERY_COLS>;
+const USER_QUERY_COLS = <const>["id", "email", "first_name", "last_name", "email_verified"];
+export type User = s.tenant_owners.OnlyCols<typeof USER_QUERY_COLS>;
 
 export async function login(
   client: db.Queryable,
   email: string,
   password: string,
-): Promise<USER_RETURN | undefined> {
+): Promise<User | undefined> {
   const where: s.tenant_owners.Whereable = {
     email: email,
     password: db.sql`${db.self} = crypt(${db.param(password)}, ${db.self})`,
   };
   const user = await db.sql<
     s.tenant_owners.SQL,
-    USER_RETURN[]
+    User[]
   >`SELECT ${db.cols(USER_QUERY_COLS)} FROM ${"tenant_owners"} WHERE ${where}`.run(client);
 
   // Sanity check should never happen given unique check on email.
@@ -29,13 +29,13 @@ export async function login(
 export async function findManagementUserByEmail(
   client: db.Queryable,
   email: string,
-): Promise<USER_RETURN | undefined> {
+): Promise<User | undefined> {
   const where: s.tenant_owners.Whereable = {
     email: email,
   };
   const user = await db.sql<
     s.tenant_owners.SQL,
-    USER_RETURN[]
+    User[]
   >`SELECT ${db.cols(USER_QUERY_COLS)} FROM ${"tenant_owners"} WHERE ${where}`.run(client);
 
   // Sanity check should never happen given unique check on email.

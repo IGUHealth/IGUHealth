@@ -193,7 +193,7 @@ export function createOIDCRouter<State, C>(
   const oidcRouter = new Router<State, KoaFHIRContext<C>>({ prefix });
 
   oidcRouter.get("/interaction/login", (ctx) => {
-    views.render(
+    views.renderPipe(
       ctx,
       React.createElement(Login, {
         logo: "/public/img/logo.svg",

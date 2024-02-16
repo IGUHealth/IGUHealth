@@ -10,7 +10,7 @@ export const signupGET: ManagementRouteHandler = async (ctx) => {
   const signupURL = ctx.router.url(ROUTES.PASSWORD_RESET_INITIATE_POST);
   if (typeof signupURL !== "string") throw signupURL;
 
-  views.render(
+  views.renderPipe(
     ctx,
     React.createElement(EmailForm, {
       logo: "/public/img/logo.svg",

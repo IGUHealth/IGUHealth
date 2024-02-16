@@ -1,24 +1,70 @@
 import Router from "@koa/router";
 import type * as Koa from "koa";
 import koaPassport from "koa-passport";
+import localStrategy from "passport-local";
+import * as db from "zapatos/db";
+
+import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { KoaFHIRServicesContext } from "../../fhir-context/koa.js";
 import { ROUTES } from "./constants.js";
+import * as dbUser from "./db/user.js";
 import * as routes from "./routes/index.js";
 
 export type ManagementRouteHandler = Parameters<
   ReturnType<typeof createManagementRouter>["all"]
 >[2];
 
+type Options = {
+  client: db.Queryable;
+};
+
 /**
  * Management api for creating tenants and managing tenant owners.
  */
-export function createManagementRouter(prefix: string) {
+export function createManagementRouter(prefix: string, { client }: Options) {
   const managementRouter = new Router<
     Koa.DefaultState,
     KoaFHIRServicesContext<Koa.DefaultContext>
   >({
     prefix,
+  });
+
+  koaPassport.use(
+    new localStrategy.Strategy(
+      {
+        usernameField: "email",
+        passwordField: "password",
+      },
+      function (username, password, done) {
+        try {
+          dbUser.login(client, username, password).then((user) => {
+            if (user) {
+              done(null, user);
+            } else {
+              done(null, false);
+            }
+          });
+        } catch (e) {
+          throw new OperationError(
+            outcomeFatal("unknown", "Internal Server Error could not login."),
+          );
+        }
+      },
+    ),
+  );
+
+  koaPassport.serializeUser((user, done) => {
+    done(null, (user as unknown as dbUser.User).email);
+  });
+
+  koaPassport.deserializeUser(async (email: string, done) => {
+    try {
+      const user = await dbUser.findManagementUserByEmail(client, email);
+      done(null, user);
+    } catch (err) {
+      done(err);
+    }
   });
 
   managementRouter.use(koaPassport.initialize());
@@ -57,11 +103,24 @@ export function createManagementRouter(prefix: string) {
     "/interaction/password-reset-verify",
     routes.passwordResetPOST,
   );
-  managementRouter.get(ROUTES.LOGIN_GET, "/interaction/login", routes.loginGet);
+  managementRouter.get(ROUTES.LOGIN_GET, "/interaction/login", routes.loginGET);
   managementRouter.post(
     ROUTES.LOGIN_POST,
     "/interaction/login",
-    routes.loginPost,
+    routes.loginPOST,
+  );
+  managementRouter.get(
+    ROUTES.AUTHORIZE_GET,
+    "/interaction/authorize",
+    routes.authorizeGET,
+  );
+
+  // Adding both as options to either get or post.
+  managementRouter.get(ROUTES.LOGOUT_GET, "/interaction/logout", routes.logout);
+  managementRouter.post(
+    ROUTES.LOGOUT_POST,
+    "/interaction/logout",
+    routes.logout,
   );
 
   return managementRouter;

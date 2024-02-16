@@ -18,7 +18,7 @@ export const OperationOutcomeIssueDisplay = ({
 }) => (
   <div>
     {!hideCode && (
-      <div className="p-4 space-y-2 md:space-y-2 ">
+      <div className="mt-2 px-4 py-2 space-y-2 md:space-y-2 ">
         <h1 className="text-xl font-bold leading-tight tracking-tight text-red-500 md:text-2xl">
           {capitalize(issue.code)}
         </h1>

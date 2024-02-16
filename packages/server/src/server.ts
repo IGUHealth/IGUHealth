@@ -129,7 +129,7 @@ function createErrorHandlingMiddleware<T>(): Koa.Middleware<
           }
           case "text":
           case "html": {
-            views.render(
+            views.renderPipe(
               ctx,
               React.createElement(FHIROperationOutcomeDisplay, {
                 logo: "/public/img/logo.svg",
@@ -208,7 +208,9 @@ export default async function createServer(): Promise<
     await createKoaFHIRServices(pool),
   );
 
-  const managementRouter = createManagementRouter("/management");
+  const managementRouter = createManagementRouter("/management", {
+    client: pool,
+  });
   rootRouter.use(managementRouter.routes());
   rootRouter.use(managementRouter.allowedMethods());
 
@@ -299,7 +301,7 @@ export default async function createServer(): Promise<
     )
     .use(cors())
     .use(bodyParser())
-    .use(session({}, app))
+    .use(session({ prefix: "__koa_session" }, app))
     .use(async (ctx, next) => {
       await next();
       const rt = ctx.response.get("X-Response-Time");
