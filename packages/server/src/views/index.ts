@@ -1,32 +1,41 @@
 import Koa from "koa";
 import React from "react";
-import { renderToPipeableStream } from "react-dom/server";
+import { renderToPipeableStream, renderToString } from "react-dom/server";
 import { PassThrough } from "stream";
 
 import Base from "./base.js";
+
+export function wrapComponent(element: React.ReactElement) {
+  return React.createElement(Base, {
+    children: element,
+  });
+}
 
 /**
  * Render a react element to a Koa context with base html wrapped.
  * @param ctx Koa context (will set body with rendered react).
  * @param element The react element to render.
  */
-export function render(ctx: Koa.Context, element: React.ReactElement) {
+export function renderPipe(ctx: Koa.Context, element: React.ReactElement) {
   const stream = new PassThrough();
 
-  const { pipe } = renderToPipeableStream(
-    React.createElement(Base, {
-      children: element,
-    }),
-    {
-      // bootstrapScripts: ["/main.js"],
-      onShellReady() {
-        ctx.respond = false;
-        ctx.status = 200;
-        ctx.set("content-type", "text/html");
-        pipe(stream);
-        stream.end();
-      },
+  const { pipe } = renderToPipeableStream(wrapComponent(element), {
+    // bootstrapScripts: ["/main.js"],
+    onShellReady() {
+      ctx.respond = false;
+      ctx.status = 200;
+      ctx.set("content-type", "text/html");
+      pipe(stream);
+      stream.end();
     },
-  );
+  });
   ctx.body = stream;
+}
+
+/**
+ * Render element to string with wrapped base html.
+ * @param element The react element to render.
+ */
+export function renderString(element: React.ReactElement) {
+  return renderToString(wrapComponent(element));
 }

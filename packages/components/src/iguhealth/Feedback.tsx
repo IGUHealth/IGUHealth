@@ -10,7 +10,7 @@ export const Feedback = ({
   logo?: string;
   title: string;
   header?: string;
-  content: string;
+  content: string | React.ReactNode;
   children?: React.ReactNode;
 }) => (
   <section className="bg-gray-50 dark:bg-gray-900">
@@ -24,7 +24,7 @@ export const Feedback = ({
       </a>
       <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
         {header && (
-          <div className="p-4 space-y-2 md:space-y-4 ">
+          <div className="mt-2 px-4 py-2 space-y-2 md:space-y-4 ">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               {header}
             </h1>

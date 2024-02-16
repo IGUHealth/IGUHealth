@@ -41,7 +41,7 @@ export const passwordResetGET: ManagementRouteHandler = async (ctx) => {
   );
   if (passwordResetPostUrl instanceof Error) throw passwordResetPostUrl;
 
-  views.render(
+  views.renderPipe(
     ctx,
     React.createElement(PasswordResetForm, {
       logo: "/public/img/logo.svg",
@@ -67,7 +67,7 @@ export const passwordResetPOST: ManagementRouteHandler = async (ctx) => {
   if (passwordResetPostUrl instanceof Error) throw passwordResetPostUrl;
 
   if (!body?.password) {
-    views.render(
+    views.renderPipe(
       ctx,
       React.createElement(PasswordResetForm, {
         logo: "/public/img/logo.svg",
@@ -82,7 +82,7 @@ export const passwordResetPOST: ManagementRouteHandler = async (ctx) => {
   }
 
   if (body?.password !== body?.passwordConfirm) {
-    views.render(
+    views.renderPipe(
       ctx,
       React.createElement(PasswordResetForm, {
         logo: "/public/img/logo.svg",
@@ -125,7 +125,7 @@ export const passwordResetPOST: ManagementRouteHandler = async (ctx) => {
     await db.deletes("authorization_code", { code: body.code }).run(txnClient);
   });
 
-  views.render(
+  views.renderPipe(
     ctx,
     React.createElement(Feedback, {
       logo: "/public/img/logo.svg",
@@ -143,7 +143,7 @@ export const passwordResetInitiateGet: ManagementRouteHandler = async (ctx) => {
   if (typeof passwordResetInitiatePostURL !== "string")
     throw passwordResetInitiatePostURL;
 
-  views.render(
+  views.renderPipe(
     ctx,
     React.createElement(EmailForm, {
       logo: "/public/img/logo.svg",
@@ -209,15 +209,28 @@ export const passwordResetInitiatePOST: ManagementRouteHandler = async (
     );
     if (typeof emailVerificationURL !== "string") throw emailVerificationURL;
 
+    const emailHTML = views.renderString(
+      React.createElement("div", {
+        children: [
+          "To verify your email and set your password click ",
+          React.createElement("a", {
+            href: `${process.env.API_URL}${emailVerificationURL}`,
+            clicktracking: "off",
+            children: "  Here ",
+          }),
+        ],
+      }),
+    );
+
     await ctx.emailProvider.sendEmail({
       from: process.env.EMAIL_FROM,
       to: user.email,
       subject: "IGUHealth Email Verification",
-      html: `Follow the following link to verify your email and set your password. <a href="${process.env.API_URL}${emailVerificationURL}" clicktracking="off">  Here </a>`,
+      html: emailHTML,
     });
   }
 
-  views.render(
+  views.renderPipe(
     ctx,
     React.createElement(Feedback, {
       logo: "/public/img/logo.svg",
