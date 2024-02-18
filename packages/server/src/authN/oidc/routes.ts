@@ -207,7 +207,7 @@ export function createOIDCRouter<State, C>(
 
   oidcRouter.post(
     "/token",
-    createValidateInjectOIDCParameters(["client_id"]),
+    createValidateInjectOIDCParameters({ required: ["client_id"] }),
     createClientInjectMiddleware(),
     tokenEndpoint(),
   );

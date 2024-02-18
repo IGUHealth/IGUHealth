@@ -116,11 +116,10 @@ export function createManagementRouter(prefix: string, { client }: Options) {
   managementRouter.get(
     ROUTES.AUTHORIZE_GET,
     "/interaction/authorize",
-    createValidateInjectOIDCParameters([
-      "response_type",
-      "state",
-      "redirect_uri",
-    ]),
+    createValidateInjectOIDCParameters({
+      required: ["client_id", "response_type", "state"],
+      optional: ["scope", "redirect_uri"],
+    }),
     routes.authorizeGET,
   );
 

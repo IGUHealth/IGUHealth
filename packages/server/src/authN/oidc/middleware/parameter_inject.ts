@@ -36,25 +36,39 @@ function isValidParam(_param: ParameterKey, value: unknown): value is string {
 export function createValidateInjectOIDCParameters<
   State,
   C extends Koa.DefaultContext,
->(parameters: ParameterKey[]): Koa.Middleware<State, KoaFHIRContext<C>> {
+>({
+  required,
+  optional,
+}: {
+  required?: ParameterKey[];
+  optional?: ParameterKey[];
+}): Koa.Middleware<State, KoaFHIRContext<C>> {
   return async (ctx, next) => {
-    ctx.oidc = {
-      ...ctx.oidc,
-      parameters: parameters.reduce((acc, param) => {
-        const value = findParam(ctx.request, param);
-        if (!value) {
+    const params = [
+      ...(required ?? []).map((p) => ({ required: true, param: p })),
+      ...(optional ?? []).map((p) => ({ required: false, param: p })),
+    ];
+    const requiredParams = params.reduce((acc, { required, param }) => {
+      const value = findParam(ctx.request, param);
+      if (!value) {
+        if (required)
           throw new OperationError(
             outcomeError("invalid", `'${param}' parameter must be present.`),
           );
-        }
-        if (!isValidParam(param, value)) {
-          throw new OperationError(
-            outcomeError("invalid", `Invalid '${param}' parameter.`),
-          );
-        }
+        else return acc;
+      }
+      if (!isValidParam(param, value)) {
+        throw new OperationError(
+          outcomeError("invalid", `Invalid '${param}' parameter.`),
+        );
+      }
 
-        return { ...acc, [param]: value };
-      }, {}),
+      return { ...acc, [param]: value };
+    }, {});
+
+    ctx.oidc = {
+      ...ctx.oidc,
+      parameters: { ...requiredParams },
     };
 
     await next();
