@@ -6,7 +6,11 @@ import * as db from "zapatos/db";
 
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import { KoaFHIRServicesContext } from "../../fhir-context/koa.js";
+import {
+  KoaFHIRServicesContext,
+  OIDCKoaContext,
+} from "../../fhir-context/koa.js";
+import { createValidateInjectOIDCParameters } from "../oidc/middleware/parameter_inject.js";
 import { ROUTES } from "./constants.js";
 import * as dbUser from "./db/user.js";
 import * as routes from "./routes/index.js";
@@ -25,7 +29,7 @@ type Options = {
 export function createManagementRouter(prefix: string, { client }: Options) {
   const managementRouter = new Router<
     Koa.DefaultState,
-    KoaFHIRServicesContext<Koa.DefaultContext>
+    OIDCKoaContext<KoaFHIRServicesContext<Koa.DefaultContext>>
   >({
     prefix,
   });
@@ -112,6 +116,11 @@ export function createManagementRouter(prefix: string, { client }: Options) {
   managementRouter.get(
     ROUTES.AUTHORIZE_GET,
     "/interaction/authorize",
+    createValidateInjectOIDCParameters([
+      "response_type",
+      "state",
+      "redirect_uri",
+    ]),
     routes.authorizeGET,
   );
 
