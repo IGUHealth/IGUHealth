@@ -11,6 +11,7 @@ import { getSigningKey } from "../certifications.js";
 import { createToken } from "../token.js";
 import { getCredentialsBasicHeader } from "../utilities.js";
 import { createClientInjectMiddleware } from "./middleware/client_find.js";
+import { createValidateInjectOIDCParameters } from "./middleware/parameter_inject.js";
 
 type AuthorizationRequestBody = {
   response_type: "token";
@@ -155,10 +156,12 @@ export function tokenEndpoint<
             outcomeError("security", "Invalid credentials for client."),
           );
         }
+
         const signingKey = await getSigningKey(
           process.env.AUTH_LOCAL_CERTIFICATION_LOCATION as string,
           process.env.AUTH_LOCAL_SIGNING_KEY as string,
         );
+
         ctx.body = {
           access_token: await createToken(signingKey, {
             tenant: ctx.FHIRContext.tenant,
@@ -202,7 +205,12 @@ export function createOIDCRouter<State, C>(
     );
   });
 
-  oidcRouter.post("/token", createClientInjectMiddleware(), tokenEndpoint());
+  oidcRouter.post(
+    "/token",
+    createValidateInjectOIDCParameters({ required: ["client_id"] }),
+    createClientInjectMiddleware(),
+    tokenEndpoint(),
+  );
 
   return oidcRouter;
 }

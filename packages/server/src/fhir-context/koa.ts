@@ -1,15 +1,26 @@
 import * as db from "zapatos/db";
 
-import { ClientApplication } from "@iguhealth/fhir-types/r4/types";
+import { ClientApplication, code } from "@iguhealth/fhir-types/r4/types";
 
 import { EmailProvider } from "../email/interface.js";
 import { FHIRServerCTX } from "./context.js";
 
-export type KoaFHIRContext<C> = C &
-  KoaFHIRServicesContext<C> & {
-    oidc: {
-      client?: ClientApplication;
+export type OIDCKoaContext<C> = {
+  oidc: {
+    client?: ClientApplication;
+    parameters: {
+      state?: string;
+      responseType?: code;
+      response_type?: string;
+      client_id?: string;
+      redirect_uri?: string;
+      scope?: string;
     };
+  };
+} & C;
+
+export type KoaFHIRContext<C> = C &
+  OIDCKoaContext<KoaFHIRServicesContext<C>> & {
     FHIRContext: Omit<FHIRServerCTX, "user"> | FHIRServerCTX;
   };
 

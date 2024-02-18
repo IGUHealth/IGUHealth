@@ -5,7 +5,6 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { asSystemCTX } from "../../../fhir-context/context.js";
 import { KoaFHIRContext } from "../../../fhir-context/koa.js";
-import { getClientId } from "../../utilities.js";
 
 /**
  * Creates koa middleware that injects the current ClientApplication under ctx.oidc.client.
@@ -17,7 +16,7 @@ export function createClientInjectMiddleware<
   C extends Koa.DefaultContext,
 >(): Koa.Middleware<State, KoaFHIRContext<C>> {
   return async (ctx, next) => {
-    const clientId = getClientId(ctx.request);
+    const clientId = ctx.oidc.parameters.client_id;
 
     if (!clientId) {
       throw new OperationError(

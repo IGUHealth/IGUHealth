@@ -21,14 +21,17 @@ export function getCredentialsBasicHeader(
 }
 
 /**
- * Will search for clientID in request body and basic auth header.
+ * Will search for clientID in request body and basic auth header and query parameter.
  * @param request Koa Request to derive client ID from.
  * @returns clientID if found, undefined otherwise.
  */
 export function getClientId(request: Koa.Request): string | undefined {
   if ((request.body as Record<string, unknown>)?.client_id) {
     return (request.body as Record<string, string>)?.client_id;
+  } else if (getCredentialsBasicHeader(request)?.client_id) {
+    return getCredentialsBasicHeader(request)?.client_id;
+  } else if (typeof request.query.client_id === "string") {
+    return request.query.client_id;
   }
-
-  return getCredentialsBasicHeader(request)?.client_id;
+  return undefined;
 }
