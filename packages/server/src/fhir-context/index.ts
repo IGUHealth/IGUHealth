@@ -7,7 +7,6 @@ import pg from "pg";
 import { pino } from "pino";
 import { fileURLToPath } from "url";
 
-
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
@@ -357,18 +356,26 @@ export function createResolveTypeToCanonical(
   };
 }
 
+let _redis_client: Redis | undefined = undefined;
+/**
+ * Returns instantiated Redis client based on environment variables.
+ * @returns Singleton Redis client
+ */
 export function getRedisClient() {
-  const redisClient = new Redis({
-    host: process.env.REDIS_HOST,
-    port: parseInt(process.env.REDIS_PORT || "6739"),
-    tls:
-      process.env.REDIS_SSL === "true"
-        ? {
-            rejectUnauthorized: false,
-          }
-        : undefined,
-  });
-  return redisClient;
+  if (!_redis_client) {
+    _redis_client = new Redis({
+      host: process.env.REDIS_HOST,
+      port: parseInt(process.env.REDIS_PORT || "6739"),
+      tls:
+        process.env.REDIS_SSL === "true"
+          ? {
+              rejectUnauthorized: false,
+            }
+          : undefined,
+    });
+  }
+
+  return _redis_client;
 }
 
 /**

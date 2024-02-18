@@ -45,7 +45,7 @@ export const loginPOST: ManagementRouteHandler = async (ctx, next) => {
   const loginURL = ctx.router.url(ROUTES.LOGIN_GET);
   if (loginURL instanceof Error) throw loginURL;
 
-  return koaPassport.authenticate("local", (err, user, info, status) => {
+  return koaPassport.authenticate("local", (_err, user, _info, _status) => {
     if (user === false) {
       ctx.body = { success: false };
       ctx.throw(401);
