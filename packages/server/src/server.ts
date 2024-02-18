@@ -4,6 +4,7 @@ import Router from "@koa/router";
 import Koa from "koa";
 import mount from "koa-mount";
 import ratelimit from "koa-ratelimit";
+import redisStore from "koa-redis";
 import session from "koa-session";
 import serve from "koa-static";
 import path from "node:path";
@@ -301,7 +302,15 @@ export default async function createServer(): Promise<
     )
     .use(cors())
     .use(bodyParser())
-    .use(session({ prefix: "__koa_session" }, app))
+    .use(
+      session(
+        {
+          prefix: "__koa_session",
+          store: redisStore({ client: getRedisClient() }),
+        },
+        app,
+      ),
+    )
     .use(async (ctx, next) => {
       await next();
       const rt = ctx.response.get("X-Response-Time");
