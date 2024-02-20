@@ -117,7 +117,7 @@ export const passwordResetPOST: ManagementRouteHandler = async (ctx) => {
   db.serializable(ctx.postgres, async (txnClient) => {
     await db
       .update(
-        "tenant_owners",
+        "users",
         { password: body.password, email_verified: true },
         { email: authorizationCode.user_id },
       )

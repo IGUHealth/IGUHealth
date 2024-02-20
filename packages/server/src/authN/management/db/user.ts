@@ -3,21 +3,21 @@ import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
 const USER_QUERY_COLS = <const>["id", "email", "first_name", "last_name", "email_verified"];
-export type User = s.tenant_owners.OnlyCols<typeof USER_QUERY_COLS>;
+export type User = s.users.OnlyCols<typeof USER_QUERY_COLS>;
 
 export async function login(
   client: db.Queryable,
   email: string,
   password: string,
 ): Promise<User | undefined> {
-  const where: s.tenant_owners.Whereable = {
+  const where: s.users.Whereable = {
     email: email,
     password: db.sql`${db.self} = crypt(${db.param(password)}, ${db.self})`,
   };
   const user = await db.sql<
-    s.tenant_owners.SQL,
+    s.users.SQL,
     User[]
-  >`SELECT ${db.cols(USER_QUERY_COLS)} FROM ${"tenant_owners"} WHERE ${where}`.run(client);
+  >`SELECT ${db.cols(USER_QUERY_COLS)} FROM ${"users"} WHERE ${where}`.run(client);
 
   // Sanity check should never happen given unique check on email.
   if(user.length > 1) throw new Error("Multiple users found with the same email and password");
@@ -30,13 +30,13 @@ export async function findManagementUserByEmail(
   client: db.Queryable,
   email: string,
 ): Promise<User | undefined> {
-  const where: s.tenant_owners.Whereable = {
+  const where: s.users.Whereable = {
     email: email,
   };
   const user = await db.sql<
-    s.tenant_owners.SQL,
+    s.users.SQL,
     User[]
-  >`SELECT ${db.cols(USER_QUERY_COLS)} FROM ${"tenant_owners"} WHERE ${where}`.run(client);
+  >`SELECT ${db.cols(USER_QUERY_COLS)} FROM ${"users"} WHERE ${where}`.run(client);
 
   // Sanity check should never happen given unique check on email.
   if(user.length > 1) throw new Error("Multiple users found with the same email.");
@@ -49,10 +49,10 @@ export async function findManagementUserByEmail(
  * @param client Queryable client
  * @param email email of user to update
  * @param user values to update
- * @returns tenant_owner
+ * @returns users
  */
-export async function updateManagementUser(client: db.Queryable, email: string, values: s.tenant_owners.OnlyCols<["first_name", "last_name", "password"]>): Promise<s.tenant_owners.JSONSelectable> {
-   const updatedUser =  await db.update("tenant_owners", values, {email}).run(client);
+export async function updateManagementUser(client: db.Queryable, email: string, values: s.users.OnlyCols<["first_name", "last_name", "password"]>): Promise<s.users.JSONSelectable> {
+   const updatedUser =  await db.update("users", values, {email}).run(client);
    return updatedUser[0];
 }
 
@@ -62,7 +62,7 @@ export async function updateManagementUser(client: db.Queryable, email: string, 
  * @param email New users email
  * @returns Newly created user object.
  */
-export async function createUser(client: db.Queryable, email: string): Promise<s.tenant_owners.JSONSelectable> {
+export async function createUser(client: db.Queryable, email: string): Promise<s.users.JSONSelectable> {
   return await db.serializable(client, async (txnClient) => {
     const tenant = await db
       .insert("tenants", {
@@ -75,14 +75,14 @@ export async function createUser(client: db.Queryable, email: string): Promise<s
       .run(txnClient);
 
     const user = await db
-      .insert("tenant_owners", {
+      .insert("users", {
         email: email,
         email_verified: false,
       })
       .run(txnClient);
 
     await db
-      .insert("tenant_owners_to_tenants", {
+      .insert("membership", {
         tenant_id: tenant.id,
         user_email: user.email,
         role: "owner",

@@ -24,8 +24,10 @@ function findParam(request: Koa.Request, parameter: ParameterKey): unknown {
   return value;
 }
 
-function isValidParam(_param: ParameterKey, value: unknown): value is string {
+function isValidParam(param: ParameterKey, value: unknown): value is string {
   if (typeof value !== "string") return false;
+  if (param === "response_type" && !["code", "token"].includes(value))
+    return false;
   return true;
 }
 

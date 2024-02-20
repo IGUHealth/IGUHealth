@@ -617,6 +617,119 @@ declare module 'zapatos/schema' {
   }
 
   /**
+   * **membership**
+   * - Table in database
+   */
+  export namespace membership {
+    export type Table = 'membership';
+    export interface Selectable {
+      /**
+      * **membership.user_email**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      user_email: string;
+      /**
+      * **membership.tenant_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant_id: string;
+      /**
+      * **membership.role**
+      * - `user_role` in database
+      * - `NOT NULL`, default: `'owner'::user_role`
+      */
+      role: user_role;
+    }
+    export interface JSONSelectable {
+      /**
+      * **membership.user_email**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      user_email: string;
+      /**
+      * **membership.tenant_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant_id: string;
+      /**
+      * **membership.role**
+      * - `user_role` in database
+      * - `NOT NULL`, default: `'owner'::user_role`
+      */
+      role: user_role;
+    }
+    export interface Whereable {
+      /**
+      * **membership.user_email**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      user_email?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **membership.tenant_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **membership.role**
+      * - `user_role` in database
+      * - `NOT NULL`, default: `'owner'::user_role`
+      */
+      role?: user_role | db.Parameter<user_role> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, user_role | db.Parameter<user_role> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **membership.user_email**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      user_email: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **membership.tenant_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant_id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **membership.role**
+      * - `user_role` in database
+      * - `NOT NULL`, default: `'owner'::user_role`
+      */
+      role?: user_role | db.Parameter<user_role> | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **membership.user_email**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      user_email?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **membership.tenant_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **membership.role**
+      * - `user_role` in database
+      * - `NOT NULL`, default: `'owner'::user_role`
+      */
+      role?: user_role | db.Parameter<user_role> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, user_role | db.Parameter<user_role> | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'tenant_owners_to_tenants_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
    * **migrations**
    * - Table in database
    */
@@ -2554,412 +2667,6 @@ declare module 'zapatos/schema' {
   }
 
   /**
-   * **tenant_owners**
-   * - Table in database
-   */
-  export namespace tenant_owners {
-    export type Table = 'tenant_owners';
-    export interface Selectable {
-      /**
-      * **tenant_owners.id**
-      * - `uuid` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
-      */
-      id: string;
-      /**
-      * **tenant_owners.email**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      email: string;
-      /**
-      * **tenant_owners.password**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      password: string | null;
-      /**
-      * **tenant_owners.first_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      first_name: string | null;
-      /**
-      * **tenant_owners.last_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      last_name: string | null;
-      /**
-      * **tenant_owners.phone_number**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      phone_number: string | null;
-      /**
-      * **tenant_owners.email_verified**
-      * - `bool` in database
-      * - Nullable, default: `false`
-      */
-      email_verified: boolean | null;
-      /**
-      * **tenant_owners.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at: Date;
-      /**
-      * **tenant_owners.updated_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      updated_at: Date;
-    }
-    export interface JSONSelectable {
-      /**
-      * **tenant_owners.id**
-      * - `uuid` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
-      */
-      id: string;
-      /**
-      * **tenant_owners.email**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      email: string;
-      /**
-      * **tenant_owners.password**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      password: string | null;
-      /**
-      * **tenant_owners.first_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      first_name: string | null;
-      /**
-      * **tenant_owners.last_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      last_name: string | null;
-      /**
-      * **tenant_owners.phone_number**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      phone_number: string | null;
-      /**
-      * **tenant_owners.email_verified**
-      * - `bool` in database
-      * - Nullable, default: `false`
-      */
-      email_verified: boolean | null;
-      /**
-      * **tenant_owners.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at: db.TimestampTzString;
-      /**
-      * **tenant_owners.updated_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      updated_at: db.TimestampTzString;
-    }
-    export interface Whereable {
-      /**
-      * **tenant_owners.id**
-      * - `uuid` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
-      */
-      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **tenant_owners.email**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      email?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **tenant_owners.password**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      password?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **tenant_owners.first_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      first_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **tenant_owners.last_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      last_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **tenant_owners.phone_number**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      phone_number?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **tenant_owners.email_verified**
-      * - `bool` in database
-      * - Nullable, default: `false`
-      */
-      email_verified?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **tenant_owners.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **tenant_owners.updated_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-    }
-    export interface Insertable {
-      /**
-      * **tenant_owners.id**
-      * - `uuid` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
-      */
-      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
-      /**
-      * **tenant_owners.email**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      email: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **tenant_owners.password**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      password?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **tenant_owners.first_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      first_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **tenant_owners.last_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      last_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **tenant_owners.phone_number**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      phone_number?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **tenant_owners.email_verified**
-      * - `bool` in database
-      * - Nullable, default: `false`
-      */
-      email_verified?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **tenant_owners.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
-      /**
-      * **tenant_owners.updated_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
-    }
-    export interface Updatable {
-      /**
-      * **tenant_owners.id**
-      * - `uuid` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
-      */
-      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **tenant_owners.email**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      email?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **tenant_owners.password**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      password?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **tenant_owners.first_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      first_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **tenant_owners.last_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      last_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **tenant_owners.phone_number**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      phone_number?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **tenant_owners.email_verified**
-      * - `bool` in database
-      * - Nullable, default: `false`
-      */
-      email_verified?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **tenant_owners.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **tenant_owners.updated_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
-    }
-    export type UniqueIndex = 'tenant_owners_email_key' | 'tenant_owners_pkey';
-    export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
-    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
-    export type SQL = SQLExpression | SQLExpression[];
-  }
-
-  /**
-   * **tenant_owners_to_tenants**
-   * - Table in database
-   */
-  export namespace tenant_owners_to_tenants {
-    export type Table = 'tenant_owners_to_tenants';
-    export interface Selectable {
-      /**
-      * **tenant_owners_to_tenants.user_email**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      user_email: string;
-      /**
-      * **tenant_owners_to_tenants.tenant_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant_id: string;
-      /**
-      * **tenant_owners_to_tenants.role**
-      * - `user_role` in database
-      * - `NOT NULL`, default: `'owner'::user_role`
-      */
-      role: user_role;
-    }
-    export interface JSONSelectable {
-      /**
-      * **tenant_owners_to_tenants.user_email**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      user_email: string;
-      /**
-      * **tenant_owners_to_tenants.tenant_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant_id: string;
-      /**
-      * **tenant_owners_to_tenants.role**
-      * - `user_role` in database
-      * - `NOT NULL`, default: `'owner'::user_role`
-      */
-      role: user_role;
-    }
-    export interface Whereable {
-      /**
-      * **tenant_owners_to_tenants.user_email**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      user_email?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **tenant_owners_to_tenants.tenant_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **tenant_owners_to_tenants.role**
-      * - `user_role` in database
-      * - `NOT NULL`, default: `'owner'::user_role`
-      */
-      role?: user_role | db.Parameter<user_role> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, user_role | db.Parameter<user_role> | db.SQLFragment | db.ParentColumn>;
-    }
-    export interface Insertable {
-      /**
-      * **tenant_owners_to_tenants.user_email**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      user_email: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **tenant_owners_to_tenants.tenant_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant_id: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **tenant_owners_to_tenants.role**
-      * - `user_role` in database
-      * - `NOT NULL`, default: `'owner'::user_role`
-      */
-      role?: user_role | db.Parameter<user_role> | db.DefaultType | db.SQLFragment;
-    }
-    export interface Updatable {
-      /**
-      * **tenant_owners_to_tenants.user_email**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      user_email?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **tenant_owners_to_tenants.tenant_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **tenant_owners_to_tenants.role**
-      * - `user_role` in database
-      * - `NOT NULL`, default: `'owner'::user_role`
-      */
-      role?: user_role | db.Parameter<user_role> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, user_role | db.Parameter<user_role> | db.DefaultType | db.SQLFragment>;
-    }
-    export type UniqueIndex = 'tenant_owners_to_tenants_pkey';
-    export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
-    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
-    export type SQL = SQLExpression | SQLExpression[];
-  }
-
-  /**
    * **tenants**
    * - Table in database
    */
@@ -3718,23 +3425,316 @@ declare module 'zapatos/schema' {
     export type SQL = SQLExpression | SQLExpression[];
   }
 
+  /**
+   * **users**
+   * - Table in database
+   */
+  export namespace users {
+    export type Table = 'users';
+    export interface Selectable {
+      /**
+      * **users.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `gen_random_uuid()`
+      */
+      id: string;
+      /**
+      * **users.email**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      email: string;
+      /**
+      * **users.password**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      password: string | null;
+      /**
+      * **users.first_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      first_name: string | null;
+      /**
+      * **users.last_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      last_name: string | null;
+      /**
+      * **users.phone_number**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      phone_number: string | null;
+      /**
+      * **users.email_verified**
+      * - `bool` in database
+      * - Nullable, default: `false`
+      */
+      email_verified: boolean | null;
+      /**
+      * **users.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at: Date;
+      /**
+      * **users.updated_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      updated_at: Date;
+    }
+    export interface JSONSelectable {
+      /**
+      * **users.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `gen_random_uuid()`
+      */
+      id: string;
+      /**
+      * **users.email**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      email: string;
+      /**
+      * **users.password**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      password: string | null;
+      /**
+      * **users.first_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      first_name: string | null;
+      /**
+      * **users.last_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      last_name: string | null;
+      /**
+      * **users.phone_number**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      phone_number: string | null;
+      /**
+      * **users.email_verified**
+      * - `bool` in database
+      * - Nullable, default: `false`
+      */
+      email_verified: boolean | null;
+      /**
+      * **users.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at: db.TimestampTzString;
+      /**
+      * **users.updated_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      updated_at: db.TimestampTzString;
+    }
+    export interface Whereable {
+      /**
+      * **users.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `gen_random_uuid()`
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **users.email**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      email?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **users.password**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      password?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **users.first_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      first_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **users.last_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      last_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **users.phone_number**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      phone_number?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **users.email_verified**
+      * - `bool` in database
+      * - Nullable, default: `false`
+      */
+      email_verified?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **users.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **users.updated_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **users.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `gen_random_uuid()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
+      * **users.email**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      email: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **users.password**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      password?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **users.first_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      first_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **users.last_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      last_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **users.phone_number**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      phone_number?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **users.email_verified**
+      * - `bool` in database
+      * - Nullable, default: `false`
+      */
+      email_verified?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **users.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **users.updated_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **users.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `gen_random_uuid()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **users.email**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      email?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **users.password**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      password?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **users.first_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      first_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **users.last_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      last_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **users.phone_number**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      phone_number?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **users.email_verified**
+      * - `bool` in database
+      * - Nullable, default: `false`
+      */
+      email_verified?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **users.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **users.updated_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'tenant_owners_email_key' | 'tenant_owners_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
   /* --- aggregate types --- */
 
   export namespace public {  
-    export type Table = authorization_code.Table | date_idx.Table | migrations.Table | migrations_state.Table | number_idx.Table | quantity_idx.Table | reference_idx.Table | resources.Table | string_idx.Table | tenant_owners.Table | tenant_owners_to_tenants.Table | tenants.Table | token_idx.Table | uri_idx.Table;
-    export type Selectable = authorization_code.Selectable | date_idx.Selectable | migrations.Selectable | migrations_state.Selectable | number_idx.Selectable | quantity_idx.Selectable | reference_idx.Selectable | resources.Selectable | string_idx.Selectable | tenant_owners.Selectable | tenant_owners_to_tenants.Selectable | tenants.Selectable | token_idx.Selectable | uri_idx.Selectable;
-    export type JSONSelectable = authorization_code.JSONSelectable | date_idx.JSONSelectable | migrations.JSONSelectable | migrations_state.JSONSelectable | number_idx.JSONSelectable | quantity_idx.JSONSelectable | reference_idx.JSONSelectable | resources.JSONSelectable | string_idx.JSONSelectable | tenant_owners.JSONSelectable | tenant_owners_to_tenants.JSONSelectable | tenants.JSONSelectable | token_idx.JSONSelectable | uri_idx.JSONSelectable;
-    export type Whereable = authorization_code.Whereable | date_idx.Whereable | migrations.Whereable | migrations_state.Whereable | number_idx.Whereable | quantity_idx.Whereable | reference_idx.Whereable | resources.Whereable | string_idx.Whereable | tenant_owners.Whereable | tenant_owners_to_tenants.Whereable | tenants.Whereable | token_idx.Whereable | uri_idx.Whereable;
-    export type Insertable = authorization_code.Insertable | date_idx.Insertable | migrations.Insertable | migrations_state.Insertable | number_idx.Insertable | quantity_idx.Insertable | reference_idx.Insertable | resources.Insertable | string_idx.Insertable | tenant_owners.Insertable | tenant_owners_to_tenants.Insertable | tenants.Insertable | token_idx.Insertable | uri_idx.Insertable;
-    export type Updatable = authorization_code.Updatable | date_idx.Updatable | migrations.Updatable | migrations_state.Updatable | number_idx.Updatable | quantity_idx.Updatable | reference_idx.Updatable | resources.Updatable | string_idx.Updatable | tenant_owners.Updatable | tenant_owners_to_tenants.Updatable | tenants.Updatable | token_idx.Updatable | uri_idx.Updatable;
-    export type UniqueIndex = authorization_code.UniqueIndex | date_idx.UniqueIndex | migrations.UniqueIndex | migrations_state.UniqueIndex | number_idx.UniqueIndex | quantity_idx.UniqueIndex | reference_idx.UniqueIndex | resources.UniqueIndex | string_idx.UniqueIndex | tenant_owners.UniqueIndex | tenant_owners_to_tenants.UniqueIndex | tenants.UniqueIndex | token_idx.UniqueIndex | uri_idx.UniqueIndex;
-    export type Column = authorization_code.Column | date_idx.Column | migrations.Column | migrations_state.Column | number_idx.Column | quantity_idx.Column | reference_idx.Column | resources.Column | string_idx.Column | tenant_owners.Column | tenant_owners_to_tenants.Column | tenants.Column | token_idx.Column | uri_idx.Column;
+    export type Table = authorization_code.Table | date_idx.Table | membership.Table | migrations.Table | migrations_state.Table | number_idx.Table | quantity_idx.Table | reference_idx.Table | resources.Table | string_idx.Table | tenants.Table | token_idx.Table | uri_idx.Table | users.Table;
+    export type Selectable = authorization_code.Selectable | date_idx.Selectable | membership.Selectable | migrations.Selectable | migrations_state.Selectable | number_idx.Selectable | quantity_idx.Selectable | reference_idx.Selectable | resources.Selectable | string_idx.Selectable | tenants.Selectable | token_idx.Selectable | uri_idx.Selectable | users.Selectable;
+    export type JSONSelectable = authorization_code.JSONSelectable | date_idx.JSONSelectable | membership.JSONSelectable | migrations.JSONSelectable | migrations_state.JSONSelectable | number_idx.JSONSelectable | quantity_idx.JSONSelectable | reference_idx.JSONSelectable | resources.JSONSelectable | string_idx.JSONSelectable | tenants.JSONSelectable | token_idx.JSONSelectable | uri_idx.JSONSelectable | users.JSONSelectable;
+    export type Whereable = authorization_code.Whereable | date_idx.Whereable | membership.Whereable | migrations.Whereable | migrations_state.Whereable | number_idx.Whereable | quantity_idx.Whereable | reference_idx.Whereable | resources.Whereable | string_idx.Whereable | tenants.Whereable | token_idx.Whereable | uri_idx.Whereable | users.Whereable;
+    export type Insertable = authorization_code.Insertable | date_idx.Insertable | membership.Insertable | migrations.Insertable | migrations_state.Insertable | number_idx.Insertable | quantity_idx.Insertable | reference_idx.Insertable | resources.Insertable | string_idx.Insertable | tenants.Insertable | token_idx.Insertable | uri_idx.Insertable | users.Insertable;
+    export type Updatable = authorization_code.Updatable | date_idx.Updatable | membership.Updatable | migrations.Updatable | migrations_state.Updatable | number_idx.Updatable | quantity_idx.Updatable | reference_idx.Updatable | resources.Updatable | string_idx.Updatable | tenants.Updatable | token_idx.Updatable | uri_idx.Updatable | users.Updatable;
+    export type UniqueIndex = authorization_code.UniqueIndex | date_idx.UniqueIndex | membership.UniqueIndex | migrations.UniqueIndex | migrations_state.UniqueIndex | number_idx.UniqueIndex | quantity_idx.UniqueIndex | reference_idx.UniqueIndex | resources.UniqueIndex | string_idx.UniqueIndex | tenants.UniqueIndex | token_idx.UniqueIndex | uri_idx.UniqueIndex | users.UniqueIndex;
+    export type Column = authorization_code.Column | date_idx.Column | membership.Column | migrations.Column | migrations_state.Column | number_idx.Column | quantity_idx.Column | reference_idx.Column | resources.Column | string_idx.Column | tenants.Column | token_idx.Column | uri_idx.Column | users.Column;
   
-    export type AllBaseTables = [authorization_code.Table, date_idx.Table, migrations.Table, migrations_state.Table, number_idx.Table, quantity_idx.Table, reference_idx.Table, resources.Table, string_idx.Table, tenant_owners.Table, tenant_owners_to_tenants.Table, tenants.Table, token_idx.Table, uri_idx.Table];
+    export type AllBaseTables = [authorization_code.Table, date_idx.Table, membership.Table, migrations.Table, migrations_state.Table, number_idx.Table, quantity_idx.Table, reference_idx.Table, resources.Table, string_idx.Table, tenants.Table, token_idx.Table, uri_idx.Table, users.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [authorization_code.Table, date_idx.Table, migrations.Table, migrations_state.Table, number_idx.Table, quantity_idx.Table, reference_idx.Table, resources.Table, string_idx.Table, tenant_owners.Table, tenant_owners_to_tenants.Table, tenants.Table, token_idx.Table, uri_idx.Table];
+    export type AllTablesAndViews = [authorization_code.Table, date_idx.Table, membership.Table, migrations.Table, migrations_state.Table, number_idx.Table, quantity_idx.Table, reference_idx.Table, resources.Table, string_idx.Table, tenants.Table, token_idx.Table, uri_idx.Table, users.Table];
   }
 
 
@@ -3764,6 +3764,7 @@ declare module 'zapatos/schema' {
   export type SelectableForTable<T extends Table> = {
     "authorization_code": authorization_code.Selectable;
     "date_idx": date_idx.Selectable;
+    "membership": membership.Selectable;
     "migrations": migrations.Selectable;
     "migrations_state": migrations_state.Selectable;
     "number_idx": number_idx.Selectable;
@@ -3771,16 +3772,16 @@ declare module 'zapatos/schema' {
     "reference_idx": reference_idx.Selectable;
     "resources": resources.Selectable;
     "string_idx": string_idx.Selectable;
-    "tenant_owners": tenant_owners.Selectable;
-    "tenant_owners_to_tenants": tenant_owners_to_tenants.Selectable;
     "tenants": tenants.Selectable;
     "token_idx": token_idx.Selectable;
     "uri_idx": uri_idx.Selectable;
+    "users": users.Selectable;
   }[T];
 
   export type JSONSelectableForTable<T extends Table> = {
     "authorization_code": authorization_code.JSONSelectable;
     "date_idx": date_idx.JSONSelectable;
+    "membership": membership.JSONSelectable;
     "migrations": migrations.JSONSelectable;
     "migrations_state": migrations_state.JSONSelectable;
     "number_idx": number_idx.JSONSelectable;
@@ -3788,16 +3789,16 @@ declare module 'zapatos/schema' {
     "reference_idx": reference_idx.JSONSelectable;
     "resources": resources.JSONSelectable;
     "string_idx": string_idx.JSONSelectable;
-    "tenant_owners": tenant_owners.JSONSelectable;
-    "tenant_owners_to_tenants": tenant_owners_to_tenants.JSONSelectable;
     "tenants": tenants.JSONSelectable;
     "token_idx": token_idx.JSONSelectable;
     "uri_idx": uri_idx.JSONSelectable;
+    "users": users.JSONSelectable;
   }[T];
 
   export type WhereableForTable<T extends Table> = {
     "authorization_code": authorization_code.Whereable;
     "date_idx": date_idx.Whereable;
+    "membership": membership.Whereable;
     "migrations": migrations.Whereable;
     "migrations_state": migrations_state.Whereable;
     "number_idx": number_idx.Whereable;
@@ -3805,16 +3806,16 @@ declare module 'zapatos/schema' {
     "reference_idx": reference_idx.Whereable;
     "resources": resources.Whereable;
     "string_idx": string_idx.Whereable;
-    "tenant_owners": tenant_owners.Whereable;
-    "tenant_owners_to_tenants": tenant_owners_to_tenants.Whereable;
     "tenants": tenants.Whereable;
     "token_idx": token_idx.Whereable;
     "uri_idx": uri_idx.Whereable;
+    "users": users.Whereable;
   }[T];
 
   export type InsertableForTable<T extends Table> = {
     "authorization_code": authorization_code.Insertable;
     "date_idx": date_idx.Insertable;
+    "membership": membership.Insertable;
     "migrations": migrations.Insertable;
     "migrations_state": migrations_state.Insertable;
     "number_idx": number_idx.Insertable;
@@ -3822,16 +3823,16 @@ declare module 'zapatos/schema' {
     "reference_idx": reference_idx.Insertable;
     "resources": resources.Insertable;
     "string_idx": string_idx.Insertable;
-    "tenant_owners": tenant_owners.Insertable;
-    "tenant_owners_to_tenants": tenant_owners_to_tenants.Insertable;
     "tenants": tenants.Insertable;
     "token_idx": token_idx.Insertable;
     "uri_idx": uri_idx.Insertable;
+    "users": users.Insertable;
   }[T];
 
   export type UpdatableForTable<T extends Table> = {
     "authorization_code": authorization_code.Updatable;
     "date_idx": date_idx.Updatable;
+    "membership": membership.Updatable;
     "migrations": migrations.Updatable;
     "migrations_state": migrations_state.Updatable;
     "number_idx": number_idx.Updatable;
@@ -3839,16 +3840,16 @@ declare module 'zapatos/schema' {
     "reference_idx": reference_idx.Updatable;
     "resources": resources.Updatable;
     "string_idx": string_idx.Updatable;
-    "tenant_owners": tenant_owners.Updatable;
-    "tenant_owners_to_tenants": tenant_owners_to_tenants.Updatable;
     "tenants": tenants.Updatable;
     "token_idx": token_idx.Updatable;
     "uri_idx": uri_idx.Updatable;
+    "users": users.Updatable;
   }[T];
 
   export type UniqueIndexForTable<T extends Table> = {
     "authorization_code": authorization_code.UniqueIndex;
     "date_idx": date_idx.UniqueIndex;
+    "membership": membership.UniqueIndex;
     "migrations": migrations.UniqueIndex;
     "migrations_state": migrations_state.UniqueIndex;
     "number_idx": number_idx.UniqueIndex;
@@ -3856,16 +3857,16 @@ declare module 'zapatos/schema' {
     "reference_idx": reference_idx.UniqueIndex;
     "resources": resources.UniqueIndex;
     "string_idx": string_idx.UniqueIndex;
-    "tenant_owners": tenant_owners.UniqueIndex;
-    "tenant_owners_to_tenants": tenant_owners_to_tenants.UniqueIndex;
     "tenants": tenants.UniqueIndex;
     "token_idx": token_idx.UniqueIndex;
     "uri_idx": uri_idx.UniqueIndex;
+    "users": users.UniqueIndex;
   }[T];
 
   export type ColumnForTable<T extends Table> = {
     "authorization_code": authorization_code.Column;
     "date_idx": date_idx.Column;
+    "membership": membership.Column;
     "migrations": migrations.Column;
     "migrations_state": migrations_state.Column;
     "number_idx": number_idx.Column;
@@ -3873,16 +3874,16 @@ declare module 'zapatos/schema' {
     "reference_idx": reference_idx.Column;
     "resources": resources.Column;
     "string_idx": string_idx.Column;
-    "tenant_owners": tenant_owners.Column;
-    "tenant_owners_to_tenants": tenant_owners_to_tenants.Column;
     "tenants": tenants.Column;
     "token_idx": token_idx.Column;
     "uri_idx": uri_idx.Column;
+    "users": users.Column;
   }[T];
 
   export type SQLForTable<T extends Table> = {
     "authorization_code": authorization_code.SQL;
     "date_idx": date_idx.SQL;
+    "membership": membership.SQL;
     "migrations": migrations.SQL;
     "migrations_state": migrations_state.SQL;
     "number_idx": number_idx.SQL;
@@ -3890,11 +3891,10 @@ declare module 'zapatos/schema' {
     "reference_idx": reference_idx.SQL;
     "resources": resources.SQL;
     "string_idx": string_idx.SQL;
-    "tenant_owners": tenant_owners.SQL;
-    "tenant_owners_to_tenants": tenant_owners_to_tenants.SQL;
     "tenants": tenants.SQL;
     "token_idx": token_idx.SQL;
     "uri_idx": uri_idx.SQL;
+    "users": users.SQL;
   }[T];
 
 }
