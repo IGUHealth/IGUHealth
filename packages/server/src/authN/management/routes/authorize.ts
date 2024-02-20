@@ -23,8 +23,6 @@ import { setLoginRedirectSession } from "./login.js";
          server includes this value when redirecting the user-agent back
          to the client.  The parameter SHOULD be used for preventing
          cross-site request forgery as described in Section 10.12.
- * 
- * @param ctx 
  */
 export const authorizeGET: ManagementRouteHandler = async (ctx, next) => {
   if (ctx.isAuthenticated()) {

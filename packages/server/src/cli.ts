@@ -21,6 +21,18 @@ async function runServer(port: number) {
   return server.listen(port);
 }
 
+type Services = {
+  server?: Awaited<ReturnType<typeof runServer>>;
+  worker?: Awaited<ReturnType<typeof createWorker>>;
+};
+
+let runningServices: Services = {};
+
+function terminateServices(services: Services) {
+  if (services.server) services.server.close();
+  if (services.worker) services.worker();
+}
+
 async function run() {
   program
     .command("generate-types")
@@ -61,18 +73,27 @@ async function run() {
     .argument("<type>", "Either 'server', 'worker' or 'migrate'")
     .option("-p, --port <number>", "port to run on.", "3000")
     .action(async (type, options) => {
+      terminateServices(runningServices);
       switch (type) {
         case "server": {
-          const listener = await runServer(options.port);
+          runningServices = {
+            ...runningServices,
+            server: await runServer(options.port),
+          };
           break;
         }
         case "worker": {
-          const stopWorker = await createWorker();
+          runningServices = {
+            ...runningServices,
+            worker: await createWorker(),
+          };
           break;
         }
         case "both": {
-          const listener = await runServer(options.port);
-          const stopWorker = await createWorker();
+          runningServices = {
+            server: await runServer(options.port),
+            worker: await createWorker(),
+          };
           break;
         }
         case "migrate": {
@@ -94,5 +115,11 @@ async function run() {
 
   await program.parseAsync();
 }
+
+process.on("SIGINT", function () {
+  console.log("Exiting...");
+  terminateServices(runningServices);
+  process.exit();
+});
 
 run();
