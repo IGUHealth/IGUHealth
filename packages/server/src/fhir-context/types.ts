@@ -87,6 +87,7 @@ export interface FHIRServerCTX {
   client: FHIRClientAsync<FHIRServerCTX>;
 
   // Services
+  db: db.Queryable;
   logger: Logger<string>;
   lock: Lock<unknown>;
   cache: IOCache<FHIRServerCTX>;

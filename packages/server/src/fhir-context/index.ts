@@ -479,7 +479,7 @@ export async function createFHIRServices(
         "history-request",
         "transaction-request",
       ],
-      source: createPostgresClient(pool, {
+      source: createPostgresClient({
         transaction_entry_limit: parseInt(
           process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
         ),
@@ -488,6 +488,7 @@ export async function createFHIRServices(
   ]);
 
   return {
+    db: pool,
     logger: logger,
     lock,
     cache,
