@@ -7,6 +7,6 @@ import { ManagementRouteHandler } from "../index.js";
  * @param ctx FHIR Server Context
  */
 export const logout: ManagementRouteHandler = async (ctx) => {
-  ctx.logout();
+  await ctx.logout();
   ctx.redirect(ctx.router.url(ROUTES.LOGIN_GET) as string);
 };

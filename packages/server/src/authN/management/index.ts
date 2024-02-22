@@ -10,9 +10,9 @@ import {
   KoaFHIRServicesContext,
   OIDCKoaContext,
 } from "../../fhir-context/koa.js";
+import * as dbUser from "../db/user.js";
 import { createValidateInjectOIDCParameters } from "../oidc/middleware/parameter_inject.js";
 import { ROUTES } from "./constants.js";
-import * as dbUser from "./db/user.js";
 import * as routes from "./routes/index.js";
 
 export type ManagementRouteHandler = Parameters<
@@ -42,7 +42,7 @@ export function createManagementRouter(prefix: string, { client }: Options) {
       },
       function (username, password, done) {
         try {
-          dbUser.login(client, username, password).then((user) => {
+          dbUser.login(client, "global", username, password).then((user) => {
             if (user) {
               done(null, user);
             } else {
@@ -64,7 +64,7 @@ export function createManagementRouter(prefix: string, { client }: Options) {
 
   koaPassport.deserializeUser(async (email: string, done) => {
     try {
-      const user = await dbUser.findManagementUserByEmail(client, email);
+      const user = await dbUser.findUserByEmail(client, email);
       done(null, user);
     } catch (err) {
       done(err);
