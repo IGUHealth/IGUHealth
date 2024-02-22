@@ -1,4 +1,6 @@
 import type { Logger } from "pino";
+import * as db from "zapatos/db";
+import * as s from "zapatos/schema";
 
 import { FHIRClientAsync } from "@iguhealth/client/interface";
 import {
@@ -10,25 +12,65 @@ import {
   OperationDefinition,
   ResourceType,
   canonical,
+  code,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 
 import { IGUHEALTH_ISSUER, JWT } from "../authN/token.js";
 import type { IOCache } from "../cache/interface.js";
+import { EmailProvider } from "../email/interface.js";
 import type { EncryptionProvider } from "../encryption/provider/interface.js";
 import type { TerminologyProvider } from "../fhir-terminology/interface.js";
 import type { Lock } from "../synchronization/interfaces.js";
-import { ROLE } from "./roles.js";
+
+export namespace KoaContext {
+  export type OIDC = {
+    oidc: {
+      client?: ClientApplication;
+      parameters: {
+        state?: string;
+        responseType?: code;
+        response_type?: string;
+        client_id?: string;
+        redirect_uri?: string;
+        scope?: string;
+      };
+    };
+  };
+
+  export type FHIR<C> = C &
+    OIDC &
+    FHIRServices & {
+      FHIRContext: Omit<FHIRServerCTX, "user"> | FHIRServerCTX;
+    };
+
+  export type FHIRServices = {
+    emailProvider?: EmailProvider;
+    postgres: db.Queryable;
+    FHIRContext: Omit<FHIRServerCTX, "user" | "tenant">;
+  };
+
+  /**
+   * Verifies whether ctx is FHIRServerCTX with user.
+   * @param ctx CTX that should be verified as user associated
+   * @returns  Verifies whether ctx is FHIRServerCTX with user
+   */
+  export function isFHIRServerAuthorizedUserCTX(
+    ctx: FHIRServerCTX | Omit<FHIRServerCTX, "user">,
+  ): ctx is FHIRServerCTX {
+    return (ctx as FHIRServerCTX).user !== undefined;
+  }
+}
 
 declare const __tenant: unique symbol;
 export type TenantId = string & { [__tenant]: string };
 export interface TenantClaim {
   id: TenantId;
-  userRole: ROLE;
+  userRole: s.user_role;
 }
 
 export interface UserContext {
-  role: ROLE;
+  role: s.user_role;
   jwt: JWT;
   resource?: Membership | ClientApplication | OperationDefinition | null;
   accessPolicies?: AccessPolicy[];
@@ -47,7 +89,6 @@ export interface FHIRServerCTX {
   // Services
   logger: Logger<string>;
   lock: Lock<unknown>;
-
   cache: IOCache<FHIRServerCTX>;
   terminologyProvider: TerminologyProvider;
   encryptionProvider?: EncryptionProvider;
@@ -75,7 +116,7 @@ export function asSystemCTX(ctx: Omit<FHIRServerCTX, "user">): FHIRServerCTX {
     ...ctx,
     tenant: ctx.tenant,
     user: {
-      role: "SUPER_ADMIN",
+      role: "admin",
       jwt: {
         iss: IGUHEALTH_ISSUER,
         sub: "system",

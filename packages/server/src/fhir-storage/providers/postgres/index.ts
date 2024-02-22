@@ -45,7 +45,7 @@ import {
 } from "../../utilities/search/parameters.js";
 import { fhirResponseToBundleEntry } from "../../utilities/bundle.js";
 import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
-import { asSystemCTX, FHIRServerCTX } from "../../../fhir-context/context.js";
+import { asSystemCTX, FHIRServerCTX } from "../../../fhir-context/types.js";
 import { param_types_supported } from "./constants.js";
 import { executeSearchQuery } from "./search/index.js";
 import { ParsedParameter } from "@iguhealth/client/url";

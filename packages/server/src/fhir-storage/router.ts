@@ -26,7 +26,7 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../fhir-context/context.js";
+import { FHIRServerCTX } from "../fhir-context/types.js";
 import { httpRequestToFHIRRequest } from "../fhir-http/index.js";
 import { fhirResponseToBundleEntry } from "./utilities/bundle.js";
 import { deriveResourceTypeFilter } from "./utilities/search/parameters.js";

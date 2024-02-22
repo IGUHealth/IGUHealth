@@ -15,7 +15,7 @@ import {
 
 import { JWT } from "../authN/token.js";
 import { IOCache } from "../cache/interface.js";
-import { FHIRServerCTX, TenantId } from "../fhir-context/context.js";
+import { FHIRServerCTX, TenantId } from "../fhir-context/types.js";
 import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
 import { Lock } from "../synchronization/interfaces.js";
 import MemoryDatabase from "./providers/memory/async.js";
@@ -50,7 +50,7 @@ class TestCache<CTX extends { tenant: TenantId }> implements IOCache<CTX> {
 
 export const testServices: FHIRServerCTX = {
   tenant: "tenant" as TenantId,
-  user: { role: "SUPER_ADMIN", jwt: { iss: "test", sub: "test-user" } as JWT },
+  user: { role: "admin", jwt: { iss: "test", sub: "test-user" } as JWT },
   terminologyProvider: new TerminologyProviderMemory(),
   logger: pino<string>(),
   capabilities: {

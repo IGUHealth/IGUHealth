@@ -6,10 +6,7 @@ import * as db from "zapatos/db";
 
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import {
-  KoaFHIRServicesContext,
-  OIDCKoaContext,
-} from "../../fhir-context/koa.js";
+import { KoaContext } from "../../fhir-context/types.js";
 import * as dbUser from "../db/user.js";
 import { createValidateInjectOIDCParameters } from "../oidc/middleware/parameter_inject.js";
 import { ROUTES } from "./constants.js";
@@ -29,7 +26,7 @@ type Options = {
 export function createManagementRouter(prefix: string, { client }: Options) {
   const managementRouter = new Router<
     Koa.DefaultState,
-    OIDCKoaContext<KoaFHIRServicesContext<Koa.DefaultContext>>
+    Koa.DefaultContext & KoaContext.OIDC & KoaContext.FHIRServices
   >({
     prefix,
   });

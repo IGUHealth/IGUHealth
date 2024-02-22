@@ -7,7 +7,7 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../fhir-context/context.js";
+import { FHIRServerCTX } from "../../fhir-context/types.js";
 
 /**
  * Determine whether or not the policy access has access to the resource type.
@@ -181,7 +181,7 @@ function evaluateAccessPolicy(
  * @returns boolean as to whether or not a user is being granted access.
  */
 function canUserMakeRequest(ctx: FHIRServerCTX, request: FHIRRequest): boolean {
-  if (ctx.user.role === "SUPER_ADMIN") return true;
+  if (ctx.user.role === "admin" || ctx.user.role === "owner") return true;
   return evaluateAccessPolicy(ctx, request);
 }
 

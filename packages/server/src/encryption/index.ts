@@ -3,7 +3,7 @@ import jsonpatch, { Operation } from "fast-json-patch";
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../fhir-context/context.js";
+import { FHIRServerCTX } from "../fhir-context/types.js";
 
 function toFP(loc: (string | number)[]) {
   let FP = "$this";

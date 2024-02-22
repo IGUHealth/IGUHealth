@@ -23,9 +23,9 @@ declare module 'zapatos/schema' {
   export namespace every {
     export type code_type = ['oauth2_code_grant', 'password_reset'];
   }
-  export type user_role = 'owner';
+  export type user_role = 'admin' | 'member' | 'owner';
   export namespace every {
-    export type user_role = ['owner'];
+    export type user_role = ['admin', 'member', 'owner'];
   }
   export type user_scope = 'global' | 'tenant';
   export namespace every {

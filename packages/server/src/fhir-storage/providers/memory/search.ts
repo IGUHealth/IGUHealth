@@ -5,7 +5,7 @@ import { Resource, uri } from "@iguhealth/fhir-types/r4/types";
 import * as fp from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../fhir-context/context.js";
+import { FHIRServerCTX } from "../../../fhir-context/types.js";
 import {
   toDateRange,
   toQuantityRange,

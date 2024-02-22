@@ -8,7 +8,7 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../fhir-context/context.js";
+import { FHIRServerCTX } from "../../../fhir-context/types.js";
 import InlineOperation from "./interface.js";
 
 export const validateResource = async (

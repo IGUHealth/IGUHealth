@@ -54,8 +54,7 @@ import RouterClient from "../fhir-storage/router.js";
 import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
 import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with { type: "json" };
 import RedisLock from "../synchronization/redis.lock.js";
-import { FHIRServerCTX, TenantId, asSystemCTX } from "./context.js";
-import { KoaFHIRContext, KoaFHIRServicesContext } from "./koa.js";
+import { KoaContext, FHIRServerCTX, TenantId, asSystemCTX } from "./types.js";
 
 export const MEMORY_TYPES: ResourceType[] = [
   "StructureDefinition",
@@ -518,8 +517,8 @@ export async function createKoaFHIRServices<State, Context>(
 ): Promise<
   koa.Middleware<
     State,
-    KoaFHIRServicesContext<Context> &
-      Router.RouterParamContext<State, KoaFHIRServicesContext<Context>>
+    (Context & KoaContext.FHIRServices) &
+      Router.RouterParamContext<State, Context & KoaContext.FHIRServices>
   >
 > {
   const fhirServices = await createFHIRServices(pool);
@@ -537,12 +536,12 @@ export async function createKoaFHIRContextMiddleware<
     access_token?: string;
     user: { [key: string]: unknown };
   },
-  Context extends KoaFHIRServicesContext<unknown>,
+  Context extends KoaContext.FHIRServices,
 >(): Promise<
   koa.Middleware<
     State,
-    KoaFHIRContext<Context> &
-      Router.RouterParamContext<State, KoaFHIRContext<Context>>
+    KoaContext.FHIR<Context> &
+      Router.RouterParamContext<State, KoaContext.FHIR<Context>>
   >
 > {
   return async (ctx, next) => {

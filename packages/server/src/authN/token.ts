@@ -1,4 +1,5 @@
 import * as jose from "jose";
+import * as s from "zapatos/schema"
 
 import {
   ClientApplication,
@@ -6,8 +7,7 @@ import {
   Membership,
 } from "@iguhealth/fhir-types/lib/r4/types";
 
-import { TenantClaim, TenantId } from "../fhir-context/context.js";
-import { ROLE } from "../fhir-context/roles.js";
+import { TenantClaim, TenantId } from "../fhir-context/types.js";
 
 declare const __subject: unique symbol;
 export type Subject = string & { [__subject]: string };
@@ -37,7 +37,7 @@ export async function createToken(
   privatekey: { kid: string; key: jose.KeyLike },
   payload: {
     tenant: TenantId;
-    role: ROLE;
+    role: s.user_role;
     resourceType: JWT_RESOURCE_TYPES;
     sub: OperationDefinition["id"] | ClientApplication["id"] | Membership["id"];
     scope: string;

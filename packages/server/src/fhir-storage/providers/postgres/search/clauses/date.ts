@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
-import { FHIRServerCTX } from "../../../../../fhir-context/context.js";
+import { FHIRServerCTX } from "../../../../../fhir-context/types.js";
 import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
 
 export default function dateClauses(

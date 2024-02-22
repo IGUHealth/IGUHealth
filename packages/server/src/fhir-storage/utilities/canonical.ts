@@ -1,4 +1,4 @@
-import { FHIRServerCTX } from "../../fhir-context/context.js";
+import { FHIRServerCTX } from "../../fhir-context/types.js";
 import type { toReference } from "./search/dataConversion.js";
 
 export function createResolverRemoteCanonical(
