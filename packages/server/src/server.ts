@@ -34,10 +34,7 @@ import {
   getRedisClient,
   logger,
 } from "./fhir-context/index.js";
-import {
-  KoaFHIRContext,
-  isFHIRServerAuthorizedUserCTX,
-} from "./fhir-context/koa.js";
+import { KoaContext } from "./fhir-context/types.js";
 import {
   fhirResponseToHTTPResponse,
   httpRequestToFHIRRequest,
@@ -62,8 +59,8 @@ async function FHIRAPIKoaMiddleware<
 >(): Promise<
   Koa.Middleware<
     T,
-    KoaFHIRContext<Koa.DefaultContext> &
-      Router.RouterParamContext<T, KoaFHIRContext<Koa.DefaultContext>>
+    KoaContext.FHIR<Koa.DefaultContext> &
+      Router.RouterParamContext<T, KoaContext.FHIR<Koa.DefaultContext>>
   >
 > {
   const fhirAPI = await createFHIRAPI();
@@ -77,7 +74,7 @@ async function FHIRAPIKoaMiddleware<
         op: "fhirserver",
       });
     }
-    if (!isFHIRServerAuthorizedUserCTX(ctx.FHIRContext)) {
+    if (!KoaContext.isFHIRServerAuthorizedUserCTX(ctx.FHIRContext)) {
       throw new Error("FHIR Context is not authorized");
     }
 
@@ -109,8 +106,8 @@ async function FHIRAPIKoaMiddleware<
 
 function createErrorHandlingMiddleware<T>(): Koa.Middleware<
   T,
-  KoaFHIRContext<Koa.DefaultContext> &
-    Router.RouterParamContext<T, KoaFHIRContext<Koa.DefaultContext>>
+  KoaContext.FHIR<Koa.DefaultContext> &
+    Router.RouterParamContext<T, KoaContext.FHIR<Koa.DefaultContext>>
 > {
   return async function errorHandlingMiddleware(ctx, next) {
     try {
@@ -200,7 +197,7 @@ export default async function createServer(): Promise<
 
   const rootRouter = new Router<
     Koa.DefaultState,
-    KoaFHIRContext<Koa.DefaultContext>
+    KoaContext.FHIR<Koa.DefaultContext>
   >();
 
   rootRouter.use(
@@ -217,14 +214,14 @@ export default async function createServer(): Promise<
 
   const tenantRouter = new Router<
     Koa.DefaultState,
-    KoaFHIRContext<Koa.DefaultContext>
+    KoaContext.FHIR<Koa.DefaultContext>
   >({
     prefix: "/w/:tenant",
   });
 
   const tenantAPIV1Router = new Router<
     Koa.DefaultState,
-    KoaFHIRContext<Koa.DefaultContext>
+    KoaContext.FHIR<Koa.DefaultContext>
   >({
     prefix: "/api/v1",
   });

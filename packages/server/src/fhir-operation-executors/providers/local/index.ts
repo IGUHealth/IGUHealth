@@ -11,7 +11,7 @@ import {
 import { OperationDefinition } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../fhir-context/context.js";
+import { FHIRServerCTX } from "../../../fhir-context/types.js";
 import { InlineOp } from "./interface.js";
 
 function createExecutor(): MiddlewareAsync<

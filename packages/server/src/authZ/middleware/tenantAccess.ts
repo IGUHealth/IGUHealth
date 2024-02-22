@@ -7,11 +7,11 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { CUSTOM_CLAIMS, JWT } from "../../authN/token.js";
-import type { TenantClaim } from "../../fhir-context/context.js";
-import { KoaFHIRContext } from "../../fhir-context/koa.js";
+import type { TenantClaim } from "../../fhir-context/types.js";
+import { KoaContext } from "../../fhir-context/types.js";
 
 function findCurrentTenant<Context extends Koa.DefaultContext>(
-  ctx: KoaFHIRContext<Context>,
+  ctx: KoaContext.FHIR<Context>,
 ): TenantClaim | undefined {
   return ctx.state.user[CUSTOM_CLAIMS.TENANTS]?.find(
     (t: TenantClaim) => t.id === ctx.FHIRContext.tenant,
@@ -20,7 +20,7 @@ function findCurrentTenant<Context extends Koa.DefaultContext>(
 
 export async function verifyAndAssociateUserFHIRContext<
   State extends Koa.DefaultState,
-  Context extends KoaFHIRContext<Koa.DefaultContext>,
+  Context extends KoaContext.FHIR<Koa.DefaultContext>,
 >(ctx: Koa.ParameterizedContext<State, Context>, next: Koa.Next) {
   if (!ctx.FHIRContext.tenant) {
     throw new OperationError(outcomeError("invalid", "No tenant present."));

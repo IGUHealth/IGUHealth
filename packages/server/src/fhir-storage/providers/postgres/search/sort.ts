@@ -7,7 +7,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import {
   FHIRServerCTX,
   asSystemCTX,
-} from "../../../../fhir-context/context.js";
+} from "../../../../fhir-context/types.js";
 import {
   SearchParameterResult,
   searchParameterToTableName,

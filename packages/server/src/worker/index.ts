@@ -31,9 +31,8 @@ import {
   JWT,
   createToken,
 } from "../authN/token.js";
-import { FHIRServerCTX, TenantId } from "../fhir-context/context.js";
 import { createFHIRAPI, createFHIRServices } from "../fhir-context/index.js";
-import { SUPER_ADMIN_ROLE } from "../fhir-context/roles.js";
+import { FHIRServerCTX, TenantId } from "../fhir-context/types.js";
 import { httpRequestToFHIRRequest } from "../fhir-http/index.js";
 import logAuditEvent, {
   MAJOR_FAILURE,
@@ -178,7 +177,7 @@ async function handleSubscriptionPayload(
 
       const user_access_token = await createToken(signingKey, {
         tenant: ctx.tenant,
-        role: "SUPER_ADMIN",
+        role: "admin",
         resourceType: "OperationDefinition",
         sub: operationDefinition.id,
         scope: "openid profile email offline_access",
@@ -411,7 +410,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
           ...fhirServices,
           tenant: tenant,
           user: {
-            role: "SUPER_ADMIN" as SUPER_ADMIN_ROLE,
+            role: "admin" as s.user_role,
             jwt: {
               iss: IGUHEALTH_ISSUER,
               sub: `system-worker-${workerID}`,

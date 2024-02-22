@@ -2,7 +2,7 @@ import { FHIRRequest } from "@iguhealth/client/types";
 import { IguhealthEncrypt } from "@iguhealth/generated-ops/r4";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../../fhir-context/context.js";
+import { FHIRServerCTX } from "../../../../fhir-context/types.js";
 import InlineOperation from "../interface.js";
 
 const IguhealthEncryptInvoke = InlineOperation(

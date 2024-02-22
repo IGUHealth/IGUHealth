@@ -3,8 +3,7 @@ import * as Koa from "koa";
 import { id } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { asSystemCTX } from "../../../fhir-context/context.js";
-import { KoaFHIRContext } from "../../../fhir-context/koa.js";
+import { KoaContext, asSystemCTX } from "../../../fhir-context/types.js";
 
 /**
  * Creates koa middleware that injects the current ClientApplication under ctx.oidc.client.
@@ -14,7 +13,7 @@ import { KoaFHIRContext } from "../../../fhir-context/koa.js";
 export function createClientInjectMiddleware<
   State,
   C extends Koa.DefaultContext,
->(): Koa.Middleware<State, KoaFHIRContext<C>> {
+>(): Koa.Middleware<State, KoaContext.FHIR<C>> {
   return async (ctx, next) => {
     const clientId = ctx.oidc.parameters.client_id;
 

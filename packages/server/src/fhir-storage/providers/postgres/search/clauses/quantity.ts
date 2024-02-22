@@ -4,7 +4,7 @@ import type * as s from "zapatos/schema";
 import { splitParameter } from "@iguhealth/client/url";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../../../fhir-context/context.js";
+import { FHIRServerCTX } from "../../../../../fhir-context/types.js";
 import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
 
 // /[^\\]\|/g

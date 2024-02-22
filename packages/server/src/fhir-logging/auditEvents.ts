@@ -7,7 +7,7 @@ import {
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 
-import { FHIRServerCTX } from "../fhir-context/context.js";
+import { FHIRServerCTX } from "../fhir-context/types.js";
 
 export type OUTCOMES = {
   SUCCESS: "0";

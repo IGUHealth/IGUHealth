@@ -2,7 +2,7 @@ import jwksRsa from "jwks-rsa";
 import Koa, { Middleware } from "koa";
 import jwt from "koa-jwt";
 
-import { TenantClaim } from "../fhir-context/context.js";
+import { TenantClaim } from "../fhir-context/types.js";
 import { getJWKS } from "./certifications.js";
 import {
   CUSTOM_CLAIMS,
@@ -119,7 +119,7 @@ export const allowPublicAccessMiddleware: Koa.Middleware = async (
       access_token: "sec-public",
       [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
       [CUSTOM_CLAIMS.TENANTS]: [
-        { id: ctx.params.tenant, userRole: "SUPER_ADMIN" } as TenantClaim,
+        { id: ctx.params.tenant, userRole: "admin" } as TenantClaim,
       ],
     },
   };

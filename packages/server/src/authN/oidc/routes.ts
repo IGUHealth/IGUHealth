@@ -5,7 +5,7 @@ import React from "react";
 import { Login } from "@iguhealth/components";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaFHIRContext } from "../../fhir-context/koa.js";
+import { KoaContext } from "../../fhir-context/types.js";
 import * as views from "../../views/index.js";
 import { getSigningKey } from "../certifications.js";
 import { createToken } from "../token.js";
@@ -77,7 +77,7 @@ function validateAuthorizationCodeBody(
 export function authorizationEndpoint<
   State,
   C extends Koa.DefaultContext,
->(): Koa.Middleware<State, KoaFHIRContext<C>> {
+>(): Koa.Middleware<State, KoaContext.FHIR<C>> {
   return async (ctx) => {
     const body = (ctx.request as unknown as Record<string, unknown>).body;
     if (!isRecord(body)) {
@@ -102,7 +102,7 @@ export function authorizationEndpoint<
 export function tokenEndpoint<
   State,
   C extends Koa.DefaultContext,
->(): Koa.Middleware<State, KoaFHIRContext<C>> {
+>(): Koa.Middleware<State, KoaContext.FHIR<C>> {
   return async (ctx) => {
     const body = (ctx.request as unknown as Record<string, unknown>).body;
     if (!isRecord(body)) {
@@ -165,7 +165,7 @@ export function tokenEndpoint<
         ctx.body = {
           access_token: await createToken(signingKey, {
             tenant: ctx.FHIRContext.tenant,
-            role: "USER",
+            role: "member",
             resourceType: "ClientApplication",
             sub: ctx.oidc.client.id,
             scope: "openid profile email offline_access",
@@ -192,8 +192,10 @@ export function tokenEndpoint<
  */
 export function createOIDCRouter<State, C>(
   prefix: string,
-): Router<State, KoaFHIRContext<C>> {
-  const oidcRouter = new Router<State, KoaFHIRContext<C>>({ prefix });
+): Router<State, KoaContext.FHIR<C>> {
+  const oidcRouter = new Router<State, KoaContext.FHIR<C>>({
+    prefix,
+  });
 
   oidcRouter.get("/interaction/login", (ctx) => {
     views.renderPipe(
