@@ -37,6 +37,7 @@ export async function findUserByEmail(
 ): Promise<User | undefined> {
   const where: s.users.Whereable = {
     email: email,
+    scope: "global",
   };
   const user = await db.sql<
     s.users.SQL,
