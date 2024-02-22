@@ -2,17 +2,22 @@ import { nanoid } from "nanoid";
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
+
 const USER_QUERY_COLS = <const>["id", "email", "first_name", "last_name", "email_verified"];
 export type User = s.users.OnlyCols<typeof USER_QUERY_COLS>;
 
+
 export async function login(
   client: db.Queryable,
+  scope: s.users.Selectable["scope"],
   email: string,
   password: string,
+
 ): Promise<User | undefined> {
   const where: s.users.Whereable = {
     email: email,
     password: db.sql`${db.self} = crypt(${db.param(password)}, ${db.self})`,
+    scope,
   };
   const user = await db.sql<
     s.users.SQL,
@@ -26,7 +31,7 @@ export async function login(
 }
 
 
-export async function findManagementUserByEmail(
+export async function findUserByEmail(
   client: db.Queryable,
   email: string,
 ): Promise<User | undefined> {
@@ -51,7 +56,7 @@ export async function findManagementUserByEmail(
  * @param user values to update
  * @returns users
  */
-export async function updateManagementUser(client: db.Queryable, email: string, values: s.users.OnlyCols<["first_name", "last_name", "password"]>): Promise<s.users.JSONSelectable> {
+export async function updateUser(client: db.Queryable, email: string, values: s.users.OnlyCols<["first_name", "last_name", "password"]>): Promise<s.users.JSONSelectable> {
    const updatedUser =  await db.update("users", values, {email}).run(client);
    return updatedUser[0];
 }
@@ -76,16 +81,19 @@ export async function createUser(client: db.Queryable, email: string): Promise<s
 
     const user = await db
       .insert("users", {
+        scope: "global",
         email: email,
         email_verified: false,
       })
       .run(txnClient);
 
     await db
-      .insert("membership", {
-        tenant_id: tenant.id,
-        user_email: user.email,
+      .insert("users", {
+        scope: "tenant",
         role: "owner",
+        tenant: tenant.id,
+        email: user.email,
+        root_user: user.id,
       })
       .run(txnClient);
 

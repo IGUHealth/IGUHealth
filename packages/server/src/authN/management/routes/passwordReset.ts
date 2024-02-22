@@ -9,9 +9,9 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import * as views from "../../../views/index.js";
+import * as dbCode from "../../db/code.js";
+import * as dbUser from "../../db/user.js";
 import { ROUTES } from "../constants.js";
-import * as dbCode from "../db/code.js";
-import * as dbUser from "../db/user.js";
 import type { ManagementRouteHandler } from "../index.js";
 import { validateEmail } from "../utilities.js";
 
@@ -178,7 +178,7 @@ export const passwordResetInitiatePOST: ManagementRouteHandler = async (
     );
   }
 
-  let user = await dbUser.findManagementUserByEmail(ctx.postgres, body.email);
+  let user = await dbUser.findUserByEmail(ctx.postgres, body.email);
   if (!user) {
     user = await dbUser.createUser(ctx.postgres, body.email);
   }
