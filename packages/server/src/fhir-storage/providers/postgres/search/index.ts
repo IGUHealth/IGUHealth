@@ -1,4 +1,3 @@
-import pg from "pg";
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
@@ -9,10 +8,7 @@ import {
 import { Resource, ResourceType, id } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import {
-  FHIRServerCTX,
-  asSystemCTX,
-} from "../../../../fhir-context/types.js";
+import { FHIRServerCTX, asSystemCTX } from "../../../../fhir-context/types.js";
 import {
   SearchParameterResource,
   SearchParameterResult,
@@ -101,7 +97,7 @@ async function processRevInclude(
 }
 
 async function processInclude(
-  client: pg.PoolClient,
+  client: db.Queryable,
   ctx: FHIRServerCTX,
   param: SearchParameterResult,
   results: Resource[],
@@ -183,7 +179,7 @@ async function processInclude(
 }
 
 export async function executeSearchQuery(
-  client: pg.PoolClient,
+  client: db.Queryable,
   ctx: FHIRServerCTX,
   request: SystemSearchRequest | TypeSearchRequest,
 ): Promise<{ total?: number; resources: Resource[] }> {

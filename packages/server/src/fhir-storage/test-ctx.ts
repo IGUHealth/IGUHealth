@@ -1,5 +1,6 @@
 import dotEnv from "dotenv";
 import path from "path";
+import pg from "pg";
 import { pino } from "pino";
 import { fileURLToPath } from "url";
 
@@ -50,6 +51,22 @@ class TestCache<CTX extends { tenant: TenantId }> implements IOCache<CTX> {
 
 export const testServices: FHIRServerCTX = {
   tenant: "tenant" as TenantId,
+  db: new pg.Pool({
+    user: process.env["FHIR_DATABASE_USERNAME"],
+    password: process.env["FHIR_DATABASE_PASSWORD"],
+    host: process.env["FHIR_DATABASE_HOST"],
+    database: process.env["FHIR_DATABASE_NAME"],
+    port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
+    ssl:
+      process.env["FHIR_DATABASE_SSL"] === "true"
+        ? {
+            // Self signed certificate CA is not used.
+            rejectUnauthorized: false,
+            host: process.env["FHIR_DATABASE_HOST"],
+            port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
+          }
+        : false,
+  }),
   user: { role: "admin", jwt: { iss: "test", sub: "test-user" } as JWT },
   terminologyProvider: new TerminologyProviderMemory(),
   logger: pino<string>(),
