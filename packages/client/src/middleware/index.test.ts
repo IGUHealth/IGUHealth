@@ -1,5 +1,6 @@
 import { expect, test } from "@jest/globals";
 
+import { FHIRResponse } from "../types.js";
 import type { ParsedParameter } from "../url";
 import { createMiddlewareAsync } from "./index.js";
 
@@ -16,7 +17,7 @@ test("Test middleware Async", async () => {
               ...resource,
               id: "123",
             })),
-          },
+          } as FHIRResponse,
         };
       }
       return {
