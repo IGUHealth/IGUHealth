@@ -180,7 +180,7 @@ export const passwordResetInitiatePOST: ManagementRouteHandler = async (
 
   let user = await dbUser.findUserByEmail(ctx.postgres, body.email);
   if (!user) {
-    user = await dbUser.createUser(ctx.postgres, body.email);
+    user = await dbUser.createRootUser(ctx.postgres, body.email);
   }
 
   if (!process.env.EMAIL_FROM) {

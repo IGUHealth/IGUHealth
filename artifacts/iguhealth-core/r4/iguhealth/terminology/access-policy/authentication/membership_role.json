@@ -24,11 +24,11 @@
             "display": "Owner"
           },
           {
-            "code": "super_admin",
+            "code": "admin",
             "display": "Super Admin"
           },
           {
-            "code": "Membership",
+            "code": "membership",
             "display": "Membership"
           }
         ]

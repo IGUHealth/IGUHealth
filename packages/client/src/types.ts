@@ -82,7 +82,7 @@ export type UpdateRequest = InstanceInteraction & {
 // TODO - implement patch type
 export type PatchRequest = InstanceInteraction & {
   type: RequestInteractionTypes["patch"];
-  body: Object;
+  body: unknown;
 };
 
 export type DeleteRequest = InstanceInteraction & {
@@ -96,6 +96,10 @@ export type HistoryInstanceRequest = InstanceInteraction & {
 
 export type CreateRequest = TypeInteraction & {
   type: RequestInteractionTypes["create"];
+  /**
+   * If provided, the server must use the provided id instead of a server assigned id.
+   */
+  allowIdSet?: boolean;
   body: Resource;
 };
 

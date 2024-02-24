@@ -1,4 +1,4 @@
-import { MiddlewareAsync } from "@iguhealth/client/middleware";
+import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
 import { escapeParameter } from "@iguhealth/client/url";
 import { AccessPolicy, Membership, id } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
@@ -14,12 +14,10 @@ import { FHIRServerCTX, asSystemCTX } from "../../fhir-context/types.js";
  * @param next Next chain in middleware.
  * @returns FHIRServerCTX with user resource and access policies attached.
  */
-export const associateUserMiddleware: MiddlewareAsync<
+export const associateUserMiddleware: MiddlewareAsyncChain<
   unknown,
   FHIRServerCTX
 > = async (context, next) => {
-  if (!next) throw new Error("next middleware was not defined");
-
   switch (context.ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE]) {
     case "Membership": {
       const usersAndAccessPolicies = (await context.ctx.client.search_type(

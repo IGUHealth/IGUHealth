@@ -26,7 +26,11 @@ export interface FHIRClientAsync<CTX> {
     type: T,
     parameters: ParsedParameter<string | number>[] | string,
   ): Promise<{ total?: number; resources: AResource<T>[] }>;
-  create<T extends Resource>(ctx: CTX, resource: T): Promise<T>;
+  create<T extends Resource>(
+    ctx: CTX,
+    resource: T,
+    allowIdSet?: boolean,
+  ): Promise<T>;
   update<T extends ResourceType>(
     ctx: CTX,
     resourceType: T,

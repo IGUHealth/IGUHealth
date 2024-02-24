@@ -18,7 +18,7 @@ export const ENCRYPTION_URL = "https://iguhealth.app/Extension/encrypt-value";
 
 export async function encryptValue<T extends object>(
   ctx: FHIRServerCTX,
-  resource: T,
+  valueToEncrypt: T,
 ): Promise<T> {
   const encryptionProvider = ctx.encryptionProvider;
   if (!encryptionProvider)
@@ -28,7 +28,7 @@ export async function encryptValue<T extends object>(
 
   const encryptionLocations = evaluateWithMeta(
     "$this.descendants().where($this.extension.url=%extUrl).value",
-    resource,
+    valueToEncrypt,
     {
       variables: {
         extUrl: ENCRYPTION_URL,
@@ -39,7 +39,7 @@ export async function encryptValue<T extends object>(
     encryptionLocations.map(async (value): Promise<Operation[]> => {
       const encryptExtensionValue = evaluateWithMeta(
         `${toFP(value.location())}.extension.where(url=%extUrl).value`,
-        resource,
+        valueToEncrypt,
         {
           variables: {
             extUrl: ENCRYPTION_URL,
@@ -96,6 +96,6 @@ export async function encryptValue<T extends object>(
     }),
   );
 
-  const value = jsonpatch.applyPatch(resource, operations.flat());
+  const value = jsonpatch.applyPatch(valueToEncrypt, operations.flat());
   return value.newDocument;
 }

@@ -68,7 +68,7 @@ export async function updateUser(client: db.Queryable, email: string, values: s.
  * @param email New users email
  * @returns Newly created user object.
  */
-export async function createUser(client: db.Queryable, email: string): Promise<s.users.JSONSelectable> {
+export async function createRootUser(client: db.Queryable, email: string): Promise<s.users.JSONSelectable> {
   return await db.serializable(client, async (txnClient) => {
     const tenant = await db
       .insert("tenants", {

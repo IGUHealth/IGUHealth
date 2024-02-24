@@ -45100,9 +45100,25 @@ resourceType: "Membership"
    */
   link?: Array<Reference>;
   /** 
-   * The identifier of the Membership. You can tie the iss and sub to Membership.identifier.system and Membership.identifier.value.
+   * Users email address.
    */
-  identifier?: Array<Identifier>;
+  email: string;
+  /** 
+   * Users email address.
+   */
+  _email?: Element
+  /** 
+   * Is Users email address verified.
+   */
+  emailVerified: boolean;
+  /** 
+   * Is Users email address verified.
+   */
+  _emailVerified?: Element
+  /** 
+   * Users name
+   */
+  name?: HumanName;
   /** 
    * The Memberships role. Note that owner and superadmin roles are granted full access.
    */
@@ -45111,8 +45127,4 @@ resourceType: "Membership"
    * The Memberships role. Note that owner and superadmin roles are granted full access.
    */
   _role?: Element
-  /** 
-   * The Memberships contact information.
-   */
-  contact?: Array<ContactPoint>;
 }
