@@ -1,8 +1,5 @@
 import { FHIRRequest } from "@iguhealth/client/lib/types";
-import type {
-  MiddlewareAsync,
-  MiddlewareAsyncChain,
-} from "@iguhealth/client/middleware";
+import type { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
 import { AccessPolicyAccess, code } from "@iguhealth/fhir-types/r4/types";
 import {
   OperationError,

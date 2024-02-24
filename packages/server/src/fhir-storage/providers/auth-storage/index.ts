@@ -1,5 +1,4 @@
 import * as db from "zapatos/db";
-import * as s from "zapatos/schema";
 
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
@@ -29,7 +28,6 @@ async function customValidationMembership(
       outcomeFatal("not-supported", "Cannot create owner membership."),
     );
   }
-  return;
 }
 
 function createAuthMiddleware<

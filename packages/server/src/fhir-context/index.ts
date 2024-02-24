@@ -66,7 +66,7 @@ const SPECIAL_TYPES: { MEMORY: ResourceType[]; } = {
 };
 const ALL_SPECIAL_TYPES = Object.values(SPECIAL_TYPES).flatMap((v) => v);
 const DB_TYPES: ResourceType[] = ([...resourceTypes] as ResourceType[]).filter(
-  (type) => ALL_SPECIAL_TYPES.indexOf(type as ResourceType) === -1,
+  (type) => ALL_SPECIAL_TYPES.indexOf(type) === -1,
 );
 
 export function createMemoryData(
