@@ -804,7 +804,8 @@ function createPostgresMiddleware<
             context.ctx,
             {
               ...context.request.body,
-              id: nanoid() as id,
+              // If the id is allowed to be set, use the id from the request body, otherwise generate a new id.
+              id: context.request.allowIdSet ? context.request.body.id ?? nanoid() as id : nanoid() as id,
             },
           );
 

@@ -11,7 +11,7 @@ import { loadArtifacts } from "@iguhealth/artifacts";
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
 import {
-  MiddlewareAsync,
+  MiddlewareAsyncChain,
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import { FHIRRequest } from "@iguhealth/client/types";
@@ -47,6 +47,10 @@ import StructureDefinitionSnapshotInvoke from "../fhir-operation-executors/provi
 import ValueSetExpandInvoke from "../fhir-operation-executors/providers/local/terminology/expand.js";
 import CodeSystemLookupInvoke from "../fhir-operation-executors/providers/local/terminology/lookup.js";
 import ValueSetValidateInvoke from "../fhir-operation-executors/providers/local/terminology/validate.js";
+import {
+  AUTH_RESOURCETYPES,
+  createAuthStorageClient,
+} from "../fhir-storage/providers/auth-storage/index.js";
 import MemoryDatabaseAsync from "../fhir-storage/providers/memory/async.js";
 import { InternalData } from "../fhir-storage/providers/memory/types.js";
 import { createPostgresClient } from "../fhir-storage/providers/postgres/index.js";
@@ -54,14 +58,16 @@ import RouterClient from "../fhir-storage/router.js";
 import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
 import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with { type: "json" };
 import RedisLock from "../synchronization/redis.lock.js";
-import { KoaContext, FHIRServerCTX, TenantId, asSystemCTX } from "./types.js";
+import { FHIRServerCTX, KoaContext, TenantId, asSystemCTX } from "./types.js";
 
-export const MEMORY_TYPES: ResourceType[] = [
-  "StructureDefinition",
-  "SearchParameter",
-  "ValueSet",
-  "CodeSystem",
-];
+const SPECIAL_TYPES: { MEMORY: ResourceType[]; AUTH: ResourceType[] } = {
+  AUTH: AUTH_RESOURCETYPES,
+  MEMORY: ["StructureDefinition", "SearchParameter", "ValueSet", "CodeSystem"],
+};
+const ALL_SPECIAL_TYPES = Object.values(SPECIAL_TYPES).flatMap((v) => v);
+const DB_TYPES: ResourceType[] = ([...resourceTypes] as ResourceType[]).filter(
+  (type) => ALL_SPECIAL_TYPES.indexOf(type as ResourceType) === -1,
+);
 
 export function createMemoryData(
   resourceTypes: ResourceType[],
@@ -205,7 +211,7 @@ type RouterState = Parameters<
   Parameters<typeof RouterClient>[0][number]
 >[0]["state"];
 
-const validationMiddleware: MiddlewareAsync<
+const validationMiddleware: MiddlewareAsyncChain<
   RouterState,
   FHIRServerCTX
 > = async (context, next) => {
@@ -244,11 +250,10 @@ const validationMiddleware: MiddlewareAsync<
       break;
     }
   }
-  if (!next) throw new Error("No next");
   return next(context);
 };
 
-const capabilitiesMiddleware: MiddlewareAsync<
+const capabilitiesMiddleware: MiddlewareAsyncChain<
   RouterState,
   FHIRServerCTX
 > = async (context, next) => {
@@ -262,15 +267,14 @@ const capabilitiesMiddleware: MiddlewareAsync<
       },
     };
   }
-  if (!next) throw new Error("next middleware was not defined");
+
   return next(context);
 };
 
 const encryptionMiddleware: (
   resourceTypesToEncrypt: ResourceType[],
-) => MiddlewareAsync<RouterState, FHIRServerCTX> =
+) => MiddlewareAsyncChain<RouterState, FHIRServerCTX> =
   (resourceTypesToEncrypt: ResourceType[]) => async (context, next) => {
-    if (!next) throw new Error("next middleware was not defined");
     if (!context.ctx.encryptionProvider) {
       return next(context);
     }
@@ -293,7 +297,8 @@ const encryptionMiddleware: (
         case "patch-request": {
           const encrypted = await encryptValue(
             context.ctx,
-            context.request.body,
+            // Should be safe as given patch should be validated.
+            context.request.body as object,
           );
           return next({
             ...context,
@@ -397,8 +402,13 @@ async function createFHIRClient(sources: RouterState["sources"]) {
 export async function createFHIRServices(
   pool: pg.Pool,
 ): Promise<Omit<FHIRServerCTX, "tenant" | "user">> {
-  const data = createMemoryData(MEMORY_TYPES);
+  const data = createMemoryData(SPECIAL_TYPES.MEMORY);
   const memDBAsync = MemoryDatabaseAsync(data);
+  const pgFHIR = createPostgresClient({
+    transaction_entry_limit: parseInt(
+      process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
+    ),
+  });
 
   const inlineOperationExecution = InlineExecutioner([
     StructureDefinitionSnapshotInvoke,
@@ -437,6 +447,7 @@ export async function createFHIRServices(
 
   const lock = new RedisLock(redis);
   const cache = new RedisCache(redis);
+
   const capabilities = await serverCapabilities(
     { resolveCanonical, resolveTypeToCanonical },
     memDBAsync,
@@ -461,14 +472,12 @@ export async function createFHIRServices(
       source: lambdaExecutioner,
     },
     {
-      resourcesSupported: MEMORY_TYPES,
+      resourcesSupported: SPECIAL_TYPES.MEMORY,
       interactionsSupported: ["read-request", "search-request"],
       source: memDBAsync,
     },
     {
-      resourcesSupported: [...resourceTypes].filter(
-        (type) => MEMORY_TYPES.indexOf(type as ResourceType) === -1,
-      ) as ResourceType[],
+      resourcesSupported: DB_TYPES,
       interactionsSupported: [
         "read-request",
         "search-request",
@@ -479,11 +488,7 @@ export async function createFHIRServices(
         "history-request",
         "transaction-request",
       ],
-      source: createPostgresClient({
-        transaction_entry_limit: parseInt(
-          process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
-        ),
-      }),
+      source: pgFHIR,
     },
   ]);
 
@@ -566,7 +571,7 @@ export async function createKoaFHIRContextMiddleware<
 }
 
 async function fhirAPIMiddleware(): Promise<
-  MiddlewareAsync<unknown, FHIRServerCTX>
+  MiddlewareAsyncChain<unknown, FHIRServerCTX>
 > {
   return createMiddlewareAsync([
     associateUserMiddleware,
@@ -585,5 +590,8 @@ async function fhirAPIMiddleware(): Promise<
 }
 
 export async function createFHIRAPI() {
-  return new AsynchronousClient({}, await fhirAPIMiddleware());
+  return new AsynchronousClient(
+    {},
+    createMiddlewareAsync([await fhirAPIMiddleware()]),
+  );
 }

@@ -1,5 +1,8 @@
 import { FHIRRequest } from "@iguhealth/client/lib/types";
-import type { MiddlewareAsync } from "@iguhealth/client/middleware";
+import type {
+  MiddlewareAsync,
+  MiddlewareAsyncChain,
+} from "@iguhealth/client/middleware";
 import { AccessPolicyAccess, code } from "@iguhealth/fhir-types/r4/types";
 import {
   OperationError,
@@ -191,13 +194,11 @@ function canUserMakeRequest(ctx: FHIRServerCTX, request: FHIRRequest): boolean {
  * @param next Next middleware
  * @returns context with response.
  */
-export function createAuthorizationMiddleWare<T>(): MiddlewareAsync<
+export function createAuthorizationMiddleWare<T>(): MiddlewareAsyncChain<
   T,
   FHIRServerCTX
 > {
   return async (context, next) => {
-    if (!next) throw new Error("Next must be present on access policy access");
-
     if (canUserMakeRequest(context.ctx, context.request)) {
       return next(context);
     }

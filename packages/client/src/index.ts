@@ -35,6 +35,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   }
   async request(ctx: CTX, request: FHIRRequest): Promise<FHIRResponse> {
     const res = await this.middleware({ ctx, state: this.state, request });
+    if (!res.response) throw new Error("No Response was returned.");
     return res.response;
   }
   async invoke_system<Op extends IOperation<unknown, unknown>>(
@@ -135,11 +136,16 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       resources: response.body as AResource<T>[],
     };
   }
-  async create<T extends Resource>(ctx: CTX, resource: T): Promise<T> {
+  async create<T extends Resource>(
+    ctx: CTX,
+    resource: T,
+    allowIdSet = false,
+  ): Promise<T> {
     const response = await this.request(ctx, {
       type: "create-request",
       level: "type",
       resourceType: resource.resourceType,
+      allowIdSet,
       body: resource,
     });
     if (response.type !== "create-response")
