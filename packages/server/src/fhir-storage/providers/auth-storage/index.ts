@@ -63,7 +63,7 @@ function membershipHandler<
 
     switch (context.request.type) {
       case "create-request": {
-        customValidationMembership(context.request.body as Membership);
+        await customValidationMembership(context.request.body as Membership);
         return db.serializable(context.ctx.db, async (txClient) => {
           const res = await next({
             ...context,
@@ -107,7 +107,7 @@ function membershipHandler<
         });
       }
       case "update-request": {
-        customValidationMembership(context.request.body as Membership);
+        await customValidationMembership(context.request.body as Membership);
         const id = context.request.id;
         return db.serializable(context.ctx.db, async (txClient) => {
           const ctx = { ...context.ctx, db: txClient };

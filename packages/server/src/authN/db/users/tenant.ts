@@ -108,8 +108,6 @@ export default class TenantUserManagement implements UserManagement {
         scope: "tenant",
       };
       const user = await db.select("users", where).run(txnClient);
-      if (user.length < 1)
-        throw new OperationError(outcomeError("not-found", "User not found."));
       if (user.length > 1) {
         throw new OperationError(
           outcomeError(

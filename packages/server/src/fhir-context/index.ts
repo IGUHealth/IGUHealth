@@ -393,7 +393,7 @@ async function createFHIRClient(sources: RouterState["sources"]) {
     [
       validationMiddleware,
       capabilitiesMiddleware,
-      encryptionMiddleware(["OperationDefinition", "Membership"]),
+      encryptionMiddleware(["OperationDefinition"]),
       createAuthorizationMiddleWare<RouterState>(),
     ],
     sources,
