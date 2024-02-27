@@ -10,7 +10,7 @@ export default function validateResourceTypeMiddleware<State, CTX>(
       throw new OperationError(
         outcomeError(
           "not-supported",
-          `Operation level '${context.request.level}' is not supported in auth.`,
+          `Operation level '${context.request.level}' is not supported in this middleware.`,
         ),
       );
     }
@@ -18,7 +18,7 @@ export default function validateResourceTypeMiddleware<State, CTX>(
       throw new OperationError(
         outcomeError(
           "not-supported",
-          `Resource type '${context.request.resourceType}' is not supported in auth.`,
+          `Resource type '${context.request.resourceType}' is not supported in this middleware.`,
         ),
       );
     }

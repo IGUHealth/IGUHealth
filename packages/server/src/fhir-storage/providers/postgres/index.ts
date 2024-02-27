@@ -44,13 +44,15 @@ import {
 } from "../../utilities/search/parameters.js";
 import { fhirResponseToBundleEntry } from "../../utilities/bundle.js";
 import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
-import { asSystemCTX, FHIRServerCTX, TenantId } from "../../../fhir-context/types.js";
+import {
+  asSystemCTX,
+  FHIRServerCTX,
+  TenantId,
+} from "../../../fhir-context/types.js";
 import { param_types_supported } from "./constants.js";
 import { executeSearchQuery } from "./search/index.js";
 import { ParsedParameter } from "@iguhealth/client/url";
-import {
-  buildTransactionTopologicalGraph,
-} from "../../transactions.js";
+import { buildTransactionTopologicalGraph } from "../../transactions.js";
 import { validateResource } from "../../../fhir-operation-executors/providers/local/resource_validate.js";
 import {
   HistoryInstanceRequest,
@@ -419,26 +421,30 @@ async function createResource<CTX extends FHIRServerCTX>(
   initCTX: CTX,
   resource: Resource,
 ): Promise<Resource> {
-  return db.transaction(client, db.IsolationLevel.ReadCommitted, async (client) => {
-    const ctx = { ...initCTX, db: client };
-    const data: s.resources.Insertable = {
-      tenant: ctx.tenant,
-      request_method: "POST",
-      author: ctx.user.jwt.sub,
-      resource: resource as unknown as db.JSONObject,
-    };
-    // the <const> prevents generalization to string[]
-    const resourceCol = <const>["resource"];
-    type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
-    const res = await db.sql<s.resources.SQL, ResourceReturn[]>`
+  return db.transaction(
+    client,
+    db.IsolationLevel.ReadCommitted,
+    async (client) => {
+      const ctx = { ...initCTX, db: client };
+      const data: s.resources.Insertable = {
+        tenant: ctx.tenant,
+        request_method: "POST",
+        author: ctx.user.jwt.sub,
+        resource: resource as unknown as db.JSONObject,
+      };
+      // the <const> prevents generalization to string[]
+      const resourceCol = <const>["resource"];
+      type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
+      const res = await db.sql<s.resources.SQL, ResourceReturn[]>`
     INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
       data,
     )}) RETURNING ${db.cols(resourceCol)}
     `.run(client);
 
-    await indexResource(client, ctx, res[0].resource as unknown as Resource);
-    return res[0].resource as unknown as Resource;
-  })
+      await indexResource(client, ctx, res[0].resource as unknown as Resource);
+      return res[0].resource as unknown as Resource;
+    },
+  );
 }
 
 async function getResource(
@@ -492,7 +498,6 @@ function processHistoryParameters(
       ),
     );
   }
-
 
   if (_since?.value[0] && typeof _since?.value[0] === "string") {
     sqlParams["created_at"] = db.sql`${db.self} >= ${db.param(
@@ -577,39 +582,112 @@ async function patchResource<CTX extends FHIRServerCTX>(
   id: string,
   patches: Operation[],
 ): Promise<Resource> {
-  return db.transaction(client, db.IsolationLevel.Serializable, async (client) => {
-    const ctx = {...initCTX, db: client };
-    const existingResource = await getResource(client, ctx.tenant, resourceType, id);
-    try {
-      const newResource = jsonpatch.applyPatch(existingResource, patches)
-        .newDocument as Resource;
+  return db.transaction(
+    client,
+    db.IsolationLevel.Serializable,
+    async (client) => {
+      const ctx = { ...initCTX, db: client };
+      const existingResource = await getResource(
+        client,
+        ctx.tenant,
+        resourceType,
+        id,
+      );
+      try {
+        const newResource = jsonpatch.applyPatch(existingResource, patches)
+          .newDocument as Resource;
 
-      const outcome = await validateResource(ctx, resourceType, {
-        resource: newResource,
-      });
+        const outcome = await validateResource(ctx, resourceType, {
+          resource: newResource,
+        });
 
-      // Need to revaluate post application of patch to ensure that the resource is still valid.
-      if (
-        outcome.issue.filter(
-          (i) => i.severity === "error" || i.severity === "fatal",
-        ).length > 0
-      ) {
-        throw new OperationError(outcome);
+        // Need to revaluate post application of patch to ensure that the resource is still valid.
+        if (
+          outcome.issue.filter(
+            (i) => i.severity === "error" || i.severity === "fatal",
+          ).length > 0
+        ) {
+          throw new OperationError(outcome);
+        }
+
+        if (newResource.id !== existingResource.id) {
+          newResource.id = existingResource.id;
+        }
+
+        const data: s.resources.Insertable = {
+          tenant: ctx.tenant,
+          request_method: "PATCH",
+          author: ctx.user.jwt.sub,
+          resource: newResource as unknown as db.JSONObject,
+          prev_version_id: parseInt(existingResource.meta?.versionId as string),
+          patches: JSON.stringify(patches),
+        };
+
+        const resourceCol = <const>["resource"];
+        type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
+        const res = await db.sql<s.resources.SQL, ResourceReturn[]>`
+        INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
+          data,
+        )}) RETURNING ${db.cols(resourceCol)}`.run(client);
+
+        const patchedResource = res[0].resource as unknown as Resource;
+
+        await indexResource(client, ctx, patchedResource);
+        return patchedResource;
+      } catch (e) {
+        if (e instanceof OperationError) throw e;
+        else {
+          ctx.logger.error(e);
+          throw new OperationError(
+            outcomeError(
+              "structure",
+              `Patch could not be applied to the given resource '${resourceType}/${id}'`,
+            ),
+          );
+        }
       }
+    },
+  );
+}
 
-      if (
-        newResource.id !== existingResource.id
-      ) {
-        newResource.id = existingResource.id;
-      }
+async function updateResource<CTX extends FHIRServerCTX>(
+  client: db.Queryable,
+  initCTX: CTX,
+  resource: Resource,
+): Promise<Resource> {
+  return db.transaction(
+    client,
+    db.IsolationLevel.Serializable,
+    async (client) => {
+      const ctx = { ...initCTX, db: client };
+      if (!resource.id)
+        throw new OperationError(
+          outcomeError("invalid", "Resource id not found on resource"),
+        );
+
+      const existingResource = await getResource(
+        client,
+        ctx.tenant,
+        resource.resourceType,
+        resource.id,
+      );
+
+      if (!existingResource)
+        throw new OperationError(
+          outcomeError(
+            "not-found",
+            `'${resource.resourceType}' with id '${resource.id}' was not found`,
+          ),
+        );
 
       const data: s.resources.Insertable = {
         tenant: ctx.tenant,
-        request_method: "PATCH",
+        request_method: "PUT",
         author: ctx.user.jwt.sub,
-        resource: newResource as unknown as db.JSONObject,
+        resource: resource as unknown as db.JSONObject,
         prev_version_id: parseInt(existingResource.meta?.versionId as string),
-        patches: JSON.stringify(patches),
+        // [TODO] probably uneccessary to insert this and can instead derive in case of syncing.
+        patches: JSON.stringify([{ op: "replace", path: "", value: resource }]),
       };
 
       const resourceCol = <const>["resource"];
@@ -619,73 +697,11 @@ async function patchResource<CTX extends FHIRServerCTX>(
           data,
         )}) RETURNING ${db.cols(resourceCol)}`.run(client);
 
-      const patchedResource = res[0].resource as unknown as Resource;
-
-      await indexResource(client, ctx, patchedResource);
-      return patchedResource;
-    } catch (e) {
-      if (e instanceof OperationError) throw e;
-      else {
-        ctx.logger.error(e);
-        throw new OperationError(
-          outcomeError(
-            "structure",
-            `Patch could not be applied to the given resource '${resourceType}/${id}'`,
-          ),
-        );
-      }
-    }
-  });
-}
-
-async function updateResource<CTX extends FHIRServerCTX>(
-  client: db.Queryable,
-  initCTX: CTX,
-  resource: Resource,
-): Promise<Resource> {
-  return db.transaction(client, db.IsolationLevel.Serializable, async (client) => {
-    const ctx = {...initCTX, db: client };
-    if (!resource.id)
-      throw new OperationError(
-        outcomeError("invalid", "Resource id not found on resource"),
-      );
-
-    const existingResource = await getResource(
-      client,
-      ctx.tenant,
-      resource.resourceType,
-      resource.id,
-    );
-
-    if (!existingResource)
-      throw new OperationError(
-        outcomeError(
-          "not-found",
-          `'${resource.resourceType}' with id '${resource.id}' was not found`,
-        ),
-      );
-
-    const data: s.resources.Insertable = {
-      tenant: ctx.tenant,
-      request_method: "PUT",
-      author: ctx.user.jwt.sub,
-      resource: resource as unknown as db.JSONObject,
-      prev_version_id: parseInt(existingResource.meta?.versionId as string),
-      // [TODO] probably uneccessary to insert this and can instead derive in case of syncing.
-      patches: JSON.stringify([{ op: "replace", path: "", value: resource }]),
-    };
-
-    const resourceCol = <const>["resource"];
-    type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
-    const res = await db.sql<s.resources.SQL, ResourceReturn[]>`
-        INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
-          data,
-        )}) RETURNING ${db.cols(resourceCol)}`.run(client);
-
-    const updatedResource = res[0].resource as unknown as Resource;
-    await indexResource(client, ctx, updatedResource);
-    return updatedResource;
-  })
+      const updatedResource = res[0].resource as unknown as Resource;
+      await indexResource(client, ctx, updatedResource);
+      return updatedResource;
+    },
+  );
 }
 
 async function deleteResource<CTX extends FHIRServerCTX>(
@@ -694,38 +710,42 @@ async function deleteResource<CTX extends FHIRServerCTX>(
   resourceType: ResourceType,
   id: string,
 ) {
-  return db.transaction(client, db.IsolationLevel.RepeatableRead, async (client) => {
-    const ctx = {...initCTX, db: client};
+  return db.transaction(
+    client,
+    db.IsolationLevel.RepeatableRead,
+    async (client) => {
+      const ctx = { ...initCTX, db: client };
 
-    const resource = await getResource(client, ctx.tenant, resourceType, id);
-    if (!resource)
-      throw new OperationError(
-        outcomeError(
-          "not-found",
-          `'${resourceType}' with id '${id}' was not found`,
-        ),
-      );
+      const resource = await getResource(client, ctx.tenant, resourceType, id);
+      if (!resource)
+        throw new OperationError(
+          outcomeError(
+            "not-found",
+            `'${resourceType}' with id '${id}' was not found`,
+          ),
+        );
 
-    const data: s.resources.Insertable = {
-      tenant: ctx.tenant,
-      request_method: "DELETE",
-      author: ctx.user.jwt.sub,
-      resource: resource as unknown as db.JSONObject,
-      prev_version_id: parseInt(resource.meta?.versionId as string),
-      deleted: true,
-    };
+      const data: s.resources.Insertable = {
+        tenant: ctx.tenant,
+        request_method: "DELETE",
+        author: ctx.user.jwt.sub,
+        resource: resource as unknown as db.JSONObject,
+        prev_version_id: parseInt(resource.meta?.versionId as string),
+        deleted: true,
+      };
 
-    const resourceCol = <const>["resource"];
-    type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
+      const resourceCol = <const>["resource"];
+      type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
 
-    const deleteResource = await db.sql<s.resources.SQL, ResourceReturn[]>`
+      const deleteResource = await db.sql<s.resources.SQL, ResourceReturn[]>`
       INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
         data,
       )}) RETURNING ${db.cols(resourceCol)}`;
 
-    await deleteResource.run(client);
-    await removeIndices(client, ctx, resource);
-  });
+      await deleteResource.run(client);
+      await removeIndices(client, ctx, resource);
+    },
+  );
 }
 
 function createPostgresMiddleware<
@@ -805,9 +825,13 @@ function createPostgresMiddleware<
             {
               ...context.request.body,
               // If the id is allowed to be set, use the id from the request body, otherwise generate a new id.
-              id: context.request.allowIdSet ? context.request.body.id ?? nanoid() as id : nanoid() as id,
+              id: context.request.allowIdSet
+                ? context.request.body.id ?? (nanoid() as id)
+                : (nanoid() as id),
             },
           );
+
+          console.log("POSTGRES:SAVED:", savedResource.id, nanoid());
 
           return {
             request: context.request,
@@ -948,8 +972,10 @@ function createPostgresMiddleware<
 
         case "transaction-request": {
           let transactionBundle = context.request.body;
-          const { locationsToUpdate, order } =
-            buildTransactionTopologicalGraph(context.ctx, transactionBundle);
+          const { locationsToUpdate, order } = buildTransactionTopologicalGraph(
+            context.ctx,
+            transactionBundle,
+          );
           if (
             (transactionBundle.entry || []).length >
             context.state.transaction_entry_limit
@@ -969,94 +995,95 @@ function createPostgresMiddleware<
             ...new Array((transactionBundle.entry || []).length),
           ];
 
-          return db.transaction(context.ctx.db, db.IsolationLevel.RepeatableRead, async (client) => {
-            const ctx = { ...context.ctx, db: client };
-            for (const index of order) {
-              const entry = transactionBundle.entry?.[parseInt(index)];
-              if (!entry)
-                throw new OperationError(
-                  outcomeFatal(
-                    "exception",
-                    "invalid entry in transaction processing.",
-                  ),
-                );
+          return db.transaction(
+            context.ctx.db,
+            db.IsolationLevel.RepeatableRead,
+            async (client) => {
+              const ctx = { ...context.ctx, db: client };
+              for (const index of order) {
+                const entry = transactionBundle.entry?.[parseInt(index)];
+                if (!entry)
+                  throw new OperationError(
+                    outcomeFatal(
+                      "exception",
+                      "invalid entry in transaction processing.",
+                    ),
+                  );
 
-              if (!entry.request?.method) {
-                throw new OperationError(
-                  outcomeError(
-                    "invalid",
-                    `No request.method found at index '${index}'`,
-                  ),
-                );
+                if (!entry.request?.method) {
+                  throw new OperationError(
+                    outcomeError(
+                      "invalid",
+                      `No request.method found at index '${index}'`,
+                    ),
+                  );
+                }
+                if (!entry.request?.url) {
+                  throw new OperationError(
+                    outcomeError(
+                      "invalid",
+                      `No request.url found at index '${index}'`,
+                    ),
+                  );
+                }
+
+                const fhirRequest = httpRequestToFHIRRequest({
+                  url: entry.request?.url || "",
+                  method: entry.request?.method,
+                  body: entry.resource,
+                });
+
+                const fhirResponse = await ctx.client.request(ctx, fhirRequest);
+
+                const responseEntry = fhirResponseToBundleEntry(fhirResponse);
+                responseEntries[parseInt(index)] = responseEntry;
+                // Generate patches to update the transaction references.
+                const patches = entry.fullUrl
+                  ? (locationsToUpdate[entry.fullUrl] || []).map(
+                      (loc): Operation => {
+                        if (!responseEntry.response?.location)
+                          throw new OperationError(
+                            outcomeFatal(
+                              "exception",
+                              "response location not found during transaction processing",
+                            ),
+                          );
+                        return {
+                          path: `/${loc.join("/")}`,
+                          op: "replace",
+                          value: {
+                            reference: responseEntry.response?.location,
+                          },
+                        };
+                      },
+                    )
+                  : [];
+
+                // Update transaction bundle with applied references.
+                transactionBundle = jsonpatch.applyPatch(
+                  transactionBundle,
+                  patches,
+                ).newDocument;
               }
-              if (!entry.request?.url) {
-                throw new OperationError(
-                  outcomeError(
-                    "invalid",
-                    `No request.url found at index '${index}'`,
-                  ),
-                );
-              }
 
-              const fhirRequest = httpRequestToFHIRRequest({
-                url: entry.request?.url || "",
-                method: entry.request?.method,
-                body: entry.resource,
-              });
+              const transactionResponse: Bundle = {
+                resourceType: "Bundle",
+                type: "transaction-response" as code,
+                entry: responseEntries,
+              };
 
-              const fhirResponse = await ctx.client.request(
-                ctx,
-                fhirRequest,
-              );
-
-              const responseEntry = fhirResponseToBundleEntry(fhirResponse);
-              responseEntries[parseInt(index)] = responseEntry;
-              // Generate patches to update the transaction references.
-              const patches = entry.fullUrl
-                ? (locationsToUpdate[entry.fullUrl] || []).map(
-                    (loc): Operation => {
-                      if (!responseEntry.response?.location)
-                        throw new OperationError(
-                          outcomeFatal(
-                            "exception",
-                            "response location not found during transaction processing",
-                          ),
-                        );
-                      return {
-                        path: `/${loc.join("/")}`,
-                        op: "replace",
-                        value: {
-                          reference: responseEntry.response?.location,
-                        },
-                      };
-                    },
-                  )
-                : [];
-
-              // Update transaction bundle with applied references.
-              transactionBundle = jsonpatch.applyPatch(
-                transactionBundle,
-                patches,
-              ).newDocument;
-            }
-
-            const transactionResponse: Bundle = {
-              resourceType: "Bundle",
-              type: "transaction-response" as code,
-              entry: responseEntries,
-            };
-
-            return {
-              state: context.state,
-              ctx: context.ctx,
-              request: context.request,
-              response: {
-                type: "transaction-response",
-                level: "system",
-                body: transactionResponse,
-              },
-            };
-          });
+              return {
+                state: context.state,
+                ctx: context.ctx,
+                request: context.request,
+                response: {
+                  type: "transaction-response",
+                  level: "system",
+                  body: transactionResponse,
+                },
+              };
+            },
+          );
         }
         default: {
           throw new OperationError(
@@ -1067,7 +1094,7 @@ function createPostgresMiddleware<
           );
         }
       }
-    }
+    },
   ]);
 }
 
@@ -1076,8 +1103,8 @@ export function createPostgresClient<CTX extends FHIRServerCTX>(
     transaction_entry_limit: 20,
   },
 ): FHIRClientAsync<CTX> {
-  return new AsynchronousClient<
-    { transaction_entry_limit: number },
-    CTX
-  >({ transaction_entry_limit }, createPostgresMiddleware());
+  return new AsynchronousClient<{ transaction_entry_limit: number }, CTX>(
+    { transaction_entry_limit },
+    createPostgresMiddleware(),
+  );
 }

@@ -2,12 +2,17 @@ import * as db from "zapatos/db";
 
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
-import { FHIRResponse } from "@iguhealth/client/lib/types";
+import {
+  CreateResponse,
+  FHIRRequest,
+  UpdateResponse,
+} from "@iguhealth/client/lib/types";
 import {
   MiddlewareAsync,
+  MiddlewareAsyncChain,
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
-import { Membership, ResourceType, id } from "@iguhealth/fhir-types/r4/types";
+import { Membership, ResourceType } from "@iguhealth/fhir-types/r4/types";
 import {
   OperationError,
   outcomeError,
@@ -15,10 +20,20 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../fhir-context/types.js";
+import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 import validateResourceTypeMiddleware from "../../middleware/validate-resourcetype.js";
 import { createPostgresClient } from "../postgres/index.js";
+import TenantUserManagement from "../../../authN/db/users/tenant.js";
+import { membershipToUser } from "../../../authN/db/users/utilities.js";
 
 export const AUTH_RESOURCETYPES: ResourceType[] = ["Membership"];
+export const AUTH_METHODS_ALLOWED: FHIRRequest["type"][] = [
+  "create-request",
+  "delete-request",
+  "read-request",
+  "search-request",
+  "update-request",
+];
 
 async function customValidationMembership(
   membership: Membership,
@@ -30,6 +45,125 @@ async function customValidationMembership(
   }
 }
 
+function membershipHandler<
+  State extends {
+    fhirDB: ReturnType<typeof createPostgresClient>;
+  },
+  CTX extends FHIRServerCTX,
+>(): MiddlewareAsyncChain<State, CTX> {
+  return async (context, next) => {
+    const tenantUserManagement = new TenantUserManagement(context.ctx.tenant);
+    // Skip and run other middleware if not membership.
+    if (
+      !("resourceType" in context.request) ||
+      "Membership" !== context.request.resourceType
+    ) {
+      return next(context);
+    }
+
+    switch (context.request.type) {
+      case "create-request": {
+        await customValidationMembership(context.request.body as Membership);
+        return db.serializable(context.ctx.db, async (txClient) => {
+          const res = await next({
+            ...context,
+            ctx: { ...context.ctx, db: txClient },
+          });
+
+          const membership = (res.response as CreateResponse)?.body;
+          if (membership.resourceType !== "Membership") {
+            throw new OperationError(
+              outcomeError("invariant", "Invalid resource type."),
+            );
+          }
+
+          await tenantUserManagement.create(
+            txClient,
+            membershipToUser(membership),
+          );
+
+          return res;
+        });
+      }
+      case "delete-request": {
+        const id = context.request.id;
+        return db.serializable(context.ctx.db, async (txClient) => {
+          const membership = await context.state.fhirDB.read(
+            context.ctx,
+            "Membership",
+            id,
+          );
+          const versionId = membership?.meta?.versionId;
+          if (!versionId)
+            throw new OperationError(
+              outcomeFatal("not-found", "Membership not found."),
+            );
+
+          await tenantUserManagement.delete(txClient, {
+            fhir_user_versionid: parseInt(versionId),
+          });
+
+          return next({ ...context, ctx: { ...context.ctx, db: txClient } });
+        });
+      }
+      case "update-request": {
+        await customValidationMembership(context.request.body as Membership);
+        const id = context.request.id;
+        return db.serializable(context.ctx.db, async (txClient) => {
+          const ctx = { ...context.ctx, db: txClient };
+          const existingMembership = await context.state.fhirDB.read(
+            ctx,
+            "Membership",
+            id,
+          );
+          if (!existingMembership?.meta?.versionId)
+            throw new OperationError(
+              outcomeFatal("not-found", "Membership not found."),
+            );
+
+          const existingUser = await db
+            .selectOne("users", {
+              fhir_user_versionid: parseInt(existingMembership.meta.versionId),
+            })
+            .run(txClient);
+
+          if (!existingUser)
+            throw new OperationError(
+              outcomeFatal("not-found", "User not found."),
+            );
+
+          const res = await next({ ...context, ctx });
+          if (!(res.response as UpdateResponse)?.body)
+            throw new OperationError(
+              outcomeFatal("invariant", "Response body not found."),
+            );
+
+          tenantUserManagement.update(
+            txClient,
+            existingUser.id,
+            membershipToUser(
+              (res.response as UpdateResponse)?.body as Membership,
+            ),
+          );
+
+          return res;
+        });
+      }
+      case "read-request": {
+        return next(context);
+      }
+      case "search-request": {
+        return next(context);
+      }
+      default: {
+        throw new OperationError(
+          outcomeFatal("invariant", "Invalid request type."),
+        );
+      }
+    }
+  };
+}
+
 function createAuthMiddleware<
   State extends {
     fhirDB: ReturnType<typeof createPostgresClient>;
@@ -38,147 +172,16 @@ function createAuthMiddleware<
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
     validateResourceTypeMiddleware(AUTH_RESOURCETYPES),
+    validateOperationsAllowed(AUTH_METHODS_ALLOWED),
+    membershipHandler(),
     async (context) => {
-      if (context.request.level === "system") {
-        throw new OperationError(
-          outcomeError(
-            "not-supported",
-            `Operation level '${context.request.level}' is not supported in auth.`,
-          ),
-        );
-      }
-      switch (context.request.type) {
-        // Mutations
-        case "create-request": {
-          switch (context.request.resourceType) {
-            case "Membership": {
-              const membership = context.request.body as Membership;
-              return {
-                ...context,
-                response: await db.serializable(
-                  context.ctx.db,
-                  async (client) => {
-                    customValidationMembership(membership);
-                    const ctx = { ...context.ctx, db: client };
-                    const email = membership.email;
-
-                    const response = await db
-                      .insert("users", {
-                        email,
-                        tenant: context.ctx.tenant,
-                        first_name: membership.name?.given?.[0],
-                        last_name: membership.name?.family,
-                        role: membership.role === "admin" ? "admin" : "member",
-                      })
-                      .run(client);
-                    const resource = await context.state.fhirDB.create(
-                      ctx,
-                      {
-                        ...membership,
-                        id: response.id as id,
-                      },
-                      true,
-                    );
-
-                    return {
-                      level: "type",
-                      type: "create-response",
-                      resourceType: "Membership",
-                      body: resource,
-                    };
-                  },
-                ),
-              };
-            }
-            default:
-              throw new OperationError(
-                outcomeFatal("not-supported", "invalid resourcetype"),
-              );
-          }
-        }
-        case "update-request": {
-          throw new Error("Method not implemented.");
-        }
-        case "patch-request": {
-          throw new Error("Method not implemented.");
-        }
-        case "delete-request": {
-          const id = context.request.id;
-
-          switch (context.request.resourceType) {
-            case "Membership": {
-              return {
-                ...context,
-                response: await db.serializable(
-                  context.ctx.db,
-                  async (client) => {
-                    const ctx = { ...context.ctx, db: client };
-                    await db
-                      .deletes("users", { id, tenant: context.ctx.tenant })
-                      .run(client);
-                    await context.state.fhirDB.delete(ctx, "Membership", id);
-                    return {
-                      type: "delete-response",
-                      resourceType: "Membership",
-                      id,
-                    } as FHIRResponse;
-                  },
-                ),
-              };
-            }
-            default: {
-              throw new OperationError(
-                outcomeFatal("not-supported", "invalid resourcetype"),
-              );
-            }
-          }
-        }
-
-        case "read-request": {
-          return {
-            ...context,
-            response: await context.state.fhirDB.request(context.ctx, {
-              type: "read-request",
-              level: "instance",
-              resourceType: "Membership",
-              id: context.request.id,
-            }),
-          };
-        }
-        case "vread-request": {
-          return {
-            ...context,
-            response: await context.state.fhirDB.request(context.ctx, {
-              type: "vread-request",
-              level: "instance",
-              resourceType: "Membership",
-              id: context.request.id,
-              versionId: context.request.versionId,
-            }),
-          };
-        }
-
-        case "search-request": {
-          return {
-            ...context,
-            response: await context.state.fhirDB.request(context.ctx, {
-              type: "search-request",
-              level: "type",
-              resourceType: context.request.resourceType,
-              parameters: context.request.parameters,
-            }),
-          };
-        }
-
-        default: {
-          throw new OperationError(
-            outcomeError(
-              "not-supported",
-              `Operation '${context.request.type}' is not supported in auth.`,
-            ),
-          );
-        }
-      }
+      return {
+        ...context,
+        response: await context.state.fhirDB.request(
+          context.ctx,
+          context.request,
+        ),
+      };
     },
   ]);
 }
