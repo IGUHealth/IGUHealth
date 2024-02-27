@@ -89,6 +89,8 @@ export default class TenantUserManagement implements UserManagement {
           "users",
           {
             ...update,
+            tenant: this.tenant,
+            scope: "tenant",
             email_verified:
               update.email !== currentUser.email
                 ? false
