@@ -47,10 +47,11 @@ import StructureDefinitionSnapshotInvoke from "../fhir-operation-executors/provi
 import ValueSetExpandInvoke from "../fhir-operation-executors/providers/local/terminology/expand.js";
 import CodeSystemLookupInvoke from "../fhir-operation-executors/providers/local/terminology/lookup.js";
 import ValueSetValidateInvoke from "../fhir-operation-executors/providers/local/terminology/validate.js";
-// import {
-//   AUTH_RESOURCETYPES,
-//   createAuthStorageClient,
-// } from "../fhir-storage/providers/auth-storage/index.js";
+import {
+  AUTH_METHODS_ALLOWED,
+  AUTH_RESOURCETYPES,
+  createAuthStorageClient,
+} from "../fhir-storage/providers/auth-storage/index.js";
 import MemoryDatabaseAsync from "../fhir-storage/providers/memory/async.js";
 import { InternalData } from "../fhir-storage/providers/memory/types.js";
 import { createPostgresClient } from "../fhir-storage/providers/postgres/index.js";
@@ -60,8 +61,8 @@ import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with
 import RedisLock from "../synchronization/redis.lock.js";
 import { FHIRServerCTX, KoaContext, TenantId, asSystemCTX } from "./types.js";
 
-const SPECIAL_TYPES: { MEMORY: ResourceType[]; } = {
-  // AUTH: AUTH_RESOURCETYPES,
+const SPECIAL_TYPES: { MEMORY: ResourceType[]; AUTH: ResourceType[] } = {
+  AUTH: AUTH_RESOURCETYPES,
   MEMORY: ["StructureDefinition", "SearchParameter", "ValueSet", "CodeSystem"],
 };
 const ALL_SPECIAL_TYPES = Object.values(SPECIAL_TYPES).flatMap((v) => v);
@@ -475,6 +476,11 @@ export async function createFHIRServices(
       resourcesSupported: SPECIAL_TYPES.MEMORY,
       interactionsSupported: ["read-request", "search-request"],
       source: memDBAsync,
+    },
+    {
+      resourcesSupported: SPECIAL_TYPES.AUTH,
+      interactionsSupported: AUTH_METHODS_ALLOWED,
+      source: createAuthStorageClient(pgFHIR),
     },
     {
       resourcesSupported: DB_TYPES,

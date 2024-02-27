@@ -10,10 +10,10 @@ import {
 
 import * as views from "../../../views/index.js";
 import * as dbCode from "../../db/code.js";
-import * as dbUser from "../../db/user.js";
 import { ROUTES } from "../constants.js";
 import type { ManagementRouteHandler } from "../index.js";
 import { validateEmail } from "../utilities.js";
+import GlobalUserManagement from "../../db/users/global.js";
 
 export const passwordResetGET: ManagementRouteHandler = async (ctx) => {
   const queryCode = ctx.request.query.code;
@@ -160,6 +160,7 @@ export const passwordResetInitiateGet: ManagementRouteHandler = async (ctx) => {
 export const passwordResetInitiatePOST: ManagementRouteHandler = async (
   ctx,
 ) => {
+  const management = new GlobalUserManagement();
   const body = ctx.request.body as
     | { email?: string; password?: string }
     | undefined;
@@ -178,9 +179,18 @@ export const passwordResetInitiatePOST: ManagementRouteHandler = async (
     );
   }
 
-  let user = await dbUser.findUserByEmail(ctx.postgres, body.email);
+  const usersWithEmail = await management.search(ctx.postgres, {
+    email: body.email,
+  });
+  if (usersWithEmail.length > 1) {
+    throw new OperationError(
+      outcomeError("invalid", "Multiple users found with the same email."),
+    );
+  }
+
+  let user = usersWithEmail[0];
   if (!user) {
-    user = await dbUser.createRootUser(ctx.postgres, body.email);
+    user = await management.create(ctx.postgres, { email: body.email });
   }
 
   if (!process.env.EMAIL_FROM) {

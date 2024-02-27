@@ -7,10 +7,12 @@ import * as db from "zapatos/db";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { KoaContext } from "../../fhir-context/types.js";
-import * as dbUser from "../db/user.js";
 import { createValidateInjectOIDCParameters } from "../oidc/middleware/parameter_inject.js";
 import { ROUTES } from "./constants.js";
 import * as routes from "./routes/index.js";
+import { user_scope } from "zapatos/schema";
+import GlobalUserManagement from "../db/users/global.js";
+import { User } from "../db/users/types.js";
 
 export type ManagementRouteHandler = Parameters<
   ReturnType<typeof createManagementRouter>["all"]
@@ -31,6 +33,8 @@ export function createManagementRouter(prefix: string, { client }: Options) {
     prefix,
   });
 
+  const userManagement = new GlobalUserManagement();
+
   koaPassport.use(
     new localStrategy.Strategy(
       {
@@ -39,13 +43,15 @@ export function createManagementRouter(prefix: string, { client }: Options) {
       },
       function (username, password, done) {
         try {
-          dbUser.login(client, "global", username, password).then((user) => {
-            if (user) {
-              done(null, user);
-            } else {
-              done(null, false);
-            }
-          });
+          userManagement
+            .login(client, "password", { email: username, password })
+            .then((user) => {
+              if (user) {
+                done(null, user);
+              } else {
+                done(null, false);
+              }
+            });
         } catch (e) {
           throw new OperationError(
             outcomeFatal("unknown", "Internal Server Error could not login."),
@@ -55,18 +61,21 @@ export function createManagementRouter(prefix: string, { client }: Options) {
     ),
   );
 
-  koaPassport.serializeUser((user, done) => {
-    done(null, (user as unknown as dbUser.User).email);
+  koaPassport.serializeUser((euser, done) => {
+    const user = euser as unknown as User;
+    done(null, { id: user.id });
   });
 
-  koaPassport.deserializeUser(async (email: string, done) => {
-    try {
-      const user = await dbUser.findUserByEmail(client, email);
-      done(null, user);
-    } catch (err) {
-      done(err);
-    }
-  });
+  koaPassport.deserializeUser(
+    async (info: { scope: user_scope; id: string; tenant: string }, done) => {
+      try {
+        const user = await userManagement.get(client, info.id);
+        done(null, user);
+      } catch (err) {
+        done(err);
+      }
+    },
+  );
 
   managementRouter.use(koaPassport.initialize());
   managementRouter.use(koaPassport.session());
