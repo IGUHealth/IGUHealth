@@ -116,7 +116,7 @@ function membershipHandler<
             "Membership",
             id,
           );
-          if (!existingMembership || !existingMembership.meta?.versionId)
+          if (!existingMembership?.meta?.versionId)
             throw new OperationError(
               outcomeFatal("not-found", "Membership not found."),
             );

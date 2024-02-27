@@ -1,7 +1,6 @@
 import * as s from "zapatos/schema";
 
 import { Membership, code, id } from "@iguhealth/fhir-types/lib/r4/types";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 export function userToMembership(user: s.users.JSONSelectable): Membership {
   return {
