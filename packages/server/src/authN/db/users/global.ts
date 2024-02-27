@@ -13,7 +13,6 @@ export default class GlobalUserManagement implements UserManagement {
     parameters: LoginParameters[T],
   ): Promise<User> {
     switch (type) {
-      // [TODO] handle when auth is set on global user.
       case "password": {
         const where: s.users.Whereable = {
           scope: "global",
