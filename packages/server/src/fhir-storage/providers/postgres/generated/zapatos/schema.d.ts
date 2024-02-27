@@ -42,41 +42,17 @@ declare module 'zapatos/schema' {
     export type Table = 'authorization_code';
     export interface Selectable {
       /**
-      * **authorization_code.id**
-      * - `uuid` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
-      */
-      id: string;
-      /**
-      * **authorization_code.type**
-      * - `code_type` in database
-      * - `NOT NULL`, no default
-      */
-      type: code_type;
-      /**
-      * **authorization_code.code**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      code: string;
-      /**
-      * **authorization_code.user_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      user_id: string;
-      /**
       * **authorization_code.client_id**
       * - `text` in database
       * - Nullable, no default
       */
       client_id: string | null;
       /**
-      * **authorization_code.tenant**
+      * **authorization_code.code**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      tenant: string | null;
+      code: string;
       /**
       * **authorization_code.created_at**
       * - `timestamptz` in database
@@ -89,8 +65,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       expires_in: string;
-    }
-    export interface JSONSelectable {
       /**
       * **authorization_code.id**
       * - `uuid` in database
@@ -98,23 +72,25 @@ declare module 'zapatos/schema' {
       */
       id: string;
       /**
+      * **authorization_code.tenant**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tenant: string | null;
+      /**
       * **authorization_code.type**
       * - `code_type` in database
       * - `NOT NULL`, no default
       */
       type: code_type;
       /**
-      * **authorization_code.code**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      code: string;
-      /**
       * **authorization_code.user_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       user_id: string;
+    }
+    export interface JSONSelectable {
       /**
       * **authorization_code.client_id**
       * - `text` in database
@@ -122,11 +98,11 @@ declare module 'zapatos/schema' {
       */
       client_id: string | null;
       /**
-      * **authorization_code.tenant**
+      * **authorization_code.code**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      tenant: string | null;
+      code: string;
       /**
       * **authorization_code.created_at**
       * - `timestamptz` in database
@@ -139,32 +115,32 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       expires_in: string;
-    }
-    export interface Whereable {
       /**
       * **authorization_code.id**
       * - `uuid` in database
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
-      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      id: string;
+      /**
+      * **authorization_code.tenant**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tenant: string | null;
       /**
       * **authorization_code.type**
       * - `code_type` in database
       * - `NOT NULL`, no default
       */
-      type?: code_type | db.Parameter<code_type> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, code_type | db.Parameter<code_type> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **authorization_code.code**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      type: code_type;
       /**
       * **authorization_code.user_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      user_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      user_id: string;
+    }
+    export interface Whereable {
       /**
       * **authorization_code.client_id**
       * - `text` in database
@@ -172,11 +148,11 @@ declare module 'zapatos/schema' {
       */
       client_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **authorization_code.tenant**
+      * **authorization_code.code**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **authorization_code.created_at**
       * - `timestamptz` in database
@@ -189,32 +165,32 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       expires_in?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-    }
-    export interface Insertable {
       /**
       * **authorization_code.id**
       * - `uuid` in database
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
-      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **authorization_code.tenant**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **authorization_code.type**
       * - `code_type` in database
       * - `NOT NULL`, no default
       */
-      type: code_type | db.Parameter<code_type> | db.SQLFragment;
-      /**
-      * **authorization_code.code**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      code: string | db.Parameter<string> | db.SQLFragment;
+      type?: code_type | db.Parameter<code_type> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, code_type | db.Parameter<code_type> | db.SQLFragment | db.ParentColumn>;
       /**
       * **authorization_code.user_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      user_id: string | db.Parameter<string> | db.SQLFragment;
+      user_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
       /**
       * **authorization_code.client_id**
       * - `text` in database
@@ -222,11 +198,11 @@ declare module 'zapatos/schema' {
       */
       client_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **authorization_code.tenant**
+      * **authorization_code.code**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      tenant?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      code: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **authorization_code.created_at**
       * - `timestamptz` in database
@@ -239,32 +215,32 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       expires_in: string | db.Parameter<string> | db.SQLFragment;
-    }
-    export interface Updatable {
       /**
       * **authorization_code.id**
       * - `uuid` in database
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
-      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
+      * **authorization_code.tenant**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tenant?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **authorization_code.type**
       * - `code_type` in database
       * - `NOT NULL`, no default
       */
-      type?: code_type | db.Parameter<code_type> | db.SQLFragment | db.SQLFragment<any, code_type | db.Parameter<code_type> | db.SQLFragment>;
-      /**
-      * **authorization_code.code**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      code?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      type: code_type | db.Parameter<code_type> | db.SQLFragment;
       /**
       * **authorization_code.user_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      user_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      user_id: string | db.Parameter<string> | db.SQLFragment;
+    }
+    export interface Updatable {
       /**
       * **authorization_code.client_id**
       * - `text` in database
@@ -272,11 +248,11 @@ declare module 'zapatos/schema' {
       */
       client_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **authorization_code.tenant**
+      * **authorization_code.code**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      tenant?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      code?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **authorization_code.created_at**
       * - `timestamptz` in database
@@ -289,6 +265,30 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       expires_in?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **authorization_code.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `gen_random_uuid()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **authorization_code.tenant**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      tenant?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **authorization_code.type**
+      * - `code_type` in database
+      * - `NOT NULL`, no default
+      */
+      type?: code_type | db.Parameter<code_type> | db.SQLFragment | db.SQLFragment<any, code_type | db.Parameter<code_type> | db.SQLFragment>;
+      /**
+      * **authorization_code.user_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      user_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
     export type UniqueIndex = 'authorization_code_pkey';
     export type Column = keyof Selectable;
@@ -305,47 +305,11 @@ declare module 'zapatos/schema' {
     export type Table = 'date_idx';
     export interface Selectable {
       /**
-      * **date_idx.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('date_idx_id_seq'::regclass)`
-      */
-      id: number;
-      /**
-      * **date_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string;
-      /**
-      * **date_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string;
-      /**
-      * **date_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id: number;
-      /**
-      * **date_idx.parameter_name**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      parameter_name: string;
-      /**
-      * **date_idx.parameter_url**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      parameter_url: string;
-      /**
-      * **date_idx.start_date**
+      * **date_idx.created_at**
       * - `timestamptz` in database
-      * - `NOT NULL`, no default
+      * - `NOT NULL`, default: `now()`
       */
-      start_date: Date;
+      created_at: Date;
       /**
       * **date_idx.end_date**
       * - `timestamptz` in database
@@ -353,43 +317,11 @@ declare module 'zapatos/schema' {
       */
       end_date: Date;
       /**
-      * **date_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at: Date;
-      /**
-      * **date_idx.resource_type**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      resource_type: string;
-    }
-    export interface JSONSelectable {
-      /**
       * **date_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('date_idx_id_seq'::regclass)`
       */
       id: number;
-      /**
-      * **date_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string;
-      /**
-      * **date_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string;
-      /**
-      * **date_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id: number;
       /**
       * **date_idx.parameter_name**
       * - `text` in database
@@ -403,17 +335,37 @@ declare module 'zapatos/schema' {
       */
       parameter_url: string;
       /**
+      * **date_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id: string;
+      /**
+      * **date_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id: number;
+      /**
+      * **date_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type: string;
+      /**
       * **date_idx.start_date**
       * - `timestamptz` in database
       * - `NOT NULL`, no default
       */
-      start_date: db.TimestampTzString;
+      start_date: Date;
       /**
-      * **date_idx.end_date**
-      * - `timestamptz` in database
+      * **date_idx.tenant**
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      end_date: db.TimestampTzString;
+      tenant: string;
+    }
+    export interface JSONSelectable {
       /**
       * **date_idx.created_at**
       * - `timestamptz` in database
@@ -421,37 +373,79 @@ declare module 'zapatos/schema' {
       */
       created_at: db.TimestampTzString;
       /**
+      * **date_idx.end_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, no default
+      */
+      end_date: db.TimestampTzString;
+      /**
+      * **date_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('date_idx_id_seq'::regclass)`
+      */
+      id: number;
+      /**
+      * **date_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name: string;
+      /**
+      * **date_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url: string;
+      /**
+      * **date_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id: string;
+      /**
+      * **date_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id: number;
+      /**
       * **date_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type: string;
+      /**
+      * **date_idx.start_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, no default
+      */
+      start_date: db.TimestampTzString;
+      /**
+      * **date_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string;
     }
     export interface Whereable {
+      /**
+      * **date_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **date_idx.end_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, no default
+      */
+      end_date?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
       * **date_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('date_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **date_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **date_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **date_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **date_idx.parameter_name**
       * - `text` in database
@@ -465,55 +459,55 @@ declare module 'zapatos/schema' {
       */
       parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **date_idx.start_date**
-      * - `timestamptz` in database
+      * **date_idx.r_id**
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      start_date?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **date_idx.end_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, no default
+      * **date_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
       */
-      end_date?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **date_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **date_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **date_idx.start_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, no default
+      */
+      start_date?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **date_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
+      /**
+      * **date_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **date_idx.end_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, no default
+      */
+      end_date: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment;
       /**
       * **date_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('date_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
-      /**
-      * **date_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **date_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **date_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
       * **date_idx.parameter_name**
       * - `text` in database
@@ -527,55 +521,55 @@ declare module 'zapatos/schema' {
       */
       parameter_url: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **date_idx.start_date**
-      * - `timestamptz` in database
+      * **date_idx.r_id**
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      start_date: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment;
+      r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **date_idx.end_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, no default
+      * **date_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
       */
-      end_date: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment;
-      /**
-      * **date_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
       * **date_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **date_idx.start_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, no default
+      */
+      start_date: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment;
+      /**
+      * **date_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **date_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **date_idx.end_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, no default
+      */
+      end_date?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment>;
       /**
       * **date_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('date_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **date_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **date_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **date_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
       * **date_idx.parameter_name**
       * - `text` in database
@@ -589,29 +583,35 @@ declare module 'zapatos/schema' {
       */
       parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **date_idx.start_date**
-      * - `timestamptz` in database
+      * **date_idx.r_id**
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      start_date?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment>;
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **date_idx.end_date**
-      * - `timestamptz` in database
-      * - `NOT NULL`, no default
+      * **date_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('date_idx_r_version_id_seq'::regclass)`
       */
-      end_date?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment>;
-      /**
-      * **date_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
       * **date_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **date_idx.start_date**
+      * - `timestamptz` in database
+      * - `NOT NULL`, no default
+      */
+      start_date?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment>;
+      /**
+      * **date_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
     export type UniqueIndex = 'date_idx_pkey';
     export type Column = keyof Selectable;
@@ -747,17 +747,17 @@ declare module 'zapatos/schema' {
       */
       key: string;
       /**
-      * **migrations_state.value**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      value: string;
-      /**
       * **migrations_state.run_on**
       * - `timestamp` in database
       * - `NOT NULL`, no default
       */
       run_on: Date;
+      /**
+      * **migrations_state.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value: string;
     }
     export interface JSONSelectable {
       /**
@@ -767,17 +767,17 @@ declare module 'zapatos/schema' {
       */
       key: string;
       /**
-      * **migrations_state.value**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      value: string;
-      /**
       * **migrations_state.run_on**
       * - `timestamp` in database
       * - `NOT NULL`, no default
       */
       run_on: db.TimestampString;
+      /**
+      * **migrations_state.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value: string;
     }
     export interface Whereable {
       /**
@@ -787,17 +787,17 @@ declare module 'zapatos/schema' {
       */
       key?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **migrations_state.value**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **migrations_state.run_on**
       * - `timestamp` in database
       * - `NOT NULL`, no default
       */
       run_on?: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **migrations_state.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -807,17 +807,17 @@ declare module 'zapatos/schema' {
       */
       key: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **migrations_state.value**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      value: string | db.Parameter<string> | db.SQLFragment;
-      /**
       * **migrations_state.run_on**
       * - `timestamp` in database
       * - `NOT NULL`, no default
       */
       run_on: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment;
+      /**
+      * **migrations_state.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -827,17 +827,17 @@ declare module 'zapatos/schema' {
       */
       key?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **migrations_state.value**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      value?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
       * **migrations_state.run_on**
       * - `timestamp` in database
       * - `NOT NULL`, no default
       */
       run_on?: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.SQLFragment<any, (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment>;
+      /**
+      * **migrations_state.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
     export type UniqueIndex = 'migrations_state_pkey';
     export type Column = keyof Selectable;
@@ -854,85 +854,17 @@ declare module 'zapatos/schema' {
     export type Table = 'number_idx';
     export interface Selectable {
       /**
-      * **number_idx.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('number_idx_id_seq'::regclass)`
-      */
-      id: number;
-      /**
-      * **number_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string;
-      /**
-      * **number_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string;
-      /**
-      * **number_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id: number;
-      /**
-      * **number_idx.parameter_name**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      parameter_name: string;
-      /**
-      * **number_idx.parameter_url**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      parameter_url: string;
-      /**
-      * **number_idx.value**
-      * - `numeric` in database
-      * - `NOT NULL`, no default
-      */
-      value: db.NumericString;
-      /**
       * **number_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
       */
       created_at: Date;
       /**
-      * **number_idx.resource_type**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      resource_type: string;
-    }
-    export interface JSONSelectable {
-      /**
       * **number_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('number_idx_id_seq'::regclass)`
       */
       id: number;
-      /**
-      * **number_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string;
-      /**
-      * **number_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string;
-      /**
-      * **number_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id: number;
       /**
       * **number_idx.parameter_name**
       * - `text` in database
@@ -946,11 +878,37 @@ declare module 'zapatos/schema' {
       */
       parameter_url: string;
       /**
+      * **number_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id: string;
+      /**
+      * **number_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id: number;
+      /**
+      * **number_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type: string;
+      /**
+      * **number_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string;
+      /**
       * **number_idx.value**
       * - `numeric` in database
       * - `NOT NULL`, no default
       */
-      value: number;
+      value: db.NumericString;
+    }
+    export interface JSONSelectable {
       /**
       * **number_idx.created_at**
       * - `timestamptz` in database
@@ -958,37 +916,67 @@ declare module 'zapatos/schema' {
       */
       created_at: db.TimestampTzString;
       /**
+      * **number_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('number_idx_id_seq'::regclass)`
+      */
+      id: number;
+      /**
+      * **number_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name: string;
+      /**
+      * **number_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url: string;
+      /**
+      * **number_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id: string;
+      /**
+      * **number_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id: number;
+      /**
       * **number_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type: string;
+      /**
+      * **number_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string;
+      /**
+      * **number_idx.value**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      value: number;
     }
     export interface Whereable {
+      /**
+      * **number_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
       * **number_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('number_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **number_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **number_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **number_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **number_idx.parameter_name**
       * - `text` in database
@@ -1002,49 +990,49 @@ declare module 'zapatos/schema' {
       */
       parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **number_idx.value**
-      * - `numeric` in database
+      * **number_idx.r_id**
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn>;
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **number_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
+      * **number_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
       */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **number_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **number_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **number_idx.value**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
+      /**
+      * **number_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
       * **number_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('number_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
-      /**
-      * **number_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **number_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **number_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
       * **number_idx.parameter_name**
       * - `text` in database
@@ -1058,49 +1046,49 @@ declare module 'zapatos/schema' {
       */
       parameter_url: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **number_idx.value**
-      * - `numeric` in database
+      * **number_idx.r_id**
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      value: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment;
+      r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **number_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
+      * **number_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
       */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
       * **number_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **number_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **number_idx.value**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      value: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **number_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
       * **number_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('number_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **number_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **number_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **number_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
       * **number_idx.parameter_name**
       * - `text` in database
@@ -1114,23 +1102,35 @@ declare module 'zapatos/schema' {
       */
       parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **number_idx.value**
-      * - `numeric` in database
+      * **number_idx.r_id**
+      * - `text` in database
       * - `NOT NULL`, no default
       */
-      value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment>;
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **number_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
+      * **number_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('number_idx_r_version_id_seq'::regclass)`
       */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
       * **number_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **number_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **number_idx.value**
+      * - `numeric` in database
+      * - `NOT NULL`, no default
+      */
+      value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment>;
     }
     export type UniqueIndex = 'number_idx_pkey' | 'number_idx_unique';
     export type Column = keyof Selectable;
@@ -1147,59 +1147,23 @@ declare module 'zapatos/schema' {
     export type Table = 'quantity_idx';
     export interface Selectable {
       /**
-      * **quantity_idx.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('quantity_idx_id_seq'::regclass)`
+      * **quantity_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
       */
-      id: number;
+      created_at: Date;
       /**
-      * **quantity_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string;
-      /**
-      * **quantity_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string;
-      /**
-      * **quantity_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id: number;
-      /**
-      * **quantity_idx.parameter_name**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      parameter_name: string;
-      /**
-      * **quantity_idx.parameter_url**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      parameter_url: string;
-      /**
-      * **quantity_idx.start_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      start_value: db.NumericString | null;
-      /**
-      * **quantity_idx.start_system**
+      * **quantity_idx.end_code**
       * - `text` in database
       * - Nullable, no default
       */
-      start_system: string | null;
+      end_code: string | null;
       /**
-      * **quantity_idx.start_code**
+      * **quantity_idx.end_system**
       * - `text` in database
       * - Nullable, no default
       */
-      start_code: string | null;
+      end_system: string | null;
       /**
       * **quantity_idx.end_value**
       * - `numeric` in database
@@ -1207,55 +1171,11 @@ declare module 'zapatos/schema' {
       */
       end_value: db.NumericString | null;
       /**
-      * **quantity_idx.end_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      end_system: string | null;
-      /**
-      * **quantity_idx.end_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      end_code: string | null;
-      /**
-      * **quantity_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at: Date;
-      /**
-      * **quantity_idx.resource_type**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      resource_type: string;
-    }
-    export interface JSONSelectable {
-      /**
       * **quantity_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('quantity_idx_id_seq'::regclass)`
       */
       id: number;
-      /**
-      * **quantity_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string;
-      /**
-      * **quantity_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string;
-      /**
-      * **quantity_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id: number;
       /**
       * **quantity_idx.parameter_name**
       * - `text` in database
@@ -1269,17 +1189,23 @@ declare module 'zapatos/schema' {
       */
       parameter_url: string;
       /**
-      * **quantity_idx.start_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      start_value: number | null;
-      /**
-      * **quantity_idx.start_system**
+      * **quantity_idx.r_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      start_system: string | null;
+      r_id: string;
+      /**
+      * **quantity_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id: number;
+      /**
+      * **quantity_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type: string;
       /**
       * **quantity_idx.start_code**
       * - `text` in database
@@ -1287,23 +1213,25 @@ declare module 'zapatos/schema' {
       */
       start_code: string | null;
       /**
-      * **quantity_idx.end_value**
+      * **quantity_idx.start_system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      start_system: string | null;
+      /**
+      * **quantity_idx.start_value**
       * - `numeric` in database
       * - Nullable, no default
       */
-      end_value: number | null;
+      start_value: db.NumericString | null;
       /**
-      * **quantity_idx.end_system**
+      * **quantity_idx.tenant**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      end_system: string | null;
-      /**
-      * **quantity_idx.end_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      end_code: string | null;
+      tenant: string;
+    }
+    export interface JSONSelectable {
       /**
       * **quantity_idx.created_at**
       * - `timestamptz` in database
@@ -1311,37 +1239,115 @@ declare module 'zapatos/schema' {
       */
       created_at: db.TimestampTzString;
       /**
+      * **quantity_idx.end_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      end_code: string | null;
+      /**
+      * **quantity_idx.end_system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      end_system: string | null;
+      /**
+      * **quantity_idx.end_value**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      end_value: number | null;
+      /**
+      * **quantity_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('quantity_idx_id_seq'::regclass)`
+      */
+      id: number;
+      /**
+      * **quantity_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name: string;
+      /**
+      * **quantity_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url: string;
+      /**
+      * **quantity_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id: string;
+      /**
+      * **quantity_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id: number;
+      /**
       * **quantity_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type: string;
+      /**
+      * **quantity_idx.start_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      start_code: string | null;
+      /**
+      * **quantity_idx.start_system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      start_system: string | null;
+      /**
+      * **quantity_idx.start_value**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      start_value: number | null;
+      /**
+      * **quantity_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string;
     }
     export interface Whereable {
+      /**
+      * **quantity_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **quantity_idx.end_code**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      end_code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **quantity_idx.end_system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      end_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **quantity_idx.end_value**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      end_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn>;
       /**
       * **quantity_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('quantity_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **quantity_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **quantity_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **quantity_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **quantity_idx.parameter_name**
       * - `text` in database
@@ -1355,17 +1361,23 @@ declare module 'zapatos/schema' {
       */
       parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **quantity_idx.start_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **quantity_idx.start_system**
+      * **quantity_idx.r_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      start_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **quantity_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **quantity_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **quantity_idx.start_code**
       * - `text` in database
@@ -1373,61 +1385,55 @@ declare module 'zapatos/schema' {
       */
       start_code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **quantity_idx.end_value**
+      * **quantity_idx.start_system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      start_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **quantity_idx.start_value**
       * - `numeric` in database
       * - Nullable, no default
       */
-      end_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn>;
+      start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **quantity_idx.end_system**
+      * **quantity_idx.tenant**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      end_system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **quantity_idx.end_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      end_code?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
       /**
       * **quantity_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
       */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
-      * **quantity_idx.resource_type**
+      * **quantity_idx.end_code**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
-      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-    }
-    export interface Insertable {
+      end_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **quantity_idx.end_system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      end_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **quantity_idx.end_value**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      end_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment;
       /**
       * **quantity_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('quantity_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
-      /**
-      * **quantity_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **quantity_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **quantity_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
       * **quantity_idx.parameter_name**
       * - `text` in database
@@ -1441,17 +1447,23 @@ declare module 'zapatos/schema' {
       */
       parameter_url: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **quantity_idx.start_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **quantity_idx.start_system**
+      * **quantity_idx.r_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      start_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      r_id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **quantity_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **quantity_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **quantity_idx.start_code**
       * - `text` in database
@@ -1459,61 +1471,55 @@ declare module 'zapatos/schema' {
       */
       start_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **quantity_idx.end_value**
+      * **quantity_idx.start_system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      start_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **quantity_idx.start_value**
       * - `numeric` in database
       * - Nullable, no default
       */
-      end_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment;
+      start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **quantity_idx.end_system**
+      * **quantity_idx.tenant**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      end_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **quantity_idx.end_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      end_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      tenant: string | db.Parameter<string> | db.SQLFragment;
+    }
+    export interface Updatable {
       /**
       * **quantity_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
       */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
-      * **quantity_idx.resource_type**
+      * **quantity_idx.end_code**
       * - `text` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
-      resource_type: string | db.Parameter<string> | db.SQLFragment;
-    }
-    export interface Updatable {
+      end_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **quantity_idx.end_system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      end_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **quantity_idx.end_value**
+      * - `numeric` in database
+      * - Nullable, no default
+      */
+      end_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **quantity_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('quantity_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **quantity_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **quantity_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **quantity_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
       * **quantity_idx.parameter_name**
       * - `text` in database
@@ -1527,17 +1533,23 @@ declare module 'zapatos/schema' {
       */
       parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **quantity_idx.start_value**
-      * - `numeric` in database
-      * - Nullable, no default
-      */
-      start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **quantity_idx.start_system**
+      * **quantity_idx.r_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      start_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **quantity_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('quantity_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **quantity_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **quantity_idx.start_code**
       * - `text` in database
@@ -1545,35 +1557,23 @@ declare module 'zapatos/schema' {
       */
       start_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **quantity_idx.end_value**
+      * **quantity_idx.start_system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      start_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **quantity_idx.start_value**
       * - `numeric` in database
       * - Nullable, no default
       */
-      end_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment>;
+      start_value?: (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (number | db.NumericString) | db.Parameter<(number | db.NumericString)> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **quantity_idx.end_system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      end_system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **quantity_idx.end_code**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      end_code?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **quantity_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **quantity_idx.resource_type**
+      * **quantity_idx.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
     export type UniqueIndex = 'quantity_idx_pkey';
     export type Column = keyof Selectable;
@@ -1590,97 +1590,17 @@ declare module 'zapatos/schema' {
     export type Table = 'reference_idx';
     export interface Selectable {
       /**
-      * **reference_idx.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('reference_idx_id_seq'::regclass)`
-      */
-      id: number;
-      /**
-      * **reference_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string;
-      /**
-      * **reference_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string;
-      /**
-      * **reference_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id: number;
-      /**
-      * **reference_idx.parameter_name**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      parameter_name: string;
-      /**
-      * **reference_idx.parameter_url**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      parameter_url: string;
-      /**
-      * **reference_idx.reference**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      reference: db.JSONValue;
-      /**
-      * **reference_idx.reference_type**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      reference_type: string;
-      /**
-      * **reference_idx.reference_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      reference_id: string;
-      /**
       * **reference_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
       */
       created_at: Date;
       /**
-      * **reference_idx.resource_type**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      resource_type: string;
-    }
-    export interface JSONSelectable {
-      /**
       * **reference_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('reference_idx_id_seq'::regclass)`
       */
       id: number;
-      /**
-      * **reference_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string;
-      /**
-      * **reference_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string;
-      /**
-      * **reference_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id: number;
       /**
       * **reference_idx.parameter_name**
       * - `text` in database
@@ -1694,11 +1614,29 @@ declare module 'zapatos/schema' {
       */
       parameter_url: string;
       /**
+      * **reference_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id: string;
+      /**
+      * **reference_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id: number;
+      /**
       * **reference_idx.reference**
       * - `jsonb` in database
       * - `NOT NULL`, no default
       */
       reference: db.JSONValue;
+      /**
+      * **reference_idx.reference_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      reference_id: string;
       /**
       * **reference_idx.reference_type**
       * - `text` in database
@@ -1706,11 +1644,19 @@ declare module 'zapatos/schema' {
       */
       reference_type: string;
       /**
-      * **reference_idx.reference_id**
+      * **reference_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      reference_id: string;
+      resource_type: string;
+      /**
+      * **reference_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string;
+    }
+    export interface JSONSelectable {
       /**
       * **reference_idx.created_at**
       * - `timestamptz` in database
@@ -1718,37 +1664,79 @@ declare module 'zapatos/schema' {
       */
       created_at: db.TimestampTzString;
       /**
+      * **reference_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('reference_idx_id_seq'::regclass)`
+      */
+      id: number;
+      /**
+      * **reference_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name: string;
+      /**
+      * **reference_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url: string;
+      /**
+      * **reference_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id: string;
+      /**
+      * **reference_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id: number;
+      /**
+      * **reference_idx.reference**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      reference: db.JSONValue;
+      /**
+      * **reference_idx.reference_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      reference_id: string;
+      /**
+      * **reference_idx.reference_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      reference_type: string;
+      /**
       * **reference_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type: string;
+      /**
+      * **reference_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string;
     }
     export interface Whereable {
+      /**
+      * **reference_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
       * **reference_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('reference_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **reference_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **reference_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **reference_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **reference_idx.parameter_name**
       * - `text` in database
@@ -1762,17 +1750,23 @@ declare module 'zapatos/schema' {
       */
       parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
+      * **reference_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **reference_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **reference_idx.reference**
       * - `jsonb` in database
       * - `NOT NULL`, no default
       */
       reference?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **reference_idx.reference_type**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      reference_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **reference_idx.reference_id**
       * - `text` in database
@@ -1780,43 +1774,37 @@ declare module 'zapatos/schema' {
       */
       reference_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **reference_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
+      * **reference_idx.reference_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
       */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      reference_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **reference_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **reference_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
+      /**
+      * **reference_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
       * **reference_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('reference_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
-      /**
-      * **reference_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **reference_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **reference_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
       * **reference_idx.parameter_name**
       * - `text` in database
@@ -1830,17 +1818,23 @@ declare module 'zapatos/schema' {
       */
       parameter_url: string | db.Parameter<string> | db.SQLFragment;
       /**
+      * **reference_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **reference_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
       * **reference_idx.reference**
       * - `jsonb` in database
       * - `NOT NULL`, no default
       */
       reference: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment;
-      /**
-      * **reference_idx.reference_type**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      reference_type: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **reference_idx.reference_id**
       * - `text` in database
@@ -1848,43 +1842,37 @@ declare module 'zapatos/schema' {
       */
       reference_id: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **reference_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
+      * **reference_idx.reference_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
       */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+      reference_type: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **reference_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **reference_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **reference_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
       * **reference_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('reference_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **reference_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **reference_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **reference_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
       * **reference_idx.parameter_name**
       * - `text` in database
@@ -1898,17 +1886,23 @@ declare module 'zapatos/schema' {
       */
       parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
+      * **reference_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **reference_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('reference_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
       * **reference_idx.reference**
       * - `jsonb` in database
       * - `NOT NULL`, no default
       */
       reference?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment>;
-      /**
-      * **reference_idx.reference_type**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      reference_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **reference_idx.reference_id**
       * - `text` in database
@@ -1916,17 +1910,23 @@ declare module 'zapatos/schema' {
       */
       reference_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **reference_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
+      * **reference_idx.reference_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
       */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+      reference_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **reference_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **reference_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
     export type UniqueIndex = 'reference_idx_pkey' | 'reference_idx_unique';
     export type Column = keyof Selectable;
@@ -1943,41 +1943,17 @@ declare module 'zapatos/schema' {
     export type Table = 'resources';
     export interface Selectable {
       /**
-      * **resources.id**
-      * - `text` in database
-      * - Generated column
-      */
-      id: string;
-      /**
-      * **resources.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string;
-      /**
-      * **resources.resource_type**
-      * - `text` in database
-      * - Generated column
-      */
-      resource_type: string;
-      /**
       * **resources.author**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       author: string;
       /**
-      * **resources.version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
+      * **resources.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
       */
-      version_id: number;
-      /**
-      * **resources.resource**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      resource: db.JSONValue;
+      created_at: Date;
       /**
       * **resources.deleted**
       * - `bool` in database
@@ -1985,11 +1961,11 @@ declare module 'zapatos/schema' {
       */
       deleted: boolean;
       /**
-      * **resources.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
+      * **resources.id**
+      * - `text` in database
+      * - Generated column
       */
-      created_at: Date;
+      id: string;
       /**
       * **resources.patches**
       * - `jsonb` in database
@@ -2008,38 +1984,6 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `'PUT'::character varying`
       */
       request_method: string | null;
-    }
-    export interface JSONSelectable {
-      /**
-      * **resources.id**
-      * - `text` in database
-      * - Generated column
-      */
-      id: string;
-      /**
-      * **resources.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string;
-      /**
-      * **resources.resource_type**
-      * - `text` in database
-      * - Generated column
-      */
-      resource_type: string;
-      /**
-      * **resources.author**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      author: string;
-      /**
-      * **resources.version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
-      */
-      version_id: number;
       /**
       * **resources.resource**
       * - `jsonb` in database
@@ -2047,17 +1991,49 @@ declare module 'zapatos/schema' {
       */
       resource: db.JSONValue;
       /**
-      * **resources.deleted**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
+      * **resources.resource_type**
+      * - `text` in database
+      * - Generated column
       */
-      deleted: boolean;
+      resource_type: string;
+      /**
+      * **resources.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string;
+      /**
+      * **resources.version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
+      */
+      version_id: number;
+    }
+    export interface JSONSelectable {
+      /**
+      * **resources.author**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      author: string;
       /**
       * **resources.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
       */
       created_at: db.TimestampTzString;
+      /**
+      * **resources.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      deleted: boolean;
+      /**
+      * **resources.id**
+      * - `text` in database
+      * - Generated column
+      */
+      id: string;
       /**
       * **resources.patches**
       * - `jsonb` in database
@@ -2076,26 +2052,32 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `'PUT'::character varying`
       */
       request_method: string | null;
-    }
-    export interface Whereable {
       /**
-      * **resources.id**
-      * - `text` in database
-      * - Generated column
-      */
-      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **resources.tenant**
-      * - `text` in database
+      * **resources.resource**
+      * - `jsonb` in database
       * - `NOT NULL`, no default
       */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      resource: db.JSONValue;
       /**
       * **resources.resource_type**
       * - `text` in database
       * - Generated column
       */
-      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      resource_type: string;
+      /**
+      * **resources.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string;
+      /**
+      * **resources.version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
+      */
+      version_id: number;
+    }
+    export interface Whereable {
       /**
       * **resources.author**
       * - `text` in database
@@ -2103,17 +2085,11 @@ declare module 'zapatos/schema' {
       */
       author?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **resources.version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
+      * **resources.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
       */
-      version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **resources.resource**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      resource?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
       * **resources.deleted**
       * - `bool` in database
@@ -2121,11 +2097,11 @@ declare module 'zapatos/schema' {
       */
       deleted?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **resources.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
+      * **resources.id**
+      * - `text` in database
+      * - Generated column
       */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **resources.patches**
       * - `jsonb` in database
@@ -2144,14 +2120,32 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `'PUT'::character varying`
       */
       request_method?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-    }
-    export interface Insertable {
+      /**
+      * **resources.resource**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      resource?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **resources.resource_type**
+      * - `text` in database
+      * - Generated column
+      */
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **resources.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      tenant: string | db.Parameter<string> | db.SQLFragment;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **resources.version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
+      */
+      version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
       /**
       * **resources.author**
       * - `text` in database
@@ -2159,29 +2153,17 @@ declare module 'zapatos/schema' {
       */
       author: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **resources.version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
+      * **resources.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
       */
-      version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
-      /**
-      * **resources.resource**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      resource: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment;
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
       * **resources.deleted**
       * - `bool` in database
       * - `NOT NULL`, default: `false`
       */
       deleted?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
-      /**
-      * **resources.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
       * **resources.patches**
       * - `jsonb` in database
@@ -2200,14 +2182,26 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `'PUT'::character varying`
       */
       request_method?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-    }
-    export interface Updatable {
+      /**
+      * **resources.resource**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      resource: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment;
       /**
       * **resources.tenant**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      tenant: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **resources.version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
+      */
+      version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
       /**
       * **resources.author**
       * - `text` in database
@@ -2215,29 +2209,17 @@ declare module 'zapatos/schema' {
       */
       author?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **resources.version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
+      * **resources.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
       */
-      version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **resources.resource**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      resource?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment>;
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
       * **resources.deleted**
       * - `bool` in database
       * - `NOT NULL`, default: `false`
       */
       deleted?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **resources.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
       * **resources.patches**
       * - `jsonb` in database
@@ -2256,6 +2238,24 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `'PUT'::character varying`
       */
       request_method?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **resources.resource**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      resource?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment>;
+      /**
+      * **resources.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **resources.version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('resources_version_id_seq'::regclass)`
+      */
+      version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'resources_pkey';
     export type Column = keyof Selectable;
@@ -2272,85 +2272,17 @@ declare module 'zapatos/schema' {
     export type Table = 'string_idx';
     export interface Selectable {
       /**
-      * **string_idx.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('string_idx_id_seq'::regclass)`
-      */
-      id: number;
-      /**
-      * **string_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string;
-      /**
-      * **string_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string;
-      /**
-      * **string_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id: number;
-      /**
-      * **string_idx.parameter_name**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      parameter_name: string;
-      /**
-      * **string_idx.parameter_url**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      parameter_url: string;
-      /**
-      * **string_idx.value**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      value: string;
-      /**
       * **string_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
       */
       created_at: Date;
       /**
-      * **string_idx.resource_type**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      resource_type: string;
-    }
-    export interface JSONSelectable {
-      /**
       * **string_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('string_idx_id_seq'::regclass)`
       */
       id: number;
-      /**
-      * **string_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string;
-      /**
-      * **string_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string;
-      /**
-      * **string_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id: number;
       /**
       * **string_idx.parameter_name**
       * - `text` in database
@@ -2364,11 +2296,37 @@ declare module 'zapatos/schema' {
       */
       parameter_url: string;
       /**
+      * **string_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id: string;
+      /**
+      * **string_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id: number;
+      /**
+      * **string_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type: string;
+      /**
+      * **string_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string;
+      /**
       * **string_idx.value**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       value: string;
+    }
+    export interface JSONSelectable {
       /**
       * **string_idx.created_at**
       * - `timestamptz` in database
@@ -2376,37 +2334,67 @@ declare module 'zapatos/schema' {
       */
       created_at: db.TimestampTzString;
       /**
+      * **string_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('string_idx_id_seq'::regclass)`
+      */
+      id: number;
+      /**
+      * **string_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name: string;
+      /**
+      * **string_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url: string;
+      /**
+      * **string_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id: string;
+      /**
+      * **string_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id: number;
+      /**
       * **string_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type: string;
+      /**
+      * **string_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string;
+      /**
+      * **string_idx.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value: string;
     }
     export interface Whereable {
+      /**
+      * **string_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
       * **string_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('string_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **string_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **string_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **string_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **string_idx.parameter_name**
       * - `text` in database
@@ -2420,49 +2408,49 @@ declare module 'zapatos/schema' {
       */
       parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **string_idx.value**
+      * **string_idx.r_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **string_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
+      * **string_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
       */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **string_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **string_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **string_idx.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
+      /**
+      * **string_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
       * **string_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('string_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
-      /**
-      * **string_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **string_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **string_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
       * **string_idx.parameter_name**
       * - `text` in database
@@ -2476,49 +2464,49 @@ declare module 'zapatos/schema' {
       */
       parameter_url: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **string_idx.value**
+      * **string_idx.r_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      value: string | db.Parameter<string> | db.SQLFragment;
+      r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **string_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
+      * **string_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
       */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
       * **string_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **string_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **string_idx.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **string_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
       * **string_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('string_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **string_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **string_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **string_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
       * **string_idx.parameter_name**
       * - `text` in database
@@ -2532,23 +2520,35 @@ declare module 'zapatos/schema' {
       */
       parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **string_idx.value**
+      * **string_idx.r_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      value?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **string_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
+      * **string_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('string_idx_r_version_id_seq'::regclass)`
       */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
       * **string_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **string_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **string_idx.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
     export type UniqueIndex = 'string_idx_pkey' | 'string_idx_unique';
     export type Column = keyof Selectable;
@@ -2565,31 +2565,17 @@ declare module 'zapatos/schema' {
     export type Table = 'tenants';
     export interface Selectable {
       /**
-      * **tenants.id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      id: string;
-      /**
-      * **tenants.tenant**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: db.JSONValue;
-      /**
-      * **tenants.deleted**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
-      */
-      deleted: boolean;
-      /**
       * **tenants.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
       */
       created_at: Date;
-    }
-    export interface JSONSelectable {
+      /**
+      * **tenants.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      deleted: boolean;
       /**
       * **tenants.id**
       * - `text` in database
@@ -2602,20 +2588,46 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       tenant: db.JSONValue;
-      /**
-      * **tenants.deleted**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
-      */
-      deleted: boolean;
+    }
+    export interface JSONSelectable {
       /**
       * **tenants.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
       */
       created_at: db.TimestampTzString;
+      /**
+      * **tenants.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      deleted: boolean;
+      /**
+      * **tenants.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
+      /**
+      * **tenants.tenant**
+      * - `jsonb` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: db.JSONValue;
     }
     export interface Whereable {
+      /**
+      * **tenants.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tenants.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      deleted?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
       /**
       * **tenants.id**
       * - `text` in database
@@ -2628,20 +2640,20 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       tenant?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **tenants.deleted**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
-      */
-      deleted?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
       /**
       * **tenants.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
       */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-    }
-    export interface Insertable {
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **tenants.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      deleted?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
       /**
       * **tenants.id**
       * - `text` in database
@@ -2654,20 +2666,20 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       tenant: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment;
-      /**
-      * **tenants.deleted**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
-      */
-      deleted?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
       /**
       * **tenants.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
       */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
-    }
-    export interface Updatable {
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **tenants.deleted**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      deleted?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
       /**
       * **tenants.id**
       * - `text` in database
@@ -2680,18 +2692,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       tenant?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment>;
-      /**
-      * **tenants.deleted**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
-      */
-      deleted?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **tenants.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'workspaces_pkey';
     export type Column = keyof Selectable;
@@ -2708,91 +2708,17 @@ declare module 'zapatos/schema' {
     export type Table = 'token_idx';
     export interface Selectable {
       /**
-      * **token_idx.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('token_idx_id_seq'::regclass)`
-      */
-      id: number;
-      /**
-      * **token_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string;
-      /**
-      * **token_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string;
-      /**
-      * **token_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id: number;
-      /**
-      * **token_idx.parameter_name**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      parameter_name: string;
-      /**
-      * **token_idx.parameter_url**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      parameter_url: string;
-      /**
-      * **token_idx.system**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      system: string | null;
-      /**
-      * **token_idx.value**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      value: string | null;
-      /**
       * **token_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
       */
       created_at: Date;
       /**
-      * **token_idx.resource_type**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      resource_type: string;
-    }
-    export interface JSONSelectable {
-      /**
       * **token_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('token_idx_id_seq'::regclass)`
       */
       id: number;
-      /**
-      * **token_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string;
-      /**
-      * **token_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string;
-      /**
-      * **token_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id: number;
       /**
       * **token_idx.parameter_name**
       * - `text` in database
@@ -2806,17 +2732,43 @@ declare module 'zapatos/schema' {
       */
       parameter_url: string;
       /**
+      * **token_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id: string;
+      /**
+      * **token_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id: number;
+      /**
+      * **token_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type: string;
+      /**
       * **token_idx.system**
       * - `text` in database
       * - Nullable, no default
       */
       system: string | null;
       /**
+      * **token_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string;
+      /**
       * **token_idx.value**
       * - `text` in database
       * - Nullable, no default
       */
       value: string | null;
+    }
+    export interface JSONSelectable {
       /**
       * **token_idx.created_at**
       * - `timestamptz` in database
@@ -2824,37 +2776,73 @@ declare module 'zapatos/schema' {
       */
       created_at: db.TimestampTzString;
       /**
+      * **token_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('token_idx_id_seq'::regclass)`
+      */
+      id: number;
+      /**
+      * **token_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name: string;
+      /**
+      * **token_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url: string;
+      /**
+      * **token_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id: string;
+      /**
+      * **token_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id: number;
+      /**
       * **token_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type: string;
+      /**
+      * **token_idx.system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      system: string | null;
+      /**
+      * **token_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string;
+      /**
+      * **token_idx.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value: string | null;
     }
     export interface Whereable {
+      /**
+      * **token_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
       * **token_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('token_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **token_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **token_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **token_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **token_idx.parameter_name**
       * - `text` in database
@@ -2868,55 +2856,55 @@ declare module 'zapatos/schema' {
       */
       parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **token_idx.system**
+      * **token_idx.r_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **token_idx.value**
-      * - `text` in database
-      * - Nullable, no default
+      * **token_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
       */
-      value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **token_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **token_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **token_idx.system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      system?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **token_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **token_idx.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
+      /**
+      * **token_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
       * **token_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('token_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
-      /**
-      * **token_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **token_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **token_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
       * **token_idx.parameter_name**
       * - `text` in database
@@ -2930,55 +2918,55 @@ declare module 'zapatos/schema' {
       */
       parameter_url: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **token_idx.system**
+      * **token_idx.r_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **token_idx.value**
-      * - `text` in database
-      * - Nullable, no default
+      * **token_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
       */
-      value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **token_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
       * **token_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **token_idx.system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **token_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **token_idx.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **token_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
       * **token_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('token_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **token_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **token_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **token_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
       * **token_idx.parameter_name**
       * - `text` in database
@@ -2992,29 +2980,41 @@ declare module 'zapatos/schema' {
       */
       parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **token_idx.system**
+      * **token_idx.r_id**
       * - `text` in database
-      * - Nullable, no default
+      * - `NOT NULL`, no default
       */
-      system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **token_idx.value**
-      * - `text` in database
-      * - Nullable, no default
+      * **token_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('token_idx_r_version_id_seq'::regclass)`
       */
-      value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **token_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
       * **token_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **token_idx.system**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      system?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **token_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **token_idx.value**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      value?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'token_idx_pkey' | 'token_idx_unique';
     export type Column = keyof Selectable;
@@ -3031,85 +3031,17 @@ declare module 'zapatos/schema' {
     export type Table = 'uri_idx';
     export interface Selectable {
       /**
-      * **uri_idx.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('uri_idx_id_seq'::regclass)`
-      */
-      id: number;
-      /**
-      * **uri_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string;
-      /**
-      * **uri_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string;
-      /**
-      * **uri_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id: number;
-      /**
-      * **uri_idx.parameter_name**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      parameter_name: string;
-      /**
-      * **uri_idx.parameter_url**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      parameter_url: string;
-      /**
-      * **uri_idx.value**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      value: string;
-      /**
       * **uri_idx.created_at**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
       */
       created_at: Date;
       /**
-      * **uri_idx.resource_type**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      resource_type: string;
-    }
-    export interface JSONSelectable {
-      /**
       * **uri_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('uri_idx_id_seq'::regclass)`
       */
       id: number;
-      /**
-      * **uri_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string;
-      /**
-      * **uri_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string;
-      /**
-      * **uri_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id: number;
       /**
       * **uri_idx.parameter_name**
       * - `text` in database
@@ -3123,11 +3055,37 @@ declare module 'zapatos/schema' {
       */
       parameter_url: string;
       /**
+      * **uri_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id: string;
+      /**
+      * **uri_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id: number;
+      /**
+      * **uri_idx.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type: string;
+      /**
+      * **uri_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string;
+      /**
       * **uri_idx.value**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       value: string;
+    }
+    export interface JSONSelectable {
       /**
       * **uri_idx.created_at**
       * - `timestamptz` in database
@@ -3135,37 +3093,67 @@ declare module 'zapatos/schema' {
       */
       created_at: db.TimestampTzString;
       /**
+      * **uri_idx.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('uri_idx_id_seq'::regclass)`
+      */
+      id: number;
+      /**
+      * **uri_idx.parameter_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_name: string;
+      /**
+      * **uri_idx.parameter_url**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      parameter_url: string;
+      /**
+      * **uri_idx.r_id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      r_id: string;
+      /**
+      * **uri_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
+      */
+      r_version_id: number;
+      /**
       * **uri_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type: string;
+      /**
+      * **uri_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string;
+      /**
+      * **uri_idx.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value: string;
     }
     export interface Whereable {
+      /**
+      * **uri_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
       * **uri_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('uri_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **uri_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **uri_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **uri_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **uri_idx.parameter_name**
       * - `text` in database
@@ -3179,49 +3167,49 @@ declare module 'zapatos/schema' {
       */
       parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **uri_idx.value**
+      * **uri_idx.r_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **uri_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
+      * **uri_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
       */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      r_version_id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **uri_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **uri_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **uri_idx.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
+      /**
+      * **uri_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
       * **uri_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('uri_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
-      /**
-      * **uri_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **uri_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **uri_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
       * **uri_idx.parameter_name**
       * - `text` in database
@@ -3235,49 +3223,49 @@ declare module 'zapatos/schema' {
       */
       parameter_url: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **uri_idx.value**
+      * **uri_idx.r_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      value: string | db.Parameter<string> | db.SQLFragment;
+      r_id: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **uri_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
+      * **uri_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
       */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
       * **uri_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **uri_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **uri_idx.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **uri_idx.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
       * **uri_idx.id**
       * - `int4` in database
       * - `NOT NULL`, default: `nextval('uri_idx_id_seq'::regclass)`
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **uri_idx.tenant**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **uri_idx.r_id**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **uri_idx.r_version_id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
-      */
-      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
       * **uri_idx.parameter_name**
       * - `text` in database
@@ -3291,23 +3279,35 @@ declare module 'zapatos/schema' {
       */
       parameter_url?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **uri_idx.value**
+      * **uri_idx.r_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      value?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      r_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **uri_idx.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
+      * **uri_idx.r_version_id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('uri_idx_r_version_id_seq'::regclass)`
       */
-      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+      r_version_id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
       * **uri_idx.resource_type**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       resource_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **uri_idx.tenant**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **uri_idx.value**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      value?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
     export type UniqueIndex = 'uri_idx_pkey' | 'uri_idx_unique';
     export type Column = keyof Selectable;
@@ -3324,11 +3324,11 @@ declare module 'zapatos/schema' {
     export type Table = 'users';
     export interface Selectable {
       /**
-      * **users.id**
-      * - `uuid` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
+      * **users.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
       */
-      id: string;
+      created_at: Date;
       /**
       * **users.email**
       * - `text` in database
@@ -3336,47 +3336,11 @@ declare module 'zapatos/schema' {
       */
       email: string;
       /**
-      * **users.password**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      password: string | null;
-      /**
-      * **users.first_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      first_name: string | null;
-      /**
-      * **users.last_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      last_name: string | null;
-      /**
-      * **users.phone_number**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      phone_number: string | null;
-      /**
       * **users.email_verified**
       * - `bool` in database
       * - Nullable, default: `false`
       */
       email_verified: boolean | null;
-      /**
-      * **users.created_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      created_at: Date;
-      /**
-      * **users.updated_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      updated_at: Date;
       /**
       * **users.fhir_user_versionid**
       * - `int4` in database
@@ -3384,11 +3348,41 @@ declare module 'zapatos/schema' {
       */
       fhir_user_versionid: number | null;
       /**
-      * **users.tenant**
+      * **users.first_name**
       * - `text` in database
       * - Nullable, no default
       */
-      tenant: string | null;
+      first_name: string | null;
+      /**
+      * **users.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `gen_random_uuid()`
+      */
+      id: string;
+      /**
+      * **users.last_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      last_name: string | null;
+      /**
+      * **users.password**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      password: string | null;
+      /**
+      * **users.phone_number**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      phone_number: string | null;
+      /**
+      * **users.role**
+      * - `user_role` in database
+      * - Nullable, no default
+      */
+      role: user_role | null;
       /**
       * **users.root_user**
       * - `uuid` in database
@@ -3402,55 +3396,19 @@ declare module 'zapatos/schema' {
       */
       scope: user_scope;
       /**
-      * **users.role**
-      * - `user_role` in database
+      * **users.tenant**
+      * - `text` in database
       * - Nullable, no default
       */
-      role: user_role | null;
+      tenant: string | null;
+      /**
+      * **users.updated_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      updated_at: Date;
     }
     export interface JSONSelectable {
-      /**
-      * **users.id**
-      * - `uuid` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
-      */
-      id: string;
-      /**
-      * **users.email**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      email: string;
-      /**
-      * **users.password**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      password: string | null;
-      /**
-      * **users.first_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      first_name: string | null;
-      /**
-      * **users.last_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      last_name: string | null;
-      /**
-      * **users.phone_number**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      phone_number: string | null;
-      /**
-      * **users.email_verified**
-      * - `bool` in database
-      * - Nullable, default: `false`
-      */
-      email_verified: boolean | null;
       /**
       * **users.created_at**
       * - `timestamptz` in database
@@ -3458,11 +3416,17 @@ declare module 'zapatos/schema' {
       */
       created_at: db.TimestampTzString;
       /**
-      * **users.updated_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
+      * **users.email**
+      * - `text` in database
+      * - `NOT NULL`, no default
       */
-      updated_at: db.TimestampTzString;
+      email: string;
+      /**
+      * **users.email_verified**
+      * - `bool` in database
+      * - Nullable, default: `false`
+      */
+      email_verified: boolean | null;
       /**
       * **users.fhir_user_versionid**
       * - `int4` in database
@@ -3470,11 +3434,41 @@ declare module 'zapatos/schema' {
       */
       fhir_user_versionid: number | null;
       /**
-      * **users.tenant**
+      * **users.first_name**
       * - `text` in database
       * - Nullable, no default
       */
-      tenant: string | null;
+      first_name: string | null;
+      /**
+      * **users.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `gen_random_uuid()`
+      */
+      id: string;
+      /**
+      * **users.last_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      last_name: string | null;
+      /**
+      * **users.password**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      password: string | null;
+      /**
+      * **users.phone_number**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      phone_number: string | null;
+      /**
+      * **users.role**
+      * - `user_role` in database
+      * - Nullable, no default
+      */
+      role: user_role | null;
       /**
       * **users.root_user**
       * - `uuid` in database
@@ -3488,55 +3482,19 @@ declare module 'zapatos/schema' {
       */
       scope: user_scope;
       /**
-      * **users.role**
-      * - `user_role` in database
+      * **users.tenant**
+      * - `text` in database
       * - Nullable, no default
       */
-      role: user_role | null;
+      tenant: string | null;
+      /**
+      * **users.updated_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      updated_at: db.TimestampTzString;
     }
     export interface Whereable {
-      /**
-      * **users.id**
-      * - `uuid` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
-      */
-      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **users.email**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      email?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **users.password**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      password?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **users.first_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      first_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **users.last_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      last_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **users.phone_number**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      phone_number?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **users.email_verified**
-      * - `bool` in database
-      * - Nullable, default: `false`
-      */
-      email_verified?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
       /**
       * **users.created_at**
       * - `timestamptz` in database
@@ -3544,11 +3502,17 @@ declare module 'zapatos/schema' {
       */
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **users.updated_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
+      * **users.email**
+      * - `text` in database
+      * - `NOT NULL`, no default
       */
-      updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      email?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **users.email_verified**
+      * - `bool` in database
+      * - Nullable, default: `false`
+      */
+      email_verified?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
       /**
       * **users.fhir_user_versionid**
       * - `int4` in database
@@ -3556,11 +3520,41 @@ declare module 'zapatos/schema' {
       */
       fhir_user_versionid?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **users.tenant**
+      * **users.first_name**
       * - `text` in database
       * - Nullable, no default
       */
-      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      first_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **users.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `gen_random_uuid()`
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **users.last_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      last_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **users.password**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      password?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **users.phone_number**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      phone_number?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **users.role**
+      * - `user_role` in database
+      * - Nullable, no default
+      */
+      role?: user_role | db.Parameter<user_role> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, user_role | db.Parameter<user_role> | db.SQLFragment | db.ParentColumn>;
       /**
       * **users.root_user**
       * - `uuid` in database
@@ -3574,55 +3568,19 @@ declare module 'zapatos/schema' {
       */
       scope?: user_scope | db.Parameter<user_scope> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, user_scope | db.Parameter<user_scope> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **users.role**
-      * - `user_role` in database
+      * **users.tenant**
+      * - `text` in database
       * - Nullable, no default
       */
-      role?: user_role | db.Parameter<user_role> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, user_role | db.Parameter<user_role> | db.SQLFragment | db.ParentColumn>;
+      tenant?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **users.updated_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
-      /**
-      * **users.id**
-      * - `uuid` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
-      */
-      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
-      /**
-      * **users.email**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      email: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **users.password**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      password?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **users.first_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      first_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **users.last_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      last_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **users.phone_number**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      phone_number?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **users.email_verified**
-      * - `bool` in database
-      * - Nullable, default: `false`
-      */
-      email_verified?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment;
       /**
       * **users.created_at**
       * - `timestamptz` in database
@@ -3630,11 +3588,17 @@ declare module 'zapatos/schema' {
       */
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
-      * **users.updated_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
+      * **users.email**
+      * - `text` in database
+      * - `NOT NULL`, no default
       */
-      updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+      email: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **users.email_verified**
+      * - `bool` in database
+      * - Nullable, default: `false`
+      */
+      email_verified?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment;
       /**
       * **users.fhir_user_versionid**
       * - `int4` in database
@@ -3642,11 +3606,41 @@ declare module 'zapatos/schema' {
       */
       fhir_user_versionid?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **users.tenant**
+      * **users.first_name**
       * - `text` in database
       * - Nullable, no default
       */
-      tenant?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      first_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **users.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `gen_random_uuid()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
+      * **users.last_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      last_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **users.password**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      password?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **users.phone_number**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      phone_number?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **users.role**
+      * - `user_role` in database
+      * - Nullable, no default
+      */
+      role?: user_role | db.Parameter<user_role> | null | db.DefaultType | db.SQLFragment;
       /**
       * **users.root_user**
       * - `uuid` in database
@@ -3660,55 +3654,19 @@ declare module 'zapatos/schema' {
       */
       scope?: user_scope | db.Parameter<user_scope> | db.DefaultType | db.SQLFragment;
       /**
-      * **users.role**
-      * - `user_role` in database
+      * **users.tenant**
+      * - `text` in database
       * - Nullable, no default
       */
-      role?: user_role | db.Parameter<user_role> | null | db.DefaultType | db.SQLFragment;
+      tenant?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **users.updated_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
-      /**
-      * **users.id**
-      * - `uuid` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
-      */
-      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **users.email**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      email?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **users.password**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      password?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **users.first_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      first_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **users.last_name**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      last_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **users.phone_number**
-      * - `text` in database
-      * - Nullable, no default
-      */
-      phone_number?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **users.email_verified**
-      * - `bool` in database
-      * - Nullable, default: `false`
-      */
-      email_verified?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **users.created_at**
       * - `timestamptz` in database
@@ -3716,11 +3674,17 @@ declare module 'zapatos/schema' {
       */
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
-      * **users.updated_at**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
+      * **users.email**
+      * - `text` in database
+      * - `NOT NULL`, no default
       */
-      updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+      email?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **users.email_verified**
+      * - `bool` in database
+      * - Nullable, default: `false`
+      */
+      email_verified?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **users.fhir_user_versionid**
       * - `int4` in database
@@ -3728,11 +3692,41 @@ declare module 'zapatos/schema' {
       */
       fhir_user_versionid?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
-      * **users.tenant**
+      * **users.first_name**
       * - `text` in database
       * - Nullable, no default
       */
-      tenant?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      first_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **users.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `gen_random_uuid()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **users.last_name**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      last_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **users.password**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      password?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **users.phone_number**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      phone_number?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **users.role**
+      * - `user_role` in database
+      * - Nullable, no default
+      */
+      role?: user_role | db.Parameter<user_role> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, user_role | db.Parameter<user_role> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **users.root_user**
       * - `uuid` in database
@@ -3746,11 +3740,17 @@ declare module 'zapatos/schema' {
       */
       scope?: user_scope | db.Parameter<user_scope> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, user_scope | db.Parameter<user_scope> | db.DefaultType | db.SQLFragment>;
       /**
-      * **users.role**
-      * - `user_role` in database
+      * **users.tenant**
+      * - `text` in database
       * - Nullable, no default
       */
-      role?: user_role | db.Parameter<user_role> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, user_role | db.Parameter<user_role> | null | db.DefaultType | db.SQLFragment>;
+      tenant?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **users.updated_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'tenant_owners_pkey' | 'unique_email_global';
     export type Column = keyof Selectable;

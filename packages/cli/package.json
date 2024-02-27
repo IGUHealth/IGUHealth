@@ -20,8 +20,8 @@
     "@iguhealth/fhir-types": "workspace:^",
     "@iguhealth/hl7.fhir.r4.core": "workspace:^",
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^",
-    "@inquirer/prompts": "^4.0.0",
-    "@types/node": "^20.11.17",
+    "@inquirer/prompts": "^4.1.0",
+    "@types/node": "^20.11.21",
     "commander": "^12.0.0"
   },
   "devDependencies": {
