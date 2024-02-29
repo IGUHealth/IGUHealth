@@ -4,6 +4,34 @@ import { id } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaContext, asSystemCTX } from "../../../fhir-context/types.js";
+import { ADMIN_APP } from "../hardcodedClients/admin-app.js";
+
+export function injectHardcodedClients<
+  State,
+  C extends Koa.DefaultContext,
+>(): Koa.Middleware<State, C & KoaContext.OIDC> {
+  return async (ctx, next) => {
+    const clientId = ctx.oidc.parameters.client_id;
+
+    if (!clientId || clientId === "") {
+      throw new OperationError(
+        outcomeError("invalid", "Request must have client_id."),
+      );
+    }
+
+    switch (clientId) {
+      case ADMIN_APP?.id: {
+        ctx.oidc.client = ADMIN_APP;
+        await next();
+        return;
+      }
+      default: {
+        await next();
+        return;
+      }
+    }
+  };
+}
 
 /**
  * Creates koa middleware that injects the current ClientApplication under ctx.oidc.client.

@@ -150,5 +150,9 @@ export interface IGUHealthEnvironment {
    * Sentry profiles rate.
    */
   SENTRY_PROFILES_SAMPLE_RATE?: string;
+  /**
+   * Redirect URI for admin app
+   */
+  ADMIN_APP_REDIRECT_URI?: string;
   [k: string]: unknown;
 }

@@ -192,6 +192,10 @@
     "SENTRY_PROFILES_SAMPLE_RATE": {
       "type": "string",
       "description": "Sentry profiles rate."
+    },
+    "ADMIN_APP_REDIRECT_URI": {
+      "type": "string",
+      "description": "Redirect URI for admin app"
     }
   }
 }

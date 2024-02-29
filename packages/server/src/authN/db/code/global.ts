@@ -44,7 +44,7 @@ export default class GlobalAuthorizationCodeManagement
     client: db.Queryable,
     model: Pick<
       s.authorization_code.Insertable,
-      "type" | "user_id" | "tenant" | "expires_in"
+      "type" | "user_id" | "tenant" | "expires_in" | "client_id" | "payload"
     >,
   ): Promise<AuthorizationCode> {
     return db

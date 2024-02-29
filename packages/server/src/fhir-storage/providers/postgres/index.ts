@@ -831,8 +831,6 @@ function createPostgresMiddleware<
             },
           );
 
-          console.log("POSTGRES:SAVED:", savedResource.id, nanoid());
-
           return {
             request: context.request,
             state: context.state,
