@@ -41,17 +41,17 @@ export function createGlobalRouter(prefix: string, { client }: Options) {
         usernameField: "email",
         passwordField: "password",
       },
-      function (username, password, done) {
+      async function (username, password, done) {
         try {
-          userManagement
-            .login(client, "password", { email: username, password })
-            .then((user) => {
-              if (user) {
-                done(null, user);
-              } else {
-                done(null, false);
-              }
-            });
+          const user = await userManagement.login(client, "password", {
+            email: username,
+            password,
+          });
+          if (user) {
+            done(null, user);
+          } else {
+            done(null, false);
+          }
         } catch (e) {
           throw new OperationError(
             outcomeFatal("unknown", "Internal Server Error could not login."),

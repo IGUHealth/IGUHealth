@@ -119,15 +119,14 @@ export const passwordResetPOST: ManagementRouteHandler = async (ctx) => {
     );
   }
 
+  const userManagement = new GlobalUserManagement();
+
   db.serializable(ctx.postgres, async (txnClient) => {
-    await db
-      .update(
-        "users",
-        { password: body.password, email_verified: true },
-        { email: authorizationCode.user_id },
-      )
-      .run(txnClient);
-    await db.deletes("authorization_code", { code: body.code }).run(txnClient);
+    await userManagement.update(txnClient, authorizationCode.user_id, {
+      password: body.password,
+      email_verified: true,
+    });
+    await codeManagement.delete(txnClient, { code: body.code });
   });
 
   views.renderPipe(
