@@ -10,7 +10,7 @@ import * as views from "../../views/index.js";
 import { getSigningKey } from "../certifications.js";
 import { createToken } from "../token.js";
 import { getCredentialsBasicHeader } from "../utilities.js";
-import { createClientInjectMiddleware } from "./middleware/client_find.js";
+import { clientTenantInjectMiddleware } from "./middleware/client_find.js";
 import { createValidateInjectOIDCParameters } from "./middleware/parameter_inject.js";
 
 type AuthorizationRequestBody = {
@@ -211,7 +211,7 @@ export function createOIDCRouter<State, C>(
   oidcRouter.post(
     "/token",
     createValidateInjectOIDCParameters({ required: ["client_id"] }),
-    createClientInjectMiddleware(),
+    clientTenantInjectMiddleware(),
     tokenEndpoint(),
   );
 

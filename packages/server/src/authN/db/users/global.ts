@@ -24,7 +24,7 @@ export default class GlobalUserManagement implements UserManagement {
           .select("users", where, { columns: USER_QUERY_COLS })
           .run(client);
 
-        // Sanity check should never happen given unique check on email.
+        // Sanity check should never happen given unique checks on db.
         if (user.length > 1)
           throw new Error(
             "Multiple users found with the same email and password",
@@ -77,7 +77,7 @@ export default class GlobalUserManagement implements UserManagement {
         })
         .run(txnClient);
 
-      return await db
+      const tenantUser = await db
         .insert("users", {
           scope: "tenant",
           role: "owner",
@@ -86,6 +86,8 @@ export default class GlobalUserManagement implements UserManagement {
           root_user: globalUser.id,
         })
         .run(txnClient);
+
+      return globalUser;
     });
   }
   async update(

@@ -19,7 +19,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { createCertsIfNoneExists } from "./authN/certifications.js";
-import { createManagementRouter } from "./authN/management/index.js";
+import { createGlobalRouter } from "./authN/global/index.js";
 import {
   allowPublicAccessMiddleware,
   createValidateUserJWTMiddleware,
@@ -206,7 +206,7 @@ export default async function createServer(): Promise<
     await createKoaFHIRServices(pool),
   );
 
-  const managementRouter = createManagementRouter("/management", {
+  const managementRouter = createGlobalRouter("/management", {
     client: pool,
   });
   rootRouter.use(managementRouter.routes());
