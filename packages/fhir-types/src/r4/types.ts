@@ -45026,7 +45026,7 @@ resourceType: "ClientApplication"
   /** 
    * This value is used by confidential clients to authenticate to the token endpoint, as described in OAuth 2.0 [RFC6749], Section 2.3.1.
    */
-  secret: string;
+  secret?: string;
   /** 
    * This value is used by confidential clients to authenticate to the token endpoint, as described in OAuth 2.0 [RFC6749], Section 2.3.1.
    */
@@ -45110,7 +45110,7 @@ resourceType: "Membership"
   /** 
    * Is Users email address verified.
    */
-  emailVerified: boolean;
+  emailVerified?: boolean;
   /** 
    * Is Users email address verified.
    */

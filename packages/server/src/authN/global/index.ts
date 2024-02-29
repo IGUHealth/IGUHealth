@@ -13,6 +13,7 @@ import * as routes from "./routes/index.js";
 import { user_scope } from "zapatos/schema";
 import GlobalUserManagement from "../db/users/global.js";
 import { User } from "../db/users/types.js";
+import { injectHardcodedClients } from "../oidc/middleware/client_find.js";
 
 export type ManagementRouteHandler = Parameters<
   ReturnType<typeof createGlobalRouter>["all"]
@@ -80,7 +81,6 @@ export function createGlobalRouter(prefix: string, { client }: Options) {
   managementRouter.use(koaPassport.initialize());
   managementRouter.use(koaPassport.session());
   managementRouter.use(async (ctx, next) => {
-    console.log("authMethods:", ctx.isAuthenticated(), ctx.isUnauthenticated());
     return next();
   });
 
@@ -126,6 +126,7 @@ export function createGlobalRouter(prefix: string, { client }: Options) {
       required: ["client_id", "response_type", "state"],
       optional: ["scope", "redirect_uri"],
     }),
+    injectHardcodedClients(),
     routes.authorizeGET,
   );
 

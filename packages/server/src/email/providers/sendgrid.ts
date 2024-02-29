@@ -19,7 +19,6 @@ export default class SendGrid implements EmailProvider {
       headers: response.headers,
     };
 
-    console.log(httpResponse);
     return httpResponse;
   }
 }

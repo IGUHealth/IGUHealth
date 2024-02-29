@@ -1,6 +1,13 @@
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { ROUTES } from "../constants.js";
 import { ManagementRouteHandler } from "../index.js";
 import { setLoginRedirectSession } from "./login.js";
+import GlobalAuthorizationCodeManagement from "../../db/code/global.js";
+
+function getRegexForRedirect(urlPattern: string): RegExp {
+  const regex = new RegExp(urlPattern.replaceAll("*", "(.+)"));
+  return regex;
+}
 
 /**
  * See https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1.
@@ -25,8 +32,31 @@ import { setLoginRedirectSession } from "./login.js";
          cross-site request forgery as described in Section 10.12.
  */
 export const authorizeGET: ManagementRouteHandler = async (ctx, next) => {
+  const codeManagement = new GlobalAuthorizationCodeManagement();
   if (ctx.isAuthenticated()) {
-    ctx.body = ctx.oidc.parameters.client_id;
+    const redirectUrl = ctx.request.query.redirect_uri?.toString();
+    // const scope = ctx.request.query.scope;
+    const state = ctx.request.query.state;
+    const client = ctx.oidc.client;
+
+    if (!client)
+      throw new OperationError(outcomeError("invalid", "Client not found."));
+    if (
+      !redirectUrl ||
+      !client.redirectUri?.find((v) => getRegexForRedirect(v).test(redirectUrl))
+    )
+      throw new OperationError(
+        outcomeError("invalid", `Redirect URI '${redirectUrl}' not found.`),
+      );
+
+    const code = await codeManagement.create(ctx.postgres, {
+      type: "oauth2_code_grant",
+      client_id: client.id,
+      user_id: ctx.state.user.id,
+      expires_in: "15 minutes",
+    });
+
+    ctx.redirect(`${redirectUrl}?code=${code.code}&state=${state}`);
   } else {
     setLoginRedirectSession(ctx.session, ctx.url);
     ctx.redirect(ctx.router.url(ROUTES.LOGIN_GET) as string);
