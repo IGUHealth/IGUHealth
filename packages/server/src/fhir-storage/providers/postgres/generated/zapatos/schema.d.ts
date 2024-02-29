@@ -72,6 +72,18 @@ declare module 'zapatos/schema' {
       */
       id: string;
       /**
+      * **authorization_code.payload**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      payload: db.JSONValue | null;
+      /**
+      * **authorization_code.scope**
+      * - `user_scope` in database
+      * - `NOT NULL`, default: `'global'::user_scope`
+      */
+      scope: user_scope;
+      /**
       * **authorization_code.tenant**
       * - `text` in database
       * - Nullable, no default
@@ -85,7 +97,7 @@ declare module 'zapatos/schema' {
       type: code_type;
       /**
       * **authorization_code.user_id**
-      * - `text` in database
+      * - `uuid` in database
       * - `NOT NULL`, no default
       */
       user_id: string;
@@ -122,6 +134,18 @@ declare module 'zapatos/schema' {
       */
       id: string;
       /**
+      * **authorization_code.payload**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      payload: db.JSONValue | null;
+      /**
+      * **authorization_code.scope**
+      * - `user_scope` in database
+      * - `NOT NULL`, default: `'global'::user_scope`
+      */
+      scope: user_scope;
+      /**
       * **authorization_code.tenant**
       * - `text` in database
       * - Nullable, no default
@@ -135,7 +159,7 @@ declare module 'zapatos/schema' {
       type: code_type;
       /**
       * **authorization_code.user_id**
-      * - `text` in database
+      * - `uuid` in database
       * - `NOT NULL`, no default
       */
       user_id: string;
@@ -172,6 +196,18 @@ declare module 'zapatos/schema' {
       */
       id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
+      * **authorization_code.payload**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      payload?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **authorization_code.scope**
+      * - `user_scope` in database
+      * - `NOT NULL`, default: `'global'::user_scope`
+      */
+      scope?: user_scope | db.Parameter<user_scope> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, user_scope | db.Parameter<user_scope> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **authorization_code.tenant**
       * - `text` in database
       * - Nullable, no default
@@ -185,7 +221,7 @@ declare module 'zapatos/schema' {
       type?: code_type | db.Parameter<code_type> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, code_type | db.Parameter<code_type> | db.SQLFragment | db.ParentColumn>;
       /**
       * **authorization_code.user_id**
-      * - `text` in database
+      * - `uuid` in database
       * - `NOT NULL`, no default
       */
       user_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
@@ -222,6 +258,18 @@ declare module 'zapatos/schema' {
       */
       id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
       /**
+      * **authorization_code.payload**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      payload?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **authorization_code.scope**
+      * - `user_scope` in database
+      * - `NOT NULL`, default: `'global'::user_scope`
+      */
+      scope?: user_scope | db.Parameter<user_scope> | db.DefaultType | db.SQLFragment;
+      /**
       * **authorization_code.tenant**
       * - `text` in database
       * - Nullable, no default
@@ -235,7 +283,7 @@ declare module 'zapatos/schema' {
       type: code_type | db.Parameter<code_type> | db.SQLFragment;
       /**
       * **authorization_code.user_id**
-      * - `text` in database
+      * - `uuid` in database
       * - `NOT NULL`, no default
       */
       user_id: string | db.Parameter<string> | db.SQLFragment;
@@ -272,6 +320,18 @@ declare module 'zapatos/schema' {
       */
       id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
       /**
+      * **authorization_code.payload**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      payload?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **authorization_code.scope**
+      * - `user_scope` in database
+      * - `NOT NULL`, default: `'global'::user_scope`
+      */
+      scope?: user_scope | db.Parameter<user_scope> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, user_scope | db.Parameter<user_scope> | db.DefaultType | db.SQLFragment>;
+      /**
       * **authorization_code.tenant**
       * - `text` in database
       * - Nullable, no default
@@ -285,7 +345,7 @@ declare module 'zapatos/schema' {
       type?: code_type | db.Parameter<code_type> | db.SQLFragment | db.SQLFragment<any, code_type | db.Parameter<code_type> | db.SQLFragment>;
       /**
       * **authorization_code.user_id**
-      * - `text` in database
+      * - `uuid` in database
       * - `NOT NULL`, no default
       */
       user_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;

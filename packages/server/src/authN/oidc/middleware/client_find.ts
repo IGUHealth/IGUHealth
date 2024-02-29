@@ -10,7 +10,7 @@ import { KoaContext, asSystemCTX } from "../../../fhir-context/types.js";
  * Used in subsequent oidc routes.
  * @returns Koa.Middleware
  */
-export function createClientInjectMiddleware<
+export function clientTenantInjectMiddleware<
   State,
   C extends Koa.DefaultContext,
 >(): Koa.Middleware<State, KoaContext.FHIR<C>> {

@@ -9,7 +9,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import * as views from "../../../views/index.js";
-import * as dbCode from "../../db/code.js";
+import GlobalAuthorizationCodeManagement from "../../db/code/global.js";
 import { ROUTES } from "../constants.js";
 import type { ManagementRouteHandler } from "../index.js";
 import { validateEmail } from "../utilities.js";
@@ -20,14 +20,16 @@ export const passwordResetGET: ManagementRouteHandler = async (ctx) => {
   if (typeof queryCode !== "string") {
     throw new OperationError(outcomeError("invalid", "Code not found."));
   }
+  const codeManagement = new GlobalAuthorizationCodeManagement();
+  const authorizationCodeSearch = await codeManagement.search(ctx.postgres, {
+    type: "password_reset",
+    code: queryCode,
+  });
 
-  const authorizationCode = await dbCode.findAuthorizationCode(
-    ctx.postgres,
-    "password_reset",
-    queryCode,
-  );
-
-  if (!authorizationCode || authorizationCode.is_expired) {
+  if (
+    authorizationCodeSearch.length !== 1 ||
+    authorizationCodeSearch[0].is_expired
+  ) {
     throw new OperationError(
       outcomeError(
         "invalid",
@@ -48,12 +50,13 @@ export const passwordResetGET: ManagementRouteHandler = async (ctx) => {
       title: "IGUHealth",
       header: "Reset Password",
       action: passwordResetPostUrl,
-      code: authorizationCode.code,
+      code: authorizationCodeSearch[0].code,
     }),
   );
 };
 
 export const passwordResetPOST: ManagementRouteHandler = async (ctx) => {
+  const codeManagement = new GlobalAuthorizationCodeManagement();
   const body = ctx.request.body as
     | { code?: string; password?: string; passwordConfirm?: string }
     | undefined;
@@ -98,12 +101,14 @@ export const passwordResetPOST: ManagementRouteHandler = async (ctx) => {
     );
     return;
   }
-
-  const authorizationCode = await dbCode.findAuthorizationCode(
-    ctx.postgres,
-    "password_reset",
-    body.code,
-  );
+  const res = await codeManagement.search(ctx.postgres, {
+    type: "password_reset",
+    code: body.code,
+  });
+  if (res.length !== 1) {
+    throw new OperationError(outcomeError("invalid", "Code not found."));
+  }
+  const authorizationCode = res[0];
 
   if (!authorizationCode || authorizationCode.is_expired) {
     throw new OperationError(
@@ -199,18 +204,21 @@ export const passwordResetInitiatePOST: ManagementRouteHandler = async (
     );
   }
 
+  const codeManagement = new GlobalAuthorizationCodeManagement();
+
   if (
-    !(await dbCode.doesCodeAlreadyExistForUser(
-      ctx.postgres,
-      user.email,
-      "password_reset",
-    ))
+    (
+      await codeManagement.search(ctx.postgres, {
+        user_id: user.id,
+        type: "password_reset",
+      })
+    ).length === 0
   ) {
-    const code = await dbCode.createAuthorizationCode(
-      ctx.postgres,
-      "password_reset",
-      user.email,
-    );
+    const code = await codeManagement.create(ctx.postgres, {
+      type: "password_reset",
+      user_id: user.id,
+      expires_in: "15 minutes",
+    });
 
     const emailVerificationURL = ctx.router.url(
       ROUTES.PASSWORD_RESET_VERIFY_GET,

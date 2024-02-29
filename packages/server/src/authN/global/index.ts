@@ -15,7 +15,7 @@ import GlobalUserManagement from "../db/users/global.js";
 import { User } from "../db/users/types.js";
 
 export type ManagementRouteHandler = Parameters<
-  ReturnType<typeof createManagementRouter>["all"]
+  ReturnType<typeof createGlobalRouter>["all"]
 >[2];
 
 type Options = {
@@ -25,7 +25,7 @@ type Options = {
 /**
  * Management api for creating tenants and managing tenant owners.
  */
-export function createManagementRouter(prefix: string, { client }: Options) {
+export function createGlobalRouter(prefix: string, { client }: Options) {
   const managementRouter = new Router<
     Koa.DefaultState,
     Koa.DefaultContext & KoaContext.OIDC & KoaContext.FHIRServices
