@@ -114,6 +114,7 @@ export function tokenEndpoint<
         ctx.body = response;
         ctx.status = 200;
         ctx.set("Content-Type", "application/json");
+        return;
       }
       // https://www.rfc-editor.org/rfc/rfc6749.html#section-6
       case "refresh_token": {
