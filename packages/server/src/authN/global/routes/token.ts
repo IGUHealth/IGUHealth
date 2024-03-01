@@ -2,12 +2,14 @@ import type * as Koa from "koa";
 import * as db from "zapatos/db";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import { id } from "@iguhealth/fhir-types/r4/types";
 
-import { KoaContext } from "../../../fhir-context/types.js";
+import { KoaContext, TenantId } from "../../../fhir-context/types.js";
 import { getSigningKey } from "../../certifications.js";
 import { createToken } from "../../token.js";
 import GlobalAuthorizationCodeManagement from "../../db/code/global.js";
 import GlobalUserManagement from "../../db/users/global.js";
+import { user_role } from "zapatos/schema";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -90,12 +92,18 @@ export function tokenEndpoint<
               user.id,
             );
 
+            if (tenantUsers.length === 0) {
+              throw new OperationError(
+                outcomeError("invalid", "User not a member of any tenants."),
+              );
+            }
+
             return {
               access_token: await createToken(signingKey, {
-                tenant: ctx.FHIRContext.tenant,
-                role: "member",
-                resourceType: "ClientApplication",
-                sub: ctx.oidc.client.id,
+                tenant: tenantUsers[0].tenant as TenantId,
+                role: tenantUsers[0].role as user_role,
+                resourceType: "Membership",
+                sub: tenantUsers[0].id as id,
                 scope: "openid profile email offline_access",
               }),
               token_type: "Bearer",
