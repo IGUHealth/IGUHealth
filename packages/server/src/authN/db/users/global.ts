@@ -7,6 +7,16 @@ import { nanoid } from "nanoid";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 export default class GlobalUserManagement implements UserManagement {
+  async getTenantUsers(client: db.Queryable, id: string): Promise<User[]> {
+    const user = await this.get(client, id);
+    if (!user) return [];
+
+    const tenantUsers = await db
+      .select("users", { root_user: user.id }, { columns: USER_QUERY_COLS })
+      .run(client);
+
+    return tenantUsers;
+  }
   async login<T extends keyof LoginParameters>(
     client: db.Queryable,
     type: T,

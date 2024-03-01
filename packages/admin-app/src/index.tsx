@@ -521,8 +521,6 @@ function App() {
   return <RouterProvider router={router} />;
 }
 
-export default App;
-
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );
