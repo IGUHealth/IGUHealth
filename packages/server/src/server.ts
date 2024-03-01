@@ -24,7 +24,7 @@ import {
   allowPublicAccessMiddleware,
   createValidateUserJWTMiddleware,
 } from "./authN/middleware.js";
-import { createOIDCRouter } from "./authN/oidc/routes.js";
+import { createOIDCRouter } from "./authN/oidc/index.js";
 import { verifyAndAssociateUserFHIRContext } from "./authZ/middleware/tenantAccess.js";
 import loadEnv from "./env.js";
 import {

@@ -1,5 +1,5 @@
 import * as jose from "jose";
-import * as s from "zapatos/schema"
+import * as s from "zapatos/schema";
 
 import {
   ClientApplication,
@@ -20,7 +20,10 @@ export const CUSTOM_CLAIMS = {
   TENANTS: <const>"https://iguhealth.app/tenants",
   RESOURCE_TYPE: <const>"https://iguhealth.app/resourceType",
 };
-export type JWT_RESOURCE_TYPES = OperationDefinition["resourceType"] | ClientApplication["resourceType"] | Membership["resourceType"]
+export type JWT_RESOURCE_TYPES =
+  | OperationDefinition["resourceType"]
+  | ClientApplication["resourceType"]
+  | Membership["resourceType"];
 
 export interface JWT {
   sub: Subject;

@@ -34,6 +34,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:packages/artifacts"\
     },\
     {\
+      "name": "@iguhealth/auth_testing",\
+      "reference": "workspace:packages/auth_testing"\
+    },\
+    {\
       "name": "@iguhealth/cli",\
       "reference": "workspace:packages/cli"\
     },\
@@ -99,6 +103,7 @@ const RAW_RUNTIME_STATE =
   "fallbackExclusionList": [\
     ["@iguhealth/admin-app", ["workspace:packages/admin-app"]],\
     ["@iguhealth/artifacts", ["workspace:packages/artifacts"]],\
+    ["@iguhealth/auth_testing", ["workspace:packages/auth_testing"]],\
     ["@iguhealth/cli", ["workspace:packages/cli"]],\
     ["@iguhealth/client", ["workspace:packages/client"]],\
     ["@iguhealth/codegen", ["workspace:packages/codegen"]],\
@@ -14548,6 +14553,32 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
           ["@types/node", "npm:20.11.21"],\
           ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@iguhealth/auth_testing", [\
+      ["workspace:packages/auth_testing", {\
+        "packageLocation": "./packages/auth_testing/",\
+        "packageDependencies": [\
+          ["@iguhealth/auth_testing", "workspace:packages/auth_testing"],\
+          ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
+          ["@testing-library/jest-dom", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:6.4.2"],\
+          ["@testing-library/react", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:14.2.1"],\
+          ["@testing-library/user-event", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:14.5.2"],\
+          ["@types/jest", "npm:29.5.12"],\
+          ["@types/node", "npm:20.11.21"],\
+          ["@types/react", "npm:18.2.21"],\
+          ["@types/react-dom", "npm:18.2.19"],\
+          ["@types/react-window", "npm:1.8.8"],\
+          ["classnames", "npm:2.5.1"],\
+          ["react", "npm:18.2.0"],\
+          ["react-dom", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:18.2.0"],\
+          ["react-router-dom", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:6.22.1"],\
+          ["react-scripts", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:5.0.1"],\
+          ["tailwindcss", "npm:3.4.1"],\
+          ["typescript", "patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"],\
+          ["web-vitals", "npm:3.5.2"]\
         ],\
         "linkType": "SOFT"\
       }]\

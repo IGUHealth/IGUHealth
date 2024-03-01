@@ -1,0 +1,111 @@
+import type * as Koa from "koa";
+
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+
+import { KoaContext } from "../../../fhir-context/types.js";
+import { getSigningKey } from "../../certifications.js";
+import { createToken } from "../../token.js";
+import { getCredentialsBasicHeader } from "../../utilities.js";
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+/**
+ * Returns an access token that can be used to access protected resources.
+ */
+export function tokenEndpoint<
+  State,
+  C extends Koa.DefaultContext,
+>(): Koa.Middleware<State, KoaContext.FHIR<C>> {
+  return async (ctx) => {
+    const body = (ctx.request as unknown as Record<string, unknown>).body;
+    if (!isRecord(body)) {
+      throw new OperationError(
+        outcomeError("invalid", "Body must be a record."),
+      );
+    }
+
+    if (!ctx.oidc.client) {
+      throw new OperationError(
+        outcomeError("invalid", "Could not find client in context."),
+      );
+    }
+
+    if (body.grant_type !== ctx.oidc.client?.grantType) {
+      throw new OperationError(
+        outcomeError(
+          "invalid",
+          `Only grant type: '${ctx.oidc.client?.grantType}' is supported for registered client.`,
+        ),
+      );
+    }
+
+    switch (body.grant_type) {
+      // https://www.rfc-editor.org/rfc/rfc6749.html#section-4.1
+      case "authorization_code": {
+        throw new Error("Not Implemented");
+      }
+      // https://www.rfc-editor.org/rfc/rfc6749.html#section-6
+      case "refresh_token": {
+        throw new Error("Not Implemented");
+      }
+      // https://www.rfc-editor.org/rfc/rfc6749.html#section-4.4
+      case "client_credentials": {
+        const credentials = getCredentialsBasicHeader(ctx.request);
+
+        if (ctx.oidc.client.grantType !== "client_credentials") {
+          throw new OperationError(
+            outcomeError(
+              "invalid",
+              "Grant type must be client_credentials for registered client.",
+            ),
+          );
+        }
+
+        if (!credentials) {
+          throw new OperationError(
+            outcomeError("invalid", "Could not find credentials in request."),
+          );
+        }
+
+        if (credentials?.client_id !== ctx.oidc.client?.id) {
+          throw new OperationError(
+            outcomeError("security", "Invalid credentials for client."),
+          );
+        }
+
+        if (credentials?.client_secret !== ctx.oidc.client.secret) {
+          throw new OperationError(
+            outcomeError("security", "Invalid credentials for client."),
+          );
+        }
+
+        const signingKey = await getSigningKey(
+          process.env.AUTH_LOCAL_CERTIFICATION_LOCATION as string,
+          process.env.AUTH_LOCAL_SIGNING_KEY as string,
+        );
+
+        ctx.body = {
+          access_token: await createToken(signingKey, {
+            tenant: ctx.FHIRContext.tenant,
+            role: "member",
+            resourceType: "ClientApplication",
+            sub: ctx.oidc.client.id,
+            scope: "openid profile email offline_access",
+          }),
+          token_type: "Bearer",
+          expires_in: 7200,
+        };
+        ctx.status = 200;
+        ctx.set("Content-Type", "application/json");
+        break;
+      }
+      default: {
+        throw new OperationError(
+          outcomeError("invalid", "Grant type not supported"),
+        );
+      }
+    }
+  };
+}
