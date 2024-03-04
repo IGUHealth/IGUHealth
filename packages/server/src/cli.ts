@@ -7,6 +7,7 @@ import * as generateSQL from "zapatos/generate";
 
 import createServer from "./server.js";
 import createWorker from "./worker/index.js";
+import { readFileSync, writeFileSync } from "node:fs";
 
 const execPromise = util.promisify(exec);
 
@@ -34,6 +35,32 @@ function terminateServices(services: Services) {
 }
 
 async function run() {
+  program
+    .command("generate-readme")
+    .description("Generate a readme file from environment json schema.")
+    .action(async () => {
+      const schema = JSON.parse(
+        readFileSync(
+          "src/json-schemas/schemas/environment.schema.json",
+          "utf-8",
+        ),
+      );
+
+      const required = schema.required || [];
+
+      const md = `
+# Environment Variables
+| name | description | required | defaults |
+|------|-------------|----------|----------|
+${Object.keys(schema.properties)
+  .map((k) => {
+    const prop = schema.properties[k];
+    return `| ${k} | ${prop.description || ""} | ${required.includes(k)} | ${prop.default || ""} |`;
+  })
+  .join("\n")}`;
+
+      writeFileSync("README.md", md);
+    });
   program
     .command("generate-types")
     .description(
