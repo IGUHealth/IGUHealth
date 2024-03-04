@@ -2,9 +2,10 @@ import { randomBytes } from "node:crypto";
 import * as s from "zapatos/schema";
 import * as db from "zapatos/db";
 
-import { AuthorizationCodeManagement } from "./interface.js";
-import { AuthorizationCode } from "./types.js";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+
+import { AuthorizationCodeManagement } from "../interface.js";
+import { AuthorizationCode } from "../types.js";
 
 const is_expired = db.sql<
   s.authorization_code.SQL,

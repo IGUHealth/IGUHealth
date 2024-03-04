@@ -4,9 +4,9 @@ import React from "react";
 
 import { Login } from "@iguhealth/components";
 
-import * as views from "../../../views/index.js";
-import { ROUTES } from "../constants.js";
-import type { ManagementRouteHandler } from "../index.js";
+import * as views from "../../../../views/index.js";
+import { ROUTES } from "../../constants.js";
+import type { ManagementRouteHandler } from "../../index.js";
 
 /**
  * This function sets the login redirect url on the session.

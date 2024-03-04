@@ -11,9 +11,10 @@ import { createValidateInjectOIDCParameters } from "../oidc/middleware/parameter
 import { ROUTES } from "./constants.js";
 import * as routes from "./routes/index.js";
 import { user_scope } from "zapatos/schema";
-import GlobalUserManagement from "../db/users/global.js";
+import GlobalUserManagement from "../db/users/provider/global.js";
 import { User } from "../db/users/types.js";
 import { injectHardcodedClients } from "../oidc/middleware/client_find.js";
+import GlobalAuthorizationCodeManagement from "../db/code/provider/global.js";
 
 export type ManagementRouteHandler = Parameters<
   ReturnType<typeof createGlobalRouter>["all"]
@@ -35,6 +36,7 @@ export function createGlobalRouter(prefix: string, { client }: Options) {
   });
 
   const userManagement = new GlobalUserManagement();
+  const codeManagement = new GlobalAuthorizationCodeManagement();
 
   koaPassport.use(
     new localStrategy.Strategy(
@@ -93,7 +95,7 @@ export function createGlobalRouter(prefix: string, { client }: Options) {
   managementRouter.post(
     ROUTES.PASSWORD_RESET_INITIATE_POST,
     "/interaction/password-reset",
-    routes.passwordResetInitiatePOST,
+    routes.passwordResetInitiatePOST({ userManagement, codeManagement }),
   );
 
   managementRouter.get(
@@ -105,13 +107,13 @@ export function createGlobalRouter(prefix: string, { client }: Options) {
   managementRouter.get(
     ROUTES.PASSWORD_RESET_VERIFY_GET,
     "/interaction/password-reset-verify",
-    routes.passwordResetGET,
+    routes.passwordResetGET({ codeManagement }),
   );
 
   managementRouter.post(
     ROUTES.PASSWORD_RESET_VERIFY_POST,
     "/interaction/password-reset-verify",
-    routes.passwordResetPOST,
+    routes.passwordResetPOST({ codeManagement, userManagement }),
   );
   managementRouter.get(ROUTES.LOGIN_GET, "/interaction/login", routes.loginGET);
   managementRouter.post(
@@ -121,13 +123,27 @@ export function createGlobalRouter(prefix: string, { client }: Options) {
   );
   managementRouter.get(
     ROUTES.AUTHORIZE_GET,
-    "/interaction/authorize",
+    "/auth/authorize",
     createValidateInjectOIDCParameters({
       required: ["client_id", "response_type", "state"],
       optional: ["scope", "redirect_uri"],
     }),
     injectHardcodedClients(),
-    routes.authorizeGET,
+    routes.authorizeGET({
+      codeManagement,
+    }),
+  );
+  managementRouter.post(
+    ROUTES.TOKEN_POST,
+    "/auth/token",
+    createValidateInjectOIDCParameters({
+      required: ["client_id"],
+    }),
+    injectHardcodedClients(),
+    routes.tokenPost({
+      codeManagement,
+      userManagement,
+    }),
   );
 
   // Adding both as options to either get or post.

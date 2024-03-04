@@ -1,5 +1,5 @@
-import { ROUTES } from "../constants.js";
-import { ManagementRouteHandler } from "../index.js";
+import { ROUTES } from "../../constants.js";
+import { ManagementRouteHandler } from "../../index.js";
 
 /**
  * Logs out user from passport session and redirects to login page.

@@ -23,7 +23,7 @@ import { FHIRServerCTX } from "../../../fhir-context/types.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 import validateResourceTypeMiddleware from "../../middleware/validate-resourcetype.js";
 import { createPostgresClient } from "../postgres/index.js";
-import TenantUserManagement from "../../../authN/db/users/tenant.js";
+import TenantUserManagement from "../../../authN/db/users/provider/tenant.js";
 import { membershipToUser } from "../../../authN/db/users/utilities.js";
 
 export const AUTH_RESOURCETYPES: ResourceType[] = ["Membership"];

@@ -3,9 +3,9 @@ import type * as s from "zapatos/schema";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { TenantId } from "../../../fhir-context/types.js";
-import { UserManagement } from "./interface.js";
-import { User, USER_QUERY_COLS, LoginParameters } from "./types.js";
+import { TenantId } from "../../../../fhir-context/types.js";
+import { UserManagement } from "../interface.js";
+import { User, USER_QUERY_COLS, LoginParameters } from "../types.js";
 
 export default class TenantUserManagement implements UserManagement {
   private tenant: TenantId;
