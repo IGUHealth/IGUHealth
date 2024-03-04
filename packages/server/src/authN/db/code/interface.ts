@@ -7,6 +7,9 @@ export interface AuthorizationCodeManagement
   extends ModelManagement<
     AuthorizationCode,
     s.authorization_code.Whereable,
-    s.authorization_code.Insertable,
+    Pick<
+      s.authorization_code.Insertable,
+      "type" | "user_id" | "tenant" | "expires_in" | "client_id" | "payload"
+    >,
     s.authorization_code.Updatable
   > {}

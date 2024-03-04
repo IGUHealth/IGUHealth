@@ -7,9 +7,10 @@ import { id } from "@iguhealth/fhir-types/r4/types";
 import { KoaContext, TenantId } from "../../../fhir-context/types.js";
 import { getSigningKey } from "../../certifications.js";
 import { createToken } from "../../token.js";
-import GlobalAuthorizationCodeManagement from "../../db/code/global.js";
-import GlobalUserManagement from "../../db/users/global.js";
+import GlobalUserManagement from "../../db/users/provider/global.js";
 import { user_role } from "zapatos/schema";
+import { AuthorizationCodeManagement } from "../../db/code/interface.js";
+import { UserManagement } from "../../db/users/interface.js";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -18,10 +19,13 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 /**
  * Returns an access token that can be used to access protected resources.
  */
-export function tokenEndpoint<
-  State,
-  C extends Koa.DefaultContext,
->(): Koa.Middleware<State, KoaContext.FHIR<C>> {
+export function tokenPost<State, C extends Koa.DefaultContext>({
+  codeManagement,
+  userManagement,
+}: {
+  codeManagement: AuthorizationCodeManagement;
+  userManagement: UserManagement & GlobalUserManagement;
+}): Koa.Middleware<State, KoaContext.FHIR<C>> {
   return async (ctx) => {
     const body = (ctx.request as unknown as Record<string, unknown>).body;
     if (!isRecord(body)) {
@@ -48,8 +52,6 @@ export function tokenEndpoint<
     switch (body.grant_type) {
       // https://www.rfc-editor.org/rfc/rfc6749.html#section-4.1
       case "authorization_code": {
-        const codeManagement = new GlobalAuthorizationCodeManagement();
-        const userManagement = new GlobalUserManagement();
         const body = (ctx.request as unknown as Record<string, unknown>).body;
 
         const response = await db.serializable(
@@ -98,15 +100,23 @@ export function tokenEndpoint<
               );
             }
 
-            return {
-              access_token: await createToken(signingKey, {
+            const token = await createToken(
+              signingKey,
+              {
                 tenant: tenantUsers[0].tenant as TenantId,
                 role: tenantUsers[0].role as user_role,
                 resourceType: "Membership",
                 sub: tenantUsers[0].id as id,
                 scope: "openid profile email offline_access",
-              }),
+              },
+              "2h",
+            );
+
+            return {
+              access_token: token,
+              id_token: token,
               token_type: "Bearer",
+              // 2 hours in seconds
               expires_in: 7200,
             };
           },

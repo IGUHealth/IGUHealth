@@ -9,4 +9,5 @@ export const ROUTES = {
   PASSWORD_RESET_VERIFY_GET: "management-password-reset-verify-get",
   PASSWORD_RESET_VERIFY_POST: "management-password-reset-verify-post",
   AUTHORIZE_GET: "management-authorize-get",
+  TOKEN_POST: "management-token-post",
 };

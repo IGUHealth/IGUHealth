@@ -45,6 +45,7 @@ export async function createToken(
     sub: OperationDefinition["id"] | ClientApplication["id"] | Membership["id"];
     scope: string;
   },
+  expiresIn = "2h",
 ): Promise<string> {
   const signedJWT = await new jose.SignJWT({
     iss: IGUHEALTH_ISSUER,
@@ -61,7 +62,7 @@ export async function createToken(
   } as JWT)
     .setProtectedHeader({ kid: privatekey.kid, alg: "RS256" })
     .setIssuedAt()
-    .setExpirationTime("2h")
+    .setExpirationTime(expiresIn)
     .sign(privatekey.key);
 
   return signedJWT;

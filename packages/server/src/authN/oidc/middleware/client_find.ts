@@ -20,8 +20,8 @@ export function injectHardcodedClients<
     }
 
     switch (clientId) {
-      case ADMIN_APP?.id: {
-        ctx.oidc.client = ADMIN_APP;
+      case ADMIN_APP()?.id: {
+        ctx.oidc.client = ADMIN_APP();
         await next();
         return;
       }
