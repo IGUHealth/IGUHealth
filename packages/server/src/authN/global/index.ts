@@ -8,8 +8,6 @@ import { user_scope } from "zapatos/schema";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { KoaContext } from "../../fhir-context/types.js";
-import GlobalAuthorizationCodeManagement from "../db/code/provider/global.js";
-import GlobalUserManagement from "../db/users/provider/global.js";
 import { User } from "../db/users/types.js";
 import { injectHardcodedClients } from "../oidc/middleware/index.js";
 import { createValidateInjectOIDCParameters } from "../oidc/middleware/parameter_inject.js";
@@ -35,56 +33,55 @@ export function createGlobalRouter(prefix: string, { client }: Options) {
     prefix,
   });
 
-  const userManagement = new GlobalUserManagement();
-  const codeManagement = new GlobalAuthorizationCodeManagement();
+  managementRouter.use(async (ctx, next) => {
+    koaPassport.serializeUser((euser, done) => {
+      const user = euser as unknown as User;
+      done(null, { id: user.id });
+    });
 
-  koaPassport.use(
-    new localStrategy.Strategy(
-      {
-        usernameField: "email",
-        passwordField: "password",
-      },
-      async function (username, password, done) {
+    koaPassport.deserializeUser(
+      async (info: { scope: user_scope; id: string; tenant: string }, done) => {
         try {
-          const user = await userManagement.login(client, "password", {
-            email: username,
-            password,
-          });
-          if (user) {
-            done(null, user);
-          } else {
-            done(null, false);
-          }
-        } catch (e) {
-          throw new OperationError(
-            outcomeFatal("unknown", "Internal Server Error could not login."),
-          );
+          const user = await ctx.oidc.userManagement.get(client, info.id);
+          done(null, user);
+        } catch (err) {
+          done(err);
         }
       },
-    ),
-  );
-
-  koaPassport.serializeUser((euser, done) => {
-    const user = euser as unknown as User;
-    done(null, { id: user.id });
+    );
+    koaPassport.use(
+      new localStrategy.Strategy(
+        {
+          usernameField: "email",
+          passwordField: "password",
+        },
+        async function (username, password, done) {
+          try {
+            const user = await ctx.oidc.userManagement.login(
+              client,
+              "password",
+              {
+                email: username,
+                password,
+              },
+            );
+            if (user) {
+              done(null, user);
+            } else {
+              done(null, false);
+            }
+          } catch (e) {
+            throw new OperationError(
+              outcomeFatal("unknown", "Internal Server Error could not login."),
+            );
+          }
+        },
+      ),
+    );
+    await next();
   });
-
-  koaPassport.deserializeUser(
-    async (info: { scope: user_scope; id: string; tenant: string }, done) => {
-      try {
-        const user = await userManagement.get(client, info.id);
-        done(null, user);
-      } catch (err) {
-        done(err);
-      }
-    },
-  );
-
   managementRouter.use(koaPassport.initialize());
   managementRouter.use(koaPassport.session());
-  managementRouter.use(async (ctx, next) => {
-    return next();
-  });
 
   managementRouter.get(
     ROUTES.SIGNUP_GET,
@@ -95,7 +92,7 @@ export function createGlobalRouter(prefix: string, { client }: Options) {
   managementRouter.post(
     ROUTES.PASSWORD_RESET_INITIATE_POST,
     "/interaction/password-reset",
-    routes.passwordResetInitiatePOST({ userManagement, codeManagement }),
+    routes.passwordResetInitiatePOST(),
   );
 
   managementRouter.get(
@@ -107,13 +104,13 @@ export function createGlobalRouter(prefix: string, { client }: Options) {
   managementRouter.get(
     ROUTES.PASSWORD_RESET_VERIFY_GET,
     "/interaction/password-reset-verify",
-    routes.passwordResetGET({ codeManagement }),
+    routes.passwordResetGET(),
   );
 
   managementRouter.post(
     ROUTES.PASSWORD_RESET_VERIFY_POST,
     "/interaction/password-reset-verify",
-    routes.passwordResetPOST({ codeManagement, userManagement }),
+    routes.passwordResetPOST(),
   );
   managementRouter.get(ROUTES.LOGIN_GET, "/interaction/login", routes.loginGET);
   managementRouter.post(
@@ -129,9 +126,7 @@ export function createGlobalRouter(prefix: string, { client }: Options) {
       optional: ["scope", "redirect_uri"],
     }),
     injectHardcodedClients(),
-    routes.authorizeGET({
-      codeManagement,
-    }),
+    routes.authorizeGET(),
   );
   managementRouter.post(
     ROUTES.TOKEN_POST,
@@ -140,10 +135,7 @@ export function createGlobalRouter(prefix: string, { client }: Options) {
       required: ["client_id"],
     }),
     injectHardcodedClients(),
-    routes.tokenPost({
-      codeManagement,
-      userManagement,
-    }),
+    routes.tokenPost(),
   );
 
   // Adding both as options to either get or post.

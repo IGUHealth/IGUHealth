@@ -1,16 +1,13 @@
 import type * as Koa from "koa";
 import * as db from "zapatos/db";
+import { user_role } from "zapatos/schema";
 
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { id } from "@iguhealth/fhir-types/r4/types";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaContext, TenantId } from "../../../fhir-context/types.js";
 import { getSigningKey } from "../../certifications.js";
 import { createToken } from "../../token.js";
-import GlobalUserManagement from "../../db/users/provider/global.js";
-import { user_role } from "zapatos/schema";
-import { AuthorizationCodeManagement } from "../../db/code/interface.js";
-import { UserManagement } from "../../db/users/interface.js";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -19,13 +16,10 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 /**
  * Returns an access token that can be used to access protected resources.
  */
-export function tokenPost<State, C extends Koa.DefaultContext>({
-  codeManagement,
-  userManagement,
-}: {
-  codeManagement: AuthorizationCodeManagement;
-  userManagement: UserManagement & GlobalUserManagement;
-}): Koa.Middleware<State, KoaContext.FHIR<C>> {
+export function tokenPost<
+  State,
+  C extends Koa.DefaultContext,
+>(): Koa.Middleware<State, KoaContext.FHIR<C>> {
   return async (ctx) => {
     const body = (ctx.request as unknown as Record<string, unknown>).body;
     if (!isRecord(body)) {
@@ -67,7 +61,7 @@ export function tokenPost<State, C extends Koa.DefaultContext>({
               );
             }
 
-            const code = await codeManagement.search(txnClient, {
+            const code = await ctx.oidc.codeManagement.search(txnClient, {
               code: body.code,
             });
 
@@ -78,18 +72,23 @@ export function tokenPost<State, C extends Koa.DefaultContext>({
                 outcomeError("invalid", "Invalid client"),
               );
 
-            const user = await userManagement.get(txnClient, code[0].user_id);
+            const user = await ctx.oidc.userManagement.get(
+              txnClient,
+              code[0].user_id,
+            );
             if (!user)
               throw new OperationError(outcomeError("invalid", "Invalid user"));
 
-            await codeManagement.delete(txnClient, { id: code[0].id });
+            await ctx.oidc.codeManagement.delete(txnClient, { id: code[0].id });
 
             const signingKey = await getSigningKey(
               process.env.AUTH_LOCAL_CERTIFICATION_LOCATION as string,
               process.env.AUTH_LOCAL_SIGNING_KEY as string,
             );
 
-            const tenantUsers = await userManagement.getTenantUsers(
+            // [TODO] Need to fix this for tenant management.
+            // @ts-ignore
+            const tenantUsers = await ctx.oidc.userManagement.getTenantUsers(
               txnClient,
               user.id,
             );

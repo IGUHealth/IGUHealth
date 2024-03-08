@@ -10,10 +10,10 @@ import { KoaContext, asSystemCTX } from "../../../fhir-context/types.js";
  * Used in subsequent oidc routes.
  * @returns Koa.Middleware
  */
-export function clientInjectFHIRMiddleware<
+export function clientInjectFHIRMiddleware<State>(): Koa.Middleware<
   State,
-  C extends Koa.DefaultContext,
->(): Koa.Middleware<State, Koa.DefaultContext & KoaContext.OIDC> {
+  Koa.DefaultContext & KoaContext.OIDC
+> {
   return async (ctx, next) => {
     const clientId = ctx.oidc.parameters.client_id;
 
