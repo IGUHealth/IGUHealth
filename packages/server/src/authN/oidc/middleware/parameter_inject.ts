@@ -37,7 +37,7 @@ function isValidParam(param: ParameterKey, value: unknown): value is string {
  */
 export function createValidateInjectOIDCParameters<
   State,
-  C extends Koa.DefaultContext,
+  C extends Koa.DefaultContext & KoaContext.OIDC,
 >({
   required,
   optional,

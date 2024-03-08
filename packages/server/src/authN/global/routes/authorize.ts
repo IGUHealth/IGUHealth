@@ -1,8 +1,8 @@
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+
 import { ROUTES } from "../constants.js";
 import { ManagementRouteHandler } from "../index.js";
 import { setLoginRedirectSession } from "./interactions/login.js";
-import { AuthorizationCodeManagement } from "../../db/code/interface.js";
 
 function getRegexForRedirect(urlPattern: string): RegExp {
   const regex = new RegExp(urlPattern.replaceAll("*", "(.+)"));
@@ -31,11 +31,7 @@ function getRegexForRedirect(urlPattern: string): RegExp {
          to the client.  The parameter SHOULD be used for preventing
          cross-site request forgery as described in Section 10.12.
  */
-export function authorizeGET({
-  codeManagement,
-}: {
-  codeManagement: AuthorizationCodeManagement;
-}): ManagementRouteHandler {
+export function authorizeGET(): ManagementRouteHandler {
   return async (ctx, next) => {
     if (ctx.isAuthenticated()) {
       const redirectUrl = ctx.request.query.redirect_uri?.toString();
@@ -55,7 +51,7 @@ export function authorizeGET({
           outcomeError("invalid", `Redirect URI '${redirectUrl}' not found.`),
         );
 
-      const code = await codeManagement.create(ctx.postgres, {
+      const code = await ctx.oidc.codeManagement.create(ctx.postgres, {
         type: "oauth2_code_grant",
         client_id: client.id,
         user_id: ctx.state.user.id,

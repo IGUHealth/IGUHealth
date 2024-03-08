@@ -5,8 +5,10 @@ import { Login } from "@iguhealth/components";
 
 import { KoaContext } from "../../fhir-context/types.js";
 import * as views from "../../views/index.js";
-import { clientTenantInjectMiddleware } from "./middleware/client_find.js";
-import { createValidateInjectOIDCParameters } from "./middleware/parameter_inject.js";
+import {
+  clientInjectFHIRMiddleware,
+  createValidateInjectOIDCParameters,
+} from "./middleware/index.js";
 import * as routes from "./routes/index.js";
 
 /**
@@ -33,7 +35,7 @@ export function createOIDCRouter<State, C>(
   oidcRouter.post(
     "/token",
     createValidateInjectOIDCParameters({ required: ["client_id"] }),
-    clientTenantInjectMiddleware(),
+    clientInjectFHIRMiddleware(),
     routes.tokenEndpoint(),
   );
 

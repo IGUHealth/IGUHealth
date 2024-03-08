@@ -4,13 +4,18 @@ import * as s from "zapatos/schema";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { TenantId } from "../../../../fhir-context/types.js";
 import { AuthorizationCodeManagement } from "../interface.js";
 import { AuthorizationCode } from "../types.js";
 import { is_expired } from "../utilities.js";
 
-export default class GlobalAuthorizationCodeManagement
+export default class TenantAuthorizationCodeManagement
   implements AuthorizationCodeManagement
 {
+  private tenantId: TenantId;
+  constructor(tenantId: TenantId) {
+    this.tenantId = tenantId;
+  }
   async get(
     client: db.Queryable,
     id: string,
@@ -18,7 +23,7 @@ export default class GlobalAuthorizationCodeManagement
     return db
       .selectOne(
         "authorization_code",
-        { id, scope: "global" },
+        { id, scope: "tenant", tenant: this.tenantId },
         {
           extras: { is_expired },
         },
@@ -32,7 +37,7 @@ export default class GlobalAuthorizationCodeManagement
     return db
       .select(
         "authorization_code",
-        { ...where, scope: "global" },
+        { ...where, scope: "tenant", tenant: this.tenantId },
         { extras: { is_expired } },
       )
       .run(client);
@@ -47,7 +52,12 @@ export default class GlobalAuthorizationCodeManagement
     return db
       .insert(
         "authorization_code",
-        { ...model, code: randomBytes(32).toString("hex"), scope: "global" },
+        {
+          ...model,
+          code: randomBytes(32).toString("hex"),
+          scope: "tenant",
+          tenant: this.tenantId,
+        },
         { extras: { is_expired } },
       )
       .run(client);
@@ -59,7 +69,8 @@ export default class GlobalAuthorizationCodeManagement
   ): Promise<AuthorizationCode> {
     return db.serializable(client, async (txnClient) => {
       const where: s.authorization_code.Whereable = {
-        scope: "global",
+        scope: "tenant",
+        tenant: this.tenantId,
         id,
       };
       const authorization_codes = await db
@@ -74,7 +85,8 @@ export default class GlobalAuthorizationCodeManagement
           "authorization_code",
           {
             ...update,
-            scope: "global",
+            scope: "tenant",
+            tenant: this.tenantId,
           },
           where,
           { extras: { is_expired } },
@@ -90,7 +102,8 @@ export default class GlobalAuthorizationCodeManagement
     return db.serializable(client, async (txnClient) => {
       const where: s.authorization_code.Whereable = {
         ...where_,
-        scope: "global",
+        scope: "tenant",
+        tenant: this.tenantId,
       };
       const authorization_code = await db
         .select("authorization_code", where)

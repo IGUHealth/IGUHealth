@@ -12,24 +12,21 @@ import * as views from "../../../../views/index.js";
 import { ROUTES } from "../../constants.js";
 import type { ManagementRouteHandler } from "../../index.js";
 import { validateEmail } from "../../utilities.js";
-import { AuthorizationCodeManagement } from "../../../db/code/interface.js";
-import { UserManagement } from "../../../db/users/interface.js";
 
-export function passwordResetGET({
-  codeManagement,
-}: {
-  codeManagement: AuthorizationCodeManagement;
-}): ManagementRouteHandler {
+export function passwordResetGET(): ManagementRouteHandler {
   return async (ctx) => {
     const queryCode = ctx.request.query.code;
     if (typeof queryCode !== "string") {
       throw new OperationError(outcomeError("invalid", "Code not found."));
     }
 
-    const authorizationCodeSearch = await codeManagement.search(ctx.postgres, {
-      type: "password_reset",
-      code: queryCode,
-    });
+    const authorizationCodeSearch = await ctx.oidc.codeManagement.search(
+      ctx.postgres,
+      {
+        type: "password_reset",
+        code: queryCode,
+      },
+    );
 
     if (
       authorizationCodeSearch.length !== 1 ||
@@ -61,13 +58,7 @@ export function passwordResetGET({
   };
 }
 
-export function passwordResetPOST({
-  codeManagement,
-  userManagement,
-}: {
-  codeManagement: AuthorizationCodeManagement;
-  userManagement: UserManagement;
-}): ManagementRouteHandler {
+export function passwordResetPOST(): ManagementRouteHandler {
   return async (ctx) => {
     const body = ctx.request.body as
       | { code?: string; password?: string; passwordConfirm?: string }
@@ -113,13 +104,16 @@ export function passwordResetPOST({
       );
       return;
     }
-    const res = await codeManagement.search(ctx.postgres, {
+
+    const res = await ctx.oidc.codeManagement.search(ctx.postgres, {
       type: "password_reset",
       code: body.code,
     });
+
     if (res.length !== 1) {
       throw new OperationError(outcomeError("invalid", "Code not found."));
     }
+
     const authorizationCode = res[0];
 
     if (!authorizationCode || authorizationCode.is_expired) {
@@ -132,11 +126,15 @@ export function passwordResetPOST({
     }
 
     db.serializable(ctx.postgres, async (txnClient) => {
-      await userManagement.update(txnClient, authorizationCode.user_id, {
-        password: body.password,
-        email_verified: true,
-      });
-      await codeManagement.delete(txnClient, { code: body.code });
+      await ctx.oidc.userManagement.update(
+        txnClient,
+        authorizationCode.user_id,
+        {
+          password: body.password,
+          email_verified: true,
+        },
+      );
+      await ctx.oidc.codeManagement.delete(txnClient, { code: body.code });
     });
 
     views.renderPipe(
@@ -172,13 +170,7 @@ export const passwordResetInitiateGet: ManagementRouteHandler = async (ctx) => {
  * Initiates password reset process by sending an email to the user with a link to reset their password.
  * @param ctx Koa fhir context
  */
-export function passwordResetInitiatePOST({
-  codeManagement,
-  userManagement,
-}: {
-  codeManagement: AuthorizationCodeManagement;
-  userManagement: UserManagement;
-}): ManagementRouteHandler {
+export function passwordResetInitiatePOST(): ManagementRouteHandler {
   return async (ctx) => {
     const body = ctx.request.body as
       | { email?: string; password?: string }
@@ -198,7 +190,7 @@ export function passwordResetInitiatePOST({
       );
     }
 
-    const usersWithEmail = await userManagement.search(ctx.postgres, {
+    const usersWithEmail = await ctx.oidc.userManagement.search(ctx.postgres, {
       email: body.email,
     });
     if (usersWithEmail.length > 1) {
@@ -210,7 +202,9 @@ export function passwordResetInitiatePOST({
     let user = usersWithEmail[0];
     // TODO Should user be created?
     if (!user) {
-      user = await userManagement.create(ctx.postgres, { email: body.email });
+      user = await ctx.oidc.userManagement.create(ctx.postgres, {
+        email: body.email,
+      });
     }
 
     if (!process.env.EMAIL_FROM) {
@@ -224,13 +218,13 @@ export function passwordResetInitiatePOST({
 
     if (
       (
-        await codeManagement.search(ctx.postgres, {
+        await ctx.oidc.codeManagement.search(ctx.postgres, {
           user_id: user.id,
           type: "password_reset",
         })
       ).length === 0
     ) {
-      const code = await codeManagement.create(ctx.postgres, {
+      const code = await ctx.oidc.codeManagement.create(ctx.postgres, {
         type: "password_reset",
         user_id: user.id,
         expires_in: "15 minutes",
