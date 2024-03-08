@@ -1,6 +1,6 @@
 import Router from "@koa/router";
 import type * as Koa from "koa";
-import koaPassport from "koa-passport";
+import { KoaPassport } from "koa-passport";
 import localStrategy from "passport-local";
 import * as db from "zapatos/db";
 import { user_scope } from "zapatos/schema";
@@ -32,6 +32,8 @@ export function createGlobalRouter(prefix: string, { client }: Options) {
   >({
     prefix,
   });
+
+  const koaPassport = new KoaPassport();
 
   managementRouter.use(async (ctx, next) => {
     koaPassport.serializeUser((euser, done) => {

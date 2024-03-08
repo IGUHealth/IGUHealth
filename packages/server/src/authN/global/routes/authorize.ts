@@ -1,6 +1,5 @@
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { AuthorizationCodeManagement } from "../../db/code/interface.js";
 import { ROUTES } from "../constants.js";
 import { ManagementRouteHandler } from "../index.js";
 import { setLoginRedirectSession } from "./interactions/login.js";
