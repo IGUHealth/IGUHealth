@@ -209,6 +209,7 @@ export default async function createServer(): Promise<
   const managementRouter = createGlobalRouter("/management", {
     client: pool,
   });
+
   rootRouter.use(managementRouter.routes());
   rootRouter.use(managementRouter.allowedMethods());
 

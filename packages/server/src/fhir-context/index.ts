@@ -72,7 +72,7 @@ const DB_TYPES: ResourceType[] = ([...resourceTypes] as ResourceType[]).filter(
 
 export function createMemoryData(
   resourceTypes: ResourceType[],
-): InternalData<ResourceType> {
+): InternalData<ResourceType> { 
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
       loadArtifacts({

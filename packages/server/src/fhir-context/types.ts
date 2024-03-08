@@ -16,6 +16,8 @@ import {
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 
+import { AuthorizationCodeManagement } from "../authN/db/code/interface.js";
+import { UserManagement } from "../authN/db/users/interface.js";
 import { IGUHEALTH_ISSUER, JWT } from "../authN/token.js";
 import type { IOCache } from "../cache/interface.js";
 import { EmailProvider } from "../email/interface.js";
@@ -26,6 +28,9 @@ import type { Lock } from "../synchronization/interfaces.js";
 export namespace KoaContext {
   export type OIDC = {
     oidc: {
+      userManagement: UserManagement;
+      codeManagement: AuthorizationCodeManagement;
+      context: { scope: "global" } | { scope: "tenant"; tenant: TenantId };
       client?: ClientApplication;
       parameters: {
         state?: string;

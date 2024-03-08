@@ -3,18 +3,18 @@ import type * as Koa from "koa";
 import koaPassport from "koa-passport";
 import localStrategy from "passport-local";
 import * as db from "zapatos/db";
+import { user_scope } from "zapatos/schema";
 
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { KoaContext } from "../../fhir-context/types.js";
+import GlobalAuthorizationCodeManagement from "../db/code/provider/global.js";
+import GlobalUserManagement from "../db/users/provider/global.js";
+import { User } from "../db/users/types.js";
+import { injectHardcodedClients } from "../oidc/middleware/index.js";
 import { createValidateInjectOIDCParameters } from "../oidc/middleware/parameter_inject.js";
 import { ROUTES } from "./constants.js";
 import * as routes from "./routes/index.js";
-import { user_scope } from "zapatos/schema";
-import GlobalUserManagement from "../db/users/provider/global.js";
-import { User } from "../db/users/types.js";
-import { injectHardcodedClients } from "../oidc/middleware/client_find.js";
-import GlobalAuthorizationCodeManagement from "../db/code/provider/global.js";
 
 export type ManagementRouteHandler = Parameters<
   ReturnType<typeof createGlobalRouter>["all"]
