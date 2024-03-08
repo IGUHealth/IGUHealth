@@ -17,8 +17,11 @@ export function injectGlobalManagement<State>(): Koa.Middleware<
   Koa.DefaultContext & KoaContext.OIDC
 > {
   return async (ctx, next) => {
-    ctx.oidc.userManagement = new GlobalUserManagement();
-    ctx.oidc.codeManagement = new GlobalAuthorizationCodeManagement();
+    ctx.oidc = {
+      ...ctx.oidc,
+      userManagement: new GlobalUserManagement(),
+      codeManagement: new GlobalAuthorizationCodeManagement(),
+    };
 
     await next();
   };
@@ -36,10 +39,14 @@ export function injectTenantManagement<State, C>(): Koa.Middleware<
     if (!ctx.FHIRContext.tenant) {
       throw new OperationError(outcomeFatal("invalid", "No Tenant"));
     }
-    ctx.oidc.userManagement = new TenantUserManagement(ctx.FHIRContext.tenant);
-    ctx.oidc.codeManagement = new TenantAuthorizationCodeManagement(
-      ctx.FHIRContext.tenant,
-    );
+
+    ctx.oidc = {
+      ...ctx.oidc,
+      userManagement: new TenantUserManagement(ctx.FHIRContext.tenant),
+      codeManagement: new TenantAuthorizationCodeManagement(
+        ctx.FHIRContext.tenant,
+      ),
+    };
 
     await next();
   };

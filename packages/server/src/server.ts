@@ -25,6 +25,7 @@ import {
   createValidateUserJWTMiddleware,
 } from "./authN/middleware.js";
 import { createOIDCRouter } from "./authN/oidc/index.js";
+import { injectGlobalManagement } from "./authN/oidc/middleware/inject_management.js";
 import { verifyAndAssociateUserFHIRContext } from "./authZ/middleware/tenantAccess.js";
 import loadEnv from "./env.js";
 import {
@@ -208,6 +209,8 @@ export default async function createServer(): Promise<
 
   const managementRouter = createGlobalRouter("/management", {
     client: pool,
+    // Inject global management.
+    middleware: [injectGlobalManagement()],
   });
 
   rootRouter.use(managementRouter.routes());

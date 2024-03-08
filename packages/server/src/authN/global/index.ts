@@ -20,18 +20,24 @@ export type ManagementRouteHandler = Parameters<
 
 type Options = {
   client: db.Queryable;
+  middleware: ManagementRouteHandler[];
 };
 
 /**
  * Management api for creating tenants and managing tenant owners.
  */
-export function createGlobalRouter(prefix: string, { client }: Options) {
+export function createGlobalRouter(
+  prefix: string,
+  { client, middleware }: Options,
+) {
   const managementRouter = new Router<
     Koa.DefaultState,
     Koa.DefaultContext & KoaContext.OIDC & KoaContext.FHIRServices
   >({
     prefix,
   });
+
+  managementRouter.use(...middleware);
 
   const koaPassport = new KoaPassport();
 
