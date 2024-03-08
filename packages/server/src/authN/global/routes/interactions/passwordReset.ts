@@ -9,8 +9,6 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import * as views from "../../../../views/index.js";
-import { AuthorizationCodeManagement } from "../../../db/code/interface.js";
-import { UserManagement } from "../../../db/users/interface.js";
 import { ROUTES } from "../../constants.js";
 import type { ManagementRouteHandler } from "../../index.js";
 import { validateEmail } from "../../utilities.js";
