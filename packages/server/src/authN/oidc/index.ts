@@ -7,7 +7,7 @@ import { user_scope } from "zapatos/schema";
 
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX, KoaContext } from "../../fhir-context/types.js";
+import { KoaContext } from "../../fhir-context/types.js";
 import { User } from "../db/users/types.js";
 import { ROUTES } from "../oidc/constants.js";
 import {
@@ -89,6 +89,8 @@ export function createOIDCRouter<
         },
       ),
     );
+
+    ctx.oidc.passport = koaPassport;
     await next();
   });
   managementRouter.use(koaPassport.initialize());
@@ -145,6 +147,7 @@ export function createOIDCRouter<
       optional: ["scope", "redirect_uri"],
     }),
     injectHardcodedClients(),
+    clientInjectFHIRMiddleware(),
     routes.authorizeGET(),
   );
 

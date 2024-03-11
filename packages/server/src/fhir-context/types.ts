@@ -1,3 +1,4 @@
+import { KoaPassport } from "koa-passport";
 import type { Logger } from "pino";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
@@ -40,6 +41,7 @@ export namespace KoaContext {
         redirect_uri?: string;
         scope?: string;
       };
+      passport: InstanceType<typeof KoaPassport>;
     };
   };
 

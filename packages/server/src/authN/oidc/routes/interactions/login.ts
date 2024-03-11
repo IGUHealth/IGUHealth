@@ -1,5 +1,4 @@
 import type koa from "koa";
-import koaPassport from "koa-passport";
 import React from "react";
 
 import { Login } from "@iguhealth/components";
@@ -45,20 +44,23 @@ export const loginPOST: ManagementRouteHandler = async (ctx, next) => {
   const loginURL = ctx.router.url(ROUTES.LOGIN_GET);
   if (loginURL instanceof Error) throw loginURL;
 
-  return koaPassport.authenticate("local", (_err, user, _info, _status) => {
-    if (user === false) {
-      ctx.body = { success: false };
-      ctx.throw(401);
-    } else {
-      const redirecTURL =
-        getLoginRedirectURL(ctx.session) ??
-        (ctx.router.url(ROUTES.LOGIN_GET) as string);
-      removeLoginRedirectURL(ctx.session);
+  return ctx.oidc.passport.authenticate(
+    "local",
+    (_err, user, _info, _status) => {
+      if (user === false) {
+        ctx.body = { success: false };
+        ctx.throw(401);
+      } else {
+        const redirecTURL =
+          getLoginRedirectURL(ctx.session) ??
+          (ctx.router.url(ROUTES.LOGIN_GET) as string);
+        removeLoginRedirectURL(ctx.session);
 
-      ctx.redirect(redirecTURL);
-      return ctx.login(user);
-    }
-  })(ctx, next);
+        ctx.redirect(redirecTURL);
+        return ctx.login(user);
+      }
+    },
+  )(ctx, next);
 };
 
 export const loginGET: ManagementRouteHandler = async (ctx) => {
