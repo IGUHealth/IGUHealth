@@ -5,12 +5,27 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { TenantId } from "../../../../fhir-context/types.js";
 import { UserManagement } from "../interface.js";
-import { User, USER_QUERY_COLS, LoginParameters } from "../types.js";
+import { LoginParameters, USER_QUERY_COLS, User } from "../types.js";
 
 export default class TenantUserManagement implements UserManagement {
   private tenant: TenantId;
   constructor(tenant: TenantId) {
     this.tenant = tenant;
+  }
+  async getTenantUsers(client: db.Queryable, id: string): Promise<User[]> {
+    const user = await this.get(client, id);
+    if (user?.root_user) {
+      const tenantUsers = await db
+        .select(
+          "users",
+          { root_user: user.id, scope: "tenant" },
+          { columns: USER_QUERY_COLS },
+        )
+        .run(client);
+
+      return tenantUsers;
+    }
+    return [];
   }
   async login<T extends keyof LoginParameters>(
     client: db.Queryable,

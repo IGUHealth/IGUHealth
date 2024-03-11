@@ -9,6 +9,7 @@ export const USER_QUERY_COLS = <const>[
   "email_verified",
   "role",
   "fhir_user_versionid",
+  "root_user",
 ];
 
 export type User = s.users.OnlyCols<typeof USER_QUERY_COLS>;

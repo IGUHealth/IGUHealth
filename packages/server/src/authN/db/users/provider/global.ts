@@ -1,11 +1,11 @@
+import { nanoid } from "nanoid";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
-import { nanoid } from "nanoid";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { UserManagement } from "../interface.js";
-import { User, USER_QUERY_COLS, LoginParameters } from "../types.js";
+import { LoginParameters, USER_QUERY_COLS, User } from "../types.js";
 
 export default class GlobalUserManagement implements UserManagement {
   async getTenantUsers(client: db.Queryable, id: string): Promise<User[]> {
@@ -88,7 +88,7 @@ export default class GlobalUserManagement implements UserManagement {
         })
         .run(txnClient);
 
-      const tenantUser = await db
+      await db
         .insert("users", {
           scope: "tenant",
           role: "owner",
