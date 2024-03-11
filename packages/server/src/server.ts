@@ -19,13 +19,15 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { createCertsIfNoneExists } from "./authN/certifications.js";
-import { createGlobalRouter } from "./authN/global/index.js";
 import {
   allowPublicAccessMiddleware,
   createValidateUserJWTMiddleware,
 } from "./authN/middleware.js";
 import { createOIDCRouter } from "./authN/oidc/index.js";
-import { injectGlobalManagement } from "./authN/oidc/middleware/inject_management.js";
+import {
+  injectGlobalManagement,
+  injectTenantManagement,
+} from "./authN/oidc/middleware/inject_management.js";
 import { verifyAndAssociateUserFHIRContext } from "./authZ/middleware/tenantAccess.js";
 import loadEnv from "./env.js";
 import {
@@ -207,7 +209,7 @@ export default async function createServer(): Promise<
     await createKoaFHIRServices(pool),
   );
 
-  const managementRouter = createGlobalRouter("/management", {
+  const managementRouter = createOIDCRouter("/management", {
     client: pool,
     // Inject global management.
     middleware: [injectGlobalManagement()],
@@ -241,10 +243,16 @@ export default async function createServer(): Promise<
   );
 
   // Instantiate OIDC routes
-  const oidcRouter = createOIDCRouter("/auth/oidc");
+  const tenantOIDCRouter = createOIDCRouter<
+    KoaContext.FHIR<Koa.DefaultContext>
+  >("/oidc", {
+    client: pool,
+    // Inject global management.
+    middleware: [injectTenantManagement()],
+  });
 
-  tenantAPIV1Router.use(oidcRouter.routes());
-  tenantAPIV1Router.use(oidcRouter.allowedMethods());
+  tenantAPIV1Router.use(tenantOIDCRouter.routes());
+  tenantAPIV1Router.use(tenantOIDCRouter.allowedMethods());
 
   // FHIR API Endpoint
   tenantAPIV1Router.all(
