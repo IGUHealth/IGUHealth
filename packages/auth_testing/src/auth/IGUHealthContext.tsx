@@ -1,6 +1,7 @@
 import { createContext } from "react";
-import { Membership } from "@iguhealth/fhir-types/r4/types";
+
 import createHTTPClient from "@iguhealth/client/http";
+import { Membership } from "@iguhealth/fhir-types/r4/types";
 
 export type IGUHealthContextState = {
   getClient: () => ReturnType<typeof createHTTPClient>;
@@ -8,9 +9,6 @@ export type IGUHealthContextState = {
   user: Membership | undefined;
 };
 
-/**
- * @ignore
- */
 const stub = (): never => {
   throw new Error("IGUHealth has not been initiated.");
 };

@@ -1,8 +1,9 @@
-import type { IGUHealthContextState } from "./IGUHealthContext";
 import createHTTPClient from "@iguhealth/client/http";
 
+import type { IGUHealthContextState } from "./IGUHealthContext";
+
 export type Action = {
-  type: "SET_AUTHORIZATION_PAYLOAD";
+  type: "INIT_CLIENT";
   domain: string;
   payload: { id_token: string; access_token: string };
 };
@@ -25,7 +26,7 @@ function parseJwt(token: string) {
 
 export function iguHealthReducer(state: IGUHealthContextState, action: Action) {
   switch (action.type) {
-    case "SET_AUTHORIZATION_PAYLOAD": {
+    case "INIT_CLIENT": {
       const user = parseJwt(action.payload.id_token);
       return {
         ...state,

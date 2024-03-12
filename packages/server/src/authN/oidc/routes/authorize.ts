@@ -1,6 +1,8 @@
+import { user_scope } from "zapatos/schema";
+
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { ROUTES } from "../constants.js";
+import { OIDC_ROUTES } from "../constants.js";
 import { ManagementRouteHandler } from "../index.js";
 import { setLoginRedirectSession } from "./interactions/login.js";
 
@@ -31,7 +33,7 @@ function getRegexForRedirect(urlPattern: string): RegExp {
          to the client.  The parameter SHOULD be used for preventing
          cross-site request forgery as described in Section 10.12.
  */
-export function authorizeGET(): ManagementRouteHandler {
+export function authorizeGET(scope: user_scope): ManagementRouteHandler {
   return async (ctx, next) => {
     if (ctx.isAuthenticated()) {
       const redirectUrl = ctx.request.query.redirect_uri?.toString();
@@ -61,7 +63,12 @@ export function authorizeGET(): ManagementRouteHandler {
       ctx.redirect(`${redirectUrl}?code=${code.code}&state=${state}`);
     } else {
       setLoginRedirectSession(ctx.session, ctx.url);
-      ctx.redirect(ctx.router.url(ROUTES.LOGIN_GET) as string);
+
+      ctx.redirect(
+        ctx.router.url(OIDC_ROUTES(scope).LOGIN_GET, {
+          tenant: ctx.oidc.tenant,
+        }) as string,
+      );
     }
     await next();
   };

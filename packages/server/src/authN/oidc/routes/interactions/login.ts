@@ -1,10 +1,11 @@
 import type koa from "koa";
 import React from "react";
+import { user_scope } from "zapatos/schema";
 
 import { Login } from "@iguhealth/components";
 
 import * as views from "../../../../views/index.js";
-import { ROUTES } from "../../constants.js";
+import { OIDC_ROUTES } from "../../constants.js";
 import type { ManagementRouteHandler } from "../../index.js";
 
 /**
@@ -40,45 +41,62 @@ export function getLoginRedirectURL(
   return session?.loginRedirect;
 }
 
-export const loginPOST: ManagementRouteHandler = async (ctx, next) => {
-  const loginURL = ctx.router.url(ROUTES.LOGIN_GET);
-  if (loginURL instanceof Error) throw loginURL;
+export const loginPOST =
+  (scope: user_scope): ManagementRouteHandler =>
+  async (ctx, next) => {
+    const loginURL = ctx.router.url(OIDC_ROUTES(scope).LOGIN_GET, {
+      tenant: ctx.oidc.tenant,
+    });
 
-  return ctx.oidc.passport.authenticate(
-    "local",
-    (_err, user, _info, _status) => {
-      if (user === false) {
-        ctx.body = { success: false };
-        ctx.throw(401);
-      } else {
-        const redirecTURL =
-          getLoginRedirectURL(ctx.session) ??
-          (ctx.router.url(ROUTES.LOGIN_GET) as string);
-        removeLoginRedirectURL(ctx.session);
+    if (loginURL instanceof Error) throw loginURL;
 
-        ctx.redirect(redirecTURL);
-        return ctx.login(user);
-      }
-    },
-  )(ctx, next);
-};
+    return ctx.oidc.passport.authenticate(
+      "local",
+      (_err, user, _info, _status) => {
+        if (user === false) {
+          ctx.body = { success: false };
+          ctx.throw(401);
+        } else {
+          const redirecTURL =
+            getLoginRedirectURL(ctx.session) ??
+            (ctx.router.url(OIDC_ROUTES(scope).LOGIN_GET, {
+              tenant: ctx.oidc.tenant,
+            }) as string);
+          removeLoginRedirectURL(ctx.session);
 
-export const loginGET: ManagementRouteHandler = async (ctx) => {
-  const loginRoute = ctx.router.url(ROUTES.LOGIN_POST);
-  if (loginRoute instanceof Error) throw loginRoute;
-  const signupURL = ctx.router.url(ROUTES.SIGNUP_GET);
-  if (signupURL instanceof Error) throw signupURL;
-  const forgotPasswordURL = ctx.router.url(ROUTES.PASSWORD_RESET_INITIATE_GET);
-  if (forgotPasswordURL instanceof Error) throw forgotPasswordURL;
+          ctx.redirect(redirecTURL);
+          return ctx.login(user);
+        }
+      },
+    )(ctx, next);
+  };
 
-  views.renderPipe(
-    ctx,
-    React.createElement(Login, {
-      logo: "/public/img/logo.svg",
-      title: "IGUHealth",
-      action: loginRoute,
-      signupURL,
-      forgotPasswordURL,
-    }),
-  );
-};
+export const loginGET =
+  (scope: user_scope): ManagementRouteHandler =>
+  async (ctx) => {
+    const loginRoute = ctx.router.url(OIDC_ROUTES(scope).LOGIN_POST, {
+      tenant: ctx.oidc.tenant,
+    });
+    if (loginRoute instanceof Error) throw loginRoute;
+    const signupURL = ctx.router.url(OIDC_ROUTES(scope).SIGNUP_GET, {
+      tenant: ctx.oidc.tenant,
+    });
+    if (signupURL instanceof Error) throw signupURL;
+    const forgotPasswordURL = ctx.router.url(
+      OIDC_ROUTES(scope).PASSWORD_RESET_INITIATE_GET,
+      { tenant: ctx.oidc.tenant },
+    );
+
+    if (forgotPasswordURL instanceof Error) throw forgotPasswordURL;
+
+    views.renderPipe(
+      ctx,
+      React.createElement(Login, {
+        logo: "/public/img/logo.svg",
+        title: "IGUHealth",
+        action: loginRoute,
+        signupURL,
+        forgotPasswordURL,
+      }),
+    );
+  };

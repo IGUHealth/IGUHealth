@@ -38,6 +38,7 @@ export default class TenantUserManagement implements UserManagement {
         const where: s.users.Whereable = {
           scope: "tenant",
           tenant: this.tenant,
+          method: "email-password",
           email: parameters.email,
           password: db.sql`${db.self} = crypt(${db.param(parameters.password)}, ${db.self})`,
         };
