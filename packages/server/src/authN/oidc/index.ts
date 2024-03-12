@@ -3,13 +3,13 @@ import type * as Koa from "koa";
 import { KoaPassport } from "koa-passport";
 import localStrategy from "passport-local";
 import * as db from "zapatos/db";
-import { user_scope } from "zapatos/schema";
+import * as s from "zapatos/schema";
 
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { KoaContext } from "../../fhir-context/types.js";
 import { User } from "../db/users/types.js";
-import { ROUTES } from "../oidc/constants.js";
+import { OIDC_ROUTES } from "../oidc/constants.js";
 import {
   clientInjectFHIRMiddleware,
   injectHardcodedClients,
@@ -29,9 +29,11 @@ export function createOIDCRouter<
 >(
   prefix: string,
   {
+    scope,
     client,
     middleware,
   }: {
+    scope: s.user_scope;
     client: db.Queryable;
     middleware: Router.Middleware<Koa.DefaultState, C>[];
   },
@@ -50,16 +52,18 @@ export function createOIDCRouter<
       done(null, { id: user.id });
     });
 
-    koaPassport.deserializeUser(
-      async (info: { scope: user_scope; id: string; tenant: string }, done) => {
-        try {
-          const user = await ctx.oidc.userManagement.get(client, info.id);
-          done(null, user);
-        } catch (err) {
-          done(err);
+    koaPassport.deserializeUser(async (info: { id: string }, done) => {
+      try {
+        const user = await ctx.oidc.userManagement.get(client, info.id);
+
+        if (!user) {
+          done(null, false);
         }
-      },
-    );
+        done(null, user);
+      } catch (err) {
+        done(err);
+      }
+    });
     koaPassport.use(
       new localStrategy.Strategy(
         {
@@ -93,54 +97,63 @@ export function createOIDCRouter<
     ctx.oidc.passport = koaPassport;
     await next();
   });
+
   managementRouter.use(koaPassport.initialize());
   managementRouter.use(koaPassport.session());
 
   managementRouter.get(
-    ROUTES.SIGNUP_GET,
+    OIDC_ROUTES(scope).SIGNUP_GET,
     "/interaction/signup",
-    routes.signupGET,
+    routes.signupGET(scope),
   );
 
   managementRouter.post(
-    ROUTES.PASSWORD_RESET_INITIATE_POST,
+    OIDC_ROUTES(scope).PASSWORD_RESET_INITIATE_POST,
     "/interaction/password-reset",
-    routes.passwordResetInitiatePOST(),
+    routes.passwordResetInitiatePOST(scope),
   );
 
   managementRouter.get(
-    ROUTES.PASSWORD_RESET_INITIATE_GET,
+    OIDC_ROUTES(scope).PASSWORD_RESET_INITIATE_GET,
     "/interaction/password-reset",
-    routes.passwordResetInitiateGet,
+    routes.passwordResetInitiateGet(scope),
   );
 
   managementRouter.get(
-    ROUTES.PASSWORD_RESET_VERIFY_GET,
+    OIDC_ROUTES(scope).PASSWORD_RESET_VERIFY_GET,
     "/interaction/password-reset-verify",
-    routes.passwordResetGET(),
+    routes.passwordResetGET(scope),
   );
 
   managementRouter.post(
-    ROUTES.PASSWORD_RESET_VERIFY_POST,
+    OIDC_ROUTES(scope).PASSWORD_RESET_VERIFY_POST,
     "/interaction/password-reset-verify",
-    routes.passwordResetPOST(),
+    routes.passwordResetPOST(scope),
   );
-  managementRouter.get(ROUTES.LOGIN_GET, "/interaction/login", routes.loginGET);
-  managementRouter.post(
-    ROUTES.LOGIN_POST,
+  managementRouter.get(
+    OIDC_ROUTES(scope).LOGIN_GET,
     "/interaction/login",
-    routes.loginPOST,
+    routes.loginGET(scope),
+  );
+  managementRouter.post(
+    OIDC_ROUTES(scope).LOGIN_POST,
+    "/interaction/login",
+    routes.loginPOST(scope),
   );
   // Adding both as options to either get or post.
-  managementRouter.get(ROUTES.LOGOUT_GET, "/interaction/logout", routes.logout);
-  managementRouter.post(
-    ROUTES.LOGOUT_POST,
+  managementRouter.get(
+    OIDC_ROUTES(scope).LOGOUT_GET,
     "/interaction/logout",
-    routes.logout,
+    routes.logout(scope),
+  );
+  managementRouter.post(
+    OIDC_ROUTES(scope).LOGOUT_POST,
+    "/interaction/logout",
+    routes.logout(scope),
   );
 
   managementRouter.get(
-    ROUTES.AUTHORIZE_GET,
+    OIDC_ROUTES(scope).AUTHORIZE_GET,
     "/auth/authorize",
     createValidateInjectOIDCParameters({
       required: ["client_id", "response_type", "state"],
@@ -148,11 +161,11 @@ export function createOIDCRouter<
     }),
     injectHardcodedClients(),
     clientInjectFHIRMiddleware(),
-    routes.authorizeGET(),
+    routes.authorizeGET(scope),
   );
 
   managementRouter.post(
-    ROUTES.TOKEN_POST,
+    OIDC_ROUTES(scope).TOKEN_POST,
     "/auth/token",
     createValidateInjectOIDCParameters({
       required: ["client_id"],

@@ -68,7 +68,7 @@ function createClient(location: string) {
     getAccessToken: async function () {
       const response = await fetch(
         concatenateURLPaths(
-          getTenantAPIURL(tenant.api_origin, tenant.id),
+          getTenantURL(tenant.api_origin, tenant.id),
           "/oidc/auth/token",
         ),
         {

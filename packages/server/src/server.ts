@@ -209,7 +209,8 @@ export default async function createServer(): Promise<
     await createKoaFHIRServices(pool),
   );
 
-  const managementRouter = createOIDCRouter("/management", {
+  const managementRouter = createOIDCRouter("/oidc", {
+    scope: "global",
     client: pool,
     // Inject global management.
     middleware: [injectGlobalManagement()],
@@ -225,14 +226,7 @@ export default async function createServer(): Promise<
     prefix: "/w/:tenant",
   });
 
-  const tenantAPIV1Router = new Router<
-    Koa.DefaultState,
-    KoaContext.FHIR<Koa.DefaultContext>
-  >({
-    prefix: "/api/v1",
-  });
-
-  tenantAPIV1Router.use(
+  tenantRouter.use(
     "/",
     // Error handling middleware. Checks for OperationError and converts to OperationOutcome with status based on level and/or code.
 
@@ -242,17 +236,12 @@ export default async function createServer(): Promise<
     await createKoaFHIRContextMiddleware(),
   );
 
-  // Instantiate OIDC routes
-  const tenantOIDCRouter = createOIDCRouter<
+  const tenantAPIV1Router = new Router<
+    Koa.DefaultState,
     KoaContext.FHIR<Koa.DefaultContext>
-  >("/oidc", {
-    client: pool,
-    // Inject global management.
-    middleware: [injectTenantManagement()],
+  >({
+    prefix: "/api/v1",
   });
-
-  tenantAPIV1Router.use(tenantOIDCRouter.routes());
-  tenantAPIV1Router.use(tenantOIDCRouter.allowedMethods());
 
   // FHIR API Endpoint
   tenantAPIV1Router.all(
@@ -270,6 +259,26 @@ export default async function createServer(): Promise<
     verifyAndAssociateUserFHIRContext,
     await FHIRAPIKoaMiddleware<KoaFHIRMiddlewareState>(),
   );
+
+  // Instantiate OIDC routes
+  const tenantOIDCRouter = createOIDCRouter<
+    KoaContext.FHIR<Koa.DefaultContext>
+  >("/oidc", {
+    scope: "tenant",
+    client: pool,
+    // Inject global management.
+    middleware: [
+      injectTenantManagement(),
+      // Inject tenant.
+      async (ctx, next) => {
+        ctx.oidc = { ...ctx.oidc, tenant: ctx.FHIRContext.tenant };
+        await next();
+      },
+    ],
+  });
+
+  tenantRouter.use(tenantOIDCRouter.routes());
+  tenantRouter.use(tenantOIDCRouter.allowedMethods());
   tenantRouter.use(tenantAPIV1Router.routes());
   tenantRouter.use(tenantAPIV1Router.allowedMethods());
 

@@ -1,5 +1,5 @@
-import React, { useReducer, useEffect, useRef } from "react";
 import { nanoid } from "nanoid";
+import React, { useEffect, useReducer, useRef } from "react";
 
 import IGUHealthContext, { InitialContext } from "./IGUHealthContext";
 import { iguHealthReducer } from "./reducer";
@@ -7,10 +7,19 @@ import { hasAuthQueryParams } from "./utilities";
 
 const state_key = (client_id: string) => `iguhealth_${client_id}`;
 
+function conditionalAddTenant(path: string, tenant?: string) {
+  if (tenant) {
+    return `/w/${tenant}${path}`;
+  }
+  return path;
+}
+
 async function handleRedirectCallback({
   domain,
   clientId,
+  tenant,
 }: {
+  tenant?: string;
   domain: string;
   clientId: string;
 }) {
@@ -30,7 +39,7 @@ async function handleRedirectCallback({
 
   window.history.replaceState(null, "", location.pathname);
 
-  const url = new URL(`/management/auth/token`, domain);
+  const url = new URL(conditionalAddTenant(`/oidc/auth/token`, tenant), domain);
   const response: { access_token: string; id_token: string } = await fetch(
     url,
     {
@@ -51,10 +60,12 @@ async function handleRedirectCallback({
 }
 
 async function handleAuthorizeInitial({
+  tenant,
   clientId,
   domain,
   redirectUrl,
 }: {
+  tenant?: string;
   clientId: string;
   domain: string;
   redirectUrl: string;
@@ -62,22 +73,25 @@ async function handleAuthorizeInitial({
   const state = nanoid();
   localStorage.setItem(state_key(clientId), state);
 
-  console.log(domain);
-
   const url = new URL(
-    `/management/auth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&state=${state}&response_type=${"code"}`,
+    conditionalAddTenant(
+      `/oidc/auth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&state=${state}&response_type=${"code"}`,
+      tenant,
+    ),
     domain,
   );
-  console.log(domain, new URL(domain).pathname, url.toString());
+
   window.location.replace(url);
 }
 
-export default function IGUHealthProvider({
+export function IGUHealthProvider({
   clientId,
+  tenant,
   redirectUrl,
   domain,
   children,
 }: Readonly<{
+  tenant?: string;
   clientId: string;
   domain: string;
   redirectUrl: string;
@@ -97,15 +111,16 @@ export default function IGUHealthProvider({
         if (hasAuthQueryParams()) {
           const authorizationPayload = await handleRedirectCallback({
             domain,
+            tenant,
             clientId,
           });
           dispatch({
-            type: "SET_AUTHORIZATION_PAYLOAD",
+            type: "INIT_CLIENT",
             domain,
             payload: authorizationPayload,
           });
         } else {
-          handleAuthorizeInitial({ clientId, domain, redirectUrl });
+          handleAuthorizeInitial({ tenant, clientId, domain, redirectUrl });
         }
       } catch (error) {
         console.error(error);

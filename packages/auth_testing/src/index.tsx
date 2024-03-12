@@ -1,11 +1,10 @@
-import { ReportHandler } from "web-vitals";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
+import { ReportHandler } from "web-vitals";
 
 import { Patient } from "@iguhealth/fhir-types/r4/types";
 
-import IGUHealthProvider from "./IGUHealthProvider";
-import useIGUHealth from "./useIGUHealth";
+import { IGUHealthProvider, useIGUHealth } from "./auth";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
@@ -31,6 +30,7 @@ function App() {
 root.render(
   <React.StrictMode>
     <IGUHealthProvider
+      tenant="system"
       domain={"http://localhost:3000"}
       clientId="admin-app"
       redirectUrl="http://system.localhost:3002"

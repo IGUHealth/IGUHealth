@@ -28,6 +28,7 @@ export default class GlobalUserManagement implements UserManagement {
         const where: s.users.Whereable = {
           scope: "global",
           email: parameters.email,
+          method: "email-password",
           password: db.sql`${db.self} = crypt(${db.param(parameters.password)}, ${db.self})`,
         };
 

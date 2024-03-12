@@ -29,6 +29,7 @@ import type { Lock } from "../synchronization/interfaces.js";
 export namespace KoaContext {
   export type OIDC = {
     oidc: {
+      tenant?: TenantId;
       userManagement: UserManagement;
       codeManagement: AuthorizationCodeManagement;
       context: { scope: "global" } | { scope: "tenant"; tenant: TenantId };
