@@ -1,13 +1,11 @@
 import type * as Koa from "koa";
 import * as db from "zapatos/db";
-import { user_role } from "zapatos/schema";
 
 import { id } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaContext, TenantId } from "../../../fhir-context/types.js";
+import { KoaContext } from "../../../fhir-context/types.js";
 import { getSigningKey } from "../../certifications.js";
-import { User } from "../../db/users/types.js";
 import { CUSTOM_CLAIMS, createToken } from "../../token.js";
 import { getCredentialsBasicHeader } from "../../utilities.js";
 

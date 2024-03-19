@@ -1,5 +1,4 @@
 import * as jose from "jose";
-import * as s from "zapatos/schema";
 
 import {
   ClientApplication,
@@ -7,7 +6,7 @@ import {
   Membership,
 } from "@iguhealth/fhir-types/lib/r4/types";
 
-import { TenantClaim, TenantId } from "../fhir-context/types.js";
+import { TenantClaim } from "../fhir-context/types.js";
 
 declare const __subject: unique symbol;
 export type Subject = string & { [__subject]: string };
