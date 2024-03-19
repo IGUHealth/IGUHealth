@@ -3,6 +3,7 @@ import * as s from "zapatos/schema";
 
 import { ModelManagement } from "../interface.js";
 import { LoginParameters, User } from "./types.js";
+import { TenantClaim } from "../../../fhir-context/types.js";
 
 export interface UserManagement
   extends ModelManagement<
@@ -16,5 +17,5 @@ export interface UserManagement
     type: T,
     parameters: LoginParameters[T],
   ): Promise<User | undefined>;
-  getTenantUsers(client: db.Queryable, id: string): Promise<User[]>;
+  getTenantClaims(client: db.Queryable, id: string): Promise<TenantClaim[]>;
 }

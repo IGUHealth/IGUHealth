@@ -15,8 +15,12 @@ export const USER_QUERY_COLS = <const>[
 export type User = s.users.OnlyCols<typeof USER_QUERY_COLS>;
 
 export type LoginParameters = {
-  password: {
+  "email-password" : {
     email: string;
     password: string;
-  };
+  },
+  "oidc-provider": {
+    email: string;
+    provider: string;
+  }
 };

@@ -8,7 +8,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { KoaContext, TenantId } from "../../../fhir-context/types.js";
 import { getSigningKey } from "../../certifications.js";
 import { User } from "../../db/users/types.js";
-import { createToken } from "../../token.js";
+import { CUSTOM_CLAIMS, createToken } from "../../token.js";
 import { getCredentialsBasicHeader } from "../../utilities.js";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -78,6 +78,7 @@ export function tokenPost<
               txnClient,
               code[0].user_id,
             );
+
             if (!user)
               throw new OperationError(outcomeError("invalid", "Invalid user"));
 
@@ -88,29 +89,16 @@ export function tokenPost<
               process.env.AUTH_LOCAL_SIGNING_KEY as string,
             );
 
-            let tenantUsers: User[] = [];
-            if (user.scope === "tenant") {
-              tenantUsers = [user];
-            } else if (user.scope === "global") {
-              tenantUsers = await ctx.oidc.userManagement.getTenantUsers(
-                txnClient,
-                user.id,
-              );
-            }
-
-            if (tenantUsers.length === 0) {
-              throw new OperationError(
-                outcomeError("invalid", "User not a member of any tenants."),
-              );
-            }
-
             const token = await createToken(
               signingKey,
               {
-                tenant: tenantUsers[0].tenant as TenantId,
-                role: tenantUsers[0].role as user_role,
+                [CUSTOM_CLAIMS.TENANTS]:
+                  await ctx.oidc.userManagement.getTenantClaims(
+                    txnClient,
+                    user.id,
+                  ),
                 resourceType: "Membership",
-                sub: tenantUsers[0].id as id,
+                sub: user.id as id,
                 scope: "openid profile email offline_access",
               },
               "2h",
@@ -172,8 +160,12 @@ export function tokenPost<
 
         ctx.body = {
           access_token: await createToken(signingKey, {
-            tenant: ctx.FHIRContext.tenant,
-            role: "member",
+            [CUSTOM_CLAIMS.TENANTS]: [
+              {
+                id: ctx.FHIRContext.tenant,
+                userRole: "member",
+              },
+            ],
             resourceType: "ClientApplication",
             sub: ctx.oidc.client.id,
             scope: "openid profile email offline_access",
