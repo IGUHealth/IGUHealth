@@ -74,7 +74,7 @@ export function createOIDCRouter<
           try {
             const user = await ctx.oidc.userManagement.login(
               client,
-              "password",
+              "email-password",
               {
                 email: username,
                 password,

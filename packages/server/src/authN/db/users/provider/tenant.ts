@@ -3,62 +3,138 @@ import type * as s from "zapatos/schema";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { TenantId } from "../../../../fhir-context/types.js";
+import { TenantClaim, TenantId } from "../../../../fhir-context/types.js";
 import { UserManagement } from "../interface.js";
 import { LoginParameters, USER_QUERY_COLS, User } from "../types.js";
 
-export default class TenantUserManagement implements UserManagement {
-  private tenant: TenantId;
-  constructor(tenant: TenantId) {
-    this.tenant = tenant;
-  }
-  async getTenantUsers(client: db.Queryable, id: string): Promise<User[]> {
-    const user = await this.get(client, id);
-    if (user?.root_user) {
-      const tenantUsers = await db
+async function loginUsingGlobalUser<T extends keyof LoginParameters>(
+  client: db.Queryable,
+  tenant: TenantId,
+  type: T,
+  parameters: LoginParameters[T],
+): Promise<User | undefined> {
+  switch (type) {
+    case "email-password": {
+      const where: s.users.Whereable = {
+        scope: "global",
+        method: "email-password",
+        email: parameters.email,
+        password: db.sql`${db.self} = crypt(${db.param((parameters as LoginParameters["email-password"]).password)}, ${db.self})`,
+      };
+
+      const globalUser: User[] = await db
+        .select("users", where, { columns: USER_QUERY_COLS })
+        .run(client);
+
+      if (globalUser[0] === undefined) {
+        return;
+      }
+
+      const tenantUser: User[] = await db
         .select(
           "users",
-          { root_user: user.id, scope: "tenant" },
+          {
+            scope: "tenant",
+            tenant: tenant,
+            root_user: globalUser[0]?.id,
+          },
           { columns: USER_QUERY_COLS },
         )
         .run(client);
 
-      return tenantUsers;
+      if (tenantUser.length > 0) {
+        return globalUser[0];
+      }
+
+      return;
     }
-    return [];
+    default:
+      return;
   }
+}
+
+/**
+ * Logins using the tenant user. Doesn't check the global user.
+ */
+async function tenantLogin<T extends keyof LoginParameters>(
+  client: db.Queryable,
+  tenant: TenantId,
+  type: T,
+  parameters: LoginParameters[T],
+): Promise<User | undefined> {
+  switch (type) {
+    // [TODO] handle when auth is set on global user.
+    case "email-password": {
+      const where: s.users.Whereable = {
+        scope: "tenant",
+        tenant: tenant,
+        method: "email-password",
+        email: parameters.email,
+        password: db.sql`${db.self} = crypt(${db.param((parameters as LoginParameters["email-password"]).password)}, ${db.self})`,
+      };
+
+      const user: User[] = await db
+        .select("users", where, { columns: USER_QUERY_COLS })
+        .run(client);
+
+      // Sanity check should never happen given unique check on email.
+      if (user.length > 1)
+        throw new Error(
+          "Multiple users found with the same email and password",
+        );
+
+      return user[0];
+    }
+    default:
+      return;
+  }
+}
+
+export default class TenantUserManagement implements UserManagement {
+  private tenant: TenantId;
+
+  constructor(tenant: TenantId) {
+    this.tenant = tenant;
+  }
+
+  async getTenantClaims(
+    client: db.Queryable,
+    id: string,
+  ): Promise<TenantClaim[]> {
+    const user = await this.get(client, id);
+    if (!user) return [];
+    
+    switch (user.scope) {
+      case "tenant": {
+        return [{ id: user.tenant as TenantId, userRole: user.role as s.user_role }];
+      }
+      case "global": {
+        const tenantUsers: User[] = await db
+          .select(
+            "users",
+            { root_user: user.id, tenant: this.tenant },
+            { columns: USER_QUERY_COLS },
+          )
+          .run(client);
+
+        return tenantUsers.map((tenantUser) => ({
+          id: tenantUser.id as TenantId,
+          userRole: tenantUser.role as s.user_role,
+        }));
+      }
+    }
+  }
+
   async login<T extends keyof LoginParameters>(
     client: db.Queryable,
     type: T,
     parameters: LoginParameters[T],
   ): Promise<User | undefined> {
-    switch (type) {
-      // [TODO] handle when auth is set on global user.
-      case "password": {
-        const where: s.users.Whereable = {
-          scope: "tenant",
-          tenant: this.tenant,
-          method: "email-password",
-          email: parameters.email,
-          password: db.sql`${db.self} = crypt(${db.param(parameters.password)}, ${db.self})`,
-        };
-
-        const user: User[] = await db
-          .select("users", where, { columns: USER_QUERY_COLS })
-          .run(client);
-
-        // Sanity check should never happen given unique check on email.
-        if (user.length > 1)
-          throw new Error(
-            "Multiple users found with the same email and password",
-          );
-
-        return user[0];
-      }
-      default:
-        throw new Error();
-    }
+    const tenantUser = await tenantLogin(client, this.tenant, type, parameters);
+    if (tenantUser) return tenantUser;
+    return loginUsingGlobalUser(client, this.tenant, type, parameters);
   }
+
   async get(client: db.Queryable, id: string): Promise<User | undefined> {
     return db
       .selectOne(

@@ -176,8 +176,12 @@ async function handleSubscriptionPayload(
       );
 
       const user_access_token = await createToken(signingKey, {
-        tenant: ctx.tenant,
-        role: "admin",
+        [CUSTOM_CLAIMS.TENANTS]: [
+          {
+            id: ctx.tenant,
+            userRole: "admin",
+          },
+        ],
         resourceType: "OperationDefinition",
         sub: operationDefinition.id,
         scope: "openid profile email offline_access",

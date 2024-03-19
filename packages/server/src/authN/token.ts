@@ -1,5 +1,4 @@
 import * as jose from "jose";
-import * as s from "zapatos/schema";
 
 import {
   ClientApplication,
@@ -7,7 +6,7 @@ import {
   Membership,
 } from "@iguhealth/fhir-types/lib/r4/types";
 
-import { TenantClaim, TenantId } from "../fhir-context/types.js";
+import { TenantClaim } from "../fhir-context/types.js";
 
 declare const __subject: unique symbol;
 export type Subject = string & { [__subject]: string };
@@ -39,8 +38,7 @@ export interface JWT {
 export async function createToken(
   privatekey: { kid: string; key: jose.KeyLike },
   payload: {
-    tenant: TenantId;
-    role: s.user_role;
+    [CUSTOM_CLAIMS.TENANTS]: TenantClaim[];
     resourceType: JWT_RESOURCE_TYPES;
     sub: OperationDefinition["id"] | ClientApplication["id"] | Membership["id"];
     scope: string;
@@ -50,12 +48,7 @@ export async function createToken(
   const signedJWT = await new jose.SignJWT({
     iss: IGUHEALTH_ISSUER,
     aud: IGUHEALTH_AUDIENCE,
-    [CUSTOM_CLAIMS.TENANTS]: [
-      {
-        id: payload.tenant,
-        userRole: payload.role,
-      } as TenantClaim,
-    ],
+    [CUSTOM_CLAIMS.TENANTS]: payload[CUSTOM_CLAIMS.TENANTS],
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: payload.resourceType,
     sub: payload.sub as string as Subject,
     scope: payload.scope,

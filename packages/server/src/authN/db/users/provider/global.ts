@@ -4,32 +4,39 @@ import * as s from "zapatos/schema";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { TenantClaim, TenantId } from "../../../../fhir-context/types.js";
 import { UserManagement } from "../interface.js";
 import { LoginParameters, USER_QUERY_COLS, User } from "../types.js";
 
 export default class GlobalUserManagement implements UserManagement {
-  async getTenantUsers(client: db.Queryable, id: string): Promise<User[]> {
+  async getTenantClaims(
+    client: db.Queryable,
+    id: string,
+  ): Promise<TenantClaim[]> {
     const user = await this.get(client, id);
     if (!user) return [];
 
-    const tenantUsers = await db
+    const tenantUsers: User[] = await db
       .select("users", { root_user: user.id }, { columns: USER_QUERY_COLS })
       .run(client);
 
-    return tenantUsers;
+    return tenantUsers.map((tenantUser) => ({
+      id: tenantUser.id as TenantId,
+      userRole: tenantUser.role as s.user_role,
+    }));
   }
   async login<T extends keyof LoginParameters>(
     client: db.Queryable,
     type: T,
     parameters: LoginParameters[T],
-  ): Promise<User> {
+  ): Promise<User | undefined> {
     switch (type) {
-      case "password": {
+      case "email-password": {
         const where: s.users.Whereable = {
           scope: "global",
           email: parameters.email,
           method: "email-password",
-          password: db.sql`${db.self} = crypt(${db.param(parameters.password)}, ${db.self})`,
+          password: db.sql`${db.self} = crypt(${db.param((parameters as LoginParameters["email-password"]).password)}, ${db.self})`,
         };
 
         const user: User[] = await db
@@ -45,7 +52,7 @@ export default class GlobalUserManagement implements UserManagement {
         return user[0];
       }
       default:
-        throw new Error();
+        return;
     }
   }
   async get(client: db.Queryable, id: string): Promise<User | undefined> {
@@ -70,6 +77,8 @@ export default class GlobalUserManagement implements UserManagement {
       if (!user.email) {
         throw new OperationError(outcomeError("invalid", "Email is required."));
       }
+
+      // For global creation we also create a tenant.
 
       const tenant = await db
         .insert("tenants", {
