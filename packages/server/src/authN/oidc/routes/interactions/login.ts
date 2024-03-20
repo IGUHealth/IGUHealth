@@ -94,6 +94,7 @@ export const loginPOST =
               forgotPasswordURL,
               errors: ["Invalid email or password. Please try again."],
             }),
+            401,
           );
         } else {
           const redirecTURL =

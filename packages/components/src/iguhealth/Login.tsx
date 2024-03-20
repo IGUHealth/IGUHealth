@@ -31,7 +31,10 @@ export const Login = ({
           <div>
             {errors?.map((error) => {
               return (
-                <div className="text-sm text-red-600 dark:text-red-400">
+                <div
+                  key={error}
+                  className="text-sm text-red-600 dark:text-red-400"
+                >
                   {error}
                 </div>
               );
