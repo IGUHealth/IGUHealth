@@ -8,6 +8,31 @@ import * as views from "../../../../views/index.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import type { ManagementRouteHandler } from "../../index.js";
 
+function getRoutes(
+  ctx: Parameters<ManagementRouteHandler>[0],
+  scope: user_scope,
+) {
+  const loginRoute = ctx.router.url(OIDC_ROUTES(scope).LOGIN_POST, {
+    tenant: ctx.oidc.tenant,
+  });
+  if (loginRoute instanceof Error) throw loginRoute;
+  const signupURL = ctx.router.url(OIDC_ROUTES(scope).SIGNUP_GET, {
+    tenant: ctx.oidc.tenant,
+  });
+  if (signupURL instanceof Error) throw signupURL;
+  const forgotPasswordURL = ctx.router.url(
+    OIDC_ROUTES(scope).PASSWORD_RESET_INITIATE_GET,
+    { tenant: ctx.oidc.tenant },
+  );
+  if (forgotPasswordURL instanceof Error) throw forgotPasswordURL;
+
+  return {
+    signupURL,
+    loginRoute,
+    forgotPasswordURL,
+  };
+}
+
 /**
  * This function sets the login redirect url on the session.
  * @param session Koa Session
@@ -54,8 +79,22 @@ export const loginPOST =
       "local",
       (_err, user, _info, _status) => {
         if (user === false) {
-          ctx.body = { success: false };
-          ctx.throw(401);
+          const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(
+            ctx,
+            scope,
+          );
+
+          views.renderPipe(
+            ctx,
+            React.createElement(Login, {
+              logo: "/public/img/logo.svg",
+              title: "IGUHealth",
+              action: loginRoute,
+              signupURL,
+              forgotPasswordURL,
+              errors: ["Invalid email or password. Please try again."],
+            }),
+          );
         } else {
           const redirecTURL =
             getLoginRedirectURL(ctx.session) ??
@@ -74,21 +113,7 @@ export const loginPOST =
 export const loginGET =
   (scope: user_scope): ManagementRouteHandler =>
   async (ctx) => {
-    const loginRoute = ctx.router.url(OIDC_ROUTES(scope).LOGIN_POST, {
-      tenant: ctx.oidc.tenant,
-    });
-    if (loginRoute instanceof Error) throw loginRoute;
-    const signupURL = ctx.router.url(OIDC_ROUTES(scope).SIGNUP_GET, {
-      tenant: ctx.oidc.tenant,
-    });
-    if (signupURL instanceof Error) throw signupURL;
-    const forgotPasswordURL = ctx.router.url(
-      OIDC_ROUTES(scope).PASSWORD_RESET_INITIATE_GET,
-      { tenant: ctx.oidc.tenant },
-    );
-
-    if (forgotPasswordURL instanceof Error) throw forgotPasswordURL;
-
+    const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(ctx, scope);
     views.renderPipe(
       ctx,
       React.createElement(Login, {

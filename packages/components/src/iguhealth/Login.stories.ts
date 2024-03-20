@@ -21,3 +21,10 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: { action: "#" },
 };
+
+export const WithErrors: Story = {
+  args: {
+    action: "#",
+    errors: ["Invalid email or password"],
+  },
+};
