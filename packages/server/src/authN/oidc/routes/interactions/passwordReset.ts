@@ -210,11 +210,19 @@ export function passwordResetInitiatePOST(
     }
 
     let user = usersWithEmail[0];
-    // TODO Should user be created?
+    // Pretend email sent to avoid phishing for email addresses.
     if (!user) {
-      user = await ctx.oidc.userManagement.create(ctx.postgres, {
-        email: body.email,
-      });
+      views.renderPipe(
+        ctx,
+        React.createElement(Feedback, {
+          logo: "/public/img/logo.svg",
+          title: "IGUHealth",
+          header: "Email Verification",
+          content:
+            "We have sent an email to your email address. Please verify your email address to login.",
+        }),
+      );
+      return;
     }
 
     if (!process.env.EMAIL_FROM) {
