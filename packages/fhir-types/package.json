@@ -24,8 +24,8 @@
     "./r4/types": "./lib/r4/types.js"
   },
   "devDependencies": {
-    "@types/node": "^20.11.21",
-    "typescript": "5.3.3"
+    "@types/node": "^20.11.30",
+    "typescript": "5.4.3"
   },
   "files": [
     "readme.md",
