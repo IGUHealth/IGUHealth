@@ -24,6 +24,7 @@ import {
   createValidateUserJWTMiddleware,
 } from "./authN/middleware.js";
 import { createOIDCRouter } from "./authN/oidc/index.js";
+import { setAllowSignup } from "./authN/oidc/middleware/allow_signup.js";
 import {
   injectGlobalManagement,
   injectTenantManagement,
@@ -213,7 +214,7 @@ export default async function createServer(): Promise<
     scope: "global",
     client: pool,
     // Inject global management.
-    middleware: [injectGlobalManagement()],
+    middleware: [injectGlobalManagement(), setAllowSignup(true)],
   });
 
   rootRouter.use(managementRouter.routes());
@@ -269,9 +270,13 @@ export default async function createServer(): Promise<
     // Inject global management.
     middleware: [
       injectTenantManagement(),
+      setAllowSignup(false),
       // Inject tenant.
       async (ctx, next) => {
-        ctx.oidc = { ...ctx.oidc, tenant: ctx.FHIRContext.tenant };
+        ctx.oidc = {
+          ...ctx.oidc,
+          tenant: ctx.FHIRContext.tenant,
+        };
         await next();
       },
     ],

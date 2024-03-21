@@ -6,7 +6,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { AuthorizationCodeManagement } from "../interface.js";
 import { AuthorizationCode } from "../types.js";
-import { is_expired } from "../utilities.js";
+import { is_expired, is_not_expired } from "../utilities.js";
 
 export default class GlobalAuthorizationCodeManagement
   implements AuthorizationCodeManagement
@@ -29,11 +29,18 @@ export default class GlobalAuthorizationCodeManagement
     client: db.Queryable,
     where: s.authorization_code.Whereable,
   ): Promise<AuthorizationCode[]> {
+    const whereable: s.authorization_code.Whereable = {
+      ...where,
+      scope: "global",
+    };
+
     return db
       .select(
         "authorization_code",
-        { ...where, scope: "global" },
-        { extras: { is_expired } },
+        db.sql`${whereable} AND ${is_not_expired}`,
+        {
+          extras: { is_expired },
+        },
       )
       .run(client);
   }

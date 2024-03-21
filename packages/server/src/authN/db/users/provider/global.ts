@@ -92,6 +92,7 @@ export default class GlobalUserManagement implements UserManagement {
 
       const globalUser = await db
         .insert("users", {
+          ...user,
           scope: "global",
           email: user.email,
           email_verified: false,

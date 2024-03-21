@@ -9,3 +9,11 @@ export const is_expired = db.sql<
   s.authorization_code.SQL,
   boolean
 >`NOW() > ${"created_at"} + ${"expires_in"}`;
+
+/**
+ * Filter for only non-expired codes.
+ */
+export const is_not_expired = db.sql<
+  s.authorization_code.SQL,
+  boolean
+>`NOW() <= ${"created_at"} + ${"expires_in"}`;
