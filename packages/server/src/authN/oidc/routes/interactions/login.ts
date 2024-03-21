@@ -117,8 +117,6 @@ export const loginGET =
     const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(ctx, scope);
     const message = ctx.request.query["message"]?.toString();
 
-    console.log(ctx.request.query);
-
     views.renderPipe(
       ctx,
       React.createElement(Login, {
