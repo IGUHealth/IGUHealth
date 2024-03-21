@@ -32,8 +32,8 @@ export namespace KoaContext {
       tenant?: TenantId;
       userManagement: UserManagement;
       codeManagement: AuthorizationCodeManagement;
-      context: { scope: "global" } | { scope: "tenant"; tenant: TenantId };
       client?: ClientApplication;
+      allowSignup?: boolean;
       parameters: {
         state?: string;
         responseType?: code;

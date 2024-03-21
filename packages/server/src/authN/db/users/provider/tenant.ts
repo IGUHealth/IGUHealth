@@ -103,10 +103,12 @@ export default class TenantUserManagement implements UserManagement {
   ): Promise<TenantClaim[]> {
     const user = await this.get(client, id);
     if (!user) return [];
-    
+
     switch (user.scope) {
       case "tenant": {
-        return [{ id: user.tenant as TenantId, userRole: user.role as s.user_role }];
+        return [
+          { id: user.tenant as TenantId, userRole: user.role as s.user_role },
+        ];
       }
       case "global": {
         const tenantUsers: User[] = await db

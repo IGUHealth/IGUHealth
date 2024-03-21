@@ -1,11 +1,13 @@
 import React from "react";
 import { user_scope } from "zapatos/schema";
 
-import { EmailForm } from "@iguhealth/components";
+import { EmailForm, Feedback } from "@iguhealth/components";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import * as views from "../../../../views/index.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import type { ManagementRouteHandler } from "../../index.js";
+import { sendPasswordResetEmail } from "../../utilities/sendPasswordResetEmail.js";
 
 export const signupGET =
   (scope: user_scope): ManagementRouteHandler =>
@@ -24,4 +26,38 @@ export const signupGET =
         action: signupURL,
       }),
     );
+  };
+
+export const signupPOST =
+  (scope: user_scope): ManagementRouteHandler =>
+  async (ctx) => {
+    if (!ctx.oidc.allowSignup) {
+      throw new OperationError(
+        outcomeError("forbidden", "Signup is not allowed."),
+      );
+    }
+
+    const body = ctx.request.body as
+      | { email?: string; password?: string }
+      | undefined;
+
+    const email = body?.email;
+
+    if (!email) {
+      throw new OperationError(outcomeError("invalid", "Email is required."));
+    }
+
+    const user = await ctx.oidc.userManagement.create(ctx.postgres, {
+      email,
+    });
+
+    await sendPasswordResetEmail(scope, ctx, user);
+
+    React.createElement(Feedback, {
+      logo: "/public/img/logo.svg",
+      title: "IGUHealth",
+      header: "Email Verification",
+      content:
+        "We have sent an email to your email address. Please verify your email address to login.",
+    });
   };

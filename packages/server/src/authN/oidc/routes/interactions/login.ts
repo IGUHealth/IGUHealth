@@ -87,8 +87,8 @@ export const loginPOST =
           views.renderPipe(
             ctx,
             React.createElement(Login, {
-              logo: "/public/img/logo.svg",
               title: "IGUHealth",
+              logo: "/public/img/logo.svg",
               action: loginRoute,
               signupURL,
               forgotPasswordURL,
@@ -115,11 +115,16 @@ export const loginGET =
   (scope: user_scope): ManagementRouteHandler =>
   async (ctx) => {
     const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(ctx, scope);
+    const message = ctx.request.query["message"]?.toString();
+
+    console.log(ctx.request.query);
+
     views.renderPipe(
       ctx,
       React.createElement(Login, {
-        logo: "/public/img/logo.svg",
         title: "IGUHealth",
+        logo: "/public/img/logo.svg",
+        messages: message ? [message] : [],
         action: loginRoute,
         signupURL,
         forgotPasswordURL,

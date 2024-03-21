@@ -7,7 +7,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { TenantId } from "../../../../fhir-context/types.js";
 import { AuthorizationCodeManagement } from "../interface.js";
 import { AuthorizationCode } from "../types.js";
-import { is_expired } from "../utilities.js";
+import { is_expired, is_not_expired } from "../utilities.js";
 
 export default class TenantAuthorizationCodeManagement
   implements AuthorizationCodeManagement
@@ -34,11 +34,19 @@ export default class TenantAuthorizationCodeManagement
     client: db.Queryable,
     where: s.authorization_code.Whereable,
   ): Promise<AuthorizationCode[]> {
+    const whereable: s.authorization_code.Whereable = {
+      ...where,
+      scope: "tenant",
+      tenant: this.tenantId,
+    };
+
     return db
       .select(
         "authorization_code",
-        { ...where, scope: "tenant", tenant: this.tenantId },
-        { extras: { is_expired } },
+        db.sql`${whereable} AND ${is_not_expired}`,
+        {
+          extras: { is_expired },
+        },
       )
       .run(client);
   }

@@ -12,7 +12,8 @@ import {
 import * as views from "../../../../views/index.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import type { ManagementRouteHandler } from "../../index.js";
-import { validateEmail } from "../../utilities.js";
+import { sendPasswordResetEmail } from "../../utilities/sendPasswordResetEmail.js";
+import { validateEmail } from "../../utilities/validation.js";
 
 export function passwordResetGET(scope: user_scope): ManagementRouteHandler {
   return async (ctx) => {
@@ -140,15 +141,16 @@ export function passwordResetPOST(scope: user_scope): ManagementRouteHandler {
       await ctx.oidc.codeManagement.delete(txnClient, { code: body.code });
     });
 
-    views.renderPipe(
-      ctx,
-      React.createElement(Feedback, {
-        logo: "/public/img/logo.svg",
-        title: "IGUHealth",
-        header: "Password Reset",
-        content: "Your password has been set.",
-      }),
+    const loginRoute = ctx.router.url(
+      OIDC_ROUTES(scope).LOGIN_GET,
+      {
+        tenant: ctx.oidc.tenant,
+      },
+      { query: { message: "Password reset. Please login." } },
     );
+
+    if (loginRoute instanceof Error) throw loginRoute;
+    ctx.redirect(loginRoute);
   };
 }
 
@@ -224,47 +226,7 @@ export function passwordResetInitiatePOST(
       );
     }
 
-    if (
-      (
-        await ctx.oidc.codeManagement.search(ctx.postgres, {
-          user_id: user.id,
-          type: "password_reset",
-        })
-      ).length === 0
-    ) {
-      const code = await ctx.oidc.codeManagement.create(ctx.postgres, {
-        type: "password_reset",
-        user_id: user.id,
-        expires_in: "15 minutes",
-      });
-
-      const emailVerificationURL = ctx.router.url(
-        OIDC_ROUTES(scope).PASSWORD_RESET_VERIFY_GET,
-        { tenant: ctx.oidc.tenant },
-        { query: { code: code.code } },
-      );
-      if (typeof emailVerificationURL !== "string") throw emailVerificationURL;
-
-      const emailHTML = views.renderString(
-        React.createElement("div", {
-          children: [
-            "To verify your email and set your password click ",
-            React.createElement("a", {
-              href: `${process.env.API_URL}${emailVerificationURL}`,
-              clicktracking: "off",
-              children: "  Here ",
-            }),
-          ],
-        }),
-      );
-
-      await ctx.emailProvider.sendEmail({
-        from: process.env.EMAIL_FROM,
-        to: user.email,
-        subject: "IGUHealth Email Verification",
-        html: emailHTML,
-      });
-    }
+    await sendPasswordResetEmail(scope, ctx, user);
 
     views.renderPipe(
       ctx,

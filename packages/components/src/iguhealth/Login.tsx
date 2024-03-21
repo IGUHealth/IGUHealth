@@ -5,6 +5,7 @@ export type LoginProps = {
   logo?: string;
   action: string;
   errors?: string[];
+  messages?: string[];
   signupURL?: string;
   forgotPasswordURL?: string;
 };
@@ -12,6 +13,7 @@ export type LoginProps = {
 export const Login = ({
   title = "IGUHealth",
   errors,
+  messages,
   logo,
   action,
   signupURL,
@@ -28,6 +30,18 @@ export const Login = ({
       </a>
       <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+          <div>
+            {messages?.map((message) => {
+              return (
+                <div
+                  key={message}
+                  className="text-sm text-green-600 dark:text-green-400"
+                >
+                  {message}
+                </div>
+              );
+            })}
+          </div>
           <div>
             {errors?.map((error) => {
               return (
