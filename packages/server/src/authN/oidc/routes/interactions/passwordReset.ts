@@ -209,7 +209,7 @@ export function passwordResetInitiatePOST(
       );
     }
 
-    let user = usersWithEmail[0];
+    const user = usersWithEmail[0];
     // Pretend email sent to avoid phishing for email addresses.
     if (!user) {
       views.renderPipe(
