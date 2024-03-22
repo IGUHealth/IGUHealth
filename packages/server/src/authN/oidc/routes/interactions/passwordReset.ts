@@ -203,6 +203,7 @@ export function passwordResetInitiatePOST(
     const usersWithEmail = await ctx.oidc.userManagement.search(ctx.postgres, {
       email: body.email,
     });
+
     if (usersWithEmail.length > 1) {
       throw new OperationError(
         outcomeError("invalid", "Multiple users found with the same email."),

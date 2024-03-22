@@ -16,10 +16,12 @@ function getRoutes(
     tenant: ctx.oidc.tenant,
   });
   if (loginRoute instanceof Error) throw loginRoute;
+
   const signupURL = ctx.router.url(OIDC_ROUTES(scope).SIGNUP_GET, {
     tenant: ctx.oidc.tenant,
   });
   if (signupURL instanceof Error) throw signupURL;
+
   const forgotPasswordURL = ctx.router.url(
     OIDC_ROUTES(scope).PASSWORD_RESET_INITIATE_GET,
     { tenant: ctx.oidc.tenant },
@@ -27,7 +29,7 @@ function getRoutes(
   if (forgotPasswordURL instanceof Error) throw forgotPasswordURL;
 
   return {
-    signupURL,
+    signupURL: ctx.oidc.allowSignup ? signupURL : undefined,
     loginRoute,
     forgotPasswordURL,
   };

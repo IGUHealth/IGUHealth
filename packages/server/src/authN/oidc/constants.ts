@@ -8,6 +8,7 @@ export const OIDC_ROUTES = (scope: user_scope) =>
         LOGOUT_GET: "tenant-oidc-interaction-logout-get",
         LOGOUT_POST: "tenant-oidc-interaction-logout-post",
         SIGNUP_GET: "tenant-oidc-interaction-signup-get",
+        SIGNUP_POST: "tenant-oidc-interaction-signup-post",
         PASSWORD_RESET_INITIATE_POST:
           "tenant-oidc-interaction-password-reset-initiate-post",
         PASSWORD_RESET_INITIATE_GET:
@@ -25,6 +26,7 @@ export const OIDC_ROUTES = (scope: user_scope) =>
         LOGOUT_GET: "global-oidc-interaction-logout-get",
         LOGOUT_POST: "global-oidc-interaction-logout-post",
         SIGNUP_GET: "global-oidc-interaction-signup-get",
+        SIGNUP_POST: "global-oidc-interaction-signup-post",
         PASSWORD_RESET_INITIATE_POST:
           "global-oidc-interaction-password-reset-initiate-post",
         PASSWORD_RESET_INITIATE_GET:
