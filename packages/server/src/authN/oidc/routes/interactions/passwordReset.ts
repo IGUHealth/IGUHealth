@@ -3,6 +3,7 @@ import * as db from "zapatos/db";
 import { user_scope } from "zapatos/schema";
 
 import { EmailForm, Feedback, PasswordResetForm } from "@iguhealth/components";
+import { OperationOutcome } from "@iguhealth/fhir-types/r4/types";
 import {
   OperationError,
   outcomeError,
@@ -14,6 +15,18 @@ import { OIDC_ROUTES } from "../../constants.js";
 import type { ManagementRouteHandler } from "../../index.js";
 import { sendPasswordResetEmail } from "../../utilities/sendPasswordResetEmail.js";
 import { validateEmail } from "../../utilities/validation.js";
+
+function validatePasswordStrength(
+  password: string,
+): OperationOutcome | undefined {
+  if (password.length < 8) {
+    return outcomeError(
+      "invalid",
+      "Password must be at least 8 characters long.",
+    );
+  }
+  return undefined;
+}
 
 export function passwordResetGET(scope: user_scope): ManagementRouteHandler {
   return async (ctx) => {
@@ -104,6 +117,22 @@ export function passwordResetPOST(scope: user_scope): ManagementRouteHandler {
             "invalid",
             "Passwords do not match. Please re-enter and try again.",
           ),
+        }),
+      );
+      return;
+    }
+
+    const passwordValidStrength = validatePasswordStrength(body.password);
+    if (passwordValidStrength) {
+      views.renderPipe(
+        ctx,
+        React.createElement(PasswordResetForm, {
+          logo: "/public/img/logo.svg",
+          title: "IGUHealth",
+          header: "Reset Password",
+          action: passwordResetPostUrl,
+          code: body.code,
+          error: passwordValidStrength,
         }),
       );
       return;
