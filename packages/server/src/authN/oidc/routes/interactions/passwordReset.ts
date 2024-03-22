@@ -213,6 +213,9 @@ export function passwordResetInitiatePOST(
     const user = usersWithEmail[0];
     // Pretend email sent to avoid phishing for email addresses.
     if (!user) {
+      console.warn(
+        `not sending password reset for non existing user: '${body.email}' `,
+      );
       views.renderPipe(
         ctx,
         React.createElement(Feedback, {
