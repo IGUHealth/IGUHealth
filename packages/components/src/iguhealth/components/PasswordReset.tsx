@@ -2,7 +2,7 @@ import React from "react";
 
 import { OperationOutcome } from "@iguhealth/fhir-types/r4/types";
 
-import { OperationOutcomeIssueDisplay } from "../fhir/resources/OperationOutcome";
+import { OperationOutcomeIssueDisplay } from "../../fhir/resources/OperationOutcome";
 
 export type PasswordResetProps = {
   title?: string;

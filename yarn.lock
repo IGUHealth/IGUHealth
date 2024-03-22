@@ -7716,6 +7716,7 @@ __metadata:
   resolution: "@iguhealth/auth_testing@workspace:packages/auth_testing"
   dependencies:
     "@iguhealth/client": "workspace:^"
+    "@iguhealth/components": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
     "@testing-library/jest-dom": "npm:^6.4.2"
     "@testing-library/react": "npm:^14.2.2"
