@@ -6355,14 +6355,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codemirror/view@npm:^6.0.0, @codemirror/view@npm:^6.17.0, @codemirror/view@npm:^6.24.1":
-  version: 6.24.1
-  resolution: "@codemirror/view@npm:6.24.1"
+"@codemirror/view@npm:^6.0.0, @codemirror/view@npm:^6.17.0, @codemirror/view@npm:^6.26.0":
+  version: 6.26.0
+  resolution: "@codemirror/view@npm:6.26.0"
   dependencies:
     "@codemirror/state": "npm:^6.4.0"
     style-mod: "npm:^4.1.0"
     w3c-keyname: "npm:^2.2.4"
-  checksum: 10/66428da341241a865f75c88c4e2984234919ae46a76bba24822867166ba3d15a9df0235b120c491a5ffacdfed7f5d748cae083e19c48656ee9b93c40a5f3c7e1
+  checksum: 10/d4ef249044cbc293a7267c83e08671a68646fd7bbe1efb8d205c01385f157c93918eabeaedb62a4cc10598ab63818ac749cec4f6355fe0404d9d4beb7857c31f
   languageName: node
   linkType: hard
 
@@ -7668,7 +7668,7 @@ __metadata:
     "@codemirror/commands": "npm:^6.3.3"
     "@codemirror/lang-javascript": "npm:^6.2.2"
     "@codemirror/lang-json": "npm:^6.0.1"
-    "@codemirror/view": "npm:^6.24.1"
+    "@codemirror/view": "npm:^6.26.0"
     "@headlessui/react": "npm:^1.7.18"
     "@heroicons/react": "npm:^2.1.1"
     "@iguhealth/client": "workspace:^"
@@ -7685,7 +7685,7 @@ __metadata:
     "@types/jest": "npm:^29.5.12"
     "@types/node": "npm:^20.11.30"
     "@types/react": "npm:^18.0.0"
-    "@types/react-dom": "npm:^18.2.19"
+    "@types/react-dom": "npm:^18.2.22"
     "@types/react-window": "npm:^1.8.8"
     classnames: "npm:^2.5.1"
     codemirror: "npm:^6.0.1"
@@ -7723,7 +7723,7 @@ __metadata:
     "@types/jest": "npm:^29.5.12"
     "@types/node": "npm:^20.11.30"
     "@types/react": "npm:^18.0.0"
-    "@types/react-dom": "npm:^18.2.19"
+    "@types/react-dom": "npm:^18.2.22"
     "@types/react-window": "npm:^1.8.8"
     classnames: "npm:^2.5.1"
     nanoid: "npm:^5.0.6"
@@ -7792,7 +7792,7 @@ __metadata:
     "@babel/preset-typescript": "npm:^7.24.1"
     "@codemirror/lang-markdown": "npm:^6.2.4"
     "@codemirror/state": "npm:^6.4.1"
-    "@codemirror/view": "npm:^6.24.1"
+    "@codemirror/view": "npm:^6.26.0"
     "@headlessui/react": "npm:^1.7.18"
     "@heroicons/react": "npm:^2.1.1"
     "@iguhealth/client": "workspace:^"
@@ -7817,7 +7817,7 @@ __metadata:
     "@storybook/react-webpack5": "npm:^8.0.4"
     "@storybook/test": "npm:^8.0.4"
     "@storybook/theming": "npm:^8.0.4"
-    "@types/react": "npm:^18.2.60"
+    "@types/react": "npm:^18.2.67"
     autoprefixer: "npm:^10.4.19"
     classnames: "npm:^2.5.1"
     codemirror: "npm:^6.0.1"
@@ -8072,9 +8072,9 @@ __metadata:
     "@types/koa__router": "npm:^12.0.4"
     "@types/node": "npm:^20.11.30"
     "@types/passport-local": "npm:^1.0.38"
-    "@types/pg": "npm:^8.11.2"
-    "@types/react": "npm:^18.2.60"
-    "@types/react-dom": "npm:^18.2.19"
+    "@types/pg": "npm:^8.11.4"
+    "@types/react": "npm:^18.2.67"
+    "@types/react-dom": "npm:^18.2.22"
     "@types/uuid": "npm:9.0.8"
     adm-zip: "npm:^0.5.12"
     ajv: "npm:^8.12.0"
@@ -13742,14 +13742,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/pg@npm:^8.11.2":
-  version: 8.11.2
-  resolution: "@types/pg@npm:8.11.2"
+"@types/pg@npm:^8.11.4":
+  version: 8.11.4
+  resolution: "@types/pg@npm:8.11.4"
   dependencies:
     "@types/node": "npm:*"
     pg-protocol: "npm:*"
     pg-types: "npm:^4.0.1"
-  checksum: 10/7c05cf63beffc0f8d817d080cdd98d199a2bd732b779b9aadddcb8659f861f7aafb3bc071636b9eaa65b36cfe998ee66e21aa1485e583b190918fe2f856a6c53
+  checksum: 10/b2713bc4ec8e7245958d8ced5833e5fbf3b7bdc090c19b1967f49626abf79cfe62a14e36b194c48c9fc9edeeeb3d4308cfa716534e6ca318b0785daaeb32e359
   languageName: node
   linkType: hard
 
@@ -13811,12 +13811,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^18.2.19":
-  version: 18.2.19
-  resolution: "@types/react-dom@npm:18.2.19"
+"@types/react-dom@npm:^18.2.22":
+  version: 18.2.22
+  resolution: "@types/react-dom@npm:18.2.22"
   dependencies:
     "@types/react": "npm:*"
-  checksum: 10/98eb760ce78f1016d97c70f605f0b1a53873a548d3c2192b40c897f694fd9c8bb12baeada16581a9c7b26f5022c1d2613547be98284d8f1b82d1611b1e3e7df0
+  checksum: 10/310da22244c1bb65a7f213f8727bda821dd211cfb2dd62d1f9b28dd50ef1c196d59e908494bd5f25c13a3844343f3a6135f39fb830aca6f79646fa56c1b56c08
   languageName: node
   linkType: hard
 
@@ -13894,7 +13894,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^16.8.0 || ^17.0.0 || ^18.0.0":
+"@types/react@npm:^16.8.0 || ^17.0.0 || ^18.0.0, @types/react@npm:^18.2.67":
   version: 18.2.67
   resolution: "@types/react@npm:18.2.67"
   dependencies:
@@ -13913,17 +13913,6 @@ __metadata:
     "@types/scheduler": "npm:*"
     csstype: "npm:^3.0.2"
   checksum: 10/7b315e2b14da1cd895719ba957fd71a0a8a35300fd76689d0268ed9afd8065a56b4fdcd1306871e3e16706dd3ecd706a846af74caca8fcad88052469cf0d83a1
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:^18.2.60":
-  version: 18.2.60
-  resolution: "@types/react@npm:18.2.60"
-  dependencies:
-    "@types/prop-types": "npm:*"
-    "@types/scheduler": "npm:*"
-    csstype: "npm:^3.0.2"
-  checksum: 10/5f2f6091623f13375a5bbc7e5c222cd212b5d6366ead737b76c853f6f52b314db24af5ae3f688d2d49814c668c216858a75433f145311839d8989d46bb3cbecf
   languageName: node
   linkType: hard
 
