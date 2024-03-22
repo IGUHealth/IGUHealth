@@ -12,10 +12,9 @@ import { sendPasswordResetEmail } from "../../utilities/sendPasswordResetEmail.j
 export const signupGET =
   (scope: user_scope): ManagementRouteHandler =>
   async (ctx) => {
-    const signupURL = ctx.router.url(
-      OIDC_ROUTES(scope).PASSWORD_RESET_INITIATE_POST,
-      { tenant: ctx.oidc.tenant },
-    );
+    const signupURL = ctx.router.url(OIDC_ROUTES(scope).SIGNUP_POST, {
+      tenant: ctx.oidc.tenant,
+    });
     if (typeof signupURL !== "string") throw signupURL;
 
     views.renderPipe(
@@ -33,7 +32,7 @@ export const signupPOST =
   async (ctx) => {
     if (!ctx.oidc.allowSignup) {
       throw new OperationError(
-        outcomeError("forbidden", "Signup is not allowed."),
+        outcomeError("forbidden", "Signup is not allowed on this tenant."),
       );
     }
 

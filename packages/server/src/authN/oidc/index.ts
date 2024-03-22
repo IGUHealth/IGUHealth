@@ -106,6 +106,11 @@ export function createOIDCRouter<
     "/interaction/signup",
     routes.signupGET(scope),
   );
+  managementRouter.post(
+    OIDC_ROUTES(scope).SIGNUP_POST,
+    "/interaction/signup",
+    routes.signupPOST(scope),
+  );
 
   managementRouter.post(
     OIDC_ROUTES(scope).PASSWORD_RESET_INITIATE_POST,
@@ -177,24 +182,3 @@ export function createOIDCRouter<
 
   return managementRouter;
 }
-
-// /**
-//  * Creates a router for oidc endpoints.
-//  * @returns Router for oidc endpoints.
-//  */
-// export function createOIDCRouterOld<State, C>(
-//   prefix: string,
-// ): Router<State, KoaContext.FHIR<C>> {
-//   const oidcRouter = new Router<State, KoaContext.FHIR<C>>({
-//     prefix,
-//   });
-
-//   oidcRouter.post(
-//     "/token",
-//     createValidateInjectOIDCParameters({ required: ["client_id"] }),
-//     clientInjectFHIRMiddleware(),
-//     routes.tokenPost(),
-//   );
-
-//   return oidcRouter;
-// }
