@@ -1,9 +1,18 @@
-import { nanoid } from "nanoid";
 import React, { useEffect, useReducer, useRef } from "react";
 
 import IGUHealthContext, { InitialContext } from "./IGUHealthContext";
 import { iguHealthReducer } from "./reducer";
 import { hasAuthQueryParams } from "./utilities";
+
+function dec2hex(dec: number) {
+  return dec.toString(16).padStart(2, "0");
+}
+
+function generateRandomString(len: number) {
+  const arr = new Uint8Array((len || 40) / 2);
+  window.crypto.getRandomValues(arr);
+  return Array.from(arr, dec2hex).join("");
+}
 
 const state_key = (client_id: string) => `iguhealth_${client_id}`;
 
@@ -70,7 +79,7 @@ async function handleAuthorizeInitial({
   domain: string;
   redirectUrl: string;
 }) {
-  const state = nanoid();
+  const state = generateRandomString(30);
   localStorage.setItem(state_key(clientId), state);
 
   const url = new URL(

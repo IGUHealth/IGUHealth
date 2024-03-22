@@ -2,26 +2,25 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { ReportHandler } from "web-vitals";
 
+import { IGUHealthProvider, useIGUHealth } from "@iguhealth/components";
 import { Patient } from "@iguhealth/fhir-types/r4/types";
-
-import { IGUHealthProvider, useIGUHealth } from "./auth";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );
 
 function App() {
-  const state = useIGUHealth();
+  const iguhealth = useIGUHealth();
   const [patients, setPatients] = useState<Patient[]>([]);
   useEffect(() => {
     async function fetchPatients() {
-      const patients = await state.getClient().search_type({}, "Patient");
+      const patients = await iguhealth.getClient().search_type({}, "Patient");
       setPatients(patients.resources);
     }
-    if (state.isAuthenticated) fetchPatients();
-  }, [state.isAuthenticated]);
+    if (iguhealth.isAuthenticated) fetchPatients();
+  }, [iguhealth.isAuthenticated]);
 
-  if (!state.isAuthenticated) {
+  if (!iguhealth.isAuthenticated) {
     return <div>Not authenticated</div>;
   }
   return <div>{JSON.stringify(patients)}</div>;
