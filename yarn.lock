@@ -20090,23 +20090,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.0.0":
-  version: 1.15.4
-  resolution: "follow-redirects@npm:1.15.4"
+"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.15.4":
+  version: 1.15.6
+  resolution: "follow-redirects@npm:1.15.6"
   peerDependenciesMeta:
     debug:
       optional: true
-  checksum: 10/2e8f5f259a6b02dfa8dc199e08431848a7c3beed32eb4c19945966164a52c89f07b86c3afcc32ebe4279cf0a960520e45a63013d6350309c5ec90133c5d9351a
-  languageName: node
-  linkType: hard
-
-"follow-redirects@npm:^1.15.4":
-  version: 1.15.5
-  resolution: "follow-redirects@npm:1.15.5"
-  peerDependenciesMeta:
-    debug:
-      optional: true
-  checksum: 10/d467f13c1c6aa734599b8b369cd7a625b20081af358f6204ff515f6f4116eb440de9c4e0c49f10798eeb0df26c95dd05d5e0d9ddc5786ab1a8a8abefe92929b4
+  checksum: 10/70c7612c4cab18e546e36b991bbf8009a1a41cf85354afe04b113d1117569abf760269409cb3eb842d9f7b03d62826687086b081c566ea7b1e6613cf29030bf7
   languageName: node
   linkType: hard
 
@@ -32853,8 +32843,8 @@ __metadata:
   linkType: hard
 
 "webpack-dev-middleware@npm:^5.3.1":
-  version: 5.3.3
-  resolution: "webpack-dev-middleware@npm:5.3.3"
+  version: 5.3.4
+  resolution: "webpack-dev-middleware@npm:5.3.4"
   dependencies:
     colorette: "npm:^2.0.10"
     memfs: "npm:^3.4.3"
@@ -32863,7 +32853,7 @@ __metadata:
     schema-utils: "npm:^4.0.0"
   peerDependencies:
     webpack: ^4.0.0 || ^5.0.0
-  checksum: 10/31a2f7a11e58a76bdcde1eb8da310b6643844d9b442f9916f48be5b46c103f23490c393c32a9af501ce68226fbb018b811f5a956635ed60a03f9481a4bcd6c76
+  checksum: 10/3004374130f31c2910da39b80e24296009653bb11caa0b8449d962b67e003d7e73d01fbcfda9be1f1f04179f66a9c39f4caf7963df54303b430e39ba5a94f7c2
   languageName: node
   linkType: hard
 
