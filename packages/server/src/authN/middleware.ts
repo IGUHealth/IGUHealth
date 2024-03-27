@@ -1,14 +1,17 @@
 import jwksRsa from "jwks-rsa";
 import Koa, { Middleware } from "koa";
 import jwt from "koa-jwt";
+import * as s from "zapatos/schema";
 
-import { TenantClaim } from "../fhir-context/types.js";
-import { getJWKS } from "./certifications.js";
 import {
   CUSTOM_CLAIMS,
   IGUHEALTH_AUDIENCE,
   IGUHEALTH_ISSUER,
-} from "./token.js";
+  TenantClaim,
+} from "@iguhealth/jwt";
+
+import { getJWKS } from "./certifications.js";
+import "./token.js";
 
 async function createLocalJWTSecret(
   AUTH_LOCAL_CERTIFICATION_LOCATION: string | undefined,
@@ -119,7 +122,10 @@ export const allowPublicAccessMiddleware: Koa.Middleware = async (
       access_token: "sec-public",
       [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
       [CUSTOM_CLAIMS.TENANTS]: [
-        { id: ctx.params.tenant, userRole: "admin" } as TenantClaim,
+        {
+          id: ctx.params.tenant,
+          userRole: "admin",
+        } as TenantClaim<s.user_role>,
       ],
     },
   };

@@ -76,11 +76,16 @@ function membershipHandler<
               outcomeError("invariant", "Invalid resource type."),
             );
           }
-
-          await tenantUserManagement.create(
-            txClient,
-            membershipToUser(membership),
-          );
+          try {
+            await tenantUserManagement.create(
+              txClient,
+              membershipToUser(membership),
+            );
+          } catch (e) {
+            throw new OperationError(
+              outcomeError("invariant", "User already exists."),
+            );
+          }
 
           return res;
         });

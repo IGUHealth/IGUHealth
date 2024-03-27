@@ -1,4 +1,3 @@
-import { Auth0Provider, User, useAuth0 } from "@auth0/auth0-react";
 import {
   ArrowLeftOnRectangleIcon,
   Cog6ToothIcon,
@@ -16,23 +15,21 @@ import {
 } from "react-router-dom";
 import { RecoilRoot, useRecoilState } from "recoil";
 
-import createHTTPClient from "@iguhealth/client/http";
 import {
+  IGUHealthProvider,
   Loading,
   ProfileDropdown,
   SideBar,
   Toaster,
+  useIGUHealth,
 } from "@iguhealth/components";
 import "@iguhealth/components/dist/index.css";
+import { CUSTOM_CLAIMS, IDTokenPayload, TenantClaim } from "@iguhealth/jwt";
 
 import { Logo } from "./components/Logo";
 import Search from "./components/Search";
 import SearchModal from "./components/SearchModal";
-import {
-  REACT_APP_AUTH0_CLIENT_ID,
-  REACT_APP_AUTH0_DOMAIN,
-  REACT_APP_FHIR_BASE_URL,
-} from "./config";
+import { REACT_APP_FHIR_BASE_URL } from "./config";
 import { createAdminAppClient, getClient } from "./db/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
@@ -52,22 +49,11 @@ if (
 }
 
 function LoginWrapper() {
-  const auth0Info = useAuth0();
-  const initiateAuth = !auth0Info.isAuthenticated && !auth0Info.isLoading;
-
-  useEffect(() => {
-    if (initiateAuth) {
-      auth0Info.loginWithRedirect({
-        appState: {
-          returnTo: window.location.pathname,
-        },
-      });
-    }
-  }, [initiateAuth]);
+  const iguhealth = useIGUHealth();
 
   return (
     <>
-      {auth0Info.isLoading || !auth0Info.isAuthenticated ? (
+      {!iguhealth.isAuthenticated ? (
         <div className="h-screen flex flex-1 justify-center items-center flex-col">
           <Loading />
           <div className="mt-1 ">Loading...</div>
@@ -82,30 +68,24 @@ function LoginWrapper() {
 }
 
 function ServiceSetup({ children }: { children: React.ReactNode }) {
-  const auth0 = useAuth0();
-  const tenant = deriveTenantID();
+  const iguhealth = useIGUHealth();
+  const client = iguhealth.isAuthenticated ? iguhealth.getClient() : undefined;
   const [c, setClient] = useRecoilState(getClient);
 
   React.useEffect(() => {
-    setClient(
-      createAdminAppClient(
-        createHTTPClient({
-          getAccessToken: () => auth0.getAccessTokenSilently(),
-          url: REACT_APP_FHIR_BASE_URL + `/w/${tenant}/api/v1/fhir/r4`,
-        }),
-      ),
-    );
-  }, [setClient]);
+    if (client) {
+      setClient(createAdminAppClient(client));
+    }
+  }, [setClient, iguhealth.isAuthenticated]);
 
   return <>{c ? <>{children}</> : undefined}</>;
 }
 
-interface Tenant {
-  id: string;
-}
-
-function getTenants(user: User | undefined): Tenant[] {
-  return user?.["https://iguhealth.app/tenants"] as Tenant[];
+function getTenants<role>(
+  jwt: IDTokenPayload<role> | undefined,
+): TenantClaim<role>[] {
+  if (!jwt) return [];
+  return jwt[CUSTOM_CLAIMS.TENANTS] as TenantClaim<role>[];
 }
 
 function deriveTenantID() {
@@ -117,9 +97,9 @@ function deriveTenantID() {
 function WorkspaceCheck() {
   const navigate = useNavigate();
   const matches = useMatches();
-  const auth0 = useAuth0();
+  const iguhealth = useIGUHealth();
 
-  const tenants = getTenants(auth0.user);
+  const tenants = getTenants(iguhealth.user);
 
   useEffect(() => {
     if (
@@ -128,7 +108,7 @@ function WorkspaceCheck() {
     ) {
       navigate("/no-workspace", { replace: true });
     }
-  }, [auth0.user, navigate, matches]);
+  }, [iguhealth.user, navigate, matches]);
 
   return (
     <>
@@ -137,31 +117,23 @@ function WorkspaceCheck() {
   );
 }
 
-function Auth0Wrapper() {
-  const navigate = useNavigate();
-
+function IGUHealthWrapper() {
   return (
-    <Auth0Provider
-      useRefreshTokens
-      domain={REACT_APP_AUTH0_DOMAIN || ""}
-      clientId={REACT_APP_AUTH0_CLIENT_ID || ""}
-      onRedirectCallback={(appState) => {
-        navigate(appState?.returnTo || "/");
-      }}
-      authorizationParams={{
-        audience: "https://iguhealth.com/api",
-        redirect_uri: window.location.origin,
-      }}
+    <IGUHealthProvider
+      domain={REACT_APP_FHIR_BASE_URL || ""}
+      tenant={deriveTenantID()}
+      clientId={"admin-app"}
+      redirectUrl={window.location.origin}
     >
       <Outlet />
-    </Auth0Provider>
+    </IGUHealthProvider>
   );
 }
 
 const router = createBrowserRouter([
   {
-    id: "auth0-wrapper",
-    element: <Auth0Wrapper />,
+    id: "iguhealth-wrapper",
+    element: <IGUHealthWrapper />,
     children: [
       {
         id: "login",
@@ -212,10 +184,10 @@ const router = createBrowserRouter([
 ]);
 
 function Root() {
-  const auth0 = useAuth0();
+  const iguhealth = useIGUHealth();
   const navigate = useNavigate();
   const matches = useMatches();
-  const tenants = getTenants(auth0.user);
+  const tenants = getTenants(iguhealth.user);
 
   return (
     <>
@@ -391,13 +363,9 @@ function Root() {
               </SideBar.SideBarItem>
               <SideBar.SideBarItem
                 logo={<ArrowLeftOnRectangleIcon />}
-                onClick={() =>
-                  auth0.logout({
-                    logoutParams: {
-                      returnTo: window.location.origin,
-                    },
-                  })
-                }
+                onClick={() => {
+                  iguhealth.logout(window.location.origin);
+                }}
               >
                 Sign out
               </SideBar.SideBarItem>
@@ -422,9 +390,9 @@ function Root() {
                 </a>
                 <ProfileDropdown
                   user={{
-                    email: auth0.user?.email,
-                    name: auth0.user?.name,
-                    imageUrl: auth0.user?.picture,
+                    email: iguhealth.user?.email,
+                    name: iguhealth.user?.given_name || iguhealth.user?.email,
+                    // imageUrl: auth0.user?.picture,
                   }}
                 >
                   <div>
@@ -486,11 +454,7 @@ function Root() {
                       <a
                         className="cursor-pointer block px-4 py-2 text-sm text-slate-800 hover:text-blue-800 hover:bg-blue-100"
                         onClick={() => {
-                          auth0.logout({
-                            logoutParams: {
-                              returnTo: window.location.origin,
-                            },
-                          });
+                          iguhealth.logout(window.location.origin);
                         }}
                       >
                         Sign out

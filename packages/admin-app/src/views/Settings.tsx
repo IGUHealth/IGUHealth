@@ -1,7 +1,13 @@
-import { User, useAuth0 } from "@auth0/auth0-react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-import { Button, Input, Loading, Toaster } from "@iguhealth/components";
+import {
+  Button,
+  Input,
+  Loading,
+  Toaster,
+  useIGUHealth,
+} from "@iguhealth/components";
+import { IDTokenPayload } from "@iguhealth/jwt";
 
 function copytoClipboard(token: string | undefined) {
   if (token) {
@@ -12,7 +18,7 @@ function copytoClipboard(token: string | undefined) {
 
 interface SettingProps {
   token?: string;
-  user?: User;
+  user?: IDTokenPayload<string>;
 }
 
 function SettingDisplay({ user, token }: SettingProps) {
@@ -57,13 +63,7 @@ function SettingDisplay({ user, token }: SettingProps) {
 }
 
 export default function Settings() {
-  const auth0 = useAuth0();
-  const [token, setToken] = useState<string>();
-  useEffect(() => {
-    auth0.getAccessTokenSilently().then((token) => {
-      setToken(token);
-    });
-  }, [setToken]);
+  const iguhealth = useIGUHealth();
 
   return (
     <React.Suspense
@@ -74,7 +74,7 @@ export default function Settings() {
         </div>
       }
     >
-      <SettingDisplay user={auth0.user} token={token} />
+      <SettingDisplay user={iguhealth.user} token={iguhealth.access_token} />
     </React.Suspense>
   );
 }

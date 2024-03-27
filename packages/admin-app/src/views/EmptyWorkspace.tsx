@@ -1,10 +1,10 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import React from "react";
 
-import { Button } from "@iguhealth/components";
+import { Button, useIGUHealth } from "@iguhealth/components";
 
 export default function EmptyWorkspace() {
-  const auth0 = useAuth0();
+  const iguhealth = useIGUHealth();
+
   return (
     <div className="h-screen w-screen flex  flex-col items-center">
       <div className=" flex justify-center items-center flex-col px-4 py-4 shadow-md -top-[15px] mt-16">
@@ -13,13 +13,7 @@ export default function EmptyWorkspace() {
         </h1>
         <Button
           buttonType="secondary"
-          onClick={() =>
-            auth0.logout({
-              logoutParams: {
-                returnTo: window.location.origin,
-              },
-            })
-          }
+          onClick={() => iguhealth.logout(window.location.origin)}
         >
           Logout
         </Button>

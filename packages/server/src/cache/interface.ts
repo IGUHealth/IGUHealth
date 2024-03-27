@@ -1,4 +1,4 @@
-import type { TenantId } from "../fhir-context/types.js";
+import type { TenantId } from "@iguhealth/jwt";
 
 export interface IOCache<CTX extends { tenant: TenantId }> {
   get(ctx: CTX, key: string): Promise<string | number | null>;

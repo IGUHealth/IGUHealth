@@ -4,12 +4,8 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { OIDC_ROUTES } from "../constants.js";
 import { ManagementRouteHandler } from "../index.js";
+import { isInvalidRedirectUrl } from "../utilities/checkRedirectUrl.js";
 import { setLoginRedirectSession } from "./interactions/login.js";
-
-function getRegexForRedirect(urlPattern: string): RegExp {
-  const regex = new RegExp(urlPattern.replaceAll("*", "(.+)"));
-  return regex;
-}
 
 /**
  * See https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1.
@@ -43,15 +39,12 @@ export function authorizeGET(scope: user_scope): ManagementRouteHandler {
 
       if (!client)
         throw new OperationError(outcomeError("invalid", "Client not found."));
-      if (
-        !redirectUrl ||
-        !client.redirectUri?.find((v) =>
-          getRegexForRedirect(v).test(redirectUrl),
-        )
-      )
+
+      if (isInvalidRedirectUrl(redirectUrl, client)) {
         throw new OperationError(
           outcomeError("invalid", `Redirect URI '${redirectUrl}' not found.`),
         );
+      }
 
       const code = await ctx.oidc.codeManagement.create(ctx.postgres, {
         type: "oauth2_code_grant",

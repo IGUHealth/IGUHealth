@@ -1,11 +1,12 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
+import { TenantClaim, TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { TenantClaim, TenantId } from "../../../../fhir-context/types.js";
 import { UserManagement } from "../interface.js";
 import { LoginParameters, USER_QUERY_COLS, User } from "../types.js";
+import { determineEmailUpdate } from "../utilities.js";
 
 async function loginUsingGlobalUser<T extends keyof LoginParameters>(
   client: db.Queryable,
@@ -100,7 +101,7 @@ export default class TenantUserManagement implements UserManagement {
   async getTenantClaims(
     client: db.Queryable,
     id: string,
-  ): Promise<TenantClaim[]> {
+  ): Promise<TenantClaim<s.user_role>[]> {
     const user = await this.get(client, id);
     if (!user) return [];
 
@@ -138,13 +139,27 @@ export default class TenantUserManagement implements UserManagement {
   }
 
   async get(client: db.Queryable, id: string): Promise<User | undefined> {
-    return db
+    const tenantUser: User | undefined = (await db
       .selectOne(
         "users",
         { id, tenant: this.tenant, scope: "tenant" },
         { columns: USER_QUERY_COLS },
       )
-      .run(client);
+      .run(client)) as User | undefined;
+
+    if (tenantUser?.root_user) {
+      const globalUser: User | undefined = (await db
+        .selectOne(
+          "users",
+          { id: tenantUser.root_user, scope: "global" },
+          { columns: USER_QUERY_COLS },
+        )
+        .run(client)) as User | undefined;
+
+      return { ...globalUser, ...tenantUser };
+    }
+
+    return tenantUser;
   }
   async search(
     client: db.Queryable,
@@ -185,10 +200,7 @@ export default class TenantUserManagement implements UserManagement {
             ...update,
             tenant: this.tenant,
             scope: "tenant",
-            email_verified:
-              update.email !== currentUser.email
-                ? false
-                : currentUser.email_verified,
+            email_verified: determineEmailUpdate(update, currentUser),
           },
           where,
         )

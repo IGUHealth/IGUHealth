@@ -3,6 +3,7 @@ import path from "path";
 import pg from "pg";
 import { pino } from "pino";
 import { fileURLToPath } from "url";
+import * as s from "zapatos/schema";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import {
@@ -13,10 +14,10 @@ import {
   dateTime,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
+import { AccessTokenPayload, TenantId } from "@iguhealth/jwt";
 
-import { JWT } from "../authN/token.js";
 import { IOCache } from "../cache/interface.js";
-import { FHIRServerCTX, TenantId } from "../fhir-context/types.js";
+import { FHIRServerCTX } from "../fhir-context/types.js";
 import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
 import { Lock } from "../synchronization/interfaces.js";
 import MemoryDatabase from "./providers/memory/async.js";
@@ -67,7 +68,10 @@ export const testServices: FHIRServerCTX = {
           }
         : false,
   }),
-  user: { role: "admin", jwt: { iss: "test", sub: "test-user" } as JWT },
+  user: {
+    role: "admin",
+    jwt: { iss: "test", sub: "test-user" } as AccessTokenPayload<s.user_role>,
+  },
   terminologyProvider: new TerminologyProviderMemory(),
   logger: pino<string>(),
   capabilities: {

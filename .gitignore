@@ -5,6 +5,7 @@ tsconfig.tsbuildinfo
 .env
 packages/docs/.yarn
 packages/docs/build
+packages/auth_testing/build/
 packages/admin-app/build/
 packages/server/src/version.ts
 storybook-static/

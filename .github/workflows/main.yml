@@ -105,7 +105,7 @@ jobs:
         run: yarn workspaces foreach -A -pt --topological-dev run build
 
       - name: start server
-        run: yarn workspace @iguhealth/server migrate up && yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/system/api/v1/fhir/r4/metadata
+        run: yarn workspace @iguhealth/server migrate up && yarn workspace @iguhealth/server ci
         env:
           AUTH_PUBLIC_ACCESS: true
           FHIR_DATABASE_NAME: postgres

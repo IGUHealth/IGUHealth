@@ -1,8 +1,10 @@
 import React, { useEffect, useReducer, useRef } from "react";
 
+import { AccessToken, IDToken } from "@iguhealth/jwt";
+
 import IGUHealthContext, { InitialContext } from "./IGUHealthContext";
 import { iguHealthReducer } from "./reducer";
-import { hasAuthQueryParams } from "./utilities";
+import { conditionalAddTenant, hasAuthQueryParams } from "./utilities";
 
 function dec2hex(dec: number) {
   return dec.toString(16).padStart(2, "0");
@@ -15,13 +17,6 @@ function generateRandomString(len: number) {
 }
 
 const state_key = (client_id: string) => `iguhealth_${client_id}`;
-
-function conditionalAddTenant(path: string, tenant?: string) {
-  if (tenant) {
-    return `/w/${tenant}${path}`;
-  }
-  return path;
-}
 
 async function handleRedirectCallback({
   domain,
@@ -49,21 +44,21 @@ async function handleRedirectCallback({
   window.history.replaceState(null, "", location.pathname);
 
   const url = new URL(conditionalAddTenant(`/oidc/auth/token`, tenant), domain);
-  const response: { access_token: string; id_token: string } = await fetch(
-    url,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-
-      body: JSON.stringify({
-        grant_type: "authorization_code",
-        code: parameters.code,
-        client_id: clientId,
-      }),
+  const response: {
+    access_token: AccessToken<string>;
+    id_token: IDToken<string>;
+  } = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-  ).then((v) => v.json());
+
+    body: JSON.stringify({
+      grant_type: "authorization_code",
+      code: parameters.code,
+      client_id: clientId,
+    }),
+  }).then((v) => v.json());
 
   return response;
 }
@@ -126,6 +121,7 @@ export function IGUHealthProvider({
           dispatch({
             type: "INIT_CLIENT",
             domain,
+            clientId,
             payload: authorizationPayload,
           });
         } else {

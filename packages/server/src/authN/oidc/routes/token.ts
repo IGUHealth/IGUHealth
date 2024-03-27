@@ -1,12 +1,19 @@
 import type * as Koa from "koa";
 import * as db from "zapatos/db";
+import * as s from "zapatos/schema";
 
-import { id } from "@iguhealth/fhir-types/r4/types";
+import {
+  AccessTokenPayload,
+  CUSTOM_CLAIMS,
+  IDTokenPayload,
+  IGUHEALTH_ISSUER,
+  Subject,
+  createToken,
+} from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaContext } from "../../../fhir-context/types.js";
 import { getSigningKey } from "../../certifications.js";
-import { CUSTOM_CLAIMS, createToken } from "../../token.js";
 import { getCredentialsBasicHeader } from "../../utilities.js";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -87,24 +94,37 @@ export function tokenPost<
               process.env.AUTH_LOCAL_SIGNING_KEY as string,
             );
 
-            const token = await createToken(
-              signingKey,
-              {
-                [CUSTOM_CLAIMS.TENANTS]:
-                  await ctx.oidc.userManagement.getTenantClaims(
-                    txnClient,
-                    user.id,
-                  ),
-                resourceType: "Membership",
-                sub: user.id as id,
-                scope: "openid profile email offline_access",
-              },
-              "2h",
-            );
+            const accessTokenPayload: AccessTokenPayload<s.user_role> = {
+              iss: IGUHEALTH_ISSUER,
+              [CUSTOM_CLAIMS.TENANTS]:
+                await ctx.oidc.userManagement.getTenantClaims(
+                  txnClient,
+                  user.id,
+                ),
+              [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
+              sub: user.id as string as Subject,
+              scope: "openid profile email offline_access",
+            };
 
             return {
-              access_token: token,
-              id_token: token,
+              access_token: await createToken<AccessTokenPayload<s.user_role>>(
+                signingKey,
+                accessTokenPayload,
+                "2h",
+              ),
+              id_token: await createToken<IDTokenPayload<s.user_role>>(
+                signingKey,
+                {
+                  ...accessTokenPayload,
+                  email: user.email,
+                  email_verified: user.email_verified
+                    ? user.email_verified
+                    : false,
+                  given_name: user.first_name ? user.first_name : undefined,
+                  family_name: user.last_name ? user.last_name : undefined,
+                },
+                "2h",
+              ),
               token_type: "Bearer",
               // 2 hours in seconds
               expires_in: 7200,
@@ -156,18 +176,24 @@ export function tokenPost<
           process.env.AUTH_LOCAL_SIGNING_KEY as string,
         );
 
+        const accessTokenPayload: AccessTokenPayload<s.user_role> = {
+          iss: IGUHEALTH_ISSUER,
+          [CUSTOM_CLAIMS.TENANTS]: [
+            {
+              id: ctx.FHIRContext.tenant,
+              userRole: "member",
+            },
+          ],
+          [CUSTOM_CLAIMS.RESOURCE_TYPE]: "ClientApplication",
+          sub: ctx.oidc.client.id as string as Subject,
+          scope: "openid profile email offline_access",
+        };
+
         ctx.body = {
-          access_token: await createToken(signingKey, {
-            [CUSTOM_CLAIMS.TENANTS]: [
-              {
-                id: ctx.FHIRContext.tenant,
-                userRole: "member",
-              },
-            ],
-            resourceType: "ClientApplication",
-            sub: ctx.oidc.client.id,
-            scope: "openid profile email offline_access",
-          }),
+          access_token: await createToken<AccessTokenPayload<s.user_role>>(
+            signingKey,
+            accessTokenPayload,
+          ),
           token_type: "Bearer",
           expires_in: 7200,
         };
