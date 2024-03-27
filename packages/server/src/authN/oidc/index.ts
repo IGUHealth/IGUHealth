@@ -106,6 +106,7 @@ export function createOIDCRouter<
     "/interaction/signup",
     routes.signupGET(scope),
   );
+
   managementRouter.post(
     OIDC_ROUTES(scope).SIGNUP_POST,
     "/interaction/signup",
@@ -149,11 +150,23 @@ export function createOIDCRouter<
   managementRouter.get(
     OIDC_ROUTES(scope).LOGOUT_GET,
     "/interaction/logout",
+    createValidateInjectOIDCParameters({
+      required: [],
+      optional: ["redirect_uri", "client_id"],
+    }),
+    injectHardcodedClients(),
+    clientInjectFHIRMiddleware(),
     routes.logout(scope),
   );
   managementRouter.post(
     OIDC_ROUTES(scope).LOGOUT_POST,
     "/interaction/logout",
+    createValidateInjectOIDCParameters({
+      required: [],
+      optional: ["redirect_uri", "client_id"],
+    }),
+    injectHardcodedClients(),
+    clientInjectFHIRMiddleware(),
     routes.logout(scope),
   );
 

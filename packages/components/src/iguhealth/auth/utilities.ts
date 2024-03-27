@@ -7,3 +7,10 @@ export const hasAuthQueryParams = (
 ): boolean =>
   (CODE_REGEX.test(searchParams) || ERROR_REGEX.test(searchParams)) &&
   STATE_REGEX.test(searchParams);
+
+export function conditionalAddTenant(path: string, tenant?: string) {
+  if (tenant) {
+    return `/w/${tenant}${path}`;
+  }
+  return path;
+}

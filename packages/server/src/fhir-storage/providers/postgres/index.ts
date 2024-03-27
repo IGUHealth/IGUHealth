@@ -47,7 +47,6 @@ import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
 import {
   asSystemCTX,
   FHIRServerCTX,
-  TenantId,
 } from "../../../fhir-context/types.js";
 import { param_types_supported } from "./constants.js";
 import { executeSearchQuery } from "./search/index.js";
@@ -60,6 +59,7 @@ import {
   TypeHistoryRequest,
 } from "@iguhealth/client/lib/types";
 import { createResolverRemoteCanonical } from "../../utilities/canonical.js";
+import { TenantId } from "@iguhealth/jwt";
 
 async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,

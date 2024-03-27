@@ -29,6 +29,7 @@ import {
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import {TenantId} from "@iguhealth/jwt"
 
 import { associateUserMiddleware } from "../authZ/middleware/associateUser.js";
 import { createAuthorizationMiddleWare } from "../authZ/middleware/authorization.js";
@@ -59,7 +60,8 @@ import RouterClient from "../fhir-storage/router.js";
 import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
 import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with { type: "json" };
 import RedisLock from "../synchronization/redis.lock.js";
-import { FHIRServerCTX, KoaContext, TenantId, asSystemCTX } from "./types.js";
+
+import { FHIRServerCTX, KoaContext,  asSystemCTX } from "./types.js";
 
 const SPECIAL_TYPES: { MEMORY: ResourceType[]; AUTH: ResourceType[] } = {
   AUTH: AUTH_RESOURCETYPES,

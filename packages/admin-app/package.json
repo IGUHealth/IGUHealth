@@ -9,7 +9,6 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@auth0/auth0-react": "^2.2.4",
     "@codemirror/commands": "^6.3.3",
     "@codemirror/lang-javascript": "^6.2.2",
     "@codemirror/lang-json": "^6.0.1",
@@ -21,6 +20,7 @@
     "@iguhealth/fhir-patch-building": "workspace:^",
     "@iguhealth/fhir-pointer": "workspace:^",
     "@iguhealth/generated-ops": "workspace:^",
+    "@iguhealth/jwt": "workspace:^",
     "@iguhealth/operation-execution": "workspace:^",
     "@iguhealth/operation-outcomes": "workspace:^",
     "@testing-library/jest-dom": "^6.4.2",

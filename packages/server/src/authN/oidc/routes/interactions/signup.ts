@@ -45,18 +45,38 @@ export const signupPOST =
     if (!email) {
       throw new OperationError(outcomeError("invalid", "Email is required."));
     }
+    try {
+      const user = await ctx.oidc.userManagement.create(ctx.postgres, {
+        email,
+      });
 
-    const user = await ctx.oidc.userManagement.create(ctx.postgres, {
-      email,
-    });
-
-    await sendPasswordResetEmail(scope, ctx, user);
-
-    React.createElement(Feedback, {
-      logo: "/public/img/logo.svg",
-      title: "IGUHealth",
-      header: "Email Verification",
-      content:
-        "We have sent an email to your email address. Please verify your email address to login.",
-    });
+      await sendPasswordResetEmail(scope, ctx, user);
+      views.renderPipe(
+        ctx,
+        React.createElement(Feedback, {
+          logo: "/public/img/logo.svg",
+          title: "IGUHealth",
+          header: "Email Verification",
+          content:
+            "We have sent an email to your email address. Please verify your email address to login.",
+        }),
+      );
+    } catch (e) {
+      const user = await ctx.oidc.userManagement.search(ctx.postgres, {
+        email,
+      });
+      if (user.length === 1) {
+        await sendPasswordResetEmail(scope, ctx, user[0]);
+      }
+      views.renderPipe(
+        ctx,
+        React.createElement(Feedback, {
+          logo: "/public/img/logo.svg",
+          title: "IGUHealth",
+          header: "Email Verification",
+          content:
+            "We have sent an email to your email address. Please verify your email address to login.",
+        }),
+      );
+    }
   };

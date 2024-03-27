@@ -1,6 +1,7 @@
 import Redis from "ioredis";
 
-import { TenantId } from "../../fhir-context/types.js";
+import { TenantId } from "@iguhealth/jwt";
+
 import { IOCache } from "../interface.js";
 
 function constructKey(tenant: TenantId, key: string) {

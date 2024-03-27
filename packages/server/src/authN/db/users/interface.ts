@@ -1,9 +1,10 @@
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
+import { TenantClaim } from "@iguhealth/jwt";
+
 import { ModelManagement } from "../interface.js";
 import { LoginParameters, User } from "./types.js";
-import { TenantClaim } from "../../../fhir-context/types.js";
 
 export interface UserManagement
   extends ModelManagement<
@@ -17,5 +18,8 @@ export interface UserManagement
     type: T,
     parameters: LoginParameters[T],
   ): Promise<User | undefined>;
-  getTenantClaims(client: db.Queryable, id: string): Promise<TenantClaim[]>;
+  getTenantClaims(
+    client: db.Queryable,
+    id: string,
+  ): Promise<TenantClaim<s.user_role>[]>;
 }

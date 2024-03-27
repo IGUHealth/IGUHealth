@@ -158,7 +158,7 @@ export function passwordResetPOST(scope: user_scope): ManagementRouteHandler {
       );
     }
 
-    db.serializable(ctx.postgres, async (txnClient) => {
+    await db.serializable(ctx.postgres, async (txnClient) => {
       await ctx.oidc.userManagement.update(
         txnClient,
         authorizationCode.user_id,

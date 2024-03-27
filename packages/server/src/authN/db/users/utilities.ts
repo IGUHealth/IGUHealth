@@ -28,3 +28,22 @@ export function membershipToUser(user: Membership): s.users.Insertable {
       : null,
   };
 }
+
+/**
+ * Return false if email changed (even if update specifies the email is verified)
+ * Return value of update for email_verified if present in update.
+ * Else default to current email_verified value.
+ * @param update Update to user table
+ * @param current Current value in user table
+ * @returns whether email is verified.
+ */
+export function determineEmailUpdate(
+  update: s.users.Updatable,
+  current: s.users.JSONSelectable,
+): s.users.Updatable["email_verified"] {
+  // If email has changed.
+  if (update.email && update.email !== current.email) return false;
+  if ("email_verified" in update) return update.email_verified;
+
+  return current.email_verified;
+}

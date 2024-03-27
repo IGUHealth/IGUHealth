@@ -31,6 +31,7 @@
     "@codemirror/state": "^6.4.1",
     "@codemirror/view": "^6.26.0",
     "@iguhealth/fhir-types": "workspace:^",
+    "@iguhealth/jwt": "workspace:^",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",

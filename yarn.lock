@@ -363,25 +363,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@auth0/auth0-react@npm:^2.2.4":
-  version: 2.2.4
-  resolution: "@auth0/auth0-react@npm:2.2.4"
-  dependencies:
-    "@auth0/auth0-spa-js": "npm:^2.1.3"
-  peerDependencies:
-    react: ^16.11.0 || ^17 || ^18
-    react-dom: ^16.11.0 || ^17 || ^18
-  checksum: 10/90974eadf39161dea33757bbdc2a1bda92015a7687915196b1e4b6adb92af910c566cab3b5d0b3e5d3d3ce7fa5591843f1926e2306b33b67a50e1a250bcb828b
-  languageName: node
-  linkType: hard
-
-"@auth0/auth0-spa-js@npm:^2.1.3":
-  version: 2.1.3
-  resolution: "@auth0/auth0-spa-js@npm:2.1.3"
-  checksum: 10/c0585a7f6c8f8929bf6c7402f2d049cda2c64f82c1736e700cc6ca668d3e23c2c0d22722e8f2aa2d24478e5e6676349e3d5f7ec197a44d093c5607ea8a831adc
-  languageName: node
-  linkType: hard
-
 "@aw-web-design/x-default-browser@npm:1.4.126":
   version: 1.4.126
   resolution: "@aw-web-design/x-default-browser@npm:1.4.126"
@@ -7664,7 +7645,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@iguhealth/admin-app@workspace:packages/admin-app"
   dependencies:
-    "@auth0/auth0-react": "npm:^2.2.4"
     "@codemirror/commands": "npm:^6.3.3"
     "@codemirror/lang-javascript": "npm:^6.2.2"
     "@codemirror/lang-json": "npm:^6.0.1"
@@ -7677,6 +7657,7 @@ __metadata:
     "@iguhealth/fhir-pointer": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
     "@iguhealth/generated-ops": "workspace:^"
+    "@iguhealth/jwt": "workspace:^"
     "@iguhealth/operation-execution": "workspace:^"
     "@iguhealth/operation-outcomes": "workspace:^"
     "@testing-library/jest-dom": "npm:^6.4.2"
@@ -7802,6 +7783,7 @@ __metadata:
     "@iguhealth/fhir-types": "workspace:^"
     "@iguhealth/fhirpath": "workspace:^"
     "@iguhealth/generated-ops": "workspace:^"
+    "@iguhealth/jwt": "workspace:^"
     "@rollup/plugin-commonjs": "npm:^25.0.7"
     "@rollup/plugin-node-resolve": "npm:^15.2.3"
     "@rollup/plugin-typescript": "npm:^11.1.6"
@@ -7979,6 +7961,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@iguhealth/jwt@workspace:^, @iguhealth/jwt@workspace:packages/jwt":
+  version: 0.0.0-use.local
+  resolution: "@iguhealth/jwt@workspace:packages/jwt"
+  dependencies:
+    "@iguhealth/fhir-types": "workspace:^"
+    "@jest/globals": "npm:^29.7.0"
+    "@types/jest": "npm:^29.5.12"
+    jest: "npm:^29.7.0"
+    jose: "npm:^5.2.3"
+    ts-jest: "npm:^29.1.2"
+    typescript: "npm:5.4.3"
+  languageName: unknown
+  linkType: soft
+
 "@iguhealth/meta-value@workspace:^, @iguhealth/meta-value@workspace:packages/meta-value":
   version: 0.0.0-use.local
   resolution: "@iguhealth/meta-value@workspace:packages/meta-value"
@@ -8047,6 +8043,7 @@ __metadata:
     "@iguhealth/generated-ops": "workspace:^"
     "@iguhealth/hl7.fhir.r4.core": "workspace:^"
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^"
+    "@iguhealth/jwt": "workspace:^"
     "@iguhealth/meta-value": "workspace:^"
     "@iguhealth/operation-execution": "workspace:^"
     "@iguhealth/operation-outcomes": "workspace:^"

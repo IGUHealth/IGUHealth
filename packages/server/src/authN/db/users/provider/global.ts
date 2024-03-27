@@ -1,18 +1,23 @@
-import { nanoid } from "nanoid";
+import { customAlphabet } from "nanoid";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
+import { TenantClaim, TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { TenantClaim, TenantId } from "../../../../fhir-context/types.js";
 import { UserManagement } from "../interface.js";
 import { LoginParameters, USER_QUERY_COLS, User } from "../types.js";
+import { determineEmailUpdate } from "../utilities.js";
+
+// https://www.rfc-editor.org/rfc/rfc1035#section-2.3.3
+// Do not allow uppercase characters.
+const generateTenantId = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz");
 
 export default class GlobalUserManagement implements UserManagement {
   async getTenantClaims(
     client: db.Queryable,
     id: string,
-  ): Promise<TenantClaim[]> {
+  ): Promise<TenantClaim<s.user_role>[]> {
     const user = await this.get(client, id);
     if (!user) return [];
 
@@ -79,12 +84,13 @@ export default class GlobalUserManagement implements UserManagement {
       }
 
       // For global creation we also create a tenant.
+      const tenantId = generateTenantId();
 
       const tenant = await db
         .insert("tenants", {
-          id: nanoid(),
+          id: tenantId,
           tenant: {
-            id: nanoid(),
+            id: tenantId,
             name: "Default",
           },
         })
@@ -132,14 +138,23 @@ export default class GlobalUserManagement implements UserManagement {
           "users",
           {
             ...update,
-            email_verified:
-              update.email !== currentUser.email
-                ? false
-                : currentUser.email_verified,
+            email_verified: determineEmailUpdate(update, currentUser),
           },
           where,
         )
         .run(txnClient);
+
+      await db
+        .update(
+          "users",
+          {
+            ...update,
+            email_verified: determineEmailUpdate(update, currentUser),
+          },
+          { scope: "tenant", root_user: id },
+        )
+        .run(txnClient);
+
       return updatedUser[0];
     });
   }
@@ -151,6 +166,7 @@ export default class GlobalUserManagement implements UserManagement {
       };
 
       const user = await db.select("users", where).run(txnClient);
+
       if (user.length > 1) {
         throw new OperationError(
           outcomeError(
@@ -159,6 +175,11 @@ export default class GlobalUserManagement implements UserManagement {
           ),
         );
       }
+
+      db.deletes("users", {
+        scope: "tenant",
+        root_user: db.sql<s.users.SQL>`${db.vals(user.map((u) => u.id))}`,
+      }).run(txnClient);
 
       await db.deletes("users", where).run(txnClient);
     });

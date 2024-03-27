@@ -82,6 +82,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:packages/generated-ops"\
     },\
     {\
+      "name": "@iguhealth/jwt",\
+      "reference": "workspace:packages/jwt"\
+    },\
+    {\
       "name": "@iguhealth/meta-value",\
       "reference": "workspace:packages/meta-value"\
     },\
@@ -117,6 +121,7 @@ const RAW_RUNTIME_STATE =
     ["@iguhealth/generated-ops", ["workspace:packages/generated-ops"]],\
     ["@iguhealth/hl7.fhir.r4.core", ["workspace:artifacts/hl7-core"]],\
     ["@iguhealth/iguhealth.fhir.r4.core", ["workspace:artifacts/iguhealth-core"]],\
+    ["@iguhealth/jwt", ["workspace:packages/jwt"]],\
     ["@iguhealth/meta-value", ["workspace:packages/meta-value"]],\
     ["@iguhealth/operation-execution", ["workspace:packages/operation-execution"]],\
     ["@iguhealth/operation-outcomes", ["workspace:packages/operation-outcomes"]],\
@@ -586,42 +591,6 @@ const RAW_RUNTIME_STATE =
         "packagePeers": [\
           "@types/ajv",\
           "ajv"\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@auth0/auth0-react", [\
-      ["npm:2.2.4", {\
-        "packageLocation": "./.yarn/cache/@auth0-auth0-react-npm-2.2.4-a90387b590-90974eadf3.zip/node_modules/@auth0/auth0-react/",\
-        "packageDependencies": [\
-          ["@auth0/auth0-react", "npm:2.2.4"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:2.2.4", {\
-        "packageLocation": "./.yarn/__virtual__/@auth0-auth0-react-virtual-fa76414312/0/cache/@auth0-auth0-react-npm-2.2.4-a90387b590-90974eadf3.zip/node_modules/@auth0/auth0-react/",\
-        "packageDependencies": [\
-          ["@auth0/auth0-react", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:2.2.4"],\
-          ["@auth0/auth0-spa-js", "npm:2.1.3"],\
-          ["@types/react", "npm:18.2.21"],\
-          ["@types/react-dom", "npm:18.2.22"],\
-          ["react", "npm:18.2.0"],\
-          ["react-dom", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:18.2.0"]\
-        ],\
-        "packagePeers": [\
-          "@types/react-dom",\
-          "@types/react",\
-          "react-dom",\
-          "react"\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@auth0/auth0-spa-js", [\
-      ["npm:2.1.3", {\
-        "packageLocation": "./.yarn/cache/@auth0-auth0-spa-js-npm-2.1.3-5f453f3d6d-c0585a7f6c.zip/node_modules/@auth0/auth0-spa-js/",\
-        "packageDependencies": [\
-          ["@auth0/auth0-spa-js", "npm:2.1.3"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -15165,7 +15134,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./packages/admin-app/",\
         "packageDependencies": [\
           ["@iguhealth/admin-app", "workspace:packages/admin-app"],\
-          ["@auth0/auth0-react", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:2.2.4"],\
           ["@codemirror/commands", "npm:6.3.3"],\
           ["@codemirror/lang-javascript", "npm:6.2.2"],\
           ["@codemirror/lang-json", "npm:6.0.1"],\
@@ -15178,6 +15146,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/fhir-pointer", "workspace:packages/fhir-pointer"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
           ["@iguhealth/generated-ops", "workspace:packages/generated-ops"],\
+          ["@iguhealth/jwt", "workspace:packages/jwt"],\
           ["@iguhealth/operation-execution", "workspace:packages/operation-execution"],\
           ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
           ["@testing-library/jest-dom", "virtual:545f804a983dc194a00ebad9d106024e36980e2afd511deba1ae08c26f6a8b9b7b0c4057cdccad6a5c4d6d1cc4398cd5fea3436f439896b3f851112fd8e78645#npm:6.4.2"],\
@@ -15314,6 +15283,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
           ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
           ["@iguhealth/generated-ops", "workspace:packages/generated-ops"],\
+          ["@iguhealth/jwt", "workspace:packages/jwt"],\
           ["@rollup/plugin-commonjs", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:25.0.7"],\
           ["@rollup/plugin-node-resolve", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:15.2.3"],\
           ["@rollup/plugin-typescript", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:11.1.6"],\
@@ -15386,6 +15356,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
           ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
           ["@iguhealth/generated-ops", "workspace:packages/generated-ops"],\
+          ["@iguhealth/jwt", "workspace:packages/jwt"],\
           ["@rollup/plugin-commonjs", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:25.0.7"],\
           ["@rollup/plugin-node-resolve", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:15.2.3"],\
           ["@rollup/plugin-typescript", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:11.1.6"],\
@@ -15456,6 +15427,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
           ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
           ["@iguhealth/generated-ops", "workspace:packages/generated-ops"],\
+          ["@iguhealth/jwt", "workspace:packages/jwt"],\
           ["@rollup/plugin-commonjs", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:25.0.7"],\
           ["@rollup/plugin-node-resolve", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:15.2.3"],\
           ["@rollup/plugin-typescript", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:11.1.6"],\
@@ -15649,6 +15621,22 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
+    ["@iguhealth/jwt", [\
+      ["workspace:packages/jwt", {\
+        "packageLocation": "./packages/jwt/",\
+        "packageDependencies": [\
+          ["@iguhealth/jwt", "workspace:packages/jwt"],\
+          ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
+          ["@jest/globals", "npm:29.7.0"],\
+          ["@types/jest", "npm:29.5.12"],\
+          ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
+          ["jose", "npm:5.2.3"],\
+          ["ts-jest", "virtual:60d59201a81fdf9d844335582569d604f77c0cfb33012fc0d97d31d995c40a543914afd8f900018942c3e21e71ae879a5dcdf97d4008644edf9f0ce84a7e8664#npm:29.1.2"],\
+          ["typescript", "patch:typescript@npm%3A5.4.3#optional!builtin<compat/typescript>::version=5.4.3&hash=5adc0c"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
     ["@iguhealth/meta-value", [\
       ["workspace:packages/meta-value", {\
         "packageLocation": "./packages/meta-value/",\
@@ -15724,6 +15712,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/generated-ops", "workspace:packages/generated-ops"],\
           ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"],\
           ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/iguhealth-core"],\
+          ["@iguhealth/jwt", "workspace:packages/jwt"],\
           ["@iguhealth/meta-value", "workspace:packages/meta-value"],\
           ["@iguhealth/operation-execution", "workspace:packages/operation-execution"],\
           ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
