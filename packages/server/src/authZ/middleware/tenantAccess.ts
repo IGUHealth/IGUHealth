@@ -1,20 +1,20 @@
 import Koa from "koa";
+import * as s from "zapatos/schema";
 
+import { AccessTokenPayload, CUSTOM_CLAIMS, TenantClaim } from "@iguhealth/jwt";
 import {
   OperationError,
   outcomeError,
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { CUSTOM_CLAIMS, JWT } from "../../authN/token.js";
-import type { TenantClaim } from "../../fhir-context/types.js";
 import { KoaContext } from "../../fhir-context/types.js";
 
 function findCurrentTenant<Context extends Koa.DefaultContext>(
   ctx: KoaContext.FHIR<Context>,
-): TenantClaim | undefined {
+): TenantClaim<s.user_role> | undefined {
   return ctx.state.user[CUSTOM_CLAIMS.TENANTS]?.find(
-    (t: TenantClaim) => t.id === ctx.FHIRContext.tenant,
+    (t: TenantClaim<s.user_role>) => t.id === ctx.FHIRContext.tenant,
   );
 }
 
@@ -48,7 +48,7 @@ export async function verifyAndAssociateUserFHIRContext<
     ...ctx.FHIRContext,
     user: {
       role: tenantClaim.userRole,
-      jwt: ctx.state.user as JWT,
+      jwt: ctx.state.user as AccessTokenPayload<s.user_role>,
       accessToken: ctx.state.access_token,
     },
   };

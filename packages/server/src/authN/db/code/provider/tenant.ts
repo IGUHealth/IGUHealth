@@ -2,9 +2,9 @@ import { randomBytes } from "node:crypto";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
+import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { TenantId } from "../../../../fhir-context/types.js";
 import { AuthorizationCodeManagement } from "../interface.js";
 import { AuthorizationCode } from "../types.js";
 import { is_expired, is_not_expired } from "../utilities.js";

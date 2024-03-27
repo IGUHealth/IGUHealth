@@ -14,6 +14,14 @@ import {
   id,
 } from "@iguhealth/fhir-types/r4/types";
 import { evaluate } from "@iguhealth/fhirpath";
+import {
+  AccessTokenPayload,
+  CUSTOM_CLAIMS,
+  IGUHEALTH_ISSUER,
+  Subject,
+  TenantId,
+  createToken,
+} from "@iguhealth/jwt";
 import { Operation } from "@iguhealth/operation-execution";
 import {
   OperationError,
@@ -25,14 +33,8 @@ import {
   createCertsIfNoneExists,
   getSigningKey,
 } from "../authN/certifications.js";
-import {
-  CUSTOM_CLAIMS,
-  IGUHEALTH_ISSUER,
-  JWT,
-  createToken,
-} from "../authN/token.js";
 import { createFHIRAPI, createFHIRServices } from "../fhir-context/index.js";
-import { FHIRServerCTX, TenantId } from "../fhir-context/types.js";
+import { FHIRServerCTX } from "../fhir-context/types.js";
 import { httpRequestToFHIRRequest } from "../fhir-http/index.js";
 import logAuditEvent, {
   MAJOR_FAILURE,
@@ -175,15 +177,18 @@ async function handleSubscriptionPayload(
         process.env.AUTH_LOCAL_SIGNING_KEY,
       );
 
-      const user_access_token = await createToken(signingKey, {
+      const user_access_token = await createToken<
+        AccessTokenPayload<s.user_role>
+      >(signingKey, {
+        iss: IGUHEALTH_ISSUER,
         [CUSTOM_CLAIMS.TENANTS]: [
           {
             id: ctx.tenant,
             userRole: "admin",
           },
         ],
-        resourceType: "OperationDefinition",
-        sub: operationDefinition.id,
+        [CUSTOM_CLAIMS.RESOURCE_TYPE]: "OperationDefinition",
+        sub: operationDefinition.id as unknown as Subject,
         scope: "openid profile email offline_access",
       });
 
@@ -419,7 +424,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
               iss: IGUHEALTH_ISSUER,
               sub: `system-worker-${workerID}`,
               [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
-            } as JWT,
+            } as AccessTokenPayload<s.user_role>,
           },
         };
         const activeSubscriptionIds = (

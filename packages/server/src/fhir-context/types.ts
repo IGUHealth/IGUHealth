@@ -16,10 +16,10 @@ import {
   code,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
+import { AccessTokenPayload, IGUHEALTH_ISSUER, TenantId } from "@iguhealth/jwt";
 
 import { AuthorizationCodeManagement } from "../authN/db/code/interface.js";
 import { UserManagement } from "../authN/db/users/interface.js";
-import { IGUHEALTH_ISSUER, JWT } from "../authN/token.js";
 import type { IOCache } from "../cache/interface.js";
 import { EmailProvider } from "../email/interface.js";
 import type { EncryptionProvider } from "../encryption/provider/interface.js";
@@ -70,16 +70,9 @@ export namespace KoaContext {
   }
 }
 
-declare const __tenant: unique symbol;
-export type TenantId = string & { [__tenant]: string };
-export interface TenantClaim {
-  id: TenantId;
-  userRole: s.user_role;
-}
-
 export interface UserContext {
   role: s.user_role;
-  jwt: JWT;
+  jwt: AccessTokenPayload<s.user_role>;
   resource?: Membership | ClientApplication | OperationDefinition | null;
   accessPolicies?: AccessPolicy[];
   accessToken?: string;
@@ -129,7 +122,7 @@ export function asSystemCTX(ctx: Omit<FHIRServerCTX, "user">): FHIRServerCTX {
       jwt: {
         iss: IGUHEALTH_ISSUER,
         sub: "system",
-      } as JWT,
+      } as AccessTokenPayload<s.user_role>,
     },
   };
 }

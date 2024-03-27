@@ -1,0 +1,5 @@
+releases:
+  "@iguhealth/admin-app": minor
+  "@iguhealth/components": minor
+  "@iguhealth/jwt": minor
+  "@iguhealth/server": minor
