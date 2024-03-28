@@ -79,7 +79,7 @@ export const loginPOST =
 
     return ctx.oidc.passport.authenticate(
       "local",
-      (_err, user, _info, _status) => {
+      async (_err, user, _info, _status) => {
         if (user === false) {
           const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(
             ctx,
@@ -106,8 +106,10 @@ export const loginPOST =
             }) as string);
           removeLoginRedirectURL(ctx.session);
 
+          await ctx.login(user);
           ctx.redirect(redirecTURL);
-          return ctx.login(user);
+
+          return;
         }
       },
     )(ctx, next);
