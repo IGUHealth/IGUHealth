@@ -11,11 +11,14 @@ import path from "node:path";
 import pg from "pg";
 import React from "react";
 import { fileURLToPath } from "url";
+import * as db from "zapatos/db";
 
 import { FHIROperationOutcomeDisplay } from "@iguhealth/components";
 import {
+  OperationError,
   isOperationError,
   issueSeverityToStatusCodes,
+  outcomeError,
 } from "@iguhealth/operation-outcomes";
 
 import { createCertsIfNoneExists } from "./authN/certifications.js";
@@ -233,8 +236,18 @@ export default async function createServer(): Promise<
 
     // Associate FHIR Context for all routes
     // [NOTE] for oidc we pull in fhir data so we need to associate the context on top of non fhir apis.
-
     await createKoaFHIRContextMiddleware(),
+    async (ctx, next) => {
+      const tenantId = ctx.FHIRContext.tenant;
+      const tenant = await db
+        .selectOne("tenants", { id: tenantId }, { columns: ["id"] })
+        .run(pool);
+
+      if (!tenant) {
+        throw new OperationError(outcomeError("not-found", "Tenant not found"));
+      }
+      await next();
+    },
   );
 
   const tenantAPIV1Router = new Router<
