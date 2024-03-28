@@ -6,7 +6,7 @@
     "type": "git",
     "url": "https://github.com/IGUHealth/IGUHealth.git"
   },
-  "packageManager": "yarn@4.1.0",
+  "packageManager": "yarn@4.1.1",
   "canonical": "https://iguhealth.app/fhir/ImplementationGuide/iguhealth.fhir.r4.core",
   "url": "https://iguhealth.app/fhir/ImplementationGuide/iguhealth.fhir.r4.core",
   "title": "IGUHealth Core resources",

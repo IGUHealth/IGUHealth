@@ -7,7 +7,7 @@
     "url": "https://github.com/IGUHealth/IGUHealth.git"
   },
   "description": "Package to create operation definition executables.",
-  "packageManager": "yarn@4.1.0",
+  "packageManager": "yarn@4.1.1",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
