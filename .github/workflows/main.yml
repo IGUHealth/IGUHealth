@@ -27,7 +27,7 @@ jobs:
         run: corepack enable
 
       - name: Yarn v4
-        run: corepack prepare yarn@4.1.0 --activate
+        run: corepack prepare yarn@4.1.1 --activate
 
       - name: Version Check
         run: yarn version check
@@ -93,7 +93,7 @@ jobs:
         run: corepack enable
 
       - name: Yarn Setup
-        run: corepack prepare yarn@4.1.0 --activate
+        run: corepack prepare yarn@4.1.1 --activate
 
       - name: Version Check
         run: yarn version check
