@@ -2,6 +2,7 @@ import type * as Koa from "koa";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
+import { code } from "@iguhealth/fhir-types/r4/types";
 import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
@@ -41,11 +42,13 @@ export function tokenPost<
       );
     }
 
-    if (body.grant_type !== ctx.oidc.client?.grantType) {
+    if (
+      !ctx.oidc.client?.grantType.includes(body.grant_type?.toString() as code)
+    ) {
       throw new OperationError(
         outcomeError(
           "invalid",
-          `Only grant type: '${ctx.oidc.client?.grantType}' is supported for registered client.`,
+          `Grant type not supported by client : '${body.grant_type}'`,
         ),
       );
     }
@@ -120,6 +123,9 @@ export function tokenPost<
                   email_verified: user.email_verified
                     ? user.email_verified
                     : false,
+                  name: [user.first_name, user.last_name]
+                    .filter((v) => v !== undefined)
+                    .join(" "),
                   given_name: user.first_name ? user.first_name : undefined,
                   family_name: user.last_name ? user.last_name : undefined,
                 },
@@ -143,15 +149,6 @@ export function tokenPost<
       // https://www.rfc-editor.org/rfc/rfc6749.html#section-4.4
       case "client_credentials": {
         const credentials = getCredentialsBasicHeader(ctx.request);
-
-        if (ctx.oidc.client.grantType !== "client_credentials") {
-          throw new OperationError(
-            outcomeError(
-              "invalid",
-              "Grant type must be client_credentials for registered client.",
-            ),
-          );
-        }
 
         if (!credentials) {
           throw new OperationError(

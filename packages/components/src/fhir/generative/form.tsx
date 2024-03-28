@@ -213,7 +213,7 @@ function LabelWrapper({
   return (
     <div>
       <div className="flex items-center space-x-2">
-        <div className="">
+        <div className={classNames({ required: (found.element.min || 0) > 0 })}>
           {capitalize(
             getFieldName(found.element.path)
               .replace(/([A-Z])/g, " $1")

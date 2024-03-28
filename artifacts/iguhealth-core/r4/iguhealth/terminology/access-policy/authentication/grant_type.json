@@ -22,6 +22,10 @@
           {
             "code": "client_credentials",
             "display": "Client Credentials"
+          },
+          {
+            "code": "authorization_code",
+            "display": "Authorization Code"
           }
         ]
       }
