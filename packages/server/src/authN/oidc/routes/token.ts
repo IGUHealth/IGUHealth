@@ -120,6 +120,9 @@ export function tokenPost<
                   email_verified: user.email_verified
                     ? user.email_verified
                     : false,
+                  name: [user.first_name, user.last_name]
+                    .filter((v) => v !== undefined)
+                    .join(" "),
                   given_name: user.first_name ? user.first_name : undefined,
                   family_name: user.last_name ? user.last_name : undefined,
                 },
