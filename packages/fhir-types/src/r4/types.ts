@@ -45002,19 +45002,11 @@ resourceType: "ClientApplication"
   /** 
    * Auth 2.0 grant type strings that the client can use at the token endpoint.
    */
-  grantType: code;
+  grantType: Array<code>;
   /** 
    * Auth 2.0 grant type strings that the client can use at the token endpoint.
    */
-  _grantType?: Element
-  /** 
-   * String indicator of the requested authentication method for the token endpoint.
-   */
-  tokenEndpointAuthMethod: code;
-  /** 
-   * String indicator of the requested authentication method for the token endpoint.
-   */
-  _tokenEndpointAuthMethod?: Element
+  _grantType?: Array<Element>
   /** 
    * OAuth 2.0 response type strings that the client can use at the authorization endpoint.
    */
