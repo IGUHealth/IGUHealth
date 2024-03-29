@@ -32,7 +32,7 @@ export const signupPOST =
   async (ctx) => {
     if (!ctx.oidc.allowSignup) {
       throw new OperationError(
-        outcomeError("forbidden", "Signup is not allowed on this tenant."),
+        outcomeError("forbidden", "Signup is not allowed."),
       );
     }
 
