@@ -98,9 +98,7 @@ export async function createValidateUserJWTMiddleware<T, C>({
     issuer: process.env.AUTH_EXTERNAL_JWT_ISSUER
       ? [process.env.AUTH_EXTERNAL_JWT_ISSUER, IGUHEALTH_ISSUER]
       : [IGUHEALTH_ISSUER],
-    algorithms: [
-      process.env.AUTH_JWT_ALGORITHM ? process.env.AUTH_JWT_ALGORITHM : "RS256",
-    ],
+    algorithms: ["RS256"],
   }) as unknown as Middleware<T, C>;
 }
 

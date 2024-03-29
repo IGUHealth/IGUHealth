@@ -100,16 +100,6 @@ spec:
                 secretKeyRef:
                   name: iguhealth-secrets
                   key: auth-jwk-uri
-            - name: AUTH_JWT_ALGORITHM
-              valueFrom:
-                secretKeyRef:
-                  name: iguhealth-secrets
-                  key: auth-jwt-alg
-            - name: AUTH_JWT_AUDIENCE
-              valueFrom:
-                secretKeyRef:
-                  name: iguhealth-secrets
-                  key: auth-jwt-audience
             - name: AUTH_EXTERNAL_JWT_ISSUER
               valueFrom:
                 secretKeyRef:

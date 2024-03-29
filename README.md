@@ -58,12 +58,7 @@ Optional depending on whether you are executing custom code for operations
 
 #### AUTHENTICATION
 
-Shared environment variables
-
-| name               | description                           | required | defaults                  |
-| ------------------ | ------------------------------------- | -------- | ------------------------- |
-| AUTH_JWT_AUDIENCE  | String representing audience for jwt. | false    | https://iguhealth.app/api |
-| AUTH_JWT_ALGORITHM |                                       | false    | RS256                     |
+Authentication related variables.
 
 ##### Unsafe
 

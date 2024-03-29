@@ -18,15 +18,15 @@
 | AWS_LAMBDA_ACCESS_KEY_ID | Access key id for lambda (must have permission to invoke and create lambda functions) | false |  |
 | AWS_LAMBDA_ACCESS_KEY_SECRET | Access key secret for lambda (must have permission to invoke and create lambda functions). | false |  |
 | AWS_LAMBDA_LAYER_ARN | ARN Layer for lambda (current expectation is layer installed with all @iguhealth packages). | false |  |
-| AUTH_JWT_AUDIENCE | String representing audience for jwt. | false | https://iguhealth.app/api |
-| AUTH_JWT_ALGORITHM | AUTH JWT ALGOrithm for jwt. | false | RS256 |
 | AUTH_PUBLIC_ACCESS | Sets the server to allow full public access when set to true. | false | false |
+| AUTH_ALLOW_GLOBAL_SIGNUP | Sets whether to allow global signup for users. | false | false |
+| AUTH_ALLOW_TENANT_SIGNUP | Sets whether to allow tenant signup for users. | false | false |
 | AUTH_LOCAL_CERTIFICATION_LOCATION | Location for local certifications for IGUHEALTH ISSUER | false |  |
 | AUTH_LOCAL_SIGNING_KEY | The signing key used to generate new local tokens | false |  |
 | AUTH_EXTERNAL_JWK_URI | JWK remote url to pull JSON WEB Key Set. | false |  |
 | AUTH_EXTERNAL_JWT_ISSUER | Issuer of the JWT. | false |  |
 | EMAIL_PROVIDER | Set the email provider | false |  |
-| SENDGRID_API_KEY | Set the sendgrid api key (only used on email provider set to sendgrid) | false |  |
+| EMAIL_SENDGRID_API_KEY | Set the sendgrid api key (only used on email provider set to sendgrid) | false |  |
 | ENCRYPTION_TYPE | The type of encryption (used to encrypt user secrets) | false |  |
 | AWS_KMS_ACCESS_KEY_ID | KMS client access key ID | false |  |
 | AWS_KMS_ACCESS_KEY_SECRET | KMS client access key secret | false |  |

@@ -217,7 +217,10 @@ export default async function createServer(): Promise<
     scope: "global",
     client: pool,
     // Inject global management.
-    middleware: [injectGlobalManagement(), setAllowSignup(true)],
+    middleware: [
+      injectGlobalManagement(),
+      setAllowSignup(process.env.AUTH_ALLOW_GLOBAL_SIGNUP === "true"),
+    ],
   });
 
   rootRouter.use(managementRouter.routes());
@@ -283,7 +286,7 @@ export default async function createServer(): Promise<
     // Inject global management.
     middleware: [
       injectTenantManagement(),
-      setAllowSignup(false),
+      setAllowSignup(process.env.AUTH_ALLOW_TENANT_SIGNUP === "true"),
       // Inject tenant.
       async (ctx, next) => {
         ctx.oidc = {

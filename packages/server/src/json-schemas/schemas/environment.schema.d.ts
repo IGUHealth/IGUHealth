@@ -71,17 +71,17 @@ export interface IGUHealthEnvironment {
    */
   AWS_LAMBDA_LAYER_ARN?: string;
   /**
-   * String representing audience for jwt.
-   */
-  AUTH_JWT_AUDIENCE?: string;
-  /**
-   * AUTH JWT ALGOrithm for jwt.
-   */
-  AUTH_JWT_ALGORITHM?: string;
-  /**
    * Sets the server to allow full public access when set to true.
    */
   AUTH_PUBLIC_ACCESS?: "true" | "false";
+  /**
+   * Sets whether to allow global signup for users.
+   */
+  AUTH_ALLOW_GLOBAL_SIGNUP?: "true" | "false";
+  /**
+   * Sets whether to allow tenant signup for users.
+   */
+  AUTH_ALLOW_TENANT_SIGNUP?: "true" | "false";
   /**
    * Location for local certifications for IGUHEALTH ISSUER
    */
@@ -105,7 +105,7 @@ export interface IGUHealthEnvironment {
   /**
    * Set the sendgrid api key (only used on email provider set to sendgrid)
    */
-  SENDGRID_API_KEY?: string;
+  EMAIL_SENDGRID_API_KEY?: string;
   /**
    * The type of encryption (used to encrypt user secrets)
    */
