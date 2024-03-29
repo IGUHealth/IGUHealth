@@ -96,21 +96,23 @@
       "description": "ARN Layer for lambda (current expectation is layer installed with all @iguhealth packages)."
     },
 
-    "AUTH_JWT_AUDIENCE": {
-      "type": "string",
-      "description": "String representing audience for jwt.",
-      "default": "https://iguhealth.app/api"
-    },
-    "AUTH_JWT_ALGORITHM": {
-      "type": "string",
-      "description": "AUTH JWT ALGOrithm for jwt.",
-      "default": "RS256"
-    },
-
     "AUTH_PUBLIC_ACCESS": {
       "type": "string",
       "enum": ["true", "false"],
       "description": "Sets the server to allow full public access when set to true.",
+      "default": "false"
+    },
+
+    "AUTH_ALLOW_GLOBAL_SIGNUP": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Sets whether to allow global signup for users.",
+      "default": "false"
+    },
+    "AUTH_ALLOW_TENANT_SIGNUP": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Sets whether to allow tenant signup for users.",
       "default": "false"
     },
 
@@ -137,7 +139,7 @@
       "enum": ["sendgrid"],
       "description": "Set the email provider"
     },
-    "SENDGRID_API_KEY": {
+    "EMAIL_SENDGRID_API_KEY": {
       "type": "string",
       "description": "Set the sendgrid api key (only used on email provider set to sendgrid)"
     },
@@ -193,6 +195,7 @@
       "type": "string",
       "description": "Sentry profiles rate."
     },
+
     "ADMIN_APP_REDIRECT_URI": {
       "type": "string",
       "description": "Redirect URI for admin app"
