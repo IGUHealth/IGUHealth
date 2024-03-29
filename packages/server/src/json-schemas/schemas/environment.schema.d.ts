@@ -99,13 +99,17 @@ export interface IGUHealthEnvironment {
    */
   AUTH_EXTERNAL_JWT_ISSUER?: string;
   /**
-   * Set the email provider
+   * Set the email provider.
    */
   EMAIL_PROVIDER?: "sendgrid";
   /**
-   * Set the sendgrid api key (only used on email provider set to sendgrid)
+   * Set the sendgrid api key (only used on email provider set to sendgrid).
    */
   EMAIL_SENDGRID_API_KEY?: string;
+  /**
+   * Set the email from address.
+   */
+  EMAIL_FROM?: string;
   /**
    * The type of encryption (used to encrypt user secrets)
    */

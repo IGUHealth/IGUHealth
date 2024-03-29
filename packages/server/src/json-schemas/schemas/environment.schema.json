@@ -137,11 +137,15 @@
     "EMAIL_PROVIDER": {
       "type": "string",
       "enum": ["sendgrid"],
-      "description": "Set the email provider"
+      "description": "Set the email provider."
     },
     "EMAIL_SENDGRID_API_KEY": {
       "type": "string",
-      "description": "Set the sendgrid api key (only used on email provider set to sendgrid)"
+      "description": "Set the sendgrid api key (only used on email provider set to sendgrid)."
+    },
+    "EMAIL_FROM": {
+      "type": "string",
+      "description": "Set the email from address."
     },
 
     "ENCRYPTION_TYPE": {
