@@ -48,6 +48,7 @@ export async function sendPasswordResetEmail(
     { tenant: ctx.oidc.tenant },
     { query: { code: code.code } },
   );
+
   if (typeof emailVerificationURL !== "string") throw emailVerificationURL;
 
   const emailHTML = views.renderString(
@@ -55,7 +56,7 @@ export async function sendPasswordResetEmail(
       children: [
         "To verify your email and set your password click ",
         React.createElement("a", {
-          href: `${process.env.API_URL}${emailVerificationURL}`,
+          href: new URL(emailVerificationURL, process.env.API_URL),
           clicktracking: "off",
           children: "  Here ",
         }),
