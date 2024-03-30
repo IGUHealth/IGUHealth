@@ -22,7 +22,7 @@ export function membershipToUser(user: Membership): s.users.Insertable {
     first_name: user.name?.given?.[0] ?? null,
     last_name: user.name?.family ?? null,
     email_verified: user.emailVerified,
-    role: "member",
+    role: user.role as s.user_role,
     fhir_user_versionid: user.meta?.versionId
       ? parseInt(user.meta.versionId)
       : null,
