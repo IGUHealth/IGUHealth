@@ -22,6 +22,7 @@ When a request comes in the tenant slug is extracted and then checked against th
 
 ### Custom Claims
 
-| Name                          | type                                  | description                                                            |
-| ----------------------------- | ------------------------------------- | ---------------------------------------------------------------------- |
-| https://iguhealth.app/tenants | `{id: string, superAdmin: boolean}[]` | Which tenants a user has access too and whether they are a superadmin. |
+| Name                                 | type                                                                                | description                                                                          |
+| ------------------------------------ | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| https://iguhealth.app/tenants        | `{id: string, userRole: string}[]`                                                  | Which tenants a user has access too and their role which can be owner,admin, member. |
+| "https://iguhealth.app/resourceType" | The type of user being logged in ClientApplication, Membership, OperationDefinition | The type of user.                                                                    |

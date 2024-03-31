@@ -1,0 +1,147 @@
+---
+sidebar_position: 2
+---
+
+import TabItem from "@theme/TabItem";
+import Tabs from "@theme/Tabs";
+
+# OpenID Connect
+
+IGUHealth supports the following RFCs
+* OAuth 2.0: https://datatracker.ietf.org/doc/html/rfc6749
+  - Authorization code grant
+  - Client credentials grant
+* Client Registration: https://openid.net/specs/openid-connect-registration-1_0.html
+
+## Frontend React
+
+We have react components and hooks that will setup authentication on your application.
+To use it do the following:
+<Tabs>
+<TabItem value="provider" label="Provider">
+
+```jsx
+import { IGUHealthProvider, useIGUHealth } from "@iguhealth/components";
+
+<IGUHealthProvider
+  domain={REACT_APP_FHIR_BASE_URL || ""}
+  tenant={deriveTenantID()}
+  clientId={"admin-app"}
+  redirectUrl={window.location.origin}
+>
+  <App />
+</IGUHealthProvider>;
+```
+
+</TabItem>
+</Tabs>
+
+## Client Registration
+
+### Type information
+
+```tsx
+{
+  resourceType: "ClientApplication"
+  /**
+   * Logical id of this artifact
+   */
+  id?: id;
+  /**
+   * Metadata about the resource
+   */
+  meta?: Meta;
+  /**
+   * The name of the client to be presented to the end-user.
+   */
+  name: string;
+  /**
+   * The name of the client to be presented to the end-user.
+   */
+  _name?: Element
+  /**
+   * The description of the client to be presented to the end-user.
+   */
+  description?: string;
+  /**
+   * The description of the client to be presented to the end-user.
+   */
+  _description?: Element
+  /**
+   * Auth 2.0 grant type strings that the client can use at the token endpoint.
+   */
+  grantType: Array<code>;
+  /**
+   * Auth 2.0 grant type strings that the client can use at the token endpoint.
+   */
+  _grantType?: Array<Element>
+  /**
+   * OAuth 2.0 response type strings that the client can use at the authorization endpoint.
+   */
+  responseTypes: code;
+  /**
+   * OAuth 2.0 response type strings that the client can use at the authorization endpoint.
+   */
+  _responseTypes?: Element
+  /**
+   * This value is used by confidential clients to authenticate to the token endpoint, as described in OAuth 2.0 [RFC6749], Section 2.3.1.
+   */
+  secret?: string;
+  /**
+   * This value is used by confidential clients to authenticate to the token endpoint, as described in OAuth 2.0 [RFC6749], Section 2.3.1.
+   */
+  _secret?: Element
+  /**
+   * Array of redirection URI strings for use in redirect-based flows such as the authorization code and implicit flows.  As required by Section 2 of OAuth 2.0 [RFC6749], clients using flows with redirection MUST register their redirection URI values. Authorization servers that support dynamic registration for redirect-based flows MUST implement support for this metadata value.
+   */
+  redirectUri?: Array<string>;
+  /**
+   * Array of redirection URI strings for use in redirect-based flows such as the authorization code and implicit flows.  As required by Section 2 of OAuth 2.0 [RFC6749], clients using flows with redirection MUST register their redirection URI values. Authorization servers that support dynamic registration for redirect-based flows MUST implement support for this metadata value.
+   */
+  _redirectUri?: Array<Element>
+  /**
+   * URL string of a web page providing information about the client.
+   */
+  uri?: uri;
+  /**
+   * URL string of a web page providing information about the client.
+   */
+  _uri?: Element
+  /**
+   * URL string that references a logo for the client.
+   */
+  logoUri?: uri;
+  /**
+   * URL string that references a logo for the client.
+   */
+  _logoUri?: Element
+  /**
+   * String containing a space-separated list of scope values (as described in Section 3.3 of OAuth 2.0 [RFC6749]) that the client can use when requesting access tokens.
+   */
+  scope?: string;
+  /**
+   * String containing a space-separated list of scope values (as described in Section 3.3 of OAuth 2.0 [RFC6749]) that the client can use when requesting access tokens.
+   */
+  _scope?: Element
+  /**
+   * Array of strings representing ways to contact people responsible for this client, typically email addresses.
+   */
+  contact?: ContactPoint;
+  /**
+   * URL string that points to a human-readable terms of service document for the client that describes a contractual relationship between the end-user and the client that the end-user accepts when authorizing the client.
+   */
+  tosUri?: uri;
+  /**
+   * URL string that points to a human-readable terms of service document for the client that describes a contractual relationship between the end-user and the client that the end-user accepts when authorizing the client.
+   */
+  _tosUri?: Element
+  /**
+   * URL string that points to a human-readable privacy policy document that describes how the deployment organization collects, uses, retains, and discloses personal data.
+   */
+  policyUri?: uri;
+  /**
+   * URL string that points to a human-readable privacy policy document that describes how the deployment organization collects, uses, retains, and discloses personal data.
+   */
+  _policyUri?: Element
+}
+```

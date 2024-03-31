@@ -1,8 +1,7 @@
 {
-  "extends": "../../config/base.tsconfig.json",
-  "exclude": ["./**/*.test.ts", "lib/*", "jest.config.js", "scripts/*"],
+  // This file is not used in compilation. It is here just for a nice editor experience.
+  "extends": "@docusaurus/tsconfig",
   "compilerOptions": {
-    "outDir": "lib",
-    "jsx": "react"
+    "baseUrl": "."
   }
 }

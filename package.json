@@ -32,6 +32,9 @@
   "dependenciesMeta": {
     "@trivago/prettier-plugin-sort-imports@4.3.0": {
       "unplugged": true
+    },
+    "prism-react-renderer@2.3.1": {
+      "unplugged": true
     }
   }
 }
