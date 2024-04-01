@@ -1,9 +1,14 @@
-# GraphDefinition
+import TabItem from "@theme/TabItem";
+  import Tabs from "@theme/Tabs";
+
+  # GraphDefinition
  ## Description 
- A formal computable definition of a graph of resources - that is, a coherent set of resources that form a graph by following references. The Graph Definition resource defines a set and makes rules about the set.
- ## Structure 
- | Path | Cardinality | Type | Description 
- | ---- | ----------- | ---- | -------  
+ A formal computable definition of a graph of resources - that is, a coherent set of resources that form a graph by following references. The Graph Definition resource defines a set and makes rules about the set. 
+
+  ## Data
+  <Tabs> <TabItem value="structure" label="Structure">
+   | Path | Cardinality | Type | Description
+  | ---- | ----------- | ---- | -------  
  | GraphDefinition | 0..* | GraphDefinition | A formal computable definition of a graph of resources - that is, a coherent set of resources that form a graph by following references. The Graph Definition resource defines a set and makes rules about the set. 
  | GraphDefinition.id | 0..1 | http://hl7.org/fhirpath/System.String | The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes. 
  | GraphDefinition.meta | 0..1 | Meta | The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource. 
@@ -53,9 +58,10 @@
  | GraphDefinition.link.target.compartment.expression | 0..1 | string | Custom rule, as a FHIRPath expression. 
  | GraphDefinition.link.target.compartment.description | 0..1 | string | Documentation for FHIRPath expression. 
  | GraphDefinition.link.target.link | 0..* | GraphDefinition | Additional links from target resource. 
- ## Search Parameters 
- | Name | Type | Description  | Expression  
- | ---- | ---- | ------- | ------  
+</TabItem>
+ <TabItem value="searchparameter" label="Search Parameters">
+   | Name | Type | Description  | Expression 
+    | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
  | _content | string | Search on the entire content of the resource |   
  | _id | token | Logical id of this artifact | Resource.id  
@@ -81,3 +87,6 @@
  | start | token | Type of resource at which the graph starts | GraphDefinition.start  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+
+</TabItem>
+</Tabs>

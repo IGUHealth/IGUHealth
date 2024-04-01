@@ -1,9 +1,14 @@
-# SpecimenDefinition
+import TabItem from "@theme/TabItem";
+  import Tabs from "@theme/Tabs";
+
+  # SpecimenDefinition
  ## Description 
- A kind of specimen with associated set of requirements.
- ## Structure 
- | Path | Cardinality | Type | Description 
- | ---- | ----------- | ---- | -------  
+ A kind of specimen with associated set of requirements. 
+
+  ## Data
+  <Tabs> <TabItem value="structure" label="Structure">
+   | Path | Cardinality | Type | Description
+  | ---- | ----------- | ---- | -------  
  | SpecimenDefinition | 0..* | SpecimenDefinition | A kind of specimen with associated set of requirements. 
  | SpecimenDefinition.id | 0..1 | http://hl7.org/fhirpath/System.String | The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes. 
  | SpecimenDefinition.meta | 0..1 | Meta | The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource. 
@@ -52,9 +57,10 @@
  | SpecimenDefinition.typeTested.handling.temperatureRange | 0..1 | Range | The temperature interval for this set of handling instructions. 
  | SpecimenDefinition.typeTested.handling.maxDuration | 0..1 | Duration | The maximum time interval of preservation of the specimen with these conditions. 
  | SpecimenDefinition.typeTested.handling.instruction | 0..1 | string | Additional textual instructions for the preservation or transport of the specimen. For instance, 'Protect from light exposure'. 
- ## Search Parameters 
- | Name | Type | Description  | Expression  
- | ---- | ---- | ------- | ------  
+</TabItem>
+ <TabItem value="searchparameter" label="Search Parameters">
+   | Name | Type | Description  | Expression 
+    | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
  | _content | string | Search on the entire content of the resource |   
  | _id | token | Logical id of this artifact | Resource.id  
@@ -69,3 +75,6 @@
  | type | token | The type of collected specimen | SpecimenDefinition.typeCollected  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+
+</TabItem>
+</Tabs>

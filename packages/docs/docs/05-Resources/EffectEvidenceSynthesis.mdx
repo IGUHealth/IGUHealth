@@ -1,9 +1,14 @@
-# EffectEvidenceSynthesis
+import TabItem from "@theme/TabItem";
+  import Tabs from "@theme/Tabs";
+
+  # EffectEvidenceSynthesis
  ## Description 
- The EffectEvidenceSynthesis resource describes the difference in an outcome between exposures states in a population where the effect estimate is derived from a combination of research studies.
- ## Structure 
- | Path | Cardinality | Type | Description 
- | ---- | ----------- | ---- | -------  
+ The EffectEvidenceSynthesis resource describes the difference in an outcome between exposures states in a population where the effect estimate is derived from a combination of research studies. 
+
+  ## Data
+  <Tabs> <TabItem value="structure" label="Structure">
+   | Path | Cardinality | Type | Description
+  | ---- | ----------- | ---- | -------  
  | EffectEvidenceSynthesis | 0..* | EffectEvidenceSynthesis | The EffectEvidenceSynthesis resource describes the difference in an outcome between exposures states in a population where the effect estimate is derived from a combination of research studies. 
  | EffectEvidenceSynthesis.id | 0..1 | http://hl7.org/fhirpath/System.String | The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes. 
  | EffectEvidenceSynthesis.meta | 0..1 | Meta | The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource. 
@@ -87,9 +92,10 @@
  | EffectEvidenceSynthesis.certainty.certaintySubcomponent.type | 0..1 | CodeableConcept | Type of subcomponent of certainty rating. 
  | EffectEvidenceSynthesis.certainty.certaintySubcomponent.rating | 0..* | CodeableConcept | A rating of a subcomponent of rating certainty. 
  | EffectEvidenceSynthesis.certainty.certaintySubcomponent.note | 0..* | Annotation | A human-readable string to clarify or explain concepts about the resource. 
- ## Search Parameters 
- | Name | Type | Description  | Expression  
- | ---- | ---- | ------- | ------  
+</TabItem>
+ <TabItem value="searchparameter" label="Search Parameters">
+   | Name | Type | Description  | Expression 
+    | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
  | _content | string | Search on the entire content of the resource |   
  | _id | token | Logical id of this artifact | Resource.id  
@@ -117,3 +123,6 @@
  | context-type-value | composite | A use context type and value assigned to the effect evidence synthesis | EffectEvidenceSynthesis.useContext  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+
+</TabItem>
+</Tabs>

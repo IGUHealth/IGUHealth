@@ -1,9 +1,14 @@
-# Appointment
+import TabItem from "@theme/TabItem";
+  import Tabs from "@theme/Tabs";
+
+  # Appointment
  ## Description 
- A booking of a healthcare event among patient(s), practitioner(s), related person(s) and/or device(s) for a specific date/time. This may result in one or more Encounter(s).
- ## Structure 
- | Path | Cardinality | Type | Description 
- | ---- | ----------- | ---- | -------  
+ A booking of a healthcare event among patient(s), practitioner(s), related person(s) and/or device(s) for a specific date/time. This may result in one or more Encounter(s). 
+
+  ## Data
+  <Tabs> <TabItem value="structure" label="Structure">
+   | Path | Cardinality | Type | Description
+  | ---- | ----------- | ---- | -------  
  | Appointment | 0..* | Appointment | A booking of a healthcare event among patient(s), practitioner(s), related person(s) and/or device(s) for a specific date/time. This may result in one or more Encounter(s). 
  | Appointment.id | 0..1 | http://hl7.org/fhirpath/System.String | The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes. 
  | Appointment.meta | 0..1 | Meta | The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource. 
@@ -43,9 +48,10 @@
  | Appointment.participant.status | 1..1 | code | Participation status of the actor. 
  | Appointment.participant.period | 0..1 | Period | Participation period of the actor. 
  | Appointment.requestedPeriod | 0..* | Period | A set of date ranges (potentially including times) that the appointment is preferred to be scheduled within.The duration (usually in minutes) could also be provided to indicate the length of the appointment to fill and populate the start/end times for the actual allocated time. However, in other situations the duration may be calculated by the scheduling system. 
- ## Search Parameters 
- | Name | Type | Description  | Expression  
- | ---- | ---- | ------- | ------  
+</TabItem>
+ <TabItem value="searchparameter" label="Search Parameters">
+   | Name | Type | Description  | Expression 
+    | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
  | _content | string | Search on the entire content of the resource |   
  | _id | token | Logical id of this artifact | Resource.id  
@@ -74,3 +80,6 @@
  | supporting-info | reference | Additional information to support the appointment | Appointment.supportingInformation  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+
+</TabItem>
+</Tabs>

@@ -1,9 +1,14 @@
-# StructureMap
+import TabItem from "@theme/TabItem";
+  import Tabs from "@theme/Tabs";
+
+  # StructureMap
  ## Description 
- A Map of relationships between 2 structures that can be used to transform data.
- ## Structure 
- | Path | Cardinality | Type | Description 
- | ---- | ----------- | ---- | -------  
+ A Map of relationships between 2 structures that can be used to transform data. 
+
+  ## Data
+  <Tabs> <TabItem value="structure" label="Structure">
+   | Path | Cardinality | Type | Description
+  | ---- | ----------- | ---- | -------  
  | StructureMap | 0..* | StructureMap | A Map of relationships between 2 structures that can be used to transform data. 
  | StructureMap.id | 0..1 | http://hl7.org/fhirpath/System.String | The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes. 
  | StructureMap.meta | 0..1 | Meta | The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource. 
@@ -97,9 +102,10 @@
  | StructureMap.group.rule.dependent.name | 1..1 | id | Name of a rule or group to apply. 
  | StructureMap.group.rule.dependent.variable | 1..* | string | Variable to pass to the rule or group. 
  | StructureMap.group.rule.documentation | 0..1 | string | Documentation for this instance of data. 
- ## Search Parameters 
- | Name | Type | Description  | Expression  
- | ---- | ---- | ------- | ------  
+</TabItem>
+ <TabItem value="searchparameter" label="Search Parameters">
+   | Name | Type | Description  | Expression 
+    | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
  | _content | string | Search on the entire content of the resource |   
  | _id | token | Logical id of this artifact | Resource.id  
@@ -126,3 +132,6 @@
  | identifier | token | Multiple Resources: * [CodeSystem](codesystem.html): External identifier for the code system* [ConceptMap](conceptmap.html): External identifier for the concept map* [MessageDefinition](messagedefinition.html): External identifier for the message definition* [StructureDefinition](structuredefinition.html): External identifier for the structure definition* [StructureMap](structuremap.html): External identifier for the structure map* [ValueSet](valueset.html): External identifier for the value set | CodeSystem.identifier / ConceptMap.identifier / MessageDefinition.identifier / StructureDefinition.identifier / StructureMap.identifier / ValueSet.identifier  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+
+</TabItem>
+</Tabs>

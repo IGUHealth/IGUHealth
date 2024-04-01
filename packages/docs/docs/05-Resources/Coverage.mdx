@@ -1,9 +1,14 @@
-# Coverage
+import TabItem from "@theme/TabItem";
+  import Tabs from "@theme/Tabs";
+
+  # Coverage
  ## Description 
- Financial instrument which may be used to reimburse or pay for health care products and services. Includes both insurance and self-payment.
- ## Structure 
- | Path | Cardinality | Type | Description 
- | ---- | ----------- | ---- | -------  
+ Financial instrument which may be used to reimburse or pay for health care products and services. Includes both insurance and self-payment. 
+
+  ## Data
+  <Tabs> <TabItem value="structure" label="Structure">
+   | Path | Cardinality | Type | Description
+  | ---- | ----------- | ---- | -------  
  | Coverage | 0..* | Coverage | Financial instrument which may be used to reimburse or pay for health care products and services. Includes both insurance and self-payment. 
  | Coverage.id | 0..1 | http://hl7.org/fhirpath/System.String | The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes. 
  | Coverage.meta | 0..1 | Meta | The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource. 
@@ -47,9 +52,10 @@
  | Coverage.costToBeneficiary.exception.period | 0..1 | Period | The timeframe during when the exception is in force. 
  | Coverage.subrogation | 0..1 | boolean | When 'subrogation=true' this insurance instance has been included not for adjudication but to provide insurers with the details to recover costs. 
  | Coverage.contract | 0..* | Reference | The policy(s) which constitute this insurance coverage. 
- ## Search Parameters 
- | Name | Type | Description  | Expression  
- | ---- | ---- | ------- | ------  
+</TabItem>
+ <TabItem value="searchparameter" label="Search Parameters">
+   | Name | Type | Description  | Expression 
+    | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
  | _content | string | Search on the entire content of the resource |   
  | _id | token | Logical id of this artifact | Resource.id  
@@ -72,3 +78,6 @@
  | type | token | The kind of coverage (health plan, auto, Workers Compensation) | Coverage.type  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+
+</TabItem>
+</Tabs>

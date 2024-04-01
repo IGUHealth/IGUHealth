@@ -1,9 +1,14 @@
-# ChargeItemDefinition
+import TabItem from "@theme/TabItem";
+  import Tabs from "@theme/Tabs";
+
+  # ChargeItemDefinition
  ## Description 
- The ChargeItemDefinition resource provides the properties that apply to the (billing) codes necessary to calculate costs and prices. The properties may differ largely depending on type and realm, therefore this resource gives only a rough structure and requires profiling for each type of billing code system.
- ## Structure 
- | Path | Cardinality | Type | Description 
- | ---- | ----------- | ---- | -------  
+ The ChargeItemDefinition resource provides the properties that apply to the (billing) codes necessary to calculate costs and prices. The properties may differ largely depending on type and realm, therefore this resource gives only a rough structure and requires profiling for each type of billing code system. 
+
+  ## Data
+  <Tabs> <TabItem value="structure" label="Structure">
+   | Path | Cardinality | Type | Description
+  | ---- | ----------- | ---- | -------  
  | ChargeItemDefinition | 0..* | ChargeItemDefinition | The ChargeItemDefinition resource provides the properties that apply to the (billing) codes necessary to calculate costs and prices. The properties may differ largely depending on type and realm, therefore this resource gives only a rough structure and requires profiling for each type of billing code system. 
  | ChargeItemDefinition.id | 0..1 | http://hl7.org/fhirpath/System.String | The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes. 
  | ChargeItemDefinition.meta | 0..1 | Meta | The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource. 
@@ -54,9 +59,10 @@
  | ChargeItemDefinition.propertyGroup.priceComponent.code | 0..1 | CodeableConcept | A code that identifies the component. Codes may be used to differentiate between kinds of taxes, surcharges, discounts etc. 
  | ChargeItemDefinition.propertyGroup.priceComponent.factor | 0..1 | decimal | The factor that has been applied on the base price for calculating this component. 
  | ChargeItemDefinition.propertyGroup.priceComponent.amount | 0..1 | Money | The amount calculated for this component. 
- ## Search Parameters 
- | Name | Type | Description  | Expression  
- | ---- | ---- | ------- | ------  
+</TabItem>
+ <TabItem value="searchparameter" label="Search Parameters">
+   | Name | Type | Description  | Expression 
+    | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
  | _content | string | Search on the entire content of the resource |   
  | _id | token | Logical id of this artifact | Resource.id  
@@ -83,3 +89,6 @@
  | context-type-value | composite | A use context type and value assigned to the charge item definition | ChargeItemDefinition.useContext  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+
+</TabItem>
+</Tabs>

@@ -1,9 +1,14 @@
-# OrganizationAffiliation
+import TabItem from "@theme/TabItem";
+  import Tabs from "@theme/Tabs";
+
+  # OrganizationAffiliation
  ## Description 
- Defines an affiliation/assotiation/relationship between 2 distinct oganizations, that is not a part-of relationship/sub-division relationship.
- ## Structure 
- | Path | Cardinality | Type | Description 
- | ---- | ----------- | ---- | -------  
+ Defines an affiliation/assotiation/relationship between 2 distinct oganizations, that is not a part-of relationship/sub-division relationship. 
+
+  ## Data
+  <Tabs> <TabItem value="structure" label="Structure">
+   | Path | Cardinality | Type | Description
+  | ---- | ----------- | ---- | -------  
  | OrganizationAffiliation | 0..* | OrganizationAffiliation | Defines an affiliation/assotiation/relationship between 2 distinct oganizations, that is not a part-of relationship/sub-division relationship. 
  | OrganizationAffiliation.id | 0..1 | http://hl7.org/fhirpath/System.String | The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes. 
  | OrganizationAffiliation.meta | 0..1 | Meta | The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource. 
@@ -25,9 +30,10 @@
  | OrganizationAffiliation.healthcareService | 0..* | Reference | Healthcare services provided through the role. 
  | OrganizationAffiliation.telecom | 0..* | ContactPoint | Contact details at the participatingOrganization relevant to this Affiliation. 
  | OrganizationAffiliation.endpoint | 0..* | Reference | Technical endpoints providing access to services operated for this role. 
- ## Search Parameters 
- | Name | Type | Description  | Expression  
- | ---- | ---- | ------- | ------  
+</TabItem>
+ <TabItem value="searchparameter" label="Search Parameters">
+   | Name | Type | Description  | Expression 
+    | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
  | _content | string | Search on the entire content of the resource |   
  | _id | token | Logical id of this artifact | Resource.id  
@@ -53,3 +59,6 @@
  | telecom | token | The value in any kind of contact | OrganizationAffiliation.telecom  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+
+</TabItem>
+</Tabs>

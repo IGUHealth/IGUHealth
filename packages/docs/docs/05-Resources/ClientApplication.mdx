@@ -1,9 +1,14 @@
-# ClientApplication
+import TabItem from "@theme/TabItem";
+  import Tabs from "@theme/Tabs";
+
+  # ClientApplication
  ## Description 
- FHIR Implementation of Client Metadata from https://datatracker.ietf.org/doc/html/rfc7591#section-2
- ## Structure 
- | Path | Cardinality | Type | Description 
- | ---- | ----------- | ---- | -------  
+ FHIR Implementation of Client Metadata from https://datatracker.ietf.org/doc/html/rfc7591#section-2 
+
+  ## Data
+  <Tabs> <TabItem value="structure" label="Structure">
+   | Path | Cardinality | Type | Description
+  | ---- | ----------- | ---- | -------  
  | ClientApplication | 0..* | ClientApplication | undefined 
  | ClientApplication.id | 0..1 | http://hl7.org/fhirpath/System.String | The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes. 
  | ClientApplication.meta | 0..1 | Meta | The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource. 
@@ -19,9 +24,10 @@
  | ClientApplication.contact | 0..1 | ContactPoint | undefined 
  | ClientApplication.tosUri | 0..1 | uri | undefined 
  | ClientApplication.policyUri | 0..1 | uri | undefined 
- ## Search Parameters 
- | Name | Type | Description  | Expression  
- | ---- | ---- | ------- | ------  
+</TabItem>
+ <TabItem value="searchparameter" label="Search Parameters">
+   | Name | Type | Description  | Expression 
+    | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
  | _content | string | Search on the entire content of the resource |   
  | _id | token | Logical id of this artifact | Resource.id  
@@ -33,3 +39,6 @@
  | _tag | token | Tags applied to this resource | Resource.meta.tag  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+
+</TabItem>
+</Tabs>

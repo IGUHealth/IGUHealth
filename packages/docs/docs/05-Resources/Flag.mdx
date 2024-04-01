@@ -1,9 +1,14 @@
-# Flag
+import TabItem from "@theme/TabItem";
+  import Tabs from "@theme/Tabs";
+
+  # Flag
  ## Description 
- Prospective warnings of potential issues when providing care to the patient.
- ## Structure 
- | Path | Cardinality | Type | Description 
- | ---- | ----------- | ---- | -------  
+ Prospective warnings of potential issues when providing care to the patient. 
+
+  ## Data
+  <Tabs> <TabItem value="structure" label="Structure">
+   | Path | Cardinality | Type | Description
+  | ---- | ----------- | ---- | -------  
  | Flag | 0..* | Flag | Prospective warnings of potential issues when providing care to the patient. 
  | Flag.id | 0..1 | http://hl7.org/fhirpath/System.String | The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes. 
  | Flag.meta | 0..1 | Meta | The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource. 
@@ -21,9 +26,10 @@
  | Flag.period | 0..1 | Period | The period of time from the activation of the flag to inactivation of the flag. If the flag is active, the end of the period should be unspecified. 
  | Flag.encounter | 0..1 | Reference | This alert is only relevant during the encounter. 
  | Flag.author | 0..1 | Reference | The person, organization or device that created the flag. 
- ## Search Parameters 
- | Name | Type | Description  | Expression  
- | ---- | ---- | ------- | ------  
+</TabItem>
+ <TabItem value="searchparameter" label="Search Parameters">
+   | Name | Type | Description  | Expression 
+    | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
  | _content | string | Search on the entire content of the resource |   
  | _id | token | Logical id of this artifact | Resource.id  
@@ -41,3 +47,6 @@
  | subject | reference | The identity of a subject to list flags for | Flag.subject  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+
+</TabItem>
+</Tabs>

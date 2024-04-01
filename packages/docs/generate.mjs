@@ -35,8 +35,15 @@ async function processStructureDefinition(structureDefinition) {
         r.base.includes("DomainResource"),
     );
 
-  let doc = `# ${structureDefinition.name}\n ## Description \n ${structureDefinition.description}\n`;
-  doc = `${doc} ## Structure \n | Path | Cardinality | Type | Description \n | ---- | ----------- | ---- | -------  \n`;
+  let doc = `import TabItem from "@theme/TabItem";
+  import Tabs from "@theme/Tabs";
+
+  # ${structureDefinition.name}\n ## Description \n ${structureDefinition.description} \n
+  ## Data
+  <Tabs>`;
+  doc = `${doc} <TabItem value="structure" label="Structure">
+   | Path | Cardinality | Type | Description
+  | ---- | ----------- | ---- | -------  \n`;
   for (const element of structureDefinition.snapshot?.element || []) {
     const path = element.path;
     const min = element.min;
@@ -48,7 +55,11 @@ async function processStructureDefinition(structureDefinition) {
     } | ${description} \n`;
   }
 
-  doc = `${doc} ## Search Parameters \n | Name | Type | Description  | Expression  \n | ---- | ---- | ------- | ------  \n`;
+  doc = `${doc}</TabItem>\n`;
+
+  doc = `${doc} <TabItem value="searchparameter" label="Search Parameters">
+   | Name | Type | Description  | Expression 
+    | ---- | ---- | ------- | ------  \n`;
   for (const parameter of parameters) {
     const name = parameter.name;
     const type = parameter.type;
@@ -59,6 +70,9 @@ async function processStructureDefinition(structureDefinition) {
 
     doc = `${doc} | ${name} | ${type} | ${description} | ${expression}  \n`;
   }
+  doc = `${doc}\n</TabItem>\n`;
+
+  doc = `${doc}</Tabs>`;
 
   return doc;
 }
