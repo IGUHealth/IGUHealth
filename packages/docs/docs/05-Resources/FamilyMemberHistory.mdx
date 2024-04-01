@@ -1,9 +1,14 @@
-# FamilyMemberHistory
+import TabItem from "@theme/TabItem";
+  import Tabs from "@theme/Tabs";
+
+  # FamilyMemberHistory
  ## Description 
- Significant health conditions for a person related to the patient relevant in the context of care for the patient.
- ## Structure 
- | Path | Cardinality | Type | Description 
- | ---- | ----------- | ---- | -------  
+ Significant health conditions for a person related to the patient relevant in the context of care for the patient. 
+
+  ## Data
+  <Tabs> <TabItem value="structure" label="Structure">
+   | Path | Cardinality | Type | Description
+  | ---- | ----------- | ---- | -------  
  | FamilyMemberHistory | 0..* | FamilyMemberHistory | Significant health conditions for a person related to the patient relevant in the context of care for the patient. 
  | FamilyMemberHistory.id | 0..1 | http://hl7.org/fhirpath/System.String | The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes. 
  | FamilyMemberHistory.meta | 0..1 | Meta | The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource. 
@@ -39,9 +44,10 @@
  | FamilyMemberHistory.condition.contributedToDeath | 0..1 | boolean | This condition contributed to the cause of death of the related person. If contributedToDeath is not populated, then it is unknown. 
  | FamilyMemberHistory.condition.onset[x] | 0..1 | Age | Either the age of onset, range of approximate age or descriptive string can be recorded.  For conditions with multiple occurrences, this describes the first known occurrence. 
  | FamilyMemberHistory.condition.note | 0..* | Annotation | An area where general notes can be placed about this specific condition. 
- ## Search Parameters 
- | Name | Type | Description  | Expression  
- | ---- | ---- | ------- | ------  
+</TabItem>
+ <TabItem value="searchparameter" label="Search Parameters">
+   | Name | Type | Description  | Expression 
+    | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
  | _content | string | Search on the entire content of the resource |   
  | _id | token | Logical id of this artifact | Resource.id  
@@ -62,3 +68,6 @@
  | status | token | partial / completed / entered-in-error / health-unknown | FamilyMemberHistory.status  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+
+</TabItem>
+</Tabs>

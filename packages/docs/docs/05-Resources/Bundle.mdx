@@ -1,9 +1,14 @@
-# Bundle
+import TabItem from "@theme/TabItem";
+  import Tabs from "@theme/Tabs";
+
+  # Bundle
  ## Description 
- A container for a collection of resources.
- ## Structure 
- | Path | Cardinality | Type | Description 
- | ---- | ----------- | ---- | -------  
+ A container for a collection of resources. 
+
+  ## Data
+  <Tabs> <TabItem value="structure" label="Structure">
+   | Path | Cardinality | Type | Description
+  | ---- | ----------- | ---- | -------  
  | Bundle | 0..* | Bundle | A container for a collection of resources. 
  | Bundle.id | 0..1 | http://hl7.org/fhirpath/System.String | The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes. 
  | Bundle.meta | 0..1 | Meta | The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource. 
@@ -52,9 +57,10 @@
  | Bundle.entry.response.lastModified | 0..1 | instant | The date/time that the resource was modified on the server. 
  | Bundle.entry.response.outcome | 0..1 | Resource | An OperationOutcome containing hints and warnings produced as part of processing this entry in a batch or transaction. 
  | Bundle.signature | 0..1 | Signature | Digital Signature - base64 encoded. XML-DSig or a JWT. 
- ## Search Parameters 
- | Name | Type | Description  | Expression  
- | ---- | ---- | ------- | ------  
+</TabItem>
+ <TabItem value="searchparameter" label="Search Parameters">
+   | Name | Type | Description  | Expression 
+    | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
  | _content | string | Search on the entire content of the resource |   
  | _id | token | Logical id of this artifact | Resource.id  
@@ -71,3 +77,6 @@
  | type | token | document / message / transaction / transaction-response / batch / batch-response / history / searchset / collection | Bundle.type  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+
+</TabItem>
+</Tabs>

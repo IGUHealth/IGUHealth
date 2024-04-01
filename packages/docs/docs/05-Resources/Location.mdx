@@ -1,9 +1,14 @@
-# Location
+import TabItem from "@theme/TabItem";
+  import Tabs from "@theme/Tabs";
+
+  # Location
  ## Description 
- Details and position information for a physical place where services are provided and resources and participants may be stored, found, contained, or accommodated.
- ## Structure 
- | Path | Cardinality | Type | Description 
- | ---- | ----------- | ---- | -------  
+ Details and position information for a physical place where services are provided and resources and participants may be stored, found, contained, or accommodated. 
+
+  ## Data
+  <Tabs> <TabItem value="structure" label="Structure">
+   | Path | Cardinality | Type | Description
+  | ---- | ----------- | ---- | -------  
  | Location | 0..* | Location | Details and position information for a physical place where services are provided and resources and participants may be stored, found, contained, or accommodated. 
  | Location.id | 0..1 | http://hl7.org/fhirpath/System.String | The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes. 
  | Location.meta | 0..1 | Meta | The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource. 
@@ -43,9 +48,10 @@
  | Location.hoursOfOperation.closingTime | 0..1 | time | Time that the Location closes. 
  | Location.availabilityExceptions | 0..1 | string | A description of when the locations opening ours are different to normal, e.g. public holiday availability. Succinctly describing all possible exceptions to normal site availability as detailed in the opening hours Times. 
  | Location.endpoint | 0..* | Reference | Technical endpoints providing access to services operated for the location. 
- ## Search Parameters 
- | Name | Type | Description  | Expression  
- | ---- | ---- | ------- | ------  
+</TabItem>
+ <TabItem value="searchparameter" label="Search Parameters">
+   | Name | Type | Description  | Expression 
+    | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
  | _content | string | Search on the entire content of the resource |   
  | _id | token | Logical id of this artifact | Resource.id  
@@ -72,3 +78,6 @@
  | type | token | A code for the type of location | Location.type  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+
+</TabItem>
+</Tabs>

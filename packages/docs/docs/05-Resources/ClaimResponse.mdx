@@ -1,9 +1,14 @@
-# ClaimResponse
+import TabItem from "@theme/TabItem";
+  import Tabs from "@theme/Tabs";
+
+  # ClaimResponse
  ## Description 
- This resource provides the adjudication details from the processing of a Claim resource.
- ## Structure 
- | Path | Cardinality | Type | Description 
- | ---- | ----------- | ---- | -------  
+ This resource provides the adjudication details from the processing of a Claim resource. 
+
+  ## Data
+  <Tabs> <TabItem value="structure" label="Structure">
+   | Path | Cardinality | Type | Description
+  | ---- | ----------- | ---- | -------  
  | ClaimResponse | 0..* | ClaimResponse | This resource provides the adjudication details from the processing of a Claim resource. 
  | ClaimResponse.id | 0..1 | http://hl7.org/fhirpath/System.String | The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes. 
  | ClaimResponse.meta | 0..1 | Meta | The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource. 
@@ -147,9 +152,10 @@
  | ClaimResponse.error.detailSequence | 0..1 | positiveInt | The sequence number of the detail within the line item submitted which contains the error. This value is omitted when the error occurs outside of the item structure. 
  | ClaimResponse.error.subDetailSequence | 0..1 | positiveInt | The sequence number of the sub-detail within the detail within the line item submitted which contains the error. This value is omitted when the error occurs outside of the item structure. 
  | ClaimResponse.error.code | 1..1 | CodeableConcept | An error code, from a specified code system, which details why the claim could not be adjudicated. 
- ## Search Parameters 
- | Name | Type | Description  | Expression  
- | ---- | ---- | ------- | ------  
+</TabItem>
+ <TabItem value="searchparameter" label="Search Parameters">
+   | Name | Type | Description  | Expression 
+    | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
  | _content | string | Search on the entire content of the resource |   
  | _id | token | Logical id of this artifact | Resource.id  
@@ -172,3 +178,6 @@
  | use | token | The type of claim | ClaimResponse.use  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+
+</TabItem>
+</Tabs>

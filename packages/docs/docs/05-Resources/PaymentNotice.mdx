@@ -1,9 +1,14 @@
-# PaymentNotice
+import TabItem from "@theme/TabItem";
+  import Tabs from "@theme/Tabs";
+
+  # PaymentNotice
  ## Description 
- This resource provides the status of the payment for goods and services rendered, and the request and response resource references.
- ## Structure 
- | Path | Cardinality | Type | Description 
- | ---- | ----------- | ---- | -------  
+ This resource provides the status of the payment for goods and services rendered, and the request and response resource references. 
+
+  ## Data
+  <Tabs> <TabItem value="structure" label="Structure">
+   | Path | Cardinality | Type | Description
+  | ---- | ----------- | ---- | -------  
  | PaymentNotice | 0..* | PaymentNotice | This resource provides the status of the payment for goods and services rendered, and the request and response resource references. 
  | PaymentNotice.id | 0..1 | http://hl7.org/fhirpath/System.String | The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes. 
  | PaymentNotice.meta | 0..1 | Meta | The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource. 
@@ -25,9 +30,10 @@
  | PaymentNotice.recipient | 1..1 | Reference | The party who is notified of the payment status. 
  | PaymentNotice.amount | 1..1 | Money | The amount sent to the payee. 
  | PaymentNotice.paymentStatus | 0..1 | CodeableConcept | A code indicating whether payment has been sent or cleared. 
- ## Search Parameters 
- | Name | Type | Description  | Expression  
- | ---- | ---- | ------- | ------  
+</TabItem>
+ <TabItem value="searchparameter" label="Search Parameters">
+   | Name | Type | Description  | Expression 
+    | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
  | _content | string | Search on the entire content of the resource |   
  | _id | token | Logical id of this artifact | Resource.id  
@@ -46,3 +52,6 @@
  | status | token | The status of the payment notice | PaymentNotice.status  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+
+</TabItem>
+</Tabs>

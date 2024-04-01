@@ -1,0 +1,22 @@
+# Intro
+
+## Accessing a tenants resources
+Tenants are specified by a tenantID slug in the URL (see below).
+
+```bash
+http://${API_ROOT}/w/${tenantID}
+```
+
+## Approaches
+We support several approaches for multitenancy. Each approach has its own set of tradeoffs (security, performance, complexity, etc).
+The approach you choose will depend on your specific requirements.
+
+### Single deployment
+This is the simplest approach. All tenants share the same database and schema. The tenant is identified by a column in each table. This is the default approach.
+
+### Single deployment seperate databases
+Each tenant has its own database. The tenant is identified by the database name. This allows for better isolation between tenants.
+
+### Multiple Deployments
+Each tenant has its own deployment. This is the most secure approach. Each tenant has its own seperate database and process. 
+This approach is useful when tenants have different security requirements.
