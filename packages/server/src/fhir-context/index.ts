@@ -470,21 +470,25 @@ export async function createFHIRServices(
       source: inlineOperationExecution,
     },
     {
+      levelsSupported: ["system", "type", "instance"],
       resourcesSupported: [...resourceTypes] as ResourceType[],
       interactionsSupported: ["invoke-request"],
       source: lambdaExecutioner,
     },
     {
+      levelsSupported: ["system", "type", "instance"],
       resourcesSupported: SPECIAL_TYPES.MEMORY,
       interactionsSupported: ["read-request", "search-request"],
       source: memDBAsync,
     },
     {
+      levelsSupported: ["type", "instance"],
       resourcesSupported: SPECIAL_TYPES.AUTH,
       interactionsSupported: AUTH_METHODS_ALLOWED,
       source: createAuthStorageClient(pgFHIR),
     },
     {
+      levelsSupported: ["system", "type", "instance"],
       resourcesSupported: DB_TYPES,
       interactionsSupported: [
         "read-request",
@@ -495,6 +499,7 @@ export async function createFHIRServices(
         "delete-request",
         "history-request",
         "transaction-request",
+        "batch-request"
       ],
       source: pgFHIR,
     },
