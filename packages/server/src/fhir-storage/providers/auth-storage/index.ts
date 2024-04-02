@@ -33,6 +33,7 @@ export const AUTH_METHODS_ALLOWED: FHIRRequest["type"][] = [
   "read-request",
   "search-request",
   "update-request",
+  "history-request",
 ];
 
 async function customValidationMembership(
@@ -158,6 +159,9 @@ function membershipHandler<
         return next(context);
       }
       case "search-request": {
+        return next(context);
+      }
+      case "history-request": {
         return next(context);
       }
       default: {

@@ -36,6 +36,7 @@ type InteractionSupported = FHIRRequest["type"];
 type InteractionsSupported = InteractionSupported[];
 
 type Source<CTX> = {
+  levelsSupported?: FHIRRequest["level"][];
   resourcesSupported?: ResourceType[];
   interactionsSupported?: InteractionsSupported;
   useSource?: (request: FHIRRequest) => boolean;
@@ -80,7 +81,8 @@ export function findSource<T>(
       deriveResourceTypeFilter(request).every((resource) =>
         source.resourcesSupported?.includes(resource),
       ) &&
-      source.interactionsSupported?.includes(request.type)
+      source.interactionsSupported?.includes(request.type) &&
+      source.levelsSupported?.includes(request.level)
     ) {
       found = [...found, { source, score: 1 }];
     }
@@ -120,6 +122,16 @@ function createRouterMiddleware<
   return createMiddlewareAsync<State, CTX>([
     async (context) => {
       const sources = findSource(context.state.sources, context.request);
+
+      if (sources.length === 0) {
+        throw new OperationError(
+          outcomeError(
+            "not-supported",
+            `No source found with support for operation '${context.request.type}' for level '${context.request.level}' and  type '${context.request.level === "type" || context.request.level === "instance" ? context.request.resourceType : "none"}'`,
+          ),
+        );
+      }
+
       switch (context.request.type) {
         // Multi-types allowed
         case "search-request": {

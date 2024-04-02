@@ -107,6 +107,7 @@ export const loginPOST =
           removeLoginRedirectURL(ctx.session);
 
           await ctx.login(user);
+
           ctx.redirect(redirecTURL);
 
           return;
