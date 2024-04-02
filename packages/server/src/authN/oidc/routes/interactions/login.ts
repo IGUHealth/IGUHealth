@@ -80,12 +80,11 @@ export const loginPOST =
     return ctx.oidc.passport.authenticate(
       "local",
       async (_err, user, _info, _status) => {
+        const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(
+          ctx,
+          scope,
+        );
         if (user === false) {
-          const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(
-            ctx,
-            scope,
-          );
-
           views.renderPipe(
             ctx,
             React.createElement(Login, {
@@ -99,18 +98,29 @@ export const loginPOST =
             401,
           );
         } else {
-          const redirecTURL =
-            getLoginRedirectURL(ctx.session) ??
-            (ctx.router.url(OIDC_ROUTES(scope).LOGIN_GET, {
-              tenant: ctx.oidc.tenant,
-            }) as string);
-          removeLoginRedirectURL(ctx.session);
+          const redirectURL = getLoginRedirectURL(ctx.session);
 
           await ctx.login(user);
 
-          ctx.redirect(redirecTURL);
+          if (redirectURL) {
+            removeLoginRedirectURL(ctx.session);
+            ctx.redirect(redirectURL);
+            return;
+          }
 
-          return;
+          // If logged in but no redirect display login with success message.
+          return views.renderPipe(
+            ctx,
+            React.createElement(Login, {
+              title: "IGUHealth",
+              logo: "/public/img/logo.svg",
+              action: loginRoute,
+              signupURL,
+              forgotPasswordURL,
+              messages: ["You have successfully logged in."],
+            }),
+            201,
+          );
         }
       },
     )(ctx, next);
