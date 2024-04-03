@@ -1,5 +1,4 @@
 import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
-import { escapeParameter } from "@iguhealth/client/url";
 import { AccessPolicy, Membership, id } from "@iguhealth/fhir-types/r4/types";
 import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
