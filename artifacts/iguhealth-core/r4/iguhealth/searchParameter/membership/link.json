@@ -3,7 +3,7 @@
   "id": "Membership-link",
   "url": "https://iguhealth.app/fhir/SearchParameter/Membership-link",
   "version": "4.0.1",
-  "name": "link",
+  "name": "Link",
   "status": "draft",
   "experimental": false,
   "publisher": "IGUHealth",

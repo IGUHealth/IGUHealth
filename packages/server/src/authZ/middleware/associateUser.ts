@@ -1,5 +1,4 @@
 import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
-import { escapeParameter } from "@iguhealth/client/url";
 import { AccessPolicy, Membership, id } from "@iguhealth/fhir-types/r4/types";
 import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
@@ -25,12 +24,8 @@ export const associateUserMiddleware: MiddlewareAsyncChain<
         "Membership",
         [
           {
-            name: "identifier",
-            value: [
-              `${escapeParameter(context.ctx.user.jwt.iss)}|${escapeParameter(
-                context.ctx.user.jwt.sub,
-              )}`,
-            ],
+            name: "_id",
+            value: [context.ctx.user.jwt.sub],
           },
           { name: "_revinclude", value: ["AccessPolicy:link"] },
         ],
