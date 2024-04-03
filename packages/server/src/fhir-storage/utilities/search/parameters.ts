@@ -206,10 +206,10 @@ export async function findSearchParameter<
   client: Client,
   ctx: CTX,
   resourceTypes: ResourceType[],
-  name: string,
+  code: string,
 ): Promise<SearchParameter[]> {
   const result = await client.search_type(ctx, "SearchParameter", [
-    { name: "name", value: [name] },
+    { name: "code", value: [code] },
     {
       name: "type",
       value: param_types_supported,

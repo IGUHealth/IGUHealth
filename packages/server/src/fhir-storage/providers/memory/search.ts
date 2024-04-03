@@ -200,11 +200,11 @@ function checkParameterWithResource<CTX extends MemorySearchCTX>(
     }
     default: {
       if (
-        parameter.name === "name" &&
+        parameter.name === "code" &&
         resource.resourceType === "SearchParameter"
       ) {
         return (
-          (resource as unknown as Record<string, unknown>)["name"] ===
+          (resource as unknown as Record<string, unknown>)["code"] ===
           parameter.value[0]
         );
       }

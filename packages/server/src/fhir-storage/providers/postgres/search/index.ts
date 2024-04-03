@@ -41,8 +41,8 @@ async function getParameterForLatestId(
 ): Promise<SearchParameterResource[]> {
   const idParameter = (
     await parametersWithMetaAssociated(
-      async (resourceTypes, name) =>
-        await findSearchParameter(ctx.client, ctx, resourceTypes, name),
+      async (resourceTypes, code) =>
+        await findSearchParameter(ctx.client, ctx, resourceTypes, code),
       resourceTypes,
       [{ name: "_id", modifier: "missing", value: ["false"] }],
     )
@@ -127,7 +127,7 @@ async function processInclude(
           asSystemCTX(ctx),
           "SearchParameter",
           [
-            { name: "name", value: [includeParameterName] },
+            { name: "code", value: [includeParameterName] },
             { name: "type", value: ["reference"] },
             { name: "base", value: [resourceType] },
           ],

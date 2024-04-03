@@ -154,7 +154,7 @@ export default function ResourceTypeView() {
                   selector: string;
                   name: string;
                 } => ({
-                  name: searchParameter.name,
+                  name: searchParameter.code,
                   selector: searchParameter.expression as string,
                   selectorType: "fhirpath",
                 }),

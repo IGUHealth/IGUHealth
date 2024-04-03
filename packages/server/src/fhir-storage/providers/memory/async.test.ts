@@ -76,6 +76,7 @@ test("Creation and search", async () => {
     generateParameter({
       id: "test1",
       name: "test1",
+      code: "test1",
     } as SearchParameter),
   );
   await memDb.create(
@@ -83,6 +84,7 @@ test("Creation and search", async () => {
     generateParameter({
       id: "test2",
       name: "test2",
+      code: "test2",
     } as SearchParameter),
   );
 
@@ -90,12 +92,13 @@ test("Creation and search", async () => {
     testServices,
     generateSD({ id: "test0", name: "test1" } as StructureDefinition),
   );
+
   expect(
     (
       await memDb.search_type(
         testServices,
         "SearchParameter",
-        parseParameters("SearchParameter?name=test"),
+        parseParameters("SearchParameter?code=test"),
       )
     ).resources,
   ).toEqual([]);
@@ -105,13 +108,14 @@ test("Creation and search", async () => {
       await memDb.search_type(
         testServices,
         "SearchParameter",
-        parseParameters("SearchParameter?name=test1"),
+        parseParameters("SearchParameter?code=test1"),
       )
     ).resources,
   ).toEqual([
     generateParameter({
       id: "test1",
       name: "test1",
+      code: "test1",
     } as SearchParameter),
   ]);
 });
