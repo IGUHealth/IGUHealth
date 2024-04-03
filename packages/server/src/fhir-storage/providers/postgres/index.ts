@@ -64,9 +64,8 @@ import { TenantId } from "@iguhealth/jwt";
 async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
   resourceTypes: ResourceType[],
-  names?: string[],
 ): Promise<SearchParameter[]> {
-  let parameters = [
+  const parameters = [
     {
       name: "type",
       value: param_types_supported,
@@ -76,10 +75,6 @@ async function getAllParametersForResource<CTX extends FHIRServerCTX>(
       value: searchResources(resourceTypes),
     },
   ];
-
-  if (names) {
-    parameters = [...parameters, { name: "name", value: names }];
-  }
 
   return (
     await ctx.client.search_type(
