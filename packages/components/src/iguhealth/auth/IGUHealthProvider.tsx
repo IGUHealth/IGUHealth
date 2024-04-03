@@ -95,7 +95,7 @@ export function IGUHealthProvider({
   domain,
   children,
 }: Readonly<{
-  tenant?: TenantId;
+  tenant?: TenantId | string;
   clientId: string;
   domain: string;
   redirectUrl: string;
@@ -121,7 +121,7 @@ export function IGUHealthProvider({
           dispatch({
             type: "INIT_CLIENT",
             domain,
-            tenant,
+            tenant: tenant as TenantId,
             clientId,
             payload: authorizationPayload,
           });

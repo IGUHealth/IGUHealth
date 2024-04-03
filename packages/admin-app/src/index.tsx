@@ -24,7 +24,12 @@ import {
   useIGUHealth,
 } from "@iguhealth/components";
 import "@iguhealth/components/dist/index.css";
-import { CUSTOM_CLAIMS, IDTokenPayload, TenantClaim } from "@iguhealth/jwt";
+import {
+  CUSTOM_CLAIMS,
+  IDTokenPayload,
+  TenantClaim,
+  TenantId,
+} from "@iguhealth/jwt";
 
 import { Logo } from "./components/Logo";
 import Search from "./components/Search";
@@ -88,10 +93,10 @@ function getTenants<role>(
   return jwt[CUSTOM_CLAIMS.TENANTS] as TenantClaim<role>[];
 }
 
-function deriveTenantID() {
+function deriveTenantID(): TenantId {
   const host = window.location.host;
   const tenantID = host.split(".")[0];
-  return tenantID;
+  return tenantID as TenantId;
 }
 
 function WorkspaceCheck() {

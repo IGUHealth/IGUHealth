@@ -29,7 +29,7 @@ function App() {
 root.render(
   <React.StrictMode>
     <IGUHealthProvider
-      tenant="system"
+      tenant={"system"}
       domain={"http://localhost:3000"}
       clientId="admin-app"
       redirectUrl="http://system.localhost:3002"
