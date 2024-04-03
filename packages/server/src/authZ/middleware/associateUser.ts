@@ -25,12 +25,8 @@ export const associateUserMiddleware: MiddlewareAsyncChain<
         "Membership",
         [
           {
-            name: "identifier",
-            value: [
-              `${escapeParameter(context.ctx.user.jwt.iss)}|${escapeParameter(
-                context.ctx.user.jwt.sub,
-              )}`,
-            ],
+            name: "_id",
+            value: [context.ctx.user.jwt.sub],
           },
           { name: "_revinclude", value: ["AccessPolicy:link"] },
         ],

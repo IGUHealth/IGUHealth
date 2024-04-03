@@ -22,11 +22,27 @@
       "resourceType": "SearchParameter"
     },
     {
-      "filename": "r4/iguhealth/searchParameter/membership/identifier.json",
+      "filename": "r4/iguhealth/searchParameter/clientApplication/grantType.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "r4/iguhealth/searchParameter/clientApplication/name.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "r4/iguhealth/searchParameter/membership/email.json",
       "resourceType": "SearchParameter"
     },
     {
       "filename": "r4/iguhealth/searchParameter/membership/link.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "r4/iguhealth/searchParameter/membership/name.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "r4/iguhealth/searchParameter/membership/role.json",
       "resourceType": "SearchParameter"
     },
     {
