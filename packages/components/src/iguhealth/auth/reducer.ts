@@ -33,6 +33,7 @@ export function iguHealthReducer(
             ),
             action.domain,
           );
+
           window.location.replace(url);
         },
         getClient: () => {

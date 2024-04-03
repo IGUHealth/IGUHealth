@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useRef } from "react";
 
-import { AccessToken, IDToken } from "@iguhealth/jwt";
+import { AccessToken, IDToken, TenantId } from "@iguhealth/jwt";
 
 import IGUHealthContext, { InitialContext } from "./IGUHealthContext";
 import { iguHealthReducer } from "./reducer";
@@ -95,7 +95,7 @@ export function IGUHealthProvider({
   domain,
   children,
 }: Readonly<{
-  tenant?: string;
+  tenant?: TenantId;
   clientId: string;
   domain: string;
   redirectUrl: string;
@@ -121,6 +121,7 @@ export function IGUHealthProvider({
           dispatch({
             type: "INIT_CLIENT",
             domain,
+            tenant,
             clientId,
             payload: authorizationPayload,
           });
