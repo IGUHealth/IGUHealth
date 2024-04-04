@@ -10,11 +10,8 @@ import {
   Resource,
   ResourceType,
   StructureDefinition,
-  code,
-  uri,
 } from "@iguhealth/fhir-types/r4/types";
 
-import { FHIRCodeEditable } from "..";
 import { Input, Loading, Select } from "../../base";
 import { InputContainer } from "../../base/containers";
 import { Modal } from "../../base/modal";
