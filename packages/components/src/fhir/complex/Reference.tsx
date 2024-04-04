@@ -15,7 +15,7 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 
 import { FHIRCodeEditable } from "..";
-import { Input, Loading } from "../../base";
+import { Input, Loading, Select } from "../../base";
 import { InputContainer } from "../../base/containers";
 import { Modal } from "../../base/modal";
 import { FHIRGenerativeForm } from "../generative/form";
@@ -134,17 +134,13 @@ const ReferenceSearch = ({
     <div>
       <div className="flex space-x-1 text-slate-700  ">
         <div className="w-36">
-          <FHIRCodeEditable
-            client={client}
-            value={resourceType as code}
-            filter={(option) =>
-              !resourceTypesAllowed ||
-              resourceTypesAllowed.includes(
-                option.value.toString() as ResourceType,
-              )
-            }
-            onChange={(value) => setResourceType(value as ResourceType)}
-            system={"http://hl7.org/fhir/ValueSet/resource-types" as uri}
+          <Select
+            value={resourceType}
+            onChange={(option) => setResourceType(option.value as ResourceType)}
+            options={(resourceTypesAllowed ?? []).map((rt) => ({
+              label: rt,
+              value: rt,
+            }))}
           />
         </div>
         <div className="flex flex-1">

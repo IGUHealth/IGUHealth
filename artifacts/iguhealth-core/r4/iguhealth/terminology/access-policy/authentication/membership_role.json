@@ -28,8 +28,8 @@
             "display": "Super Admin"
           },
           {
-            "code": "membership",
-            "display": "Membership"
+            "code": "member",
+            "display": "Member"
           }
         ]
       }
