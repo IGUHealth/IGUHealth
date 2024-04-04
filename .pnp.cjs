@@ -15755,7 +15755,6 @@ const RAW_RUNTIME_STATE =
           ["@types/koa", "npm:2.13.6"],\
           ["@types/koa-bodyparser", "npm:4.3.12"],\
           ["@types/koa-mount", "npm:4.0.5"],\
-          ["@types/koa-passport", "npm:6.0.3"],\
           ["@types/koa-ratelimit", "npm:5.0.3"],\
           ["@types/koa-redis", "npm:4.0.5"],\
           ["@types/koa-session", "npm:6.4.5"],\
@@ -15763,7 +15762,6 @@ const RAW_RUNTIME_STATE =
           ["@types/koa__cors", "npm:5.0.0"],\
           ["@types/koa__router", "npm:12.0.4"],\
           ["@types/node", "npm:20.11.30"],\
-          ["@types/passport-local", "npm:1.0.38"],\
           ["@types/pg", "npm:8.11.4"],\
           ["@types/react", "npm:18.2.73"],\
           ["@types/react-dom", "npm:18.2.22"],\
@@ -15787,14 +15785,12 @@ const RAW_RUNTIME_STATE =
           ["koa-body", "npm:6.0.1"],\
           ["koa-jwt", "npm:4.0.4"],\
           ["koa-mount", "npm:4.0.0"],\
-          ["koa-passport", "npm:6.0.0"],\
           ["koa-ratelimit", "npm:5.1.0"],\
           ["koa-redis", "npm:4.0.1"],\
           ["koa-session", "npm:6.4.0"],\
           ["koa-static", "npm:5.0.0"],\
           ["nanoid", "npm:5.0.6"],\
           ["openid-client", "npm:5.6.5"],\
-          ["passport-local", "npm:1.0.0"],\
           ["pg", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:8.11.4"],\
           ["pino", "npm:8.19.0"],\
           ["react", "npm:18.2.0"],\
@@ -23499,17 +23495,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["@types/koa-passport", [\
-      ["npm:6.0.3", {\
-        "packageLocation": "./.yarn/cache/@types-koa-passport-npm-6.0.3-469c12ce31-a7a3c47b11.zip/node_modules/@types/koa-passport/",\
-        "packageDependencies": [\
-          ["@types/koa-passport", "npm:6.0.3"],\
-          ["@types/koa", "npm:2.13.6"],\
-          ["@types/passport", "npm:1.0.16"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["@types/koa-ratelimit", [\
       ["npm:5.0.3", {\
         "packageLocation": "./.yarn/cache/@types-koa-ratelimit-npm-5.0.3-5c677ee2b1-1f3077d741.zip/node_modules/@types/koa-ratelimit/",\
@@ -23737,39 +23722,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@types-parse-json-npm-4.0.0-298522afa6-4df9de9815.zip/node_modules/@types/parse-json/",\
         "packageDependencies": [\
           ["@types/parse-json", "npm:4.0.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@types/passport", [\
-      ["npm:1.0.16", {\
-        "packageLocation": "./.yarn/cache/@types-passport-npm-1.0.16-7f245434f2-0ee7b9a461.zip/node_modules/@types/passport/",\
-        "packageDependencies": [\
-          ["@types/passport", "npm:1.0.16"],\
-          ["@types/express", "npm:4.17.17"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@types/passport-local", [\
-      ["npm:1.0.38", {\
-        "packageLocation": "./.yarn/cache/@types-passport-local-npm-1.0.38-e5beccb1f8-d333956699.zip/node_modules/@types/passport-local/",\
-        "packageDependencies": [\
-          ["@types/passport-local", "npm:1.0.38"],\
-          ["@types/express", "npm:4.17.17"],\
-          ["@types/passport", "npm:1.0.16"],\
-          ["@types/passport-strategy", "npm:0.2.38"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@types/passport-strategy", [\
-      ["npm:0.2.38", {\
-        "packageLocation": "./.yarn/cache/@types-passport-strategy-npm-0.2.38-6460f7e728-b580e16518.zip/node_modules/@types/passport-strategy/",\
-        "packageDependencies": [\
-          ["@types/passport-strategy", "npm:0.2.38"],\
-          ["@types/express", "npm:4.17.17"],\
-          ["@types/passport", "npm:1.0.16"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -36294,16 +36246,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["koa-passport", [\
-      ["npm:6.0.0", {\
-        "packageLocation": "./.yarn/cache/koa-passport-npm-6.0.0-83a51e8d92-4482e4b3d2.zip/node_modules/koa-passport/",\
-        "packageDependencies": [\
-          ["koa-passport", "npm:6.0.0"],\
-          ["passport", "npm:0.6.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["koa-ratelimit", [\
       ["npm:5.1.0", {\
         "packageLocation": "./.yarn/cache/koa-ratelimit-npm-5.1.0-1ab589a18d-09c718b727.zip/node_modules/koa-ratelimit/",\
@@ -39257,37 +39199,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["passport", [\
-      ["npm:0.6.0", {\
-        "packageLocation": "./.yarn/cache/passport-npm-0.6.0-0a57682d5b-5051e1d773.zip/node_modules/passport/",\
-        "packageDependencies": [\
-          ["passport", "npm:0.6.0"],\
-          ["passport-strategy", "npm:1.0.0"],\
-          ["pause", "npm:0.0.1"],\
-          ["utils-merge", "npm:1.0.1"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["passport-local", [\
-      ["npm:1.0.0", {\
-        "packageLocation": "./.yarn/cache/passport-local-npm-1.0.0-ed89961a0c-86dc08b12f.zip/node_modules/passport-local/",\
-        "packageDependencies": [\
-          ["passport-local", "npm:1.0.0"],\
-          ["passport-strategy", "npm:1.0.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["passport-strategy", [\
-      ["npm:1.0.0", {\
-        "packageLocation": "./.yarn/cache/passport-strategy-npm-1.0.0-5648a82a66-5086693f25.zip/node_modules/passport-strategy/",\
-        "packageDependencies": [\
-          ["passport-strategy", "npm:1.0.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["path-browserify", [\
       ["npm:1.0.1", {\
         "packageLocation": "./.yarn/cache/path-browserify-npm-1.0.1-f975d99a99-7e7368a520.zip/node_modules/path-browserify/",\
@@ -39437,15 +39348,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/pathval-npm-1.1.1-ce0311d7e0-b50a475106.zip/node_modules/pathval/",\
         "packageDependencies": [\
           ["pathval", "npm:1.1.1"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["pause", [\
-      ["npm:0.0.1", {\
-        "packageLocation": "./.yarn/cache/pause-npm-0.0.1-0c421a299d-e96ee581b6.zip/node_modules/pause/",\
-        "packageDependencies": [\
-          ["pause", "npm:0.0.1"]\
         ],\
         "linkType": "HARD"\
       }]\

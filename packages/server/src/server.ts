@@ -215,7 +215,6 @@ export default async function createServer(): Promise<
 
   const managementRouter = createOIDCRouter("/oidc", {
     scope: "global",
-    client: pool,
     // Inject global management.
     middleware: [
       injectGlobalManagement(),
@@ -282,7 +281,6 @@ export default async function createServer(): Promise<
     KoaContext.FHIR<Koa.DefaultContext>
   >("/oidc", {
     scope: "tenant",
-    client: pool,
     // Inject global management.
     middleware: [
       injectTenantManagement(),

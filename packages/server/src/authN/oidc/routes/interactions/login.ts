@@ -3,6 +3,7 @@ import React from "react";
 import { user_scope } from "zapatos/schema";
 
 import { Login } from "@iguhealth/components";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import * as views from "../../../../views/index.js";
 import { OIDC_ROUTES } from "../../constants.js";
@@ -68,6 +69,10 @@ export function getLoginRedirectURL(
   return session?.loginRedirect;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object";
+}
+
 export const loginPOST =
   (scope: user_scope): ManagementRouteHandler =>
   async (ctx, next) => {
@@ -77,53 +82,62 @@ export const loginPOST =
 
     if (loginURL instanceof Error) throw loginURL;
 
-    return ctx.oidc.passport.authenticate(
-      "local",
-      async (_err, user, _info, _status) => {
-        const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(
-          ctx,
-          scope,
+    const body = ctx.request.body;
+    let wasLoginSuccess = false;
+    if (isRecord(body)) {
+      const email = body.email;
+      const password = body.password;
+      if (typeof email !== "string" || typeof password !== "string") {
+        throw new OperationError(
+          outcomeError("invalid", "Email and password must be present."),
         );
-        if (user === false) {
-          views.renderPipe(
-            ctx,
-            React.createElement(Login, {
-              title: "IGUHealth",
-              logo: "/public/img/logo.svg",
-              action: loginRoute,
-              signupURL,
-              forgotPasswordURL,
-              errors: ["Invalid email or password. Please try again."],
-            }),
-            401,
-          );
-        } else {
-          const redirectURL = getLoginRedirectURL(ctx.session);
+      }
 
-          await ctx.login(user);
+      wasLoginSuccess = await ctx.oidc.sessionLogin(ctx, "email-password", {
+        email,
+        password,
+      });
+    }
 
-          if (redirectURL) {
-            removeLoginRedirectURL(ctx.session);
-            ctx.redirect(redirectURL);
-            return;
-          }
+    const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(ctx, scope);
+    if (wasLoginSuccess === false) {
+      views.renderPipe(
+        ctx,
+        React.createElement(Login, {
+          title: "IGUHealth",
+          logo: "/public/img/logo.svg",
+          action: loginRoute,
+          signupURL,
+          forgotPasswordURL,
+          errors: ["Invalid email or password. Please try again."],
+        }),
+        401,
+      );
+    } else {
+      const redirectURL = getLoginRedirectURL(ctx.session);
 
-          // If logged in but no redirect display login with success message.
-          return views.renderPipe(
-            ctx,
-            React.createElement(Login, {
-              title: "IGUHealth",
-              logo: "/public/img/logo.svg",
-              action: loginRoute,
-              signupURL,
-              forgotPasswordURL,
-              messages: ["You have successfully logged in."],
-            }),
-            201,
-          );
-        }
-      },
-    )(ctx, next);
+      if (redirectURL) {
+        removeLoginRedirectURL(ctx.session);
+        ctx.redirect(redirectURL);
+        return;
+      }
+
+      // If logged in but no redirect display login with success message.
+      views.renderPipe(
+        ctx,
+        React.createElement(Login, {
+          title: "IGUHealth",
+          logo: "/public/img/logo.svg",
+          action: loginRoute,
+          signupURL,
+          forgotPasswordURL,
+          messages: ["You have successfully logged in."],
+        }),
+        201,
+      );
+    }
+
+    await next();
   };
 
 export const loginGET =

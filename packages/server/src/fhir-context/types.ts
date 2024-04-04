@@ -1,4 +1,3 @@
-import { KoaPassport } from "koa-passport";
 import type { Logger } from "pino";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
@@ -20,6 +19,9 @@ import { AccessTokenPayload, IGUHEALTH_ISSUER, TenantId } from "@iguhealth/jwt";
 
 import { AuthorizationCodeManagement } from "../authN/db/code/interface.js";
 import { UserManagement } from "../authN/db/users/interface.js";
+import { User } from "../authN/db/users/types.js";
+import { ManagementRouteHandler } from "../authN/oidc/index.js";
+import { sessionLogin, sessionLogout } from "../authN/oidc/session/index.js";
 import type { IOCache } from "../cache/interface.js";
 import { EmailProvider } from "../email/interface.js";
 import type { EncryptionProvider } from "../encryption/provider/interface.js";
@@ -29,6 +31,13 @@ import type { Lock } from "../synchronization/interfaces.js";
 export namespace KoaContext {
   export type OIDC = {
     oidc: {
+      sessionLogin: typeof sessionLogin;
+      sessionLogout: typeof sessionLogout;
+      isAuthenticated: (
+        ctx: Parameters<ManagementRouteHandler>[0],
+      ) => Promise<boolean>;
+
+      user?: User;
       tenant?: TenantId;
       userManagement: UserManagement;
       codeManagement: AuthorizationCodeManagement;
@@ -42,7 +51,6 @@ export namespace KoaContext {
         redirect_uri?: string;
         scope?: string;
       };
-      passport: InstanceType<typeof KoaPassport>;
     };
   };
 
