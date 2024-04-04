@@ -83,7 +83,7 @@ export const loginPOST =
     if (loginURL instanceof Error) throw loginURL;
 
     const body = ctx.request.body;
-    let user = false;
+    let wasLoginSuccess = false;
     if (isRecord(body)) {
       const email = body.email;
       const password = body.password;
@@ -93,14 +93,14 @@ export const loginPOST =
         );
       }
 
-      user = await ctx.oidc.sessionLogin(ctx, "email-password", {
+      wasLoginSuccess = await ctx.oidc.sessionLogin(ctx, "email-password", {
         email,
         password,
       });
     }
 
     const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(ctx, scope);
-    if (user === false) {
+    if (wasLoginSuccess === false) {
       views.renderPipe(
         ctx,
         React.createElement(Login, {
