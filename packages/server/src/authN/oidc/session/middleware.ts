@@ -1,4 +1,3 @@
-import { USER_SESSION_KEY } from "../constants.js";
 import { ManagementRouteHandler } from "../index.js";
 import {
   deserializeUser,
@@ -13,7 +12,7 @@ export function sessionAuthorizationMiddleware(): ManagementRouteHandler {
 
     ctx.oidc.sessionLogin = sessionLogin;
     ctx.oidc.sessionLogout = sessionLogout;
-    ctx.oidc.user = await deserializeUser(ctx, ctx.session?.[USER_SESSION_KEY]);
+    ctx.oidc.user = await deserializeUser(ctx);
 
     await next();
   };

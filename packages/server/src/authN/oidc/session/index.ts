@@ -11,9 +11,9 @@ export function serializeUser(user: User): string {
 
 export async function deserializeUser(
   ctx: Parameters<ManagementRouteHandler>[0],
-  id?: string,
 ): Promise<User | undefined> {
   try {
+    const id = ctx.session?.[USER_SESSION_KEY];
     if (!id) return undefined;
     const user = await ctx.oidc.userManagement.get(ctx.postgres, id);
     if (!user) {
@@ -58,7 +58,6 @@ export async function sessionLogin<Method extends keyof LoginParameters>(
   }
 
   ctx.session[USER_SESSION_KEY] = serializeUser(user);
-
   return true;
 }
 
