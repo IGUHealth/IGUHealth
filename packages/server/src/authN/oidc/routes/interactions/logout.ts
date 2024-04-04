@@ -14,7 +14,7 @@ import { isInvalidRedirectUrl } from "../../utilities/checkRedirectUrl.js";
 export const logout =
   (scope: user_scope): ManagementRouteHandler =>
   async (ctx) => {
-    await ctx.logout();
+    await ctx.oidc.sessionLogout(ctx);
 
     const client = ctx.oidc.client;
     const redirectUrl = ctx.request.query.redirect_uri?.toString();

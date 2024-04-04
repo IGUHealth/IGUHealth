@@ -1,5 +1,7 @@
 import { user_scope } from "zapatos/schema";
 
+export const USER_SESSION_KEY = "user";
+
 export const OIDC_ROUTES = (scope: user_scope) =>
   scope === "tenant"
     ? {

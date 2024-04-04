@@ -31,7 +31,7 @@ import { setLoginRedirectSession } from "./interactions/login.js";
  */
 export function authorizeGET(scope: user_scope): ManagementRouteHandler {
   return async (ctx, next) => {
-    if (ctx.isAuthenticated()) {
+    if (await ctx.oidc.isAuthenticated(ctx)) {
       const redirectUrl = ctx.request.query.redirect_uri?.toString();
       // const scope = ctx.request.query.scope;
       const state = ctx.request.query.state;
@@ -49,7 +49,8 @@ export function authorizeGET(scope: user_scope): ManagementRouteHandler {
       const code = await ctx.oidc.codeManagement.create(ctx.postgres, {
         type: "oauth2_code_grant",
         client_id: client.id,
-        user_id: ctx.state.user.id,
+        // Should be safe to use here as is authenticated so user should be populated.
+        user_id: ctx.oidc.user?.id as string,
         expires_in: "15 minutes",
       });
 
