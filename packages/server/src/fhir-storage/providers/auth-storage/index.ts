@@ -84,7 +84,7 @@ function membershipHandler<
             );
           } catch (e) {
             throw new OperationError(
-              outcomeError("invariant", "User already exists."),
+              outcomeError("invariant", "Failed to create user."),
             );
           }
 
