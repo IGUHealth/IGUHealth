@@ -8030,6 +8030,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@iguhealth/rs_cpu-count@workspace:packages/rs_cpu-count":
+  version: 0.0.0-use.local
+  resolution: "@iguhealth/rs_cpu-count@workspace:packages/rs_cpu-count"
+  dependencies:
+    cargo-cp-artifact: "npm:^0.1"
+  languageName: unknown
+  linkType: soft
+
 "@iguhealth/server@workspace:packages/server":
   version: 0.0.0-use.local
   resolution: "@iguhealth/server@workspace:packages/server"
@@ -16263,6 +16271,15 @@ __metadata:
   version: 1.0.30001599
   resolution: "caniuse-lite@npm:1.0.30001599"
   checksum: 10/c9a5ad806fc0d446e4f995d551b840d8fdcbe97958b7f83ff7a255a8ef5e40ca12ca1a508c66b3ab147e19eef932d28772d205c046500dd0740ea9dfb602e2e1
+  languageName: node
+  linkType: hard
+
+"cargo-cp-artifact@npm:^0.1":
+  version: 0.1.8
+  resolution: "cargo-cp-artifact@npm:0.1.8"
+  bin:
+    cargo-cp-artifact: bin/cargo-cp-artifact.js
+  checksum: 10/04c83f065f1692669a313f0a000d2bba3f210bb1fed52b23ad82884f1235aff6d0718520bafbe1331c09a964227c7f67375962d559bdfcbdd73ad78057755a7b
   languageName: node
   linkType: hard
 
