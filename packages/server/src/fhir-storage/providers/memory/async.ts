@@ -127,6 +127,7 @@ function createMemoryMiddleware<
 
           let result = [];
           for (const resource of resourceSet || []) {
+            // Performance opt and removes issue of recursion with search parameter queries.
             if (resource.resourceType === "SearchParameter") {
               if (checkSearchParameter(resource, resourceParameters)) {
                 result.push(resource);
