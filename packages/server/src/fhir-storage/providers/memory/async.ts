@@ -1,18 +1,29 @@
 import { nanoid } from "nanoid";
 
 import { AsynchronousClient } from "@iguhealth/client";
+import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
+import { FHIRRequest, FHIRResponse } from "@iguhealth/client/lib/types";
+import { ParsedParameter } from "@iguhealth/client/lib/url";
 import {
   MiddlewareAsync,
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import {
+  AResource,
+  Bundle,
+  BundleEntry,
+  CapabilityStatement,
+  ConcreteType,
   Resource,
+  ResourceMap,
   ResourceType,
   SearchParameter,
   id,
 } from "@iguhealth/fhir-types/r4/types";
+import { IOperation, OPMetadata } from "@iguhealth/operation-execution";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { createResolveTypeToCanonical } from "../../../fhir-context/index.js";
 import { FHIRServerCTX } from "../../../fhir-context/types.js";
 import {
   SearchParameterResource,
@@ -222,11 +233,77 @@ function createMemoryMiddleware<
   ]);
 }
 
+interface MemoryClientInterface<CTX> extends FHIRClientAsync<CTX> {
+  resolveCanonical<T extends ResourceType>(): void;
+  resolveTypeToCanonical<T extends ResourceType>(): void;
+}
+
+class Memory<CTX> implements MemoryClientInterface<CTX> {
+  private _client;
+
+  public request: FHIRClientAsync<CTX>["request"];
+  public capabilities: FHIRClientAsync<CTX>["capabilities"];
+  public search_system: FHIRClientAsync<CTX>["search_system"];
+  public search_type: FHIRClientAsync<CTX>["search_type"];
+  public create: FHIRClientAsync<CTX>["create"];
+  public update: FHIRClientAsync<CTX>["update"];
+  public patch: FHIRClientAsync<CTX>["patch"];
+  public read: FHIRClientAsync<CTX>["read"];
+  public vread: FHIRClientAsync<CTX>["vread"];
+  public delete: FHIRClientAsync<CTX>["delete"];
+  public historySystem: FHIRClientAsync<CTX>["historySystem"];
+  public historyType: FHIRClientAsync<CTX>["historyType"];
+  public historyInstance: FHIRClientAsync<CTX>["historyInstance"];
+  public invoke_system: FHIRClientAsync<CTX>["invoke_system"];
+  public invoke_type: FHIRClientAsync<CTX>["invoke_type"];
+  public invoke_instance: FHIRClientAsync<CTX>["invoke_instance"];
+  public transaction: FHIRClientAsync<CTX>["transaction"];
+  public batch: FHIRClientAsync<CTX>["batch"];
+
+  constructor(
+    client: AsynchronousClient<
+      {
+        data: InternalData<ResourceType>;
+      },
+      CTX
+    >,
+  ) {
+    this._client = client;
+    this.request = this._client.request;
+    this.capabilities = this._client.capabilities;
+
+    this.search_system = this._client.search_system;
+    this.search_type = this._client.search_type;
+
+    this.create = this._client.create;
+    this.update = this._client.update;
+    this.patch = this._client.patch;
+    this.read = this._client.read;
+    this.vread = this._client.vread;
+    this.delete = this._client.delete;
+
+    this.historySystem = this._client.historySystem;
+    this.historyType = this._client.historyType;
+    this.historyInstance = this._client.historyInstance;
+
+    this.invoke_system = this._client.invoke_system;
+    this.invoke_type = this._client.invoke_type;
+    this.invoke_instance = this._client.invoke_instance;
+
+    this.transaction = this._client.transaction;
+    this.batch = this._client.batch;
+  }
+  resolveCanonical<T extends keyof ResourceMap>(): void {}
+  resolveTypeToCanonical<T extends keyof ResourceMap>(): void {}
+}
+
 export default function MemoryDatabase<CTX extends FHIRServerCTX>(
   data: InternalData<ResourceType>,
-): AsynchronousClient<{ data: InternalData<ResourceType> }, CTX> {
-  return new AsynchronousClient<{ data: InternalData<ResourceType> }, CTX>(
-    { data: data },
-    createMemoryMiddleware(),
-  );
+): Memory<CTX> {
+  const client = new AsynchronousClient<
+    { data: InternalData<ResourceType> },
+    CTX
+  >({ data: data }, createMemoryMiddleware());
+
+  return new Memory(client);
 }
