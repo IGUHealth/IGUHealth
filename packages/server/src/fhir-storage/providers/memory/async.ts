@@ -1,15 +1,20 @@
 import { nanoid } from "nanoid";
 
 import { AsynchronousClient } from "@iguhealth/client";
+import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
 import {
   MiddlewareAsync,
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import {
+  AResource,
   Resource,
   ResourceType,
   SearchParameter,
+  StructureDefinition,
+  canonical,
   id,
+  uri,
 } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -222,11 +227,119 @@ function createMemoryMiddleware<
   ]);
 }
 
+function createResolveCanonical(
+  data: InternalData<ResourceType>,
+): <T extends ResourceType>(type: T, url: string) => AResource<T> | undefined {
+  const map = new Map<ResourceType, Map<string, string>>();
+  for (const resourceType of Object.keys(data)) {
+    for (const resource of Object.values(
+      data[resourceType as ResourceType] ?? {},
+    )) {
+      if ((resource as { url: string })?.url) {
+        if (!map.has(resourceType as ResourceType)) {
+          map.set(resourceType as ResourceType, new Map());
+        }
+        const url = (resource as { url: string }).url;
+        const id = resource?.id;
+        if (!map.get(resourceType as ResourceType)?.has(url) && id) {
+          map.get(resourceType as ResourceType)?.set(url, id);
+        }
+      }
+    }
+  }
+
+  return <T extends ResourceType>(type: T, url: string) => {
+    const id = map.get(type)?.get(url);
+    return id ? (data[type]?.[id as id] as AResource<T>) : undefined;
+  };
+}
+
+function createResolveTypeToCanonical(
+  data: InternalData<ResourceType>,
+): (type: uri) => canonical | undefined {
+  const map = new Map<uri, canonical>();
+  const sds: Record<id, StructureDefinition | undefined> = data[
+    "StructureDefinition"
+  ] as Record<id, StructureDefinition | undefined>;
+
+  for (const resource of Object.values(sds || {})) {
+    if (resource?.type && resource?.url) {
+      map.set(resource.type, resource.url as canonical);
+    }
+  }
+
+  return (type: uri) => {
+    return map.get(type);
+  };
+}
+
+interface MemoryClientInterface<CTX> extends FHIRClientAsync<CTX> {
+  resolveCanonical: ReturnType<typeof createResolveCanonical>;
+  resolveTypeToCanonical: ReturnType<typeof createResolveTypeToCanonical>;
+}
+
+class Memory<CTX extends FHIRServerCTX> implements MemoryClientInterface<CTX> {
+  private _client;
+
+  public request: FHIRClientAsync<CTX>["request"];
+  public capabilities: FHIRClientAsync<CTX>["capabilities"];
+  public search_system: FHIRClientAsync<CTX>["search_system"];
+  public search_type: FHIRClientAsync<CTX>["search_type"];
+  public create: FHIRClientAsync<CTX>["create"];
+  public update: FHIRClientAsync<CTX>["update"];
+  public patch: FHIRClientAsync<CTX>["patch"];
+  public read: FHIRClientAsync<CTX>["read"];
+  public vread: FHIRClientAsync<CTX>["vread"];
+  public delete: FHIRClientAsync<CTX>["delete"];
+  public historySystem: FHIRClientAsync<CTX>["historySystem"];
+  public historyType: FHIRClientAsync<CTX>["historyType"];
+  public historyInstance: FHIRClientAsync<CTX>["historyInstance"];
+  public invoke_system: FHIRClientAsync<CTX>["invoke_system"];
+  public invoke_type: FHIRClientAsync<CTX>["invoke_type"];
+  public invoke_instance: FHIRClientAsync<CTX>["invoke_instance"];
+  public transaction: FHIRClientAsync<CTX>["transaction"];
+  public batch: FHIRClientAsync<CTX>["batch"];
+  public resolveCanonical: MemoryClientInterface<CTX>["resolveCanonical"];
+  public resolveTypeToCanonical: MemoryClientInterface<CTX>["resolveTypeToCanonical"];
+
+  constructor(data: InternalData<ResourceType>) {
+    const client = new AsynchronousClient<
+      { data: InternalData<ResourceType> },
+      CTX
+    >({ data: data }, createMemoryMiddleware());
+
+    this._client = client;
+    this.request = this._client.request.bind(this._client);
+    this.capabilities = this._client.capabilities.bind(this._client);
+
+    this.search_system = this._client.search_system.bind(this._client);
+    this.search_type = this._client.search_type.bind(this._client);
+
+    this.create = this._client.create.bind(this._client);
+    this.update = this._client.update.bind(this._client);
+    this.patch = this._client.patch.bind(this._client);
+    this.read = this._client.read.bind(this._client);
+    this.vread = this._client.vread.bind(this._client);
+    this.delete = this._client.delete.bind(this._client);
+
+    this.historySystem = this._client.historySystem.bind(this._client);
+    this.historyType = this._client.historyType.bind(this._client);
+    this.historyInstance = this._client.historyInstance.bind(this._client);
+
+    this.invoke_system = this._client.invoke_system.bind(this._client);
+    this.invoke_type = this._client.invoke_type.bind(this._client);
+    this.invoke_instance = this._client.invoke_instance.bind(this._client);
+
+    this.transaction = this._client.transaction.bind(this._client);
+    this.batch = this._client.batch.bind(this._client);
+
+    this.resolveCanonical = createResolveCanonical(data);
+    this.resolveTypeToCanonical = createResolveTypeToCanonical(data);
+  }
+}
+
 export default function MemoryDatabase<CTX extends FHIRServerCTX>(
   data: InternalData<ResourceType>,
-): AsynchronousClient<{ data: InternalData<ResourceType> }, CTX> {
-  return new AsynchronousClient<{ data: InternalData<ResourceType> }, CTX>(
-    { data: data },
-    createMemoryMiddleware(),
-  );
+): Memory<CTX> {
+  return new Memory(data);
 }
