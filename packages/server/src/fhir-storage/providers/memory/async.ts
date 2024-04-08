@@ -40,7 +40,48 @@ async function resolveParameter(
       p?.name === name &&
       p?.base?.some((b) => resourceTypes.includes(b as ResourceType)),
   );
+
   return params;
+}
+
+function checkSearchParameter(
+  searchParameter: SearchParameter,
+  resourceParameters: SearchParameterResource[],
+) {
+  for (const resourceParameter of resourceParameters) {
+    switch (resourceParameter.name) {
+      case "base":
+      case "code":
+      case "date":
+      case "description":
+      case "name":
+      case "publisher":
+      case "status":
+      case "target":
+      case "type":
+      case "url":
+      case "version": {
+        const value = searchParameter[resourceParameter.name];
+        const valuesToCheck = Array.isArray(value) ? value : [value];
+
+        // @ts-ignore
+        if (!valuesToCheck.some((v) => resourceParameter.value.includes(v)))
+          return false;
+
+        break;
+      }
+      default: {
+        throw new OperationError(
+          outcomeError(
+            "not-supported",
+            `'${resourceParameter.name}' is not supported for SearchParameter resources.`,
+          ),
+        );
+      }
+    }
+  }
+
+  return true;
 }
 
 function createMemoryMiddleware<
@@ -72,22 +113,26 @@ function createMemoryMiddleware<
 
           const resourceSet =
             context.request.level === "type"
-              ? Object.values(
+              ? (Object.values(
                   context.state.data[context.request.resourceType] || {},
-                ).filter((v): v is Resource => v !== undefined)
-              : (resourceTypes.length > 0
+                ) as Resource[])
+              : ((resourceTypes.length > 0
                   ? resourceTypes
                   : Object.keys(context.state.data)
                 )
                   .map((k) =>
                     Object.values(context.state.data[k as ResourceType] || {}),
                   )
-                  .filter((v): v is Resource[] => v !== undefined)
-                  .flat();
+                  .flat() as Resource[]);
 
           let result = [];
           for (const resource of resourceSet || []) {
-            if (
+            // Performance opt and removes issue of recursion with search parameter queries.
+            if (resource.resourceType === "SearchParameter") {
+              if (checkSearchParameter(resource, resourceParameters)) {
+                result.push(resource);
+              }
+            } else if (
               await fitsSearchCriteria(
                 context.ctx,
                 resource,
@@ -121,6 +166,7 @@ function createMemoryMiddleware<
               : 50;
 
           result = result.slice(0, total);
+
           switch (context.request.level) {
             case "system": {
               return {
