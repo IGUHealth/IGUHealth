@@ -2,28 +2,22 @@ import { nanoid } from "nanoid";
 
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
-import { FHIRRequest, FHIRResponse } from "@iguhealth/client/lib/types";
-import { ParsedParameter } from "@iguhealth/client/lib/url";
 import {
   MiddlewareAsync,
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import {
   AResource,
-  Bundle,
-  BundleEntry,
-  CapabilityStatement,
-  ConcreteType,
   Resource,
-  ResourceMap,
   ResourceType,
   SearchParameter,
+  StructureDefinition,
+  canonical,
   id,
+  uri,
 } from "@iguhealth/fhir-types/r4/types";
-import { IOperation, OPMetadata } from "@iguhealth/operation-execution";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { createResolveTypeToCanonical } from "../../../fhir-context/index.js";
 import { FHIRServerCTX } from "../../../fhir-context/types.js";
 import {
   SearchParameterResource,
@@ -233,12 +227,58 @@ function createMemoryMiddleware<
   ]);
 }
 
-interface MemoryClientInterface<CTX> extends FHIRClientAsync<CTX> {
-  resolveCanonical<T extends ResourceType>(): void;
-  resolveTypeToCanonical<T extends ResourceType>(): void;
+function createResolveCanonical(
+  data: InternalData<ResourceType>,
+): <T extends ResourceType>(type: T, url: string) => AResource<T> | undefined {
+  const map = new Map<ResourceType, Map<string, string>>();
+  for (const resourceType of Object.keys(data)) {
+    for (const resource of Object.values(
+      data[resourceType as ResourceType] ?? {},
+    )) {
+      if ((resource as { url: string })?.url) {
+        if (!map.has(resourceType as ResourceType)) {
+          map.set(resourceType as ResourceType, new Map());
+        }
+        const url = (resource as { url: string }).url;
+        const id = resource?.id;
+        if (!map.get(resourceType as ResourceType)?.has(url) && id) {
+          map.get(resourceType as ResourceType)?.set(url, id);
+        }
+      }
+    }
+  }
+
+  return <T extends ResourceType>(type: T, url: string) => {
+    const id = map.get(type)?.get(url);
+    return id ? (data[type]?.[id as id] as AResource<T>) : undefined;
+  };
 }
 
-class Memory<CTX> implements MemoryClientInterface<CTX> {
+function createResolveTypeToCanonical(
+  data: InternalData<ResourceType>,
+): (type: uri) => canonical | undefined {
+  const map = new Map<uri, canonical>();
+  const sds: Record<id, StructureDefinition | undefined> = data[
+    "StructureDefinition"
+  ] as Record<id, StructureDefinition | undefined>;
+
+  for (const resource of Object.values(sds || {})) {
+    if (resource?.type && resource?.url) {
+      map.set(resource.type, resource.url as canonical);
+    }
+  }
+
+  return (type: uri) => {
+    return map.get(type);
+  };
+}
+
+interface MemoryClientInterface<CTX> extends FHIRClientAsync<CTX> {
+  resolveCanonical: ReturnType<typeof createResolveCanonical>;
+  resolveTypeToCanonical: ReturnType<typeof createResolveTypeToCanonical>;
+}
+
+class Memory<CTX extends FHIRServerCTX> implements MemoryClientInterface<CTX> {
   private _client;
 
   public request: FHIRClientAsync<CTX>["request"];
@@ -259,15 +299,15 @@ class Memory<CTX> implements MemoryClientInterface<CTX> {
   public invoke_instance: FHIRClientAsync<CTX>["invoke_instance"];
   public transaction: FHIRClientAsync<CTX>["transaction"];
   public batch: FHIRClientAsync<CTX>["batch"];
+  public resolveCanonical: MemoryClientInterface<CTX>["resolveCanonical"];
+  public resolveTypeToCanonical: MemoryClientInterface<CTX>["resolveTypeToCanonical"];
 
-  constructor(
-    client: AsynchronousClient<
-      {
-        data: InternalData<ResourceType>;
-      },
+  constructor(data: InternalData<ResourceType>) {
+    const client = new AsynchronousClient<
+      { data: InternalData<ResourceType> },
       CTX
-    >,
-  ) {
+    >({ data: data }, createMemoryMiddleware());
+
     this._client = client;
     this.request = this._client.request;
     this.capabilities = this._client.capabilities;
@@ -292,18 +332,13 @@ class Memory<CTX> implements MemoryClientInterface<CTX> {
 
     this.transaction = this._client.transaction;
     this.batch = this._client.batch;
+    this.resolveCanonical = createResolveCanonical(data);
+    this.resolveTypeToCanonical = createResolveTypeToCanonical(data);
   }
-  resolveCanonical<T extends keyof ResourceMap>(): void {}
-  resolveTypeToCanonical<T extends keyof ResourceMap>(): void {}
 }
 
 export default function MemoryDatabase<CTX extends FHIRServerCTX>(
   data: InternalData<ResourceType>,
 ): Memory<CTX> {
-  const client = new AsynchronousClient<
-    { data: InternalData<ResourceType> },
-    CTX
-  >({ data: data }, createMemoryMiddleware());
-
-  return new Memory(client);
+  return new Memory(data);
 }

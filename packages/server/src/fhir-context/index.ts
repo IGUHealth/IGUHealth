@@ -62,6 +62,7 @@ import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with
 import RedisLock from "../synchronization/redis.lock.js";
 
 import { FHIRServerCTX, KoaContext,  asSystemCTX } from "./types.js";
+import { memoryUsage } from "process";
 
 const SPECIAL_TYPES: { MEMORY: ResourceType[]; AUTH: ResourceType[] } = {
   AUTH: AUTH_RESOURCETYPES,
@@ -317,51 +318,7 @@ const encryptionMiddleware: (
     }
   };
 
-export function createResolveCanonical(
-  data: InternalData<ResourceType>,
-): <T extends ResourceType>(type: T, url: string) => AResource<T> | undefined {
-  const map = new Map<ResourceType, Map<string, string>>();
-  for (const resourceType of Object.keys(data)) {
-    for (const resource of Object.values(
-      data[resourceType as ResourceType] ?? {},
-    )) {
-      if ((resource as { url: string })?.url) {
-        if (!map.has(resourceType as ResourceType)) {
-          map.set(resourceType as ResourceType, new Map());
-        }
-        const url = (resource as { url: string }).url;
-        const id = resource?.id;
-        if (!map.get(resourceType as ResourceType)?.has(url) && id) {
-          map.get(resourceType as ResourceType)?.set(url, id);
-        }
-      }
-    }
-  }
 
-  return <T extends ResourceType>(type: T, url: string) => {
-    const id = map.get(type)?.get(url);
-    return id ? (data[type]?.[id as id] as AResource<T>) : undefined;
-  };
-}
-
-export function createResolveTypeToCanonical(
-  data: InternalData<ResourceType>,
-): (type: uri) => canonical | undefined {
-  const map = new Map<uri, canonical>();
-  const sds: Record<id, StructureDefinition | undefined> = data[
-    "StructureDefinition"
-  ] as Record<id, StructureDefinition | undefined>;
-
-  for (const resource of Object.values(sds || {})) {
-    if (resource?.type && resource?.url) {
-      map.set(resource.type, resource.url as canonical);
-    }
-  }
-
-  return (type: uri) => {
-    return map.get(type);
-  };
-}
 
 let _redis_client: Redis | undefined = undefined;
 /**
@@ -430,8 +387,7 @@ export async function createFHIRServices(
     LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
   });
 
-  const resolveCanonical = createResolveCanonical(data);
-  const resolveTypeToCanonical = createResolveTypeToCanonical(data);
+
   const redis = getRedisClient();
   const terminologyProvider = new TerminologyProviderMemory();
   const encryptionProvider =
@@ -452,7 +408,7 @@ export async function createFHIRServices(
   const cache = new RedisCache(redis);
 
   const capabilities = await serverCapabilities(
-    { resolveCanonical, resolveTypeToCanonical },
+    { resolveCanonical: memDBAsync.resolveCanonical, resolveTypeToCanonical: memDBAsync.resolveTypeToCanonical },
     memDBAsync,
   );
   const client = await createFHIRClient([
@@ -513,8 +469,8 @@ export async function createFHIRServices(
     capabilities,
     terminologyProvider,
     encryptionProvider,
-    resolveCanonical,
-    resolveTypeToCanonical,
+    resolveCanonical: memDBAsync.resolveCanonical,
+    resolveTypeToCanonical: memDBAsync.resolveTypeToCanonical,
     client,
   };
 }
