@@ -309,29 +309,30 @@ class Memory<CTX extends FHIRServerCTX> implements MemoryClientInterface<CTX> {
     >({ data: data }, createMemoryMiddleware());
 
     this._client = client;
-    this.request = this._client.request;
-    this.capabilities = this._client.capabilities;
+    this.request = this._client.request.bind(this._client);
+    this.capabilities = this._client.capabilities.bind(this._client);
 
-    this.search_system = this._client.search_system;
-    this.search_type = this._client.search_type;
+    this.search_system = this._client.search_system.bind(this._client);
+    this.search_type = this._client.search_type.bind(this._client);
 
-    this.create = this._client.create;
-    this.update = this._client.update;
-    this.patch = this._client.patch;
-    this.read = this._client.read;
-    this.vread = this._client.vread;
-    this.delete = this._client.delete;
+    this.create = this._client.create.bind(this._client);
+    this.update = this._client.update.bind(this._client);
+    this.patch = this._client.patch.bind(this._client);
+    this.read = this._client.read.bind(this._client);
+    this.vread = this._client.vread.bind(this._client);
+    this.delete = this._client.delete.bind(this._client);
 
-    this.historySystem = this._client.historySystem;
-    this.historyType = this._client.historyType;
-    this.historyInstance = this._client.historyInstance;
+    this.historySystem = this._client.historySystem.bind(this._client);
+    this.historyType = this._client.historyType.bind(this._client);
+    this.historyInstance = this._client.historyInstance.bind(this._client);
 
-    this.invoke_system = this._client.invoke_system;
-    this.invoke_type = this._client.invoke_type;
-    this.invoke_instance = this._client.invoke_instance;
+    this.invoke_system = this._client.invoke_system.bind(this._client);
+    this.invoke_type = this._client.invoke_type.bind(this._client);
+    this.invoke_instance = this._client.invoke_instance.bind(this._client);
 
-    this.transaction = this._client.transaction;
-    this.batch = this._client.batch;
+    this.transaction = this._client.transaction.bind(this._client);
+    this.batch = this._client.batch.bind(this._client);
+
     this.resolveCanonical = createResolveCanonical(data);
     this.resolveTypeToCanonical = createResolveTypeToCanonical(data);
   }
