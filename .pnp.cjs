@@ -15660,7 +15660,7 @@ const RAW_RUNTIME_STATE =
           ["@jest/globals", "npm:29.7.0"],\
           ["@types/jest", "npm:29.5.12"],\
           ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
-          ["jose", "npm:5.2.3"],\
+          ["jose", "npm:5.2.4"],\
           ["ts-jest", "virtual:60d59201a81fdf9d844335582569d604f77c0cfb33012fc0d97d31d995c40a543914afd8f900018942c3e21e71ae879a5dcdf97d4008644edf9f0ce84a7e8664#npm:29.1.2"],\
           ["typescript", "patch:typescript@npm%3A5.4.3#optional!builtin<compat/typescript>::version=5.4.3&hash=5adc0c"]\
         ],\
@@ -15792,7 +15792,7 @@ const RAW_RUNTIME_STATE =
           ["fast-json-patch", "npm:3.1.1"],\
           ["ioredis", "npm:5.3.2"],\
           ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
-          ["jose", "npm:5.2.3"],\
+          ["jose", "npm:5.2.4"],\
           ["json-schema-to-typescript", "npm:13.1.2"],\
           ["jwks-rsa", "npm:3.1.0"],\
           ["keygrip", "npm:1.1.0"],\
@@ -35740,13 +35740,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["jose", [\
-      ["npm:4.15.4", {\
-        "packageLocation": "./.yarn/cache/jose-npm-4.15.4-c518ec3da8-20fa941597.zip/node_modules/jose/",\
-        "packageDependencies": [\
-          ["jose", "npm:4.15.4"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:4.15.5", {\
         "packageLocation": "./.yarn/cache/jose-npm-4.15.5-15e487a3a1-17944fcc0d.zip/node_modules/jose/",\
         "packageDependencies": [\
@@ -35754,10 +35747,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:5.2.3", {\
-        "packageLocation": "./.yarn/cache/jose-npm-5.2.3-11c452707f-33056092ed.zip/node_modules/jose/",\
+      ["npm:5.2.4", {\
+        "packageLocation": "./.yarn/cache/jose-npm-5.2.4-e36f68377d-0b09df51d7.zip/node_modules/jose/",\
         "packageDependencies": [\
-          ["jose", "npm:5.2.3"]\
+          ["jose", "npm:5.2.4"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -36115,7 +36108,7 @@ const RAW_RUNTIME_STATE =
           ["@types/express", "npm:4.17.21"],\
           ["@types/jsonwebtoken", "npm:9.0.5"],\
           ["debug", "virtual:1ff4b5f90832ba0a9c93ba1223af226e44ba70c1126a3740d93562b97bc36544e896a5e95908196f7458713e6a6089a34bfc67362fc6df7fa093bd06c878be47#npm:4.3.4"],\
-          ["jose", "npm:4.15.4"],\
+          ["jose", "npm:4.15.5"],\
           ["limiter", "npm:1.1.5"],\
           ["lru-memoizer", "npm:2.2.0"]\
         ],\
