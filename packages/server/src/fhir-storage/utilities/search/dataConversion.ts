@@ -37,7 +37,7 @@ import { getDecimalPrecision } from "./parameters.js";
 // https://hl7.org/fhir/r4/search.html#table
 // ---------------------------------------------------------
 
-export function toStringParameters(
+function toStringParameters(
   value: MetaValueSingular<NonNullable<unknown>>,
 ): string[] {
   switch (value.meta()?.type) {
@@ -82,8 +82,7 @@ export function toStringParameters(
 // uri		uri
 // string	n/a	string	Token is sometimes used for string to indicate that exact matching is the correct default search strategy
 
-export function toTokenParameters(
-  parameter: SearchParameter,
+function toTokenParameters(
   value: MetaValueSingular<NonNullable<unknown>>,
 ): Array<{ system?: string; code?: string }> {
   switch (value.meta()?.type) {
@@ -94,10 +93,7 @@ export function toTokenParameters(
     case "CodeableConcept": {
       const codings = descend(value, "coding");
       if (codings instanceof MetaValueArray) {
-        return codings
-          .toArray()
-          .map((v) => toTokenParameters(parameter, v))
-          .flat();
+        return codings.toArray().map(toTokenParameters).flat();
       }
       return [];
     }
@@ -134,13 +130,12 @@ export function toTokenParameters(
       throw new Error(
         `Unknown token parameter of type '${
           value.meta()?.type
-        }' '${value.valueOf()}' indexing '${parameter.url}'`,
+        }' '${value.valueOf()}' indexing'`,
       );
   }
 }
 
-export function toURIParameters(
-  param: SearchParameter,
+function toURIParameters(
   value: MetaValueSingular<NonNullable<unknown>>,
 ): string[] {
   switch (value.meta()?.type) {
@@ -155,18 +150,55 @@ export function toURIParameters(
       throw new Error(
         `Unknown uri parameter of type '${
           value.meta()?.type
-        }' '${value.valueOf()}' indexing '${param.url}'`,
+        }' '${value.valueOf()}' indexing`,
       );
   }
 }
 
-export async function toReference(
+function toReferenceLocal(
+  value: MetaValueSingular<NonNullable<unknown>>,
+): Array<{
+  reference: Reference;
+  resourceType?: ResourceType;
+  id?: id;
+  url?: canonical | uri;
+}> {
+  switch (value.meta()?.type) {
+    case "Reference": {
+      const reference: Reference = value.valueOf() as Reference;
+      const [resourceType, id] = reference.reference?.split("/") || [];
+      if (resourceTypes.has(resourceType) && id) {
+        return [
+          {
+            reference: reference,
+            resourceType: resourceType as ResourceType,
+            id: id as id,
+          },
+        ];
+      } else {
+        // Need to determine how to handle identifier style references.
+        return [];
+        //return [{ reference: reference }];
+      }
+    }
+
+    case "uri":
+    case "canonical":
+    default: {
+      return [];
+    }
+  }
+}
+
+export type ResolveRemoteCanonical = (
+  types: ResourceType[],
+  url: canonical,
+) => Promise<Resource | undefined>;
+
+async function toReferenceRemote(
   parameter: SearchParameter,
   value: MetaValueSingular<NonNullable<unknown>>,
-  resolveCanonical?: (
-    types: ResourceType[],
-    url: canonical,
-  ) => Promise<Resource | undefined>,
+  resolveCanonical?: ResolveRemoteCanonical,
 ): Promise<
   Array<{
     reference: Reference;
@@ -265,7 +297,7 @@ function getPrecision(v: date | dateTime) {
   );
 }
 
-export function toDateRange(
+function toDateRange(
   value: MetaValueSingular<NonNullable<unknown>>,
 ): { start: string; end: string }[] {
   switch (value.meta()?.type) {
@@ -356,7 +388,7 @@ function getQuantityRange(value: number): { start: number; end: number } {
   };
 }
 
-export function toQuantityRange(
+function toQuantityRange(
   value: MetaValueSingular<NonNullable<unknown>>,
 ): { start: QuantityIndex; end: QuantityIndex }[] {
   switch (value.meta()?.type) {
@@ -401,5 +433,124 @@ export function toQuantityRange(
       throw new Error(
         `Unable to index as quantity value '${value.meta()?.type}'`,
       );
+  }
+}
+
+export type SEARCH_TYPE =
+  | "number"
+  | "date"
+  | "string"
+  | "token"
+  | "reference"
+  | "composite"
+  | "quantity"
+  | "uri"
+  | "special";
+
+type DATA_CONVERSION = {
+  number: number[][number];
+  date: Awaited<ReturnType<typeof toDateRange>>[number];
+  string: Awaited<ReturnType<typeof toStringParameters>>[number];
+  token: Awaited<ReturnType<typeof toTokenParameters>>[number];
+  reference: Awaited<ReturnType<typeof toReferenceRemote>>[number];
+  quantity: Awaited<ReturnType<typeof toQuantityRange>>[number];
+  uri: Awaited<ReturnType<typeof toURIParameters>>[number];
+
+  /**
+   * Not supporting composite or special in memory index.
+   */
+  composite: never;
+  special: never;
+};
+
+export type ADataConversion<T extends SEARCH_TYPE> = DATA_CONVERSION[T];
+
+export function dataConversionLocal<T extends SEARCH_TYPE>(
+  type: T,
+  evaluation: MetaValueSingular<NonNullable<unknown>>[],
+): ADataConversion<T>[] {
+  switch (type) {
+    case "number": {
+      return evaluation.map((e) => e.valueOf()) as ADataConversion<
+        typeof type
+      >[];
+    }
+    case "string": {
+      return evaluation.map(toStringParameters).flat() as ADataConversion<
+        typeof type
+      >[];
+    }
+    case "token": {
+      return evaluation.map(toTokenParameters).flat() as ADataConversion<
+        typeof type
+      >[];
+    }
+    case "uri": {
+      return evaluation.map(toURIParameters).flat() as ADataConversion<
+        typeof type
+      >[];
+    }
+    case "quantity": {
+      return evaluation.map(toQuantityRange).flat() as ADataConversion<
+        typeof type
+      >[];
+    }
+    case "date": {
+      return evaluation.map(toDateRange).flat() as ADataConversion<
+        typeof type
+      >[];
+    }
+    case "reference": {
+      return evaluation.map(toReferenceLocal).flat() as ADataConversion<
+        typeof type
+      >[];
+    }
+    case "composite":
+    case "special":
+    default: {
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `Memory search does not support '${type}' yet.`,
+        ),
+      );
+    }
+  }
+}
+
+export default async function dataConversion<T extends SEARCH_TYPE>(
+  parameter: SearchParameter,
+  type: T,
+  evaluation: MetaValueSingular<NonNullable<unknown>>[],
+  resolveRemoteCanonical?: ResolveRemoteCanonical,
+): Promise<ADataConversion<T>[]> {
+  switch (type) {
+    case "number":
+    case "string":
+    case "token":
+    case "uri":
+    case "quantity":
+    case "date": {
+      return dataConversionLocal(type, evaluation);
+    }
+    case "reference": {
+      return (
+        await Promise.all(
+          evaluation.map((v) =>
+            toReferenceRemote(parameter, v, resolveRemoteCanonical),
+          ),
+        )
+      ).flat() as ADataConversion<typeof type>[];
+    }
+    case "composite":
+    case "special":
+    default: {
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `Memory search does not support '${type}' yet.`,
+        ),
+      );
+    }
   }
 }
