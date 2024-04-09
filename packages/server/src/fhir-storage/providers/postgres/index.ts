@@ -29,14 +29,7 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import {
-  toStringParameters,
-  toQuantityRange,
-  toDateRange,
-  toReference,
-  toTokenParameters,
-  toURIParameters,
-} from "../../utilities/search/dataConversion.js";
+import dataConversion from "../../utilities/search/dataConversion.js";
 import {
   searchResources,
   deriveLimit,
@@ -94,9 +87,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
 ) {
   switch (parameter.type) {
     case "quantity": {
-      const quantity_indexes: s.quantity_idx.Insertable[] = evaluation
-        .map(toQuantityRange)
-        .flat()
+      const quantity_indexes: s.quantity_idx.Insertable[] = (await dataConversion(parameter, "quantity", evaluation))
         .map(
           (value): s.quantity_idx.Insertable => ({
             tenant: ctx.tenant,
@@ -128,8 +119,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
       return;
     }
     case "date": {
-      const date_indexes = evaluation
-        .map(toDateRange)
+      const date_indexes = (await dataConversion(parameter, "date", evaluation))
         .flat()
         .map(
           (value): s.date_idx.Insertable => ({
@@ -152,13 +142,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
     }
 
     case "reference": {
-      const references = (
-        await Promise.all(
-          evaluation.map((v) =>
-            toReference(parameter, v, createResolverRemoteCanonical(ctx)),
-          ),
-        )
-      ).flat();
+      const references = (await dataConversion(parameter, "reference", evaluation, createResolverRemoteCanonical(ctx))).flat();
 
       const reference_indexes = references
         .filter(({ reference }) => {
@@ -204,8 +188,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
       return;
     }
     case "uri": {
-      const uri_indexes = evaluation
-        .map((v) => toURIParameters(parameter, v))
+      const uri_indexes = (await dataConversion(parameter, "uri", evaluation))
         .flat()
         .map(
           (value): s.uri_idx.Insertable => ({
@@ -228,8 +211,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
       return;
     }
     case "token": {
-      const token_indexes = evaluation
-        .map((v) => toTokenParameters(parameter, v))
+      const token_indexes = (await dataConversion(parameter, "token", evaluation))
         .flat()
         .map(
           (value): s.token_idx.Insertable => ({
@@ -253,8 +235,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
       return;
     }
     case "number": {
-      const number_indexes = evaluation.map((v): s.number_idx.Insertable => {
-        const value = v.valueOf();
+      const number_indexes = (await dataConversion(parameter, "number", evaluation)).map((value): s.number_idx.Insertable => {
         if (typeof value !== "number")
           throw new OperationError(
             outcomeError(
@@ -287,8 +268,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
     }
 
     case "string": {
-      const string_indexes = evaluation
-        .map(toStringParameters)
+      const string_indexes = (await dataConversion(parameter, "string", evaluation))
         .flat()
         .map(
           (value): s.string_idx.Insertable => ({
