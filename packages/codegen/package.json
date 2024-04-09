@@ -19,8 +19,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^20.11.30",
-    "typescript": "5.4.3"
+    "@types/node": "^20.12.7",
+    "typescript": "5.4.4"
   },
   "dependencies": {
     "@iguhealth/artifacts": "workspace:^",
