@@ -5,3 +5,4 @@ export * from "./interactions/logout.js";
 export * from "./authorize.js";
 export * from "./token.js";
 export * from "./discovery.js";
+export * from "./userInfo.js";

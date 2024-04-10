@@ -13,20 +13,22 @@ import * as routes from "./routes/index.js";
 import { sessionAuthorizationMiddleware } from "./session/middleware.js";
 
 export type ManagementRouteHandler = Parameters<
-  ReturnType<typeof createOIDCRouter>["all"]
+  Awaited<ReturnType<typeof createOIDCRouter>>["all"]
 >[2];
 
 /**
  * Management api for creating tenants and managing tenant owners.
  */
-export function createOIDCRouter<
+export async function createOIDCRouter<
   C extends Koa.DefaultContext & KoaContext.OIDC,
 >(
   prefix: string,
   {
+    authMiddlewares,
     scope,
     middleware,
   }: {
+    authMiddlewares: Koa.Middleware<unknown, unknown, unknown>[];
     scope: s.user_scope;
     middleware: Router.Middleware<Koa.DefaultState, C>[];
   },
@@ -42,6 +44,20 @@ export function createOIDCRouter<
     OIDC_ROUTES(scope).OIDC_DISCOVERY,
     "/.well-known/openid-configuration",
     routes.discoveryGet(scope),
+  );
+
+  managementRouter.get(
+    OIDC_ROUTES(scope).USER_INFO,
+    "/auth/userinfo",
+    ...authMiddlewares,
+    routes.userInfo(scope),
+  );
+
+  managementRouter.post(
+    OIDC_ROUTES(scope).USER_INFO,
+    "/auth/userinfo",
+    ...authMiddlewares,
+    routes.userInfo(scope),
   );
 
   managementRouter.get(

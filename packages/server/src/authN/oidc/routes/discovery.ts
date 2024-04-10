@@ -153,6 +153,13 @@ export function discoveryGet(scope: user_scope): ManagementRouteHandler {
     const OIDC_DISCOVERY_DOCUMENT: OIDCDiscoveryDocument = {
       issuer: IGUHEALTH_ISSUER,
 
+      userinfo_endpoint: new URL(
+        ctx.router.url(OIDC_ROUTES(scope).USER_INFO, {
+          tenant: ctx.oidc.tenant,
+        }) as string,
+        process.env.API_URL,
+      ).href,
+
       token_endpoint: new URL(
         ctx.router.url(OIDC_ROUTES(scope).TOKEN_POST, {
           tenant: ctx.oidc.tenant,
@@ -169,6 +176,12 @@ export function discoveryGet(scope: user_scope): ManagementRouteHandler {
 
       jwks_uri: new URL(ctx.router.url(JWKS_GET) as string, process.env.API_URL)
         .href,
+
+      response_types_supported: ["code", "id_token", "id_token token"],
+      token_endpoint_auth_methods_supported: [
+        "client_secret_basic",
+        "client_secret_post",
+      ],
 
       subject_types_supported: ["public"],
     };

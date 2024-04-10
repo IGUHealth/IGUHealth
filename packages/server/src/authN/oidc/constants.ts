@@ -22,6 +22,7 @@ export const OIDC_ROUTES = (scope: user_scope) =>
           "tenant-oidc-interaction-password-reset-verify-post",
         AUTHORIZE_GET: "tenant-oidc-authorize-get",
         TOKEN_POST: "tenant-oidc-token-post",
+        USER_INFO: "tenant-oidc-user-info",
         OIDC_DISCOVERY: "tenant-oidc-discovery",
       }
     : {
@@ -41,5 +42,6 @@ export const OIDC_ROUTES = (scope: user_scope) =>
           "global-oidc-interaction-password-reset-verify-post",
         AUTHORIZE_GET: "global-oidc-authorize-get",
         TOKEN_POST: "global-oidc-token-post",
+        USER_INFO: "global-oidc-user-info",
         OIDC_DISCOVERY: "global-oidc-discovery",
       };
