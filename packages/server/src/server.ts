@@ -225,7 +225,27 @@ export default async function createServer(): Promise<
     throw new OperationError(outcomeError("not-found", "No certs found."));
   });
 
-  const managementRouter = createOIDCRouter("/oidc", {
+  const jwtMiddleware = await createValidateUserJWTMiddleware({
+    AUTH_LOCAL_CERTIFICATION_LOCATION:
+      process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
+    AUTH_LOCAL_SIGNING_KEY: process.env.AUTH_LOCAL_SIGNING_KEY,
+    AUTH_EXTERNAL_JWT_ISSUER: process.env.AUTH_EXTERNAL_JWT_ISSUER,
+    AUTH_EXTERNAL_JWK_URI: process.env.AUTH_EXTERNAL_JWK_URI,
+  });
+
+  const authMiddlewares = [
+    (process.env.AUTH_PUBLIC_ACCESS === "true"
+      ? allowPublicAccessMiddleware
+      : jwtMiddleware) as Koa.Middleware<unknown, unknown, unknown>,
+    verifyAndAssociateUserFHIRContext as Koa.Middleware<
+      unknown,
+      unknown,
+      unknown
+    >,
+  ];
+
+  const managementRouter = await createOIDCRouter("/oidc", {
+    authMiddlewares,
     scope: "global",
     // Inject global management.
     middleware: [
@@ -275,23 +295,15 @@ export default async function createServer(): Promise<
   tenantAPIV1Router.all(
     "/fhir/r4/:fhirUrl*",
     // MonitoringSentry.tracingMiddleWare<KoaFHIRMiddlewareState>(process.env.SENTRY_SERVER_DSN),
-    process.env.AUTH_PUBLIC_ACCESS === "true"
-      ? allowPublicAccessMiddleware
-      : await createValidateUserJWTMiddleware({
-          AUTH_LOCAL_CERTIFICATION_LOCATION:
-            process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
-          AUTH_LOCAL_SIGNING_KEY: process.env.AUTH_LOCAL_SIGNING_KEY,
-          AUTH_EXTERNAL_JWT_ISSUER: process.env.AUTH_EXTERNAL_JWT_ISSUER,
-          AUTH_EXTERNAL_JWK_URI: process.env.AUTH_EXTERNAL_JWK_URI,
-        }),
-    verifyAndAssociateUserFHIRContext,
+    ...authMiddlewares,
     await FHIRAPIKoaMiddleware<KoaFHIRMiddlewareState>(),
   );
 
   // Instantiate OIDC routes
-  const tenantOIDCRouter = createOIDCRouter<
+  const tenantOIDCRouter = await createOIDCRouter<
     KoaContext.FHIR<Koa.DefaultContext>
   >("/oidc", {
+    authMiddlewares,
     scope: "tenant",
     // Inject global management.
     middleware: [

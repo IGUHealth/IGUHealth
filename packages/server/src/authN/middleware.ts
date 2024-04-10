@@ -78,6 +78,7 @@ export async function createValidateUserJWTMiddleware<T, C>({
   return jwt({
     tokenKey: "access_token",
     secret: async (header: jwksRsa.TokenHeader, payload: { iss: string }) => {
+      console.log("JWT SECRET");
       switch (true) {
         case EXTERNAL_JWT_SECRET &&
           EXTERNAL_JWT_SECRET?.issuer === payload.iss: {

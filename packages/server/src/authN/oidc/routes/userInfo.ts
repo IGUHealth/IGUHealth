@@ -15,23 +15,17 @@ type UserInfoResponse = {
 
 export function userInfo(_scope: user_scope): ManagementRouteHandler {
   return async (ctx, next) => {
-    if ((await ctx.oidc.isAuthenticated(ctx)) || !ctx.oidc.user) {
-      throw new OperationError(
-        outcomeError("login", "User is not authenticated."),
-      );
-    }
+    const user = await ctx.oidc.userManagement.get(
+      ctx.postgres,
+      ctx.FHIRContext.user.jwt.sub,
+    );
+    ctx.body = {
+      sub: user?.id,
+      given_name: user?.first_name ?? undefined,
+      family_name: user?.last_name ?? undefined,
+      email: user?.email ?? undefined,
+    } as UserInfoResponse;
 
-    const userInfoResponse: UserInfoResponse = {
-      sub: ctx.oidc.user?.id,
-      name:
-        ctx.oidc.user?.first_name && ctx.oidc.user?.last_name
-          ? ctx.oidc.user?.first_name + " " + ctx.oidc.user?.last_name
-          : undefined,
-      given_name: ctx.oidc.user?.first_name ?? undefined,
-      family_name: ctx.oidc.user?.last_name ?? undefined,
-      email: ctx.oidc.user?.email ?? undefined,
-    };
-    ctx.body = userInfoResponse;
     await next();
   };
 }
