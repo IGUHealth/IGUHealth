@@ -1,7 +1,5 @@
 import { user_scope } from "zapatos/schema";
 
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
-
 import { ManagementRouteHandler } from "../index.js";
 
 type UserInfoResponse = {
