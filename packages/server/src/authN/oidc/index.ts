@@ -45,6 +45,18 @@ export function createOIDCRouter<
   );
 
   managementRouter.get(
+    OIDC_ROUTES(scope).USER_INFO,
+    "/auth/userinfo",
+    routes.userInfo(scope),
+  );
+
+  managementRouter.post(
+    OIDC_ROUTES(scope).USER_INFO,
+    "/auth/userinfo",
+    routes.userInfo(scope),
+  );
+
+  managementRouter.get(
     OIDC_ROUTES(scope).SIGNUP_GET,
     "/interaction/signup",
     routes.signupGET(scope),
