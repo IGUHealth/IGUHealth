@@ -39,6 +39,12 @@ export function createOIDCRouter<
   managementRouter.use(sessionAuthorizationMiddleware());
 
   managementRouter.get(
+    OIDC_ROUTES(scope).OIDC_DISCOVERY,
+    "/.well-known/openid-configuration",
+    routes.discoveryGet(scope),
+  );
+
+  managementRouter.get(
     OIDC_ROUTES(scope).SIGNUP_GET,
     "/interaction/signup",
     routes.signupGET(scope),
@@ -84,6 +90,7 @@ export function createOIDCRouter<
     routes.loginPOST(scope),
   );
   // Adding both as options to either get or post.
+
   managementRouter.get(
     OIDC_ROUTES(scope).LOGOUT_GET,
     "/interaction/logout",
@@ -95,6 +102,7 @@ export function createOIDCRouter<
     clientInjectFHIRMiddleware(),
     routes.logout(scope),
   );
+
   managementRouter.post(
     OIDC_ROUTES(scope).LOGOUT_POST,
     "/interaction/logout",
