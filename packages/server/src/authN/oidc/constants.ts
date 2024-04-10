@@ -1,6 +1,7 @@
 import { user_scope } from "zapatos/schema";
 
 export const USER_SESSION_KEY = "user";
+export const JWKS_GET = "JWKS_GET";
 
 export const OIDC_ROUTES = (scope: user_scope) =>
   scope === "tenant"
@@ -21,6 +22,7 @@ export const OIDC_ROUTES = (scope: user_scope) =>
           "tenant-oidc-interaction-password-reset-verify-post",
         AUTHORIZE_GET: "tenant-oidc-authorize-get",
         TOKEN_POST: "tenant-oidc-token-post",
+        OIDC_DISCOVERY: "tenant-oidc-discovery",
       }
     : {
         LOGIN_GET: "global-oidc-interaction-login-get",
@@ -39,4 +41,5 @@ export const OIDC_ROUTES = (scope: user_scope) =>
           "global-oidc-interaction-password-reset-verify-post",
         AUTHORIZE_GET: "global-oidc-authorize-get",
         TOKEN_POST: "global-oidc-token-post",
+        OIDC_DISCOVERY: "global-oidc-discovery",
       };

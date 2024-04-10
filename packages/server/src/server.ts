@@ -21,11 +21,12 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
-import { createCertsIfNoneExists } from "./authN/certifications.js";
+import { createCertsIfNoneExists, getJWKS } from "./authN/certifications.js";
 import {
   allowPublicAccessMiddleware,
   createValidateUserJWTMiddleware,
 } from "./authN/middleware.js";
+import { JWKS_GET } from "./authN/oidc/constants.js";
 import { createOIDCRouter } from "./authN/oidc/index.js";
 import { setAllowSignup } from "./authN/oidc/middleware/allow_signup.js";
 import {
@@ -212,6 +213,17 @@ export default async function createServer(): Promise<
     createErrorHandlingMiddleware(),
     await createKoaFHIRServices(pool),
   );
+
+  rootRouter.get(JWKS_GET, "/certs/jwks", async (ctx, next) => {
+    if (process.env.AUTH_LOCAL_CERTIFICATION_LOCATION) {
+      const jwks = await getJWKS(process.env.AUTH_LOCAL_CERTIFICATION_LOCATION);
+      ctx.body = jwks;
+      await next();
+      return;
+    }
+
+    throw new OperationError(outcomeError("not-found", "No certs found."));
+  });
 
   const managementRouter = createOIDCRouter("/oidc", {
     scope: "global",

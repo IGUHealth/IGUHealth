@@ -5,6 +5,7 @@
   "$id": "https://IGUHealth.app/environment-variables",
   "additionalProperties": true,
   "required": [
+    "API_URL",
     "FHIR_DATABASE_NAME",
     "FHIR_DATABASE_HOST",
     "FHIR_DATABASE_PORT",
