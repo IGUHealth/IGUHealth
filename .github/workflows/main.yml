@@ -107,6 +107,7 @@ jobs:
       - name: start server
         run: yarn workspace @iguhealth/server migrate up && yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/system/api/v1/fhir/r4/metadata
         env:
+          API_URL: http://localhost:3000
           AUTH_PUBLIC_ACCESS: true
           FHIR_DATABASE_NAME: postgres
           FHIR_DATABASE_HOST: localhost

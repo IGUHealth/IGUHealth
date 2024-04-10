@@ -49,7 +49,7 @@ export interface IGUHealthEnvironment {
   /**
    * Current url where API is hosted from (used in operation execution clients).
    */
-  API_URL?: string;
+  API_URL: string;
   /**
    * AWS Region where you want lambdas to be executed from.
    */
