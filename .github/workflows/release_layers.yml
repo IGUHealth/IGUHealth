@@ -1,7 +1,6 @@
 name: Deploy Lambda Layer
 on:
   # Execute after publish npm so latest packages are installed.
-
   workflow_run:
     workflows: [NPM Publish]
     types:
