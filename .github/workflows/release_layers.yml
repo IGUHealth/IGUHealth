@@ -1,0 +1,50 @@
+name: Deploy Lambda Layer
+on:
+  # Execute after publish npm so latest packages are installed.
+
+  workflow_run:
+    workflows: [NPM Publish]
+    types:
+      - completed
+
+# on: [pull_request]
+
+jobs:
+  npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 21.6.1
+          cache: "yarn"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: EnableCorePack
+        run: corepack enable
+
+      - name: Install Lambda Deps
+        run: cd layers/lambda && npm i
+
+      - name: Create NODEJS DIR
+        run: mkdir nodejs
+
+      - name: Move Node modules to dir
+        run: mv layers/lambda/node_modules nodejs/node_modules
+
+      - name: Package in Zip
+        run: zip -r layer.zip nodejs
+
+      - name: Configure AWS credentials from Github account
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::611909812228:role/iguhealth_github_action_user
+          aws-region: us-east-1
+
+      - name: Copy files to the production website with the AWS CLI
+        run: |
+          aws s3 sync layer.zip s3://iguhealth-lambda-layers-newprod/layer
