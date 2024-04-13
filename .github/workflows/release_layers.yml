@@ -59,4 +59,4 @@ jobs:
 
       - name: Publish Layer
         run: |
-          aws lambda publish-layer-version --layer-name ${LAYER_NAME} --content S3Bucket=${S3_BUCKET},S3Key=${GITHUB_RUN_ID}.layer.zip
+          aws lambda publish-layer-version --layer-name ${LAYER_NAME} --content S3Bucket=${S3_BUCKET},S3Key=${GITHUB_RUN_ID}.layer.zip --compatible-runtimes nodejs14.x,nodejs16.x --description "Iguhealth Layer"
