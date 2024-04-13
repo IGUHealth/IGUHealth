@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   build_api_reference:
+    environment: production
     name: Upload API Reference
     runs-on: ubuntu-latest
     # These permissions are needed to interact with GitHub's OIDC Token endpoint.
@@ -57,6 +58,7 @@ jobs:
           aws s3 sync ./docs s3://api-reference.iguhealth.app
 
   build_docs:
+    environment: production
     name: Upload Docs
     runs-on: ubuntu-latest
     # These permissions are needed to interact with GitHub's OIDC Token endpoint.
@@ -100,6 +102,7 @@ jobs:
           aws s3 sync packages/docs/build s3://docs.iguhealth.app
 
   build_story_book:
+    environment: production
     name: Upload Storybook to S3
     runs-on: ubuntu-latest
     # These permissions are needed to interact with GitHub's OIDC Token endpoint.
@@ -144,53 +147,3 @@ jobs:
       - name: Copy files to the production website with the AWS CLI
         run: |
           aws s3 sync packages/components/storybook-static s3://storybook.iguhealth.app
-
-  # build_admin_app:
-  #   name: Upload Admin UI to S3
-  #   runs-on: ubuntu-latest
-  #   # These permissions are needed to interact with GitHub's OIDC Token endpoint.
-  #   permissions:
-  #     id-token: write
-  #     contents: read
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 0
-
-  #     - name: Set up Node
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 21.6.1
-  #         cache: "yarn"
-
-  #     - name: EnableCorePack
-  #       run: corepack enable
-
-  #     - name: Yarn Setup
-  #       run: corepack prepare yarn@4.1.1 --activate
-
-  #     - name: Version Check
-  #       run: yarn version check
-
-  #     - name: Install dependencies
-  #       run: yarn install
-
-  #     - name: Create env file
-  #       run: |
-  #         touch packages/admin-app/.env
-  #         echo REACT_APP_AUTH0_DOMAIN=${{ secrets.ADMIN_APP_DOMAIN }} >> packages/admin-app/.env
-  #         echo REACT_APP_AUTH0_CLIENT_ID=${{ secrets.ADMIN_APP_CLIENT_ID }} >> packages/admin-app/.env
-  #         echo REACT_APP_FHIR_BASE_URL=${{ secrets.ADMIN_APP_FHIR_URL }} >> packages/admin-app/.env
-
-  #     - name: Compile
-  #       run: yarn workspaces foreach -A -pt --topological-dev run build
-
-  #     - name: Configure AWS credentials from Github account
-  #       uses: aws-actions/configure-aws-credentials@v4
-  #       with:
-  #         role-to-assume: arn:aws:iam::611909812228:role/iguhealth_github_action_user
-  #         aws-region: us-east-1
-
-  #     - name: Copy files to the production website with the AWS CLI
-  #       run: aws s3 sync packages/admin-app/build s3://admin.iguhealth.app

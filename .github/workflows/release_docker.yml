@@ -10,6 +10,7 @@ env:
 
 jobs:
   server:
+    environment: production
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -54,6 +55,7 @@ jobs:
           docker push $IMAGE_ID:latest
 
   admin-app:
+    environment: production
     runs-on: ubuntu-latest
     permissions:
       packages: write
