@@ -9,8 +9,17 @@ on:
 # on: [pull_request]
 
 jobs:
-  npm:
+  layers:
+    environment: production
+    name: Upload Lambda Layer
     runs-on: ubuntu-latest
+    env:
+      LAYER_NAME: iguhealth_layer_newprod
+      S3_BUCKET: iguhealth-lambda-layers-newprod
+
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v3
         with:
@@ -46,4 +55,8 @@ jobs:
 
       - name: Copy files to the production website with the AWS CLI
         run: |
-          aws s3 sync layer.zip s3://iguhealth-lambda-layers-newprod/layer
+          aws s3 cp layer.zip s3://${S3_BUCKET}/${GITHUB_RUN_ID}.layer.zip
+
+      - name: Publish Layer
+        run: |
+          aws lambda publish-layer-version --layer-name ${LAYER_NAME} --content S3Bucket=${S3_BUCKET},S3Key=${GITHUB_RUN_ID}.layer.zip --compatible-runtimes nodejs20.x nodejs16.x --description "Iguhealth Layer"

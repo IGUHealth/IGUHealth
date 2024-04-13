@@ -5,6 +5,7 @@ on:
 
 jobs:
   npm:
+    environment: production
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -36,7 +37,7 @@ jobs:
       - name: commit to main branch
         run: |
           git add .
-          git commit -m "chore: NPM publish packages"
+          git commit --allow-empty -m "chore: NPM publish packages"
           git push
 
       - name: Configure NPM AUTH
