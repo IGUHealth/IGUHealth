@@ -39,8 +39,10 @@ export default function generateIndexFile(
     .map(getAllFiles)
     .flat()
     .filter((f) => f.endsWith(".json"))
-    .filter((f) => ignore.indexOf(f) === -1);
-  for (let file of files) {
+    .filter((f) => ignore.indexOf(f) === -1)
+    .sort((a, b) => a.localeCompare(b));
+
+  for (const file of files) {
     const fileContents = fs.readFileSync(file);
     const json = JSON.parse(fileContents.toString("utf8"));
     if (json.resourceType === "Bundle") {

@@ -7996,15 +7996,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@iguhealth/hl7.fhir.r4.core@workspace:^, @iguhealth/hl7.fhir.r4.core@workspace:artifacts/hl7-core":
+"@iguhealth/hl7.fhir.r4.core@workspace:^, @iguhealth/hl7.fhir.r4.core@workspace:artifacts/r4/hl7-core":
   version: 0.0.0-use.local
-  resolution: "@iguhealth/hl7.fhir.r4.core@workspace:artifacts/hl7-core"
+  resolution: "@iguhealth/hl7.fhir.r4.core@workspace:artifacts/r4/hl7-core"
   languageName: unknown
   linkType: soft
 
-"@iguhealth/iguhealth.fhir.r4.core@workspace:^, @iguhealth/iguhealth.fhir.r4.core@workspace:artifacts/iguhealth-core":
+"@iguhealth/hl7.fhir.r4b.core@workspace:artifacts/r4b/hl7-core":
   version: 0.0.0-use.local
-  resolution: "@iguhealth/iguhealth.fhir.r4.core@workspace:artifacts/iguhealth-core"
+  resolution: "@iguhealth/hl7.fhir.r4b.core@workspace:artifacts/r4b/hl7-core"
+  languageName: unknown
+  linkType: soft
+
+"@iguhealth/iguhealth.fhir.r4.core@workspace:^, @iguhealth/iguhealth.fhir.r4.core@workspace:artifacts/r4/iguhealth-core":
+  version: 0.0.0-use.local
+  resolution: "@iguhealth/iguhealth.fhir.r4.core@workspace:artifacts/r4/iguhealth-core"
   languageName: unknown
   linkType: soft
 
@@ -8165,9 +8171,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@iguhealth/test-data@workspace:^, @iguhealth/test-data@workspace:artifacts/test-data":
+"@iguhealth/test-data@workspace:^, @iguhealth/test-data@workspace:artifacts/r4/test-data":
   version: 0.0.0-use.local
-  resolution: "@iguhealth/test-data@workspace:artifacts/test-data"
+  resolution: "@iguhealth/test-data@workspace:artifacts/r4/test-data"
   languageName: unknown
   linkType: soft
 

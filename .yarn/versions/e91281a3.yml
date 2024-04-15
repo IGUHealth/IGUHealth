@@ -1,0 +1,17 @@
+releases:
+  "@iguhealth/admin-app": patch
+  "@iguhealth/artifacts": patch
+  "@iguhealth/cli": patch
+  "@iguhealth/client": patch
+  "@iguhealth/codegen": patch
+  "@iguhealth/components": patch
+  "@iguhealth/fhir-validation": patch
+  "@iguhealth/fhirpath": patch
+  "@iguhealth/generated-ops": patch
+  "@iguhealth/hl7.fhir.r4.core": patch
+  "@iguhealth/hl7.fhir.r4b.core": patch
+  "@iguhealth/iguhealth.fhir.r4.core": patch
+  "@iguhealth/meta-value": patch
+  "@iguhealth/operation-execution": patch
+  "@iguhealth/server": patch
+  "@iguhealth/test-data": patch

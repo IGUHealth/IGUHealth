@@ -1,0 +1,33 @@
+{
+  "name": "@iguhealth/hl7.fhir.r4b.core",
+  "version": "0.1.1",
+  "homepage": "https://docs.iguhealth.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IGUHealth/IGUHealth.git"
+  },
+  "packageManager": "yarn@4.1.1",
+  "canonical": "https://iguhealth.app/fhir/ImplementationGuide/iguhealth.hl7.fhir.r4b.core",
+  "url": "https://iguhealth.app/fhir/ImplementationGuide/iguhealth.hl7.fhir.r4b.core",
+  "title": "Hl7 Core resources",
+  "description": "IGUHEALTH package that contains core hl7 R4B resources.",
+  "fhirVersions": [
+    "4.3.0"
+  ],
+  "author": "IGUHealth",
+  "maintainers": [
+    {
+      "name": "IGUHealth",
+      "email": "dev@iguhealth.app"
+    }
+  ],
+  "scripts": {
+    "generate-index": "yarn node ../../../packages/cli/lib/iguhealth.js generate index-file -p . -r r4b --ignore r4/hl7/profiles-others.json r4/hl7/dataelements.json r4b/hl7/extension-definitions.json",
+    "publish": "yarn npm publish --access public --tolerate-republish"
+  },
+  "files": [
+    "r4b/**",
+    ".index.json",
+    "README.md"
+  ]
+}

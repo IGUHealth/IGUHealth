@@ -1,0 +1,15 @@
+{
+  "resourceType": "SearchParameter",
+  "id": "Membership-email",
+  "url": "https://iguhealth.app/fhir/SearchParameter/Membership-email",
+  "version": "4.0.1",
+  "name": "Email",
+  "status": "draft",
+  "experimental": false,
+  "publisher": "IGUHealth",
+  "description": "Membership email",
+  "code": "email",
+  "base": ["Membership"],
+  "type": "token",
+  "expression": "Membership.email"
+}
