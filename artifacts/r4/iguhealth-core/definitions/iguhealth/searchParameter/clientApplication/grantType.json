@@ -1,0 +1,15 @@
+{
+  "resourceType": "SearchParameter",
+  "id": "ClientApplication-grantType",
+  "url": "https://iguhealth.app/fhir/SearchParameter/ClientApplication-grantType",
+  "version": "4.0.1",
+  "name": "Grant Type",
+  "status": "draft",
+  "experimental": false,
+  "publisher": "IGUHealth",
+  "description": "ClientApplication grant type.",
+  "code": "grantType",
+  "base": ["ClientApplication"],
+  "type": "token",
+  "expression": "ClientApplication.grantType"
+}

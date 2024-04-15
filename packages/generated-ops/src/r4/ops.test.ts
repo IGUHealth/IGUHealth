@@ -49,6 +49,7 @@ test("Test ValueSet Expands", async () => {
     if (inputIssues.length > 0) throw new Error("Input is invalid");
 
     const outputIssues = await op.validate(ctx, "out", output);
+    console.log(outputIssues);
     if (outputIssues.length > 0) throw new Error("Output is invalid");
 
     return output;

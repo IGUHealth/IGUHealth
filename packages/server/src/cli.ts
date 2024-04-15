@@ -2,12 +2,12 @@ import { program } from "commander";
 // @ts-ignore
 import DBMigrate from "db-migrate";
 import { exec } from "node:child_process";
+import { readFileSync, writeFileSync } from "node:fs";
 import util from "node:util";
 import * as generateSQL from "zapatos/generate";
 
 import createServer from "./server.js";
 import createWorker from "./worker/index.js";
-import { readFileSync, writeFileSync } from "node:fs";
 
 const execPromise = util.promisify(exec);
 

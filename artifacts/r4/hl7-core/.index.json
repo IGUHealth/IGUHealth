@@ -1,0 +1,57 @@
+{
+  "index-version": "1",
+  "files": [
+    {
+      "filename": "definitions/hl7/conceptmaps.json",
+      "resourceType": "ConceptMap"
+    },
+    {
+      "filename": "definitions/hl7/profiles-resources.json",
+      "resourceType": "CapabilityStatement"
+    },
+    {
+      "filename": "definitions/hl7/profiles-resources.json",
+      "resourceType": "CompartmentDefinition"
+    },
+    {
+      "filename": "definitions/hl7/profiles-resources.json",
+      "resourceType": "OperationDefinition"
+    },
+    {
+      "filename": "definitions/hl7/profiles-resources.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "definitions/hl7/profiles-types.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "definitions/hl7/search-parameters.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "definitions/hl7/v2-tables.json",
+      "resourceType": "ValueSet"
+    },
+    {
+      "filename": "definitions/hl7/v2-tables.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "definitions/hl7/v3-codesystems.json",
+      "resourceType": "ValueSet"
+    },
+    {
+      "filename": "definitions/hl7/v3-codesystems.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "definitions/hl7/valuesets.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "definitions/hl7/valuesets.json",
+      "resourceType": "ValueSet"
+    }
+  ]
+}

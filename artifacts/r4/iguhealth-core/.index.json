@@ -1,0 +1,129 @@
+{
+  "index-version": "1",
+  "files": [
+    {
+      "filename": "definitions/iguhealth/operation/encrypt.json",
+      "resourceType": "OperationDefinition"
+    },
+    {
+      "filename": "definitions/iguhealth/searchParameter/accessPolicy/code.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "definitions/iguhealth/searchParameter/accessPolicy/link.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "definitions/iguhealth/searchParameter/accessPolicy/name.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "definitions/iguhealth/searchParameter/accessPolicy/type.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "definitions/iguhealth/searchParameter/clientApplication/grantType.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "definitions/iguhealth/searchParameter/clientApplication/name.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "definitions/iguhealth/searchParameter/membership/email.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "definitions/iguhealth/searchParameter/membership/link.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "definitions/iguhealth/searchParameter/membership/name.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "definitions/iguhealth/searchParameter/membership/role.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "definitions/iguhealth/searchParameter/resource-parameters.json",
+      "resourceType": "SearchParameter"
+    },
+    {
+      "filename": "definitions/iguhealth/structuredefinition/accessPolicy.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "definitions/iguhealth/structuredefinition/client-application.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "definitions/iguhealth/structuredefinition/membership.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy/authentication/grant_type.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy/authentication/grant_type.json",
+      "resourceType": "ValueSet"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy/authentication/membership_role.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy/authentication/membership_role.json",
+      "resourceType": "ValueSet"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy/authentication/response_types.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy/authentication/response_types.json",
+      "resourceType": "ValueSet"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy/authorization/fhir-api-level.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy/authorization/fhir-api-level.json",
+      "resourceType": "ValueSet"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy/authorization/fhir-api-methods.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy/authorization/fhir-api-methods.json",
+      "resourceType": "ValueSet"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy/authorization/fhir-api-parameters.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy/authorization/fhir-api-parameters.json",
+      "resourceType": "ValueSet"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy/policy-types.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy/policy-types.json",
+      "resourceType": "ValueSet"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy/resource_type.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/access-policy/resource_type.json",
+      "resourceType": "ValueSet"
+    }
+  ]
+}

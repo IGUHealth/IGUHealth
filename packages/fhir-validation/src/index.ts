@@ -380,6 +380,7 @@ async function validateComplex(
     await Promise.all(
       requiredElements.map(async (index) => {
         const child = structureDefinition.snapshot?.element?.[index];
+        console.log(child);
         if (!child) throw new Error("Child not found");
 
         const fields = determineTypesAndFields(child, value);

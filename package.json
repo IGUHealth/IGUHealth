@@ -23,7 +23,7 @@
   "keywords": [],
   "license": "ISC",
   "workspaces": [
-    "artifacts/*",
+    "artifacts/**/*",
     "packages/*"
   ],
   "resolutions": {

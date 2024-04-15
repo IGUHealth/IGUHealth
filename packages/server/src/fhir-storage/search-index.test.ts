@@ -48,10 +48,7 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
       .filter((r) => r.id)
       .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
       .slice(0, 10);
-    console.log(
-      resourceType,
-      searchParameters.map((s) => s.name),
-    );
+
     for (const resource of resources) {
       for (const parameter of searchParameters) {
         if (parameter.expression) {

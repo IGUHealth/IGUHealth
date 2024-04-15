@@ -1,4 +1,3 @@
-import { deepStrictEqual } from "node:assert";
 import { createRequire } from "node:module";
 
 import {
@@ -26,7 +25,7 @@ function flattenOrInclude<T extends ResourceType>(
   resource: Resource,
 ): AResource<T>[] {
   if (isBundle(resource)) {
-    let resources = (resource.entry || [])?.map((entry) => entry.resource);
+    const resources = (resource.entry || [])?.map((entry) => entry.resource);
     return resources.filter((r: Resource | undefined): r is AResource<T> =>
       isType(type, r),
     );
@@ -38,6 +37,8 @@ function flattenOrInclude<T extends ResourceType>(
 }
 
 interface LoadArtifactOptions<T extends ResourceType> {
+  // Only support R4 and R4B for now.
+  fhirVersion?: "4.0" | "4.3";
   resourceType: T;
   packageLocation: string;
   silence?: boolean;
@@ -50,6 +51,7 @@ interface LoadArtifactOptions<T extends ResourceType> {
  * @returns A list of resources of type T
  */
 export default function loadArtifacts<T extends ResourceType>({
+  fhirVersion = "4.0",
   resourceType,
   packageLocation,
   silence,

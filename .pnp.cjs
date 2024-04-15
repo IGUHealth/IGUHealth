@@ -15,15 +15,19 @@ const RAW_RUNTIME_STATE =
     },\
     {\
       "name": "@iguhealth/hl7.fhir.r4.core",\
-      "reference": "workspace:artifacts/hl7-core"\
+      "reference": "workspace:artifacts/r4/hl7-core"\
     },\
     {\
       "name": "@iguhealth/iguhealth.fhir.r4.core",\
-      "reference": "workspace:artifacts/iguhealth-core"\
+      "reference": "workspace:artifacts/r4/iguhealth-core"\
     },\
     {\
       "name": "@iguhealth/test-data",\
-      "reference": "workspace:artifacts/test-data"\
+      "reference": "workspace:artifacts/r4/test-data"\
+    },\
+    {\
+      "name": "@iguhealth/hl7.fhir.r4b.core",\
+      "reference": "workspace:artifacts/r4b/hl7-core"\
     },\
     {\
       "name": "@iguhealth/admin-app",\
@@ -123,15 +127,16 @@ const RAW_RUNTIME_STATE =
     ["@iguhealth/fhir-validation", ["workspace:packages/fhir-validation"]],\
     ["@iguhealth/fhirpath", ["workspace:packages/fhirpath"]],\
     ["@iguhealth/generated-ops", ["workspace:packages/generated-ops"]],\
-    ["@iguhealth/hl7.fhir.r4.core", ["workspace:artifacts/hl7-core"]],\
-    ["@iguhealth/iguhealth.fhir.r4.core", ["workspace:artifacts/iguhealth-core"]],\
+    ["@iguhealth/hl7.fhir.r4.core", ["workspace:artifacts/r4/hl7-core"]],\
+    ["@iguhealth/hl7.fhir.r4b.core", ["workspace:artifacts/r4b/hl7-core"]],\
+    ["@iguhealth/iguhealth.fhir.r4.core", ["workspace:artifacts/r4/iguhealth-core"]],\
     ["@iguhealth/jwt", ["workspace:packages/jwt"]],\
     ["@iguhealth/meta-value", ["workspace:packages/meta-value"]],\
     ["@iguhealth/operation-execution", ["workspace:packages/operation-execution"]],\
     ["@iguhealth/operation-outcomes", ["workspace:packages/operation-outcomes"]],\
     ["@iguhealth/rs_cpu-count", ["workspace:packages/rs_cpu-count"]],\
     ["@iguhealth/server", ["workspace:packages/server"]],\
-    ["@iguhealth/test-data", ["workspace:artifacts/test-data"]],\
+    ["@iguhealth/test-data", ["workspace:artifacts/r4/test-data"]],\
     ["iguhealth-workspace", ["workspace:."]]\
   ],\
   "fallbackPool": [\
@@ -15316,8 +15321,8 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/client", "workspace:packages/client"],\
           ["@iguhealth/codegen", "workspace:packages/codegen"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
-          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"],\
-          ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/iguhealth-core"],\
+          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
+          ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@inquirer/prompts", "npm:4.3.2"],\
           ["@types/node", "npm:20.12.7"],\
           ["commander", "npm:12.0.0"],\
@@ -15575,8 +15580,8 @@ const RAW_RUNTIME_STATE =
           ["@docusaurus/types", "virtual:9f288d48d2ea76719e04b1b7e59356fc6efd647c59fb847eff6fa2e56b3608f12273a918949e2afe8f77891c06fb4b346f8580227efcb8876b86b9519ca03ad2#npm:3.2.0"],\
           ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
-          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"],\
-          ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/iguhealth-core"],\
+          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
+          ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@mdx-js/react", "virtual:9f288d48d2ea76719e04b1b7e59356fc6efd647c59fb847eff6fa2e56b3608f12273a918949e2afe8f77891c06fb4b346f8580227efcb8876b86b9519ca03ad2#npm:3.0.0"],\
           ["clsx", "npm:2.0.0"],\
           ["prism-react-renderer", "virtual:9f288d48d2ea76719e04b1b7e59356fc6efd647c59fb847eff6fa2e56b3608f12273a918949e2afe8f77891c06fb4b346f8580227efcb8876b86b9519ca03ad2#npm:2.3.1"],\
@@ -15639,10 +15644,10 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/codegen", "workspace:packages/codegen"],\
           ["@iguhealth/fhir-pointer", "workspace:packages/fhir-pointer"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
-          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"],\
-          ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/iguhealth-core"],\
+          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
+          ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
-          ["@iguhealth/test-data", "workspace:artifacts/test-data"],\
+          ["@iguhealth/test-data", "workspace:artifacts/r4/test-data"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["@types/jest", "npm:29.5.12"],\
           ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
@@ -15660,8 +15665,8 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
           ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
-          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"],\
-          ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/iguhealth-core"],\
+          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
+          ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@iguhealth/meta-value", "workspace:packages/meta-value"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["@types/jest", "npm:29.5.12"],\
@@ -15682,8 +15687,8 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
           ["@iguhealth/cli", "workspace:packages/cli"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
-          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"],\
-          ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/iguhealth-core"],\
+          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
+          ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@iguhealth/operation-execution", "workspace:packages/operation-execution"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
@@ -15695,19 +15700,28 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@iguhealth/hl7.fhir.r4.core", [\
-      ["workspace:artifacts/hl7-core", {\
-        "packageLocation": "./artifacts/hl7-core/",\
+      ["workspace:artifacts/r4/hl7-core", {\
+        "packageLocation": "./artifacts/r4/hl7-core/",\
         "packageDependencies": [\
-          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"]\
+          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@iguhealth/hl7.fhir.r4b.core", [\
+      ["workspace:artifacts/r4b/hl7-core", {\
+        "packageLocation": "./artifacts/r4b/hl7-core/",\
+        "packageDependencies": [\
+          ["@iguhealth/hl7.fhir.r4b.core", "workspace:artifacts/r4b/hl7-core"]\
         ],\
         "linkType": "SOFT"\
       }]\
     ]],\
     ["@iguhealth/iguhealth.fhir.r4.core", [\
-      ["workspace:artifacts/iguhealth-core", {\
-        "packageLocation": "./artifacts/iguhealth-core/",\
+      ["workspace:artifacts/r4/iguhealth-core", {\
+        "packageLocation": "./artifacts/r4/iguhealth-core/",\
         "packageDependencies": [\
-          ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/iguhealth-core"]\
+          ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -15735,8 +15749,8 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/meta-value", "workspace:packages/meta-value"],\
           ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
-          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"],\
-          ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/iguhealth-core"],\
+          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
+          ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["@types/jest", "npm:29.5.12"],\
           ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
@@ -15755,8 +15769,8 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/fhir-pointer", "workspace:packages/fhir-pointer"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
           ["@iguhealth/fhir-validation", "workspace:packages/fhir-validation"],\
-          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"],\
-          ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/iguhealth-core"],\
+          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
+          ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
@@ -15811,13 +15825,13 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/fhir-validation", "workspace:packages/fhir-validation"],\
           ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
           ["@iguhealth/generated-ops", "workspace:packages/generated-ops"],\
-          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/hl7-core"],\
-          ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/iguhealth-core"],\
+          ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
+          ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@iguhealth/jwt", "workspace:packages/jwt"],\
           ["@iguhealth/meta-value", "workspace:packages/meta-value"],\
           ["@iguhealth/operation-execution", "workspace:packages/operation-execution"],\
           ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
-          ["@iguhealth/test-data", "workspace:artifacts/test-data"],\
+          ["@iguhealth/test-data", "workspace:artifacts/r4/test-data"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["@koa/bodyparser", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:5.1.1"],\
           ["@koa/cors", "npm:5.0.0"],\
@@ -15882,10 +15896,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@iguhealth/test-data", [\
-      ["workspace:artifacts/test-data", {\
-        "packageLocation": "./artifacts/test-data/",\
+      ["workspace:artifacts/r4/test-data", {\
+        "packageLocation": "./artifacts/r4/test-data/",\
         "packageDependencies": [\
-          ["@iguhealth/test-data", "workspace:artifacts/test-data"]\
+          ["@iguhealth/test-data", "workspace:artifacts/r4/test-data"]\
         ],\
         "linkType": "SOFT"\
       }]\
