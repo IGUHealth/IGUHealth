@@ -359,6 +359,7 @@ export async function createFHIRServices(
 ): Promise<Omit<FHIRServerCTX, "tenant" | "user">> {
   const data = createMemoryData(SPECIAL_TYPES.MEMORY);
   const memDBAsync = MemoryDatabaseAsync(data);
+  
   const pgFHIR = createPostgresClient({
     transaction_entry_limit: parseInt(
       process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",

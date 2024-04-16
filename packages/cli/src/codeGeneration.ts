@@ -6,17 +6,24 @@ import { fileURLToPath } from "url";
 import { generateIndexFile, loadArtifacts } from "@iguhealth/artifacts";
 import { generateOps, generateSets, generateTypes } from "@iguhealth/codegen";
 
+const FHIR_VERSIONS_SUPPORTED: ["4.0", "4.3"] = ["4.0", "4.3"];
+
 export function codeGenerationCommands(command: Command) {
   command
     .command("types-artifacts")
     .description("Generates typescript types off profiles")
     .option("-o, --output <output>", "output file")
-    .option("-v, --version <version>", "FHIR Profiles to use", "r4")
+    .option("-v, --version <version>", "FHIR Profiles to use", "4.0")
     .action((options) => {
-      if (options.version !== "r4") {
-        throw new Error("Currently only support r4");
+      if (FHIR_VERSIONS_SUPPORTED.indexOf(options.version) === -1) {
+        throw new Error(
+          `${options.version} is not supported must be oneof ${JSON.stringify(FHIR_VERSIONS_SUPPORTED)}`,
+        );
       }
+
       const structureDefinitions = loadArtifacts({
+        fhirVersion:
+          options.version as (typeof FHIR_VERSIONS_SUPPORTED)[number],
         resourceType: "StructureDefinition",
         packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
       });
