@@ -16,7 +16,7 @@ export default function tokenClauses(
       return missingModifier(ctx, parameter);
     default: {
       return db.conditions.or(
-        ...parameter.value.map((value): s.token_idx.Whereable => {
+        ...parameter.value.map((value): s.r4_token_idx.Whereable => {
           const parts = splitParameter(value.toString(), "|");
           if (parts.length === 1) {
             return { value: value.toString() };

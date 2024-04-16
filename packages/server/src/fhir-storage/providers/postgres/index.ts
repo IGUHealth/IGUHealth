@@ -78,7 +78,7 @@ async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   ).resources;
 }
 
-async function indexSearchParameter<CTX extends FHIRServerCTX>(
+async function indexR4SearchParameter<CTX extends FHIRServerCTX>(
   client: db.Queryable,
   ctx: CTX,
   parameter: SearchParameter,
@@ -87,9 +87,9 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
 ) {
   switch (parameter.type) {
     case "quantity": {
-      const quantity_indexes: s.quantity_idx.Insertable[] = (await dataConversion(parameter, "quantity", evaluation))
+      const quantity_indexes: s.r4_quantity_idx.Insertable[] = (await dataConversion(parameter, "quantity", evaluation))
         .map(
-          (value): s.quantity_idx.Insertable => ({
+          (value): s.r4_quantity_idx.Insertable => ({
             tenant: ctx.tenant,
             r_id: resource.id,
             resource_type: resource.resourceType,
@@ -109,7 +109,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
 
       await db
         .upsert(
-          "quantity_idx",
+          "r4_quantity_idx",
           quantity_indexes,
           db.constraint("quantity_idx_pkey"),
           { updateColumns: db.doNothing },
@@ -122,7 +122,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
       const date_indexes = (await dataConversion(parameter, "date", evaluation))
         .flat()
         .map(
-          (value): s.date_idx.Insertable => ({
+          (value): s.r4_date_idx.Insertable => ({
             tenant: ctx.tenant,
             r_id: resource.id,
             resource_type: resource.resourceType,
@@ -134,7 +134,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           }),
         );
       await db
-        .upsert("date_idx", date_indexes, db.constraint("date_idx_pkey"), {
+        .upsert("r4_date_idx", date_indexes, db.constraint("date_idx_pkey"), {
           updateColumns: db.doNothing,
         })
         .run(client);
@@ -152,7 +152,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
           }
           return true;
         })
-        .map(({ reference, resourceType, id }): s.reference_idx.Insertable => {
+        .map(({ reference, resourceType, id }): s.r4_reference_idx.Insertable => {
           if (!resourceType || !id) {
             throw new OperationError(
               outcomeError(
@@ -176,7 +176,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
 
       await db
         .upsert(
-          "reference_idx",
+          "r4_reference_idx",
           reference_indexes,
           db.constraint("reference_idx_unique"),
           {
@@ -191,7 +191,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
       const uri_indexes = (await dataConversion(parameter, "uri", evaluation))
         .flat()
         .map(
-          (value): s.uri_idx.Insertable => ({
+          (value): s.r4_uri_idx.Insertable => ({
             tenant: ctx.tenant,
             r_id: resource.id,
             resource_type: resource.resourceType,
@@ -203,7 +203,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
         );
 
       await db
-        .upsert("uri_idx", uri_indexes, db.constraint("uri_idx_unique"), {
+        .upsert("r4_uri_idx", uri_indexes, db.constraint("uri_idx_unique"), {
           updateColumns: db.doNothing,
         })
         .run(client);
@@ -214,7 +214,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
       const token_indexes = (await dataConversion(parameter, "token", evaluation))
         .flat()
         .map(
-          (value): s.token_idx.Insertable => ({
+          (value): s.r4_token_idx.Insertable => ({
             tenant: ctx.tenant,
             r_id: resource.id,
             resource_type: resource.resourceType,
@@ -227,7 +227,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
         );
 
       await db
-        .upsert("token_idx", token_indexes, db.constraint("token_idx_unique"), {
+        .upsert("r4_token_idx", token_indexes, db.constraint("token_idx_unique"), {
           updateColumns: db.doNothing,
         })
         .run(client);
@@ -235,7 +235,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
       return;
     }
     case "number": {
-      const number_indexes = (await dataConversion(parameter, "number", evaluation)).map((value): s.number_idx.Insertable => {
+      const number_indexes = (await dataConversion(parameter, "number", evaluation)).map((value): s.r4_number_idx.Insertable => {
         if (typeof value !== "number")
           throw new OperationError(
             outcomeError(
@@ -256,7 +256,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
 
       await db
         .upsert(
-          "number_idx",
+          "r4_number_idx",
           number_indexes,
           db.constraint("number_idx_unique"),
           {
@@ -271,7 +271,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
       const string_indexes = (await dataConversion(parameter, "string", evaluation))
         .flat()
         .map(
-          (value): s.string_idx.Insertable => ({
+          (value): s.r4_string_idx.Insertable => ({
             tenant: ctx.tenant,
             r_id: resource.id,
             resource_type: resource.resourceType,
@@ -284,7 +284,7 @@ async function indexSearchParameter<CTX extends FHIRServerCTX>(
 
       await db
         .upsert(
-          "string_idx",
+          "r4_string_idx",
           string_indexes,
           db.constraint("string_idx_unique"),
           {
@@ -313,13 +313,13 @@ async function removeIndices(
   await Promise.all(
     param_types_supported.map((type) => {
       return db.sql<
-        | s.number_idx.SQL
-        | s.string_idx.SQL
-        | s.uri_idx.SQL
-        | s.date_idx.SQL
-        | s.token_idx.SQL
-        | s.reference_idx.SQL
-        | s.quantity_idx.SQL
+        | s.r4_number_idx.SQL
+        | s.r4_string_idx.SQL
+        | s.r4_uri_idx.SQL
+        | s.r4_date_idx.SQL
+        | s.r4_token_idx.SQL
+        | s.r4_reference_idx.SQL
+        | s.r4_quantity_idx.SQL
       >`DELETE FROM ${searchParameterToTableName(type)} WHERE ${{
         r_id: resource.id,
       }}`.run(client);
@@ -340,7 +340,7 @@ function resourceIsValidForIndexing(
   return true;
 }
 
-async function indexResource<CTX extends FHIRServerCTX>(
+async function indexR4Resource<CTX extends FHIRServerCTX>(
   client: db.Queryable,
   ctx: CTX,
   resource: Resource,
@@ -380,7 +380,7 @@ async function indexResource<CTX extends FHIRServerCTX>(
           ),
         );
       }
-      return indexSearchParameter(
+      return indexR4SearchParameter(
         client,
         ctx,
         searchParameter,
@@ -403,6 +403,7 @@ async function createResource<CTX extends FHIRServerCTX>(
       const ctx = { ...initCTX, db: client };
       const data: s.resources.Insertable = {
         tenant: ctx.tenant,
+        fhir_version: "r4",
         request_method: "POST",
         author: ctx.user.jwt.sub,
         resource: resource as unknown as db.JSONObject,
@@ -416,7 +417,7 @@ async function createResource<CTX extends FHIRServerCTX>(
     )}) RETURNING ${db.cols(resourceCol)}
     `.run(client);
 
-      await indexResource(client, ctx, res[0].resource as unknown as Resource);
+      await indexR4Resource(client, ctx, res[0].resource as unknown as Resource);
       return res[0].resource as unknown as Resource;
     },
   );
@@ -591,6 +592,7 @@ async function patchResource<CTX extends FHIRServerCTX>(
 
         const data: s.resources.Insertable = {
           tenant: ctx.tenant,
+          fhir_version: "r4",
           request_method: "PATCH",
           author: ctx.user.jwt.sub,
           resource: newResource as unknown as db.JSONObject,
@@ -607,7 +609,7 @@ async function patchResource<CTX extends FHIRServerCTX>(
 
         const patchedResource = res[0].resource as unknown as Resource;
 
-        await indexResource(client, ctx, patchedResource);
+        await indexR4Resource(client, ctx, patchedResource);
         return patchedResource;
       } catch (e) {
         if (e instanceof OperationError) throw e;
@@ -657,6 +659,7 @@ async function updateResource<CTX extends FHIRServerCTX>(
 
       const data: s.resources.Insertable = {
         tenant: ctx.tenant,
+        fhir_version: "r4",
         request_method: "PUT",
         author: ctx.user.jwt.sub,
         resource: resource as unknown as db.JSONObject,
@@ -673,7 +676,7 @@ async function updateResource<CTX extends FHIRServerCTX>(
         )}) RETURNING ${db.cols(resourceCol)}`.run(client);
 
       const updatedResource = res[0].resource as unknown as Resource;
-      await indexResource(client, ctx, updatedResource);
+      await indexR4Resource(client, ctx, updatedResource);
       return updatedResource;
     },
   );
@@ -702,6 +705,7 @@ async function deleteResource<CTX extends FHIRServerCTX>(
 
       const data: s.resources.Insertable = {
         tenant: ctx.tenant,
+        fhir_version: "r4",
         request_method: "DELETE",
         author: ctx.user.jwt.sub,
         resource: resource as unknown as db.JSONObject,

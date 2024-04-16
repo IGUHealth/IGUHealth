@@ -49,13 +49,13 @@ export function buildParameterSQL(
     case "reference":
     case "quantity": {
       return db.sql<
-        | s.number_idx.SQL
-        | s.string_idx.SQL
-        | s.uri_idx.SQL
-        | s.date_idx.SQL
-        | s.token_idx.SQL
-        | s.reference_idx.SQL
-        | s.quantity_idx.SQL
+        | s.r4_number_idx.SQL
+        | s.r4_string_idx.SQL
+        | s.r4_uri_idx.SQL
+        | s.r4_date_idx.SQL
+        | s.r4_token_idx.SQL
+        | s.r4_reference_idx.SQL
+        | s.r4_quantity_idx.SQL
       >`
       SELECT ${
         columns.length === 0

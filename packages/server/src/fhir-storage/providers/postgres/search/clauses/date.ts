@@ -10,7 +10,7 @@ export default function dateClauses(
   parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, unknown> {
   return db.conditions.or(
-    ...parameter.value.map((value): s.date_idx.Whereable => {
+    ...parameter.value.map((value): s.r4_date_idx.Whereable => {
       const formattedDate = dayjs(
         value,
         "YYYY-MM-DDThh:mm:ss+zz:zz",

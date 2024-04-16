@@ -10,7 +10,7 @@ export default function uriClauses(
 ): db.SQLFragment<boolean | null, unknown> {
   return db.conditions.or(
     ...parameter.value.map(
-      (value): s.uri_idx.Whereable => ({ value: value.toString() }),
+      (value): s.r4_uri_idx.Whereable => ({ value: value.toString() }),
     ),
   );
 }
