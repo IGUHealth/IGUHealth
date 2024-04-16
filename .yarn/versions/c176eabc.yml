@@ -8,7 +8,9 @@ releases:
   "@iguhealth/fhir-validation": patch
   "@iguhealth/fhirpath": patch
   "@iguhealth/generated-ops": patch
+  "@iguhealth/hl7.fhir.r4.core": patch
   "@iguhealth/hl7.fhir.r4b.core": patch
+  "@iguhealth/iguhealth.fhir.r4.core": patch
   "@iguhealth/meta-value": patch
   "@iguhealth/operation-execution": patch
   "@iguhealth/server": patch
