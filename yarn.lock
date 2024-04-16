@@ -8002,7 +8002,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@iguhealth/hl7.fhir.r4b.core@workspace:artifacts/r4b/hl7-core":
+"@iguhealth/hl7.fhir.r4b.core@workspace:^, @iguhealth/hl7.fhir.r4b.core@workspace:artifacts/r4b/hl7-core":
   version: 0.0.0-use.local
   resolution: "@iguhealth/hl7.fhir.r4b.core@workspace:artifacts/r4b/hl7-core"
   languageName: unknown
@@ -8103,6 +8103,7 @@ __metadata:
     "@iguhealth/fhirpath": "workspace:^"
     "@iguhealth/generated-ops": "workspace:^"
     "@iguhealth/hl7.fhir.r4.core": "workspace:^"
+    "@iguhealth/hl7.fhir.r4b.core": "workspace:^"
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^"
     "@iguhealth/jwt": "workspace:^"
     "@iguhealth/meta-value": "workspace:^"

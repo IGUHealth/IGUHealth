@@ -35,6 +35,7 @@
     "@iguhealth/fhirpath": "workspace:^",
     "@iguhealth/generated-ops": "workspace:^",
     "@iguhealth/hl7.fhir.r4.core": "workspace:^",
+    "@iguhealth/hl7.fhir.r4b.core": "workspace:^",
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^",
     "@iguhealth/jwt": "workspace:^",
     "@iguhealth/meta-value": "workspace:^",
