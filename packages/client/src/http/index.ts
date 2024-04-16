@@ -38,7 +38,7 @@ async function toHTTPRequest(
   method: string;
   body?: string;
 }> {
-  const headers: Record<string, any> = {
+  const headers: Record<string, string> = {
     "Content-Type": "application/json", //"application/fhir+json"
     ...state.headers,
   };
@@ -212,7 +212,7 @@ async function httpResponseToFHIRResponse(
       }
       throw new OperationError(outcomeError("exception", "Invalid level"));
     }
-    case "read-request":
+    case "read-request": {
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
       const resource = (await response.json()) as Resource;
@@ -223,8 +223,9 @@ async function httpResponseToFHIRResponse(
         id: request.id,
         body: resource,
       };
+    }
 
-    case "vread-request":
+    case "vread-request": {
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
       const vresource = (await response.json()) as Resource;
@@ -236,7 +237,8 @@ async function httpResponseToFHIRResponse(
         versionId: request.versionId,
         body: vresource,
       };
-    case "update-request":
+    }
+    case "update-request": {
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
       const uresource = (await response.json()) as Resource;
@@ -248,7 +250,8 @@ async function httpResponseToFHIRResponse(
         id: request.id,
         body: uresource,
       };
-    case "patch-request":
+    }
+    case "patch-request": {
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
       const presource = (await response.json()) as Resource;
@@ -259,14 +262,15 @@ async function httpResponseToFHIRResponse(
         id: request.id,
         body: presource,
       };
-
-    case "delete-request":
+    }
+    case "delete-request": {
       return {
         type: "delete-response",
         level: "instance",
         resourceType: request.resourceType,
         id: request.id,
       };
+    }
 
     case "history-request": {
       if (!response.body)
@@ -303,7 +307,7 @@ async function httpResponseToFHIRResponse(
       throw new OperationError(outcomeError("exception", "Invalid level"));
     }
 
-    case "create-request":
+    case "create-request": {
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
       const cresource = (await response.json()) as Resource;
@@ -313,6 +317,7 @@ async function httpResponseToFHIRResponse(
         resourceType: request.resourceType,
         body: cresource,
       };
+    }
 
     case "search-request": {
       if (!response.body)

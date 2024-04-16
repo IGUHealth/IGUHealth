@@ -12,9 +12,12 @@ import type { IOperation, OPMetadata } from "@iguhealth/operation-execution";
 import type { FHIRRequest, FHIRResponse } from "./types.js";
 import type { ParsedParameter } from "./url.js";
 
-export type FHIRClient<CTX> = FHIRClientAsync<CTX>;
+export const FHIR_VERSIONS_SUPPORTED = <const>["4.0", "4.3"];
+export type Versioned = { fhirVersion: typeof FHIR_VERSIONS_SUPPORTED[number] };
 
-export interface FHIRClientAsync<CTX> {
+export type FHIRClient<CTX extends Versioned> = FHIRClientAsync<CTX>;
+
+export interface FHIRClientAsync<CTX extends Versioned> {
   request(ctx: CTX, request: FHIRRequest): Promise<FHIRResponse>;
   capabilities(ctx: CTX): Promise<CapabilityStatement>;
   search_system(

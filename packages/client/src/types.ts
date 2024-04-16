@@ -10,6 +10,7 @@ import {
   unsignedInt,
 } from "@iguhealth/fhir-types/r4/types";
 
+import { FHIR_VERSIONS_SUPPORTED } from "./interface.js";
 import type { ParsedParameter } from "./url.js";
 
 export type REQUEST_METHOD = "PUT" | "POST" | "DELETE" | "PATCH";
@@ -50,20 +51,21 @@ type ResponseInteractionTypes = {
   invoke: "invoke-response";
 };
 
-export type InstanceInteraction = {
-  level: RequestLevel["instance"];
+type Request<level extends keyof RequestLevel> = {
+  fhirVersion: (typeof FHIR_VERSIONS_SUPPORTED)[number];
+  level: RequestLevel[level];
+};
+
+export interface InstanceInteraction extends Request<"instance"> {
   resourceType: ResourceType;
   id: id;
-};
+}
 
-export type TypeInteraction = {
-  level: RequestLevel["type"];
+export interface TypeInteraction extends Request<"type"> {
   resourceType: ResourceType;
-};
+}
 
-export type SystemInteraction = {
-  level: RequestLevel["system"];
-};
+export interface SystemInteraction extends Request<"system"> {}
 
 export type ReadRequest = InstanceInteraction & {
   type: RequestInteractionTypes["read"];

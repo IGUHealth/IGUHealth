@@ -11,13 +11,15 @@ import {
 import type { IOperation, OPMetadata } from "@iguhealth/operation-execution";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import type { FHIRClientAsync } from "./interface.js";
+import type { FHIRClientAsync, Versioned } from "./interface.js";
 import { MiddlewareAsync } from "./middleware/index.js";
 import type { FHIRRequest, FHIRResponse } from "./types.js";
 import type { ParsedParameter } from "./url.js";
 import { parseQuery } from "./url.js";
 
-export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
+export class AsynchronousClient<State, CTX extends Versioned>
+  implements FHIRClientAsync<CTX>
+{
   private state: State;
   private middleware: MiddlewareAsync<State, CTX>;
   constructor(initialState: State, middleware: MiddlewareAsync<State, CTX>) {
