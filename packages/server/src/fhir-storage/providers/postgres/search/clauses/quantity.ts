@@ -16,7 +16,7 @@ export default function quantityClauses(
   return db.conditions.or(
     ...parameter.value.map((value) => {
       const parts = splitParameter(value.toString(), "|");
-      const clauses: s.quantity_idx.Whereable = {};
+      const clauses: s.r4_quantity_idx.Whereable = {};
 
       if (parts.length === 4) {
         throw new OperationError(

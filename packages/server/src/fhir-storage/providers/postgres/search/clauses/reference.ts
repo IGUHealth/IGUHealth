@@ -17,7 +17,7 @@ function generateCanonicalReferenceSearch(
   ctx: FHIRServerCTX,
   parameter: SearchParameterResource,
 ): db.SQLFragment {
-  const where: s.uri_idx.Whereable = {
+  const where: s.r4_uri_idx.Whereable = {
     tenant: ctx.tenant,
     resource_type: db.sql`${db.self} in (${sqlUtils.paramsWithComma(
       parameter.searchParameter.target || [],
@@ -25,8 +25,8 @@ function generateCanonicalReferenceSearch(
     value: parameter.value[0].toString(),
   };
 
-  return db.sql<s.uri_idx.SQL>`
-    ( SELECT DISTINCT ON (${"r_id"}) ${"r_id"} FROM ${"uri_idx"} WHERE ${where} )`;
+  return db.sql<s.r4_uri_idx.SQL>`
+    ( SELECT DISTINCT ON (${"r_id"}) ${"r_id"} FROM ${"r4_uri_idx"} WHERE ${where} )`;
 }
 
 function isChainParameter(
@@ -106,7 +106,7 @@ function sqlParameterValue(
   parameter: SearchParameterResource,
   parameterValue: string | number,
 ) {
-  const canonicalSQL = db.sql<s.reference_idx.SQL>`${"reference_id"} in ${generateCanonicalReferenceSearch(
+  const canonicalSQL = db.sql<s.r4_reference_idx.SQL>`${"reference_id"} in ${generateCanonicalReferenceSearch(
     ctx,
     parameter,
   )}`;
@@ -115,22 +115,22 @@ function sqlParameterValue(
   const parts = referenceValue.split("/");
 
   if (parts.length === 1) {
-    const where: s.reference_idx.Whereable = {
+    const where: s.r4_reference_idx.Whereable = {
       reference_id: parts[0],
     };
     return db.conditions.or(
       canonicalSQL,
-      db.sql<s.reference_idx.SQL>`${where}`,
+      db.sql<s.r4_reference_idx.SQL>`${where}`,
     );
   } else if (parts.length === 2) {
-    const where: s.reference_idx.Whereable = {
+    const where: s.r4_reference_idx.Whereable = {
       reference_type: parts[0],
       reference_id: parts[1],
     };
 
     return db.conditions.or(
       canonicalSQL,
-      db.sql<s.reference_idx.SQL>`${where}`,
+      db.sql<s.r4_reference_idx.SQL>`${where}`,
     );
   } else {
     // In this case only perform a canonical search as could have passed a canonical url for the value.

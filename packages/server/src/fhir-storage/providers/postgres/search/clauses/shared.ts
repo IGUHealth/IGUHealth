@@ -7,16 +7,16 @@ import { FHIRServerCTX } from "../../../../../fhir-context/types.js";
 import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
 
 export type SEARCH_INDEX_WHEREABLE =
-  | s.date_idx.Whereable
-  | s.quantity_idx.Whereable
-  | s.reference_idx.Whereable
+  | s.r4_date_idx.Whereable
+  | s.r4_quantity_idx.Whereable
+  | s.r4_reference_idx.Whereable
   | SEARCH_INDEX_VALUE_BASED;
 
 export type SEARCH_INDEX_VALUE_BASED =
-  | s.string_idx.Whereable
-  | s.number_idx.Whereable
-  | s.token_idx.Whereable
-  | s.uri_idx.Whereable;
+  | s.r4_string_idx.Whereable
+  | s.r4_number_idx.Whereable
+  | s.r4_token_idx.Whereable
+  | s.r4_uri_idx.Whereable;
 
 export function missingModifier(
   _ctx: FHIRServerCTX,
@@ -52,7 +52,7 @@ export function missingModifier(
         }
 
         case "date": {
-          const where: s.date_idx.Whereable = {
+          const where: s.r4_date_idx.Whereable = {
             start_date: db.sql`${db.self} IS NOT NULL` as db.SQLFragment,
             end_date: db.sql`${db.self} IS NOT NULL` as db.SQLFragment,
           };
@@ -60,13 +60,13 @@ export function missingModifier(
         }
 
         case "reference": {
-          const where: s.reference_idx.Whereable = {
+          const where: s.r4_reference_idx.Whereable = {
             reference_id: db.sql`${db.self} IS NOT NULL` as db.SQLFragment,
           };
           return where;
         }
         case "quantity": {
-          const where: s.quantity_idx.Whereable = {
+          const where: s.r4_quantity_idx.Whereable = {
             start_value: db.sql`${db.self} IS NOT NULL` as db.SQLFragment,
           };
           return where;

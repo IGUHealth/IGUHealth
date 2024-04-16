@@ -56,36 +56,36 @@ export default function numberClauses(
         // the range of the search value fully contains the range of the target value
         case "eq":
         case undefined: {
-          return db.sql<s.number_idx.SQL>`
+          return db.sql<s.r4_number_idx.SQL>`
           (${"value"} - 0.5 * 10 ^ ${precision}) <= ${paramValue} AND
           (${"value"} + 0.5 * 10 ^ ${precision}) >= ${paramValue}`;
         }
 
         // 	the range of the search value does not fully contain the range of the target value
         case "ne": {
-          return db.sql<s.number_idx.SQL>`
+          return db.sql<s.r4_number_idx.SQL>`
           (${"value"} - 0.5 * 10 ^ ${precision}) > ${paramValue} OR
           (${"value"} + 0.5 * 10 ^ ${precision}) < ${paramValue}`;
         }
 
         // the range above the search value intersects (i.e. overlaps) with the range of the target value
         case "gt": {
-          return db.sql<s.number_idx.SQL>`(${"value"} - 0.5 * 10 ^ ${precision}) > ${paramValue}`;
+          return db.sql<s.r4_number_idx.SQL>`(${"value"} - 0.5 * 10 ^ ${precision}) > ${paramValue}`;
         }
         //	the value for the parameter in the resource is less than the provided value
         case "lt": {
           // Start at upperbound to exclude the intersection.
-          return db.sql<s.number_idx.SQL>`(${"value"} + 0.5 * 10 ^ ${precision}) < ${paramValue}`;
+          return db.sql<s.r4_number_idx.SQL>`(${"value"} + 0.5 * 10 ^ ${precision}) < ${paramValue}`;
         }
         // the range above the search value intersects (i.e. overlaps) with the range of the target value,
         // or the range of the search value fully contains the range of the target value
         case "ge": {
           // Perform search as GT but use >= and start on upperbound.
-          return db.sql<s.number_idx.SQL>`(${"value"} + 0.5 * 10 ^ ${precision}) >= ${paramValue}`;
+          return db.sql<s.r4_number_idx.SQL>`(${"value"} + 0.5 * 10 ^ ${precision}) >= ${paramValue}`;
         }
         case "le": {
           // Perform search as lt but use <= and start on lowerbound
-          return db.sql<s.number_idx.SQL>`(${"value"} - 0.5 * 10 ^ ${precision}) <= ${paramValue}`;
+          return db.sql<s.r4_number_idx.SQL>`(${"value"} - 0.5 * 10 ^ ${precision}) <= ${paramValue}`;
         }
         case "sa":
         case "eb":

@@ -149,11 +149,11 @@ async function processInclude(
 
         // Derive the id and type from the reference_idx table for the given param for the resources.
         const idResult = await db.sql<
-          s.reference_idx.SQL,
-          s.reference_idx.Selectable[]
+          s.r4_reference_idx.SQL,
+          s.r4_reference_idx.Selectable[]
         >`
         SELECT ${"reference_id"}, ${"reference_type"}
-        FROM ${"reference_idx"} 
+        FROM ${"r4_reference_idx"} 
         WHERE ${"r_id"} IN (${sqlUtils.paramsWithComma(ids)}) AND
         ${"parameter_url"} = ${db.param(
           includeParameterSearchParam.resources[0].url,

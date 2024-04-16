@@ -54,19 +54,19 @@ export function getDecimalPrecision(value: number): number {
 }
 
 type SearchTables =
-  | "date_idx"
-  | "number_idx"
-  | "quantity_idx"
-  | "reference_idx"
-  | "string_idx"
-  | "token_idx"
-  | "uri_idx";
+  | "r4_date_idx"
+  | "r4_number_idx"
+  | "r4_quantity_idx"
+  | "r4_reference_idx"
+  | "r4_string_idx"
+  | "r4_token_idx"
+  | "r4_uri_idx";
 
 export function searchParameterToTableName(
   searchparameter_type: SearchParameter["type"],
 ): SearchTables {
   if (param_types_supported.includes(searchparameter_type)) {
-    return `${searchparameter_type}_idx` as SearchTables;
+    return `r4_${searchparameter_type}_idx` as SearchTables;
   }
   throw new OperationError(
     outcomeError(
