@@ -9,7 +9,8 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "generate": "yarn node ../cli/lib/iguhealth.js generate types-artifacts --output=./src/r4 && yarn build",
+    "generate-r4": "yarn node ../cli/lib/iguhealth.js generate types-artifacts --version=4.0 --output=./src/r4 && yarn build",
+    "generate-r4b": "yarn node ../cli/lib/iguhealth.js generate types-artifacts --version=4.3 --output=./src/r4b && yarn build",
     "build": "tsc",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
@@ -20,8 +21,12 @@
   "exports": {
     "./lib/r4/types": "./lib/r4/types.js",
     "./lib/r4/sets": "./lib/r4/sets.js",
+    "./lib/r4b/types": "./lib/r4b/types.js",
+    "./lib/r4b/sets": "./lib/r4b/sets.js",
     "./r4/sets": "./lib/r4/sets.js",
-    "./r4/types": "./lib/r4/types.js"
+    "./r4/types": "./lib/r4/types.js",
+    "./r4b/sets": "./lib/r4b/sets.js",
+    "./r4b/types": "./lib/r4b/types.js"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",
