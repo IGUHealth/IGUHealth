@@ -59,6 +59,7 @@ export default function loadArtifacts<T extends ResourceType>({
 }: LoadArtifactOptions<T>): AResource<T>[] {
   const requirer = createRequire(packageLocation);
   const packageJSON: PackageJSON = requirer("./package.json");
+
   let deps = { ...packageJSON.dependencies };
   // https://jestjs.io/docs/environment-variables
   // JEST sets environment to test by default.
@@ -77,7 +78,11 @@ export default function loadArtifacts<T extends ResourceType>({
         if (onlyPackages && !onlyPackages.includes(d)) {
           return false;
         }
-        return !!depPackage.fhirVersions;
+
+        // Filter out for packages that contain a fhirVersion specified by parameter.
+        return depPackage.fhirVersions?.some((version: string) =>
+          version.startsWith(fhirVersion),
+        );
       } catch (e) {
         return false;
       }
