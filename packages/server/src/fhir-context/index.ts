@@ -325,7 +325,7 @@ async function createFHIRClient(sources: RouterState["sources"]) {
 export async function createFHIRServices(
   pool: pg.Pool,
 ): Promise<Omit<FHIRServerCTX, "tenant" | "user">> {
-  const memDBAsync = createArtifactMemoryDatabase(SPECIAL_TYPES.MEMORY)
+  const memDBAsync = createArtifactMemoryDatabase("4.0", SPECIAL_TYPES.MEMORY)
 
   const pgFHIR = createPostgresClient({
     transaction_entry_limit: parseInt(
