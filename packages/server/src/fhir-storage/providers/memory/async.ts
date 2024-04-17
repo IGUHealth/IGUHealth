@@ -1,21 +1,16 @@
 import { nanoid } from "nanoid";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
+import { loadArtifacts } from "@iguhealth/artifacts";
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
 import {
   MiddlewareAsync,
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
-import {
-  AResource,
-  Resource,
-  ResourceType,
-  SearchParameter,
-  StructureDefinition,
-  canonical,
-  id,
-  uri,
-} from "@iguhealth/fhir-types/r4/types";
+import * as r4 from "@iguhealth/fhir-types/r4/types";
+import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../fhir-context/types.js";
@@ -30,22 +25,22 @@ import { InternalData } from "./types.js";
 
 // Need special handling of SearchParameter to avoid infinite recursion.
 async function resolveParameter(
-  data: InternalData<ResourceType>,
-  resourceTypes: ResourceType[],
+  data: InternalData<r4.ResourceType>,
+  resourceTypes: r4.ResourceType[],
   name: string,
 ) {
   const params = Object.values(data?.["SearchParameter"] || {}).filter(
-    (p): p is SearchParameter =>
+    (p): p is r4.SearchParameter =>
       p?.resourceType === "SearchParameter" &&
       p?.name === name &&
-      p?.base?.some((b) => resourceTypes.includes(b as ResourceType)),
+      p?.base?.some((b) => resourceTypes.includes(b as r4.ResourceType)),
   );
 
   return params;
 }
 
 function checkSearchParameter(
-  searchParameter: SearchParameter,
+  searchParameter: r4.SearchParameter,
   resourceParameters: SearchParameterResource[],
 ) {
   for (const resourceParameter of resourceParameters) {
@@ -85,7 +80,7 @@ function checkSearchParameter(
 }
 
 function createMemoryMiddleware<
-  State extends { data: InternalData<ResourceType> },
+  State extends { data: InternalData<r4.ResourceType> },
   CTX extends FHIRServerCTX,
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
@@ -115,15 +110,17 @@ function createMemoryMiddleware<
             context.request.level === "type"
               ? (Object.values(
                   context.state.data[context.request.resourceType] || {},
-                ) as Resource[])
+                ) as r4.Resource[])
               : ((resourceTypes.length > 0
                   ? resourceTypes
                   : Object.keys(context.state.data)
                 )
                   .map((k) =>
-                    Object.values(context.state.data[k as ResourceType] || {}),
+                    Object.values(
+                      context.state.data[k as r4.ResourceType] || {},
+                    ),
                   )
-                  .flat() as Resource[]);
+                  .flat() as r4.Resource[]);
 
           let result = [];
           for (const resource of resourceSet || []) {
@@ -224,7 +221,7 @@ function createMemoryMiddleware<
         case "create-request": {
           const resource = context.request.body;
           const resources = context.state.data[context.request.resourceType];
-          if (!resource?.id) resource.id = nanoid() as id;
+          if (!resource?.id) resource.id = nanoid() as r4.id;
 
           context.state.data = {
             ...context.state.data,
@@ -279,47 +276,50 @@ function createMemoryMiddleware<
 }
 
 function createResolveCanonical(
-  data: InternalData<ResourceType>,
-): <T extends ResourceType>(type: T, url: string) => AResource<T> | undefined {
-  const map = new Map<ResourceType, Map<string, string>>();
+  data: InternalData<r4.ResourceType>,
+): <T extends r4.ResourceType>(
+  type: T,
+  url: string,
+) => r4.AResource<T> | undefined {
+  const map = new Map<r4.ResourceType, Map<string, string>>();
   for (const resourceType of Object.keys(data)) {
     for (const resource of Object.values(
-      data[resourceType as ResourceType] ?? {},
+      data[resourceType as r4.ResourceType] ?? {},
     )) {
       if ((resource as { url: string })?.url) {
-        if (!map.has(resourceType as ResourceType)) {
-          map.set(resourceType as ResourceType, new Map());
+        if (!map.has(resourceType as r4.ResourceType)) {
+          map.set(resourceType as r4.ResourceType, new Map());
         }
         const url = (resource as { url: string }).url;
         const id = resource?.id;
-        if (!map.get(resourceType as ResourceType)?.has(url) && id) {
-          map.get(resourceType as ResourceType)?.set(url, id);
+        if (!map.get(resourceType as r4.ResourceType)?.has(url) && id) {
+          map.get(resourceType as r4.ResourceType)?.set(url, id);
         }
       }
     }
   }
 
-  return <T extends ResourceType>(type: T, url: string) => {
+  return <T extends r4.ResourceType>(type: T, url: string) => {
     const id = map.get(type)?.get(url);
-    return id ? (data[type]?.[id as id] as AResource<T>) : undefined;
+    return id ? (data[type]?.[id as r4.id] as r4.AResource<T>) : undefined;
   };
 }
 
 function createResolveTypeToCanonical(
-  data: InternalData<ResourceType>,
-): (type: uri) => canonical | undefined {
-  const map = new Map<uri, canonical>();
-  const sds: Record<id, StructureDefinition | undefined> = data[
+  data: InternalData<r4.ResourceType>,
+): (type: r4.uri) => r4.canonical | undefined {
+  const map = new Map<r4.uri, r4.canonical>();
+  const sds: Record<r4.id, r4.StructureDefinition | undefined> = data[
     "StructureDefinition"
-  ] as Record<id, StructureDefinition | undefined>;
+  ] as Record<r4.id, r4.StructureDefinition | undefined>;
 
   for (const resource of Object.values(sds || {})) {
     if (resource?.type && resource?.url) {
-      map.set(resource.type, resource.url as canonical);
+      map.set(resource.type, resource.url as r4.canonical);
     }
   }
 
-  return (type: uri) => {
+  return (type: r4.uri) => {
     return map.get(type);
   };
 }
@@ -353,9 +353,9 @@ class Memory<CTX extends FHIRServerCTX> implements MemoryClientInterface<CTX> {
   public resolveCanonical: MemoryClientInterface<CTX>["resolveCanonical"];
   public resolveTypeToCanonical: MemoryClientInterface<CTX>["resolveTypeToCanonical"];
 
-  constructor(data: InternalData<ResourceType>) {
+  constructor(data: InternalData<r4.ResourceType>) {
     const client = new AsynchronousClient<
-      { data: InternalData<ResourceType> },
+      { data: InternalData<r4.ResourceType> },
       CTX
     >({ data: data }, createMemoryMiddleware());
 
@@ -389,8 +389,38 @@ class Memory<CTX extends FHIRServerCTX> implements MemoryClientInterface<CTX> {
   }
 }
 
-export default function MemoryDatabase<CTX extends FHIRServerCTX>(
-  data: InternalData<ResourceType>,
+export default function createMemoryDatabaseFromData<CTX extends FHIRServerCTX>(
+  data: InternalData<r4.ResourceType>,
 ): Memory<CTX> {
   return new Memory(data);
+}
+
+export function createArtifactMemoryDatabase<CTX extends FHIRServerCTX>(
+  fhirVersion: "4.0",
+  resourceTypes: r4.ResourceType[],
+): Memory<CTX> {
+  const artifactResources: r4.Resource[] = resourceTypes
+    .map((resourceType) =>
+      loadArtifacts({
+        fhirVersion: fhirVersion,
+        resourceType,
+        packageLocation: path.join(
+          fileURLToPath(import.meta.url),
+          "../../../../../",
+        ),
+      }),
+    )
+    .flat();
+  let data: InternalData<r4.ResourceType> = {};
+  for (const resource of artifactResources) {
+    data = {
+      ...data,
+      [resource.resourceType]: {
+        ...data[resource.resourceType],
+        [resource.id as r4.id]: resource,
+      },
+    };
+  }
+
+  return createMemoryDatabaseFromData(data);
 }

@@ -2,12 +2,9 @@ import Router from "@koa/router";
 import Ajv from "ajv";
 import { Redis } from "ioredis";
 import type * as koa from "koa";
-import path from "path";
 import pg from "pg";
 import { pino } from "pino";
-import { fileURLToPath } from "url";
 
-import { loadArtifacts } from "@iguhealth/artifacts";
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClientAsync } from "@iguhealth/client/interface";
 import {
@@ -19,14 +16,13 @@ import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
   CapabilityStatement,
   CapabilityStatementRestResource,
-  Resource,
   ResourceType,
   StructureDefinition,
   code,
-  id,
 } from "@iguhealth/fhir-types/r4/types";
+import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
-import {TenantId} from "@iguhealth/jwt"
+
 import { associateUserMiddleware } from "../authZ/middleware/associateUser.js";
 import { createAuthorizationMiddleWare } from "../authZ/middleware/authorization.js";
 import RedisCache from "../cache/providers/redis.js";
@@ -49,15 +45,13 @@ import {
   AUTH_RESOURCETYPES,
   createAuthStorageClient,
 } from "../fhir-storage/providers/auth-storage/index.js";
-import MemoryDatabaseAsync from "../fhir-storage/providers/memory/async.js";
-import { InternalData } from "../fhir-storage/providers/memory/types.js";
+import { createArtifactMemoryDatabase } from "../fhir-storage/providers/memory/async.js";
 import { createPostgresClient } from "../fhir-storage/providers/postgres/index.js";
 import RouterClient from "../fhir-storage/router.js";
 import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
 import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with { type: "json" };
 import RedisLock from "../synchronization/redis.lock.js";
-
-import { FHIRServerCTX, KoaContext,  asSystemCTX } from "./types.js";
+import { FHIRServerCTX, KoaContext, asSystemCTX } from "./types.js";
 
 const SPECIAL_TYPES: { MEMORY: ResourceType[]; AUTH: ResourceType[] } = {
   AUTH: AUTH_RESOURCETYPES,
@@ -67,31 +61,6 @@ const ALL_SPECIAL_TYPES = Object.values(SPECIAL_TYPES).flatMap((v) => v);
 const DB_TYPES: ResourceType[] = ([...resourceTypes] as ResourceType[]).filter(
   (type) => ALL_SPECIAL_TYPES.indexOf(type) === -1,
 );
-
-export function createMemoryData(
-  resourceTypes: ResourceType[],
-): InternalData<ResourceType> { 
-  const artifactResources: Resource[] = resourceTypes
-    .map((resourceType) =>
-      loadArtifacts({
-        resourceType,
-        packageLocation: path.join(fileURLToPath(import.meta.url), "../../../"),
-      }),
-    )
-    .flat();
-  let data: InternalData<ResourceType> = {};
-  for (const resource of artifactResources) {
-    data = {
-      ...data,
-      [resource.resourceType]: {
-        ...data[resource.resourceType],
-        [resource.id as id]: resource,
-      },
-    };
-  }
-
-  return data;
-}
 
 async function createResourceRestCapabilities(
   ctx: Partial<FHIRServerCTX>,
@@ -314,8 +283,6 @@ const encryptionMiddleware: (
     }
   };
 
-
-
 let _redis_client: Redis | undefined = undefined;
 /**
  * Returns instantiated Redis client based on environment variables.
@@ -358,9 +325,8 @@ async function createFHIRClient(sources: RouterState["sources"]) {
 export async function createFHIRServices(
   pool: pg.Pool,
 ): Promise<Omit<FHIRServerCTX, "tenant" | "user">> {
-  const data = createMemoryData(SPECIAL_TYPES.MEMORY);
-  const memDBAsync = MemoryDatabaseAsync(data);
-  
+  const memDBAsync = createArtifactMemoryDatabase("4.0", SPECIAL_TYPES.MEMORY)
+
   const pgFHIR = createPostgresClient({
     transaction_entry_limit: parseInt(
       process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
@@ -384,7 +350,6 @@ export async function createFHIRServices(
     LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
   });
 
-
   const redis = getRedisClient();
   const terminologyProvider = new TerminologyProviderMemory();
   const encryptionProvider =
@@ -405,7 +370,10 @@ export async function createFHIRServices(
   const cache = new RedisCache(redis);
 
   const capabilities = await serverCapabilities(
-    { resolveCanonical: memDBAsync.resolveCanonical, resolveTypeToCanonical: memDBAsync.resolveTypeToCanonical },
+    {
+      resolveCanonical: memDBAsync.resolveCanonical,
+      resolveTypeToCanonical: memDBAsync.resolveTypeToCanonical,
+    },
     memDBAsync,
   );
   const client = await createFHIRClient([
@@ -452,7 +420,7 @@ export async function createFHIRServices(
         "delete-request",
         "history-request",
         "transaction-request",
-        "batch-request"
+        "batch-request",
       ],
       source: pgFHIR,
     },
