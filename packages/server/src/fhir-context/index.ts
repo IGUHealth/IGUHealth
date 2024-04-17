@@ -260,6 +260,7 @@ const capabilitiesMiddleware: MiddlewareAsyncChain<
     return {
       ...context,
       response: {
+        fhirVersion: "4.0",
         level: "system",
         type: "capabilities-response",
         body: context.ctx.capabilities,

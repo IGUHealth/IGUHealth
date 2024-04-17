@@ -26,6 +26,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   }
   async capabilities(ctx: CTX): Promise<CapabilityStatement> {
     const response = await this.request(ctx, {
+      fhirVersion: "4.0",
       type: "capabilities-request",
       level: "system",
     });
@@ -44,6 +45,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     input: OPMetadata<Op>["Input"],
   ): Promise<OPMetadata<Op>["Output"]> {
     const response = await this.request(ctx, {
+      fhirVersion: "4.0",
       type: "invoke-request",
       level: "system",
       operation: op.code,
@@ -63,6 +65,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     input: OPMetadata<Op>["Input"],
   ): Promise<OPMetadata<Op>["Output"]> {
     const response = await this.request(ctx, {
+      fhirVersion: "4.0",
       type: "invoke-request",
       level: "type",
       operation: op.code,
@@ -85,6 +88,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     input: OPMetadata<Op>["Input"],
   ): Promise<OPMetadata<Op>["Output"]> {
     const response = await this.request(ctx, {
+      fhirVersion: "4.0",
       type: "invoke-request",
       level: "instance",
       operation: op.code,
@@ -106,6 +110,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
         ? parseQuery(parameters)
         : parameters;
     const response = await this.request(ctx, {
+      fhirVersion: "4.0",
       type: "search-request",
       level: "system",
       parameters: parsedParameters,
@@ -124,6 +129,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
         ? parseQuery(parameters)
         : parameters;
     const response = await this.request(ctx, {
+      fhirVersion: "4.0",
       type: "search-request",
       level: "type",
       resourceType: resourceType,
@@ -142,6 +148,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     allowIdSet = false,
   ): Promise<T> {
     const response = await this.request(ctx, {
+      fhirVersion: "4.0",
       type: "create-request",
       level: "type",
       resourceType: resource.resourceType,
@@ -161,6 +168,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     if (resource.id === undefined)
       throw new Error("Cannot update resource without id");
     const response = await this.request(ctx, {
+      fhirVersion: "4.0",
       type: "update-request",
       level: "instance",
       resourceType,
@@ -179,6 +187,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     patches: any,
   ): Promise<AResource<T>> {
     const response = await this.request(ctx, {
+      fhirVersion: "4.0",
       type: "patch-request",
       level: "instance",
       resourceType: resourceType,
@@ -195,6 +204,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     id: id,
   ): Promise<AResource<T> | undefined> {
     const response = await this.request(ctx, {
+      fhirVersion: "4.0",
       type: "read-request",
       level: "instance",
       resourceType: resourceType,
@@ -211,6 +221,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     versionId: id,
   ): Promise<AResource<T>> {
     const response = await this.request(ctx, {
+      fhirVersion: "4.0",
       type: "vread-request",
       level: "instance",
       resourceType: resourceType,
@@ -223,6 +234,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   }
   async delete<T extends ResourceType>(ctx: CTX, resourceType: T, id: id) {
     const response = await this.request(ctx, {
+      fhirVersion: "4.0",
       type: "delete-request",
       level: "instance",
       resourceType: resourceType,
@@ -243,6 +255,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
           : [];
 
     const response = await this.request(ctx, {
+      fhirVersion: "4.0",
       type: "history-request",
       level: "system",
       parameters: parsedParameters,
@@ -263,6 +276,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
           ? parameters
           : [];
     const response = await this.request(ctx, {
+      fhirVersion: "4.0",
       type: "history-request",
       level: "type",
       resourceType: resourceType,
@@ -285,6 +299,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
           ? parameters
           : [];
     const response = await this.request(ctx, {
+      fhirVersion: "4.0",
       type: "history-request",
       level: "instance",
       resourceType: resourceType,
@@ -301,6 +316,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
         outcomeError("invalid", "Bundle must be of type 'transaction'"),
       );
     const response = await this.request(ctx, {
+      fhirVersion: "4.0",
       type: "transaction-request",
       level: "system",
       body: bundle,
@@ -318,6 +334,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
         outcomeError("invalid", "Bundle must be of type 'batch'"),
       );
     const response = await this.request(ctx, {
+      fhirVersion: "4.0",
       type: "batch-request",
       level: "system",
       body: bundle,

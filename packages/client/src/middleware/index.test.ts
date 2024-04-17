@@ -23,6 +23,7 @@ test("Test middleware Async", async () => {
       return {
         ...context,
         response: {
+          fhirVersion: "4.0",
           parameters: (context.request as any).parameters
             ? ((context.request as any).parameters as ParsedParameter<
                 string | number
@@ -38,6 +39,7 @@ test("Test middleware Async", async () => {
       return {
         ...context,
         response: {
+          fhirVersion: "4.0",
           parameters: (context.request as any).parameters
             ? ((context.request as any).parameters as ParsedParameter<
                 string | number
@@ -58,6 +60,7 @@ test("Test middleware Async", async () => {
     request: {},
     ctx: {},
     response: {
+      fhirVersion: "4.0",
       parameters: [],
       type: "search-response",
       level: "system",

@@ -748,6 +748,7 @@ function createPostgresMiddleware<
             ctx: context.ctx,
             request: context.request,
             response: {
+              fhirVersion: "4.0",
               level: "instance",
               type: "read-response",
               resourceType: context.request.resourceType,
@@ -769,6 +770,7 @@ function createPostgresMiddleware<
                 state: context.state,
                 ctx: context.ctx,
                 response: {
+                  fhirVersion: "4.0",
                   type: "search-response",
                   parameters: context.request.parameters,
                   level: "system",
@@ -783,6 +785,7 @@ function createPostgresMiddleware<
                 state: context.state,
                 ctx: context.ctx,
                 response: {
+                  fhirVersion: "4.0",
                   type: "search-response",
                   parameters: context.request.parameters,
                   level: "type",
@@ -815,6 +818,7 @@ function createPostgresMiddleware<
             state: context.state,
             ctx: context.ctx,
             response: {
+              fhirVersion: "4.0",
               level: "type",
               resourceType: context.request.resourceType,
               type: "create-response",
@@ -837,6 +841,7 @@ function createPostgresMiddleware<
             state: context.state,
             ctx: context.ctx,
             response: {
+              fhirVersion: "4.0",
               level: "instance",
               resourceType: context.request.resourceType,
               id: context.request.id,
@@ -862,6 +867,7 @@ function createPostgresMiddleware<
             state: context.state,
             ctx: context.ctx,
             response: {
+              fhirVersion: "4.0",
               level: "instance",
               resourceType: context.request.resourceType,
               id: context.request.id,
@@ -883,6 +889,7 @@ function createPostgresMiddleware<
             state: context.state,
             ctx: context.ctx,
             response: {
+              fhirVersion: "4.0",
               type: "delete-response",
               level: "instance",
               resourceType: context.request.resourceType,
@@ -906,6 +913,7 @@ function createPostgresMiddleware<
                 state: context.state,
                 ctx: context.ctx,
                 response: {
+                  fhirVersion: "4.0",
                   type: "history-response",
                   level: "instance",
                   resourceType: context.request.resourceType,
@@ -920,6 +928,7 @@ function createPostgresMiddleware<
                 state: context.state,
                 ctx: context.ctx,
                 response: {
+                  fhirVersion: "4.0",
                   type: "history-response",
                   level: "type",
                   resourceType: context.request.resourceType,
@@ -933,6 +942,7 @@ function createPostgresMiddleware<
                 state: context.state,
                 ctx: context.ctx,
                 response: {
+                  fhirVersion: "4.0",
                   type: "history-response",
                   level: "system",
                   body: history,
@@ -1054,6 +1064,7 @@ function createPostgresMiddleware<
                 ctx: context.ctx,
                 request: context.request,
                 response: {
+                  fhirVersion: "4.0",
                   type: "transaction-response",
                   level: "system",
                   body: transactionResponse,

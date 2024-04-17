@@ -106,6 +106,7 @@ function parseRequest1Empty(
         );
       }
       return {
+        fhirVersion: "4.0",
         type:
           request.body.type === "transaction"
             ? "transaction-request"
@@ -116,6 +117,7 @@ function parseRequest1Empty(
     }
     case "GET": {
       return {
+        fhirVersion: "4.0",
         type: "search-request",
         level: "system",
         parameters: parseUrl(request.url),
@@ -150,6 +152,7 @@ function parseRequest1NonEmpty(
       switch (request.method) {
         case "POST": {
           return {
+            fhirVersion: "4.0",
             type: "invoke-request",
             level: "system",
             operation: urlPieces[0].slice(1) as code,
@@ -180,6 +183,7 @@ function parseRequest1NonEmpty(
       }
       if (verifyResourceType(urlPieces[0])) {
         return {
+          fhirVersion: "4.0",
           type: "create-request",
           level: "type",
           resourceType: urlPieces[0],
@@ -194,12 +198,14 @@ function parseRequest1NonEmpty(
       switch (true) {
         case urlPieces[0] === "metadata": {
           return {
+            fhirVersion: "4.0",
             type: "capabilities-request",
             level: "system",
           };
         }
         case urlPieces[0] === "_history": {
           return {
+            fhirVersion: "4.0",
             type: "history-request",
             level: "system",
             parameters: parseUrl(request.url),
@@ -210,6 +216,7 @@ function parseRequest1NonEmpty(
           const resourceType = urlPieces[0].split("?")[0];
           if (verifyResourceType(resourceType)) {
             return {
+              fhirVersion: "4.0",
               type: "search-request",
               level: "type",
               resourceType,
@@ -252,6 +259,7 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
         switch (request.method) {
           case "POST": {
             return {
+              fhirVersion: "4.0",
               type: "invoke-request",
               level: "type",
               resourceType: urlPieces[0],
@@ -295,6 +303,7 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
         switch (true) {
           case urlPieces[1] === "_history": {
             return {
+              fhirVersion: "4.0",
               type: "history-request",
               level: "type",
               resourceType: urlPieces[0],
@@ -303,6 +312,7 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
           }
           case resourceTypes.has(urlPieces[0]): {
             return {
+              fhirVersion: "4.0",
               type: "read-request",
               level: "instance",
               resourceType: urlPieces[0],
@@ -318,6 +328,7 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
       }
       case request.method === "PUT": {
         return {
+          fhirVersion: "4.0",
           type: "update-request",
           level: "instance",
           resourceType: urlPieces[0],
@@ -327,6 +338,7 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
       }
       case request.method === "PATCH": {
         return {
+          fhirVersion: "4.0",
           type: "patch-request",
           level: "instance",
           resourceType: urlPieces[0],
@@ -336,6 +348,7 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
       }
       case request.method === "DELETE": {
         return {
+          fhirVersion: "4.0",
           type: "delete-request",
           level: "instance",
           resourceType: urlPieces[0],
@@ -362,6 +375,7 @@ function parseRequest3(urlPieces: string[], request: HTTPRequest): FHIRRequest {
         switch (request.method) {
           case "POST": {
             return {
+              fhirVersion: "4.0",
               type: "invoke-request",
               level: "instance",
               resourceType: urlPieces[0],
@@ -391,6 +405,7 @@ function parseRequest3(urlPieces: string[], request: HTTPRequest): FHIRRequest {
       case request.method === "GET": {
         if (urlPieces[2] === "_history") {
           return {
+            fhirVersion: "4.0",
             type: "history-request",
             level: "instance",
             resourceType: urlPieces[0],
@@ -415,6 +430,7 @@ function parseRequest4(
 ): FHIRRequest {
   if (verifyResourceType(urlPieces[0]) && urlPieces[2] === "_history") {
     return {
+      fhirVersion: "4.0",
       type: "vread-request",
       level: "instance",
       resourceType: urlPieces[0],

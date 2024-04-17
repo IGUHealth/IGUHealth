@@ -32,6 +32,7 @@ function createExecutor(): MiddlewareAsync<
               return {
                 ...context,
                 response: {
+                  fhirVersion: "4.0",
                   type: "invoke-response",
                   level: "system",
                   operation: context.request.operation,

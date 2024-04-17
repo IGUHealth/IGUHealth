@@ -184,6 +184,7 @@ async function httpResponseToFHIRResponse(
       switch (request.level) {
         case "system": {
           return {
+            fhirVersion: "4.0",
             type: "invoke-response",
             operation: request.operation,
             level: "system",
@@ -192,6 +193,7 @@ async function httpResponseToFHIRResponse(
         }
         case "type": {
           return {
+            fhirVersion: "4.0",
             type: "invoke-response",
             operation: request.operation,
             level: "type",
@@ -201,6 +203,7 @@ async function httpResponseToFHIRResponse(
         }
         case "instance": {
           return {
+            fhirVersion: "4.0",
             type: "invoke-response",
             operation: request.operation,
             level: "instance",
@@ -212,23 +215,26 @@ async function httpResponseToFHIRResponse(
       }
       throw new OperationError(outcomeError("exception", "Invalid level"));
     }
-    case "read-request":
+    case "read-request": {
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
       const resource = (await response.json()) as Resource;
       return {
+        fhirVersion: "4.0",
         level: "instance",
         type: "read-response",
         resourceType: request.resourceType,
         id: request.id,
         body: resource,
       };
+    }
 
-    case "vread-request":
+    case "vread-request": {
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
       const vresource = (await response.json()) as Resource;
       return {
+        fhirVersion: "4.0",
         level: "instance",
         type: "vread-response",
         resourceType: request.resourceType,
@@ -236,37 +242,44 @@ async function httpResponseToFHIRResponse(
         versionId: request.versionId,
         body: vresource,
       };
-    case "update-request":
+    }
+    case "update-request": {
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
       const uresource = (await response.json()) as Resource;
 
       return {
+        fhirVersion: "4.0",
         type: "update-response",
         level: "instance",
         resourceType: request.resourceType,
         id: request.id,
         body: uresource,
       };
-    case "patch-request":
+    }
+    case "patch-request": {
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
       const presource = (await response.json()) as Resource;
       return {
+        fhirVersion: "4.0",
         type: "patch-response",
         level: "instance",
         resourceType: request.resourceType,
         id: request.id,
         body: presource,
       };
+    }
 
-    case "delete-request":
+    case "delete-request": {
       return {
+        fhirVersion: "4.0",
         type: "delete-response",
         level: "instance",
         resourceType: request.resourceType,
         id: request.id,
       };
+    }
 
     case "history-request": {
       if (!response.body)
@@ -277,6 +290,7 @@ async function httpResponseToFHIRResponse(
       switch (request.level) {
         case "system": {
           return {
+            fhirVersion: "4.0",
             type: "history-response",
             level: "system",
             body: resources,
@@ -284,6 +298,7 @@ async function httpResponseToFHIRResponse(
         }
         case "type": {
           return {
+            fhirVersion: "4.0",
             type: "history-response",
             level: "type",
             resourceType: request.resourceType,
@@ -292,6 +307,7 @@ async function httpResponseToFHIRResponse(
         }
         case "instance": {
           return {
+            fhirVersion: "4.0",
             type: "history-response",
             level: "instance",
             resourceType: request.resourceType,
@@ -303,16 +319,18 @@ async function httpResponseToFHIRResponse(
       throw new OperationError(outcomeError("exception", "Invalid level"));
     }
 
-    case "create-request":
+    case "create-request": {
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
-      const cresource = (await response.json()) as Resource;
+      const resource = (await response.json()) as Resource;
       return {
+        fhirVersion: "4.0",
         type: "create-response",
         level: "type",
         resourceType: request.resourceType,
-        body: cresource,
+        body: resource,
       };
+    }
 
     case "search-request": {
       if (!response.body)
@@ -325,6 +343,7 @@ async function httpResponseToFHIRResponse(
       switch (request.level) {
         case "system": {
           return {
+            fhirVersion: "4.0",
             type: "search-response",
             level: "system",
             parameters: request.parameters,
@@ -334,6 +353,7 @@ async function httpResponseToFHIRResponse(
         }
         case "type": {
           return {
+            fhirVersion: "4.0",
             type: "search-response",
             level: "type",
             parameters: request.parameters,
@@ -351,6 +371,7 @@ async function httpResponseToFHIRResponse(
         throw new OperationError(outcomeError("exception", "No response body"));
       const capabilities = (await response.json()) as CapabilityStatement;
       return {
+        fhirVersion: "4.0",
         level: "system",
         type: "capabilities-response",
         body: capabilities,
@@ -362,6 +383,7 @@ async function httpResponseToFHIRResponse(
         throw new OperationError(outcomeError("exception", "No response body"));
       const batch = (await response.json()) as Bundle;
       return {
+        fhirVersion: "4.0",
         type: "batch-response",
         level: "system",
         body: batch,
@@ -373,6 +395,7 @@ async function httpResponseToFHIRResponse(
         throw new OperationError(outcomeError("exception", "No response body"));
       const transaction = (await response.json()) as Bundle;
       return {
+        fhirVersion: "4.0",
         type: "transaction-response",
         level: "system",
         body: transaction,
