@@ -1,34 +1,32 @@
 import {
   AResource,
+  Bundle,
+  BundleEntry,
+  CapabilityStatement,
   Parameters,
   Resource,
+  ResourceType,
   id,
 } from "@iguhealth/fhir-types/r4/types";
 import type { IOperation, OPMetadata } from "@iguhealth/operation-execution";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRClientAsync, Versioned } from "./interface.js";
+import type { FHIRClientAsync } from "./interface.js";
 import { MiddlewareAsync } from "./middleware/index.js";
 import type { FHIRRequest, FHIRResponse } from "./types.js";
 import type { ParsedParameter } from "./url.js";
 import { parseQuery } from "./url.js";
-import { VERSIONED_FHIR, VersionedResourceType } from "./version.js";
 
-export class AsynchronousClient<State, CTX extends Versioned>
-  implements FHIRClientAsync<CTX>
-{
+export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   private state: State;
   private middleware: MiddlewareAsync<State, CTX>;
   constructor(initialState: State, middleware: MiddlewareAsync<State, CTX>) {
     this.state = initialState;
     this.middleware = middleware;
   }
-
-  async capabilities<Context extends CTX>(
-    ctx: Context,
-  ): Promise<VERSIONED_FHIR[Context["fhirVersion"]]["CapabilityStatement"]> {
+  async capabilities(ctx: CTX): Promise<CapabilityStatement> {
     const response = await this.request(ctx, {
-      fhirVersion: ctx.fhirVersion,
+      fhirVersion: "4.0",
       type: "capabilities-request",
       level: "system",
     });
@@ -41,13 +39,13 @@ export class AsynchronousClient<State, CTX extends Versioned>
     if (!res.response) throw new Error("No Response was returned.");
     return res.response;
   }
-  async invoke_system<Op extends IOperation<any, any>>(
+  async invoke_system<Op extends IOperation<unknown, unknown>>(
     op: Op,
     ctx: CTX,
     input: OPMetadata<Op>["Input"],
   ): Promise<OPMetadata<Op>["Output"]> {
     const response = await this.request(ctx, {
-      fhirVersion: ctx.fhirVersion,
+      fhirVersion: "4.0",
       type: "invoke-request",
       level: "system",
       operation: op.code,
@@ -58,17 +56,16 @@ export class AsynchronousClient<State, CTX extends Versioned>
     return op.parseToObject("out", response.body);
   }
   async invoke_type<
-    Context extends CTX,
-    Op extends IOperation<any, any>,
-    T extends VersionedResourceType<Context["fhirVersion"]>,
+    Op extends IOperation<unknown, unknown>,
+    T extends ResourceType,
   >(
     op: Op,
-    ctx: Context,
+    ctx: CTX,
     resourceType: T,
     input: OPMetadata<Op>["Input"],
   ): Promise<OPMetadata<Op>["Output"]> {
     const response = await this.request(ctx, {
-      fhirVersion: ctx.fhirVersion,
+      fhirVersion: "4.0",
       type: "invoke-request",
       level: "type",
       operation: op.code,
@@ -81,18 +78,17 @@ export class AsynchronousClient<State, CTX extends Versioned>
   }
 
   async invoke_instance<
-    Context extends CTX,
-    Op extends IOperation<any, any>,
-    T extends VersionedResourceType<Context["fhirVersion"]>,
+    Op extends IOperation<unknown, unknown>,
+    T extends ResourceType,
   >(
     op: Op,
-    ctx: Context,
+    ctx: CTX,
     resourceType: T,
-    id: VERSIONED_FHIR[Context["fhirVersion"]]["id"],
+    id: id,
     input: OPMetadata<Op>["Input"],
   ): Promise<OPMetadata<Op>["Output"]> {
     const response = await this.request(ctx, {
-      fhirVersion: ctx.fhirVersion,
+      fhirVersion: "4.0",
       type: "invoke-request",
       level: "instance",
       operation: op.code,
@@ -114,7 +110,7 @@ export class AsynchronousClient<State, CTX extends Versioned>
         ? parseQuery(parameters)
         : parameters;
     const response = await this.request(ctx, {
-      fhirVersion: ctx.fhirVersion,
+      fhirVersion: "4.0",
       type: "search-request",
       level: "system",
       parameters: parsedParameters,
@@ -123,26 +119,20 @@ export class AsynchronousClient<State, CTX extends Versioned>
       throw new Error("Unexpected response type");
     return { total: response.total, resources: response.body };
   }
-  async search_type<
-    Context extends CTX,
-    T extends VersionedResourceType<Context["fhirVersion"]>,
-  >(
-    ctx: Context,
-    type: T,
-    parameters: ParsedParameter<string | number>[] | string,
-  ): Promise<{
-    total?: number;
-    resources: VersionedAResource<Context["fhirVersion"], T>;
-  }> {
+  async search_type<T extends ResourceType>(
+    ctx: CTX,
+    resourceType: T,
+    parameters?: ParsedParameter<string | number>[] | string,
+  ): Promise<{ total?: number; resources: AResource<T>[] }> {
     const parsedParameters: ParsedParameter<string | number>[] =
       typeof parameters === "string" || parameters === undefined
         ? parseQuery(parameters)
         : parameters;
     const response = await this.request(ctx, {
-      fhirVersion: ctx.fhirVersion,
+      fhirVersion: "4.0",
       type: "search-request",
       level: "type",
-      resourceType: type,
+      resourceType: resourceType,
       parameters: parsedParameters,
     });
     if (response.type !== "search-response")
@@ -152,11 +142,13 @@ export class AsynchronousClient<State, CTX extends Versioned>
       resources: response.body as AResource<T>[],
     };
   }
-  async create<
-    Context extends CTX,
-    T extends VERSIONED_FHIR[Context["fhirVersion"]]["Resource"],
-  >(ctx: CTX, resource: T, allowIdSet?: boolean): Promise<T> {
+  async create<T extends Resource>(
+    ctx: CTX,
+    resource: T,
+    allowIdSet = false,
+  ): Promise<T> {
     const response = await this.request(ctx, {
+      fhirVersion: "4.0",
       type: "create-request",
       level: "type",
       resourceType: resource.resourceType,
@@ -167,19 +159,16 @@ export class AsynchronousClient<State, CTX extends Versioned>
       throw new Error("Unexpected response type");
     return response.body as T;
   }
-  async update<
-    Context extends CTX,
-    T extends VersionedResourceType<Context["fhirVersion"]>,
-  >(
-    ctx: Context,
+  async update<T extends ResourceType>(
+    ctx: CTX,
     resourceType: T,
-    id: VERSIONED_FHIR[Context["fhirVersion"]]["id"],
-    resource: VersionedAResource<Context["fhirVersion"], T>,
-  ): Promise<VersionedAResource<Context["fhirVersion"], T>> {
+    id: id,
+    resource: AResource<T>,
+  ): Promise<AResource<T>> {
     if (resource.id === undefined)
       throw new Error("Cannot update resource without id");
     const response = await this.request(ctx, {
-      fhirVersion: ctx.fhirVersion,
+      fhirVersion: "4.0",
       type: "update-request",
       level: "instance",
       resourceType,
@@ -191,17 +180,14 @@ export class AsynchronousClient<State, CTX extends Versioned>
     return response.body as AResource<T>;
   }
   // [ADD JSON PATCH TYPES]
-  async patch<
-    Context extends CTX,
-    T extends VersionedResourceType<Context["fhirVersion"]>,
-  >(
-    ctx: Context,
+  async patch<T extends ResourceType>(
+    ctx: CTX,
     resourceType: T,
-    id: VERSIONED_FHIR[Context["fhirVersion"]]["id"],
+    id: id,
     patches: any,
-  ): Promise<VersionedAResource<Context["fhirVersion"], T>> {
+  ): Promise<AResource<T>> {
     const response = await this.request(ctx, {
-      fhirVersion: ctx.fhirVersion,
+      fhirVersion: "4.0",
       type: "patch-request",
       level: "instance",
       resourceType: resourceType,
@@ -212,16 +198,13 @@ export class AsynchronousClient<State, CTX extends Versioned>
       throw new Error("Unexpected response type");
     return response.body as AResource<T>;
   }
-  async read<
-    Context extends CTX,
-    T extends VersionedResourceType<Context["fhirVersion"]>,
-  >(
-    ctx: Context,
+  async read<T extends ResourceType>(
+    ctx: CTX,
     resourceType: T,
-    id: VERSIONED_FHIR[Context["fhirVersion"]]["id"],
-  ): Promise<VersionedAResource<Context["fhirVersion"], T> | undefined> {
+    id: id,
+  ): Promise<AResource<T> | undefined> {
     const response = await this.request(ctx, {
-      fhirVersion: ctx.fhirVersion,
+      fhirVersion: "4.0",
       type: "read-request",
       level: "instance",
       resourceType: resourceType,
@@ -231,17 +214,14 @@ export class AsynchronousClient<State, CTX extends Versioned>
       throw new Error("Unexpected response type");
     return response.body as AResource<T> | undefined;
   }
-  async vread<
-    Context extends CTX,
-    T extends VersionedResourceType<Context["fhirVersion"]>,
-  >(
-    ctx: Context,
+  async vread<T extends ResourceType>(
+    ctx: CTX,
     resourceType: T,
-    id: VERSIONED_FHIR[Context["fhirVersion"]]["id"],
-    versionId: VERSIONED_FHIR[Context["fhirVersion"]]["id"],
-  ): Promise<VersionedAResource<Context["fhirVersion"], T> | undefined> {
+    id: id,
+    versionId: id,
+  ): Promise<AResource<T>> {
     const response = await this.request(ctx, {
-      fhirVersion: ctx.fhirVersion,
+      fhirVersion: "4.0",
       type: "vread-request",
       level: "instance",
       resourceType: resourceType,
@@ -252,16 +232,9 @@ export class AsynchronousClient<State, CTX extends Versioned>
       throw new Error("Unexpected response type");
     return response.body as AResource<T>;
   }
-  async delete<
-    Context extends CTX,
-    T extends VersionedResourceType<Context["fhirVersion"]>,
-  >(
-    ctx: Context,
-    resourceType: T,
-    id: VERSIONED_FHIR[Context["fhirVersion"]]["id"],
-  ): Promise<void> {
+  async delete<T extends ResourceType>(ctx: CTX, resourceType: T, id: id) {
     const response = await this.request(ctx, {
-      fhirVersion: ctx.fhirVersion,
+      fhirVersion: "4.0",
       type: "delete-request",
       level: "instance",
       resourceType: resourceType,
@@ -270,10 +243,10 @@ export class AsynchronousClient<State, CTX extends Versioned>
     if (response.type !== "delete-response")
       throw new Error("Unexpected response type");
   }
-  async historySystem<Context extends CTX>(
-    ctx: Context,
+  async historySystem(
+    ctx: CTX,
     parameters?: ParsedParameter<string | number>[] | string,
-  ): Promise<VERSIONED_FHIR[Context["fhirVersion"]]["BundleEntry"][]> {
+  ): Promise<BundleEntry[]> {
     const parsedParameters: ParsedParameter<string | number>[] =
       typeof parameters === "string"
         ? parseQuery(parameters)
@@ -282,7 +255,7 @@ export class AsynchronousClient<State, CTX extends Versioned>
           : [];
 
     const response = await this.request(ctx, {
-      fhirVersion: ctx.fhirVersion,
+      fhirVersion: "4.0",
       type: "history-request",
       level: "system",
       parameters: parsedParameters,
@@ -291,14 +264,11 @@ export class AsynchronousClient<State, CTX extends Versioned>
       throw new Error("Unexpected response type");
     return response.body;
   }
-  async historyType<
-    Context extends CTX,
-    T extends VersionedResourceType<Context["fhirVersion"]>,
-  >(
-    ctx: Context,
+  async historyType<T extends ResourceType>(
+    ctx: CTX,
     resourceType: T,
     parameters?: ParsedParameter<string | number>[] | string,
-  ): Promise<VERSIONED_FHIR[Context["fhirVersion"]]["BundleEntry"][]> {
+  ): Promise<BundleEntry[]> {
     const parsedParameters: ParsedParameter<string | number>[] =
       typeof parameters === "string"
         ? parseQuery(parameters)
@@ -306,7 +276,7 @@ export class AsynchronousClient<State, CTX extends Versioned>
           ? parameters
           : [];
     const response = await this.request(ctx, {
-      fhirVersion: ctx.fhirVersion,
+      fhirVersion: "4.0",
       type: "history-request",
       level: "type",
       resourceType: resourceType,
@@ -316,15 +286,12 @@ export class AsynchronousClient<State, CTX extends Versioned>
       throw new Error("Unexpected response type");
     return response.body;
   }
-  async historyInstance<
-    Context extends CTX,
-    T extends VersionedResourceType<Context["fhirVersion"]>,
-  >(
-    ctx: Context,
+  async historyInstance<T extends ResourceType>(
+    ctx: CTX,
     resourceType: T,
-    id: VERSIONED_FHIR[Context["fhirVersion"]]["id"],
+    id: string,
     parameters?: ParsedParameter<string | number>[] | string,
-  ): Promise<VERSIONED_FHIR[Context["fhirVersion"]]["BundleEntry"][]> {
+  ): Promise<BundleEntry[]> {
     const parsedParameters: ParsedParameter<string | number>[] =
       typeof parameters === "string"
         ? parseQuery(parameters)
@@ -332,7 +299,7 @@ export class AsynchronousClient<State, CTX extends Versioned>
           ? parameters
           : [];
     const response = await this.request(ctx, {
-      fhirVersion: ctx.fhirVersion,
+      fhirVersion: "4.0",
       type: "history-request",
       level: "instance",
       resourceType: resourceType,
@@ -343,16 +310,13 @@ export class AsynchronousClient<State, CTX extends Versioned>
       throw new Error("Unexpected response type");
     return response.body;
   }
-  async transaction<Context extends CTX>(
-    ctx: Context,
-    bundle: VERSIONED_FHIR[Context["fhirVersion"]]["Bundle"],
-  ): Promise<VERSIONED_FHIR[Context["fhirVersion"]]["Bundle"]> {
+  async transaction(ctx: CTX, bundle: Bundle): Promise<Bundle> {
     if (bundle.type !== "transaction")
       throw new OperationError(
         outcomeError("invalid", "Bundle must be of type 'transaction'"),
       );
     const response = await this.request(ctx, {
-      fhirVersion: ctx.fhirVersion,
+      fhirVersion: "4.0",
       type: "transaction-request",
       level: "system",
       body: bundle,
@@ -364,16 +328,13 @@ export class AsynchronousClient<State, CTX extends Versioned>
     }
     return response.body;
   }
-  async batch<Context extends CTX>(
-    ctx: Context,
-    bundle: VERSIONED_FHIR[Context["fhirVersion"]]["Bundle"],
-  ): Promise<VERSIONED_FHIR[Context["fhirVersion"]]["Bundle"]> {
+  async batch(ctx: CTX, bundle: Bundle): Promise<Bundle> {
     if (bundle.type !== "batch")
       throw new OperationError(
         outcomeError("invalid", "Bundle must be of type 'batch'"),
       );
     const response = await this.request(ctx, {
-      fhirVersion: ctx.fhirVersion,
+      fhirVersion: "4.0",
       type: "batch-request",
       level: "system",
       body: bundle,

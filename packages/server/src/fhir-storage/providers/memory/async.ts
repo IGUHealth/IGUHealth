@@ -172,6 +172,7 @@ function createMemoryMiddleware<
               return {
                 ...context,
                 response: {
+                  fhirVersion: "4.0",
                   level: context.request.level,
                   parameters: context.request.parameters,
                   type: "search-response",
@@ -183,6 +184,7 @@ function createMemoryMiddleware<
               return {
                 ...context,
                 response: {
+                  fhirVersion: "4.0",
                   resourceType: context.request.resourceType,
                   level: "type",
                   parameters: context.request.parameters,
@@ -210,6 +212,7 @@ function createMemoryMiddleware<
           return {
             ...context,
             response: {
+              fhirVersion: "4.0",
               level: "instance",
               type: "update-response",
               resourceType: context.request.resourceType,
@@ -233,6 +236,7 @@ function createMemoryMiddleware<
           return {
             ...context,
             response: {
+              fhirVersion: "4.0",
               level: "type",
               type: "create-response",
               resourceType: context.request.resourceType,
@@ -253,6 +257,7 @@ function createMemoryMiddleware<
           return {
             ...context,
             response: {
+              fhirVersion: "4.0",
               level: "instance",
               type: "read-response",
               resourceType: context.request.resourceType,

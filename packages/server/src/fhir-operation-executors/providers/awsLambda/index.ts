@@ -440,6 +440,7 @@ function createExecutor(
                 return {
                   ...context,
                   response: {
+                    fhirVersion: "4.0",
                     operation: context.request.operation,
                     type: "invoke-response",
                     level: context.request.level,
@@ -453,6 +454,7 @@ function createExecutor(
                 return {
                   ...context,
                   response: {
+                    fhirVersion: "4.0",
                     operation: context.request.operation,
                     type: "invoke-response",
                     resourceType: context.request.resourceType,
@@ -465,6 +467,7 @@ function createExecutor(
                 return {
                   ...context,
                   response: {
+                    fhirVersion: "4.0",
                     operation: context.request.operation,
                     type: "invoke-response",
                     level: context.request.level,

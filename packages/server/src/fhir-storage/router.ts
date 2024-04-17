@@ -266,6 +266,7 @@ function createRouterMiddleware<
           return {
             ...context,
             response: {
+              fhirVersion: "4.0",
               type: "batch-response",
               level: "system",
               body: {
