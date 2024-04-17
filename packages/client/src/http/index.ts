@@ -418,16 +418,3 @@ export default function createHTTPClient(
     middleware,
   );
 }
-
-const client: FHIRClientAsync<{
-  fhirVersion: (typeof FHIR_VERSIONS_SUPPORTED)[number];
-}> = createHTTPClient({
-  url: "http://localhost:3000/w/system/api/v1/fhir/r4",
-  getAccessToken: async function () {
-    return "fake_token";
-  },
-}) as any as FHIRClientAsync<{
-  fhirVersion: (typeof FHIR_VERSIONS_SUPPORTED)[number];
-}>;
-
-const subs = await client.search_type({ fhirVersion: "4.0" }, "SubscriptionTopic", []);
