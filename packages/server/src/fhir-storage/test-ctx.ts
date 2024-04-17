@@ -20,7 +20,7 @@ import { IOCache } from "../cache/interface.js";
 import { FHIRServerCTX } from "../fhir-context/types.js";
 import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
 import { Lock } from "../synchronization/interfaces.js";
-import MemoryDatabase from "./providers/memory/async.js";
+import createMemoryDatabaseFromData from "./providers/memory/async.js";
 
 dotEnv.config();
 
@@ -82,7 +82,7 @@ export const testServices: FHIRServerCTX = {
     date: new Date().toISOString() as dateTime,
     format: ["json" as code],
   },
-  client: MemoryDatabase({}),
+  client: createMemoryDatabaseFromData({}),
   cache: new TestCache(),
   resolveCanonical: <T extends ResourceType>(type: T, url: string) => {
     return sds.find((sd) => sd.url === url) as AResource<T>;
