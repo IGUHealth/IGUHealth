@@ -13,7 +13,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import type { FHIRClientAsync } from "./interface.js";
 import { MiddlewareAsync } from "./middleware/index.js";
-import type { FHIRRequest, FHIRResponse } from "./types.js";
+import type { FHIRRequest, FHIRResponse } from "./types/index.js";
 import type { ParsedParameter } from "./url.js";
 import { parseQuery } from "./url.js";
 
@@ -32,7 +32,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     });
     if (response.type !== "capabilities-response")
       throw new Error("Unexpected response type");
-    return response.body;
+    return response.body as CapabilityStatement;
   }
   async request(ctx: CTX, request: FHIRRequest): Promise<FHIRResponse> {
     const res = await this.middleware({ ctx, state: this.state, request });
@@ -117,7 +117,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     });
     if (response.type !== "search-response")
       throw new Error("Unexpected response type");
-    return { total: response.total, resources: response.body };
+    return { total: response.total, resources: response.body as Resource[] };
   }
   async search_type<T extends ResourceType>(
     ctx: CTX,
@@ -262,7 +262,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     });
     if (response.type !== "history-response")
       throw new Error("Unexpected response type");
-    return response.body;
+    return response.body as BundleEntry[];
   }
   async historyType<T extends ResourceType>(
     ctx: CTX,
@@ -284,7 +284,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     });
     if (response.type !== "history-response")
       throw new Error("Unexpected response type");
-    return response.body;
+    return response.body as BundleEntry[];
   }
   async historyInstance<T extends ResourceType>(
     ctx: CTX,
@@ -308,7 +308,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     });
     if (response.type !== "history-response")
       throw new Error("Unexpected response type");
-    return response.body;
+    return response.body as BundleEntry[];
   }
   async transaction(ctx: CTX, bundle: Bundle): Promise<Bundle> {
     if (bundle.type !== "transaction")
@@ -326,7 +326,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
         outcomeError("invalid", "response type must be 'transaction-response'"),
       );
     }
-    return response.body;
+    return response.body as Bundle;
   }
   async batch(ctx: CTX, bundle: Bundle): Promise<Bundle> {
     if (bundle.type !== "batch")
@@ -344,6 +344,6 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
         outcomeError("invalid", "response type must be 'batch-response'"),
       );
     }
-    return response.body;
+    return response.body as Bundle;
   }
 }

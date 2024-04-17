@@ -1,4 +1,4 @@
-import { FHIRRequest, FHIRResponse } from "../types.js";
+import { FHIRRequest, FHIRResponse } from "../types/index.js";
 
 export type MiddlewareAsyncChain<State, CTX> = (
   ctx: { state: State; ctx: CTX; request: FHIRRequest },

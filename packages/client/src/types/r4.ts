@@ -18,47 +18,47 @@ import {
   ResponseInteractionTypes,
 } from "./utilities.js";
 
-export interface InstanceInteraction extends Request<R4, "instance"> {
+export interface R4InstanceInteraction extends Request<R4, "instance"> {
   resourceType: ResourceType;
   id: id;
 }
 
-export interface TypeInteraction extends Request<R4, "type"> {
+export interface R4TypeInteraction extends Request<R4, "type"> {
   resourceType: ResourceType;
 }
 
-export interface SystemInteraction extends Request<R4, "system"> {}
+export interface R4SystemInteraction extends Request<R4, "system"> {}
 
-export type ReadRequest = InstanceInteraction & {
+export type R4ReadRequest = R4InstanceInteraction & {
   type: RequestInteractionTypes["read"];
 };
 
-export type VersionReadRequest = InstanceInteraction & {
+export type R4VersionReadRequest = R4InstanceInteraction & {
   type: RequestInteractionTypes["vread"];
   versionId: string;
 };
 
-export type UpdateRequest = InstanceInteraction & {
+export type R4UpdateRequest = R4InstanceInteraction & {
   type: RequestInteractionTypes["update"];
   body: Resource;
 };
 
 // TODO - implement patch type
-export type PatchRequest = InstanceInteraction & {
+export type R4PatchRequest = R4InstanceInteraction & {
   type: RequestInteractionTypes["patch"];
   body: unknown;
 };
 
-export type DeleteRequest = InstanceInteraction & {
+export type R4DeleteRequest = R4InstanceInteraction & {
   type: RequestInteractionTypes["delete"];
 };
 
-export type HistoryInstanceRequest = InstanceInteraction & {
+export type R4HistoryInstanceRequest = R4InstanceInteraction & {
   type: RequestInteractionTypes["history"];
   parameters?: ParsedParameter<string | number>[];
 };
 
-export type CreateRequest = TypeInteraction & {
+export type R4CreateRequest = R4TypeInteraction & {
   type: RequestInteractionTypes["create"];
   /**
    * If provided, the server must use the provided id instead of a server assigned id.
@@ -67,197 +67,197 @@ export type CreateRequest = TypeInteraction & {
   body: Resource;
 };
 
-export type TypeSearchRequest = TypeInteraction & {
+export type R4TypeSearchRequest = R4TypeInteraction & {
   parameters: ParsedParameter<string | number>[];
   type: RequestInteractionTypes["search"];
 };
 
-export type TypeHistoryRequest = TypeInteraction & {
+export type R4TypeHistoryRequest = R4TypeInteraction & {
   type: RequestInteractionTypes["history"];
   parameters?: ParsedParameter<string | number>[];
 };
 
-export type CapabilitiesRequest = SystemInteraction & {
+export type R4CapabilitiesRequest = R4SystemInteraction & {
   type: RequestInteractionTypes["capabilities"];
 };
 
-export type BatchRequest = SystemInteraction & {
+export type R4BatchRequest = R4SystemInteraction & {
   type: RequestInteractionTypes["batch"];
   body: Bundle;
 };
 
-export type TransactionRequest = SystemInteraction & {
+export type R4TransactionRequest = R4SystemInteraction & {
   type: RequestInteractionTypes["transaction"];
   body: Bundle;
 };
 
-export type SystemHistoryRequest = SystemInteraction & {
+export type R4SystemHistoryRequest = R4SystemInteraction & {
   type: RequestInteractionTypes["history"];
   parameters?: ParsedParameter<string | number>[];
 };
 
-export type SystemSearchRequest = SystemInteraction & {
+export type R4SystemSearchRequest = R4SystemInteraction & {
   parameters: ParsedParameter<string | number>[];
   type: RequestInteractionTypes["search"];
 };
 
-export type InvokeInstanceRequest = InstanceInteraction & {
+export type R4InvokeInstanceRequest = R4InstanceInteraction & {
   type: RequestInteractionTypes["invoke"];
   operation: code;
   body: Parameters;
 };
 
-export type InvokeTypeRequest = TypeInteraction & {
+export type R4InvokeTypeRequest = R4TypeInteraction & {
   type: RequestInteractionTypes["invoke"];
   operation: code;
   body: Parameters;
 };
 
-export type InvokeSystemRequest = SystemInteraction & {
+export type R4InvokeSystemRequest = R4SystemInteraction & {
   type: RequestInteractionTypes["invoke"];
   operation: code;
   body: Parameters;
 };
 
-export type FHIRRequest =
-  | InvokeInstanceRequest
-  | InvokeTypeRequest
-  | InvokeSystemRequest
-  | ReadRequest
-  | VersionReadRequest
-  | UpdateRequest
-  | PatchRequest
-  | DeleteRequest
-  | HistoryInstanceRequest
-  | CreateRequest
-  | TypeSearchRequest
-  | TypeHistoryRequest
-  | CapabilitiesRequest
-  | BatchRequest
-  | TransactionRequest
-  | SystemHistoryRequest
-  | SystemSearchRequest;
+export type R4FHIRRequest =
+  | R4InvokeInstanceRequest
+  | R4InvokeTypeRequest
+  | R4InvokeSystemRequest
+  | R4ReadRequest
+  | R4VersionReadRequest
+  | R4UpdateRequest
+  | R4PatchRequest
+  | R4DeleteRequest
+  | R4HistoryInstanceRequest
+  | R4CreateRequest
+  | R4TypeSearchRequest
+  | R4TypeHistoryRequest
+  | R4CapabilitiesRequest
+  | R4BatchRequest
+  | R4TransactionRequest
+  | R4SystemHistoryRequest
+  | R4SystemSearchRequest;
 
-export type ReadResponse = InstanceInteraction & {
+export type R4ReadResponse = R4InstanceInteraction & {
   type: ResponseInteractionTypes["read"];
   body: Resource;
 };
 
-export type VersionReadResponse = InstanceInteraction & {
+export type R4VersionReadResponse = R4InstanceInteraction & {
   type: ResponseInteractionTypes["vread"];
   versionId: string;
   body: Resource;
 };
 
-export type UpdateResponse = InstanceInteraction & {
+export type R4UpdateResponse = R4InstanceInteraction & {
   type: ResponseInteractionTypes["update"];
   body: Resource;
 };
 
 // TODO - implement patch type
-export type PatchResponse = InstanceInteraction & {
+export type R4PatchResponse = R4InstanceInteraction & {
   type: ResponseInteractionTypes["patch"];
   body: Resource;
 };
 
-export type DeleteResponse = InstanceInteraction & {
+export type R4DeleteResponse = R4InstanceInteraction & {
   type: ResponseInteractionTypes["delete"];
 };
 
 type HISTORY_BODY = BundleEntry[];
 
-export type InstanceHistoryResponse = InstanceInteraction & {
+export type R4InstanceHistoryResponse = R4InstanceInteraction & {
   type: ResponseInteractionTypes["history"];
   body: HISTORY_BODY;
 };
 
-export type CreateResponse = TypeInteraction & {
+export type R4CreateResponse = R4TypeInteraction & {
   type: ResponseInteractionTypes["create"];
   body: Resource;
 };
 
-export type TypeSearchResponse = TypeInteraction & {
+export type R4TypeSearchResponse = R4TypeInteraction & {
   parameters: ParsedParameter<string | number>[];
   type: ResponseInteractionTypes["search"];
   total?: unsignedInt;
   body: Resource[];
 };
 
-export type TypeHistoryResponse = TypeInteraction & {
+export type R4TypeHistoryResponse = R4TypeInteraction & {
   type: ResponseInteractionTypes["history"];
   body: HISTORY_BODY;
 };
 
-export type CapabilitiesResponse = SystemInteraction & {
+export type R4CapabilitiesResponse = R4SystemInteraction & {
   type: ResponseInteractionTypes["capabilities"];
   body: CapabilityStatement;
 };
 
-export type BatchResponse = SystemInteraction & {
+export type R4BatchResponse = R4SystemInteraction & {
   type: ResponseInteractionTypes["batch"];
   body: Bundle;
 };
 
-export type TransactionResponse = SystemInteraction & {
+export type R4TransactionResponse = R4SystemInteraction & {
   type: ResponseInteractionTypes["transaction"];
   body: Bundle;
 };
 
-export type SystemHistoryResponse = SystemInteraction & {
+export type R4SystemHistoryResponse = R4SystemInteraction & {
   type: ResponseInteractionTypes["history"];
   body: HISTORY_BODY;
 };
 
-export type SystemSearchResponse = SystemInteraction & {
+export type R4SystemSearchResponse = R4SystemInteraction & {
   parameters: ParsedParameter<string | number>[];
   type: ResponseInteractionTypes["search"];
   total?: unsignedInt;
   body: Resource[];
 };
 
-export type InvokeInstanceResponse = InstanceInteraction & {
+export type R4InvokeInstanceResponse = R4InstanceInteraction & {
   type: ResponseInteractionTypes["invoke"];
   operation: code;
   body: Parameters;
 };
 
-export type InvokeTypeResponse = TypeInteraction & {
+export type R4InvokeTypeResponse = R4TypeInteraction & {
   type: ResponseInteractionTypes["invoke"];
   operation: code;
   body: Parameters;
 };
 
-export type InvokeSystemResponse = SystemInteraction & {
+export type R4InvokeSystemResponse = R4SystemInteraction & {
   type: ResponseInteractionTypes["invoke"];
   operation: code;
   body: Parameters;
 };
 
-export type InvokeResponse =
-  | InvokeInstanceResponse
-  | InvokeTypeResponse
-  | InvokeSystemResponse;
+export type R4InvokeResponse =
+  | R4InvokeInstanceResponse
+  | R4InvokeTypeResponse
+  | R4InvokeSystemResponse;
 
-export type InvokeRequest =
-  | InvokeInstanceRequest
-  | InvokeTypeRequest
-  | InvokeSystemRequest;
+export type R4InvokeRequest =
+  | R4InvokeInstanceRequest
+  | R4InvokeTypeRequest
+  | R4InvokeSystemRequest;
 
-export type FHIRResponse =
-  | InvokeInstanceResponse
-  | InvokeTypeResponse
-  | InvokeSystemResponse
-  | ReadResponse
-  | VersionReadResponse
-  | UpdateResponse
-  | PatchResponse
-  | DeleteResponse
-  | InstanceHistoryResponse
-  | CreateResponse
-  | TypeSearchResponse
-  | TypeHistoryResponse
-  | CapabilitiesResponse
-  | BatchResponse
-  | TransactionResponse
-  | SystemHistoryResponse
-  | SystemSearchResponse;
+export type R4FHIRResponse =
+  | R4InvokeInstanceResponse
+  | R4InvokeTypeResponse
+  | R4InvokeSystemResponse
+  | R4ReadResponse
+  | R4VersionReadResponse
+  | R4UpdateResponse
+  | R4PatchResponse
+  | R4DeleteResponse
+  | R4InstanceHistoryResponse
+  | R4CreateResponse
+  | R4TypeSearchResponse
+  | R4TypeHistoryResponse
+  | R4CapabilitiesResponse
+  | R4BatchResponse
+  | R4TransactionResponse
+  | R4SystemHistoryResponse
+  | R4SystemSearchResponse;

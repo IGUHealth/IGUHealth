@@ -9,7 +9,7 @@ import type {
 } from "@iguhealth/fhir-types/r4/types";
 import type { IOperation, OPMetadata } from "@iguhealth/operation-execution";
 
-import type { FHIRRequest, FHIRResponse } from "./types.js";
+import type { FHIRRequest, FHIRResponse } from "./types/index.js";
 import type { ParsedParameter } from "./url.js";
 import {
   FHIR_VERSIONS_SUPPORTED,
