@@ -406,7 +406,7 @@ export function createArtifactMemoryDatabase<CTX extends FHIRServerCTX>(
         resourceType,
         packageLocation: path.join(
           fileURLToPath(import.meta.url),
-          "../../../../",
+          "../../../../../",
         ),
       }),
     )
