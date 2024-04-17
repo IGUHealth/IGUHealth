@@ -10,8 +10,8 @@ import {
   unsignedInt,
 } from "@iguhealth/fhir-types/r4/types";
 
-import { FHIR_VERSIONS_SUPPORTED } from "./interface.js";
 import type { ParsedParameter } from "./url.js";
+import { FHIR_VERSIONS_SUPPORTED } from "./version.js";
 
 export type REQUEST_METHOD = "PUT" | "POST" | "DELETE" | "PATCH";
 

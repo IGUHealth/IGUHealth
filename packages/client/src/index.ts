@@ -1,25 +1,18 @@
 import {
   AResource,
-  Bundle,
-  BundleEntry,
   Parameters,
   Resource,
-  ResourceType,
   id,
 } from "@iguhealth/fhir-types/r4/types";
 import type { IOperation, OPMetadata } from "@iguhealth/operation-execution";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import type {
-  FHIRClientAsync,
-  VERSIONED_FHIR,
-  Versioned,
-  VersionedResourceType,
-} from "./interface.js";
+import { FHIRClientAsync, Versioned } from "./interface.js";
 import { MiddlewareAsync } from "./middleware/index.js";
 import type { FHIRRequest, FHIRResponse } from "./types.js";
 import type { ParsedParameter } from "./url.js";
 import { parseQuery } from "./url.js";
+import { VERSIONED_FHIR, VersionedResourceType } from "./version.js";
 
 export class AsynchronousClient<State, CTX extends Versioned>
   implements FHIRClientAsync<CTX>
@@ -33,7 +26,7 @@ export class AsynchronousClient<State, CTX extends Versioned>
 
   async capabilities<Context extends CTX>(
     ctx: Context,
-  ): VERSIONED_FHIR[Context["fhirVersion"]]["CapabilityStatement"] {
+  ): Promise<VERSIONED_FHIR[Context["fhirVersion"]]["CapabilityStatement"]> {
     const response = await this.request(ctx, {
       fhirVersion: ctx.fhirVersion,
       type: "capabilities-request",
