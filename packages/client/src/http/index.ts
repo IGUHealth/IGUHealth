@@ -8,11 +8,13 @@ import {
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { AsynchronousClient } from "../index.js";
+import { FHIRClientAsync, FHIR_VERSIONS_SUPPORTED } from "../interface.js";
 import { MiddlewareAsync, createMiddlewareAsync } from "../middleware/index.js";
 import { FHIRRequest, FHIRResponse } from "../types.js";
 import { ParsedParameter } from "../url.js";
 
 type HTTPClientState = {
+  fhirVersion: (typeof FHIR_VERSIONS_SUPPORTED)[number];
   getAccessToken?: () => Promise<string>;
   url: string;
   headers?: Record<string, string>;
@@ -416,3 +418,16 @@ export default function createHTTPClient(
     middleware,
   );
 }
+
+const client: FHIRClientAsync<{
+  fhirVersion: (typeof FHIR_VERSIONS_SUPPORTED)[number];
+}> = createHTTPClient({
+  url: "http://localhost:3000/w/system/api/v1/fhir/r4",
+  getAccessToken: async function () {
+    return "fake_token";
+  },
+}) as any as FHIRClientAsync<{
+  fhirVersion: (typeof FHIR_VERSIONS_SUPPORTED)[number];
+}>;
+
+const subs = await client.search_type({ fhirVersion: "4.0" }, "SubscriptionTopic", []);

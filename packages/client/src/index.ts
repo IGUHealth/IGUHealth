@@ -26,6 +26,7 @@ export class AsynchronousClient<State, CTX extends Versioned>
     this.state = initialState;
     this.middleware = middleware;
   }
+
   async capabilities(ctx: CTX): Promise<CapabilityStatement> {
     const response = await this.request(ctx, {
       type: "capabilities-request",
