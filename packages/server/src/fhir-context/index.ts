@@ -49,7 +49,7 @@ import { createArtifactMemoryDatabase } from "../fhir-storage/providers/memory/a
 import { createPostgresClient } from "../fhir-storage/providers/postgres/index.js";
 import RouterClient from "../fhir-storage/router.js";
 import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
-import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with { type: "json" };
+import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json";
 import RedisLock from "../synchronization/redis.lock.js";
 import { FHIRServerCTX, KoaContext, asSystemCTX } from "./types.js";
 
@@ -146,23 +146,32 @@ export async function serverCapabilities(
 export const logger = pino<string>();
 
 function getResourceTypeToValidate(request: FHIRRequest): ResourceType {
-  switch (request.type) {
-    case "create-request":
-      return request.resourceType;
-    case "update-request":
-      return request.resourceType;
-    case "invoke-request":
-      return "Parameters";
-    case "transaction-request":
-    case "batch-request":
-      return "Bundle";
-    default:
+  switch (request.fhirVersion) {
+    case "4.3": {
       throw new OperationError(
-        outcomeError(
-          "invalid",
-          `cannot validate resource type '${request.type}'`,
-        ),
+        outcomeError("not-supported", "FHIR Version R4B is not supported"),
       );
+    }
+    case "4.0": {
+      switch (request.type) {
+        case "create-request":
+          return request.resourceType;
+        case "update-request":
+          return request.resourceType;
+        case "invoke-request":
+          return "Parameters";
+        case "transaction-request":
+        case "batch-request":
+          return "Bundle";
+        default:
+          throw new OperationError(
+            outcomeError(
+              "invalid",
+              `cannot validate resource type '${request.type}'`,
+            ),
+          );
+      }
+    }
   }
 }
 
@@ -183,37 +192,47 @@ const validationMiddleware: MiddlewareAsyncChain<
   RouterState,
   FHIRServerCTX
 > = async (context, next) => {
-  switch (context.request.type) {
-    case "update-request":
-    case "create-request":
-    case "batch-request":
-    case "invoke-request":
-    case "transaction-request": {
-      const outcome = await validateResource(
-        asSystemCTX(context.ctx),
-        getResourceTypeToValidate(context.request),
-        {
-          mode: (context.request.type === "create-request"
-            ? "create"
-            : "update") as code,
-          resource: context.request.body,
-        },
+  switch (context.request.fhirVersion) {
+    case "4.3": {
+      throw new OperationError(
+        outcomeError("not-supported", "FHIR Version R4B is not supported"),
       );
-      if (
-        outcome.issue.find(
-          (i) => i.severity === "fatal" || i.severity === "error",
-        )
-      ) {
-        throw new OperationError(outcome);
-      }
-      break;
     }
-    case "patch-request": {
-      const valid = validateJSONPatch(context.request.body);
-      if (!valid) {
-        throw new OperationError(
-          outcomeError("invalid", ajv.errorsText(validateJSONPatch.errors)),
-        );
+    case "4.0": {
+      switch (context.request.type) {
+        case "update-request":
+        case "create-request":
+        case "batch-request":
+        case "invoke-request":
+        case "transaction-request": {
+          const outcome = await validateResource(
+            asSystemCTX(context.ctx),
+            getResourceTypeToValidate(context.request),
+            {
+              mode: (context.request.type === "create-request"
+                ? "create"
+                : "update") as code,
+              resource: context.request.body,
+            },
+          );
+          if (
+            outcome.issue.find(
+              (i) => i.severity === "fatal" || i.severity === "error",
+            )
+          ) {
+            throw new OperationError(outcome);
+          }
+          break;
+        }
+        case "patch-request": {
+          const valid = validateJSONPatch(context.request.body);
+          if (!valid) {
+            throw new OperationError(
+              outcomeError("invalid", ajv.errorsText(validateJSONPatch.errors)),
+            );
+          }
+          break;
+        }
       }
       break;
     }
@@ -244,42 +263,51 @@ const encryptionMiddleware: (
   resourceTypesToEncrypt: ResourceType[],
 ) => MiddlewareAsyncChain<RouterState, FHIRServerCTX> =
   (resourceTypesToEncrypt: ResourceType[]) => async (context, next) => {
-    if (!context.ctx.encryptionProvider) {
-      return next(context);
-    }
-    if (
-      "resourceType" in context.request &&
-      resourceTypesToEncrypt.includes(context.request.resourceType)
-    ) {
-      switch (context.request.type) {
-        case "create-request":
-        case "update-request": {
-          const encrypted = await encryptValue(
-            context.ctx,
-            context.request.body,
-          );
-          return next({
-            ...context,
-            request: { ...context.request, body: encrypted },
-          });
+    switch (context.request.fhirVersion) {
+      case "4.3": {
+        throw new OperationError(
+          outcomeError("not-supported", "FHIR Version R4B is not supported"),
+        );
+      }
+      case "4.0": {
+        if (!context.ctx.encryptionProvider) {
+          return next(context);
         }
-        case "patch-request": {
-          const encrypted = await encryptValue(
-            context.ctx,
-            // Should be safe as given patch should be validated.
-            context.request.body as object,
-          );
-          return next({
-            ...context,
-            request: { ...context.request, body: encrypted },
-          });
-        }
-        default: {
+        if (
+          "resourceType" in context.request &&
+          resourceTypesToEncrypt.includes(context.request.resourceType)
+        ) {
+          switch (context.request.type) {
+            case "create-request":
+            case "update-request": {
+              const encrypted = await encryptValue(
+                context.ctx,
+                context.request.body,
+              );
+              return next({
+                ...context,
+                request: { ...context.request, body: encrypted },
+              });
+            }
+            case "patch-request": {
+              const encrypted = await encryptValue(
+                context.ctx,
+                // Should be safe as given patch should be validated.
+                context.request.body as object,
+              );
+              return next({
+                ...context,
+                request: { ...context.request, body: encrypted },
+              });
+            }
+            default: {
+              return next(context);
+            }
+          }
+        } else {
           return next(context);
         }
       }
-    } else {
-      return next(context);
     }
   };
 
@@ -325,8 +353,7 @@ async function createFHIRClient(sources: RouterState["sources"]) {
 export async function createFHIRServices(
   pool: pg.Pool,
 ): Promise<Omit<FHIRServerCTX, "tenant" | "user">> {
-  const memDBAsync = createArtifactMemoryDatabase("4.0", SPECIAL_TYPES.MEMORY)
-
+  const memDBAsync = createArtifactMemoryDatabase("4.0", SPECIAL_TYPES.MEMORY);
   const pgFHIR = createPostgresClient({
     transaction_entry_limit: parseInt(
       process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",

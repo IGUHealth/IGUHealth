@@ -247,11 +247,21 @@ function processSubscription(
         url: subscription.criteria,
         method: "GET",
       });
+
       if (request.type !== "search-request") {
         throw new OperationError(
           outcomeError(
             "invalid",
             `Criteria must be a search request but found ${request.type}`,
+          ),
+        );
+      }
+
+      if (request.fhirVersion !== "4.0") {
+        throw new OperationError(
+          outcomeError(
+            "invalid",
+            `Criteria must be a search request for FHIR version 4.0 but found ${request.fhirVersion}`,
           ),
         );
       }
