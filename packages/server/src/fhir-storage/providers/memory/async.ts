@@ -85,191 +85,205 @@ function createMemoryMiddleware<
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
     async (context) => {
-      /* eslint-disable no-fallthrough */
-      switch (context.request.type) {
-        case "search-request": {
-          const resourceTypes = deriveResourceTypeFilter(context.request);
-          // Remove _type as using on derived resourceTypeFilter
-          context.request.parameters = context.request.parameters.filter(
-            (p) => p.name !== "_type",
-          );
-
-          const parameters = await parametersWithMetaAssociated(
-            async (resourceTypes, name) =>
-              resolveParameter(context.state.data, resourceTypes, name),
-            resourceTypes,
-            context.request.parameters,
-          );
-
-          // Standard parameters
-          const resourceParameters = parameters.filter(
-            (v): v is SearchParameterResource => v.type === "resource",
-          );
-
-          const resourceSet =
-            context.request.level === "type"
-              ? (Object.values(
-                  context.state.data[context.request.resourceType] || {},
-                ) as r4.Resource[])
-              : ((resourceTypes.length > 0
-                  ? resourceTypes
-                  : Object.keys(context.state.data)
-                )
-                  .map((k) =>
-                    Object.values(
-                      context.state.data[k as r4.ResourceType] || {},
-                    ),
-                  )
-                  .flat() as r4.Resource[]);
-
-          let result = [];
-          for (const resource of resourceSet || []) {
-            // Performance opt and removes issue of recursion with search parameter queries.
-            if (resource.resourceType === "SearchParameter") {
-              if (checkSearchParameter(resource, resourceParameters)) {
-                result.push(resource);
-              }
-            } else if (
-              await fitsSearchCriteria(
-                context.ctx,
-                resource,
-                resourceParameters,
-              )
-            ) {
-              result.push(resource);
-            }
-          }
-
-          const parametersResult = parameters.filter(
-            (v): v is SearchParameterResult => v.type === "result",
-          );
-
-          const offsetParam = parametersResult.find(
-            (v) => v.name === "_offset",
-          );
-
-          if (offsetParam) {
-            if (isNaN(parseInt(offsetParam.value[0].toString())))
-              throw new OperationError(
-                outcomeError("invalid", "_offset must be a single number"),
-              );
-            result = result.slice(parseInt(offsetParam.value[0].toString()));
-          }
-
-          const countParam = parametersResult.find((v) => v.name === "_count");
-          const total =
-            countParam && !isNaN(parseInt(countParam.value[0].toString()))
-              ? parseInt(countParam.value[0].toString())
-              : 50;
-
-          result = result.slice(0, total);
-
-          switch (context.request.level) {
-            case "system": {
-              return {
-                ...context,
-                response: {
-                  fhirVersion: "4.0",
-                  level: context.request.level,
-                  parameters: context.request.parameters,
-                  type: "search-response",
-                  body: result,
-                },
-              };
-            }
-            case "type": {
-              return {
-                ...context,
-                response: {
-                  fhirVersion: "4.0",
-                  resourceType: context.request.resourceType,
-                  level: "type",
-                  parameters: context.request.parameters,
-                  type: "search-response",
-                  body: result,
-                },
-              };
-            }
-          }
-        }
-        case "update-request": {
-          const resource = context.request.body;
-          if (!resource.id)
-            throw new OperationError(
-              outcomeError("invalid", "Updated resource must have an id."),
-            );
-          context.state.data = {
-            ...context.state.data,
-            [resource.resourceType]: {
-              ...context.state.data[resource.resourceType],
-              [resource.id]: resource,
-            },
-          };
-
-          return {
-            ...context,
-            response: {
-              fhirVersion: "4.0",
-              level: "instance",
-              type: "update-response",
-              resourceType: context.request.resourceType,
-              id: resource.id,
-              body: resource,
-            },
-          };
-        }
-        case "create-request": {
-          const resource = context.request.body;
-          const resources = context.state.data[context.request.resourceType];
-          if (!resource?.id) resource.id = nanoid() as r4.id;
-
-          context.state.data = {
-            ...context.state.data,
-            [resource.resourceType]: {
-              ...resources,
-              [resource.id]: resource,
-            },
-          };
-          return {
-            ...context,
-            response: {
-              fhirVersion: "4.0",
-              level: "type",
-              type: "create-response",
-              resourceType: context.request.resourceType,
-              body: resource,
-            },
-          };
-        }
-        case "read-request": {
-          const data =
-            context.state.data[context.request.resourceType]?.[
-              context.request.id
-            ];
-          if (!data) {
-            throw new Error(
-              `Not found resource of type '${context.request.resourceType}' with id '${context.request.id}'`,
-            );
-          }
-          return {
-            ...context,
-            response: {
-              fhirVersion: "4.0",
-              level: "instance",
-              type: "read-response",
-              resourceType: context.request.resourceType,
-              id: context.request.id,
-              body: data,
-            },
-          };
-        }
-        default:
+      switch (context.request.fhirVersion) {
+        case "4.3": {
           throw new OperationError(
-            outcomeError(
-              "not-supported",
-              `Request not supported '${context.request.type}'`,
-            ),
+            outcomeError("not-supported", "FHIR 4.3 is not supported"),
           );
+        }
+        case "4.0": {
+          /* eslint-disable no-fallthrough */
+          switch (context.request.type) {
+            case "search-request": {
+              const resourceTypes = deriveResourceTypeFilter(context.request);
+              // Remove _type as using on derived resourceTypeFilter
+              context.request.parameters = context.request.parameters.filter(
+                (p) => p.name !== "_type",
+              );
+
+              const parameters = await parametersWithMetaAssociated(
+                async (resourceTypes, name) =>
+                  resolveParameter(context.state.data, resourceTypes, name),
+                resourceTypes,
+                context.request.parameters,
+              );
+
+              // Standard parameters
+              const resourceParameters = parameters.filter(
+                (v): v is SearchParameterResource => v.type === "resource",
+              );
+
+              const resourceSet =
+                context.request.level === "type"
+                  ? (Object.values(
+                      context.state.data[context.request.resourceType] || {},
+                    ) as r4.Resource[])
+                  : ((resourceTypes.length > 0
+                      ? resourceTypes
+                      : Object.keys(context.state.data)
+                    )
+                      .map((k) =>
+                        Object.values(
+                          context.state.data[k as r4.ResourceType] || {},
+                        ),
+                      )
+                      .flat() as r4.Resource[]);
+
+              let result = [];
+              for (const resource of resourceSet || []) {
+                // Performance opt and removes issue of recursion with search parameter queries.
+                if (resource.resourceType === "SearchParameter") {
+                  if (checkSearchParameter(resource, resourceParameters)) {
+                    result.push(resource);
+                  }
+                } else if (
+                  await fitsSearchCriteria(
+                    context.ctx,
+                    resource,
+                    resourceParameters,
+                  )
+                ) {
+                  result.push(resource);
+                }
+              }
+
+              const parametersResult = parameters.filter(
+                (v): v is SearchParameterResult => v.type === "result",
+              );
+
+              const offsetParam = parametersResult.find(
+                (v) => v.name === "_offset",
+              );
+
+              if (offsetParam) {
+                if (isNaN(parseInt(offsetParam.value[0].toString())))
+                  throw new OperationError(
+                    outcomeError("invalid", "_offset must be a single number"),
+                  );
+                result = result.slice(
+                  parseInt(offsetParam.value[0].toString()),
+                );
+              }
+
+              const countParam = parametersResult.find(
+                (v) => v.name === "_count",
+              );
+              const total =
+                countParam && !isNaN(parseInt(countParam.value[0].toString()))
+                  ? parseInt(countParam.value[0].toString())
+                  : 50;
+
+              result = result.slice(0, total);
+
+              switch (context.request.level) {
+                case "system": {
+                  return {
+                    ...context,
+                    response: {
+                      fhirVersion: "4.0",
+                      level: context.request.level,
+                      parameters: context.request.parameters,
+                      type: "search-response",
+                      body: result,
+                    },
+                  };
+                }
+                case "type": {
+                  return {
+                    ...context,
+                    response: {
+                      fhirVersion: "4.0",
+                      resourceType: context.request.resourceType,
+                      level: "type",
+                      parameters: context.request.parameters,
+                      type: "search-response",
+                      body: result,
+                    },
+                  };
+                }
+              }
+            }
+            case "update-request": {
+              const resource = context.request.body;
+              if (!resource.id)
+                throw new OperationError(
+                  outcomeError("invalid", "Updated resource must have an id."),
+                );
+              context.state.data = {
+                ...context.state.data,
+                [resource.resourceType]: {
+                  ...context.state.data[resource.resourceType],
+                  [resource.id]: resource,
+                },
+              };
+
+              return {
+                ...context,
+                response: {
+                  fhirVersion: "4.0",
+                  level: "instance",
+                  type: "update-response",
+                  resourceType: context.request.resourceType,
+                  id: resource.id,
+                  body: resource,
+                },
+              };
+            }
+            case "create-request": {
+              const resource = context.request.body;
+              const resources =
+                context.state.data[context.request.resourceType];
+              if (!resource?.id) resource.id = nanoid() as r4.id;
+
+              context.state.data = {
+                ...context.state.data,
+                [resource.resourceType]: {
+                  ...resources,
+                  [resource.id]: resource,
+                },
+              };
+              return {
+                ...context,
+                response: {
+                  fhirVersion: "4.0",
+                  level: "type",
+                  type: "create-response",
+                  resourceType: context.request.resourceType,
+                  body: resource,
+                },
+              };
+            }
+            case "read-request": {
+              const data =
+                context.state.data[context.request.resourceType]?.[
+                  context.request.id
+                ];
+              if (!data) {
+                throw new Error(
+                  `Not found resource of type '${context.request.resourceType}' with id '${context.request.id}'`,
+                );
+              }
+              return {
+                ...context,
+                response: {
+                  fhirVersion: "4.0",
+                  level: "instance",
+                  type: "read-response",
+                  resourceType: context.request.resourceType,
+                  id: context.request.id,
+                  body: data,
+                },
+              };
+            }
+            default:
+              throw new OperationError(
+                outcomeError(
+                  "not-supported",
+                  `Request not supported '${context.request.type}'`,
+                ),
+              );
+          }
+        }
       }
     },
   ]);

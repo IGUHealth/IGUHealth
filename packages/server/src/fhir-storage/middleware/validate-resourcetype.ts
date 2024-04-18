@@ -14,6 +14,14 @@ export default function validateResourceTypeMiddleware<State, CTX>(
         ),
       );
     }
+    if (context.request.fhirVersion !== "4.0") {
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `FHIR version '${context.request.fhirVersion}' is not supported in this middleware.`,
+        ),
+      );
+    }
     if (!typesAllowed.includes(context.request.resourceType)) {
       throw new OperationError(
         outcomeError(
