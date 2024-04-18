@@ -14,12 +14,8 @@ import {
   R4TypeHistoryResponse,
   R4TypeSearchResponse,
 } from "@iguhealth/client/types";
-import {
-  BundleEntry,
-  Resource,
-  ResourceType,
-  code,
-} from "@iguhealth/fhir-types/r4/types";
+import * as r4 from "@iguhealth/fhir-types/r4/types";
+import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import {
   OperationError,
   issueSeverityToStatusCodes,
@@ -35,11 +31,25 @@ import { deriveResourceTypeFilter } from "./utilities/search/parameters.js";
 type InteractionSupported = FHIRRequest["type"];
 type InteractionsSupported = InteractionSupported[];
 
-type Source<CTX> = {
+type R4Filter = {
   levelsSupported?: FHIRRequest["level"][];
-  resourcesSupported?: ResourceType[];
+  resourcesSupported?: r4.ResourceType[];
   interactionsSupported?: InteractionsSupported;
-  useSource?: (request: FHIRRequest) => boolean;
+};
+
+type R4BFilter = {
+  levelsSupported?: FHIRRequest["level"][];
+  resourcesSupported?: r4b.ResourceType[];
+  interactionsSupported?: InteractionsSupported;
+};
+
+type Source<CTX> = {
+  filter?: {
+    r4?: R4Filter;
+    r4b?: R4BFilter;
+    useSource?: (request: FHIRRequest) => boolean;
+  };
+
   source: FHIRClient<CTX>;
 };
 type Sources<CTX> = Source<CTX>[];
@@ -75,14 +85,14 @@ export function findSource<T>(
   let found: { source: Source<T>; score: number }[] = [];
 
   for (const source of sources) {
-    if (source.useSource && source.useSource(request)) {
+    if (source?.filter?.useSource && source?.filter?.useSource(request)) {
       found = [...found, { source, score: 5 }];
     } else if (
       deriveResourceTypeFilter(request).every((resource) =>
-        source.resourcesSupported?.includes(resource),
+        source.filter?.r4?.resourcesSupported?.includes(resource),
       ) &&
-      source.interactionsSupported?.includes(request.type) &&
-      source.levelsSupported?.includes(request.level)
+      source.filter?.r4?.interactionsSupported?.includes(request.type) &&
+      source.filter?.r4?.levelsSupported?.includes(request.level)
     ) {
       found = [...found, { source, score: 1 }];
     }
@@ -97,7 +107,7 @@ export function findSource<T>(
           "not-supported",
           `No source found with support for operation '${
             request.type
-          }' for type '${(request as Resource).resourceType}'`,
+          }' for type '${(request as r4.Resource).resourceType}'`,
         ),
       );
     if (found.length > 1 && found[0].score === found[1].score) {
@@ -105,7 +115,7 @@ export function findSource<T>(
         outcomeError(
           "invalid",
           `Conflicting sources found for request '${request.type}' for type '${
-            (request as Resource).resourceType
+            (request as r4.Resource).resourceType
           }'`,
         ),
       );
@@ -213,9 +223,9 @@ function createRouterMiddleware<
         }
 
         case "batch-request": {
-          const entries: BundleEntry[] = await Promise.all(
+          const entries: r4.BundleEntry[] = await Promise.all(
             (context.request.body.entry || []).map(
-              async (entry, index): Promise<BundleEntry> => {
+              async (entry, index): Promise<r4.BundleEntry> => {
                 try {
                   if (!entry.request?.method) {
                     return {
@@ -271,7 +281,7 @@ function createRouterMiddleware<
               level: "system",
               body: {
                 resourceType: "Bundle",
-                type: "batch-response" as code,
+                type: "batch-response" as r4.code,
                 entry: entries,
               },
             },
@@ -294,7 +304,7 @@ function createRouterMiddleware<
                 "not-supported",
                 `No source found with support for operation '${
                   context.request.type
-                }' for type '${(context.request as Resource).resourceType}'`,
+                }' for type '${(context.request as r4.Resource).resourceType}'`,
               ),
             );
           const source = sources[0];
