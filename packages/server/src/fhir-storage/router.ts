@@ -8,11 +8,11 @@ import {
 import {
   FHIRRequest,
   FHIRResponse,
-  InstanceHistoryResponse,
-  SystemHistoryResponse,
-  SystemSearchResponse,
-  TypeHistoryResponse,
-  TypeSearchResponse,
+  R4InstanceHistoryResponse,
+  R4SystemHistoryResponse,
+  R4SystemSearchResponse,
+  R4TypeHistoryResponse,
+  R4TypeSearchResponse,
 } from "@iguhealth/client/types";
 import {
   BundleEntry,
@@ -142,7 +142,7 @@ function createRouterMiddleware<
               ),
             )
           ).filter(
-            (res): res is TypeSearchResponse | SystemSearchResponse =>
+            (res): res is R4TypeSearchResponse | R4SystemSearchResponse =>
               res.type === "search-response",
           );
 
@@ -165,9 +165,9 @@ function createRouterMiddleware<
             (
               res,
             ): res is
-              | SystemHistoryResponse
-              | TypeHistoryResponse
-              | InstanceHistoryResponse => res.type === "history-response",
+              | R4SystemHistoryResponse
+              | R4TypeHistoryResponse
+              | R4InstanceHistoryResponse => res.type === "history-response",
           );
 
           return {

@@ -3,9 +3,9 @@ import * as db from "zapatos/db";
 import { AsynchronousClient } from "@iguhealth/client";
 import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
 import {
-  CreateResponse,
   FHIRRequest,
-  UpdateResponse,
+  R4CreateResponse,
+  R4UpdateResponse,
 } from "@iguhealth/client/lib/types";
 import {
   MiddlewareAsync,
@@ -71,7 +71,7 @@ function membershipHandler<
             ctx: { ...context.ctx, db: txClient },
           });
 
-          const membership = (res.response as CreateResponse)?.body;
+          const membership = (res.response as R4CreateResponse)?.body;
           if (membership.resourceType !== "Membership") {
             throw new OperationError(
               outcomeError("invariant", "Invalid resource type."),
@@ -139,7 +139,7 @@ function membershipHandler<
             );
 
           const res = await next({ ...context, ctx });
-          if (!(res.response as UpdateResponse)?.body)
+          if (!(res.response as R4UpdateResponse)?.body)
             throw new OperationError(
               outcomeFatal("invariant", "Response body not found."),
             );
@@ -148,7 +148,7 @@ function membershipHandler<
             txClient,
             existingUser.id,
             membershipToUser(
-              (res.response as UpdateResponse)?.body as Membership,
+              (res.response as R4UpdateResponse)?.body as Membership,
             ),
           );
 

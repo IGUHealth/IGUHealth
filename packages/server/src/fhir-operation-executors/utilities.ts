@@ -1,5 +1,5 @@
 import { FHIRClientAsync } from "@iguhealth/client/interface";
-import { InvokeRequest } from "@iguhealth/client/types";
+import { R4InvokeRequest } from "@iguhealth/client/types";
 import {
   OperationDefinition,
   OperationOutcome,
@@ -75,7 +75,7 @@ export async function getOperationCode(
   return code[0];
 }
 
-export function getOpCTX(ctx: FHIRServerCTX, request: InvokeRequest): OpCTX {
+export function getOpCTX(ctx: FHIRServerCTX, request: R4InvokeRequest): OpCTX {
   return {
     level: request.level,
     validateCode: async (url: string, code: string) => {
@@ -90,7 +90,10 @@ export function getOpCTX(ctx: FHIRServerCTX, request: InvokeRequest): OpCTX {
   };
 }
 
-function validateLevel(operation: OperationDefinition, request: InvokeRequest) {
+function validateLevel(
+  operation: OperationDefinition,
+  request: R4InvokeRequest,
+) {
   switch (request.level) {
     case "system": {
       if (!operation.system)
@@ -122,7 +125,7 @@ function validateLevel(operation: OperationDefinition, request: InvokeRequest) {
 
 export function validateInvocationContext(
   operation: OperationDefinition,
-  request: InvokeRequest,
+  request: R4InvokeRequest,
 ): OperationOutcome | undefined {
   const issues = validateLevel(operation, request);
   if (issues) return issues;

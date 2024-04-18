@@ -1,8 +1,4 @@
-import {
-  FHIRRequest,
-  InvokeRequest,
-  InvokeResponse,
-} from "@iguhealth/client/types";
+import { R4FHIRRequest, R4InvokeRequest } from "@iguhealth/client/types";
 import {
   OperationDefinition,
   Parameters,
@@ -20,19 +16,19 @@ type Output<T> = T extends IOperation<unknown, infer Output> ? Output : never;
 export class InlineOp<T, V> extends Operation<T, V> {
   private _execute: (
     ctx: FHIRServerCTX,
-    request: InvokeRequest,
+    request: R4InvokeRequest,
   ) => Promise<Parameters>;
   constructor(
     definition: OperationDefinition,
     execute: (
       ctx: FHIRServerCTX,
-      request: InvokeRequest,
+      request: R4InvokeRequest,
     ) => Promise<Parameters>,
   ) {
     super(definition);
     this._execute = execute;
   }
-  execute(ctx: FHIRServerCTX, request: InvokeRequest): Promise<Parameters> {
+  execute(ctx: FHIRServerCTX, request: R4InvokeRequest): Promise<Parameters> {
     return this._execute(ctx, request);
   }
 }
@@ -43,13 +39,13 @@ export default function InlineOperation<
   op: OP,
   executor: (
     ctx: FHIRServerCTX,
-    request: FHIRRequest,
+    request: R4FHIRRequest,
     v: Input<OP>,
   ) => Promise<Output<OP>>,
 ): InlineOp<Input<OP>, Output<OP>> {
   return new InlineOp(
     op.operationDefinition,
-    async (ctx: FHIRServerCTX, request: InvokeRequest) => {
+    async (ctx: FHIRServerCTX, request: R4InvokeRequest) => {
       const invocationOperationOutcome = validateInvocationContext(
         op.operationDefinition,
         request,
