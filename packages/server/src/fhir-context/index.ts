@@ -49,7 +49,7 @@ import { createArtifactMemoryDatabase } from "../fhir-storage/providers/memory/a
 import { createPostgresClient } from "../fhir-storage/providers/postgres/index.js";
 import RouterClient from "../fhir-storage/router.js";
 import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
-import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json";
+import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with { type:"json" };
 import RedisLock from "../synchronization/redis.lock.js";
 import { FHIRServerCTX, KoaContext, asSystemCTX } from "./types.js";
 
