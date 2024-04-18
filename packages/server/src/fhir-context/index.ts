@@ -53,12 +53,12 @@ import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with
 import RedisLock from "../synchronization/redis.lock.js";
 import { FHIRServerCTX, KoaContext, asSystemCTX } from "./types.js";
 
-const SPECIAL_TYPES: { MEMORY: ResourceType[]; AUTH: ResourceType[] } = {
+const R4_SPECIAL_TYPES: { MEMORY: ResourceType[]; AUTH: ResourceType[] } = {
   AUTH: AUTH_RESOURCETYPES,
   MEMORY: ["StructureDefinition", "SearchParameter", "ValueSet", "CodeSystem"],
 };
-const ALL_SPECIAL_TYPES = Object.values(SPECIAL_TYPES).flatMap((v) => v);
-const DB_TYPES: ResourceType[] = ([...resourceTypes] as ResourceType[]).filter(
+const ALL_SPECIAL_TYPES = Object.values(R4_SPECIAL_TYPES).flatMap((v) => v);
+const R4_DB_TYPES: ResourceType[] = ([...resourceTypes] as ResourceType[]).filter(
   (type) => ALL_SPECIAL_TYPES.indexOf(type) === -1,
 );
 
@@ -353,7 +353,7 @@ async function createFHIRClient(sources: RouterState["sources"]) {
 export async function createFHIRServices(
   pool: pg.Pool,
 ): Promise<Omit<FHIRServerCTX, "tenant" | "user">> {
-  const memDBAsync = createArtifactMemoryDatabase("4.0", SPECIAL_TYPES.MEMORY);
+  const memDBAsync = createArtifactMemoryDatabase("4.0", R4_SPECIAL_TYPES.MEMORY);
   const pgFHIR = createPostgresClient({
     transaction_entry_limit: parseInt(
       process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
@@ -406,49 +406,67 @@ export async function createFHIRServices(
   const client = await createFHIRClient([
     // OP INVOCATION
     {
-      useSource: (request) => {
-        return (
-          request.type === "invoke-request" &&
-          inlineOperationExecution
-            .supportedOperations()
-            .map((op) => op.code)
-            .includes(request.operation)
-        );
+      filter: {
+        useSource: (request) => {
+          return (
+            request.type === "invoke-request" &&
+            inlineOperationExecution
+              .supportedOperations()
+              .map((op) => op.code)
+              .includes(request.operation)
+          );
+        },
       },
       source: inlineOperationExecution,
     },
     {
-      levelsSupported: ["system", "type", "instance"],
-      resourcesSupported: [...resourceTypes] as ResourceType[],
-      interactionsSupported: ["invoke-request"],
+      filter: {
+        r4: {
+          levelsSupported: ["system", "type", "instance"],
+          resourcesSupported: [...resourceTypes] as ResourceType[],
+          interactionsSupported: ["invoke-request"],
+        },
+      },
       source: lambdaExecutioner,
     },
     {
-      levelsSupported: ["system", "type", "instance"],
-      resourcesSupported: SPECIAL_TYPES.MEMORY,
-      interactionsSupported: ["read-request", "search-request"],
+      filter: {
+        r4: {
+          levelsSupported: ["system", "type", "instance"],
+          resourcesSupported: R4_SPECIAL_TYPES.MEMORY,
+          interactionsSupported: ["read-request", "search-request"],
+        },
+      },
       source: memDBAsync,
     },
     {
-      levelsSupported: ["type", "instance"],
-      resourcesSupported: SPECIAL_TYPES.AUTH,
-      interactionsSupported: AUTH_METHODS_ALLOWED,
+      filter: {
+        r4: {
+          levelsSupported: ["type", "instance"],
+          resourcesSupported: R4_SPECIAL_TYPES.AUTH,
+          interactionsSupported: AUTH_METHODS_ALLOWED,
+        },
+      },
       source: createAuthStorageClient(pgFHIR),
     },
     {
-      levelsSupported: ["system", "type", "instance"],
-      resourcesSupported: DB_TYPES,
-      interactionsSupported: [
-        "read-request",
-        "search-request",
-        "create-request",
-        "patch-request",
-        "update-request",
-        "delete-request",
-        "history-request",
-        "transaction-request",
-        "batch-request",
-      ],
+      filter: {
+        r4: {
+          levelsSupported: ["system", "type", "instance"],
+          resourcesSupported: R4_DB_TYPES,
+          interactionsSupported: [
+            "read-request",
+            "search-request",
+            "create-request",
+            "patch-request",
+            "update-request",
+            "delete-request",
+            "history-request",
+            "transaction-request",
+            "batch-request",
+          ],
+        },
+      },
       source: pgFHIR,
     },
   ]);

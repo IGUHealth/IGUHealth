@@ -12,9 +12,13 @@ test("Test routing on resourceTypes", async () => {
     [],
     [
       {
-        levelsSupported: ["system", "type", "instance"],
-        resourcesSupported: ["Patient"],
-        interactionsSupported: ["read-request", "search-request"],
+        filter: {
+          r4: {
+            levelsSupported: ["system", "type", "instance"],
+            resourcesSupported: ["Patient"],
+            interactionsSupported: ["read-request", "search-request"],
+          },
+        },
         source: MemoryDatabase({
           ["Patient"]: {
             ["1" as id]: { id: "1", resourceType: "Patient" } as Patient,
@@ -28,9 +32,13 @@ test("Test routing on resourceTypes", async () => {
         }),
       },
       {
-        levelsSupported: ["system", "type", "instance"],
-        resourcesSupported: ["Practitioner"],
-        interactionsSupported: ["read-request", "search-request"],
+        filter: {
+          r4: {
+            levelsSupported: ["system", "type", "instance"],
+            resourcesSupported: ["Practitioner"],
+            interactionsSupported: ["read-request", "search-request"],
+          },
+        },
         source: MemoryDatabase({
           ["Patient"]: {
             ["2" as id]: { id: "2", resourceType: "Patient" } as Patient,
@@ -67,9 +75,13 @@ test("Test routing priority", async () => {
     [],
     [
       {
-        levelsSupported: ["system", "type", "instance"],
-        resourcesSupported: ["Practitioner"],
-        interactionsSupported: ["read-request", "search-request"],
+        filter: {
+          r4: {
+            levelsSupported: ["system", "type", "instance"],
+            resourcesSupported: ["Practitioner"],
+            interactionsSupported: ["read-request", "search-request"],
+          },
+        },
         source: MemoryDatabase({
           ["Practitioner"]: {
             ["4" as id]: {
@@ -81,7 +93,18 @@ test("Test routing priority", async () => {
         }),
       },
       {
-        levelsSupported: ["system", "type", "instance"],
+        filter: {
+          r4: {
+            levelsSupported: ["system", "type", "instance"],
+          },
+          useSource: (request: FHIRRequest) => {
+            return (
+              request.type === "search-request" &&
+              request.level === "type" &&
+              request.resourceType === "Practitioner"
+            );
+          },
+        },
         source: MemoryDatabase({
           ["Practitioner"]: {
             ["5" as id]: {
@@ -91,13 +114,6 @@ test("Test routing priority", async () => {
             } as Practitioner,
           },
         }),
-        useSource: (request: FHIRRequest) => {
-          return (
-            request.type === "search-request" &&
-            request.level === "type" &&
-            request.resourceType === "Practitioner"
-          );
-        },
       },
     ],
   );
@@ -124,9 +140,13 @@ test("Test routing priority", async () => {
     [],
     [
       {
-        levelsSupported: ["system", "type", "instance"],
-        resourcesSupported: ["Practitioner"],
-        interactionsSupported: ["read-request", "search-request"],
+        filter: {
+          r4: {
+            levelsSupported: ["system", "type", "instance"],
+            resourcesSupported: ["Practitioner"],
+            interactionsSupported: ["read-request", "search-request"],
+          },
+        },
         source: MemoryDatabase({
           ["Practitioner"]: {
             ["4" as id]: {
@@ -138,6 +158,11 @@ test("Test routing priority", async () => {
         }),
       },
       {
+        filter: {
+          useSource: (request: FHIRRequest) => {
+            return false;
+          },
+        },
         source: MemoryDatabase({
           ["Practitioner"]: {
             ["5" as id]: {
@@ -147,9 +172,6 @@ test("Test routing priority", async () => {
             } as Practitioner,
           },
         }),
-        useSource: (request: FHIRRequest) => {
-          return false;
-        },
       },
     ],
   );
