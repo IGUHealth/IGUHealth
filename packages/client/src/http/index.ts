@@ -9,7 +9,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { AsynchronousClient } from "../index.js";
 import { MiddlewareAsync, createMiddlewareAsync } from "../middleware/index.js";
-import { FHIRRequest, FHIRResponse } from "../types.js";
+import { FHIRRequest, FHIRResponse, R4FHIRResponse } from "../types/index.js";
 import { ParsedParameter } from "../url.js";
 
 type HTTPClientState = {
@@ -189,7 +189,7 @@ async function httpResponseToFHIRResponse(
             operation: request.operation,
             level: "system",
             body: parameters,
-          };
+          } as R4FHIRResponse;
         }
         case "type": {
           return {
@@ -199,7 +199,7 @@ async function httpResponseToFHIRResponse(
             level: "type",
             resourceType: request.resourceType,
             body: parameters,
-          };
+          } as R4FHIRResponse;
         }
         case "instance": {
           return {
@@ -210,7 +210,7 @@ async function httpResponseToFHIRResponse(
             resourceType: request.resourceType,
             id: request.id,
             body: parameters,
-          };
+          } as R4FHIRResponse;
         }
       }
       throw new OperationError(outcomeError("exception", "Invalid level"));
@@ -226,7 +226,7 @@ async function httpResponseToFHIRResponse(
         resourceType: request.resourceType,
         id: request.id,
         body: resource,
-      };
+      } as R4FHIRResponse;
     }
 
     case "vread-request": {
@@ -241,7 +241,7 @@ async function httpResponseToFHIRResponse(
         id: request.id,
         versionId: request.versionId,
         body: vresource,
-      };
+      } as R4FHIRResponse;
     }
     case "update-request": {
       if (!response.body)
@@ -255,7 +255,7 @@ async function httpResponseToFHIRResponse(
         resourceType: request.resourceType,
         id: request.id,
         body: uresource,
-      };
+      } as R4FHIRResponse;
     }
     case "patch-request": {
       if (!response.body)
@@ -268,7 +268,7 @@ async function httpResponseToFHIRResponse(
         resourceType: request.resourceType,
         id: request.id,
         body: presource,
-      };
+      } as R4FHIRResponse;
     }
 
     case "delete-request": {
@@ -278,7 +278,7 @@ async function httpResponseToFHIRResponse(
         level: "instance",
         resourceType: request.resourceType,
         id: request.id,
-      };
+      } as R4FHIRResponse;
     }
 
     case "history-request": {
@@ -303,7 +303,7 @@ async function httpResponseToFHIRResponse(
             level: "type",
             resourceType: request.resourceType,
             body: resources,
-          };
+          } as R4FHIRResponse;
         }
         case "instance": {
           return {
@@ -313,7 +313,7 @@ async function httpResponseToFHIRResponse(
             resourceType: request.resourceType,
             id: request.id,
             body: resources,
-          };
+          } as R4FHIRResponse;
         }
       }
       throw new OperationError(outcomeError("exception", "Invalid level"));
@@ -329,7 +329,7 @@ async function httpResponseToFHIRResponse(
         level: "type",
         resourceType: request.resourceType,
         body: resource,
-      };
+      } as R4FHIRResponse;
     }
 
     case "search-request": {
@@ -360,7 +360,7 @@ async function httpResponseToFHIRResponse(
             resourceType: request.resourceType,
             total: bundle.total,
             body: resources,
-          };
+          } as R4FHIRResponse;
         }
       }
       throw new OperationError(outcomeError("exception", "Invalid level"));

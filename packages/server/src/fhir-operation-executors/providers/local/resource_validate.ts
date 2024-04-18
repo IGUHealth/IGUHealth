@@ -1,4 +1,4 @@
-import { TypeInteraction } from "@iguhealth/client/types";
+import { R4TypeInteraction } from "@iguhealth/client/types";
 import { ResourceType, code, uri } from "@iguhealth/fhir-types/r4/types";
 import validate from "@iguhealth/fhir-validation";
 import { ResourceValidate } from "@iguhealth/generated-ops/r4";
@@ -68,7 +68,7 @@ export const validateResource = async (
 export default InlineOperation(ResourceValidate.Op, (ctx, request, input) => {
   return validateResource(
     ctx,
-    (request as TypeInteraction).resourceType,
+    (request as R4TypeInteraction).resourceType,
     input,
   );
 });

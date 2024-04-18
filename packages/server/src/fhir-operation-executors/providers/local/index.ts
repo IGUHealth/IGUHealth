@@ -20,41 +20,49 @@ function createExecutor(): MiddlewareAsync<
 > {
   return createMiddlewareAsync<InlineOp<unknown, unknown>[], FHIRServerCTX>([
     async (context) => {
-      /* eslint-disable no-fallthrough */
-      switch (context.request.type) {
-        case "invoke-request": {
-          for (const op of context.state) {
-            if (op.code === context.request.operation) {
-              const parameterOutput = await op.execute(
-                context.ctx,
-                context.request,
-              );
-              return {
-                ...context,
-                response: {
-                  fhirVersion: "4.0",
-                  type: "invoke-response",
-                  level: "system",
-                  operation: context.request.operation,
-                  body: parameterOutput,
-                },
-              };
-            }
-          }
+      switch (context.request.fhirVersion) {
+        case "4.3": {
           throw new OperationError(
-            outcomeFatal(
-              "not-supported",
-              `Operation '${context.request.operation}' is not supported`,
-            ),
+            outcomeFatal("not-supported", "FHIR 4.3 is not supported"),
           );
         }
-        default:
-          throw new OperationError(
-            outcomeFatal(
-              "invalid",
-              `Invocation client only supports invoke-request not '${context.request.type}'`,
-            ),
-          );
+        case "4.0": {
+          switch (context.request.type) {
+            case "invoke-request": {
+              for (const op of context.state) {
+                if (op.code === context.request.operation) {
+                  const parameterOutput = await op.execute(
+                    context.ctx,
+                    context.request,
+                  );
+                  return {
+                    ...context,
+                    response: {
+                      fhirVersion: "4.0",
+                      type: "invoke-response",
+                      level: "system",
+                      operation: context.request.operation,
+                      body: parameterOutput,
+                    },
+                  };
+                }
+              }
+              throw new OperationError(
+                outcomeFatal(
+                  "not-supported",
+                  `Operation '${context.request.operation}' is not supported`,
+                ),
+              );
+            }
+            default:
+              throw new OperationError(
+                outcomeFatal(
+                  "invalid",
+                  `Invocation client only supports invoke-request not '${context.request.type}'`,
+                ),
+              );
+          }
+        }
       }
     },
   ]);

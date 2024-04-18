@@ -17,8 +17,7 @@ import {
   MiddlewareAsync,
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
-import { FHIRRequest } from "@iguhealth/client/types";
-import { InvokeRequest } from "@iguhealth/client/types";
+import { FHIRRequest, R4InvokeRequest } from "@iguhealth/client/types";
 import {
   OperationDefinition,
   Parameters,
@@ -281,7 +280,7 @@ async function createOrUpdateLambda(
 async function createPayload(
   ctx: FHIRServerCTX,
   op: Operation<Record<string, unknown>, Record<string, unknown>>,
-  request: InvokeRequest,
+  request: R4InvokeRequest,
 ): Promise<Payload> {
   const parsedBody = op.parseToObject("in", request.body);
   const opCTX = getOpCTX(ctx, request);
@@ -358,132 +357,147 @@ function createExecutor(
   return createMiddlewareAsync<unknown, FHIRServerCTX>([
     async (context) => {
       try {
-        /* eslint-disable no-fallthrough */
-        switch (context.request.type) {
-          case "invoke-request": {
-            const operationDefinition = await resolveOperationDefinition(
-              context.ctx.client,
-              context.ctx,
-              context.request.operation,
+        switch (context.request.fhirVersion) {
+          case "4.3": {
+            throw new OperationError(
+              outcomeFatal("invalid", "FHIR version 4.3 is not supported"),
             );
+          }
+          case "4.0": {
+            /* eslint-disable no-fallthrough */
+            switch (context.request.type) {
+              case "invoke-request": {
+                const operationDefinition = await resolveOperationDefinition(
+                  context.ctx.client,
+                  context.ctx,
+                  context.request.operation,
+                );
 
-            const op = new Operation<
-              Record<string, unknown>,
-              Record<string, unknown>
-            >(operationDefinition);
+                const op = new Operation<
+                  Record<string, unknown>,
+                  Record<string, unknown>
+                >(operationDefinition);
 
-            const opCTX = getOpCTX(context.ctx, context.request);
+                const opCTX = getOpCTX(context.ctx, context.request);
 
-            const invocationContextOperation = validateInvocationContext(
-              op.operationDefinition,
-              context.request,
-            );
+                const invocationContextOperation = validateInvocationContext(
+                  op.operationDefinition,
+                  context.request,
+                );
 
-            const payload = await createPayload(
-              context.ctx,
-              op,
-              context.request,
-            );
+                const payload = await createPayload(
+                  context.ctx,
+                  op,
+                  context.request,
+                );
 
-            if (invocationContextOperation)
-              throw new OperationError(invocationContextOperation);
-            const lambda = await confirmLambdaExistsAndReady(
-              client,
-              layers,
-              role,
-              context.ctx,
-              op,
-            );
+                if (invocationContextOperation)
+                  throw new OperationError(invocationContextOperation);
+                const lambda = await confirmLambdaExistsAndReady(
+                  client,
+                  layers,
+                  role,
+                  context.ctx,
+                  op,
+                );
 
-            const invoke = new InvokeCommand({
-              FunctionName: lambda.Configuration?.FunctionArn,
-              Payload: Buffer.from(JSON.stringify(payload)),
-            });
+                const invoke = new InvokeCommand({
+                  FunctionName: lambda.Configuration?.FunctionArn,
+                  Payload: Buffer.from(JSON.stringify(payload)),
+                });
 
-            const invokeResponse = await client.lambda.send(invoke);
-            const payloadString = invokeResponse.Payload?.transformToString();
-            if (!payloadString)
-              throw new OperationError(
-                outcomeFatal(
-                  "invalid",
-                  "No payload returned from lambda invocation",
-                ),
-              );
-            const output = JSON.parse(payloadString);
+                const invokeResponse = await client.lambda.send(invoke);
+                const payloadString =
+                  invokeResponse.Payload?.transformToString();
+                if (!payloadString)
+                  throw new OperationError(
+                    outcomeFatal(
+                      "invalid",
+                      "No payload returned from lambda invocation",
+                    ),
+                  );
+                const output = JSON.parse(payloadString);
 
-            if (invokeResponse.FunctionError) {
-              const auditEvent = await logAuditEvent(
-                context.ctx.client,
-                context.ctx,
-                MINOR_FAILURE,
-                { reference: `OperationDefinition/${operationDefinition.id}` },
-                output.trace ? output.trace.join("\n") : "No trace present.",
-              );
-              throw new OperationError(
-                outcomeFatal(
-                  "invalid",
-                  `Lambda function returned error: '${invokeResponse.FunctionError}' More info captured in 'AuditEvent/${auditEvent.id}'`,
-                ),
-              );
-            }
+                if (invokeResponse.FunctionError) {
+                  const auditEvent = await logAuditEvent(
+                    context.ctx.client,
+                    context.ctx,
+                    MINOR_FAILURE,
+                    {
+                      reference: `OperationDefinition/${operationDefinition.id}`,
+                    },
+                    output.trace
+                      ? output.trace.join("\n")
+                      : "No trace present.",
+                  );
+                  throw new OperationError(
+                    outcomeFatal(
+                      "invalid",
+                      `Lambda function returned error: '${invokeResponse.FunctionError}' More info captured in 'AuditEvent/${auditEvent.id}'`,
+                    ),
+                  );
+                }
 
-            const issues = await op.validate(opCTX, "out", output);
-            if (issues.length > 0) throw new OperationError(outcome(issues));
+                const issues = await op.validate(opCTX, "out", output);
+                if (issues.length > 0)
+                  throw new OperationError(outcome(issues));
 
-            const outputParameters = op.parseToParameters(
-              "out",
-              output,
-            ) as unknown as Parameters;
+                const outputParameters = op.parseToParameters(
+                  "out",
+                  output,
+                ) as unknown as Parameters;
 
-            switch (context.request.level) {
-              case "instance": {
-                return {
-                  ...context,
-                  response: {
-                    fhirVersion: "4.0",
-                    operation: context.request.operation,
-                    type: "invoke-response",
-                    level: context.request.level,
-                    body: outputParameters,
-                    resourceType: context.request.resourceType,
-                    id: context.request.id,
-                  },
-                };
+                switch (context.request.level) {
+                  case "instance": {
+                    return {
+                      ...context,
+                      response: {
+                        fhirVersion: "4.0",
+                        operation: context.request.operation,
+                        type: "invoke-response",
+                        level: context.request.level,
+                        body: outputParameters,
+                        resourceType: context.request.resourceType,
+                        id: context.request.id,
+                      },
+                    };
+                  }
+                  case "type": {
+                    return {
+                      ...context,
+                      response: {
+                        fhirVersion: "4.0",
+                        operation: context.request.operation,
+                        type: "invoke-response",
+                        resourceType: context.request.resourceType,
+                        level: context.request.level,
+                        body: outputParameters,
+                      },
+                    };
+                  }
+                  case "system": {
+                    return {
+                      ...context,
+                      response: {
+                        fhirVersion: "4.0",
+                        operation: context.request.operation,
+                        type: "invoke-response",
+                        level: context.request.level,
+                        body: outputParameters,
+                      },
+                    };
+                  }
+                }
               }
-              case "type": {
-                return {
-                  ...context,
-                  response: {
-                    fhirVersion: "4.0",
-                    operation: context.request.operation,
-                    type: "invoke-response",
-                    resourceType: context.request.resourceType,
-                    level: context.request.level,
-                    body: outputParameters,
-                  },
-                };
-              }
-              case "system": {
-                return {
-                  ...context,
-                  response: {
-                    fhirVersion: "4.0",
-                    operation: context.request.operation,
-                    type: "invoke-response",
-                    level: context.request.level,
-                    body: outputParameters,
-                  },
-                };
-              }
+              default:
+                throw new OperationError(
+                  outcomeFatal(
+                    "invalid",
+                    `Invocation client only supports invoke-request not '${context.request.type}'`,
+                  ),
+                );
             }
           }
-          default:
-            throw new OperationError(
-              outcomeFatal(
-                "invalid",
-                `Invocation client only supports invoke-request not '${context.request.type}'`,
-              ),
-            );
         }
       } catch (e) {
         context.ctx.logger.error(e);

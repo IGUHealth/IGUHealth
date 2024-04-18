@@ -2,8 +2,8 @@ import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
 import {
-  SystemSearchRequest,
-  TypeSearchRequest,
+  R4SystemSearchRequest,
+  R4TypeSearchRequest,
 } from "@iguhealth/client/types";
 import { Resource, ResourceType, id } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -181,7 +181,7 @@ async function processInclude(
 export async function executeSearchQuery(
   client: db.Queryable,
   ctx: FHIRServerCTX,
-  request: SystemSearchRequest | TypeSearchRequest,
+  request: R4SystemSearchRequest | R4TypeSearchRequest,
 ): Promise<{ total?: number; resources: Resource[] }> {
   const resourceTypes = deriveResourceTypeFilter(request);
   // Remove _type as using on derived resourceTypeFilter

@@ -17,10 +17,10 @@
   },
   "exports": {
     "./lib/url": "./lib/url.js",
-    "./lib/types": "./lib/types.js",
+    "./lib/types": "./lib/types/index.js",
     "./lib/interface": "./lib/interface.js",
     ".": "./lib/index.js",
-    "./types": "./lib/types.js",
+    "./types": "./lib/types/index.js",
     "./interface": "./lib/interface.js",
     "./middleware": "./lib/middleware/index.js",
     "./url": "./lib/url.js",

@@ -1,15 +1,8 @@
 import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
 import parseUrl from "@iguhealth/client/url";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
-import {
-  Bundle,
-  Parameters,
-  Resource,
-  ResourceType,
-  code,
-  id,
-  unsignedInt,
-} from "@iguhealth/fhir-types/r4/types";
+import * as r4 from "@iguhealth/fhir-types/r4/types";
+import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 /*
@@ -54,18 +47,18 @@ vread            	  /[type]/[id]/_history/[vid]	        GET‡	N/A	N/A	N/A	N/A
  -----------------------------------------------------------------------------------------------------------------
 */
 
-function isBundle(v: unknown): v is Bundle {
+function isBundle(v: unknown): v is r4.Bundle {
   if (
     typeof v === "object" &&
     v !== null &&
     Object.prototype.hasOwnProperty.call(v, "resourceType") &&
-    (v as Resource).resourceType === "Bundle"
+    (v as r4.Resource).resourceType === "Bundle"
   )
     return true;
   return false;
 }
 
-function verifyResourceType(r: string): r is ResourceType {
+function verifyResourceType(r: string): r is r4.ResourceType {
   if (!resourceTypes.has(r))
     throw new OperationError(
       outcomeError("invalid", `Invalid resource type '${r}'`),
@@ -155,8 +148,8 @@ function parseRequest1NonEmpty(
             fhirVersion: "4.0",
             type: "invoke-request",
             level: "system",
-            operation: urlPieces[0].slice(1) as code,
-            body: request.body as Parameters,
+            operation: urlPieces[0].slice(1) as r4.code,
+            body: request.body as r4.Parameters,
           };
         }
         case "GET": {
@@ -187,7 +180,7 @@ function parseRequest1NonEmpty(
           type: "create-request",
           level: "type",
           resourceType: urlPieces[0],
-          body: request.body as Parameters,
+          body: request.body as r4.Parameters,
         };
       }
       throw new OperationError(
@@ -263,8 +256,8 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
               type: "invoke-request",
               level: "type",
               resourceType: urlPieces[0],
-              operation: urlPieces[1].slice(1) as code,
-              body: request.body as Parameters,
+              operation: urlPieces[1].slice(1) as r4.code,
+              body: request.body as r4.Parameters,
             };
           }
           case "GET": {
@@ -316,7 +309,7 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
               type: "read-request",
               level: "instance",
               resourceType: urlPieces[0],
-              id: urlPieces[1] as id,
+              id: urlPieces[1] as r4.id,
             };
           }
           default: {
@@ -332,8 +325,8 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
           type: "update-request",
           level: "instance",
           resourceType: urlPieces[0],
-          id: urlPieces[1] as id,
-          body: request.body as Resource,
+          id: urlPieces[1] as r4.id,
+          body: request.body as r4.Resource,
         };
       }
       case request.method === "PATCH": {
@@ -342,7 +335,7 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
           type: "patch-request",
           level: "instance",
           resourceType: urlPieces[0],
-          id: urlPieces[1] as id,
+          id: urlPieces[1] as r4.id,
           body: request.body as object,
         };
       }
@@ -352,7 +345,7 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
           type: "delete-request",
           level: "instance",
           resourceType: urlPieces[0],
-          id: urlPieces[1] as id,
+          id: urlPieces[1] as r4.id,
         };
       }
     }
@@ -379,9 +372,9 @@ function parseRequest3(urlPieces: string[], request: HTTPRequest): FHIRRequest {
               type: "invoke-request",
               level: "instance",
               resourceType: urlPieces[0],
-              id: urlPieces[1] as id,
-              operation: urlPieces[2].slice(1) as code,
-              body: request.body as Parameters,
+              id: urlPieces[1] as r4.id,
+              operation: urlPieces[2].slice(1) as r4.code,
+              body: request.body as r4.Parameters,
             };
           }
           case "GET": {
@@ -409,7 +402,7 @@ function parseRequest3(urlPieces: string[], request: HTTPRequest): FHIRRequest {
             type: "history-request",
             level: "instance",
             resourceType: urlPieces[0],
-            id: urlPieces[1] as id,
+            id: urlPieces[1] as r4.id,
             parameters: parseUrl(request.url),
           };
         }
@@ -434,7 +427,7 @@ function parseRequest4(
       type: "vread-request",
       level: "instance",
       resourceType: urlPieces[0],
-      id: urlPieces[1] as id,
+      id: urlPieces[1] as r4.id,
       versionId: urlPieces[3],
     };
   }
@@ -464,7 +457,7 @@ export function httpRequestToFHIRRequest(request: HTTPRequest): FHIRRequest {
   }
 }
 
-function toBundle(
+function toR4Bundle(
   bundleType:
     | "document"
     | "message"
@@ -475,12 +468,34 @@ function toBundle(
     | "history"
     | "searchset"
     | "collection",
-  total: unsignedInt | undefined,
-  resources: Resource[],
-): Bundle {
+  total: r4.unsignedInt | undefined,
+  resources: r4.Resource[],
+): r4.Bundle {
   return {
     resourceType: "Bundle",
-    type: bundleType as code,
+    type: bundleType as r4.code,
+    total: total,
+    entry: resources.map((resource) => ({ resource })),
+  };
+}
+
+function toR4BBundle(
+  bundleType:
+    | "document"
+    | "message"
+    | "transaction"
+    | "transaction-response"
+    | "batch"
+    | "batch-response"
+    | "history"
+    | "searchset"
+    | "collection",
+  total: r4b.unsignedInt | undefined,
+  resources: r4b.Resource[],
+): r4b.Bundle {
+  return {
+    resourceType: "Bundle",
+    type: bundleType as r4b.code,
     total: total,
     entry: resources.map((resource) => ({ resource })),
   };
@@ -544,7 +559,10 @@ export function fhirResponseToHTTPResponse(
     case "search-response": {
       return {
         status: 200,
-        body: toBundle("searchset", fhirResponse.total, fhirResponse.body),
+        body:
+          fhirResponse.fhirVersion === "4.3"
+            ? toR4BBundle("searchset", fhirResponse.total, fhirResponse.body)
+            : toR4Bundle("searchset", fhirResponse.total, fhirResponse.body),
       };
     }
     case "transaction-response":

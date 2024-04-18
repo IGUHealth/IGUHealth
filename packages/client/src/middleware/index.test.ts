@@ -1,6 +1,6 @@
 import { expect, test } from "@jest/globals";
 
-import { FHIRResponse } from "../types.js";
+import { FHIRResponse } from "../types/index.js";
 import type { ParsedParameter } from "../url";
 import { createMiddlewareAsync } from "./index.js";
 
