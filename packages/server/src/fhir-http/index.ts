@@ -305,7 +305,7 @@ function parseRequest1NonEmpty(
     }
   }
   throw new OperationError(
-    outcomeError("invalid", "Request could not be parsed at system level."),
+    outcomeError("invalid", "Request could not be parsed."),
   );
 }
 
