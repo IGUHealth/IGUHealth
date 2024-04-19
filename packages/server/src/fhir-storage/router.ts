@@ -238,11 +238,14 @@ function createRouterMiddleware<
                       },
                     };
                   }
-                  const fhirRequest = httpRequestToFHIRRequest({
-                    url: entry.request?.url || "",
-                    method: entry.request?.method,
-                    body: entry.resource,
-                  });
+                  const fhirRequest = httpRequestToFHIRRequest(
+                    context.request.fhirVersion,
+                    {
+                      url: entry.request?.url || "",
+                      method: entry.request?.method,
+                      body: entry.resource,
+                    },
+                  );
 
                   const fhirResponse = await context.ctx.client.request(
                     context.ctx,

@@ -4,9 +4,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import { generateIndexFile, loadArtifacts } from "@iguhealth/artifacts";
+import { FHIR_VERSIONS_SUPPORTED } from "@iguhealth/client/version";
 import { generateOps, generateSets, generateTypes } from "@iguhealth/codegen";
-
-const FHIR_VERSIONS_SUPPORTED: ["4.0", "4.3"] = ["4.0", "4.3"];
 
 export function codeGenerationCommands(command: Command) {
   command

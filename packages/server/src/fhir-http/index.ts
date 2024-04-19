@@ -1,7 +1,8 @@
 import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
 import parseUrl from "@iguhealth/client/url";
-import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
+import { resourceTypes as r4ResourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import * as r4 from "@iguhealth/fhir-types/r4/types";
+import { resourceTypes as r4bResourceTypes } from "@iguhealth/fhir-types/r4b/sets";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -47,23 +48,42 @@ vread            	  /[type]/[id]/_history/[vid]	        GET‡	N/A	N/A	N/A	N/A
  -----------------------------------------------------------------------------------------------------------------
 */
 
-function isBundle(v: unknown): v is r4.Bundle {
+function isBundle<
+  Version extends FHIRRequest["fhirVersion"],
+  Bundle extends Version extends "4.0" ? r4.Bundle : r4b.Bundle,
+>(fhirVersion: Version, v: unknown): v is Bundle {
   if (
     typeof v === "object" &&
     v !== null &&
     Object.prototype.hasOwnProperty.call(v, "resourceType") &&
-    (v as r4.Resource).resourceType === "Bundle"
+    (v as r4.Resource | r4b.Resource).resourceType === "Bundle"
   )
     return true;
   return false;
 }
 
-function verifyResourceType(r: string): r is r4.ResourceType {
-  if (!resourceTypes.has(r))
-    throw new OperationError(
-      outcomeError("invalid", `Invalid resource type '${r}'`),
-    );
-  return true;
+/**
+ * Verifies that the resource type is valid for the given FHIR version.
+ * @param fhirVersion The FHIR version.
+ * @param r The resource type.
+ * @returns True if the resource type is valid for the given FHIR version.
+ */
+function verifyResourceType<Version extends FHIRRequest["fhirVersion"]>(
+  fhirVersion: Version,
+  r: string,
+): r is Version extends "4.0" ? r4.ResourceType : r4b.ResourceType {
+  switch (fhirVersion) {
+    case "4.0": {
+      return r4ResourceTypes.has(r);
+    }
+    case "4.3": {
+      return r4bResourceTypes.has(r);
+    }
+  }
+
+  throw new OperationError(
+    outcomeError("invalid", `Invalid FHIR version '${fhirVersion}'`),
+  );
 }
 
 type HTTPRequest = {
@@ -76,13 +96,14 @@ type HTTPRequest = {
 transaction	        /	                                  POST	R	Bundle	O	N/A
 batch	              /	                                  POST	R	Bundle	O	N/A
 */
-function parseRequest1Empty(
+function parseRequest1Empty<Version extends FHIRRequest["fhirVersion"]>(
+  fhirVersion: Version,
   urlPieces: string[],
   request: HTTPRequest,
 ): FHIRRequest {
   switch (request.method) {
     case "POST": {
-      if (!isBundle(request.body)) {
+      if (!isBundle(fhirVersion, request.body)) {
         throw new OperationError(
           outcomeError("invalid", "POST request must be a bundle"),
         );
@@ -98,19 +119,39 @@ function parseRequest1Empty(
           ),
         );
       }
-      return {
-        fhirVersion: "4.0",
-        type:
-          request.body.type === "transaction"
-            ? "transaction-request"
-            : "batch-request",
-        level: "system",
-        body: request.body,
-      };
+      switch (fhirVersion) {
+        case "4.0": {
+          return {
+            fhirVersion,
+            type:
+              request.body.type === "transaction"
+                ? "transaction-request"
+                : "batch-request",
+            level: "system",
+            body: request.body as r4.Bundle,
+          };
+        }
+        case "4.3": {
+          return {
+            fhirVersion,
+            type:
+              request.body.type === "transaction"
+                ? "transaction-request"
+                : "batch-request",
+            level: "system",
+            body: request.body as r4b.Bundle,
+          };
+        }
+        default: {
+          throw new OperationError(
+            outcomeError("invalid", `Invalid FHIR version '${fhirVersion}'`),
+          );
+        }
+      }
     }
     case "GET": {
       return {
-        fhirVersion: "4.0",
+        fhirVersion,
         type: "search-request",
         level: "system",
         parameters: parseUrl(request.url),
@@ -137,6 +178,7 @@ history-system	    /_history	                          GET	N/A	N/A	N/A	N/A
                                                         POST	application/x-www-form-urlencoded	form data	N/A	N/A
 */
 function parseRequest1NonEmpty(
+  fhirVersion: FHIRRequest["fhirVersion"],
   urlPieces: string[],
   request: HTTPRequest,
 ): FHIRRequest {
@@ -144,13 +186,29 @@ function parseRequest1NonEmpty(
     case urlPieces[0].startsWith("$"): {
       switch (request.method) {
         case "POST": {
-          return {
-            fhirVersion: "4.0",
-            type: "invoke-request",
-            level: "system",
-            operation: urlPieces[0].slice(1) as r4.code,
-            body: request.body as r4.Parameters,
-          };
+          switch (fhirVersion) {
+            case "4.0": {
+              return {
+                fhirVersion,
+                type: "invoke-request",
+                level: "system",
+                operation: urlPieces[0].slice(1) as r4.code,
+                body: request.body as r4.Parameters,
+              };
+            }
+            case "4.3": {
+              return {
+                fhirVersion,
+                type: "invoke-request",
+                level: "system",
+                operation: urlPieces[0].slice(1) as r4.code,
+                body: request.body as r4b.Parameters,
+              };
+            }
+          }
+          throw new OperationError(
+            outcomeError("invalid", `Invalid FHIR version '${fhirVersion}'`),
+          );
         }
         case "GET": {
           throw new OperationError(
@@ -174,14 +232,27 @@ function parseRequest1NonEmpty(
           outcomeError("not-supported", "Search via post not supported."),
         );
       }
-      if (verifyResourceType(urlPieces[0])) {
-        return {
-          fhirVersion: "4.0",
-          type: "create-request",
-          level: "type",
-          resourceType: urlPieces[0],
-          body: request.body as r4.Parameters,
-        };
+      if (verifyResourceType(fhirVersion, urlPieces[0])) {
+        switch (fhirVersion) {
+          case "4.0": {
+            return {
+              fhirVersion,
+              type: "create-request",
+              level: "type",
+              resourceType: urlPieces[0] as r4.ResourceType,
+              body: request.body as r4.Resource,
+            };
+          }
+          case "4.3": {
+            return {
+              fhirVersion,
+              type: "create-request",
+              level: "type",
+              resourceType: urlPieces[0] as r4b.ResourceType,
+              body: request.body as r4b.Resource,
+            };
+          }
+        }
       }
       throw new OperationError(
         outcomeError("invalid", `Invalid resource type ${urlPieces[0]}`),
@@ -191,14 +262,14 @@ function parseRequest1NonEmpty(
       switch (true) {
         case urlPieces[0] === "metadata": {
           return {
-            fhirVersion: "4.0",
+            fhirVersion,
             type: "capabilities-request",
             level: "system",
           };
         }
         case urlPieces[0] === "_history": {
           return {
-            fhirVersion: "4.0",
+            fhirVersion,
             type: "history-request",
             level: "system",
             parameters: parseUrl(request.url),
@@ -207,14 +278,27 @@ function parseRequest1NonEmpty(
         default: {
           // Split by Questionmark because of search parameters
           const resourceType = urlPieces[0].split("?")[0];
-          if (verifyResourceType(resourceType)) {
-            return {
-              fhirVersion: "4.0",
-              type: "search-request",
-              level: "type",
-              resourceType,
-              parameters: parseUrl(request.url),
-            };
+          if (verifyResourceType(fhirVersion, resourceType)) {
+            switch (fhirVersion) {
+              case "4.0": {
+                return {
+                  fhirVersion,
+                  type: "search-request",
+                  level: "type",
+                  resourceType: resourceType as r4.ResourceType,
+                  parameters: parseUrl(request.url),
+                };
+              }
+              case "4.3": {
+                return {
+                  fhirVersion,
+                  type: "search-request",
+                  level: "type",
+                  resourceType: resourceType as r4b.ResourceType,
+                  parameters: parseUrl(request.url),
+                };
+              }
+            }
           }
         }
       }
@@ -226,11 +310,15 @@ function parseRequest1NonEmpty(
 }
 
 // Parses the request for urls split at length 1 (includes system searches, creations, and operation invocations)
-function parseRequest1(urlPieces: string[], request: HTTPRequest): FHIRRequest {
+function parseRequest1<Version extends FHIRRequest["fhirVersion"]>(
+  fhirVersion: Version,
+  urlPieces: string[],
+  request: HTTPRequest,
+): FHIRRequest {
   if (urlPieces[0] === "") {
-    return parseRequest1Empty(urlPieces, request);
+    return parseRequest1Empty(fhirVersion, urlPieces, request);
   } else {
-    return parseRequest1NonEmpty(urlPieces, request);
+    return parseRequest1NonEmpty(fhirVersion, urlPieces, request);
   }
 }
 
@@ -245,20 +333,47 @@ patch        	      /[type]/[id]                      	PATCH	R (may be a patch t
 delete	            /[type]/[id]	                      DELETE	N/A	N/A	N/A	N/A
 history-type	      /[type]/_history	                  GET	N/A	N/A	N/A	N/A
 */
-function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
-  if (verifyResourceType(urlPieces[0])) {
+function parseRequest2<Version extends FHIRRequest["fhirVersion"]>(
+  fhirVersion: Version,
+  urlPieces: string[],
+  request: HTTPRequest,
+): FHIRRequest {
+  const resourceType = urlPieces[0];
+  if (verifyResourceType(fhirVersion, resourceType)) {
     switch (true) {
       case urlPieces[1].startsWith("$"): {
         switch (request.method) {
           case "POST": {
-            return {
-              fhirVersion: "4.0",
-              type: "invoke-request",
-              level: "type",
-              resourceType: urlPieces[0],
-              operation: urlPieces[1].slice(1) as r4.code,
-              body: request.body as r4.Parameters,
-            };
+            switch (fhirVersion) {
+              case "4.0": {
+                return {
+                  fhirVersion,
+                  type: "invoke-request",
+                  level: "type",
+                  resourceType: resourceType as r4.ResourceType,
+                  operation: urlPieces[1].slice(1) as r4.code,
+                  body: request.body as r4.Parameters,
+                };
+              }
+              case "4.3": {
+                return {
+                  fhirVersion,
+                  type: "invoke-request",
+                  level: "type",
+                  resourceType: resourceType as r4b.ResourceType,
+                  operation: urlPieces[1].slice(1) as r4b.code,
+                  body: request.body as r4b.Parameters,
+                };
+              }
+              default: {
+                throw new OperationError(
+                  outcomeError(
+                    "invalid",
+                    `Invalid FHIR version '${fhirVersion}'`,
+                  ),
+                );
+              }
+            }
           }
           case "GET": {
             throw new OperationError(
@@ -295,22 +410,64 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
       case request.method === "GET": {
         switch (true) {
           case urlPieces[1] === "_history": {
-            return {
-              fhirVersion: "4.0",
-              type: "history-request",
-              level: "type",
-              resourceType: urlPieces[0],
-              parameters: parseUrl(request.url),
-            };
+            switch (fhirVersion) {
+              case "4.0": {
+                return {
+                  fhirVersion,
+                  type: "history-request",
+                  level: "type",
+                  resourceType: urlPieces[0] as r4.ResourceType,
+                  parameters: parseUrl(request.url),
+                };
+              }
+              case "4.3": {
+                return {
+                  fhirVersion,
+                  type: "history-request",
+                  level: "type",
+                  resourceType: urlPieces[0] as r4b.ResourceType,
+                  parameters: parseUrl(request.url),
+                };
+              }
+              default: {
+                throw new OperationError(
+                  outcomeError(
+                    "invalid",
+                    `Invalid FHIR version '${fhirVersion}'`,
+                  ),
+                );
+              }
+            }
           }
-          case resourceTypes.has(urlPieces[0]): {
-            return {
-              fhirVersion: "4.0",
-              type: "read-request",
-              level: "instance",
-              resourceType: urlPieces[0],
-              id: urlPieces[1] as r4.id,
-            };
+          case verifyResourceType(fhirVersion, urlPieces[0]): {
+            switch (fhirVersion) {
+              case "4.0": {
+                return {
+                  fhirVersion,
+                  type: "read-request",
+                  level: "instance",
+                  resourceType: urlPieces[0] as r4.ResourceType,
+                  id: urlPieces[1] as r4b.id,
+                };
+              }
+              case "4.3": {
+                return {
+                  fhirVersion,
+                  type: "read-request",
+                  level: "instance",
+                  resourceType: urlPieces[0] as r4b.ResourceType,
+                  id: urlPieces[1] as r4b.id,
+                };
+              }
+              default: {
+                throw new OperationError(
+                  outcomeError(
+                    "invalid",
+                    `Invalid FHIR version '${fhirVersion}'`,
+                  ),
+                );
+              }
+            }
           }
           default: {
             throw new OperationError(
@@ -320,33 +477,89 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
         }
       }
       case request.method === "PUT": {
-        return {
-          fhirVersion: "4.0",
-          type: "update-request",
-          level: "instance",
-          resourceType: urlPieces[0],
-          id: urlPieces[1] as r4.id,
-          body: request.body as r4.Resource,
-        };
+        switch (fhirVersion) {
+          case "4.0": {
+            return {
+              fhirVersion,
+              type: "update-request",
+              level: "instance",
+              resourceType: urlPieces[0] as r4.ResourceType,
+              id: urlPieces[1] as r4.id,
+              body: request.body as r4.Resource,
+            };
+          }
+          case "4.3": {
+            return {
+              fhirVersion,
+              type: "update-request",
+              level: "instance",
+              resourceType: urlPieces[0] as r4b.ResourceType,
+              id: urlPieces[1] as r4b.id,
+              body: request.body as r4b.Resource,
+            };
+          }
+          default: {
+            throw new OperationError(
+              outcomeError("invalid", `Invalid FHIR version '${fhirVersion}'`),
+            );
+          }
+        }
       }
       case request.method === "PATCH": {
-        return {
-          fhirVersion: "4.0",
-          type: "patch-request",
-          level: "instance",
-          resourceType: urlPieces[0],
-          id: urlPieces[1] as r4.id,
-          body: request.body as object,
-        };
+        switch (fhirVersion) {
+          case "4.0": {
+            return {
+              fhirVersion,
+              type: "patch-request",
+              level: "instance",
+              resourceType: urlPieces[0] as r4.ResourceType,
+              id: urlPieces[1] as r4.id,
+              body: request.body as object,
+            };
+          }
+          case "4.3": {
+            return {
+              fhirVersion,
+              type: "patch-request",
+              level: "instance",
+              resourceType: urlPieces[0] as r4b.ResourceType,
+              id: urlPieces[1] as r4b.id,
+              body: request.body as object,
+            };
+          }
+          default: {
+            throw new OperationError(
+              outcomeError("invalid", `Invalid FHIR version '${fhirVersion}'`),
+            );
+          }
+        }
       }
       case request.method === "DELETE": {
-        return {
-          fhirVersion: "4.0",
-          type: "delete-request",
-          level: "instance",
-          resourceType: urlPieces[0],
-          id: urlPieces[1] as r4.id,
-        };
+        switch (fhirVersion) {
+          case "4.0": {
+            return {
+              fhirVersion,
+              type: "delete-request",
+              level: "instance",
+              resourceType: urlPieces[0] as r4.ResourceType,
+              id: urlPieces[1] as r4.id,
+            };
+          }
+          case "4.3": {
+            return {
+              fhirVersion,
+              type: "delete-request",
+              level: "instance",
+              resourceType: urlPieces[0] as r4b.ResourceType,
+              id: urlPieces[1] as r4b.id,
+            };
+          }
+          default: {
+            throw new OperationError(
+              outcomeError("invalid", `Invalid FHIR version '${fhirVersion}'`),
+            );
+          }
+        }
       }
     }
   }
@@ -361,21 +574,48 @@ function parseRequest2(urlPieces: string[], request: HTTPRequest): FHIRRequest {
                                                         POST	application/x-www-form-urlencoded	form data	N/A	N/A
 history-instance	  /[type]/[id]/_history	              GET	N/A	N/A	N/A	N/A
 */
-function parseRequest3(urlPieces: string[], request: HTTPRequest): FHIRRequest {
-  if (verifyResourceType(urlPieces[0])) {
+function parseRequest3(
+  fhirVersion: FHIRRequest["fhirVersion"],
+  urlPieces: string[],
+  request: HTTPRequest,
+): FHIRRequest {
+  if (verifyResourceType(fhirVersion, urlPieces[0])) {
     switch (true) {
       case urlPieces[2].startsWith("$"): {
         switch (request.method) {
           case "POST": {
-            return {
-              fhirVersion: "4.0",
-              type: "invoke-request",
-              level: "instance",
-              resourceType: urlPieces[0],
-              id: urlPieces[1] as r4.id,
-              operation: urlPieces[2].slice(1) as r4.code,
-              body: request.body as r4.Parameters,
-            };
+            switch (fhirVersion) {
+              case "4.0": {
+                return {
+                  fhirVersion,
+                  type: "invoke-request",
+                  level: "instance",
+                  resourceType: urlPieces[0] as r4.ResourceType,
+                  id: urlPieces[1] as r4.id,
+                  operation: urlPieces[2].slice(1) as r4.code,
+                  body: request.body as r4.Parameters,
+                };
+              }
+              case "4.3": {
+                return {
+                  fhirVersion,
+                  type: "invoke-request",
+                  level: "instance",
+                  resourceType: urlPieces[0] as r4b.ResourceType,
+                  id: urlPieces[1] as r4b.id,
+                  operation: urlPieces[2].slice(1) as r4b.code,
+                  body: request.body as r4b.Parameters,
+                };
+              }
+              default: {
+                throw new OperationError(
+                  outcomeError(
+                    "invalid",
+                    `Invalid FHIR version '${fhirVersion}'`,
+                  ),
+                );
+              }
+            }
           }
           case "GET": {
             throw new OperationError(
@@ -397,14 +637,36 @@ function parseRequest3(urlPieces: string[], request: HTTPRequest): FHIRRequest {
       }
       case request.method === "GET": {
         if (urlPieces[2] === "_history") {
-          return {
-            fhirVersion: "4.0",
-            type: "history-request",
-            level: "instance",
-            resourceType: urlPieces[0],
-            id: urlPieces[1] as r4.id,
-            parameters: parseUrl(request.url),
-          };
+          switch (fhirVersion) {
+            case "4.0": {
+              return {
+                fhirVersion,
+                type: "history-request",
+                level: "instance",
+                resourceType: urlPieces[0] as r4.ResourceType,
+                id: urlPieces[1] as r4.id,
+                parameters: parseUrl(request.url),
+              };
+            }
+            case "4.3": {
+              return {
+                fhirVersion,
+                type: "history-request",
+                level: "instance",
+                resourceType: urlPieces[0] as r4b.ResourceType,
+                id: urlPieces[1] as r4.id,
+                parameters: parseUrl(request.url),
+              };
+            }
+            default: {
+              throw new OperationError(
+                outcomeError(
+                  "invalid",
+                  `Invalid FHIR version '${fhirVersion}'`,
+                ),
+              );
+            }
+          }
         }
       }
     }
@@ -418,35 +680,71 @@ function parseRequest3(urlPieces: string[], request: HTTPRequest): FHIRRequest {
 vread            	  /[type]/[id]/_history/[vid]	        GET‡	N/A	N/A	N/A	N/A
 */
 function parseRequest4(
+  fhirVersion: FHIRRequest["fhirVersion"],
   urlPieces: string[],
   _request: HTTPRequest,
 ): FHIRRequest {
-  if (verifyResourceType(urlPieces[0]) && urlPieces[2] === "_history") {
-    return {
-      fhirVersion: "4.0",
-      type: "vread-request",
-      level: "instance",
-      resourceType: urlPieces[0],
-      id: urlPieces[1] as r4.id,
-      versionId: urlPieces[3],
-    };
+  if (
+    verifyResourceType(fhirVersion, urlPieces[0]) &&
+    urlPieces[2] === "_history"
+  ) {
+    switch (fhirVersion) {
+      case "4.0": {
+        return {
+          fhirVersion,
+          type: "vread-request",
+          level: "instance",
+          resourceType: urlPieces[0] as r4.ResourceType,
+          id: urlPieces[1] as r4.id,
+          versionId: urlPieces[3],
+        };
+      }
+      case "4.3": {
+        return {
+          fhirVersion,
+          type: "vread-request",
+          level: "instance",
+          resourceType: urlPieces[0] as r4b.ResourceType,
+          id: urlPieces[1] as r4b.id,
+          versionId: urlPieces[3],
+        };
+      }
+    }
   }
   throw new OperationError(
     outcomeError("invalid", "Request could not be parsed at version level."),
   );
 }
 
-export function httpRequestToFHIRRequest(request: HTTPRequest): FHIRRequest {
+function convertVersion(fhirVersion: string): FHIRRequest["fhirVersion"] {
+  switch (true) {
+    case fhirVersion === "4.0" || fhirVersion === "r4":
+      return "4.0";
+    case fhirVersion === "4.3" || fhirVersion === "r4b":
+      return "4.3";
+    default:
+      throw new OperationError(
+        outcomeError("invalid", `Invalid FHIR version '${fhirVersion}'`),
+      );
+  }
+}
+
+export function httpRequestToFHIRRequest(
+  fhirVersionUrlChunk: string,
+  request: HTTPRequest,
+): FHIRRequest {
   const urlPieces = request.url.split("?")[0].split("/");
+  const fhirVersion = convertVersion(fhirVersionUrlChunk);
+
   switch (urlPieces.length) {
     case 1:
-      return parseRequest1(urlPieces, request);
+      return parseRequest1(fhirVersion, urlPieces, request);
     case 2:
-      return parseRequest2(urlPieces, request);
+      return parseRequest2(fhirVersion, urlPieces, request);
     case 3:
-      return parseRequest3(urlPieces, request);
+      return parseRequest3(fhirVersion, urlPieces, request);
     case 4:
-      return parseRequest4(urlPieces, request);
+      return parseRequest4(fhirVersion, urlPieces, request);
     default:
       throw new OperationError(
         outcomeError(

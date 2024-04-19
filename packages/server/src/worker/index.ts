@@ -243,7 +243,8 @@ function processSubscription(
     });
 
     try {
-      const request = httpRequestToFHIRRequest({
+      // Only doing r4 for Subs right now.
+      const request = httpRequestToFHIRRequest("r4", {
         url: subscription.criteria,
         method: "GET",
       });

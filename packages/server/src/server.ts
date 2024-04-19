@@ -89,7 +89,7 @@ async function FHIRAPIKoaMiddleware<
     try {
       const response = await fhirAPI.request(
         ctx.FHIRContext,
-        httpRequestToFHIRRequest({
+        httpRequestToFHIRRequest(ctx.params.fhirVersion, {
           url: `${ctx.params.fhirUrl || ""}${
             ctx.request.querystring ? `?${ctx.request.querystring}` : ""
           }`,
@@ -293,7 +293,7 @@ export default async function createServer(): Promise<
 
   // FHIR API Endpoint
   tenantAPIV1Router.all(
-    "/fhir/r4/:fhirUrl*",
+    "/fhir/:fhirVersion/:fhirUrl*",
     // MonitoringSentry.tracingMiddleWare<KoaFHIRMiddlewareState>(process.env.SENTRY_SERVER_DSN),
     ...authMiddlewares,
     await FHIRAPIKoaMiddleware<KoaFHIRMiddlewareState>(),

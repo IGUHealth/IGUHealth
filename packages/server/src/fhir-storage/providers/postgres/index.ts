@@ -1021,7 +1021,7 @@ function createPostgresMiddleware<
                       );
                     }
 
-                    const fhirRequest = httpRequestToFHIRRequest({
+                    const fhirRequest = httpRequestToFHIRRequest(context.request.fhirVersion, {
                       url: entry.request?.url || "",
                       method: entry.request?.method,
                       body: entry.resource,
