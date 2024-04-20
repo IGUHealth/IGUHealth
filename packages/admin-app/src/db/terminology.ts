@@ -11,9 +11,14 @@ export const getValueSetExpansion = selectorFamily({
     (url: string) =>
     async ({ get }) => {
       const client = get(getClient);
-      const expansion = client.invoke_type(ValueSetExpand.Op, {}, "ValueSet", {
-        url: url as uri,
-      });
+      const expansion = client.invoke_type(
+        ValueSetExpand.Op,
+        { fhirVersion: "4.0" },
+        "ValueSet",
+        {
+          url: url as uri,
+        },
+      );
       return expansion;
     },
 });

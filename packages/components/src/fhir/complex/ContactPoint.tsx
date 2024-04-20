@@ -11,6 +11,7 @@ export type FHIRContactPointEditableProps = EditableProps<ContactPoint> &
   ClientProps;
 
 export const FHIRContactPointEditable = ({
+  fhirVersion,
   value,
   client,
   onChange,
@@ -21,6 +22,7 @@ export const FHIRContactPointEditable = ({
     <InputContainer label={label} issues={issue ? [issue] : []}>
       <div className="flex flex-1 space-x-1">
         <FHIRCodeEditable
+          fhirVersion={fhirVersion}
           label="Use"
           client={client}
           open={true}
@@ -31,6 +33,7 @@ export const FHIRContactPointEditable = ({
           }}
         />
         <FHIRCodeEditable
+          fhirVersion={fhirVersion}
           label="System"
           client={client}
           open={true}

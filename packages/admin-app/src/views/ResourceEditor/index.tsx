@@ -35,12 +35,12 @@ function ResourceEditorTabs() {
         try {
           const editPromise = (
             id === "new"
-              ? client.create({}, {
+              ? client.create({ fhirVersion: "4.0" }, {
                   ...resource,
                   resourceType, // Validate that resourceTypes align.
                 } as Resource)
               : client.update(
-                  {},
+                  { fhirVersion: "4.0" },
                   resourceType as ResourceType,
                   id as id,
                   {
@@ -86,7 +86,7 @@ function ResourceEditorTabs() {
       label: "Delete",
       onClick: () => {
         const deletingResource = client.delete(
-          {},
+          { fhirVersion: "4.0" },
           resourceType as ResourceType,
           id as id,
         );
@@ -109,7 +109,7 @@ function ResourceEditorTabs() {
 
   useEffect(() => {
     client
-      .batch({}, {
+      .batch({ fhirVersion: "4.0" }, {
         type: "batch",
         resourceType: "Bundle",
         entry: [

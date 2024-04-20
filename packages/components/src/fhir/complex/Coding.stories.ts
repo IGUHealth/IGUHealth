@@ -23,6 +23,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
+    fhirVersion: "4.0",
     client: createStorybookClient(),
     value: {
       code: "male",
@@ -35,6 +36,7 @@ export const Primary: Story = {
 
 export const OnError: Story = {
   args: {
+    fhirVersion: "4.0",
     // @ts-ignore
     value: "test",
     issue: "Bad value",

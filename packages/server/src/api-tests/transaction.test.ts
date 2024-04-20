@@ -4,7 +4,7 @@ import HTTPClient from "@iguhealth/client/lib/http";
 import { Bundle, Patient, code } from "@iguhealth/fhir-types/lib/r4/types";
 
 const client = HTTPClient({
-  url: "http://localhost:3000/w/system/api/v1/fhir/r4",
+  url: "http://localhost:3000/w/system",
   getAccessToken: async function () {
     return "pub_token";
   },
@@ -16,7 +16,7 @@ test("test successful transaction", async () => {
     type: "transaction-response" as code,
   } as Bundle;
   try {
-    transactionResponse = await client.transaction({}, {
+    transactionResponse = await client.transaction({ fhirVersion: "4.0" }, {
       resourceType: "Bundle",
       type: "transaction",
       entry: [
@@ -62,12 +62,12 @@ test("test successful transaction", async () => {
         };
       }),
     } as Bundle;
-    await client.transaction({}, transaction);
+    await client.transaction({ fhirVersion: "4.0" }, transaction);
   }
 });
 
 test("test circular transaction", async () => {
-  const response = client.transaction({}, {
+  const response = client.transaction({ fhirVersion: "4.0" }, {
     resourceType: "Bundle",
     type: "transaction",
     entry: [

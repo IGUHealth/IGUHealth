@@ -111,7 +111,7 @@ export interface VersionedFHIRClientAsync<CTX extends Versioned> {
   ): Promise<FHIRResponse>;
   capabilities<Context extends CTX>(
     ctx: Context,
-  ): VERSIONED_FHIR[Context["fhirVersion"]]["CapabilityStatement"];
+  ): Promise<VERSIONED_FHIR[Context["fhirVersion"]]["CapabilityStatement"]>;
   search_system<Context extends CTX>(
     ctx: Context,
     parameters: ParsedParameter<string | number>[] | string,
@@ -128,7 +128,7 @@ export interface VersionedFHIRClientAsync<CTX extends Versioned> {
     parameters: ParsedParameter<string | number>[] | string,
   ): Promise<{
     total?: number;
-    resources: VersionedAResource<Context["fhirVersion"], T>;
+    resources: VersionedAResource<Context["fhirVersion"], T>[];
   }>;
   create<
     Context extends CTX,

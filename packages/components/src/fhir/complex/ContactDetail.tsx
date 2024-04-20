@@ -10,6 +10,7 @@ export type FHIRContactDetailEditableProps = EditableProps<ContactDetail> &
   ClientProps;
 
 export const FHIRContactDetailEditable = ({
+  fhirVersion,
   value,
   onChange,
   client,
@@ -27,6 +28,7 @@ export const FHIRContactDetailEditable = ({
           }}
         />
         <FHIRCodeEditable
+          fhirVersion={fhirVersion}
           label="System"
           client={client}
           open={true}

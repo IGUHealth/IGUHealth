@@ -108,7 +108,9 @@ function OperationAuditEvents({ operationId }: { operationId: string }) {
   useEffect(() => {
     setLoading(true);
     client
-      .search_type({}, "AuditEvent", [{ name: "entity", value: [operationId] }])
+      .search_type({ fhirVersion: "4.0" }, "AuditEvent", [
+        { name: "entity", value: [operationId] },
+      ])
       .then((response) => {
         setAuditEvents(response.resources);
         setLoading(false);
@@ -195,7 +197,7 @@ const InvocationModal = ({
                       }
                       const invocation = client.invoke_system(
                         new Operation(operation),
-                        {},
+                        { fhirVersion: "4.0" },
                         JSON.parse(parameters),
                       );
                       Toaster.promise(invocation, {

@@ -13,6 +13,7 @@ import { ClientProps, EditableProps } from "../types";
 export type FHIRQuantityEditableProps = EditableProps<Quantity> & ClientProps;
 
 export const FHIRQuantityEditable = ({
+  fhirVersion,
   value,
   onChange,
   issue,
@@ -23,6 +24,7 @@ export const FHIRQuantityEditable = ({
     <InputContainer label={label} issues={issue ? [issue] : []}>
       <div className="flex flex-1 space-x-1">
         <FHIRCodeEditable
+          fhirVersion={fhirVersion}
           client={client}
           label="Comparator"
           open={true}

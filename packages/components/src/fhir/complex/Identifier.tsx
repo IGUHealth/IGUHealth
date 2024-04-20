@@ -12,6 +12,7 @@ export type FHIRIdentifierEditableProps = EditableProps<Identifier> &
   ClientProps;
 
 export const FHIRIdentifierEditable = ({
+  fhirVersion,
   value,
   client,
   onChange,
@@ -22,6 +23,7 @@ export const FHIRIdentifierEditable = ({
     <InputContainer label={label} issues={issue ? [issue] : []}>
       <div className="flex flex-1 space-x-1">
         <FHIRCodeEditable
+          fhirVersion={fhirVersion}
           client={client}
           label="Use"
           open={true}

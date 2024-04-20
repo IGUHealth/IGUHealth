@@ -37,7 +37,11 @@ export default function ResourceTypeView() {
     () => (query: string) => {
       setIsLoading(true);
       client
-        .search_type({}, params.resourceType as ResourceType, query)
+        .search_type(
+          { fhirVersion: "4.0" },
+          params.resourceType as ResourceType,
+          query,
+        )
         .then((response) => {
           setIsLoading(false);
           setData(response.resources);
@@ -64,7 +68,7 @@ export default function ResourceTypeView() {
 
   useEffect(() => {
     client
-      .search_type({}, "SearchParameter", [
+      .search_type({ fhirVersion: "4.0" }, "SearchParameter", [
         { name: "base", value: ["Resource", params.resourceType as string] },
         { name: "_count", value: ["100"] },
         // { name: "type", value: ["string", "number", "code"] },

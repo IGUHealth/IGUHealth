@@ -14,7 +14,9 @@ function App() {
   const [patients, setPatients] = useState<Patient[]>([]);
   useEffect(() => {
     async function fetchPatients() {
-      const patients = await iguhealth.getClient().search_type({}, "Patient");
+      const patients = await iguhealth
+        .getClient()
+        .search_type({ fhirVersion: "4.0" }, "Patient", []);
       setPatients(patients.resources);
     }
     if (iguhealth.isAuthenticated) fetchPatients();

@@ -40,7 +40,7 @@ export function iguHealthReducer(
           return createHTTPClient({
             getAccessToken: () => Promise.resolve(action.payload.access_token),
             url: new URL(
-              `/w/${action.tenant ? action.tenant : user["https://iguhealth.app/tenants"][0]?.id}/api/v1/fhir/r4`,
+              `/w/${action.tenant ? action.tenant : user["https://iguhealth.app/tenants"][0]?.id}`,
               action.domain,
             ).toString(),
             headers: {},

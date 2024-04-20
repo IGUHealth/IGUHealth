@@ -33,17 +33,6 @@ function getTenantAPIURL(
   );
 }
 
-function getFHIRAPIURL(
-  apiOrigin: string,
-  tenant: Tenant["id"],
-  fhirVersion = "r4",
-) {
-  return concatenateURLPaths(
-    getTenantAPIURL(apiOrigin, tenant),
-    `/fhir/${fhirVersion}`,
-  );
-}
-
 function configureAuthHeader(tenant: Tenant) {
   return {
     headers: {
@@ -64,7 +53,7 @@ function createClient(location: string) {
   if (!tenant) throw new Error("No tenant configured run config add-tenant.");
 
   return httpClient({
-    url: getFHIRAPIURL(tenant.api_origin, tenant.id).toString(),
+    url: getTenantAPIURL(tenant.api_origin, tenant.id).toString(),
     getAccessToken: async function () {
       const response = await fetch(
         concatenateURLPaths(
@@ -112,7 +101,7 @@ function isBundle(value: unknown): value is Bundle {
 export function apiCommands(command: Command) {
   command.command("capabilities").action(async () => {
     const client = createClient(CONFIG_LOCATION);
-    const capabilities = await client.capabilities({});
+    const capabilities = await client.capabilities({ fhirVersion: "4.0" });
     console.log(JSON.stringify(capabilities, null, 2));
   });
 
@@ -123,7 +112,10 @@ export function apiCommands(command: Command) {
       if (!resourceToSave) {
         throw new Error("No resource provided to save");
       }
-      const resource = await client.create({}, resourceToSave as Resource);
+      const resource = await client.create(
+        { fhirVersion: "4.0" },
+        resourceToSave as Resource,
+      );
       console.log(JSON.stringify(resource, null, 2));
     }),
   );
@@ -144,7 +136,7 @@ export function apiCommands(command: Command) {
         }
 
         const resource = await client.update(
-          {},
+          { fhirVersion: "4.0" },
           resourceType,
           id,
           resourceToSave as Resource,
@@ -162,7 +154,7 @@ export function apiCommands(command: Command) {
       }
       if (!isBundle(batchBundle))
         throw new Error("invalid resource type must be a 'Bundle'.");
-      const resource = await client.batch({}, batchBundle);
+      const resource = await client.batch({ fhirVersion: "4.0" }, batchBundle);
       console.log(JSON.stringify(resource, null, 2));
     }),
   );
@@ -176,7 +168,10 @@ export function apiCommands(command: Command) {
       }
       if (!isBundle(transaction))
         throw new Error("invalid resource type must be a 'Bundle'.");
-      const resource = await client.transaction({}, transaction);
+      const resource = await client.transaction(
+        { fhirVersion: "4.0" },
+        transaction,
+      );
       console.log(JSON.stringify(resource, null, 2));
     }),
   );
@@ -197,7 +192,12 @@ export function apiCommands(command: Command) {
           throw new Error("No patches provided.");
         }
 
-        const resource = await client.patch({}, resourceType, id, patches);
+        const resource = await client.patch(
+          { fhirVersion: "4.0" },
+          resourceType,
+          id,
+          patches,
+        );
         console.log(JSON.stringify(resource, null, 2));
       }),
   );
@@ -217,7 +217,7 @@ export function apiCommands(command: Command) {
       });
 
       if (shouldDelete) {
-        await client.delete({}, resourceType, id);
+        await client.delete({ fhirVersion: "4.0" }, resourceType, id);
         console.log("Resource has been deleted.");
       }
     });
@@ -227,7 +227,10 @@ export function apiCommands(command: Command) {
     .argument("[query]", "query")
     .action(async (query: string | undefined) => {
       const client = createClient(CONFIG_LOCATION);
-      const searchResponse = await client.search_system({}, query);
+      const searchResponse = await client.search_system(
+        { fhirVersion: "4.0" },
+        query ?? "",
+      );
       console.log(JSON.stringify(searchResponse, null, 2));
     });
 
@@ -239,7 +242,11 @@ export function apiCommands(command: Command) {
       const client = createClient(CONFIG_LOCATION);
       if (!validateResourceType(resourceType))
         throw new Error("Invalid resource type");
-      const searchResponse = await client.search_type({}, resourceType, query);
+      const searchResponse = await client.search_type(
+        { fhirVersion: "4.0" },
+        resourceType,
+        query ?? "",
+      );
       console.log(JSON.stringify(searchResponse, null, 2));
     });
   command
@@ -250,7 +257,11 @@ export function apiCommands(command: Command) {
       const client = createClient(CONFIG_LOCATION);
       if (!validateResourceType(resourceType))
         throw new Error("Invalid resource type");
-      const resource = await client.read({}, resourceType, id);
+      const resource = await client.read(
+        { fhirVersion: "4.0" },
+        resourceType,
+        id,
+      );
       console.log(JSON.stringify(resource, null, 2));
     });
   command
@@ -263,7 +274,7 @@ export function apiCommands(command: Command) {
       if (!validateResourceType(resourceType))
         throw new Error("Invalid resource type");
       const resourceVersion = await client.vread(
-        {},
+        { fhirVersion: "4.0" },
         resourceType,
         id,
         versionId,
@@ -273,7 +284,7 @@ export function apiCommands(command: Command) {
 
   command.command("history_system").action(async () => {
     const client = createClient(CONFIG_LOCATION);
-    const history = await client.historySystem({});
+    const history = await client.historySystem({ fhirVersion: "4.0" });
     console.log(JSON.stringify(history, null, 2));
   });
 
@@ -284,7 +295,10 @@ export function apiCommands(command: Command) {
       const client = createClient(CONFIG_LOCATION);
       if (!validateResourceType(resourceType))
         throw new Error("Invalid resource type");
-      const history = await client.historyType({}, resourceType);
+      const history = await client.historyType(
+        { fhirVersion: "4.0" },
+        resourceType,
+      );
       console.log(JSON.stringify(history, null, 2));
     });
 
@@ -296,7 +310,11 @@ export function apiCommands(command: Command) {
       const client = createClient(CONFIG_LOCATION);
       if (!validateResourceType(resourceType))
         throw new Error("Invalid resource type");
-      const history = await client.historyInstance({}, resourceType, id);
+      const history = await client.historyInstance(
+        { fhirVersion: "4.0" },
+        resourceType,
+        id,
+      );
       console.log(JSON.stringify(history, null, 2));
     });
 }
