@@ -11,7 +11,7 @@ import { evaluate } from "@iguhealth/fhirpath";
 import { OperationError } from "@iguhealth/operation-outcomes";
 
 const client = HTTPClient({
-  url: "http://localhost:3000/w/system/api/v1/fhir/r4",
+  url: "http://localhost:3000/w/system",
   getAccessToken: async function () {
     return "pub_token";
   },
@@ -92,23 +92,30 @@ test("include test", async () => {
     type: "transaction-response",
   } as Bundle;
   try {
-    transactionResponse = await client.transaction({}, SETUP_BUNDLE);
+    transactionResponse = await client.transaction(
+      { fhirVersion: "4.0" },
+      SETUP_BUNDLE,
+    );
     const observations = transactionResponse.entry
       ?.filter((e) => e.resource?.resourceType === "Observation")
       .map((e) => e.resource as Observation);
 
     expect(observations?.length).toEqual(2);
 
-    const includeResponse = await client.search_type({}, "Observation", [
-      {
-        name: "_id",
-        value: [observations?.[0].id as string],
-      },
-      {
-        name: "_include",
-        value: ["Observation:subject"],
-      },
-    ]);
+    const includeResponse = await client.search_type(
+      { fhirVersion: "4.0" },
+      "Observation",
+      [
+        {
+          name: "_id",
+          value: [observations?.[0].id as string],
+        },
+        {
+          name: "_include",
+          value: ["Observation:subject"],
+        },
+      ],
+    );
 
     expect(includeResponse.resources?.length).toEqual(2);
     expect(includeResponse.resources?.[1].resourceType).toEqual("Patient");
@@ -122,7 +129,7 @@ test("include test", async () => {
         };
       }),
     } as Bundle;
-    await client.transaction({}, transaction);
+    await client.transaction({ fhirVersion: "4.0" }, transaction);
   }
 });
 
@@ -132,23 +139,30 @@ test("revinclude test", async () => {
     type: "transaction-response",
   } as Bundle;
   try {
-    transactionResponse = await client.transaction({}, SETUP_BUNDLE);
+    transactionResponse = await client.transaction(
+      { fhirVersion: "4.0" },
+      SETUP_BUNDLE,
+    );
     const patient = transactionResponse.entry
       ?.filter((e) => e.resource?.resourceType === "Patient")
       .map((e) => e.resource as Patient);
 
     expect(patient?.length).toEqual(1);
 
-    const revIncludeResponse1 = await client.search_type({}, "Patient", [
-      {
-        name: "_id",
-        value: [patient?.[0].id as string],
-      },
-      {
-        name: "_revinclude",
-        value: ["Observation:subject"],
-      },
-    ]);
+    const revIncludeResponse1 = await client.search_type(
+      { fhirVersion: "4.0" },
+      "Patient",
+      [
+        {
+          name: "_id",
+          value: [patient?.[0].id as string],
+        },
+        {
+          name: "_revinclude",
+          value: ["Observation:subject"],
+        },
+      ],
+    );
 
     expect(revIncludeResponse1.resources?.length).toEqual(3);
     expect(revIncludeResponse1.resources?.[1].resourceType).toEqual(
@@ -162,16 +176,20 @@ test("revinclude test", async () => {
       ?.filter((e) => e.resource?.resourceType === "Practitioner")
       .map((e) => e.resource as Practitioner);
 
-    const revIncludeResponse2 = await client.search_type({}, "Practitioner", [
-      {
-        name: "_id",
-        value: [practitioner?.[0].id as string],
-      },
-      {
-        name: "_revinclude",
-        value: ["Patient:general-practitioner"],
-      },
-    ]);
+    const revIncludeResponse2 = await client.search_type(
+      { fhirVersion: "4.0" },
+      "Practitioner",
+      [
+        {
+          name: "_id",
+          value: [practitioner?.[0].id as string],
+        },
+        {
+          name: "_revinclude",
+          value: ["Patient:general-practitioner"],
+        },
+      ],
+    );
 
     expect(revIncludeResponse2.resources?.length).toEqual(2);
     expect(revIncludeResponse2.resources?.[0].resourceType).toEqual(
@@ -188,6 +206,6 @@ test("revinclude test", async () => {
         };
       }),
     } as Bundle;
-    await client.transaction({}, transaction);
+    await client.transaction({ fhirVersion: "4.0" }, transaction);
   }
 });

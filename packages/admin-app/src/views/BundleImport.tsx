@@ -66,8 +66,8 @@ export default function BatchImportView() {
               if (bundle) {
                 const batchPromise =
                   bundle.type === "transaction"
-                    ? client.transaction({}, bundle)
-                    : client.batch({}, bundle);
+                    ? client.transaction({ fhirVersion: "4.0" }, bundle)
+                    : client.batch({ fhirVersion: "4.0" }, bundle);
                 Toaster.promise(batchPromise, {
                   loading: "Uploading Bundle",
                   success: () => `Bundle was uploaded`,

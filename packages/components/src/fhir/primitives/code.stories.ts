@@ -23,6 +23,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
+    fhirVersion: "4.0",
     client: createStorybookClient(),
     value: "test" as code,
     onChange: (value: string | undefined) => console.log(value),
@@ -32,6 +33,7 @@ export const Primary: Story = {
 
 export const OnError: Story = {
   args: {
+    fhirVersion: "4.0",
     client: createStorybookClient(),
     value: "test" as code,
     issue: "Bad value",

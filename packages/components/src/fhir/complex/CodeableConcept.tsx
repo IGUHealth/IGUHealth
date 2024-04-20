@@ -27,6 +27,7 @@ export type FHIRCodeableConceptEditableProps = EditableProps<CodeableConcept> &
   ClientProps;
 
 export const FhirCodeableConceptEditable = ({
+  fhirVersion,
   client,
   value,
   onChange,
@@ -43,6 +44,7 @@ export const FhirCodeableConceptEditable = ({
         {value?.coding?.map((coding, index) => (
           <div key={`${coding.code}-${coding.system}`} className="relative">
             <FHIRCodingEditable
+              fhirVersion={fhirVersion}
               client={client}
               value={coding}
               onChange={(coding) => {

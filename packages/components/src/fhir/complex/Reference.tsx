@@ -24,6 +24,7 @@ export type FHIRReferenceEditableProps = EditableProps<Reference> &
   };
 
 const ReferenceView = ({
+  fhirVersion,
   value,
   client,
 }: { value: Reference | undefined } & ClientProps) => {
@@ -36,7 +37,7 @@ const ReferenceView = ({
       const resourceType = value.reference.split("/")[0];
       const id = value.reference.split("/")[1];
       client
-        .batch({}, {
+        .batch({ fhirVersion }, {
           resourceType: "Bundle",
           type: "batch",
           entry: [
@@ -54,7 +55,7 @@ const ReferenceView = ({
             batchResponse.entry?.[0].resource?.resourceType === resourceType ||
             batchResponse.entry?.[0].resource?.id === id
           ) {
-            setResource(batchResponse.entry?.[0].resource);
+            setResource(batchResponse.entry?.[0].resource as Resource);
           }
           setSd(batchResponse.entry?.[1].resource as StructureDefinition);
         })
@@ -71,6 +72,7 @@ const ReferenceView = ({
     </div>
   ) : resource && sd ? (
     <FHIRGenerativeForm
+      fhirVersion={fhirVersion}
       client={client}
       value={resource}
       structureDefinition={sd}
@@ -106,6 +108,7 @@ const SearchResult = ({
 };
 
 const ReferenceSearch = ({
+  fhirVersion,
   client,
   onChange,
   resourceTypesAllowed,
@@ -121,9 +124,11 @@ const ReferenceSearch = ({
 
   React.useEffect(() => {
     if (resourceType) {
-      client.search_type({}, resourceType, query).then((bundle) => {
-        setResults(bundle.resources);
-      });
+      client
+        .search_type({ fhirVersion }, resourceType, query)
+        .then((bundle) => {
+          setResults(bundle.resources);
+        });
     }
   }, [client, resourceType, query]);
 
@@ -168,12 +173,14 @@ export const FHIRReferenceEditable = ({
   issue,
   client,
   label,
+  fhirVersion,
   resourceTypesAllowed,
 }: FHIRReferenceEditableProps) => {
   return (
     <Modal
       ModalContent={(setOpen) => (
         <ReferenceSearch
+          fhirVersion={fhirVersion}
           onChange={(ref) => {
             onChange?.call(this, ref);
             setOpen(false);
@@ -186,7 +193,11 @@ export const FHIRReferenceEditable = ({
       {(openSearch) => (
         <Modal
           ModalContent={(_setOpen) => (
-            <ReferenceView value={value} client={client} />
+            <ReferenceView
+              value={value}
+              client={client}
+              fhirVersion={fhirVersion}
+            />
           )}
         >
           {(openDisplay) => (

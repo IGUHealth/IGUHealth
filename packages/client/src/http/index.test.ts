@@ -5,7 +5,7 @@ import { OperationDefinition, code, id } from "@iguhealth/fhir-types/r4/types";
 import HTTPClient from "./index.js";
 
 const client = HTTPClient({
-  url: "http://localhost:3000/w/system/api/v1/fhir/r4",
+  url: "http://localhost:3000/w/system",
   getAccessToken: async function () {
     return "fake_token";
   },
@@ -23,7 +23,10 @@ test("Test creating and destroying with HTTP Client", async () => {
     type: false,
     parameter: [],
   } as OperationDefinition;
-  const response = await client.create({}, operationDefinition);
+  const response = await client.create(
+    { fhirVersion: "4.0" },
+    operationDefinition,
+  );
   expect(response).toMatchObject({
     resourceType: "OperationDefinition",
     name: "test",
@@ -36,5 +39,9 @@ test("Test creating and destroying with HTTP Client", async () => {
     parameter: [],
   });
 
-  await client.delete({}, "OperationDefinition", response.id as id);
+  await client.delete(
+    { fhirVersion: "4.0" },
+    "OperationDefinition",
+    response.id as id,
+  );
 });

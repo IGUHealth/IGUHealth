@@ -4,7 +4,7 @@ import HTTPClient from "@iguhealth/client/lib/http";
 import { Bundle, code } from "@iguhealth/fhir-types/lib/r4/types";
 
 const client = HTTPClient({
-  url: "http://localhost:3000/w/system/api/v1/fhir/r4",
+  url: "http://localhost:3000/w/system",
   getAccessToken: async function () {
     return "pub_token";
   },
@@ -17,7 +17,7 @@ test("test batch", async () => {
     entry: [],
   } as Bundle;
   try {
-    response = await client.batch({}, {
+    response = await client.batch({ fhirVersion: "4.0" }, {
       resourceType: "Bundle",
       type: "batch",
       entry: [
@@ -55,6 +55,6 @@ test("test batch", async () => {
         };
       }),
     } as Bundle;
-    await client.batch({}, bundle);
+    await client.batch({ fhirVersion: "4.0" }, bundle);
   }
 });

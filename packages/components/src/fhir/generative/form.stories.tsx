@@ -40,6 +40,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
+    fhirVersion: "4.0",
     client: createStorybookClient(),
     value: {
       resourceType: "Patient",
@@ -798,8 +799,7 @@ export const Primary: Story = {
               strength: "required",
               description:
                 "The gender of a person used for administrative purposes.",
-              valueSet:
-                "http://hl7.org/fhir/ValueSet/administrative-gender|4.3.0",
+              valueSet: "http://hl7.org/fhir/ValueSet/administrative-gender",
             },
             mapping: [
               {

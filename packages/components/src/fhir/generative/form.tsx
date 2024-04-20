@@ -259,6 +259,7 @@ function LabelWrapper({
 
 const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
   const {
+    fhirVersion,
     sd,
     elementIndex,
     value,
@@ -323,6 +324,7 @@ const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
 
             return childElement.element.max === "1" ? (
               <MetaValueSingular
+                fhirVersion={fhirVersion}
                 client={client}
                 type={type}
                 key={childPointer}
@@ -335,6 +337,7 @@ const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
               />
             ) : (
               <MetaValueArray
+                fhirVersion={fhirVersion}
                 client={client}
                 type={type}
                 key={childPointer}
@@ -355,6 +358,7 @@ const MetaValueSingular = React.memo((props: MetaProps<any, any>) => {
 
 const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
   const {
+    fhirVersion,
     sd,
     elementIndex,
     value = [],
@@ -399,6 +403,7 @@ const MetaValueArray = React.memo((props: MetaProps<any, any>) => {
               key={`${descend(pointer, i)}`}
             >
               <MetaValueSingular
+                fhirVersion={fhirVersion}
                 client={client}
                 type={type}
                 sd={sd}
@@ -455,6 +460,7 @@ export type FHIRGenerativeFormProps = {
 } & ClientProps;
 
 export const FHIRGenerativeForm = ({
+  fhirVersion,
   structureDefinition,
   value,
   client,
@@ -475,6 +481,7 @@ export const FHIRGenerativeForm = ({
 
   return (
     <MetaValueSingular
+      fhirVersion={fhirVersion}
       client={client}
       sd={structureDefinition}
       elementIndex={0}

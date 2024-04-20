@@ -84,6 +84,7 @@ export const TypeComponents: Record<string, TypeComponent> = {
   code: (props) => (
     <Primitives.FHIRCodeEditable
       {...deriveSharedProps<code>(props)}
+      fhirVersion={props.fhirVersion}
       client={props.client}
       open={true}
       system={
@@ -109,12 +110,14 @@ export const TypeComponents: Record<string, TypeComponent> = {
   Identifier: (props) => (
     <ComplexTypes.FHIRIdentifierEditable
       {...deriveSharedProps<Identifier>(props)}
+      fhirVersion={props.fhirVersion}
       client={props.client}
     />
   ),
   ContactPoint: (props) => (
     <ComplexTypes.FHIRContactPointEditable
       {...deriveSharedProps<ContactPoint>(props)}
+      fhirVersion={props.fhirVersion}
       client={props.client}
     />
   ),
@@ -126,6 +129,7 @@ export const TypeComponents: Record<string, TypeComponent> = {
   ContactDetail: (props) => (
     <ComplexTypes.FHIRContactDetailEditable
       {...deriveSharedProps<ContactDetail>(props)}
+      fhirVersion={props.fhirVersion}
       client={props.client}
     />
   ),
@@ -149,6 +153,7 @@ export const TypeComponents: Record<string, TypeComponent> = {
   Reference: (props) => (
     <ComplexTypes.FHIRReferenceEditable
       {...deriveSharedProps<Reference>(props)}
+      fhirVersion={props.fhirVersion}
       client={props.client}
       resourceTypesAllowed={getElementDefinition(
         props.sd,
@@ -168,11 +173,13 @@ export const TypeComponents: Record<string, TypeComponent> = {
   CodeableConcept: (props) => (
     <ComplexTypes.FhirCodeableConceptEditable
       {...deriveSharedProps<CodeableConcept>(props)}
+      fhirVersion={props.fhirVersion}
       client={props.client}
     />
   ),
   Coding: (props) => (
     <ComplexTypes.FHIRCodingEditable
+      fhirVersion={props.fhirVersion}
       client={props.client}
       {...deriveSharedProps<Coding>(props)}
     />

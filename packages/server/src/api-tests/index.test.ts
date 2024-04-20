@@ -15,7 +15,7 @@ import { evaluate } from "@iguhealth/fhirpath";
 import { OperationError } from "@iguhealth/operation-outcomes";
 
 const client = HTTPClient({
-  url: "http://localhost:3000/w/system/api/v1/fhir/r4",
+  url: "http://localhost:3000/w/system",
   getAccessToken: async function () {
     return "pub_token";
   },
@@ -198,7 +198,7 @@ async function createTestData(seed: number) {
     },
   ];
   const practitionerResponse = await client.create(
-    {},
+    { fhirVersion: "4.0" },
     {
       ...practitioner,
       name: [
@@ -210,7 +210,7 @@ async function createTestData(seed: number) {
   );
   resources.push(practitionerResponse);
 
-  const patientResponse = await client.create({}, {
+  const patientResponse = await client.create({ fhirVersion: "4.0" }, {
     ...patient,
     extension: ext,
     generalPractitioner: [
@@ -219,7 +219,7 @@ async function createTestData(seed: number) {
   } as Patient);
   resources.push(patientResponse);
 
-  const observationResponse = await client.create({}, {
+  const observationResponse = await client.create({ fhirVersion: "4.0" }, {
     ...observation,
     extension: ext,
     subject: { reference: `Patient/${patientResponse.id}` },
@@ -233,13 +233,17 @@ test("Parameter chains", async () => {
   try {
     const resources = (await createTestData(1)).concat(await createTestData(2));
     try {
-      const observationSearch = await client.search_type({}, "Observation", [
-        {
-          name: "patient",
-          chains: ["general-practitioner", "name"],
-          value: [`Adam1`],
-        },
-      ]);
+      const observationSearch = await client.search_type(
+        { fhirVersion: "4.0" },
+        "Observation",
+        [
+          {
+            name: "patient",
+            chains: ["general-practitioner", "name"],
+            value: [`Adam1`],
+          },
+        ],
+      );
 
       //and $this.extension.where(url=%seedUrl).value = '1'
       const expectedResult = evaluate(
@@ -256,7 +260,11 @@ test("Parameter chains", async () => {
     } finally {
       await Promise.all(
         resources.map(async ({ resourceType, id }) => {
-          return await client.delete({}, resourceType, id as id);
+          return await client.delete(
+            { fhirVersion: "4.0" },
+            resourceType,
+            id as id,
+          );
         }),
       );
     }
@@ -273,7 +281,7 @@ test("test offsets and count", async () => {
   const resources: Resource[] = [];
   try {
     for (let i = 0; i < 10; i++) {
-      const observationResponse = await client.create({}, {
+      const observationResponse = await client.create({ fhirVersion: "4.0" }, {
         ...observation,
         code: {
           coding: [
@@ -287,16 +295,24 @@ test("test offsets and count", async () => {
       resources.push(observationResponse);
     }
 
-    const observationSearch1 = await client.search_type({}, "Observation", [
-      { name: "code", value: ["test"] },
-      { name: "_count", value: [5] },
-    ]);
+    const observationSearch1 = await client.search_type(
+      { fhirVersion: "4.0" },
+      "Observation",
+      [
+        { name: "code", value: ["test"] },
+        { name: "_count", value: [5] },
+      ],
+    );
     expect(observationSearch1.resources.length).toEqual(5);
-    const observationSearch2 = await client.search_type({}, "Observation", [
-      { name: "code", value: ["test"] },
-      { name: "_count", value: [3] },
-      { name: "_offset", value: [1] },
-    ]);
+    const observationSearch2 = await client.search_type(
+      { fhirVersion: "4.0" },
+      "Observation",
+      [
+        { name: "code", value: ["test"] },
+        { name: "_count", value: [3] },
+        { name: "_offset", value: [1] },
+      ],
+    );
     expect(observationSearch1.resources[1].id).toEqual(
       observationSearch2.resources[0].id,
     );
@@ -304,7 +320,11 @@ test("test offsets and count", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as id);
+        return await client.delete(
+          { fhirVersion: "4.0" },
+          resourceType,
+          id as id,
+        );
       }),
     );
   }
@@ -314,7 +334,7 @@ test("test total accurate", async () => {
   const resources: Resource[] = [];
   try {
     for (let i = 0; i < 10; i++) {
-      const observationResponse = await client.create({}, {
+      const observationResponse = await client.create({ fhirVersion: "4.0" }, {
         ...observation,
         code: {
           coding: [
@@ -328,16 +348,24 @@ test("test total accurate", async () => {
       resources.push(observationResponse);
     }
 
-    const observationSearch1 = await client.search_type({}, "Observation", [
-      { name: "code", value: ["test"] },
-      { name: "_count", value: [5] },
-      { name: "_total", value: ["accurate"] },
-    ]);
+    const observationSearch1 = await client.search_type(
+      { fhirVersion: "4.0" },
+      "Observation",
+      [
+        { name: "code", value: ["test"] },
+        { name: "_count", value: [5] },
+        { name: "_total", value: ["accurate"] },
+      ],
+    );
     expect(observationSearch1.total).toEqual(10);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as id);
+        return await client.delete(
+          { fhirVersion: "4.0" },
+          resourceType,
+          id as id,
+        );
       }),
     );
   }
@@ -347,7 +375,7 @@ test("Test sort ", async () => {
   const resources: Resource[] = [];
   try {
     for (let i = 0; i < 10; i++) {
-      const patientResponse = await client.create({}, {
+      const patientResponse = await client.create({ fhirVersion: "4.0" }, {
         resourceType: "Patient",
         name: [
           {
@@ -356,7 +384,7 @@ test("Test sort ", async () => {
           },
         ],
       } as Patient);
-      const patientResponse2 = await client.create({}, {
+      const patientResponse2 = await client.create({ fhirVersion: "4.0" }, {
         resourceType: "Patient",
         name: [
           {
@@ -369,17 +397,21 @@ test("Test sort ", async () => {
       resources.push(patientResponse2);
     }
 
-    const patientSearch = await client.search_type({}, "Patient", [
-      { name: "_sort", value: ["name"] },
-    ]);
+    const patientSearch = await client.search_type(
+      { fhirVersion: "4.0" },
+      "Patient",
+      [{ name: "_sort", value: ["name"] }],
+    );
 
     expect(
       patientSearch.resources.map((v) => evaluate("$this.name.given", v)[0])[0],
     ).toEqual("A");
 
-    const patientSearch2 = await client.search_type({}, "Patient", [
-      { name: "_sort", value: ["-name"] },
-    ]);
+    const patientSearch2 = await client.search_type(
+      { fhirVersion: "4.0" },
+      "Patient",
+      [{ name: "_sort", value: ["-name"] }],
+    );
 
     expect(
       patientSearch2.resources.map(
@@ -387,9 +419,11 @@ test("Test sort ", async () => {
       )[0],
     ).toEqual("J");
 
-    const mutliSort1 = await client.search_type({}, "Patient", [
-      { name: "_sort", value: ["-name", "-family"] },
-    ]);
+    const mutliSort1 = await client.search_type(
+      { fhirVersion: "4.0" },
+      "Patient",
+      [{ name: "_sort", value: ["-name", "-family"] }],
+    );
 
     const resmultiSort1 = mutliSort1.resources.map(
       (v) => evaluate("$this.name.family", v)[0],
@@ -397,9 +431,11 @@ test("Test sort ", async () => {
 
     expect([resmultiSort1[0], resmultiSort1[1]]).toEqual(["K", "J"]);
 
-    const mutliSort2 = await client.search_type({}, "Patient", [
-      { name: "_sort", value: ["name", "-family"] },
-    ]);
+    const mutliSort2 = await client.search_type(
+      { fhirVersion: "4.0" },
+      "Patient",
+      [{ name: "_sort", value: ["name", "-family"] }],
+    );
 
     const resmutliSort2 = mutliSort2.resources.map((v) => [
       evaluate("$this.name.given", v)[0],
@@ -431,7 +467,11 @@ test("Test sort ", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as id);
+        return await client.delete(
+          { fhirVersion: "4.0" },
+          resourceType,
+          id as id,
+        );
       }),
     );
   }
@@ -440,7 +480,7 @@ test("Test sort ", async () => {
 test("Testing custom extension added to resources", async () => {
   const resources: Resource[] = [];
   try {
-    const p1 = await client.create({}, {
+    const p1 = await client.create({ fhirVersion: "4.0" }, {
       resourceType: "Patient",
     } as Patient);
     resources.push(p1);
@@ -450,7 +490,7 @@ test("Testing custom extension added to resources", async () => {
         "https://iguhealth.app/author",
       ].sort(),
     );
-    const existingExtensions = await client.create({}, {
+    const existingExtensions = await client.create({ fhirVersion: "4.0" }, {
       meta: {
         extension: [
           { url: "https://iguhealth.app/author", valueString: "test" },
@@ -472,7 +512,7 @@ test("Testing custom extension added to resources", async () => {
       ].sort(),
     );
 
-    const preserveExtensions = await client.create({}, {
+    const preserveExtensions = await client.create({ fhirVersion: "4.0" }, {
       meta: {
         extension: [
           { url: "https://test.com", valueString: "test" },
@@ -498,7 +538,11 @@ test("Testing custom extension added to resources", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as id);
+        return await client.delete(
+          { fhirVersion: "4.0" },
+          resourceType,
+          id as id,
+        );
       }),
     );
   }
@@ -507,24 +551,27 @@ test("Testing custom extension added to resources", async () => {
 test("Number range", async () => {
   const resources: Resource[] = [];
   try {
-    const RiskAssessment: RiskAssessment = await client.create({}, {
-      status: "final",
-      subject: {
-        reference: "Patient/b248b1b2-1686-4b94-9936-37d7a5f94b51",
-      },
-      prediction: [
-        {
-          probabilityDecimal: 1.1327,
+    const RiskAssessment: RiskAssessment = await client.create(
+      { fhirVersion: "4.0" },
+      {
+        status: "final",
+        subject: {
+          reference: "Patient/b248b1b2-1686-4b94-9936-37d7a5f94b51",
         },
-      ],
-      resourceType: "RiskAssessment",
-      occurrenceDateTime: "2006-01-13T23:01:00Z",
-    } as RiskAssessment);
+        prediction: [
+          {
+            probabilityDecimal: 1.1327,
+          },
+        ],
+        resourceType: "RiskAssessment",
+        occurrenceDateTime: "2006-01-13T23:01:00Z",
+      } as RiskAssessment,
+    );
     resources.push(RiskAssessment);
 
     expect(
       (
-        await client.search_type({}, "RiskAssessment", [
+        await client.search_type({ fhirVersion: "4.0" }, "RiskAssessment", [
           { name: "probability", value: [1.133] },
         ])
       ).resources[0].id,
@@ -532,7 +579,7 @@ test("Number range", async () => {
 
     expect(
       (
-        await client.search_type({}, "RiskAssessment", [
+        await client.search_type({ fhirVersion: "4.0" }, "RiskAssessment", [
           { name: "probability", value: [1.134] },
         ])
       ).resources.length,
@@ -540,7 +587,7 @@ test("Number range", async () => {
 
     expect(
       (
-        await client.search_type({}, "RiskAssessment", [
+        await client.search_type({ fhirVersion: "4.0" }, "RiskAssessment", [
           { name: "probability", value: [1.13] },
         ])
       ).resources[0].id,
@@ -548,7 +595,7 @@ test("Number range", async () => {
 
     expect(
       (
-        await client.search_type({}, "RiskAssessment", [
+        await client.search_type({ fhirVersion: "4.0" }, "RiskAssessment", [
           { name: "probability", value: [1.14] },
         ])
       ).resources.length,
@@ -556,7 +603,11 @@ test("Number range", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as id);
+        return await client.delete(
+          { fhirVersion: "4.0" },
+          resourceType,
+          id as id,
+        );
       }),
     );
   }
@@ -565,25 +616,28 @@ test("Number range", async () => {
 test("Number prefixes", async () => {
   const resources: Resource[] = [];
   try {
-    const RiskAssessment: RiskAssessment = await client.create({}, {
-      status: "final",
-      subject: {
-        reference: "Patient/b248b1b2-1686-4b94-9936-37d7a5f94b51",
-      },
-      prediction: [
-        {
-          probabilityDecimal: 1.1327,
+    const RiskAssessment: RiskAssessment = await client.create(
+      { fhirVersion: "4.0" },
+      {
+        status: "final",
+        subject: {
+          reference: "Patient/b248b1b2-1686-4b94-9936-37d7a5f94b51",
         },
-      ],
-      resourceType: "RiskAssessment",
-      occurrenceDateTime: "2006-01-13T23:01:00Z",
-    } as RiskAssessment);
+        prediction: [
+          {
+            probabilityDecimal: 1.1327,
+          },
+        ],
+        resourceType: "RiskAssessment",
+        occurrenceDateTime: "2006-01-13T23:01:00Z",
+      } as RiskAssessment,
+    );
     resources.push(RiskAssessment);
 
     // Because range is off it will not match on generic
     expect(
       (
-        await client.search_type({}, "RiskAssessment", [
+        await client.search_type({ fhirVersion: "4.0" }, "RiskAssessment", [
           { name: "probability", value: ["gt1"] },
         ])
       ).resources.length,
@@ -591,7 +645,7 @@ test("Number prefixes", async () => {
 
     expect(
       (
-        await client.search_type({}, "RiskAssessment", [
+        await client.search_type({ fhirVersion: "4.0" }, "RiskAssessment", [
           { name: "probability", value: ["gt1.12"] },
         ])
       ).resources[0].id,
@@ -599,7 +653,7 @@ test("Number prefixes", async () => {
 
     expect(
       (
-        await client.search_type({}, "RiskAssessment", [
+        await client.search_type({ fhirVersion: "4.0" }, "RiskAssessment", [
           { name: "probability", value: ["gt1.13"] },
         ])
       ).resources.length,
@@ -607,7 +661,7 @@ test("Number prefixes", async () => {
 
     expect(
       (
-        await client.search_type({}, "RiskAssessment", [
+        await client.search_type({ fhirVersion: "4.0" }, "RiskAssessment", [
           { name: "probability", value: ["ge1.13"] },
         ])
       ).resources[0].id,
@@ -615,7 +669,7 @@ test("Number prefixes", async () => {
 
     expect(
       (
-        await client.search_type({}, "RiskAssessment", [
+        await client.search_type({ fhirVersion: "4.0" }, "RiskAssessment", [
           { name: "probability", value: ["gt-1"] },
         ])
       ).resources[0].id,
@@ -623,7 +677,7 @@ test("Number prefixes", async () => {
 
     expect(
       (
-        await client.search_type({}, "RiskAssessment", [
+        await client.search_type({ fhirVersion: "4.0" }, "RiskAssessment", [
           { name: "probability", value: ["lt1.14"] },
         ])
       ).resources[0].id,
@@ -631,7 +685,7 @@ test("Number prefixes", async () => {
 
     expect(
       (
-        await client.search_type({}, "RiskAssessment", [
+        await client.search_type({ fhirVersion: "4.0" }, "RiskAssessment", [
           { name: "probability", value: ["lt1.133"] },
         ])
       ).resources.length,
@@ -639,7 +693,7 @@ test("Number prefixes", async () => {
 
     expect(
       (
-        await client.search_type({}, "RiskAssessment", [
+        await client.search_type({ fhirVersion: "4.0" }, "RiskAssessment", [
           { name: "probability", value: ["le1.133"] },
         ])
       ).resources[0].id,
@@ -647,7 +701,7 @@ test("Number prefixes", async () => {
 
     expect(
       (
-        await client.search_type({}, "RiskAssessment", [
+        await client.search_type({ fhirVersion: "4.0" }, "RiskAssessment", [
           { name: "probability", value: ["lt1.130"] },
         ])
       ).resources.length,
@@ -655,7 +709,7 @@ test("Number prefixes", async () => {
 
     expect(
       (
-        await client.search_type({}, "RiskAssessment", [
+        await client.search_type({ fhirVersion: "4.0" }, "RiskAssessment", [
           { name: "probability", value: ["ne1.13"] },
         ])
       ).resources.length,
@@ -663,7 +717,7 @@ test("Number prefixes", async () => {
 
     expect(
       (
-        await client.search_type({}, "RiskAssessment", [
+        await client.search_type({ fhirVersion: "4.0" }, "RiskAssessment", [
           { name: "probability", value: ["eq1.13"] },
         ])
       ).resources[0].id,
@@ -671,7 +725,7 @@ test("Number prefixes", async () => {
 
     expect(
       (
-        await client.search_type({}, "RiskAssessment", [
+        await client.search_type({ fhirVersion: "4.0" }, "RiskAssessment", [
           { name: "probability", value: ["1.13"] },
         ])
       ).resources[0].id,
@@ -679,7 +733,11 @@ test("Number prefixes", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as id);
+        return await client.delete(
+          { fhirVersion: "4.0" },
+          resourceType,
+          id as id,
+        );
       }),
     );
   }
@@ -699,29 +757,36 @@ test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
   } as QuestionnaireResponse;
   const resources: Resource[] = [];
   try {
-    const q = await client.create({}, questionnaireTemplate);
+    const q = await client.create(
+      { fhirVersion: "4.0" },
+      questionnaireTemplate,
+    );
     resources.push(q);
-    const qr = await client.create({}, qrTemplate);
+    const qr = await client.create({ fhirVersion: "4.0" }, qrTemplate);
     resources.push(qr);
 
     expect(
-      await client.search_type({}, "QuestionnaireResponse", [
-        { name: "questionnaire", value: [q.id as id] },
-      ]),
+      await client.search_type(
+        { fhirVersion: "4.0" },
+        "QuestionnaireResponse",
+        [{ name: "questionnaire", value: [q.id as id] }],
+      ),
     ).toEqual({
       resources: [qr],
     });
 
     expect(
-      await client.search_type({}, "QuestionnaireResponse", [
-        { name: "questionnaire", value: [q.url as string] },
-      ]),
+      await client.search_type(
+        { fhirVersion: "4.0" },
+        "QuestionnaireResponse",
+        [{ name: "questionnaire", value: [q.url as string] }],
+      ),
     ).toEqual({
       resources: [qr],
     });
 
     expect(
-      await client.search_type({}, "Questionnaire", [
+      await client.search_type({ fhirVersion: "4.0" }, "Questionnaire", [
         { name: "url", value: ["https://iguhealth.com/PREPARE"] },
       ]),
     ).toEqual({
@@ -730,7 +795,11 @@ test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as id);
+        return await client.delete(
+          { fhirVersion: "4.0" },
+          resourceType,
+          id as id,
+        );
       }),
     );
   }
@@ -740,7 +809,7 @@ test("Type filter Memory", async () => {
   expect([
     ...new Set(
       (
-        await client.search_system({}, [
+        await client.search_system({ fhirVersion: "4.0" }, [
           { name: "_type", value: ["SearchParameter"] },
         ])
       ).resources.map((v) => v.resourceType),
@@ -762,13 +831,16 @@ test("Type filter", async () => {
   } as QuestionnaireResponse;
   const resources: Resource[] = [];
   try {
-    const q = await client.create({}, questionnaireTemplate);
+    const q = await client.create(
+      { fhirVersion: "4.0" },
+      questionnaireTemplate,
+    );
     resources.push(q);
-    const qr = await client.create({}, qrTemplate);
+    const qr = await client.create({ fhirVersion: "4.0" }, qrTemplate);
     resources.push(qr);
 
     expect(
-      await client.search_system({}, [
+      await client.search_system({ fhirVersion: "4.0" }, [
         { name: "_type", value: ["QuestionnaireResponse"] },
       ]),
     ).toEqual({
@@ -776,7 +848,7 @@ test("Type filter", async () => {
     });
 
     expect(
-      await client.search_system({}, [
+      await client.search_system({ fhirVersion: "4.0" }, [
         { name: "_type", value: ["Questionnaire"] },
       ]),
     ).toEqual({
@@ -785,7 +857,11 @@ test("Type filter", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as id);
+        return await client.delete(
+          { fhirVersion: "4.0" },
+          resourceType,
+          id as id,
+        );
       }),
     );
   }
@@ -793,7 +869,7 @@ test("Type filter", async () => {
 
 test("Memory type test", async () => {
   const primitiveSDSearch = await client.search_type(
-    {},
+    { fhirVersion: "4.0" },
     "StructureDefinition",
     [
       { name: "kind", value: ["primitive-type"] },
@@ -806,7 +882,7 @@ test("Memory type test", async () => {
 
 test("Memory type test with _count", async () => {
   const primitiveSDSearch = await client.search_type(
-    {},
+    { fhirVersion: "4.0" },
     "StructureDefinition",
     [{ name: "_count", value: ["1"] }],
   );
@@ -823,16 +899,19 @@ test("Encoding test", async () => {
 
   const resources: Resource[] = [];
   try {
-    const q = await client.create({}, questionnaireTemplate);
+    const q = await client.create(
+      { fhirVersion: "4.0" },
+      questionnaireTemplate,
+    );
     resources.push(q);
     const q2 = await client.create(
-      {},
+      { fhirVersion: "4.0" },
       { ...questionnaireTemplate, title: "test&encoding=3" },
     );
     resources.push(q2);
 
     expect(
-      await client.search_type({}, "Questionnaire", [
+      await client.search_type({ fhirVersion: "4.0" }, "Questionnaire", [
         { name: "title", value: ["test/encoding=123"] },
       ]),
     ).toEqual({
@@ -840,7 +919,7 @@ test("Encoding test", async () => {
     });
 
     expect(
-      await client.search_type({}, "Questionnaire", [
+      await client.search_type({ fhirVersion: "4.0" }, "Questionnaire", [
         { name: "title", value: ["test&encoding=3"] },
       ]),
     ).toEqual({
@@ -849,7 +928,11 @@ test("Encoding test", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, resourceType, id as id);
+        return await client.delete(
+          { fhirVersion: "4.0" },
+          resourceType,
+          id as id,
+        );
       }),
     );
   }

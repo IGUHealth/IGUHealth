@@ -34,6 +34,7 @@ function valueSetToOptions(valueSet: ValueSet): Option[] {
 }
 
 export const FHIRCodeEditable = ({
+  fhirVersion,
   value,
   onChange,
   issue,
@@ -47,7 +48,9 @@ export const FHIRCodeEditable = ({
   useEffect(() => {
     if (system) {
       client
-        .invoke_type(ValueSetExpand.Op, {}, "ValueSet", { url: system })
+        .invoke_type(ValueSetExpand.Op, { fhirVersion }, "ValueSet", {
+          url: system,
+        })
         .then((valueSet) => {
           setOptions(valueSetToOptions(valueSet));
         });

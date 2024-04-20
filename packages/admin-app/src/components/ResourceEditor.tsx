@@ -60,7 +60,11 @@ function ResourceHistory() {
   useEffect(() => {
     setLoading(true);
     client
-      .historyInstance({}, resourceType as ResourceType, id as id)
+      .historyInstance(
+        { fhirVersion: "4.0" },
+        resourceType as ResourceType,
+        id as id,
+      )
       .then((response) => {
         setHistory(response);
         setLoading(false);
@@ -146,6 +150,7 @@ export default function ResourceEditorComponent({
             title: "Editor",
             content: structureDefinition && (
               <FHIRGenerativeForm
+                fhirVersion="4.0"
                 value={resource}
                 structureDefinition={structureDefinition}
                 setValue={setValue}

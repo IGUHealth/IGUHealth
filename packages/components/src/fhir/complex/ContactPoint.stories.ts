@@ -25,6 +25,7 @@ const client = createStorybookClient();
 
 export const Primary: Story = {
   args: {
+    fhirVersion: "4.0",
     client: client,
     value: {
       use: "home",
@@ -38,6 +39,7 @@ export const Primary: Story = {
 
 export const OnError: Story = {
   args: {
+    fhirVersion: "4.0",
     // @ts-ignore
     value: "test",
     issue: "Bad value",

@@ -9,6 +9,7 @@ import { ClientProps, EditableProps } from "../types";
 export type FHIRCodingEditableProps = EditableProps<Coding> & ClientProps;
 
 export const FHIRCodingEditable = ({
+  fhirVersion,
   value,
   onChange,
   client,
@@ -27,6 +28,7 @@ export const FHIRCodingEditable = ({
         />
         <FHIRCodeEditable
           label="Code"
+          fhirVersion={fhirVersion}
           client={client}
           open={true}
           system={value?.system}
