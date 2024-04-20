@@ -294,7 +294,7 @@ async function createPayload(
   return {
     ctx: {
       SEC_TOKEN: ctx.user.accessToken || "not-sec",
-      API_URL: new URL(`/w/${ctx.tenant}/api/v1/fhir/r4`, process.env.API_URL)
+      API_URL: new URL(`/w/${ctx.tenant}`, process.env.API_URL)
         .href,
       tenant: ctx.tenant,
       level: request.level,
