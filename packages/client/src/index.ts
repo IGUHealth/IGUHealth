@@ -11,11 +11,7 @@ import {
 import type { IOperation, OPMetadata } from "@iguhealth/operation-execution";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import type {
-  FHIRClientAsync,
-  Versioned,
-  VersionedFHIRClientAsync,
-} from "./interface.js";
+import type { FHIRClientAsync, VersionedFHIRClientAsync } from "./interface.js";
 import { MiddlewareAsync } from "./middleware/index.js";
 import type { FHIRRequest, FHIRResponse } from "./types/index.js";
 import type { ParsedParameter } from "./url.js";

@@ -17,7 +17,7 @@ test("test batch", async () => {
     entry: [],
   } as Bundle;
   try {
-    response = await client.batch({ fhirVersion: "4.0" }, {
+    response = await client.batch({}, "4.0", {
       resourceType: "Bundle",
       type: "batch",
       entry: [
@@ -55,6 +55,6 @@ test("test batch", async () => {
         };
       }),
     } as Bundle;
-    await client.batch({ fhirVersion: "4.0" }, bundle);
+    await client.batch({}, "4.0", bundle);
   }
 });

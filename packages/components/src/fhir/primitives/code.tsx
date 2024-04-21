@@ -48,7 +48,7 @@ export const FHIRCodeEditable = ({
   useEffect(() => {
     if (system) {
       client
-        .invoke_type(ValueSetExpand.Op, { fhirVersion }, "ValueSet", {
+        .invoke_type(ValueSetExpand.Op, {}, fhirVersion, "ValueSet", {
           url: system,
         })
         .then((valueSet) => {

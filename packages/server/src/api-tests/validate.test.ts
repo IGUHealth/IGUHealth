@@ -16,17 +16,14 @@ const client = HTTPClient({
 test("create bad patient", async () => {
   expect(
     // @ts-ignore
-    client.create(
-      { fhirVersion: "4.0" },
-      { resourceType: "Patient", badValue: 5 },
-    ),
+    client.create({}, "4.0", { resourceType: "Patient", badValue: 5 }),
   ).rejects.toThrowError();
 });
 
 test("Bad Creation", async () => {
   const badPatient = { resourceType: "Patient", name: "bob" };
   //@ts-ignore
-  expect(client.create({ fhirVersion: "4.0" }, badPatient)).rejects.toThrow();
+  expect(client.create({}, "4.0", badPatient)).rejects.toThrow();
 });
 
 test("Bad expansion", async () => {
@@ -36,7 +33,8 @@ test("Bad expansion", async () => {
     // @ts-ignore
     client.invoke_type(
       ValueSetExpand.Op,
-      { fhirVersion: "4.0" },
+      {},
+      "4.0",
       "ValueSet",
       // @ts-ignore
       badExpansion,
@@ -49,7 +47,8 @@ test("ValidationOperation", async () => {
   const invocation = client
     .invoke_type(
       ResourceValidate.Op,
-      { fhirVersion: "4.0" },
+      {},
+      "4.0",
       "Patient",
       // @ts-ignore
       { resource: badPatient },
@@ -72,7 +71,8 @@ test("ValidationOperation", async () => {
 
   const successfulInvocation = client.invoke_type(
     ResourceValidate.Op,
-    { fhirVersion: "4.0" },
+    {},
+    "4.0",
     "Patient",
     { resource: { resourceType: "Patient", name: [{ given: ["bob"] }] } },
   );
@@ -90,7 +90,8 @@ test("ValidationOperation", async () => {
 
   const invalidType = client.invoke_type(
     ResourceValidate.Op,
-    { fhirVersion: "4.0" },
+    {},
+    "4.0",
     "Practitioner",
     { resource: { resourceType: "Patient", name: [{ given: ["bob"] }] } },
   );
@@ -113,7 +114,7 @@ test("Invalid Operation Payload", async () => {
   expect(
     // @ts-ignore
     client
-      .invoke_system(ValueSetExpand.Op, { fhirVersion: "4.0" }, { url: 5 })
+      .invoke_system(ValueSetExpand.Op, {}, "4.0", { url: 5 })
       .catch((e) => {
         throw e.operationOutcome;
       }),
