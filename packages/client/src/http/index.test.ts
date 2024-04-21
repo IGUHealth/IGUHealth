@@ -23,10 +23,7 @@ test("Test creating and destroying with HTTP Client", async () => {
     type: false,
     parameter: [],
   } as OperationDefinition;
-  const response = await client.create(
-    { fhirVersion: "4.0" },
-    operationDefinition,
-  );
+  const response = await client.create({}, "4.0", operationDefinition);
   expect(response).toMatchObject({
     resourceType: "OperationDefinition",
     name: "test",
@@ -39,9 +36,5 @@ test("Test creating and destroying with HTTP Client", async () => {
     parameter: [],
   });
 
-  await client.delete(
-    { fhirVersion: "4.0" },
-    "OperationDefinition",
-    response.id as id,
-  );
+  await client.delete({}, "4.0", "OperationDefinition", response.id as id);
 });

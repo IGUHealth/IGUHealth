@@ -12,19 +12,13 @@ import type { IOperation, OPMetadata } from "@iguhealth/operation-execution";
 import type { FHIRRequest, FHIRResponse } from "./types/index.js";
 import type { ParsedParameter } from "./url.js";
 import {
-  FHIR_VERSIONS_SUPPORTED,
   VERSIONED_FHIR,
   VersionedAResource,
   VersionedResourceType,
 } from "./version.js";
 
-export type Versioned = {
-  fhirVersion: (typeof FHIR_VERSIONS_SUPPORTED)[number];
-};
-
 export type FHIRClient<CTX> = FHIRClientAsync<CTX>;
-export type VersionedFHIRClient<CTX extends Versioned> =
-  VersionedFHIRClientAsync<CTX>;
+export type VersionedFHIRClient<CTX> = VersionedFHIRClientAsync<CTX>;
 
 export interface FHIRClientAsync<CTX> {
   request(ctx: CTX, request: FHIRRequest): Promise<FHIRResponse>;
@@ -104,137 +98,154 @@ export interface FHIRClientAsync<CTX> {
   batch(ctx: CTX, bundle: Bundle): Promise<Bundle>;
 }
 
-export interface VersionedFHIRClientAsync<CTX extends Versioned> {
-  request<Context extends CTX>(
-    ctx: Context,
-    request: FHIRRequest,
-  ): Promise<FHIRResponse>;
-  capabilities<Context extends CTX>(
-    ctx: Context,
-  ): Promise<VERSIONED_FHIR[Context["fhirVersion"]]["CapabilityStatement"]>;
-  search_system<Context extends CTX>(
-    ctx: Context,
+export interface VersionedFHIRClientAsync<CTX> {
+  request(ctx: CTX, request: FHIRRequest): Promise<FHIRResponse>;
+  capabilities<FHIRVersion extends FHIRRequest["fhirVersion"]>(
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
+  ): Promise<VERSIONED_FHIR[FHIRVersion]["CapabilityStatement"]>;
+  search_system<FHIRVersion extends FHIRRequest["fhirVersion"]>(
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
     parameters: ParsedParameter<string | number>[] | string,
   ): Promise<{
     total?: number;
-    resources: VERSIONED_FHIR[Context["fhirVersion"]]["Resource"][];
+    resources: VERSIONED_FHIR[FHIRVersion]["Resource"][];
   }>;
   search_type<
-    Context extends CTX,
-    T extends VersionedResourceType<Context["fhirVersion"]>,
+    FHIRVersion extends FHIRRequest["fhirVersion"],
+    T extends VersionedResourceType<FHIRVersion>,
   >(
-    ctx: Context,
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
     type: T,
     parameters: ParsedParameter<string | number>[] | string,
   ): Promise<{
     total?: number;
-    resources: VersionedAResource<Context["fhirVersion"], T>[];
+    resources: VersionedAResource<FHIRVersion, T>[];
   }>;
   create<
-    Context extends CTX,
-    T extends VERSIONED_FHIR[Context["fhirVersion"]]["Resource"],
+    FHIRVersion extends FHIRRequest["fhirVersion"],
+    T extends VERSIONED_FHIR[FHIRVersion]["Resource"],
   >(
     ctx: CTX,
+    fhirVersion: FHIRVersion,
     resource: T,
     allowIdSet?: boolean,
   ): Promise<T>;
   update<
-    Context extends CTX,
-    T extends VersionedResourceType<Context["fhirVersion"]>,
+    FHIRVersion extends FHIRRequest["fhirVersion"],
+    T extends VersionedResourceType<FHIRVersion>,
   >(
-    ctx: Context,
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
     resourceType: T,
-    id: VERSIONED_FHIR[Context["fhirVersion"]]["id"],
-    resource: VersionedAResource<Context["fhirVersion"], T>,
-  ): Promise<VersionedAResource<Context["fhirVersion"], T>>;
+    id: VERSIONED_FHIR[FHIRVersion]["id"],
+    resource: VersionedAResource<FHIRVersion, T>,
+  ): Promise<VersionedAResource<FHIRVersion, T>>;
   patch<
-    Context extends CTX,
-    T extends VersionedResourceType<Context["fhirVersion"]>,
+    FHIRVersion extends FHIRRequest["fhirVersion"],
+    T extends VersionedResourceType<FHIRVersion>,
   >(
-    ctx: Context,
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
     resourceType: T,
-    id: VERSIONED_FHIR[Context["fhirVersion"]]["id"],
+    id: VERSIONED_FHIR[FHIRVersion]["id"],
     patches: any,
-  ): Promise<VersionedAResource<Context["fhirVersion"], T>>;
+  ): Promise<VersionedAResource<FHIRVersion, T>>;
   read<
-    Context extends CTX,
-    T extends VersionedResourceType<Context["fhirVersion"]>,
+    FHIRVersion extends FHIRRequest["fhirVersion"],
+    T extends VersionedResourceType<FHIRVersion>,
   >(
-    ctx: Context,
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
     resourceType: T,
-    id: VERSIONED_FHIR[Context["fhirVersion"]]["id"],
-  ): Promise<VersionedAResource<Context["fhirVersion"], T> | undefined>;
+    id: VERSIONED_FHIR[FHIRVersion]["id"],
+  ): Promise<VersionedAResource<FHIRVersion, T> | undefined>;
   vread<
-    Context extends CTX,
-    T extends VersionedResourceType<Context["fhirVersion"]>,
+    FHIRVersion extends FHIRRequest["fhirVersion"],
+    T extends VersionedResourceType<FHIRVersion>,
   >(
-    ctx: Context,
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
     resourceType: T,
-    id: VERSIONED_FHIR[Context["fhirVersion"]]["id"],
-    versionId: VERSIONED_FHIR[Context["fhirVersion"]]["id"],
-  ): Promise<VersionedAResource<Context["fhirVersion"], T> | undefined>;
+    id: VERSIONED_FHIR[FHIRVersion]["id"],
+    versionId: VERSIONED_FHIR[FHIRVersion]["id"],
+  ): Promise<VersionedAResource<FHIRVersion, T> | undefined>;
   delete<
-    Context extends CTX,
-    T extends VersionedResourceType<Context["fhirVersion"]>,
+    FHIRVersion extends FHIRRequest["fhirVersion"],
+    T extends VersionedResourceType<FHIRVersion>,
   >(
-    ctx: Context,
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
     resourceType: T,
-    id: VERSIONED_FHIR[Context["fhirVersion"]]["id"],
+    id: VERSIONED_FHIR[FHIRVersion]["id"],
   ): Promise<void>;
 
-  historySystem<Context extends CTX>(
-    ctx: Context,
+  historySystem<FHIRVersion extends FHIRRequest["fhirVersion"]>(
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
     parameters?: ParsedParameter<string | number>[] | string,
-  ): Promise<VERSIONED_FHIR[Context["fhirVersion"]]["BundleEntry"][]>;
+  ): Promise<VERSIONED_FHIR[FHIRVersion]["BundleEntry"][]>;
   historyType<
-    Context extends CTX,
-    T extends VersionedResourceType<Context["fhirVersion"]>,
+    FHIRVersion extends FHIRRequest["fhirVersion"],
+    T extends VersionedResourceType<FHIRVersion>,
   >(
-    ctx: Context,
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
     resourceType: T,
     parameters?: ParsedParameter<string | number>[] | string,
-  ): Promise<VERSIONED_FHIR[Context["fhirVersion"]]["BundleEntry"][]>;
+  ): Promise<VERSIONED_FHIR[FHIRVersion]["BundleEntry"][]>;
   historyInstance<
-    Context extends CTX,
-    T extends VersionedResourceType<Context["fhirVersion"]>,
+    FHIRVersion extends FHIRRequest["fhirVersion"],
+    T extends VersionedResourceType<FHIRVersion>,
   >(
-    ctx: Context,
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
     resourceType: T,
-    id: VERSIONED_FHIR[Context["fhirVersion"]]["id"],
+    id: VERSIONED_FHIR[FHIRVersion]["id"],
     parameters?: ParsedParameter<string | number>[] | string,
-  ): Promise<VERSIONED_FHIR[Context["fhirVersion"]]["BundleEntry"][]>;
-  invoke_system<Context extends CTX, Op extends IOperation<any, any>>(
+  ): Promise<VERSIONED_FHIR[FHIRVersion]["BundleEntry"][]>;
+  invoke_system<
+    FHIRVersion extends FHIRRequest["fhirVersion"],
+    Op extends IOperation<any, any>,
+  >(
     op: Op,
-    ctx: Context,
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
     input: OPMetadata<Op>["Input"],
   ): Promise<OPMetadata<Op>["Output"]>;
   invoke_type<
-    Context extends CTX,
+    FHIRVersion extends FHIRRequest["fhirVersion"],
     Op extends IOperation<any, any>,
-    T extends VersionedResourceType<Context["fhirVersion"]>,
+    T extends VersionedResourceType<FHIRVersion>,
   >(
     op: Op,
-    ctx: Context,
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
     resourceType: T,
     input: OPMetadata<Op>["Input"],
   ): Promise<OPMetadata<Op>["Output"]>;
   invoke_instance<
-    Context extends CTX,
+    FHIRVersion extends FHIRRequest["fhirVersion"],
     Op extends IOperation<any, any>,
-    T extends VersionedResourceType<Context["fhirVersion"]>,
+    T extends VersionedResourceType<FHIRVersion>,
   >(
     op: Op,
-    ctx: Context,
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
     resourceType: T,
-    id: VERSIONED_FHIR[Context["fhirVersion"]]["id"],
+    id: VERSIONED_FHIR[FHIRVersion]["id"],
     input: OPMetadata<Op>["Input"],
   ): Promise<OPMetadata<Op>["Output"]>;
-  transaction<Context extends CTX>(
-    ctx: Context,
-    bundle: VERSIONED_FHIR[Context["fhirVersion"]]["Bundle"],
-  ): Promise<VERSIONED_FHIR[Context["fhirVersion"]]["Bundle"]>;
-  batch<Context extends CTX>(
-    ctx: Context,
-    bundle: VERSIONED_FHIR[Context["fhirVersion"]]["Bundle"],
-  ): Promise<VERSIONED_FHIR[Context["fhirVersion"]]["Bundle"]>;
+  transaction<FHIRVersion extends FHIRRequest["fhirVersion"]>(
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
+    bundle: VERSIONED_FHIR[FHIRVersion]["Bundle"],
+  ): Promise<VERSIONED_FHIR[FHIRVersion]["Bundle"]>;
+  batch<FHIRVersion extends FHIRRequest["fhirVersion"]>(
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
+    bundle: VERSIONED_FHIR[FHIRVersion]["Bundle"],
+  ): Promise<VERSIONED_FHIR[FHIRVersion]["Bundle"]>;
 }
