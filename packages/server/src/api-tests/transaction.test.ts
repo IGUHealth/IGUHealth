@@ -16,7 +16,7 @@ test("test successful transaction", async () => {
     type: "transaction-response" as code,
   } as Bundle;
   try {
-    transactionResponse = await client.transaction({ fhirVersion: "4.0" }, {
+    transactionResponse = await client.transaction({}, "4.0", {
       resourceType: "Bundle",
       type: "transaction",
       entry: [
@@ -62,12 +62,12 @@ test("test successful transaction", async () => {
         };
       }),
     } as Bundle;
-    await client.transaction({ fhirVersion: "4.0" }, transaction);
+    await client.transaction({}, "4.0", transaction);
   }
 });
 
 test("test circular transaction", async () => {
-  const response = client.transaction({ fhirVersion: "4.0" }, {
+  const response = client.transaction({}, "4.0", {
     resourceType: "Bundle",
     type: "transaction",
     entry: [

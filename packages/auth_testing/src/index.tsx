@@ -16,7 +16,7 @@ function App() {
     async function fetchPatients() {
       const patients = await iguhealth
         .getClient()
-        .search_type({ fhirVersion: "4.0" }, "Patient", []);
+        .search_type({}, "4.0", "Patient", []);
       setPatients(patients.resources);
     }
     if (iguhealth.isAuthenticated) fetchPatients();

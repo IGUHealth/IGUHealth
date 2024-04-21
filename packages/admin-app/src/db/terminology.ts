@@ -13,7 +13,8 @@ export const getValueSetExpansion = selectorFamily({
       const client = get(getClient);
       const expansion = client.invoke_type(
         ValueSetExpand.Op,
-        { fhirVersion: "4.0" },
+        {},
+        "4.0",
         "ValueSet",
         {
           url: url as uri,

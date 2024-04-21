@@ -7,7 +7,6 @@ import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { VersionedAsynchronousClient } from "../index.js";
-import { Versioned } from "../interface.js";
 import { MiddlewareAsync, createMiddlewareAsync } from "../middleware/index.js";
 import { FHIRRequest, FHIRResponse } from "../types/index.js";
 import { ParsedParameter } from "../url.js";
@@ -432,10 +431,7 @@ async function httpResponseToFHIRResponse(
   }
 }
 
-function httpMiddleware<CTX extends Versioned>(): MiddlewareAsync<
-  HTTPClientState,
-  CTX
-> {
+function httpMiddleware<CTX>(): MiddlewareAsync<HTTPClientState, CTX> {
   return createMiddlewareAsync<HTTPClientState, CTX>([
     async (context) => {
       const httpRequest = await toHTTPRequest(context.state, context.request);
@@ -453,7 +449,7 @@ function httpMiddleware<CTX extends Versioned>(): MiddlewareAsync<
   ]);
 }
 
-export default function createHTTPClient<CTX extends Versioned>(
+export default function createHTTPClient<CTX>(
   initialState: HTTPClientState,
 ): VersionedAsynchronousClient<HTTPClientState, CTX> {
   // Removing trailing slash

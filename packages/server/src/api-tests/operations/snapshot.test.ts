@@ -27,7 +27,8 @@ test("Patient expansion", async () => {
   const result = await client
     .invoke_type(
       StructureDefinitionSnapshot.Op,
-      { fhirVersion: "4.0" },
+      {},
+      "4.0",
       "StructureDefinition",
       {
         url: PATIENT_URL,
@@ -39,7 +40,8 @@ test("Patient expansion", async () => {
   const patientTest = await client
     .invoke_type(
       StructureDefinitionSnapshot.Op,
-      { fhirVersion: "4.0" },
+      {},
+      "4.0",
       "StructureDefinition",
       {
         definition: {
@@ -79,7 +81,8 @@ test("us-core-snapshot", async () => {
   const usCoreSnapshot = await client
     .invoke_type(
       StructureDefinitionSnapshot.Op,
-      { fhirVersion: "4.0" },
+      {},
+      "4.0",
       "StructureDefinition",
       {
         definition: { ...usCoreDifferential, snapshot: undefined },

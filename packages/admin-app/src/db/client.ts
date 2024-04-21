@@ -2,7 +2,6 @@ import { atom } from "recoil";
 
 import { VersionedAsynchronousClient } from "@iguhealth/client";
 import createHTTPClient from "@iguhealth/client/http";
-import { Versioned } from "@iguhealth/client/lib/interface";
 import { createMiddlewareAsync } from "@iguhealth/client/middleware";
 import { FHIRResponse } from "@iguhealth/client/types";
 
@@ -10,10 +9,10 @@ type CachedClient = VersionedAsynchronousClient<
   {
     client: VersionedAsynchronousClient<
       { client: ReturnType<typeof createAdminAppClient> },
-      Versioned
+      unknown
     >;
   },
-  Versioned
+  unknown
 >;
 
 export const getClient = atom<ReturnType<typeof createAdminAppClient>>({
@@ -33,7 +32,7 @@ export function createAdminAppClient(
     { client: client },
     createMiddlewareAsync<
       { client: ReturnType<typeof createHTTPClient> },
-      Versioned
+      unknown
     >([
       async (context) => {
         switch (context.request.type) {

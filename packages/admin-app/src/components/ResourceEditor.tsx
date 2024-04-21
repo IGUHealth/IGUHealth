@@ -60,11 +60,7 @@ function ResourceHistory() {
   useEffect(() => {
     setLoading(true);
     client
-      .historyInstance(
-        { fhirVersion: "4.0" },
-        resourceType as ResourceType,
-        id as id,
-      )
+      .historyInstance({}, "4.0", resourceType as ResourceType, id as id)
       .then((response) => {
         setHistory(response);
         setLoading(false);
