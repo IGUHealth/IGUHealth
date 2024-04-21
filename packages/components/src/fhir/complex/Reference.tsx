@@ -37,7 +37,7 @@ const ReferenceView = ({
       const resourceType = value.reference.split("/")[0];
       const id = value.reference.split("/")[1];
       client
-        .batch({ fhirVersion }, {
+        .batch({}, fhirVersion, {
           resourceType: "Bundle",
           type: "batch",
           entry: [
@@ -125,7 +125,7 @@ const ReferenceSearch = ({
   React.useEffect(() => {
     if (resourceType) {
       client
-        .search_type({ fhirVersion }, resourceType, query)
+        .search_type({}, fhirVersion, resourceType, query)
         .then((bundle) => {
           setResults(bundle.resources);
         });
