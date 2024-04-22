@@ -97,9 +97,10 @@ export function deriveResourceTypeFilter<Request extends FHIRRequest>(
 ): VersionedResourceType<Request["fhirVersion"]>[] {
   const passedinTypes = _deriveResourceTypeFilter(request) as ResourceType[];
 
-  const resourceTypes = request.fhirVersion
-    ? r4bSets.resourceTypes
-    : r4Sets.resourceTypes;
+  const resourceTypes =
+    request.fhirVersion === "4.3"
+      ? r4bSets.resourceTypes
+      : r4Sets.resourceTypes;
 
   for (const type of passedinTypes) {
     if (!resourceTypes.has(type)) {
