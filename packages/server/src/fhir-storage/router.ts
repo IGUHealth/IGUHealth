@@ -77,6 +77,26 @@ function getIsMultiSourced(request: FHIRRequest): boolean {
   }
 }
 
+function getFilter<T>(
+  source: Source<T>,
+  request: FHIRRequest,
+): R4Filter | R4BFilter {
+  switch (request.fhirVersion) {
+    case "4.0":
+      return source.filter?.r4 || {};
+    case "4.3":
+      return source.filter?.r4b || {};
+    default:
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          //@ts-ignore
+          `FHIR version '${request.fhirVersion}' not supported`,
+        ),
+      );
+  }
+}
+
 export function findSource<T>(
   sources: Sources<T>,
   request: FHIRRequest,
@@ -85,14 +105,19 @@ export function findSource<T>(
   let found: { source: Source<T>; score: number }[] = [];
 
   for (const source of sources) {
+    const fhirVersionPropertyFilter = getFilter(source, request);
+
+    // Function based filter.
     if (source?.filter?.useSource && source?.filter?.useSource(request)) {
       found = [...found, { source, score: 5 }];
     } else if (
-      deriveResourceTypeFilter(request).every((resource) =>
-        source.filter?.r4?.resourcesSupported?.includes(resource),
+      deriveResourceTypeFilter(request).every((resourceType) =>
+        (
+          fhirVersionPropertyFilter?.resourcesSupported as string[] | undefined
+        )?.includes(resourceType),
       ) &&
-      source.filter?.r4?.interactionsSupported?.includes(request.type) &&
-      source.filter?.r4?.levelsSupported?.includes(request.level)
+      fhirVersionPropertyFilter.interactionsSupported?.includes(request.type) &&
+      fhirVersionPropertyFilter.levelsSupported?.includes(request.level)
     ) {
       found = [...found, { source, score: 1 }];
     }
@@ -279,15 +304,15 @@ function createRouterMiddleware<
           return {
             ...context,
             response: {
-              fhirVersion: "4.0",
+              fhirVersion: context.request.fhirVersion,
               type: "batch-response",
               level: "system",
               body: {
                 resourceType: "Bundle",
-                type: "batch-response" as r4.code,
-                entry: entries,
-              },
-            },
+                type: "batch-response" as r4.code | r4b.code,
+                entry: entries as r4b.BundleEntry[] | r4.BundleEntry[],
+              } as r4b.Bundle | r4.Bundle,
+            } as FHIRResponse,
           };
         }
         // Mutations and invocations should only have one source

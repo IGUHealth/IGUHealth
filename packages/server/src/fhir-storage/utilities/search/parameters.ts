@@ -1,8 +1,10 @@
 import { FHIRClientAsync } from "@iguhealth/client/interface";
+import { VersionedResourceType } from "@iguhealth/client/lib/version";
 import { FHIRRequest } from "@iguhealth/client/types";
 import { ParsedParameter } from "@iguhealth/client/url";
-import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
+import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
 import { ResourceType, SearchParameter } from "@iguhealth/fhir-types/r4/types";
+import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { param_types_supported } from "../../providers/postgres/constants.js";
@@ -90,8 +92,16 @@ function _deriveResourceTypeFilter(request: FHIRRequest): string[] {
   }
 }
 
-export function deriveResourceTypeFilter(request: FHIRRequest): ResourceType[] {
+export function deriveResourceTypeFilter<Request extends FHIRRequest>(
+  request: Request,
+): VersionedResourceType<Request["fhirVersion"]>[] {
   const passedinTypes = _deriveResourceTypeFilter(request) as ResourceType[];
+
+  const resourceTypes =
+    request.fhirVersion === "4.3"
+      ? r4bSets.resourceTypes
+      : r4Sets.resourceTypes;
+
   for (const type of passedinTypes) {
     if (!resourceTypes.has(type)) {
       throw new OperationError(
@@ -102,7 +112,7 @@ export function deriveResourceTypeFilter(request: FHIRRequest): ResourceType[] {
       );
     }
   }
-  return passedinTypes;
+  return passedinTypes as VersionedResourceType<Request["fhirVersion"]>[];
 }
 
 /*
