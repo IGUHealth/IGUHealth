@@ -5,12 +5,13 @@ import { fileURLToPath } from "url";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import HTTPClient from "@iguhealth/client/lib/http";
 import { StructureDefinition } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { R4 } from "@iguhealth/fhir-types/lib/versions";
 import { StructureDefinitionSnapshot } from "@iguhealth/generated-ops/lib/r4/ops";
 
 import usCoreDifferential from "../data/us-core-differential";
 
 const sds = loadArtifacts({
-  fhirVersion: "4.0",
+  fhirVersion: R4,
   resourceType: "StructureDefinition",
   packageLocation: path.join(fileURLToPath(import.meta.url), "../../../"),
   silence: true,
@@ -30,7 +31,7 @@ test("Patient expansion", async () => {
     .invoke_type(
       StructureDefinitionSnapshot.Op,
       {},
-      "4.0",
+      R4,
       "StructureDefinition",
       {
         url: PATIENT_URL,
@@ -43,7 +44,7 @@ test("Patient expansion", async () => {
     .invoke_type(
       StructureDefinitionSnapshot.Op,
       {},
-      "4.0",
+      R4,
       "StructureDefinition",
       {
         definition: {
@@ -84,7 +85,7 @@ test("us-core-snapshot", async () => {
     .invoke_type(
       StructureDefinitionSnapshot.Op,
       {},
-      "4.0",
+      R4,
       "StructureDefinition",
       {
         definition: { ...usCoreDifferential, snapshot: undefined },

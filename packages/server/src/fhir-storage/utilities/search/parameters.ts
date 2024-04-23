@@ -6,6 +6,7 @@ import { ResourceType, SearchParameter } from "@iguhealth/fhir-types/r4/types";
 import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import {
   FHIR_VERSION,
+  R4B,
   VersionedResourceType,
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -101,9 +102,7 @@ export function deriveResourceTypeFilter<Request extends FHIRRequest>(
   const passedinTypes = _deriveResourceTypeFilter(request) as ResourceType[];
 
   const resourceTypes =
-    request.fhirVersion === "4.3"
-      ? r4bSets.resourceTypes
-      : r4Sets.resourceTypes;
+    request.fhirVersion === R4B ? r4bSets.resourceTypes : r4Sets.resourceTypes;
 
   for (const type of passedinTypes) {
     if (!resourceTypes.has(type)) {

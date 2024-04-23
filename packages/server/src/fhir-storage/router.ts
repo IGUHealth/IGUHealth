@@ -16,6 +16,7 @@ import {
 } from "@iguhealth/client/types";
 import * as r4 from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
+import { R4, R4B } from "@iguhealth/fhir-types/versions";
 import {
   OperationError,
   issueSeverityToStatusCodes,
@@ -82,9 +83,9 @@ function getFilter<T>(
   request: FHIRRequest,
 ): R4Filter | R4BFilter {
   switch (request.fhirVersion) {
-    case "4.0":
+    case R4:
       return source.filter?.r4 || {};
-    case "4.3":
+    case R4B:
       return source.filter?.r4b || {};
     default:
       throw new OperationError(

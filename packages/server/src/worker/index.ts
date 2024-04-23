@@ -14,7 +14,7 @@ import {
   id,
 } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
-import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
 import { evaluate } from "@iguhealth/fhirpath";
 import {
   AccessTokenPayload,
@@ -270,7 +270,7 @@ function processSubscription(
         );
       }
 
-      if (request.fhirVersion !== "4.0") {
+      if (request.fhirVersion !== R4) {
         throw new OperationError(
           outcomeError(
             "invalid",
@@ -378,7 +378,7 @@ function processSubscription(
                 ...ctx,
                 resolveRemoteCanonical: createResolverRemoteCanonical(ctx),
               },
-              "4.0",
+              R4,
               entry.resource as Resource,
               resourceParameters,
             ))
@@ -442,7 +442,7 @@ async function getActiveTenants(pool: pg.Pool): Promise<TenantId[]> {
 
 async function createWorker(
   workerID = randomUUID(),
-  fhirVersion: FHIR_VERSION = "4.0",
+  fhirVersion: FHIR_VERSION = R4,
   loopInterval = 500,
 ) {
   // Using a pool directly because need to query up tenants.

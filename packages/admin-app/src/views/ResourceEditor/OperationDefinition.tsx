@@ -26,6 +26,7 @@ import {
   ResourceType,
   id,
 } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 import { Operation } from "@iguhealth/operation-execution";
 
 import ResourceEditorComponent, {
@@ -108,7 +109,7 @@ function OperationAuditEvents({ operationId }: { operationId: string }) {
   useEffect(() => {
     setLoading(true);
     client
-      .search_type({}, "4.0", "AuditEvent", [
+      .search_type({}, R4, "AuditEvent", [
         { name: "entity", value: [operationId] },
       ])
       .then((response) => {
@@ -197,7 +198,8 @@ const InvocationModal = ({
                       }
                       const invocation = client.invoke_system(
                         new Operation(operation),
-                        {}, "4.0",
+                        {},
+                        R4,
                         JSON.parse(parameters),
                       );
                       Toaster.promise(invocation, {

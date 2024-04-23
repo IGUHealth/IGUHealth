@@ -7,6 +7,7 @@ import {
   Resource,
   id,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { R4 } from "@iguhealth/fhir-types/lib/versions";
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system",
@@ -19,52 +20,47 @@ test("History test", async () => {
   const resources: Resource[] = [];
   const time = new Date().toISOString();
   try {
-    const p = await client.create({}, "4.0", {
+    const p = await client.create({}, R4, {
       resourceType: "Patient",
     } as Patient);
 
     resources.push(p);
     expect(p.id).toBeDefined();
-    await client.update({}, "4.0", p.resourceType, p.id as id, p);
-    const history = await client.historyInstance(
-      {},
-      "4.0",
-      "Patient",
-      p.id as id,
-    );
+    await client.update({}, R4, p.resourceType, p.id as id, p);
+    const history = await client.historyInstance({}, R4, "Patient", p.id as id);
     expect(history.length).toEqual(2);
 
-    const p2 = await client.create({}, "4.0", {
+    const p2 = await client.create({}, R4, {
       resourceType: "Patient",
     } as Patient);
     resources.push(p2);
     expect(p2.id).toBeDefined();
-    await client.update({}, "4.0", p2.resourceType, p2.id as id, p2);
-    const typeHistory = await client.historyType({}, "4.0", "Patient", [
+    await client.update({}, R4, p2.resourceType, p2.id as id, p2);
+    const typeHistory = await client.historyType({}, R4, "Patient", [
       { name: "_since", value: [time] },
     ]);
     expect(typeHistory.length).toEqual(4);
 
-    const practitioner = await client.create({}, "4.0", {
+    const practitioner = await client.create({}, R4, {
       resourceType: "Practitioner",
     } as Practitioner);
     resources.push(practitioner);
     expect(practitioner.id).toBeDefined();
     await client.update(
       {},
-      "4.0",
+      R4,
       practitioner.resourceType,
       practitioner.id as id,
       practitioner,
     );
-    const systemHistory = await client.historySystem({}, "4.0", [
+    const systemHistory = await client.historySystem({}, R4, [
       { name: "_since", value: [time] },
     ]);
     expect(systemHistory.length).toEqual(6);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, "4.0", resourceType, id as id);
+        return await client.delete({}, R4, resourceType, id as id);
       }),
     );
   }
@@ -73,52 +69,47 @@ test("History test", async () => {
 test("History test since versionid", async () => {
   const resources: Resource[] = [];
   try {
-    const p = await client.create({}, "4.0", {
+    const p = await client.create({}, R4, {
       resourceType: "Patient",
     } as Patient);
 
     resources.push(p);
     expect(p.id).toBeDefined();
-    await client.update({}, "4.0", p.resourceType, p.id as id, p);
-    const history = await client.historyInstance(
-      {},
-      "4.0",
-      "Patient",
-      p.id as id,
-    );
+    await client.update({}, R4, p.resourceType, p.id as id, p);
+    const history = await client.historyInstance({}, R4, "Patient", p.id as id);
     expect(history.length).toEqual(2);
 
-    const p2 = await client.create({}, "4.0", {
+    const p2 = await client.create({}, R4, {
       resourceType: "Patient",
     } as Patient);
     resources.push(p2);
     expect(p2.id).toBeDefined();
-    await client.update({}, "4.0", p2.resourceType, p2.id as id, p2);
-    const typeHistory = await client.historyType({}, "4.0", "Patient", [
+    await client.update({}, R4, p2.resourceType, p2.id as id, p2);
+    const typeHistory = await client.historyType({}, R4, "Patient", [
       { name: "_since-version", value: [p.meta?.versionId as id] },
     ]);
     expect(typeHistory.length).toEqual(3);
 
-    const practitioner = await client.create({}, "4.0", {
+    const practitioner = await client.create({}, R4, {
       resourceType: "Practitioner",
     } as Practitioner);
     resources.push(practitioner);
     expect(practitioner.id).toBeDefined();
     await client.update(
       {},
-      "4.0",
+      R4,
       practitioner.resourceType,
       practitioner.id as id,
       practitioner,
     );
-    const systemHistory = await client.historySystem({}, "4.0", [
+    const systemHistory = await client.historySystem({}, R4, [
       { name: "_since-version", value: [p.meta?.versionId as id] },
     ]);
     expect(systemHistory.length).toEqual(5);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, "4.0", resourceType, id as id);
+        return await client.delete({}, R4, resourceType, id as id);
       }),
     );
   }

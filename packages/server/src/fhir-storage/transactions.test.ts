@@ -3,9 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
-import { FHIRRequest } from "@iguhealth/client/lib/types/index.js";
 import {
-  AResource,
   Bundle,
   Resource,
   ResourceType,
@@ -13,9 +11,10 @@ import {
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
   FHIR_VERSION,
+  R4,
   VersionedAResource,
   VersionedResourceType,
-} from "@iguhealth/fhir-types/lib/versions.js";
+} from "@iguhealth/fhir-types/lib/versions";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { testServices } from "./test-ctx.js";
@@ -54,7 +53,7 @@ const CTX = {
 };
 
 test("Generate a graph from a transaction", () => {
-  const result = buildTransactionTopologicalGraph(CTX, "4.0", {
+  const result = buildTransactionTopologicalGraph(CTX, R4, {
     resourceType: "Bundle",
     type: "transaction",
     entry: [
@@ -80,7 +79,7 @@ test("Generate a graph from a transaction", () => {
 
 test("Test Cyclical", () => {
   expect(() => {
-    return buildTransactionTopologicalGraph(CTX, "4.0", {
+    return buildTransactionTopologicalGraph(CTX, R4, {
       resourceType: "Bundle",
       type: "transaction",
       entry: [
@@ -114,7 +113,7 @@ test("Test Cyclical", () => {
     ),
   );
   try {
-    buildTransactionTopologicalGraph(CTX, "4.0", {
+    buildTransactionTopologicalGraph(CTX, R4, {
       resourceType: "Bundle",
       type: "transaction",
       entry: [

@@ -23,6 +23,7 @@ import {
 } from "@iguhealth/fhir-types/r4/types";
 import {
   FHIR_VERSION,
+  R4,
   VersionedAResource,
   VersionedResourceType,
 } from "@iguhealth/fhir-types/versions";
@@ -244,7 +245,7 @@ async function toReferenceRemote(
         );
       const resource = resolveCanonical
         ? await resolveCanonical(
-            "4.0",
+            R4,
             parameter.target as ResourceType[],
             value.valueOf().toString() as canonical,
           )

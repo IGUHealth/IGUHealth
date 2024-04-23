@@ -12,6 +12,7 @@ import {
   StructureDefinition,
   id,
 } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 
 import ResourceEditorComponent from "../../components/ResourceEditor";
 import { getClient } from "../../db/client";
@@ -35,12 +36,13 @@ function ResourceEditorTabs() {
         try {
           const editPromise = (
             id === "new"
-              ? client.create({}, "4.0", {
+              ? client.create({}, R4, {
                   ...resource,
                   resourceType, // Validate that resourceTypes align.
                 } as Resource)
               : client.update(
-                  {}, "4.0",
+                  {},
+                  R4,
                   resourceType as ResourceType,
                   id as id,
                   {
@@ -86,7 +88,8 @@ function ResourceEditorTabs() {
       label: "Delete",
       onClick: () => {
         const deletingResource = client.delete(
-          {}, "4.0",
+          {},
+          R4,
           resourceType as ResourceType,
           id as id,
         );
@@ -109,7 +112,7 @@ function ResourceEditorTabs() {
 
   useEffect(() => {
     client
-      .batch({}, "4.0", {
+      .batch({}, R4, {
         type: "batch",
         resourceType: "Bundle",
         entry: [

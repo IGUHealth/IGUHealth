@@ -1,6 +1,7 @@
 import { selectorFamily } from "recoil";
 
 import { uri } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 import { ValueSetExpand } from "@iguhealth/generated-ops/r4";
 
 import { getClient } from "./client";
@@ -14,7 +15,7 @@ export const getValueSetExpansion = selectorFamily({
       const expansion = client.invoke_type(
         ValueSetExpand.Op,
         {},
-        "4.0",
+        R4,
         "ValueSet",
         {
           url: url as uri,

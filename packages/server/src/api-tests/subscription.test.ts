@@ -14,6 +14,7 @@ import {
   Subscription,
   id,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { R4 } from "@iguhealth/fhir-types/lib/versions";
 
 dotEnv.config();
 
@@ -80,26 +81,26 @@ test("No filter QR", async () => {
       status: "completed",
       identifier: { system: "iguhealth-system", value: "test-qr" },
     } as QuestionnaireResponse;
-    resources.push(await client.create({}, "4.0", sub));
-    resources.push(await client.create({}, "4.0", qr));
+    resources.push(await client.create({}, R4, sub));
+    resources.push(await client.create({}, R4, qr));
     await new Promise((resolve) => setTimeout(resolve, 2000));
     const response = await client2.search_type(
       {},
-      "4.0",
+      R4,
       "QuestionnaireResponse",
       [{ name: "identifier", value: ["iguhealth-system|test-qr"] }],
     );
     expect(response.resources.length).toEqual(1);
     await client2.delete(
       {},
-      "4.0",
+      R4,
       "QuestionnaireResponse",
       response.resources[0].id as id,
     );
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, "4.0", resourceType, id as id);
+        return await client.delete({}, R4, resourceType, id as id);
       }),
     );
   }
@@ -124,27 +125,27 @@ test("Filter patient sub ", async () => {
 
   const resources: Resource[] = [];
   try {
-    resources.push(await client.create({}, "4.0", sub));
+    resources.push(await client.create({}, R4, sub));
     resources.push(
-      await client.create({}, "4.0", {
+      await client.create({}, R4, {
         resourceType: "Patient",
         name: [{ given: ["John"] }],
       }),
     );
     resources.push(
-      await client.create({}, "4.0", {
+      await client.create({}, R4, {
         resourceType: "Patient",
         name: [{ given: ["David"] }],
       }),
     );
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    const response = await client2.search_type({}, "4.0", "Patient", []);
+    const response = await client2.search_type({}, R4, "Patient", []);
     expect(response.resources.length).toEqual(1);
-    await client2.delete({}, "4.0", "Patient", response.resources[0].id as id);
+    await client2.delete({}, R4, "Patient", response.resources[0].id as id);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, "4.0", resourceType, id as id);
+        return await client.delete({}, R4, resourceType, id as id);
       }),
     );
   }
@@ -169,27 +170,27 @@ test("name check", async () => {
 
   const resources: Resource[] = [];
   try {
-    resources.push(await client.create({}, "4.0", sub));
+    resources.push(await client.create({}, R4, sub));
     resources.push(
-      await client.create({}, "4.0", {
+      await client.create({}, R4, {
         resourceType: "Patient",
         name: [{ given: ["Marko1"] }],
       }),
     );
     resources.push(
-      await client.create({}, "4.0", {
+      await client.create({}, R4, {
         resourceType: "Patient",
         name: [{ given: ["David"] }],
       }),
     );
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    const response = await client2.search_type({}, "4.0", "Patient", []);
+    const response = await client2.search_type({}, R4, "Patient", []);
     expect(response.resources.length).toEqual(1);
-    await client2.delete({}, "4.0", "Patient", response.resources[0].id as id);
+    await client2.delete({}, R4, "Patient", response.resources[0].id as id);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, "4.0", resourceType, id as id);
+        return await client.delete({}, R4, resourceType, id as id);
       }),
     );
   }
@@ -202,7 +203,7 @@ test("Reference canonical", async () => {
   const resources: Resource[] = [];
   try {
     resources.push(
-      await client.create({}, "4.0", {
+      await client.create({}, R4, {
         reason: "Patient post back",
         status: "active",
         channel: {
@@ -216,7 +217,7 @@ test("Reference canonical", async () => {
       } as Subscription),
     );
     resources.push(
-      await client.create({}, "4.0", {
+      await client.create({}, R4, {
         resourceType: "Questionnaire",
         url: "ahc-questionnaire",
         status: "active",
@@ -224,7 +225,7 @@ test("Reference canonical", async () => {
     );
 
     resources.push(
-      await client.create({}, "4.0", {
+      await client.create({}, R4, {
         resourceType: "QuestionnaireResponse",
         questionnaire: "ahc-questionnaire",
         status: "completed",
@@ -232,12 +233,12 @@ test("Reference canonical", async () => {
     );
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    let qrs = await client2.search_type({}, "4.0", "QuestionnaireResponse", []);
+    let qrs = await client2.search_type({}, R4, "QuestionnaireResponse", []);
     expect(qrs.resources[0].questionnaire).toEqual("ahc-questionnaire");
 
     // Confirm additional QRS aren't getting pushed
     resources.push(
-      await client.create({}, "4.0", {
+      await client.create({}, R4, {
         resourceType: "QuestionnaireResponse",
         questionnaire: "unknown-questionnaire",
         status: "completed",
@@ -245,16 +246,16 @@ test("Reference canonical", async () => {
     );
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    qrs = await client2.search_type({}, "4.0", "QuestionnaireResponse", []);
+    qrs = await client2.search_type({}, R4, "QuestionnaireResponse", []);
     expect(qrs.resources.length).toEqual(1);
 
     for (const qr of qrs.resources) {
-      await client2.delete({}, "4.0", "QuestionnaireResponse", qr.id as id);
+      await client2.delete({}, R4, "QuestionnaireResponse", qr.id as id);
     }
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, "4.0", resourceType, id as id);
+        return await client.delete({}, R4, resourceType, id as id);
       }),
     );
   }
@@ -266,11 +267,11 @@ test("Reference standard", async () => {
   const client2 = createClient("ref-check");
   const resources: Resource[] = [];
   try {
-    const patient: Patient = await client.create({}, "4.0", {
+    const patient: Patient = await client.create({}, R4, {
       resourceType: "Patient",
     });
     resources.push(patient);
-    const sub = await client.create({}, "4.0", {
+    const sub = await client.create({}, R4, {
       reason: "Patient post back",
       status: "active",
       channel: {
@@ -283,7 +284,7 @@ test("Reference standard", async () => {
     } as Subscription);
     resources.push(sub);
     resources.push(
-      await client.create({}, "4.0", {
+      await client.create({}, R4, {
         resourceType: "Encounter",
         status: "finished",
         class: {
@@ -298,7 +299,7 @@ test("Reference standard", async () => {
     );
 
     resources.push(
-      await client.create({}, "4.0", {
+      await client.create({}, R4, {
         resourceType: "Encounter",
         status: "finished",
         class: {
@@ -313,22 +314,17 @@ test("Reference standard", async () => {
     );
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    let encounters = await client2.search_type({}, "4.0", "Encounter", []);
+    let encounters = await client2.search_type({}, R4, "Encounter", []);
     expect(encounters.resources.length).toEqual(1);
     expect(encounters.resources[0]?.subject?.reference).toEqual(
       `Patient/${patient.id}`,
     );
 
-    await client2.delete(
-      {},
-      "4.0",
-      "Encounter",
-      encounters.resources[0].id as id,
-    );
+    await client2.delete({}, R4, "Encounter", encounters.resources[0].id as id);
 
     await client.update(
       {},
-      "4.0",
+      R4,
       "Subscription",
       sub.id as id,
       {
@@ -337,7 +333,7 @@ test("Reference standard", async () => {
       } as Subscription,
     );
     resources.push(
-      await client.create({}, "4.0", {
+      await client.create({}, R4, {
         resourceType: "Encounter",
         status: "finished",
         class: {
@@ -352,7 +348,7 @@ test("Reference standard", async () => {
     );
 
     resources.push(
-      await client.create({}, "4.0", {
+      await client.create({}, R4, {
         resourceType: "Encounter",
         status: "finished",
         class: {
@@ -367,22 +363,17 @@ test("Reference standard", async () => {
     );
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    encounters = await client2.search_type({}, "4.0", "Encounter", []);
+    encounters = await client2.search_type({}, R4, "Encounter", []);
     expect(encounters.resources.length).toEqual(1);
     expect(encounters.resources[0]?.subject?.reference).toEqual(
       `Patient/${patient.id}`,
     );
 
-    await client2.delete(
-      {},
-      "4.0",
-      "Encounter",
-      encounters.resources[0].id as id,
-    );
+    await client2.delete({}, R4, "Encounter", encounters.resources[0].id as id);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, "4.0", resourceType, id as id);
+        return await client.delete({}, R4, resourceType, id as id);
       }),
     );
   }

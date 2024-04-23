@@ -20,6 +20,7 @@ import {
   StructureDefinition,
   id,
 } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 
 import { getClient } from "../db/client";
 
@@ -60,7 +61,7 @@ function ResourceHistory() {
   useEffect(() => {
     setLoading(true);
     client
-      .historyInstance({}, "4.0", resourceType as ResourceType, id as id)
+      .historyInstance({}, R4, resourceType as ResourceType, id as id)
       .then((response) => {
         setHistory(response);
         setLoading(false);
@@ -146,7 +147,7 @@ export default function ResourceEditorComponent({
             title: "Editor",
             content: structureDefinition && (
               <FHIRGenerativeForm
-                fhirVersion="4.0"
+                fhirVersion={R4}
                 value={resource}
                 structureDefinition={structureDefinition}
                 setValue={setValue}

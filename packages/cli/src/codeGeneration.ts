@@ -5,14 +5,14 @@ import { fileURLToPath } from "url";
 
 import { generateIndexFile, loadArtifacts } from "@iguhealth/artifacts";
 import { generateOps, generateSets, generateTypes } from "@iguhealth/codegen";
-import { FHIR_VERSIONS_SUPPORTED } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSIONS_SUPPORTED, R4 } from "@iguhealth/fhir-types/versions";
 
 export function codeGenerationCommands(command: Command) {
   command
     .command("types-artifacts")
     .description("Generates typescript types off profiles")
     .option("-o, --output <output>", "output file")
-    .option("-v, --version <version>", "FHIR Profiles to use", "4.0")
+    .option("-v, --version <version>", "FHIR Profiles to use", R4)
     .action((options) => {
       if (FHIR_VERSIONS_SUPPORTED.indexOf(options.version) === -1) {
         throw new Error(

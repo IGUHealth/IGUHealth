@@ -6,6 +6,7 @@ import path from "node:path";
 import httpClient from "@iguhealth/client/http";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import { Bundle, Resource, ResourceType } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 
 import {
   CONFIG_LOCATION,
@@ -101,7 +102,7 @@ function isBundle(value: unknown): value is Bundle {
 export function apiCommands(command: Command) {
   command.command("capabilities").action(async () => {
     const client = createClient(CONFIG_LOCATION);
-    const capabilities = await client.capabilities({}, "4.0");
+    const capabilities = await client.capabilities({}, R4);
     console.log(JSON.stringify(capabilities, null, 2));
   });
 
@@ -112,11 +113,7 @@ export function apiCommands(command: Command) {
       if (!resourceToSave) {
         throw new Error("No resource provided to save");
       }
-      const resource = await client.create(
-        {},
-        "4.0",
-        resourceToSave as Resource,
-      );
+      const resource = await client.create({}, R4, resourceToSave as Resource);
       console.log(JSON.stringify(resource, null, 2));
     }),
   );
@@ -138,7 +135,7 @@ export function apiCommands(command: Command) {
 
         const resource = await client.update(
           {},
-          "4.0",
+          R4,
           resourceType,
           id,
           resourceToSave as Resource,
@@ -156,7 +153,7 @@ export function apiCommands(command: Command) {
       }
       if (!isBundle(batchBundle))
         throw new Error("invalid resource type must be a 'Bundle'.");
-      const resource = await client.batch({}, "4.0", batchBundle);
+      const resource = await client.batch({}, R4, batchBundle);
       console.log(JSON.stringify(resource, null, 2));
     }),
   );
@@ -170,7 +167,7 @@ export function apiCommands(command: Command) {
       }
       if (!isBundle(transaction))
         throw new Error("invalid resource type must be a 'Bundle'.");
-      const resource = await client.transaction({}, "4.0", transaction);
+      const resource = await client.transaction({}, R4, transaction);
       console.log(JSON.stringify(resource, null, 2));
     }),
   );
@@ -191,13 +188,7 @@ export function apiCommands(command: Command) {
           throw new Error("No patches provided.");
         }
 
-        const resource = await client.patch(
-          {},
-          "4.0",
-          resourceType,
-          id,
-          patches,
-        );
+        const resource = await client.patch({}, R4, resourceType, id, patches);
         console.log(JSON.stringify(resource, null, 2));
       }),
   );
@@ -217,7 +208,7 @@ export function apiCommands(command: Command) {
       });
 
       if (shouldDelete) {
-        await client.delete({}, "4.0", resourceType, id);
+        await client.delete({}, R4, resourceType, id);
         console.log("Resource has been deleted.");
       }
     });
@@ -227,7 +218,7 @@ export function apiCommands(command: Command) {
     .argument("[query]", "query")
     .action(async (query: string | undefined) => {
       const client = createClient(CONFIG_LOCATION);
-      const searchResponse = await client.search_system({}, "4.0", query ?? "");
+      const searchResponse = await client.search_system({}, R4, query ?? "");
       console.log(JSON.stringify(searchResponse, null, 2));
     });
 
@@ -241,7 +232,7 @@ export function apiCommands(command: Command) {
         throw new Error("Invalid resource type");
       const searchResponse = await client.search_type(
         {},
-        "4.0",
+        R4,
         resourceType,
         query ?? "",
       );
@@ -255,7 +246,7 @@ export function apiCommands(command: Command) {
       const client = createClient(CONFIG_LOCATION);
       if (!validateResourceType(resourceType))
         throw new Error("Invalid resource type");
-      const resource = await client.read({}, "4.0", resourceType, id);
+      const resource = await client.read({}, R4, resourceType, id);
       console.log(JSON.stringify(resource, null, 2));
     });
   command
@@ -269,7 +260,7 @@ export function apiCommands(command: Command) {
         throw new Error("Invalid resource type");
       const resourceVersion = await client.vread(
         {},
-        "4.0",
+        R4,
         resourceType,
         id,
         versionId,
@@ -279,7 +270,7 @@ export function apiCommands(command: Command) {
 
   command.command("history_system").action(async () => {
     const client = createClient(CONFIG_LOCATION);
-    const history = await client.historySystem({}, "4.0");
+    const history = await client.historySystem({}, R4);
     console.log(JSON.stringify(history, null, 2));
   });
 
@@ -290,7 +281,7 @@ export function apiCommands(command: Command) {
       const client = createClient(CONFIG_LOCATION);
       if (!validateResourceType(resourceType))
         throw new Error("Invalid resource type");
-      const history = await client.historyType({}, "4.0", resourceType);
+      const history = await client.historyType({}, R4, resourceType);
       console.log(JSON.stringify(history, null, 2));
     });
 
@@ -302,7 +293,7 @@ export function apiCommands(command: Command) {
       const client = createClient(CONFIG_LOCATION);
       if (!validateResourceType(resourceType))
         throw new Error("Invalid resource type");
-      const history = await client.historyInstance({}, "4.0", resourceType, id);
+      const history = await client.historyInstance({}, R4, resourceType, id);
       console.log(JSON.stringify(history, null, 2));
     });
 }

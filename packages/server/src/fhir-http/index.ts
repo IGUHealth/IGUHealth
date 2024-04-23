@@ -4,7 +4,7 @@ import { resourceTypes as r4ResourceTypes } from "@iguhealth/fhir-types/r4/sets"
 import * as r4 from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes as r4bResourceTypes } from "@iguhealth/fhir-types/r4b/sets";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
-import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 /*
@@ -51,7 +51,7 @@ vread            	  /[type]/[id]/_history/[vid]	        GET‡	N/A	N/A	N/A	N/A
 
 function isBundle<
   Version extends FHIR_VERSION,
-  Bundle extends Version extends "4.0" ? r4.Bundle : r4b.Bundle,
+  Bundle extends Version extends R4 ? r4.Bundle : r4b.Bundle,
 >(fhirVersion: Version, v: unknown): v is Bundle {
   if (
     typeof v === "object" &&
@@ -72,12 +72,12 @@ function isBundle<
 function verifyResourceType<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   r: string,
-): r is Version extends "4.0" ? r4.ResourceType : r4b.ResourceType {
+): r is Version extends R4 ? r4.ResourceType : r4b.ResourceType {
   switch (fhirVersion) {
-    case "4.0": {
+    case R4: {
       return r4ResourceTypes.has(r);
     }
-    case "4.3": {
+    case R4B: {
       return r4bResourceTypes.has(r);
     }
   }
@@ -121,7 +121,7 @@ function parseRequest1Empty<Version extends FHIR_VERSION>(
         );
       }
       switch (fhirVersion) {
-        case "4.0": {
+        case R4: {
           return {
             fhirVersion,
             type:
@@ -132,7 +132,7 @@ function parseRequest1Empty<Version extends FHIR_VERSION>(
             body: request.body as r4.Bundle,
           };
         }
-        case "4.3": {
+        case R4B: {
           return {
             fhirVersion,
             type:
@@ -188,7 +188,7 @@ function parseRequest1NonEmpty(
       switch (request.method) {
         case "POST": {
           switch (fhirVersion) {
-            case "4.0": {
+            case R4: {
               return {
                 fhirVersion,
                 type: "invoke-request",
@@ -197,7 +197,7 @@ function parseRequest1NonEmpty(
                 body: request.body as r4.Parameters,
               };
             }
-            case "4.3": {
+            case R4B: {
               return {
                 fhirVersion,
                 type: "invoke-request",
@@ -235,7 +235,7 @@ function parseRequest1NonEmpty(
       }
       if (verifyResourceType(fhirVersion, urlPieces[0])) {
         switch (fhirVersion) {
-          case "4.0": {
+          case R4: {
             return {
               fhirVersion,
               type: "create-request",
@@ -244,7 +244,7 @@ function parseRequest1NonEmpty(
               body: request.body as r4.Resource,
             };
           }
-          case "4.3": {
+          case R4B: {
             return {
               fhirVersion,
               type: "create-request",
@@ -281,7 +281,7 @@ function parseRequest1NonEmpty(
           const resourceType = urlPieces[0].split("?")[0];
           if (verifyResourceType(fhirVersion, resourceType)) {
             switch (fhirVersion) {
-              case "4.0": {
+              case R4: {
                 return {
                   fhirVersion,
                   type: "search-request",
@@ -290,7 +290,7 @@ function parseRequest1NonEmpty(
                   parameters: parseUrl(request.url),
                 };
               }
-              case "4.3": {
+              case R4B: {
                 return {
                   fhirVersion,
                   type: "search-request",
@@ -346,7 +346,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
         switch (request.method) {
           case "POST": {
             switch (fhirVersion) {
-              case "4.0": {
+              case R4: {
                 return {
                   fhirVersion,
                   type: "invoke-request",
@@ -356,7 +356,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
                   body: request.body as r4.Parameters,
                 };
               }
-              case "4.3": {
+              case R4B: {
                 return {
                   fhirVersion,
                   type: "invoke-request",
@@ -412,7 +412,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
         switch (true) {
           case urlPieces[1] === "_history": {
             switch (fhirVersion) {
-              case "4.0": {
+              case R4: {
                 return {
                   fhirVersion,
                   type: "history-request",
@@ -421,7 +421,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
                   parameters: parseUrl(request.url),
                 };
               }
-              case "4.3": {
+              case R4B: {
                 return {
                   fhirVersion,
                   type: "history-request",
@@ -442,7 +442,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
           }
           case verifyResourceType(fhirVersion, urlPieces[0]): {
             switch (fhirVersion) {
-              case "4.0": {
+              case R4: {
                 return {
                   fhirVersion,
                   type: "read-request",
@@ -451,7 +451,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
                   id: urlPieces[1] as r4b.id,
                 };
               }
-              case "4.3": {
+              case R4B: {
                 return {
                   fhirVersion,
                   type: "read-request",
@@ -479,7 +479,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
       }
       case request.method === "PUT": {
         switch (fhirVersion) {
-          case "4.0": {
+          case R4: {
             return {
               fhirVersion,
               type: "update-request",
@@ -489,7 +489,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
               body: request.body as r4.Resource,
             };
           }
-          case "4.3": {
+          case R4B: {
             return {
               fhirVersion,
               type: "update-request",
@@ -508,7 +508,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
       }
       case request.method === "PATCH": {
         switch (fhirVersion) {
-          case "4.0": {
+          case R4: {
             return {
               fhirVersion,
               type: "patch-request",
@@ -518,7 +518,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
               body: request.body as object,
             };
           }
-          case "4.3": {
+          case R4B: {
             return {
               fhirVersion,
               type: "patch-request",
@@ -537,7 +537,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
       }
       case request.method === "DELETE": {
         switch (fhirVersion) {
-          case "4.0": {
+          case R4: {
             return {
               fhirVersion,
               type: "delete-request",
@@ -546,7 +546,7 @@ function parseRequest2<Version extends FHIR_VERSION>(
               id: urlPieces[1] as r4.id,
             };
           }
-          case "4.3": {
+          case R4B: {
             return {
               fhirVersion,
               type: "delete-request",
@@ -586,7 +586,7 @@ function parseRequest3(
         switch (request.method) {
           case "POST": {
             switch (fhirVersion) {
-              case "4.0": {
+              case R4: {
                 return {
                   fhirVersion,
                   type: "invoke-request",
@@ -597,7 +597,7 @@ function parseRequest3(
                   body: request.body as r4.Parameters,
                 };
               }
-              case "4.3": {
+              case R4B: {
                 return {
                   fhirVersion,
                   type: "invoke-request",
@@ -639,7 +639,7 @@ function parseRequest3(
       case request.method === "GET": {
         if (urlPieces[2] === "_history") {
           switch (fhirVersion) {
-            case "4.0": {
+            case R4: {
               return {
                 fhirVersion,
                 type: "history-request",
@@ -649,7 +649,7 @@ function parseRequest3(
                 parameters: parseUrl(request.url),
               };
             }
-            case "4.3": {
+            case R4B: {
               return {
                 fhirVersion,
                 type: "history-request",
@@ -690,7 +690,7 @@ function parseRequest4(
     urlPieces[2] === "_history"
   ) {
     switch (fhirVersion) {
-      case "4.0": {
+      case R4: {
         return {
           fhirVersion,
           type: "vread-request",
@@ -700,7 +700,7 @@ function parseRequest4(
           versionId: urlPieces[3],
         };
       }
-      case "4.3": {
+      case R4B: {
         return {
           fhirVersion,
           type: "vread-request",
@@ -719,10 +719,10 @@ function parseRequest4(
 
 function convertVersion(fhirVersion: string): FHIR_VERSION {
   switch (true) {
-    case fhirVersion === "4.0" || fhirVersion === "r4":
-      return "4.0";
-    case fhirVersion === "4.3" || fhirVersion === "r4b":
-      return "4.3";
+    case fhirVersion === R4 || fhirVersion === "r4":
+      return R4;
+    case fhirVersion === R4B || fhirVersion === "r4b":
+      return R4B;
     default:
       throw new OperationError(
         outcomeError("invalid", `Invalid FHIR version '${fhirVersion}'`),
@@ -859,7 +859,7 @@ export function fhirResponseToHTTPResponse(
       return {
         status: 200,
         body:
-          fhirResponse.fhirVersion === "4.3"
+          fhirResponse.fhirVersion === R4B
             ? toR4BBundle("searchset", fhirResponse.total, fhirResponse.body)
             : toR4Bundle("searchset", fhirResponse.total, fhirResponse.body),
       };

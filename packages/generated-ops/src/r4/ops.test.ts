@@ -11,6 +11,7 @@ import {
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
   FHIR_VERSION,
+  R4,
   VersionedAResource,
   VersionedResourceType,
 } from "@iguhealth/fhir-types/lib/versions";
@@ -44,7 +45,7 @@ test("Test ValueSet Expands", async () => {
       return sd.url as canonical;
     },
     level: "instance",
-    fhirVersion: "4.0",
+    fhirVersion: R4,
   };
 
   const valueSet: ValueSet = {

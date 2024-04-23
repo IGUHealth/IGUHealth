@@ -14,6 +14,7 @@ import {
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
   FHIR_VERSION,
+  R4,
   VersionedAResource,
   VersionedResourceType,
 } from "@iguhealth/fhir-types/lib/versions";
@@ -45,7 +46,7 @@ const memDatabase = createMemoryDatabase([
 ] as ResourceType[]);
 
 const CTX: ValidationCTX = {
-  fhirVersion: "4.0",
+  fhirVersion: R4,
   resolveTypeToCanonical: (type: uri): canonical => {
     return `http://hl7.org/fhir/StructureDefinition/${type}` as canonical;
   },

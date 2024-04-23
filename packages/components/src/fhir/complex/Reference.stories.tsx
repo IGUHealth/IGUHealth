@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 
 import { Reference } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 
 import { createStorybookClient } from "../stories.client";
 import { FHIRReferenceEditable } from "./Reference";
@@ -39,7 +40,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    fhirVersion: "4.0",
+    fhirVersion: R4,
     client: createStorybookClient(),
     value: {
       reference: "Patient/123",
@@ -51,7 +52,7 @@ export const Primary: Story = {
 
 export const OnError: Story = {
   args: {
-    fhirVersion: "4.0",
+    fhirVersion: R4,
     client: createStorybookClient(),
     // @ts-ignore
     value: "test",

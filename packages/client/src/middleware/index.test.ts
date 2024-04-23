@@ -1,5 +1,7 @@
 import { expect, test } from "@jest/globals";
 
+import { R4 } from "@iguhealth/fhir-types/lib/versions";
+
 import { FHIRResponse } from "../types/index.js";
 import type { ParsedParameter } from "../url";
 import { createMiddlewareAsync } from "./index.js";
@@ -23,7 +25,7 @@ test("Test middleware Async", async () => {
       return {
         ...context,
         response: {
-          fhirVersion: "4.0",
+          fhirVersion: R4,
           parameters: (context.request as any).parameters
             ? ((context.request as any).parameters as ParsedParameter<
                 string | number
@@ -39,7 +41,7 @@ test("Test middleware Async", async () => {
       return {
         ...context,
         response: {
-          fhirVersion: "4.0",
+          fhirVersion: R4,
           parameters: (context.request as any).parameters
             ? ((context.request as any).parameters as ParsedParameter<
                 string | number
@@ -60,7 +62,7 @@ test("Test middleware Async", async () => {
     request: {},
     ctx: {},
     response: {
-      fhirVersion: "4.0",
+      fhirVersion: R4,
       parameters: [],
       type: "search-response",
       level: "system",

@@ -5,7 +5,7 @@ import {
   StructureDefinition,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
-import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
 
 //
 function isResourceOrComplexType(type: string): boolean {
@@ -70,7 +70,7 @@ function deriveNextTypeMeta(
 ): TypeMeta | undefined {
   if (!partialMeta) return partialMeta;
   if (!partialMeta.elementIndex) partialMeta.elementIndex = 0;
-  if (!partialMeta.fhirVersion) partialMeta.fhirVersion = "4.0";
+  if (!partialMeta.fhirVersion) partialMeta.fhirVersion = R4;
   if (!partialMeta.sd && partialMeta.type)
     partialMeta.sd = partialMeta.getSD?.call(
       undefined,
