@@ -2,7 +2,7 @@ import {
   ClientApplication,
   code,
   id,
-} from "@iguhealth/fhir-types/lib/r4/types";
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
 
 export function ADMIN_APP(): ClientApplication | undefined {
   return process.env.ADMIN_APP_REDIRECT_URI

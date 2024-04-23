@@ -7,6 +7,7 @@ import {
   ValueSetExpansionContains,
   dateTime,
 } from "@iguhealth/fhir-types/r4/types";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import {
   CodeSystemLookup,
   ValueSetExpand,
@@ -61,6 +62,7 @@ function codeSystemConceptToValuesetExpansion(
 
 async function getValuesetExpansionContains(
   ctx: FHIRServerCTX,
+  fhirVersion: FHIR_VERSION,
   valueSet: ValueSet,
 ): Promise<ValueSetExpansionContains[]> {
   let expansion: ValueSetExpansionContains[] = [];
@@ -76,6 +78,7 @@ async function getValuesetExpansionContains(
         const expandedValueSet = await ctx.client.invoke_type(
           ValueSetExpand.Op,
           ctx,
+          fhirVersion,
           "ValueSet",
           { url: includeValueSet },
         );
@@ -86,9 +89,12 @@ async function getValuesetExpansionContains(
         );
       }
     } else if (include.system) {
-      const codeSystemSearch = await ctx.client.search_type(ctx, "CodeSystem", [
-        { name: "url", value: [include.system] },
-      ]);
+      const codeSystemSearch = await ctx.client.search_type(
+        ctx,
+        fhirVersion,
+        "CodeSystem",
+        [{ name: "url", value: [include.system] }],
+      );
       if (codeSystemSearch.resources.length > 1) {
         throw new OperationError(
           outcomeError(
@@ -162,9 +168,10 @@ export class TerminologyProviderMemory implements TerminologyProvider {
   constructor() {}
   async validate(
     ctx: FHIRServerCTX,
+    fhirVersion: FHIR_VERSION,
     input: ValidateInput,
   ): Promise<ValidateOutput> {
-    const valueset = await this.expand(ctx, {
+    const valueset = await this.expand(ctx, fhirVersion, {
       url: input.url,
       valueSet: input.valueSet,
       valueSetVersion: input.valueSetVersion,
@@ -185,7 +192,11 @@ export class TerminologyProviderMemory implements TerminologyProvider {
       result: doesCodeExists,
     };
   }
-  async expand(ctx: FHIRServerCTX, input: ExpandInput): Promise<ExpandOutput> {
+  async expand(
+    ctx: FHIRServerCTX,
+    fhirVersion: FHIR_VERSION,
+    input: ExpandInput,
+  ): Promise<ExpandOutput> {
     let valueset: ValueSet | undefined;
     if (input.valueSet) {
       valueset = input.valueSet;
@@ -195,6 +206,7 @@ export class TerminologyProviderMemory implements TerminologyProvider {
 
       const valuesetSearch = await ctx.client.search_type(
         ctx,
+        fhirVersion,
         "ValueSet",
         [{ name: "url", value: [url] }].concat(
           version ? [{ name: "version", value: [version] }] : [],
@@ -213,7 +225,11 @@ export class TerminologyProviderMemory implements TerminologyProvider {
     }
 
     if (!valueset.expansion) {
-      const contains = await getValuesetExpansionContains(ctx, valueset);
+      const contains = await getValuesetExpansionContains(
+        ctx,
+        fhirVersion,
+        valueset,
+      );
       valueset = {
         ...valueset,
         expansion: {
@@ -226,6 +242,7 @@ export class TerminologyProviderMemory implements TerminologyProvider {
   }
   async lookup(
     ctx: FHIRServerCTX,
+    fhirVersion: FHIR_VERSION,
     input: CodeSystemLookup.Input,
   ): Promise<CodeSystemLookup.Output> {
     if (!input.system || !input.code) {
@@ -233,9 +250,12 @@ export class TerminologyProviderMemory implements TerminologyProvider {
         outcomeError("invalid", "Invalid input must have both system and code"),
       );
     }
-    const codeSystem = await ctx.client.search_type(ctx, "CodeSystem", [
-      { name: "url", value: [input.system] },
-    ]);
+    const codeSystem = await ctx.client.search_type(
+      ctx,
+      fhirVersion,
+      "CodeSystem",
+      [{ name: "url", value: [input.system] }],
+    );
     if (codeSystem.resources.length < 1) {
       throw new OperationError(
         outcomeError(

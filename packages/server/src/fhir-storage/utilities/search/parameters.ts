@@ -1,10 +1,13 @@
-import { FHIRClientAsync } from "@iguhealth/client/interface";
-import { VersionedResourceType } from "@iguhealth/client/lib/version";
+import { VersionedFHIRClientAsync } from "@iguhealth/client/interface";
 import { FHIRRequest } from "@iguhealth/client/types";
 import { ParsedParameter } from "@iguhealth/client/url";
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
 import { ResourceType, SearchParameter } from "@iguhealth/fhir-types/r4/types";
 import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
+import {
+  FHIR_VERSION,
+  VersionedResourceType,
+} from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { param_types_supported } from "../../providers/postgres/constants.js";
@@ -211,14 +214,15 @@ export function isSearchResultParameter(
 
 export async function findSearchParameter<
   CTX,
-  Client extends FHIRClientAsync<CTX>,
+  Client extends VersionedFHIRClientAsync<CTX>,
 >(
   client: Client,
   ctx: CTX,
+  fhirVersion: FHIR_VERSION,
   resourceTypes: ResourceType[],
   code: string,
 ): Promise<SearchParameter[]> {
-  const result = await client.search_type(ctx, "SearchParameter", [
+  const result = await client.search_type(ctx, fhirVersion, "SearchParameter", [
     { name: "code", value: [code] },
     {
       name: "type",

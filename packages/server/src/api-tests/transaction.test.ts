@@ -1,7 +1,11 @@
 import { expect, test } from "@jest/globals";
 
 import HTTPClient from "@iguhealth/client/lib/http";
-import { Bundle, Patient, code } from "@iguhealth/fhir-types/lib/r4/types";
+import {
+  Bundle,
+  Patient,
+  code,
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system",

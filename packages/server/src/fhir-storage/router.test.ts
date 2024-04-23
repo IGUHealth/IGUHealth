@@ -1,7 +1,11 @@
 import { expect, test } from "@jest/globals";
 
 import { FHIRRequest } from "@iguhealth/client/lib/types";
-import { Patient, Practitioner, id } from "@iguhealth/fhir-types/lib/r4/types";
+import {
+  Patient,
+  Practitioner,
+  id,
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
 
 import MemoryDatabase from "./providers/memory/async.js";
 import RouterClient from "./router.js";
@@ -54,7 +58,12 @@ test("Test routing on resourceTypes", async () => {
     ],
   );
 
-  const patientSearch = await router.search_type(testServices, "Patient", []);
+  const patientSearch = await router.search_type(
+    testServices,
+    "4.0",
+    "Patient",
+    [],
+  );
 
   expect(patientSearch.resources).toEqual([
     { id: "1", resourceType: "Patient" },
@@ -62,6 +71,7 @@ test("Test routing on resourceTypes", async () => {
 
   const practitionerSearch = await router.search_type(
     testServices,
+    "4.0",
     "Practitioner",
     [],
   );
@@ -120,6 +130,7 @@ test("Test routing priority", async () => {
 
   const practitioner = await router.search_type(
     testServices,
+    "4.0",
     "Practitioner",
     [],
   );
@@ -178,6 +189,7 @@ test("Test routing priority", async () => {
 
   const practitioner2 = await router.search_type(
     testServices,
+    "4.0",
     "Practitioner",
     [],
   );

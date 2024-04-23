@@ -7,15 +7,16 @@ import type {
   ResourceType,
   id,
 } from "@iguhealth/fhir-types/r4/types";
+import {
+  FHIR_VERSION,
+  VERSIONED_FHIR,
+  VersionedAResource,
+  VersionedResourceType,
+} from "@iguhealth/fhir-types/versions";
 import type { IOperation, OPMetadata } from "@iguhealth/operation-execution";
 
 import type { FHIRRequest, FHIRResponse } from "./types/index.js";
 import type { ParsedParameter } from "./url.js";
-import {
-  VERSIONED_FHIR,
-  VersionedAResource,
-  VersionedResourceType,
-} from "./version.js";
 
 export type FHIRClient<CTX> = FHIRClientAsync<CTX>;
 export type VersionedFHIRClient<CTX> = VersionedFHIRClientAsync<CTX>;
@@ -100,11 +101,11 @@ export interface FHIRClientAsync<CTX> {
 
 export interface VersionedFHIRClientAsync<CTX> {
   request(ctx: CTX, request: FHIRRequest): Promise<FHIRResponse>;
-  capabilities<FHIRVersion extends FHIRRequest["fhirVersion"]>(
+  capabilities<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
   ): Promise<VERSIONED_FHIR[FHIRVersion]["CapabilityStatement"]>;
-  search_system<FHIRVersion extends FHIRRequest["fhirVersion"]>(
+  search_system<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     parameters: ParsedParameter<string | number>[] | string,
@@ -113,7 +114,7 @@ export interface VersionedFHIRClientAsync<CTX> {
     resources: VERSIONED_FHIR[FHIRVersion]["Resource"][];
   }>;
   search_type<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     T extends VersionedResourceType<FHIRVersion>,
   >(
     ctx: CTX,
@@ -125,7 +126,7 @@ export interface VersionedFHIRClientAsync<CTX> {
     resources: VersionedAResource<FHIRVersion, T>[];
   }>;
   create<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     T extends VERSIONED_FHIR[FHIRVersion]["Resource"],
   >(
     ctx: CTX,
@@ -134,7 +135,7 @@ export interface VersionedFHIRClientAsync<CTX> {
     allowIdSet?: boolean,
   ): Promise<T>;
   update<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     T extends VersionedResourceType<FHIRVersion>,
   >(
     ctx: CTX,
@@ -144,7 +145,7 @@ export interface VersionedFHIRClientAsync<CTX> {
     resource: VersionedAResource<FHIRVersion, T>,
   ): Promise<VersionedAResource<FHIRVersion, T>>;
   patch<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     T extends VersionedResourceType<FHIRVersion>,
   >(
     ctx: CTX,
@@ -154,7 +155,7 @@ export interface VersionedFHIRClientAsync<CTX> {
     patches: any,
   ): Promise<VersionedAResource<FHIRVersion, T>>;
   read<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     T extends VersionedResourceType<FHIRVersion>,
   >(
     ctx: CTX,
@@ -163,7 +164,7 @@ export interface VersionedFHIRClientAsync<CTX> {
     id: VERSIONED_FHIR[FHIRVersion]["id"],
   ): Promise<VersionedAResource<FHIRVersion, T> | undefined>;
   vread<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     T extends VersionedResourceType<FHIRVersion>,
   >(
     ctx: CTX,
@@ -173,7 +174,7 @@ export interface VersionedFHIRClientAsync<CTX> {
     versionId: VERSIONED_FHIR[FHIRVersion]["id"],
   ): Promise<VersionedAResource<FHIRVersion, T> | undefined>;
   delete<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     T extends VersionedResourceType<FHIRVersion>,
   >(
     ctx: CTX,
@@ -182,13 +183,13 @@ export interface VersionedFHIRClientAsync<CTX> {
     id: VERSIONED_FHIR[FHIRVersion]["id"],
   ): Promise<void>;
 
-  historySystem<FHIRVersion extends FHIRRequest["fhirVersion"]>(
+  historySystem<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     parameters?: ParsedParameter<string | number>[] | string,
   ): Promise<VERSIONED_FHIR[FHIRVersion]["BundleEntry"][]>;
   historyType<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     T extends VersionedResourceType<FHIRVersion>,
   >(
     ctx: CTX,
@@ -197,7 +198,7 @@ export interface VersionedFHIRClientAsync<CTX> {
     parameters?: ParsedParameter<string | number>[] | string,
   ): Promise<VERSIONED_FHIR[FHIRVersion]["BundleEntry"][]>;
   historyInstance<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     T extends VersionedResourceType<FHIRVersion>,
   >(
     ctx: CTX,
@@ -207,7 +208,7 @@ export interface VersionedFHIRClientAsync<CTX> {
     parameters?: ParsedParameter<string | number>[] | string,
   ): Promise<VERSIONED_FHIR[FHIRVersion]["BundleEntry"][]>;
   invoke_system<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     Op extends IOperation<any, any>,
   >(
     op: Op,
@@ -216,7 +217,7 @@ export interface VersionedFHIRClientAsync<CTX> {
     input: OPMetadata<Op>["Input"],
   ): Promise<OPMetadata<Op>["Output"]>;
   invoke_type<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     Op extends IOperation<any, any>,
     T extends VersionedResourceType<FHIRVersion>,
   >(
@@ -227,7 +228,7 @@ export interface VersionedFHIRClientAsync<CTX> {
     input: OPMetadata<Op>["Input"],
   ): Promise<OPMetadata<Op>["Output"]>;
   invoke_instance<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     Op extends IOperation<any, any>,
     T extends VersionedResourceType<FHIRVersion>,
   >(
@@ -238,12 +239,12 @@ export interface VersionedFHIRClientAsync<CTX> {
     id: VERSIONED_FHIR[FHIRVersion]["id"],
     input: OPMetadata<Op>["Input"],
   ): Promise<OPMetadata<Op>["Output"]>;
-  transaction<FHIRVersion extends FHIRRequest["fhirVersion"]>(
+  transaction<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     bundle: VERSIONED_FHIR[FHIRVersion]["Bundle"],
   ): Promise<VERSIONED_FHIR[FHIRVersion]["Bundle"]>;
-  batch<FHIRVersion extends FHIRRequest["fhirVersion"]>(
+  batch<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     bundle: VERSIONED_FHIR[FHIRVersion]["Bundle"],

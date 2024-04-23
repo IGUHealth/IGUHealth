@@ -5,11 +5,15 @@ import { fileURLToPath } from "url";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import {
   AResource,
-  ResourceType,
   ValueSet,
   canonical,
   uri,
-} from "@iguhealth/fhir-types/lib/r4/types";
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
+import {
+  FHIR_VERSION,
+  VersionedAResource,
+  VersionedResourceType,
+} from "@iguhealth/fhir-types/lib/versions";
 import { Invocation } from "@iguhealth/operation-execution";
 import { OpCTX } from "@iguhealth/operation-execution/src/index.js";
 
@@ -22,13 +26,17 @@ const sds = loadArtifacts({
 
 test("Test ValueSet Expands", async () => {
   const ctx: OpCTX = {
-    resolveCanonical<T extends ResourceType>(
-      type: T,
-      url: string,
-    ): AResource<T> {
+    resolveCanonical<
+      FHIRVersion extends FHIR_VERSION,
+      Type extends VersionedResourceType<FHIRVersion>,
+    >(
+      fhirVersion: FHIRVersion,
+      type: Type,
+      url: canonical,
+    ): VersionedAResource<FHIRVersion, Type> | undefined {
       const sd = sds.find((sd) => sd.url === url);
       if (!sd) throw new Error(`Could not resolve type ${type}`);
-      return sd as AResource<T>;
+      return sd as VersionedAResource<FHIRVersion, Type>;
     },
     resolveTypeToCanonical(type: uri): canonical {
       const sd = sds.find((sd) => sd.type === type);
@@ -36,6 +44,7 @@ test("Test ValueSet Expands", async () => {
       return sd.url as canonical;
     },
     level: "instance",
+    fhirVersion: "4.0",
   };
 
   const valueSet: ValueSet = {

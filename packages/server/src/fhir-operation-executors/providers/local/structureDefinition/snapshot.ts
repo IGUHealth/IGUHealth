@@ -1,5 +1,6 @@
 import { FHIRRequest } from "@iguhealth/client/types";
-import { StructureDefinition } from "@iguhealth/fhir-types/r4/types";
+import { StructureDefinition, canonical } from "@iguhealth/fhir-types/r4/types";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { StructureDefinitionSnapshot } from "@iguhealth/generated-ops/r4";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -15,7 +16,11 @@ function findLastIndex<T>(collection: T[], predicate: (item: T) => boolean) {
   return index;
 }
 
-async function generateSnapshot(ctx: FHIRServerCTX, sd: StructureDefinition) {
+async function generateSnapshot(
+  fhirVersion: FHIR_VERSION,
+  ctx: FHIRServerCTX,
+  sd: StructureDefinition,
+) {
   if (sd.snapshot) return sd;
 
   if (!sd.differential)
@@ -28,8 +33,11 @@ async function generateSnapshot(ctx: FHIRServerCTX, sd: StructureDefinition) {
   // slice so I'm not altering the original when injecting values with splice.
   const baseSnapshotElements = sd.baseDefinition
     ? (
-        (await ctx.resolveCanonical("StructureDefinition", sd.baseDefinition)
-          ?.snapshot?.element) ?? []
+        (await ctx.resolveCanonical(
+          fhirVersion,
+          "StructureDefinition",
+          sd.baseDefinition,
+        )?.snapshot?.element) ?? []
       ).slice()
     : [];
 
@@ -76,9 +84,14 @@ const StructureDefinitionSnapshotInvoke = InlineOperation(
         ),
       );
     }
+
     const sd: StructureDefinition | undefined = input.definition
       ? input.definition
-      : await ctx.resolveCanonical("StructureDefinition", input.url as string);
+      : await ctx.resolveCanonical(
+          request.fhirVersion,
+          "StructureDefinition",
+          input.url as canonical,
+        );
 
     if (!sd) {
       throw new OperationError(
@@ -89,7 +102,7 @@ const StructureDefinitionSnapshotInvoke = InlineOperation(
       );
     }
 
-    return generateSnapshot(ctx, sd);
+    return generateSnapshot(request.fhirVersion, ctx, sd);
   },
 );
 

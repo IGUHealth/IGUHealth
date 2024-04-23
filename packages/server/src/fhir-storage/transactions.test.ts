@@ -3,12 +3,19 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
+import { FHIRRequest } from "@iguhealth/client/lib/types/index.js";
 import {
   AResource,
   Bundle,
   Resource,
   ResourceType,
-} from "@iguhealth/fhir-types/lib/r4/types";
+  canonical,
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
+import {
+  FHIR_VERSION,
+  VersionedAResource,
+  VersionedResourceType,
+} from "@iguhealth/fhir-types/lib/versions.js";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { testServices } from "./test-ctx.js";
@@ -31,16 +38,23 @@ const resources = loadResources(["StructureDefinition"]);
 
 const CTX = {
   ...testServices,
-  resolveCanonical<T extends ResourceType>(type: T, url: string): AResource<T> {
+  resolveCanonical<
+    FHIRVersion extends FHIR_VERSION,
+    Type extends VersionedResourceType<FHIRVersion>,
+  >(
+    fhirVersion: FHIRVersion,
+    type: Type,
+    url: canonical,
+  ): VersionedAResource<FHIRVersion, Type> | undefined {
     // @ts-ignore
     const sd = resources.find((sd) => sd.url === url);
     if (!sd) throw new Error(`Could not resolve url ${url}`);
-    return sd as AResource<T>;
+    return sd as VersionedAResource<FHIRVersion, Type> | undefined;
   },
 };
 
 test("Generate a graph from a transaction", () => {
-  const result = buildTransactionTopologicalGraph(CTX, {
+  const result = buildTransactionTopologicalGraph(CTX, "4.0", {
     resourceType: "Bundle",
     type: "transaction",
     entry: [
@@ -66,7 +80,7 @@ test("Generate a graph from a transaction", () => {
 
 test("Test Cyclical", () => {
   expect(() => {
-    return buildTransactionTopologicalGraph(CTX, {
+    return buildTransactionTopologicalGraph(CTX, "4.0", {
       resourceType: "Bundle",
       type: "transaction",
       entry: [
@@ -100,7 +114,7 @@ test("Test Cyclical", () => {
     ),
   );
   try {
-    buildTransactionTopologicalGraph(CTX, {
+    buildTransactionTopologicalGraph(CTX, "4.0", {
       resourceType: "Bundle",
       type: "transaction",
       entry: [

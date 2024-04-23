@@ -1,5 +1,7 @@
-import { R4TypeInteraction } from "@iguhealth/client/types";
-import { ResourceType, code, uri } from "@iguhealth/fhir-types/r4/types";
+import { R4BTypeInteraction, R4TypeInteraction } from "@iguhealth/client/types";
+import * as r4 from "@iguhealth/fhir-types/r4/types";
+import * as r4b from "@iguhealth/fhir-types/r4b/types";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import validate from "@iguhealth/fhir-validation";
 import { ResourceValidate } from "@iguhealth/generated-ops/r4";
 import {
@@ -13,7 +15,8 @@ import InlineOperation from "./interface.js";
 
 export const validateResource = async (
   ctx: FHIRServerCTX,
-  resourceType: ResourceType,
+  fhirVersion: FHIR_VERSION,
+  resourceType: r4.ResourceType | r4b.ResourceType,
   input: ResourceValidate.Input,
 ) => {
   const mode = input.mode ? input.mode : "no-action";
@@ -29,17 +32,22 @@ export const validateResource = async (
         );
       const issues = await validate(
         {
-          validateCode: async (url: uri, code: code) => {
-            const result = await ctx.terminologyProvider.validate(ctx, {
-              code,
-              url,
-            });
+          fhirVersion,
+          validateCode: async (url: r4.uri, code: r4.code) => {
+            const result = await ctx.terminologyProvider.validate(
+              ctx,
+              fhirVersion,
+              {
+                code,
+                url,
+              },
+            );
             return result.result;
           },
           resolveCanonical: ctx.resolveCanonical,
           resolveTypeToCanonical: ctx.resolveTypeToCanonical,
         },
-        resourceType as uri,
+        resourceType as r4.uri,
         input.resource,
       );
 
@@ -49,8 +57,8 @@ export const validateResource = async (
 
       return outcome([
         {
-          severity: "information" as code,
-          code: "informational" as code,
+          severity: "information" as r4.code,
+          code: "informational" as r4.code,
           diagnostics: "Validation successful",
         },
       ]);
@@ -68,7 +76,8 @@ export const validateResource = async (
 export default InlineOperation(ResourceValidate.Op, (ctx, request, input) => {
   return validateResource(
     ctx,
-    (request as R4TypeInteraction).resourceType,
+    request.fhirVersion,
+    (request as R4TypeInteraction | R4BTypeInteraction).resourceType,
     input,
   );
 });

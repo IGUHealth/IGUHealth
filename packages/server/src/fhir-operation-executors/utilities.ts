@@ -1,4 +1,4 @@
-import { FHIRClientAsync } from "@iguhealth/client/interface";
+import { VersionedFHIRClientAsync } from "@iguhealth/client/interface";
 import { R4InvokeRequest } from "@iguhealth/client/types";
 import {
   OperationDefinition,
@@ -6,6 +6,7 @@ import {
   code,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { evaluate } from "@iguhealth/fhirpath";
 import { OpCTX } from "@iguhealth/operation-execution";
 import {
@@ -18,14 +19,16 @@ import { FHIRServerCTX } from "../fhir-context/types.js";
 
 export async function resolveOperationDefinition<
   CTX,
-  Client extends FHIRClientAsync<CTX>,
+  Client extends VersionedFHIRClientAsync<CTX>,
 >(
   client: Client,
   ctx: CTX,
+  fhirVersion: FHIR_VERSION,
   operationCode: string,
 ): Promise<OperationDefinition> {
   const operationDefinition = await client.search_type(
     ctx,
+    fhirVersion,
     "OperationDefinition",
     [{ name: "code", value: [operationCode] }],
   );
@@ -77,12 +80,17 @@ export async function getOperationCode(
 
 export function getOpCTX(ctx: FHIRServerCTX, request: R4InvokeRequest): OpCTX {
   return {
+    fhirVersion: request.fhirVersion,
     level: request.level,
     validateCode: async (url: string, code: string) => {
-      const result = await ctx.terminologyProvider.validate(ctx, {
-        code: code as code,
-        url: url as uri,
-      });
+      const result = await ctx.terminologyProvider.validate(
+        ctx,
+        request.fhirVersion,
+        {
+          code: code as code,
+          url: url as uri,
+        },
+      );
       return result.result;
     },
     resolveTypeToCanonical: ctx.resolveTypeToCanonical,

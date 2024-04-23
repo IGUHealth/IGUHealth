@@ -4,6 +4,7 @@ import { resourceTypes as r4ResourceTypes } from "@iguhealth/fhir-types/r4/sets"
 import * as r4 from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes as r4bResourceTypes } from "@iguhealth/fhir-types/r4b/sets";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 /*
@@ -49,7 +50,7 @@ vread            	  /[type]/[id]/_history/[vid]	        GET‡	N/A	N/A	N/A	N/A
 */
 
 function isBundle<
-  Version extends FHIRRequest["fhirVersion"],
+  Version extends FHIR_VERSION,
   Bundle extends Version extends "4.0" ? r4.Bundle : r4b.Bundle,
 >(fhirVersion: Version, v: unknown): v is Bundle {
   if (
@@ -68,7 +69,7 @@ function isBundle<
  * @param r The resource type.
  * @returns True if the resource type is valid for the given FHIR version.
  */
-function verifyResourceType<Version extends FHIRRequest["fhirVersion"]>(
+function verifyResourceType<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   r: string,
 ): r is Version extends "4.0" ? r4.ResourceType : r4b.ResourceType {
@@ -96,7 +97,7 @@ type HTTPRequest = {
 transaction	        /	                                  POST	R	Bundle	O	N/A
 batch	              /	                                  POST	R	Bundle	O	N/A
 */
-function parseRequest1Empty<Version extends FHIRRequest["fhirVersion"]>(
+function parseRequest1Empty<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   urlPieces: string[],
   request: HTTPRequest,
@@ -178,7 +179,7 @@ history-system	    /_history	                          GET	N/A	N/A	N/A	N/A
                                                         POST	application/x-www-form-urlencoded	form data	N/A	N/A
 */
 function parseRequest1NonEmpty(
-  fhirVersion: FHIRRequest["fhirVersion"],
+  fhirVersion: FHIR_VERSION,
   urlPieces: string[],
   request: HTTPRequest,
 ): FHIRRequest {
@@ -310,7 +311,7 @@ function parseRequest1NonEmpty(
 }
 
 // Parses the request for urls split at length 1 (includes system searches, creations, and operation invocations)
-function parseRequest1<Version extends FHIRRequest["fhirVersion"]>(
+function parseRequest1<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   urlPieces: string[],
   request: HTTPRequest,
@@ -333,7 +334,7 @@ patch        	      /[type]/[id]                      	PATCH	R (may be a patch t
 delete	            /[type]/[id]	                      DELETE	N/A	N/A	N/A	N/A
 history-type	      /[type]/_history	                  GET	N/A	N/A	N/A	N/A
 */
-function parseRequest2<Version extends FHIRRequest["fhirVersion"]>(
+function parseRequest2<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   urlPieces: string[],
   request: HTTPRequest,
@@ -575,7 +576,7 @@ function parseRequest2<Version extends FHIRRequest["fhirVersion"]>(
 history-instance	  /[type]/[id]/_history	              GET	N/A	N/A	N/A	N/A
 */
 function parseRequest3(
-  fhirVersion: FHIRRequest["fhirVersion"],
+  fhirVersion: FHIR_VERSION,
   urlPieces: string[],
   request: HTTPRequest,
 ): FHIRRequest {
@@ -680,7 +681,7 @@ function parseRequest3(
 vread            	  /[type]/[id]/_history/[vid]	        GET‡	N/A	N/A	N/A	N/A
 */
 function parseRequest4(
-  fhirVersion: FHIRRequest["fhirVersion"],
+  fhirVersion: FHIR_VERSION,
   urlPieces: string[],
   _request: HTTPRequest,
 ): FHIRRequest {
@@ -716,7 +717,7 @@ function parseRequest4(
   );
 }
 
-function convertVersion(fhirVersion: string): FHIRRequest["fhirVersion"] {
+function convertVersion(fhirVersion: string): FHIR_VERSION {
   switch (true) {
     case fhirVersion === "4.0" || fhirVersion === "r4":
       return "4.0";

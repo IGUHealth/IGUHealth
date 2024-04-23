@@ -55,6 +55,7 @@ export async function deriveSortQuery(
         }
         const searchParameter = await ctx.client.search_type(
           asSystemCTX(ctx),
+          "4.0",
           "SearchParameter",
           [
             { name: "code", value: [paramName] },

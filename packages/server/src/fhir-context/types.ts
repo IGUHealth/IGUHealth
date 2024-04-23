@@ -2,19 +2,22 @@ import type { Logger } from "pino";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
-import { FHIRClientAsync } from "@iguhealth/client/interface";
+import { VersionedFHIRClientAsync } from "@iguhealth/client/interface";
 import {
-  AResource,
   AccessPolicy,
   CapabilityStatement,
   ClientApplication,
   Membership,
   OperationDefinition,
-  ResourceType,
   canonical,
   code,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
+import {
+  FHIR_VERSION,
+  VersionedAResource,
+  VersionedResourceType,
+} from "@iguhealth/fhir-types/versions";
 import { AccessTokenPayload, IGUHEALTH_ISSUER, TenantId } from "@iguhealth/jwt";
 
 import { AuthorizationCodeManagement } from "../authN/db/code/interface.js";
@@ -93,7 +96,7 @@ export interface FHIRServerCTX {
   user: UserContext;
 
   // FHIR Client
-  client: FHIRClientAsync<FHIRServerCTX>;
+  client: VersionedFHIRClientAsync<FHIRServerCTX>;
 
   // Services
   db: db.Queryable;
@@ -109,10 +112,14 @@ export interface FHIRServerCTX {
 
   // Utilities
   resolveTypeToCanonical: (type: uri) => canonical | undefined;
-  resolveCanonical: <T extends ResourceType>(
-    type: T,
-    url: string,
-  ) => AResource<T> | undefined;
+  resolveCanonical: <
+    FHIRVersion extends FHIR_VERSION,
+    Type extends VersionedResourceType<FHIRVersion>,
+  >(
+    fhirVersion: FHIRVersion,
+    type: Type,
+    url: canonical,
+  ) => VersionedAResource<FHIRVersion, Type> | undefined;
 }
 
 /**

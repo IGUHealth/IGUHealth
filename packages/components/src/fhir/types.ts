@@ -1,5 +1,5 @@
 import createHTTPClient from "@iguhealth/client/http";
-import { FHIRRequest } from "@iguhealth/client/lib/types";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 type HTTPClient = ReturnType<typeof createHTTPClient>;
 
@@ -23,6 +23,6 @@ export type EditableProps<T> = {
 };
 
 export type ClientProps = {
-  fhirVersion: FHIRRequest["fhirVersion"];
+  fhirVersion: FHIR_VERSION;
   client: HTTPClient;
 };

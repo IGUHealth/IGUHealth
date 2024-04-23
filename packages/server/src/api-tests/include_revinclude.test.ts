@@ -6,7 +6,7 @@ import {
   Observation,
   Patient,
   Practitioner,
-} from "@iguhealth/fhir-types/lib/r4/types";
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { evaluate } from "@iguhealth/fhirpath";
 import { OperationError } from "@iguhealth/operation-outcomes";
 

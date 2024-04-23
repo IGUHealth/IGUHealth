@@ -53,6 +53,7 @@ import {
 } from "@iguhealth/client/lib/types";
 import { createResolverRemoteCanonical } from "../../utilities/canonical.js";
 import { TenantId } from "@iguhealth/jwt";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   ctx: CTX,
@@ -72,6 +73,7 @@ async function getAllParametersForResource<CTX extends FHIRServerCTX>(
   return (
     await ctx.client.search_type(
       asSystemCTX(ctx),
+      "4.0",
       "SearchParameter",
       parameters,
     )
@@ -343,6 +345,7 @@ function resourceIsValidForIndexing(
 async function indexR4Resource<CTX extends FHIRServerCTX>(
   client: db.Queryable,
   ctx: CTX,
+  fhirVersion: FHIR_VERSION,
   resource: Resource,
 ) {
   await removeIndices(client, ctx, resource);
@@ -357,7 +360,8 @@ async function indexR4Resource<CTX extends FHIRServerCTX>(
         resource,
         {
           meta: {
-            getSD: (type: uri) => {
+            fhirVersion,
+            getSD: (fhirVersion, type: uri) => {
               const canonicalURL = ctx.resolveTypeToCanonical(type);
               if (!canonicalURL)
                 throw new OperationError(
@@ -366,7 +370,7 @@ async function indexR4Resource<CTX extends FHIRServerCTX>(
                     `Could not resolve canonical url for type '${type}'`,
                   ),
                 );
-              return ctx.resolveCanonical("StructureDefinition", canonicalURL);
+              return ctx.resolveCanonical(fhirVersion, "StructureDefinition", canonicalURL);
             },
           },
         },
@@ -394,6 +398,7 @@ async function indexR4Resource<CTX extends FHIRServerCTX>(
 async function createResource<CTX extends FHIRServerCTX>(
   client: db.Queryable,
   initCTX: CTX,
+  fhirVersion: FHIR_VERSION,
   resource: Resource,
 ): Promise<Resource> {
   return db.transaction(
@@ -417,7 +422,7 @@ async function createResource<CTX extends FHIRServerCTX>(
     )}) RETURNING ${db.cols(resourceCol)}
     `.run(client);
 
-      await indexR4Resource(client, ctx, res[0].resource as unknown as Resource);
+      await indexR4Resource(client, ctx, fhirVersion, res[0].resource as unknown as Resource);
       return res[0].resource as unknown as Resource;
     },
   );
@@ -554,6 +559,7 @@ async function getHistory<CTX extends FHIRServerCTX>(
 async function patchResource<CTX extends FHIRServerCTX>(
   client: db.Queryable,
   initCTX: CTX,
+  fhirVersion: FHIR_VERSION,
   resourceType: ResourceType,
   id: string,
   patches: Operation[],
@@ -573,7 +579,7 @@ async function patchResource<CTX extends FHIRServerCTX>(
         const newResource = jsonpatch.applyPatch(existingResource, patches)
           .newDocument as Resource;
 
-        const outcome = await validateResource(ctx, resourceType, {
+        const outcome = await validateResource(ctx, "4.0", resourceType, {
           resource: newResource,
         });
 
@@ -609,7 +615,7 @@ async function patchResource<CTX extends FHIRServerCTX>(
 
         const patchedResource = res[0].resource as unknown as Resource;
 
-        await indexR4Resource(client, ctx, patchedResource);
+        await indexR4Resource(client, ctx, fhirVersion, patchedResource);
         return patchedResource;
       } catch (e) {
         if (e instanceof OperationError) throw e;
@@ -630,6 +636,7 @@ async function patchResource<CTX extends FHIRServerCTX>(
 async function updateResource<CTX extends FHIRServerCTX>(
   client: db.Queryable,
   initCTX: CTX,
+  fhirVersion: FHIR_VERSION,
   resource: Resource,
 ): Promise<Resource> {
   return db.transaction(
@@ -676,7 +683,7 @@ async function updateResource<CTX extends FHIRServerCTX>(
         )}) RETURNING ${db.cols(resourceCol)}`.run(client);
 
       const updatedResource = res[0].resource as unknown as Resource;
-      await indexR4Resource(client, ctx, updatedResource);
+      await indexR4Resource(client, ctx, fhirVersion, updatedResource);
       return updatedResource;
     },
   );
@@ -811,6 +818,7 @@ function createPostgresMiddleware<
               const savedResource = await createResource(
                 context.ctx.db,
                 context.ctx,
+                context.request.fhirVersion,
                 {
                   ...context.request.body,
                   // If the id is allowed to be set, use the id from the request body, otherwise generate a new id.
@@ -838,6 +846,7 @@ function createPostgresMiddleware<
               const savedResource = await patchResource(
                 context.ctx.db,
                 context.ctx,
+                context.request.fhirVersion,
                 context.request.resourceType,
                 context.request.id,
                 context.request.body as Operation[],
@@ -861,6 +870,7 @@ function createPostgresMiddleware<
               const savedResource = await updateResource(
                 context.ctx.db,
                 context.ctx,
+                context.request.fhirVersion,
                 // Set the id for the request body to ensure that the resource is updated correctly.
                 // Should be pased on the request.id and request.resourceType
                 {
@@ -968,6 +978,7 @@ function createPostgresMiddleware<
               let transactionBundle = context.request.body;
               const { locationsToUpdate, order } = buildTransactionTopologicalGraph(
                 context.ctx,
+                context.request.fhirVersion,
                 transactionBundle,
               );
               if (

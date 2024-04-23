@@ -294,8 +294,7 @@ async function createPayload(
   return {
     ctx: {
       SEC_TOKEN: ctx.user.accessToken || "not-sec",
-      API_URL: new URL(`/w/${ctx.tenant}`, process.env.API_URL)
-        .href,
+      API_URL: new URL(`/w/${ctx.tenant}`, process.env.API_URL).href,
       tenant: ctx.tenant,
       level: request.level,
       resourceType:
@@ -370,6 +369,7 @@ function createExecutor(
                 const operationDefinition = await resolveOperationDefinition(
                   context.ctx.client,
                   context.ctx,
+                  context.request.fhirVersion,
                   context.request.operation,
                 );
 
@@ -422,6 +422,7 @@ function createExecutor(
                   const auditEvent = await logAuditEvent(
                     context.ctx.client,
                     context.ctx,
+                    context.request.fhirVersion,
                     MINOR_FAILURE,
                     {
                       reference: `OperationDefinition/${operationDefinition.id}`,
@@ -452,7 +453,7 @@ function createExecutor(
                     return {
                       ...context,
                       response: {
-                        fhirVersion: "4.0",
+                        fhirVersion: context.request.fhirVersion,
                         operation: context.request.operation,
                         type: "invoke-response",
                         level: context.request.level,
@@ -466,7 +467,7 @@ function createExecutor(
                     return {
                       ...context,
                       response: {
-                        fhirVersion: "4.0",
+                        fhirVersion: context.request.fhirVersion,
                         operation: context.request.operation,
                         type: "invoke-response",
                         resourceType: context.request.resourceType,
@@ -479,7 +480,7 @@ function createExecutor(
                     return {
                       ...context,
                       response: {
-                        fhirVersion: "4.0",
+                        fhirVersion: context.request.fhirVersion,
                         operation: context.request.operation,
                         type: "invoke-response",
                         level: context.request.level,

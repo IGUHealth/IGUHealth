@@ -1,7 +1,7 @@
 import { expect, test } from "@jest/globals";
 
 import HTTPClient from "@iguhealth/client/lib/http";
-import { code, uri } from "@iguhealth/fhir-types/lib/r4/types";
+import { code, uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
   CodeSystemLookup,
   ValueSetExpand,

@@ -4,14 +4,16 @@ import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import HTTPClient from "@iguhealth/client/lib/http";
-import { StructureDefinition } from "@iguhealth/fhir-types/lib/r4/types";
+import { StructureDefinition } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { StructureDefinitionSnapshot } from "@iguhealth/generated-ops/lib/r4/ops";
 
 import usCoreDifferential from "../data/us-core-differential";
 
 const sds = loadArtifacts({
+  fhirVersion: "4.0",
   resourceType: "StructureDefinition",
   packageLocation: path.join(fileURLToPath(import.meta.url), "../../../"),
+  silence: true,
 });
 
 const client = HTTPClient({

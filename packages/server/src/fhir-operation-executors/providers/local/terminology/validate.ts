@@ -7,7 +7,11 @@ import InlineOperation from "../interface.js";
 const ValueSetValidateInvoke = InlineOperation(
   ValueSetValidateCode.Op,
   async (ctx: FHIRServerCTX, request: FHIRRequest, input) => {
-    const validationResult = await ctx.terminologyProvider.validate(ctx, input);
+    const validationResult = await ctx.terminologyProvider.validate(
+      ctx,
+      request.fhirVersion,
+      input,
+    );
     return validationResult;
   },
 );

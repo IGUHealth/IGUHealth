@@ -1,3 +1,4 @@
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import {
   CodeSystemLookup,
   ValueSetExpand,
@@ -9,14 +10,17 @@ import { FHIRServerCTX } from "../fhir-context/types.js";
 export interface TerminologyProvider {
   expand(
     ctx: FHIRServerCTX,
+    fhirVersion: FHIR_VERSION,
     input: ValueSetExpand.Input,
   ): Promise<ValueSetExpand.Output>;
   validate(
     ctx: FHIRServerCTX,
+    fhirVersion: FHIR_VERSION,
     input: ValueSetValidateCode.Input,
   ): Promise<ValueSetValidateCode.Output>;
   lookup(
     ctx: FHIRServerCTX,
+    fhirVersion: FHIR_VERSION,
     input: CodeSystemLookup.Input,
   ): Promise<CodeSystemLookup.Output>;
 }

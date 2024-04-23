@@ -3,7 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
-import { resourceTypes } from "@iguhealth/fhir-types/lib/r4/sets";
+import { resourceTypes } from "@iguhealth/fhir-types/lib/generated/r4/sets";
 import {
   Resource,
   ResourceType,
@@ -11,7 +11,7 @@ import {
   StructureDefinition,
   code,
   uri,
-} from "@iguhealth/fhir-types/lib/r4/types";
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
 import * as fhirpath from "@iguhealth/fhirpath";
 
 function getArtifactResources(resourceTypes: ResourceType[]): Resource[] {
@@ -23,6 +23,7 @@ function getArtifactResources(resourceTypes: ResourceType[]): Resource[] {
         // silence: true,
         // Limiting to strictly hl7 packages as iguhealth packages changing constantly for snapshots.
         onlyPackages: ["@iguhealth/hl7.fhir.r4.core", "@iguhealth/test-data"],
+        silence: true,
       }),
     )
     .flat();
@@ -58,7 +59,8 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
               resource,
               {
                 meta: {
-                  getSD: (type) => {
+                  fhirVersion: "4.0",
+                  getSD: (fhirVersion, type) => {
                     return artifactResources.find(
                       (r) =>
                         r.resourceType === "StructureDefinition" &&
