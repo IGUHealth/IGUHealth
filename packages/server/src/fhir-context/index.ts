@@ -52,7 +52,7 @@ import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
 import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with { type:"json" };
 import RedisLock from "../synchronization/redis.lock.js";
 import { FHIRServerCTX, KoaContext, asSystemCTX } from "./types.js";
-import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 
 const R4_SPECIAL_TYPES: { MEMORY: ResourceType[]; AUTH: ResourceType[] } = {
   AUTH: AUTH_RESOURCETYPES,
@@ -150,12 +150,12 @@ export const logger = pino<string>();
 
 function getResourceTypeToValidate(request: FHIRRequest): ResourceType {
   switch (request.fhirVersion) {
-    case "4.3": {
+    case R4B: {
       throw new OperationError(
         outcomeError("not-supported", "FHIR Version R4B is not supported"),
       );
     }
-    case "4.0": {
+    case R4: {
       switch (request.type) {
         case "create-request":
           return request.resourceType;
@@ -196,12 +196,12 @@ const validationMiddleware: MiddlewareAsyncChain<
   FHIRServerCTX
 > = async (context, next) => {
   switch (context.request.fhirVersion) {
-    case "4.3": {
+    case R4B: {
       throw new OperationError(
         outcomeError("not-supported", "FHIR Version R4B is not supported"),
       );
     }
-    case "4.0": {
+    case R4: {
       switch (context.request.type) {
         case "update-request":
         case "create-request":
@@ -252,7 +252,7 @@ const capabilitiesMiddleware: MiddlewareAsyncChain<
     return {
       ...context,
       response: {
-        fhirVersion: "4.0",
+        fhirVersion: R4,
         level: "system",
         type: "capabilities-response",
         body: context.ctx.capabilities,
@@ -268,12 +268,12 @@ const encryptionMiddleware: (
 ) => MiddlewareAsyncChain<RouterState, FHIRServerCTX> =
   (resourceTypesToEncrypt: ResourceType[]) => async (context, next) => {
     switch (context.request.fhirVersion) {
-      case "4.3": {
+      case R4B: {
         throw new OperationError(
           outcomeError("not-supported", "FHIR Version R4B is not supported"),
         );
       }
-      case "4.0": {
+      case R4: {
         if (!context.ctx.encryptionProvider) {
           return next(context);
         }
@@ -357,7 +357,7 @@ async function createFHIRClient(sources: RouterState["sources"]) {
 export async function createFHIRServices(
   pool: pg.Pool,
 ): Promise<Omit<FHIRServerCTX, "tenant" | "user">> {
-  const memDBAsync = createArtifactMemoryDatabase("4.0", R4_SPECIAL_TYPES.MEMORY);
+  const memDBAsync = createArtifactMemoryDatabase(R4, R4_SPECIAL_TYPES.MEMORY);
   const pgFHIR = createPostgresClient({
     transaction_entry_limit: parseInt(
       process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
@@ -405,7 +405,7 @@ export async function createFHIRServices(
       resolveCanonical: memDBAsync.resolveCanonical,
       resolveTypeToCanonical: memDBAsync.resolveTypeToCanonical,
     },
-    "4.0",
+    R4,
     memDBAsync,
   );
   const client = await createFHIRClient([

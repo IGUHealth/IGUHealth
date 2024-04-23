@@ -4,6 +4,7 @@ import { ReportHandler } from "web-vitals";
 
 import { IGUHealthProvider, useIGUHealth } from "@iguhealth/components";
 import { Patient } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
@@ -16,7 +17,7 @@ function App() {
     async function fetchPatients() {
       const patients = await iguhealth
         .getClient()
-        .search_type({}, "4.0", "Patient", []);
+        .search_type({}, R4, "Patient", []);
       setPatients(patients.resources);
     }
     if (iguhealth.isAuthenticated) fetchPatients();

@@ -41,6 +41,7 @@ import {
   resolveOperationDefinition,
   validateInvocationContext,
 } from "../../utilities.js";
+import { R4, R4B } from "@iguhealth/fhir-types/versions";
 
 configDotenv();
 function getLambdaFunctionName(
@@ -357,12 +358,12 @@ function createExecutor(
     async (context) => {
       try {
         switch (context.request.fhirVersion) {
-          case "4.3": {
+          case R4B: {
             throw new OperationError(
               outcomeFatal("invalid", "FHIR version 4.3 is not supported"),
             );
           }
-          case "4.0": {
+          case R4: {
             /* eslint-disable no-fallthrough */
             switch (context.request.type) {
               case "invoke-request": {

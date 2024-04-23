@@ -6,6 +6,7 @@ import {
   R4TypeSearchRequest,
 } from "@iguhealth/client/types";
 import { Resource, ResourceType, id } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX, asSystemCTX } from "../../../../fhir-context/types.js";
@@ -42,7 +43,7 @@ async function getParameterForLatestId(
   const idParameter = (
     await parametersWithMetaAssociated(
       async (resourceTypes, code) =>
-        await findSearchParameter(ctx.client, ctx, "4.0", resourceTypes, code),
+        await findSearchParameter(ctx.client, ctx, R4, resourceTypes, code),
       resourceTypes,
       [{ name: "_id", modifier: "missing", value: ["false"] }],
     )
@@ -82,7 +83,7 @@ async function processRevInclude(
         const searchParameterRevInclude = revInclude[1];
         const revIncludeResults = await ctx.client.search_type(
           ctx,
-          "4.0",
+          R4,
           resourceType,
           [
             {
@@ -126,7 +127,7 @@ async function processInclude(
         const includeParameterName = include[1];
         const includeParameterSearchParam = await ctx.client.search_type(
           asSystemCTX(ctx),
-          "4.0",
+          R4,
           "SearchParameter",
           [
             { name: "code", value: [includeParameterName] },
@@ -167,7 +168,7 @@ async function processInclude(
         ];
 
         return ctx.client
-          .search_system(ctx, "4.0", [
+          .search_system(ctx, R4, [
             { name: "_type", value: types },
             {
               name: "_id",
@@ -194,7 +195,7 @@ export async function executeSearchQuery(
       await findSearchParameter(
         ctx.client,
         asSystemCTX(ctx),
-        "4.0",
+        R4,
         resourceTypes,
         name,
       ),

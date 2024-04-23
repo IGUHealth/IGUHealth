@@ -4,6 +4,7 @@ import { useRecoilValue } from "recoil";
 
 import { Button, Input, Toaster } from "@iguhealth/components";
 import { Bundle, OperationOutcome } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 
 import { getClient } from "../db/client";
 
@@ -66,8 +67,8 @@ export default function BatchImportView() {
               if (bundle) {
                 const batchPromise =
                   bundle.type === "transaction"
-                    ? client.transaction({}, "4.0", bundle)
-                    : client.batch({}, "4.0", bundle);
+                    ? client.transaction({}, R4, bundle)
+                    : client.batch({}, R4, bundle);
                 Toaster.promise(batchPromise, {
                   loading: "Uploading Bundle",
                   success: () => `Bundle was uploaded`,

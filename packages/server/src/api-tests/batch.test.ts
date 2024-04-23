@@ -2,6 +2,7 @@ import { expect, test } from "@jest/globals";
 
 import HTTPClient from "@iguhealth/client/lib/http";
 import { Bundle, code } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { R4 } from "@iguhealth/fhir-types/lib/versions";
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system",
@@ -17,7 +18,7 @@ test("test batch", async () => {
     entry: [],
   } as Bundle;
   try {
-    response = await client.batch({}, "4.0", {
+    response = await client.batch({}, R4, {
       resourceType: "Bundle",
       type: "batch",
       entry: [
@@ -55,6 +56,6 @@ test("test batch", async () => {
         };
       }),
     } as Bundle;
-    await client.batch({}, "4.0", bundle);
+    await client.batch({}, R4, bundle);
   }
 });

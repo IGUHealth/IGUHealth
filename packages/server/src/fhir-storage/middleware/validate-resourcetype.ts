@@ -1,5 +1,6 @@
 import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
 import { ResourceType } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 export default function validateResourceTypeMiddleware<State, CTX>(
@@ -14,7 +15,7 @@ export default function validateResourceTypeMiddleware<State, CTX>(
         ),
       );
     }
-    if (context.request.fhirVersion !== "4.0") {
+    if (context.request.fhirVersion !== R4) {
       throw new OperationError(
         outcomeError(
           "not-supported",

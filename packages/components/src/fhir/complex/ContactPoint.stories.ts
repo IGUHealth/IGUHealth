@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { ContactPoint } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 
 import { createStorybookClient } from "../stories.client";
 import { FHIRContactPointEditable } from "./ContactPoint";
@@ -25,7 +26,7 @@ const client = createStorybookClient();
 
 export const Primary: Story = {
   args: {
-    fhirVersion: "4.0",
+    fhirVersion: R4,
     client: client,
     value: {
       use: "home",
@@ -39,7 +40,7 @@ export const Primary: Story = {
 
 export const OnError: Story = {
   args: {
-    fhirVersion: "4.0",
+    fhirVersion: R4,
     // @ts-ignore
     value: "test",
     issue: "Bad value",

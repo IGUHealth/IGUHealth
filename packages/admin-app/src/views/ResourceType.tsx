@@ -15,6 +15,7 @@ import {
   ResourceType,
   SearchParameter,
 } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 import { OperationError } from "@iguhealth/operation-outcomes";
 
 import { getClient } from "../db/client";
@@ -37,11 +38,7 @@ export default function ResourceTypeView() {
     () => (query: string) => {
       setIsLoading(true);
       client
-        .search_type(
-          {}, "4.0",
-          params.resourceType as ResourceType,
-          query,
-        )
+        .search_type({}, R4, params.resourceType as ResourceType, query)
         .then((response) => {
           setIsLoading(false);
           setData(response.resources);
@@ -68,7 +65,7 @@ export default function ResourceTypeView() {
 
   useEffect(() => {
     client
-      .search_type({}, "4.0", "SearchParameter", [
+      .search_type({}, R4, "SearchParameter", [
         { name: "base", value: ["Resource", params.resourceType as string] },
         { name: "_count", value: ["100"] },
         // { name: "type", value: ["string", "number", "code"] },

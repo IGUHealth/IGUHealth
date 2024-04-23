@@ -7,6 +7,7 @@ import {
   Patient,
   Practitioner,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { R4 } from "@iguhealth/fhir-types/lib/versions";
 import { evaluate } from "@iguhealth/fhirpath";
 import { OperationError } from "@iguhealth/operation-outcomes";
 
@@ -92,14 +93,14 @@ test("include test", async () => {
     type: "transaction-response",
   } as Bundle;
   try {
-    transactionResponse = await client.transaction({}, "4.0", SETUP_BUNDLE);
+    transactionResponse = await client.transaction({}, R4, SETUP_BUNDLE);
     const observations = transactionResponse.entry
       ?.filter((e) => e.resource?.resourceType === "Observation")
       .map((e) => e.resource as Observation);
 
     expect(observations?.length).toEqual(2);
 
-    const includeResponse = await client.search_type({}, "4.0", "Observation", [
+    const includeResponse = await client.search_type({}, R4, "Observation", [
       {
         name: "_id",
         value: [observations?.[0].id as string],
@@ -122,7 +123,7 @@ test("include test", async () => {
         };
       }),
     } as Bundle;
-    await client.transaction({}, "4.0", transaction);
+    await client.transaction({}, R4, transaction);
   }
 });
 
@@ -132,14 +133,14 @@ test("revinclude test", async () => {
     type: "transaction-response",
   } as Bundle;
   try {
-    transactionResponse = await client.transaction({}, "4.0", SETUP_BUNDLE);
+    transactionResponse = await client.transaction({}, R4, SETUP_BUNDLE);
     const patient = transactionResponse.entry
       ?.filter((e) => e.resource?.resourceType === "Patient")
       .map((e) => e.resource as Patient);
 
     expect(patient?.length).toEqual(1);
 
-    const revIncludeResponse1 = await client.search_type({}, "4.0", "Patient", [
+    const revIncludeResponse1 = await client.search_type({}, R4, "Patient", [
       {
         name: "_id",
         value: [patient?.[0].id as string],
@@ -164,7 +165,7 @@ test("revinclude test", async () => {
 
     const revIncludeResponse2 = await client.search_type(
       {},
-      "4.0",
+      R4,
       "Practitioner",
       [
         {
@@ -193,6 +194,6 @@ test("revinclude test", async () => {
         };
       }),
     } as Bundle;
-    await client.transaction({}, "4.0", transaction);
+    await client.transaction({}, R4, transaction);
   }
 });

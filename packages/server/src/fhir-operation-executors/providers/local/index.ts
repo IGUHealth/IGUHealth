@@ -9,6 +9,7 @@ import {
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import { OperationDefinition } from "@iguhealth/fhir-types/r4/types";
+import { R4, R4B } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../fhir-context/types.js";
@@ -21,12 +22,12 @@ function createExecutor(): MiddlewareAsync<
   return createMiddlewareAsync<InlineOp<unknown, unknown>[], FHIRServerCTX>([
     async (context) => {
       switch (context.request.fhirVersion) {
-        case "4.3": {
+        case R4B: {
           throw new OperationError(
             outcomeFatal("not-supported", "FHIR 4.3 is not supported"),
           );
         }
-        case "4.0": {
+        case R4: {
           switch (context.request.type) {
             case "invoke-request": {
               for (const op of context.state) {
@@ -38,7 +39,7 @@ function createExecutor(): MiddlewareAsync<
                   return {
                     ...context,
                     response: {
-                      fhirVersion: "4.0",
+                      fhirVersion: R4,
                       type: "invoke-response",
                       level: "system",
                       operation: context.request.operation,

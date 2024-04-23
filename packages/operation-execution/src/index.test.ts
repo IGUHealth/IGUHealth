@@ -14,6 +14,7 @@ import {
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
   FHIR_VERSION,
+  R4,
   VersionedAResource,
   VersionedResourceType,
 } from "@iguhealth/fhir-types/lib/versions";
@@ -228,7 +229,7 @@ test("execution", async () => {
     new Operation<{ test: string }, { testOut: string }>(operationTest);
 
   const ctx: OpCTX = {
-    fhirVersion: "4.0",
+    fhirVersion: R4,
     resolveCanonical<
       FHIRVersion extends FHIR_VERSION,
       Type extends VersionedResourceType<FHIRVersion>,
@@ -299,7 +300,7 @@ test("paramValidation", async () => {
   >(operationTest);
 
   const ctx: OpCTX = {
-    fhirVersion: "4.0",
+    fhirVersion: R4,
     resolveCanonical<
       FHIRVersion extends FHIR_VERSION,
       Type extends VersionedResourceType<FHIRVersion>,
@@ -504,7 +505,7 @@ test("Test invalid resource validation", async () => {
     new Operation<{ payload: Resource[] }, { test: string }>(op);
 
   const ctx: OpCTX = {
-    fhirVersion: "4.0",
+    fhirVersion: R4,
     resolveCanonical<
       FHIRVersion extends FHIR_VERSION,
       Type extends VersionedResourceType<FHIRVersion>,

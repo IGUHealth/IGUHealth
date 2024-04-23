@@ -2,6 +2,7 @@ import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
 import { ResourceType, SearchParameter } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX, asSystemCTX } from "../../../../fhir-context/types.js";
@@ -55,7 +56,7 @@ export async function deriveSortQuery(
         }
         const searchParameter = await ctx.client.search_type(
           asSystemCTX(ctx),
-          "4.0",
+          R4,
           "SearchParameter",
           [
             { name: "code", value: [paramName] },

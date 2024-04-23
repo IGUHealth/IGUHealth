@@ -6,6 +6,7 @@ import {
   Practitioner,
   id,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { R4 } from "@iguhealth/fhir-types/lib/versions";
 
 import MemoryDatabase from "./providers/memory/async.js";
 import RouterClient from "./router.js";
@@ -60,7 +61,7 @@ test("Test routing on resourceTypes", async () => {
 
   const patientSearch = await router.search_type(
     testServices,
-    "4.0",
+    R4,
     "Patient",
     [],
   );
@@ -71,7 +72,7 @@ test("Test routing on resourceTypes", async () => {
 
   const practitionerSearch = await router.search_type(
     testServices,
-    "4.0",
+    R4,
     "Practitioner",
     [],
   );
@@ -130,7 +131,7 @@ test("Test routing priority", async () => {
 
   const practitioner = await router.search_type(
     testServices,
-    "4.0",
+    R4,
     "Practitioner",
     [],
   );
@@ -189,7 +190,7 @@ test("Test routing priority", async () => {
 
   const practitioner2 = await router.search_type(
     testServices,
-    "4.0",
+    R4,
     "Practitioner",
     [],
   );

@@ -1,5 +1,6 @@
 import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
 import { AccessPolicy, Membership, id } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
@@ -21,7 +22,7 @@ export const associateUserMiddleware: MiddlewareAsyncChain<
     case "Membership": {
       const usersAndAccessPolicies = (await context.ctx.client.search_type(
         asSystemCTX(context.ctx),
-        "4.0",
+        R4,
         "Membership",
         [
           {
@@ -58,14 +59,14 @@ export const associateUserMiddleware: MiddlewareAsyncChain<
     case "ClientApplication": {
       const clientApplication = await context.ctx.client.read(
         asSystemCTX(context.ctx),
-        "4.0",
+        R4,
         "ClientApplication",
         context.ctx.user.jwt.sub as string as id,
       );
 
       const accessPolicies = await context.ctx.client.search_type(
         asSystemCTX(context.ctx),
-        "4.0",
+        R4,
         "AccessPolicy",
         [
           {
@@ -90,14 +91,14 @@ export const associateUserMiddleware: MiddlewareAsyncChain<
     case "OperationDefinition": {
       const operationDefinition = await context.ctx.client.read(
         asSystemCTX(context.ctx),
-        "4.0",
+        R4,
         "OperationDefinition",
         context.ctx.user.jwt.sub as string as id,
       );
 
       const accessPolicies = await context.ctx.client.search_type(
         asSystemCTX(context.ctx),
-        "4.0",
+        R4,
         "AccessPolicy",
         [
           {

@@ -2,6 +2,7 @@ import { expect, test } from "@jest/globals";
 
 import HTTPClient from "@iguhealth/client/lib/http";
 import { code, uri } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { R4 } from "@iguhealth/fhir-types/lib/versions";
 import {
   CodeSystemLookup,
   ValueSetExpand,
@@ -19,7 +20,7 @@ test("Hl7 Gender expansion", async () => {
   const valuesetExpanded = await client.invoke_type(
     ValueSetExpand.Op,
     {},
-    "4.0",
+    R4,
     "ValueSet",
     {
       url: "http://hl7.org/fhir/ValueSet/administrative-gender|4.0.1" as uri,
@@ -84,7 +85,7 @@ test("Hl7 Gender validation", async () => {
   const validationSuccess = await client.invoke_type(
     ValueSetValidateCode.Op,
     {},
-    "4.0",
+    R4,
     "ValueSet",
     {
       url: "http://hl7.org/fhir/ValueSet/administrative-gender|4.0.1" as uri,
@@ -95,7 +96,7 @@ test("Hl7 Gender validation", async () => {
   const validationFail = await client.invoke_type(
     ValueSetValidateCode.Op,
     {},
-    "4.0",
+    R4,
     "ValueSet",
     {
       url: "http://hl7.org/fhir/ValueSet/administrative-gender|4.0.1" as uri,
@@ -109,7 +110,7 @@ test("nested test", async () => {
   const validationSuccess = await client.invoke_type(
     ValueSetValidateCode.Op,
     {},
-    "4.0",
+    R4,
     "ValueSet",
     {
       url: "http://hl7.org/fhir/ValueSet/name-use|4.0.1" as uri,
@@ -120,7 +121,7 @@ test("nested test", async () => {
   const validationFail = await client.invoke_type(
     ValueSetValidateCode.Op,
     {},
-    "4.0",
+    R4,
     "ValueSet",
     {
       url: "http://hl7.org/fhir/ValueSet/name-use|4.0.1" as uri,
@@ -132,7 +133,7 @@ test("nested test", async () => {
   const expansion = await client.invoke_type(
     ValueSetExpand.Op,
     {},
-    "4.0",
+    R4,
     "ValueSet",
     {
       url: "http://hl7.org/fhir/ValueSet/name-use|4.0.1" as uri,
@@ -191,7 +192,7 @@ test("Hl7 Name Lookup", async () => {
   const lookupName = await client.invoke_type(
     CodeSystemLookup.Op,
     {},
-    "4.0",
+    R4,
     "CodeSystem",
     {
       system: "http://hl7.org/fhir/name-use" as uri,
@@ -208,7 +209,7 @@ test("Hl7 Name Lookup", async () => {
   const lookupName2 = client.invoke_type(
     CodeSystemLookup.Op,
     {},
-    "4.0",
+    R4,
     "CodeSystem",
     {
       system: "http://hl7.org/fhir/name-use" as uri,

@@ -6,6 +6,7 @@ import {
   Resource,
   id,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { R4 } from "@iguhealth/fhir-types/lib/versions";
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system",
@@ -17,14 +18,14 @@ const client = HTTPClient({
 test("Test successfull patch", async () => {
   const resources: Resource[] = [];
   try {
-    const patient = (await client.create({}, "4.0", {
+    const patient = (await client.create({}, R4, {
       resourceType: "Patient",
     })) as Patient;
 
     resources.push(patient);
 
     const patientUpdated = await client
-      .patch({}, "4.0", patient.resourceType, patient.id as id, [
+      .patch({}, R4, patient.resourceType, patient.id as id, [
         { op: "add", path: "/name", value: [] },
         { op: "add", path: "/name/0", value: {} },
         { op: "add", path: "/name/0/family", value: "Smith" },
@@ -36,7 +37,7 @@ test("Test successfull patch", async () => {
     expect(patientUpdated.name).toEqual([{ family: "Smith" }]);
 
     const OOFAILURE = await client
-      .patch({}, "4.0", patient.resourceType, patient.id as id, [
+      .patch({}, R4, patient.resourceType, patient.id as id, [
         { op: "add", path: "/d", value: "Smith" },
       ])
       .catch((e) => {
@@ -56,7 +57,7 @@ test("Test successfull patch", async () => {
     });
 
     const invalidPatchData = await client
-      .patch({}, "4.0", patient.resourceType, patient.id as id, [
+      .patch({}, R4, patient.resourceType, patient.id as id, [
         { z: "add", path: "/d", value: "Smith" },
       ])
       .catch((e) => {
@@ -76,7 +77,7 @@ test("Test successfull patch", async () => {
     });
 
     const invalidAppliedPatch = await client
-      .patch({}, "4.0", patient.resourceType, patient.id as id, [
+      .patch({}, R4, patient.resourceType, patient.id as id, [
         { op: "add", path: "/d/1", value: "Z" },
       ])
       .catch((e) => {
@@ -96,7 +97,7 @@ test("Test successfull patch", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, "4.0", resourceType, id as id);
+        return await client.delete({}, R4, resourceType, id as id);
       }),
     );
   }

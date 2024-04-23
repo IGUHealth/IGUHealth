@@ -12,6 +12,8 @@ import {
 import * as r4 from "@iguhealth/fhir-types/r4/types";
 import {
   FHIR_VERSION,
+  R4,
+  R4B,
   VersionedAResource,
   VersionedResourceType,
 } from "@iguhealth/fhir-types/versions";
@@ -90,12 +92,12 @@ function createMemoryMiddleware<
   return createMiddlewareAsync<State, CTX>([
     async (context) => {
       switch (context.request.fhirVersion) {
-        case "4.3": {
+        case R4B: {
           throw new OperationError(
             outcomeError("not-supported", "FHIR 4.3 is not supported"),
           );
         }
-        case "4.0": {
+        case R4: {
           /* eslint-disable no-fallthrough */
           switch (context.request.type) {
             case "search-request": {
@@ -323,7 +325,7 @@ function createResolveCanonical(
     type: Type,
     url: r4.canonical,
   ) => {
-    if (fhirVersion !== "4.0") {
+    if (fhirVersion !== R4) {
       throw new OperationError(
         outcomeError("not-supported", "FHIR version not supported yet."),
       );

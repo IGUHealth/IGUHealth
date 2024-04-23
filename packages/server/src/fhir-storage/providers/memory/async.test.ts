@@ -10,6 +10,7 @@ import {
   StructureDefinition,
   id,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { R4 } from "@iguhealth/fhir-types/lib/versions";
 
 import { testServices } from "../../test-ctx.js";
 import CreateMemoryDatabaseAsync from "./async.js";
@@ -73,7 +74,7 @@ test("Creation and search", async () => {
   const memDb = CreateMemoryDatabaseAsync(data);
   await memDb.create(
     testServices,
-    "4.0",
+    R4,
     generateParameter({
       id: "test1",
       name: "test1",
@@ -82,7 +83,7 @@ test("Creation and search", async () => {
   );
   await memDb.create(
     testServices,
-    "4.0",
+    R4,
     generateParameter({
       id: "test2",
       name: "test2",
@@ -92,7 +93,7 @@ test("Creation and search", async () => {
 
   await memDb.create(
     testServices,
-    "4.0",
+    R4,
     generateSD({ id: "test0", name: "test1" } as StructureDefinition),
   );
 
@@ -100,7 +101,7 @@ test("Creation and search", async () => {
     (
       await memDb.search_type(
         testServices,
-        "4.0",
+        R4,
         "SearchParameter",
         parseParameters("SearchParameter?code=test"),
       )
@@ -111,7 +112,7 @@ test("Creation and search", async () => {
     (
       await memDb.search_type(
         testServices,
-        "4.0",
+        R4,
         "SearchParameter",
         parseParameters("SearchParameter?code=test1"),
       )
@@ -133,7 +134,7 @@ test("artifactParameters", async () => {
   const parameters = (
     await memDb.search_type(
       testServices,
-      "4.0",
+      R4,
       "SearchParameter",
       parseParameters("SearchParameter?base=Patient,Resource,DomainResource"),
     )
@@ -144,7 +145,7 @@ test("artifactParameters", async () => {
     (
       await memDb.search_type(
         testServices,
-        "4.0",
+        R4,
         "SearchParameter",
         parseParameters("SearchParameter?base=DomainResource"),
       )
@@ -155,7 +156,7 @@ test("artifactParameters", async () => {
     (
       await memDb.search_type(
         testServices,
-        "4.0",
+        R4,
         "SearchParameter",
         parseParameters("SearchParameter?base=Resource"),
       )
@@ -177,7 +178,7 @@ test("artifactParameters", async () => {
     (
       await memDb.search_type(
         testServices,
-        "4.0",
+        R4,
         "SearchParameter",
         parseParameters("SearchParameter?base=Patient"),
       )
@@ -188,7 +189,7 @@ test("artifactParameters", async () => {
     (
       await memDb.search_type(
         testServices,
-        "4.0",
+        R4,
         "SearchParameter",
         parseParameters(
           "SearchParameter?base=Patient,Resource,DomainResource&type=string",
@@ -201,7 +202,7 @@ test("artifactParameters", async () => {
     (
       await memDb.search_type(
         testServices,
-        "4.0",
+        R4,
         "SearchParameter",
         parseParameters(
           "SearchParameter?base=Patient,Resource,DomainResource&type=date",

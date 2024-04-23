@@ -6,7 +6,7 @@ import {
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/r4/types";
-import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
 
 import { IndexFile, PackageJSON } from "./types.js";
 
@@ -52,7 +52,7 @@ interface LoadArtifactOptions<T extends ResourceType> {
  * @returns A list of resources of type T
  */
 export default function loadArtifacts<T extends ResourceType>({
-  fhirVersion = "4.0",
+  fhirVersion = R4,
   resourceType,
   packageLocation,
   silence,

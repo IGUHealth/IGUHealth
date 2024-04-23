@@ -4,7 +4,7 @@ import {
   Resource,
 } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
-import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { VersionedAsynchronousClient } from "../index.js";
@@ -34,9 +34,9 @@ const pathJoin = (parts: string[], sep = "/") =>
 
 function fhirUrlChunk(version: string) {
   switch (version) {
-    case "4.0":
+    case R4:
       return "r4";
-    case "4.3":
+    case R4B:
       return "r4b";
     default:
       return version;

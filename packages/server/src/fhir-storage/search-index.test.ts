@@ -12,6 +12,7 @@ import {
   code,
   uri,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import { R4 } from "@iguhealth/fhir-types/lib/versions";
 import * as fhirpath from "@iguhealth/fhirpath";
 
 function getArtifactResources(resourceTypes: ResourceType[]): Resource[] {
@@ -59,7 +60,7 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
               resource,
               {
                 meta: {
-                  fhirVersion: "4.0",
+                  fhirVersion: R4,
                   getSD: (fhirVersion, type) => {
                     return artifactResources.find(
                       (r) =>

@@ -1,6 +1,7 @@
 import { expect, test } from "@jest/globals";
 
 import HTTPClient from "@iguhealth/client/lib/http";
+import { R4 } from "@iguhealth/fhir-types/lib/versions";
 import {
   ResourceValidate,
   ValueSetExpand,
@@ -16,14 +17,14 @@ const client = HTTPClient({
 test("create bad patient", async () => {
   expect(
     // @ts-ignore
-    client.create({}, "4.0", { resourceType: "Patient", badValue: 5 }),
+    client.create({}, R4, { resourceType: "Patient", badValue: 5 }),
   ).rejects.toThrowError();
 });
 
 test("Bad Creation", async () => {
   const badPatient = { resourceType: "Patient", name: "bob" };
   //@ts-ignore
-  expect(client.create({}, "4.0", badPatient)).rejects.toThrow();
+  expect(client.create({}, R4, badPatient)).rejects.toThrow();
 });
 
 test("Bad expansion", async () => {
@@ -34,7 +35,7 @@ test("Bad expansion", async () => {
     client.invoke_type(
       ValueSetExpand.Op,
       {},
-      "4.0",
+      R4,
       "ValueSet",
       // @ts-ignore
       badExpansion,
@@ -48,7 +49,7 @@ test("ValidationOperation", async () => {
     .invoke_type(
       ResourceValidate.Op,
       {},
-      "4.0",
+      R4,
       "Patient",
       // @ts-ignore
       { resource: badPatient },
@@ -72,7 +73,7 @@ test("ValidationOperation", async () => {
   const successfulInvocation = client.invoke_type(
     ResourceValidate.Op,
     {},
-    "4.0",
+    R4,
     "Patient",
     { resource: { resourceType: "Patient", name: [{ given: ["bob"] }] } },
   );
@@ -91,7 +92,7 @@ test("ValidationOperation", async () => {
   const invalidType = client.invoke_type(
     ResourceValidate.Op,
     {},
-    "4.0",
+    R4,
     "Practitioner",
     { resource: { resourceType: "Patient", name: [{ given: ["bob"] }] } },
   );
@@ -113,11 +114,9 @@ test("ValidationOperation", async () => {
 test("Invalid Operation Payload", async () => {
   expect(
     // @ts-ignore
-    client
-      .invoke_system(ValueSetExpand.Op, {}, "4.0", { url: 5 })
-      .catch((e) => {
-        throw e.operationOutcome;
-      }),
+    client.invoke_system(ValueSetExpand.Op, {}, R4, { url: 5 }).catch((e) => {
+      throw e.operationOutcome;
+    }),
   ).rejects.toEqual({
     issue: [
       {
