@@ -1,4 +1,4 @@
 {
   "extends": ["../../typedoc.base.json"],
-  "entryPoints": ["src/r4/types.ts"]
+  "entryPoints": ["src/generated/r4/types.ts"]
 }
