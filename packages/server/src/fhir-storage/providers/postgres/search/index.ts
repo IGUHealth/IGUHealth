@@ -42,7 +42,7 @@ async function getParameterForLatestId(
   const idParameter = (
     await parametersWithMetaAssociated(
       async (resourceTypes, code) =>
-        await findSearchParameter(ctx.client, ctx, resourceTypes, code),
+        await findSearchParameter(ctx.client, ctx, "4.0", resourceTypes, code),
       resourceTypes,
       [{ name: "_id", modifier: "missing", value: ["false"] }],
     )
@@ -82,6 +82,7 @@ async function processRevInclude(
         const searchParameterRevInclude = revInclude[1];
         const revIncludeResults = await ctx.client.search_type(
           ctx,
+          "4.0",
           resourceType,
           [
             {
@@ -125,6 +126,7 @@ async function processInclude(
         const includeParameterName = include[1];
         const includeParameterSearchParam = await ctx.client.search_type(
           asSystemCTX(ctx),
+          "4.0",
           "SearchParameter",
           [
             { name: "code", value: [includeParameterName] },
@@ -165,7 +167,7 @@ async function processInclude(
         ];
 
         return ctx.client
-          .search_system(ctx, [
+          .search_system(ctx, "4.0", [
             { name: "_type", value: types },
             {
               name: "_id",
@@ -192,6 +194,7 @@ export async function executeSearchQuery(
       await findSearchParameter(
         ctx.client,
         asSystemCTX(ctx),
+        "4.0",
         resourceTypes,
         name,
       ),

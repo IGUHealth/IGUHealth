@@ -3,18 +3,22 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
-import { resourceTypes } from "@iguhealth/fhir-types/lib/r4/sets";
+import { resourceTypes } from "@iguhealth/fhir-types/lib/generated/r4/sets";
 import {
-  AResource,
   Account,
   Resource,
   ResourceType,
   StructureDefinition,
   canonical,
   uri,
-} from "@iguhealth/fhir-types/lib/r4/types";
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
+import {
+  FHIR_VERSION,
+  VersionedAResource,
+  VersionedResourceType,
+} from "@iguhealth/fhir-types/lib/versions";
 
-import { createValidator } from "./index";
+import { ValidationCTX, createValidator } from "./index";
 
 function createMemoryDatabase(
   resourceTypes: ResourceType[],
@@ -40,16 +44,25 @@ const memDatabase = createMemoryDatabase([
   ...resourceTypes.values(),
 ] as ResourceType[]);
 
-const CTX = {
+const CTX: ValidationCTX = {
+  fhirVersion: "4.0",
   resolveTypeToCanonical: (type: uri): canonical => {
     return `http://hl7.org/fhir/StructureDefinition/${type}` as canonical;
   },
-  resolveCanonical: <T extends ResourceType>(t: T, url: string) => {
-    const sd = memDatabase[t].find(
-      (sd) => (sd as StructureDefinition).url === url,
-    );
+  resolveCanonical: <
+    Version extends FHIR_VERSION,
+    Type extends VersionedResourceType<Version>,
+  >(
+    version: Version,
+    t: Type,
+    url: canonical,
+  ): VersionedAResource<Version, Type> => {
+    // @ts-ignore
+    const sd: VersionedAResource<Version, Type> = memDatabase[t].find(
+      (sd: unknown) => (sd as StructureDefinition).url === url,
+    ) as VersionedAResource<Version, Type>;
     if (!sd) throw new Error(`Couldn't find sd with url '${url}'`);
-    return sd as AResource<T>;
+    return sd as VersionedAResource<Version, Type>;
   },
 };
 

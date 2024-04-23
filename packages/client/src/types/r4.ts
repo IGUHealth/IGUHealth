@@ -9,9 +9,9 @@ import {
   id,
   unsignedInt,
 } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 
 import type { ParsedParameter } from "../url.js";
-import { R4 } from "../version.js";
 import {
   Request,
   RequestInteractionTypes,

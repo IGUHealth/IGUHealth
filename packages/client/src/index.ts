@@ -8,6 +8,12 @@ import {
   ResourceType,
   id,
 } from "@iguhealth/fhir-types/r4/types";
+import {
+  FHIR_VERSION,
+  VERSIONED_FHIR,
+  VersionedAResource,
+  VersionedResourceType,
+} from "@iguhealth/fhir-types/versions";
 import type { IOperation, OPMetadata } from "@iguhealth/operation-execution";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -16,11 +22,6 @@ import { MiddlewareAsync } from "./middleware/index.js";
 import type { FHIRRequest, FHIRResponse } from "./types/index.js";
 import type { ParsedParameter } from "./url.js";
 import { parseQuery } from "./url.js";
-import {
-  VERSIONED_FHIR,
-  VersionedAResource,
-  VersionedResourceType,
-} from "./version.js";
 
 export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   private state: State;
@@ -368,7 +369,7 @@ export class VersionedAsynchronousClient<State, CTX>
     if (!res.response) throw new Error("No Response was returned.");
     return res.response;
   }
-  async capabilities<FHIRVersion extends FHIRRequest["fhirVersion"]>(
+  async capabilities<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
   ): Promise<VERSIONED_FHIR[FHIRVersion]["CapabilityStatement"]> {
@@ -381,7 +382,7 @@ export class VersionedAsynchronousClient<State, CTX>
       throw new Error("Unexpected response type");
     return response.body;
   }
-  async search_system<FHIRVersion extends FHIRRequest["fhirVersion"]>(
+  async search_system<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     parameters: ParsedParameter<string | number>[] | string,
@@ -404,7 +405,7 @@ export class VersionedAsynchronousClient<State, CTX>
     return { total: response.total, resources: response.body };
   }
   async search_type<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     T extends VersionedResourceType<FHIRVersion>,
   >(
     ctx: CTX,
@@ -434,7 +435,7 @@ export class VersionedAsynchronousClient<State, CTX>
     };
   }
   async create<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     T extends VERSIONED_FHIR[FHIRVersion]["Resource"],
   >(
     ctx: CTX,
@@ -455,7 +456,7 @@ export class VersionedAsynchronousClient<State, CTX>
     return response.body as T;
   }
   async update<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     T extends VersionedResourceType<FHIRVersion>,
   >(
     ctx: CTX,
@@ -479,7 +480,7 @@ export class VersionedAsynchronousClient<State, CTX>
     return response.body as VersionedAResource<FHIRVersion, T>;
   }
   async patch<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     T extends VersionedResourceType<FHIRVersion>,
   >(
     ctx: CTX,
@@ -501,7 +502,7 @@ export class VersionedAsynchronousClient<State, CTX>
     return response.body as VersionedAResource<FHIRVersion, T>;
   }
   async read<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     T extends VersionedResourceType<FHIRVersion>,
   >(
     ctx: CTX,
@@ -521,7 +522,7 @@ export class VersionedAsynchronousClient<State, CTX>
     return response.body as VersionedAResource<FHIRVersion, T> | undefined;
   }
   async vread<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     T extends VersionedResourceType<FHIRVersion>,
   >(
     ctx: CTX,
@@ -543,7 +544,7 @@ export class VersionedAsynchronousClient<State, CTX>
     return response.body as VersionedAResource<FHIRVersion, T> | undefined;
   }
   async delete<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     T extends VersionedResourceType<FHIRVersion>,
   >(
     ctx: CTX,
@@ -561,7 +562,7 @@ export class VersionedAsynchronousClient<State, CTX>
     if (response.type !== "delete-response")
       throw new Error("Unexpected response type");
   }
-  async historySystem<FHIRVersion extends FHIRRequest["fhirVersion"]>(
+  async historySystem<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     parameters?: ParsedParameter<string | number>[] | string,
@@ -584,7 +585,7 @@ export class VersionedAsynchronousClient<State, CTX>
     return response.body as BundleEntry[];
   }
   async historyType<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     T extends VersionedResourceType<FHIRVersion>,
   >(
     ctx: CTX,
@@ -610,7 +611,7 @@ export class VersionedAsynchronousClient<State, CTX>
     return response.body;
   }
   async historyInstance<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     T extends VersionedResourceType<FHIRVersion>,
   >(
     ctx: CTX,
@@ -638,7 +639,7 @@ export class VersionedAsynchronousClient<State, CTX>
     return response.body;
   }
   async invoke_system<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     Op extends IOperation<any, any>,
   >(
     op: Op,
@@ -658,7 +659,7 @@ export class VersionedAsynchronousClient<State, CTX>
     return op.parseToObject("out", response.body);
   }
   async invoke_type<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     Op extends IOperation<any, any>,
     T extends VersionedResourceType<FHIRVersion>,
   >(
@@ -682,7 +683,7 @@ export class VersionedAsynchronousClient<State, CTX>
     return op.parseToObject("out", response.body);
   }
   async invoke_instance<
-    FHIRVersion extends FHIRRequest["fhirVersion"],
+    FHIRVersion extends FHIR_VERSION,
     Op extends IOperation<any, any>,
     T extends VersionedResourceType<FHIRVersion>,
   >(
@@ -706,7 +707,7 @@ export class VersionedAsynchronousClient<State, CTX>
       throw new Error("Unexpected response type");
     return op.parseToObject("out", response.body);
   }
-  async transaction<FHIRVersion extends FHIRRequest["fhirVersion"]>(
+  async transaction<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     bundle: VERSIONED_FHIR[FHIRVersion]["Bundle"],
@@ -729,7 +730,7 @@ export class VersionedAsynchronousClient<State, CTX>
     }
     return response.body;
   }
-  async batch<FHIRVersion extends FHIRRequest["fhirVersion"]>(
+  async batch<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     bundle: VERSIONED_FHIR[FHIRVersion]["Bundle"],

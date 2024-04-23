@@ -7,7 +7,11 @@ import InlineOperation from "../interface.js";
 const CodeSystemLookupInvoke = InlineOperation(
   CodeSystemLookup.Op,
   async (ctx: FHIRServerCTX, request: FHIRRequest, input) => {
-    const lookup = await ctx.terminologyProvider.lookup(ctx, input);
+    const lookup = await ctx.terminologyProvider.lookup(
+      ctx,
+      request.fhirVersion,
+      input,
+    );
     return lookup;
   },
 );

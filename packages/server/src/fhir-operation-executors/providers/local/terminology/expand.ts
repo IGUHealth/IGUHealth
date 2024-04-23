@@ -7,7 +7,11 @@ import InlineOperation from "../interface.js";
 const ValueSetExpandInvoke = InlineOperation(
   ValueSetExpand.Op,
   async (ctx: FHIRServerCTX, request: FHIRRequest, input) => {
-    const expandedValueSet = await ctx.terminologyProvider.expand(ctx, input);
+    const expandedValueSet = await ctx.terminologyProvider.expand(
+      ctx,
+      request.fhirVersion,
+      input,
+    );
     return expandedValueSet;
   },
 );

@@ -5,8 +5,8 @@ import type * as koa from "koa";
 import pg from "pg";
 import { pino } from "pino";
 
-import { AsynchronousClient } from "@iguhealth/client";
-import { FHIRClientAsync } from "@iguhealth/client/interface";
+import { VersionedAsynchronousClient } from "@iguhealth/client";
+import { VersionedFHIRClientAsync } from "@iguhealth/client/interface";
 import {
   MiddlewareAsyncChain,
   createMiddlewareAsync,
@@ -52,6 +52,7 @@ import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
 import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with { type:"json" };
 import RedisLock from "../synchronization/redis.lock.js";
 import { FHIRServerCTX, KoaContext, asSystemCTX } from "./types.js";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 const R4_SPECIAL_TYPES: { MEMORY: ResourceType[]; AUTH: ResourceType[] } = {
   AUTH: AUTH_RESOURCETYPES,
@@ -64,10 +65,11 @@ const R4_DB_TYPES: ResourceType[] = ([...resourceTypes] as ResourceType[]).filte
 
 async function createResourceRestCapabilities(
   ctx: Partial<FHIRServerCTX>,
-  memdb: FHIRClientAsync<unknown>,
+  fhirVersion: FHIR_VERSION,
+  memdb: VersionedFHIRClientAsync<unknown>,
   sd: StructureDefinition,
 ): Promise<CapabilityStatementRestResource> {
-  const resourceParameters = await memdb.search_type(ctx, "SearchParameter", [
+  const resourceParameters = await memdb.search_type(ctx, fhirVersion, "SearchParameter", [
     { name: "_count", value: [1000] },
     {
       name: "base",
@@ -99,15 +101,16 @@ async function createResourceRestCapabilities(
 
 export async function serverCapabilities(
   ctx: Partial<FHIRServerCTX>,
-  memdb: FHIRClientAsync<unknown>,
+  fhirVersion: FHIR_VERSION,
+  memdb: VersionedFHIRClientAsync<unknown>,
 ): Promise<CapabilityStatement> {
   const sds = (
-    await memdb.search_type({}, "StructureDefinition", [
+    await memdb.search_type({}, fhirVersion, "StructureDefinition", [
       { name: "_count", value: [1000] },
     ])
   ).resources.filter((sd) => sd.abstract === false && sd.kind === "resource");
 
-  const rootParameters = await memdb.search_type(ctx, "SearchParameter", [
+  const rootParameters = await memdb.search_type(ctx, fhirVersion, "SearchParameter", [
     { name: "_count", value: [1000] },
     {
       name: "base",
@@ -136,7 +139,7 @@ export async function serverCapabilities(
           documentation: resource.description,
         })),
         resource: await Promise.all(
-          sds.map((sd) => createResourceRestCapabilities(ctx, memdb, sd)),
+          sds.map((sd) => createResourceRestCapabilities(ctx, fhirVersion, memdb, sd)),
         ),
       },
     ],
@@ -207,6 +210,7 @@ const validationMiddleware: MiddlewareAsyncChain<
         case "transaction-request": {
           const outcome = await validateResource(
             asSystemCTX(context.ctx),
+            context.request.fhirVersion,
             getResourceTypeToValidate(context.request),
             {
               mode: (context.request.type === "create-request"
@@ -401,6 +405,7 @@ export async function createFHIRServices(
       resolveCanonical: memDBAsync.resolveCanonical,
       resolveTypeToCanonical: memDBAsync.resolveTypeToCanonical,
     },
+    "4.0",
     memDBAsync,
   );
   const client = await createFHIRClient([
@@ -569,7 +574,7 @@ async function fhirAPIMiddleware(): Promise<
 }
 
 export async function createFHIRAPI() {
-  return new AsynchronousClient(
+  return new VersionedAsynchronousClient(
     {},
     createMiddlewareAsync([await fhirAPIMiddleware()]),
   );

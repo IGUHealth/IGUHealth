@@ -9,16 +9,19 @@ import {
 } from "@iguhealth/fhir-pointer";
 import { primitiveTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
-  AResource,
   ElementDefinition,
   OperationOutcome,
   Reference,
   Resource,
-  ResourceType,
   StructureDefinition,
   canonical,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
+import {
+  FHIR_VERSION,
+  VersionedAResource,
+  VersionedResourceType,
+} from "@iguhealth/fhir-types/versions";
 import {
   OperationError,
   issueError,
@@ -27,11 +30,16 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 export interface ValidationCTX {
+  fhirVersion: FHIR_VERSION;
   resolveTypeToCanonical(type: uri): canonical | undefined;
-  resolveCanonical<T extends ResourceType>(
-    type: T,
-    url: string,
-  ): AResource<T> | undefined;
+  resolveCanonical: <
+    FHIRVersion extends FHIR_VERSION,
+    Type extends VersionedResourceType<FHIRVersion>,
+  >(
+    fhirVersion: FHIRVersion,
+    type: Type,
+    url: canonical,
+  ) => VersionedAResource<FHIRVersion, Type> | undefined;
   validateCode?(system: string, code: string): Promise<boolean>;
 }
 
@@ -265,7 +273,7 @@ function determineTypesAndFields(
   element: ElementDefinition,
   value: object,
 ): [string, uri][] {
-  let fields: [string, uri][] = [];
+  const fields: [string, uri][] = [];
   const base = findBaseFieldAndType(element, value);
   if (base) {
     fields.push(base);
@@ -301,7 +309,7 @@ async function validateReferenceTypeConstraint(
   element: ElementDefinition,
 ): Promise<OperationOutcome["issue"]> {
   // [Note] because element should already be validated as reference this can be considered safe?
-  let value = get(path, root) as Reference;
+  const value = get(path, root) as Reference;
 
   const referenceProfiles = element.type?.find(
     (t) => t.code === "Reference",
@@ -309,7 +317,11 @@ async function validateReferenceTypeConstraint(
   if (referenceProfiles === undefined || referenceProfiles?.length === 0)
     return [];
   for (const profile of referenceProfiles || []) {
-    const sd = ctx.resolveCanonical("StructureDefinition", profile);
+    const sd = ctx.resolveCanonical(
+      ctx.fhirVersion,
+      "StructureDefinition",
+      profile,
+    );
     // Domain or resource type means all types are allowed.
     if (sd?.type === "Resource" || sd?.type === "DomainResource") {
       return [];
@@ -676,7 +688,11 @@ export default async function validate(
       ),
     );
   }
-  const sd = ctx.resolveCanonical("StructureDefinition", canonical);
+  const sd = ctx.resolveCanonical(
+    ctx.fhirVersion,
+    "StructureDefinition",
+    canonical,
+  );
   if (!sd)
     throw new OperationError(
       outcomeFatal(

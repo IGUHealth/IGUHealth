@@ -12,7 +12,6 @@ import {
   Quantity,
   Range,
   Reference,
-  Resource,
   ResourceType,
   SearchParameter,
   canonical,
@@ -22,6 +21,11 @@ import {
   instant,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
+import {
+  FHIR_VERSION,
+  VersionedAResource,
+  VersionedResourceType,
+} from "@iguhealth/fhir-types/versions";
 import {
   MetaValueArray,
   MetaValueSingular,
@@ -190,10 +194,14 @@ function toReferenceLocal(
   }
 }
 
-export type ResolveRemoteCanonical = (
-  types: ResourceType[],
+export type ResolveRemoteCanonical = <FHIRVersion extends FHIR_VERSION>(
+  fhirVersion: FHIRVersion,
+  types: VersionedResourceType<FHIRVersion>[],
   url: canonical,
-) => Promise<Resource | undefined>;
+) => Promise<
+  | VersionedAResource<FHIRVersion, VersionedResourceType<FHIRVersion>>
+  | undefined
+>;
 
 async function toReferenceRemote(
   parameter: SearchParameter,
@@ -236,6 +244,7 @@ async function toReferenceRemote(
         );
       const resource = resolveCanonical
         ? await resolveCanonical(
+            "4.0",
             parameter.target as ResourceType[],
             value.valueOf().toString() as canonical,
           )

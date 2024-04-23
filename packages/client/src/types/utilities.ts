@@ -1,4 +1,4 @@
-import { FHIR_VERSIONS_SUPPORTED } from "../version.js";
+import { FHIR_VERSIONS_SUPPORTED } from "@iguhealth/fhir-types/versions";
 
 type RequestLevel = {
   instance: "instance";

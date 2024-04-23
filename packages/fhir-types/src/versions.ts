@@ -1,10 +1,14 @@
-import * as r4 from "@iguhealth/fhir-types/r4/types";
-import * as r4b from "@iguhealth/fhir-types/r4b/types";
+import * as r4 from "./generated/r4/types.js";
+import * as r4b from "./generated/r4b/types.js";
 
 export type R4 = "4.0";
 export type R4B = "4.3";
 
+export const R4: R4 = "4.0";
+export const R4B: R4B = "4.3";
+
 export const FHIR_VERSIONS_SUPPORTED: [R4, R4B] = ["4.0", "4.3"];
+export type FHIR_VERSION = (typeof FHIR_VERSIONS_SUPPORTED)[number];
 
 export type VERSIONED_FHIR = {
   "4.0": {

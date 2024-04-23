@@ -5,6 +5,7 @@ import {
   StructureDefinition,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 //
 function isResourceOrComplexType(type: string): boolean {
@@ -36,11 +37,15 @@ function resolveContentReferenceIndex(
 type Location = (string | number)[];
 
 type TypeMeta = {
+  fhirVersion: FHIR_VERSION;
   sd: StructureDefinition;
   elementIndex: number;
   // Typechoice so need to maintain the type here.
   type: uri;
-  getSD?: (type: uri) => StructureDefinition | undefined;
+  getSD?: (
+    fhirVersion: FHIR_VERSION,
+    type: uri,
+  ) => StructureDefinition | undefined;
 };
 
 export type Meta = { location: Location; type: TypeMeta | undefined };
@@ -65,8 +70,13 @@ function deriveNextTypeMeta(
 ): TypeMeta | undefined {
   if (!partialMeta) return partialMeta;
   if (!partialMeta.elementIndex) partialMeta.elementIndex = 0;
+  if (!partialMeta.fhirVersion) partialMeta.fhirVersion = "4.0";
   if (!partialMeta.sd && partialMeta.type)
-    partialMeta.sd = partialMeta.getSD?.call(undefined, partialMeta.type);
+    partialMeta.sd = partialMeta.getSD?.call(
+      undefined,
+      partialMeta.fhirVersion,
+      partialMeta.type,
+    );
 
   return partialMeta.sd ? (partialMeta as TypeMeta) : undefined;
 }
@@ -103,7 +113,7 @@ function getField<T extends { [key: string]: unknown }>(
   value: T,
   field: string,
 ): string | undefined {
-  if (value.hasOwnProperty(field)) return field;
+  if (Object.prototype.hasOwnProperty.call(value, field)) return field;
   const foundField = Object.keys(value).find(
     (k) =>
       k.startsWith(field.toString()) || k.startsWith(`_${field.toString()}`),
@@ -127,7 +137,7 @@ function isElementDefinitionWithType(
     element.type?.length > 1 &&
     path.startsWith(element.path.replace("[x]", ""))
   ) {
-    for (let type of element.type) {
+    for (const type of element.type) {
       // Because type pulled from typechoice will be capitalized and it may or may not be
       // on the actual type for example HumanName vs boolean
       // Just lowercase both and compare.
@@ -189,7 +199,11 @@ function deriveNextMetaInformation(
     const { index, type: nextType } = foundIndexAndType;
     const nextElement = meta.sd.snapshot?.element[index] as ElementDefinition;
 
-    const nextMeta: PartialTypeMeta = {
+    const nextMeta: PartialTypeMeta & {
+      getSD: TypeMeta["getSD"];
+      fhirVersion: TypeMeta["fhirVersion"];
+    } = {
+      fhirVersion: meta.fhirVersion,
       getSD: meta.getSD,
     };
 
@@ -219,7 +233,7 @@ function deriveNextMetaInformation(
       // In this case pull in the SD means it's a complex or resource type
       // so need to retrieve the SD.
       if (isResourceOrComplexType(type)) {
-        const sd = meta.getSD?.call(undefined, type);
+        const sd = meta.getSD?.call(undefined, meta.fhirVersion, type);
         if (!sd) {
           throw new Error(`Could not retrieve sd of type '${type}'`);
         }
@@ -303,8 +317,8 @@ export function descend<T>(
   if (isObject(internalValue)) {
     const computedField = getField(internalValue, field);
     if (computedField) {
-      let v = internalValue[computedField];
-      let elementValue = internalValue[`_${computedField}`] as
+      const v = internalValue[computedField];
+      const elementValue = internalValue[`_${computedField}`] as
         | Element[]
         | Element
         | undefined;

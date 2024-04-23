@@ -4,6 +4,7 @@ import {
   Resource,
 } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { VersionedAsynchronousClient } from "../index.js";
@@ -42,10 +43,7 @@ function fhirUrlChunk(version: string) {
   }
 }
 
-function versionUrl(
-  domain: string,
-  fhirVersion: FHIRRequest["fhirVersion"],
-): string {
+function versionUrl(domain: string, fhirVersion: FHIR_VERSION): string {
   return new URL(
     pathJoin([
       new URL(domain).pathname,

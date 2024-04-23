@@ -1,5 +1,5 @@
 import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
-import { ResourceType } from "@iguhealth/fhir-types/lib/r4/types";
+import { ResourceType } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 export default function validateResourceTypeMiddleware<State, CTX>(

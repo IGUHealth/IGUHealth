@@ -9,7 +9,7 @@ import {
   Practitioner,
   StructureDefinition,
   uri,
-} from "@iguhealth/fhir-types/lib/r4/types";
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
 
 import { MetaValueArray, MetaValueSingular, descend } from "./index";
 
@@ -62,7 +62,7 @@ test("Simple Type test", () => {
     {
       type: {
         type: "Patient" as uri,
-        getSD: (type: string) => {
+        getSD: (_version, type: string) => {
           const foundSD = sds.find((sd) => sd.type === type);
           return foundSD;
         },
@@ -124,7 +124,7 @@ test("ConceptMap test", () => {
     {
       type: {
         type: "ConceptMap" as uri,
-        getSD: (type: string) => {
+        getSD: (_version, type: string) => {
           const foundSD = sds.find((sd) => sd.type === type);
           return foundSD;
         },
@@ -165,7 +165,7 @@ test("Location test", () => {
     {
       type: {
         type: "Patient" as uri,
-        getSD: (type: string) => {
+        getSD: (_version, type: string) => {
           const foundSD = sds.find((sd) => sd.type === type);
           return foundSD;
         },
@@ -195,7 +195,7 @@ test("typechoice", () => {
     {
       type: {
         type: "Practitioner" as uri,
-        getSD: (type: string) => {
+        getSD: (_version, type: string) => {
           const foundSD = sds.find((sd) => sd.type === type);
           return foundSD;
         },
@@ -227,7 +227,7 @@ test("Location test primitive extensions", () => {
     {
       type: {
         type: "Practitioner" as uri,
-        getSD: (type: string) => {
+        getSD: (_version, type: string) => {
           const foundSD = sds.find((sd) => sd.type === type);
           return foundSD;
         },

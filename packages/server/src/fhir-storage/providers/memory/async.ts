@@ -3,14 +3,18 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
-import { AsynchronousClient } from "@iguhealth/client";
-import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
+import { VersionedAsynchronousClient } from "@iguhealth/client";
+import { VersionedFHIRClientAsync } from "@iguhealth/client/lib/interface";
 import {
   MiddlewareAsync,
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import * as r4 from "@iguhealth/fhir-types/r4/types";
-import * as r4b from "@iguhealth/fhir-types/r4b/types";
+import {
+  FHIR_VERSION,
+  VersionedAResource,
+  VersionedResourceType,
+} from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../fhir-context/types.js";
@@ -139,6 +143,7 @@ function createMemoryMiddleware<
                 } else if (
                   await fitsSearchCriteria(
                     context.ctx,
+                    context.request.fhirVersion,
                     resource,
                     resourceParameters,
                   )
@@ -180,7 +185,7 @@ function createMemoryMiddleware<
                   return {
                     ...context,
                     response: {
-                      fhirVersion: "4.0",
+                      fhirVersion: context.request.fhirVersion,
                       level: context.request.level,
                       parameters: context.request.parameters,
                       type: "search-response",
@@ -192,7 +197,7 @@ function createMemoryMiddleware<
                   return {
                     ...context,
                     response: {
-                      fhirVersion: "4.0",
+                      fhirVersion: context.request.fhirVersion,
                       resourceType: context.request.resourceType,
                       level: "type",
                       parameters: context.request.parameters,
@@ -220,7 +225,7 @@ function createMemoryMiddleware<
               return {
                 ...context,
                 response: {
-                  fhirVersion: "4.0",
+                  fhirVersion: context.request.fhirVersion,
                   level: "instance",
                   type: "update-response",
                   resourceType: context.request.resourceType,
@@ -245,7 +250,7 @@ function createMemoryMiddleware<
               return {
                 ...context,
                 response: {
-                  fhirVersion: "4.0",
+                  fhirVersion: context.request.fhirVersion,
                   level: "type",
                   type: "create-response",
                   resourceType: context.request.resourceType,
@@ -266,7 +271,7 @@ function createMemoryMiddleware<
               return {
                 ...context,
                 response: {
-                  fhirVersion: "4.0",
+                  fhirVersion: context.request.fhirVersion,
                   level: "instance",
                   type: "read-response",
                   resourceType: context.request.resourceType,
@@ -291,10 +296,7 @@ function createMemoryMiddleware<
 
 function createResolveCanonical(
   data: InternalData<r4.ResourceType>,
-): <T extends r4.ResourceType>(
-  type: T,
-  url: string,
-) => r4.AResource<T> | undefined {
+): FHIRServerCTX["resolveCanonical"] {
   const map = new Map<r4.ResourceType, Map<string, string>>();
   for (const resourceType of Object.keys(data)) {
     for (const resource of Object.values(
@@ -313,9 +315,25 @@ function createResolveCanonical(
     }
   }
 
-  return <T extends r4.ResourceType>(type: T, url: string) => {
-    const id = map.get(type)?.get(url);
-    return id ? (data[type]?.[id as r4.id] as r4.AResource<T>) : undefined;
+  return <
+    FHIRVersion extends FHIR_VERSION,
+    Type extends VersionedResourceType<FHIRVersion>,
+  >(
+    fhirVersion: FHIRVersion,
+    type: Type,
+    url: r4.canonical,
+  ) => {
+    if (fhirVersion !== "4.0") {
+      throw new OperationError(
+        outcomeError("not-supported", "FHIR version not supported yet."),
+      );
+    }
+
+    const id = map.get(type as r4.ResourceType)?.get(url);
+    return (id ? data[type]?.[id as r4.id] : undefined) as VersionedAResource<
+      FHIRVersion,
+      Type
+    >;
   };
 }
 
@@ -338,7 +356,7 @@ function createResolveTypeToCanonical(
   };
 }
 
-interface MemoryClientInterface<CTX> extends FHIRClientAsync<CTX> {
+interface MemoryClientInterface<CTX> extends VersionedFHIRClientAsync<CTX> {
   resolveCanonical: ReturnType<typeof createResolveCanonical>;
   resolveTypeToCanonical: ReturnType<typeof createResolveTypeToCanonical>;
 }
@@ -346,29 +364,29 @@ interface MemoryClientInterface<CTX> extends FHIRClientAsync<CTX> {
 class Memory<CTX extends FHIRServerCTX> implements MemoryClientInterface<CTX> {
   private _client;
 
-  public request: FHIRClientAsync<CTX>["request"];
-  public capabilities: FHIRClientAsync<CTX>["capabilities"];
-  public search_system: FHIRClientAsync<CTX>["search_system"];
-  public search_type: FHIRClientAsync<CTX>["search_type"];
-  public create: FHIRClientAsync<CTX>["create"];
-  public update: FHIRClientAsync<CTX>["update"];
-  public patch: FHIRClientAsync<CTX>["patch"];
-  public read: FHIRClientAsync<CTX>["read"];
-  public vread: FHIRClientAsync<CTX>["vread"];
-  public delete: FHIRClientAsync<CTX>["delete"];
-  public historySystem: FHIRClientAsync<CTX>["historySystem"];
-  public historyType: FHIRClientAsync<CTX>["historyType"];
-  public historyInstance: FHIRClientAsync<CTX>["historyInstance"];
-  public invoke_system: FHIRClientAsync<CTX>["invoke_system"];
-  public invoke_type: FHIRClientAsync<CTX>["invoke_type"];
-  public invoke_instance: FHIRClientAsync<CTX>["invoke_instance"];
-  public transaction: FHIRClientAsync<CTX>["transaction"];
-  public batch: FHIRClientAsync<CTX>["batch"];
+  public request: VersionedFHIRClientAsync<CTX>["request"];
+  public capabilities: VersionedFHIRClientAsync<CTX>["capabilities"];
+  public search_system: VersionedFHIRClientAsync<CTX>["search_system"];
+  public search_type: VersionedFHIRClientAsync<CTX>["search_type"];
+  public create: VersionedFHIRClientAsync<CTX>["create"];
+  public update: VersionedFHIRClientAsync<CTX>["update"];
+  public patch: VersionedFHIRClientAsync<CTX>["patch"];
+  public read: VersionedFHIRClientAsync<CTX>["read"];
+  public vread: VersionedFHIRClientAsync<CTX>["vread"];
+  public delete: VersionedFHIRClientAsync<CTX>["delete"];
+  public historySystem: VersionedFHIRClientAsync<CTX>["historySystem"];
+  public historyType: VersionedFHIRClientAsync<CTX>["historyType"];
+  public historyInstance: VersionedFHIRClientAsync<CTX>["historyInstance"];
+  public invoke_system: VersionedFHIRClientAsync<CTX>["invoke_system"];
+  public invoke_type: VersionedFHIRClientAsync<CTX>["invoke_type"];
+  public invoke_instance: VersionedFHIRClientAsync<CTX>["invoke_instance"];
+  public transaction: VersionedFHIRClientAsync<CTX>["transaction"];
+  public batch: VersionedFHIRClientAsync<CTX>["batch"];
   public resolveCanonical: MemoryClientInterface<CTX>["resolveCanonical"];
   public resolveTypeToCanonical: MemoryClientInterface<CTX>["resolveTypeToCanonical"];
 
   constructor(data: InternalData<r4.ResourceType>) {
-    const client = new AsynchronousClient<
+    const client = new VersionedAsynchronousClient<
       { data: InternalData<r4.ResourceType> },
       CTX
     >({ data: data }, createMemoryMiddleware());
@@ -410,7 +428,7 @@ export default function createMemoryDatabaseFromData<CTX extends FHIRServerCTX>(
 }
 
 export function createArtifactMemoryDatabase<CTX extends FHIRServerCTX>(
-  fhirVersion: "4.0",
+  fhirVersion: FHIR_VERSION,
   resourceTypes: r4.ResourceType[],
 ): Memory<CTX> {
   const artifactResources: r4.Resource[] = resourceTypes

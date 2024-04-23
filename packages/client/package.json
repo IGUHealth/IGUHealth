@@ -16,14 +16,12 @@
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "exports": {
+    ".": "./lib/index.js",
     "./lib/url": "./lib/url.js",
     "./lib/types": "./lib/types/index.js",
     "./lib/interface": "./lib/interface.js",
-    "./lib/version": "./lib/version.js",
-    ".": "./lib/index.js",
     "./types": "./lib/types/index.js",
     "./interface": "./lib/interface.js",
-    "./version": "./lib/version.js",
     "./middleware": "./lib/middleware/index.js",
     "./url": "./lib/url.js",
     "./lib/http": "./lib/http/index.js",

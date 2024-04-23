@@ -21,6 +21,7 @@ export const associateUserMiddleware: MiddlewareAsyncChain<
     case "Membership": {
       const usersAndAccessPolicies = (await context.ctx.client.search_type(
         asSystemCTX(context.ctx),
+        "4.0",
         "Membership",
         [
           {
@@ -57,12 +58,14 @@ export const associateUserMiddleware: MiddlewareAsyncChain<
     case "ClientApplication": {
       const clientApplication = await context.ctx.client.read(
         asSystemCTX(context.ctx),
+        "4.0",
         "ClientApplication",
         context.ctx.user.jwt.sub as string as id,
       );
 
       const accessPolicies = await context.ctx.client.search_type(
         asSystemCTX(context.ctx),
+        "4.0",
         "AccessPolicy",
         [
           {
@@ -87,12 +90,14 @@ export const associateUserMiddleware: MiddlewareAsyncChain<
     case "OperationDefinition": {
       const operationDefinition = await context.ctx.client.read(
         asSystemCTX(context.ctx),
+        "4.0",
         "OperationDefinition",
         context.ctx.user.jwt.sub as string as id,
       );
 
       const accessPolicies = await context.ctx.client.search_type(
         asSystemCTX(context.ctx),
+        "4.0",
         "AccessPolicy",
         [
           {

@@ -6,14 +6,12 @@ import { fileURLToPath } from "url";
 import * as s from "zapatos/schema";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
+import { canonical, code, dateTime, uri } from "@iguhealth/fhir-types/r4/types";
 import {
-  AResource,
-  ResourceType,
-  canonical,
-  code,
-  dateTime,
-  uri,
-} from "@iguhealth/fhir-types/r4/types";
+  FHIR_VERSION,
+  VersionedAResource,
+  VersionedResourceType,
+} from "@iguhealth/fhir-types/versions";
 import { AccessTokenPayload, TenantId } from "@iguhealth/jwt";
 
 import { IOCache } from "../cache/interface.js";
@@ -84,8 +82,18 @@ export const testServices: FHIRServerCTX = {
   },
   client: createMemoryDatabaseFromData({}),
   cache: new TestCache(),
-  resolveCanonical: <T extends ResourceType>(type: T, url: string) => {
-    return sds.find((sd) => sd.url === url) as AResource<T>;
+  resolveCanonical: <
+    Version extends FHIR_VERSION,
+    Type extends VersionedResourceType<Version>,
+  >(
+    version: Version,
+    type: Type,
+    url: canonical,
+  ) => {
+    return sds.find((sd) => sd.url === url) as VersionedAResource<
+      Version,
+      Type
+    >;
   },
   resolveTypeToCanonical: (type: uri) => {
     const sd = sds.find((sd) => sd.type === type);

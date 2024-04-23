@@ -1,7 +1,7 @@
 import { expect, test } from "@jest/globals";
 import crypto from "node:crypto";
 
-import { OperationDefinition } from "@iguhealth/fhir-types/lib/r4/types";
+import { OperationDefinition } from "@iguhealth/fhir-types/lib/generated/r4/types";
 
 import { testServices } from "../../fhir-storage/test-ctx.js";
 import { encryptValue } from "../index.js";

@@ -2,6 +2,7 @@ import graphlib from "@dagrejs/graphlib";
 import pg from "pg";
 
 import { Bundle, Reference, uri } from "@iguhealth/fhir-types/r4/types";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
@@ -25,6 +26,7 @@ type LocationsToUpdate = {
 
 export function buildTransactionTopologicalGraph(
   ctx: FHIRServerCTX,
+  fhirVersion: FHIR_VERSION,
   transaction: Bundle,
 ): {
   order: string[];
@@ -47,8 +49,9 @@ export function buildTransactionTopologicalGraph(
         entry.resource,
         {
           meta: {
+            fhirVersion,
             type: entry.resource.resourceType as uri,
-            getSD: (type) => {
+            getSD: (fhirVersion, type) => {
               const canonical = ctx.resolveTypeToCanonical(type);
               if (!canonical)
                 throw new OperationError(
@@ -57,7 +60,11 @@ export function buildTransactionTopologicalGraph(
                     `Could not resolve canonical for type '${type}'.`,
                   ),
                 );
-              return ctx.resolveCanonical("StructureDefinition", canonical);
+              return ctx.resolveCanonical(
+                fhirVersion,
+                "StructureDefinition",
+                canonical,
+              );
             },
           },
         },

@@ -6,9 +6,8 @@ import { loadArtifacts } from "@iguhealth/artifacts";
 import {
   OperationDefinition,
   StructureDefinition,
-  code,
   uri,
-} from "@iguhealth/fhir-types/lib/r4/types";
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
 
 import { evaluate, evaluateWithMeta } from "./index";
 
@@ -17,7 +16,7 @@ const sds: StructureDefinition[] = loadArtifacts({
   packageLocation: path.join(fileURLToPath(import.meta.url), ".."),
 });
 
-function getSD(type: uri) {
+function getSD(_version: unknown, type: uri) {
   const foundSD = sds.find((sd) => sd.type === type);
   return foundSD;
 }

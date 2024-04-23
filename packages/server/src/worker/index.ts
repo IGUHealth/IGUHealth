@@ -5,7 +5,7 @@ import pg from "pg";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
-import { AsynchronousClient } from "@iguhealth/client";
+import { VersionedAsynchronousClient } from "@iguhealth/client";
 import {
   BundleEntry,
   Resource,
@@ -13,6 +13,8 @@ import {
   code,
   id,
 } from "@iguhealth/fhir-types/r4/types";
+import * as r4b from "@iguhealth/fhir-types/r4b/types";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { evaluate } from "@iguhealth/fhirpath";
 import {
   AccessTokenPayload,
@@ -94,10 +96,11 @@ function getVersionSequence(resource: Resource): number {
 }
 
 async function handleSubscriptionPayload(
-  server: AsynchronousClient<unknown, FHIRServerCTX>,
+  server: VersionedAsynchronousClient<unknown, FHIRServerCTX>,
   ctx: FHIRServerCTX,
+  fhirVersion: FHIR_VERSION,
   subscription: Subscription,
-  payload: Resource[],
+  payload: (Resource | r4b.Resource)[],
 ): Promise<void> {
   const channelType = evaluate(
     "$this.channel.type | $this.channel.type.extension.where(url=%typeUrl).value",
@@ -152,6 +155,7 @@ async function handleSubscriptionPayload(
         logAuditEvent(
           server,
           ctx,
+          fhirVersion,
           MAJOR_FAILURE,
           { reference: `Subscription/${subscription.id}` },
           `No Operation was specified, specifiy via extension '${OPERATION_URL}' with valueCode of operation code.`,
@@ -163,6 +167,7 @@ async function handleSubscriptionPayload(
       const operationDefinition = await resolveOperationDefinition(
         server,
         ctx,
+        fhirVersion,
         operation,
       );
 
@@ -195,6 +200,7 @@ async function handleSubscriptionPayload(
       await server.invoke_system(
         new Operation(operationDefinition),
         { ...ctx, user: { ...ctx.user, accessToken: user_access_token } },
+        fhirVersion,
         {
           payload,
         },
@@ -220,13 +226,19 @@ function subscriptionLockKey(tenant: string, subscriptionId: string) {
 function processSubscription(
   workerID: string,
   ctx: FHIRServerCTX,
-  server: AsynchronousClient<unknown, FHIRServerCTX>,
+  fhirVersion: FHIR_VERSION,
+  server: VersionedAsynchronousClient<unknown, FHIRServerCTX>,
 
   subscriptionId: id,
 ) {
   return async () => {
     // Reread here in event that concurrent process has altered the id.
-    const subscription = await server.read(ctx, "Subscription", subscriptionId);
+    const subscription = await server.read(
+      ctx,
+      fhirVersion,
+      "Subscription",
+      subscriptionId,
+    );
     if (!subscription)
       throw new OperationError(
         outcomeError(
@@ -285,11 +297,11 @@ function processSubscription(
         : // If latest isn't there then use the subscription version when created.
           getVersionSequence(subscription);
 
-      let historyPoll: BundleEntry[] = [];
+      let historyPoll: (BundleEntry | r4b.BundleEntry)[] = [];
 
       switch (request.level) {
         case "system": {
-          historyPoll = await server.historySystem(ctx, [
+          historyPoll = await server.historySystem(ctx, fhirVersion, [
             {
               name: "_since-version",
               value: [latestVersionIdForSub],
@@ -298,12 +310,17 @@ function processSubscription(
           break;
         }
         case "type": {
-          historyPoll = await server.historyType(ctx, request.resourceType, [
-            {
-              name: "_since-version",
-              value: [latestVersionIdForSub],
-            },
-          ]);
+          historyPoll = await server.historyType(
+            ctx,
+            fhirVersion,
+            request.resourceType,
+            [
+              {
+                name: "_since-version",
+                value: [latestVersionIdForSub],
+              },
+            ],
+          );
           break;
         }
       }
@@ -316,7 +333,13 @@ function processSubscription(
 
       const parameters = await parametersWithMetaAssociated(
         async (resourceTypes, name) =>
-          await findSearchParameter(server, ctx, resourceTypes, name),
+          await findSearchParameter(
+            server,
+            ctx,
+            fhirVersion,
+            resourceTypes,
+            name,
+          ),
         resourceTypes,
         request.parameters,
       );
@@ -337,7 +360,7 @@ function processSubscription(
           );
 
         // Do reverse as ordering is the latest update first.
-        const payload: Resource[] = [];
+        const payload: (Resource | r4b.Resource)[] = [];
 
         for (const entry of historyPoll) {
           if (entry.resource === undefined)
@@ -355,14 +378,21 @@ function processSubscription(
                 ...ctx,
                 resolveRemoteCanonical: createResolverRemoteCanonical(ctx),
               },
-              entry.resource,
+              "4.0",
+              entry.resource as Resource,
               resourceParameters,
             ))
           ) {
             payload.push(entry.resource);
           }
         }
-        await handleSubscriptionPayload(server, ctx, subscription, payload);
+        await handleSubscriptionPayload(
+          server,
+          ctx,
+          fhirVersion,
+          subscription,
+          payload,
+        );
         await ctx.cache.set(
           ctx,
           `${subscription.id}_latest`,
@@ -382,15 +412,22 @@ function processSubscription(
       await logAuditEvent(
         server,
         ctx,
+        fhirVersion,
         SERIOUS_FAILURE,
         { reference: `Subscription/${subscription.id}` },
         errorDescription,
       );
 
-      await server.update(ctx, "Subscription", subscription.id as id, {
-        ...subscription,
-        status: "error" as code,
-      });
+      await server.update(
+        ctx,
+        fhirVersion,
+        "Subscription",
+        subscription.id as id,
+        {
+          ...subscription,
+          status: "error" as code,
+        },
+      );
     }
   };
 }
@@ -403,7 +440,11 @@ async function getActiveTenants(pool: pg.Pool): Promise<TenantId[]> {
   return tenants.map((w) => w.id as TenantId);
 }
 
-async function createWorker(workerID = randomUUID(), loopInterval = 500) {
+async function createWorker(
+  workerID = randomUUID(),
+  fhirVersion: FHIR_VERSION = "4.0",
+  loopInterval = 500,
+) {
   // Using a pool directly because need to query up tenants.
   const pool = new pg.Pool({
     user: process.env["FHIR_DATABASE_USERNAME"],
@@ -439,7 +480,7 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
           },
         };
         const activeSubscriptionIds = (
-          await fhirServer.search_type(ctx, "Subscription", [
+          await fhirServer.search_type(ctx, fhirVersion, "Subscription", [
             { name: "status", value: ["active"] },
           ])
         ).resources.map((r) => r.id);
@@ -450,7 +491,13 @@ async function createWorker(workerID = randomUUID(), loopInterval = 500) {
           try {
             await fhirServices.lock.withLock(
               subscriptionLockKey(tenant, subscriptionId),
-              processSubscription(workerID, ctx, fhirServer, subscriptionId),
+              processSubscription(
+                workerID,
+                ctx,
+                fhirVersion,
+                fhirServer,
+                subscriptionId,
+              ),
             );
           } catch (e) {
             fhirServices.logger.error(e);

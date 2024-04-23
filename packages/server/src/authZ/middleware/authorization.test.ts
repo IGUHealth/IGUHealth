@@ -6,7 +6,7 @@ import {
   Patient,
   code,
   id,
-} from "@iguhealth/fhir-types/lib/r4/types";
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
 
 import { FHIRServerCTX } from "../../fhir-context/context.js";
 import { testServices } from "../../fhir-storage/test-ctx.js";

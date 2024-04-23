@@ -13,7 +13,7 @@ import {
   Resource,
   Subscription,
   id,
-} from "@iguhealth/fhir-types/lib/r4/types";
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
 
 dotEnv.config();
 

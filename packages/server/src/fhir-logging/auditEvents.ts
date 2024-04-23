@@ -1,4 +1,4 @@
-import { FHIRClientAsync } from "@iguhealth/client/interface";
+import { VersionedFHIRClientAsync } from "@iguhealth/client/interface";
 import {
   AuditEvent,
   Reference,
@@ -6,6 +6,7 @@ import {
   instant,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 import { FHIRServerCTX } from "../fhir-context/types.js";
 
@@ -23,10 +24,11 @@ export const MAJOR_FAILURE: OUTCOMES["MAJOR_FAILURE"] = "12";
 
 export default async function logAuditEvent<
   CTX extends FHIRServerCTX,
-  Client extends FHIRClientAsync<CTX>,
+  Client extends VersionedFHIRClientAsync<CTX>,
 >(
   client: Client,
   ctx: CTX,
+  fhirVersion: FHIR_VERSION,
   outcome: OUTCOMES[keyof OUTCOMES],
   entity: Reference,
   outcomeDescription: string,
@@ -62,6 +64,6 @@ export default async function logAuditEvent<
     ],
   };
 
-  const savedAuditEvent = await client.create(ctx, auditEvent);
+  const savedAuditEvent = await client.create(ctx, fhirVersion, auditEvent);
   return savedAuditEvent;
 }

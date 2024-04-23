@@ -6,6 +6,7 @@ import {
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/r4/types";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 import { IndexFile, PackageJSON } from "./types.js";
 
@@ -38,7 +39,7 @@ function flattenOrInclude<T extends ResourceType>(
 
 interface LoadArtifactOptions<T extends ResourceType> {
   // Only support R4 and R4B for now.
-  fhirVersion?: "4.0" | "4.3";
+  fhirVersion?: FHIR_VERSION;
   resourceType: T;
   packageLocation: string;
   silence?: boolean;

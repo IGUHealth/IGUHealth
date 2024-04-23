@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween.js";
 
 import { Resource, uri } from "@iguhealth/fhir-types/r4/types";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import * as fp from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -26,6 +27,7 @@ interface MemorySearchCTX {
 
 async function expressionSearch<CTX extends MemorySearchCTX>(
   ctx: CTX,
+  fhirVersion: FHIR_VERSION,
   resource: Resource,
   parameter: SearchParameterResource,
 ) {
@@ -57,8 +59,9 @@ async function expressionSearch<CTX extends MemorySearchCTX>(
     resource,
     {
       meta: {
+        fhirVersion,
         type: resource.resourceType as uri,
-        getSD: (type) => {
+        getSD: (fhirVersion, type) => {
           const canonical = ctx.resolveTypeToCanonical(type);
           if (!canonical)
             throw new OperationError(
@@ -67,7 +70,11 @@ async function expressionSearch<CTX extends MemorySearchCTX>(
                 `Could not resolve canonical for type '${type}'.`,
               ),
             );
-          return ctx.resolveCanonical("StructureDefinition", canonical);
+          return ctx.resolveCanonical(
+            fhirVersion,
+            "StructureDefinition",
+            canonical,
+          );
         },
       },
     },
@@ -105,6 +112,7 @@ async function expressionSearch<CTX extends MemorySearchCTX>(
 
 function checkParameterWithResource<CTX extends MemorySearchCTX>(
   ctx: CTX,
+  fhirVersion: FHIR_VERSION,
   resource: Resource,
   parameter: SearchParameterResource,
 ) {
@@ -126,18 +134,20 @@ function checkParameterWithResource<CTX extends MemorySearchCTX>(
           parameter.value[0]
         );
       }
-      return expressionSearch(ctx, resource, parameter);
+      return expressionSearch(ctx, fhirVersion, resource, parameter);
     }
   }
 }
 
 export async function fitsSearchCriteria<CTX extends MemorySearchCTX>(
   ctx: CTX,
+  fhirVersion: FHIR_VERSION,
   resource: Resource,
   parameters: SearchParameterResource[],
 ) {
   for (const param of parameters) {
-    if (!(await checkParameterWithResource(ctx, resource, param))) return false;
+    if (!(await checkParameterWithResource(ctx, fhirVersion, resource, param)))
+      return false;
   }
 
   return true;

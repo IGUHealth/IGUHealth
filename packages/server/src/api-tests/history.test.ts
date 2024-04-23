@@ -6,7 +6,7 @@ import {
   Practitioner,
   Resource,
   id,
-} from "@iguhealth/fhir-types/lib/r4/types";
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system",

@@ -9,8 +9,8 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "generate-r4": "yarn node ../cli/lib/iguhealth.js generate types-artifacts --version=4.0 --output=./src/r4 && yarn build",
-    "generate-r4b": "yarn node ../cli/lib/iguhealth.js generate types-artifacts --version=4.3 --output=./src/r4b && yarn build",
+    "generate-r4": "yarn node ../cli/lib/iguhealth.js generate types-artifacts --version=4.0 --output=./src/generated/r4 && yarn build",
+    "generate-r4b": "yarn node ../cli/lib/iguhealth.js generate types-artifacts --version=4.3 --output=./src/generated/r4b && yarn build",
     "build": "tsc",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
@@ -19,14 +19,16 @@
   "author": "",
   "license": "ISC",
   "exports": {
-    "./lib/r4/types": "./lib/r4/types.js",
-    "./lib/r4/sets": "./lib/r4/sets.js",
-    "./lib/r4b/types": "./lib/r4b/types.js",
-    "./lib/r4b/sets": "./lib/r4b/sets.js",
-    "./r4/sets": "./lib/r4/sets.js",
-    "./r4/types": "./lib/r4/types.js",
-    "./r4b/sets": "./lib/r4b/sets.js",
-    "./r4b/types": "./lib/r4b/types.js"
+    "./versions": "./lib/versions.js",
+    "./lib/generated/r4/types": "./lib/generated/r4/types.js",
+    "./lib/generated/r4/sets": "./lib/generated/r4/sets.js",
+    "./lib/generated/r4b/types": "./lib/generated/r4b/types.js",
+    "./lib/generated/r4b/sets": "./lib/generated/r4b/sets.js",
+    "./lib/versions": "./lib/versions.js",
+    "./r4/sets": "./lib/generated/r4/sets.js",
+    "./r4/types": "./lib/generated/r4/types.js",
+    "./r4b/sets": "./lib/generated/r4b/sets.js",
+    "./r4b/types": "./lib/generated/r4b/types.js"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",
