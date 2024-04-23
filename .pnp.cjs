@@ -23350,10 +23350,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@types/formidable", [\
-      ["npm:2.0.6", {\
-        "packageLocation": "./.yarn/cache/@types-formidable-npm-2.0.6-94d53f71b6-808a9bc112.zip/node_modules/@types/formidable/",\
+      ["npm:3.4.5", {\
+        "packageLocation": "./.yarn/cache/@types-formidable-npm-3.4.5-1fa13c32d2-4ef1039eb2.zip/node_modules/@types/formidable/",\
         "packageDependencies": [\
-          ["@types/formidable", "npm:2.0.6"],\
+          ["@types/formidable", "npm:3.4.5"],\
           ["@types/node", "npm:20.3.3"]\
         ],\
         "linkType": "HARD"\
@@ -32019,10 +32019,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["formidable", [\
-      ["npm:2.1.2", {\
-        "packageLocation": "./.yarn/cache/formidable-npm-2.1.2-40ba18d67f-d385180e04.zip/node_modules/formidable/",\
+      ["npm:3.5.1", {\
+        "packageLocation": "./.yarn/cache/formidable-npm-3.5.1-257e5eab8a-c9a7bbbd4c.zip/node_modules/formidable/",\
         "packageDependencies": [\
-          ["formidable", "npm:2.1.2"],\
+          ["formidable", "npm:3.5.1"],\
           ["dezalgo", "npm:1.0.4"],\
           ["hexoid", "npm:1.0.0"],\
           ["once", "npm:1.4.0"],\
@@ -36307,10 +36307,10 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["koa-body", "npm:6.0.1"],\
           ["@types/co-body", "npm:6.1.0"],\
-          ["@types/formidable", "npm:2.0.6"],\
+          ["@types/formidable", "npm:3.4.5"],\
           ["@types/koa", "npm:2.13.6"],\
           ["co-body", "npm:6.1.0"],\
-          ["formidable", "npm:2.1.2"],\
+          ["formidable", "npm:3.5.1"],\
           ["zod", "npm:3.22.3"]\
         ],\
         "linkType": "HARD"\
