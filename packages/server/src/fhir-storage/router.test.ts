@@ -8,7 +8,7 @@ import {
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { R4 } from "@iguhealth/fhir-types/lib/versions";
 
-import MemoryDatabase from "./providers/memory/async.js";
+import { Memory } from "./providers/memory/async.js";
 import RouterClient from "./router.js";
 import { testServices } from "./test-ctx.js";
 
@@ -24,7 +24,7 @@ test("Test routing on resourceTypes", async () => {
             interactionsSupported: ["read-request", "search-request"],
           },
         },
-        source: MemoryDatabase({
+        source: new Memory({
           ["Patient"]: {
             ["1" as id]: { id: "1", resourceType: "Patient" } as Patient,
           },
@@ -44,7 +44,7 @@ test("Test routing on resourceTypes", async () => {
             interactionsSupported: ["read-request", "search-request"],
           },
         },
-        source: MemoryDatabase({
+        source: new Memory({
           ["Patient"]: {
             ["2" as id]: { id: "2", resourceType: "Patient" } as Patient,
           },
@@ -93,7 +93,7 @@ test("Test routing priority", async () => {
             interactionsSupported: ["read-request", "search-request"],
           },
         },
-        source: MemoryDatabase({
+        source: new Memory({
           ["Practitioner"]: {
             ["4" as id]: {
               id: "4",
@@ -116,7 +116,7 @@ test("Test routing priority", async () => {
             );
           },
         },
-        source: MemoryDatabase({
+        source: new Memory({
           ["Practitioner"]: {
             ["5" as id]: {
               id: "5",
@@ -159,7 +159,7 @@ test("Test routing priority", async () => {
             interactionsSupported: ["read-request", "search-request"],
           },
         },
-        source: MemoryDatabase({
+        source: new Memory({
           ["Practitioner"]: {
             ["4" as id]: {
               id: "4",
@@ -175,7 +175,7 @@ test("Test routing priority", async () => {
             return false;
           },
         },
-        source: MemoryDatabase({
+        source: new Memory({
           ["Practitioner"]: {
             ["5" as id]: {
               id: "5",

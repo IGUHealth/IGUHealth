@@ -1,5 +1,6 @@
 import { FHIRRequest } from "@iguhealth/client/types";
 import { StructureDefinition, canonical } from "@iguhealth/fhir-types/r4/types";
+import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { StructureDefinitionSnapshot } from "@iguhealth/generated-ops/r4";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -19,9 +20,9 @@ function findLastIndex<T>(collection: T[], predicate: (item: T) => boolean) {
 async function generateSnapshot(
   fhirVersion: FHIR_VERSION,
   ctx: FHIRServerCTX,
-  sd: StructureDefinition,
-) {
-  if (sd.snapshot) return sd;
+  sd: StructureDefinition | r4b.StructureDefinition,
+): Promise<StructureDefinition> {
+  if (sd.snapshot) return sd as StructureDefinition;
 
   if (!sd.differential)
     throw new OperationError(
@@ -70,7 +71,10 @@ async function generateSnapshot(
     }
   }
 
-  return { ...sd, snapshot: { element: baseSnapshotElements } };
+  return {
+    ...sd,
+    snapshot: { element: baseSnapshotElements },
+  } as StructureDefinition;
 }
 
 const StructureDefinitionSnapshotInvoke = InlineOperation(
@@ -85,13 +89,14 @@ const StructureDefinitionSnapshotInvoke = InlineOperation(
       );
     }
 
-    const sd: StructureDefinition | undefined = input.definition
-      ? input.definition
-      : await ctx.resolveCanonical(
-          request.fhirVersion,
-          "StructureDefinition",
-          input.url as canonical,
-        );
+    const sd: StructureDefinition | r4b.StructureDefinition | undefined =
+      input.definition
+        ? input.definition
+        : await ctx.resolveCanonical(
+            request.fhirVersion,
+            "StructureDefinition",
+            input.url as canonical,
+          );
 
     if (!sd) {
       throw new OperationError(

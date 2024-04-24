@@ -14,15 +14,16 @@ import { R4 } from "@iguhealth/fhir-types/lib/versions";
 
 import { FHIRServerCTX } from "../../../fhir-context/types.js";
 import { testServices } from "../../test-ctx.js";
-import MemoryDatabase from "./async.js";
+import { Memory } from "./async.js";
 
 function createMemoryDatabase(
   resourceTypes: ResourceType[],
 ): VersionedFHIRClientAsync<FHIRServerCTX> {
-  const database = MemoryDatabase({});
+  const database = new Memory({});
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
       loadArtifacts({
+        fhirVersion: R4,
         resourceType,
         packageLocation: path.join(
           fileURLToPath(import.meta.url),

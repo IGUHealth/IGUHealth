@@ -61,7 +61,10 @@ async function expressionSearch<CTX extends MemorySearchCTX>(
       meta: {
         fhirVersion,
         type: resource.resourceType as uri,
-        getSD: (fhirVersion, type) => {
+        getSD: <Version extends FHIR_VERSION>(
+          fhirVersion: Version,
+          type: uri,
+        ) => {
           const canonical = ctx.resolveTypeToCanonical(type);
           if (!canonical)
             throw new OperationError(

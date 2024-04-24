@@ -11,6 +11,7 @@ import {
   ResourceType,
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
+import * as r4b from "@iguhealth/fhir-types/r4b/types";
 
 import { Input, Loading, Select } from "../../base";
 import { InputContainer } from "../../base/containers";
@@ -88,13 +89,13 @@ const SearchResult = ({
   resource,
   onChange,
 }: {
-  resource: Resource;
+  resource: Resource | r4b.Resource;
   onChange: FHIRReferenceEditableProps["onChange"];
 }) => {
   return (
     <div
       className="hover:bg-blue-100 py-2 px-4 cursor-pointer border "
-      onClick={(e) =>
+      onClick={(_e) =>
         onChange?.call(this, {
           reference: `${resource.resourceType}/${resource.id}`,
         })
@@ -116,7 +117,7 @@ const ReferenceSearch = ({
   resourceTypesAllowed?: ResourceType[];
   onChange: FHIRReferenceEditableProps["onChange"];
 }) => {
-  const [results, setResults] = React.useState<Resource[]>([]);
+  const [results, setResults] = React.useState<(Resource | r4b.Resource)[]>([]);
   const [query, setQuery] = React.useState<string>("");
   const [resourceType, setResourceType] = React.useState<
     ResourceType | undefined

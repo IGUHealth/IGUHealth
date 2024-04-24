@@ -17,6 +17,7 @@ import {
   canonical,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
+import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import {
   FHIR_VERSION,
   VersionedAResource,
@@ -240,8 +241,8 @@ function isPrimitiveType(type: string) {
 }
 
 function resolveContentReferenceIndex(
-  sd: StructureDefinition,
-  element: ElementDefinition,
+  sd: StructureDefinition | r4b.StructureDefinition,
+  element: ElementDefinition | r4b.ElementDefinition,
 ): number {
   const contentReference = element.contentReference?.split("#")[1];
   const referenceElementIndex = sd.snapshot?.element.findIndex(
@@ -359,7 +360,7 @@ async function validateReferenceTypeConstraint(
 async function validateComplex(
   ctx: ValidationCTX,
   path: Loc<object, any, any>,
-  structureDefinition: StructureDefinition,
+  structureDefinition: StructureDefinition | r4b.StructureDefinition,
   elementIndex: number,
   root: object,
   childrenIndexes: number[],
@@ -485,7 +486,7 @@ async function validateComplex(
 async function validateContentReference(
   ctx: ValidationCTX,
   path: Loc<object, any, any>,
-  structureDefinition: StructureDefinition,
+  structureDefinition: StructureDefinition | r4b.StructureDefinition,
   elementIndex: number,
   root: object,
   type: uri,
@@ -516,7 +517,7 @@ async function validateContentReference(
 async function validateSingular(
   ctx: ValidationCTX,
   path: Loc<object, any, any>,
-  structureDefinition: StructureDefinition,
+  structureDefinition: StructureDefinition | r4b.StructureDefinition,
   elementIndex: number,
   root: object,
   type: uri,
@@ -572,7 +573,7 @@ async function validateSingular(
 async function checkFields(
   ctx: ValidationCTX,
   path: Loc<object, any, any>,
-  structureDefinition: StructureDefinition,
+  structureDefinition: StructureDefinition | r4b.StructureDefinition,
   index: number,
   root: object,
   fields: [string, uri][],
@@ -608,7 +609,7 @@ function validateIsObject(v: unknown): v is object {
 async function validateElement(
   ctx: ValidationCTX,
   path: Loc<any, any, any>,
-  structureDefinition: StructureDefinition,
+  structureDefinition: StructureDefinition | r4b.StructureDefinition,
   elementIndex: number,
   root: object,
   type: uri,

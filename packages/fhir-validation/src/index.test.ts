@@ -30,6 +30,7 @@ function createMemoryDatabase(
   >;
   for (const resourceType of resourceTypes) {
     const resources = loadArtifacts({
+      fhirVersion: R4,
       resourceType: resourceType,
       packageLocation: path.join(fileURLToPath(import.meta.url), ".."),
       silence: true,

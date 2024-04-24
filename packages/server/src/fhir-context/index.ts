@@ -20,6 +20,8 @@ import {
   StructureDefinition,
   code,
 } from "@iguhealth/fhir-types/r4/types";
+import * as r4b from "@iguhealth/fhir-types/r4b/types";
+import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -52,30 +54,34 @@ import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
 import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with { type:"json" };
 import RedisLock from "../synchronization/redis.lock.js";
 import { FHIRServerCTX, KoaContext, asSystemCTX } from "./types.js";
-import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 
 const R4_SPECIAL_TYPES: { MEMORY: ResourceType[]; AUTH: ResourceType[] } = {
   AUTH: AUTH_RESOURCETYPES,
   MEMORY: ["StructureDefinition", "SearchParameter", "ValueSet", "CodeSystem"],
 };
 const ALL_SPECIAL_TYPES = Object.values(R4_SPECIAL_TYPES).flatMap((v) => v);
-const R4_DB_TYPES: ResourceType[] = ([...resourceTypes] as ResourceType[]).filter(
-  (type) => ALL_SPECIAL_TYPES.indexOf(type) === -1,
-);
+const R4_DB_TYPES: ResourceType[] = (
+  [...resourceTypes] as ResourceType[]
+).filter((type) => ALL_SPECIAL_TYPES.indexOf(type) === -1);
 
 async function createResourceRestCapabilities(
   ctx: Partial<FHIRServerCTX>,
   fhirVersion: FHIR_VERSION,
   memdb: VersionedFHIRClientAsync<unknown>,
-  sd: StructureDefinition,
+  sd: StructureDefinition | r4b.StructureDefinition,
 ): Promise<CapabilityStatementRestResource> {
-  const resourceParameters = await memdb.search_type(ctx, fhirVersion, "SearchParameter", [
-    { name: "_count", value: [1000] },
-    {
-      name: "base",
-      value: ["Resource", "DomainResource", sd.type],
-    },
-  ]);
+  const resourceParameters = await memdb.search_type(
+    ctx,
+    fhirVersion,
+    "SearchParameter",
+    [
+      { name: "_count", value: [1000] },
+      {
+        name: "base",
+        value: ["Resource", "DomainResource", sd.type],
+      },
+    ],
+  );
 
   return {
     type: sd.type as unknown as code,
@@ -110,13 +116,18 @@ export async function serverCapabilities(
     ])
   ).resources.filter((sd) => sd.abstract === false && sd.kind === "resource");
 
-  const rootParameters = await memdb.search_type(ctx, fhirVersion, "SearchParameter", [
-    { name: "_count", value: [1000] },
-    {
-      name: "base",
-      value: ["Resource", "DomainResource"],
-    },
-  ]);
+  const rootParameters = await memdb.search_type(
+    ctx,
+    fhirVersion,
+    "SearchParameter",
+    [
+      { name: "_count", value: [1000] },
+      {
+        name: "base",
+        value: ["Resource", "DomainResource"],
+      },
+    ],
+  );
 
   return {
     resourceType: "CapabilityStatement",
@@ -139,7 +150,9 @@ export async function serverCapabilities(
           documentation: resource.description,
         })),
         resource: await Promise.all(
-          sds.map((sd) => createResourceRestCapabilities(ctx, fhirVersion, memdb, sd)),
+          sds.map((sd) =>
+            createResourceRestCapabilities(ctx, fhirVersion, memdb, sd),
+          ),
         ),
       },
     ],
@@ -357,7 +370,10 @@ async function createFHIRClient(sources: RouterState["sources"]) {
 export async function createFHIRServices(
   pool: pg.Pool,
 ): Promise<Omit<FHIRServerCTX, "tenant" | "user">> {
-  const memDBAsync = createArtifactMemoryDatabase(R4, R4_SPECIAL_TYPES.MEMORY);
+  const memDBAsync = createArtifactMemoryDatabase({
+    r4: R4_SPECIAL_TYPES.MEMORY,
+    r4b: [],
+  });
   const pgFHIR = createPostgresClient({
     transaction_entry_limit: parseInt(
       process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",

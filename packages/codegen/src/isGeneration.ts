@@ -1,20 +1,22 @@
 import {
-  ElementDefinition,
-  StructureDefinition,
-} from "@iguhealth/fhir-types/r4/types";
+  FHIR_VERSION,
+  VersionedAResource,
+} from "@iguhealth/fhir-types/versions";
 
 function generateTypeSet(
   name: string,
-  sds: Readonly<Array<StructureDefinition>>,
+  sds: Readonly<Array<VersionedAResource<FHIR_VERSION, "StructureDefinition">>>,
 ) {
   return `export const ${name}: Set<string>  = new Set([${sds
     .map((sd) => `"${sd.id}"`)
     .join(",")}])\n`;
 }
 
-export function generateSets(
-  version: "r4",
-  structureDefinitions: Readonly<Array<StructureDefinition>>,
+export function generateSets<Version extends FHIR_VERSION>(
+  version: Version,
+  structureDefinitions: Readonly<
+    Array<VersionedAResource<Version, "StructureDefinition">>
+  >,
 ): string {
   // Ignore templates for now during type generation.
   structureDefinitions = structureDefinitions.filter(

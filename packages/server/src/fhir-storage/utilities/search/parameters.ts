@@ -7,6 +7,7 @@ import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import {
   FHIR_VERSION,
   R4B,
+  VersionedAResource,
   VersionedResourceType,
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -214,13 +215,14 @@ export function isSearchResultParameter(
 export async function findSearchParameter<
   CTX,
   Client extends VersionedFHIRClientAsync<CTX>,
+  Version extends FHIR_VERSION,
 >(
   client: Client,
   ctx: CTX,
-  fhirVersion: FHIR_VERSION,
+  fhirVersion: Version,
   resourceTypes: ResourceType[],
   code: string,
-): Promise<SearchParameter[]> {
+): Promise<VersionedAResource<Version, "SearchParameter">[]> {
   const result = await client.search_type(ctx, fhirVersion, "SearchParameter", [
     { name: "code", value: [code] },
     {

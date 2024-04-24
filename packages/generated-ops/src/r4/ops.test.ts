@@ -4,7 +4,6 @@ import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import {
-  AResource,
   ValueSet,
   canonical,
   uri,
@@ -21,6 +20,7 @@ import { OpCTX } from "@iguhealth/operation-execution/src/index.js";
 import { ValueSetExpand } from "./ops.js";
 
 const sds = loadArtifacts({
+  fhirVersion: R4,
   resourceType: "StructureDefinition",
   packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
 });

@@ -8,23 +8,31 @@ import {
   StructureDefinition,
   uri,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import {
+  FHIR_VERSION,
+  R4,
+  VersionedAResource,
+} from "@iguhealth/fhir-types/lib/versions";
 
 import { evaluate, evaluateWithMeta } from "./index";
 
 const sds: StructureDefinition[] = loadArtifacts({
+  fhirVersion: R4,
   resourceType: "StructureDefinition",
   packageLocation: path.join(fileURLToPath(import.meta.url), ".."),
 });
 
-function getSD(_version: unknown, type: uri) {
+const getSD = <Version extends FHIR_VERSION>(_version: Version, type: uri) => {
   const foundSD = sds.find((sd) => sd.type === type);
-  return foundSD;
-}
+  return foundSD as
+    | VersionedAResource<Version, "StructureDefinition">
+    | undefined;
+};
 
 const metaOptions = (startingType: string) => ({
   meta: {
     type: startingType as uri,
-    getSD: getSD,
+    getSD,
   },
 });
 

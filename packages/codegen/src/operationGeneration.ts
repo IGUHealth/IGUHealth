@@ -1,8 +1,13 @@
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
-import { OperationDefinition } from "@iguhealth/fhir-types/r4/types";
+import {
+  FHIR_VERSION,
+  VersionedAResource,
+} from "@iguhealth/fhir-types/versions";
 
 function generateParameterType(
-  parameters: NonNullable<OperationDefinition["parameter"]>,
+  parameters: NonNullable<
+    VersionedAResource<FHIR_VERSION, "OperationDefinition">["parameter"]
+  >,
 ): string {
   if (parameters.length === 0) return `Record<string, never>`;
   const fields = parameters
@@ -28,7 +33,9 @@ function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-function getName(op: OperationDefinition): string {
+function getName(
+  op: VersionedAResource<FHIR_VERSION, "OperationDefinition">,
+): string {
   if (!op.id) throw new Error("Must have id for generating operation");
   return capitalize(
     op.id
@@ -39,7 +46,9 @@ function getName(op: OperationDefinition): string {
 }
 
 function generateOutput(
-  parameters: NonNullable<OperationDefinition["parameter"]>,
+  parameters: NonNullable<
+    VersionedAResource<FHIR_VERSION, "OperationDefinition">["parameter"]
+  >,
 ): string {
   if (
     parameters.length === 1 &&
@@ -54,7 +63,9 @@ function generateOutput(
   return generateParameterType(parameters);
 }
 
-export function generateOp(op: OperationDefinition): string {
+export function generateOp(
+  op: VersionedAResource<FHIR_VERSION, "OperationDefinition">,
+): string {
   const namespace = getName(op);
   const interfaceName = "IOp";
   const operationName = "Op";
@@ -82,11 +93,13 @@ export function generateOp(op: OperationDefinition): string {
   ${[inputType, outputType, operationType, operationInstance].join("\n")}}`;
 }
 
-export default async function operationGeneration(
-  fhirVersion: string,
-  operations: Readonly<Array<OperationDefinition>>,
+export default async function operationGeneration<Version extends FHIR_VERSION>(
+  fhirVersion: Version,
+  operations: Readonly<
+    Array<VersionedAResource<Version, "OperationDefinition">>
+  >,
 ): Promise<string> {
-  if (fhirVersion !== "r4") throw new Error("Only support r4");
+  if (fhirVersion !== "4.0") throw new Error("Only support 4.0");
   const code = [
     `import type * as fhirTypes from "@iguhealth/fhir-types/r4/types";`,
     `import { Operation, IOperation } from "@iguhealth/operation-execution";`,

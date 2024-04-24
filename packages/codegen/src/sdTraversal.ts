@@ -1,7 +1,8 @@
+import { ElementDefinition } from "@iguhealth/fhir-types/r4/types";
 import {
-  ElementDefinition,
-  StructureDefinition,
-} from "@iguhealth/fhir-types/r4/types";
+  FHIR_VERSION,
+  VersionedAResource,
+} from "@iguhealth/fhir-types/versions";
 
 type VisitorFunction<T> = (element: ElementDefinition, children: T[]) => T[];
 
@@ -43,7 +44,7 @@ function traversalSdElements<T>(
 }
 
 export function traversalBottomUp<T>(
-  sd: StructureDefinition,
+  sd: VersionedAResource<FHIR_VERSION, "StructureDefinition">,
   visitorFunction: VisitorFunction<T>,
 ) {
   const elements = sd.snapshot?.element;

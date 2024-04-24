@@ -6,7 +6,10 @@ import {
   code,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
-import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
+import {
+  FHIR_VERSION,
+  VersionedAResource,
+} from "@iguhealth/fhir-types/versions";
 import { evaluate } from "@iguhealth/fhirpath";
 import { OpCTX } from "@iguhealth/operation-execution";
 import {
@@ -19,13 +22,14 @@ import { FHIRServerCTX } from "../fhir-context/types.js";
 
 export async function resolveOperationDefinition<
   CTX,
+  Version extends FHIR_VERSION,
   Client extends VersionedFHIRClientAsync<CTX>,
 >(
   client: Client,
   ctx: CTX,
-  fhirVersion: FHIR_VERSION,
+  fhirVersion: Version,
   operationCode: string,
-): Promise<OperationDefinition> {
+): Promise<VersionedAResource<Version, "OperationDefinition">> {
   const operationDefinition = await client.search_type(
     ctx,
     fhirVersion,

@@ -24,6 +24,7 @@ import {
   ResourceType,
   id,
 } from "@iguhealth/fhir-types/r4/types";
+import { R4, R4B } from "@iguhealth/fhir-types/versions";
 import { Operation } from "@iguhealth/operation-execution";
 import {
   OperationError,
@@ -41,7 +42,6 @@ import {
   resolveOperationDefinition,
   validateInvocationContext,
 } from "../../utilities.js";
-import { R4, R4B } from "@iguhealth/fhir-types/versions";
 
 configDotenv();
 function getLambdaFunctionName(

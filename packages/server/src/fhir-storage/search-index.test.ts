@@ -19,6 +19,7 @@ function getArtifactResources(resourceTypes: ResourceType[]): Resource[] {
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
       loadArtifacts({
+        fhirVersion: R4,
         resourceType,
         packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
         // silence: true,

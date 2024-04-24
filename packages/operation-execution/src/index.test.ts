@@ -30,11 +30,13 @@ import {
 } from "./index";
 
 const operationDefinitions = loadArtifacts({
+  fhirVersion: R4,
   resourceType: "OperationDefinition",
   packageLocation: path.join(fileURLToPath(import.meta.url), ".."),
 });
 
 const structureDefinitions = loadArtifacts({
+  fhirVersion: R4,
   resourceType: "StructureDefinition",
   packageLocation: path.join(fileURLToPath(import.meta.url), ".."),
 });

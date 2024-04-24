@@ -1,49 +1,50 @@
 import { createRequire } from "node:module";
 
+import { Bundle } from "@iguhealth/fhir-types/r4/types";
+import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import {
-  AResource,
-  Bundle,
-  Resource,
-  ResourceType,
-} from "@iguhealth/fhir-types/r4/types";
-import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
+  FHIR_VERSION,
+  VersionedAResource,
+  VersionedResourceType,
+} from "@iguhealth/fhir-types/versions";
 
 import { IndexFile, PackageJSON } from "./types.js";
 
-function isBundle(r: Resource): r is Bundle {
-  return r?.resourceType === "Bundle";
+function isBundle(r: unknown): r is Bundle | r4b.Bundle {
+  return (r as Record<string, unknown>)?.resourceType === "Bundle";
 }
 
-function isType<T extends ResourceType>(
+function isType<
+  Version extends FHIR_VERSION,
+  T extends VersionedResourceType<Version>,
+>(
+  _fhirVersion: Version,
   type: T,
-  r: Resource | undefined,
-): r is AResource<T> {
-  return r !== undefined && r.resourceType === type;
+  r: unknown,
+): r is VersionedAResource<Version, T> {
+  return (
+    r !== undefined && (r as Record<string, unknown>)?.resourceType === type
+  );
 }
 
-function flattenOrInclude<T extends ResourceType>(
+function flattenOrInclude<
+  Version extends FHIR_VERSION,
+  T extends VersionedResourceType<Version>,
+>(
+  fhirVersion: Version,
   type: T,
-  resource: Resource,
-): AResource<T>[] {
+  resource: unknown,
+): VersionedAResource<Version, T>[] {
   if (isBundle(resource)) {
     const resources = (resource.entry || [])?.map((entry) => entry.resource);
-    return resources.filter((r: Resource | undefined): r is AResource<T> =>
-      isType(type, r),
+    return resources.filter((r: unknown): r is VersionedAResource<Version, T> =>
+      isType(fhirVersion, type, r),
     );
   }
-  if (isType(type, resource)) {
+  if (isType(fhirVersion, type, resource)) {
     return [resource];
   }
   return [];
-}
-
-interface LoadArtifactOptions<T extends ResourceType> {
-  // Only support R4 and R4B for now.
-  fhirVersion?: FHIR_VERSION;
-  resourceType: T;
-  packageLocation: string;
-  silence?: boolean;
-  onlyPackages?: string[];
 }
 
 /**
@@ -51,13 +52,23 @@ interface LoadArtifactOptions<T extends ResourceType> {
  * @param options Artifact Load options
  * @returns A list of resources of type T
  */
-export default function loadArtifacts<T extends ResourceType>({
-  fhirVersion = R4,
+export default function loadArtifacts<
+  Version extends FHIR_VERSION,
+  T extends VersionedResourceType<Version>,
+>({
+  fhirVersion,
   resourceType,
   packageLocation,
   silence,
   onlyPackages,
-}: LoadArtifactOptions<T>): AResource<T>[] {
+}: {
+  // Only support R4 and R4B for now.
+  fhirVersion: Version;
+  resourceType: T;
+  packageLocation: string;
+  silence?: boolean;
+  onlyPackages?: string[];
+}): VersionedAResource<Version, T>[] {
   const requirer = createRequire(packageLocation);
   const packageJSON: PackageJSON = requirer("./package.json");
 
@@ -106,6 +117,7 @@ export default function loadArtifacts<T extends ResourceType>({
           return fileInfos
             .map((r) => {
               return flattenOrInclude(
+                fhirVersion,
                 resourceType,
                 requirer(`${d}/${r.filename}`),
               );
