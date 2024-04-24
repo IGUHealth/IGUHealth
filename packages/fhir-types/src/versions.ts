@@ -37,11 +37,17 @@ export type VersionedResourceType<
     ? r4b.ResourceType
     : never;
 
+export type AllResourceTypes = r4.ResourceType | r4b.ResourceType;
+
 export type VersionedAResource<
   Version extends (typeof FHIR_VERSIONS_SUPPORTED)[number],
-  Type extends VersionedResourceType<Version>,
-> = Type extends r4.ResourceType
-  ? r4.AResource<Type>
-  : Type extends r4b.ResourceType
-    ? r4b.AResource<Type>
+  Type extends AllResourceTypes,
+> = Version extends R4
+  ? Type extends r4.ResourceType
+    ? r4.AResource<Type>
+    : never
+  : Version extends R4B
+    ? Type extends r4b.ResourceType
+      ? r4b.AResource<Type>
+      : never
     : never;

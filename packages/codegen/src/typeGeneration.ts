@@ -1,8 +1,8 @@
+import { ElementDefinition, unsignedInt } from "@iguhealth/fhir-types/r4/types";
 import {
-  ElementDefinition,
-  StructureDefinition,
-  unsignedInt,
-} from "@iguhealth/fhir-types/r4/types";
+  FHIR_VERSION,
+  VersionedAResource,
+} from "@iguhealth/fhir-types/versions";
 
 import { traversalBottomUp } from "./sdTraversal.js";
 
@@ -60,7 +60,10 @@ function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-function isRoot(sd: StructureDefinition, elementDefinition: ElementDefinition) {
+function isRoot(
+  sd: VersionedAResource<FHIR_VERSION, "StructureDefinition">,
+  elementDefinition: ElementDefinition,
+) {
   return elementDefinition.path === sd.id;
 }
 
@@ -85,7 +88,7 @@ function getElementField(element: ElementDefinition, type?: string) {
 }
 
 function primitiveToTypescriptType(
-  primitiveSd: StructureDefinition,
+  primitiveSd: VersionedAResource<FHIR_VERSION, "StructureDefinition">,
 ): string | void {
   const primitiveValueType = primitiveSd.snapshot?.element.filter((element) =>
     element.path.endsWith(".value"),
@@ -93,7 +96,7 @@ function primitiveToTypescriptType(
   // http://hl7.org/fhir/StructureDefinition/uri
   // Skip over these primitive types as already exist in typescript
   if (primitiveValueType) {
-    let primitiveType = `export type ${
+    const primitiveType = `export type ${
       primitiveSd.id
     } = ${fhirSystemTypePredicate(primitiveValueType)}`;
 
@@ -179,7 +182,10 @@ function getInterfaceName(element: ElementDefinition) {
 /*
   Resolves an elements content Reference
 */
-function contentReference(sd: StructureDefinition, element: ElementDefinition) {
+function contentReference(
+  sd: VersionedAResource<FHIR_VERSION, "StructureDefinition">,
+  element: ElementDefinition,
+) {
   const contentReference = element.contentReference?.split("#")[1];
   const referenceElement = sd.snapshot?.element.filter(
     (element) => element.id === contentReference,
@@ -192,7 +198,7 @@ function contentReference(sd: StructureDefinition, element: ElementDefinition) {
   if (isNested(referenceElement)) {
     referenceTypescriptType = getInterfaceName(referenceElement);
   } else {
-    let type = referenceElement.type?.[0]?.code;
+    const type = referenceElement.type?.[0]?.code;
     if (type === undefined) {
       throw new Error(
         "No type found for content reference: '" + referenceElement.id + "'",
@@ -220,7 +226,10 @@ function getPrimitiveExtension(element: ElementDefinition, type: string) {
   )}: ${typeToTypescriptType(element, "Element")}`;
 }
 
-function processLeaf(sd: StructureDefinition, element: ElementDefinition) {
+function processLeaf(
+  sd: VersionedAResource<FHIR_VERSION, "StructureDefinition">,
+  element: ElementDefinition,
+) {
   if (element.contentReference) {
     return contentReference(sd, element);
   } else if (element.type?.length && element.type?.length > 1) {
@@ -258,7 +267,7 @@ interface ComplexTypeOutput {
 }
 
 function processComplexToTypescript(
-  sd: StructureDefinition,
+  sd: VersionedAResource<FHIR_VERSION, "StructureDefinition">,
   element: ElementDefinition,
   children: string[],
 ): ComplexTypeOutput {
@@ -281,14 +290,14 @@ ${children.join("\n")}
 }
 
 function resourceOrComplexFhirToTypescript(
-  sd: StructureDefinition,
+  sd: VersionedAResource<FHIR_VERSION, "StructureDefinition">,
 ): string | void {
   let typescriptTypes = "";
   traversalBottomUp(sd, (element, children: string[]): string[] => {
     if (children.length === 0) {
       return processLeaf(sd, element);
     } else {
-      let { typescriptInterface, field } = processComplexToTypescript(
+      const { typescriptInterface, field } = processComplexToTypescript(
         sd,
         element,
         children,
@@ -300,12 +309,16 @@ function resourceOrComplexFhirToTypescript(
   return typescriptTypes;
 }
 
-function getNonAbstractResourceTypes(sds: StructureDefinition[]) {
+function getNonAbstractResourceTypes(
+  sds: VersionedAResource<FHIR_VERSION, "StructureDefinition">[],
+) {
   return sds.filter((sd) => !sd.abstract);
 }
 
 // Handle DomainResource and Resource by union joining existing generated types.
-function abstractResourceTypes(resourcesSds: StructureDefinition[]) {
+function abstractResourceTypes(
+  resourcesSds: VersionedAResource<FHIR_VERSION, "StructureDefinition">[],
+) {
   const abstractResourceTypes = resourcesSds.filter((sd) => sd.abstract);
   const nonAbstractResourceTypes = resourcesSds.filter((sd) => !sd.abstract);
   const ResourceMap = `export type ResourceMap = {\n${nonAbstractResourceTypes
@@ -328,9 +341,11 @@ function abstractResourceTypes(resourcesSds: StructureDefinition[]) {
   return;
 }
 
-export function generateTypes(
-  version: "r4",
-  structureDefinitions: Readonly<Array<StructureDefinition>>,
+export function generateTypes<Version extends FHIR_VERSION>(
+  fhirVersion: Version,
+  structureDefinitions: Readonly<
+    Array<VersionedAResource<Version, "StructureDefinition">>
+  >,
 ): string {
   const primitiveTypes = structureDefinitions.filter(
     (sd) => sd.kind === "primitive-type",

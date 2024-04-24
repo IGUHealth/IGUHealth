@@ -13,15 +13,17 @@ import {
 import { R4 } from "@iguhealth/fhir-types/lib/versions";
 
 import { testServices } from "../../test-ctx.js";
-import CreateMemoryDatabaseAsync from "./async.js";
+import { Memory } from "./async.js";
 import type { InternalData } from "./types.js";
 
 const artifactParameters = loadArtifacts({
+  fhirVersion: R4,
   resourceType: "SearchParameter",
   packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
   silence: true,
 });
 const sds = loadArtifacts({
+  fhirVersion: R4,
   resourceType: "StructureDefinition",
   packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
   silence: true,
@@ -71,7 +73,7 @@ function generateSD(
 }
 
 test("Creation and search", async () => {
-  const memDb = CreateMemoryDatabaseAsync(data);
+  const memDb = new Memory(data);
   await memDb.create(
     testServices,
     R4,
@@ -127,7 +129,7 @@ test("Creation and search", async () => {
 });
 
 test("artifactParameters", async () => {
-  const memDb = CreateMemoryDatabaseAsync(data);
+  const memDb = new Memory(data);
   // Domainresource 1 param
   // Resource 11
   // Patient 23

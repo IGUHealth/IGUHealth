@@ -5,7 +5,11 @@ import { fileURLToPath } from "url";
 
 import { generateIndexFile, loadArtifacts } from "@iguhealth/artifacts";
 import { generateOps, generateSets, generateTypes } from "@iguhealth/codegen";
-import { FHIR_VERSIONS_SUPPORTED, R4 } from "@iguhealth/fhir-types/versions";
+import {
+  FHIR_VERSION,
+  FHIR_VERSIONS_SUPPORTED,
+  R4,
+} from "@iguhealth/fhir-types/versions";
 
 export function codeGenerationCommands(command: Command) {
   command
@@ -21,8 +25,7 @@ export function codeGenerationCommands(command: Command) {
       }
 
       const structureDefinitions = loadArtifacts({
-        fhirVersion:
-          options.version as (typeof FHIR_VERSIONS_SUPPORTED)[number],
+        fhirVersion: options.version as FHIR_VERSION,
         resourceType: "StructureDefinition",
         packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
       });
@@ -48,6 +51,7 @@ export function codeGenerationCommands(command: Command) {
         throw new Error("Currently only support r4");
       }
       const operationDefinitions = loadArtifacts({
+        fhirVersion: options.version,
         resourceType: "OperationDefinition",
         packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
       });

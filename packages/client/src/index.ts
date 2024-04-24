@@ -9,6 +9,7 @@ import {
   id,
 } from "@iguhealth/fhir-types/r4/types";
 import {
+  AllResourceTypes,
   FHIR_VERSION,
   R4,
   VERSIONED_FHIR,
@@ -373,7 +374,7 @@ export class VersionedAsynchronousClient<State, CTX>
   async capabilities<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
-  ): Promise<VERSIONED_FHIR[FHIRVersion]["CapabilityStatement"]> {
+  ): Promise<VersionedAResource<FHIRVersion, "CapabilityStatement">> {
     const response = await this.request(ctx, {
       fhirVersion,
       type: "capabilities-request",
@@ -381,7 +382,10 @@ export class VersionedAsynchronousClient<State, CTX>
     });
     if (response.type !== "capabilities-response")
       throw new Error("Unexpected response type");
-    return response.body;
+    return response.body as VersionedAResource<
+      FHIRVersion,
+      "CapabilityStatement"
+    >;
   }
   async search_system<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
@@ -407,7 +411,7 @@ export class VersionedAsynchronousClient<State, CTX>
   }
   async search_type<
     FHIRVersion extends FHIR_VERSION,
-    T extends VersionedResourceType<FHIRVersion>,
+    T extends AllResourceTypes,
   >(
     ctx: CTX,
     fhirVersion: FHIRVersion,
@@ -456,10 +460,7 @@ export class VersionedAsynchronousClient<State, CTX>
       throw new Error("Unexpected response type");
     return response.body as T;
   }
-  async update<
-    FHIRVersion extends FHIR_VERSION,
-    T extends VersionedResourceType<FHIRVersion>,
-  >(
+  async update<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
@@ -480,10 +481,7 @@ export class VersionedAsynchronousClient<State, CTX>
       throw new Error("Unexpected response type");
     return response.body as VersionedAResource<FHIRVersion, T>;
   }
-  async patch<
-    FHIRVersion extends FHIR_VERSION,
-    T extends VersionedResourceType<FHIRVersion>,
-  >(
+  async patch<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
@@ -502,10 +500,7 @@ export class VersionedAsynchronousClient<State, CTX>
       throw new Error("Unexpected response type");
     return response.body as VersionedAResource<FHIRVersion, T>;
   }
-  async read<
-    FHIRVersion extends FHIR_VERSION,
-    T extends VersionedResourceType<FHIRVersion>,
-  >(
+  async read<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
@@ -522,10 +517,7 @@ export class VersionedAsynchronousClient<State, CTX>
       throw new Error("Unexpected response type");
     return response.body as VersionedAResource<FHIRVersion, T> | undefined;
   }
-  async vread<
-    FHIRVersion extends FHIR_VERSION,
-    T extends VersionedResourceType<FHIRVersion>,
-  >(
+  async vread<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
@@ -587,7 +579,7 @@ export class VersionedAsynchronousClient<State, CTX>
   }
   async historyType<
     FHIRVersion extends FHIR_VERSION,
-    T extends VersionedResourceType<FHIRVersion>,
+    T extends AllResourceTypes,
   >(
     ctx: CTX,
     fhirVersion: FHIRVersion,
@@ -613,7 +605,7 @@ export class VersionedAsynchronousClient<State, CTX>
   }
   async historyInstance<
     FHIRVersion extends FHIR_VERSION,
-    T extends VersionedResourceType<FHIRVersion>,
+    T extends AllResourceTypes,
   >(
     ctx: CTX,
     fhirVersion: FHIRVersion,
@@ -662,7 +654,7 @@ export class VersionedAsynchronousClient<State, CTX>
   async invoke_type<
     FHIRVersion extends FHIR_VERSION,
     Op extends IOperation<any, any>,
-    T extends VersionedResourceType<FHIRVersion>,
+    T extends AllResourceTypes,
   >(
     op: Op,
     ctx: CTX,
@@ -686,7 +678,7 @@ export class VersionedAsynchronousClient<State, CTX>
   async invoke_instance<
     FHIRVersion extends FHIR_VERSION,
     Op extends IOperation<any, any>,
-    T extends VersionedResourceType<FHIRVersion>,
+    T extends AllResourceTypes,
   >(
     op: Op,
     ctx: CTX,

@@ -8,6 +8,7 @@ import type {
   id,
 } from "@iguhealth/fhir-types/r4/types";
 import {
+  AllResourceTypes,
   FHIR_VERSION,
   VERSIONED_FHIR,
   VersionedAResource,
@@ -104,7 +105,7 @@ export interface VersionedFHIRClientAsync<CTX> {
   capabilities<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
-  ): Promise<VERSIONED_FHIR[FHIRVersion]["CapabilityStatement"]>;
+  ): Promise<VersionedAResource<FHIRVersion, "CapabilityStatement">>;
   search_system<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
@@ -113,10 +114,7 @@ export interface VersionedFHIRClientAsync<CTX> {
     total?: number;
     resources: VERSIONED_FHIR[FHIRVersion]["Resource"][];
   }>;
-  search_type<
-    FHIRVersion extends FHIR_VERSION,
-    T extends VersionedResourceType<FHIRVersion>,
-  >(
+  search_type<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     type: T,
@@ -127,46 +125,34 @@ export interface VersionedFHIRClientAsync<CTX> {
   }>;
   create<
     FHIRVersion extends FHIR_VERSION,
-    T extends VERSIONED_FHIR[FHIRVersion]["Resource"],
+    Resource extends VERSIONED_FHIR[FHIRVersion]["Resource"],
   >(
     ctx: CTX,
     fhirVersion: FHIRVersion,
-    resource: T,
+    resource: Resource,
     allowIdSet?: boolean,
-  ): Promise<T>;
-  update<
-    FHIRVersion extends FHIR_VERSION,
-    T extends VersionedResourceType<FHIRVersion>,
-  >(
+  ): Promise<Resource>;
+  update<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
     id: VERSIONED_FHIR[FHIRVersion]["id"],
     resource: VersionedAResource<FHIRVersion, T>,
   ): Promise<VersionedAResource<FHIRVersion, T>>;
-  patch<
-    FHIRVersion extends FHIR_VERSION,
-    T extends VersionedResourceType<FHIRVersion>,
-  >(
+  patch<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
     id: VERSIONED_FHIR[FHIRVersion]["id"],
     patches: any,
   ): Promise<VersionedAResource<FHIRVersion, T>>;
-  read<
-    FHIRVersion extends FHIR_VERSION,
-    T extends VersionedResourceType<FHIRVersion>,
-  >(
+  read<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
     id: VERSIONED_FHIR[FHIRVersion]["id"],
   ): Promise<VersionedAResource<FHIRVersion, T> | undefined>;
-  vread<
-    FHIRVersion extends FHIR_VERSION,
-    T extends VersionedResourceType<FHIRVersion>,
-  >(
+  vread<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
@@ -188,19 +174,13 @@ export interface VersionedFHIRClientAsync<CTX> {
     fhirVersion: FHIRVersion,
     parameters?: ParsedParameter<string | number>[] | string,
   ): Promise<VERSIONED_FHIR[FHIRVersion]["BundleEntry"][]>;
-  historyType<
-    FHIRVersion extends FHIR_VERSION,
-    T extends VersionedResourceType<FHIRVersion>,
-  >(
+  historyType<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
     parameters?: ParsedParameter<string | number>[] | string,
   ): Promise<VERSIONED_FHIR[FHIRVersion]["BundleEntry"][]>;
-  historyInstance<
-    FHIRVersion extends FHIR_VERSION,
-    T extends VersionedResourceType<FHIRVersion>,
-  >(
+  historyInstance<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
@@ -219,7 +199,7 @@ export interface VersionedFHIRClientAsync<CTX> {
   invoke_type<
     FHIRVersion extends FHIR_VERSION,
     Op extends IOperation<any, any>,
-    T extends VersionedResourceType<FHIRVersion>,
+    T extends AllResourceTypes,
   >(
     op: Op,
     ctx: CTX,
@@ -230,7 +210,7 @@ export interface VersionedFHIRClientAsync<CTX> {
   invoke_instance<
     FHIRVersion extends FHIR_VERSION,
     Op extends IOperation<any, any>,
-    T extends VersionedResourceType<FHIRVersion>,
+    T extends AllResourceTypes,
   >(
     op: Op,
     ctx: CTX,

@@ -8,9 +8,10 @@ import * as s from "zapatos/schema";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { canonical, code, dateTime, uri } from "@iguhealth/fhir-types/r4/types";
 import {
+  AllResourceTypes,
   FHIR_VERSION,
+  R4,
   VersionedAResource,
-  VersionedResourceType,
 } from "@iguhealth/fhir-types/versions";
 import { AccessTokenPayload, TenantId } from "@iguhealth/jwt";
 
@@ -18,11 +19,12 @@ import { IOCache } from "../cache/interface.js";
 import { FHIRServerCTX } from "../fhir-context/types.js";
 import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
 import { Lock } from "../synchronization/interfaces.js";
-import createMemoryDatabaseFromData from "./providers/memory/async.js";
+import { Memory } from "./providers/memory/async.js";
 
 dotEnv.config();
 
 const sds = loadArtifacts({
+  fhirVersion: R4,
   resourceType: "StructureDefinition",
   packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
   silence: true,
@@ -80,11 +82,11 @@ export const testServices: FHIRServerCTX = {
     date: new Date().toISOString() as dateTime,
     format: ["json" as code],
   },
-  client: createMemoryDatabaseFromData({}),
+  client: new Memory({}),
   cache: new TestCache(),
   resolveCanonical: <
     Version extends FHIR_VERSION,
-    Type extends VersionedResourceType<Version>,
+    Type extends AllResourceTypes,
   >(
     version: Version,
     type: Type,

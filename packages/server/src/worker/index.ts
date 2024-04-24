@@ -98,7 +98,7 @@ function getVersionSequence(resource: Resource): number {
 async function handleSubscriptionPayload(
   server: VersionedAsynchronousClient<unknown, FHIRServerCTX>,
   ctx: FHIRServerCTX,
-  fhirVersion: FHIR_VERSION,
+  fhirVersion: R4,
   subscription: Subscription,
   payload: (Resource | r4b.Resource)[],
 ): Promise<void> {
@@ -231,6 +231,13 @@ function processSubscription(
 
   subscriptionId: id,
 ) {
+  if (fhirVersion !== R4)
+    throw new OperationError(
+      outcomeError(
+        "not-supported",
+        `FHIR version ${fhirVersion} is not supported.`,
+      ),
+    );
   return async () => {
     // Reread here in event that concurrent process has altered the id.
     const subscription = await server.read(

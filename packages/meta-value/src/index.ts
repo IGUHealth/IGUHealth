@@ -1,11 +1,16 @@
 import { complexTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
+import * as r4 from "@iguhealth/fhir-types/r4/types";
+import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import {
-  Element,
-  ElementDefinition,
-  StructureDefinition,
-  uri,
-} from "@iguhealth/fhir-types/r4/types";
-import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
+  FHIR_VERSION,
+  R4,
+  VersionedAResource,
+} from "@iguhealth/fhir-types/versions";
+
+type Element = r4.Element | r4b.Element;
+type ElementDefinition = r4.ElementDefinition | r4b.ElementDefinition;
+type StructureDefinition = r4.StructureDefinition | r4b.StructureDefinition;
+type uri = r4.uri | r4b.uri;
 
 //
 function isResourceOrComplexType(type: string): boolean {
@@ -42,10 +47,10 @@ type TypeMeta = {
   elementIndex: number;
   // Typechoice so need to maintain the type here.
   type: uri;
-  getSD?: (
-    fhirVersion: FHIR_VERSION,
+  getSD?: <Version extends FHIR_VERSION>(
+    fhirVersion: Version,
     type: uri,
-  ) => StructureDefinition | undefined;
+  ) => VersionedAResource<Version, "StructureDefinition"> | undefined;
 };
 
 export type Meta = { location: Location; type: TypeMeta | undefined };
@@ -197,7 +202,8 @@ function deriveNextMetaInformation(
 
   if (foundIndexAndType) {
     const { index, type: nextType } = foundIndexAndType;
-    const nextElement = meta.sd.snapshot?.element[index] as ElementDefinition;
+    const nextElement = meta.sd.snapshot?.element[index];
+    if (!nextElement) throw new Error(`No element found on '${index}'`);
 
     const nextMeta: PartialTypeMeta & {
       getSD: TypeMeta["getSD"];

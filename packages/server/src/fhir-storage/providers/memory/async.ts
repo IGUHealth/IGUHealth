@@ -10,12 +10,13 @@ import {
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import * as r4 from "@iguhealth/fhir-types/r4/types";
+import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import {
+  AllResourceTypes,
   FHIR_VERSION,
   R4,
   R4B,
   VersionedAResource,
-  VersionedResourceType,
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -317,10 +318,7 @@ function createResolveCanonical(
     }
   }
 
-  return <
-    FHIRVersion extends FHIR_VERSION,
-    Type extends VersionedResourceType<FHIRVersion>,
-  >(
+  return <FHIRVersion extends FHIR_VERSION, Type extends AllResourceTypes>(
     fhirVersion: FHIRVersion,
     type: Type,
     url: r4.canonical,
@@ -363,7 +361,9 @@ interface MemoryClientInterface<CTX> extends VersionedFHIRClientAsync<CTX> {
   resolveTypeToCanonical: ReturnType<typeof createResolveTypeToCanonical>;
 }
 
-class Memory<CTX extends FHIRServerCTX> implements MemoryClientInterface<CTX> {
+export class Memory<CTX extends FHIRServerCTX>
+  implements MemoryClientInterface<CTX>
+{
   private _client;
 
   public request: VersionedFHIRClientAsync<CTX>["request"];
@@ -423,20 +423,17 @@ class Memory<CTX extends FHIRServerCTX> implements MemoryClientInterface<CTX> {
   }
 }
 
-export default function createMemoryDatabaseFromData<CTX extends FHIRServerCTX>(
-  data: InternalData<r4.ResourceType>,
-): Memory<CTX> {
-  return new Memory(data);
-}
-
-export function createArtifactMemoryDatabase<CTX extends FHIRServerCTX>(
-  fhirVersion: FHIR_VERSION,
-  resourceTypes: r4.ResourceType[],
-): Memory<CTX> {
-  const artifactResources: r4.Resource[] = resourceTypes
+export function createArtifactMemoryDatabase<CTX extends FHIRServerCTX>({
+  r4,
+  r4b,
+}: {
+  r4: r4.ResourceType[];
+  r4b: r4b.ResourceType[];
+}): Memory<CTX> {
+  const r4Resources: r4.Resource[] = r4
     .map((resourceType) =>
       loadArtifacts({
-        fhirVersion: fhirVersion,
+        fhirVersion: R4,
         resourceType,
         packageLocation: path.join(
           fileURLToPath(import.meta.url),
@@ -445,16 +442,39 @@ export function createArtifactMemoryDatabase<CTX extends FHIRServerCTX>(
       }),
     )
     .flat();
-  let data: InternalData<r4.ResourceType> = {};
-  for (const resource of artifactResources) {
-    data = {
-      ...data,
+  let r4Data: InternalData<r4.ResourceType> = {};
+  for (const resource of r4Resources) {
+    r4Data = {
+      ...r4Data,
       [resource.resourceType]: {
-        ...data[resource.resourceType],
+        ...r4Data[resource.resourceType],
         [resource.id as r4.id]: resource,
       },
     };
   }
 
-  return createMemoryDatabaseFromData(data);
+  // const r4bResources: r4b.Resource[] = r4b
+  //   .map((resourceType) =>
+  //     loadArtifacts({
+  //       fhirVersion: R4B,
+  //       resourceType,
+  //       packageLocation: path.join(
+  //         fileURLToPath(import.meta.url),
+  //         "../../../../../",
+  //       ),
+  //     }),
+  //   )
+  //   .flat();
+
+  for (const resource of r4Resources) {
+    r4Data = {
+      ...r4Data,
+      [resource.resourceType]: {
+        ...r4Data[resource.resourceType],
+        [resource.id as r4.id]: resource,
+      },
+    };
+  }
+
+  return new Memory(r4Data);
 }

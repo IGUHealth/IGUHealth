@@ -14,9 +14,9 @@ import {
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 import {
+  AllResourceTypes,
   FHIR_VERSION,
   VersionedAResource,
-  VersionedResourceType,
 } from "@iguhealth/fhir-types/versions";
 import { AccessTokenPayload, IGUHEALTH_ISSUER, TenantId } from "@iguhealth/jwt";
 
@@ -114,7 +114,7 @@ export interface FHIRServerCTX {
   resolveTypeToCanonical: (type: uri) => canonical | undefined;
   resolveCanonical: <
     FHIRVersion extends FHIR_VERSION,
-    Type extends VersionedResourceType<FHIRVersion>,
+    Type extends AllResourceTypes,
   >(
     fhirVersion: FHIRVersion,
     type: Type,
