@@ -16,9 +16,9 @@ import { FHIRServerCTX } from "../../../fhir-context/types.js";
 import { testServices } from "../../test-ctx.js";
 import { Memory } from "./async.js";
 
-function createMemoryDatabase(
+async function createMemoryDatabase(
   resourceTypes: ResourceType[],
-): VersionedFHIRClientAsync<FHIRServerCTX> {
+): Promise<VersionedFHIRClientAsync<FHIRServerCTX>> {
   const database = new Memory({});
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
@@ -34,12 +34,12 @@ function createMemoryDatabase(
     )
     .flat();
   for (const resource of artifactResources) {
-    database.create(testServices, R4, resource);
+    await database.create(testServices, R4, resource);
   }
   return database;
 }
 
-const memDB = createMemoryDatabase([
+const memDB = await createMemoryDatabase([
   "SearchParameter",
   "StructureDefinition",
 ] as ResourceType[]);

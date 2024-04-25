@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import { VersionedAsynchronousClient } from "@iguhealth/client";
 import { VersionedFHIRClientAsync } from "@iguhealth/client/lib/interface";
+import { FHIRResponse } from "@iguhealth/client/lib/types";
 import {
   MiddlewareAsync,
   createMiddlewareAsync,
@@ -17,6 +18,7 @@ import {
   R4,
   R4B,
   VersionedAResource,
+  VersionedResourceType,
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -31,23 +33,27 @@ import { fitsSearchCriteria } from "./search.js";
 import { InternalData } from "./types.js";
 
 // Need special handling of SearchParameter to avoid infinite recursion.
-async function resolveParameter(
-  data: InternalData<r4.ResourceType>,
-  resourceTypes: r4.ResourceType[],
+async function resolveParameter<Version extends FHIR_VERSION>(
+  memoryData: MemoryData,
+  fhirVersion: Version,
+  resourceTypes: VersionedResourceType<Version>[],
   name: string,
 ) {
+  const data = memoryData[fhirVersion];
   const params = Object.values(data?.["SearchParameter"] || {}).filter(
     (p): p is r4.SearchParameter =>
       p?.resourceType === "SearchParameter" &&
       p?.name === name &&
-      p?.base?.some((b) => resourceTypes.includes(b as r4.ResourceType)),
+      p?.base?.some((b: unknown) =>
+        resourceTypes.includes(b as VersionedResourceType<Version>),
+      ),
   );
 
   return params;
 }
 
 function checkSearchParameter(
-  searchParameter: r4.SearchParameter,
+  searchParameter: VersionedAResource<FHIR_VERSION, "SearchParameter">,
   resourceParameters: SearchParameterResource[],
 ) {
   for (const resourceParameter of resourceParameters) {
@@ -66,8 +72,11 @@ function checkSearchParameter(
         const value = searchParameter[resourceParameter.name];
         const valuesToCheck = Array.isArray(value) ? value : [value];
 
-        // @ts-ignore
-        if (!valuesToCheck.some((v) => resourceParameter.value.includes(v)))
+        if (
+          !valuesToCheck.some((v) =>
+            resourceParameter.value.includes(v as string | number),
+          )
+        )
           return false;
 
         break;
@@ -86,273 +95,363 @@ function checkSearchParameter(
   return true;
 }
 
+function getVersionedDB<Version extends FHIR_VERSION>(
+  data: MemoryData,
+  fhirVersion: Version,
+): Record<
+  AllResourceTypes,
+  Record<r4.id, VersionedAResource<Version, AllResourceTypes>>
+> {
+  return data[fhirVersion] as Record<
+    AllResourceTypes,
+    Record<r4.id, VersionedAResource<Version, AllResourceTypes>>
+  >;
+}
+
+function getResourceType<
+  Version extends FHIR_VERSION,
+  T extends AllResourceTypes,
+>(
+  data: MemoryData,
+  fhirVersion: Version,
+  type: T,
+): Record<r4.id, VersionedAResource<Version, T>> {
+  const versionedDb = getVersionedDB(data, fhirVersion);
+  const resources = versionedDb[type] ?? {};
+
+  return resources as Record<r4.id, VersionedAResource<Version, T>>;
+}
+
+function setResource<Version extends FHIR_VERSION>(
+  data: MemoryData,
+  fhirVersion: Version,
+  resource: VersionedAResource<Version, AllResourceTypes> & { id: r4.id },
+): MemoryData {
+  // Return new object on mutation.
+  return {
+    ...data,
+    [fhirVersion]: {
+      ...data[fhirVersion],
+      [resource.resourceType]: {
+        ...data[fhirVersion][resource.resourceType],
+        [resource.id]: resource,
+      },
+    },
+  };
+}
+
 function createMemoryMiddleware<
-  State extends { data: InternalData<r4.ResourceType> },
+  State extends { data: MemoryData },
   CTX extends FHIRServerCTX,
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
     async (context) => {
-      switch (context.request.fhirVersion) {
-        case R4B: {
-          throw new OperationError(
-            outcomeError("not-supported", "FHIR 4.3 is not supported"),
+      /* eslint-disable no-fallthrough */
+      switch (context.request.type) {
+        case "search-request": {
+          const resourceTypes = deriveResourceTypeFilter(context.request);
+          // Remove _type as using on derived resourceTypeFilter
+          context.request.parameters = context.request.parameters.filter(
+            (p) => p.name !== "_type",
           );
-        }
-        case R4: {
-          /* eslint-disable no-fallthrough */
-          switch (context.request.type) {
-            case "search-request": {
-              const resourceTypes = deriveResourceTypeFilter(context.request);
-              // Remove _type as using on derived resourceTypeFilter
-              context.request.parameters = context.request.parameters.filter(
-                (p) => p.name !== "_type",
-              );
 
-              const parameters = await parametersWithMetaAssociated(
-                async (resourceTypes, name) =>
-                  resolveParameter(context.state.data, resourceTypes, name),
+          const parameters = await parametersWithMetaAssociated(
+            async (resourceTypes, name) =>
+              resolveParameter(
+                context.state.data,
+                context.request.fhirVersion,
                 resourceTypes,
-                context.request.parameters,
-              );
+                name,
+              ),
+            resourceTypes,
+            context.request.parameters,
+          );
 
-              // Standard parameters
-              const resourceParameters = parameters.filter(
-                (v): v is SearchParameterResource => v.type === "resource",
-              );
+          // Standard parameters
+          const resourceParameters = parameters.filter(
+            (v): v is SearchParameterResource => v.type === "resource",
+          );
 
-              const resourceSet =
-                context.request.level === "type"
-                  ? (Object.values(
-                      context.state.data[context.request.resourceType] || {},
-                    ) as r4.Resource[])
-                  : ((resourceTypes.length > 0
-                      ? resourceTypes
-                      : Object.keys(context.state.data)
-                    )
-                      .map((k) =>
-                        Object.values(
-                          context.state.data[k as r4.ResourceType] || {},
-                        ),
-                      )
-                      .flat() as r4.Resource[]);
-
-              let result = [];
-              for (const resource of resourceSet || []) {
-                // Performance opt and removes issue of recursion with search parameter queries.
-                if (resource.resourceType === "SearchParameter") {
-                  if (checkSearchParameter(resource, resourceParameters)) {
-                    result.push(resource);
-                  }
-                } else if (
-                  await fitsSearchCriteria(
-                    context.ctx,
+          const resourceSet =
+            context.request.level === "type"
+              ? Object.values(
+                  getResourceType(
+                    context.state.data,
                     context.request.fhirVersion,
-                    resource,
-                    resourceParameters,
+                    context.request.resourceType,
+                  ),
+                )
+              : ((resourceTypes.length > 0
+                  ? resourceTypes
+                  : Object.keys(context.state.data[context.request.fhirVersion])
+                )
+                  .map((k) =>
+                    Object.values(
+                      context.state.data[context.request.fhirVersion][
+                        k as AllResourceTypes
+                      ] ?? {},
+                    ),
                   )
-                ) {
-                  result.push(resource);
-                }
+                  .flat() as r4.Resource[]);
+
+          let result = [];
+          for (const resource of resourceSet || []) {
+            // Performance opt and removes issue of recursion with search parameter queries.
+            if (resource.resourceType === "SearchParameter") {
+              if (checkSearchParameter(resource, resourceParameters)) {
+                result.push(resource);
               }
-
-              const parametersResult = parameters.filter(
-                (v): v is SearchParameterResult => v.type === "result",
-              );
-
-              const offsetParam = parametersResult.find(
-                (v) => v.name === "_offset",
-              );
-
-              if (offsetParam) {
-                if (isNaN(parseInt(offsetParam.value[0].toString())))
-                  throw new OperationError(
-                    outcomeError("invalid", "_offset must be a single number"),
-                  );
-                result = result.slice(
-                  parseInt(offsetParam.value[0].toString()),
-                );
-              }
-
-              const countParam = parametersResult.find(
-                (v) => v.name === "_count",
-              );
-              const total =
-                countParam && !isNaN(parseInt(countParam.value[0].toString()))
-                  ? parseInt(countParam.value[0].toString())
-                  : 50;
-
-              result = result.slice(0, total);
-
-              switch (context.request.level) {
-                case "system": {
-                  return {
-                    ...context,
-                    response: {
-                      fhirVersion: context.request.fhirVersion,
-                      level: context.request.level,
-                      parameters: context.request.parameters,
-                      type: "search-response",
-                      body: result,
-                    },
-                  };
-                }
-                case "type": {
-                  return {
-                    ...context,
-                    response: {
-                      fhirVersion: context.request.fhirVersion,
-                      resourceType: context.request.resourceType,
-                      level: "type",
-                      parameters: context.request.parameters,
-                      type: "search-response",
-                      body: result,
-                    },
-                  };
-                }
-              }
+            } else if (
+              await fitsSearchCriteria(
+                context.ctx,
+                context.request.fhirVersion,
+                resource,
+                resourceParameters,
+              )
+            ) {
+              result.push(resource);
             }
-            case "update-request": {
-              const resource = context.request.body;
-              if (!resource.id)
-                throw new OperationError(
-                  outcomeError("invalid", "Updated resource must have an id."),
-                );
-              context.state.data = {
-                ...context.state.data,
-                [resource.resourceType]: {
-                  ...context.state.data[resource.resourceType],
-                  [resource.id]: resource,
-                },
-              };
+          }
 
-              return {
-                ...context,
-                response: {
-                  fhirVersion: context.request.fhirVersion,
-                  level: "instance",
-                  type: "update-response",
-                  resourceType: context.request.resourceType,
-                  id: resource.id,
-                  body: resource,
-                },
-              };
-            }
-            case "create-request": {
-              const resource = context.request.body;
-              const resources =
-                context.state.data[context.request.resourceType];
-              if (!resource?.id) resource.id = nanoid() as r4.id;
+          const parametersResult = parameters.filter(
+            (v): v is SearchParameterResult => v.type === "result",
+          );
 
-              context.state.data = {
-                ...context.state.data,
-                [resource.resourceType]: {
-                  ...resources,
-                  [resource.id]: resource,
-                },
-              };
-              return {
-                ...context,
-                response: {
-                  fhirVersion: context.request.fhirVersion,
-                  level: "type",
-                  type: "create-response",
-                  resourceType: context.request.resourceType,
-                  body: resource,
-                },
-              };
-            }
-            case "read-request": {
-              const data =
-                context.state.data[context.request.resourceType]?.[
-                  context.request.id
-                ];
-              if (!data) {
-                throw new Error(
-                  `Not found resource of type '${context.request.resourceType}' with id '${context.request.id}'`,
-                );
-              }
-              return {
-                ...context,
-                response: {
-                  fhirVersion: context.request.fhirVersion,
-                  level: "instance",
-                  type: "read-response",
-                  resourceType: context.request.resourceType,
-                  id: context.request.id,
-                  body: data,
-                },
-              };
-            }
-            default:
+          const offsetParam = parametersResult.find(
+            (v) => v.name === "_offset",
+          );
+
+          if (offsetParam) {
+            if (isNaN(parseInt(offsetParam.value[0].toString())))
               throw new OperationError(
-                outcomeError(
-                  "not-supported",
-                  `Request not supported '${context.request.type}'`,
-                ),
+                outcomeError("invalid", "_offset must be a single number"),
               );
+            result = result.slice(parseInt(offsetParam.value[0].toString()));
+          }
+
+          const countParam = parametersResult.find((v) => v.name === "_count");
+          const total =
+            countParam && !isNaN(parseInt(countParam.value[0].toString()))
+              ? parseInt(countParam.value[0].toString())
+              : 50;
+
+          result = result.slice(0, total);
+
+          switch (context.request.level) {
+            case "system": {
+              return {
+                ...context,
+                response: {
+                  fhirVersion: context.request.fhirVersion,
+                  level: context.request.level,
+                  parameters: context.request.parameters,
+                  type: "search-response",
+                  body: result,
+                } as FHIRResponse,
+              };
+            }
+            case "type": {
+              return {
+                ...context,
+                response: {
+                  fhirVersion: context.request.fhirVersion,
+                  resourceType: context.request.resourceType,
+                  level: "type",
+                  parameters: context.request.parameters,
+                  type: "search-response",
+                  body: result,
+                } as FHIRResponse,
+              };
+            }
           }
         }
+        case "update-request": {
+          const resource = context.request.body;
+          if (!resource.id)
+            throw new OperationError(
+              outcomeError("invalid", "Updated resource must have an id."),
+            );
+
+          return {
+            ...context,
+            state: {
+              ...context.state,
+              data: setResource(
+                context.state.data,
+                context.request.fhirVersion,
+                resource as Parameters<typeof setResource>[2],
+              ),
+            },
+            response: {
+              fhirVersion: context.request.fhirVersion,
+              level: "instance",
+              type: "update-response",
+              resourceType: context.request.resourceType,
+              id: resource.id,
+              body: resource as VersionedAResource<
+                typeof context.request.fhirVersion,
+                AllResourceTypes
+              >,
+            } as FHIRResponse,
+          };
+        }
+        case "create-request": {
+          const resource = context.request.body;
+          if (!resource?.id) resource.id = nanoid() as r4.id;
+          return {
+            ...context,
+            state: {
+              ...context.state,
+              data: setResource(
+                context.state.data,
+                context.request.fhirVersion,
+                resource as Parameters<typeof setResource>[2],
+              ),
+            },
+            response: {
+              fhirVersion: context.request.fhirVersion,
+              level: "type",
+              type: "create-response",
+              resourceType: context.request.resourceType,
+              body: resource as VersionedAResource<
+                typeof context.request.fhirVersion,
+                AllResourceTypes
+              >,
+            } as FHIRResponse,
+          };
+        }
+        case "read-request": {
+          const resource =
+            context.state.data[context.request.fhirVersion][
+              context.request.resourceType
+            ]?.[context.request.id];
+          if (!resource) {
+            throw new Error(
+              `Not found resource of type '${context.request.resourceType}' with id '${context.request.id}'`,
+            );
+          }
+          return {
+            ...context,
+            response: {
+              fhirVersion: context.request.fhirVersion,
+              level: "instance",
+              type: "read-response",
+              resourceType: context.request.resourceType,
+              id: context.request.id,
+              body: resource as VersionedAResource<
+                typeof context.request.fhirVersion,
+                AllResourceTypes
+              >,
+            } as FHIRResponse,
+          };
+        }
+        default:
+          throw new OperationError(
+            outcomeError(
+              "not-supported",
+              `Request not supported '${context.request.type}'`,
+            ),
+          );
       }
     },
   ]);
 }
 
-function createResolveCanonical(
-  data: InternalData<r4.ResourceType>,
-): FHIRServerCTX["resolveCanonical"] {
-  const map = new Map<r4.ResourceType, Map<string, string>>();
+function createURLMap<Version extends FHIR_VERSION>(
+  memoryData: MemoryData,
+  fhirVersion: Version,
+): Map<AllResourceTypes, Map<string, string>> {
+  const versionedMap = new Map();
+  const data = getVersionedDB(memoryData, fhirVersion);
   for (const resourceType of Object.keys(data)) {
     for (const resource of Object.values(
-      data[resourceType as r4.ResourceType] ?? {},
+      data[resourceType as VersionedResourceType<Version>] ?? {},
     )) {
       if ((resource as { url: string })?.url) {
-        if (!map.has(resourceType as r4.ResourceType)) {
-          map.set(resourceType as r4.ResourceType, new Map());
+        if (!versionedMap.has(resourceType as r4.ResourceType)) {
+          versionedMap.set(resourceType as r4.ResourceType, new Map());
         }
         const url = (resource as { url: string }).url;
         const id = resource?.id;
-        if (!map.get(resourceType as r4.ResourceType)?.has(url) && id) {
-          map.get(resourceType as r4.ResourceType)?.set(url, id);
+        if (
+          !versionedMap.get(resourceType as r4.ResourceType)?.has(url) &&
+          id
+        ) {
+          versionedMap.get(resourceType as r4.ResourceType)?.set(url, id);
         }
       }
     }
   }
+
+  return versionedMap;
+}
+
+function createResolveCanonical(
+  data: MemoryData,
+): FHIRServerCTX["resolveCanonical"] {
+  const r4Map = createURLMap(data, R4);
+  const r4bMap = createURLMap(data, R4B);
 
   return <FHIRVersion extends FHIR_VERSION, Type extends AllResourceTypes>(
     fhirVersion: FHIRVersion,
     type: Type,
     url: r4.canonical,
   ) => {
-    if (fhirVersion !== R4) {
-      throw new OperationError(
-        outcomeError("not-supported", "FHIR version not supported yet."),
-      );
-    }
+    const versionedMap = fhirVersion === R4 ? r4Map : r4bMap;
 
-    const id = map.get(type as r4.ResourceType)?.get(url);
-    return (id ? data[type]?.[id as r4.id] : undefined) as VersionedAResource<
-      FHIRVersion,
-      Type
-    >;
+    const id = versionedMap.get(type)?.get(url);
+    getResourceType(data, fhirVersion, type);
+    return (
+      id ? getResourceType(data, fhirVersion, type)?.[id as r4.id] : undefined
+    ) as VersionedAResource<FHIRVersion, Type>;
   };
 }
 
 function createResolveTypeToCanonical(
-  data: InternalData<r4.ResourceType>,
-): (type: r4.uri) => r4.canonical | undefined {
-  const map = new Map<r4.uri, r4.canonical>();
-  const sds: Record<r4.id, r4.StructureDefinition | undefined> = data[
-    "StructureDefinition"
-  ] as Record<r4.id, r4.StructureDefinition | undefined>;
+  data: MemoryData,
+): (version: FHIR_VERSION, type: r4.uri) => r4.canonical | undefined {
+  const r4Map = (
+    Object.values(
+      data?.[R4]?.["StructureDefinition"] ?? {},
+    ) as r4.StructureDefinition[]
+  ).reduce(
+    (acc: Map<r4.uri, r4.canonical>, resource: r4.StructureDefinition) => {
+      if (resource?.type && resource?.url) {
+        acc.set(resource.type, resource.url as r4.canonical);
+      }
+      return acc;
+    },
+    new Map(),
+  );
 
-  for (const resource of Object.values(sds || {})) {
-    if (resource?.type && resource?.url) {
-      map.set(resource.type, resource.url as r4.canonical);
+  const r4bMap = (
+    Object.values(
+      data?.[R4B]?.["StructureDefinition"] ?? {},
+    ) as r4b.StructureDefinition[]
+  ).reduce(
+    (acc: Map<r4b.uri, r4b.canonical>, resource: r4b.StructureDefinition) => {
+      if (resource?.type && resource?.url) {
+        acc.set(resource.type, resource.url as r4b.canonical);
+      }
+      return acc;
+    },
+    new Map(),
+  );
+
+  return (version: FHIR_VERSION, type: r4.uri) => {
+    switch (version) {
+      case R4: {
+        return r4Map.get(type);
+      }
+      case R4B: {
+        return r4bMap.get(type);
+      }
+      default: {
+        throw new OperationError(
+          outcomeError("not-supported", "FHIR version not supported yet."),
+        );
+      }
     }
-  }
-
-  return (type: r4.uri) => {
-    return map.get(type);
   };
 }
 
@@ -360,6 +459,11 @@ interface MemoryClientInterface<CTX> extends VersionedFHIRClientAsync<CTX> {
   resolveCanonical: ReturnType<typeof createResolveCanonical>;
   resolveTypeToCanonical: ReturnType<typeof createResolveTypeToCanonical>;
 }
+
+type MemoryData = {
+  [R4]: InternalData<R4, AllResourceTypes>;
+  [R4B]: InternalData<R4B, AllResourceTypes>;
+};
 
 export class Memory<CTX extends FHIRServerCTX>
   implements MemoryClientInterface<CTX>
@@ -387,11 +491,18 @@ export class Memory<CTX extends FHIRServerCTX>
   public resolveCanonical: MemoryClientInterface<CTX>["resolveCanonical"];
   public resolveTypeToCanonical: MemoryClientInterface<CTX>["resolveTypeToCanonical"];
 
-  constructor(data: InternalData<r4.ResourceType>) {
+  constructor(partialData: Partial<MemoryData>) {
+    const data: MemoryData = {
+      [R4]: {},
+      [R4B]: {},
+      ...partialData,
+    };
     const client = new VersionedAsynchronousClient<
-      { data: InternalData<r4.ResourceType> },
+      {
+        data: MemoryData;
+      },
       CTX
-    >({ data: data }, createMemoryMiddleware());
+    >({ data }, createMemoryMiddleware());
 
     this._client = client;
     this.request = this._client.request.bind(this._client);
@@ -442,39 +553,44 @@ export function createArtifactMemoryDatabase<CTX extends FHIRServerCTX>({
       }),
     )
     .flat();
-  let r4Data: InternalData<r4.ResourceType> = {};
-  for (const resource of r4Resources) {
-    r4Data = {
+
+  const r4Data: InternalData<R4, r4.ResourceType> = r4Resources.reduce(
+    (r4Data: InternalData<R4, r4.ResourceType>, resource) => ({
       ...r4Data,
       [resource.resourceType]: {
         ...r4Data[resource.resourceType],
         [resource.id as r4.id]: resource,
       },
-    };
-  }
+    }),
+    {},
+  );
 
-  // const r4bResources: r4b.Resource[] = r4b
-  //   .map((resourceType) =>
-  //     loadArtifacts({
-  //       fhirVersion: R4B,
-  //       resourceType,
-  //       packageLocation: path.join(
-  //         fileURLToPath(import.meta.url),
-  //         "../../../../../",
-  //       ),
-  //     }),
-  //   )
-  //   .flat();
+  const r4bResources: r4b.Resource[] = r4b
+    .map((resourceType) =>
+      loadArtifacts({
+        fhirVersion: R4B,
+        resourceType,
+        packageLocation: path.join(
+          fileURLToPath(import.meta.url),
+          "../../../../../",
+        ),
+      }),
+    )
+    .flat();
 
-  for (const resource of r4Resources) {
-    r4Data = {
-      ...r4Data,
+  const r4bData: InternalData<R4B, r4b.ResourceType> = r4bResources.reduce(
+    (r4bData: InternalData<R4B, r4b.ResourceType>, resource) => ({
+      ...r4bData,
       [resource.resourceType]: {
-        ...r4Data[resource.resourceType],
+        ...r4bData[resource.resourceType],
         [resource.id as r4.id]: resource,
       },
-    };
-  }
+    }),
+    {},
+  );
 
-  return new Memory(r4Data);
+  return new Memory({
+    [R4]: r4Data,
+    [R4B]: r4bData,
+  });
 }

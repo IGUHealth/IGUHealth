@@ -32,7 +32,10 @@ import {
 
 export interface ValidationCTX {
   fhirVersion: FHIR_VERSION;
-  resolveTypeToCanonical(type: uri): canonical | undefined;
+  resolveTypeToCanonical<Version extends FHIR_VERSION>(
+    version: Version,
+    type: uri,
+  ): canonical | undefined;
   resolveCanonical: <
     FHIRVersion extends FHIR_VERSION,
     Type extends VersionedResourceType<FHIRVersion>,
@@ -679,7 +682,7 @@ export default async function validate(
   root: unknown,
   path: Loc<any, any, any> = typedPointer<any, any>(),
 ): Promise<OperationOutcome["issue"]> {
-  const canonical = ctx.resolveTypeToCanonical(type);
+  const canonical = ctx.resolveTypeToCanonical(ctx.fhirVersion, type);
   if (!canonical) {
     throw new OperationError(
       outcomeFatal(

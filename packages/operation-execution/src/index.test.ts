@@ -244,7 +244,7 @@ test("execution", async () => {
       if (!sd) throw new Error(`Could not resolve url ${url}`);
       return sd as VersionedAResource<FHIRVersion, Type> | undefined;
     },
-    resolveTypeToCanonical: (type: uri) => {
+    resolveTypeToCanonical: (version: FHIR_VERSION, type: uri) => {
       const sd = structureDefinitions.find((sd) => sd.type === type);
       if (!sd) throw new Error(`Could not resolve type ${type}`);
       return sd.url as canonical;
@@ -315,7 +315,7 @@ test("paramValidation", async () => {
       if (!sd) throw new Error(`Could not resolve url ${url}`);
       return sd as VersionedAResource<FHIRVersion, Type> | undefined;
     },
-    resolveTypeToCanonical: (type: uri) => {
+    resolveTypeToCanonical: (version: FHIR_VERSION, type: uri) => {
       const sd = structureDefinitions.find((sd) => sd.type === type);
       if (!sd) throw new Error(`Could not resolve type ${type}`);
       return sd.url as canonical;
@@ -520,7 +520,7 @@ test("Test invalid resource validation", async () => {
       if (!sd) throw new Error(`Could not resolve url ${url}`);
       return sd as VersionedAResource<FHIRVersion, Type> | undefined;
     },
-    resolveTypeToCanonical: (type: uri) => {
+    resolveTypeToCanonical: (version: FHIR_VERSION, type: uri) => {
       const sd = structureDefinitions.find((sd) => sd.type === type);
       if (!sd) throw new Error(`Could not resolve type ${type}`);
       return sd.url as canonical;

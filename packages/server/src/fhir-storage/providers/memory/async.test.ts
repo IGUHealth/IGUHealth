@@ -10,7 +10,7 @@ import {
   StructureDefinition,
   id,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { R4 } from "@iguhealth/fhir-types/lib/versions";
+import { R4, R4B } from "@iguhealth/fhir-types/lib/versions";
 
 import { testServices } from "../../test-ctx.js";
 import { Memory } from "./async.js";
@@ -29,16 +29,18 @@ const sds = loadArtifacts({
   silence: true,
 });
 
-let data: InternalData<ResourceType> = {};
+let r4data: InternalData<R4, ResourceType> = {};
 for (const resource of [...artifactParameters, ...sds]) {
-  data = {
-    ...data,
+  r4data = {
+    ...r4data,
     [resource.resourceType]: {
-      ...data[resource.resourceType],
+      ...r4data[resource.resourceType],
       [resource.id as id]: resource,
     },
   };
 }
+
+let data = { [R4]: r4data, [R4B]: {} };
 
 function generateParameter(
   fieldOverrides: Partial<SearchParameter>,
@@ -100,6 +102,16 @@ test("Creation and search", async () => {
   );
 
   expect(
+    await memDb.read(testServices, R4, "SearchParameter", "test1"),
+  ).toEqual(
+    generateParameter({
+      id: "test1",
+      name: "test1",
+      code: "test1",
+    } as SearchParameter),
+  );
+
+  expect(
     (
       await memDb.search_type(
         testServices,
@@ -141,6 +153,7 @@ test("artifactParameters", async () => {
       parseParameters("SearchParameter?base=Patient,Resource,DomainResource"),
     )
   ).resources;
+
   expect(parameters.length).toEqual(34);
 
   expect(

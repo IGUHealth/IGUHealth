@@ -11,6 +11,7 @@ import {
   AllResourceTypes,
   FHIR_VERSION,
   R4,
+  R4B,
   VersionedAResource,
 } from "@iguhealth/fhir-types/versions";
 import { AccessTokenPayload, TenantId } from "@iguhealth/jwt";
@@ -82,7 +83,7 @@ export const testServices: FHIRServerCTX = {
     date: new Date().toISOString() as dateTime,
     format: ["json" as code],
   },
-  client: new Memory({}),
+  client: new Memory({ [R4]: {}, [R4B]: {} }),
   cache: new TestCache(),
   resolveCanonical: <
     Version extends FHIR_VERSION,
@@ -97,7 +98,7 @@ export const testServices: FHIRServerCTX = {
       Type
     >;
   },
-  resolveTypeToCanonical: (type: uri) => {
+  resolveTypeToCanonical: (_fhirVersion, type: uri) => {
     const sd = sds.find((sd) => sd.type === type);
     return sd?.url as canonical;
   },

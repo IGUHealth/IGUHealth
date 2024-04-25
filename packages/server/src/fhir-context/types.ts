@@ -111,7 +111,10 @@ export interface FHIRServerCTX {
   inTransaction?: boolean;
 
   // Utilities
-  resolveTypeToCanonical: (type: uri) => canonical | undefined;
+  resolveTypeToCanonical: (
+    fhirVersion: FHIR_VERSION,
+    type: uri,
+  ) => canonical | undefined;
   resolveCanonical: <
     FHIRVersion extends FHIR_VERSION,
     Type extends AllResourceTypes,

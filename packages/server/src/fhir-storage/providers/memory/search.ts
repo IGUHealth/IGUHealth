@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween.js";
 
 import { Resource, uri } from "@iguhealth/fhir-types/r4/types";
+import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import * as fp from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -28,7 +29,7 @@ interface MemorySearchCTX {
 async function expressionSearch<CTX extends MemorySearchCTX>(
   ctx: CTX,
   fhirVersion: FHIR_VERSION,
-  resource: Resource,
+  resource: Resource | r4b.Resource,
   parameter: SearchParameterResource,
 ) {
   if (!parameter.searchParameter.expression)
@@ -65,7 +66,7 @@ async function expressionSearch<CTX extends MemorySearchCTX>(
           fhirVersion: Version,
           type: uri,
         ) => {
-          const canonical = ctx.resolveTypeToCanonical(type);
+          const canonical = ctx.resolveTypeToCanonical(fhirVersion, type);
           if (!canonical)
             throw new OperationError(
               outcomeError(
@@ -116,7 +117,7 @@ async function expressionSearch<CTX extends MemorySearchCTX>(
 function checkParameterWithResource<CTX extends MemorySearchCTX>(
   ctx: CTX,
   fhirVersion: FHIR_VERSION,
-  resource: Resource,
+  resource: Resource | r4b.Resource,
   parameter: SearchParameterResource,
 ) {
   switch (parameter.name) {
@@ -145,7 +146,7 @@ function checkParameterWithResource<CTX extends MemorySearchCTX>(
 export async function fitsSearchCriteria<CTX extends MemorySearchCTX>(
   ctx: CTX,
   fhirVersion: FHIR_VERSION,
-  resource: Resource,
+  resource: Resource | r4b.Resource,
   parameters: SearchParameterResource[],
 ) {
   for (const param of parameters) {

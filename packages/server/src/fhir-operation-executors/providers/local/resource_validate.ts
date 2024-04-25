@@ -17,7 +17,11 @@ export const validateResource = async (
   ctx: FHIRServerCTX,
   fhirVersion: FHIR_VERSION,
   resourceType: r4.ResourceType | r4b.ResourceType,
-  input: ResourceValidate.Input,
+  input: {
+    resource?: r4.ConcreteType | r4b.ConcreteType | undefined;
+    mode?: r4.code | undefined;
+    profile?: r4.uri | undefined;
+  },
 ) => {
   const mode = input.mode ? input.mode : "no-action";
   switch (mode) {
