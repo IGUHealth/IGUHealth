@@ -13,7 +13,6 @@ import {
   Range,
   Reference,
   ResourceType,
-  SearchParameter,
   canonical,
   date,
   dateTime,
