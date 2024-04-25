@@ -39,7 +39,7 @@ test("Test ValueSet Expands", async () => {
       if (!sd) throw new Error(`Could not resolve type ${type}`);
       return sd as VersionedAResource<FHIRVersion, Type>;
     },
-    resolveTypeToCanonical(type: uri): canonical {
+    resolveTypeToCanonical(version: FHIR_VERSION, type: uri): canonical {
       const sd = sds.find((sd) => sd.type === type);
       if (!sd) throw new Error(`Could not resolve type ${type}`);
       return sd.url as canonical;

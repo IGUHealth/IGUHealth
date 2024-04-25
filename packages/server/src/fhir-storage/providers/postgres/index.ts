@@ -362,7 +362,7 @@ async function indexR4Resource<CTX extends FHIRServerCTX>(
           meta: {
             fhirVersion,
             getSD: (fhirVersion, type: uri) => {
-              const canonicalURL = ctx.resolveTypeToCanonical(type);
+              const canonicalURL = ctx.resolveTypeToCanonical(fhirVersion, type);
               if (!canonicalURL)
                 throw new OperationError(
                   outcomeFatal(

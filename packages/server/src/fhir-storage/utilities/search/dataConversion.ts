@@ -13,7 +13,6 @@ import {
   Range,
   Reference,
   ResourceType,
-  SearchParameter,
   canonical,
   date,
   dateTime,
@@ -205,7 +204,7 @@ export type ResolveRemoteCanonical = <FHIRVersion extends FHIR_VERSION>(
 >;
 
 async function toReferenceRemote(
-  parameter: SearchParameter,
+  parameter: VersionedAResource<FHIR_VERSION, "SearchParameter">,
   value: MetaValueSingular<NonNullable<unknown>>,
   resolveCanonical?: ResolveRemoteCanonical,
 ): Promise<
@@ -529,7 +528,7 @@ export function dataConversionLocal<T extends SEARCH_TYPE>(
 }
 
 export default async function dataConversion<T extends SEARCH_TYPE>(
-  parameter: SearchParameter,
+  parameter: VersionedAResource<FHIR_VERSION, "SearchParameter">,
   type: T,
   evaluation: MetaValueSingular<NonNullable<unknown>>[],
   resolveRemoteCanonical?: ResolveRemoteCanonical,

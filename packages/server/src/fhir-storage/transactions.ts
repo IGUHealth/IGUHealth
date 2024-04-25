@@ -52,7 +52,7 @@ export function buildTransactionTopologicalGraph(
             fhirVersion,
             type: entry.resource.resourceType as uri,
             getSD: (fhirVersion, type) => {
-              const canonical = ctx.resolveTypeToCanonical(type);
+              const canonical = ctx.resolveTypeToCanonical(fhirVersion, type);
               if (!canonical)
                 throw new OperationError(
                   outcomeFatal(

@@ -44,6 +44,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   }
   async request(ctx: CTX, request: FHIRRequest): Promise<FHIRResponse> {
     const res = await this.middleware({ ctx, state: this.state, request });
+    this.state = res.state;
     if (!res.response) throw new Error("No Response was returned.");
     return res.response;
   }
@@ -368,6 +369,7 @@ export class VersionedAsynchronousClient<State, CTX>
 
   async request(ctx: CTX, request: FHIRRequest): Promise<FHIRResponse> {
     const res = await this.middleware({ ctx, state: this.state, request });
+    this.state = res.state;
     if (!res.response) throw new Error("No Response was returned.");
     return res.response;
   }

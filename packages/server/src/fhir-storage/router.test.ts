@@ -25,14 +25,16 @@ test("Test routing on resourceTypes", async () => {
           },
         },
         source: new Memory({
-          ["Patient"]: {
-            ["1" as id]: { id: "1", resourceType: "Patient" } as Patient,
-          },
-          ["Practitioner"]: {
-            ["3" as id]: {
-              id: "3",
-              resourceType: "Practitioner",
-            } as Practitioner,
+          [R4]: {
+            ["Patient"]: {
+              ["1" as id]: { id: "1", resourceType: "Patient" } as Patient,
+            },
+            ["Practitioner"]: {
+              ["3" as id]: {
+                id: "3",
+                resourceType: "Practitioner",
+              } as Practitioner,
+            },
           },
         }),
       },
@@ -45,14 +47,16 @@ test("Test routing on resourceTypes", async () => {
           },
         },
         source: new Memory({
-          ["Patient"]: {
-            ["2" as id]: { id: "2", resourceType: "Patient" } as Patient,
-          },
-          ["Practitioner"]: {
-            ["4" as id]: {
-              id: "4",
-              resourceType: "Practitioner",
-            } as Practitioner,
+          [R4]: {
+            ["Patient"]: {
+              ["2" as id]: { id: "2", resourceType: "Patient" } as Patient,
+            },
+            ["Practitioner"]: {
+              ["4" as id]: {
+                id: "4",
+                resourceType: "Practitioner",
+              } as Practitioner,
+            },
           },
         }),
       },
@@ -93,13 +97,16 @@ test("Test routing priority", async () => {
             interactionsSupported: ["read-request", "search-request"],
           },
         },
+
         source: new Memory({
-          ["Practitioner"]: {
-            ["4" as id]: {
-              id: "4",
-              resourceType: "Practitioner",
-              name: [{ given: ["TEST"] }],
-            } as Practitioner,
+          [R4]: {
+            ["Practitioner"]: {
+              ["4" as id]: {
+                id: "4",
+                resourceType: "Practitioner",
+                name: [{ given: ["TEST"] }],
+              } as Practitioner,
+            },
           },
         }),
       },
@@ -117,12 +124,14 @@ test("Test routing priority", async () => {
           },
         },
         source: new Memory({
-          ["Practitioner"]: {
-            ["5" as id]: {
-              id: "5",
-              resourceType: "Practitioner",
-              name: [{ given: ["TEST"] }],
-            } as Practitioner,
+          [R4]: {
+            ["Practitioner"]: {
+              ["5" as id]: {
+                id: "5",
+                resourceType: "Practitioner",
+                name: [{ given: ["TEST"] }],
+              } as Practitioner,
+            },
           },
         }),
       },
@@ -160,12 +169,14 @@ test("Test routing priority", async () => {
           },
         },
         source: new Memory({
-          ["Practitioner"]: {
-            ["4" as id]: {
-              id: "4",
-              resourceType: "Practitioner",
-              name: [{ given: ["TEST"] }],
-            } as Practitioner,
+          [R4]: {
+            ["Practitioner"]: {
+              ["4" as id]: {
+                id: "4",
+                resourceType: "Practitioner",
+                name: [{ given: ["TEST"] }],
+              } as Practitioner,
+            },
           },
         }),
       },
@@ -176,12 +187,14 @@ test("Test routing priority", async () => {
           },
         },
         source: new Memory({
-          ["Practitioner"]: {
-            ["5" as id]: {
-              id: "5",
-              resourceType: "Practitioner",
-              name: [{ given: ["TEST"] }],
-            } as Practitioner,
+          [R4]: {
+            ["Practitioner"]: {
+              ["5" as id]: {
+                id: "5",
+                resourceType: "Practitioner",
+                name: [{ given: ["TEST"] }],
+              } as Practitioner,
+            },
           },
         }),
       },
