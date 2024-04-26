@@ -5,7 +5,6 @@ import * as s from "zapatos/schema";
 import { VersionedFHIRClientAsync } from "@iguhealth/client/interface";
 import {
   AccessPolicy,
-  CapabilityStatement,
   ClientApplication,
   Membership,
   OperationDefinition,

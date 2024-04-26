@@ -6,7 +6,7 @@ import { fileURLToPath } from "url";
 import * as s from "zapatos/schema";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
-import { canonical, code, dateTime, uri } from "@iguhealth/fhir-types/r4/types";
+import { canonical, uri } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
   FHIR_VERSION,
