@@ -11,17 +11,16 @@ import {
   MiddlewareAsyncChain,
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
-import { FHIRRequest } from "@iguhealth/client/types";
+import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
-  CapabilityStatement,
   CapabilityStatementRestResource,
   ResourceType,
   StructureDefinition,
   code,
 } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
-import { AllResourceTypes, FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
+import { AllResourceTypes, FHIR_VERSION, VersionedAResource } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -109,11 +108,11 @@ async function createResourceRestCapabilities(
   } as CapabilityStatementRestResource;
 }
 
-export async function serverCapabilities(
+async function serverCapabilities<Version extends FHIR_VERSION>(
   ctx: Partial<FHIRServerCTX>,
-  fhirVersion: FHIR_VERSION,
+  fhirVersion: Version,
   memdb: VersionedFHIRClientAsync<unknown>,
-): Promise<CapabilityStatement> {
+): Promise<VersionedAResource<Version, "CapabilityStatement">> {
   const sds = (
     await memdb.search_type({}, fhirVersion, "StructureDefinition", [
       { name: "_count", value: [1000] },
@@ -136,7 +135,7 @@ export async function serverCapabilities(
   return {
     resourceType: "CapabilityStatement",
     status: "active",
-    fhirVersion: "4.0.1",
+    fhirVersion: fhirVersion,
     date: new Date().toISOString(),
     kind: "capability",
     format: ["json"],
@@ -160,7 +159,7 @@ export async function serverCapabilities(
         ),
       },
     ],
-  } as CapabilityStatement;
+  } as VersionedAResource<Version, "CapabilityStatement">;
 }
 
 export const logger = pino<string>();
@@ -253,11 +252,11 @@ const capabilitiesMiddleware: MiddlewareAsyncChain<
     return {
       ...context,
       response: {
-        fhirVersion: R4,
+        fhirVersion: context.request.fhirVersion,
         level: "system",
         type: "capabilities-response",
-        body: context.ctx.capabilities,
-      },
+        body: await serverCapabilities(context.ctx, context.request.fhirVersion, context.ctx.client),
+      } as FHIRResponse,
     };
   }
 
@@ -396,14 +395,7 @@ export async function createFHIRServices(
   const lock = new RedisLock(redis);
   const cache = new RedisCache(redis);
 
-  const capabilities = await serverCapabilities(
-    {
-      resolveCanonical: memDBAsync.resolveCanonical,
-      resolveTypeToCanonical: memDBAsync.resolveTypeToCanonical,
-    },
-    R4,
-    memDBAsync,
-  );
+
   const client = await createFHIRClient([
     // OP INVOCATION
     {
@@ -482,7 +474,6 @@ export async function createFHIRServices(
     logger: logger,
     lock,
     cache,
-    capabilities,
     terminologyProvider,
     encryptionProvider,
     resolveCanonical: memDBAsync.resolveCanonical,

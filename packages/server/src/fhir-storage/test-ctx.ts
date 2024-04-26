@@ -75,14 +75,6 @@ export const testServices: FHIRServerCTX = {
   },
   terminologyProvider: new TerminologyProviderMemory(),
   logger: pino<string>(),
-  capabilities: {
-    resourceType: "CapabilityStatement",
-    status: "active" as code,
-    kind: "instance" as code,
-    fhirVersion: "4.0.1" as code,
-    date: new Date().toISOString() as dateTime,
-    format: ["json" as code],
-  },
   client: new Memory({ [R4]: {}, [R4B]: {} }),
   cache: new TestCache(),
   resolveCanonical: <

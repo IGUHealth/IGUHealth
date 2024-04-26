@@ -91,7 +91,6 @@ export interface UserContext {
 
 export interface FHIRServerCTX {
   // Server Information
-  capabilities: CapabilityStatement;
   tenant: TenantId;
   user: UserContext;
 
