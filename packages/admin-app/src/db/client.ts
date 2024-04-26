@@ -18,6 +18,7 @@ type CachedClient = VersionedAsynchronousClient<
 export const getClient = atom<ReturnType<typeof createAdminAppClient>>({
   key: "client",
   default: undefined,
+  dangerouslyAllowMutability: true,
 });
 
 const cachedResponse: Record<string, Promise<FHIRResponse>> = {};
