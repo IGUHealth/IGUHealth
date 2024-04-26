@@ -5,7 +5,6 @@ import * as s from "zapatos/schema";
 import { VersionedFHIRClientAsync } from "@iguhealth/client/interface";
 import {
   AccessPolicy,
-  CapabilityStatement,
   ClientApplication,
   Membership,
   OperationDefinition,
@@ -91,7 +90,6 @@ export interface UserContext {
 
 export interface FHIRServerCTX {
   // Server Information
-  capabilities: CapabilityStatement;
   tenant: TenantId;
   user: UserContext;
 
