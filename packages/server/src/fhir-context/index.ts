@@ -68,9 +68,9 @@ const R4B_SPECIAL_TYPES: { MEMORY: r4b.ResourceType[] } = {
 };
 
 async function createResourceRestCapabilities(
-  ctx: Partial<FHIRServerCTX>,
+  ctx: FHIRServerCTX,
   fhirVersion: FHIR_VERSION,
-  memdb: VersionedFHIRClientAsync<unknown>,
+  memdb: VersionedFHIRClientAsync<FHIRServerCTX>,
   sd: StructureDefinition | r4b.StructureDefinition,
 ): Promise<CapabilityStatementRestResource> {
   const resourceParameters = await memdb.search_type(
@@ -109,17 +109,17 @@ async function createResourceRestCapabilities(
 }
 
 async function serverCapabilities<Version extends FHIR_VERSION>(
-  ctx: Partial<FHIRServerCTX>,
+  ctx: FHIRServerCTX,
   fhirVersion: Version,
-  memdb: VersionedFHIRClientAsync<unknown>,
+  client: VersionedFHIRClientAsync<FHIRServerCTX>,
 ): Promise<VersionedAResource<Version, "CapabilityStatement">> {
   const sds = (
-    await memdb.search_type({}, fhirVersion, "StructureDefinition", [
+    await client.search_type(ctx, fhirVersion, "StructureDefinition", [
       { name: "_count", value: [1000] },
     ])
   ).resources.filter((sd) => sd.abstract === false && sd.kind === "resource");
 
-  const rootParameters = await memdb.search_type(
+  const rootParameters = await client.search_type(
     ctx,
     fhirVersion,
     "SearchParameter",
@@ -154,7 +154,7 @@ async function serverCapabilities<Version extends FHIR_VERSION>(
         })),
         resource: await Promise.all(
           sds.map((sd) =>
-            createResourceRestCapabilities(ctx, fhirVersion, memdb, sd),
+            createResourceRestCapabilities(ctx, fhirVersion, client, sd),
           ),
         ),
       },
