@@ -96,6 +96,15 @@ export function minimizeCommands(command: Command) {
               }),
             }),
           );
+        } else if (json.resourceType) {
+          fs.writeFileSync(
+            file.replace(".json", ".min.json"),
+            JSON.stringify(
+              minimizeResource(
+                json as VersionedAResource<FHIR_VERSION, AllResourceTypes>,
+              ),
+            ),
+          );
         }
       }
     });
