@@ -19,17 +19,17 @@ function getAllFiles(directory: string): string[] {
   return files;
 }
 
-function checkBundleResourceTypesAlign(b: Bundle): boolean {
-  const resourceTypes = (b.entry || []).map((e) => e.resource?.resourceType);
-  const set = new Set(resourceTypes);
-  return set.size === 1 && resourceTypes[0] !== undefined;
-}
-
-export default function generateIndexFile(
-  root: string,
-  artifactLocations: string[],
-  ignore: string[] = [],
-) {
+export default function generateIndexFile({
+  root,
+  artifactLocations,
+  ignore = [],
+  extension = ".json",
+}: {
+  root: string;
+  artifactLocations: string[];
+  ignore?: string[];
+  extension?: string;
+}) {
   // Read artifactLocation and recursively walk the directory tree reading all files from root
   // For each file, read the contents and parse the JSON
   // If the JSON has a "resourceType" property, add it to the index
@@ -38,7 +38,7 @@ export default function generateIndexFile(
     .map((loc) => path.join(root, loc))
     .map(getAllFiles)
     .flat()
-    .filter((f) => f.endsWith(".json"))
+    .filter((f) => f.endsWith(extension))
     .filter((f) => ignore.indexOf(f) === -1)
     .sort((a, b) => a.localeCompare(b));
 

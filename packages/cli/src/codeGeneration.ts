@@ -72,12 +72,14 @@ export function codeGenerationCommands(command: Command) {
     .option("-p, --packagedir <packagedir>", "")
     .option("-r, --resources <resources>", "")
     .option("-i, --ignore   [ignore...]", "")
+    .option("-e, --extension   <extension>", "")
     .action((options) => {
-      const indexFile = generateIndexFile(
-        options.packagedir,
-        [options.resources],
-        options.ignore,
-      );
+      const indexFile = generateIndexFile({
+        root: options.packagedir,
+        artifactLocations: [options.resources],
+        ignore: options.ignore,
+        extension: options.extension,
+      });
       console.log("generating index file");
       const indexLoc = path.join(options.packagedir, ".index.json");
       writeFileSync(indexLoc, JSON.stringify(indexFile, null, 2));

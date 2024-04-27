@@ -2,55 +2,55 @@
   "index-version": "1",
   "files": [
     {
-      "filename": "definitions/hl7/conceptmaps.json",
+      "filename": "definitions/hl7/conceptmaps.min.json",
       "resourceType": "ConceptMap"
     },
     {
-      "filename": "definitions/hl7/profiles-resources.json",
+      "filename": "definitions/hl7/profiles-resources.min.json",
       "resourceType": "CapabilityStatement"
     },
     {
-      "filename": "definitions/hl7/profiles-resources.json",
+      "filename": "definitions/hl7/profiles-resources.min.json",
       "resourceType": "CompartmentDefinition"
     },
     {
-      "filename": "definitions/hl7/profiles-resources.json",
+      "filename": "definitions/hl7/profiles-resources.min.json",
       "resourceType": "OperationDefinition"
     },
     {
-      "filename": "definitions/hl7/profiles-resources.json",
+      "filename": "definitions/hl7/profiles-resources.min.json",
       "resourceType": "StructureDefinition"
     },
     {
-      "filename": "definitions/hl7/profiles-types.json",
+      "filename": "definitions/hl7/profiles-types.min.json",
       "resourceType": "StructureDefinition"
     },
     {
-      "filename": "definitions/hl7/search-parameters.json",
+      "filename": "definitions/hl7/search-parameters.min.json",
       "resourceType": "SearchParameter"
     },
     {
-      "filename": "definitions/hl7/v2-tables.json",
+      "filename": "definitions/hl7/v2-tables.min.json",
       "resourceType": "ValueSet"
     },
     {
-      "filename": "definitions/hl7/v2-tables.json",
+      "filename": "definitions/hl7/v2-tables.min.json",
       "resourceType": "CodeSystem"
     },
     {
-      "filename": "definitions/hl7/v3-codesystems.json",
+      "filename": "definitions/hl7/v3-codesystems.min.json",
       "resourceType": "ValueSet"
     },
     {
-      "filename": "definitions/hl7/v3-codesystems.json",
+      "filename": "definitions/hl7/v3-codesystems.min.json",
       "resourceType": "CodeSystem"
     },
     {
-      "filename": "definitions/hl7/valuesets.json",
+      "filename": "definitions/hl7/valuesets.min.json",
       "resourceType": "CodeSystem"
     },
     {
-      "filename": "definitions/hl7/valuesets.json",
+      "filename": "definitions/hl7/valuesets.min.json",
       "resourceType": "ValueSet"
     }
   ]

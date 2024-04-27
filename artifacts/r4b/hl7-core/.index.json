@@ -2,39 +2,39 @@
   "index-version": "1",
   "files": [
     {
-      "filename": "definitions/conceptmaps.json",
+      "filename": "definitions/conceptmaps.min.json",
       "resourceType": "ConceptMap"
     },
     {
-      "filename": "definitions/profiles-resources.json",
+      "filename": "definitions/profiles-resources.min.json",
       "resourceType": "CapabilityStatement"
     },
     {
-      "filename": "definitions/profiles-resources.json",
+      "filename": "definitions/profiles-resources.min.json",
       "resourceType": "CompartmentDefinition"
     },
     {
-      "filename": "definitions/profiles-resources.json",
+      "filename": "definitions/profiles-resources.min.json",
       "resourceType": "OperationDefinition"
     },
     {
-      "filename": "definitions/profiles-resources.json",
+      "filename": "definitions/profiles-resources.min.json",
       "resourceType": "StructureDefinition"
     },
     {
-      "filename": "definitions/profiles-types.json",
+      "filename": "definitions/profiles-types.min.json",
       "resourceType": "StructureDefinition"
     },
     {
-      "filename": "definitions/search-parameters.json",
+      "filename": "definitions/search-parameters.min.json",
       "resourceType": "SearchParameter"
     },
     {
-      "filename": "definitions/valuesets.json",
+      "filename": "definitions/valuesets.min.json",
       "resourceType": "CodeSystem"
     },
     {
-      "filename": "definitions/valuesets.json",
+      "filename": "definitions/valuesets.min.json",
       "resourceType": "ValueSet"
     }
   ]
