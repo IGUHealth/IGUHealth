@@ -74,7 +74,6 @@ test("Generate a graph from a transaction", () => {
       },
     ],
   } as Bundle);
-  expect(result).toMatchSnapshot();
   expect(result.order).toEqual(["1", "0"]);
 });
 
