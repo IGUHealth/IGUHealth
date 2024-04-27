@@ -34,6 +34,7 @@ function minimizeResource<
         title: resource.title,
         abstract: resource.abstract,
         url: resource.url,
+        version: resource.version,
         context: resource.context,
         type: resource.type,
         baseDefinition: resource.baseDefinition,
