@@ -67,20 +67,6 @@ exports[`Patient expansion 1`] = `
     "id": "Patient",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "rim",
-        "map": "Entity. Role, or Act",
-      },
-      {
-        "identity": "rim",
-        "map": "Patient[classCode=PAT]",
-      },
-      {
-        "identity": "cda",
-        "map": "ClinicalDocument.recordTarget.patientRole",
-      },
-    ],
     "max": "*",
     "min": 0,
     "path": "Patient",
@@ -252,12 +238,6 @@ exports[`Patient expansion 1`] = `
     "id": "Patient.text",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "rim",
-        "map": "Act.text?",
-      },
-    ],
     "max": "1",
     "min": 0,
     "path": "Patient.text",
@@ -284,12 +264,6 @@ exports[`Patient expansion 1`] = `
     "id": "Patient.contained",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "rim",
-        "map": "N/A",
-      },
-    ],
     "max": "*",
     "min": 0,
     "path": "Patient.contained",
@@ -333,12 +307,6 @@ exports[`Patient expansion 1`] = `
     "id": "Patient.extension",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "rim",
-        "map": "N/A",
-      },
-    ],
     "max": "*",
     "min": 0,
     "path": "Patient.extension",
@@ -385,12 +353,6 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
     "isModifier": true,
     "isModifierReason": "Modifier extensions are expected to modify the meaning or interpretation of the resource that contains them",
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "rim",
-        "map": "N/A",
-      },
-    ],
     "max": "*",
     "min": 0,
     "path": "Patient.modifierExtension",
@@ -422,24 +384,6 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
     "id": "Patient.identifier",
     "isModifier": false,
     "isSummary": true,
-    "mapping": [
-      {
-        "identity": "w5",
-        "map": "FiveWs.identifier",
-      },
-      {
-        "identity": "v2",
-        "map": "PID-3",
-      },
-      {
-        "identity": "rim",
-        "map": "id",
-      },
-      {
-        "identity": "cda",
-        "map": ".id",
-      },
-    ],
     "max": "1",
     "min": 0,
     "path": "Patient.identifier",
@@ -478,20 +422,6 @@ Deceased patients may also be marked as inactive for the same reasons, but may b
     "isModifier": true,
     "isModifierReason": "This element is labelled as a modifier because it is a status element that can indicate that a record should not be treated as valid",
     "isSummary": true,
-    "mapping": [
-      {
-        "identity": "w5",
-        "map": "FiveWs.status",
-      },
-      {
-        "identity": "rim",
-        "map": "statusCode",
-      },
-      {
-        "identity": "cda",
-        "map": "n/a",
-      },
-    ],
     "max": "1",
     "meaningWhenMissing": "This resource is generally assumed to be active if no value is provided for the active element",
     "min": 0,
@@ -525,20 +455,6 @@ Deceased patients may also be marked as inactive for the same reasons, but may b
     "id": "Patient.name",
     "isModifier": false,
     "isSummary": true,
-    "mapping": [
-      {
-        "identity": "v2",
-        "map": "PID-5, PID-9",
-      },
-      {
-        "identity": "rim",
-        "map": "name",
-      },
-      {
-        "identity": "cda",
-        "map": ".patient.name",
-      },
-    ],
     "max": "*",
     "min": 0,
     "path": "Patient.name",
@@ -571,20 +487,6 @@ Deceased patients may also be marked as inactive for the same reasons, but may b
     "id": "Patient.telecom",
     "isModifier": false,
     "isSummary": true,
-    "mapping": [
-      {
-        "identity": "v2",
-        "map": "PID-13, PID-14, PID-40",
-      },
-      {
-        "identity": "rim",
-        "map": "telecom",
-      },
-      {
-        "identity": "cda",
-        "map": ".telecom",
-      },
-    ],
     "max": "*",
     "min": 0,
     "path": "Patient.telecom",
@@ -632,20 +534,6 @@ Deceased patients may also be marked as inactive for the same reasons, but may b
     "id": "Patient.gender",
     "isModifier": false,
     "isSummary": true,
-    "mapping": [
-      {
-        "identity": "v2",
-        "map": "PID-8",
-      },
-      {
-        "identity": "rim",
-        "map": "player[classCode=PSN|ANM and determinerCode=INSTANCE]/administrativeGender",
-      },
-      {
-        "identity": "cda",
-        "map": ".patient.administrativeGenderCode",
-      },
-    ],
     "max": "1",
     "min": 0,
     "path": "Patient.gender",
@@ -678,24 +566,6 @@ Deceased patients may also be marked as inactive for the same reasons, but may b
     "id": "Patient.birthDate",
     "isModifier": false,
     "isSummary": true,
-    "mapping": [
-      {
-        "identity": "v2",
-        "map": "PID-7",
-      },
-      {
-        "identity": "rim",
-        "map": "player[classCode=PSN|ANM and determinerCode=INSTANCE]/birthTime",
-      },
-      {
-        "identity": "cda",
-        "map": ".patient.birthTime",
-      },
-      {
-        "identity": "loinc",
-        "map": "21112-8",
-      },
-    ],
     "max": "1",
     "min": 0,
     "path": "Patient.birthDate",
@@ -729,20 +599,6 @@ Deceased patients may also be marked as inactive for the same reasons, but may b
     "isModifier": true,
     "isModifierReason": "This element is labeled as a modifier because once a patient is marked as deceased, the actions that are appropriate to perform on the patient may be significantly different.",
     "isSummary": true,
-    "mapping": [
-      {
-        "identity": "v2",
-        "map": "PID-30  (bool) and PID-29 (datetime)",
-      },
-      {
-        "identity": "rim",
-        "map": "player[classCode=PSN|ANM and determinerCode=INSTANCE]/deceasedInd, player[classCode=PSN|ANM and determinerCode=INSTANCE]/deceasedTime",
-      },
-      {
-        "identity": "cda",
-        "map": "n/a",
-      },
-    ],
     "max": "1",
     "min": 0,
     "path": "Patient.deceased[x]",
@@ -778,20 +634,6 @@ Deceased patients may also be marked as inactive for the same reasons, but may b
     "id": "Patient.address",
     "isModifier": false,
     "isSummary": true,
-    "mapping": [
-      {
-        "identity": "v2",
-        "map": "PID-11",
-      },
-      {
-        "identity": "rim",
-        "map": "addr",
-      },
-      {
-        "identity": "cda",
-        "map": ".addr",
-      },
-    ],
     "max": "*",
     "min": 0,
     "path": "Patient.address",
@@ -838,20 +680,6 @@ Deceased patients may also be marked as inactive for the same reasons, but may b
     "id": "Patient.maritalStatus",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "v2",
-        "map": "PID-16",
-      },
-      {
-        "identity": "rim",
-        "map": "player[classCode=PSN]/maritalStatusCode",
-      },
-      {
-        "identity": "cda",
-        "map": ".patient.maritalStatusCode",
-      },
-    ],
     "max": "1",
     "min": 0,
     "path": "Patient.maritalStatus",
@@ -884,20 +712,6 @@ Deceased patients may also be marked as inactive for the same reasons, but may b
     "id": "Patient.multipleBirth[x]",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "v2",
-        "map": "PID-24 (bool), PID-25 (integer)",
-      },
-      {
-        "identity": "rim",
-        "map": "player[classCode=PSN|ANM and determinerCode=INSTANCE]/multipleBirthInd,  player[classCode=PSN|ANM and determinerCode=INSTANCE]/multipleBirthOrderNumber",
-      },
-      {
-        "identity": "cda",
-        "map": "n/a",
-      },
-    ],
     "max": "1",
     "min": 0,
     "path": "Patient.multipleBirth[x]",
@@ -936,20 +750,6 @@ Deceased patients may also be marked as inactive for the same reasons, but may b
     "id": "Patient.photo",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "v2",
-        "map": "OBX-5 - needs a profile",
-      },
-      {
-        "identity": "rim",
-        "map": "player[classCode=PSN|ANM and determinerCode=INSTANCE]/desc",
-      },
-      {
-        "identity": "cda",
-        "map": "n/a",
-      },
-    ],
     "max": "*",
     "min": 0,
     "path": "Patient.photo",
@@ -995,16 +795,6 @@ Deceased patients may also be marked as inactive for the same reasons, but may b
     "id": "Patient.contact",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "rim",
-        "map": "player[classCode=PSN|ANM and determinerCode=INSTANCE]/scopedRole[classCode=CON]",
-      },
-      {
-        "identity": "cda",
-        "map": "n/a",
-      },
-    ],
     "max": "*",
     "min": 0,
     "path": "Patient.contact",
@@ -1026,12 +816,6 @@ Deceased patients may also be marked as inactive for the same reasons, but may b
     "id": "Patient.contact.id",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "rim",
-        "map": "n/a",
-      },
-    ],
     "max": "1",
     "min": 0,
     "path": "Patient.contact.id",
@@ -1084,12 +868,6 @@ Deceased patients may also be marked as inactive for the same reasons, but may b
     "id": "Patient.contact.extension",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "rim",
-        "map": "n/a",
-      },
-    ],
     "max": "*",
     "min": 0,
     "path": "Patient.contact.extension",
@@ -1137,12 +915,6 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
     "isModifier": true,
     "isModifierReason": "Modifier extensions are expected to modify the meaning or interpretation of the element that contains them",
     "isSummary": true,
-    "mapping": [
-      {
-        "identity": "rim",
-        "map": "N/A",
-      },
-    ],
     "max": "*",
     "min": 0,
     "path": "Patient.contact.modifierExtension",
@@ -1185,20 +957,6 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
     "id": "Patient.contact.relationship",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "v2",
-        "map": "NK1-7, NK1-3",
-      },
-      {
-        "identity": "rim",
-        "map": "code",
-      },
-      {
-        "identity": "cda",
-        "map": "n/a",
-      },
-    ],
     "max": "*",
     "min": 0,
     "path": "Patient.contact.relationship",
@@ -1230,20 +988,6 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
     "id": "Patient.contact.name",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "v2",
-        "map": "NK1-2",
-      },
-      {
-        "identity": "rim",
-        "map": "name",
-      },
-      {
-        "identity": "cda",
-        "map": "n/a",
-      },
-    ],
     "max": "1",
     "min": 0,
     "path": "Patient.contact.name",
@@ -1276,20 +1020,6 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
     "id": "Patient.contact.telecom",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "v2",
-        "map": "NK1-5, NK1-6, NK1-40",
-      },
-      {
-        "identity": "rim",
-        "map": "telecom",
-      },
-      {
-        "identity": "cda",
-        "map": "n/a",
-      },
-    ],
     "max": "*",
     "min": 0,
     "path": "Patient.contact.telecom",
@@ -1321,20 +1051,6 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
     "id": "Patient.contact.address",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "v2",
-        "map": "NK1-4",
-      },
-      {
-        "identity": "rim",
-        "map": "addr",
-      },
-      {
-        "identity": "cda",
-        "map": "n/a",
-      },
-    ],
     "max": "1",
     "min": 0,
     "path": "Patient.contact.address",
@@ -1381,20 +1097,6 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
     "id": "Patient.contact.gender",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "v2",
-        "map": "NK1-15",
-      },
-      {
-        "identity": "rim",
-        "map": "player[classCode=PSN|ANM and determinerCode=INSTANCE]/administrativeGender",
-      },
-      {
-        "identity": "cda",
-        "map": "n/a",
-      },
-    ],
     "max": "1",
     "min": 0,
     "path": "Patient.contact.gender",
@@ -1429,20 +1131,6 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
     "id": "Patient.contact.organization",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "v2",
-        "map": "NK1-13, NK1-30, NK1-31, NK1-32, NK1-41",
-      },
-      {
-        "identity": "rim",
-        "map": "scoper",
-      },
-      {
-        "identity": "cda",
-        "map": "n/a",
-      },
-    ],
     "max": "1",
     "min": 0,
     "path": "Patient.contact.organization",
@@ -1477,16 +1165,6 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
     "id": "Patient.contact.period",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "rim",
-        "map": "effectiveTime",
-      },
-      {
-        "identity": "cda",
-        "map": "n/a",
-      },
-    ],
     "max": "1",
     "min": 0,
     "path": "Patient.contact.period",
@@ -1518,16 +1196,6 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
     "id": "Patient.communication",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "rim",
-        "map": "LanguageCommunication",
-      },
-      {
-        "identity": "cda",
-        "map": "patient.languageCommunication",
-      },
-    ],
     "max": "*",
     "min": 0,
     "path": "Patient.communication",
@@ -1549,12 +1217,6 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
     "id": "Patient.communication.id",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "rim",
-        "map": "n/a",
-      },
-    ],
     "max": "1",
     "min": 0,
     "path": "Patient.communication.id",
@@ -1607,12 +1269,6 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
     "id": "Patient.communication.extension",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "rim",
-        "map": "n/a",
-      },
-    ],
     "max": "*",
     "min": 0,
     "path": "Patient.communication.extension",
@@ -1660,12 +1316,6 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
     "isModifier": true,
     "isModifierReason": "Modifier extensions are expected to modify the meaning or interpretation of the element that contains them",
     "isSummary": true,
-    "mapping": [
-      {
-        "identity": "rim",
-        "map": "N/A",
-      },
-    ],
     "max": "*",
     "min": 0,
     "path": "Patient.communication.modifierExtension",
@@ -1717,20 +1367,6 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
     "id": "Patient.communication.language",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "v2",
-        "map": "PID-15, LAN-2",
-      },
-      {
-        "identity": "rim",
-        "map": "player[classCode=PSN|ANM and determinerCode=INSTANCE]/languageCommunication/code",
-      },
-      {
-        "identity": "cda",
-        "map": ".languageCode",
-      },
-    ],
     "max": "1",
     "min": 1,
     "path": "Patient.communication.language",
@@ -1763,20 +1399,6 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
     "id": "Patient.communication.preferred",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "v2",
-        "map": "PID-15",
-      },
-      {
-        "identity": "rim",
-        "map": "preferenceInd",
-      },
-      {
-        "identity": "cda",
-        "map": ".preferenceInd",
-      },
-    ],
     "max": "1",
     "min": 0,
     "path": "Patient.communication.preferred",
@@ -1815,20 +1437,6 @@ Jurisdictions may decide that they can profile this down to 1 if desired, or 1 p
     "id": "Patient.generalPractitioner",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "v2",
-        "map": "PD1-4",
-      },
-      {
-        "identity": "rim",
-        "map": "subjectOf.CareEvent.performer.AssignedEntity",
-      },
-      {
-        "identity": "cda",
-        "map": "n/a",
-      },
-    ],
     "max": "*",
     "min": 0,
     "path": "Patient.generalPractitioner",
@@ -1865,16 +1473,6 @@ Jurisdictions may decide that they can profile this down to 1 if desired, or 1 p
     "id": "Patient.managingOrganization",
     "isModifier": false,
     "isSummary": true,
-    "mapping": [
-      {
-        "identity": "rim",
-        "map": "scoper",
-      },
-      {
-        "identity": "cda",
-        "map": ".providerOrganization",
-      },
-    ],
     "max": "1",
     "min": 0,
     "path": "Patient.managingOrganization",
@@ -1911,16 +1509,6 @@ Jurisdictions may decide that they can profile this down to 1 if desired, or 1 p
     "isModifier": true,
     "isModifierReason": "This element is labeled as a modifier because it might not be the main Patient resource, and the referenced patient should be used instead of this Patient record. This is when the link.type value is 'replaced-by'",
     "isSummary": true,
-    "mapping": [
-      {
-        "identity": "rim",
-        "map": "outboundLink",
-      },
-      {
-        "identity": "cda",
-        "map": "n/a",
-      },
-    ],
     "max": "*",
     "min": 0,
     "path": "Patient.link",
@@ -1945,12 +1533,6 @@ Jurisdictions may decide that they can profile this down to 1 if desired, or 1 p
     "id": "Patient.link.id",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "rim",
-        "map": "n/a",
-      },
-    ],
     "max": "1",
     "min": 0,
     "path": "Patient.link.id",
@@ -2003,12 +1585,6 @@ Jurisdictions may decide that they can profile this down to 1 if desired, or 1 p
     "id": "Patient.link.extension",
     "isModifier": false,
     "isSummary": false,
-    "mapping": [
-      {
-        "identity": "rim",
-        "map": "n/a",
-      },
-    ],
     "max": "*",
     "min": 0,
     "path": "Patient.link.extension",
@@ -2056,12 +1632,6 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
     "isModifier": true,
     "isModifierReason": "Modifier extensions are expected to modify the meaning or interpretation of the element that contains them",
     "isSummary": true,
-    "mapping": [
-      {
-        "identity": "rim",
-        "map": "N/A",
-      },
-    ],
     "max": "*",
     "min": 0,
     "path": "Patient.link.modifierExtension",
@@ -2094,20 +1664,6 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
     "id": "Patient.link.other",
     "isModifier": false,
     "isSummary": true,
-    "mapping": [
-      {
-        "identity": "v2",
-        "map": "PID-3, MRG-1",
-      },
-      {
-        "identity": "rim",
-        "map": "id",
-      },
-      {
-        "identity": "cda",
-        "map": "n/a",
-      },
-    ],
     "max": "1",
     "min": 1,
     "path": "Patient.link.other",
@@ -2159,16 +1715,6 @@ Modifier extensions SHALL NOT change the meaning of any elements on Resource or 
     "id": "Patient.link.type",
     "isModifier": false,
     "isSummary": true,
-    "mapping": [
-      {
-        "identity": "rim",
-        "map": "typeCode",
-      },
-      {
-        "identity": "cda",
-        "map": "n/a",
-      },
-    ],
     "max": "1",
     "min": 1,
     "path": "Patient.link.type",

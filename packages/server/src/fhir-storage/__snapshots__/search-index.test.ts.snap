@@ -24369,18 +24369,14 @@ exports[`Testing indexing resourceType 'StructureDefinition' 3`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 4`] = `
 [
   "CapabilityStatement.date | CodeSystem.date | CompartmentDefinition.date | ConceptMap.date | GraphDefinition.date | ImplementationGuide.date | MessageDefinition.date | NamingSystem.date | OperationDefinition.date | SearchParameter.date | StructureDefinition.date | StructureMap.date | TerminologyCapabilities.date | ValueSet.date",
-  [
-    "2019-11-01T09:29:23+11:00",
-  ],
+  [],
 ]
 `;
 
 exports[`Testing indexing resourceType 'StructureDefinition' 5`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
-  [
-    "A financial tool for tracking value accrued for a particular purpose.  In the healthcare field, used to track charges for a patient, cost centers, etc.",
-  ],
+  [],
 ]
 `;
 
@@ -24403,9 +24399,7 @@ exports[`Testing indexing resourceType 'StructureDefinition' 7`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 8`] = `
 [
   "CapabilityStatement.publisher | CodeSystem.publisher | CompartmentDefinition.publisher | ConceptMap.publisher | GraphDefinition.publisher | ImplementationGuide.publisher | MessageDefinition.publisher | NamingSystem.publisher | OperationDefinition.publisher | SearchParameter.publisher | StructureDefinition.publisher | StructureMap.publisher | TerminologyCapabilities.publisher | ValueSet.publisher",
-  [
-    "Health Level Seven International (Patient Administration)",
-  ],
+  [],
 ]
 `;
 
@@ -24595,23 +24589,6 @@ exports[`Testing indexing resourceType 'StructureDefinition' 24`] = `
     "Account.guarantor.onHold",
     "Account.guarantor.period",
     "Account.partOf",
-    "Account",
-    "Account.identifier",
-    "Account.status",
-    "Account.type",
-    "Account.name",
-    "Account.subject",
-    "Account.servicePeriod",
-    "Account.coverage",
-    "Account.coverage.coverage",
-    "Account.coverage.priority",
-    "Account.owner",
-    "Account.description",
-    "Account.guarantor",
-    "Account.guarantor.party",
-    "Account.guarantor.onHold",
-    "Account.guarantor.period",
-    "Account.partOf",
   ],
 ]
 `;
@@ -24660,18 +24637,14 @@ exports[`Testing indexing resourceType 'StructureDefinition' 29`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 30`] = `
 [
   "CapabilityStatement.date | CodeSystem.date | CompartmentDefinition.date | ConceptMap.date | GraphDefinition.date | ImplementationGuide.date | MessageDefinition.date | NamingSystem.date | OperationDefinition.date | SearchParameter.date | StructureDefinition.date | StructureMap.date | TerminologyCapabilities.date | ValueSet.date",
-  [
-    "2019-11-01T09:29:23+11:00",
-  ],
+  [],
 ]
 `;
 
 exports[`Testing indexing resourceType 'StructureDefinition' 31`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
-  [
-    "This resource allows for the definition of some activity to be performed, independent of a particular patient, practitioner, or other performance context.",
-  ],
+  [],
 ]
 `;
 
@@ -24694,9 +24667,7 @@ exports[`Testing indexing resourceType 'StructureDefinition' 33`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 34`] = `
 [
   "CapabilityStatement.publisher | CodeSystem.publisher | CompartmentDefinition.publisher | ConceptMap.publisher | GraphDefinition.publisher | ImplementationGuide.publisher | MessageDefinition.publisher | NamingSystem.publisher | OperationDefinition.publisher | SearchParameter.publisher | StructureDefinition.publisher | StructureMap.publisher | TerminologyCapabilities.publisher | ValueSet.publisher",
-  [
-    "Health Level Seven International (Clinical Decision Support)",
-  ],
+  [],
 ]
 `;
 
@@ -24954,57 +24925,6 @@ exports[`Testing indexing resourceType 'StructureDefinition' 50`] = `
     "ActivityDefinition.dynamicValue.modifierExtension",
     "ActivityDefinition.dynamicValue.path",
     "ActivityDefinition.dynamicValue.expression",
-    "ActivityDefinition",
-    "ActivityDefinition.url",
-    "ActivityDefinition.identifier",
-    "ActivityDefinition.version",
-    "ActivityDefinition.name",
-    "ActivityDefinition.title",
-    "ActivityDefinition.subtitle",
-    "ActivityDefinition.status",
-    "ActivityDefinition.experimental",
-    "ActivityDefinition.subject[x]",
-    "ActivityDefinition.date",
-    "ActivityDefinition.publisher",
-    "ActivityDefinition.contact",
-    "ActivityDefinition.description",
-    "ActivityDefinition.useContext",
-    "ActivityDefinition.jurisdiction",
-    "ActivityDefinition.purpose",
-    "ActivityDefinition.usage",
-    "ActivityDefinition.copyright",
-    "ActivityDefinition.approvalDate",
-    "ActivityDefinition.lastReviewDate",
-    "ActivityDefinition.effectivePeriod",
-    "ActivityDefinition.topic",
-    "ActivityDefinition.author",
-    "ActivityDefinition.editor",
-    "ActivityDefinition.reviewer",
-    "ActivityDefinition.endorser",
-    "ActivityDefinition.relatedArtifact",
-    "ActivityDefinition.library",
-    "ActivityDefinition.kind",
-    "ActivityDefinition.profile",
-    "ActivityDefinition.code",
-    "ActivityDefinition.intent",
-    "ActivityDefinition.priority",
-    "ActivityDefinition.doNotPerform",
-    "ActivityDefinition.timing[x]",
-    "ActivityDefinition.location",
-    "ActivityDefinition.participant",
-    "ActivityDefinition.participant.type",
-    "ActivityDefinition.participant.role",
-    "ActivityDefinition.product[x]",
-    "ActivityDefinition.quantity",
-    "ActivityDefinition.dosage",
-    "ActivityDefinition.bodySite",
-    "ActivityDefinition.specimenRequirement",
-    "ActivityDefinition.observationRequirement",
-    "ActivityDefinition.observationResultRequirement",
-    "ActivityDefinition.transform",
-    "ActivityDefinition.dynamicValue",
-    "ActivityDefinition.dynamicValue.path",
-    "ActivityDefinition.dynamicValue.expression",
   ],
 ]
 `;
@@ -25063,18 +24983,14 @@ exports[`Testing indexing resourceType 'StructureDefinition' 55`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 56`] = `
 [
   "CapabilityStatement.date | CodeSystem.date | CompartmentDefinition.date | ConceptMap.date | GraphDefinition.date | ImplementationGuide.date | MessageDefinition.date | NamingSystem.date | OperationDefinition.date | SearchParameter.date | StructureDefinition.date | StructureMap.date | TerminologyCapabilities.date | ValueSet.date",
-  [
-    "2019-11-01T09:29:23+11:00",
-  ],
+  [],
 ]
 `;
 
 exports[`Testing indexing resourceType 'StructureDefinition' 57`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
-  [
-    "Base StructureDefinition for Address Type: An address expressed using postal conventions (as opposed to GPS or other location definition formats).  This data type may be used to convey addresses for use in delivering mail as well as for visiting locations which might not be valid for mail delivery.  There are a variety of postal address formats defined around the world.",
-  ],
+  [],
 ]
 `;
 
@@ -25097,9 +25013,7 @@ exports[`Testing indexing resourceType 'StructureDefinition' 59`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 60`] = `
 [
   "CapabilityStatement.publisher | CodeSystem.publisher | CompartmentDefinition.publisher | ConceptMap.publisher | GraphDefinition.publisher | ImplementationGuide.publisher | MessageDefinition.publisher | NamingSystem.publisher | OperationDefinition.publisher | SearchParameter.publisher | StructureDefinition.publisher | StructureMap.publisher | TerminologyCapabilities.publisher | ValueSet.publisher",
-  [
-    "HL7 FHIR Standard",
-  ],
+  [],
 ]
 `;
 
@@ -25253,17 +25167,6 @@ exports[`Testing indexing resourceType 'StructureDefinition' 76`] = `
     "Address.postalCode",
     "Address.country",
     "Address.period",
-    "Address",
-    "Address.use",
-    "Address.type",
-    "Address.text",
-    "Address.line",
-    "Address.city",
-    "Address.district",
-    "Address.state",
-    "Address.postalCode",
-    "Address.country",
-    "Address.period",
   ],
 ]
 `;
@@ -25311,18 +25214,14 @@ exports[`Testing indexing resourceType 'StructureDefinition' 81`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 82`] = `
 [
   "CapabilityStatement.date | CodeSystem.date | CompartmentDefinition.date | ConceptMap.date | GraphDefinition.date | ImplementationGuide.date | MessageDefinition.date | NamingSystem.date | OperationDefinition.date | SearchParameter.date | StructureDefinition.date | StructureMap.date | TerminologyCapabilities.date | ValueSet.date",
-  [
-    "2019-11-01T09:29:23+11:00",
-  ],
+  [],
 ]
 `;
 
 exports[`Testing indexing resourceType 'StructureDefinition' 83`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
-  [
-    "Actual or  potential/avoided event causing unintended physical injury resulting from or contributed to by medical care, a research study or other healthcare setting factors that requires additional monitoring, treatment, or hospitalization, or that results in death.",
-  ],
+  [],
 ]
 `;
 
@@ -25345,9 +25244,7 @@ exports[`Testing indexing resourceType 'StructureDefinition' 85`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 86`] = `
 [
   "CapabilityStatement.publisher | CodeSystem.publisher | CompartmentDefinition.publisher | ConceptMap.publisher | GraphDefinition.publisher | ImplementationGuide.publisher | MessageDefinition.publisher | NamingSystem.publisher | OperationDefinition.publisher | SearchParameter.publisher | StructureDefinition.publisher | StructureMap.publisher | TerminologyCapabilities.publisher | ValueSet.publisher",
-  [
-    "Health Level Seven International (Patient Care)",
-  ],
+  [],
 ]
 `;
 
@@ -25557,33 +25454,6 @@ exports[`Testing indexing resourceType 'StructureDefinition' 102`] = `
     "AdverseEvent.subjectMedicalHistory",
     "AdverseEvent.referenceDocument",
     "AdverseEvent.study",
-    "AdverseEvent",
-    "AdverseEvent.identifier",
-    "AdverseEvent.actuality",
-    "AdverseEvent.category",
-    "AdverseEvent.event",
-    "AdverseEvent.subject",
-    "AdverseEvent.encounter",
-    "AdverseEvent.date",
-    "AdverseEvent.detected",
-    "AdverseEvent.recordedDate",
-    "AdverseEvent.resultingCondition",
-    "AdverseEvent.location",
-    "AdverseEvent.seriousness",
-    "AdverseEvent.severity",
-    "AdverseEvent.outcome",
-    "AdverseEvent.recorder",
-    "AdverseEvent.contributor",
-    "AdverseEvent.suspectEntity",
-    "AdverseEvent.suspectEntity.instance",
-    "AdverseEvent.suspectEntity.causality",
-    "AdverseEvent.suspectEntity.causality.assessment",
-    "AdverseEvent.suspectEntity.causality.productRelatedness",
-    "AdverseEvent.suspectEntity.causality.author",
-    "AdverseEvent.suspectEntity.causality.method",
-    "AdverseEvent.subjectMedicalHistory",
-    "AdverseEvent.referenceDocument",
-    "AdverseEvent.study",
   ],
 ]
 `;
@@ -25638,18 +25508,14 @@ exports[`Testing indexing resourceType 'StructureDefinition' 107`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 108`] = `
 [
   "CapabilityStatement.date | CodeSystem.date | CompartmentDefinition.date | ConceptMap.date | GraphDefinition.date | ImplementationGuide.date | MessageDefinition.date | NamingSystem.date | OperationDefinition.date | SearchParameter.date | StructureDefinition.date | StructureMap.date | TerminologyCapabilities.date | ValueSet.date",
-  [
-    "2019-11-01T09:29:23+11:00",
-  ],
+  [],
 ]
 `;
 
 exports[`Testing indexing resourceType 'StructureDefinition' 109`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
-  [
-    "Base StructureDefinition for Age Type: A duration of time during which an organism (or a process) has existed.",
-  ],
+  [],
 ]
 `;
 
@@ -25672,9 +25538,7 @@ exports[`Testing indexing resourceType 'StructureDefinition' 111`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 112`] = `
 [
   "CapabilityStatement.publisher | CodeSystem.publisher | CompartmentDefinition.publisher | ConceptMap.publisher | GraphDefinition.publisher | ImplementationGuide.publisher | MessageDefinition.publisher | NamingSystem.publisher | OperationDefinition.publisher | SearchParameter.publisher | StructureDefinition.publisher | StructureMap.publisher | TerminologyCapabilities.publisher | ValueSet.publisher",
-  [
-    "HL7 FHIR Standard",
-  ],
+  [],
 ]
 `;
 
@@ -25818,7 +25682,6 @@ exports[`Testing indexing resourceType 'StructureDefinition' 128`] = `
     "Age.unit",
     "Age.system",
     "Age.code",
-    "Age",
   ],
 ]
 `;
@@ -25866,18 +25729,14 @@ exports[`Testing indexing resourceType 'StructureDefinition' 133`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 134`] = `
 [
   "CapabilityStatement.date | CodeSystem.date | CompartmentDefinition.date | ConceptMap.date | GraphDefinition.date | ImplementationGuide.date | MessageDefinition.date | NamingSystem.date | OperationDefinition.date | SearchParameter.date | StructureDefinition.date | StructureMap.date | TerminologyCapabilities.date | ValueSet.date",
-  [
-    "2019-11-01T09:29:23+11:00",
-  ],
+  [],
 ]
 `;
 
 exports[`Testing indexing resourceType 'StructureDefinition' 135`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
-  [
-    "Risk of harmful or undesirable, physiological response which is unique to an individual and associated with exposure to a substance.",
-  ],
+  [],
 ]
 `;
 
@@ -25900,9 +25759,7 @@ exports[`Testing indexing resourceType 'StructureDefinition' 137`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 138`] = `
 [
   "CapabilityStatement.publisher | CodeSystem.publisher | CompartmentDefinition.publisher | ConceptMap.publisher | GraphDefinition.publisher | ImplementationGuide.publisher | MessageDefinition.publisher | NamingSystem.publisher | OperationDefinition.publisher | SearchParameter.publisher | StructureDefinition.publisher | StructureMap.publisher | TerminologyCapabilities.publisher | ValueSet.publisher",
-  [
-    "Health Level Seven International (Patient Care)",
-  ],
+  [],
 ]
 `;
 
@@ -26100,30 +25957,6 @@ exports[`Testing indexing resourceType 'StructureDefinition' 154`] = `
     "AllergyIntolerance.reaction.severity",
     "AllergyIntolerance.reaction.exposureRoute",
     "AllergyIntolerance.reaction.note",
-    "AllergyIntolerance",
-    "AllergyIntolerance.identifier",
-    "AllergyIntolerance.clinicalStatus",
-    "AllergyIntolerance.verificationStatus",
-    "AllergyIntolerance.type",
-    "AllergyIntolerance.category",
-    "AllergyIntolerance.criticality",
-    "AllergyIntolerance.code",
-    "AllergyIntolerance.patient",
-    "AllergyIntolerance.encounter",
-    "AllergyIntolerance.onset[x]",
-    "AllergyIntolerance.recordedDate",
-    "AllergyIntolerance.recorder",
-    "AllergyIntolerance.asserter",
-    "AllergyIntolerance.lastOccurrence",
-    "AllergyIntolerance.note",
-    "AllergyIntolerance.reaction",
-    "AllergyIntolerance.reaction.substance",
-    "AllergyIntolerance.reaction.manifestation",
-    "AllergyIntolerance.reaction.description",
-    "AllergyIntolerance.reaction.onset",
-    "AllergyIntolerance.reaction.severity",
-    "AllergyIntolerance.reaction.exposureRoute",
-    "AllergyIntolerance.reaction.note",
   ],
 ]
 `;
@@ -26180,18 +26013,14 @@ exports[`Testing indexing resourceType 'StructureDefinition' 159`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 160`] = `
 [
   "CapabilityStatement.date | CodeSystem.date | CompartmentDefinition.date | ConceptMap.date | GraphDefinition.date | ImplementationGuide.date | MessageDefinition.date | NamingSystem.date | OperationDefinition.date | SearchParameter.date | StructureDefinition.date | StructureMap.date | TerminologyCapabilities.date | ValueSet.date",
-  [
-    "2019-11-01T09:29:23+11:00",
-  ],
+  [],
 ]
 `;
 
 exports[`Testing indexing resourceType 'StructureDefinition' 161`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
-  [
-    "Base StructureDefinition for Annotation Type: A  text note which also  contains information about who made the statement and when.",
-  ],
+  [],
 ]
 `;
 
@@ -26214,9 +26043,7 @@ exports[`Testing indexing resourceType 'StructureDefinition' 163`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 164`] = `
 [
   "CapabilityStatement.publisher | CodeSystem.publisher | CompartmentDefinition.publisher | ConceptMap.publisher | GraphDefinition.publisher | ImplementationGuide.publisher | MessageDefinition.publisher | NamingSystem.publisher | OperationDefinition.publisher | SearchParameter.publisher | StructureDefinition.publisher | StructureMap.publisher | TerminologyCapabilities.publisher | ValueSet.publisher",
-  [
-    "HL7 FHIR Standard",
-  ],
+  [],
 ]
 `;
 
@@ -26356,10 +26183,6 @@ exports[`Testing indexing resourceType 'StructureDefinition' 180`] = `
     "Annotation.author[x]",
     "Annotation.time",
     "Annotation.text",
-    "Annotation",
-    "Annotation.author[x]",
-    "Annotation.time",
-    "Annotation.text",
   ],
 ]
 `;
@@ -26404,18 +26227,14 @@ exports[`Testing indexing resourceType 'StructureDefinition' 185`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 186`] = `
 [
   "CapabilityStatement.date | CodeSystem.date | CompartmentDefinition.date | ConceptMap.date | GraphDefinition.date | ImplementationGuide.date | MessageDefinition.date | NamingSystem.date | OperationDefinition.date | SearchParameter.date | StructureDefinition.date | StructureMap.date | TerminologyCapabilities.date | ValueSet.date",
-  [
-    "2019-11-01T09:29:23+11:00",
-  ],
+  [],
 ]
 `;
 
 exports[`Testing indexing resourceType 'StructureDefinition' 187`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
-  [
-    "A booking of a healthcare event among patient(s), practitioner(s), related person(s) and/or device(s) for a specific date/time. This may result in one or more Encounter(s).",
-  ],
+  [],
 ]
 `;
 
@@ -26438,9 +26257,7 @@ exports[`Testing indexing resourceType 'StructureDefinition' 189`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 190`] = `
 [
   "CapabilityStatement.publisher | CodeSystem.publisher | CompartmentDefinition.publisher | ConceptMap.publisher | GraphDefinition.publisher | ImplementationGuide.publisher | MessageDefinition.publisher | NamingSystem.publisher | OperationDefinition.publisher | SearchParameter.publisher | StructureDefinition.publisher | StructureMap.publisher | TerminologyCapabilities.publisher | ValueSet.publisher",
-  [
-    "Health Level Seven International (Patient Administration)",
-  ],
+  [],
 ]
 `;
 
@@ -26646,34 +26463,6 @@ exports[`Testing indexing resourceType 'StructureDefinition' 206`] = `
     "Appointment.participant.status",
     "Appointment.participant.period",
     "Appointment.requestedPeriod",
-    "Appointment",
-    "Appointment.identifier",
-    "Appointment.status",
-    "Appointment.cancelationReason",
-    "Appointment.serviceCategory",
-    "Appointment.serviceType",
-    "Appointment.specialty",
-    "Appointment.appointmentType",
-    "Appointment.reasonCode",
-    "Appointment.reasonReference",
-    "Appointment.priority",
-    "Appointment.description",
-    "Appointment.supportingInformation",
-    "Appointment.start",
-    "Appointment.end",
-    "Appointment.minutesDuration",
-    "Appointment.slot",
-    "Appointment.created",
-    "Appointment.comment",
-    "Appointment.patientInstruction",
-    "Appointment.basedOn",
-    "Appointment.participant",
-    "Appointment.participant.type",
-    "Appointment.participant.actor",
-    "Appointment.participant.required",
-    "Appointment.participant.status",
-    "Appointment.participant.period",
-    "Appointment.requestedPeriod",
   ],
 ]
 `;
@@ -26730,18 +26519,14 @@ exports[`Testing indexing resourceType 'StructureDefinition' 211`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 212`] = `
 [
   "CapabilityStatement.date | CodeSystem.date | CompartmentDefinition.date | ConceptMap.date | GraphDefinition.date | ImplementationGuide.date | MessageDefinition.date | NamingSystem.date | OperationDefinition.date | SearchParameter.date | StructureDefinition.date | StructureMap.date | TerminologyCapabilities.date | ValueSet.date",
-  [
-    "2019-11-01T09:29:23+11:00",
-  ],
+  [],
 ]
 `;
 
 exports[`Testing indexing resourceType 'StructureDefinition' 213`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
-  [
-    "A reply to an appointment request for a patient and/or practitioner(s), such as a confirmation or rejection.",
-  ],
+  [],
 ]
 `;
 
@@ -26764,9 +26549,7 @@ exports[`Testing indexing resourceType 'StructureDefinition' 215`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 216`] = `
 [
   "CapabilityStatement.publisher | CodeSystem.publisher | CompartmentDefinition.publisher | ConceptMap.publisher | GraphDefinition.publisher | ImplementationGuide.publisher | MessageDefinition.publisher | NamingSystem.publisher | OperationDefinition.publisher | SearchParameter.publisher | StructureDefinition.publisher | StructureMap.publisher | TerminologyCapabilities.publisher | ValueSet.publisher",
-  [
-    "Health Level Seven International (Patient Administration)",
-  ],
+  [],
 ]
 `;
 
@@ -26928,15 +26711,6 @@ exports[`Testing indexing resourceType 'StructureDefinition' 232`] = `
     "AppointmentResponse.actor",
     "AppointmentResponse.participantStatus",
     "AppointmentResponse.comment",
-    "AppointmentResponse",
-    "AppointmentResponse.identifier",
-    "AppointmentResponse.appointment",
-    "AppointmentResponse.start",
-    "AppointmentResponse.end",
-    "AppointmentResponse.participantType",
-    "AppointmentResponse.actor",
-    "AppointmentResponse.participantStatus",
-    "AppointmentResponse.comment",
   ],
 ]
 `;
@@ -26985,18 +26759,14 @@ exports[`Testing indexing resourceType 'StructureDefinition' 237`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 238`] = `
 [
   "CapabilityStatement.date | CodeSystem.date | CompartmentDefinition.date | ConceptMap.date | GraphDefinition.date | ImplementationGuide.date | MessageDefinition.date | NamingSystem.date | OperationDefinition.date | SearchParameter.date | StructureDefinition.date | StructureMap.date | TerminologyCapabilities.date | ValueSet.date",
-  [
-    "2019-11-01T09:29:23+11:00",
-  ],
+  [],
 ]
 `;
 
 exports[`Testing indexing resourceType 'StructureDefinition' 239`] = `
 [
   "CapabilityStatement.description | CodeSystem.description | CompartmentDefinition.description | ConceptMap.description | GraphDefinition.description | ImplementationGuide.description | MessageDefinition.description | NamingSystem.description | OperationDefinition.description | SearchParameter.description | StructureDefinition.description | StructureMap.description | TerminologyCapabilities.description | ValueSet.description",
-  [
-    "Base StructureDefinition for Attachment Type: For referring to data content defined in other formats.",
-  ],
+  [],
 ]
 `;
 
@@ -27019,9 +26789,7 @@ exports[`Testing indexing resourceType 'StructureDefinition' 241`] = `
 exports[`Testing indexing resourceType 'StructureDefinition' 242`] = `
 [
   "CapabilityStatement.publisher | CodeSystem.publisher | CompartmentDefinition.publisher | ConceptMap.publisher | GraphDefinition.publisher | ImplementationGuide.publisher | MessageDefinition.publisher | NamingSystem.publisher | OperationDefinition.publisher | SearchParameter.publisher | StructureDefinition.publisher | StructureMap.publisher | TerminologyCapabilities.publisher | ValueSet.publisher",
-  [
-    "HL7 FHIR Standard",
-  ],
+  [],
 ]
 `;
 
@@ -27163,15 +26931,6 @@ exports[`Testing indexing resourceType 'StructureDefinition' 258`] = `
     "Attachment",
     "Attachment.id",
     "Attachment.extension",
-    "Attachment.contentType",
-    "Attachment.language",
-    "Attachment.data",
-    "Attachment.url",
-    "Attachment.size",
-    "Attachment.hash",
-    "Attachment.title",
-    "Attachment.creation",
-    "Attachment",
     "Attachment.contentType",
     "Attachment.language",
     "Attachment.data",

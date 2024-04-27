@@ -3,6 +3,7 @@ import { Command } from "commander";
 import { apiCommands } from "./api.js";
 import { codeGenerationCommands } from "./codeGeneration.js";
 import { configurationCommands } from "./config.js";
+import { minimizeCommands } from "./minimize.js";
 
 const program = new Command();
 
@@ -14,5 +15,6 @@ program
 configurationCommands(program.command("config"));
 codeGenerationCommands(program.command("generate"));
 apiCommands(program.command("api"));
+minimizeCommands(program.command("minimize"));
 
 program.parse();
