@@ -36,7 +36,7 @@
     "@iguhealth/fhir-types": "workspace:^",
     "@iguhealth/hl7.fhir.r4.core": "workspace:^",
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^",
-    "typescript": "~5.4.4"
+    "typescript": "~5.4.5"
   },
   "browserslist": {
     "production": [
