@@ -1,6 +1,6 @@
 import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
 import parseUrl from "@iguhealth/client/url";
-import { resourceTypes as r4ResourceTypes } from "@iguhealth/fhir-types/r4/sets";
+import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import * as r4 from "@iguhealth/fhir-types/r4/types";
 import { resourceTypes as r4bResourceTypes } from "@iguhealth/fhir-types/r4b/sets";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
@@ -75,7 +75,7 @@ function verifyResourceType<Version extends FHIR_VERSION>(
 ): r is Version extends R4 ? r4.ResourceType : r4b.ResourceType {
   switch (fhirVersion) {
     case R4: {
-      return r4ResourceTypes.has(r);
+      return resourceTypes.has(r);
     }
     case R4B: {
       return r4bResourceTypes.has(r);

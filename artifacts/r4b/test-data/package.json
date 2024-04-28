@@ -8,6 +8,13 @@
   "fhirVersions": [
     "4.3.0"
   ],
+  "canonical": "https://iguhealth.app/fhir/ImplementationGuide/iguhealth.hl7.fhir.r4b.test-data",
+  "url": "https://iguhealth.app/fhir/ImplementationGuide/iguhealth.hl7.fhir.r4b.test-data",
+  "homepage": "https://docs.iguhealth.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IGUHealth/IGUHealth.git"
+  },
   "author": "IGUHealth",
   "maintainers": [
     {
