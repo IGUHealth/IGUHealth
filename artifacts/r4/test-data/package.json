@@ -1,5 +1,5 @@
 {
-  "name": "@iguhealth/test-data",
+  "name": "@iguhealth/hl7.fhir.r4.test-data",
   "packageManager": "yarn@4.1.1",
   "version": "0.1.32",
   "homepage": "https://docs.iguhealth.app",

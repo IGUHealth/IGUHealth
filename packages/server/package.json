@@ -82,7 +82,7 @@
     "@babel/preset-env": "^7.24.4",
     "@babel/preset-typescript": "^7.24.1",
     "@iguhealth/fhir-types": "workspace:^",
-    "@iguhealth/test-data": "workspace:^",
+    "@iguhealth/hl7.fhir.r4.test-data": "workspace:^",
     "@jest/globals": "^29.7.0",
     "@types/adm-zip": "^0.5.5",
     "@types/jest": "^29.5.12",

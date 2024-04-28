@@ -22,12 +22,20 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:artifacts/r4/iguhealth-core"\
     },\
     {\
-      "name": "@iguhealth/test-data",\
+      "name": "@iguhealth/hl7.fhir.r4.test-data",\
       "reference": "workspace:artifacts/r4/test-data"\
     },\
     {\
       "name": "@iguhealth/hl7.fhir.r4b.core",\
       "reference": "workspace:artifacts/r4b/hl7-core"\
+    },\
+    {\
+      "name": "@iguhealth/hl7.fhir.r4b.test-data",\
+      "reference": "workspace:artifacts/r4b/test-data"\
+    },\
+    {\
+      "name": "hl7.fhir.r4b.examples",\
+      "reference": "workspace:artifacts/r4b/test-data/examples-json"\
     },\
     {\
       "name": "@iguhealth/admin-app",\
@@ -128,7 +136,9 @@ const RAW_RUNTIME_STATE =
     ["@iguhealth/fhirpath", ["workspace:packages/fhirpath"]],\
     ["@iguhealth/generated-ops", ["workspace:packages/generated-ops"]],\
     ["@iguhealth/hl7.fhir.r4.core", ["workspace:artifacts/r4/hl7-core"]],\
+    ["@iguhealth/hl7.fhir.r4.test-data", ["workspace:artifacts/r4/test-data"]],\
     ["@iguhealth/hl7.fhir.r4b.core", ["workspace:artifacts/r4b/hl7-core"]],\
+    ["@iguhealth/hl7.fhir.r4b.test-data", ["workspace:artifacts/r4b/test-data"]],\
     ["@iguhealth/iguhealth.fhir.r4.core", ["workspace:artifacts/r4/iguhealth-core"]],\
     ["@iguhealth/jwt", ["workspace:packages/jwt"]],\
     ["@iguhealth/meta-value", ["workspace:packages/meta-value"]],\
@@ -136,7 +146,7 @@ const RAW_RUNTIME_STATE =
     ["@iguhealth/operation-outcomes", ["workspace:packages/operation-outcomes"]],\
     ["@iguhealth/rs_cpu-count", ["workspace:packages/rs_cpu-count"]],\
     ["@iguhealth/server", ["workspace:packages/server"]],\
-    ["@iguhealth/test-data", ["workspace:artifacts/r4/test-data"]],\
+    ["hl7.fhir.r4b.examples", ["workspace:artifacts/r4b/test-data/examples-json"]],\
     ["iguhealth-workspace", ["workspace:."]]\
   ],\
   "fallbackPool": [\
@@ -15592,9 +15602,9 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/fhir-pointer", "workspace:packages/fhir-pointer"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
           ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
+          ["@iguhealth/hl7.fhir.r4.test-data", "workspace:artifacts/r4/test-data"],\
           ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
-          ["@iguhealth/test-data", "workspace:artifacts/r4/test-data"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["@types/jest", "npm:29.5.12"],\
           ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
@@ -15655,11 +15665,29 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
+    ["@iguhealth/hl7.fhir.r4.test-data", [\
+      ["workspace:artifacts/r4/test-data", {\
+        "packageLocation": "./artifacts/r4/test-data/",\
+        "packageDependencies": [\
+          ["@iguhealth/hl7.fhir.r4.test-data", "workspace:artifacts/r4/test-data"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
     ["@iguhealth/hl7.fhir.r4b.core", [\
       ["workspace:artifacts/r4b/hl7-core", {\
         "packageLocation": "./artifacts/r4b/hl7-core/",\
         "packageDependencies": [\
           ["@iguhealth/hl7.fhir.r4b.core", "workspace:artifacts/r4b/hl7-core"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@iguhealth/hl7.fhir.r4b.test-data", [\
+      ["workspace:artifacts/r4b/test-data", {\
+        "packageLocation": "./artifacts/r4b/test-data/",\
+        "packageDependencies": [\
+          ["@iguhealth/hl7.fhir.r4b.test-data", "workspace:artifacts/r4b/test-data"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -15773,13 +15801,13 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
           ["@iguhealth/generated-ops", "workspace:packages/generated-ops"],\
           ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
+          ["@iguhealth/hl7.fhir.r4.test-data", "workspace:artifacts/r4/test-data"],\
           ["@iguhealth/hl7.fhir.r4b.core", "workspace:artifacts/r4b/hl7-core"],\
           ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
           ["@iguhealth/jwt", "workspace:packages/jwt"],\
           ["@iguhealth/meta-value", "workspace:packages/meta-value"],\
           ["@iguhealth/operation-execution", "workspace:packages/operation-execution"],\
           ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
-          ["@iguhealth/test-data", "workspace:artifacts/r4/test-data"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["@koa/bodyparser", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:5.1.1"],\
           ["@koa/cors", "npm:5.0.0"],\
@@ -15839,15 +15867,6 @@ const RAW_RUNTIME_STATE =
           ["tsc-watch", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:6.2.0"],\
           ["typescript", "patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>::version=5.4.5&hash=5adc0c"],\
           ["zapatos", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:6.4.0"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@iguhealth/test-data", [\
-      ["workspace:artifacts/r4/test-data", {\
-        "packageLocation": "./artifacts/r4/test-data/",\
-        "packageDependencies": [\
-          ["@iguhealth/test-data", "workspace:artifacts/r4/test-data"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -33019,6 +33038,15 @@ const RAW_RUNTIME_STATE =
           ["value-equal", "npm:1.0.1"]\
         ],\
         "linkType": "HARD"\
+      }]\
+    ]],\
+    ["hl7.fhir.r4b.examples", [\
+      ["workspace:artifacts/r4b/test-data/examples-json", {\
+        "packageLocation": "./artifacts/r4b/test-data/examples-json/",\
+        "packageDependencies": [\
+          ["hl7.fhir.r4b.examples", "workspace:artifacts/r4b/test-data/examples-json"]\
+        ],\
+        "linkType": "SOFT"\
       }]\
     ]],\
     ["hoist-non-react-statics", [\
