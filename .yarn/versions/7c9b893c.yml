@@ -1,0 +1,12 @@
+releases:
+  "@iguhealth/admin-app": patch
+  "@iguhealth/cli": patch
+  "@iguhealth/client": patch
+  "@iguhealth/components": patch
+  "@iguhealth/fhir-validation": patch
+  "@iguhealth/generated-ops": patch
+  "@iguhealth/hl7.fhir.r4.test-data": patch
+  "@iguhealth/hl7.fhir.r4b.test-data": patch
+  "@iguhealth/operation-execution": patch
+  "@iguhealth/server": patch
+  hl7.fhir.r4b.examples: patch

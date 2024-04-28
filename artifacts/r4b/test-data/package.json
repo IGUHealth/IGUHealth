@@ -1,0 +1,28 @@
+{
+  "name": "@iguhealth/hl7.fhir.r4b.test-data",
+  "packageManager": "yarn@4.1.1",
+  "type": "module",
+  "version": "0.0.1",
+  "title": "Hl7 Test data for R4B",
+  "description": "IGUHEALTH package that contains hl7 R4B test data.",
+  "fhirVersions": [
+    "4.3.0"
+  ],
+  "author": "IGUHealth",
+  "maintainers": [
+    {
+      "name": "IGUHealth",
+      "email": "dev@iguhealth.app"
+    }
+  ],
+  "scripts": {
+    "remove-duplicates": "yarn node remove_duplicates.js examples-json",
+    "generate-index-file": "yarn node ../../../packages/cli/lib/iguhealth.js generate index-file -p . -r examples-json",
+    "publish": "yarn npm publish --access public --tolerate-republish"
+  },
+  "files": [
+    "lib/**",
+    ".index.json",
+    "examples-json/**"
+  ]
+}

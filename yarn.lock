@@ -7945,9 +7945,9 @@ __metadata:
     "@iguhealth/fhir-pointer": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
     "@iguhealth/hl7.fhir.r4.core": "workspace:^"
+    "@iguhealth/hl7.fhir.r4.test-data": "workspace:^"
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^"
     "@iguhealth/operation-outcomes": "workspace:^"
-    "@iguhealth/test-data": "workspace:^"
     "@jest/globals": "npm:^29.7.0"
     "@types/jest": "npm:^29.5.12"
     jest: "npm:^29.7.0"
@@ -8000,9 +8000,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@iguhealth/hl7.fhir.r4.test-data@workspace:^, @iguhealth/hl7.fhir.r4.test-data@workspace:artifacts/r4/test-data":
+  version: 0.0.0-use.local
+  resolution: "@iguhealth/hl7.fhir.r4.test-data@workspace:artifacts/r4/test-data"
+  languageName: unknown
+  linkType: soft
+
 "@iguhealth/hl7.fhir.r4b.core@workspace:^, @iguhealth/hl7.fhir.r4b.core@workspace:artifacts/r4b/hl7-core":
   version: 0.0.0-use.local
   resolution: "@iguhealth/hl7.fhir.r4b.core@workspace:artifacts/r4b/hl7-core"
+  languageName: unknown
+  linkType: soft
+
+"@iguhealth/hl7.fhir.r4b.test-data@workspace:artifacts/r4b/test-data":
+  version: 0.0.0-use.local
+  resolution: "@iguhealth/hl7.fhir.r4b.test-data@workspace:artifacts/r4b/test-data"
   languageName: unknown
   linkType: soft
 
@@ -8101,13 +8113,13 @@ __metadata:
     "@iguhealth/fhirpath": "workspace:^"
     "@iguhealth/generated-ops": "workspace:^"
     "@iguhealth/hl7.fhir.r4.core": "workspace:^"
+    "@iguhealth/hl7.fhir.r4.test-data": "workspace:^"
     "@iguhealth/hl7.fhir.r4b.core": "workspace:^"
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^"
     "@iguhealth/jwt": "workspace:^"
     "@iguhealth/meta-value": "workspace:^"
     "@iguhealth/operation-execution": "workspace:^"
     "@iguhealth/operation-outcomes": "workspace:^"
-    "@iguhealth/test-data": "workspace:^"
     "@jest/globals": "npm:^29.7.0"
     "@koa/bodyparser": "npm:^5.1.1"
     "@koa/cors": "npm:^5.0.0"
@@ -8167,12 +8179,6 @@ __metadata:
     tsc-watch: "npm:^6.2.0"
     typescript: "npm:5.4.5"
     zapatos: "npm:^6.4.0"
-  languageName: unknown
-  linkType: soft
-
-"@iguhealth/test-data@workspace:^, @iguhealth/test-data@workspace:artifacts/r4/test-data":
-  version: 0.0.0-use.local
-  resolution: "@iguhealth/test-data@workspace:artifacts/r4/test-data"
   languageName: unknown
   linkType: soft
 
@@ -21172,6 +21178,12 @@ __metadata:
   checksum: 10/042373f69dad6419a4d551b995ef40f449a8854775a1157c4e9f077ee39aea6ca7ed8f45ec3e1762ef1891357a724d17dad11f2fe7d0edeebcbcf9f48ed3e4d4
   languageName: node
   linkType: hard
+
+"hl7.fhir.r4b.examples@workspace:artifacts/r4b/test-data/examples-json":
+  version: 0.0.0-use.local
+  resolution: "hl7.fhir.r4b.examples@workspace:artifacts/r4b/test-data/examples-json"
+  languageName: unknown
+  linkType: soft
 
 "hoist-non-react-statics@npm:^3.1.0":
   version: 3.3.2

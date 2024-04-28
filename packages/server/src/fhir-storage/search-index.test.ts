@@ -10,43 +10,55 @@ import {
   SearchParameter,
   StructureDefinition,
   code,
-  uri,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { R4 } from "@iguhealth/fhir-types/lib/versions";
+import {
+  AllResourceTypes,
+  FHIR_VERSION,
+  R4,
+  VersionedAResource,
+  VersionedResourceType,
+} from "@iguhealth/fhir-types/lib/versions";
 import * as fhirpath from "@iguhealth/fhirpath";
 
-function getArtifactResources(resourceTypes: ResourceType[]): Resource[] {
+function getArtifactResources<Version extends FHIR_VERSION>(
+  fhirVersion: Version,
+  resourceTypes: VersionedResourceType<Version>[],
+): VersionedAResource<Version, AllResourceTypes>[] {
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>
       loadArtifacts({
-        fhirVersion: R4,
+        fhirVersion,
         resourceType,
         packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
         // silence: true,
         // Limiting to strictly hl7 packages as iguhealth packages changing constantly for snapshots.
-        onlyPackages: ["@iguhealth/hl7.fhir.r4.core", "@iguhealth/test-data"],
+        onlyPackages: [
+          "@iguhealth/hl7.fhir.r4.core",
+          "@iguhealth/hl7.fhir.r4b.core",
+          "@iguhealth/hl7.fhir.r4.test-data",
+        ],
         silence: true,
       }),
     )
     .flat();
 
-  return artifactResources;
+  return artifactResources as VersionedAResource<Version, AllResourceTypes>[];
 }
 
-const artifactResources = getArtifactResources([
+const r4ArtifactResources = getArtifactResources(R4, [
   ...resourceTypes.values(),
 ] as ResourceType[]);
 
 test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
-  `Testing indexing resourceType '%s'`,
+  `R4 Testing indexing resourceType '%s'`,
   (resourceType) => {
-    const searchParameters = artifactResources.filter(
+    const searchParameters = r4ArtifactResources.filter(
       (r): r is SearchParameter =>
         r.resourceType === "SearchParameter" &&
         r.base.includes(resourceType as code),
     );
 
-    const resources = artifactResources
+    const resources = r4ArtifactResources
       .filter((r) => r.resourceType === resourceType)
       .filter((r) => r.id)
       .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
@@ -63,7 +75,7 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
                 meta: {
                   fhirVersion: R4,
                   getSD: (fhirVersion, type) => {
-                    return artifactResources.find(
+                    return r4ArtifactResources.find(
                       (r) =>
                         r.resourceType === "StructureDefinition" &&
                         r.type === type,
