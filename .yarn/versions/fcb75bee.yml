@@ -1,7 +1,0 @@
-releases:
-  "@iguhealth/hl7.fhir.r4.test-data": patch
-  "@iguhealth/hl7.fhir.r4b.test-data": patch
-
-declined:
-  - "@iguhealth/fhir-validation"
-  - "@iguhealth/server"
