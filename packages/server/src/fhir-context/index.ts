@@ -12,7 +12,7 @@ import {
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
-import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
+import { r4ResourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
   CapabilityStatementRestResource,
   ResourceType,
@@ -60,7 +60,7 @@ const R4_SPECIAL_TYPES: { MEMORY: ResourceType[]; AUTH: ResourceType[] } = {
 };
 const ALL_SPECIAL_TYPES = Object.values(R4_SPECIAL_TYPES).flatMap((v) => v);
 const R4_DB_TYPES: ResourceType[] = (
-  [...resourceTypes] as ResourceType[]
+  [...r4ResourceTypes] as ResourceType[]
 ).filter((type) => ALL_SPECIAL_TYPES.indexOf(type) === -1);
 
 const R4B_SPECIAL_TYPES: { MEMORY: r4b.ResourceType[] } = {
@@ -416,7 +416,7 @@ export async function createFHIRServices(
       filter: {
         r4: {
           levelsSupported: ["system", "type", "instance"],
-          resourcesSupported: [...resourceTypes] as ResourceType[],
+          resourcesSupported: [...r4ResourceTypes] as ResourceType[],
           interactionsSupported: ["invoke-request"],
         },
       },
