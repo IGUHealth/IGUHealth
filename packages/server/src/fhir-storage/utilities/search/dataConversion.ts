@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-import { r4ResourceTypes } from "@iguhealth/fhir-types/r4/sets";
+import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import {
   Address,
   CodeableConcept,
@@ -171,7 +171,7 @@ function toReferenceLocal(
     case "Reference": {
       const reference: Reference = value.valueOf() as Reference;
       const [resourceType, id] = reference.reference?.split("/") || [];
-      if (r4ResourceTypes.has(resourceType) && id) {
+      if (resourceTypes.has(resourceType) && id) {
         return [
           {
             reference: reference,
@@ -219,7 +219,7 @@ async function toReferenceRemote(
     case "Reference": {
       const reference: Reference = value.valueOf() as Reference;
       const [resourceType, id] = reference.reference?.split("/") || [];
-      if (r4ResourceTypes.has(resourceType) && id) {
+      if (resourceTypes.has(resourceType) && id) {
         return [
           {
             reference: reference,
