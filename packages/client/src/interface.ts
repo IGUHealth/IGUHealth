@@ -10,7 +10,6 @@ import type {
 import {
   AllResourceTypes,
   FHIR_VERSION,
-  VERSIONED_FHIR,
   VersionedAResource,
   VersionedResourceType,
 } from "@iguhealth/fhir-types/versions";
@@ -112,7 +111,7 @@ export interface VersionedFHIRClientAsync<CTX> {
     parameters: ParsedParameter<string | number>[] | string,
   ): Promise<{
     total?: number;
-    resources: VERSIONED_FHIR[FHIRVersion]["Resource"][];
+    resources: VersionedAResource<FHIRVersion, AllResourceTypes>[];
   }>;
   search_type<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
@@ -125,7 +124,7 @@ export interface VersionedFHIRClientAsync<CTX> {
   }>;
   create<
     FHIRVersion extends FHIR_VERSION,
-    Resource extends VERSIONED_FHIR[FHIRVersion]["Resource"],
+    Resource extends VersionedAResource<FHIRVersion, AllResourceTypes>,
   >(
     ctx: CTX,
     fhirVersion: FHIRVersion,
@@ -136,28 +135,30 @@ export interface VersionedFHIRClientAsync<CTX> {
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
-    id: VERSIONED_FHIR[FHIRVersion]["id"],
+    id: NonNullable<VersionedAResource<FHIRVersion, AllResourceTypes>["id"]>,
     resource: VersionedAResource<FHIRVersion, T>,
   ): Promise<VersionedAResource<FHIRVersion, T>>;
   patch<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
-    id: VERSIONED_FHIR[FHIRVersion]["id"],
+    id: NonNullable<VersionedAResource<FHIRVersion, AllResourceTypes>["id"]>,
     patches: any,
   ): Promise<VersionedAResource<FHIRVersion, T>>;
   read<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
-    id: VERSIONED_FHIR[FHIRVersion]["id"],
+    id: NonNullable<VersionedAResource<FHIRVersion, AllResourceTypes>["id"]>,
   ): Promise<VersionedAResource<FHIRVersion, T> | undefined>;
   vread<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
-    id: VERSIONED_FHIR[FHIRVersion]["id"],
-    versionId: VERSIONED_FHIR[FHIRVersion]["id"],
+    id: NonNullable<VersionedAResource<FHIRVersion, AllResourceTypes>["id"]>,
+    versionId: NonNullable<
+      VersionedAResource<FHIRVersion, AllResourceTypes>["id"]
+    >,
   ): Promise<VersionedAResource<FHIRVersion, T> | undefined>;
   delete<
     FHIRVersion extends FHIR_VERSION,
@@ -166,27 +167,27 @@ export interface VersionedFHIRClientAsync<CTX> {
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
-    id: VERSIONED_FHIR[FHIRVersion]["id"],
+    id: NonNullable<VersionedAResource<FHIRVersion, AllResourceTypes>["id"]>,
   ): Promise<void>;
 
   historySystem<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     parameters?: ParsedParameter<string | number>[] | string,
-  ): Promise<VERSIONED_FHIR[FHIRVersion]["BundleEntry"][]>;
+  ): Promise<NonNullable<VersionedAResource<FHIRVersion, "Bundle">["entry"]>>;
   historyType<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
     parameters?: ParsedParameter<string | number>[] | string,
-  ): Promise<VERSIONED_FHIR[FHIRVersion]["BundleEntry"][]>;
+  ): Promise<NonNullable<VersionedAResource<FHIRVersion, "Bundle">["entry"]>>;
   historyInstance<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
-    id: VERSIONED_FHIR[FHIRVersion]["id"],
+    id: NonNullable<VersionedAResource<FHIRVersion, AllResourceTypes>["id"]>,
     parameters?: ParsedParameter<string | number>[] | string,
-  ): Promise<VERSIONED_FHIR[FHIRVersion]["BundleEntry"][]>;
+  ): Promise<NonNullable<VersionedAResource<FHIRVersion, "Bundle">["entry"]>>;
   invoke_system<
     FHIRVersion extends FHIR_VERSION,
     Op extends IOperation<any, any>,
@@ -216,17 +217,17 @@ export interface VersionedFHIRClientAsync<CTX> {
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
-    id: VERSIONED_FHIR[FHIRVersion]["id"],
+    id: NonNullable<VersionedAResource<FHIRVersion, AllResourceTypes>["id"]>,
     input: OPMetadata<Op>["Input"],
   ): Promise<OPMetadata<Op>["Output"]>;
   transaction<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
-    bundle: VERSIONED_FHIR[FHIRVersion]["Bundle"],
-  ): Promise<VERSIONED_FHIR[FHIRVersion]["Bundle"]>;
+    bundle: VersionedAResource<FHIRVersion, "Bundle">,
+  ): Promise<VersionedAResource<FHIRVersion, "Bundle">>;
   batch<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
-    bundle: VERSIONED_FHIR[FHIRVersion]["Bundle"],
-  ): Promise<VERSIONED_FHIR[FHIRVersion]["Bundle"]>;
+    bundle: VersionedAResource<FHIRVersion, "Bundle">,
+  ): Promise<VersionedAResource<FHIRVersion, "Bundle">>;
 }
