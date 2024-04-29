@@ -10,25 +10,6 @@ export const R4B: R4B = "4.3";
 export const FHIR_VERSIONS_SUPPORTED: [R4, R4B] = [R4, R4B];
 export type FHIR_VERSION = (typeof FHIR_VERSIONS_SUPPORTED)[number];
 
-export type VERSIONED_FHIR = {
-  "4.0": {
-    Bundle: r4.Bundle;
-    BundleEntry: r4.BundleEntry;
-    CapabilityStatement: r4.CapabilityStatement;
-    Resource: r4.Resource;
-    ResourceType: r4.ResourceType;
-    id: r4.id;
-  };
-  "4.3": {
-    Bundle: r4b.Bundle;
-    BundleEntry: r4b.BundleEntry;
-    CapabilityStatement: r4b.CapabilityStatement;
-    Resource: r4b.Resource;
-    ResourceType: r4b.ResourceType;
-    id: r4b.id;
-  };
-};
-
 export type VersionedResourceType<
   Version extends (typeof FHIR_VERSIONS_SUPPORTED)[number],
 > = Version extends R4
