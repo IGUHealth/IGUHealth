@@ -13,6 +13,7 @@ import {
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import { Membership, ResourceType } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 import {
   OperationError,
   outcomeError,
@@ -21,7 +22,7 @@ import {
 
 import TenantUserManagement from "../../../authN/db/users/provider/tenant.js";
 import { membershipToUser } from "../../../authN/db/users/utilities.js";
-import { FHIRServerCTX } from "../../../fhir-context/types.js";
+import { FHIRServerCTX } from "../../../fhir-api/types.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 import validateResourceTypeMiddleware from "../../middleware/validate-resourcetype.js";
 import { createPostgresClient } from "../postgres/index.js";
@@ -96,6 +97,7 @@ function membershipHandler<
         return db.serializable(context.ctx.db, async (txClient) => {
           const membership = await context.state.fhirDB.read(
             context.ctx,
+            R4,
             "Membership",
             id,
           );
@@ -119,6 +121,7 @@ function membershipHandler<
           const ctx = { ...context.ctx, db: txClient };
           const existingMembership = await context.state.fhirDB.read(
             ctx,
+            R4,
             "Membership",
             id,
           );

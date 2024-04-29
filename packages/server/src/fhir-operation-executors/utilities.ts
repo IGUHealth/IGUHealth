@@ -1,4 +1,4 @@
-import { VersionedFHIRClientAsync } from "@iguhealth/client/interface";
+import { FHIRClientAsync } from "@iguhealth/client/interface";
 import { R4InvokeRequest } from "@iguhealth/client/types";
 import {
   OperationDefinition,
@@ -6,10 +6,7 @@ import {
   code,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
-import {
-  FHIR_VERSION,
-  VersionedAResource,
-} from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 import { evaluate } from "@iguhealth/fhirpath";
 import { OpCTX } from "@iguhealth/operation-execution";
 import {
@@ -18,18 +15,18 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../fhir-context/types.js";
+import { FHIRServerCTX } from "../fhir-api/types.js";
 
 export async function resolveOperationDefinition<
   CTX,
   Version extends FHIR_VERSION,
-  Client extends VersionedFHIRClientAsync<CTX>,
+  Client extends FHIRClientAsync<CTX>,
 >(
   client: Client,
   ctx: CTX,
   fhirVersion: Version,
   operationCode: string,
-): Promise<VersionedAResource<Version, "OperationDefinition">> {
+): Promise<Resource<Version, "OperationDefinition">> {
   const operationDefinition = await client.search_type(
     ctx,
     fhirVersion,

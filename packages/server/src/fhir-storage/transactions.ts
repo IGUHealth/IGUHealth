@@ -6,7 +6,7 @@ import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../fhir-context/types.js";
+import { FHIRServerCTX } from "../fhir-api/types.js";
 
 function getTransactionFullUrls(transaction: Bundle): Record<string, number> {
   const record: Record<string, number> = {};

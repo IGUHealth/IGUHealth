@@ -6,27 +6,29 @@ import { loadArtifacts } from "@iguhealth/artifacts";
 import { resourceTypes } from "@iguhealth/fhir-types/lib/generated/r4/sets";
 import {
   Account,
-  Resource,
-  ResourceType,
   StructureDefinition,
   canonical,
   uri,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
+  AllResourceTypes,
   FHIR_VERSION,
   R4,
-  VersionedAResource,
-  VersionedResourceType,
+  Resource,
+  ResourceType,
 } from "@iguhealth/fhir-types/lib/versions";
 
 import { ValidationCTX, createValidator } from "./index";
 
 function createMemoryDatabase(
-  resourceTypes: ResourceType[],
-): Record<ResourceType, Resource[]> {
-  const data: Record<ResourceType, Resource[]> = {} as Record<
-    ResourceType,
-    Resource[]
+  resourceTypes: ResourceType<R4>[],
+): Record<ResourceType<R4>, Resource<FHIR_VERSION, AllResourceTypes>[]> {
+  const data: Record<
+    ResourceType<R4>,
+    Resource<FHIR_VERSION, AllResourceTypes>[]
+  > = {} as Record<
+    ResourceType<R4>,
+    Resource<FHIR_VERSION, AllResourceTypes>[]
   >;
   for (const resourceType of resourceTypes) {
     const resources = loadArtifacts({
@@ -47,7 +49,7 @@ function createMemoryDatabase(
 
 const memDatabase = createMemoryDatabase([
   ...resourceTypes.values(),
-] as ResourceType[]);
+] as ResourceType<R4>[]);
 
 const CTX: ValidationCTX = {
   fhirVersion: R4,
@@ -56,18 +58,18 @@ const CTX: ValidationCTX = {
   },
   resolveCanonical: <
     Version extends FHIR_VERSION,
-    Type extends VersionedResourceType<Version>,
+    Type extends ResourceType<Version>,
   >(
     version: Version,
     t: Type,
     url: canonical,
-  ): VersionedAResource<Version, Type> => {
+  ): Resource<Version, Type> => {
     // @ts-ignore
-    const sd: VersionedAResource<Version, Type> = memDatabase[t].find(
+    const sd: Resource<Version, Type> = memDatabase[t].find(
       (sd: unknown) => (sd as StructureDefinition).url === url,
-    ) as VersionedAResource<Version, Type>;
+    ) as Resource<Version, Type>;
     if (!sd) throw new Error(`Couldn't find sd with url '${url}'`);
-    return sd as VersionedAResource<Version, Type>;
+    return sd as Resource<Version, Type>;
   },
 };
 
@@ -434,7 +436,7 @@ test.each([...resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)))(
     );
     const sd = structureDefinition[0];
 
-    const resources = memDatabase[resourceType as ResourceType]
+    const resources = memDatabase[resourceType as ResourceType<R4>]
       .filter((r) => r.id)
       .sort((r, r2) => JSON.stringify(r).localeCompare(JSON.stringify(r2)))
       .slice(0, 1);

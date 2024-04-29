@@ -3,7 +3,7 @@ import * as Koa from "koa";
 import { id } from "@iguhealth/fhir-types/r4/types";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaContext, asSystemCTX } from "../../../fhir-context/types.js";
+import { KoaContext, asSystemCTX } from "../../../fhir-api/types.js";
 
 /**
  * Creates koa middleware that injects the current ClientApplication under ctx.oidc.client.

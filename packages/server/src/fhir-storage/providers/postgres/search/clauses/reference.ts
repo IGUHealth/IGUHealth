@@ -3,7 +3,7 @@ import type * as s from "zapatos/schema";
 
 import { SearchParameter } from "@iguhealth/fhir-types/r4/types";
 
-import { FHIRServerCTX } from "../../../../../fhir-context/types.js";
+import { FHIRServerCTX } from "../../../../../fhir-api/types.js";
 import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
 import * as sqlUtils from "../../../../utilities/sql.js";
 import { buildParameterSQL } from "./index.js";

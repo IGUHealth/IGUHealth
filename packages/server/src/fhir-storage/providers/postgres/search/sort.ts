@@ -5,7 +5,7 @@ import { ResourceType, SearchParameter } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX, asSystemCTX } from "../../../../fhir-context/types.js";
+import { FHIRServerCTX, asSystemCTX } from "../../../../fhir-api/types.js";
 import {
   SearchParameterResult,
   searchParameterToTableName,

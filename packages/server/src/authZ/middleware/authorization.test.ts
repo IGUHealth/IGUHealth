@@ -8,7 +8,7 @@ import {
   id,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 
-import { FHIRServerCTX } from "../../fhir-context/context.js";
+import { FHIRServerCTX } from "../../fhir-api/types.js";
 import { testServices } from "../../fhir-storage/test-ctx.js";
 import { createAuthorizationMiddleWare } from "./authorization.js";
 

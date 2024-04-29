@@ -5,23 +5,24 @@ import { fileURLToPath } from "url";
 import { loadArtifacts } from "@iguhealth/artifacts";
 import {
   Bundle,
-  Resource,
-  ResourceType,
   canonical,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
+  AllResourceTypes,
   FHIR_VERSION,
   R4,
-  VersionedAResource,
-  VersionedResourceType,
+  Resource,
+  ResourceType,
 } from "@iguhealth/fhir-types/lib/versions";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { testServices } from "./test-ctx.js";
 import { buildTransactionTopologicalGraph } from "./transactions";
 
-function loadResources(resourceTypes: ResourceType[]): Resource[] {
-  const artifactResources: Resource[] = resourceTypes
+function loadResources(
+  resourceTypes: ResourceType<R4>[],
+): Resource<R4, AllResourceTypes>[] {
+  const artifactResources: Resource<R4, AllResourceTypes>[] = resourceTypes
     .map((resourceType) =>
       loadArtifacts({
         fhirVersion: R4,
@@ -40,16 +41,16 @@ const CTX = {
   ...testServices,
   resolveCanonical<
     FHIRVersion extends FHIR_VERSION,
-    Type extends VersionedResourceType<FHIRVersion>,
+    Type extends ResourceType<FHIRVersion>,
   >(
     fhirVersion: FHIRVersion,
     type: Type,
     url: canonical,
-  ): VersionedAResource<FHIRVersion, Type> | undefined {
+  ): Resource<FHIRVersion, Type> | undefined {
     // @ts-ignore
     const sd = resources.find((sd) => sd.url === url);
     if (!sd) throw new Error(`Could not resolve url ${url}`);
-    return sd as VersionedAResource<FHIRVersion, Type> | undefined;
+    return sd as Resource<FHIRVersion, Type> | undefined;
   },
 };
 

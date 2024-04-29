@@ -1,12 +1,9 @@
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
-import {
-  FHIR_VERSION,
-  VersionedAResource,
-} from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 
 function generateParameterType(
   parameters: NonNullable<
-    VersionedAResource<FHIR_VERSION, "OperationDefinition">["parameter"]
+    Resource<FHIR_VERSION, "OperationDefinition">["parameter"]
   >,
 ): string {
   if (parameters.length === 0) return `Record<string, never>`;
@@ -33,9 +30,7 @@ function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-function getName(
-  op: VersionedAResource<FHIR_VERSION, "OperationDefinition">,
-): string {
+function getName(op: Resource<FHIR_VERSION, "OperationDefinition">): string {
   if (!op.id) throw new Error("Must have id for generating operation");
   return capitalize(
     op.id
@@ -47,7 +42,7 @@ function getName(
 
 function generateOutput(
   parameters: NonNullable<
-    VersionedAResource<FHIR_VERSION, "OperationDefinition">["parameter"]
+    Resource<FHIR_VERSION, "OperationDefinition">["parameter"]
   >,
 ): string {
   if (
@@ -64,7 +59,7 @@ function generateOutput(
 }
 
 export function generateOp(
-  op: VersionedAResource<FHIR_VERSION, "OperationDefinition">,
+  op: Resource<FHIR_VERSION, "OperationDefinition">,
 ): string {
   const namespace = getName(op);
   const interfaceName = "IOp";
@@ -95,9 +90,7 @@ export function generateOp(
 
 export default async function operationGeneration<Version extends FHIR_VERSION>(
   fhirVersion: Version,
-  operations: Readonly<
-    Array<VersionedAResource<Version, "OperationDefinition">>
-  >,
+  operations: Readonly<Array<Resource<Version, "OperationDefinition">>>,
 ): Promise<string> {
   if (fhirVersion !== "4.0") throw new Error("Only support 4.0");
   const code = [

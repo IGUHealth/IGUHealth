@@ -3,8 +3,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
-import { VersionedAsynchronousClient } from "@iguhealth/client";
-import { VersionedFHIRClientAsync } from "@iguhealth/client/lib/interface";
+import { AsynchronousClient } from "@iguhealth/client";
+import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
 import { FHIRResponse } from "@iguhealth/client/lib/types";
 import {
   MiddlewareAsync,
@@ -17,12 +17,12 @@ import {
   FHIR_VERSION,
   R4,
   R4B,
-  VersionedAResource,
-  VersionedResourceType,
+  Resource,
+  ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../fhir-context/types.js";
+import { FHIRServerCTX } from "../../../fhir-api/types.js";
 import {
   SearchParameterResource,
   SearchParameterResult,
@@ -36,7 +36,7 @@ import { InternalData } from "./types.js";
 async function resolveParameter<Version extends FHIR_VERSION>(
   memoryData: MemoryData,
   fhirVersion: Version,
-  resourceTypes: VersionedResourceType<Version>[],
+  resourceTypes: ResourceType<Version>[],
   name: string,
 ) {
   const data = memoryData[fhirVersion];
@@ -45,7 +45,7 @@ async function resolveParameter<Version extends FHIR_VERSION>(
       p?.resourceType === "SearchParameter" &&
       p?.name === name &&
       p?.base?.some((b: unknown) =>
-        resourceTypes.includes(b as VersionedResourceType<Version>),
+        resourceTypes.includes(b as ResourceType<Version>),
       ),
   );
 
@@ -53,7 +53,7 @@ async function resolveParameter<Version extends FHIR_VERSION>(
 }
 
 function checkSearchParameter(
-  searchParameter: VersionedAResource<FHIR_VERSION, "SearchParameter">,
+  searchParameter: Resource<FHIR_VERSION, "SearchParameter">,
   resourceParameters: SearchParameterResource[],
 ) {
   for (const resourceParameter of resourceParameters) {
@@ -100,11 +100,11 @@ function getVersionedDB<Version extends FHIR_VERSION>(
   fhirVersion: Version,
 ): Record<
   AllResourceTypes,
-  Record<r4.id, VersionedAResource<Version, AllResourceTypes>>
+  Record<r4.id, Resource<Version, AllResourceTypes>>
 > {
   return data[fhirVersion] as Record<
     AllResourceTypes,
-    Record<r4.id, VersionedAResource<Version, AllResourceTypes>>
+    Record<r4.id, Resource<Version, AllResourceTypes>>
   >;
 }
 
@@ -115,17 +115,17 @@ function getResourceType<
   data: MemoryData,
   fhirVersion: Version,
   type: T,
-): Record<r4.id, VersionedAResource<Version, T>> {
+): Record<r4.id, Resource<Version, T>> {
   const versionedDb = getVersionedDB(data, fhirVersion);
   const resources = versionedDb[type] ?? {};
 
-  return resources as Record<r4.id, VersionedAResource<Version, T>>;
+  return resources as Record<r4.id, Resource<Version, T>>;
 }
 
 function setResource<Version extends FHIR_VERSION>(
   data: MemoryData,
   fhirVersion: Version,
-  resource: VersionedAResource<Version, AllResourceTypes> & { id: r4.id },
+  resource: Resource<Version, AllResourceTypes> & { id: r4.id },
 ): MemoryData {
   // Return new object on mutation.
   return {
@@ -288,7 +288,7 @@ function createMemoryMiddleware<
               type: "update-response",
               resourceType: context.request.resourceType,
               id: resource.id,
-              body: resource as VersionedAResource<
+              body: resource as Resource<
                 typeof context.request.fhirVersion,
                 AllResourceTypes
               >,
@@ -313,7 +313,7 @@ function createMemoryMiddleware<
               level: "type",
               type: "create-response",
               resourceType: context.request.resourceType,
-              body: resource as VersionedAResource<
+              body: resource as Resource<
                 typeof context.request.fhirVersion,
                 AllResourceTypes
               >,
@@ -338,7 +338,7 @@ function createMemoryMiddleware<
               type: "read-response",
               resourceType: context.request.resourceType,
               id: context.request.id,
-              body: resource as VersionedAResource<
+              body: resource as Resource<
                 typeof context.request.fhirVersion,
                 AllResourceTypes
               >,
@@ -365,7 +365,7 @@ function createURLMap<Version extends FHIR_VERSION>(
   const data = getVersionedDB(memoryData, fhirVersion);
   for (const resourceType of Object.keys(data)) {
     for (const resource of Object.values(
-      data[resourceType as VersionedResourceType<Version>] ?? {},
+      data[resourceType as ResourceType<Version>] ?? {},
     )) {
       if ((resource as { url: string })?.url) {
         if (!versionedMap.has(resourceType as r4.ResourceType)) {
@@ -403,7 +403,7 @@ function createResolveCanonical(
     getResourceType(data, fhirVersion, type);
     return (
       id ? getResourceType(data, fhirVersion, type)?.[id as r4.id] : undefined
-    ) as VersionedAResource<FHIRVersion, Type>;
+    ) as Resource<FHIRVersion, Type>;
   };
 }
 
@@ -455,7 +455,7 @@ function createResolveTypeToCanonical(
   };
 }
 
-interface MemoryClientInterface<CTX> extends VersionedFHIRClientAsync<CTX> {
+interface MemoryClientInterface<CTX> extends FHIRClientAsync<CTX> {
   resolveCanonical: ReturnType<typeof createResolveCanonical>;
   resolveTypeToCanonical: ReturnType<typeof createResolveTypeToCanonical>;
 }
@@ -470,24 +470,24 @@ export class Memory<CTX extends FHIRServerCTX>
 {
   private _client;
 
-  public request: VersionedFHIRClientAsync<CTX>["request"];
-  public capabilities: VersionedFHIRClientAsync<CTX>["capabilities"];
-  public search_system: VersionedFHIRClientAsync<CTX>["search_system"];
-  public search_type: VersionedFHIRClientAsync<CTX>["search_type"];
-  public create: VersionedFHIRClientAsync<CTX>["create"];
-  public update: VersionedFHIRClientAsync<CTX>["update"];
-  public patch: VersionedFHIRClientAsync<CTX>["patch"];
-  public read: VersionedFHIRClientAsync<CTX>["read"];
-  public vread: VersionedFHIRClientAsync<CTX>["vread"];
-  public delete: VersionedFHIRClientAsync<CTX>["delete"];
-  public historySystem: VersionedFHIRClientAsync<CTX>["historySystem"];
-  public historyType: VersionedFHIRClientAsync<CTX>["historyType"];
-  public historyInstance: VersionedFHIRClientAsync<CTX>["historyInstance"];
-  public invoke_system: VersionedFHIRClientAsync<CTX>["invoke_system"];
-  public invoke_type: VersionedFHIRClientAsync<CTX>["invoke_type"];
-  public invoke_instance: VersionedFHIRClientAsync<CTX>["invoke_instance"];
-  public transaction: VersionedFHIRClientAsync<CTX>["transaction"];
-  public batch: VersionedFHIRClientAsync<CTX>["batch"];
+  public request: FHIRClientAsync<CTX>["request"];
+  public capabilities: FHIRClientAsync<CTX>["capabilities"];
+  public search_system: FHIRClientAsync<CTX>["search_system"];
+  public search_type: FHIRClientAsync<CTX>["search_type"];
+  public create: FHIRClientAsync<CTX>["create"];
+  public update: FHIRClientAsync<CTX>["update"];
+  public patch: FHIRClientAsync<CTX>["patch"];
+  public read: FHIRClientAsync<CTX>["read"];
+  public vread: FHIRClientAsync<CTX>["vread"];
+  public delete: FHIRClientAsync<CTX>["delete"];
+  public historySystem: FHIRClientAsync<CTX>["historySystem"];
+  public historyType: FHIRClientAsync<CTX>["historyType"];
+  public historyInstance: FHIRClientAsync<CTX>["historyInstance"];
+  public invoke_system: FHIRClientAsync<CTX>["invoke_system"];
+  public invoke_type: FHIRClientAsync<CTX>["invoke_type"];
+  public invoke_instance: FHIRClientAsync<CTX>["invoke_instance"];
+  public transaction: FHIRClientAsync<CTX>["transaction"];
+  public batch: FHIRClientAsync<CTX>["batch"];
   public resolveCanonical: MemoryClientInterface<CTX>["resolveCanonical"];
   public resolveTypeToCanonical: MemoryClientInterface<CTX>["resolveTypeToCanonical"];
 
@@ -497,7 +497,7 @@ export class Memory<CTX extends FHIRServerCTX>
       [R4B]: {},
       ...partialData,
     };
-    const client = new VersionedAsynchronousClient<
+    const client = new AsynchronousClient<
       {
         data: MemoryData;
       },

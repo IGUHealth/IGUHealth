@@ -12,16 +12,16 @@ import {
   ElementDefinition,
   OperationOutcome,
   Reference,
-  Resource,
   StructureDefinition,
   canonical,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import {
+  AllResourceTypes,
   FHIR_VERSION,
-  VersionedAResource,
-  VersionedResourceType,
+  Resource,
+  ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import {
   OperationError,
@@ -38,12 +38,12 @@ export interface ValidationCTX {
   ): canonical | undefined;
   resolveCanonical: <
     FHIRVersion extends FHIR_VERSION,
-    Type extends VersionedResourceType<FHIRVersion>,
+    Type extends ResourceType<FHIRVersion>,
   >(
     fhirVersion: FHIRVersion,
     type: Type,
     url: canonical,
-  ) => VersionedAResource<FHIRVersion, Type> | undefined;
+  ) => Resource<FHIRVersion, Type> | undefined;
   validateCode?(system: string, code: string): Promise<boolean>;
 }
 
@@ -726,7 +726,7 @@ export default async function validate(
       issueError(
         "invalid",
         `ResourceType '${
-          (root as Resource).resourceType
+          (root as Resource<FHIR_VERSION, AllResourceTypes>).resourceType
         }' does not match expected type '${type}'`,
         [toJSONPointer(path)],
       ),

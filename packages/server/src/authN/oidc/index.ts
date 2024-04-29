@@ -2,7 +2,7 @@ import Router from "@koa/router";
 import type * as Koa from "koa";
 import * as s from "zapatos/schema";
 
-import { KoaContext } from "../../fhir-context/types.js";
+import { KoaContext } from "../../fhir-api/types.js";
 import { OIDC_ROUTES } from "../oidc/constants.js";
 import {
   clientInjectFHIRMiddleware,

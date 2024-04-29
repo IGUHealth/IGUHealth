@@ -5,8 +5,8 @@ import type * as koa from "koa";
 import pg from "pg";
 import { pino } from "pino";
 
-import { VersionedAsynchronousClient } from "@iguhealth/client";
-import { VersionedFHIRClientAsync } from "@iguhealth/client/interface";
+import { AsynchronousClient } from "@iguhealth/client";
+import { FHIRClientAsync } from "@iguhealth/client/interface";
 import {
   MiddlewareAsyncChain,
   createMiddlewareAsync,
@@ -20,7 +20,7 @@ import {
   code,
 } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
-import { AllResourceTypes, FHIR_VERSION, VersionedAResource } from "@iguhealth/fhir-types/versions";
+import { AllResourceTypes, FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -70,7 +70,7 @@ const R4B_SPECIAL_TYPES: { MEMORY: r4b.ResourceType[] } = {
 async function createResourceRestCapabilities(
   ctx: FHIRServerCTX,
   fhirVersion: FHIR_VERSION,
-  memdb: VersionedFHIRClientAsync<FHIRServerCTX>,
+  memdb: FHIRClientAsync<FHIRServerCTX>,
   sd: StructureDefinition | r4b.StructureDefinition,
 ): Promise<CapabilityStatementRestResource> {
   const resourceParameters = await memdb.search_type(
@@ -111,8 +111,8 @@ async function createResourceRestCapabilities(
 async function serverCapabilities<Version extends FHIR_VERSION>(
   ctx: FHIRServerCTX,
   fhirVersion: Version,
-  client: VersionedFHIRClientAsync<FHIRServerCTX>,
-): Promise<VersionedAResource<Version, "CapabilityStatement">> {
+  client: FHIRClientAsync<FHIRServerCTX>,
+): Promise<Resource<Version, "CapabilityStatement">> {
   const sds = (
     await client.search_type(ctx, fhirVersion, "StructureDefinition", [
       { name: "_count", value: [1000] },
@@ -159,7 +159,7 @@ async function serverCapabilities<Version extends FHIR_VERSION>(
         ),
       },
     ],
-  } as VersionedAResource<Version, "CapabilityStatement">;
+  } as Resource<Version, "CapabilityStatement">;
 }
 
 export const logger = pino<string>();
@@ -566,7 +566,7 @@ async function fhirAPIMiddleware(): Promise<
 }
 
 export async function createFHIRAPI() {
-  return new VersionedAsynchronousClient(
+  return new AsynchronousClient(
     {},
     createMiddlewareAsync([await fhirAPIMiddleware()]),
   );

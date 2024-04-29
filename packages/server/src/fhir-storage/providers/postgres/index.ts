@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
-import { FHIRClientAsync } from "@iguhealth/client/interface";
+import { FHIRClient } from "@iguhealth/client/interface";
 import { AsynchronousClient } from "@iguhealth/client";
 import {
   createMiddlewareAsync,
@@ -40,7 +40,7 @@ import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
 import {
   asSystemCTX,
   FHIRServerCTX,
-} from "../../../fhir-context/types.js";
+} from "../../../fhir-api/types.js";
 import { param_types_supported } from "./constants.js";
 import { executeSearchQuery } from "./search/index.js";
 import { ParsedParameter } from "@iguhealth/client/url";
@@ -1110,7 +1110,7 @@ export function createPostgresClient<CTX extends FHIRServerCTX>(
   { transaction_entry_limit }: { transaction_entry_limit: number } = {
     transaction_entry_limit: 20,
   },
-): FHIRClientAsync<CTX> {
+): FHIRClient<CTX> {
   return new AsynchronousClient<{ transaction_entry_limit: number }, CTX>(
     { transaction_entry_limit },
     createPostgresMiddleware(),

@@ -4,7 +4,7 @@ import { R4 } from "@iguhealth/fhir-types/versions";
 import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX, asSystemCTX } from "../../fhir-context/types.js";
+import { FHIRServerCTX, asSystemCTX } from "../../fhir-api/types.js";
 
 /**
  * Middleware to associate the user and access policies with the request.

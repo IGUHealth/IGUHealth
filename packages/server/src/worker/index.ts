@@ -5,7 +5,7 @@ import pg from "pg";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
-import { VersionedAsynchronousClient } from "@iguhealth/client";
+import { AsynchronousClient } from "@iguhealth/client";
 import {
   BundleEntry,
   Resource,
@@ -35,8 +35,8 @@ import {
   createCertsIfNoneExists,
   getSigningKey,
 } from "../authN/certifications.js";
-import { createFHIRAPI, createFHIRServices } from "../fhir-context/index.js";
-import { FHIRServerCTX } from "../fhir-context/types.js";
+import { createFHIRAPI, createFHIRServices } from "../fhir-api/index.js";
+import { FHIRServerCTX } from "../fhir-api/types.js";
 import { httpRequestToFHIRRequest } from "../fhir-http/index.js";
 import logAuditEvent, {
   MAJOR_FAILURE,
@@ -96,7 +96,7 @@ function getVersionSequence(resource: Resource): number {
 }
 
 async function handleSubscriptionPayload(
-  server: VersionedAsynchronousClient<unknown, FHIRServerCTX>,
+  server: AsynchronousClient<unknown, FHIRServerCTX>,
   ctx: FHIRServerCTX,
   fhirVersion: R4,
   subscription: Subscription,
@@ -227,7 +227,7 @@ function processSubscription(
   workerID: string,
   ctx: FHIRServerCTX,
   fhirVersion: FHIR_VERSION,
-  server: VersionedAsynchronousClient<unknown, FHIRServerCTX>,
+  server: AsynchronousClient<unknown, FHIRServerCTX>,
 
   subscriptionId: id,
 ) {

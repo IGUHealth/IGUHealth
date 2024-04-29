@@ -4,19 +4,17 @@ import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import {
-  AResource,
   OperationDefinition,
   Parameters,
-  Resource,
-  ResourceType,
   canonical,
   uri,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
+  AllResourceTypes,
   FHIR_VERSION,
   R4,
-  VersionedAResource,
-  VersionedResourceType,
+  Resource,
+  ResourceType,
 } from "@iguhealth/fhir-types/lib/versions";
 import { OperationError, outcome } from "@iguhealth/operation-outcomes";
 
@@ -234,15 +232,15 @@ test("execution", async () => {
     fhirVersion: R4,
     resolveCanonical<
       FHIRVersion extends FHIR_VERSION,
-      Type extends VersionedResourceType<FHIRVersion>,
+      Type extends ResourceType<FHIRVersion>,
     >(
       fhirVersion: FHIRVersion,
       type: Type,
       url: canonical,
-    ): VersionedAResource<FHIRVersion, Type> | undefined {
+    ): Resource<FHIRVersion, Type> | undefined {
       const sd = structureDefinitions.find((sd) => sd.url === url);
       if (!sd) throw new Error(`Could not resolve url ${url}`);
-      return sd as VersionedAResource<FHIRVersion, Type> | undefined;
+      return sd as Resource<FHIRVersion, Type> | undefined;
     },
     resolveTypeToCanonical: (version: FHIR_VERSION, type: uri) => {
       const sd = structureDefinitions.find((sd) => sd.type === type);
@@ -305,15 +303,15 @@ test("paramValidation", async () => {
     fhirVersion: R4,
     resolveCanonical<
       FHIRVersion extends FHIR_VERSION,
-      Type extends VersionedResourceType<FHIRVersion>,
+      Type extends ResourceType<FHIRVersion>,
     >(
       fhirVersion: FHIRVersion,
       type: Type,
       url: canonical,
-    ): VersionedAResource<FHIRVersion, Type> | undefined {
+    ): Resource<FHIRVersion, Type> | undefined {
       const sd = structureDefinitions.find((sd) => sd.url === url);
       if (!sd) throw new Error(`Could not resolve url ${url}`);
-      return sd as VersionedAResource<FHIRVersion, Type> | undefined;
+      return sd as Resource<FHIRVersion, Type> | undefined;
     },
     resolveTypeToCanonical: (version: FHIR_VERSION, type: uri) => {
       const sd = structureDefinitions.find((sd) => sd.type === type);
@@ -503,22 +501,27 @@ test("Test invalid resource validation", async () => {
       },
     ],
   } as OperationDefinition;
-  const operation: IOperation<{ payload: Resource[] }, { test: string }> =
-    new Operation<{ payload: Resource[] }, { test: string }>(op);
+  const operation: IOperation<
+    { payload: Resource<R4, AllResourceTypes>[] },
+    { test: string }
+  > = new Operation<
+    { payload: Resource<R4, AllResourceTypes>[] },
+    { test: string }
+  >(op);
 
   const ctx: OpCTX = {
     fhirVersion: R4,
     resolveCanonical<
       FHIRVersion extends FHIR_VERSION,
-      Type extends VersionedResourceType<FHIRVersion>,
+      Type extends ResourceType<FHIRVersion>,
     >(
       fhirVersion: FHIRVersion,
       type: Type,
       url: canonical,
-    ): VersionedAResource<FHIRVersion, Type> | undefined {
+    ): Resource<FHIRVersion, Type> | undefined {
       const sd = structureDefinitions.find((sd) => sd.url === url);
       if (!sd) throw new Error(`Could not resolve url ${url}`);
-      return sd as VersionedAResource<FHIRVersion, Type> | undefined;
+      return sd as Resource<FHIRVersion, Type> | undefined;
     },
     resolveTypeToCanonical: (version: FHIR_VERSION, type: uri) => {
       const sd = structureDefinitions.find((sd) => sd.type === type);
@@ -529,7 +532,10 @@ test("Test invalid resource validation", async () => {
   };
 
   const invoke = async (
-    op: IOperation<{ payload: Resource[] }, { test: string }>,
+    op: IOperation<
+      { payload: Resource<R4, AllResourceTypes>[] },
+      { test: string }
+    >,
     ctx: OpCTX,
     input: unknown,
   ) => {
