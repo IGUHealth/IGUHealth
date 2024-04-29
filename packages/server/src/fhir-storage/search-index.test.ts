@@ -11,15 +11,15 @@ import {
   FHIR_VERSION,
   R4,
   R4B,
-  VersionedAResource,
-  VersionedResourceType,
+  Resource,
+  ResourceType,
 } from "@iguhealth/fhir-types/lib/versions";
 import * as fhirpath from "@iguhealth/fhirpath";
 
 function getArtifactResources<Version extends FHIR_VERSION>(
   fhirVersion: Version,
-  resourceTypes: VersionedResourceType<Version>[],
-): VersionedAResource<Version, AllResourceTypes>[] {
+  resourceTypes: ResourceType<Version>[],
+): Resource<Version, AllResourceTypes>[] {
   const artifactResources = resourceTypes
     .map((resourceType) =>
       loadArtifacts({
@@ -38,18 +38,18 @@ function getArtifactResources<Version extends FHIR_VERSION>(
     )
     .flat();
 
-  return artifactResources as VersionedAResource<Version, AllResourceTypes>[];
+  return artifactResources as Resource<Version, AllResourceTypes>[];
 }
 
 const r4ArtifactResources = getArtifactResources(R4, [
   ...r4Sets.resourceTypes.values(),
-] as VersionedResourceType<R4>[]);
+] as ResourceType<R4>[]);
 
 test.each(
   [...r4Sets.resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)),
 )(`R4 Testing indexing resourceType '%s'`, (resourceType) => {
   const searchParameters = r4ArtifactResources.filter(
-    (r): r is VersionedAResource<R4, "SearchParameter"> =>
+    (r): r is Resource<R4, "SearchParameter"> =>
       r.resourceType === "SearchParameter" &&
       r.base.includes(resourceType as code),
   );
@@ -71,7 +71,7 @@ test.each(
                 return r4ArtifactResources.find(
                   (r) =>
                     r.resourceType === "StructureDefinition" && r.type === type,
-                ) as VersionedAResource<R4, "StructureDefinition"> | undefined;
+                ) as Resource<R4, "StructureDefinition"> | undefined;
               },
             },
           });
@@ -90,13 +90,13 @@ test.each(
 
 const r4bArtifactResources = getArtifactResources(R4B, [
   ...r4bSets.resourceTypes.values(),
-] as VersionedResourceType<R4B>[]);
+] as ResourceType<R4B>[]);
 
 test.each(
   [...r4bSets.resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)),
 )(`R4B Testing indexing resourceType '%s'`, (resourceType) => {
   const searchParameters = r4bArtifactResources.filter(
-    (r): r is VersionedAResource<R4B, "SearchParameter"> =>
+    (r): r is Resource<R4B, "SearchParameter"> =>
       r.resourceType === "SearchParameter" &&
       r.base.includes(resourceType as code),
   );
@@ -118,7 +118,7 @@ test.each(
                 return r4bArtifactResources.find(
                   (r) =>
                     r.resourceType === "StructureDefinition" && r.type === type,
-                ) as VersionedAResource<R4B, "StructureDefinition"> | undefined;
+                ) as Resource<R4B, "StructureDefinition"> | undefined;
               },
             },
           });

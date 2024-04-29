@@ -1,8 +1,5 @@
 import { ElementDefinition, unsignedInt } from "@iguhealth/fhir-types/r4/types";
-import {
-  FHIR_VERSION,
-  VersionedAResource,
-} from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 
 import { traversalBottomUp } from "./sdTraversal.js";
 
@@ -61,7 +58,7 @@ function capitalize(str: string) {
 }
 
 function isRoot(
-  sd: VersionedAResource<FHIR_VERSION, "StructureDefinition">,
+  sd: Resource<FHIR_VERSION, "StructureDefinition">,
   elementDefinition: ElementDefinition,
 ) {
   return elementDefinition.path === sd.id;
@@ -88,7 +85,7 @@ function getElementField(element: ElementDefinition, type?: string) {
 }
 
 function primitiveToTypescriptType(
-  primitiveSd: VersionedAResource<FHIR_VERSION, "StructureDefinition">,
+  primitiveSd: Resource<FHIR_VERSION, "StructureDefinition">,
 ): string | void {
   const primitiveValueType = primitiveSd.snapshot?.element.filter((element) =>
     element.path.endsWith(".value"),
@@ -183,7 +180,7 @@ function getInterfaceName(element: ElementDefinition) {
   Resolves an elements content Reference
 */
 function contentReference(
-  sd: VersionedAResource<FHIR_VERSION, "StructureDefinition">,
+  sd: Resource<FHIR_VERSION, "StructureDefinition">,
   element: ElementDefinition,
 ) {
   const contentReference = element.contentReference?.split("#")[1];
@@ -227,7 +224,7 @@ function getPrimitiveExtension(element: ElementDefinition, type: string) {
 }
 
 function processLeaf(
-  sd: VersionedAResource<FHIR_VERSION, "StructureDefinition">,
+  sd: Resource<FHIR_VERSION, "StructureDefinition">,
   element: ElementDefinition,
 ) {
   if (element.contentReference) {
@@ -267,7 +264,7 @@ interface ComplexTypeOutput {
 }
 
 function processComplexToTypescript(
-  sd: VersionedAResource<FHIR_VERSION, "StructureDefinition">,
+  sd: Resource<FHIR_VERSION, "StructureDefinition">,
   element: ElementDefinition,
   children: string[],
 ): ComplexTypeOutput {
@@ -290,7 +287,7 @@ ${children.join("\n")}
 }
 
 function resourceOrComplexFhirToTypescript(
-  sd: VersionedAResource<FHIR_VERSION, "StructureDefinition">,
+  sd: Resource<FHIR_VERSION, "StructureDefinition">,
 ): string | void {
   let typescriptTypes = "";
   traversalBottomUp(sd, (element, children: string[]): string[] => {
@@ -310,14 +307,14 @@ function resourceOrComplexFhirToTypescript(
 }
 
 function getNonAbstractResourceTypes(
-  sds: VersionedAResource<FHIR_VERSION, "StructureDefinition">[],
+  sds: Resource<FHIR_VERSION, "StructureDefinition">[],
 ) {
   return sds.filter((sd) => !sd.abstract);
 }
 
 // Handle DomainResource and Resource by union joining existing generated types.
 function abstractResourceTypes(
-  resourcesSds: VersionedAResource<FHIR_VERSION, "StructureDefinition">[],
+  resourcesSds: Resource<FHIR_VERSION, "StructureDefinition">[],
 ) {
   const abstractResourceTypes = resourcesSds.filter((sd) => sd.abstract);
   const nonAbstractResourceTypes = resourcesSds.filter((sd) => !sd.abstract);
@@ -344,7 +341,7 @@ function abstractResourceTypes(
 export function generateTypes<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   structureDefinitions: Readonly<
-    Array<VersionedAResource<Version, "StructureDefinition">>
+    Array<Resource<Version, "StructureDefinition">>
   >,
 ): string {
   const primitiveTypes = structureDefinitions.filter(

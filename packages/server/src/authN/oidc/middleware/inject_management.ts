@@ -2,7 +2,7 @@ import * as Koa from "koa";
 
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import { KoaContext } from "../../../fhir-context/types.js";
+import { KoaContext } from "../../../fhir-api/types.js";
 import GlobalAuthorizationCodeManagement from "../../db/code/provider/global.js";
 import TenantAuthorizationCodeManagement from "../../db/code/provider/tenant.js";
 import GlobalUserManagement from "../../db/users/provider/global.js";

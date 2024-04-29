@@ -3,7 +3,7 @@ import { stripUrlQueryAndFragment } from "@sentry/utils";
 import type Koa from "koa";
 import pg from "pg";
 
-import { KoaContext } from "../fhir-context/types.js";
+import { KoaContext } from "../fhir-api/types.js";
 
 export function enableSentry(
   sentryDSN: string,

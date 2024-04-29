@@ -3,7 +3,7 @@ import type * as s from "zapatos/schema";
 
 import { splitParameter } from "@iguhealth/client/url";
 
-import { FHIRServerCTX } from "../../../../../fhir-context/types.js";
+import { FHIRServerCTX } from "../../../../../fhir-api/types.js";
 import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
 import { missingModifier } from "./shared.js";
 

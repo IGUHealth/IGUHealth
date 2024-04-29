@@ -12,12 +12,12 @@ import {
   FHIR_VERSION,
   R4,
   R4B,
-  VersionedAResource,
+  Resource,
 } from "@iguhealth/fhir-types/versions";
 import { AccessTokenPayload, TenantId } from "@iguhealth/jwt";
 
 import { IOCache } from "../cache/interface.js";
-import { FHIRServerCTX } from "../fhir-context/types.js";
+import { FHIRServerCTX } from "../fhir-api/types.js";
 import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
 import { Lock } from "../synchronization/interfaces.js";
 import { Memory } from "./providers/memory/async.js";
@@ -85,10 +85,7 @@ export const testServices: FHIRServerCTX = {
     type: Type,
     url: canonical,
   ) => {
-    return sds.find((sd) => sd.url === url) as VersionedAResource<
-      Version,
-      Type
-    >;
+    return sds.find((sd) => sd.url === url) as Resource<Version, Type>;
   },
   resolveTypeToCanonical: (_fhirVersion, type: uri) => {
     const sd = sds.find((sd) => sd.type === type);

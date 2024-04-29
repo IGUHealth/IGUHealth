@@ -1,11 +1,11 @@
 import { canonical } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
   FHIR_VERSION,
-  VersionedAResource,
-  VersionedResourceType,
+  Resource,
+  ResourceType,
 } from "@iguhealth/fhir-types/versions";
 
-import { FHIRServerCTX } from "../../fhir-context/types.js";
+import { FHIRServerCTX } from "../../fhir-api/types.js";
 import type { ResolveRemoteCanonical } from "./search/dataConversion.js";
 
 export function createResolverRemoteCanonical(
@@ -13,7 +13,7 @@ export function createResolverRemoteCanonical(
 ): ResolveRemoteCanonical {
   return async <FHIRVersion extends FHIR_VERSION>(
     fhirVersion: FHIRVersion,
-    types: VersionedResourceType<FHIRVersion>[],
+    types: ResourceType<FHIRVersion>[],
     url: canonical,
   ) => {
     const results = await ctx.client.search_system(ctx, fhirVersion, [
@@ -26,7 +26,7 @@ export function createResolverRemoteCanonical(
     }
 
     return results.resources[0] as
-      | VersionedAResource<FHIRVersion, VersionedResourceType<FHIRVersion>>
+      | Resource<FHIRVersion, ResourceType<FHIRVersion>>
       | undefined;
   };
 }

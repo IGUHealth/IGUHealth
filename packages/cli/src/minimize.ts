@@ -5,7 +5,7 @@ import path from "node:path";
 import {
   AllResourceTypes,
   FHIR_VERSION,
-  VersionedAResource,
+  Resource,
 } from "@iguhealth/fhir-types/versions";
 
 function getAllFiles(directory: string): string[] {
@@ -22,9 +22,9 @@ function getAllFiles(directory: string): string[] {
   return files;
 }
 
-function minimizeResource<
-  Resource extends VersionedAResource<FHIR_VERSION, AllResourceTypes>,
->(resource: Resource): Resource {
+function minimizeResource<T extends Resource<FHIR_VERSION, AllResourceTypes>>(
+  resource: T,
+): T {
   switch (resource.resourceType) {
     case "StructureDefinition": {
       const minimizedSd = {
@@ -49,7 +49,7 @@ function minimizeResource<
             }) ?? [],
         },
       };
-      return minimizedSd as Resource;
+      return minimizedSd as T;
     }
     case "ValueSet": {
       return resource;
@@ -83,7 +83,7 @@ export function minimizeCommands(command: Command) {
         const fileContents = fs.readFileSync(file);
         const json = JSON.parse(fileContents.toString("utf8"));
         if (json.resourceType === "Bundle") {
-          const bundle = json as VersionedAResource<FHIR_VERSION, "Bundle">;
+          const bundle = json as Resource<FHIR_VERSION, "Bundle">;
           fs.writeFileSync(
             file.replace(".json", ".min.json"),
             JSON.stringify({
@@ -102,7 +102,7 @@ export function minimizeCommands(command: Command) {
             file.replace(".json", ".min.json"),
             JSON.stringify(
               minimizeResource(
-                json as VersionedAResource<FHIR_VERSION, AllResourceTypes>,
+                json as Resource<FHIR_VERSION, AllResourceTypes>,
               ),
             ),
           );

@@ -2,7 +2,7 @@ import type { Logger } from "pino";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
-import { VersionedFHIRClientAsync } from "@iguhealth/client/interface";
+import { FHIRClientAsync } from "@iguhealth/client/interface";
 import {
   AccessPolicy,
   ClientApplication,
@@ -15,7 +15,7 @@ import {
 import {
   AllResourceTypes,
   FHIR_VERSION,
-  VersionedAResource,
+  Resource,
 } from "@iguhealth/fhir-types/versions";
 import { AccessTokenPayload, IGUHEALTH_ISSUER, TenantId } from "@iguhealth/jwt";
 
@@ -94,7 +94,7 @@ export interface FHIRServerCTX {
   user: UserContext;
 
   // FHIR Client
-  client: VersionedFHIRClientAsync<FHIRServerCTX>;
+  client: FHIRClientAsync<FHIRServerCTX>;
 
   // Services
   db: db.Queryable;
@@ -120,7 +120,7 @@ export interface FHIRServerCTX {
     fhirVersion: FHIRVersion,
     type: Type,
     url: canonical,
-  ) => VersionedAResource<FHIRVersion, Type> | undefined;
+  ) => Resource<FHIRVersion, Type> | undefined;
 }
 
 /**

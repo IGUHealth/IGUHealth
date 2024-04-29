@@ -12,7 +12,6 @@ import {
   Quantity,
   Range,
   Reference,
-  ResourceType,
   canonical,
   date,
   dateTime,
@@ -23,8 +22,8 @@ import {
 import {
   FHIR_VERSION,
   R4,
-  VersionedAResource,
-  VersionedResourceType,
+  Resource,
+  ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import {
   MetaValueArray,
@@ -163,7 +162,7 @@ function toReferenceLocal(
   value: MetaValueSingular<NonNullable<unknown>>,
 ): Array<{
   reference: Reference;
-  resourceType?: ResourceType;
+  resourceType?: ResourceType<FHIR_VERSION>;
   id?: id;
   url?: canonical | uri;
 }> {
@@ -175,7 +174,7 @@ function toReferenceLocal(
         return [
           {
             reference: reference,
-            resourceType: resourceType as ResourceType,
+            resourceType: resourceType as ResourceType<FHIR_VERSION>,
             id: id as id,
           },
         ];
@@ -196,21 +195,18 @@ function toReferenceLocal(
 
 export type ResolveRemoteCanonical = <FHIRVersion extends FHIR_VERSION>(
   fhirVersion: FHIRVersion,
-  types: VersionedResourceType<FHIRVersion>[],
+  types: ResourceType<FHIRVersion>[],
   url: canonical,
-) => Promise<
-  | VersionedAResource<FHIRVersion, VersionedResourceType<FHIRVersion>>
-  | undefined
->;
+) => Promise<Resource<FHIRVersion, ResourceType<FHIRVersion>> | undefined>;
 
 async function toReferenceRemote(
-  parameter: VersionedAResource<FHIR_VERSION, "SearchParameter">,
+  parameter: Resource<FHIR_VERSION, "SearchParameter">,
   value: MetaValueSingular<NonNullable<unknown>>,
   resolveCanonical?: ResolveRemoteCanonical,
 ): Promise<
   Array<{
     reference: Reference;
-    resourceType?: ResourceType;
+    resourceType?: ResourceType<FHIR_VERSION>;
     id?: id;
     url?: canonical | uri;
   }>
@@ -223,7 +219,7 @@ async function toReferenceRemote(
         return [
           {
             reference: reference,
-            resourceType: resourceType as ResourceType,
+            resourceType: resourceType as ResourceType<FHIR_VERSION>,
             id: id as id,
           },
         ];
@@ -245,7 +241,7 @@ async function toReferenceRemote(
       const resource = resolveCanonical
         ? await resolveCanonical(
             R4,
-            parameter.target as ResourceType[],
+            parameter.target as ResourceType<FHIR_VERSION>[],
             value.valueOf().toString() as canonical,
           )
         : undefined;
@@ -528,7 +524,7 @@ export function dataConversionLocal<T extends SEARCH_TYPE>(
 }
 
 export default async function dataConversion<T extends SEARCH_TYPE>(
-  parameter: VersionedAResource<FHIR_VERSION, "SearchParameter">,
+  parameter: Resource<FHIR_VERSION, "SearchParameter">,
   type: T,
   evaluation: MetaValueSingular<NonNullable<unknown>>[],
   resolveRemoteCanonical?: ResolveRemoteCanonical,

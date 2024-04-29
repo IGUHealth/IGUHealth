@@ -41,8 +41,8 @@ import {
   createKoaFHIRServices,
   getRedisClient,
   logger,
-} from "./fhir-context/index.js";
-import { KoaContext } from "./fhir-context/types.js";
+} from "./fhir-api/index.js";
+import { KoaContext } from "./fhir-api/types.js";
 import {
   fhirResponseToHTTPResponse,
   httpRequestToFHIRRequest,

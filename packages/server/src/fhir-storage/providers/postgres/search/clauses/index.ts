@@ -3,7 +3,7 @@ import type * as s from "zapatos/schema";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../../../fhir-context/types.js";
+import { FHIRServerCTX } from "../../../../../fhir-api/types.js";
 import {
   SearchParameterResource,
   searchParameterToTableName,

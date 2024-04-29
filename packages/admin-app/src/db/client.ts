@@ -1,13 +1,13 @@
 import { atom } from "recoil";
 
-import { VersionedAsynchronousClient } from "@iguhealth/client";
+import { AsynchronousClient } from "@iguhealth/client";
 import createHTTPClient from "@iguhealth/client/http";
 import { createMiddlewareAsync } from "@iguhealth/client/middleware";
 import { FHIRResponse } from "@iguhealth/client/types";
 
-type CachedClient = VersionedAsynchronousClient<
+type CachedClient = AsynchronousClient<
   {
-    client: VersionedAsynchronousClient<
+    client: AsynchronousClient<
       { client: ReturnType<typeof createAdminAppClient> },
       unknown
     >;
@@ -29,7 +29,7 @@ const cachedResponse: Record<string, Promise<FHIRResponse>> = {};
 export function createAdminAppClient(
   client: ReturnType<typeof createHTTPClient>,
 ): CachedClient {
-  return new VersionedAsynchronousClient(
+  return new AsynchronousClient(
     { client: client },
     createMiddlewareAsync<
       { client: ReturnType<typeof createHTTPClient> },

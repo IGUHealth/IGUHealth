@@ -8,7 +8,7 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { KoaContext } from "../../fhir-context/types.js";
+import { KoaContext } from "../../fhir-api/types.js";
 
 function findCurrentTenant<Context extends Koa.DefaultContext>(
   ctx: KoaContext.FHIR<Context>,

@@ -7,7 +7,7 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../fhir-context/types.js";
+import { FHIRServerCTX } from "../../fhir-api/types.js";
 
 /**
  * Determine whether or not the policy access has access to the resource type.

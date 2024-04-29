@@ -3,7 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
-import { VersionedFHIRClientAsync } from "@iguhealth/client/lib/interface";
+import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
 import {
   Observation,
   Patient,
@@ -12,13 +12,13 @@ import {
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { R4 } from "@iguhealth/fhir-types/lib/versions";
 
-import { FHIRServerCTX } from "../../../fhir-context/types.js";
+import { FHIRServerCTX } from "../../../fhir-api/types.js";
 import { testServices } from "../../test-ctx.js";
 import { Memory } from "./async.js";
 
 async function createMemoryDatabase(
   resourceTypes: ResourceType[],
-): Promise<VersionedFHIRClientAsync<FHIRServerCTX>> {
+): Promise<FHIRClientAsync<FHIRServerCTX>> {
   const database = new Memory({});
   const artifactResources: Resource[] = resourceTypes
     .map((resourceType) =>

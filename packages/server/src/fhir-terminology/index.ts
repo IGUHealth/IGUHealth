@@ -5,11 +5,7 @@ import {
   ValueSetExpansionContains,
   dateTime,
 } from "@iguhealth/fhir-types/r4/types";
-import {
-  FHIR_VERSION,
-  R4,
-  VersionedAResource,
-} from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, R4, Resource } from "@iguhealth/fhir-types/versions";
 import {
   CodeSystemLookup,
   ValueSetExpand,
@@ -17,7 +13,7 @@ import {
 } from "@iguhealth/generated-ops/r4";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../fhir-context/types.js";
+import { FHIRServerCTX } from "../fhir-api/types.js";
 import { TerminologyProvider } from "./interface.js";
 
 import ExpandInput = ValueSetExpand.Input;
@@ -44,7 +40,7 @@ function areCodesInline(include: ValueSetComposeInclude) {
 }
 
 function codeSystemConceptToValuesetExpansion(
-  codesystem: VersionedAResource<FHIR_VERSION, "CodeSystem">,
+  codesystem: Resource<FHIR_VERSION, "CodeSystem">,
   concepts: CodeSystemConcept[],
 ): ValueSetExpansionContains[] {
   return concepts.map((concept) => {
@@ -65,7 +61,7 @@ function codeSystemConceptToValuesetExpansion(
 async function getValuesetExpansionContains<Version extends FHIR_VERSION>(
   ctx: FHIRServerCTX,
   fhirVersion: Version,
-  valueSet: VersionedAResource<Version, "ValueSet">,
+  valueSet: Resource<Version, "ValueSet">,
 ): Promise<ValueSetExpansionContains[]> {
   let expansion: ValueSetExpansionContains[] = [];
   for (const include of valueSet.compose?.include || []) {
@@ -199,7 +195,7 @@ export class TerminologyProviderMemory implements TerminologyProvider {
     fhirVersion: FHIR_VERSION,
     input: ExpandInput,
   ): Promise<ExpandOutput> {
-    let valueset: VersionedAResource<"4.0", "ValueSet"> | undefined;
+    let valueset: Resource<"4.0", "ValueSet"> | undefined;
     if (input.valueSet) {
       valueset = input.valueSet;
     } else if (input.url) {

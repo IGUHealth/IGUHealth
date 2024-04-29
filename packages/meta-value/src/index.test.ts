@@ -10,11 +10,7 @@ import {
   StructureDefinition,
   uri,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import {
-  FHIR_VERSION,
-  R4,
-  VersionedAResource,
-} from "@iguhealth/fhir-types/lib/versions";
+import { FHIR_VERSION, R4, Resource } from "@iguhealth/fhir-types/lib/versions";
 
 import { MetaValueArray, MetaValueSingular, descend } from "./index";
 
@@ -26,9 +22,7 @@ const sds: StructureDefinition[] = loadArtifacts({
 
 const getSD = <Version extends FHIR_VERSION>(_version: Version, type: uri) => {
   const foundSD = sds.find((sd) => sd.type === type);
-  return foundSD as
-    | VersionedAResource<Version, "StructureDefinition">
-    | undefined;
+  return foundSD as Resource<Version, "StructureDefinition"> | undefined;
 };
 
 const patientSD = sds.find(

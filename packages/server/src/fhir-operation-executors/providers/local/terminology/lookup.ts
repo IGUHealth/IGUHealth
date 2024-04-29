@@ -1,7 +1,7 @@
 import { FHIRRequest } from "@iguhealth/client/types";
 import { CodeSystemLookup } from "@iguhealth/generated-ops/r4";
 
-import { FHIRServerCTX } from "../../../../fhir-context/types.js";
+import { FHIRServerCTX } from "../../../../fhir-api/types.js";
 import InlineOperation from "../interface.js";
 
 const CodeSystemLookupInvoke = InlineOperation(

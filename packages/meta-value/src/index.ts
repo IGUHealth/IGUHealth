@@ -1,11 +1,7 @@
 import { complexTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import * as r4 from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
-import {
-  FHIR_VERSION,
-  R4,
-  VersionedAResource,
-} from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, R4, Resource } from "@iguhealth/fhir-types/versions";
 
 type Element = r4.Element | r4b.Element;
 type ElementDefinition = r4.ElementDefinition | r4b.ElementDefinition;
@@ -50,7 +46,7 @@ type TypeMeta = {
   getSD?: <Version extends FHIR_VERSION>(
     fhirVersion: Version,
     type: uri,
-  ) => VersionedAResource<Version, "StructureDefinition"> | undefined;
+  ) => Resource<Version, "StructureDefinition"> | undefined;
 };
 
 export type Meta = { location: Location; type: TypeMeta | undefined };

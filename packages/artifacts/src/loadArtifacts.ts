@@ -4,8 +4,8 @@ import { Bundle } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import {
   FHIR_VERSION,
-  VersionedAResource,
-  VersionedResourceType,
+  Resource,
+  ResourceType,
 } from "@iguhealth/fhir-types/versions";
 
 import { IndexFile, PackageJSON } from "./types.js";
@@ -14,14 +14,11 @@ function isBundle(r: unknown): r is Bundle | r4b.Bundle {
   return (r as Record<string, unknown>)?.resourceType === "Bundle";
 }
 
-function isType<
-  Version extends FHIR_VERSION,
-  T extends VersionedResourceType<Version>,
->(
+function isType<Version extends FHIR_VERSION, T extends ResourceType<Version>>(
   _fhirVersion: Version,
   type: T,
   r: unknown,
-): r is VersionedAResource<Version, T> {
+): r is Resource<Version, T> {
   return (
     r !== undefined && (r as Record<string, unknown>)?.resourceType === type
   );
@@ -29,15 +26,11 @@ function isType<
 
 function flattenOrInclude<
   Version extends FHIR_VERSION,
-  T extends VersionedResourceType<Version>,
->(
-  fhirVersion: Version,
-  type: T,
-  resource: unknown,
-): VersionedAResource<Version, T>[] {
+  T extends ResourceType<Version>,
+>(fhirVersion: Version, type: T, resource: unknown): Resource<Version, T>[] {
   if (isBundle(resource)) {
     const resources = (resource.entry || [])?.map((entry) => entry.resource);
-    return resources.filter((r: unknown): r is VersionedAResource<Version, T> =>
+    return resources.filter((r: unknown): r is Resource<Version, T> =>
       isType(fhirVersion, type, r),
     );
   }
@@ -54,7 +47,7 @@ function flattenOrInclude<
  */
 export default function loadArtifacts<
   Version extends FHIR_VERSION,
-  T extends VersionedResourceType<Version>,
+  T extends ResourceType<Version>,
 >({
   fhirVersion,
   resourceType,
@@ -68,7 +61,7 @@ export default function loadArtifacts<
   packageLocation: string;
   silence?: boolean;
   onlyPackages?: string[];
-}): VersionedAResource<Version, T>[] {
+}): Resource<Version, T>[] {
   const requirer = createRequire(packageLocation);
   const packageJSON: PackageJSON = requirer("./package.json");
 

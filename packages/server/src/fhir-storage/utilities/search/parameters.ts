@@ -1,15 +1,14 @@
-import { VersionedFHIRClientAsync } from "@iguhealth/client/interface";
+import { FHIRClientAsync } from "@iguhealth/client/interface";
 import { FHIRRequest } from "@iguhealth/client/types";
 import { ParsedParameter } from "@iguhealth/client/url";
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
-import { ResourceType } from "@iguhealth/fhir-types/r4/types";
 import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import {
   AllResourceTypes,
   FHIR_VERSION,
   R4B,
-  VersionedAResource,
-  VersionedResourceType,
+  Resource,
+  ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -17,8 +16,8 @@ import { param_types_supported } from "../../providers/postgres/constants.js";
 
 export type SearchParameterResource = ParsedParameter<string | number> & {
   type: "resource";
-  searchParameter: VersionedAResource<FHIR_VERSION, "SearchParameter">;
-  chainedParameters?: VersionedAResource<FHIR_VERSION, "SearchParameter">[][];
+  searchParameter: Resource<FHIR_VERSION, "SearchParameter">;
+  chainedParameters?: Resource<FHIR_VERSION, "SearchParameter">[][];
 };
 
 export type SearchParameterResult = ParsedParameter<string | number> & {
@@ -48,7 +47,7 @@ export function deriveLimit(
 
 export function searchResources(
   resourceTypes: AllResourceTypes[],
-): (ResourceType | string)[] {
+): (ResourceType<FHIR_VERSION> | string)[] {
   const searchTypes = ["Resource", "DomainResource"];
   if (resourceTypes.length > 0) {
     return searchTypes.concat(resourceTypes);
@@ -71,10 +70,7 @@ type SearchTables =
   | "r4_uri_idx";
 
 export function searchParameterToTableName(
-  searchparameter_type: VersionedAResource<
-    FHIR_VERSION,
-    "SearchParameter"
-  >["type"],
+  searchparameter_type: Resource<FHIR_VERSION, "SearchParameter">["type"],
 ): SearchTables {
   if (param_types_supported.includes(searchparameter_type)) {
     return `r4_${searchparameter_type}_idx` as SearchTables;
@@ -93,7 +89,8 @@ function _deriveResourceTypeFilter(request: FHIRRequest): string[] {
     case "search-request": {
       if (request.level === "type") return [request.resourceType];
       const _typeParameter = request.parameters.find((p) => p.name === "_type");
-      if (_typeParameter) return _typeParameter.value as ResourceType[];
+      if (_typeParameter)
+        return _typeParameter.value as ResourceType<FHIR_VERSION>[];
       return [];
     }
     default:
@@ -103,8 +100,10 @@ function _deriveResourceTypeFilter(request: FHIRRequest): string[] {
 
 export function deriveResourceTypeFilter<Request extends FHIRRequest>(
   request: Request,
-): VersionedResourceType<Request["fhirVersion"]>[] {
-  const passedinTypes = _deriveResourceTypeFilter(request) as ResourceType[];
+): ResourceType<Request["fhirVersion"]>[] {
+  const passedinTypes = _deriveResourceTypeFilter(
+    request,
+  ) as ResourceType<FHIR_VERSION>[];
 
   const resourceTypes =
     request.fhirVersion === R4B ? r4bSets.resourceTypes : r4Sets.resourceTypes;
@@ -119,7 +118,7 @@ export function deriveResourceTypeFilter<Request extends FHIRRequest>(
       );
     }
   }
-  return passedinTypes as VersionedResourceType<Request["fhirVersion"]>[];
+  return passedinTypes as ResourceType<Request["fhirVersion"]>[];
 }
 
 /*
@@ -127,8 +126,8 @@ export function deriveResourceTypeFilter<Request extends FHIRRequest>(
  * Given type with heirarchy of inherited types (DomainResource, Resource)
  */
 export function typesToSearch(
-  resourceTypes: ResourceType[],
-): (ResourceType | string)[] {
+  resourceTypes: ResourceType<FHIR_VERSION>[],
+): (ResourceType<FHIR_VERSION> | string)[] {
   const searchTypes = ["Resource", "DomainResource"];
   if (resourceTypes.length > 0) {
     return searchTypes.concat(resourceTypes);
@@ -141,16 +140,13 @@ async function associateChainedParameters(
   resolveSearchParameter: (
     resourceTypes: AllResourceTypes[],
     name: string,
-  ) => Promise<VersionedAResource<FHIR_VERSION, "SearchParameter">[]>,
+  ) => Promise<Resource<FHIR_VERSION, "SearchParameter">[]>,
 ): Promise<SearchParameterResource> {
   if (!parsedParameter.chains) return parsedParameter;
 
   // All middle chains should be references.
   let last = [parsedParameter.searchParameter];
-  const chainedParameters: VersionedAResource<
-    FHIR_VERSION,
-    "SearchParameter"
-  >[][] = [];
+  const chainedParameters: Resource<FHIR_VERSION, "SearchParameter">[][] = [];
 
   for (const chain of parsedParameter.chains) {
     const targets = last
@@ -221,7 +217,7 @@ export function isSearchResultParameter(
 
 export async function findSearchParameter<
   CTX,
-  Client extends VersionedFHIRClientAsync<CTX>,
+  Client extends FHIRClientAsync<CTX>,
   Version extends FHIR_VERSION,
 >(
   client: Client,
@@ -229,7 +225,7 @@ export async function findSearchParameter<
   fhirVersion: Version,
   resourceTypes: AllResourceTypes[],
   code: string,
-): Promise<VersionedAResource<Version, "SearchParameter">[]> {
+): Promise<Resource<Version, "SearchParameter">[]> {
   const result = await client.search_type(ctx, fhirVersion, "SearchParameter", [
     { name: "code", value: [code] },
     {
@@ -248,7 +244,7 @@ export async function findSearchParameter<
 type ResolveSearchParameter = (
   resourceTypes: AllResourceTypes[],
   name: string,
-) => Promise<VersionedAResource<FHIR_VERSION, "SearchParameter">[]>;
+) => Promise<Resource<FHIR_VERSION, "SearchParameter">[]>;
 
 export async function parametersWithMetaAssociated(
   resolveSearchParameter: ResolveSearchParameter,

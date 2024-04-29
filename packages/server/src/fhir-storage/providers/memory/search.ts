@@ -1,13 +1,16 @@
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween.js";
 
-import { Resource, uri } from "@iguhealth/fhir-types/r4/types";
-import * as r4b from "@iguhealth/fhir-types/r4b/types";
-import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
+import { uri } from "@iguhealth/fhir-types/r4/types";
+import {
+  AllResourceTypes,
+  FHIR_VERSION,
+  Resource,
+} from "@iguhealth/fhir-types/versions";
 import * as fp from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../fhir-context/types.js";
+import { FHIRServerCTX } from "../../../fhir-api/types.js";
 import dataConversion, {
   ResolveRemoteCanonical,
   SEARCH_TYPE,
@@ -29,7 +32,7 @@ interface MemorySearchCTX {
 async function expressionSearch<CTX extends MemorySearchCTX>(
   ctx: CTX,
   fhirVersion: FHIR_VERSION,
-  resource: Resource | r4b.Resource,
+  resource: Resource<FHIR_VERSION, AllResourceTypes>,
   parameter: SearchParameterResource,
 ) {
   if (!parameter.searchParameter.expression)
@@ -117,7 +120,7 @@ async function expressionSearch<CTX extends MemorySearchCTX>(
 function checkParameterWithResource<CTX extends MemorySearchCTX>(
   ctx: CTX,
   fhirVersion: FHIR_VERSION,
-  resource: Resource | r4b.Resource,
+  resource: Resource<FHIR_VERSION, AllResourceTypes>,
   parameter: SearchParameterResource,
 ) {
   switch (parameter.name) {
@@ -146,7 +149,7 @@ function checkParameterWithResource<CTX extends MemorySearchCTX>(
 export async function fitsSearchCriteria<CTX extends MemorySearchCTX>(
   ctx: CTX,
   fhirVersion: FHIR_VERSION,
-  resource: Resource | r4b.Resource,
+  resource: Resource<FHIR_VERSION, AllResourceTypes>,
   parameters: SearchParameterResource[],
 ) {
   for (const param of parameters) {

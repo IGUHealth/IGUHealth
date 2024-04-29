@@ -32,7 +32,7 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../fhir-context/types.js";
+import { FHIRServerCTX } from "../../../fhir-api/types.js";
 import logAuditEvent, {
   MINOR_FAILURE,
 } from "../../../fhir-logging/auditEvents.js";

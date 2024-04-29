@@ -11,8 +11,8 @@ import {
 import {
   FHIR_VERSION,
   R4,
-  VersionedAResource,
-  VersionedResourceType,
+  Resource,
+  ResourceType,
 } from "@iguhealth/fhir-types/lib/versions";
 import { Invocation } from "@iguhealth/operation-execution";
 import { OpCTX } from "@iguhealth/operation-execution/src/index.js";
@@ -29,15 +29,15 @@ test("Test ValueSet Expands", async () => {
   const ctx: OpCTX = {
     resolveCanonical<
       FHIRVersion extends FHIR_VERSION,
-      Type extends VersionedResourceType<FHIRVersion>,
+      Type extends ResourceType<FHIRVersion>,
     >(
       fhirVersion: FHIRVersion,
       type: Type,
       url: canonical,
-    ): VersionedAResource<FHIRVersion, Type> | undefined {
+    ): Resource<FHIRVersion, Type> | undefined {
       const sd = sds.find((sd) => sd.url === url);
       if (!sd) throw new Error(`Could not resolve type ${type}`);
-      return sd as VersionedAResource<FHIRVersion, Type>;
+      return sd as Resource<FHIRVersion, Type>;
     },
     resolveTypeToCanonical(version: FHIR_VERSION, type: uri): canonical {
       const sd = sds.find((sd) => sd.type === type);

@@ -13,7 +13,7 @@ import {
 } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaContext } from "../../../fhir-context/types.js";
+import { KoaContext } from "../../../fhir-api/types.js";
 import { getSigningKey } from "../../certifications.js";
 import { getCredentialsBasicHeader } from "../../utilities.js";
 
