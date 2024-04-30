@@ -61,33 +61,39 @@ export function getDecimalPrecision(value: number): number {
   return decimalPrecision;
 }
 
-type SearchTables =
+type R4SearchTables =
   | "r4_date_idx"
-  | "r4b_date_idx"
   | "r4_number_idx"
-  | "r4b_number_idx"
   | "r4_quantity_idx"
-  | "r4b_quantity_idx"
   | "r4_reference_idx"
-  | "r4b_reference_idx"
   | "r4_string_idx"
-  | "r4b_string_idx"
   | "r4_token_idx"
+  | "r4_uri_idx";
+
+type R4BSearchTables =
+  | "r4b_date_idx"
+  | "r4b_number_idx"
+  | "r4b_quantity_idx"
+  | "r4b_reference_idx"
+  | "r4b_string_idx"
   | "r4b_token_idx"
-  | "r4_uri_idx"
   | "r4b_uri_idx";
+
+type SearchTable<Version extends FHIR_VERSION> = Version extends R4
+  ? R4SearchTables
+  : R4BSearchTables;
 
 export function searchParameterToTableName<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   searchparameter_type: Resource<Version, "SearchParameter">["type"],
-): SearchTables {
+): SearchTable<Version> {
   if (param_types_supported.includes(searchparameter_type)) {
     switch (fhirVersion) {
-      case R4: {
-        return `r4_${searchparameter_type}_idx` as SearchTables;
-      }
       case R4B: {
-        return `r4b_${searchparameter_type}_idx` as SearchTables;
+        return `r4b_${searchparameter_type}_idx` as SearchTable<Version>;
+      }
+      case R4: {
+        return `r4_${searchparameter_type}_idx` as SearchTable<Version>;
       }
     }
   }
