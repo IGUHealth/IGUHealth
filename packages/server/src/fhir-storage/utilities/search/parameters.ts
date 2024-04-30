@@ -6,6 +6,7 @@ import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import {
   AllResourceTypes,
   FHIR_VERSION,
+  R4,
   R4B,
   Resource,
   ResourceType,
@@ -69,11 +70,19 @@ type SearchTables =
   | "r4_token_idx"
   | "r4_uri_idx";
 
-export function searchParameterToTableName(
-  searchparameter_type: Resource<FHIR_VERSION, "SearchParameter">["type"],
+export function searchParameterToTableName<Version extends FHIR_VERSION>(
+  fhirVersion: Version,
+  searchparameter_type: Resource<Version, "SearchParameter">["type"],
 ): SearchTables {
   if (param_types_supported.includes(searchparameter_type)) {
-    return `r4_${searchparameter_type}_idx` as SearchTables;
+    switch (fhirVersion) {
+      case R4: {
+        return `r4_${searchparameter_type}_idx` as SearchTables;
+      }
+      case R4B: {
+        return `r4b_${searchparameter_type}_idx` as SearchTables;
+      }
+    }
   }
   throw new OperationError(
     outcomeError(

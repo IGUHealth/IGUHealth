@@ -322,7 +322,7 @@ async function removeIndices(
         | s.r4_token_idx.SQL
         | s.r4_reference_idx.SQL
         | s.r4_quantity_idx.SQL
-      >`DELETE FROM ${searchParameterToTableName(type)} WHERE ${{
+      >`DELETE FROM ${searchParameterToTableName(R4, type)} WHERE ${{
         r_id: resource.id,
       }}`.run(client);
     }),
