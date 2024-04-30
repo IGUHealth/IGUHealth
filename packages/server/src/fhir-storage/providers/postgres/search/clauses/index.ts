@@ -1,6 +1,7 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
+import { R4 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../../../fhir-api/types.js";
@@ -38,7 +39,7 @@ export function buildParameterSQL(
   columns: s.Column[] = [],
 ): db.SQLFragment {
   const searchParameter = parameter.searchParameter;
-  const search_table = searchParameterToTableName(searchParameter.type);
+  const search_table = searchParameterToTableName(R4, searchParameter.type);
 
   switch (searchParameter.type) {
     case "number":
