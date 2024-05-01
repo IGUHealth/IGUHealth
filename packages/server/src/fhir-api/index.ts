@@ -12,15 +12,20 @@ import {
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
 import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
-import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
+import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
+import * as r4bSets from "@iguhealth/fhir-types/r4/sets";
 import {
   CapabilityStatementRestResource,
-  ResourceType,
-  StructureDefinition,
   code,
 } from "@iguhealth/fhir-types/r4/types";
-import * as r4b from "@iguhealth/fhir-types/r4b/types";
-import { AllResourceTypes, FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
+import {
+  AllResourceTypes,
+  FHIR_VERSION,
+  ResourceType,
+  Resource,
+  R4,
+  R4B,
+} from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -50,28 +55,46 @@ import { createArtifactMemoryDatabase } from "../fhir-storage/providers/memory/a
 import { createPostgresClient } from "../fhir-storage/providers/postgres/index.js";
 import RouterClient from "../fhir-storage/router.js";
 import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
-import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with { type:"json" };
+import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with { type: "json" };
 import RedisLock from "../synchronization/redis.lock.js";
 import { FHIRServerCTX, KoaContext, asSystemCTX } from "./types.js";
 
-const R4_SPECIAL_TYPES: { MEMORY: ResourceType[]; AUTH: ResourceType[] } = {
+const R4_SPECIAL_TYPES: {
+  MEMORY: ResourceType<R4>[];
+  AUTH: ResourceType<R4>[];
+} = {
   AUTH: AUTH_RESOURCETYPES,
   MEMORY: ["StructureDefinition", "SearchParameter", "ValueSet", "CodeSystem"],
 };
-const ALL_SPECIAL_TYPES = Object.values(R4_SPECIAL_TYPES).flatMap((v) => v);
-const R4_DB_TYPES: ResourceType[] = (
-  [...resourceTypes] as ResourceType[]
-).filter((type) => ALL_SPECIAL_TYPES.indexOf(type) === -1);
+const R4_ALL_SPECIAL_TYPES = Object.values(R4_SPECIAL_TYPES).flatMap((v) => v);
+const R4_DB_TYPES: ResourceType<R4>[] = (
+  [...r4Sets.resourceTypes] as ResourceType<R4>[]
+).filter((type) => R4_ALL_SPECIAL_TYPES.indexOf(type) === -1);
 
-const R4B_SPECIAL_TYPES: { MEMORY: r4b.ResourceType[] } = {
+const R4B_SPECIAL_TYPES: { MEMORY: ResourceType<R4B>[] } & Record<
+  string,
+  ResourceType<R4B>[]
+> = {
+  DISSALLOWED: [
+    // "Subscription",
+    // "SubscriptionTopic",
+    // "SubscriptionStatus",
+    "OperationDefinition",
+  ],
   MEMORY: ["StructureDefinition", "SearchParameter", "ValueSet", "CodeSystem"],
 };
+const R4B_ALL_SPECIAL_TYPES = Object.values(R4B_SPECIAL_TYPES).flatMap(
+  (v) => v,
+);
+const R4B_DB_TYPES: ResourceType<R4B>[] = (
+  [...r4bSets.resourceTypes] as ResourceType<R4B>[]
+).filter((type) => R4B_ALL_SPECIAL_TYPES.indexOf(type) === -1);
 
 async function createResourceRestCapabilities(
   ctx: FHIRServerCTX,
   fhirVersion: FHIR_VERSION,
   memdb: FHIRClientAsync<FHIRServerCTX>,
-  sd: StructureDefinition | r4b.StructureDefinition,
+  sd: Resource<FHIR_VERSION, "StructureDefinition">,
 ): Promise<CapabilityStatementRestResource> {
   const resourceParameters = await memdb.search_type(
     ctx,
@@ -166,7 +189,7 @@ export const logger = pino<string>();
 
 function getResourceTypeToValidate(
   request: FHIRRequest,
-): ResourceType | r4b.ResourceType {
+): ResourceType<FHIR_VERSION> {
   switch (request.type) {
     case "create-request":
       return request.resourceType;
@@ -255,7 +278,11 @@ const capabilitiesMiddleware: MiddlewareAsyncChain<
         fhirVersion: context.request.fhirVersion,
         level: "system",
         type: "capabilities-response",
-        body: await serverCapabilities(context.ctx, context.request.fhirVersion, context.ctx.client),
+        body: await serverCapabilities(
+          context.ctx,
+          context.request.fhirVersion,
+          context.ctx.client,
+        ),
       } as FHIRResponse,
     };
   }
@@ -284,7 +311,7 @@ const encryptionMiddleware: (
           return next({
             ...context,
             // @ts-ignore
-            request: { ...context.request, body: encrypted  },
+            request: { ...context.request, body: encrypted },
           });
         }
         case "patch-request": {
@@ -395,7 +422,6 @@ export async function createFHIRServices(
   const lock = new RedisLock(redis);
   const cache = new RedisCache(redis);
 
-
   const client = await createFHIRClient([
     // OP INVOCATION
     {
@@ -416,7 +442,7 @@ export async function createFHIRServices(
       filter: {
         r4: {
           levelsSupported: ["system", "type", "instance"],
-          resourcesSupported: [...resourceTypes] as ResourceType[],
+          resourcesSupported: [...r4Sets.resourceTypes] as ResourceType<R4>[],
           interactionsSupported: ["invoke-request"],
         },
       },
@@ -452,6 +478,21 @@ export async function createFHIRServices(
         r4: {
           levelsSupported: ["system", "type", "instance"],
           resourcesSupported: R4_DB_TYPES,
+          interactionsSupported: [
+            "read-request",
+            "search-request",
+            "create-request",
+            "patch-request",
+            "update-request",
+            "delete-request",
+            "history-request",
+            "transaction-request",
+            "batch-request",
+          ],
+        },
+        r4b: {
+          levelsSupported: ["system", "type", "instance"],
+          resourcesSupported: R4B_DB_TYPES,
           interactionsSupported: [
             "read-request",
             "search-request",

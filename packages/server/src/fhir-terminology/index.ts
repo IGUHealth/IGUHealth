@@ -62,7 +62,9 @@ async function getValuesetExpansionContains<Version extends FHIR_VERSION>(
   ctx: FHIRServerCTX,
   fhirVersion: Version,
   valueSet: Resource<Version, "ValueSet">,
-): Promise<ValueSetExpansionContains[]> {
+): Promise<
+  NonNullable<Resource<Version, "ValueSet">["expansion"]>["contains"]
+> {
   let expansion: ValueSetExpansionContains[] = [];
   for (const include of valueSet.compose?.include || []) {
     if (areCodesInline(include)) {
@@ -190,17 +192,15 @@ export class TerminologyProviderMemory implements TerminologyProvider {
       result: doesCodeExists,
     };
   }
-  async expand(
+  async expand<Version extends FHIR_VERSION>(
     ctx: FHIRServerCTX,
-    fhirVersion: FHIR_VERSION,
+    fhirVersion: Version,
     input: ExpandInput,
   ): Promise<ExpandOutput> {
-    let valueset: Resource<"4.0", "ValueSet"> | undefined;
+    let valueset: Resource<Version, "ValueSet"> | undefined;
     if (input.valueSet) {
-      valueset = input.valueSet;
+      valueset = input.valueSet as Resource<Version, "ValueSet"> | undefined;
     } else if (input.url) {
-      if (fhirVersion !== R4) throw new Error();
-
       const [url, url_version] = splitParameter(input.url, "|");
       const version = url_version ? url_version : input.valueSetVersion;
 
@@ -234,11 +234,12 @@ export class TerminologyProviderMemory implements TerminologyProvider {
         ...valueset,
         expansion: {
           timestamp: new Date().toISOString() as dateTime,
+          // @ts-ignore
           contains,
         },
       };
     }
-    return valueset;
+    return valueset as Resource<R4, "ValueSet">;
   }
   async lookup(
     ctx: FHIRServerCTX,

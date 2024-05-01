@@ -574,7 +574,7 @@ function resourceIsValidForIndexing<Version extends FHIR_VERSION>(
   return true;
 }
 
-async function indexR4Resource<
+async function indexResource<
   CTX extends FHIRServerCTX,
   Version extends FHIR_VERSION,
 >(
@@ -583,15 +583,6 @@ async function indexR4Resource<
   fhirVersion: Version,
   resource: Resource<Version, AllResourceTypes>,
 ) {
-  if (fhirVersion !== R4) {
-    throw new OperationError(
-      outcomeError(
-        "not-supported",
-        `Only R4 is supported for indexing resources.`,
-      ),
-    );
-  }
-
   await removeIndices(client, ctx, fhirVersion, resource);
   const searchParameters = await getAllParametersForResource(ctx, fhirVersion, [
     resource.resourceType as ResourceType<Version>,
@@ -696,7 +687,7 @@ async function createResource<
     )}) RETURNING ${db.cols(resourceCol)}
     `.run(client);
 
-      await indexR4Resource(
+      await indexResource(
         client,
         ctx,
         fhirVersion,
@@ -914,7 +905,7 @@ async function patchResource<
           AllResourceTypes
         >;
 
-        await indexR4Resource(client, ctx, fhirVersion, patchedResource);
+        await indexResource(client, ctx, fhirVersion, patchedResource);
         return patchedResource;
       } catch (e) {
         if (e instanceof OperationError) throw e;
@@ -989,7 +980,7 @@ async function updateResource<
         Version,
         AllResourceTypes
       >;
-      await indexR4Resource(client, ctx, fhirVersion, updatedResource);
+      await indexResource(client, ctx, fhirVersion, updatedResource);
       return updatedResource;
     },
   );

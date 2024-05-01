@@ -13,7 +13,7 @@ import usCoreDifferential from "../data/us-core-differential";
 const sds = loadArtifacts({
   fhirVersion: R4,
   resourceType: "StructureDefinition",
-  packageLocation: path.join(fileURLToPath(import.meta.url), "../../../"),
+  packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
   silence: true,
 });
 
