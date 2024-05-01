@@ -1,8 +1,11 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
-import { ResourceType, SearchParameter } from "@iguhealth/fhir-types/r4/types";
-import { R4 } from "@iguhealth/fhir-types/versions";
+import {
+  FHIR_VERSION,
+  Resource,
+  ResourceType,
+} from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX, asSystemCTX } from "../../../../fhir-api/types.js";
@@ -17,7 +20,7 @@ type SORT_DIRECTION = "ascending" | "descending";
 
 function getParameterSortColumn(
   direction: SORT_DIRECTION,
-  parameter: SearchParameter,
+  parameter: Resource<FHIR_VERSION, "SearchParameter">,
 ): s.Column {
   switch (parameter.type) {
     case "quantity":
@@ -35,9 +38,10 @@ function getSortColumn(index: number): db.DangerousRawString {
   return db.raw(`sort_${index}`);
 }
 
-export async function deriveSortQuery(
+export async function deriveSortQuery<Version extends FHIR_VERSION>(
   ctx: FHIRServerCTX,
-  resourceTypes: ResourceType[],
+  fhirVersion: Version,
+  resourceTypes: ResourceType<Version>[],
   sortParameter: SearchParameterResult,
   query: db.SQLFragment,
 ): Promise<db.SQLFragment> {
@@ -47,7 +51,7 @@ export async function deriveSortQuery(
         paramName,
       ): Promise<{
         direction: SORT_DIRECTION;
-        parameter: SearchParameter;
+        parameter: Resource<Version, "SearchParameter">;
       }> => {
         let direction: SORT_DIRECTION = "ascending";
         if (paramName.toString().startsWith("-")) {
@@ -56,7 +60,7 @@ export async function deriveSortQuery(
         }
         const searchParameter = await ctx.client.search_type(
           asSystemCTX(ctx),
-          R4,
+          fhirVersion,
           "SearchParameter",
           [
             { name: "code", value: [paramName] },
@@ -90,7 +94,7 @@ export async function deriveSortQuery(
   // Need to create LEFT JOINS on the queries so we can orderby postgres.
   const sortQueries = db.mapWithSeparator(
     sortInformation.map(({ direction, parameter }, sortOrder: number) => {
-      const table = searchParameterToTableName(R4, parameter.type);
+      const table = searchParameterToTableName(fhirVersion, parameter.type);
       const sort_column_name = getSortColumn(sortOrder);
       const column_name = db.raw(getParameterSortColumn(direction, parameter));
       return db.sql` LEFT JOIN 

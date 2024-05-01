@@ -2,6 +2,7 @@ import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
 import { SearchParameter } from "@iguhealth/fhir-types/r4/types";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 import { FHIRServerCTX } from "../../../../../fhir-api/types.js";
 import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
@@ -39,8 +40,9 @@ function isChainParameter(
   return false;
 }
 
-function chainSQL(
+function chainSQL<Version extends FHIR_VERSION>(
   ctx: FHIRServerCTX,
+  fhirVersion: Version,
   parameter: SearchParameterResource & {
     chainedParameters: SearchParameter[][];
   },
@@ -54,6 +56,7 @@ function chainSQL(
     const res = parameters.map((p): db.SQLFragment => {
       return buildParameterSQL(
         ctx,
+        fhirVersion,
         {
           type: "resource",
           name: p.name,
@@ -74,6 +77,7 @@ function chainSQL(
     lastParameters.map((p) => {
       return buildParameterSQL(
         ctx,
+        fhirVersion,
         { ...parameter, searchParameter: p, chainedParameters: [] },
         ["r_id"],
       );
@@ -138,14 +142,15 @@ function sqlParameterValue(
   }
 }
 
-export default function referenceClauses(
+export default function referenceClauses<Version extends FHIR_VERSION>(
   ctx: FHIRServerCTX,
+  fhirVersion: Version,
   parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, unknown> {
   if (parameter.modifier === "missing") {
     return missingModifier(ctx, parameter);
   }
-  if (isChainParameter(parameter)) return chainSQL(ctx, parameter);
+  if (isChainParameter(parameter)) return chainSQL(ctx, fhirVersion, parameter);
   else {
     return db.conditions.or(
       ...parameter.value.map((value) =>

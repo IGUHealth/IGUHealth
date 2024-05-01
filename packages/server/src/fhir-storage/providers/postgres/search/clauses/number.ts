@@ -1,6 +1,7 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../../../fhir-api/types.js";
@@ -11,6 +12,7 @@ import {
 
 export default function numberClauses(
   _ctx: FHIRServerCTX,
+  fhirVersion: FHIR_VERSION,
   parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, never> {
   return db.conditions.or(

@@ -2,11 +2,18 @@ import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
 import {
+  R4BSystemSearchRequest,
+  R4BTypeSearchRequest,
   R4SystemSearchRequest,
   R4TypeSearchRequest,
 } from "@iguhealth/client/types";
-import { Resource, ResourceType, id } from "@iguhealth/fhir-types/r4/types";
-import { R4 } from "@iguhealth/fhir-types/versions";
+import { id } from "@iguhealth/fhir-types/r4/types";
+import {
+  AllResourceTypes,
+  FHIR_VERSION,
+  Resource,
+  ResourceType,
+} from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX, asSystemCTX } from "../../../../fhir-api/types.js";
@@ -22,11 +29,12 @@ import * as sqlUtils from "../../../utilities/sql.js";
 import { buildParameterSQL } from "./clauses/index.js";
 import { deriveSortQuery } from "./sort.js";
 
-function buildParametersSQL(
+function buildParametersSQL<Version extends FHIR_VERSION>(
   ctx: FHIRServerCTX,
+  fhirVersion: Version,
   parameters: SearchParameterResource[],
 ): db.SQLFragment[] {
-  return parameters.map((p) => buildParameterSQL(ctx, p));
+  return parameters.map((p) => buildParameterSQL(ctx, fhirVersion, p));
 }
 
 /**
@@ -36,14 +44,21 @@ function buildParametersSQL(
  * @param resourceParameters Current search parameters
  * @returns
  */
-async function getParameterForLatestId(
+async function getParameterForLatestId<Version extends FHIR_VERSION>(
   ctx: FHIRServerCTX,
-  resourceTypes: ResourceType[],
+  fhirVersion: Version,
+  resourceTypes: ResourceType<Version>[],
 ): Promise<SearchParameterResource[]> {
   const idParameter = (
     await parametersWithMetaAssociated(
       async (resourceTypes, code) =>
-        await findSearchParameter(ctx.client, ctx, R4, resourceTypes, code),
+        await findSearchParameter(
+          ctx.client,
+          ctx,
+          fhirVersion,
+          resourceTypes,
+          code,
+        ),
       resourceTypes,
       [{ name: "_id", modifier: "missing", value: ["false"] }],
     )
@@ -52,14 +67,17 @@ async function getParameterForLatestId(
   return idParameter;
 }
 
-const getIds: (resources: Resource[]) => id[] = (resources) =>
+const getIds: (
+  resources: Resource<FHIR_VERSION, AllResourceTypes>[],
+) => id[] = (resources) =>
   resources.map((r) => r.id).filter((r): r is id => r !== undefined);
 
-async function processRevInclude(
+async function processRevInclude<Version extends FHIR_VERSION>(
   ctx: FHIRServerCTX,
+  fhirVersion: Version,
   param: SearchParameterResult,
-  results: Resource[],
-): Promise<Resource[]> {
+  results: Resource<Version, AllResourceTypes>[],
+): Promise<Resource<Version, AllResourceTypes>[]> {
   if (param.value.length > 1)
     throw new OperationError(
       outcomeError(
@@ -79,11 +97,11 @@ async function processRevInclude(
           throw new OperationError(
             outcomeError("invalid", "Invalid _revinclude parameter"),
           );
-        const resourceType = revInclude[0] as ResourceType;
+        const resourceType = revInclude[0] as ResourceType<Version>;
         const searchParameterRevInclude = revInclude[1];
         const revIncludeResults = await ctx.client.search_type(
           ctx,
-          R4,
+          fhirVersion,
           resourceType,
           [
             {
@@ -98,12 +116,13 @@ async function processRevInclude(
   ).flat();
 }
 
-async function processInclude(
+async function processInclude<Version extends FHIR_VERSION>(
   client: db.Queryable,
   ctx: FHIRServerCTX,
+  fhirVersion: Version,
   param: SearchParameterResult,
-  results: Resource[],
-): Promise<Resource[]> {
+  results: Resource<Version, AllResourceTypes>[],
+): Promise<Resource<Version, AllResourceTypes>[]> {
   if (param.value.length > 1)
     throw new OperationError(
       outcomeError(
@@ -123,11 +142,11 @@ async function processInclude(
           throw new OperationError(
             outcomeError("invalid", "Invalid _include parameter"),
           );
-        const resourceType = include[0] as ResourceType;
+        const resourceType = include[0] as ResourceType<Version>;
         const includeParameterName = include[1];
         const includeParameterSearchParam = await ctx.client.search_type(
           asSystemCTX(ctx),
-          R4,
+          fhirVersion,
           "SearchParameter",
           [
             { name: "code", value: [includeParameterName] },
@@ -168,7 +187,7 @@ async function processInclude(
         ];
 
         return ctx.client
-          .search_system(ctx, R4, [
+          .search_system(ctx, fhirVersion, [
             { name: "_type", value: types },
             {
               name: "_id",
@@ -181,11 +200,20 @@ async function processInclude(
   ).flat();
 }
 
-export async function executeSearchQuery(
+export async function executeSearchQuery<
+  Request extends
+    | R4SystemSearchRequest
+    | R4TypeSearchRequest
+    | R4BSystemSearchRequest
+    | R4BTypeSearchRequest,
+>(
   client: db.Queryable,
   ctx: FHIRServerCTX,
-  request: R4SystemSearchRequest | R4TypeSearchRequest,
-): Promise<{ total?: number; resources: Resource[] }> {
+  request: Request,
+): Promise<{
+  total?: number;
+  resources: Resource<Request["fhirVersion"], AllResourceTypes>[];
+}> {
   const resourceTypes = deriveResourceTypeFilter(request);
   // Remove _type as using on derived resourceTypeFilter
   request.parameters = request.parameters.filter((p) => p.name !== "_type");
@@ -195,7 +223,7 @@ export async function executeSearchQuery(
       await findSearchParameter(
         ctx.client,
         asSystemCTX(ctx),
-        R4,
+        request.fhirVersion,
         resourceTypes,
         name,
       ),
@@ -205,13 +233,23 @@ export async function executeSearchQuery(
 
   const resourceParameters = parameters
     .filter((v): v is SearchParameterResource => v.type === "resource")
-    .concat(await getParameterForLatestId(asSystemCTX(ctx), resourceTypes));
+    .concat(
+      await getParameterForLatestId(
+        asSystemCTX(ctx),
+        request.fhirVersion,
+        resourceTypes,
+      ),
+    );
 
   const parametersResult = parameters.filter(
     (v): v is SearchParameterResult => v.type === "result",
   );
 
-  const parameterClauses = buildParametersSQL(ctx, resourceParameters);
+  const parameterClauses = buildParametersSQL(
+    ctx,
+    request.fhirVersion,
+    resourceParameters,
+  );
 
   // Neccessary to pull latest version of resource
   // Afterwards check that the latest version is not deleted.
@@ -275,7 +313,14 @@ export async function executeSearchQuery(
           : db.sql`is not null`
       }`;
 
-  if (sortBy) sql = await deriveSortQuery(ctx, resourceTypes, sortBy, sql);
+  if (sortBy)
+    sql = await deriveSortQuery(
+      ctx,
+      request.fhirVersion,
+      resourceTypes,
+      sortBy,
+      sql,
+    );
 
   sql = db.sql<
     s.resources.SQL,
@@ -297,16 +342,28 @@ export async function executeSearchQuery(
         ? parseInt(result[0]?.total_count)
         : undefined;
 
-  let resources: Resource[] = result.map(
-    (r) => r.resource as unknown as Resource,
-  );
+  let resources: Resource<typeof request.fhirVersion, AllResourceTypes>[] =
+    result.map(
+      (r) =>
+        r.resource as unknown as Resource<
+          typeof request.fhirVersion,
+          AllResourceTypes
+        >,
+    );
 
   if (revIncludeParam) {
     resources = resources.concat(
       await processRevInclude(
         ctx,
+        request.fhirVersion,
         revIncludeParam,
-        result.map((r) => r.resource as unknown as Resource),
+        result.map(
+          (r) =>
+            r.resource as unknown as Resource<
+              typeof request.fhirVersion,
+              AllResourceTypes
+            >,
+        ),
       ),
     );
   }
@@ -316,14 +373,24 @@ export async function executeSearchQuery(
       await processInclude(
         client,
         ctx,
+        request.fhirVersion,
         includeParam,
-        result.map((r) => r.resource as unknown as Resource),
+        result.map(
+          (r) =>
+            r.resource as unknown as Resource<
+              typeof request.fhirVersion,
+              AllResourceTypes
+            >,
+        ),
       ),
     );
   }
 
   return {
     total,
-    resources,
+    resources: resources as Resource<
+      Request["fhirVersion"],
+      AllResourceTypes
+    >[],
   };
 }
