@@ -1,11 +1,14 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
+
 import { FHIRServerCTX } from "../../../../../fhir-api/types.js";
 import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
 
 export default function stringClauses(
   _ctx: FHIRServerCTX,
+  fhirVersion: FHIR_VERSION,
   parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, never> {
   switch (parameter.modifier) {

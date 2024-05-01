@@ -1,14 +1,16 @@
 import graphlib from "@dagrejs/graphlib";
 import pg from "pg";
 
-import { Bundle, Reference, uri } from "@iguhealth/fhir-types/r4/types";
-import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
+import { Reference, uri } from "@iguhealth/fhir-types/r4/types";
+import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../fhir-api/types.js";
 
-function getTransactionFullUrls(transaction: Bundle): Record<string, number> {
+function getTransactionFullUrls(
+  transaction: Resource<FHIR_VERSION, "Bundle">,
+): Record<string, number> {
   const record: Record<string, number> = {};
 
   for (const idx in transaction.entry) {
@@ -24,10 +26,10 @@ type LocationsToUpdate = {
   [key: string]: (string | number)[][] | undefined;
 };
 
-export function buildTransactionTopologicalGraph(
+export function buildTransactionTopologicalGraph<Version extends FHIR_VERSION>(
   ctx: FHIRServerCTX,
-  fhirVersion: FHIR_VERSION,
-  transaction: Bundle,
+  fhirVersion: Version,
+  transaction: Resource<Version, "Bundle">,
 ): {
   order: string[];
   locationsToUpdate: LocationsToUpdate;

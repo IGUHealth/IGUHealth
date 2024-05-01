@@ -1,7 +1,7 @@
 import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
-import { R4 } from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../../../fhir-api/types.js";
@@ -21,6 +21,7 @@ const PARAMETER_CLAUSES: Record<
   string,
   (
     ctx: FHIRServerCTX,
+    fhirVersion: FHIR_VERSION,
     parameter: SearchParameterResource,
   ) => db.SQLFragment<boolean | null, unknown>
 > = {
@@ -33,13 +34,17 @@ const PARAMETER_CLAUSES: Record<
   reference: referenceClauses,
 };
 
-export function buildParameterSQL(
+export function buildParameterSQL<Version extends FHIR_VERSION>(
   ctx: FHIRServerCTX,
+  fhirVersion: Version,
   parameter: SearchParameterResource,
   columns: s.Column[] = [],
 ): db.SQLFragment {
   const searchParameter = parameter.searchParameter;
-  const search_table = searchParameterToTableName(R4, searchParameter.type);
+  const search_table = searchParameterToTableName(
+    fhirVersion,
+    searchParameter.type,
+  );
 
   switch (searchParameter.type) {
     case "number":
@@ -57,6 +62,13 @@ export function buildParameterSQL(
         | s.r4_token_idx.SQL
         | s.r4_reference_idx.SQL
         | s.r4_quantity_idx.SQL
+        | s.r4b_number_idx.SQL
+        | s.r4b_string_idx.SQL
+        | s.r4b_uri_idx.SQL
+        | s.r4b_date_idx.SQL
+        | s.r4b_token_idx.SQL
+        | s.r4b_reference_idx.SQL
+        | s.r4b_quantity_idx.SQL
       >`
       SELECT ${
         columns.length === 0
@@ -66,7 +78,7 @@ export function buildParameterSQL(
       FROM ${search_table} 
       WHERE ${db.conditions.and(
         { parameter_url: searchParameter.url, tenant: ctx.tenant },
-        PARAMETER_CLAUSES[searchParameter.type](ctx, parameter),
+        PARAMETER_CLAUSES[searchParameter.type](ctx, fhirVersion, parameter),
       )}
       `;
     }
