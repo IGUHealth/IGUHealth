@@ -156,7 +156,7 @@ async function indexSearchParameter<
     case "date": {
       const date_indexes = (await dataConversion(parameter, "date", evaluation))
         .flat()
-        .map((value): s.r4_date_idx.Insertable | s.r4_date_idx.Insertable => ({
+        .map((value): s.r4_date_idx.Insertable | s.r4b_date_idx.Insertable => ({
           tenant: ctx.tenant,
           r_id: resource.id,
           resource_type: resource.resourceType,
