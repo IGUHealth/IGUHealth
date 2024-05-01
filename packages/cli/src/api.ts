@@ -23,15 +23,8 @@ function getTenantURL(apiOrigin: string, tenant: Tenant["id"]) {
   return concatenateURLPaths(new URL(apiOrigin), `/w/${tenant}`);
 }
 
-function getTenantAPIURL(
-  apiOrigin: string,
-  tenant: Tenant["id"],
-  apiVersion = "v1",
-) {
-  return concatenateURLPaths(
-    getTenantURL(apiOrigin, tenant),
-    `/api/${apiVersion}`,
-  );
+function getTenantAPIURL(apiOrigin: string, tenant: Tenant["id"]) {
+  return getTenantURL(apiOrigin, tenant);
 }
 
 function configureAuthHeader(tenant: Tenant) {
