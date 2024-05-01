@@ -129,15 +129,24 @@ export function apiCommands(command: Command) {
     });
 
   dataCommand(
-    command.command("create").action(async (options) => {
-      const resourceToSave = readData(options);
-      const client = createClient(CONFIG_LOCATION);
-      if (!resourceToSave) {
-        throw new Error("No resource provided to save");
-      }
-      const resource = await client.create({}, R4, resourceToSave as Resource);
-      console.log(JSON.stringify(resource, null, 2));
-    }),
+    command
+      .command("create")
+      .argument("<fhirVersion>", "FHIR Version")
+      .action(async (userFHIRVersion, options) => {
+        const resourceToSave = readData(options);
+        const client = createClient(CONFIG_LOCATION);
+        const FHIRVersion = asFHIRType(userFHIRVersion);
+
+        if (!resourceToSave) {
+          throw new Error("No resource provided to save");
+        }
+        const resource = await client.create(
+          {},
+          FHIRVersion,
+          resourceToSave as Resource,
+        );
+        console.log(JSON.stringify(resource, null, 2));
+      }),
   );
 
   dataCommand(
