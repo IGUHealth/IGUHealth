@@ -328,7 +328,7 @@ function Root() {
                   );
                 }}
               >
-                Brokers
+                Message Brokers
               </SideBar.SideBarItem>
               <SideBar.SideBarItem
                 active={matches[0].params.resourceType === "MessageTopic"}
@@ -340,7 +340,7 @@ function Root() {
                   );
                 }}
               >
-                Topics
+                Message Topics
               </SideBar.SideBarItem>
             </SideBar.SideBarItemGroup>
             <SideBar.SideBarItemGroup label="Data" className="mt-8">
@@ -357,6 +357,8 @@ function Root() {
                       match.params.resourceType !== "AuditEvent" &&
                       match.params.resourceType !== "Membership" &&
                       match.params.resourceType !== "AccessPolicy" &&
+                      match.params.resourceType !== "MessageTopic" &&
+                      match.params.resourceType !== "MessageBroker" &&
                       match.params.resourceType !== "ClientApplication",
                   ) !== undefined
                 }

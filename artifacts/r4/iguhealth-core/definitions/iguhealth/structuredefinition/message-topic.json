@@ -85,8 +85,8 @@
         "isSummary": true
       },
       {
-        "id": "MessageTopic.value",
-        "path": "MessageTopic.value",
+        "id": "MessageTopic.topicId",
+        "path": "MessageTopic.topicId",
         "short": "Topic for the message.",
         "type": [
           {

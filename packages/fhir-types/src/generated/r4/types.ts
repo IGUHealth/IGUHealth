@@ -45202,11 +45202,11 @@ resourceType: "MessageTopic"
   /** 
    * Topic for the message.
    */
-  value: code;
+  topicId: code;
   /** 
    * Topic for the message.
    */
-  _value?: Element
+  _topicId?: Element
   /** 
    * The message broker for this topic.
    */
