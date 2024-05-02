@@ -4,7 +4,8 @@ import fs from "node:fs";
 import path from "node:path";
 
 import httpClient from "@iguhealth/client/http";
-import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
+import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
+import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import { Bundle, Resource, ResourceType } from "@iguhealth/fhir-types/r4/types";
 
 import {
@@ -36,9 +37,17 @@ function configureAuthHeader(tenant: Tenant) {
 }
 
 function validateResourceType(
+  fhirVersion: FHIR_VERSION,
   resourceType: string,
 ): resourceType is ResourceType {
-  return resourceTypes.has(resourceType);
+  switch (fhirVersion) {
+    case R4: {
+      return r4Sets.resourceTypes.has(resourceType);
+    }
+    case R4B: {
+      return r4bSets.resourceTypes.has(resourceType);
+    }
+  }
 }
 
 function asFHIRType(fhirType: string): FHIR_VERSION {
@@ -149,10 +158,10 @@ export function apiCommands(command: Command) {
       .argument("<resourceType>", "Resource Type")
       .argument("<id>", "Resource ID")
       .action(async (userFHIRVersion, resourceType, id, options) => {
-        if (!validateResourceType(resourceType))
+        const FHIRVersion = asFHIRType(userFHIRVersion);
+        if (!validateResourceType(FHIRVersion, resourceType))
           throw new Error("Invalid resource type");
 
-        const FHIRVersion = asFHIRType(userFHIRVersion);
         const resourceToSave = readData(options);
         const client = createClient(CONFIG_LOCATION);
         if (!resourceToSave) {
@@ -217,7 +226,7 @@ export function apiCommands(command: Command) {
         const client = createClient(CONFIG_LOCATION);
         const FHIRVersion = asFHIRType(userFHIRVersion);
 
-        if (!validateResourceType(resourceType))
+        if (!validateResourceType(FHIRVersion, resourceType))
           throw new Error("Invalid resource type");
 
         if (!patches) {
@@ -244,7 +253,7 @@ export function apiCommands(command: Command) {
       const client = createClient(CONFIG_LOCATION);
       const FHIRVersion = asFHIRType(userFHIRVersion);
 
-      if (!validateResourceType(resourceType))
+      if (!validateResourceType(FHIRVersion, resourceType))
         throw new Error("Invalid resource type");
 
       const shouldDelete = await confirm({
@@ -287,7 +296,7 @@ export function apiCommands(command: Command) {
         const client = createClient(CONFIG_LOCATION);
         const FHIRVersion = asFHIRType(userFHIRVersion);
 
-        if (!validateResourceType(resourceType))
+        if (!validateResourceType(FHIRVersion, resourceType))
           throw new Error("Invalid resource type");
         const searchResponse = await client.search_type(
           {},
@@ -307,7 +316,7 @@ export function apiCommands(command: Command) {
       const client = createClient(CONFIG_LOCATION);
       const FHIRVersion = asFHIRType(userFHIRVersion);
 
-      if (!validateResourceType(resourceType))
+      if (!validateResourceType(FHIRVersion, resourceType))
         throw new Error("Invalid resource type");
 
       const resource = await client.read({}, FHIRVersion, resourceType, id);
@@ -323,7 +332,7 @@ export function apiCommands(command: Command) {
       const client = createClient(CONFIG_LOCATION);
       const FHIRVersion = asFHIRType(userFHIRVersion);
 
-      if (!validateResourceType(resourceType))
+      if (!validateResourceType(FHIRVersion, resourceType))
         throw new Error("Invalid resource type");
 
       const resourceVersion = await client.vread(
@@ -355,7 +364,7 @@ export function apiCommands(command: Command) {
       const client = createClient(CONFIG_LOCATION);
       const FHIRVersion = asFHIRType(userFHIRVersion);
 
-      if (!validateResourceType(resourceType))
+      if (!validateResourceType(FHIRVersion, resourceType))
         throw new Error("Invalid resource type");
       const history = await client.historyType({}, FHIRVersion, resourceType);
       console.log(JSON.stringify(history, null, 2));
@@ -370,7 +379,7 @@ export function apiCommands(command: Command) {
       const client = createClient(CONFIG_LOCATION);
       const FHIRVersion = asFHIRType(userFHIRVersion);
 
-      if (!validateResourceType(resourceType))
+      if (!validateResourceType(FHIRVersion, resourceType))
         throw new Error("Invalid resource type");
       const history = await client.historyInstance(
         {},
