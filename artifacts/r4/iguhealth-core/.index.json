@@ -50,7 +50,7 @@
       "resourceType": "SearchParameter"
     },
     {
-      "filename": "definitions/iguhealth/structuredefinition/accessPolicy.json",
+      "filename": "definitions/iguhealth/structuredefinition/access-policy.json",
       "resourceType": "StructureDefinition"
     },
     {
@@ -59,6 +59,14 @@
     },
     {
       "filename": "definitions/iguhealth/structuredefinition/membership.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "definitions/iguhealth/structuredefinition/message-broker.json",
+      "resourceType": "StructureDefinition"
+    },
+    {
+      "filename": "definitions/iguhealth/structuredefinition/message-topic.json",
       "resourceType": "StructureDefinition"
     },
     {

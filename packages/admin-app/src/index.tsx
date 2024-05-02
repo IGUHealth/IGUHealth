@@ -317,6 +317,32 @@ function Root() {
                 Client Applications
               </SideBar.SideBarItem>
             </SideBar.SideBarItemGroup>
+            <SideBar.SideBarItemGroup className="mt-8" label="Messaging">
+              <SideBar.SideBarItem
+                active={matches[0].params.resourceType === "MessageBroker"}
+                onClick={() => {
+                  navigate(
+                    generatePath("/resources/:resourceType", {
+                      resourceType: "MessageBroker",
+                    }),
+                  );
+                }}
+              >
+                Brokers
+              </SideBar.SideBarItem>
+              <SideBar.SideBarItem
+                active={matches[0].params.resourceType === "MessageTopic"}
+                onClick={() => {
+                  navigate(
+                    generatePath("/resources/:resourceType", {
+                      resourceType: "MessageTopic",
+                    }),
+                  );
+                }}
+              >
+                Topics
+              </SideBar.SideBarItem>
+            </SideBar.SideBarItemGroup>
             <SideBar.SideBarItemGroup label="Data" className="mt-8">
               <SideBar.SideBarItem
                 active={

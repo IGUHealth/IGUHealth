@@ -15847,6 +15847,7 @@ const RAW_RUNTIME_STATE =
           ["jose", "npm:5.2.4"],\
           ["json-schema-to-typescript", "npm:13.1.2"],\
           ["jwks-rsa", "npm:3.1.0"],\
+          ["kafkajs", "npm:2.2.4"],\
           ["keygrip", "npm:1.1.0"],\
           ["koa", "npm:2.15.3"],\
           ["koa-body", "npm:6.0.1"],\
@@ -36244,6 +36245,15 @@ const RAW_RUNTIME_STATE =
           ["jws", "npm:3.2.2"],\
           ["jwa", "npm:1.4.1"],\
           ["safe-buffer", "npm:5.2.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["kafkajs", [\
+      ["npm:2.2.4", {\
+        "packageLocation": "./.yarn/cache/kafkajs-npm-2.2.4-8837bee290-75eb0d2213.zip/node_modules/kafkajs/",\
+        "packageDependencies": [\
+          ["kafkajs", "npm:2.2.4"]\
         ],\
         "linkType": "HARD"\
       }]\

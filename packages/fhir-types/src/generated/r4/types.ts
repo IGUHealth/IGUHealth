@@ -4387,6 +4387,8 @@ export type ResourceMap = {
   AccessPolicy: AccessPolicy;
   ClientApplication: ClientApplication;
   Membership: Membership;
+  MessageBroker: MessageBroker;
+  MessageTopic: MessageTopic;
 }
 
 export type ResourceType = keyof ResourceMap
@@ -45119,4 +45121,94 @@ resourceType: "Membership"
    * The Memberships role. Note that owner and superadmin roles are granted full access.
    */
   _role?: Element
+}
+
+export interface MessageBrokerSecurity {
+  /** 
+   * The type of message broker security.
+   */
+  type: code;
+  /** 
+   * The type of message broker security.
+   */
+  _type?: Element
+  /** 
+   * Username for the message broker security.
+   */
+  username?: string;
+  /** 
+   * Username for the message broker security.
+   */
+  _username?: Element
+  /** 
+   * Password for the message broker security.
+   */
+  password?: string;
+  /** 
+   * Password for the message broker security.
+   */
+  _password?: Element
+}
+export interface MessageBroker {
+resourceType: "MessageBroker"
+  /** 
+   * Logical id of this artifact
+   */
+  id?: id;
+  /** 
+   * Metadata about the resource
+   */
+  meta?: Meta;
+  /** 
+   * Name of the message broker.
+   */
+  name: string;
+  /** 
+   * Name of the message broker.
+   */
+  _name?: Element
+  /** 
+   * The host for the message broker.
+   */
+  host: uri;
+  /** 
+   * The host for the message broker.
+   */
+  _host?: Element
+  /** 
+   * The type of message broker.
+   */
+  type: code;
+  /** 
+   * The type of message broker.
+   */
+  _type?: Element
+  /** 
+   * MessageBroker security.
+   */
+  security: MessageBrokerSecurity;
+}
+
+export interface MessageTopic {
+resourceType: "MessageTopic"
+  /** 
+   * Logical id of this artifact
+   */
+  id?: id;
+  /** 
+   * Metadata about the resource
+   */
+  meta?: Meta;
+  /** 
+   * Topic for the message.
+   */
+  value: code;
+  /** 
+   * Topic for the message.
+   */
+  _value?: Element
+  /** 
+   * The message broker for this topic.
+   */
+  broker: Reference;
 }
