@@ -1,26 +1,26 @@
 {
   "resourceType": "StructureDefinition",
-  "id": "MessageBroker",
-  "url": "https://iguhealth.com/StructureDefinition/MessageBroker",
+  "id": "MessageTopic",
+  "url": "https://iguhealth.com/StructureDefinition/MessageTopic",
   "version": "4.0.1",
-  "name": "MessageBroker",
+  "name": "MessageTopic",
   "status": "active",
   "publisher": "IGUHealth",
   "fhirVersion": "4.0.1",
   "kind": "resource",
   "abstract": false,
-  "type": "MessageBroker",
+  "type": "MessageTopic",
   "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Resource",
   "derivation": "specialization",
   "snapshot": {
     "element": [
       {
-        "id": "MessageBroker",
-        "path": "MessageBroker",
+        "id": "MessageTopic",
+        "path": "MessageTopic",
         "min": 0,
         "max": "*",
         "base": {
-          "path": "MessageBroker",
+          "path": "MessageTopic",
           "min": 0,
           "max": "*"
         },
@@ -28,8 +28,8 @@
         "isSummary": false
       },
       {
-        "id": "MessageBroker.id",
-        "path": "MessageBroker.id",
+        "id": "MessageTopic.id",
+        "path": "MessageTopic.id",
         "short": "Logical id of this artifact",
         "definition": "The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes.",
         "comment": "The only time that a resource does not have an id is when it is being submitted to the server using a create operation.",
@@ -55,8 +55,8 @@
         "isSummary": true
       },
       {
-        "id": "MessageBroker.meta",
-        "path": "MessageBroker.meta",
+        "id": "MessageTopic.meta",
+        "path": "MessageTopic.meta",
         "short": "Metadata about the resource",
         "definition": "The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource.",
         "min": 0,
@@ -85,33 +85,9 @@
         "isSummary": true
       },
       {
-        "id": "MessageBroker.name",
-        "path": "MessageBroker.name",
-        "short": "Name of the message broker.",
-        "type": [
-          {
-            "code": "string"
-          }
-        ],
-        "min": 1,
-        "max": "1"
-      },
-      {
-        "id": "MessageBroker.host",
-        "path": "MessageBroker.host",
-        "short": "The host for the message broker.",
-        "type": [
-          {
-            "code": "uri"
-          }
-        ],
-        "min": 1,
-        "max": "1"
-      },
-      {
-        "id": "MessageBroker.type",
-        "path": "MessageBroker.type",
-        "short": "The type of message broker.",
+        "id": "MessageTopic.value",
+        "path": "MessageTopic.value",
+        "short": "Topic for the message.",
         "type": [
           {
             "code": "code"
@@ -121,51 +97,18 @@
         "max": "1"
       },
       {
-        "id": "MessageBroker.security",
-        "path": "MessageBroker.security",
-        "short": "MessageBroker security.",
+        "id": "MessageTopic.broker",
+        "path": "MessageTopic.broker",
+        "short": "The message broker for this topic.",
         "type": [
           {
-            "code": "BackboneElement"
+            "code": "Reference",
+            "targetProfile": [
+              "https://iguhealth.com/StructureDefinition/MessageBroker"
+            ]
           }
         ],
         "min": 1,
-        "max": "1"
-      },
-      {
-        "id": "MessageBroker.security.type",
-        "path": "MessageBroker.security.type",
-        "short": "The type of message broker security.",
-        "type": [
-          {
-            "code": "code"
-          }
-        ],
-        "min": 1,
-        "max": "1"
-      },
-      {
-        "id": "MessageBroker.security.username",
-        "path": "MessageBroker.security.username",
-        "short": "Username for the message broker security.",
-        "type": [
-          {
-            "code": "string"
-          }
-        ],
-        "min": 0,
-        "max": "1"
-      },
-      {
-        "id": "MessageBroker.security.password",
-        "path": "MessageBroker.security.password",
-        "short": "Password for the message broker security.",
-        "type": [
-          {
-            "code": "string"
-          }
-        ],
-        "min": 0,
         "max": "1"
       }
     ]
