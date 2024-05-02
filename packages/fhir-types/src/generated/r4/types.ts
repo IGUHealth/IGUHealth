@@ -4388,6 +4388,7 @@ export type ResourceMap = {
   ClientApplication: ClientApplication;
   Membership: Membership;
   MessageBroker: MessageBroker;
+  MessageTopic: MessageTopic;
 }
 
 export type ResourceType = keyof ResourceMap
@@ -45186,4 +45187,28 @@ resourceType: "MessageBroker"
    * MessageBroker security.
    */
   security: MessageBrokerSecurity;
+}
+
+export interface MessageTopic {
+resourceType: "MessageTopic"
+  /** 
+   * Logical id of this artifact
+   */
+  id?: id;
+  /** 
+   * Metadata about the resource
+   */
+  meta?: Meta;
+  /** 
+   * Topic for the message.
+   */
+  value: code;
+  /** 
+   * Topic for the message.
+   */
+  _value?: Element
+  /** 
+   * The message broker for this topic.
+   */
+  broker: Reference;
 }
