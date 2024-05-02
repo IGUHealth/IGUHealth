@@ -13,18 +13,18 @@ import {
 } from "@iguhealth/client/middleware";
 import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
-import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import {
   CapabilityStatementRestResource,
   code,
 } from "@iguhealth/fhir-types/r4/types";
+import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import {
   AllResourceTypes,
   FHIR_VERSION,
-  ResourceType,
-  Resource,
   R4,
   R4B,
+  Resource,
+  ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -39,6 +39,7 @@ import { AWSKMSProvider } from "../encryption/provider/kms.js";
 import AWSLambdaExecutioner from "../fhir-operation-executors/providers/awsLambda/index.js";
 import IguhealthEncryptInvoke from "../fhir-operation-executors/providers/local/encryption/encrypt.js";
 import InlineExecutioner from "../fhir-operation-executors/providers/local/index.js";
+import IguhealthMessagePostInvoke from "../fhir-operation-executors/providers/local/messaging/message_post.js";
 import ResourceValidateInvoke, {
   validateResource,
 } from "../fhir-operation-executors/providers/local/resource_validate.js";
@@ -393,6 +394,7 @@ export async function createFHIRServices(
     ValueSetExpandInvoke,
     ValueSetValidateInvoke,
     CodeSystemLookupInvoke,
+    IguhealthMessagePostInvoke,
   ]);
 
   const lambdaExecutioner = AWSLambdaExecutioner({
