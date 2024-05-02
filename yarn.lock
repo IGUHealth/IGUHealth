@@ -8159,6 +8159,7 @@ __metadata:
     jose: "npm:^5.2.4"
     json-schema-to-typescript: "npm:^13.1.2"
     jwks-rsa: "npm:^3.1.0"
+    kafkajs: "npm:^2.2.4"
     keygrip: "npm:^1.1.0"
     koa: "npm:^2.15.3"
     koa-body: "npm:^6.0.1"
@@ -23983,6 +23984,13 @@ __metadata:
     jwa: "npm:^1.4.1"
     safe-buffer: "npm:^5.0.1"
   checksum: 10/70b016974af8a76d25030c80a0097b24ed5b17a9cf10f43b163c11cb4eb248d5d04a3fe48c0d724d2884c32879d878ccad7be0663720f46b464f662f7ed778fe
+  languageName: node
+  linkType: hard
+
+"kafkajs@npm:^2.2.4":
+  version: 2.2.4
+  resolution: "kafkajs@npm:2.2.4"
+  checksum: 10/75eb0d221397085f90e51f8a2d752495c9fa9c1b3a1a6db610cd7074fa8c52777f295832fd0a7c49cded5e574337a09fafa8c3f7cf1caa38f4dc9aa20fcfb7df
   languageName: node
   linkType: hard
 
