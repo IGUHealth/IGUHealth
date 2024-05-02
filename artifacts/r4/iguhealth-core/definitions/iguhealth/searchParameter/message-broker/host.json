@@ -1,0 +1,15 @@
+{
+  "resourceType": "SearchParameter",
+  "id": "MessageBroker-host",
+  "url": "https://iguhealth.app/fhir/SearchParameter/MessageBroker-host",
+  "version": "4.0.1",
+  "name": "Message broker host",
+  "status": "draft",
+  "experimental": false,
+  "publisher": "IGUHealth",
+  "description": "MessageBroker broker.",
+  "code": "host",
+  "base": ["MessageBroker"],
+  "type": "uri",
+  "expression": "MessageBroker.host"
+}

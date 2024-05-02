@@ -1,0 +1,15 @@
+{
+  "resourceType": "SearchParameter",
+  "id": "MessageTopic-topic",
+  "url": "https://iguhealth.app/fhir/SearchParameter/MessageTopic-topic",
+  "version": "4.0.1",
+  "name": "Topic",
+  "status": "draft",
+  "experimental": false,
+  "publisher": "IGUHealth",
+  "description": "MessageTopic topic id.",
+  "code": "role",
+  "base": ["MessageTopic"],
+  "type": "token",
+  "expression": "MessageTopic.topicId"
+}

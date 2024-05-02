@@ -1,0 +1,15 @@
+{
+  "resourceType": "SearchParameter",
+  "id": "MessageBroker-name",
+  "url": "https://iguhealth.app/fhir/SearchParameter/MessageBroker-name",
+  "version": "4.0.1",
+  "name": "Message broker name",
+  "status": "draft",
+  "experimental": false,
+  "publisher": "IGUHealth",
+  "description": "MessageBroker broker.",
+  "code": "name",
+  "base": ["MessageBroker"],
+  "type": "string",
+  "expression": "MessageBroker.name"
+}
