@@ -13,7 +13,7 @@ import {
 } from "@iguhealth/client/middleware";
 import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
-import * as r4bSets from "@iguhealth/fhir-types/r4/sets";
+import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import {
   CapabilityStatementRestResource,
   code,
