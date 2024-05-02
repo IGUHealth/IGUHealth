@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/jwt",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "packageManager": "yarn@4.1.1",
   "dependencies": {
     "jose": "^5.2.4"
