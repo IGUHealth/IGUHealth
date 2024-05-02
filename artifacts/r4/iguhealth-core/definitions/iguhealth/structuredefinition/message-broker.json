@@ -26,6 +26,117 @@
         },
         "isModifier": false,
         "isSummary": false
+      },
+      {
+        "id": "MessageBroker.id",
+        "path": "MessageBroker.id",
+        "short": "Logical id of this artifact",
+        "definition": "The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes.",
+        "comment": "The only time that a resource does not have an id is when it is being submitted to the server using a create operation.",
+        "min": 0,
+        "max": "1",
+        "base": {
+          "path": "Resource.id",
+          "min": 0,
+          "max": "1"
+        },
+        "type": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+                "valueUrl": "string"
+              }
+            ],
+            "code": "http://hl7.org/fhirpath/System.String"
+          }
+        ],
+        "isModifier": false,
+        "isSummary": true
+      },
+      {
+        "id": "MessageBroker.name",
+        "path": "MessageBroker.name",
+        "short": "Name of the message broker.",
+        "type": [
+          {
+            "code": "string"
+          }
+        ],
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "id": "MessageBroker.host",
+        "path": "MessageBroker.host",
+        "short": "The host for the message broker.",
+        "type": [
+          {
+            "code": "uri"
+          }
+        ],
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "id": "MessageBroker.type",
+        "path": "MessageBroker.type",
+        "short": "The type of message broker.",
+        "type": [
+          {
+            "code": "code"
+          }
+        ],
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "id": "MessageBroker.security",
+        "path": "MessageBroker.security",
+        "short": "MessageBroker security.",
+        "type": [
+          {
+            "code": "BackboneElement"
+          }
+        ],
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "id": "MessageBroker.security.type",
+        "path": "MessageBroker.security.type",
+        "short": "The type of message broker security.",
+        "type": [
+          {
+            "code": "code"
+          }
+        ],
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "id": "MessageBroker.security.username",
+        "path": "MessageBroker.security.username",
+        "short": "Username for the message broker security.",
+        "type": [
+          {
+            "code": "string"
+          }
+        ],
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "id": "MessageBroker.security.password",
+        "path": "MessageBroker.security.password",
+        "short": "Passxword for the message broker security.",
+        "type": [
+          {
+            "code": "string"
+          }
+        ],
+        "min": 0,
+        "max": "1"
       }
     ]
   }
