@@ -1,0 +1,32 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "MessageBroker",
+  "url": "https://iguhealth.com/StructureDefinition/MessageBroker",
+  "version": "4.0.1",
+  "name": "MessageBroker",
+  "status": "active",
+  "publisher": "IGUHealth",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "MessageBroker",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Resource",
+  "derivation": "specialization",
+  "snapshot": {
+    "element": [
+      {
+        "id": "MessageBroker",
+        "path": "MessageBroker",
+        "min": 0,
+        "max": "*",
+        "base": {
+          "path": "MessageBroker",
+          "min": 0,
+          "max": "*"
+        },
+        "isModifier": false,
+        "isSummary": false
+      }
+    ]
+  }
+}

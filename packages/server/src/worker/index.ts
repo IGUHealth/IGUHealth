@@ -208,6 +208,7 @@ async function handleSubscriptionPayload(
 
       return;
     }
+
     default:
       throw new OperationError(
         outcomeError(
