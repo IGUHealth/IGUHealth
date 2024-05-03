@@ -10,7 +10,7 @@ const IguhealthMessagePostInvoke = InlineOperation(
   IguhealthMessagePost.Op,
   async (ctx: FHIRServerCTX, request: FHIRRequest, input) => {
     return {
-      result: "failure" as code,
+      result: "success" as code,
     };
   },
 );

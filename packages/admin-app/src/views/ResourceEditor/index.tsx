@@ -5,6 +5,7 @@ import { useRecoilValue } from "recoil";
 import { Toaster } from "@iguhealth/components";
 import {
   Bundle,
+  MessageTopic,
   OperationDefinition,
   OperationOutcome,
   Resource,
@@ -16,6 +17,7 @@ import { R4 } from "@iguhealth/fhir-types/versions";
 
 import ResourceEditorComponent from "../../components/ResourceEditor";
 import { getClient } from "../../db/client";
+import MessageTopicView from "./MessageTopic";
 import OperationDefinitionView from "./OperationDefinition";
 
 function ResourceEditorTabs() {
@@ -84,7 +86,7 @@ function ResourceEditorTabs() {
     },
     {
       key: "Delete",
-      className: "text-red-600 hover:bg-red-600 hover:text-white",
+      className: "!text-red-600 hover:bg-red-600 hover:!text-white",
       label: "Delete",
       onClick: () => {
         const deletingResource = client.delete(
@@ -139,6 +141,17 @@ function ResourceEditorTabs() {
   }, [resourceType, id]);
 
   switch (resourceType) {
+    case "MessageTopic":
+      return (
+        <MessageTopicView
+          id={id as id}
+          resourceType={resourceType as ResourceType}
+          actions={actions}
+          resource={resource as MessageTopic}
+          structureDefinition={structureDefinition}
+          onChange={setResource}
+        />
+      );
     case "OperationDefinition":
       return (
         <OperationDefinitionView
