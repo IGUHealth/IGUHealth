@@ -104,19 +104,19 @@ export type R4BSystemSearchRequest = R4BSystemInteraction & {
 export type R4BInvokeInstanceRequest = R4BInstanceInteraction & {
   type: RequestInteractionTypes["invoke"];
   operation: code;
-  body: Parameters;
+  body: Resource;
 };
 
 export type R4BInvokeTypeRequest = R4BTypeInteraction & {
   type: RequestInteractionTypes["invoke"];
   operation: code;
-  body: Parameters;
+  body: Resource;
 };
 
 export type R4BInvokeSystemRequest = R4BSystemInteraction & {
   type: RequestInteractionTypes["invoke"];
   operation: code;
-  body: Parameters;
+  body: Resource;
 };
 
 export type R4BFHIRRequest =

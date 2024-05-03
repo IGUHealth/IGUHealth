@@ -9,6 +9,7 @@ import {
   code,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
+import { R4, ResourceType } from "@iguhealth/fhir-types/versions";
 import validate, { ValidationCTX } from "@iguhealth/fhir-validation";
 import {
   OperationError,
@@ -420,6 +421,21 @@ function isStrictlyReturn(op: OperationDefinition): boolean {
   }
   return false;
 }
+/**
+ * If, when invoking the operation, there is exactly one input parameter of type Resource (irrespective of whether other possible parameters are defined), that the operation can also be executed by a POST with that resource as the body of the request (and no parameters on the url).
+ * @param op  OperationDefinition
+ */
+function singleResource(
+  op: OperationDefinition,
+  type: ResourceType<R4>,
+): code | undefined {
+  const foundName = op.parameter?.filter(
+    (p) =>
+      p.type === type || p.type === "Resource" || p.type === "DomainResource",
+  );
+  if (foundName?.length !== 1) return undefined;
+  return foundName[0].name;
+}
 
 export type Executor<CTX, I, O> = (ctx: CTX, input: I) => Promise<O>;
 
@@ -440,8 +456,9 @@ export class Operation<I, O> implements IOperation<I, O> {
   }
   parseToObject<Use extends "in" | "out">(
     use: Use,
-    input: Parameters | Resource,
+    passedInInput: Parameters | Resource,
   ): InputOutput<I, O>[Use] {
+    let input = passedInInput;
     if (
       use === "out" &&
       !isParameters(input) &&
@@ -449,7 +466,25 @@ export class Operation<I, O> implements IOperation<I, O> {
     ) {
       return input as InputOutput<I, O>[Use];
     }
-    if (!isParameters(input)) {
+    // Allow for single resource input.
+    if (
+      use === "in" &&
+      input.resourceType !== "Parameters" &&
+      resourceTypes.has(input.resourceType)
+    ) {
+      const fieldName = singleResource(
+        this.operationDefinition,
+        input.resourceType,
+      );
+      if (fieldName) {
+        return {
+          [fieldName]: input,
+        } as InputOutput<I, O>[Use];
+      }
+      throw new OperationError(
+        outcomeError("invalid", "Invalid input, input must be a Parameters"),
+      );
+    } else if (!isParameters(input)) {
       throw new OperationError(
         outcomeError("invalid", "Invalid input, input must be a Parameters"),
       );
