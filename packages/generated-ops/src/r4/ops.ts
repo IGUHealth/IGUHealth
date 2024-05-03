@@ -5220,7 +5220,7 @@ export namespace IguhealthEncrypt {
 }
 export namespace IguhealthMessagePost {
   export type Input = { input: fhirTypes.Resource };
-  export type Output = { result: fhirTypes.code };
+  export type Output = fhirTypes.OperationOutcome;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -5248,12 +5248,12 @@ export namespace IguhealthMessagePost {
         type: "Resource",
       },
       {
-        name: "result",
+        name: "return",
         use: "out",
         min: 1,
         max: "1",
         documentation: "Result of the message post operation.",
-        type: "code",
+        type: "OperationOutcome",
       },
     ],
   } as fhirTypes.OperationDefinition);
