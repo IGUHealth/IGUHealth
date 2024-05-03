@@ -36,7 +36,7 @@ jobs:
         run: corepack enable
 
       - name: Install Lambda Deps
-        run: cd layers/lambda && npm install @iguhealth/artifacts@latest @iguhealth/fhir-patch-building@latest @iguhealth/fhir-pointer@latest @iguhealth/fhir-types@latest @iguhealth/fhir-validation@latest @iguhealth/fhirpath@latest @iguhealth/generated-ops@latest @iguhealth/hl7.fhir.r4.core@latest @iguhealth/meta-value@latest @iguhealth/operation-execution@latest @iguhealth/operation-outcomes@latest
+        run: cd layers/lambda && npm install @iguhealth/client @iguhealth/artifacts@latest @iguhealth/fhir-patch-building@latest @iguhealth/fhir-pointer@latest @iguhealth/fhir-types@latest @iguhealth/fhir-validation@latest @iguhealth/fhirpath@latest @iguhealth/generated-ops@latest @iguhealth/hl7.fhir.r4.core@latest @iguhealth/meta-value@latest @iguhealth/operation-execution@latest @iguhealth/operation-outcomes@latest
 
       - name: Create NODEJS DIR
         run: mkdir nodejs
