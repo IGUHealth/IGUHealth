@@ -24,12 +24,12 @@
       "type": "Resource"
     },
     {
-      "name": "result",
+      "name": "return",
       "use": "out",
       "min": 1,
       "max": "1",
       "documentation": "Result of the message post operation.",
-      "type": "code"
+      "type": "OperationOutcome"
     }
   ]
 }
