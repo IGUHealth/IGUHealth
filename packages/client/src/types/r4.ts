@@ -104,19 +104,19 @@ export type R4SystemSearchRequest = R4SystemInteraction & {
 export type R4InvokeInstanceRequest = R4InstanceInteraction & {
   type: RequestInteractionTypes["invoke"];
   operation: code;
-  body: Parameters;
+  body: Resource;
 };
 
 export type R4InvokeTypeRequest = R4TypeInteraction & {
   type: RequestInteractionTypes["invoke"];
   operation: code;
-  body: Parameters;
+  body: Resource;
 };
 
 export type R4InvokeSystemRequest = R4SystemInteraction & {
   type: RequestInteractionTypes["invoke"];
   operation: code;
-  body: Parameters;
+  body: Resource;
 };
 
 export type R4FHIRRequest =

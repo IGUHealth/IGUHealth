@@ -197,7 +197,7 @@ function getResourceTypeToValidate(
     case "update-request":
       return request.resourceType;
     case "invoke-request":
-      return "Parameters";
+      return request.body.resourceType;
     case "transaction-request":
     case "batch-request":
       return "Bundle";
