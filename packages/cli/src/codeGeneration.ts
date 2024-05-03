@@ -45,9 +45,9 @@ export function codeGenerationCommands(command: Command) {
     .command("operations")
     .description("Generate Operation types and classes")
     .option("-o, --output <output>", "output file")
-    .option("-v, --version <version>", "FHIR Profiles to use", "r4")
+    .option("-v, --version <version>", "FHIR Profiles to use", R4)
     .action(async (options) => {
-      if (options.version !== "r4") {
+      if (options.version !== R4) {
         throw new Error("Currently only support r4");
       }
       const operationDefinitions = loadArtifacts({

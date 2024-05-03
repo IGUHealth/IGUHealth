@@ -5218,3 +5218,43 @@ export namespace IguhealthEncrypt {
     ],
   } as fhirTypes.OperationDefinition);
 }
+export namespace IguhealthMessagePost {
+  export type Input = { input: fhirTypes.Resource };
+  export type Output = { result: fhirTypes.code };
+  export type IOp = IOperation<Input, Output>;
+  export const Op: IOp = new Operation<Input, Output>({
+    resourceType: "OperationDefinition",
+    id: "iguhealth-message-post",
+    url: "https://iguhealth.app/OperationDefinition/message-post",
+    version: "4.0.1",
+    name: "Send a message to a given topic.",
+    status: "draft",
+    kind: "operation",
+    date: "2024-05-01T09:29:23+11:00",
+    publisher: "IGUHealth",
+    description: "Posts a message to a given topic.",
+    code: "message-post",
+    system: false,
+    type: false,
+    instance: true,
+    resource: ["MessageTopic"],
+    parameter: [
+      {
+        name: "input",
+        use: "in",
+        min: 1,
+        max: "1",
+        documentation: "Value to encrypt",
+        type: "Resource",
+      },
+      {
+        name: "result",
+        use: "out",
+        min: 1,
+        max: "1",
+        documentation: "Result of the message post operation.",
+        type: "code",
+      },
+    ],
+  } as fhirTypes.OperationDefinition);
+}
