@@ -3,6 +3,7 @@ import {
   ClientApplication,
   Membership,
   OperationDefinition,
+  id,
 } from "@iguhealth/fhir-types/r4/types";
 
 import { CUSTOM_CLAIMS } from "./constants.js";
@@ -43,9 +44,14 @@ export interface AccessTokenPayload<role> {
    */
   [CUSTOM_CLAIMS.RESOURCE_TYPE]: TOKEN_RESOURCE_TYPES;
   /**
+   * The ID of the resource the token is associated with.
+   */
+  [CUSTOM_CLAIMS.RESOURCE_ID]?: id;
+  /**
    * What tenants the user has access to.
    */
   [CUSTOM_CLAIMS.TENANTS]: TenantClaim<role>[];
+
   /**
    * Allow token to have additional claims.
    */

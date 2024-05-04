@@ -5,4 +5,5 @@ export const IGUHEALTH_AUDIENCE = "https://iguhealth.com/api";
 export const CUSTOM_CLAIMS = {
   TENANTS: <const>"https://iguhealth.app/tenants",
   RESOURCE_TYPE: <const>"https://iguhealth.app/resourceType",
+  RESOURCE_ID: <const>"https://iguhealth.app/resourceId",
 };

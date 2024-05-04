@@ -30,6 +30,7 @@ export function membershipToUser(user: Membership): s.users.Insertable {
     fhir_user_versionid: user.meta?.versionId
       ? parseInt(user.meta.versionId)
       : null,
+    fhir_user_id: user.id,
   };
 }
 
