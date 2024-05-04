@@ -184,6 +184,7 @@ export function tokenPost<
             },
           ],
           [CUSTOM_CLAIMS.RESOURCE_TYPE]: "ClientApplication",
+          [CUSTOM_CLAIMS.RESOURCE_ID]: ctx.oidc.client.id as id,
           sub: ctx.oidc.client.id as string as Subject,
           scope: "openid profile email offline_access",
         };
