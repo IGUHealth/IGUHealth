@@ -5846,6 +5846,12 @@ declare module 'zapatos/schema' {
       */
       fhir_provider_id: string | null;
       /**
+      * **users.fhir_user_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      fhir_user_id: string | null;
+      /**
       * **users.fhir_user_versionid**
       * - `int4` in database
       * - Nullable, no default
@@ -5943,6 +5949,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       fhir_provider_id: string | null;
+      /**
+      * **users.fhir_user_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      fhir_user_id: string | null;
       /**
       * **users.fhir_user_versionid**
       * - `int4` in database
@@ -6042,6 +6054,12 @@ declare module 'zapatos/schema' {
       */
       fhir_provider_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
+      * **users.fhir_user_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      fhir_user_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **users.fhir_user_versionid**
       * - `int4` in database
       * - Nullable, no default
@@ -6140,6 +6158,12 @@ declare module 'zapatos/schema' {
       */
       fhir_provider_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
+      * **users.fhir_user_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      fhir_user_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
       * **users.fhir_user_versionid**
       * - `int4` in database
       * - Nullable, no default
@@ -6237,6 +6261,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       fhir_provider_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **users.fhir_user_id**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      fhir_user_id?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **users.fhir_user_versionid**
       * - `int4` in database

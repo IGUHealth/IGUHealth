@@ -8,6 +8,7 @@ export const USER_QUERY_COLS = <const>[
   "last_name",
   "email_verified",
   "role",
+  "fhir_user_id",
   "fhir_user_versionid",
   "root_user",
 ];

@@ -2,7 +2,7 @@ import type * as Koa from "koa";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
-import { code } from "@iguhealth/fhir-types/r4/types";
+import { code, id } from "@iguhealth/fhir-types/r4/types";
 import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
@@ -105,6 +105,8 @@ export function tokenPost<
                   user.id,
                 ),
               [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
+              [CUSTOM_CLAIMS.RESOURCE_ID]:
+                (user.fhir_user_id as id) ?? undefined,
               sub: user.id as string as Subject,
               scope: "openid profile email offline_access",
             };
