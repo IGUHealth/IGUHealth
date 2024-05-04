@@ -97,6 +97,7 @@ async function FHIRAPIKoaMiddleware<
           body: (ctx.request as unknown as Record<string, unknown>).body,
         }),
       );
+
       const httpResponse = fhirResponseToHTTPResponse(response);
       ctx.status = httpResponse.status;
       ctx.body = httpResponse.body;
