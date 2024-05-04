@@ -8,13 +8,17 @@ import * as s from "zapatos/schema";
 import { AsynchronousClient } from "@iguhealth/client";
 import {
   BundleEntry,
-  Resource,
   Subscription,
   code,
   id,
 } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
-import { FHIR_VERSION, R4 } from "@iguhealth/fhir-types/versions";
+import {
+  AllResourceTypes,
+  FHIR_VERSION,
+  R4,
+  Resource,
+} from "@iguhealth/fhir-types/versions";
 import { evaluate } from "@iguhealth/fhirpath";
 import {
   AccessTokenPayload,
@@ -77,7 +81,7 @@ if (process.env.SENTRY_WORKER_DSN)
     ),
   });
 
-function getVersionSequence(resource: Resource): number {
+function getVersionSequence(resource: Resource<R4, AllResourceTypes>): number {
   const evaluation = evaluate(
     "$this.meta.extension.where(url=%sequenceUrl).value",
     resource,
@@ -100,7 +104,7 @@ async function handleSubscriptionPayload(
   ctx: FHIRServerCTX,
   fhirVersion: R4,
   subscription: Subscription,
-  payload: (Resource | r4b.Resource)[],
+  payload: Resource<FHIR_VERSION, AllResourceTypes>[],
 ): Promise<void> {
   const channelType = evaluate(
     "$this.channel.type | $this.channel.type.extension.where(url=%typeUrl).value",
@@ -205,6 +209,55 @@ async function handleSubscriptionPayload(
           payload,
         },
       );
+
+      return;
+    }
+    case "message": {
+      if (!subscription.channel.endpoint) {
+        throw new OperationError(
+          outcomeError("invalid", `Subscription channel is missing endpoint.`),
+        );
+      }
+
+      const bundle: Resource<R4, "Bundle"> = {
+        resourceType: "Bundle",
+        type: "message",
+        timestamp: new Date().toISOString(),
+        entry: [
+          {
+            resource: {
+              eventCoding: {
+                system: "https://iguhealth.app",
+                code: "subscription-message",
+              },
+              resourceType: "MessageHeader",
+              source: {
+                name: "worker",
+                endpoint: `${subscription.resourceType}/${subscription.id}`,
+              },
+            } as Resource<R4, "MessageHeader">,
+          },
+          ...payload.map((resource) => ({
+            resource,
+          })),
+        ],
+      } as Resource<R4, "Bundle">;
+
+      const endpoint = subscription.channel.endpoint;
+      const headers = subscription.channel.header
+        ?.map((h) => h.split(":").map((h) => h.trim()))
+        .reduce((acc: Record<string, string>, [key, value]) => {
+          if (!key || !value) return acc;
+          acc[key] = value;
+          return acc;
+        }, {});
+
+      const response = await fetch(endpoint as string, {
+        method: "POST",
+        // headers: subscription.channel.header,
+        headers: { ...headers, "Content-Type": "application/json" },
+        body: JSON.stringify(bundle),
+      });
 
       return;
     }
@@ -368,7 +421,7 @@ function processSubscription(
           );
 
         // Do reverse as ordering is the latest update first.
-        const payload: (Resource | r4b.Resource)[] = [];
+        const payload: Resource<R4, AllResourceTypes>[] = [];
 
         for (const entry of historyPoll) {
           if (entry.resource === undefined)
@@ -387,11 +440,11 @@ function processSubscription(
                 resolveRemoteCanonical: createResolverRemoteCanonical(ctx),
               },
               R4,
-              entry.resource as Resource,
+              entry.resource,
               resourceParameters,
             ))
           ) {
-            payload.push(entry.resource);
+            payload.push(entry.resource as Resource<R4, AllResourceTypes>);
           }
         }
         await handleSubscriptionPayload(
@@ -405,7 +458,10 @@ function processSubscription(
           ctx,
           `${subscription.id}_latest`,
           getVersionSequence(
-            historyPoll[historyPoll.length - 1].resource as Resource,
+            historyPoll[historyPoll.length - 1].resource as Resource<
+              R4,
+              AllResourceTypes
+            >,
           ),
         );
       }
