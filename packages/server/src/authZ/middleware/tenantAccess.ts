@@ -17,7 +17,13 @@ function findCurrentTenant<Context extends Koa.DefaultContext>(
     (t: TenantClaim<s.user_role>) => t.id === ctx.FHIRContext.tenant,
   );
 }
-
+/**
+ * Verify a users access to a given tenant based around JWT Claims
+ * (see findCurrentTenant above for how search is done).
+ *
+ * @param ctx Parameterized Context with FHIR Services
+ * @param next Koa Next function.
+ */
 export async function verifyAndAssociateUserFHIRContext<
   State extends Koa.DefaultState,
   Context extends KoaContext.FHIR<Koa.DefaultContext>,
