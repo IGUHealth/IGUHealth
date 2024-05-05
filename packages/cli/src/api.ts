@@ -5,8 +5,9 @@ import path from "node:path";
 
 import httpClient from "@iguhealth/client/http";
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
-import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import { Bundle, Resource, ResourceType } from "@iguhealth/fhir-types/r4/types";
+import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
+import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 
 import {
   CONFIG_LOCATION,
@@ -14,7 +15,6 @@ import {
   getCurrentTenant,
   loadConfig,
 } from "./config.js";
-import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 
 function concatenateURLPaths(url: URL, urlPath: string) {
   return new URL(path.join(url.pathname, urlPath), url.origin);
@@ -90,6 +90,11 @@ function createClient(location: string) {
         },
       );
       const data = await response.json();
+
+      if (response.status >= 400) {
+        throw new Error(JSON.stringify(data));
+      }
+
       return data.access_token;
     },
   });

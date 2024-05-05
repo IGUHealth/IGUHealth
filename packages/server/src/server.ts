@@ -25,6 +25,7 @@ import { createCertsIfNoneExists, getJWKS } from "./authN/certifications.js";
 import {
   allowPublicAccessMiddleware,
   createValidateUserJWTMiddleware,
+  verifyBasicAuth,
 } from "./authN/middleware.js";
 import { JWKS_GET } from "./authN/oidc/constants.js";
 import { createOIDCRouter } from "./authN/oidc/index.js";
@@ -235,6 +236,7 @@ export default async function createServer(): Promise<
   });
 
   const authMiddlewares = [
+    verifyBasicAuth as Koa.Middleware<unknown, unknown, unknown>,
     (process.env.AUTH_PUBLIC_ACCESS === "true"
       ? allowPublicAccessMiddleware
       : jwtMiddleware) as Koa.Middleware<unknown, unknown, unknown>,

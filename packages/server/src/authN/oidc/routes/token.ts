@@ -15,7 +15,11 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaContext } from "../../../fhir-api/types.js";
 import { getSigningKey } from "../../certifications.js";
-import { getCredentialsBasicHeader } from "../../utilities.js";
+import {
+  authenticateClientCredentials,
+  createClientCredentialToken,
+  getCredentialsBasicHeader,
+} from "../../client_credentials_verification.js";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -158,41 +162,16 @@ export function tokenPost<
           );
         }
 
-        if (credentials?.client_id !== ctx.oidc.client?.id) {
+        if (!authenticateClientCredentials(ctx.oidc.client, credentials)) {
           throw new OperationError(
             outcomeError("security", "Invalid credentials for client."),
           );
         }
-
-        if (credentials?.client_secret !== ctx.oidc.client.secret) {
-          throw new OperationError(
-            outcomeError("security", "Invalid credentials for client."),
-          );
-        }
-
-        const signingKey = await getSigningKey(
-          process.env.AUTH_LOCAL_CERTIFICATION_LOCATION as string,
-          process.env.AUTH_LOCAL_SIGNING_KEY as string,
-        );
-
-        const accessTokenPayload: AccessTokenPayload<s.user_role> = {
-          iss: IGUHEALTH_ISSUER,
-          [CUSTOM_CLAIMS.TENANTS]: [
-            {
-              id: ctx.FHIRContext.tenant,
-              userRole: "member",
-            },
-          ],
-          [CUSTOM_CLAIMS.RESOURCE_TYPE]: "ClientApplication",
-          [CUSTOM_CLAIMS.RESOURCE_ID]: ctx.oidc.client.id as id,
-          sub: ctx.oidc.client.id as string as Subject,
-          scope: "openid profile email offline_access",
-        };
 
         ctx.body = {
-          access_token: await createToken<AccessTokenPayload<s.user_role>>(
-            signingKey,
-            accessTokenPayload,
+          access_token: await createClientCredentialToken(
+            ctx.FHIRContext.tenant,
+            ctx.oidc.client,
           ),
           token_type: "Bearer",
           expires_in: 7200,

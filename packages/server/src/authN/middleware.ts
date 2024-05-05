@@ -9,7 +9,9 @@ import {
   IGUHEALTH_ISSUER,
   TenantClaim,
 } from "@iguhealth/jwt";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { KoaContext } from "../fhir-api/types.js";
 import { getJWKS } from "./certifications.js";
 
 async function createLocalJWTSecret(
@@ -53,6 +55,27 @@ interface ValidateUserJWTMiddlewareOptions {
   AUTH_LOCAL_SIGNING_KEY?: string;
   AUTH_EXTERNAL_JWK_URI?: string;
   AUTH_EXTERNAL_JWT_ISSUER?: string;
+}
+
+/**
+ * For Basic auth verify and inject a token into the request
+ * Will only work for Client Application registered on tenant that allows basic.
+ * @param ctx
+ * @param next
+ */
+export async function verifyBasicAuth<
+  State extends Koa.DefaultState,
+  Context extends KoaContext.FHIR<Koa.DefaultContext>,
+>(ctx: Koa.ParameterizedContext<State, Context>, next: Koa.Next) {
+  const authHeader = ctx.req.headers.authorization;
+
+  if (authHeader?.startsWith("Basic")) {
+    throw new OperationError(
+      outcomeError("not-supported", "Basic Auth not supported"),
+    );
+  }
+
+  await next();
 }
 
 /**
