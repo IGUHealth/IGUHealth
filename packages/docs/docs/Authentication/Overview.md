@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Intro
+# Overview
 
 Authentication is built around tenants. Tenants are a logical seperation of resources. Each tenant will have it's own isolated set of resources.
 Access to a tenant is determined by JWT tokens. JWT tokens are expected to have custom claims specifying what tenant they have access too.
