@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Intro
 
-This is an overview of IGUHealth Terminology module support. For a descriptive definition of the terminology module with FHIR click [here](https://hl7.org/fhir/r4/terminology-module.html). In short, terminologies are a defined set ([ValueSet](../05-Resources/ValueSet.mdx), [CodeSystem](../05-Resources/CodeSystem.mdx)) of fixed string values ([codes](https://hl7.org/fhir/r4/datatypes.html#code)). The terminology module defines ways for looking up, validating, pulling in additional information, and translating between terminology sets (see [here](https://hl7.org/fhir/r4/terminology-module.html#index)).
+This is an overview of IGUHealth Terminology module support. For a descriptive definition of the terminology module with FHIR click [here](https://hl7.org/fhir/r4/terminology-module.html). In short, terminologies are a defined set ([ValueSet](../05-Data_Model/R4/ValueSet.mdx), [CodeSystem](../05-Data_Model/R4/CodeSystem.mdx)) of fixed string values ([codes](https://hl7.org/fhir/r4/datatypes.html#code)). The terminology module defines ways for looking up, validating, pulling in additional information, and translating between terminology sets (see [here](https://hl7.org/fhir/r4/terminology-module.html#index)).
 
 ## Supported Resources
 
