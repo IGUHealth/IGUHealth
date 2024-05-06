@@ -1,7 +1,7 @@
 import TabItem from "@theme/TabItem";
   import Tabs from "@theme/Tabs";
 
-  # Membership
+  # MessageBroker
  ## Description 
  undefined 
 
@@ -9,14 +9,16 @@ import TabItem from "@theme/TabItem";
   <Tabs> <TabItem value="structure" label="Structure">
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
- | Membership | 0..* | Membership | undefined 
- | Membership.id | 0..1 | http://hl7.org/fhirpath/System.String | The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes. 
- | Membership.meta | 0..1 | Meta | The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource. 
- | Membership.link | 0..* | Reference | undefined 
- | Membership.email | 1..1 | string | undefined 
- | Membership.emailVerified | 0..1 | boolean | undefined 
- | Membership.name | 0..1 | HumanName | undefined 
- | Membership.role | 1..1 | code | undefined 
+ | MessageBroker | 0..* | MessageBroker | undefined 
+ | MessageBroker.id | 0..1 | http://hl7.org/fhirpath/System.String | The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes. 
+ | MessageBroker.meta | 0..1 | Meta | The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource. 
+ | MessageBroker.name | 1..1 | string | undefined 
+ | MessageBroker.host | 1..1 | uri | undefined 
+ | MessageBroker.type | 1..1 | code | undefined 
+ | MessageBroker.security | 1..1 | BackboneElement | undefined 
+ | MessageBroker.security.type | 1..1 | code | undefined 
+ | MessageBroker.security.username | 0..1 | string | undefined 
+ | MessageBroker.security.password | 0..1 | string | undefined 
 </TabItem>
  <TabItem value="searchparameter" label="Search Parameters">
    | Name | Type | Description  | Expression 
@@ -30,8 +32,9 @@ import TabItem from "@theme/TabItem";
  | _security | token | Security Labels applied to this resource | Resource.meta.security  
  | _source | uri | Identifies where the resource comes from | Resource.meta.source  
  | _tag | token | Tags applied to this resource | Resource.meta.tag  
- | identifier | token | Membership identifier used to identify membership based on iss / sub | Membership.identifier  
- | link | reference | What/Who is associated with a given Membership. | Membership.link  
+ | Message broker host | uri | MessageBroker broker. | MessageBroker.host  
+ | Message broker name | string | MessageBroker broker. | MessageBroker.name  
+ | type | token | MessageBroker broker. | MessageBroker.type  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
  | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 

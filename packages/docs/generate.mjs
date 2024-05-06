@@ -3,13 +3,26 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
+import { R4, R4B } from "@iguhealth/fhir-types/versions";
 
-const artifactResources = ["StructureDefinition", "SearchParameter"]
+const r4Artifacts = ["StructureDefinition", "SearchParameter"]
   .map((resourceType) =>
     loadArtifacts({
       resourceType: resourceType,
       packageLocation: path.join(fileURLToPath(import.meta.url), "../"),
       silence: false,
+      fhirVersion: R4,
+    }),
+  )
+  .flat();
+
+const r4bArtifacts = ["StructureDefinition", "SearchParameter"]
+  .map((resourceType) =>
+    loadArtifacts({
+      resourceType: resourceType,
+      packageLocation: path.join(fileURLToPath(import.meta.url), "../"),
+      silence: false,
+      fhirVersion: R4B,
     }),
   )
   .flat();
@@ -25,8 +38,8 @@ function escapeCharacters(v) {
     .replaceAll("<", "\\<");
 }
 
-async function processStructureDefinition(structureDefinition) {
-  const parameters = artifactResources
+async function processStructureDefinition(artifacts, structureDefinition) {
+  const parameters = artifacts
     .filter((r) => r.resourceType === "SearchParameter")
     .filter(
       (r) =>
@@ -77,12 +90,28 @@ async function processStructureDefinition(structureDefinition) {
   return doc;
 }
 
-const resourceStructureDefinitions = artifactResources
+const r4StructureDefinitions = r4Artifacts
   .filter((r) => r.resourceType === "StructureDefinition")
   .filter((r) => r.kind === "resource");
 
-for (const structureDefinition of resourceStructureDefinitions) {
-  const pathName = `./docs/05-Resources/${structureDefinition.name}.mdx`;
-  const content = await processStructureDefinition(structureDefinition);
+for (const structureDefinition of r4StructureDefinitions) {
+  const pathName = `./docs/05-Data_Model/R4/${structureDefinition.name}.mdx`;
+  const content = await processStructureDefinition(
+    r4Artifacts,
+    structureDefinition,
+  );
+  fs.writeFileSync(pathName, content);
+}
+
+const r4bStructureDefinitions = r4bArtifacts
+  .filter((r) => r.resourceType === "StructureDefinition")
+  .filter((r) => r.kind === "resource");
+
+for (const structureDefinition of r4bStructureDefinitions) {
+  const pathName = `./docs/05-Data_Model/R4B/${structureDefinition.name}.mdx`;
+  const content = await processStructureDefinition(
+    r4bArtifacts,
+    structureDefinition,
+  );
   fs.writeFileSync(pathName, content);
 }

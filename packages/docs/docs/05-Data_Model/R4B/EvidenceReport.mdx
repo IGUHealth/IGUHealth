@@ -1,0 +1,100 @@
+import TabItem from "@theme/TabItem";
+  import Tabs from "@theme/Tabs";
+
+  # EvidenceReport
+ ## Description 
+ The EvidenceReport Resource is a specialized container for a collection of resources and codable concepts, adapted to support compositions of Evidence, EvidenceVariable, and Citation resources and related concepts. 
+
+  ## Data
+  <Tabs> <TabItem value="structure" label="Structure">
+   | Path | Cardinality | Type | Description
+  | ---- | ----------- | ---- | -------  
+ | EvidenceReport | 0..* | EvidenceReport | The EvidenceReport Resource is a specialized container for a collection of resources and codable concepts, adapted to support compositions of Evidence, EvidenceVariable, and Citation resources and related concepts. 
+ | EvidenceReport.id | 0..1 | http://hl7.org/fhirpath/System.String | The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes. 
+ | EvidenceReport.meta | 0..1 | Meta | The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource. 
+ | EvidenceReport.implicitRules | 0..1 | uri | A reference to a set of rules that were followed when the resource was constructed, and which must be understood when processing the content. Often, this is a reference to an implementation guide that defines the special rules along with other profiles etc. 
+ | EvidenceReport.language | 0..1 | code | The base language in which the resource is written. 
+ | EvidenceReport.text | 0..1 | Narrative | A human-readable narrative that contains a summary of the resource and can be used to represent the content of the resource to a human. The narrative need not encode all the structured data, but is required to contain sufficient detail to make it "clinically safe" for a human to just read the narrative. Resource definitions may define what content should be represented in the narrative to ensure clinical safety. 
+ | EvidenceReport.contained | 0..* | Resource | These resources do not have an independent existence apart from the resource that contains them - they cannot be identified independently, and nor can they have their own independent transaction scope. 
+ | EvidenceReport.extension | 0..* | Extension | May be used to represent additional information that is not part of the basic definition of the resource. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension. 
+ | EvidenceReport.modifierExtension | 0..* | Extension | May be used to represent additional information that is not part of the basic definition of the resource and that modifies the understanding of the element that contains it and/or the understanding of the containing element's descendants. Usually modifier elements provide negation or qualification. To make the use of extensions safe and manageable, there is a strict set of governance applied to the definition and use of extensions. Though any implementer is allowed to define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension. Applications processing a resource are required to check for modifier extensions.Modifier extensions SHALL NOT change the meaning of any elements on Resource or DomainResource (including cannot change the meaning of modifierExtension itself). 
+ | EvidenceReport.url | 0..1 | uri | An absolute URI that is used to identify this EvidenceReport when it is referenced in a specification, model, design or an instance; also called its canonical identifier. This SHOULD be globally unique and SHOULD be a literal address at which at which an authoritative instance of this summary is (or will be) published. This URL can be the target of a canonical reference. It SHALL remain the same when the summary is stored on different servers. 
+ | EvidenceReport.status | 1..1 | code | The status of this summary. Enables tracking the life-cycle of the content. 
+ | EvidenceReport.useContext | 0..* | UsageContext | The content was developed with a focus and intent of supporting the contexts that are listed. These contexts may be general categories (gender, age, ...) or may be references to specific programs (insurance plans, studies, ...) and may be used to assist with indexing and searching for appropriate evidence report instances. 
+ | EvidenceReport.identifier | 0..* | Identifier | A formal identifier that is used to identify this EvidenceReport when it is represented in other formats, or referenced in a specification, model, design or an instance. 
+ | EvidenceReport.relatedIdentifier | 0..* | Identifier | A formal identifier that is used to identify things closely related to this EvidenceReport. 
+ | EvidenceReport.citeAs[x] | 0..1 | Reference | Citation Resource or display of suggested citation for this report. 
+ | EvidenceReport.type | 0..1 | CodeableConcept | Specifies the kind of report, such as grouping of classifiers, search results, or human-compiled expression. 
+ | EvidenceReport.note | 0..* | Annotation | Used for footnotes and annotations. 
+ | EvidenceReport.relatedArtifact | 0..* | RelatedArtifact | Link, description or reference to artifact associated with the report. 
+ | EvidenceReport.subject | 1..1 | BackboneElement | Specifies the subject or focus of the report. Answers "What is this report about?". 
+ | EvidenceReport.subject.id | 0..1 | http://hl7.org/fhirpath/System.String | Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces. 
+ | EvidenceReport.subject.extension | 0..* | Extension | May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension. 
+ | EvidenceReport.subject.modifierExtension | 0..* | Extension | May be used to represent additional information that is not part of the basic definition of the element and that modifies the understanding of the element in which it is contained and/or the understanding of the containing element's descendants. Usually modifier elements provide negation or qualification. To make the use of extensions safe and manageable, there is a strict set of governance applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension. Applications processing a resource are required to check for modifier extensions.Modifier extensions SHALL NOT change the meaning of any elements on Resource or DomainResource (including cannot change the meaning of modifierExtension itself). 
+ | EvidenceReport.subject.characteristic | 0..* | BackboneElement | Characteristic. 
+ | EvidenceReport.subject.characteristic.id | 0..1 | http://hl7.org/fhirpath/System.String | Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces. 
+ | EvidenceReport.subject.characteristic.extension | 0..* | Extension | May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension. 
+ | EvidenceReport.subject.characteristic.modifierExtension | 0..* | Extension | May be used to represent additional information that is not part of the basic definition of the element and that modifies the understanding of the element in which it is contained and/or the understanding of the containing element's descendants. Usually modifier elements provide negation or qualification. To make the use of extensions safe and manageable, there is a strict set of governance applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension. Applications processing a resource are required to check for modifier extensions.Modifier extensions SHALL NOT change the meaning of any elements on Resource or DomainResource (including cannot change the meaning of modifierExtension itself). 
+ | EvidenceReport.subject.characteristic.code | 1..1 | CodeableConcept | Characteristic code. 
+ | EvidenceReport.subject.characteristic.value[x] | 1..1 | Reference | Characteristic value. 
+ | EvidenceReport.subject.characteristic.exclude | 0..1 | boolean | Is used to express not the characteristic. 
+ | EvidenceReport.subject.characteristic.period | 0..1 | Period | Timeframe for the characteristic. 
+ | EvidenceReport.subject.note | 0..* | Annotation | Used for general notes and annotations not coded elsewhere. 
+ | EvidenceReport.publisher | 0..1 | string | The name of the organization or individual that published the evidence report. 
+ | EvidenceReport.contact | 0..* | ContactDetail | Contact details to assist a user in finding and communicating with the publisher. 
+ | EvidenceReport.author | 0..* | ContactDetail | An individiual, organization, or device primarily involved in the creation and maintenance of the content. 
+ | EvidenceReport.editor | 0..* | ContactDetail | An individiual, organization, or device primarily responsible for internal coherence of the content. 
+ | EvidenceReport.reviewer | 0..* | ContactDetail | An individiual, organization, or device primarily responsible for review of some aspect of the content. 
+ | EvidenceReport.endorser | 0..* | ContactDetail | An individiual, organization, or device responsible for officially endorsing the content for use in some setting. 
+ | EvidenceReport.relatesTo | 0..* | BackboneElement | Relationships that this composition has with other compositions or documents that already exist. 
+ | EvidenceReport.relatesTo.id | 0..1 | http://hl7.org/fhirpath/System.String | Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces. 
+ | EvidenceReport.relatesTo.extension | 0..* | Extension | May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension. 
+ | EvidenceReport.relatesTo.modifierExtension | 0..* | Extension | May be used to represent additional information that is not part of the basic definition of the element and that modifies the understanding of the element in which it is contained and/or the understanding of the containing element's descendants. Usually modifier elements provide negation or qualification. To make the use of extensions safe and manageable, there is a strict set of governance applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension. Applications processing a resource are required to check for modifier extensions.Modifier extensions SHALL NOT change the meaning of any elements on Resource or DomainResource (including cannot change the meaning of modifierExtension itself). 
+ | EvidenceReport.relatesTo.code | 1..1 | code | The type of relationship that this composition has with anther composition or document. 
+ | EvidenceReport.relatesTo.target[x] | 1..1 | Identifier | The target composition/document of this relationship. 
+ | EvidenceReport.section | 0..* | BackboneElement | The root of the sections that make up the composition. 
+ | EvidenceReport.section.id | 0..1 | http://hl7.org/fhirpath/System.String | Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces. 
+ | EvidenceReport.section.extension | 0..* | Extension | May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension. 
+ | EvidenceReport.section.modifierExtension | 0..* | Extension | May be used to represent additional information that is not part of the basic definition of the element and that modifies the understanding of the element in which it is contained and/or the understanding of the containing element's descendants. Usually modifier elements provide negation or qualification. To make the use of extensions safe and manageable, there is a strict set of governance applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension. Applications processing a resource are required to check for modifier extensions.Modifier extensions SHALL NOT change the meaning of any elements on Resource or DomainResource (including cannot change the meaning of modifierExtension itself). 
+ | EvidenceReport.section.title | 0..1 | string | The label for this particular section.  This will be part of the rendered content for the document, and is often used to build a table of contents. 
+ | EvidenceReport.section.focus | 0..1 | CodeableConcept | A code identifying the kind of content contained within the section. This should be consistent with the section title. 
+ | EvidenceReport.section.focusReference | 0..1 | Reference | A definitional Resource identifying the kind of content contained within the section. This should be consistent with the section title. 
+ | EvidenceReport.section.author | 0..* | Reference | Identifies who is responsible for the information in this section, not necessarily who typed it in. 
+ | EvidenceReport.section.text | 0..1 | Narrative | A human-readable narrative that contains the attested content of the section, used to represent the content of the resource to a human. The narrative need not encode all the structured data, but is peferred to contain sufficient detail to make it acceptable for a human to just read the narrative. 
+ | EvidenceReport.section.mode | 0..1 | code | How the entry list was prepared - whether it is a working list that is suitable for being maintained on an ongoing basis, or if it represents a snapshot of a list of items from another source, or whether it is a prepared list where items may be marked as added, modified or deleted. 
+ | EvidenceReport.section.orderedBy | 0..1 | CodeableConcept | Specifies the order applied to the items in the section entries. 
+ | EvidenceReport.section.entryClassifier | 0..* | CodeableConcept | Specifies any type of classification of the evidence report. 
+ | EvidenceReport.section.entryReference | 0..* | Reference | A reference to the actual resource from which the narrative in the section is derived. 
+ | EvidenceReport.section.entryQuantity | 0..* | Quantity | Quantity as content. 
+ | EvidenceReport.section.emptyReason | 0..1 | CodeableConcept | If the section is empty, why the list is empty. An empty section typically has some text explaining the empty reason. 
+ | EvidenceReport.section.section | 0..* | EvidenceReport | A nested sub-section within this section. 
+</TabItem>
+ <TabItem value="searchparameter" label="Search Parameters">
+   | Name | Type | Description  | Expression 
+    | ---- | ---- | ------- | ------  
+ | _text | string | Search on the narrative of the resource |   
+ | _content | string | Search on the entire content of the resource |   
+ | _filter | token | Filter search parameter which supports a more sophisticated grammar for searching. See [documentation](search_filter.html) for further details |   
+ | _has | string | Provides limited support for reverse chaining - that is, selecting resources based on the properties of resources that refer to them (instead of chaining where resources can be selected based on the properties of resources that they refer to). See the FHIR search page for further documentation |   
+ | _id | token | Logical id of this artifact | Resource.id  
+ | _lastUpdated | date | When the resource version last changed | Resource.meta.lastUpdated  
+ | _list | string | All resources in nominated list (by id, Type/id, url or one of the magic List types) |   
+ | _profile | uri | Profiles this resource claims to conform to | Resource.meta.profile  
+ | _query | token | A custom search profile that describes a specific defined query operation |   
+ | _security | token | Security Labels applied to this resource | Resource.meta.security  
+ | _source | uri | Identifies where the resource comes from | Resource.meta.source  
+ | _tag | token | Tags applied to this resource | Resource.meta.tag  
+ | _text | string | Search on the narrative text (html) of the resource |   
+ | _type | token | Used when a search is performed in a context which doesn't limit the search to indicate which types are being searched. See the FHIR search page for further discussion |   
+ | context | token | A use context assigned to the evidence report | (EvidenceReport.useContext.value.ofType(CodeableConcept))  
+ | context-quantity | quantity | A quantity- or range-valued use context assigned to the evidence report | (EvidenceReport.useContext.value.ofType(Quantity)) / (EvidenceReport.useContext.value.ofType(Range))  
+ | context-type | token | A type of use context assigned to the evidence report | EvidenceReport.useContext.code  
+ | identifier | token | External identifier for the evidence report | EvidenceReport.identifier  
+ | publisher | string | Name of the publisher of the evidence report | EvidenceReport.publisher  
+ | status | token | The current status of the evidence report | EvidenceReport.status  
+ | url | uri | The uri that identifies the evidence report | EvidenceReport.url  
+ | context-type-quantity | composite | A use context type and quantity- or range-based value assigned to the evidence report | EvidenceReport.useContext  
+ | context-type-value | composite | A use context type and value assigned to the evidence report | EvidenceReport.useContext  
+
+</TabItem>
+</Tabs>
