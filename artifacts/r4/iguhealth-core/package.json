@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/iguhealth.fhir.r4.core",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "homepage": "https://docs.iguhealth.app",
   "repository": {
     "type": "git",
