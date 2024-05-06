@@ -3,7 +3,7 @@ import Koa, { Middleware } from "koa";
 import jwt from "koa-jwt";
 import * as s from "zapatos/schema";
 
-import { id } from "@iguhealth/fhir-types/r4/types";
+import { code, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import {
   CUSTOM_CLAIMS,
@@ -94,6 +94,12 @@ export async function verifyBasicAuth<
     if (!clientApplication) {
       throw new OperationError(
         outcomeError("security", "Invalid credentials for client."),
+      );
+    }
+
+    if (!clientApplication.grantType.includes("basic_auth" as code)) {
+      throw new OperationError(
+        outcomeError("security", "Client does not support basic auth."),
       );
     }
 
