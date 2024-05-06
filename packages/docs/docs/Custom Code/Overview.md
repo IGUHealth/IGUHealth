@@ -1,4 +1,6 @@
-# Extending with RPCs
+# Overview
+
+## Extending with RPCs
 
 RPC (Remote Procedure Calls) are the main approach for extending the server.
 The main advantages over writing custom code on the server is:
@@ -7,11 +9,11 @@ The main advantages over writing custom code on the server is:
 - Do not require recompiling the server.
 - Isolated per tenant.
 
-## Authoring
+### Authoring
 
 We use [OperationDefinitions](https://hl7.org/fhir/r4/operationdefinition.html) to write RPCs.
 
-### Writing the interface
+#### Writing the interface
 
 Interface for the Operation is defined on Operation.parameter. You specify inputs via parameter.use set to "in"
 and the output of your code via parameter.use set to "out"
@@ -47,11 +49,11 @@ For example the following:
 Will set the interface to expect a required body parameter (min is set to 1) and limit it's cardinality to be 1..1
 It will than output a required test field of type string with cardinality 1..1 and an op field of type OperationDefinition with cardinality 1..1.
 
-#### Output and Input Type
+##### Output and Input Type
 
 To call the RPC you than send a [Parameters](https://hl7.org/fhir/r4/parameters.html) resource. In the example above you could send and receive the following input and output
 
-##### Input
+###### Input
 
 ```json
 {
@@ -65,7 +67,7 @@ To call the RPC you than send a [Parameters](https://hl7.org/fhir/r4/parameters.
 }
 ```
 
-##### Output
+###### Output
 
 ```json
 {
@@ -115,7 +117,7 @@ const output = client.invoke_system(op, ctx, { body: "body value" });
 // Output will be following structure: {test: "test output", op: {...op.resource above}}
 ```
 
-### Writing Code
+#### Writing Code
 
 Code is written as javascript code and is saved on the OperationDefinition via the extension `https://iguhealth.github.io/fhir-operation-definition/operation-code` for example:
 
@@ -131,7 +133,7 @@ Code is written as javascript code and is saved on the OperationDefinition via t
 }
 ```
 
-#### Code interface
+##### Code interface
 
 ```js
 exports.handler = async function (ctx, param) {
@@ -162,7 +164,7 @@ exports.handler = async function (ctx, param) {
 };
 ```
 
-### Secrets and Environment Variables
+#### Secrets and Environment Variables
 
 To use environment variables use the following extension on `OperationDefinition.extension`
 
@@ -187,7 +189,7 @@ exports.handler = async function (ctx, param) {
 };
 ```
 
-#### Encryption
+##### Encryption
 
 If your value is a secret encrypt it automatically via the following extension on variable-value
 
@@ -225,7 +227,7 @@ In the example above the following will automatically encrypt the value on updat
 }
 ```
 
-### Extending with third party libraries
+#### Extending with third party libraries
 
 Libraries we default support in execution environment are as follows:
 

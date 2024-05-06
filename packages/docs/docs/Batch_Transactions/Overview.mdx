@@ -1,16 +1,16 @@
 import TabItem from "@theme/TabItem";
 import Tabs from "@theme/Tabs";
 
-# Intro
+# Overview
 
-Our server supports submitting both batch and transaction [Bundles](../05-Data_Model/R4/Bundle.mdx).
+Our server supports submitting both batch and transaction [Bundles](../Data_Model/R4/Bundle.mdx).
 Both options allow you to invoke multiple actions on a single request. The difference between the two is that transactions are atomic.
 Meaning that if one action fails, all actions will fail.
 Batch bundles, on the other hand, are not atomic, meaning that if one action fails, other actions will still be applied.
 
 ## Batch
 
-Submitting batch bundles (designated by batch on [Bundle.type](../05-Data_Model/R4/Bundle.mdx)) allows you to submit sets of actions.
+Submitting batch bundles (designated by batch on [Bundle.type](../Data_Model/R4/Bundle.mdx)) allows you to submit sets of actions.
 These actions, unlike terminology, are non-atomic (an error occurring in one operation will not prevent other actions from being applied on the server).
 Use batch if you want to evaluate multiple actions in a single request but don't care or do not want all actions to fail if one fails.
 
