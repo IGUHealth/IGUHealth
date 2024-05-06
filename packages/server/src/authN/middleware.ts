@@ -3,6 +3,8 @@ import Koa, { Middleware } from "koa";
 import jwt from "koa-jwt";
 import * as s from "zapatos/schema";
 
+import { id } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 import {
   CUSTOM_CLAIMS,
   IGUHEALTH_AUDIENCE,
@@ -11,8 +13,13 @@ import {
 } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaContext } from "../fhir-api/types.js";
+import { KoaContext, asSystemCTX } from "../fhir-api/types.js";
 import { getJWKS } from "./certifications.js";
+import {
+  authenticateClientCredentials,
+  createClientCredentialToken,
+  getBasicHeaderCredentials,
+} from "./client_credentials_verification.js";
 
 async function createLocalJWTSecret(
   AUTH_LOCAL_CERTIFICATION_LOCATION: string | undefined,
@@ -70,11 +77,38 @@ export async function verifyBasicAuth<
   const authHeader = ctx.req.headers.authorization;
 
   if (authHeader?.startsWith("Basic")) {
-    throw new OperationError(
-      outcomeError("not-supported", "Basic Auth not supported"),
-    );
-  }
+    const credentials = getBasicHeaderCredentials(ctx.request);
+    if (!credentials) {
+      throw new OperationError(
+        outcomeError("invalid", "Could not find credentials in request."),
+      );
+    }
 
+    const clientApplication = await ctx.FHIRContext.client.read(
+      asSystemCTX(ctx.FHIRContext),
+      R4,
+      "ClientApplication",
+      credentials.client_id as id,
+    );
+
+    if (!clientApplication) {
+      throw new OperationError(
+        outcomeError("security", "Invalid credentials for client."),
+      );
+    }
+
+    if (!authenticateClientCredentials(clientApplication, credentials)) {
+      throw new OperationError(
+        outcomeError("security", "Invalid credentials for client."),
+      );
+    }
+
+    const token = await createClientCredentialToken(
+      ctx.FHIRContext.tenant,
+      clientApplication,
+    );
+    ctx.req.headers.authorization = "Bearer " + token;
+  }
   await next();
 }
 

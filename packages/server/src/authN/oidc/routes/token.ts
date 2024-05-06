@@ -18,7 +18,7 @@ import { getSigningKey } from "../../certifications.js";
 import {
   authenticateClientCredentials,
   createClientCredentialToken,
-  getCredentialsBasicHeader,
+  getBasicHeaderCredentials,
 } from "../../client_credentials_verification.js";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -154,7 +154,7 @@ export function tokenPost<
       }
       // https://www.rfc-editor.org/rfc/rfc6749.html#section-4.4
       case "client_credentials": {
-        const credentials = getCredentialsBasicHeader(ctx.request);
+        const credentials = getBasicHeaderCredentials(ctx.request);
 
         if (!credentials) {
           throw new OperationError(

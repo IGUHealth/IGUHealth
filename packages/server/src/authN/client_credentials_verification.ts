@@ -21,7 +21,7 @@ export type ClientCredentials = { client_id: string; client_secret: string };
  * @param request Koa request to derive credentials from.
  * @returns client_id and client_secret if found, undefined otherwise.
  */
-export function getCredentialsBasicHeader(
+export function getBasicHeaderCredentials(
   request: Koa.Request,
 ): ClientCredentials | undefined {
   const authHeader = request.headers.authorization;
@@ -85,8 +85,8 @@ export async function createClientCredentialToken(
 export function getClientId(request: Koa.Request): string | undefined {
   if ((request.body as Record<string, unknown>)?.client_id) {
     return (request.body as Record<string, string>)?.client_id;
-  } else if (getCredentialsBasicHeader(request)?.client_id) {
-    return getCredentialsBasicHeader(request)?.client_id;
+  } else if (getBasicHeaderCredentials(request)?.client_id) {
+    return getBasicHeaderCredentials(request)?.client_id;
   } else if (typeof request.query.client_id === "string") {
     return request.query.client_id;
   }
