@@ -13,10 +13,10 @@ This is done via the [MessageBroker](../Data_model/R4/MessageBroker) resource. T
 Once you have configured your message broker, you can create a [MessageTopic](../Data_model/R4/MessageTopic) resource. 
 This resource defines the topic you are using to send and receive messages.
 
-### Sending a Message
+## Sending a Message
 To send a message to a topic, you invoke the following Operation on the [MessageTopic](../Data_model/R4/MessageTopic) resource:
 $message-post
-#### Example Request
+### Example Request
 ```
 POST /MessageTopic/${message-topic-id}/$message-post
 { 
@@ -28,7 +28,7 @@ POST /MessageTopic/${message-topic-id}/$message-post
 ```
 Where Input can be any FHIR resource. The output of this operation is a code that represents the status of the message.
 
-### Tying a Subscription to a Message Topic
+## Tying a Subscription to a Message Topic
 You can also configure a message topic to automatically send a message when a resource is created, updated, or deleted.
 This is done via the Subscription resource and the ClientApplication resource.
 
