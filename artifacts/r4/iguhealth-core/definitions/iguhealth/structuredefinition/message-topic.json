@@ -11,6 +11,7 @@
   "abstract": false,
   "type": "MessageTopic",
   "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Resource",
+  "description": "The topic for a message broker. Correlates to a Kafka or AMQP topic.",
   "derivation": "specialization",
   "snapshot": {
     "element": [

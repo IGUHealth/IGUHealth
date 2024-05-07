@@ -11,6 +11,7 @@
   "abstract": false,
   "type": "MessageBroker",
   "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Resource",
+  "description": "Configuration for a message broker. Contains endpoint for the message broker, type of message broker, and security configuration.",
   "derivation": "specialization",
   "snapshot": {
     "element": [
