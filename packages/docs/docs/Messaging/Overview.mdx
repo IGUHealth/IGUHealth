@@ -1,2 +1,92 @@
 
 # Overview
+
+We support Kafka and AMQP compatible brokers as messaging systems. You can use these messaging systems to send and receive messages between your services.
+
+## Data Model
+
+### Configuring a Message Broker
+The first step to setting up messaging is configuring your message broker. 
+This is done via the [MessageBroker](../Data_model/R4/MessageBroker) resource. This resource defines the type of broker you are using, and the connection details.
+
+### Configuring a Message Topic
+Once you have configured your message broker, you can create a [MessageTopic](../Data_model/R4/MessageTopic) resource. 
+This resource defines the topic you are using to send and receive messages.
+
+## Sending a Message
+To send a message to a topic, you invoke the following Operation on the [MessageTopic](../Data_model/R4/MessageTopic) resource:
+$message-post
+### Example Request
+```
+POST /MessageTopic/${message-topic-id}/$message-post
+{ 
+  "resourceType": "Parameters", 
+  "parameter": [
+    { "name": "input","resource": { "resourceType": "Patient" } }
+  ]
+}
+```
+Where Input can be any FHIR resource. The output of this operation is a code that represents the status of the message.
+
+## Tying a Subscription to a Message Topic
+You can also configure a message topic to automatically send a message when a resource is created, updated, or deleted.
+This is done via the Subscription resource and the ClientApplication resource.
+
+
+1. **First create a client application as follows:**
+    ```bash
+    POST /ClientApplication
+    {
+    "name": "Message-Poster",
+    "secret": "my-secret",
+    "grantType": [
+        "basic_auth"
+    ],
+    "resourceType": "ClientApplication",
+    "responseTypes": "token"
+    }
+    ```
+    _Take note of the ClientApplication.id after creating it._
+
+
+2. **Tie an AccessPolicy to your ClientApplication that allows it to post messages to the broker:**
+    ```bash
+    {
+    "code": "admin-access",
+    "name": "Admin Access",
+    "type": "full-access",
+    "target": [
+        {
+        "link": {
+            "reference": "ClientApplication/${my-client-application-id}"
+        }
+        }
+    ],
+    "description": "Full admin access",
+    "resourceType": "AccessPolicy"
+    }
+    ```
+
+
+3. **We will now create Basic auth credentials header:**
+    ```js
+    const header = btoa('${my-client-id}:${my-client-secret}')
+    ```
+
+4. **Finally we create the Subscription resource**
+    ```bash
+    POST /Subscription
+    {
+    "reason": "Post message to broker",
+    "status": "active",
+    "channel": {
+        "type": "message",
+        "header": [
+        "Authorization: Basic ${output-from-step-3}"
+        ],
+        "endpoint": "${my-domain}/w/${my-tenant-id}/api/v1/fhir/r4/MessageTopic/${my-topic-id}/$message-post"
+    },
+    "criteria": "Patient",
+    "resourceType": "Subscription"
+    }
+    ```
