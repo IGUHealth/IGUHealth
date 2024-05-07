@@ -90,28 +90,75 @@ async function processStructureDefinition(artifacts, structureDefinition) {
   return doc;
 }
 
-const r4StructureDefinitions = r4Artifacts
-  .filter((r) => r.resourceType === "StructureDefinition")
-  .filter((r) => r.kind === "resource");
+async function generateFHIRDocumentation() {
+  const r4StructureDefinitions = r4Artifacts
+    .filter((r) => r.resourceType === "StructureDefinition")
+    .filter((r) => r.kind === "resource");
 
-for (const structureDefinition of r4StructureDefinitions) {
-  const pathName = `./docs/05-Data_Model/R4/${structureDefinition.name}.mdx`;
-  const content = await processStructureDefinition(
-    r4Artifacts,
-    structureDefinition,
-  );
-  fs.writeFileSync(pathName, content);
+  for (const structureDefinition of r4StructureDefinitions) {
+    const pathName = `./docs/05-Data_Model/R4/${structureDefinition.name}.mdx`;
+    const content = await processStructureDefinition(
+      r4Artifacts,
+      structureDefinition,
+    );
+    fs.writeFileSync(pathName, content);
+  }
+
+  const r4bStructureDefinitions = r4bArtifacts
+    .filter((r) => r.resourceType === "StructureDefinition")
+    .filter((r) => r.kind === "resource");
+
+  for (const structureDefinition of r4bStructureDefinitions) {
+    const pathName = `./docs/05-Data_Model/R4B/${structureDefinition.name}.mdx`;
+    const content = await processStructureDefinition(
+      r4bArtifacts,
+      structureDefinition,
+    );
+    fs.writeFileSync(pathName, content);
+  }
 }
 
-const r4bStructureDefinitions = r4bArtifacts
-  .filter((r) => r.resourceType === "StructureDefinition")
-  .filter((r) => r.kind === "resource");
-
-for (const structureDefinition of r4bStructureDefinitions) {
-  const pathName = `./docs/05-Data_Model/R4B/${structureDefinition.name}.mdx`;
-  const content = await processStructureDefinition(
-    r4bArtifacts,
-    structureDefinition,
+async function generateNPMDocumentation() {
+  // Reads all the packages in the package directory that get published to NPM
+  // and reads in their readme.md files
+  const packageDirectory = path.join(
+    fileURLToPath(import.meta.url),
+    "../../../packages",
   );
-  fs.writeFileSync(pathName, content);
+  const packages = fs.readdirSync(packageDirectory);
+
+  for (const packageName of packages) {
+    const packagePath = path.join(packageDirectory, packageName);
+    if (fs.lstatSync(packagePath).isDirectory()) {
+      const packageJSONPath = path.join(packagePath, "package.json");
+      const readmePath = path.join(packagePath, "README.md");
+      const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf8"));
+      if (packageJSON.scripts?.publish) {
+        if (fs.existsSync(readmePath)) {
+          const readmeContent = fs.readFileSync(readmePath, "utf8");
+          const pathName = `./docs/NPM Packages/${packageJSON.name.replace("/", `_`)}.mdx`;
+          fs.writeFileSync(
+            pathName,
+            `---\nsidebar_position: 1\nsidebar_label: "${packageJSON.name}"\n---\n
+          ${readmeContent}`,
+          );
+        }
+      }
+    }
+  }
+}
+switch (process.argv[2]) {
+  case "npm": {
+    await generateNPMDocumentation();
+    break;
+  }
+  case "fhir": {
+    await generateFHIRDocumentation();
+    break;
+  }
+  default: {
+    throw new Error(
+      "Invalid argument. Please provide either 'npm' or 'fhir' as an argument.",
+    );
+  }
 }
