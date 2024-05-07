@@ -11,6 +11,7 @@
   "abstract": false,
   "type": "Membership",
   "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Resource",
+  "description": "A Membership resource is used to represent a user's membership in an organization. The resource contains information about the user's role in the organization, the user's email address, and whether the user's email address has been verified.",
   "derivation": "specialization",
   "snapshot": {
     "element": [

@@ -38,6 +38,18 @@ function escapeCharacters(v) {
     .replaceAll("<", "\\<");
 }
 
+function metaProperties(sd) {
+  return `
+|Property|Value|
+|---|---|
+|Publisher|${sd.publisher ?? ""}|
+|Name|${sd.name ?? ""}|
+|URL|${sd.url ?? ""}|
+|Status|${sd.status ?? ""}|
+|Description|${sd.description ?? ""}|
+|Abstract|${sd.abstract ?? ""}|`;
+}
+
 async function processStructureDefinition(artifacts, structureDefinition) {
   const parameters = artifacts
     .filter((r) => r.resourceType === "SearchParameter")
@@ -51,8 +63,9 @@ async function processStructureDefinition(artifacts, structureDefinition) {
   let doc = `import TabItem from "@theme/TabItem";
   import Tabs from "@theme/Tabs";
 
-  # ${structureDefinition.name}\n ## Description \n ${structureDefinition.description} \n
-  ## Data
+  # ${structureDefinition.name}\n
+  ${metaProperties(structureDefinition)}\n
+  ## Information
   <Tabs>`;
   doc = `${doc} <TabItem value="structure" label="Structure">
    | Path | Cardinality | Type | Description
@@ -96,7 +109,7 @@ async function generateFHIRDocumentation() {
     .filter((r) => r.kind === "resource");
 
   for (const structureDefinition of r4StructureDefinitions) {
-    const pathName = `./docs/05-Data_Model/R4/${structureDefinition.name}.mdx`;
+    const pathName = `./docs/Data_Model/R4/${structureDefinition.name}.mdx`;
     const content = await processStructureDefinition(
       r4Artifacts,
       structureDefinition,
@@ -109,7 +122,7 @@ async function generateFHIRDocumentation() {
     .filter((r) => r.kind === "resource");
 
   for (const structureDefinition of r4bStructureDefinitions) {
-    const pathName = `./docs/05-Data_Model/R4B/${structureDefinition.name}.mdx`;
+    const pathName = `./docs/Data_Model/R4B/${structureDefinition.name}.mdx`;
     const content = await processStructureDefinition(
       r4bArtifacts,
       structureDefinition,

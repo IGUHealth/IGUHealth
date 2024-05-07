@@ -18,6 +18,10 @@ function getAllFiles(directory: string): string[] {
   }
   return files;
 }
+function getRegexForIgnore(urlPattern: string): RegExp {
+  const regex = new RegExp(urlPattern.replaceAll("*", "(.+)"));
+  return regex;
+}
 
 export default function generateIndexFile({
   root,
@@ -39,7 +43,9 @@ export default function generateIndexFile({
     .map(getAllFiles)
     .flat()
     .filter((f) => f.endsWith(extension))
-    .filter((f) => ignore.indexOf(f) === -1)
+    .filter(
+      (f) => ignore.find((i) => getRegexForIgnore(i).test(f)) === undefined,
+    )
     .sort((a, b) => a.localeCompare(b));
 
   for (const file of files) {
