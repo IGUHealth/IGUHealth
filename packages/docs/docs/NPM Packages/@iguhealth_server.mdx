@@ -1,0 +1,47 @@
+---
+sidebar_position: 1
+sidebar_label: "@iguhealth/server"
+---
+
+          
+# Environment Variables
+| name | description | required | defaults |
+|------|-------------|----------|----------|
+| SESSION_COOKIE_SECRETS | Secret used to sign session cookies | true | iguhealth |
+| FHIR_DATABASE_NAME | Postgres database name.  | true | iguhealth |
+| FHIR_DATABASE_HOST | Postgres host | true | localhost |
+| FHIR_DATABASE_PORT | Postgres port | true | 5432 |
+| FHIR_DATABASE_PASSWORD | postgres password | true |  |
+| FHIR_DATABASE_USERNAME | postgres username | true | postgres |
+| FHIR_DATABASE_SSL | Whether Postgres connection is SSL | false | false |
+| REDIS_HOST | Redis host | true | 127.0.0.1 |
+| REDIS_PORT | Redis port | true | 6379 |
+| REDIS_SSL | Whether Redis connection is SSL | false | false |
+| API_URL | Current url where API is hosted from (used in operation execution clients). | false |  |
+| AWS_REGION | AWS Region where you want lambdas to be executed from. | false |  |
+| AWS_LAMBDA_ROLE | Execution role of lambda functions. | false |  |
+| AWS_LAMBDA_ACCESS_KEY_ID | Access key id for lambda (must have permission to invoke and create lambda functions) | false |  |
+| AWS_LAMBDA_ACCESS_KEY_SECRET | Access key secret for lambda (must have permission to invoke and create lambda functions). | false |  |
+| AWS_LAMBDA_LAYER_ARN | ARN Layer for lambda (current expectation is layer installed with all @iguhealth packages). | false |  |
+| AUTH_PUBLIC_ACCESS | Sets the server to allow full public access when set to true. | false | false |
+| AUTH_ALLOW_GLOBAL_SIGNUP | Sets whether to allow global signup for users. | false | false |
+| AUTH_ALLOW_TENANT_SIGNUP | Sets whether to allow tenant signup for users. | false | false |
+| AUTH_LOCAL_CERTIFICATION_LOCATION | Location for local certifications for IGUHEALTH ISSUER | false |  |
+| AUTH_LOCAL_SIGNING_KEY | The signing key used to generate new local tokens | false |  |
+| AUTH_EXTERNAL_JWK_URI | JWK remote url to pull JSON WEB Key Set. | false |  |
+| AUTH_EXTERNAL_JWT_ISSUER | Issuer of the JWT. | false |  |
+| EMAIL_PROVIDER | Set the email provider. | false |  |
+| EMAIL_SENDGRID_API_KEY | Set the sendgrid api key (only used on email provider set to sendgrid). | false |  |
+| EMAIL_FROM | Set the email from address. | false |  |
+| ENCRYPTION_TYPE | The type of encryption (used to encrypt user secrets) | false |  |
+| AWS_KMS_ACCESS_KEY_ID | KMS client access key ID | false |  |
+| AWS_KMS_ACCESS_KEY_SECRET | KMS client access key secret | false |  |
+| AWS_ENCRYPTION_GENERATOR_KEY | KMS key used to generate data keys on keyring | false |  |
+| AWS_ENCRYPTION_KEY | Additional KMS key used for encryption | false |  |
+| RATE_LIMIT_MAX | Rate limiting amount per minute | false | 100 |
+| POSTGRES_TRANSACTION_ENTRY_LIMIT | Postgres transaction entry limit | false | 20 |
+| SENTRY_SERVER_DSN | Sentry DSN URL for monitoring errors and performance. | false |  |
+| SENTRY_WORKER_DSN | Sentry Worker for monitoring errors and performance on worker | false |  |
+| SENTRY_TRACES_SAMPLE_RATE | Sentry sample rate. | false |  |
+| SENTRY_PROFILES_SAMPLE_RATE | Sentry profiles rate. | false |  |
+| ADMIN_APP_REDIRECT_URI | Redirect URI for admin app | false |  |
