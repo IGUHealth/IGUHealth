@@ -17,7 +17,6 @@ IGUHealth supports the following RFCs
 
 ## Endpoints
 To view oidc endpoints navigate to `https://<api-domain>/w/<tenant>/oidc/.well-known/openid-configuration`
-* Our cloud is hosted under `https://api.iguhealth.app`
 
 | Name | URL | Description | 
 |--|--|--|
@@ -32,7 +31,7 @@ To view oidc endpoints navigate to `https://<api-domain>/w/<tenant>/oidc/.well-k
 ## Client Registration
 
 To register a client, you need to make a POST request to the client registration endpoint at `https://<api-domain>/w/<tenant>/api/v1/fhir/r4/ClientApplication`.
-We use a custom resource type `ClientApplication` to register clients using the FHIR API see [here](https://www.npmjs.com/package/@iguhealth/iguhealth.fhir.r4.core?activeTab=code) for more details.
+We use a custom resource type `ClientApplication` to register clients using the FHIR API see [here](../Data_Model/R4/ClientApplication) for more details.
 
 ## Testing
 
