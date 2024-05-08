@@ -33,7 +33,7 @@ Middleware should return the following object:
 
 Depending on whether client is asynchronous or syncrhonous will either be the object directly or a promise resolving to this object.
 
-### AsynchronousClient
+### Client
 
 Constructor that allows you to create asynchronous FHIR clients.
 
@@ -50,23 +50,6 @@ return new AsynchronousClient<StateType, CTX>(
 );
 ```
 
-### SynchronousClient
-
-Constructor that allows you to create synchronous FHIR clients.
-
-```typescript
-import {
-  createMiddlewareSync,
-  MiddlewareSync,
-} from "@iguhealth/client/lib/middleware/index.js";
-import { SynchronousClient } from "@iguhealth/client";
-
-return new SynchronousClient<StateType, CTX>(
-  initialState,
-  createMiddlewareSync<State, CTX>(middlewarefunctions),
-);
-```
-
 ## HTTPClient
 
 We provide an HTTP client by default that allows you to call FHIR servers via API calls.
@@ -75,58 +58,130 @@ Supports all the method calls within the AsynchronousClient interface:
 ```typescript
 export interface FHIRClientAsync<CTX> {
   request(ctx: CTX, request: FHIRRequest): Promise<FHIRResponse>;
-  search_system(
+  capabilities<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
-    parameters: ParsedParameter<string | number>[],
-  ): Promise<{ total?: number; resources: Resource[] }>;
-  search_type<T extends ResourceType>(
+    fhirVersion: FHIRVersion,
+  ): Promise<Resource<FHIRVersion, "CapabilityStatement">>;
+  search_system<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
+    fhirVersion: FHIRVersion,
+    parameters: ParsedParameter<string | number>[] | string,
+  ): Promise<{
+    total?: number;
+    resources: Resource<FHIRVersion, AllResourceTypes>[];
+  }>;
+  search_type<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
     type: T,
-    parameters: ParsedParameter<string | number>[],
-  ): Promise<{ total?: number; resources: AResource<T>[] }>;
-  create<T extends Resource>(ctx: CTX, resource: T): Promise<T>;
-  update<T extends Resource>(ctx: CTX, resource: T): Promise<T>;
-  patch<T extends Resource>(ctx: CTX, resource: T, patches: any): Promise<T>;
-  read<T extends ResourceType>(
+    parameters: ParsedParameter<string | number>[] | string,
+  ): Promise<{
+    total?: number;
+    resources: Resource<FHIRVersion, T>[];
+  }>;
+  create<
+    FHIRVersion extends FHIR_VERSION,
+    Value extends Resource<FHIRVersion, AllResourceTypes>,
+  >(
     ctx: CTX,
-    resourceType: T,
-    id: id,
-  ): Promise<AResource<T> | undefined>;
-  vread<T extends ResourceType>(
+    fhirVersion: FHIRVersion,
+    resource: Value,
+    allowIdSet?: boolean,
+  ): Promise<Value>;
+  update<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
+    fhirVersion: FHIRVersion,
     resourceType: T,
-    id: id,
-    versionId: id,
-  ): Promise<AResource<T> | undefined>;
-  delete(ctx: CTX, resourceType: ResourceType, id: id): Promise<void>;
-  historySystem(ctx: CTX): Promise<Resource[]>;
-  historyType<T extends ResourceType>(
+    id: NonNullable<Resource<FHIRVersion, AllResourceTypes>["id"]>,
+    resource: Resource<FHIRVersion, T>,
+  ): Promise<Resource<FHIRVersion, T>>;
+  patch<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
+    fhirVersion: FHIRVersion,
     resourceType: T,
-  ): Promise<AResource<T>[]>;
-  historyInstance<T extends ResourceType>(
+    id: NonNullable<Resource<FHIRVersion, AllResourceTypes>["id"]>,
+    patches: any,
+  ): Promise<Resource<FHIRVersion, T>>;
+  read<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
+    fhirVersion: FHIRVersion,
     resourceType: T,
-    id: id,
-  ): Promise<AResource<T>[]>;
-  invoke_system<Op extends IOperation<any, any>>(
+    id: NonNullable<Resource<FHIRVersion, AllResourceTypes>["id"]>,
+  ): Promise<Resource<FHIRVersion, T> | undefined>;
+  vread<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
+    resourceType: T,
+    id: NonNullable<Resource<FHIRVersion, AllResourceTypes>["id"]>,
+    versionId: NonNullable<Resource<FHIRVersion, AllResourceTypes>["id"]>,
+  ): Promise<Resource<FHIRVersion, T> | undefined>;
+  delete<FHIRVersion extends FHIR_VERSION, T extends ResourceType<FHIRVersion>>(
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
+    resourceType: T,
+    id: NonNullable<Resource<FHIRVersion, AllResourceTypes>["id"]>,
+  ): Promise<void>;
+
+  historySystem<FHIRVersion extends FHIR_VERSION>(
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
+    parameters?: ParsedParameter<string | number>[] | string,
+  ): Promise<NonNullable<Resource<FHIRVersion, "Bundle">["entry"]>>;
+  historyType<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
+    resourceType: T,
+    parameters?: ParsedParameter<string | number>[] | string,
+  ): Promise<NonNullable<Resource<FHIRVersion, "Bundle">["entry"]>>;
+  historyInstance<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
+    resourceType: T,
+    id: NonNullable<Resource<FHIRVersion, AllResourceTypes>["id"]>,
+    parameters?: ParsedParameter<string | number>[] | string,
+  ): Promise<NonNullable<Resource<FHIRVersion, "Bundle">["entry"]>>;
+  invoke_system<
+    FHIRVersion extends FHIR_VERSION,
+    Op extends IOperation<any, any>,
+  >(
     op: Op,
     ctx: CTX,
+    fhirVersion: FHIRVersion,
     input: OPMetadata<Op>["Input"],
   ): Promise<OPMetadata<Op>["Output"]>;
-  invoke_type<Op extends IOperation<any, any>, Type extends ResourceType>(
+  invoke_type<
+    FHIRVersion extends FHIR_VERSION,
+    Op extends IOperation<any, any>,
+    T extends AllResourceTypes,
+  >(
     op: Op,
     ctx: CTX,
-    resourceType: Type,
+    fhirVersion: FHIRVersion,
+    resourceType: T,
     input: OPMetadata<Op>["Input"],
   ): Promise<OPMetadata<Op>["Output"]>;
-  invoke_instance<Op extends IOperation<any, any>, Type extends ResourceType>(
+  invoke_instance<
+    FHIRVersion extends FHIR_VERSION,
+    Op extends IOperation<any, any>,
+    T extends AllResourceTypes,
+  >(
     op: Op,
     ctx: CTX,
-    resourceType: Type,
-    id: id,
+    fhirVersion: FHIRVersion,
+    resourceType: T,
+    id: NonNullable<Resource<FHIRVersion, AllResourceTypes>["id"]>,
     input: OPMetadata<Op>["Input"],
   ): Promise<OPMetadata<Op>["Output"]>;
+  transaction<FHIRVersion extends FHIR_VERSION>(
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
+    bundle: Resource<FHIRVersion, "Bundle">,
+  ): Promise<Resource<FHIRVersion, "Bundle">>;
+  batch<FHIRVersion extends FHIR_VERSION>(
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
+    bundle: Resource<FHIRVersion, "Bundle">,
+  ): Promise<Resource<FHIRVersion, "Bundle">>;
 }
 ```
 
@@ -137,6 +192,7 @@ import { expect, test } from "@jest/globals";
 
 import HTTPClient from "@iguhealth/client/http";
 import { OperationDefinition } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/version";
 
 const client = HTTPClient({
   url: "FHIR_API_ROOT_URL",
@@ -156,7 +212,7 @@ const operationDefinition: OperationDefinition = {
   type: false,
   parameter: [],
 };
-const response = await client.create({}, operationDefinition);
+const response = await client.create({}, R4, operationDefinition);
 expect(response).toMatchObject({
   resourceType: "OperationDefinition",
   name: "test",
@@ -169,5 +225,5 @@ expect(response).toMatchObject({
   parameter: [],
 });
 
-await client.delete({}, "OperationDefinition", response.id as string);
+await client.delete({}, R4, "OperationDefinition", response.id as string);
 ```
