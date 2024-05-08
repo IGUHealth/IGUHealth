@@ -8,13 +8,13 @@ tags: [iguhealth, updates]
 # Updates 2024-05-08
 
 ## Support for External Message Brokers
-We now support external message brokers. You can now configure your own [message broker](/Data_model/R4/MessageBroker) and [message topics](/Data_model/R4/MessageTopic) to send and receive messages between your services.
+We now support external message brokers. You can now configure your own [message broker](/documentation/Data_model/R4/MessageBroker) and [message topics](/documentation/Data_model/R4/MessageTopic) to send and receive messages between your services.
 
 ### Support for pushing messages to a message broker
 #### Subscription
-We support tying FHIR Subscriptions to message brokers. Read our documentation [here](/Messaging/Overview) on how to set this up.
+We support tying FHIR Subscriptions to message brokers. Read our documentation [here](/documentation/Messaging/Overview) on how to set this up.
 #### API
-We have added an API to push messages to a message broker. You can now push messages to a message broker by invoking the following operation on the [MessageTopic](/Data_model/R4/MessageTopic) resource:
+We have added an API to push messages to a message broker. You can now push messages to a message broker by invoking the following operation on the [MessageTopic](/documentation/Data_model/R4/MessageTopic) resource:
 ```bash
 POST /MessageTopic/${message-topic-id}/$message-post
 {
@@ -32,7 +32,7 @@ When creating a client application, you can now specify `basic_auth` as a grant 
 `Authorization Basic: ${btoa(username:password)}`
 
 ## Documentation for R4B FHIR
-We have added documentation for the R4B FHIR version. You can now view the documentation [here](Data_Model/R4B/Account).
+We have added documentation for the R4B FHIR version. You can now view the documentation [here](/documentation/Data_Model/R4B/Account).
 
 ## Search Documentation
 We have added search functionality to the documentation. You can now do a full-text search for resources and operations on this site.
