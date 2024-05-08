@@ -108,7 +108,13 @@ const config = {
           position: "left",
           label: "Documentation",
         },
-        { to: "/blog", label: "Blog", position: "left" },
+        {
+          type: "docSidebar",
+          sidebarId: "rfcsSidebar",
+          position: "left",
+          label: "RFCs",
+        },
+        { to: "/blog", label: "Blog", position: "right" },
         {
           to: "https://api-reference.iguhealth.app/",
           label: "Reference",
@@ -129,7 +135,7 @@ const config = {
           items: [
             {
               label: "Documentation",
-              to: "/docs/intro",
+              to: "/",
             },
           ],
         },

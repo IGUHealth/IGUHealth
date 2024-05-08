@@ -109,7 +109,7 @@ async function generateFHIRDocumentation() {
     .filter((r) => r.kind === "resource");
 
   for (const structureDefinition of r4StructureDefinitions) {
-    const pathName = `./docs/Data_Model/R4/${structureDefinition.name}.mdx`;
+    const pathName = `./docs/documentation/Data_Model/R4/${structureDefinition.name}.mdx`;
     const content = await processStructureDefinition(
       r4Artifacts,
       structureDefinition,
@@ -122,7 +122,7 @@ async function generateFHIRDocumentation() {
     .filter((r) => r.kind === "resource");
 
   for (const structureDefinition of r4bStructureDefinitions) {
-    const pathName = `./docs/Data_Model/R4B/${structureDefinition.name}.mdx`;
+    const pathName = `./docs/documentation/Data_Model/R4B/${structureDefinition.name}.mdx`;
     const content = await processStructureDefinition(
       r4bArtifacts,
       structureDefinition,
@@ -149,7 +149,7 @@ async function generateNPMDocumentation() {
       if (packageJSON.scripts?.publish) {
         if (fs.existsSync(readmePath)) {
           const readmeContent = fs.readFileSync(readmePath, "utf8");
-          const pathName = `./docs/NPM Packages/${packageJSON.name.replace("/", `_`)}.mdx`;
+          const pathName = `./docs/documentation/NPM Packages/${packageJSON.name.replace("/", `_`)}.mdx`;
           fs.writeFileSync(
             pathName,
             `---\nsidebar_position: 1\nsidebar_label: "${packageJSON.name}"\n---\n
