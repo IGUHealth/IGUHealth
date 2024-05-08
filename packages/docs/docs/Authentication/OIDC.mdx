@@ -16,19 +16,29 @@ IGUHealth supports the following RFCs
 
 
 ## Endpoints
-To view oidc endpoints navigate to `https://<api-domain>/w/<your-tenant-id>/oidc/.well-known/openid-configuration`
-* Our cloud is hosted under `https://api.iguhealth.com`
+To view oidc endpoints navigate to `https://<api-domain>/w/<tenant>/oidc/.well-known/openid-configuration`
+* Our cloud is hosted under `https://api.iguhealth.app`
+
+| Name | URL | Description | 
+|--|--|--|
+| Discovery Document |  `https://<domain>/w/<tenant>/oidc/.well-known/openid-configuration` | OpenID metadata information, used to automatically configure clients see https://openid.net/specs/openid-connect-discovery-1_0.html. |
+| User Information | `https://<domain>/w/<tenant>/oidc/auth/userinfo` | Looks up information about a user based on access token.|
+| Token Endpoint | `https://<domain>/w/<tenant>/oidc/auth/token` | Obtain a token, method will very based on Client Application grant type. |
+| Authorization Endpoint | `https://<domain>/w/<tenant>/oidc/auth/authorize` | Authenticates and authorizes a user. | 
+| Logout | `https://<domain>/w/<tenant>/oidc/interaction/logout` | Logs a user out. |
+
+
 
 ## Client Registration
 
-To register a client, you need to make a POST request to the client registration endpoint at `https://<api-domain>/w/<your-tenant-id>/api/v1/fhir/r4/ClientApplication`.
+To register a client, you need to make a POST request to the client registration endpoint at `https://<api-domain>/w/<tenant>/api/v1/fhir/r4/ClientApplication`.
 We use a custom resource type `ClientApplication` to register clients using the FHIR API see [here](https://www.npmjs.com/package/@iguhealth/iguhealth.fhir.r4.core?activeTab=code) for more details.
 
 ## Testing
 
 To test the OIDC endpoints you can do the following:
 
-1. Go to `https://<your-tenant-id>.admin.iguhealth.app/` or equivalent if hosting our admin-app on your own.
+1. Go to `https://<tenant>.admin.iguhealth.app/` or equivalent if hosting our admin-app on your own.
 2. Navigate to `Client Applications` by clicking on the left sidebar under security
 3. Click new and fill in the following parameters:
   - name: AUTH_TESTING
