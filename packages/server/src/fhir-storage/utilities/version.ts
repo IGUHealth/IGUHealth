@@ -1,0 +1,23 @@
+import * as s from "zapatos/schema";
+
+import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+
+export function toDBFHIRVersion(fhirVersion: FHIR_VERSION): s.fhir_version {
+  switch (fhirVersion) {
+    case R4: {
+      return "r4";
+    }
+    case R4B: {
+      return "r4b";
+    }
+    default: {
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `FHIR version ${fhirVersion} is not supported.`,
+        ),
+      );
+    }
+  }
+}

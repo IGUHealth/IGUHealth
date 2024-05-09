@@ -52,6 +52,7 @@ import {
 } from "@iguhealth/client/lib/types";
 import { createResolverRemoteCanonical } from "../../utilities/canonical.js";
 import { TenantId } from "@iguhealth/jwt";
+import { toDBFHIRVersion } from "../../utilities/version.js";
 
 async function getAllParametersForResource<
   CTX extends FHIRServerCTX,
@@ -638,24 +639,7 @@ async function indexResource<
   );
 }
 
-function toDBFHIRVersion(fhirVersion: FHIR_VERSION): s.fhir_version {
-  switch (fhirVersion) {
-    case R4: {
-      return "r4";
-    }
-    case R4B: {
-      return "r4b";
-    }
-    default: {
-      throw new OperationError(
-        outcomeError(
-          "not-supported",
-          `FHIR version ${fhirVersion} is not supported.`,
-        ),
-      );
-    }
-  }
-}
+
 
 async function createResource<
   CTX extends FHIRServerCTX,
@@ -818,6 +802,7 @@ async function getHistory<
   FROM ${"resources"} 
   WHERE
   ${{
+    fhir_version: toDBFHIRVersion(fhirVersion),
     tenant: ctx.tenant,
     ...filters,
     ...processHistoryParameters(parameters),

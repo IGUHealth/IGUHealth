@@ -8,7 +8,7 @@ import { SearchParameterResource } from "../../../../utilities/search/parameters
 
 export default function stringClauses(
   _ctx: FHIRServerCTX,
-  fhirVersion: FHIR_VERSION,
+  _fhirVersion: FHIR_VERSION,
   parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, never> {
   switch (parameter.modifier) {

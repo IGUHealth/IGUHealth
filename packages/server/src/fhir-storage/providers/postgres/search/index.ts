@@ -26,6 +26,7 @@ import {
   parametersWithMetaAssociated,
 } from "../../../utilities/search/parameters.js";
 import * as sqlUtils from "../../../utilities/sql.js";
+import { toDBFHIRVersion } from "../../../utilities/version.js";
 import { buildParameterSQL } from "./clauses/index.js";
 import { deriveSortQuery } from "./sort.js";
 
@@ -307,6 +308,7 @@ export async function executeSearchQuery<
       })}
       
       WHERE ${"resources"}.${"tenant"} = ${db.param(ctx.tenant)}
+      AND ${"resources"}.${"fhir_version"} = ${db.param(toDBFHIRVersion(request.fhirVersion))}
       AND ${"resources"}.${"resource_type"} ${
         resourceTypes.length > 0
           ? db.sql`in (${sqlUtils.paramsWithComma(resourceTypes)})`
