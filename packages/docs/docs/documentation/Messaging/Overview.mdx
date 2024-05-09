@@ -7,14 +7,14 @@ We support Kafka and AMQP compatible brokers as messaging systems. You can use t
 
 ### Configuring a Message Broker
 The first step to setting up messaging is configuring your message broker. 
-This is done via the [MessageBroker](../../Data_model/R4/MessageBroker) resource. This resource defines the type of broker you are using, and the connection details.
+This is done via the [MessageBroker](../Data_Model/R4/MessageBroker.mdx) resource. This resource defines the type of broker you are using, and the connection details.
 
 ### Configuring a Message Topic
-Once you have configured your message broker, you can create a [MessageTopic](../../Data_model/R4/MessageTopic) resource. 
+Once you have configured your message broker, you can create a [MessageTopic](../Data_Model/R4/MessageTopic.mdx) resource. 
 This resource defines the topic you are using to send and receive messages.
 
 ## Sending a Message
-To send a message to a topic, you invoke the following Operation on the [MessageTopic](../../Data_model/R4/MessageTopic) resource:
+To send a message to a topic, you invoke the following Operation on the [MessageTopic](../Data_Model/R4/MessageTopic.mdx) resource:
 $message-post
 ### Example Request
 ```bash
