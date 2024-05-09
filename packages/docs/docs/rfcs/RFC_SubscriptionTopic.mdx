@@ -7,26 +7,38 @@ tags:
 # [RFC] R4B Subscription Framework
 
 ## Abstract
-Currently we use R4 Subscriptions see [here](../Data_Model/R4/Subscription). 
+Currently we use R4 Subscriptions see [here](../documentation/Data_Model/R4/Subscription). 
 The goal of this RFC is to migrate to R4B Subscription framework, depricating R4 Subscriptions and to allow a higher throughput for Subscriptions.
 
 ## Background
-R4B introduces a new SubscriptionTopic resource that allows for more flexibility in defining the topics that can be subscribed to. 
-This resource allows for more complex filtering and routing of messages.
+
+R4B introduces a new SubscriptionTopic resource that defines the criteria for a Subscription (this was previously defined on the Subscription resource itself). 
+This decouples the criteria from the client (Subscription in this case).
+
 
 ### Current Architecture
 
 ```mermaid
-graph TD;
-    Server-->Worker;
-    Worker-->Client;
+sequenceDiagram
+    Worker->>Database: Retrieve active Tenants.
+    Worker->>Worker: Loop over active tenants.
+    Worker->>Database: Retrieve active Subscriptions current tenants.
+    Worker->>Worker: Loop over active subscriptions.
+    Worker->>Database: Retrieve Lock against Subscription id.
+    Worker->>Worker: Parse Subscription criteria into a request.
+    Worker->>Database: Query History API using _since-version with latestVersion being pulled from cache (if not set use Subscription versionId).
+    Worker->>Worker: Filter History against parsed Subscription criteria.
+    Worker->>Client: Push data matching criteria to client.
+    Client->>Worker: Acknowledge data received (if not received within a certain time frame Subscription.status will be set to error).
 ```
-
-
 
 ## Problem
 
 ### Issues with current implementation
+
+* Acknowledgement of data is waited on loop which will lead to low throughput and potential block.
+* Uses Redlock may not be sound see [here](https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html).
+* Because Subscription is coupled with client, duplicate work is likely to occur.
 
 
 ## Proposal
