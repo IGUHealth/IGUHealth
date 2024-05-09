@@ -20,9 +20,9 @@
     "generate": "NODE_ENV=development yarn node generate.mjs"
   },
   "dependencies": {
-    "@docusaurus/core": "3.2.0",
-    "@docusaurus/preset-classic": "3.2.0",
-    "@docusaurus/theme-mermaid": "3.2.0",
+    "@docusaurus/core": "^3.3.2",
+    "@docusaurus/preset-classic": "^3.3.2",
+    "@docusaurus/theme-mermaid": "^3.3.2",
     "@mdx-js/react": "^3.0.0",
     "clsx": "^2.0.0",
     "prism-react-renderer": "^2.3.0",
@@ -30,9 +30,9 @@
     "react-dom": "^18.0.0"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "3.2.0",
-    "@docusaurus/tsconfig": "3.2.0",
-    "@docusaurus/types": "3.2.0",
+    "@docusaurus/module-type-aliases": "^3.3.2",
+    "@docusaurus/tsconfig": "^3.3.2",
+    "@docusaurus/types": "^3.3.2",
     "@iguhealth/artifacts": "workspace:^",
     "@iguhealth/fhir-types": "workspace:^",
     "@iguhealth/hl7.fhir.r4.core": "workspace:^",
