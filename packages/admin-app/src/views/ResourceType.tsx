@@ -3,7 +3,12 @@ import { generatePath, useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import { Button, FHIRGenerativeSearchTable } from "@iguhealth/components";
-import { R4, ResourceType } from "@iguhealth/fhir-types/versions";
+import {
+  AllResourceTypes,
+  R4,
+  Resource,
+  ResourceType,
+} from "@iguhealth/fhir-types/versions";
 
 import { getClient } from "../db/client";
 
@@ -42,6 +47,14 @@ export default function ResourceTypeView() {
       </div>
       <div className="overflow-auto">
         <FHIRGenerativeSearchTable
+          onRowClick={(row) => {
+            navigate(
+              generatePath("/resources/:resourceType/:id", {
+                resourceType: params.resourceType as string,
+                id: (row as Resource<R4, AllResourceTypes>).id as string,
+              }),
+            );
+          }}
           client={client}
           fhirVersion={R4}
           resourceType={params.resourceType as ResourceType<R4>}
