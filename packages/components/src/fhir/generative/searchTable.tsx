@@ -217,9 +217,16 @@ function SearchColumnModal(props: SearchColumnModalProps) {
   return (
     <div>
       <div className="mb-2">
-        <span className="font-semibold text-base">
-          {props.searchParameter.name}
-        </span>
+        <div>
+          <span className="font-semibold text-base">
+            {props.searchParameter.name}
+          </span>
+        </div>
+        <div className="mt-1">
+          <span className="text-slate-400 text-sm">
+            {props.searchParameter.expression}
+          </span>
+        </div>
       </div>
       <div className="p-2">
         <SearchColumnModalBody
