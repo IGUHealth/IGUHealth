@@ -4,7 +4,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { ParsedParameter } from "@iguhealth/client/url";
 import { code, date, decimal, uri } from "@iguhealth/fhir-types/r4/types";
 import {
-  AllResourceTypes,
   FHIR_VERSION,
   Resource,
   ResourceType,
@@ -48,7 +47,7 @@ function SearchColumnModalBodyInput({
   searchParameter,
   fhirVersion,
   client,
-}: SearchColumnModalBodyInputProps) {
+}: Readonly<SearchColumnModalBodyInputProps>) {
   const onChange = useMemo(() => {
     return (v: string | number | undefined) => {
       onChangeProp({
@@ -126,7 +125,7 @@ interface SearchColumnModalBodyProps extends ClientProps {
 function SearchColumnModalBody({
   value,
   ...props
-}: SearchColumnModalBodyProps) {
+}: Readonly<SearchColumnModalBodyProps>) {
   return (
     <div className="space-y-1 text-slate-600">
       <div className="text-sm">
@@ -207,7 +206,7 @@ function searchParameterTypeToColor(
   }
 }
 
-function SearchColumnModal(props: SearchColumnModalProps) {
+function SearchColumnModal(props: Readonly<SearchColumnModalProps>) {
   const parameter = props.parameters.find(
     (p) => p.name === props.searchParameter.code,
   ) ?? { name: props.searchParameter.code, value: [undefined] };
@@ -273,7 +272,7 @@ function SearchColumnModal(props: SearchColumnModalProps) {
 }
 
 export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
-  props: FHIRGenerativeSearchTableProps<Version>,
+  props: Readonly<FHIRGenerativeSearchTableProps<Version>>,
 ) {
   const pagination = 20;
   const [parameters, setParameters] = useState<
@@ -287,7 +286,7 @@ export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
   const [selectedSearchParameter, setSelectedSearchParameter] =
     useState<number>(0);
   const [data, setData] = useState<{
-    total?: number | undefined;
+    total?: number;
     resources: Resource<Version, ResourceType<Version>>[];
   }>({ total: 0, resources: [] });
 

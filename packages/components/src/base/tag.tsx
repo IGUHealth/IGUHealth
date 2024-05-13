@@ -24,7 +24,7 @@ export function Tag({
   children,
   color = "blue",
   ...spanProps
-}: TagProps) {
+}: Readonly<TagProps>) {
   return (
     <span
       {...spanProps}
