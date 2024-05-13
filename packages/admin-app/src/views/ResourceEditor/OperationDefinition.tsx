@@ -125,17 +125,20 @@ function OperationAuditEvents({ operationId }: { operationId: string }) {
       data={auditEvents || []}
       columns={[
         {
-          name: "Outcome",
+          id: "Outcome",
+          content: "Outcome",
           selector: "$this.outcome",
           selectorType: "fhirpath",
         },
         {
-          name: "Agent",
+          id: "Agent",
+          content: "Agent",
           selector: "$this.agent.name",
           selectorType: "fhirpath",
         },
         {
-          name: "Description",
+          id: "Description",
+          content: "Description",
           selector: "$this.outcomeDesc",
           selectorType: "fhirpath",
         },

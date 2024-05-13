@@ -18,9 +18,21 @@ type Story = StoryObj<typeof meta>;
 
 export const ClosedSelect: Story = {
   args: {
-    data: [{ name: "Bob" }],
+    data: [
+      { name: "Bob" },
+      { name: "Bob2" },
+      { name: "Bob3" },
+      { name: "Bob4" },
+      { name: "Bob5" },
+      { name: "Bob6" },
+    ],
     columns: [
-      { name: "Name", selector: "$this.name", selectorType: "fhirpath" },
+      {
+        id: "v1",
+        content: "Name",
+        selector: "$this.name",
+        selectorType: "fhirpath",
+      },
     ],
   },
 };

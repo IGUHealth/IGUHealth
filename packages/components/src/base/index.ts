@@ -10,6 +10,7 @@ import { Modal } from "./modal";
 import { Select } from "./select";
 import { Table } from "./table";
 import { Tabs } from "./tabs";
+import { Tag } from "./tag";
 import * as Toaster from "./toaster";
 
 export {
@@ -27,4 +28,5 @@ export {
   DropDownMenu,
   Modal,
   Add,
+  Tag,
 };

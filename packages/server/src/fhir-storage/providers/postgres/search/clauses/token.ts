@@ -14,8 +14,9 @@ export default function tokenClauses(
   parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, unknown> {
   switch (parameter.modifier) {
-    case "missing":
+    case "missing": {
       return missingModifier(ctx, parameter);
+    }
     default: {
       return db.conditions.or(
         ...parameter.value.map((value): s.r4_token_idx.Whereable => {

@@ -5,13 +5,16 @@ import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 import { FHIRServerCTX } from "../../../../../fhir-api/types.js";
 import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
+import { missingModifier } from "./shared.js";
 
 export default function stringClauses(
   _ctx: FHIRServerCTX,
   _fhirVersion: FHIR_VERSION,
   parameter: SearchParameterResource,
-): db.SQLFragment<boolean | null, never> {
+): db.SQLFragment<boolean | null, unknown> {
   switch (parameter.modifier) {
+    case "missing":
+      return missingModifier(_ctx, parameter);
     case "exact": {
       return db.conditions.or(
         ...parameter.value.map(

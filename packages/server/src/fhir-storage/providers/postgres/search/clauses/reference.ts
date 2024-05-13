@@ -147,15 +147,20 @@ export default function referenceClauses<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, unknown> {
-  if (parameter.modifier === "missing") {
-    return missingModifier(ctx, parameter);
-  }
-  if (isChainParameter(parameter)) return chainSQL(ctx, fhirVersion, parameter);
-  else {
-    return db.conditions.or(
-      ...parameter.value.map((value) =>
-        sqlParameterValue(ctx, parameter, value),
-      ),
-    );
+  switch (parameter.modifier) {
+    case "missing": {
+      return missingModifier(ctx, parameter);
+    }
+    default: {
+      if (isChainParameter(parameter))
+        return chainSQL(ctx, fhirVersion, parameter);
+      else {
+        return db.conditions.or(
+          ...parameter.value.map((value) =>
+            sqlParameterValue(ctx, parameter, value),
+          ),
+        );
+      }
+    }
   }
 }
