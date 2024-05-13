@@ -75,23 +75,27 @@ function ResourceHistory() {
       data={history || []}
       columns={[
         {
-          name: "Interaction",
+          id: "interaction",
+          content: "Interaction",
           selector: "$this.request.method",
           selectorType: "fhirpath",
         },
         {
-          name: "Version",
+          id: "Version",
+          content: "Version",
           selector: "$this.resource.meta.versionId",
           selectorType: "fhirpath",
         },
         {
-          name: "Author",
+          id: "Author",
+          content: "Author",
           selector:
             "$this.resource.meta.extension.where(url='https://iguhealth.app/author').valueString",
           selectorType: "fhirpath",
         },
         {
-          name: "Updated at",
+          id: "Updated at",
+          content: "Updated at",
           selector: "$this.resource.meta.lastUpdated",
           selectorType: "fhirpath",
         },

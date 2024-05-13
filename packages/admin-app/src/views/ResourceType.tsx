@@ -1,166 +1,50 @@
-import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
-import React, { useEffect, useMemo } from "react";
-import {
-  generatePath,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { PlusIcon } from "@heroicons/react/24/outline";
+import { generatePath, useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
-import { Toaster } from "@iguhealth/components";
-import { Button, Input, Table } from "@iguhealth/components";
-import {
-  Resource,
-  ResourceType,
-  SearchParameter,
-} from "@iguhealth/fhir-types/r4/types";
-import { R4 } from "@iguhealth/fhir-types/versions";
-import { OperationError } from "@iguhealth/operation-outcomes";
+import { Button, FHIRGenerativeSearchTable } from "@iguhealth/components";
+import { R4, ResourceType } from "@iguhealth/fhir-types/versions";
 
 import { getClient } from "../db/client";
-
-const initialQuery = "_count=20&_sort=-_lastUpdated";
 
 export default function ResourceTypeView() {
   const client = useRecoilValue(getClient);
   const params = useParams();
   const navigate = useNavigate();
-  const [queryParameter, setQueryParameter] = useSearchParams({
-    query: initialQuery,
-  });
-  const [searchParameters, setSearchParameters] =
-    React.useState<SearchParameter[]>();
-  const [isLoading, setIsLoading] = React.useState<boolean>(true);
-  const [data, setData] = React.useState<Resource[] | undefined>(undefined);
-
-  const search = useMemo(
-    () => (query: string) => {
-      setIsLoading(true);
-      client
-        .search_type({}, R4, params.resourceType as ResourceType, query)
-        .then((response) => {
-          setIsLoading(false);
-          setData(response.resources);
-        })
-        .catch((e) => {
-          setData(undefined);
-          setIsLoading(false);
-
-          if (e instanceof OperationError) {
-            Toaster.error(
-              `'${params.resourceType}': ${e.operationOutcome.issue
-                .map((i) => i.diagnostics)
-                .join("")}`,
-            );
-          } else {
-            Toaster.error(
-              `Request for resource '${params.resourceType}' failed`,
-            );
-          }
-        });
-    },
-    [setIsLoading, setData, client, params.resourceType],
-  );
-
-  useEffect(() => {
-    client
-      .search_type({}, R4, "SearchParameter", [
-        { name: "base", value: ["Resource", params.resourceType as string] },
-        { name: "_count", value: ["100"] },
-        // { name: "type", value: ["string", "number", "code"] },
-      ])
-      .then((response) => {
-        setSearchParameters(response.resources);
-      });
-    search(queryParameter.get("query") || "");
-  }, [params.resourceType]);
 
   return (
     <div className="flex flex-col flex-1 w-full text-slate-700">
-      <div className="flex items-center justify-center mb-2">
-        <h2 className="flex text-xl font-semibold mr-4 ">
+      <div className="flex mb-4 justify-center items-center">
+        <h2 className="text-left flex text-xl font-semibold mr-4 ">
           {params.resourceType}
         </h2>
-        <div className="flex flex-grow border hover:border-blue-700 h-10 focus:border-blue-700 overflow-hidden">
-          <Input
-            hideBorder
-            placeholder="Enter search query e.g. _count=10&_sort=_lastUpdated"
-            className="h-full rounded-md overflow-hidden flex flex-grow px-4 mr-1 text-xl font-light outline-none"
-            value={queryParameter.get("query") || ""}
-            onKeyUp={(e) => {
-              if (e.key === "Enter") {
-                search(queryParameter.get("query") || "");
+        <div className="flex flex-1 justify-end">
+          <div className="pr-4">
+            <Button
+              className="ml-2 font-medium"
+              buttonSize="small"
+              buttonType="secondary"
+              onClick={() =>
+                navigate(
+                  generatePath("/resources/:resourceType/:id", {
+                    resourceType: params.resourceType as string,
+                    id: "new",
+                  }),
+                )
               }
-              e.stopPropagation();
-            }}
-            onKeyDown={(e) => {
-              e.stopPropagation();
-            }}
-            onChange={(e) => {
-              setQueryParameter({ query: e.target.value });
-            }}
-          />
-          <Button
-            className="border-l ring-0 shadow-none rounded-none"
-            buttonSize="small"
-            buttonType="secondary"
-            onClick={() => {
-              search(queryParameter.get("query") || "");
-            }}
-          >
-            <MagnifyingGlassIcon className="h-5 w-5" />
-          </Button>
+            >
+              <div className="flex items-center justify-center ">
+                <PlusIcon className="w-4 h-4 mr-1" /> <span>New</span>
+              </div>
+            </Button>
+          </div>
         </div>
       </div>
-      <div className="mt-2 mb-4 flex justify-start">
-        <Button
-          className="ml-2 font-medium"
-          buttonSize="small"
-          buttonType="secondary"
-          onClick={() =>
-            navigate(
-              generatePath("/resources/:resourceType/:id", {
-                resourceType: params.resourceType as string,
-                id: "new",
-              }),
-            )
-          }
-        >
-          <div className="flex items-center justify-center ">
-            <PlusIcon className="w-4 h-4 mr-1" /> <span>New</span>
-          </div>
-        </Button>
-      </div>
       <div className="overflow-auto">
-        <Table
-          isLoading={isLoading}
-          data={data || []}
-          onRowClick={(row) => {
-            navigate(
-              generatePath("/resources/:resourceType/:id", {
-                resourceType: params.resourceType as string,
-                id: (row as Resource).id as string,
-              }),
-            );
-          }}
-          columns={[
-            ...(searchParameters || [])
-              .filter((s) => s.expression)
-              .map(
-                (
-                  searchParameter,
-                ): {
-                  selectorType: "fhirpath";
-                  selector: string;
-                  name: string;
-                } => ({
-                  name: searchParameter.code,
-                  selector: searchParameter.expression as string,
-                  selectorType: "fhirpath",
-                }),
-              ),
-          ]}
+        <FHIRGenerativeSearchTable
+          client={client}
+          fhirVersion={R4}
+          resourceType={params.resourceType as ResourceType<R4>}
         />
       </div>
     </div>

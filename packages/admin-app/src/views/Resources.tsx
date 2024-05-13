@@ -25,17 +25,20 @@ const DisplayResources = () => {
         }}
         columns={[
           {
-            name: "Resource Type",
+            id: "Resource Type",
+            content: "Resource Type",
             selector: "$this.type",
             selectorType: "fhirpath",
           },
           {
-            name: "Profile",
+            id: "Profile",
+            content: "Profile",
             selector: "$this.profile",
             selectorType: "fhirpath",
           },
           {
-            name: "Interactions Supported",
+            id: "Interactions Supported",
+            content: "Interactions Supported",
             selector: "$this.interaction.code",
             selectorType: "fhirpath",
           },
