@@ -81,7 +81,7 @@ export function Table({
                     {columns.map((column) => (
                       <td
                         key={column.id}
-                        className="overflow-auto whitespace-nowrap px-2 py-2 font-medium"
+                        className="overflow-auto whitespace-nowrap px-4 py-2 font-medium"
                       >
                         {extract(row, column.selector, column.selectorType)}
                       </td>
