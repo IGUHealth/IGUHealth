@@ -220,9 +220,12 @@ function SearchColumnModal(props: Readonly<SearchColumnModalProps>) {
           <span className="font-semibold text-base">
             {props.searchParameter.name}
           </span>
+          <span className="ml-2 text-slate-400 text-sm">
+            {props.searchParameter.type}
+          </span>
         </div>
-        <div className="mt-1">
-          <span className="text-slate-400 text-sm">
+        <div className="mt-1 text-xs text-nowrap truncate">
+          <span className="ml-2 text-slate-400 ">
             {props.searchParameter.expression}
           </span>
         </div>
