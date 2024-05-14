@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Coding, uri } from "@iguhealth/fhir-types/r4/types";
+import { Coding } from "@iguhealth/fhir-types/r4/types";
 
 import { InputContainer } from "../../base/containers";
 import { FHIRCodeEditable, FHIRUriEditable } from "../primitives";
