@@ -47,6 +47,7 @@ export default function ResourceTypeView() {
       </div>
       <div className="overflow-auto">
         <FHIRGenerativeSearchTable
+          key={params.resourceType}
           onRowClick={(row) => {
             navigate(
               generatePath("/resources/:resourceType/:id", {
