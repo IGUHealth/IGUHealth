@@ -245,7 +245,7 @@ function SearchColumnModal(props: Readonly<SearchColumnModalProps>) {
           <Button
             className="mr-2"
             buttonType="danger"
-            onClick={(e) => {
+            onClick={() => {
               props.onChange([
                 ...props.parameters.filter(
                   (p) => p.name !== props.searchParameter.code,
@@ -257,7 +257,7 @@ function SearchColumnModal(props: Readonly<SearchColumnModalProps>) {
           </Button>
           <div className="flex flex-1" />
           <Button
-            onClick={(e) => {
+            onClick={() => {
               props.onChange([
                 ...props.parameters.filter(
                   (p) => p.name !== props.searchParameter.code,
