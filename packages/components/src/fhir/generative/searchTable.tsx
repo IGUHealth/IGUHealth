@@ -309,114 +309,114 @@ function SearchColumnModal(props: Readonly<SearchColumnModalProps>) {
 function DataDisplay(searchType: string, value: unknown[]) {
   switch (searchType) {
     case "number": {
-      return (value as number[]).map((v) => {
-        return <div>{v}</div>;
+      return (value as number[]).map((v, i) => {
+        return <div key={i}>{v}</div>;
       });
     }
     case "date": {
-      return value.map((v) => {
+      return value.map((v, i) => {
         if (typeof v === "object") {
           if (Object.hasOwnProperty.call(v, "start")) {
             return (
-              <div>
+              <div key={i}>
                 <FHIRPeriodReadOnly value={v as Period} />
               </div>
             );
           } else {
             return (
-              <div>
+              <div key={i}>
                 <FHIRTimingReadOnly value={v as Timing} />
               </div>
             );
           }
         }
-        return <div>{`${v}`}</div>;
+        return <div key={i}>{`${v}`}</div>;
       });
     }
     case "string": {
-      return value.map((v) => {
+      return value.map((v, i) => {
         if (typeof v === "object") {
           if (
             Object.hasOwnProperty.call(v, "family") ||
             Object.hasOwnProperty.call(v, "given")
           ) {
             return (
-              <div>
+              <div key={i}>
                 <FHIRHumanNameReadOnly value={v as HumanName} />
               </div>
             );
           } else {
             return (
-              <div>
+              <div key={i}>
                 <FHIRAddressReadOnly value={v as Address} />
               </div>
             );
           }
         }
-        return <div>{`${v}`}</div>;
+        return <div key={i}>{`${v}`}</div>;
       });
     }
     case "token": {
-      return value.map((v) => {
+      return value.map((v, i) => {
         if (typeof v === "object") {
           if (Object.hasOwnProperty.call(v, "coding")) {
             return (
-              <div>
+              <div key={i}>
                 <FHIRCodeableConceptReadOnly value={v as CodeableConcept} />
               </div>
             );
           } else if (Object.hasOwnProperty.call(v, "code")) {
             return (
-              <div>
+              <div key={i}>
                 <FHIRCodingReadOnly value={v as Coding} />
               </div>
             );
           } else {
             return (
-              <div>
+              <div key={i}>
                 <FHIRIdentifierReadOnly value={v as Identifier} />
               </div>
             );
           }
         }
-        return <div>{`${v}`}</div>;
+        return <div key={i}>{`${v}`}</div>;
       });
     }
     case "reference": {
-      return value.map((v) => {
+      return value.map((v, i) => {
         if (typeof v === "object") {
           return (
-            <div>
+            <div key={i}>
               <FHIRReferenceReadOnly value={v as Reference} />
             </div>
           );
         }
-        return <div>{`${v}`}</div>;
+        return <div key={i}>{`${v}`}</div>;
       });
     }
     case "quantity": {
-      return value.map((v) => {
+      return value.map((v, i) => {
         if (typeof v === "object") {
           if (Object.hasOwnProperty.call(v, "value")) {
             return (
-              <div>
+              <div key={i}>
                 <FHIRQuantityReadOnly value={v as Quantity} />
               </div>
             );
           } else {
             return (
-              <div>
+              <div key={i}>
                 <FHIRRangeReadOnly value={v as Range} />
               </div>
             );
           }
         }
-        return <div>{`${v}`}</div>;
+        return <div key={i}>{`${v}`}</div>;
       });
     }
     case "uri": {
-      return value.map((v) => {
-        return <div>{`${v}`}</div>;
+      return value.map((v, i) => {
+        return <div key={i}>{`${v}`}</div>;
       });
     }
     default: {

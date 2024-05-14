@@ -6,7 +6,7 @@ export type FHIRCodingReadOnlyProps = {
   value: Coding;
 };
 
-function FHIRCodingDetailDisplay({ value }: FHIRCodingReadOnlyProps) {
+function FHIRCodingDetailDisplay({ value }: Readonly<FHIRCodingReadOnlyProps>) {
   return (
     <div>
       <span>
@@ -16,7 +16,9 @@ function FHIRCodingDetailDisplay({ value }: FHIRCodingReadOnlyProps) {
   );
 }
 
-export const FHIRCodingReadOnly = ({ value }: FHIRCodingReadOnlyProps) => {
+export const FHIRCodingReadOnly = ({
+  value,
+}: Readonly<FHIRCodingReadOnlyProps>) => {
   return (
     <>
       {value.display ? (
