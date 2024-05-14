@@ -128,7 +128,7 @@ function IGUHealthWrapper() {
       domain={REACT_APP_FHIR_BASE_URL || ""}
       tenant={deriveTenantID()}
       clientId={"admin-app"}
-      redirectUrl={window.location.origin}
+      redirectUrl={window.location.href}
     >
       <Outlet />
     </IGUHealthProvider>
