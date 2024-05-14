@@ -8,7 +8,7 @@ export type FHIRHumanNameReadOnlyProps = {
 
 export const FHIRHumanNameReadOnly = ({
   value,
-}: FHIRHumanNameReadOnlyProps) => {
+}: Readonly<FHIRHumanNameReadOnlyProps>) => {
   return (
     <div className="flex flex-1 space-x-1">
       {value.text ? (

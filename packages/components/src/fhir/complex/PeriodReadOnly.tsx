@@ -6,7 +6,9 @@ export type FHIRPeriodReadOnlyProps = {
   value: Period;
 };
 
-export const FHIRPeriodReadOnly = ({ value }: FHIRPeriodReadOnlyProps) => {
+export const FHIRPeriodReadOnly = ({
+  value,
+}: Readonly<FHIRPeriodReadOnlyProps>) => {
   return (
     <div className="flex flex-1 space-x-1">
       <div>

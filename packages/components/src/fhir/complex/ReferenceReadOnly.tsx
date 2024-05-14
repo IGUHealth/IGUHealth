@@ -8,6 +8,6 @@ export type FHIRReferenceReadOnlyProps = {
 
 export const FHIRReferenceReadOnly = ({
   value,
-}: FHIRReferenceReadOnlyProps) => {
+}: Readonly<FHIRReferenceReadOnlyProps>) => {
   return <div>{value.display ?? value.reference}</div>;
 };

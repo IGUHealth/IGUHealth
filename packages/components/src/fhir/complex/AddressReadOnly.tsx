@@ -6,7 +6,9 @@ export type FHIRAddressReadonlyProps = {
   value: Address;
 };
 
-export const FHIRAddressReadOnly = ({ value }: FHIRAddressReadonlyProps) => {
+export const FHIRAddressReadOnly = ({
+  value,
+}: Readonly<FHIRAddressReadonlyProps>) => {
   return (
     <div className="flex flex-1 space-x-1">
       <div>{value?.line?.[0]}</div>

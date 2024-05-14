@@ -8,7 +8,7 @@ export type FHIRIdentifierReadOnlyProps = {
 
 export const FHIRIdentifierReadOnly = ({
   value,
-}: FHIRIdentifierReadOnlyProps) => {
+}: Readonly<FHIRIdentifierReadOnlyProps>) => {
   return (
     <div className="flex flex-1 space-x-1">
       <div>{value?.system}</div>

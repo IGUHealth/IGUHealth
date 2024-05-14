@@ -8,7 +8,9 @@ export type FHIRRangeReadOnlyProps = {
   value: Range;
 };
 
-export const FHIRRangeReadOnly = ({ value }: FHIRRangeReadOnlyProps) => {
+export const FHIRRangeReadOnly = ({
+  value,
+}: Readonly<FHIRRangeReadOnlyProps>) => {
   return (
     <div className="flex flex-1 space-x-1">
       <div>{value.low && <FHIRQuantityReadOnly value={value.low} />}</div>

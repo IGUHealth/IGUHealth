@@ -10,7 +10,9 @@ export type FHIRTimingReadOnlyProps = {
   value: Timing;
 };
 
-export const FHIRTimingReadOnly = ({ value }: FHIRTimingReadOnlyProps) => {
+export const FHIRTimingReadOnly = ({
+  value,
+}: Readonly<FHIRTimingReadOnlyProps>) => {
   if (value.repeat?.boundsDuration) {
     return <FHIRQuantityReadOnly value={value.repeat?.boundsDuration} />;
   }

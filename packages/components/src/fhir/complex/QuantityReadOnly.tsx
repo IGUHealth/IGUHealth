@@ -6,7 +6,9 @@ export type FHIRQuantityReadOnlyProps = {
   value: Quantity;
 };
 
-export const FHIRQuantityReadOnly = ({ value }: FHIRQuantityReadOnlyProps) => {
+export const FHIRQuantityReadOnly = ({
+  value,
+}: Readonly<FHIRQuantityReadOnlyProps>) => {
   return (
     <div className="flex flex-1 space-x-1">
       <div>{value.value}</div>
