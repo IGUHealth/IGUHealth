@@ -94,15 +94,16 @@ export function IGUHealthProvider({
   redirectUrl,
   domain,
   children,
+  onRedirectCallback,
 }: Readonly<{
   tenant?: TenantId | string;
   clientId: string;
   domain: string;
   redirectUrl: string;
   children: React.ReactNode;
+  onRedirectCallback?: (initialPath: string) => void;
 }>) {
   const [state, dispatch] = useReducer(iguHealthReducer, InitialContext);
-
   const isInitialized = useRef(false);
 
   useEffect(() => {
@@ -128,7 +129,15 @@ export function IGUHealthProvider({
             reInitiliaze: () =>
               handleAuthorizeInitial({ tenant, clientId, domain, redirectUrl }),
           });
+          // Allows for SPA to redirect back.
+          if (onRedirectCallback) {
+            onRedirectCallback(sessionStorage.getItem("path") ?? "/");
+          }
         } else {
+          sessionStorage.setItem(
+            "path",
+            window.location.href.replace(window.location.origin, ""),
+          );
           handleAuthorizeInitial({ tenant, clientId, domain, redirectUrl });
         }
       } catch (error) {

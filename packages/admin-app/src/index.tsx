@@ -123,12 +123,17 @@ function WorkspaceCheck() {
 }
 
 function IGUHealthWrapper() {
+  const navigate = useNavigate();
+
   return (
     <IGUHealthProvider
       domain={REACT_APP_FHIR_BASE_URL || ""}
       tenant={deriveTenantID()}
       clientId={"admin-app"}
-      redirectUrl={window.location.href}
+      redirectUrl={window.location.origin}
+      onRedirectCallback={(initialPath: string) => {
+        navigate(initialPath);
+      }}
     >
       <Outlet />
     </IGUHealthProvider>
