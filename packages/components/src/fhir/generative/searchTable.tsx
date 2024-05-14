@@ -206,7 +206,7 @@ interface SearchColumnModalProps extends ClientProps {
 
 function searchParameterTypeToColor(
   type: string | undefined,
-): "blue" | "green" | "indigo" | "gray" | "purple" | "pink" {
+): "blue" | "green" | "indigo" | "gray" | "purple" | "pink" | "yellow" {
   switch (type) {
     case "number": {
       return "blue";
