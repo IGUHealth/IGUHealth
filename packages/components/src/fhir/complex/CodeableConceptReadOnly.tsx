@@ -13,7 +13,7 @@ export const FHIRCodeableConceptReadOnly = ({
 }: Readonly<FHIRCodeableConceptReadOnlyProps>) => {
   return (
     <div className="flex flex-1 space-x-1">
-      <div>{value?.text}</div>
+      {value.text && <div>{value?.text}</div>}
       {value?.coding?.map((coding, index) => (
         <div key={index} className="mr-1">
           <FHIRCodingReadOnly key={index} value={coding} />

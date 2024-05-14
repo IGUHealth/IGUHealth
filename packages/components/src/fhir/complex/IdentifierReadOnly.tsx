@@ -11,9 +11,9 @@ export const FHIRIdentifierReadOnly = ({
 }: Readonly<FHIRIdentifierReadOnlyProps>) => {
   return (
     <div className="flex flex-1 space-x-1">
-      <div>{value?.system}</div>
-      <div>{value?.value}</div>
-      <div>{value?.type?.text}</div>
+      {value?.system && <div>{value?.system}</div>}
+      {value?.value && <div>{value?.value}</div>}
+      {value?.type && <div>{value?.type?.text}</div>}
     </div>
   );
 };

@@ -11,15 +11,15 @@ export const FHIRHumanNameReadOnly = ({
 }: Readonly<FHIRHumanNameReadOnlyProps>) => {
   return (
     <div className="flex flex-1 space-x-1">
-      {value.text ? (
+      {value?.text ? (
         value.text
       ) : (
         <>
-          <div>{value?.prefix?.join(" ")}</div>
-          <div>{value?.text}</div>
-          <div>{value?.given?.join(" ")}</div>
-          <div>{value?.family}</div>
-          <div>{value?.suffix?.join(" ")}</div>
+          {value?.prefix && <div>{value?.prefix?.join(" ")}</div>}
+          {value?.text && <div>{value?.text}</div>}
+          {value?.given && <div>{value?.given?.join(" ")}</div>}
+          {value?.family && <div>{value?.family}</div>}
+          {value?.suffix && <div>{value?.suffix?.join(" ")}</div>}
         </>
       )}
     </div>

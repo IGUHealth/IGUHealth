@@ -11,10 +11,12 @@ export const FHIRPeriodReadOnly = ({
 }: Readonly<FHIRPeriodReadOnlyProps>) => {
   return (
     <div className="flex flex-1 space-x-1">
-      <div>
-        {value.start ?? "any time"} <span>{"->"}</span>{" "}
-      </div>
-      <div>{value.end ?? "any time"}</div>
+      {value?.start && (
+        <div>
+          {value.start ?? "any time"} <span>{"->"}</span>{" "}
+        </div>
+      )}
+      {value?.end && <div>{value.end ?? "any time"}</div>}
     </div>
   );
 };

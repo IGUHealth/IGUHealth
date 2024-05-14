@@ -11,11 +11,11 @@ export const FHIRAddressReadOnly = ({
 }: Readonly<FHIRAddressReadonlyProps>) => {
   return (
     <div className="flex flex-1 space-x-1">
-      <div>{value?.line?.[0]}</div>
-      <div>{value?.city}</div>
-      <div>{value?.state}</div>
-      <div>{value?.postalCode}</div>
-      <div>{value?.country}</div>
+      {value?.line && <div>{value?.line?.join(" ")}</div>}
+      {value?.city && <div>{value?.city}</div>}
+      {value?.state && <div>{value?.state}</div>}
+      {value?.postalCode && <div>{value?.postalCode}</div>}
+      {value?.country && <div>{value?.country}</div>}
     </div>
   );
 };

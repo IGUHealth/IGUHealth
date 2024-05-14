@@ -11,8 +11,8 @@ export const FHIRQuantityReadOnly = ({
 }: Readonly<FHIRQuantityReadOnlyProps>) => {
   return (
     <div className="flex flex-1 space-x-1">
-      <div>{value.value}</div>
-      <div>{value.unit}</div>
+      {value?.value && <div>{value.value}</div>}
+      {value?.unit && <div>{value.unit}</div>}
     </div>
   );
 };

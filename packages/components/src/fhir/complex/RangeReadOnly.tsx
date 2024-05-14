@@ -13,9 +13,13 @@ export const FHIRRangeReadOnly = ({
 }: Readonly<FHIRRangeReadOnlyProps>) => {
   return (
     <div className="flex flex-1 space-x-1">
-      <div>{value.low && <FHIRQuantityReadOnly value={value.low} />}</div>
+      {value?.low && (
+        <div>{value.low && <FHIRQuantityReadOnly value={value.low} />}</div>
+      )}
       <div>{"->"}</div>
-      <div>{value.high && <FHIRQuantityReadOnly value={value.high} />}</div>
+      {value.high && (
+        <div>{value.high && <FHIRQuantityReadOnly value={value.high} />}</div>
+      )}
     </div>
   );
 };

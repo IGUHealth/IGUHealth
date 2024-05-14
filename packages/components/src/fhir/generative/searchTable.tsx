@@ -420,7 +420,7 @@ function DataDisplay(searchType: string, value: unknown[]) {
       });
     }
     default: {
-      throw new Error("Invalid search type");
+      throw new Error(`Invalid search type '${searchType}'`);
     }
   }
 }
@@ -471,7 +471,12 @@ export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
         { name: "_count", value: ["100"] },
       ])
       .then((params) =>
-        setSearchParameters(params.resources.filter((s) => s.expression)),
+        setSearchParameters(
+          params.resources.filter(
+            (s) =>
+              s.expression && s.type !== "composite" && s.type !== "special",
+          ),
+        ),
       );
   }, [props.resourceType, props.fhirVersion]);
 
