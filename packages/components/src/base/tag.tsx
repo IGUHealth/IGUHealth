@@ -30,8 +30,7 @@ export function Tag({
       {...spanProps}
       className={classNames(
         className,
-        "text-xs font-medium me-2 px-2.5 py-0.5",
-
+        "text-nowrap inline-block text-xs font-medium me-2 px-2.5 py-0.5",
         {
           "hover:bg-blue-200 hover:text-blue-900 bg-blue-100 text-blue-800 rounded":
             color === "blue",
