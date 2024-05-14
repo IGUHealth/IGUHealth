@@ -104,6 +104,7 @@ export function IGUHealthProvider({
   const [state, dispatch] = useReducer(iguHealthReducer, InitialContext);
 
   const isInitialized = useRef(false);
+
   useEffect(() => {
     if (isInitialized.current) {
       return;
@@ -124,6 +125,8 @@ export function IGUHealthProvider({
             tenant: tenant as TenantId,
             clientId,
             payload: authorizationPayload,
+            reInitiliaze: () =>
+              handleAuthorizeInitial({ tenant, clientId, domain, redirectUrl }),
           });
         } else {
           handleAuthorizeInitial({ tenant, clientId, domain, redirectUrl });
