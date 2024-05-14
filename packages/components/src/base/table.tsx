@@ -12,6 +12,7 @@ export interface Columns {
   selectorType: SelectorType;
   selector: string;
   onClick?: (column: Columns) => void;
+  renderer?: (data: unknown[]) => React.ReactNode;
 }
 
 export interface TableProps {
@@ -25,10 +26,10 @@ function extract(
   data: unknown,
   selector: string,
   selectorType: SelectorType,
-): string {
+): unknown[] {
   switch (selectorType) {
     case "fhirpath": {
-      return fhirpath.evaluate(selector, data).join(", ");
+      return fhirpath.evaluate(selector, data);
     }
     default:
       throw new Error(`Unknown selector type: ${selectorType}`);
@@ -78,14 +79,23 @@ export function Table({
                     className="border cursor-pointer hover:bg-slate-100"
                     onClick={() => onRowClick(row)}
                   >
-                    {columns.map((column) => (
-                      <td
-                        key={column.id}
-                        className="overflow-auto whitespace-nowrap px-4 py-2 font-medium"
-                      >
-                        {extract(row, column.selector, column.selectorType)}
-                      </td>
-                    ))}
+                    {columns.map((column) => {
+                      const data = extract(
+                        row,
+                        column.selector,
+                        column.selectorType,
+                      );
+                      return (
+                        <td
+                          key={column.id}
+                          className="overflow-auto whitespace-nowrap px-4 py-2 font-medium"
+                        >
+                          {column.renderer
+                            ? column.renderer(data)
+                            : data.join("")}
+                        </td>
+                      );
+                    })}
                   </tr>
                 ))}
               </>

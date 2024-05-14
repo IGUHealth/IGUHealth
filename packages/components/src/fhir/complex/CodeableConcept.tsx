@@ -8,21 +8,6 @@ import { Add } from "../../base";
 import { InputContainer } from "../../base/containers";
 import { ClientProps, EditableProps } from "../types";
 
-const convertFileToBase64 = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-
-    reader.onload = () => {
-      const data = reader.result;
-      if (typeof data === "string") {
-        resolve(data.split(",")[1]);
-      }
-    };
-    reader.onerror = (error) => reject(error);
-  });
-};
-
 export type FHIRCodeableConceptEditableProps = EditableProps<CodeableConcept> &
   ClientProps;
 

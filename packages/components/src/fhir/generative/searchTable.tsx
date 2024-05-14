@@ -2,7 +2,22 @@ import { FunnelIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useMemo, useState } from "react";
 
 import { ParsedParameter } from "@iguhealth/client/url";
-import { code, date, decimal, uri } from "@iguhealth/fhir-types/r4/types";
+import {
+  Address,
+  CodeableConcept,
+  Coding,
+  HumanName,
+  Identifier,
+  Period,
+  Quantity,
+  Range,
+  Reference,
+  Timing,
+  code,
+  date,
+  decimal,
+  uri,
+} from "@iguhealth/fhir-types/r4/types";
 import {
   FHIR_VERSION,
   Resource,
@@ -12,6 +27,18 @@ import {
 import { Button, Modal, Select, Tag } from "../../base";
 import { Pagination } from "../../base/pagination";
 import { Table, TableProps } from "../../base/table";
+import {
+  FHIRAddressReadOnly,
+  FHIRCodingReadOnly,
+  FHIRHumanNameReadOnly,
+  FHIRIdentifierReadOnly,
+  FHIRPeriodReadOnly,
+  FHIRRangeReadOnly,
+  FHIRReferenceReadOnly,
+} from "../complex";
+import { FHIRCodeableConceptReadOnly } from "../complex/CodeableConceptReadOnly";
+import { FHIRQuantityReadOnly } from "../complex/QuantityReadOnly";
+import { FHIRTimingReadOnly } from "../complex/TimingReadOnly";
 import {
   FHIRCodeEditable,
   FHIRDateEditable,
@@ -274,6 +301,130 @@ function SearchColumnModal(props: Readonly<SearchColumnModalProps>) {
   );
 }
 
+/**
+ * Conversion pulled from https://hl7.org/fhir/search.html#table.
+ * @param searchType The Search Parameter Type
+ * @param value Some Value
+ */
+function DataDisplay(searchType: string, value: unknown[]) {
+  switch (searchType) {
+    case "number": {
+      return (value as number[]).map((v) => {
+        return <div>{v}</div>;
+      });
+    }
+    case "date": {
+      return value.map((v) => {
+        if (typeof v === "object") {
+          if (Object.hasOwnProperty.call(v, "start")) {
+            return (
+              <div>
+                <FHIRPeriodReadOnly value={v as Period} />
+              </div>
+            );
+          } else {
+            return (
+              <div>
+                <FHIRTimingReadOnly value={v as Timing} />
+              </div>
+            );
+          }
+        }
+        return <div>{`${v}`}</div>;
+      });
+    }
+    case "string": {
+      return value.map((v) => {
+        if (typeof v === "object") {
+          if (
+            Object.hasOwnProperty.call(v, "family") ||
+            Object.hasOwnProperty.call(v, "given")
+          ) {
+            return (
+              <div>
+                <FHIRHumanNameReadOnly value={v as HumanName} />
+              </div>
+            );
+          } else {
+            return (
+              <div>
+                <FHIRAddressReadOnly value={v as Address} />
+              </div>
+            );
+          }
+        }
+        return <div>{`${v}`}</div>;
+      });
+    }
+    case "token": {
+      return value.map((v) => {
+        if (typeof v === "object") {
+          if (Object.hasOwnProperty.call(v, "coding")) {
+            return (
+              <div>
+                <FHIRCodeableConceptReadOnly value={v as CodeableConcept} />
+              </div>
+            );
+          } else if (Object.hasOwnProperty.call(v, "code")) {
+            return (
+              <div>
+                <FHIRCodingReadOnly value={v as Coding} />
+              </div>
+            );
+          } else {
+            return (
+              <div>
+                <FHIRIdentifierReadOnly value={v as Identifier} />
+              </div>
+            );
+          }
+        }
+        return <div>{`${v}`}</div>;
+      });
+    }
+    case "reference": {
+      return value.map((v) => {
+        if (typeof v === "object") {
+          return (
+            <div>
+              <FHIRReferenceReadOnly value={v as Reference} />
+            </div>
+          );
+        }
+        return <div>{`${v}`}</div>;
+      });
+    }
+    case "quantity": {
+      return value.map((v) => {
+        if (typeof v === "object") {
+          if (Object.hasOwnProperty.call(v, "value")) {
+            return (
+              <div>
+                <FHIRQuantityReadOnly value={v as Quantity} />
+              </div>
+            );
+          } else {
+            return (
+              <div>
+                <FHIRRangeReadOnly value={v as Range} />
+              </div>
+            );
+          }
+        }
+        return <div>{`${v}`}</div>;
+      });
+    }
+    case "uri": {
+      return value.map((v) => {
+        return <div>{`${v}`}</div>;
+      });
+    }
+    default: {
+      throw new Error("Invalid search type");
+    }
+  }
+}
+
 export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
   props: Readonly<FHIRGenerativeSearchTableProps<Version>>,
 ) {
@@ -386,6 +537,9 @@ export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
                     onClick: () => {
                       setSelectedSearchParameter(i);
                       openParamModal(true);
+                    },
+                    renderer(data: unknown[]) {
+                      return DataDisplay(searchParameter.type, data);
                     },
                   }) as Parameters<typeof Table>[0]["columns"][number],
               ),
