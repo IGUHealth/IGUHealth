@@ -1,4 +1,9 @@
-import { FunnelIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  FunnelIcon,
+} from "@heroicons/react/24/outline";
+import classNames from "classnames";
 import React, { useEffect, useMemo, useState } from "react";
 
 import { ParsedParameter } from "@iguhealth/client/url";
@@ -201,7 +206,7 @@ interface SearchColumnModalProps extends ClientProps {
 
 function searchParameterTypeToColor(
   type: string | undefined,
-): "blue" | "green" | "indigo" | "gray" | "purple" | "pink" {
+): "blue" | "green" | "indigo" | "gray" | "purple" | "pink" | "yellow" {
   switch (type) {
     case "number": {
       return "blue";
@@ -226,7 +231,9 @@ function searchParameterTypeToColor(
       return "pink";
     }
 
-    case "string":
+    case "string": {
+      return "yellow";
+    }
     default: {
       return "blue";
     }
@@ -425,6 +432,88 @@ function DataDisplay(searchType: string, value: unknown[]) {
   }
 }
 
+interface SortIconProps {
+  searchParameter: Resource<FHIR_VERSION, "SearchParameter">;
+  sortParam: ParsedParameter<string | number | undefined> | undefined;
+  onChange: (
+    v: ParsedParameter<string | number | undefined> | undefined,
+  ) => void;
+}
+function SearchParameterSortControl({
+  sortParam,
+  searchParameter,
+  onChange,
+}: Readonly<SortIconProps>) {
+  const value = sortParam?.value?.find((v): v is string | undefined => {
+    return v === searchParameter.code || v === `-${searchParameter.code}`;
+  });
+
+  switch (true) {
+    case value === searchParameter.code: {
+      return (
+        <ArrowUpIcon
+          className={classNames(
+            "cursor-pointer w-4 h-4 hover:text-blue-400 text-blue-400",
+          )}
+          onClick={() => {
+            const values = [
+              ...(sortParam?.value ?? []).filter(
+                (v) => v !== searchParameter.code,
+              ),
+            ];
+            if (values.length === 0) {
+              onChange(undefined);
+            } else {
+              onChange({
+                ...sortParam,
+                name: "_sort",
+                value: values,
+              });
+            }
+          }}
+        />
+      );
+    }
+    case value?.startsWith("-"):
+    default: {
+      return (
+        <ArrowDownIcon
+          className={classNames("cursor-pointer w-4 h-4 hover:text-blue-400", {
+            "text-blue-400": (sortParam?.value ?? []).includes(
+              `-${searchParameter.code}`,
+            ),
+          })}
+          onClick={() => {
+            if (sortParam?.value.includes(`-${searchParameter.code}`)) {
+              onChange({
+                ...sortParam,
+                name: "_sort",
+                value: [
+                  ...(sortParam?.value ?? []).filter(
+                    (v) => v !== `-${searchParameter.code}`,
+                  ),
+                  `${searchParameter.code}`,
+                ],
+              });
+            } else {
+              onChange({
+                ...sortParam,
+                name: "_sort",
+                value: [
+                  ...(sortParam?.value ?? []).filter(
+                    (v) => v !== `-${searchParameter.code}`,
+                  ),
+                  `-${searchParameter.code}`,
+                ],
+              });
+            }
+          }}
+        />
+      );
+    }
+  }
+}
+
 export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
   props: Readonly<FHIRGenerativeSearchTableProps<Version>>,
 ) {
@@ -444,6 +533,8 @@ export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
     total?: number;
     resources: Resource<Version, ResourceType<Version>>[];
   }>({ total: 0, resources: [] });
+
+  const sortParam = parameters.find((p) => p.name === "_sort");
 
   useEffect(() => {
     setLoading(true);
@@ -497,30 +588,39 @@ export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
     >
       {(openParamModal) => (
         <>
-          <div className="overflow-x space-x-1">
-            {parameters
-              .filter((p) => searchParameters?.find((s) => s.code === p.name))
-              .map((p) => {
-                const paramIndex = searchParameters?.findIndex(
-                  (sp) => sp.code === p.name,
-                );
-                return (
-                  <Tag
-                    color={searchParameterTypeToColor(
-                      searchParameters?.[paramIndex ?? 0]?.type,
-                    )}
-                    onClick={() => {
-                      setSelectedSearchParameter(paramIndex ?? 0);
-                      openParamModal(true);
-                    }}
-                    className="cursor-pointer"
-                  >
-                    {p.name}
-                    {p.modifier ? `:${p.modifier} ` : " "} ={" "}
-                    {p.value.join(", ")}
-                  </Tag>
-                );
-              })}
+          <div className="flex items-center w-full overflow-x-auto">
+            <div className="flex flex-1  space-x-1 mr-1">
+              {parameters
+                .filter((p) => searchParameters?.find((s) => s.code === p.name))
+                .map((p) => {
+                  const paramIndex = searchParameters?.findIndex(
+                    (sp) => sp.code === p.name,
+                  );
+                  return (
+                    <Tag
+                      color={searchParameterTypeToColor(
+                        searchParameters?.[paramIndex ?? 0]?.type,
+                      )}
+                      onClick={() => {
+                        setSelectedSearchParameter(paramIndex ?? 0);
+                        openParamModal(true);
+                      }}
+                      className="cursor-pointer"
+                    >
+                      {p.name}
+                      {p.modifier ? `:${p.modifier} ` : " "} ={" "}
+                      {p.value.join(", ")}
+                    </Tag>
+                  );
+                })}
+            </div>
+            <div className="flex items-center">
+              {sortParam && (
+                <Tag className="pointer" color={"blue"}>
+                  _sort: {sortParam.value.join(",")}
+                </Tag>
+              )}
+            </div>
           </div>
           <Table
             isLoading={loading}
@@ -532,17 +632,33 @@ export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
                   ({
                     id: searchParameter.id,
                     content: (
-                      <div className="space-x-2 flex">
-                        <div>{searchParameter.code}</div>
-                        <FunnelIcon className="hover:text-blue-400 cursor-pointer w-4 h-4" />
+                      <div className="space-x-2 flex items-center">
+                        <div
+                          className="flex flex-1"
+                          onClick={() => {
+                            setSelectedSearchParameter(i);
+                            openParamModal(true);
+                          }}
+                        >
+                          <div className="mr-2">{searchParameter.code}</div>
+                          <FunnelIcon className="hover:text-blue-400 cursor-pointer w-4 h-4" />
+                        </div>
+                        <div className="flex justify-end">
+                          <SearchParameterSortControl
+                            sortParam={sortParam}
+                            searchParameter={searchParameter}
+                            onChange={(v) => {
+                              setParameters([
+                                ...parameters.filter((p) => p.name !== "_sort"),
+                                ...(v ? [v] : []),
+                              ]);
+                            }}
+                          />
+                        </div>
                       </div>
                     ),
                     selector: searchParameter.expression as string,
                     selectorType: "fhirpath",
-                    onClick: () => {
-                      setSelectedSearchParameter(i);
-                      openParamModal(true);
-                    },
                     renderer(data: unknown[]) {
                       return DataDisplay(searchParameter.type, data);
                     },
