@@ -524,6 +524,7 @@ export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
   >([
     { name: "_total", value: ["estimate"] },
     { name: "_count", value: [pagination] },
+    { name: "_sort", value: ["-_lastUpdated"] },
   ]);
   const [searchParameters, setSearchParameters] =
     useState<Resource<Version, "SearchParameter">[]>();
