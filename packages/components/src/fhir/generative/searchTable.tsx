@@ -275,6 +275,7 @@ export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
   props: Readonly<FHIRGenerativeSearchTableProps<Version>>,
 ) {
   const pagination = 20;
+  const [loading, setLoading] = useState<boolean>(true);
   const [parameters, setParameters] = useState<
     ParsedParameter<string | number | undefined>[]
   >([
@@ -291,6 +292,7 @@ export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
   }>({ total: 0, resources: [] });
 
   useEffect(() => {
+    setLoading(true);
     props.client
       .search_type(
         {},
@@ -304,6 +306,7 @@ export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
       )
       .then((bundle) => {
         setData(bundle);
+        setLoading(false);
       });
   }, [parameters, props.resourceType, props.fhirVersion]);
 
@@ -361,7 +364,7 @@ export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
               })}
           </div>
           <Table
-            isLoading={props.isLoading}
+            isLoading={loading}
             data={data.resources}
             onRowClick={props.onRowClick}
             columns={[

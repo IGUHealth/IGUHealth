@@ -10,6 +10,7 @@ export type Action = {
   tenant?: TenantId;
   clientId: string;
   payload: { id_token: IDToken<string>; access_token: AccessToken<string> };
+  reInitiliaze: () => void;
 };
 
 export function iguHealthReducer(
@@ -38,6 +39,7 @@ export function iguHealthReducer(
         },
         getClient: () => {
           return createHTTPClient({
+            onAuthError: action.reInitiliaze,
             getAccessToken: () => Promise.resolve(action.payload.access_token),
             url: new URL(
               `/w/${action.tenant ? action.tenant : user["https://iguhealth.app/tenants"][0]?.id}`,

@@ -13,6 +13,7 @@ import { FHIRRequest, FHIRResponse } from "../types/index.js";
 import { ParsedParameter } from "../url.js";
 
 type HTTPClientState = {
+  onAuthError?: () => void;
   getAccessToken?: () => Promise<string>;
   url: string;
   headers?: Record<string, string>;
@@ -197,9 +198,17 @@ async function httpResponseToFHIRResponse(
   response: Response,
 ): Promise<FHIRResponse> {
   if (response.status >= 400) {
-    if (!response.body) throw new Error(response.statusText);
-    const oo = (await response.json()) as OperationOutcome;
-    throw new OperationError(oo);
+    switch (response.status) {
+      case 403:
+      case 401: {
+        throw new OperationError(outcomeError("security", "Unauthorized"));
+      }
+      default: {
+        if (!response.body) throw new Error(response.statusText);
+        const oo = (await response.json()) as OperationOutcome;
+        throw new OperationError(oo);
+      }
+    }
   }
   switch (request.type) {
     case "invoke-request": {
@@ -439,10 +448,26 @@ function httpMiddleware<CTX>(): MiddlewareAsync<HTTPClientState, CTX> {
         body: httpRequest.body,
       });
 
-      return {
-        ...context,
-        response: await httpResponseToFHIRResponse(context.request, response),
-      };
+      try {
+        const fhirResponse = await httpResponseToFHIRResponse(
+          context.request,
+          response,
+        );
+
+        return {
+          ...context,
+          response: fhirResponse,
+        };
+      } catch (e) {
+        if (e instanceof OperationError) {
+          if (e.operationOutcome.issue[0].code === "security") {
+            if (context.state.onAuthError) {
+              context.state.onAuthError();
+            }
+          }
+        }
+        throw e;
+      }
     },
   ]);
 }
