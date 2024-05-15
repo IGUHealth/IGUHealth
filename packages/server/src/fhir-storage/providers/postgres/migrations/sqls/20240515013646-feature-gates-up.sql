@@ -58,7 +58,6 @@ INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tie
 INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4b-free-subscription-total',          'R4B Free Subscription Limitation',       'r4b', 'LIMIT_TOTAL', 'Subscription', 0, 'free');
 INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4b-free-messagetopic-total',          'R4B Free MessageTopic Limitation',       'r4b', 'LIMIT_TOTAL', 'MessageTopic', 0, 'free');
 INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4b-free-messagebroker-total',         'R4B Free MessageBroker Limitation',      'r4b', 'LIMIT_TOTAL', 'MessageBroker', 0, 'free');
--- Should we allow ClientApplications on free?
 
 -- Professional
 -- R4
