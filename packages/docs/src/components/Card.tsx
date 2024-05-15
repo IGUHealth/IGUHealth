@@ -36,19 +36,19 @@ export default function Card({
 }: CardProps) {
   return (
     <div className="w-full px-4 md:w-1/2 xl:w-1/4">
-      <div className="h-[900px] relative z-10 mb-10 overflow-hidden rounded-[10px] border-solid border-2 border-stroke dark:border-dark-3 bg-white dark:bg-dark-2 py-10 px-8 shadow-pricing sm:p-12 lg:py-10 lg:px-6 xl:p-[50px]">
+      <div className="h-[900px] relative z-10 mb-10 overflow-hidden rounded-[10px] border-solid border-2 border-stroke  py-10 px-8 shadow-pricing sm:p-12 lg:py-10 lg:px-6 xl:p-[50px]">
         <span className="mb-3 block text-lg font-semibold text-primary">
           {title}
         </span>
-        <h2 className="mb-5 text-[42px] font-bold text-dark dark:text-white">
+        <h2 className="mb-5 text-[42px] font-bold text-dark ">
           <span>{price}</span>
           {priceSuffix && (
-            <span className="text-base font-medium text-body-color dark:text-dark-6">
+            <span className="text-base font-medium text-body-color ">
               {priceSuffix}
             </span>
           )}
         </h2>
-        <p className="mb-2 border-b border-stroke pb-8 text-base text-body-color dark:text-dark-6 dark:border-dark-3">
+        <p className="mb-2 border-b border-stroke pb-8 text-base text-body-color ">
           {description}
         </p>
 
@@ -60,7 +60,7 @@ export default function Card({
               <div className="w-4 h-4 flex items-center justify-center mr-2">
                 <CheckMark className="w-4" />
               </div>
-              <span className="font-weight-500 text-sm text-body-color dark:text-dark-6">
+              <span className="font-weight-500 text-sm text-body-color ">
                 {feature}
               </span>
             </div>
@@ -75,7 +75,7 @@ export default function Card({
               <div className="w-4 h-4 flex items-center justify-center mr-2">
                 <CheckMark className="w-4" />
               </div>
-              <span className="font-weight-500 text-sm text-body-color dark:text-dark-6">
+              <span className="font-weight-500 text-sm text-body-color ">
                 {feature}
               </span>
             </div>

@@ -9,7 +9,7 @@ export default function Home(): JSX.Element {
   return (
     <Layout title={`IGUHealth pricing`} description="IGUHealth pricing page">
       <main>
-        <section className="relative z-10 overflow-hidden bg-white dark:bg-dark pt-10 pb-12">
+        <section className="relative z-10 overflow-hidden  pt-10 pb-12">
           <div className="container mx-auto">
             <div className="-mx-4 flex flex-wrap">
               <div className="w-full px-4">
@@ -17,10 +17,10 @@ export default function Home(): JSX.Element {
                   <span className="mb-2 block text-lg font-semibold text-primary">
                     Pricing Table
                   </span>
-                  <h2 className="mb-3 text-3xl leading-[1.208] font-bold text-dark dark:text-white sm:text-4xl md:text-[40px]">
+                  <h2 className="mb-3 text-3xl leading-[1.208] font-bold text-dark  sm:text-4xl md:text-[40px]">
                     Our Pricing Plans
                   </h2>
-                  <p className="text-base text-body-color dark:text-dark-6">
+                  <p className="text-base text-body-color ">
                     These are our pricing plans. We support a wide range of
                     deployment options such as cloud, on-premises, hybrid.
                     Contact us for more information.
