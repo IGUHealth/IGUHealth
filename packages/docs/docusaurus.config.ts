@@ -119,6 +119,7 @@ const config = {
           position: "left",
           label: "RFCs",
         },
+        { to: "/pricing", label: "Pricing", position: "right" },
         { to: "/blog", label: "Blog", position: "right" },
         {
           to: "https://api-reference.iguhealth.app/",
