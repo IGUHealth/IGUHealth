@@ -525,7 +525,7 @@ export async function createFHIRServices(
   };
 }
 
-export function createEmailProvider(): EmailProvider | undefined {
+function createEmailProvider(): EmailProvider | undefined {
   switch (process.env.EMAIL_PROVIDER) {
     case "sendgrid": {
       if (!process.env.EMAIL_SENDGRID_API_KEY)
@@ -537,7 +537,7 @@ export function createEmailProvider(): EmailProvider | undefined {
   }
 }
 
-export async function createKoaFHIRServices<State, Context>(
+export async function associateServicesKoaMiddleware<State, Context>(
   pool: pg.Pool,
 ): Promise<
   koa.Middleware<
@@ -556,7 +556,7 @@ export async function createKoaFHIRServices<State, Context>(
   };
 }
 
-export async function createKoaFHIRContextMiddleware<
+export async function associateTenantFHIRContextMiddleware<
   State extends {
     access_token?: string;
     user: { [key: string]: unknown };
