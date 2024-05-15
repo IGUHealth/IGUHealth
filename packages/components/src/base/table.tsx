@@ -92,7 +92,7 @@ export function Table({
                         >
                           {column.renderer
                             ? column.renderer(data)
-                            : data.join("")}
+                            : data.join(" ")}
                         </td>
                       );
                     })}
