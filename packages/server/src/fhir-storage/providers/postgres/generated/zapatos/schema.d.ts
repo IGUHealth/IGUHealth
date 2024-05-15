@@ -27,6 +27,10 @@ declare module 'zapatos/schema' {
   export namespace every {
     export type fhir_version = ['r4', 'r4b', 'r5'];
   }
+  export type limitation_type = 'LIMIT_TOTAL';
+  export namespace every {
+    export type limitation_type = ['LIMIT_TOTAL'];
+  }
   export type user_role = 'admin' | 'member' | 'owner';
   export namespace every {
     export type user_role = ['admin', 'member', 'owner'];
@@ -438,6 +442,269 @@ declare module 'zapatos/schema' {
       user_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
     export type UniqueIndex = 'authorization_code_code_key' | 'authorization_code_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **limitations**
+   * - Table in database
+   */
+  export namespace limitations {
+    export type Table = 'limitations';
+    export interface Selectable {
+      /**
+      * **limitations.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at: Date;
+      /**
+      * **limitations.fhir_version**
+      * - `text` in database
+      * - `NOT NULL`, default: `'all'::text`
+      */
+      fhir_version: string;
+      /**
+      * **limitations.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
+      /**
+      * **limitations.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name: string;
+      /**
+      * **limitations.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type: string;
+      /**
+      * **limitations.tier**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tier: string;
+      /**
+      * **limitations.type**
+      * - `limitation_type` in database
+      * - `NOT NULL`, no default
+      */
+      type: limitation_type;
+      /**
+      * **limitations.value**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      value: number;
+    }
+    export interface JSONSelectable {
+      /**
+      * **limitations.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at: db.TimestampTzString;
+      /**
+      * **limitations.fhir_version**
+      * - `text` in database
+      * - `NOT NULL`, default: `'all'::text`
+      */
+      fhir_version: string;
+      /**
+      * **limitations.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
+      /**
+      * **limitations.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name: string;
+      /**
+      * **limitations.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type: string;
+      /**
+      * **limitations.tier**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tier: string;
+      /**
+      * **limitations.type**
+      * - `limitation_type` in database
+      * - `NOT NULL`, no default
+      */
+      type: limitation_type;
+      /**
+      * **limitations.value**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      value: number;
+    }
+    export interface Whereable {
+      /**
+      * **limitations.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **limitations.fhir_version**
+      * - `text` in database
+      * - `NOT NULL`, default: `'all'::text`
+      */
+      fhir_version?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **limitations.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **limitations.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **limitations.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **limitations.tier**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tier?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **limitations.type**
+      * - `limitation_type` in database
+      * - `NOT NULL`, no default
+      */
+      type?: limitation_type | db.Parameter<limitation_type> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, limitation_type | db.Parameter<limitation_type> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **limitations.value**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      value?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **limitations.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **limitations.fhir_version**
+      * - `text` in database
+      * - `NOT NULL`, default: `'all'::text`
+      */
+      fhir_version?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
+      * **limitations.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **limitations.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **limitations.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **limitations.tier**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tier: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **limitations.type**
+      * - `limitation_type` in database
+      * - `NOT NULL`, no default
+      */
+      type: limitation_type | db.Parameter<limitation_type> | db.SQLFragment;
+      /**
+      * **limitations.value**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      value: number | db.Parameter<number> | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **limitations.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **limitations.fhir_version**
+      * - `text` in database
+      * - `NOT NULL`, default: `'all'::text`
+      */
+      fhir_version?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **limitations.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **limitations.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **limitations.resource_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      resource_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **limitations.tier**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      tier?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **limitations.type**
+      * - `limitation_type` in database
+      * - `NOT NULL`, no default
+      */
+      type?: limitation_type | db.Parameter<limitation_type> | db.SQLFragment | db.SQLFragment<any, limitation_type | db.Parameter<limitation_type> | db.SQLFragment>;
+      /**
+      * **limitations.value**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      value?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'limitations_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
@@ -5672,6 +5939,119 @@ declare module 'zapatos/schema' {
   }
 
   /**
+   * **subscription_tier**
+   * - Table in database
+   */
+  export namespace subscription_tier {
+    export type Table = 'subscription_tier';
+    export interface Selectable {
+      /**
+      * **subscription_tier.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at: Date;
+      /**
+      * **subscription_tier.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
+      /**
+      * **subscription_tier.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name: string;
+    }
+    export interface JSONSelectable {
+      /**
+      * **subscription_tier.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at: db.TimestampTzString;
+      /**
+      * **subscription_tier.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
+      /**
+      * **subscription_tier.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name: string;
+    }
+    export interface Whereable {
+      /**
+      * **subscription_tier.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **subscription_tier.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **subscription_tier.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **subscription_tier.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **subscription_tier.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **subscription_tier.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name: string | db.Parameter<string> | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **subscription_tier.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **subscription_tier.id**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **subscription_tier.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'subscription_tier_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
    * **tenants**
    * - Table in database
    */
@@ -5696,6 +6076,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       id: string;
+      /**
+      * **tenants.subscription_tier**
+      * - `text` in database
+      * - `NOT NULL`, default: `'free'::text`
+      */
+      subscription_tier: string;
       /**
       * **tenants.tenant**
       * - `jsonb` in database
@@ -5723,6 +6109,12 @@ declare module 'zapatos/schema' {
       */
       id: string;
       /**
+      * **tenants.subscription_tier**
+      * - `text` in database
+      * - `NOT NULL`, default: `'free'::text`
+      */
+      subscription_tier: string;
+      /**
       * **tenants.tenant**
       * - `jsonb` in database
       * - `NOT NULL`, no default
@@ -5748,6 +6140,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **tenants.subscription_tier**
+      * - `text` in database
+      * - `NOT NULL`, default: `'free'::text`
+      */
+      subscription_tier?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **tenants.tenant**
       * - `jsonb` in database
@@ -5775,6 +6173,12 @@ declare module 'zapatos/schema' {
       */
       id: string | db.Parameter<string> | db.SQLFragment;
       /**
+      * **tenants.subscription_tier**
+      * - `text` in database
+      * - `NOT NULL`, default: `'free'::text`
+      */
+      subscription_tier?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
       * **tenants.tenant**
       * - `jsonb` in database
       * - `NOT NULL`, no default
@@ -5800,6 +6204,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **tenants.subscription_tier**
+      * - `text` in database
+      * - `NOT NULL`, default: `'free'::text`
+      */
+      subscription_tier?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
       /**
       * **tenants.tenant**
       * - `jsonb` in database
@@ -6350,20 +6760,20 @@ declare module 'zapatos/schema' {
   /* --- aggregate types --- */
 
   export namespace public {  
-    export type Table = auth_method.Table | authorization_code.Table | migrations.Table | migrations_state.Table | r4_date_idx.Table | r4_number_idx.Table | r4_quantity_idx.Table | r4_reference_idx.Table | r4_string_idx.Table | r4_token_idx.Table | r4_uri_idx.Table | r4b_date_idx.Table | r4b_number_idx.Table | r4b_quantity_idx.Table | r4b_reference_idx.Table | r4b_string_idx.Table | r4b_token_idx.Table | r4b_uri_idx.Table | resources.Table | tenants.Table | users.Table;
-    export type Selectable = auth_method.Selectable | authorization_code.Selectable | migrations.Selectable | migrations_state.Selectable | r4_date_idx.Selectable | r4_number_idx.Selectable | r4_quantity_idx.Selectable | r4_reference_idx.Selectable | r4_string_idx.Selectable | r4_token_idx.Selectable | r4_uri_idx.Selectable | r4b_date_idx.Selectable | r4b_number_idx.Selectable | r4b_quantity_idx.Selectable | r4b_reference_idx.Selectable | r4b_string_idx.Selectable | r4b_token_idx.Selectable | r4b_uri_idx.Selectable | resources.Selectable | tenants.Selectable | users.Selectable;
-    export type JSONSelectable = auth_method.JSONSelectable | authorization_code.JSONSelectable | migrations.JSONSelectable | migrations_state.JSONSelectable | r4_date_idx.JSONSelectable | r4_number_idx.JSONSelectable | r4_quantity_idx.JSONSelectable | r4_reference_idx.JSONSelectable | r4_string_idx.JSONSelectable | r4_token_idx.JSONSelectable | r4_uri_idx.JSONSelectable | r4b_date_idx.JSONSelectable | r4b_number_idx.JSONSelectable | r4b_quantity_idx.JSONSelectable | r4b_reference_idx.JSONSelectable | r4b_string_idx.JSONSelectable | r4b_token_idx.JSONSelectable | r4b_uri_idx.JSONSelectable | resources.JSONSelectable | tenants.JSONSelectable | users.JSONSelectable;
-    export type Whereable = auth_method.Whereable | authorization_code.Whereable | migrations.Whereable | migrations_state.Whereable | r4_date_idx.Whereable | r4_number_idx.Whereable | r4_quantity_idx.Whereable | r4_reference_idx.Whereable | r4_string_idx.Whereable | r4_token_idx.Whereable | r4_uri_idx.Whereable | r4b_date_idx.Whereable | r4b_number_idx.Whereable | r4b_quantity_idx.Whereable | r4b_reference_idx.Whereable | r4b_string_idx.Whereable | r4b_token_idx.Whereable | r4b_uri_idx.Whereable | resources.Whereable | tenants.Whereable | users.Whereable;
-    export type Insertable = auth_method.Insertable | authorization_code.Insertable | migrations.Insertable | migrations_state.Insertable | r4_date_idx.Insertable | r4_number_idx.Insertable | r4_quantity_idx.Insertable | r4_reference_idx.Insertable | r4_string_idx.Insertable | r4_token_idx.Insertable | r4_uri_idx.Insertable | r4b_date_idx.Insertable | r4b_number_idx.Insertable | r4b_quantity_idx.Insertable | r4b_reference_idx.Insertable | r4b_string_idx.Insertable | r4b_token_idx.Insertable | r4b_uri_idx.Insertable | resources.Insertable | tenants.Insertable | users.Insertable;
-    export type Updatable = auth_method.Updatable | authorization_code.Updatable | migrations.Updatable | migrations_state.Updatable | r4_date_idx.Updatable | r4_number_idx.Updatable | r4_quantity_idx.Updatable | r4_reference_idx.Updatable | r4_string_idx.Updatable | r4_token_idx.Updatable | r4_uri_idx.Updatable | r4b_date_idx.Updatable | r4b_number_idx.Updatable | r4b_quantity_idx.Updatable | r4b_reference_idx.Updatable | r4b_string_idx.Updatable | r4b_token_idx.Updatable | r4b_uri_idx.Updatable | resources.Updatable | tenants.Updatable | users.Updatable;
-    export type UniqueIndex = auth_method.UniqueIndex | authorization_code.UniqueIndex | migrations.UniqueIndex | migrations_state.UniqueIndex | r4_date_idx.UniqueIndex | r4_number_idx.UniqueIndex | r4_quantity_idx.UniqueIndex | r4_reference_idx.UniqueIndex | r4_string_idx.UniqueIndex | r4_token_idx.UniqueIndex | r4_uri_idx.UniqueIndex | r4b_date_idx.UniqueIndex | r4b_number_idx.UniqueIndex | r4b_quantity_idx.UniqueIndex | r4b_reference_idx.UniqueIndex | r4b_string_idx.UniqueIndex | r4b_token_idx.UniqueIndex | r4b_uri_idx.UniqueIndex | resources.UniqueIndex | tenants.UniqueIndex | users.UniqueIndex;
-    export type Column = auth_method.Column | authorization_code.Column | migrations.Column | migrations_state.Column | r4_date_idx.Column | r4_number_idx.Column | r4_quantity_idx.Column | r4_reference_idx.Column | r4_string_idx.Column | r4_token_idx.Column | r4_uri_idx.Column | r4b_date_idx.Column | r4b_number_idx.Column | r4b_quantity_idx.Column | r4b_reference_idx.Column | r4b_string_idx.Column | r4b_token_idx.Column | r4b_uri_idx.Column | resources.Column | tenants.Column | users.Column;
+    export type Table = auth_method.Table | authorization_code.Table | limitations.Table | migrations.Table | migrations_state.Table | r4_date_idx.Table | r4_number_idx.Table | r4_quantity_idx.Table | r4_reference_idx.Table | r4_string_idx.Table | r4_token_idx.Table | r4_uri_idx.Table | r4b_date_idx.Table | r4b_number_idx.Table | r4b_quantity_idx.Table | r4b_reference_idx.Table | r4b_string_idx.Table | r4b_token_idx.Table | r4b_uri_idx.Table | resources.Table | subscription_tier.Table | tenants.Table | users.Table;
+    export type Selectable = auth_method.Selectable | authorization_code.Selectable | limitations.Selectable | migrations.Selectable | migrations_state.Selectable | r4_date_idx.Selectable | r4_number_idx.Selectable | r4_quantity_idx.Selectable | r4_reference_idx.Selectable | r4_string_idx.Selectable | r4_token_idx.Selectable | r4_uri_idx.Selectable | r4b_date_idx.Selectable | r4b_number_idx.Selectable | r4b_quantity_idx.Selectable | r4b_reference_idx.Selectable | r4b_string_idx.Selectable | r4b_token_idx.Selectable | r4b_uri_idx.Selectable | resources.Selectable | subscription_tier.Selectable | tenants.Selectable | users.Selectable;
+    export type JSONSelectable = auth_method.JSONSelectable | authorization_code.JSONSelectable | limitations.JSONSelectable | migrations.JSONSelectable | migrations_state.JSONSelectable | r4_date_idx.JSONSelectable | r4_number_idx.JSONSelectable | r4_quantity_idx.JSONSelectable | r4_reference_idx.JSONSelectable | r4_string_idx.JSONSelectable | r4_token_idx.JSONSelectable | r4_uri_idx.JSONSelectable | r4b_date_idx.JSONSelectable | r4b_number_idx.JSONSelectable | r4b_quantity_idx.JSONSelectable | r4b_reference_idx.JSONSelectable | r4b_string_idx.JSONSelectable | r4b_token_idx.JSONSelectable | r4b_uri_idx.JSONSelectable | resources.JSONSelectable | subscription_tier.JSONSelectable | tenants.JSONSelectable | users.JSONSelectable;
+    export type Whereable = auth_method.Whereable | authorization_code.Whereable | limitations.Whereable | migrations.Whereable | migrations_state.Whereable | r4_date_idx.Whereable | r4_number_idx.Whereable | r4_quantity_idx.Whereable | r4_reference_idx.Whereable | r4_string_idx.Whereable | r4_token_idx.Whereable | r4_uri_idx.Whereable | r4b_date_idx.Whereable | r4b_number_idx.Whereable | r4b_quantity_idx.Whereable | r4b_reference_idx.Whereable | r4b_string_idx.Whereable | r4b_token_idx.Whereable | r4b_uri_idx.Whereable | resources.Whereable | subscription_tier.Whereable | tenants.Whereable | users.Whereable;
+    export type Insertable = auth_method.Insertable | authorization_code.Insertable | limitations.Insertable | migrations.Insertable | migrations_state.Insertable | r4_date_idx.Insertable | r4_number_idx.Insertable | r4_quantity_idx.Insertable | r4_reference_idx.Insertable | r4_string_idx.Insertable | r4_token_idx.Insertable | r4_uri_idx.Insertable | r4b_date_idx.Insertable | r4b_number_idx.Insertable | r4b_quantity_idx.Insertable | r4b_reference_idx.Insertable | r4b_string_idx.Insertable | r4b_token_idx.Insertable | r4b_uri_idx.Insertable | resources.Insertable | subscription_tier.Insertable | tenants.Insertable | users.Insertable;
+    export type Updatable = auth_method.Updatable | authorization_code.Updatable | limitations.Updatable | migrations.Updatable | migrations_state.Updatable | r4_date_idx.Updatable | r4_number_idx.Updatable | r4_quantity_idx.Updatable | r4_reference_idx.Updatable | r4_string_idx.Updatable | r4_token_idx.Updatable | r4_uri_idx.Updatable | r4b_date_idx.Updatable | r4b_number_idx.Updatable | r4b_quantity_idx.Updatable | r4b_reference_idx.Updatable | r4b_string_idx.Updatable | r4b_token_idx.Updatable | r4b_uri_idx.Updatable | resources.Updatable | subscription_tier.Updatable | tenants.Updatable | users.Updatable;
+    export type UniqueIndex = auth_method.UniqueIndex | authorization_code.UniqueIndex | limitations.UniqueIndex | migrations.UniqueIndex | migrations_state.UniqueIndex | r4_date_idx.UniqueIndex | r4_number_idx.UniqueIndex | r4_quantity_idx.UniqueIndex | r4_reference_idx.UniqueIndex | r4_string_idx.UniqueIndex | r4_token_idx.UniqueIndex | r4_uri_idx.UniqueIndex | r4b_date_idx.UniqueIndex | r4b_number_idx.UniqueIndex | r4b_quantity_idx.UniqueIndex | r4b_reference_idx.UniqueIndex | r4b_string_idx.UniqueIndex | r4b_token_idx.UniqueIndex | r4b_uri_idx.UniqueIndex | resources.UniqueIndex | subscription_tier.UniqueIndex | tenants.UniqueIndex | users.UniqueIndex;
+    export type Column = auth_method.Column | authorization_code.Column | limitations.Column | migrations.Column | migrations_state.Column | r4_date_idx.Column | r4_number_idx.Column | r4_quantity_idx.Column | r4_reference_idx.Column | r4_string_idx.Column | r4_token_idx.Column | r4_uri_idx.Column | r4b_date_idx.Column | r4b_number_idx.Column | r4b_quantity_idx.Column | r4b_reference_idx.Column | r4b_string_idx.Column | r4b_token_idx.Column | r4b_uri_idx.Column | resources.Column | subscription_tier.Column | tenants.Column | users.Column;
   
-    export type AllBaseTables = [auth_method.Table, authorization_code.Table, migrations.Table, migrations_state.Table, r4_date_idx.Table, r4_number_idx.Table, r4_quantity_idx.Table, r4_reference_idx.Table, r4_string_idx.Table, r4_token_idx.Table, r4_uri_idx.Table, r4b_date_idx.Table, r4b_number_idx.Table, r4b_quantity_idx.Table, r4b_reference_idx.Table, r4b_string_idx.Table, r4b_token_idx.Table, r4b_uri_idx.Table, resources.Table, tenants.Table, users.Table];
+    export type AllBaseTables = [auth_method.Table, authorization_code.Table, limitations.Table, migrations.Table, migrations_state.Table, r4_date_idx.Table, r4_number_idx.Table, r4_quantity_idx.Table, r4_reference_idx.Table, r4_string_idx.Table, r4_token_idx.Table, r4_uri_idx.Table, r4b_date_idx.Table, r4b_number_idx.Table, r4b_quantity_idx.Table, r4b_reference_idx.Table, r4b_string_idx.Table, r4b_token_idx.Table, r4b_uri_idx.Table, resources.Table, subscription_tier.Table, tenants.Table, users.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [auth_method.Table, authorization_code.Table, migrations.Table, migrations_state.Table, r4_date_idx.Table, r4_number_idx.Table, r4_quantity_idx.Table, r4_reference_idx.Table, r4_string_idx.Table, r4_token_idx.Table, r4_uri_idx.Table, r4b_date_idx.Table, r4b_number_idx.Table, r4b_quantity_idx.Table, r4b_reference_idx.Table, r4b_string_idx.Table, r4b_token_idx.Table, r4b_uri_idx.Table, resources.Table, tenants.Table, users.Table];
+    export type AllTablesAndViews = [auth_method.Table, authorization_code.Table, limitations.Table, migrations.Table, migrations_state.Table, r4_date_idx.Table, r4_number_idx.Table, r4_quantity_idx.Table, r4_reference_idx.Table, r4_string_idx.Table, r4_token_idx.Table, r4_uri_idx.Table, r4b_date_idx.Table, r4b_number_idx.Table, r4b_quantity_idx.Table, r4b_reference_idx.Table, r4b_string_idx.Table, r4b_token_idx.Table, r4b_uri_idx.Table, resources.Table, subscription_tier.Table, tenants.Table, users.Table];
   }
 
 
@@ -6393,6 +6803,7 @@ declare module 'zapatos/schema' {
   export type SelectableForTable<T extends Table> = {
     "auth_method": auth_method.Selectable;
     "authorization_code": authorization_code.Selectable;
+    "limitations": limitations.Selectable;
     "migrations": migrations.Selectable;
     "migrations_state": migrations_state.Selectable;
     "r4_date_idx": r4_date_idx.Selectable;
@@ -6410,6 +6821,7 @@ declare module 'zapatos/schema' {
     "r4b_token_idx": r4b_token_idx.Selectable;
     "r4b_uri_idx": r4b_uri_idx.Selectable;
     "resources": resources.Selectable;
+    "subscription_tier": subscription_tier.Selectable;
     "tenants": tenants.Selectable;
     "users": users.Selectable;
   }[T];
@@ -6417,6 +6829,7 @@ declare module 'zapatos/schema' {
   export type JSONSelectableForTable<T extends Table> = {
     "auth_method": auth_method.JSONSelectable;
     "authorization_code": authorization_code.JSONSelectable;
+    "limitations": limitations.JSONSelectable;
     "migrations": migrations.JSONSelectable;
     "migrations_state": migrations_state.JSONSelectable;
     "r4_date_idx": r4_date_idx.JSONSelectable;
@@ -6434,6 +6847,7 @@ declare module 'zapatos/schema' {
     "r4b_token_idx": r4b_token_idx.JSONSelectable;
     "r4b_uri_idx": r4b_uri_idx.JSONSelectable;
     "resources": resources.JSONSelectable;
+    "subscription_tier": subscription_tier.JSONSelectable;
     "tenants": tenants.JSONSelectable;
     "users": users.JSONSelectable;
   }[T];
@@ -6441,6 +6855,7 @@ declare module 'zapatos/schema' {
   export type WhereableForTable<T extends Table> = {
     "auth_method": auth_method.Whereable;
     "authorization_code": authorization_code.Whereable;
+    "limitations": limitations.Whereable;
     "migrations": migrations.Whereable;
     "migrations_state": migrations_state.Whereable;
     "r4_date_idx": r4_date_idx.Whereable;
@@ -6458,6 +6873,7 @@ declare module 'zapatos/schema' {
     "r4b_token_idx": r4b_token_idx.Whereable;
     "r4b_uri_idx": r4b_uri_idx.Whereable;
     "resources": resources.Whereable;
+    "subscription_tier": subscription_tier.Whereable;
     "tenants": tenants.Whereable;
     "users": users.Whereable;
   }[T];
@@ -6465,6 +6881,7 @@ declare module 'zapatos/schema' {
   export type InsertableForTable<T extends Table> = {
     "auth_method": auth_method.Insertable;
     "authorization_code": authorization_code.Insertable;
+    "limitations": limitations.Insertable;
     "migrations": migrations.Insertable;
     "migrations_state": migrations_state.Insertable;
     "r4_date_idx": r4_date_idx.Insertable;
@@ -6482,6 +6899,7 @@ declare module 'zapatos/schema' {
     "r4b_token_idx": r4b_token_idx.Insertable;
     "r4b_uri_idx": r4b_uri_idx.Insertable;
     "resources": resources.Insertable;
+    "subscription_tier": subscription_tier.Insertable;
     "tenants": tenants.Insertable;
     "users": users.Insertable;
   }[T];
@@ -6489,6 +6907,7 @@ declare module 'zapatos/schema' {
   export type UpdatableForTable<T extends Table> = {
     "auth_method": auth_method.Updatable;
     "authorization_code": authorization_code.Updatable;
+    "limitations": limitations.Updatable;
     "migrations": migrations.Updatable;
     "migrations_state": migrations_state.Updatable;
     "r4_date_idx": r4_date_idx.Updatable;
@@ -6506,6 +6925,7 @@ declare module 'zapatos/schema' {
     "r4b_token_idx": r4b_token_idx.Updatable;
     "r4b_uri_idx": r4b_uri_idx.Updatable;
     "resources": resources.Updatable;
+    "subscription_tier": subscription_tier.Updatable;
     "tenants": tenants.Updatable;
     "users": users.Updatable;
   }[T];
@@ -6513,6 +6933,7 @@ declare module 'zapatos/schema' {
   export type UniqueIndexForTable<T extends Table> = {
     "auth_method": auth_method.UniqueIndex;
     "authorization_code": authorization_code.UniqueIndex;
+    "limitations": limitations.UniqueIndex;
     "migrations": migrations.UniqueIndex;
     "migrations_state": migrations_state.UniqueIndex;
     "r4_date_idx": r4_date_idx.UniqueIndex;
@@ -6530,6 +6951,7 @@ declare module 'zapatos/schema' {
     "r4b_token_idx": r4b_token_idx.UniqueIndex;
     "r4b_uri_idx": r4b_uri_idx.UniqueIndex;
     "resources": resources.UniqueIndex;
+    "subscription_tier": subscription_tier.UniqueIndex;
     "tenants": tenants.UniqueIndex;
     "users": users.UniqueIndex;
   }[T];
@@ -6537,6 +6959,7 @@ declare module 'zapatos/schema' {
   export type ColumnForTable<T extends Table> = {
     "auth_method": auth_method.Column;
     "authorization_code": authorization_code.Column;
+    "limitations": limitations.Column;
     "migrations": migrations.Column;
     "migrations_state": migrations_state.Column;
     "r4_date_idx": r4_date_idx.Column;
@@ -6554,6 +6977,7 @@ declare module 'zapatos/schema' {
     "r4b_token_idx": r4b_token_idx.Column;
     "r4b_uri_idx": r4b_uri_idx.Column;
     "resources": resources.Column;
+    "subscription_tier": subscription_tier.Column;
     "tenants": tenants.Column;
     "users": users.Column;
   }[T];
@@ -6561,6 +6985,7 @@ declare module 'zapatos/schema' {
   export type SQLForTable<T extends Table> = {
     "auth_method": auth_method.SQL;
     "authorization_code": authorization_code.SQL;
+    "limitations": limitations.SQL;
     "migrations": migrations.SQL;
     "migrations_state": migrations_state.SQL;
     "r4_date_idx": r4_date_idx.SQL;
@@ -6578,6 +7003,7 @@ declare module 'zapatos/schema' {
     "r4b_token_idx": r4b_token_idx.SQL;
     "r4b_uri_idx": r4b_uri_idx.SQL;
     "resources": resources.SQL;
+    "subscription_tier": subscription_tier.SQL;
     "tenants": tenants.SQL;
     "users": users.SQL;
   }[T];

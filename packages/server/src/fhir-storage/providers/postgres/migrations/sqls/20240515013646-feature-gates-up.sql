@@ -4,9 +4,6 @@ CREATE TABLE subscription_tier (
     created_at     TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 
-
-
-
 CREATE TYPE limitation_type AS ENUM ('LIMIT_TOTAL');
 
 CREATE TABLE limitations (
