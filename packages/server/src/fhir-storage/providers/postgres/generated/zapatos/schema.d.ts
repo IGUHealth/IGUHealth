@@ -463,10 +463,10 @@ declare module 'zapatos/schema' {
       created_at: Date;
       /**
       * **limitations.fhir_version**
-      * - `text` in database
-      * - `NOT NULL`, default: `'all'::text`
+      * - `fhir_version` in database
+      * - `NOT NULL`, no default
       */
-      fhir_version: string;
+      fhir_version: fhir_version;
       /**
       * **limitations.id**
       * - `text` in database
@@ -513,10 +513,10 @@ declare module 'zapatos/schema' {
       created_at: db.TimestampTzString;
       /**
       * **limitations.fhir_version**
-      * - `text` in database
-      * - `NOT NULL`, default: `'all'::text`
+      * - `fhir_version` in database
+      * - `NOT NULL`, no default
       */
-      fhir_version: string;
+      fhir_version: fhir_version;
       /**
       * **limitations.id**
       * - `text` in database
@@ -563,10 +563,10 @@ declare module 'zapatos/schema' {
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
       * **limitations.fhir_version**
-      * - `text` in database
-      * - `NOT NULL`, default: `'all'::text`
+      * - `fhir_version` in database
+      * - `NOT NULL`, no default
       */
-      fhir_version?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      fhir_version?: fhir_version | db.Parameter<fhir_version> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, fhir_version | db.Parameter<fhir_version> | db.SQLFragment | db.ParentColumn>;
       /**
       * **limitations.id**
       * - `text` in database
@@ -613,10 +613,10 @@ declare module 'zapatos/schema' {
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
       * **limitations.fhir_version**
-      * - `text` in database
-      * - `NOT NULL`, default: `'all'::text`
+      * - `fhir_version` in database
+      * - `NOT NULL`, no default
       */
-      fhir_version?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      fhir_version: fhir_version | db.Parameter<fhir_version> | db.SQLFragment;
       /**
       * **limitations.id**
       * - `text` in database
@@ -663,10 +663,10 @@ declare module 'zapatos/schema' {
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
       * **limitations.fhir_version**
-      * - `text` in database
-      * - `NOT NULL`, default: `'all'::text`
+      * - `fhir_version` in database
+      * - `NOT NULL`, no default
       */
-      fhir_version?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      fhir_version?: fhir_version | db.Parameter<fhir_version> | db.SQLFragment | db.SQLFragment<any, fhir_version | db.Parameter<fhir_version> | db.SQLFragment>;
       /**
       * **limitations.id**
       * - `text` in database

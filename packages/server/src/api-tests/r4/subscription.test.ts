@@ -39,6 +39,7 @@ async function createTenant(tenant: string) {
         .insert("tenants", {
           id: tenant,
           tenant: { id: "test", name: "test" },
+          subscription_tier: "unlimited",
         })
         .run(pgClient);
     }

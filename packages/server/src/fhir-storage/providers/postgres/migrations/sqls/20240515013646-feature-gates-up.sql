@@ -9,7 +9,7 @@ CREATE TYPE limitation_type AS ENUM ('LIMIT_TOTAL');
 CREATE TABLE limitations (
     id             TEXT            NOT NULL PRIMARY KEY,
     name           TEXT            NOT NULL,
-    fhir_version   TEXT            NOT NULL DEFAULT 'all',
+    fhir_version   fhir_version    NOT NULL,
     type           limitation_type NOT NULL,
      -- Allow either 'ALL' for a limitation of all or a specific resource type.
     resource_type  TEXT            NOT NULL,
@@ -37,31 +37,59 @@ ALTER TABLE tenants
   ADD CONSTRAINT fk_subscription_tier FOREIGN KEY(subscription_tier) REFERENCES subscription_tier(id);
 
 
+-- Set system tenant to unlimited.
+UPDATE tenants SET subscription_tier = 'unlimited' where id = 'system';
+
 -- Limitations
 
 -- Free
-INSERT INTO limitations (id, name, type, resource_type, value, tier) VALUES ('free-total',                      'Free Total Limitation',               'LIMIT_TOTAL', 'ALL', 1000, 'free');
-INSERT INTO limitations (id, name, type, resource_type, value, tier) VALUES ('free-operation-definition-total', 'Free OperationDefinition Limitation', 'LIMIT_TOTAL', 'OperationDefinition', 0, 'free');
-INSERT INTO limitations (id, name, type, resource_type, value, tier) VALUES ('free-subscription-total',          'Free Subscription Limitation',       'LIMIT_TOTAL', 'Subscription', 0, 'free');
-INSERT INTO limitations (id, name, type, resource_type, value, tier) VALUES ('free-messagetopic-total',          'Free MessageTopic Limitation',       'LIMIT_TOTAL', 'MessageTopic', 0, 'free');
-INSERT INTO limitations (id, name, type, resource_type, value, tier) VALUES ('free-messagebroker-total',         'Free MessageBroker Limitation',      'LIMIT_TOTAL', 'MessageBroker', 0, 'free');
+-- R4
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4-free-total',                       'R4 Free Total Limitation',                'r4',  'LIMIT_TOTAL', 'ALL', 3000, 'free');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4-free-operation-definition-total',  'R4 Free OperationDefinition Limitation',  'r4',  'LIMIT_TOTAL', 'OperationDefinition', 0, 'free');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4-free-subscription-total',          'R4 Free Subscription Limitation',         'r4',  'LIMIT_TOTAL', 'Subscription', 0, 'free');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4-free-messagetopic-total',          'R4 Free MessageTopic Limitation',         'r4',  'LIMIT_TOTAL', 'MessageTopic', 0, 'free');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4-free-messagebroker-total',         'R4 Free MessageBroker Limitation',        'r4',  'LIMIT_TOTAL', 'MessageBroker', 0, 'free');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4-free-membership-total',            'R4 Free Membership Limitation',           'r4',  'LIMIT_TOTAL', 'Membership', 5, 'free');
+
+-- R4B
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4b-free-total',                       'R4B Free Total Limitation',              'r4b', 'LIMIT_TOTAL', 'ALL', 3000, 'free');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4b-free-operation-definition-total',  'R4B Free OperationDefinition Limitation','r4b', 'LIMIT_TOTAL', 'OperationDefinition', 0, 'free');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4b-free-subscription-total',          'R4B Free Subscription Limitation',       'r4b', 'LIMIT_TOTAL', 'Subscription', 0, 'free');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4b-free-messagetopic-total',          'R4B Free MessageTopic Limitation',       'r4b', 'LIMIT_TOTAL', 'MessageTopic', 0, 'free');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4b-free-messagebroker-total',         'R4B Free MessageBroker Limitation',      'r4b', 'LIMIT_TOTAL', 'MessageBroker', 0, 'free');
 -- Should we allow ClientApplications on free?
 
 -- Professional
-INSERT INTO limitations (id, name, type, resource_type, value, tier) VALUES ('professional-total',                      'Professional Total Limitation',               'LIMIT_TOTAL', 'ALL', 50000, 'professional');
-INSERT INTO limitations (id, name, type, resource_type, value, tier) VALUES ('professional-operation-definition-total', 'Professional OperationDefinition Limitation', 'LIMIT_TOTAL', 'OperationDefinition', 5, 'professional');
-INSERT INTO limitations (id, name, type, resource_type, value, tier) VALUES ('professional-subscription-total',         'Professional Subscription Limitation',        'LIMIT_TOTAL', 'Subscription', 5, 'professional');
-INSERT INTO limitations (id, name, type, resource_type, value, tier) VALUES ('professional-messagetopic-total',         'Professional MessageTopic Limitation',        'LIMIT_TOTAL', 'MessageTopic', 5, 'professional');
-INSERT INTO limitations (id, name, type, resource_type, value, tier) VALUES ('professional-messagebroker-total',        'Professional MessageBroker Limitation',       'LIMIT_TOTAL', 'MessageBroker', 2, 'professional');
+-- R4
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4-professional-total',                       'R4 Professional Total Limitation',               'r4',   'LIMIT_TOTAL', 'ALL', 50000, 'professional');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4-professional-operation-definition-total',  'R4 Professional OperationDefinition Limitation', 'r4',   'LIMIT_TOTAL', 'OperationDefinition', 5, 'professional');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4-professional-subscription-total',          'R4 Professional Subscription Limitation',        'r4',   'LIMIT_TOTAL', 'Subscription', 5, 'professional');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4-professional-messagetopic-total',          'R4 Professional MessageTopic Limitation',        'r4',   'LIMIT_TOTAL', 'MessageTopic', 5, 'professional');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4-professional-messagebroker-total',         'R4 Professional MessageBroker Limitation',       'r4',   'LIMIT_TOTAL', 'MessageBroker', 2, 'professional');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4-professional-membership-total',            'R4 Professional Membership Limitation',          'r4',   'LIMIT_TOTAL', 'Membership', 100, 'professional');
+-- R4B
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4b-professional-total',                      'R4B Professional Total Limitation',               'r4b', 'LIMIT_TOTAL', 'ALL', 50000, 'professional');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4b-professional-operation-definition-total', 'R4B Professional OperationDefinition Limitation', 'r4b', 'LIMIT_TOTAL', 'OperationDefinition', 5, 'professional');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4b-professional-subscription-total',         'R4B Professional Subscription Limitation',        'r4b', 'LIMIT_TOTAL', 'Subscription', 5, 'professional');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4b-professional-messagetopic-total',         'R4B Professional MessageTopic Limitation',        'r4b', 'LIMIT_TOTAL', 'MessageTopic', 5, 'professional');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4b-professional-messagebroker-total',        'R4B Professional MessageBroker Limitation',       'r4b', 'LIMIT_TOTAL', 'MessageBroker', 2, 'professional');
 
 
 
--- Professional
-INSERT INTO limitations (id, name, type, resource_type, value, tier) VALUES ('team-total',                      'Team Total Limitation',               'LIMIT_TOTAL', 'ALL', 100000, 'team');
-INSERT INTO limitations (id, name, type, resource_type, value, tier) VALUES ('team-operation-definition-total', 'Team OperationDefinition Limitation', 'LIMIT_TOTAL', 'OperationDefinition', 30, 'team');
-INSERT INTO limitations (id, name, type, resource_type, value, tier) VALUES ('team-subscription-total',         'Team Subscription Limitation',        'LIMIT_TOTAL', 'Subscription', 30, 'team');
-INSERT INTO limitations (id, name, type, resource_type, value, tier) VALUES ('team-messagetopic-total',         'Team MessageTopic Limitation',        'LIMIT_TOTAL', 'MessageTopic', 50, 'team');
-INSERT INTO limitations (id, name, type, resource_type, value, tier) VALUES ('team-messagebroker-total',        'Team MessageBroker Limitation',       'LIMIT_TOTAL', 'MessageBroker', 10, 'team');
+-- Team
+-- R4
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4-team-total',                       'R4 Team Total Limitation',                'r4',  'LIMIT_TOTAL', 'ALL', 100000, 'team');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4-team-operation-definition-total',  'R4 Team OperationDefinition Limitation',  'r4',  'LIMIT_TOTAL', 'OperationDefinition', 30, 'team');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4-team-subscription-total',          'R4 Team Subscription Limitation',         'r4',  'LIMIT_TOTAL', 'Subscription', 30, 'team');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4-team-messagetopic-total',          'R4 Team MessageTopic Limitation',         'r4',  'LIMIT_TOTAL', 'MessageTopic', 50, 'team');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4-team-messagebroker-total',         'R4 Team MessageBroker Limitation',        'r4',  'LIMIT_TOTAL', 'MessageBroker', 10, 'team');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4-team-membership-total',            'R4 Team Membership Limitation',           'r4',   'LIMIT_TOTAL', 'Membership', 5000, 'team');
+-- R4B
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4b-team-total',                      'R4B Team Total Limitation',               'r4b', 'LIMIT_TOTAL', 'ALL', 100000, 'team');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4b-team-operation-definition-total', 'R4B Team OperationDefinition Limitation', 'r4b', 'LIMIT_TOTAL', 'OperationDefinition', 30, 'team');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4b-team-subscription-total',         'R4B Team Subscription Limitation',        'r4b', 'LIMIT_TOTAL', 'Subscription', 30, 'team');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4b-team-messagetopic-total',         'R4B Team MessageTopic Limitation',        'r4b', 'LIMIT_TOTAL', 'MessageTopic', 50, 'team');
+INSERT INTO limitations (id, name, fhir_version, type, resource_type, value, tier) VALUES ('r4b-team-messagebroker-total',        'R4B Team MessageBroker Limitation',       'r4b', 'LIMIT_TOTAL', 'MessageBroker', 10, 'team');
 
 -- Unlimited
 -- No flags, no limitations.
