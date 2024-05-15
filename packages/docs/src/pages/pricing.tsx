@@ -140,7 +140,7 @@ export default function Home(): JSX.Element {
                 support={[
                   "Support via Github Issues (No guarantees on response time)",
                   "No assistance for deploying custom code/solutions",
-                  "Cloud deployment only",
+                  "Self-hosting on your infrastructure",
                 ]}
               />
             </div>
