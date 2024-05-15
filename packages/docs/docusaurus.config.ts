@@ -138,13 +138,13 @@ const config = {
           position: "left",
           label: "RFCs",
         },
-        { to: "/pricing", label: "Pricing", position: "right" },
         { to: "/blog", label: "Blog", position: "right" },
         {
           to: "https://api-reference.iguhealth.app/",
           label: "Reference",
           position: "right",
         },
+        { to: "/pricing", label: "Pricing", position: "right" },
         {
           href: "https://github.com/iguhealth/iguhealth",
           label: "GitHub",
