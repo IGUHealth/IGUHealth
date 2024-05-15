@@ -7924,10 +7924,13 @@ __metadata:
     "@iguhealth/hl7.fhir.r4b.core": "workspace:^"
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^"
     "@mdx-js/react": "npm:^3.0.0"
+    autoprefixer: "npm:^10.4.19"
     clsx: "npm:^2.0.0"
+    postcss: "npm:^8.4.38"
     prism-react-renderer: "npm:^2.3.0"
     react: "npm:^18.0.0"
     react-dom: "npm:^18.0.0"
+    tailwindcss: "npm:^3.4.3"
     typescript: "npm:~5.4.5"
   languageName: unknown
   linkType: soft

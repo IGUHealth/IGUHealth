@@ -21,7 +21,7 @@ async function getResourceCountTotal<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   type: ResourceType<Version> | "ALL",
 ): Promise<number> {
-  const whereAble: s.r4_token_idx.Whereable | s.r4_token_idx.Whereable = {
+  const whereAble: s.r4_token_idx.Whereable | s.r4b_token_idx.Whereable = {
     tenant: tenant,
     parameter_name: "_id",
     resource_type: type === "ALL" ? db.sql`${db.self} IS NOT NULL` : type,
