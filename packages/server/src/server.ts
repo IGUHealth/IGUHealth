@@ -37,9 +37,9 @@ import {
 import { verifyAndAssociateUserFHIRContext } from "./authZ/middleware/tenantAccess.js";
 import loadEnv from "./env.js";
 import {
+  associateServicesKoaMiddleware,
+  associateTenantFHIRContextMiddleware,
   createFHIRAPI,
-  createKoaFHIRContextMiddleware,
-  createKoaFHIRServices,
   getRedisClient,
   logger,
 } from "./fhir-api/index.js";
@@ -213,7 +213,7 @@ export default async function createServer(): Promise<
   rootRouter.use(
     "/",
     createErrorHandlingMiddleware(),
-    await createKoaFHIRServices(pool),
+    await associateServicesKoaMiddleware(pool),
   );
 
   rootRouter.get(JWKS_GET, "/certs/jwks", async (ctx, next) => {
@@ -273,7 +273,7 @@ export default async function createServer(): Promise<
 
     // Associate FHIR Context for all routes
     // [NOTE] for oidc we pull in fhir data so we need to associate the context on top of non fhir apis.
-    await createKoaFHIRContextMiddleware(),
+    await associateTenantFHIRContextMiddleware(),
     async (ctx, next) => {
       const tenantId = ctx.FHIRContext.tenant;
       const tenant = await db

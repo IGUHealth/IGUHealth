@@ -59,6 +59,7 @@ import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
 import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with { type: "json" };
 import RedisLock from "../synchronization/redis.lock.js";
 import { FHIRServerCTX, KoaContext, asSystemCTX } from "./types.js";
+import { createFlagCheckMiddleWare } from "./middleware/featureGating.js";
 
 const R4_SPECIAL_TYPES: {
   MEMORY: ResourceType<R4>[];
@@ -365,6 +366,7 @@ export function getRedisClient() {
 async function createFHIRClient(sources: RouterState["sources"]) {
   return RouterClient(
     [
+      createFlagCheckMiddleWare(),
       validationMiddleware,
       capabilitiesMiddleware,
       encryptionMiddleware(["OperationDefinition"]),
@@ -525,7 +527,7 @@ export async function createFHIRServices(
   };
 }
 
-export function createEmailProvider(): EmailProvider | undefined {
+function createEmailProvider(): EmailProvider | undefined {
   switch (process.env.EMAIL_PROVIDER) {
     case "sendgrid": {
       if (!process.env.EMAIL_SENDGRID_API_KEY)
@@ -537,7 +539,7 @@ export function createEmailProvider(): EmailProvider | undefined {
   }
 }
 
-export async function createKoaFHIRServices<State, Context>(
+export async function associateServicesKoaMiddleware<State, Context>(
   pool: pg.Pool,
 ): Promise<
   koa.Middleware<
@@ -556,7 +558,7 @@ export async function createKoaFHIRServices<State, Context>(
   };
 }
 
-export async function createKoaFHIRContextMiddleware<
+export async function associateTenantFHIRContextMiddleware<
   State extends {
     access_token?: string;
     user: { [key: string]: unknown };
