@@ -1,5 +1,7 @@
 import type { Config } from "@docusaurus/types";
+import autoprefixer from "autoprefixer";
 import { themes } from "prism-react-renderer";
+import tailwind from "tailwindcss";
 
 const lightCodeTheme = themes.github;
 const darkCodeTheme = themes.dracula;
@@ -23,6 +25,20 @@ const config = {
   onBrokenLinks: "ignore",
   onBrokenMarkdownLinks: "warn",
 
+  plugins: [
+    async function myPlugin(context, options) {
+      return {
+        name: "docusaurus-tailwindcss",
+        configurePostCss(postcssOptions) {
+          // Appends TailwindCSS and AutoPrefixer.
+          postcssOptions.plugins.push(tailwind);
+          postcssOptions.plugins.push(autoprefixer);
+          return postcssOptions;
+        },
+      };
+    },
+  ],
+
   // Even if you don't use internalization, you can use this field to set useful
   // metadata like html lang. For example, if your site is Chinese, you may want
   // to replace "en" with "zh-Hans".
@@ -40,6 +56,9 @@ const config = {
     [
       "classic",
       {
+        theme: {
+          customCss: ["./src/css/custom.css"],
+        },
         docs: {
           routeBasePath: "/", // Serve the docs at the site's root. https://docusaurus.io/docs/docs-introduction#docs-only-mode
           sidebarPath: "./sidebars.ts",
