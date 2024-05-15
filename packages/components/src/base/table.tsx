@@ -60,48 +60,39 @@ export function Table({
             </tr>
           </thead>
           <tbody>
-            {isLoading ? (
-              <tr>
-                <td className="p-2" colSpan={columns.length}>
-                  <div className="flex justify-center items-center flex-col">
-                    <Loading />
-                    <div className="mt-1 font-medium text-blue-700">
-                      <span>Loading</span>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            ) : (
-              <>
-                {data.map((row, index) => (
-                  <tr
-                    key={index}
-                    className="border cursor-pointer hover:bg-slate-100"
-                    onClick={() => onRowClick(row)}
-                  >
-                    {columns.map((column) => {
-                      const data = extract(
-                        row,
-                        column.selector,
-                        column.selectorType,
-                      );
-                      return (
-                        <td
-                          key={column.id}
-                          className="overflow-auto whitespace-nowrap px-4 py-2 font-medium"
-                        >
-                          {column.renderer
-                            ? column.renderer(data)
-                            : data.join(" ")}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))}
-              </>
-            )}
+            {!isLoading &&
+              data.map((row, index) => (
+                <tr
+                  key={index}
+                  className="border cursor-pointer hover:bg-slate-100"
+                  onClick={() => onRowClick(row)}
+                >
+                  {columns.map((column) => {
+                    const data = extract(
+                      row,
+                      column.selector,
+                      column.selectorType,
+                    );
+                    return (
+                      <td
+                        key={column.id}
+                        className="overflow-auto whitespace-nowrap px-4 py-2 font-medium"
+                      >
+                        {column.renderer
+                          ? column.renderer(data)
+                          : data.join(" ")}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
           </tbody>
         </table>
+        {isLoading && (
+          <div className="w-full mt-4 flex justify-center items-center flex-col">
+            <Loading className="w-6 h-6" />
+          </div>
+        )}
       </div>
     </div>
   );

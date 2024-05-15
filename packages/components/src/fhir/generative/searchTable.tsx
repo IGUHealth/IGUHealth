@@ -554,7 +554,7 @@ export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
         setData(bundle);
         setLoading(false);
       });
-  }, [parameters, props.resourceType, props.fhirVersion]);
+  }, [parameters, props.resourceType, props.fhirVersion, setLoading]);
 
   useEffect(() => {
     props.client
