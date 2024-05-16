@@ -965,7 +965,9 @@ async function updateResource<
         Version,
         AllResourceTypes
       >;
+
       await indexResource(client, ctx, fhirVersion, updatedResource);
+      
       return updatedResource;
     },
   );
