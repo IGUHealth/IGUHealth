@@ -235,7 +235,6 @@ const validationMiddleware: MiddlewareAsyncChain<
     case "batch-request":
     case "invoke-request":
     case "transaction-request": {
-      console.time("Validation")
       const outcome = await validateResource(
         asSystemCTX(context.ctx),
         context.request.fhirVersion,
@@ -247,7 +246,7 @@ const validationMiddleware: MiddlewareAsyncChain<
           resource: context.request.body,
         },
       );
-      console.timeEnd("Validation")
+
       if (
         outcome.issue.find(
           (i) => i.severity === "fatal" || i.severity === "error",
