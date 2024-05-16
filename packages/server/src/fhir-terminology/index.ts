@@ -5,7 +5,6 @@ import {
   ValueSetExpansionContains,
   canonical,
   dateTime,
-  uri,
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, R4, Resource } from "@iguhealth/fhir-types/versions";
 import {
@@ -165,16 +164,11 @@ export class TerminologyProviderMemory implements TerminologyProvider {
     fhirVersion: FHIR_VERSION,
     input: ValidateInput,
   ): Promise<ValidateOutput> {
-    // const k = `${Math.ceil(Math.random() * 1000)}`;
-    // console.time(k);
-
-    // console.time(`Expansion: ${k}`);
     const valueset = await this.expand(ctx, fhirVersion, {
       url: input.url,
       valueSet: input.valueSet,
       valueSetVersion: input.valueSetVersion,
     });
-    // console.timeEnd(`Expansion: ${k}`);
 
     if (!valueset) {
       throw new OperationError(
@@ -182,14 +176,10 @@ export class TerminologyProviderMemory implements TerminologyProvider {
       );
     }
 
-    // console.time(`CodeCheck: ${k}`);
     const doesCodeExists = checkforCode(
       valueset.expansion?.contains,
       input.code,
     );
-    // console.timeEnd(`CodeCheck: ${k}`);
-
-    // console.timeEnd(k);
 
     return {
       result: doesCodeExists,
@@ -200,7 +190,6 @@ export class TerminologyProviderMemory implements TerminologyProvider {
     fhirVersion: Version,
     input: ExpandInput,
   ): Promise<ExpandOutput> {
-    // const k = `${Math.ceil(Math.random() * 1000)}`;
     let valueset: Resource<Version, "ValueSet"> | undefined;
     if (input.valueSet) {
       valueset = input.valueSet as Resource<Version, "ValueSet"> | undefined;
@@ -208,14 +197,11 @@ export class TerminologyProviderMemory implements TerminologyProvider {
       const [url, url_version] = splitParameter(input.url, "|");
       const version = url_version ? url_version : input.valueSetVersion;
 
-      // console.time(`${k}: ValueSetSearch`);
       valueset = await ctx.resolveCanonical(
         fhirVersion,
         "ValueSet",
         url as canonical,
       );
-
-      // console.timeEnd(`${k}: ValueSetSearch`);
     }
 
     if (!valueset) {
@@ -225,7 +211,6 @@ export class TerminologyProviderMemory implements TerminologyProvider {
     }
 
     if (!valueset.expansion) {
-      // console.time(`${k}: getValuesetExpansionContains`);
       const contains = await getValuesetExpansionContains(
         ctx,
         fhirVersion,
@@ -239,8 +224,6 @@ export class TerminologyProviderMemory implements TerminologyProvider {
           contains,
         },
       };
-
-      // console.timeEnd(`${k}: getValuesetExpansionContains`);
     }
     return valueset as Resource<R4, "ValueSet">;
   }
