@@ -2,6 +2,7 @@ import {
   ArrowDownIcon,
   ArrowUpIcon,
   FunnelIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import React, { useEffect, useMemo, useState } from "react";
@@ -159,7 +160,7 @@ function SearchColumnModalBody({
   ...props
 }: Readonly<SearchColumnModalBodyProps>) {
   return (
-    <div className="space-y-1 text-slate-600">
+    <div className="space-y-4 text-slate-600">
       <div className="text-sm">
         <div className="mb-1">
           <label>Modifiers</label>
@@ -182,16 +183,46 @@ function SearchColumnModalBody({
         </div>
       </div>
 
-      <div className="text-sm">
+      <div className=" text-sm">
         <div className="mb-1">
-          <label>Value</label>
+          <label>Values</label>
         </div>
         <div className="space-y-1">
           {value.value.map((v, i) => {
             return (
-              <SearchColumnModalBodyInput value={value} index={i} {...props} />
+              <div className="flex items-center">
+                <div className="w-full">
+                  <SearchColumnModalBodyInput
+                    value={value}
+                    index={i}
+                    {...props}
+                  />
+                </div>
+                <XMarkIcon
+                  className="cursor-pointer hover:text-red-400 ml-2 w-4 h-4"
+                  onClick={() => {
+                    props.onChange({
+                      ...value,
+                      value: value.value
+                        ?.slice(0, i)
+                        .concat(value.value?.slice(i + 1)),
+                    });
+                  }}
+                />
+              </div>
             );
           })}
+          <div
+            className="cursor-pointer mt-1 text-xs hover:text-blue-500 text-slate-400"
+            onClick={() => {
+              props.onChange({
+                ...value,
+                value: [...value.value, undefined],
+              });
+            }}
+          >
+            Add Value
+          </div>
         </div>
       </div>
     </div>
@@ -278,7 +309,7 @@ function SearchColumnModal(props: Readonly<SearchColumnModalProps>) {
         <div className="flex mt-8">
           <Button
             className="mr-2"
-            buttonType="danger"
+            buttonType="secondary"
             onClick={() => {
               props.onChange([
                 ...props.parameters.filter(
@@ -287,7 +318,7 @@ function SearchColumnModal(props: Readonly<SearchColumnModalProps>) {
               ]);
             }}
           >
-            Delete
+            Remove
           </Button>
           <div className="flex flex-1" />
           <Button
@@ -300,7 +331,7 @@ function SearchColumnModal(props: Readonly<SearchColumnModalProps>) {
               ]);
             }}
           >
-            Accept
+            Ok
           </Button>
         </div>
       </div>
