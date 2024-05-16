@@ -688,7 +688,7 @@ const RAW_RUNTIME_STATE =
           ["@aws-crypto/material-management-node", "npm:4.0.0"],\
           ["@aws-crypto/serialize", "npm:4.0.0"],\
           ["@types/duplexify", "npm:3.6.4"],\
-          ["duplexify", "npm:4.1.2"],\
+          ["duplexify", "npm:4.1.3"],\
           ["readable-stream", "npm:3.6.2"],\
           ["tslib", "npm:2.6.2"]\
         ],\
@@ -703,7 +703,7 @@ const RAW_RUNTIME_STATE =
           ["@aws-crypto/material-management-node", "npm:4.0.0"],\
           ["@aws-crypto/serialize", "npm:4.0.0"],\
           ["@types/duplexify", "npm:3.6.4"],\
-          ["duplexify", "npm:4.1.2"],\
+          ["duplexify", "npm:4.1.3"],\
           ["readable-stream", "npm:3.6.2"],\
           ["tslib", "npm:2.6.2"]\
         ],\
@@ -30818,18 +30818,18 @@ const RAW_RUNTIME_STATE =
           ["end-of-stream", "npm:1.4.4"],\
           ["inherits", "npm:2.0.4"],\
           ["readable-stream", "npm:2.3.8"],\
-          ["stream-shift", "npm:1.0.1"]\
+          ["stream-shift", "npm:1.0.3"]\
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:4.1.2", {\
-        "packageLocation": "./.yarn/cache/duplexify-npm-4.1.2-7f2140a477-eeb4f362de.zip/node_modules/duplexify/",\
+      ["npm:4.1.3", {\
+        "packageLocation": "./.yarn/cache/duplexify-npm-4.1.3-f0053971e9-b44b98ba0f.zip/node_modules/duplexify/",\
         "packageDependencies": [\
-          ["duplexify", "npm:4.1.2"],\
+          ["duplexify", "npm:4.1.3"],\
           ["end-of-stream", "npm:1.4.4"],\
           ["inherits", "npm:2.0.4"],\
           ["readable-stream", "npm:3.6.2"],\
-          ["stream-shift", "npm:1.0.1"]\
+          ["stream-shift", "npm:1.0.3"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -48231,10 +48231,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["stream-shift", [\
-      ["npm:1.0.1", {\
-        "packageLocation": "./.yarn/cache/stream-shift-npm-1.0.1-9526210fa7-59b82b44b2.zip/node_modules/stream-shift/",\
+      ["npm:1.0.3", {\
+        "packageLocation": "./.yarn/cache/stream-shift-npm-1.0.3-c1c29210c7-a24c0a3f66.zip/node_modules/stream-shift/",\
         "packageDependencies": [\
-          ["stream-shift", "npm:1.0.1"]\
+          ["stream-shift", "npm:1.0.3"]\
         ],\
         "linkType": "HARD"\
       }]\
