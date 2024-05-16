@@ -3,6 +3,7 @@ import {
   CodeSystemConcept,
   ValueSetComposeInclude,
   ValueSetExpansionContains,
+  canonical,
   dateTime,
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, R4, Resource } from "@iguhealth/fhir-types/versions";
@@ -89,21 +90,13 @@ async function getValuesetExpansionContains<Version extends FHIR_VERSION>(
         );
       }
     } else if (include.system) {
-      const codeSystemSearch = await ctx.client.search_type(
-        ctx,
+      const codeSystem = await ctx.resolveCanonical(
         fhirVersion,
         "CodeSystem",
-        [{ name: "url", value: [include.system] }],
+        include.system as canonical,
       );
-      if (codeSystemSearch.resources.length > 1) {
-        throw new OperationError(
-          outcomeError(
-            "invalid",
-            `CodeSystem '${include.system}' returned duplicate results so cannot be used to expand valueset '${valueSet.id}'`,
-          ),
-        );
-      }
-      if (codeSystemSearch.resources.length < 1) {
+
+      if (!codeSystem) {
         throw new OperationError(
           outcomeError(
             "not-found",
@@ -111,10 +104,10 @@ async function getValuesetExpansionContains<Version extends FHIR_VERSION>(
           ),
         );
       }
-      const codesystem = codeSystemSearch.resources[0];
+
       const codesystemExpansion = codeSystemConceptToValuesetExpansion(
-        codesystem,
-        codesystem.concept ? codesystem.concept : [],
+        codeSystem,
+        codeSystem.concept ? codeSystem.concept : [],
       );
 
       expansion = expansion.concat(
@@ -204,18 +197,11 @@ export class TerminologyProviderMemory implements TerminologyProvider {
       const [url, url_version] = splitParameter(input.url, "|");
       const version = url_version ? url_version : input.valueSetVersion;
 
-      const valuesetSearch = await ctx.client.search_type(
-        ctx,
+      valueset = await ctx.resolveCanonical(
         fhirVersion,
         "ValueSet",
-        [{ name: "url", value: [url] }].concat(
-          version ? [{ name: "version", value: [version] }] : [],
-        ),
+        url as canonical,
       );
-
-      if (valuesetSearch.resources.length === 1) {
-        valueset = valuesetSearch.resources[0];
-      }
     }
 
     if (!valueset) {

@@ -401,6 +401,7 @@ function createResolveCanonical(
 
     const id = versionedMap.get(type)?.get(url);
     getResourceType(data, fhirVersion, type);
+
     return (
       id ? getResourceType(data, fhirVersion, type)?.[id as r4.id] : undefined
     ) as Resource<FHIRVersion, Type>;

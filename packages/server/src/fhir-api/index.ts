@@ -246,6 +246,7 @@ const validationMiddleware: MiddlewareAsyncChain<
           resource: context.request.body,
         },
       );
+
       if (
         outcome.issue.find(
           (i) => i.severity === "fatal" || i.severity === "error",
