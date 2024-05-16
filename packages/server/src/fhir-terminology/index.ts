@@ -200,7 +200,7 @@ export class TerminologyProviderMemory implements TerminologyProvider {
     fhirVersion: Version,
     input: ExpandInput,
   ): Promise<ExpandOutput> {
-    const k = `${Math.ceil(Math.random() * 1000)}`;
+    // const k = `${Math.ceil(Math.random() * 1000)}`;
     let valueset: Resource<Version, "ValueSet"> | undefined;
     if (input.valueSet) {
       valueset = input.valueSet as Resource<Version, "ValueSet"> | undefined;
