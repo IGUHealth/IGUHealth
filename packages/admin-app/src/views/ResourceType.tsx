@@ -20,7 +20,9 @@ import { IguhealthInviteUser } from "@iguhealth/generated-ops/r4";
 
 import { getClient } from "../db/client";
 
-function InviteModal({ setOpen }: { setOpen: (open: boolean) => void }) {
+function InviteModal({
+  setOpen,
+}: Readonly<{ setOpen: (open: boolean) => void }>) {
   const client = useRecoilValue(getClient);
   const [email, setEmail] = useState<string | undefined>();
   return (
