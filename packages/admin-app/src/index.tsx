@@ -413,11 +413,10 @@ function Root() {
       >
         <>
           <div className="px-4 z-10 sm:px-6 lg:px-8 sticky top-0 bg-white">
-            <div
-              className="flex items-center justify-between"
-              style={{ height: "64px" }}
-            >
-              <Search />
+            <div className="flex items-center " style={{ height: "64px" }}>
+              <div className="flex grow mr-4">
+                <Search />
+              </div>
               <div className="flex justify-center items-center space-x-8">
                 <a
                   target="_blank"

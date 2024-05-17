@@ -63,7 +63,6 @@ export namespace KoaContext {
     };
 
   export type FHIRServices = {
-    emailProvider?: EmailProvider;
     postgres: db.Queryable;
     FHIRContext: Omit<FHIRServerCTX, "user" | "tenant">;
   };
@@ -97,12 +96,14 @@ export interface FHIRServerCTX {
   client: FHIRClientAsync<FHIRServerCTX>;
 
   // Services
+
   db: db.Queryable;
   logger: Logger<string>;
   lock: Lock<unknown>;
   cache: IOCache<FHIRServerCTX>;
   terminologyProvider: TerminologyProvider;
   encryptionProvider?: EncryptionProvider;
+  emailProvider?: EmailProvider;
 
   // Contextual Information.
   // If this is set to true, then the current request is part of a transaction.

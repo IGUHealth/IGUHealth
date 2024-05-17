@@ -12,8 +12,8 @@ const DisplayResources = () => {
   const capabilities = useRecoilValue(getCapabilities);
 
   return (
-    <div className="flex flex-col flex-1">
-      <h2 className="text-2xl font-semibold mb-4">Supported Resources</h2>
+    <div className="flex flex-col flex-1 overflow-auto">
+      <h2 className="text-2xl font-semibold mb-2">Supported Resources</h2>
       <Table
         data={capabilities?.rest?.[0].resource || []}
         onRowClick={(row) => {

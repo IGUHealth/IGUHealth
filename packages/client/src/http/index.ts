@@ -441,14 +441,13 @@ async function httpResponseToFHIRResponse(
 function httpMiddleware<CTX>(): MiddlewareAsync<HTTPClientState, CTX> {
   return createMiddlewareAsync<HTTPClientState, CTX>([
     async (context) => {
-      const httpRequest = await toHTTPRequest(context.state, context.request);
-      const response = await fetch(httpRequest.url, {
-        method: httpRequest.method,
-        headers: httpRequest.headers,
-        body: httpRequest.body,
-      });
-
       try {
+        const httpRequest = await toHTTPRequest(context.state, context.request);
+        const response = await fetch(httpRequest.url, {
+          method: httpRequest.method,
+          headers: httpRequest.headers,
+          body: httpRequest.body,
+        });
         const fhirResponse = await httpResponseToFHIRResponse(
           context.request,
           response,

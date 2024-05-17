@@ -64,8 +64,8 @@ export async function sendPasswordResetEmail(
     }),
   );
 
-  await ctx.emailProvider.sendEmail({
-    from: process.env.EMAIL_FROM,
+  await ctx.FHIRContext.emailProvider?.sendEmail({
+    from: process.env.EMAIL_FROM as string,
     to: user.email,
     subject: "IGUHealth Email Verification",
     html: emailHTML,
