@@ -1,7 +1,5 @@
 import { user_scope } from "zapatos/schema";
 
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
-
 import { ManagementRouteHandler } from "../index.js";
 
 type UserInfoResponse = {
@@ -15,15 +13,12 @@ type UserInfoResponse = {
 
 export function userInfo(_scope: user_scope): ManagementRouteHandler {
   return async (ctx, next) => {
-    if (!ctx.oidc.user) {
-      throw new OperationError(outcomeError("security", "User not logged in"));
-    }
-
     const user = await ctx.oidc.userManagement.get(
       ctx.postgres,
-      ctx.oidc.user.id,
+      // [TODO]
+      //@ts-ignore
+      ctx.FHIRContext.user.jwt.sub,
     );
-
     ctx.body = {
       sub: user?.id,
       given_name: user?.first_name ?? undefined,
