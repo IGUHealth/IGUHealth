@@ -1,3 +1,4 @@
+import validator from "validator";
 import * as db from "zapatos/db";
 
 import { AsynchronousClient } from "@iguhealth/client";
@@ -45,6 +46,14 @@ async function customValidationMembership(
       outcomeFatal("not-supported", "Cannot create owner membership."),
     );
   }
+  if (!validator.isEmail(membership.email)) {
+    throw new OperationError(
+      outcomeError(
+        "invalid",
+        `Invalid email '${membership.email}' is not valid.`,
+      ),
+    );
+  }
 }
 
 function membershipHandler<
@@ -84,6 +93,7 @@ function membershipHandler<
               membershipToUser(membership),
             );
           } catch (e) {
+            console.error(e);
             throw new OperationError(
               outcomeError("invariant", "Failed to create user."),
             );

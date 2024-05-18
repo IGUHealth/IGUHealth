@@ -215,7 +215,7 @@ export function passwordResetInitiatePOST(
       | { email?: string; password?: string }
       | undefined;
 
-    if (!ctx.emailProvider)
+    if (!ctx.FHIRContext.emailProvider)
       throw new OperationError(
         outcomeFatal(
           "not-supported",

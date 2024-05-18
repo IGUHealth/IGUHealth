@@ -8,7 +8,6 @@ type ElementDefinition = r4.ElementDefinition | r4b.ElementDefinition;
 type StructureDefinition = r4.StructureDefinition | r4b.StructureDefinition;
 type uri = r4.uri | r4b.uri;
 
-//
 function isResourceOrComplexType(type: string): boolean {
   return (
     (complexTypes.has(type) || resourceTypes.has(type)) &&

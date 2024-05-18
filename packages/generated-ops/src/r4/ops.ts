@@ -5218,6 +5218,46 @@ export namespace IguhealthEncrypt {
     ],
   } as fhirTypes.OperationDefinition);
 }
+export namespace IguhealthInviteUser {
+  export type Input = { email: fhirTypes.string };
+  export type Output = fhirTypes.OperationOutcome;
+  export type IOp = IOperation<Input, Output>;
+  export const Op: IOp = new Operation<Input, Output>({
+    resourceType: "OperationDefinition",
+    id: "iguhealth-invite-user",
+    url: "https://iguhealth.app/OperationDefinition/invite-user",
+    version: "4.0.1",
+    name: "Invite a user and send an email.",
+    status: "draft",
+    kind: "operation",
+    date: "2023-11-16T09:29:23+11:00",
+    publisher: "IGUHealth",
+    description: "Invite a user to join tenant and send an email for invite.",
+    code: "invite-user",
+    system: false,
+    type: true,
+    instance: false,
+    resource: ["Membership"],
+    parameter: [
+      {
+        name: "email",
+        use: "in",
+        min: 1,
+        max: "1",
+        documentation: "Email for new user",
+        type: "string",
+      },
+      {
+        name: "return",
+        use: "out",
+        min: 1,
+        max: "1",
+        documentation: "The result of the operation.",
+        type: "OperationOutcome",
+      },
+    ],
+  } as fhirTypes.OperationDefinition);
+}
 export namespace IguhealthMessagePost {
   export type Input = { input: fhirTypes.Resource };
   export type Output = fhirTypes.OperationOutcome;

@@ -40,6 +40,7 @@ import AWSLambdaExecutioner from "../fhir-operation-executors/providers/awsLambd
 import IguhealthEncryptInvoke from "../fhir-operation-executors/providers/local/encryption/encrypt.js";
 import InlineExecutioner from "../fhir-operation-executors/providers/local/index.js";
 import IguhealthMessagePostInvoke from "../fhir-operation-executors/providers/local/messaging/message_post.js";
+import IguhealthInviteUserInvoke from "../fhir-operation-executors/providers/local/invite_user/invite_user.js";
 import ResourceValidateInvoke, {
   validateResource,
 } from "../fhir-operation-executors/providers/local/resource_validate.js";
@@ -398,6 +399,7 @@ export async function createFHIRServices(
     ValueSetValidateInvoke,
     CodeSystemLookupInvoke,
     IguhealthMessagePostInvoke,
+    IguhealthInviteUserInvoke,
   ]);
 
   const lambdaExecutioner = AWSLambdaExecutioner({
@@ -426,6 +428,7 @@ export async function createFHIRServices(
 
   const lock = new RedisLock(redis);
   const cache = new RedisCache(redis);
+  const emailProvider = createEmailProvider();
 
   const client = await createFHIRClient([
     // OP INVOCATION
@@ -522,6 +525,8 @@ export async function createFHIRServices(
     cache,
     terminologyProvider,
     encryptionProvider,
+    emailProvider,
+
     resolveCanonical: memDBAsync.resolveCanonical,
     resolveTypeToCanonical: memDBAsync.resolveTypeToCanonical,
     client,
@@ -552,7 +557,6 @@ export async function associateServicesKoaMiddleware<State, Context>(
   const fhirServices = await createFHIRServices(pool);
 
   return async (ctx, next) => {
-    ctx.emailProvider = createEmailProvider();
     ctx.postgres = pool;
     ctx.FHIRContext = fhirServices;
     await next();
