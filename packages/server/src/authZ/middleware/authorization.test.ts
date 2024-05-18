@@ -107,10 +107,10 @@ test("Authorization test for read access on resource based on type and method", 
   }).rejects.toEqual({
     issue: [
       {
-        code: "security",
+        severity: "error",
+        code: "forbidden",
         diagnostics: "access-denied",
         expression: undefined,
-        severity: "error",
       },
     ],
     resourceType: "OperationOutcome",
