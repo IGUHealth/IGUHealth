@@ -64,7 +64,6 @@ import { FHIRServerCTX, KoaContext, asSystemCTX } from "./types.js";
 
 const R4_SPECIAL_TYPES: {
   MEMORY: ResourceType<R4>[];
-
   AUTH: ResourceType<R4>[];
 } = {
   AUTH: AUTH_RESOURCETYPES,
