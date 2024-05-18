@@ -87,6 +87,7 @@ function membershipHandler<
               outcomeError("invariant", "Invalid resource type."),
             );
           }
+          
           try {
             await tenantUserManagement.create(
               txClient,

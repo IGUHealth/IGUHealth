@@ -17,7 +17,7 @@ import { FHIROperationOutcomeDisplay } from "@iguhealth/components";
 import {
   OperationError,
   isOperationError,
-  issueSeverityToStatusCodes,
+  issueToStatusCode,
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
@@ -126,7 +126,7 @@ function createErrorHandlingMiddleware<T>(): Koa.Middleware<
       if (isOperationError(e)) {
         const operationOutcome = e.outcome;
         const status = operationOutcome.issue
-          .map((i) => issueSeverityToStatusCodes(i.severity))
+          .map((i) => issueToStatusCode(i))
           .sort()[operationOutcome.issue.length - 1];
 
         switch (ctx.accepts("json", "html", "text")) {

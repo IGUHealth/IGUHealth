@@ -39,7 +39,7 @@ export function iguHealthReducer(
         },
         getClient: () => {
           return createHTTPClient({
-            onAuthError: action.reInitiliaze,
+            onAuthenticationError: action.reInitiliaze,
             getAccessToken: () => Promise.resolve(action.payload.access_token),
             url: new URL(
               `/w/${action.tenant ? action.tenant : user["https://iguhealth.app/tenants"][0]?.id}`,

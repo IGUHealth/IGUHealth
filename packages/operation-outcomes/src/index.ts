@@ -11,20 +11,33 @@ export class OperationError extends Error {
   }
 }
 
-export function issueSeverityToStatusCodes(
-  severity: Issue["severity"],
-): number {
-  switch (severity) {
-    case "fatal":
+export function issueToStatusCode(issue: Issue): number {
+  switch (issue.severity) {
+    case "fatal": {
       return 500;
-    case "error":
-      return 400;
-    case "warning":
+    }
+    case "error": {
+      switch (issue.code) {
+        case "login": {
+          return 401;
+        }
+        case "forbidden": {
+          return 403;
+        }
+        default: {
+          return 400;
+        }
+      }
+    }
+    case "warning": {
       return 200;
-    case "information":
+    }
+    case "information": {
       return 200;
-    default:
+    }
+    default: {
       throw new Error("unknown severity");
+    }
   }
 }
 

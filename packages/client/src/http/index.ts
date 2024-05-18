@@ -13,7 +13,7 @@ import { FHIRRequest, FHIRResponse } from "../types/index.js";
 import { ParsedParameter } from "../url.js";
 
 type HTTPClientState = {
-  onAuthError?: () => void;
+  onAuthenticationError?: () => void;
   getAccessToken?: () => Promise<string>;
   url: string;
   headers?: Record<string, string>;
@@ -199,9 +199,11 @@ async function httpResponseToFHIRResponse(
 ): Promise<FHIRResponse> {
   if (response.status >= 400) {
     switch (response.status) {
-      case 403:
       case 401: {
-        throw new OperationError(outcomeError("security", "Unauthorized"));
+        throw new OperationError(outcomeError("login", "Unauthorized"));
+      }
+      case 403: {
+        throw new OperationError(outcomeError("forbidden", "Forbidden"));
       }
       default: {
         if (!response.body) throw new Error(response.statusText);
@@ -459,9 +461,9 @@ function httpMiddleware<CTX>(): MiddlewareAsync<HTTPClientState, CTX> {
         };
       } catch (e) {
         if (e instanceof OperationError) {
-          if (e.operationOutcome.issue[0].code === "security") {
-            if (context.state.onAuthError) {
-              context.state.onAuthError();
+          if (e.operationOutcome.issue[0].code === "login") {
+            if (context.state.onAuthenticationError) {
+              context.state.onAuthenticationError();
             }
           }
         }

@@ -200,6 +200,6 @@ export function createAuthorizationMiddleWare<T>(): MiddlewareAsyncChain<
       return next(context);
     }
 
-    throw new OperationError(outcomeError("security", "access-denied"));
+    throw new OperationError(outcomeError("forbidden", "access-denied"));
   };
 }
