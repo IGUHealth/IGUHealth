@@ -9,7 +9,7 @@
     "format": "yarn prettier --write "
   },
   "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@trivago/prettier-plugin-sort-imports": "patch:@trivago/prettier-plugin-sort-imports@npm%3A4.3.0#~/.yarn/patches/@trivago-prettier-plugin-sort-imports-npm-4.3.0-622c28680b.patch",
     "@types/node": "^20.12.7",
     "@typescript-eslint/eslint-plugin": "^7.7.1",
     "@typescript-eslint/parser": "^7.7.1",
@@ -27,7 +27,8 @@
     "packages/*"
   ],
   "resolutions": {
-    "redlock@v5.0.0-beta.2": "patch:redlock@npm%3A5.0.0-beta.2#./.yarn/patches/redlock-npm-5.0.0-beta.2-e67212c5e7.patch"
+    "redlock@v5.0.0-beta.2": "patch:redlock@npm%3A5.0.0-beta.2#./.yarn/patches/redlock-npm-5.0.0-beta.2-e67212c5e7.patch",
+    "@babel/generator": "7.24.5"
   },
   "dependenciesMeta": {
     "@trivago/prettier-plugin-sort-imports@4.3.0": {

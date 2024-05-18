@@ -7,6 +7,7 @@ export default {
   plugins: [require.resolve("@trivago/prettier-plugin-sort-imports")],
   tabWidth: 2,
   useTabs: false,
+  importOrderParserPlugins: ["importAssertions", "typescript", "jsx"],
   importOrder: ["^@iguhealth/(.*)$", "^[./]"],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
