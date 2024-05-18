@@ -22,6 +22,7 @@ import {
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { MetaValueSingular } from "@iguhealth/meta-value";
 import {
+  isOperationError,
   OperationError,
   outcomeError,
   outcomeFatal,
@@ -893,7 +894,7 @@ async function patchResource<
         await indexResource(client, ctx, fhirVersion, patchedResource);
         return patchedResource;
       } catch (e) {
-        if (e instanceof OperationError) throw e;
+        if (isOperationError(e)) throw e;
         else {
           ctx.logger.error(e);
           throw new OperationError(

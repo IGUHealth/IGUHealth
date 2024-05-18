@@ -13,7 +13,10 @@ import {
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { R4 } from "@iguhealth/fhir-types/lib/versions";
 import { evaluate } from "@iguhealth/fhirpath";
-import { OperationError } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  isOperationError,
+} from "@iguhealth/operation-outcomes";
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system",
@@ -264,7 +267,7 @@ test("Parameter chains", async () => {
       );
     }
   } catch (e) {
-    if (e instanceof OperationError) {
+    if (isOperationError(e)) {
       e.operationOutcome &&
         console.log(JSON.stringify(e.operationOutcome, null, 2));
     }

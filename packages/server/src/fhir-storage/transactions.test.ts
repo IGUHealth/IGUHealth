@@ -14,7 +14,11 @@ import {
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/lib/versions";
-import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  isOperationError,
+  outcomeFatal,
+} from "@iguhealth/operation-outcomes";
 
 import { testServices } from "./test-ctx.js";
 import { buildTransactionTopologicalGraph } from "./transactions";
@@ -138,7 +142,7 @@ test("Test Cyclical", () => {
       ],
     } as Bundle);
   } catch (e) {
-    if (e instanceof OperationError) {
+    if (isOperationError(e)) {
       expect(e.operationOutcome.issue).toEqual([
         {
           code: "exception",

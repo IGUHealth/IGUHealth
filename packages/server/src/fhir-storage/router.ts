@@ -19,7 +19,8 @@ import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import { R4, R4B } from "@iguhealth/fhir-types/versions";
 import {
   OperationError,
-  issueSeverityToStatusCodes,
+  isOperationError,
+  issueToStatusCode,
   outcomeError,
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
@@ -279,11 +280,11 @@ function createRouterMiddleware<
                   );
                   return fhirResponseToBundleEntry(fhirResponse);
                 } catch (e) {
-                  if (e instanceof OperationError) {
+                  if (isOperationError(e)) {
                     return {
                       response: {
-                        status: issueSeverityToStatusCodes(
-                          e.operationOutcome.issue?.[0]?.severity,
+                        status: issueToStatusCode(
+                          e.operationOutcome.issue?.[0],
                         ).toString(),
                         outcome: e.operationOutcome,
                       },
