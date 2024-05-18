@@ -39,8 +39,8 @@ import { AWSKMSProvider } from "../encryption/provider/kms.js";
 import AWSLambdaExecutioner from "../fhir-operation-executors/providers/awsLambda/index.js";
 import IguhealthEncryptInvoke from "../fhir-operation-executors/providers/local/encryption/encrypt.js";
 import InlineExecutioner from "../fhir-operation-executors/providers/local/index.js";
-import IguhealthMessagePostInvoke from "../fhir-operation-executors/providers/local/messaging/message_post.js";
 import IguhealthInviteUserInvoke from "../fhir-operation-executors/providers/local/invite_user/invite_user.js";
+import IguhealthMessagePostInvoke from "../fhir-operation-executors/providers/local/messaging/message_post.js";
 import ResourceValidateInvoke, {
   validateResource,
 } from "../fhir-operation-executors/providers/local/resource_validate.js";
@@ -59,11 +59,12 @@ import RouterClient from "../fhir-storage/router.js";
 import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
 import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with { type: "json" };
 import RedisLock from "../synchronization/redis.lock.js";
-import { FHIRServerCTX, KoaContext, asSystemCTX } from "./types.js";
 import { createFlagCheckMiddleWare } from "./middleware/featureGating.js";
+import { FHIRServerCTX, KoaContext, asSystemCTX } from "./types.js";
 
 const R4_SPECIAL_TYPES: {
   MEMORY: ResourceType<R4>[];
+
   AUTH: ResourceType<R4>[];
 } = {
   AUTH: AUTH_RESOURCETYPES,
