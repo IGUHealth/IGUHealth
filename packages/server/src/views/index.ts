@@ -1,7 +1,5 @@
-import Koa from "koa";
 import React from "react";
-import { renderToPipeableStream, renderToString } from "react-dom/server";
-import { PassThrough } from "stream";
+import { renderToString } from "react-dom/server";
 
 import Base from "./base.js";
 
