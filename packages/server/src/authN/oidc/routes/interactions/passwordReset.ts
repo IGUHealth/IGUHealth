@@ -61,8 +61,8 @@ export function passwordResetGET(scope: user_scope): ManagementRouteHandler {
     );
     if (passwordResetPostUrl instanceof Error) throw passwordResetPostUrl;
 
-    views.renderPipe(
-      ctx,
+    ctx.status = 200;
+    ctx.body = views.renderString(
       React.createElement(PasswordResetForm, {
         logo: "/public/img/logo.svg",
         title: "IGUHealth",
@@ -90,8 +90,8 @@ export function passwordResetPOST(scope: user_scope): ManagementRouteHandler {
     if (passwordResetPostUrl instanceof Error) throw passwordResetPostUrl;
 
     if (!body?.password) {
-      views.renderPipe(
-        ctx,
+      ctx.status = 200;
+      ctx.body = views.renderString(
         React.createElement(PasswordResetForm, {
           logo: "/public/img/logo.svg",
           title: "IGUHealth",
@@ -105,8 +105,8 @@ export function passwordResetPOST(scope: user_scope): ManagementRouteHandler {
     }
 
     if (body?.password !== body?.passwordConfirm) {
-      views.renderPipe(
-        ctx,
+      ctx.status = 200;
+      ctx.body = views.renderString(
         React.createElement(PasswordResetForm, {
           logo: "/public/img/logo.svg",
           title: "IGUHealth",
@@ -124,8 +124,8 @@ export function passwordResetPOST(scope: user_scope): ManagementRouteHandler {
 
     const passwordValidStrength = validatePasswordStrength(body.password);
     if (passwordValidStrength) {
-      views.renderPipe(
-        ctx,
+      ctx.status = 200;
+      ctx.body = views.renderString(
         React.createElement(PasswordResetForm, {
           logo: "/public/img/logo.svg",
           title: "IGUHealth",
@@ -193,8 +193,8 @@ export const passwordResetInitiateGet =
     if (typeof passwordResetInitiatePostURL !== "string")
       throw passwordResetInitiatePostURL;
 
-    views.renderPipe(
-      ctx,
+    ctx.status = 200;
+    ctx.body = views.renderString(
       React.createElement(EmailForm, {
         logo: "/public/img/logo.svg",
         header: "Password Reset",
@@ -245,8 +245,8 @@ export function passwordResetInitiatePOST(
       console.warn(
         `not sending password reset for non existing user: '${body.email}' `,
       );
-      views.renderPipe(
-        ctx,
+      ctx.status = 200;
+      ctx.body = views.renderString(
         React.createElement(Feedback, {
           logo: "/public/img/logo.svg",
           title: "IGUHealth",
@@ -269,8 +269,8 @@ export function passwordResetInitiatePOST(
 
     await sendPasswordResetEmail(scope, ctx, user);
 
-    views.renderPipe(
-      ctx,
+    ctx.status = 200;
+    ctx.body = views.renderString(
       React.createElement(Feedback, {
         logo: "/public/img/logo.svg",
         title: "IGUHealth",

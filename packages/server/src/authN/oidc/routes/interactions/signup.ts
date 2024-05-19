@@ -17,8 +17,8 @@ export const signupGET =
     });
     if (typeof signupURL !== "string") throw signupURL;
 
-    views.renderPipe(
-      ctx,
+    ctx.status = 200;
+    ctx.body = views.renderString(
       React.createElement(EmailForm, {
         logo: "/public/img/logo.svg",
         header: "Signup",
@@ -51,8 +51,8 @@ export const signupPOST =
       });
 
       await sendPasswordResetEmail(scope, ctx, user);
-      views.renderPipe(
-        ctx,
+      ctx.status = 200;
+      ctx.body = views.renderString(
         React.createElement(Feedback, {
           logo: "/public/img/logo.svg",
           title: "IGUHealth",
@@ -68,8 +68,8 @@ export const signupPOST =
       if (user.length === 1) {
         await sendPasswordResetEmail(scope, ctx, user[0]);
       }
-      views.renderPipe(
-        ctx,
+      ctx.status = 200;
+      ctx.body = views.renderString(
         React.createElement(Feedback, {
           logo: "/public/img/logo.svg",
           title: "IGUHealth",
