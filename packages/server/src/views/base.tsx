@@ -10,17 +10,30 @@ const indexCSS = fs
 export default function Base({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>IGUHealth Login</title>
-        <link rel="icon" href="/public/img/logo.svg" />
-        <link rel="stylesheet" href="/public/css/index.css"></link>
-        <style dangerouslySetInnerHTML={{ __html: indexCSS }}></style>
-      </head>
-      <body>{children}</body>
-    </html>
+  return React.createElement(
+    "html",
+    { lang: "en" },
+    React.createElement(
+      "head",
+      null,
+      React.createElement("meta", { charSet: "utf-8" }),
+      React.createElement("meta", {
+        name: "viewport",
+        content: "width=device-width, initial-scale=1",
+      }),
+      React.createElement("title", null, "IGUHealth Login"),
+      React.createElement("link", {
+        rel: "icon",
+        href: "/public/img/logo.svg",
+      }),
+      React.createElement("link", {
+        rel: "stylesheet",
+        href: "/public/css/index.css",
+      }),
+      React.createElement("style", {
+        dangerouslySetInnerHTML: { __html: indexCSS },
+      }),
+    ),
+    React.createElement("body", null, children),
   );
 }
