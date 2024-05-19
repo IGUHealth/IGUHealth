@@ -137,15 +137,15 @@ function createErrorHandlingMiddleware<T>(): Koa.Middleware<
           }
           case "text":
           case "html": {
-            views.renderPipe(
-              ctx,
+            ctx.status = status;
+            ctx.body = views.renderString(
               React.createElement(FHIROperationOutcomeDisplay, {
                 logo: "/public/img/logo.svg",
                 title: "IGUHealth",
                 operationOutcome,
               }),
             );
-            ctx.status = status;
+
             return;
           }
         }
