@@ -137,6 +137,7 @@ function createErrorHandlingMiddleware<T>(): Koa.Middleware<
           }
           case "text":
           case "html": {
+            ctx.status = status;
             ctx.body = views.renderString(
               React.createElement(FHIROperationOutcomeDisplay, {
                 logo: "/public/img/logo.svg",
@@ -144,7 +145,7 @@ function createErrorHandlingMiddleware<T>(): Koa.Middleware<
                 operationOutcome,
               }),
             );
-            ctx.status = status;
+
             return;
           }
         }
