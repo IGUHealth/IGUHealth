@@ -6,7 +6,9 @@ import { Login } from "@iguhealth/components";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import * as views from "../../../../views/index.js";
+import { User } from "../../../db/users/types.js";
 import { OIDC_ROUTES } from "../../constants.js";
+import * as adminApp from "../../hardcodedClients/admin-app.js";
 import type { ManagementRouteHandler } from "../../index.js";
 
 function getRoutes(
@@ -75,7 +77,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 async function validateCredentials(
   ctx: Parameters<ManagementRouteHandler>[0],
-): Promise<boolean> {
+): Promise<User | undefined> {
   const body = ctx.request.body;
   if (isRecord(body)) {
     const email = body.email;
@@ -92,7 +94,7 @@ async function validateCredentials(
     });
   }
 
-  return false;
+  return undefined;
 }
 
 export const loginPOST =
@@ -106,44 +108,50 @@ export const loginPOST =
 
     const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(ctx, scope);
 
-    switch (await validateCredentials(ctx)) {
-      case true: {
-        const redirectURL = getLoginRedirectURL(ctx.session);
+    const user = await validateCredentials(ctx);
+    if (user !== undefined) {
+      const redirectURL = getLoginRedirectURL(ctx.session);
 
-        if (redirectURL) {
-          removeLoginRedirectURL(ctx.session);
-          ctx.redirect(redirectURL);
-          return;
-        }
-
-        // If logged in but no redirect display login with success message.
-        ctx.status = 201;
-        ctx.body = views.renderString(
-          React.createElement(Login, {
-            title: "IGUHealth",
-            logo: "/public/img/logo.svg",
-            action: loginRoute,
-            signupURL,
-            forgotPasswordURL,
-            messages: ["You have successfully logged in."],
-          }),
-        );
-        break;
-      }
-      default: {
-        ctx.status = 401;
-        ctx.body = views.renderString(
-          React.createElement(Login, {
-            title: "IGUHealth",
-            logo: "/public/img/logo.svg",
-            action: loginRoute,
-            signupURL,
-            forgotPasswordURL,
-            errors: ["Invalid email or password. Please try again."],
-          }),
-        );
+      if (redirectURL) {
+        removeLoginRedirectURL(ctx.session);
+        ctx.redirect(redirectURL);
         return;
+      } else if (adminApp.ADMIN_APP() !== undefined) {
+        const tenantClaims = await ctx.oidc.userManagement.getTenantClaims(
+          ctx.FHIRContext.db,
+          user.id,
+        );
+        const tenantId = tenantClaims[0]?.id;
+        if (tenantId) {
+          ctx.redirect(adminApp.redirectURL(tenantId) as string);
+        }
       }
+
+      // If logged in but no redirect display login with success message.
+      ctx.status = 201;
+      ctx.body = views.renderString(
+        React.createElement(Login, {
+          title: "IGUHealth",
+          logo: "/public/img/logo.svg",
+          action: loginRoute,
+          signupURL,
+          forgotPasswordURL,
+          messages: ["You have successfully logged in."],
+        }),
+      );
+    } else {
+      ctx.status = 401;
+      ctx.body = views.renderString(
+        React.createElement(Login, {
+          title: "IGUHealth",
+          logo: "/public/img/logo.svg",
+          action: loginRoute,
+          signupURL,
+          forgotPasswordURL,
+          errors: ["Invalid email or password. Please try again."],
+        }),
+      );
+      return;
     }
 
     await next();

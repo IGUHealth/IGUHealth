@@ -41,7 +41,7 @@ export async function sessionLogin<Method extends keyof LoginParameters>(
   ctx: Parameters<ManagementRouteHandler>[0],
   method: Method,
   credentials: LoginParameters[Method],
-): Promise<boolean> {
+): Promise<User | undefined> {
   if (!ctx.session) {
     throw new Error("Session not found in context.");
   }
@@ -54,11 +54,12 @@ export async function sessionLogin<Method extends keyof LoginParameters>(
 
   if (!user) {
     ctx.session[USER_SESSION_KEY] = undefined;
-    return false;
+    return undefined;
   }
 
   ctx.session[USER_SESSION_KEY] = serializeUser(user);
-  return true;
+
+  return user;
 }
 
 /**
