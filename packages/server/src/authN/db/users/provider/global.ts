@@ -26,7 +26,7 @@ export default class GlobalUserManagement implements UserManagement {
       .run(client);
 
     return tenantUsers.map((tenantUser) => ({
-      id: tenantUser.id as TenantId,
+      id: tenantUser.tenant as TenantId,
       userRole: tenantUser.role as s.user_role,
     }));
   }
