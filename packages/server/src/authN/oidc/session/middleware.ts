@@ -12,6 +12,7 @@ export function sessionAuthorizationMiddleware(): ManagementRouteHandler {
 
     ctx.oidc.sessionLogin = sessionLogin;
     ctx.oidc.sessionLogout = sessionLogout;
+
     ctx.oidc.user = await deserializeUser(ctx);
 
     await next();

@@ -109,6 +109,7 @@ export const loginPOST =
     const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(ctx, scope);
 
     const user = await validateCredentials(ctx);
+
     if (user !== undefined) {
       const redirectURL = getLoginRedirectURL(ctx.session);
 
@@ -125,6 +126,7 @@ export const loginPOST =
         if (tenantId) {
           ctx.redirect(adminApp.redirectURL(tenantId) as string);
         }
+        return;
       }
 
       // If logged in but no redirect display login with success message.
