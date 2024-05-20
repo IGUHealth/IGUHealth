@@ -7,6 +7,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { UserManagement } from "../interface.js";
 import { LoginParameters, USER_QUERY_COLS, User } from "../types.js";
 import { determineEmailUpdate } from "../utilities.js";
+import GlobalUserManagement from "./global.js";
 
 async function loginUsingGlobalUser<T extends keyof LoginParameters>(
   client: db.Queryable,
@@ -139,6 +140,27 @@ export default class TenantUserManagement implements UserManagement {
   }
 
   async get(client: db.Queryable, id: string): Promise<User | undefined> {
+    // Check global first
+    const globalUserManagement = new GlobalUserManagement();
+    const globalUser = await globalUserManagement.get(client, id);
+    if (globalUser) {
+      const tenantClaims = await globalUserManagement.getTenantClaims(
+        client,
+        globalUser.id,
+      );
+      if (tenantClaims.find((t) => t.id === this.tenant)) {
+        const tenantUser: User | undefined = (await db
+          .selectOne(
+            "users",
+            { root_user: globalUser.id, scope: "tenant", tenant: this.tenant },
+            { columns: USER_QUERY_COLS },
+          )
+          .run(client)) as User | undefined;
+        return { ...globalUser, ...tenantUser };
+      }
+      return undefined;
+    }
+
     const tenantUser: User | undefined = (await db
       .selectOne(
         "users",
