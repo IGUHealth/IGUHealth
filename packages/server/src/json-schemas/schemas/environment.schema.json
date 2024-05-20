@@ -203,7 +203,8 @@
 
     "ADMIN_APP_REDIRECT_URI": {
       "type": "string",
-      "description": "Redirect URI for admin app"
+      "description": "Redirect URI for admin app",
+      "pattern": "(http|https)\\:\\/\\/\\*\\..+"
     }
   }
 }
