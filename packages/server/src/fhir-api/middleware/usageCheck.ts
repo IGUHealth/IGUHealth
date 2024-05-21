@@ -44,7 +44,7 @@ async function getResourceCountTotal<Version extends FHIR_VERSION>(
   }
 }
 
-export async function getLimits(
+export async function getTenantLimits(
   client: db.Queryable,
   tenant: TenantId,
   fhirVersion: FHIR_VERSION,
@@ -59,14 +59,18 @@ export async function getLimits(
   return limitations;
 }
 
-async function checkFeatureGating(
+async function checkTenantUsage(
   pg: db.Queryable,
   tenant: TenantId,
   fhirRequest: FHIRRequest,
 ): Promise<void> {
   switch (fhirRequest.type) {
     case "create-request": {
-      const limitations = await getLimits(pg, tenant, fhirRequest.fhirVersion);
+      const limitations = await getTenantLimits(
+        pg,
+        tenant,
+        fhirRequest.fhirVersion,
+      );
       const typeLimitation = limitations.find(
         (limitation) => limitation.resource_type === fhirRequest.resourceType,
       );
@@ -121,16 +125,12 @@ async function checkFeatureGating(
  * @param next Next middleware
  * @returns context with response.
  */
-export function createFlagCheckMiddleWare<T>(): MiddlewareAsyncChain<
+export function checkTenantUsageMiddleware<T>(): MiddlewareAsyncChain<
   T,
   FHIRServerCTX
 > {
   return async (context, next) => {
-    await checkFeatureGating(
-      context.ctx.db,
-      context.ctx.tenant,
-      context.request,
-    );
+    await checkTenantUsage(context.ctx.db, context.ctx.tenant, context.request);
 
     return next(context);
   };

@@ -59,7 +59,7 @@ import RouterClient from "../fhir-storage/router.js";
 import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
 import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with { type: "json" };
 import RedisLock from "../synchronization/redis.lock.js";
-import { createFlagCheckMiddleWare } from "./middleware/usageCheck.js";
+import { checkTenantUsageMiddleware } from "./middleware/usageCheck.js";
 import { FHIRServerCTX, KoaContext, asSystemCTX } from "./types.js";
 
 const R4_SPECIAL_TYPES: {
@@ -368,7 +368,7 @@ export function getRedisClient() {
 async function createFHIRClient(sources: RouterState["sources"]) {
   return RouterClient(
     [
-      createFlagCheckMiddleWare(),
+      checkTenantUsageMiddleware(),
       validationMiddleware,
       capabilitiesMiddleware,
       encryptionMiddleware(["OperationDefinition"]),
