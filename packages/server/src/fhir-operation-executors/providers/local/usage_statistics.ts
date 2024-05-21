@@ -51,8 +51,6 @@ const IguhealthUsageStatisticsInvoke = InlineOperation(
       )),
     ];
 
-    console.log(statistics);
-
     return {
       statistics,
     };
