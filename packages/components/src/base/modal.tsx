@@ -54,11 +54,11 @@ export function Modal({
               >
                 <Dialog.Panel
                   className={classNames(
-                    "w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all",
+                    "w-full transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all",
                     {
-                      "max-w-sm": size === "small",
-                      "max-w-md": size === "medium",
-                      "max-w-lg": size === "large",
+                      "max-w-md": size === "small",
+                      "max-w-lg": size === "medium",
+                      "max-w-2xl": size === "large",
                     },
                   )}
                 >

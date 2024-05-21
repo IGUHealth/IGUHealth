@@ -118,21 +118,9 @@ const ReferenceSearch = ({
   resourceTypesAllowed?: ResourceType<typeof fhirVersion>[];
   onChange: FHIRReferenceEditableProps["onChange"];
 }) => {
-  const [results, setResults] = React.useState<(Resource | r4b.Resource)[]>([]);
-  const [query, setQuery] = React.useState<string>("");
   const [resourceType, setResourceType] = React.useState<
     ResourceType<typeof fhirVersion> | undefined
   >(resourceTypesAllowed?.[0]);
-
-  React.useEffect(() => {
-    if (resourceType) {
-      client
-        .search_type({}, fhirVersion, resourceType, query)
-        .then((bundle) => {
-          setResults(bundle.resources);
-        });
-    }
-  }, [client, resourceType, query]);
 
   return (
     <div>
@@ -147,14 +135,6 @@ const ReferenceSearch = ({
               label: rt,
               value: rt,
             }))}
-          />
-        </div>
-        <div className="flex flex-1">
-          <Input
-            placeholder="Search query string ..."
-            icon={<MagnifyingGlassIcon className="w-5 h-5" />}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
           />
         </div>
       </div>
