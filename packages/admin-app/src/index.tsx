@@ -39,6 +39,7 @@ import { createAdminAppClient, getClient } from "./db/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import BundleImport from "./views/BundleImport";
+import Dashboard from "./views/Dashboard";
 import EmptyWorkspace from "./views/EmptyWorkspace";
 import ResourceEditor from "./views/ResourceEditor/index";
 import ResourceType from "./views/ResourceType";
@@ -167,7 +168,12 @@ const router = createBrowserRouter([
                 ),
                 children: [
                   { id: "settings", path: "settings", element: <Settings /> },
-                  { id: "root", path: "", element: <Resources /> },
+                  { id: "dashboard", path: "", element: <Dashboard /> },
+                  {
+                    id: "resources",
+                    path: "resources",
+                    element: <Resources />,
+                  },
                   {
                     id: "types",
                     path: "resources/:resourceType",
@@ -351,7 +357,8 @@ function Root() {
             <SideBar.SideBarItemGroup label="Data" className="mt-8">
               <SideBar.SideBarItem
                 active={
-                  matches.find((match) => match.id === "root") !== undefined ||
+                  matches.find((match) => match.id === "resources") !==
+                    undefined ||
                   matches.find(
                     (match) =>
                       match.id === "types" &&
@@ -368,7 +375,7 @@ function Root() {
                   ) !== undefined
                 }
                 onClick={() => {
-                  navigate(generatePath("/", {}));
+                  navigate(generatePath("/resources", {}));
                 }}
               >
                 All Resources

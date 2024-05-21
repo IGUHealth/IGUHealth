@@ -15,7 +15,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { toDBFHIRVersion } from "../../fhir-storage/utilities/version.js";
 import { FHIRServerCTX } from "../types.js";
 
-async function getResourceCountTotal<Version extends FHIR_VERSION>(
+export async function getResourceCountTotal<Version extends FHIR_VERSION>(
   pg: db.Queryable,
   tenant: TenantId,
   fhirVersion: Version,
@@ -44,20 +44,33 @@ async function getResourceCountTotal<Version extends FHIR_VERSION>(
   }
 }
 
-async function checkFeatureGating(
-  pg: db.Queryable,
+export async function getTenantLimits(
+  client: db.Queryable,
   tenant: TenantId,
-  fhirRequest: FHIRRequest,
-): Promise<void> {
+  fhirVersion: FHIR_VERSION,
+) {
   const limitations = await db.sql<
     s.limitations.SQL | s.subscription_tier.SQL | s.tenants.SQL,
     s.limitations.JSONSelectable[]
   >`
-    SELECT * FROM ${"limitations"} where ${{ fhir_version: toDBFHIRVersion(fhirRequest.fhirVersion) }} AND tier = (SELECT id FROM ${"subscription_tier"} WHERE ${"id"} = (SELECT ${"subscription_tier"} FROM ${"tenants"} where ${{ id: tenant }}));
-  `.run(pg);
+  SELECT * FROM ${"limitations"} where ${{ fhir_version: toDBFHIRVersion(fhirVersion) }} AND tier = (SELECT id FROM ${"subscription_tier"} WHERE ${"id"} = (SELECT ${"subscription_tier"} FROM ${"tenants"} where ${{ id: tenant }}));
+`.run(client);
 
+  return limitations;
+}
+
+async function checkTenantUsage(
+  pg: db.Queryable,
+  tenant: TenantId,
+  fhirRequest: FHIRRequest,
+): Promise<void> {
   switch (fhirRequest.type) {
     case "create-request": {
+      const limitations = await getTenantLimits(
+        pg,
+        tenant,
+        fhirRequest.fhirVersion,
+      );
       const typeLimitation = limitations.find(
         (limitation) => limitation.resource_type === fhirRequest.resourceType,
       );
@@ -112,16 +125,12 @@ async function checkFeatureGating(
  * @param next Next middleware
  * @returns context with response.
  */
-export function createFlagCheckMiddleWare<T>(): MiddlewareAsyncChain<
+export function checkTenantUsageMiddleware<T>(): MiddlewareAsyncChain<
   T,
   FHIRServerCTX
 > {
   return async (context, next) => {
-    await checkFeatureGating(
-      context.ctx.db,
-      context.ctx.tenant,
-      context.request,
-    );
+    await checkTenantUsage(context.ctx.db, context.ctx.tenant, context.request);
 
     return next(context);
   };

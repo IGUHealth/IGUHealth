@@ -682,6 +682,9 @@ export default async function validate(
   root: unknown,
   path: Loc<any, any, any> = typedPointer<any, any>(),
 ): Promise<OperationOutcome["issue"]> {
+  if (primitiveTypes.has(type))
+    return validatePrimitive(ctx, undefined, root, path, type);
+
   const canonical = ctx.resolveTypeToCanonical(ctx.fhirVersion, type);
   if (!canonical) {
     throw new OperationError(
@@ -705,9 +708,6 @@ export default async function validate(
         [toJSONPointer(path)],
       ),
     );
-
-  if (primitiveTypes.has(type))
-    return validatePrimitive(ctx, undefined, root, path, type);
 
   if (!validateIsObject(root))
     return [

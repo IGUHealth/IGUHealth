@@ -317,21 +317,24 @@ async function validateParameter<Use extends "in" | "out">(
           ),
         ];
       } else {
-        issues = [...issues, ...validateRequired(paramDefinition.part, value)];
+        issues = [
+          ...issues,
+          ...validateRequired(paramDefinition.part, arr[index]),
+        ];
 
         for (const part of paramDefinition.part) {
-          if (!isRecord(value)) {
+          if (!isRecord(arr[index])) {
             issues = [
               ...issues,
               issueError(
                 "invalid",
-                `Parameter ${part.name} must be an object found: '${value}'`,
+                `Parameter ${part.name} must be an object found: '${arr[index]}'`,
               ),
             ];
           }
           issues = [
             ...issues,
-            ...(await validateParameter(ctx, part, use, value[part.name])),
+            ...(await validateParameter(ctx, part, use, arr[index][part.name])),
           ];
         }
       }

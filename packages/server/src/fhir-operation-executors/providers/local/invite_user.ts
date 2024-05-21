@@ -10,11 +10,11 @@ import {
   outcomeInfo,
 } from "@iguhealth/operation-outcomes";
 
-import TenantAuthorizationCodeManagement from "../../../../authN/db/code/provider/tenant.js";
-import TenantUserManagement from "../../../../authN/db/users/provider/tenant.js";
-import { FHIRServerCTX } from "../../../../fhir-api/types.js";
-import { renderString } from "../../../../views/index.js";
-import InlineOperation from "../interface.js";
+import TenantAuthorizationCodeManagement from "../../../authN/db/code/provider/tenant.js";
+import TenantUserManagement from "../../../authN/db/users/provider/tenant.js";
+import { FHIRServerCTX } from "../../../fhir-api/types.js";
+import { renderString } from "../../../views/index.js";
+import InlineOperation from "./interface.js";
 
 const IguhealthInviteUserInvoke = InlineOperation(
   IguhealthInviteUser.Op,

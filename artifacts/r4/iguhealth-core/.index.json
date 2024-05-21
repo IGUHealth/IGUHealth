@@ -14,6 +14,10 @@
       "resourceType": "OperationDefinition"
     },
     {
+      "filename": "definitions/iguhealth/operation/usage-statistics.json",
+      "resourceType": "OperationDefinition"
+    },
+    {
       "filename": "definitions/iguhealth/searchParameter/access-policy/code.json",
       "resourceType": "SearchParameter"
     },
