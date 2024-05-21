@@ -205,8 +205,6 @@ function Root() {
   const matches = useMatches();
   const tenants = getTenants(iguhealth.user);
 
-  console.log(matches);
-
   return (
     <>
       <SideBar.SidebarLayout
