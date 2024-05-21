@@ -55,11 +55,11 @@ const Dashboard = () => {
       </div>
       <div className="mt-6 mb-6">
         <h2 className=" px-6 text-left flex text-2xl font-semibold">
-          FHIR R4 Limits
+          FHIR R4B Limits
         </h2>
         <span className="text-xs px-6 mt-2">
-          These are the current FHIR R4 Limits for your tenant. To see available
-          upgrades click{" "}
+          These are the current FHIR R4B Limits for your tenant. To see
+          available upgrades click{" "}
           <a
             target="_blank"
             className="underline text-blue-400"
