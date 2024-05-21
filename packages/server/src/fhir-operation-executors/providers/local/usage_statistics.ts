@@ -11,49 +11,52 @@ import {
 import { FHIRServerCTX } from "../../../fhir-api/types.js";
 import InlineOperation from "./interface.js";
 
-const IguhealthEncryptInvoke = InlineOperation(
+const IguhealthUsageStatisticsInvoke = InlineOperation(
   IguhealthUsageStatistics.Op,
   async (ctx: FHIRServerCTX, _request: FHIRRequest, _input) => {
     const r4Limits = await getTenantLimits(ctx.db, ctx.tenant, R4);
     const r4bLimits = await getTenantLimits(ctx.db, ctx.tenant, R4B);
+    const statistics = [
+      ...(await Promise.all(
+        r4Limits.map(async (limit) => {
+          const usage = await getResourceCountTotal(
+            ctx.db,
+            ctx.tenant,
+            R4,
+            (limit.resource_type as ResourceType<R4>) ?? "ALL",
+          );
+          return {
+            name: "usage_statistics",
+            usage: usage as integer,
+            version: "r4",
+            limit: limit.value as integer,
+          };
+        }),
+      )),
+      ...(await Promise.all(
+        r4bLimits.map(async (limit) => {
+          const usage = await getResourceCountTotal(
+            ctx.db,
+            ctx.tenant,
+            R4B,
+            (limit.resource_type as ResourceType<R4B>) ?? "ALL",
+          );
+          return {
+            name: "usage_statistics",
+            usage: usage as integer,
+            version: "r4b",
+            limit: limit.value as integer,
+          };
+        }),
+      )),
+    ];
+
+    console.log(statistics);
 
     return {
-      statistics: [
-        ...(await Promise.all(
-          r4Limits.map(async (limit) => {
-            const usage = await getResourceCountTotal(
-              ctx.db,
-              ctx.tenant,
-              R4,
-              (limit.resource_type as ResourceType<R4>) ?? "ALL",
-            );
-            return {
-              name: "usage_statistics",
-              usage: usage as integer,
-              version: "r4",
-              limit: limit.value as integer,
-            };
-          }),
-        )),
-        ...(await Promise.all(
-          r4bLimits.map(async (limit) => {
-            const usage = await getResourceCountTotal(
-              ctx.db,
-              ctx.tenant,
-              R4B,
-              (limit.resource_type as ResourceType<R4B>) ?? "ALL",
-            );
-            return {
-              name: "usage_statistics",
-              usage: usage as integer,
-              version: "r4b",
-              limit: limit.value as integer,
-            };
-          }),
-        )),
-      ],
+      statistics,
     };
   },
 );
 
-export default IguhealthEncryptInvoke;
+export default IguhealthUsageStatisticsInvoke;

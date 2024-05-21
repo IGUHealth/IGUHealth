@@ -5301,7 +5301,7 @@ export namespace IguhealthMessagePost {
 export namespace IguhealthUsageStatistics {
   export type Input = Record<string, never>;
   export type Output = {
-    statistics: Array<{
+    statistics?: Array<{
       name: fhirTypes.string;
       version: fhirTypes.string;
       limit: fhirTypes.integer;
@@ -5328,7 +5328,7 @@ export namespace IguhealthUsageStatistics {
       {
         name: "statistics",
         use: "out",
-        min: 1,
+        min: 0,
         max: "*",
         documentation: "The result of the operation.",
         part: [

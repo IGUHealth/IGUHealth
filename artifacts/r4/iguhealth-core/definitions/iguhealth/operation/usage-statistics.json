@@ -17,7 +17,7 @@
     {
       "name": "statistics",
       "use": "out",
-      "min": 1,
+      "min": 0,
       "max": "*",
       "documentation": "The result of the operation.",
       "part": [

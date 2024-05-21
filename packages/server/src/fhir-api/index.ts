@@ -48,6 +48,7 @@ import StructureDefinitionSnapshotInvoke from "../fhir-operation-executors/provi
 import ValueSetExpandInvoke from "../fhir-operation-executors/providers/local/terminology/expand.js";
 import CodeSystemLookupInvoke from "../fhir-operation-executors/providers/local/terminology/lookup.js";
 import ValueSetValidateInvoke from "../fhir-operation-executors/providers/local/terminology/validate.js";
+import IguhealthUsageStatisticsInvoke from "../fhir-operation-executors/providers/local/usage_statistics.js";
 import {
   AUTH_METHODS_ALLOWED,
   AUTH_RESOURCETYPES,
@@ -400,6 +401,7 @@ export async function createFHIRServices(
     CodeSystemLookupInvoke,
     IguhealthMessagePostInvoke,
     IguhealthInviteUserInvoke,
+    IguhealthUsageStatisticsInvoke,
   ]);
 
   const lambdaExecutioner = AWSLambdaExecutioner({
