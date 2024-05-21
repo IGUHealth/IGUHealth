@@ -158,7 +158,7 @@ const config = {
 
         {
           href: "https://api.iguhealth.app/oidc/interaction/login",
-          label: "Sign in",
+          label: "Sign up",
           position: "right",
         },
       ],
