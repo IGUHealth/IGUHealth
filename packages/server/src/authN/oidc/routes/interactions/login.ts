@@ -1,4 +1,3 @@
-import type koa from "koa";
 import React from "react";
 import { user_scope } from "zapatos/schema";
 
@@ -64,6 +63,14 @@ export function decodeState(
     if (typeof state.redirectUrl !== "string") {
       return undefined;
     }
+    if (!state.redirectUrl.startsWith("/")) {
+      throw new OperationError(
+        outcomeError(
+          "invalid",
+          "Redirect URL must be a relative path for login.",
+        ),
+      );
+    }
 
     return state;
   } catch (e) {
@@ -112,8 +119,6 @@ export const loginPOST =
 
     if (user !== undefined) {
       const state = decodeState(ctx.query.state?.toString());
-
-      console.log(state);
 
       if (state?.redirectUrl) {
         ctx.redirect(state?.redirectUrl);
