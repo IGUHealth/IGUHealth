@@ -40,6 +40,7 @@ const Dashboard = () => {
           >
             here
           </a>
+          .
         </span>
       </div>
       <div className="flex flex-wrap mb-6">
@@ -67,6 +68,7 @@ const Dashboard = () => {
           >
             here
           </a>
+          .
         </span>
       </div>
       <div className="flex flex-wrap mb-6">
