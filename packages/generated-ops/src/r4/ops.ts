@@ -5298,3 +5298,60 @@ export namespace IguhealthMessagePost {
     ],
   } as fhirTypes.OperationDefinition);
 }
+export namespace IguhealthUsageStatistics {
+  export type Input = Record<string, never>;
+  export type Output = { statistics: Array<fhirTypes.OperationOutcome> };
+  export type IOp = IOperation<Input, Output>;
+  export const Op: IOp = new Operation<Input, Output>({
+    resourceType: "OperationDefinition",
+    id: "iguhealth-usage-statistics",
+    url: "https://iguhealth.app/OperationDefinition/usage-statistics",
+    version: "4.0.1",
+    name: "IGUHealth Usage Statistics",
+    status: "draft",
+    kind: "operation",
+    date: "2024-05-16T09:29:23+11:00",
+    publisher: "IGUHealth",
+    description: "Get current tenants limitations and usage.",
+    code: "usage-statistics",
+    system: true,
+    type: false,
+    instance: false,
+    parameter: [
+      {
+        name: "statistics",
+        use: "out",
+        min: 1,
+        max: "*",
+        documentation: "The result of the operation.",
+        type: "OperationOutcome",
+        part: [
+          {
+            name: "name",
+            use: "out",
+            min: 1,
+            max: "1",
+            documentation: "The name of the limit.",
+            type: "string",
+          },
+          {
+            name: "limit",
+            use: "out",
+            min: 1,
+            max: "1",
+            documentation: "Value of the limit.",
+            type: "integer",
+          },
+          {
+            name: "usage",
+            use: "out",
+            min: 1,
+            max: "1",
+            documentation: "The current usage.",
+            type: "integer",
+          },
+        ],
+      },
+    ],
+  } as fhirTypes.OperationDefinition);
+}

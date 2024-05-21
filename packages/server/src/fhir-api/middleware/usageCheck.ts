@@ -44,20 +44,29 @@ async function getResourceCountTotal<Version extends FHIR_VERSION>(
   }
 }
 
+export async function getLimits(
+  client: db.Queryable,
+  tenant: TenantId,
+  fhirVersion: FHIR_VERSION,
+) {
+  const limitations = await db.sql<
+    s.limitations.SQL | s.subscription_tier.SQL | s.tenants.SQL,
+    s.limitations.JSONSelectable[]
+  >`
+  SELECT * FROM ${"limitations"} where ${{ fhir_version: toDBFHIRVersion(fhirVersion) }} AND tier = (SELECT id FROM ${"subscription_tier"} WHERE ${"id"} = (SELECT ${"subscription_tier"} FROM ${"tenants"} where ${{ id: tenant }}));
+`.run(client);
+
+  return limitations;
+}
+
 async function checkFeatureGating(
   pg: db.Queryable,
   tenant: TenantId,
   fhirRequest: FHIRRequest,
 ): Promise<void> {
-  const limitations = await db.sql<
-    s.limitations.SQL | s.subscription_tier.SQL | s.tenants.SQL,
-    s.limitations.JSONSelectable[]
-  >`
-    SELECT * FROM ${"limitations"} where ${{ fhir_version: toDBFHIRVersion(fhirRequest.fhirVersion) }} AND tier = (SELECT id FROM ${"subscription_tier"} WHERE ${"id"} = (SELECT ${"subscription_tier"} FROM ${"tenants"} where ${{ id: tenant }}));
-  `.run(pg);
-
   switch (fhirRequest.type) {
     case "create-request": {
+      const limitations = await getLimits(pg, tenant, fhirRequest.fhirVersion);
       const typeLimitation = limitations.find(
         (limitation) => limitation.resource_type === fhirRequest.resourceType,
       );

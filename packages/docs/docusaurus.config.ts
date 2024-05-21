@@ -144,10 +144,21 @@ const config = {
           label: "Reference",
           position: "right",
         },
-        { to: "/pricing", label: "Pricing", position: "right" },
+
         {
           href: "https://github.com/iguhealth/iguhealth",
           label: "GitHub",
+          position: "right",
+        },
+        { to: "/pricing", label: "Pricing", position: "right" },
+        {
+          type: "search",
+          position: "right",
+        },
+
+        {
+          href: "https://api.iguhealth.app/oidc/interaction/login",
+          label: "Sign in",
           position: "right",
         },
       ],
