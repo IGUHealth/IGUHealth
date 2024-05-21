@@ -50,6 +50,8 @@ export function encodeState(state: LoginState): string {
 }
 
 export function decodeState(
+  ctx: Parameters<ManagementRouteHandler>[0],
+  scope: user_scope,
   stateString: string | undefined,
 ): LoginState | undefined {
   if (!stateString) return undefined;
@@ -63,7 +65,14 @@ export function decodeState(
     if (typeof state.redirectUrl !== "string") {
       return undefined;
     }
-    if (!state.redirectUrl.startsWith("/")) {
+    // Strict enforcement so redirect can only happen on authorize endpoint.
+    if (
+      !state.redirectUrl.startsWith(
+        ctx.router.url(OIDC_ROUTES(scope).AUTHORIZE_GET, {
+          tenant: ctx.oidc.tenant,
+        }),
+      )
+    ) {
       throw new OperationError(
         outcomeError(
           "invalid",
@@ -118,7 +127,7 @@ export const loginPOST =
     const user = await validateCredentials(ctx);
 
     if (user !== undefined) {
-      const state = decodeState(ctx.query.state?.toString());
+      const state = decodeState(ctx, scope, ctx.query.state?.toString());
 
       if (state?.redirectUrl) {
         ctx.redirect(state?.redirectUrl);
