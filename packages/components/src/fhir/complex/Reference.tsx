@@ -1,7 +1,4 @@
-import {
-  MagnifyingGlassCircleIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/outline";
+import { MagnifyingGlassCircleIcon } from "@heroicons/react/24/outline";
 import React from "react";
 
 import {
@@ -13,7 +10,7 @@ import {
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import { FHIR_VERSION, ResourceType } from "@iguhealth/fhir-types/versions";
 
-import { Input, Loading, Select } from "../../base";
+import { Loading, Select } from "../../base";
 import { InputContainer } from "../../base/containers";
 import { Modal } from "../../base/modal";
 import { FHIRGenerativeSearchTable } from "../generative";
