@@ -2,7 +2,6 @@ import { FHIRRequest } from "@iguhealth/client/types";
 import { integer } from "@iguhealth/fhir-types/r4/types";
 import { R4, R4B, ResourceType } from "@iguhealth/fhir-types/versions";
 import { IguhealthUsageStatistics } from "@iguhealth/generated-ops/r4";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import {
   getResourceCountTotal,
