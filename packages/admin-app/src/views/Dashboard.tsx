@@ -10,8 +10,9 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col flex-1 overflow-auto">
-      <h2 className="text-2xl font-semibold mb-2">Usage Statistics</h2>
+      <h2 className="text-2xl font-semibold mb-2">Dashboard</h2>
       <div>
+        <h3 className="text-xl font-semibold mb-2 mt-4">Usage</h3>
         <Table
           data={usageStatistics?.statistics ?? []}
           columns={[
