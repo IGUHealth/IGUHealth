@@ -26,7 +26,7 @@ const Dashboard = () => {
         {stats?.statistics?.map((statistic) => (
           <Card
             key={statistic.name}
-            title={`${statistic.version} ${statistic.name}`}
+            title={`${statistic.version} ${statistic.name} Total`}
             limit={statistic.limit}
             usage={statistic.usage}
             description={statistic.description ?? ""}
