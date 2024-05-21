@@ -1,12 +1,15 @@
 import { Dialog, Transition } from "@headlessui/react";
+import classNames from "classnames";
 import React from "react";
 import { Fragment, useState } from "react";
 
 export function Modal({
+  size = "medium",
   modalTitle,
   ModalContent,
   children,
 }: {
+  size?: "small" | "medium" | "large";
   modalTitle?: string;
   ModalContent?: (
     setOpen: React.Dispatch<React.SetStateAction<boolean>>,
@@ -49,7 +52,16 @@ export function Modal({
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel
+                  className={classNames(
+                    "w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all",
+                    {
+                      "max-w-sm": size === "small",
+                      "max-w-md": size === "medium",
+                      "max-w-lg": size === "large",
+                    },
+                  )}
+                >
                   <Dialog.Title
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"

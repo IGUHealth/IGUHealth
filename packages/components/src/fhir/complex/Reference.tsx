@@ -187,6 +187,7 @@ export const FHIRReferenceEditable = ({
 }: FHIRReferenceEditableProps) => {
   return (
     <Modal
+      size="large"
       ModalContent={(setOpen) => (
         <ReferenceSearch
           fhirVersion={fhirVersion}
@@ -201,6 +202,7 @@ export const FHIRReferenceEditable = ({
     >
       {(openSearch) => (
         <Modal
+          size="large"
           ModalContent={(_setOpen) => (
             <ReferenceView
               value={value}
