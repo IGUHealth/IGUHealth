@@ -1,27 +1,25 @@
-import {
-  MagnifyingGlassCircleIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/outline";
+import { MagnifyingGlassCircleIcon } from "@heroicons/react/24/outline";
 import React from "react";
 
 import {
   Bundle,
   Reference,
   Resource,
-  ResourceType,
   StructureDefinition,
 } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
+import { FHIR_VERSION, ResourceType } from "@iguhealth/fhir-types/versions";
 
-import { Input, Loading, Select } from "../../base";
+import { Loading, Select } from "../../base";
 import { InputContainer } from "../../base/containers";
 import { Modal } from "../../base/modal";
+import { FHIRGenerativeSearchTable } from "../generative";
 import { FHIRGenerativeForm } from "../generative/form";
 import { ClientProps, EditableProps } from "../types";
 
 export type FHIRReferenceEditableProps = EditableProps<Reference> &
   ClientProps & {
-    resourceTypesAllowed?: ResourceType[];
+    resourceTypesAllowed?: ResourceType<FHIR_VERSION>[];
   };
 
 const ReferenceView = ({
@@ -114,24 +112,12 @@ const ReferenceSearch = ({
   onChange,
   resourceTypesAllowed,
 }: ClientProps & {
-  resourceTypesAllowed?: ResourceType[];
+  resourceTypesAllowed?: ResourceType<typeof fhirVersion>[];
   onChange: FHIRReferenceEditableProps["onChange"];
 }) => {
-  const [results, setResults] = React.useState<(Resource | r4b.Resource)[]>([]);
-  const [query, setQuery] = React.useState<string>("");
   const [resourceType, setResourceType] = React.useState<
-    ResourceType | undefined
+    ResourceType<typeof fhirVersion> | undefined
   >(resourceTypesAllowed?.[0]);
-
-  React.useEffect(() => {
-    if (resourceType) {
-      client
-        .search_type({}, fhirVersion, resourceType, query)
-        .then((bundle) => {
-          setResults(bundle.resources);
-        });
-    }
-  }, [client, resourceType, query]);
 
   return (
     <div>
@@ -139,30 +125,29 @@ const ReferenceSearch = ({
         <div className="w-36">
           <Select
             value={resourceType}
-            onChange={(option) => setResourceType(option.value as ResourceType)}
+            onChange={(option) =>
+              setResourceType(option.value as ResourceType<typeof fhirVersion>)
+            }
             options={(resourceTypesAllowed ?? []).map((rt) => ({
               label: rt,
               value: rt,
             }))}
           />
         </div>
-        <div className="flex flex-1">
-          <Input
-            placeholder="Search query string ..."
-            icon={<MagnifyingGlassIcon className="w-5 h-5" />}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-        </div>
       </div>
       <div className="mt-4 h-96 space-y-2 overflow-auto">
-        {results.map((resource) => (
-          <SearchResult
-            key={resource.id}
-            onChange={onChange}
-            resource={resource}
+        {resourceType && (
+          <FHIRGenerativeSearchTable
+            resourceType={resourceType}
+            fhirVersion={fhirVersion}
+            client={client}
+            onRowClick={(row): void => {
+              onChange?.call(this, {
+                reference: `${(row as Resource).resourceType}/${(row as Resource).id}`,
+              });
+            }}
           />
-        ))}
+        )}
       </div>
     </div>
   );
@@ -179,6 +164,7 @@ export const FHIRReferenceEditable = ({
 }: FHIRReferenceEditableProps) => {
   return (
     <Modal
+      size="large"
       ModalContent={(setOpen) => (
         <ReferenceSearch
           fhirVersion={fhirVersion}
@@ -193,6 +179,7 @@ export const FHIRReferenceEditable = ({
     >
       {(openSearch) => (
         <Modal
+          size="large"
           ModalContent={(_setOpen) => (
             <ReferenceView
               value={value}
