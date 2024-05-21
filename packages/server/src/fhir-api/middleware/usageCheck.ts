@@ -15,7 +15,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { toDBFHIRVersion } from "../../fhir-storage/utilities/version.js";
 import { FHIRServerCTX } from "../types.js";
 
-async function getResourceCountTotal<Version extends FHIR_VERSION>(
+export async function getResourceCountTotal<Version extends FHIR_VERSION>(
   pg: db.Queryable,
   tenant: TenantId,
   fhirVersion: Version,

@@ -5300,7 +5300,14 @@ export namespace IguhealthMessagePost {
 }
 export namespace IguhealthUsageStatistics {
   export type Input = Record<string, never>;
-  export type Output = { statistics: Array<fhirTypes.OperationOutcome> };
+  export type Output = {
+    statistics: Array<{
+      name: fhirTypes.string;
+      version: fhirTypes.string;
+      limit: fhirTypes.integer;
+      usage: fhirTypes.integer;
+    }>;
+  };
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
     resourceType: "OperationDefinition",
@@ -5324,7 +5331,6 @@ export namespace IguhealthUsageStatistics {
         min: 1,
         max: "*",
         documentation: "The result of the operation.",
-        type: "OperationOutcome",
         part: [
           {
             name: "name",
@@ -5332,6 +5338,14 @@ export namespace IguhealthUsageStatistics {
             min: 1,
             max: "1",
             documentation: "The name of the limit.",
+            type: "string",
+          },
+          {
+            name: "version",
+            use: "out",
+            min: 1,
+            max: "1",
+            documentation: "The fhir version for the limit.",
             type: "string",
           },
           {

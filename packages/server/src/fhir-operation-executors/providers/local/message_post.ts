@@ -10,8 +10,8 @@ import {
   outcomeInfo,
 } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../../fhir-api/types.js";
-import InlineOperation from "../interface.js";
+import { FHIRServerCTX } from "../../../fhir-api/types.js";
+import InlineOperation from "./interface.js";
 
 interface ChannelInformation {
   broker: Resource<R4, "MessageBroker">;

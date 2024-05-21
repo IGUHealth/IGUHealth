@@ -20,7 +20,6 @@
       "min": 1,
       "max": "*",
       "documentation": "The result of the operation.",
-      "type": "OperationOutcome",
       "part": [
         {
           "name": "name",
@@ -28,6 +27,14 @@
           "min": 1,
           "max": "1",
           "documentation": "The name of the limit.",
+          "type": "string"
+        },
+        {
+          "name": "version",
+          "use": "out",
+          "min": 1,
+          "max": "1",
+          "documentation": "The fhir version for the limit.",
           "type": "string"
         },
         {

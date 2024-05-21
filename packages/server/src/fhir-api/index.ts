@@ -37,14 +37,14 @@ import SendGrid from "../email/providers/sendgrid.js";
 import { encryptValue } from "../encryption/index.js";
 import { AWSKMSProvider } from "../encryption/provider/kms.js";
 import AWSLambdaExecutioner from "../fhir-operation-executors/providers/awsLambda/index.js";
-import IguhealthEncryptInvoke from "../fhir-operation-executors/providers/local/encryption/encrypt.js";
+import IguhealthEncryptInvoke from "../fhir-operation-executors/providers/local/encrypt.js";
 import InlineExecutioner from "../fhir-operation-executors/providers/local/index.js";
-import IguhealthInviteUserInvoke from "../fhir-operation-executors/providers/local/invite_user/invite_user.js";
-import IguhealthMessagePostInvoke from "../fhir-operation-executors/providers/local/messaging/message_post.js";
+import IguhealthInviteUserInvoke from "../fhir-operation-executors/providers/local/invite_user.js";
+import IguhealthMessagePostInvoke from "../fhir-operation-executors/providers/local/message_post.js";
 import ResourceValidateInvoke, {
   validateResource,
 } from "../fhir-operation-executors/providers/local/resource_validate.js";
-import StructureDefinitionSnapshotInvoke from "../fhir-operation-executors/providers/local/structureDefinition/snapshot.js";
+import StructureDefinitionSnapshotInvoke from "../fhir-operation-executors/providers/local/snapshot.js";
 import ValueSetExpandInvoke from "../fhir-operation-executors/providers/local/terminology/expand.js";
 import CodeSystemLookupInvoke from "../fhir-operation-executors/providers/local/terminology/lookup.js";
 import ValueSetValidateInvoke from "../fhir-operation-executors/providers/local/terminology/validate.js";
