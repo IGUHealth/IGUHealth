@@ -215,7 +215,14 @@ function Root() {
                 onClick={() => navigate(generatePath("/", {}))}
                 className="cursor-pointer w-16 h-16 p-2 mt-4"
               >
-                <Logo />
+                <Logo
+                  className={
+                    matches.find((match) => match.id === "dashboard") !==
+                    undefined
+                      ? "fill-blue-600"
+                      : "fill-blue-500 hover:fill-blue-600"
+                  }
+                />
               </div>
             }
           >

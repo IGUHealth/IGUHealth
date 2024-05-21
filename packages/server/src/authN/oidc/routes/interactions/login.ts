@@ -1,4 +1,3 @@
-import type koa from "koa";
 import React from "react";
 import { user_scope } from "zapatos/schema";
 
@@ -15,9 +14,13 @@ function getRoutes(
   ctx: Parameters<ManagementRouteHandler>[0],
   scope: user_scope,
 ) {
-  const loginRoute = ctx.router.url(OIDC_ROUTES(scope).LOGIN_POST, {
-    tenant: ctx.oidc.tenant,
-  });
+  const loginRoute = ctx.router.url(
+    OIDC_ROUTES(scope).LOGIN_POST,
+    {
+      tenant: ctx.oidc.tenant,
+    },
+    { query: { state: ctx.query.state } },
+  );
   if (loginRoute instanceof Error) throw loginRoute;
 
   const signupURL = ctx.router.url(OIDC_ROUTES(scope).SIGNUP_GET, {
@@ -38,37 +41,50 @@ function getRoutes(
   };
 }
 
-/**
- * This function sets the login redirect url on the session.
- * @param session Koa Session
- * @param redirectUrl redirect url to set on the session for login.
- */
-export function setLoginRedirectSession(
-  session: koa.BaseContext["session"],
-  redirectUrl: string,
-) {
-  if (session) {
-    session.loginRedirect = redirectUrl;
+type LoginState = { redirectUrl: string };
+
+export function encodeState(state: LoginState): string {
+  // https://developer.mozilla.org/en-US/docs/Glossary/Base64
+  // A common variant is "Base64 URL safe", which omits the padding and replaces +/ with -_ to avoid characters that might cause problems in URL path segments or query parameters.
+  return btoa(JSON.stringify(state)).replace("+", "-").replace("/", "_");
+}
+
+export function decodeState(
+  ctx: Parameters<ManagementRouteHandler>[0],
+  scope: user_scope,
+  stateString: string | undefined,
+): LoginState | undefined {
+  if (!stateString) return undefined;
+  try {
+    const state = JSON.parse(
+      atob(stateString.replace("-", "+").replace("_", "/")),
+    );
+    if (Object.keys(state).length !== 1) {
+      return undefined;
+    }
+    if (typeof state.redirectUrl !== "string") {
+      return undefined;
+    }
+    // Strict enforcement so redirect can only happen on authorize endpoint.
+    if (
+      !state.redirectUrl.startsWith(
+        ctx.router.url(OIDC_ROUTES(scope).AUTHORIZE_GET, {
+          tenant: ctx.oidc.tenant,
+        }),
+      )
+    ) {
+      throw new OperationError(
+        outcomeError(
+          "invalid",
+          "Redirect URL must be a relative path for login.",
+        ),
+      );
+    }
+
+    return state;
+  } catch (e) {
+    return undefined;
   }
-}
-
-/**
- * Deletes the login redirect url from the session
- * @param session
- */
-export function removeLoginRedirectURL(session: koa.BaseContext["session"]) {
-  delete session?.loginRedirect;
-}
-
-/**
- * Get the login redirect url that is set using setLoginRedirectSession
- * @param session Koa Session
- * @returns Login redirect set on the session
- */
-export function getLoginRedirectURL(
-  session: koa.BaseContext["session"],
-): string | undefined {
-  return session?.loginRedirect;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -111,11 +127,10 @@ export const loginPOST =
     const user = await validateCredentials(ctx);
 
     if (user !== undefined) {
-      const redirectURL = getLoginRedirectURL(ctx.session);
+      const state = decodeState(ctx, scope, ctx.query.state?.toString());
 
-      if (redirectURL) {
-        removeLoginRedirectURL(ctx.session);
-        ctx.redirect(redirectURL);
+      if (state?.redirectUrl) {
+        ctx.redirect(state?.redirectUrl);
         return;
       } else if (adminApp.ADMIN_APP() !== undefined) {
         const tenantClaims = await ctx.oidc.userManagement.getTenantClaims(

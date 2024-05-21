@@ -7,6 +7,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import * as views from "../../../../views/index.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import type { ManagementRouteHandler } from "../../index.js";
+import { sendAlertEmail } from "../../utilities/sendAlertEmail.js";
 import { sendPasswordResetEmail } from "../../utilities/sendPasswordResetEmail.js";
 
 export const signupGET =
@@ -45,38 +46,36 @@ export const signupPOST =
     if (!email) {
       throw new OperationError(outcomeError("invalid", "Email is required."));
     }
-    try {
+
+    const existingUser = (
+      await ctx.oidc.userManagement.search(ctx.postgres, {
+        email,
+      })
+    )[0];
+    if (existingUser !== undefined) {
+      await sendPasswordResetEmail(scope, ctx, existingUser);
+    } else {
       const user = await ctx.oidc.userManagement.create(ctx.postgres, {
         email,
       });
 
+      // Alert system admin of new user.
+      await sendAlertEmail(
+        ctx.FHIRContext.emailProvider,
+        "New User",
+        `A new user with email '${user.email}' has signed up.`,
+      );
       await sendPasswordResetEmail(scope, ctx, user);
-      ctx.status = 200;
-      ctx.body = views.renderString(
-        React.createElement(Feedback, {
-          logo: "/public/img/logo.svg",
-          title: "IGUHealth",
-          header: "Email Verification",
-          content:
-            "We have sent an email to your email address. Please verify your email address to login.",
-        }),
-      );
-    } catch (e) {
-      const user = await ctx.oidc.userManagement.search(ctx.postgres, {
-        email,
-      });
-      if (user.length === 1) {
-        await sendPasswordResetEmail(scope, ctx, user[0]);
-      }
-      ctx.status = 200;
-      ctx.body = views.renderString(
-        React.createElement(Feedback, {
-          logo: "/public/img/logo.svg",
-          title: "IGUHealth",
-          header: "Email Verification",
-          content:
-            "We have sent an email to your email address. Please verify your email address to login.",
-        }),
-      );
     }
+
+    ctx.status = 200;
+    ctx.body = views.renderString(
+      React.createElement(Feedback, {
+        logo: "/public/img/logo.svg",
+        title: "IGUHealth",
+        header: "Email Verification",
+        content:
+          "We have sent an email to your email address. Please verify your email address to login.",
+      }),
+    );
   };

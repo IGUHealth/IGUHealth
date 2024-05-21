@@ -5,7 +5,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { OIDC_ROUTES } from "../constants.js";
 import { ManagementRouteHandler } from "../index.js";
 import { isInvalidRedirectUrl } from "../utilities/checkRedirectUrl.js";
-import { setLoginRedirectSession } from "./interactions/login.js";
+import { encodeState } from "./interactions/login.js";
 
 /**
  * See https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1.
@@ -56,12 +56,17 @@ export function authorizeGET(scope: user_scope): ManagementRouteHandler {
 
       ctx.redirect(`${redirectUrl}?code=${code.code}&state=${state}`);
     } else {
-      setLoginRedirectSession(ctx.session, ctx.url);
+      // use a state parameter
+      const state = encodeState({ redirectUrl: ctx.url });
 
       ctx.redirect(
-        ctx.router.url(OIDC_ROUTES(scope).LOGIN_GET, {
-          tenant: ctx.oidc.tenant,
-        }) as string,
+        ctx.router.url(
+          OIDC_ROUTES(scope).LOGIN_GET,
+          {
+            tenant: ctx.oidc.tenant,
+          },
+          { query: { state } },
+        ) as string,
       );
     }
     await next();
