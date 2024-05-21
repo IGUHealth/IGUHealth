@@ -27,8 +27,9 @@ const IguhealthUsageStatisticsInvoke = InlineOperation(
           return {
             name: limit.resource_type ?? "ALL",
             usage: usage as integer,
-            version: "r4",
+            version: "R4",
             limit: limit.value as integer,
+            description: limit.name,
           };
         }),
       )),
@@ -43,8 +44,9 @@ const IguhealthUsageStatisticsInvoke = InlineOperation(
           return {
             name: limit.resource_type ?? "ALL",
             usage: usage as integer,
-            version: "r4b",
+            version: "R4B",
             limit: limit.value as integer,
+            description: limit.name,
           };
         }),
       )),

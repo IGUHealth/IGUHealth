@@ -42,7 +42,7 @@ export default function Card({
         </span>
         <h2 className="mb-5 text-[42px] font-bold text-dark ">
           <span>{price}</span>
-          {priceSuffix && (
+          {priceSuffix !== undefined && (
             <span className="text-base font-medium text-body-color ">
               {priceSuffix}
             </span>
