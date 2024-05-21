@@ -16,14 +16,14 @@ export default function Card({
   return (
     <div className="text-slate-800 w-full px-4 md:w-1/2 xl:w-1/4">
       <div className="h-[300px] relative z-10 mb-10 overflow-hidden rounded-[10px] border-solid border-2 border-stroke  py-10 px-8 shadow-pricing sm:p-12 lg:py-10 lg:px-6 xl:p-[50px]">
-        <span className="mb-3 block text-lg font-semibold text-primary truncate">
+        <span className="mb-6 block text-lg font-semibold text-primary truncate">
           {title}
         </span>
-        <h2 className="mb-5 text-[42px] font-bold text-dark ">
-          <span>{usage}</span>
+        <h2 className="mb-10 text-3xl font-bold text-dark ">
+          <span>{new Intl.NumberFormat().format(usage)}</span>
           <span className="text-base font-medium text-body-color ">
             {" "}
-            / {limit}
+            / {new Intl.NumberFormat().format(limit)}
           </span>
         </h2>
         <p className="mb-2 text-sm text-body-color ">{description}</p>
