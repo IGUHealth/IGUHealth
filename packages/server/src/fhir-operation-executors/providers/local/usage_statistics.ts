@@ -26,7 +26,7 @@ const IguhealthUsageStatisticsInvoke = InlineOperation(
             (limit.resource_type as ResourceType<R4>) ?? "ALL",
           );
           return {
-            name: "usage_statistics",
+            name: limit.resource_type ?? "ALL",
             usage: usage as integer,
             version: "r4",
             limit: limit.value as integer,
@@ -42,7 +42,7 @@ const IguhealthUsageStatisticsInvoke = InlineOperation(
             (limit.resource_type as ResourceType<R4B>) ?? "ALL",
           );
           return {
-            name: "usage_statistics",
+            name: limit.resource_type ?? "ALL",
             usage: usage as integer,
             version: "r4b",
             limit: limit.value as integer,

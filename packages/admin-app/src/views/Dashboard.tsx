@@ -10,8 +10,39 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col flex-1 overflow-auto">
-      <h2 className="text-2xl font-semibold mb-2">UsageStatistics</h2>
-      <span>{JSON.stringify(usageStatistics)}</span>
+      <h2 className="text-2xl font-semibold mb-2">Usage Statistics</h2>
+      <div>
+        <Table
+          data={usageStatistics?.statistics ?? []}
+          columns={[
+            {
+              content: "Version",
+              id: "version",
+              selectorType: "fhirpath",
+              selector: "version",
+            },
+            {
+              content: "Name",
+              id: "name",
+              selectorType: "fhirpath",
+              selector: "name",
+            },
+            {
+              content: "Usage",
+              id: "usage",
+              selectorType: "fhirpath",
+              selector: "usage",
+            },
+
+            {
+              content: "Limit",
+              id: "limit",
+              selectorType: "fhirpath",
+              selector: "limit",
+            },
+          ]}
+        />
+      </div>
     </div>
   );
 };
