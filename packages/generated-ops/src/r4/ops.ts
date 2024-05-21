@@ -5306,6 +5306,7 @@ export namespace IguhealthUsageStatistics {
       version: fhirTypes.string;
       limit: fhirTypes.integer;
       usage: fhirTypes.integer;
+      description: fhirTypes.string;
     }>;
   };
   export type IOp = IOperation<Input, Output>;
@@ -5363,6 +5364,14 @@ export namespace IguhealthUsageStatistics {
             max: "1",
             documentation: "The current usage.",
             type: "integer",
+          },
+          {
+            name: "description",
+            use: "out",
+            min: 1,
+            max: "1",
+            documentation: "The description of the limit.",
+            type: "string",
           },
         ],
       },

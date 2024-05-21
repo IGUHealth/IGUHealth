@@ -1,11 +1,7 @@
-import Link from "@docusaurus/Link";
-import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Card from "@site/src/components/Card";
-import Heading from "@theme/Heading";
 import Layout from "@theme/Layout";
 
-export default function Home(): JSX.Element {
-  const { siteConfig } = useDocusaurusContext();
+export default function Pricing(): JSX.Element {
   return (
     <Layout title={`IGUHealth pricing`} description="IGUHealth pricing page">
       <main>

@@ -43,6 +43,7 @@ test("VALIDATION OUTPUT", async () => {
           usage: 1,
           version: "r4",
           limit: 10,
+          description: "",
         },
       ],
     },
@@ -68,6 +69,7 @@ test("VALIDATION OUTPUT", async () => {
         {
           name: "usage_statistics",
           usage: 1,
+          description: "",
         },
       ],
     },
