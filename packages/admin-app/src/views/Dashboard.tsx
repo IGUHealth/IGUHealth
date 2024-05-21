@@ -1,18 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 
 import { Loading } from "@iguhealth/components";
+import { R4 } from "@iguhealth/fhir-types/versions";
+import { IguhealthUsageStatistics } from "@iguhealth/generated-ops/lib/r4/ops";
 
 import Card from "../components/Card";
-import { getUsageStatistics } from "../db/usage_statistics";
+import { getClient } from "../db/client";
 
 const Dashboard = () => {
-  const usageStatistics = useRecoilValue(getUsageStatistics);
+  const [stats, setStats] = useState<IguhealthUsageStatistics.Output>({
+    statistics: [],
+  });
+
+  const client = useRecoilValue(getClient);
+  useEffect(() => {
+    client
+      .invoke_system(IguhealthUsageStatistics.Op, {}, R4, {})
+      .then((stats) => setStats(stats));
+  }, [setStats]);
 
   return (
     <div className="flex flex-col flex-1 overflow-auto">
       <div className="mt-4 flex flex-wrap justify-center">
-        {usageStatistics?.statistics?.map((statistic) => (
+        {stats?.statistics?.map((statistic) => (
           <Card
             key={statistic.name}
             title={`${statistic.version} ${statistic.name}`}
