@@ -48,12 +48,13 @@ jobs:
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
 
+          # --platform linux/amd64,linux/arm64 \
+
           docker buildx build . \
            --file docker/server/server.dockerfile \
            --tag $IMAGE_ID:$VERSION \
            --tag $IMAGE_ID:latest \
-           --label "runnumber=${GITHUB_RUN_ID}" \
-           --platform linux/amd64,linux/arm64 \
+           --label "runnumber=${GITHUB_RUN_ID}" \           
            --push
 
   admin-app:
@@ -96,10 +97,10 @@ jobs:
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
 
+          # --platform linux/amd64,linux/arm64 \
           docker buildx build . \
            --file docker/admin-app/admin-app.dockerfile \
            --tag $IMAGE_ID:$VERSION \
            --tag $IMAGE_ID:latest \
            --label "runnumber=${GITHUB_RUN_ID}" \
-           --platform linux/amd64,linux/arm64 \
            --push
