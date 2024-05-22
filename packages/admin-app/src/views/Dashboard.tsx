@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 
+import { Toaster } from "@iguhealth/components";
 import { Loading } from "@iguhealth/components";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { IguhealthUsageStatistics } from "@iguhealth/generated-ops/lib/r4/ops";
+import { isOperationError } from "@iguhealth/operation-outcomes";
 
 import Card from "../components/Card";
 import { getClient } from "../db/client";
@@ -21,7 +23,17 @@ const Dashboard = () => {
         setStats(
           Object.groupBy(stats?.statistics ?? [], (stat) => stat.version),
         ),
-      );
+      )
+      .catch((e) => {
+        if (isOperationError(e))
+          Toaster.error(
+            e.operationOutcome.issue?.[0]?.diagnostics ??
+              "Failed to fetch stats.",
+          );
+        else {
+          Toaster.error("Failed to usage stats.");
+        }
+      });
   }, [setStats]);
 
   return (
