@@ -21,9 +21,9 @@
     "@iguhealth/hl7.fhir.r4.core": "workspace:^",
     "@iguhealth/hl7.fhir.r4b.core": "workspace:^",
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^",
-    "@inquirer/prompts": "^4.3.3",
+    "@inquirer/prompts": "^5.0.4",
     "@types/node": "^20.12.7",
-    "commander": "^12.0.0"
+    "commander": "^12.1.0"
   },
   "devDependencies": {
     "typescript": "5.4.5"

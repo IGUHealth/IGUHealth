@@ -24,7 +24,7 @@
   "dependencies": {
     "@iguhealth/artifacts": "workspace:^",
     "@iguhealth/fhir-types": "workspace:^",
-    "commander": "^12.0.0"
+    "commander": "^12.1.0"
   },
   "files": [
     "lib/**"
