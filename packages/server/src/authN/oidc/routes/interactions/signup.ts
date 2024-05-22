@@ -22,7 +22,7 @@ export const signupGET =
     ctx.body = views.renderString(
       React.createElement(EmailForm, {
         logo: "/public/img/logo.svg",
-        header: "Signup",
+        header: "Sign up",
         action: signupURL,
       }),
     );
