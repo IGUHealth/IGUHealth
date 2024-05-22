@@ -20,7 +20,6 @@ import {
   EmailTemplateText,
 } from "../../../email/templates/base.js";
 import { FHIRServerCTX } from "../../../fhir-api/types.js";
-// import { renderString } from "../../../views/index.js";
 import InlineOperation from "./interface.js";
 
 const IguhealthInviteUserInvoke = InlineOperation(
