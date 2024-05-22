@@ -6194,7 +6194,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codemirror/commands@npm:^6.0.0, @codemirror/commands@npm:^6.3.3":
+"@codemirror/commands@npm:^6.0.0":
   version: 6.3.3
   resolution: "@codemirror/commands@npm:6.3.3"
   dependencies:
@@ -6203,6 +6203,18 @@ __metadata:
     "@codemirror/view": "npm:^6.0.0"
     "@lezer/common": "npm:^1.1.0"
   checksum: 10/4b398b102d6afcbf0e0018b426287a7458867497811c9155790a3cc679b880765cd756bdb96bf35abc28fecb85c0938e618d39469ce8bc0724d4dea5d88f6ac2
+  languageName: node
+  linkType: hard
+
+"@codemirror/commands@npm:^6.5.0":
+  version: 6.5.0
+  resolution: "@codemirror/commands@npm:6.5.0"
+  dependencies:
+    "@codemirror/language": "npm:^6.0.0"
+    "@codemirror/state": "npm:^6.4.0"
+    "@codemirror/view": "npm:^6.0.0"
+    "@lezer/common": "npm:^1.1.0"
+  checksum: 10/2fa3e42e02e50a02cbf55c48c3f3f7891453c841b6399834a2898f4f3a286074ef13646341a60a89b53bd8372ed5885740ced869b9482e115a73305f792971fe
   languageName: node
   linkType: hard
 
@@ -6276,9 +6288,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codemirror/lang-markdown@npm:^6.2.4":
-  version: 6.2.4
-  resolution: "@codemirror/lang-markdown@npm:6.2.4"
+"@codemirror/lang-markdown@npm:^6.2.5":
+  version: 6.2.5
+  resolution: "@codemirror/lang-markdown@npm:6.2.5"
   dependencies:
     "@codemirror/autocomplete": "npm:^6.7.1"
     "@codemirror/lang-html": "npm:^6.0.0"
@@ -6287,7 +6299,7 @@ __metadata:
     "@codemirror/view": "npm:^6.0.0"
     "@lezer/common": "npm:^1.2.1"
     "@lezer/markdown": "npm:^1.0.0"
-  checksum: 10/ceaf6b8ca430c3df5b11a4df0133b74ea16b77d5cc02594d137a3add226731adaa55db7f9bb1604c704d8e93ec7979b1d0198cffdf21c2ef8846bce51574dfc0
+  checksum: 10/9b766d98322df57ec3e8e90239061afaf33203d0eb2c793aa1f0b22dd99748bec4e72630b6bd467380e6869289095238b119aff7f99ce761aaf19908a59410d9
   languageName: node
   linkType: hard
 
@@ -6334,14 +6346,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codemirror/view@npm:^6.0.0, @codemirror/view@npm:^6.17.0, @codemirror/view@npm:^6.26.0":
-  version: 6.26.0
-  resolution: "@codemirror/view@npm:6.26.0"
+"@codemirror/view@npm:^6.0.0, @codemirror/view@npm:^6.17.0, @codemirror/view@npm:^6.26.3":
+  version: 6.26.3
+  resolution: "@codemirror/view@npm:6.26.3"
   dependencies:
     "@codemirror/state": "npm:^6.4.0"
     style-mod: "npm:^4.1.0"
     w3c-keyname: "npm:^2.2.4"
-  checksum: 10/d4ef249044cbc293a7267c83e08671a68646fd7bbe1efb8d205c01385f157c93918eabeaedb62a4cc10598ab63818ac749cec4f6355fe0404d9d4beb7857c31f
+  checksum: 10/fa7cb5aa37db2d252ffd7cdbfb858b23a525ce9835648070b3c99eaaa361f686fa1997576bb258b7c34b6d6bd7a251a2294158e952239616102f783da1025fe4
   languageName: node
   linkType: hard
 
@@ -7663,10 +7675,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@iguhealth/admin-app@workspace:packages/admin-app"
   dependencies:
-    "@codemirror/commands": "npm:^6.3.3"
+    "@codemirror/commands": "npm:^6.5.0"
     "@codemirror/lang-javascript": "npm:^6.2.2"
     "@codemirror/lang-json": "npm:^6.0.1"
-    "@codemirror/view": "npm:^6.26.0"
+    "@codemirror/view": "npm:^6.26.3"
     "@headlessui/react": "npm:^1.7.18"
     "@heroicons/react": "npm:^2.1.3"
     "@iguhealth/client": "workspace:^"
@@ -7791,9 +7803,9 @@ __metadata:
     "@babel/preset-env": "npm:^7.24.4"
     "@babel/preset-react": "npm:^7.24.1"
     "@babel/preset-typescript": "npm:^7.24.1"
-    "@codemirror/lang-markdown": "npm:^6.2.4"
+    "@codemirror/lang-markdown": "npm:^6.2.5"
     "@codemirror/state": "npm:^6.4.1"
-    "@codemirror/view": "npm:^6.26.0"
+    "@codemirror/view": "npm:^6.26.3"
     "@headlessui/react": "npm:^1.7.18"
     "@heroicons/react": "npm:^2.1.3"
     "@iguhealth/client": "workspace:^"
