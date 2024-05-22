@@ -55,7 +55,7 @@
     "db-migrate-pg": "^1.5.2",
     "dotenv": "^16.4.5",
     "fast-json-patch": "3.1.1",
-    "ioredis": "^5.4.1",
+    "ioredis": "5.3.2",
     "jose": "^5.3.0",
     "json-schema-to-typescript": "^13.1.2",
     "jwks-rsa": "^3.1.0",

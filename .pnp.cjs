@@ -15986,7 +15986,7 @@ const RAW_RUNTIME_STATE =
           ["db-migrate-pg", "npm:1.5.2"],\
           ["dotenv", "npm:16.4.5"],\
           ["fast-json-patch", "npm:3.1.1"],\
-          ["ioredis", "npm:5.4.1"],\
+          ["ioredis", "npm:5.3.2"],\
           ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
           ["jose", "npm:5.3.0"],\
           ["json-schema-to-typescript", "npm:13.1.2"],\
@@ -34732,22 +34732,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/ioredis-npm-5.3.2-58471071b1-0140f055ef.zip/node_modules/ioredis/",\
         "packageDependencies": [\
           ["ioredis", "npm:5.3.2"],\
-          ["@ioredis/commands", "npm:1.2.0"],\
-          ["cluster-key-slot", "npm:1.1.2"],\
-          ["debug", "virtual:1ff4b5f90832ba0a9c93ba1223af226e44ba70c1126a3740d93562b97bc36544e896a5e95908196f7458713e6a6089a34bfc67362fc6df7fa093bd06c878be47#npm:4.3.4"],\
-          ["denque", "npm:2.1.0"],\
-          ["lodash.defaults", "npm:4.2.0"],\
-          ["lodash.isarguments", "npm:3.1.0"],\
-          ["redis-errors", "npm:1.2.0"],\
-          ["redis-parser", "npm:3.0.0"],\
-          ["standard-as-callback", "npm:2.1.0"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:5.4.1", {\
-        "packageLocation": "./.yarn/cache/ioredis-npm-5.4.1-c96e18ae67-9043b812ac.zip/node_modules/ioredis/",\
-        "packageDependencies": [\
-          ["ioredis", "npm:5.4.1"],\
           ["@ioredis/commands", "npm:1.2.0"],\
           ["cluster-key-slot", "npm:1.1.2"],\
           ["debug", "virtual:1ff4b5f90832ba0a9c93ba1223af226e44ba70c1126a3740d93562b97bc36544e896a5e95908196f7458713e6a6089a34bfc67362fc6df7fa093bd06c878be47#npm:4.3.4"],\
