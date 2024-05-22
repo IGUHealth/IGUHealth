@@ -13,7 +13,12 @@ import {
 
 import TenantAuthorizationCodeManagement from "../../../authN/db/code/provider/tenant.js";
 import TenantUserManagement from "../../../authN/db/users/provider/tenant.js";
-import { Button, Email, Image, Text } from "../../../email/templates/base.js";
+import {
+  EmailTemplate,
+  EmailTemplateButton,
+  EmailTemplateImage,
+  EmailTemplateText,
+} from "../../../email/templates/base.js";
 import { FHIRServerCTX } from "../../../fhir-api/types.js";
 // import { renderString } from "../../../views/index.js";
 import InlineOperation from "./interface.js";
@@ -45,16 +50,16 @@ const IguhealthInviteUserInvoke = InlineOperation(
     });
 
     const emailHTML = renderToString(
-      React.createElement(Email, {
+      React.createElement(EmailTemplate, {
         children: [
-          React.createElement(Image, {
+          React.createElement(EmailTemplateImage, {
             alt: "IGUHealth Logo",
             url: `${process.env.API_URL}/public/img/logo.svg`,
           }),
-          React.createElement(Text, {
+          React.createElement(EmailTemplateText, {
             text: `You've been invited to join IGUHealth tenant '${ctx.tenant}'. Click below to accept the invite or if you did not request this email, please disregard.`,
           }),
-          React.createElement(Button, {
+          React.createElement(EmailTemplateButton, {
             title: "Accept Invite",
             href: new URL(
               `/w/${ctx.tenant}/oidc/interaction/password-reset-verify?code=${code.code}`,

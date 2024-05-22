@@ -1,6 +1,6 @@
 import React from "react";
 
-export function Image({ url, alt }: { url: string; alt: string }) {
+export function EmailTemplateImage({ url, alt }: { url: string; alt: string }) {
   return React.createElement(
     "div",
     {
@@ -25,7 +25,7 @@ export function Image({ url, alt }: { url: string; alt: string }) {
   );
 }
 
-export function Text({ text }: { text: string }) {
+export function EmailTemplateText({ text }: { text: string }) {
   return React.createElement(
     "div",
     {
@@ -38,7 +38,7 @@ export function Text({ text }: { text: string }) {
   );
 }
 
-export function Email({ children }: { children: React.ReactNode }) {
+export function EmailTemplate({ children }: { children: React.ReactNode }) {
   return React.createElement(
     "html",
     null,
@@ -97,7 +97,13 @@ export function Email({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function Button({ href, title }: { href: string; title: string }) {
+export function EmailTemplateButton({
+  href,
+  title,
+}: {
+  href: string;
+  title: string;
+}) {
   return React.createElement(
     "div",
     {
