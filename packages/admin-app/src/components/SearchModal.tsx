@@ -1,13 +1,25 @@
 import { Dialog, Transition } from "@headlessui/react";
 import classNames from "classnames";
-import { CSSProperties, Fragment, useEffect, useMemo, useState } from "react";
+import {
+  CSSProperties,
+  ComponentType,
+  Fragment,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { generatePath, useNavigate } from "react-router-dom";
-import { FixedSizeList as List } from "react-window";
+import {
+  FixedSizeListProps,
+  FixedSizeList as _FixedSizeList,
+} from "react-window";
 import { RecoilState, atom, useRecoilState, useRecoilValue } from "recoil";
 
 import { CapabilityStatementRestResource } from "@iguhealth/fhir-types/r4/types";
 
 import { getCapabilities } from "../db/capabilities";
+
+const List = _FixedSizeList as ComponentType<FixedSizeListProps>;
 
 export const openSearchModalAtom = atom({
   key: "openSearchModal",
