@@ -1,7 +1,13 @@
 import React from "react";
+import { renderToString } from "react-dom/server";
 import * as s from "zapatos/schema";
 
-import * as views from "../../../views/index.js";
+import {
+  EmailTemplate,
+  EmailTemplateButton,
+  EmailTemplateImage,
+  EmailTemplateText,
+} from "../../../email/templates/base.js";
 import { User } from "../../db/users/types.js";
 import { OIDC_ROUTES } from "../constants.js";
 import { ManagementRouteHandler } from "../index.js";
@@ -51,14 +57,19 @@ export async function sendPasswordResetEmail(
 
   if (typeof emailVerificationURL !== "string") throw emailVerificationURL;
 
-  const emailHTML = views.renderString(
-    React.createElement("div", {
+  const emailHTML = renderToString(
+    React.createElement(EmailTemplate, {
       children: [
-        "To verify your email and set your password click ",
-        React.createElement("a", {
-          href: new URL(emailVerificationURL, process.env.API_URL),
-          clicktracking: "off",
-          children: "  Here ",
+        React.createElement(EmailTemplateImage, {
+          alt: "IGUHealth Logo",
+          url: `${process.env.API_URL}/public/img/logo.svg`,
+        }),
+        React.createElement(EmailTemplateText, {
+          text: "To verify your email and set your password click below.",
+        }),
+        React.createElement(EmailTemplateButton, {
+          title: "Reset Password",
+          href: new URL(emailVerificationURL, process.env.API_URL).toString(),
         }),
       ],
     }),

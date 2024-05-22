@@ -8,8 +8,9 @@ const indexCSS = fs
   .toString();
 
 export default function Base({
+  title = "IGUHealth",
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: Readonly<{ children: React.ReactNode; title?: string }>) {
   return React.createElement(
     "html",
     { lang: "en" },
@@ -21,7 +22,7 @@ export default function Base({
         name: "viewport",
         content: "width=device-width, initial-scale=1",
       }),
-      React.createElement("title", null, "IGUHealth Login"),
+      React.createElement("title", null, title),
       React.createElement("link", {
         rel: "icon",
         href: "/public/img/logo.svg",

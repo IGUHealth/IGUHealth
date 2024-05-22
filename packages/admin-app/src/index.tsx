@@ -485,16 +485,6 @@ function Root() {
                       <a
                         className={classNames(
                           "cursor-pointer block px-4 py-2 text-sm  hover:text-blue-800 hover:bg-blue-100",
-                          {
-                            "text-slate-800":
-                              matches.find(
-                                (match) => match.id === "settings",
-                              ) === undefined,
-                            "bg-blue-100 text-blue-800":
-                              matches.find(
-                                (match) => match.id === "settings",
-                              ) !== undefined,
-                          },
                         )}
                         onClick={() => {
                           navigate(generatePath("/settings", {}));

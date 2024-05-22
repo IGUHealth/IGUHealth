@@ -1,4 +1,5 @@
 import React from "react";
+import { renderToString } from "react-dom/server";
 
 import { FHIRRequest } from "@iguhealth/client/types";
 import { Membership, code } from "@iguhealth/fhir-types/r4/types";
@@ -12,8 +13,13 @@ import {
 
 import TenantAuthorizationCodeManagement from "../../../authN/db/code/provider/tenant.js";
 import TenantUserManagement from "../../../authN/db/users/provider/tenant.js";
+import {
+  EmailTemplate,
+  EmailTemplateButton,
+  EmailTemplateImage,
+  EmailTemplateText,
+} from "../../../email/templates/base.js";
 import { FHIRServerCTX } from "../../../fhir-api/types.js";
-import { renderString } from "../../../views/index.js";
 import InlineOperation from "./interface.js";
 
 const IguhealthInviteUserInvoke = InlineOperation(
@@ -41,22 +47,28 @@ const IguhealthInviteUserInvoke = InlineOperation(
       user_id: user[0].id,
       expires_in: "15 minutes",
     });
-    const element = React.createElement("div", {
-      children: [
-        `You've been invited to join IGUHealth tenant '${ctx.tenant}'. Click `,
-        React.createElement("a", {
-          href: new URL(
-            `/w/${ctx.tenant}/oidc/interaction/password-reset-verify?code=${code.code}`,
-            process.env.API_URL,
-          ),
-          clicktracking: "off",
-          children: "here",
-        }),
-        " to set your password. Disregard this email if you did not request this.",
-      ],
-    });
 
-    const emailHTML = renderString(element);
+    const emailHTML = renderToString(
+      React.createElement(EmailTemplate, {
+        children: [
+          React.createElement(EmailTemplateImage, {
+            alt: "IGUHealth Logo",
+            url: `${process.env.API_URL}/public/img/logo.svg`,
+          }),
+          React.createElement(EmailTemplateText, {
+            text: `You've been invited to join IGUHealth tenant '${ctx.tenant}'. Click below to accept the invite or if you did not request this email, please disregard.`,
+          }),
+          React.createElement(EmailTemplateButton, {
+            title: "Accept Invite",
+            href: new URL(
+              `/w/${ctx.tenant}/oidc/interaction/password-reset-verify?code=${code.code}`,
+              process.env.API_URL,
+            ).toString(),
+          }),
+        ],
+      }),
+    );
+
     await ctx.emailProvider?.sendEmail({
       from: process.env.EMAIL_FROM as string,
       to: user[0].email,
