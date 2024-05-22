@@ -24,10 +24,10 @@
     "react": "^18.2.0"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.24.4",
+    "@babel/preset-env": "^7.24.5",
     "@babel/preset-react": "^7.24.1",
     "@babel/preset-typescript": "^7.24.1",
-    "@chromatic-com/storybook": "^1",
+    "@chromatic-com/storybook": "^1.4.0",
     "@codemirror/state": "^6.4.1",
     "@codemirror/view": "^6.26.3",
     "@iguhealth/fhir-types": "workspace:^",
