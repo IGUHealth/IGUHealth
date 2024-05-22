@@ -62,7 +62,7 @@ export async function sendPasswordResetEmail(
       children: [
         React.createElement(EmailTemplateImage, {
           alt: "IGUHealth Logo",
-          url: `${process.env.API_URL}/public/img/logo.svg`,
+          url: new URL("/public/img/logo.svg", process.env.API_URL).toString(),
         }),
         React.createElement(EmailTemplateText, {
           text: "To verify your email and set your password click below.",
