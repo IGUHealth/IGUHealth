@@ -11,8 +11,12 @@ export interface SideBarItemProps
   children: React.ReactNode;
 }
 
-export function SideBarItem(props: SideBarItemProps) {
-  const { active = false, logo, children } = props;
+export function SideBarItem({
+  active,
+  logo,
+  children,
+  ...props
+}: SideBarItemProps) {
   return (
     <li {...props}>
       <div
