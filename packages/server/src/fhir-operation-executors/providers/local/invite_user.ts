@@ -53,13 +53,14 @@ const IguhealthInviteUserInvoke = InlineOperation(
         children: [
           React.createElement(EmailTemplateImage, {
             alt: "IGUHealth Logo",
+            width: "50px",
             url: new URL(
-              "/public/img/logo.svg",
+              "/public/img/logo.png",
               process.env.API_URL,
             ).toString(),
           }),
           React.createElement(EmailTemplateText, {
-            text: `You've been invited to join IGUHealth tenant '${ctx.tenant}'. Click below to accept the invite or if you did not request this email, please disregard.`,
+            text: `You've been invited to join IGUHealth tenant '${ctx.tenant}'. Click below if you'd like to accept the invite.`,
           }),
           React.createElement(EmailTemplateButton, {
             title: "Accept Invite",

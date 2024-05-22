@@ -1,4 +1,4 @@
-import { Tab } from "@headlessui/react";
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import classNames from "classnames";
 import React from "react";
 
@@ -18,8 +18,8 @@ export interface TabsProps {
 export const Tabs = ({ tabs, rightSide }: TabsProps) => {
   return (
     <div className="flex flex-1 flex-col px-2 sm:px-0 overflow-auto">
-      <Tab.Group>
-        <Tab.List className="flex space-x-4 border-b items-center">
+      <TabGroup className="flex flex-1 flex-col">
+        <TabList className="flex space-x-4 border-b items-center">
           <div className="flex space-x-4 flex-grow">
             {tabs.map((tab) => (
               <Tab
@@ -38,15 +38,15 @@ export const Tabs = ({ tabs, rightSide }: TabsProps) => {
             ))}
           </div>
           {rightSide}
-        </Tab.List>
-        <Tab.Panels className="mt-2 flex flex-grow flex-col overflow-auto">
+        </TabList>
+        <TabPanels className="mt-2 flex flex-grow flex-col overflow-auto">
           {tabs.map((tab) => (
-            <Tab.Panel className="flex flex-grow flex-col" key={tab.id}>
+            <TabPanel className="flex flex-grow flex-col" key={tab.id}>
               {tab.content}
-            </Tab.Panel>
+            </TabPanel>
           ))}
-        </Tab.Panels>
-      </Tab.Group>
+        </TabPanels>
+      </TabGroup>
     </div>
   );
 };

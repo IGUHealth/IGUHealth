@@ -1,6 +1,14 @@
 import React from "react";
 
-export function EmailTemplateImage({ url, alt }: { url: string; alt: string }) {
+export function EmailTemplateImage({
+  width = "100",
+  url,
+  alt,
+}: {
+  width?: string;
+  url: string;
+  alt: string;
+}) {
   return React.createElement(
     "div",
     {
@@ -13,7 +21,7 @@ export function EmailTemplateImage({ url, alt }: { url: string; alt: string }) {
       src: url,
       width: "100",
       style: {
-        width: "100px",
+        width: { width },
         outline: "none",
         border: "none",
         textDecoration: "none",
@@ -74,8 +82,8 @@ export function EmailTemplate({ children }: { children: React.ReactNode }) {
               backgroundColor: "#FFFFFF",
             },
             role: "presentation",
-            cellspacing: 0,
-            cellpadding: 0,
+            cellSpacing: 0,
+            cellPadding: 0,
             border: 0,
           },
           React.createElement(

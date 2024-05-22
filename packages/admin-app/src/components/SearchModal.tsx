@@ -73,10 +73,17 @@ function SearchResultItem({
 }
 
 function SearchModal() {
+  const [inputSearch, setInputSearch] = useState<HTMLInputElement | null>(null);
   const capabilities = useRecoilValue(getCapabilities);
   const [search, setSearch] = useState("");
   const [openModal, setOpenModal] = useRecoilState(openSearchModalAtom);
   const [searchIndex, setSearchIndex] = useRecoilState(currentIndex);
+
+  useEffect(() => {
+    if (openModal && inputSearch) {
+      inputSearch.focus();
+    }
+  }, [openModal, inputSearch]);
 
   const searchResults = useMemo(() => {
     return capabilities?.rest?.[0].resource?.filter((r) => {
@@ -167,6 +174,9 @@ function SearchModal() {
               <Dialog.Panel className="absolute top-12 max-w-lg w-full transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-opacity">
                 <div className="flex flex-1 p-3 space-x-2 items-center focus:outline-none shadow-sm">
                   <input
+                    ref={(ref) => {
+                      setInputSearch(ref);
+                    }}
                     className="focus:outline-none text-left flex-1 text-slate-500 text-sm"
                     placeholder="Search..."
                     value={search}
