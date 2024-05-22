@@ -26,14 +26,14 @@ const config: StorybookConfig = {
       },
     },
     getAbsolutePath("@storybook/addon-mdx-gfm"),
-    "@storybook/addon-webpack5-compiler-babel"
+    getAbsolutePath("@storybook/addon-webpack5-compiler-babel"),
+    getAbsolutePath("@storybook/addon-mdx-gfm"),
+    "@chromatic-com/storybook"
   ],
   framework: {
     name: getAbsolutePath("@storybook/react-webpack5"),
     options: {},
   },
-  docs: {
-    autodocs: "tag",
-  },
+  docs: {},
 };
 export default config;
