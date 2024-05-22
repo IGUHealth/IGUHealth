@@ -53,7 +53,8 @@ jobs:
            --tag $IMAGE_ID:$VERSION \
            --tag $IMAGE_ID:latest \
            --label "runnumber=${GITHUB_RUN_ID}" \
-           --platform linux/amd64,linux/arm64 \
+           --platform linux/amd64 \ 
+           # --platform linux/amd64,linux/arm64 \
            --push
 
   admin-app:
@@ -101,5 +102,6 @@ jobs:
            --tag $IMAGE_ID:$VERSION \
            --tag $IMAGE_ID:latest \
            --label "runnumber=${GITHUB_RUN_ID}" \
-           --platform linux/amd64,linux/arm64 \
+           --platform linux/amd64 \ 
+           # --platform linux/amd64,linux/arm64 \
            --push
