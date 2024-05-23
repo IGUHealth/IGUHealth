@@ -1,0 +1,44 @@
+---
+slug: updates_2024-05-22
+Title: Updates 2024-05-22
+authors: [confused-moniker]
+tags: [iguhealth, updates]
+---
+
+# Updates 2024-05-22
+
+## Admin Application Enhancements
+
+### Better handling of 403 errors
+App now displays a more user-friendly message when a user is not authorized to access a resource.
+This fixes the issue where users were seeing a blank page when they were not authorized to access a resource.
+
+### Invite operation
+We have added an invite operation to the admin application. You can now invite users to your organization by providing their email address.
+
+### Server Usage Display
+We have added a display to show the current server usage in the admin application. This will help you keep track of your server usage and plan accordingly.
+
+## Server Enhancements
+
+### Validation Performance
+We have improved the performance of validation operations. You should see a significant improvement in the time taken to validate resources and perform CRUD operations.
+(We have seen a 50% improvement in validation times.).
+
+### Improved Login Flow
+Login flow now will automatically direct users to admin-app if not directed too from the authorize endpoint (which will redirect to the client specified by client_id and redirect_url).
+
+### Email Templates
+Emails being sent are now formatted using our email templates.
+
+## General
+
+### Dependencies Updated to Latest
+We've updated the following dependencies to their latest versions:
+
+* CodeMirror
+* React
+* React Router
+* Storybook
+* HeadlessUI
+
