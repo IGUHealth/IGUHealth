@@ -252,7 +252,7 @@ export function passwordResetInitiatePOST(
           title: "IGUHealth",
           header: "Email Verification",
           content:
-            "We have sent an email to your email address. Please verify your email address to login.",
+            "An email will arrive in the next few minutes with the next steps to reset your password.",
         }),
       );
       return;
@@ -276,7 +276,7 @@ export function passwordResetInitiatePOST(
         title: "IGUHealth",
         header: "Email Verification",
         content:
-          "We have sent an email to your email address. Please verify your email address to login.",
+          "An email will arrive in the next few minutes with the next steps to reset your password.",
       }),
     );
   };
