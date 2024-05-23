@@ -36,6 +36,22 @@ export function getBasicHeaderCredentials(
   return { client_id, client_secret };
 }
 
+export function getClientCredentials(
+  request: Koa.Request,
+): ClientCredentials | undefined {
+  // Check Basic Auth header first
+  const basicHeaderCredentials = getBasicHeaderCredentials(request);
+  if (basicHeaderCredentials) return basicHeaderCredentials;
+
+  // Now check body per https://www.rfc-editor.org/rfc/rfc6749.html#section-2.3
+  if ((request.body as Record<string, unknown>)?.client_id) {
+    return {
+      client_id: (request.body as Record<string, string>)?.client_id,
+      client_secret: (request.body as Record<string, string>)?.client_secret,
+    };
+  }
+}
+
 export function authenticateClientCredentials(
   clientApplication: ClientApplication,
   credentials: ClientCredentials,
