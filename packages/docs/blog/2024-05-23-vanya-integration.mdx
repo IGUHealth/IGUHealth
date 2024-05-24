@@ -101,3 +101,7 @@ It works with a variety of FHIR servers and can be a great way to check for conf
 14. Paste the URL in the Vanya Client for the URL.
 15. Click Save.
 
+## Vanya Client discovered a non-conformant aspect of our server
+We use [nanoid](https://www.npmjs.com/package/nanoid) to generate unique identifiers for our resources.
+Vanya client discovered that our use of the default alphabet for nanoid, is not FHIR compliant.
+Specifically the `_` is a character not allowed in FHIR [ids](https://hl7.org/fhir/r4/datatypes.html\#id).
