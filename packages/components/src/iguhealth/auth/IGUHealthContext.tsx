@@ -3,7 +3,10 @@ import { createContext } from "react";
 import createHTTPClient from "@iguhealth/client/http";
 import { AccessToken, IDToken, IDTokenPayload } from "@iguhealth/jwt";
 
+import { OIDC_WELL_KNOWN } from "./reducer";
+
 export type IGUHealthContextState = {
+  well_known?: OIDC_WELL_KNOWN;
   getClient: () => ReturnType<typeof createHTTPClient>;
   logout: (redirect: string) => void;
   isAuthenticated: boolean;

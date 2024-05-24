@@ -4,8 +4,20 @@ import { AccessToken, IDToken, TenantId, parseJwt } from "@iguhealth/jwt";
 import type { IGUHealthContextState } from "./IGUHealthContext";
 import { conditionalAddTenant } from "./utilities";
 
-export type Action = {
-  type: "INIT_CLIENT";
+export type OIDC_WELL_KNOWN = {
+  issuer: string;
+  userinfo_endpoint: string;
+  token_endpoint: string;
+  authorization_endpoint: string;
+  jwks_uri: string;
+  response_types_supported: string[];
+  token_endpoint_auth_methods_supported?: string[];
+  subject_types_supported?: string[];
+};
+
+type INIT_ACTION = {
+  type: "INIT";
+  well_known: OIDC_WELL_KNOWN;
   domain: string;
   tenant?: TenantId;
   clientId: string;
@@ -13,16 +25,19 @@ export type Action = {
   reInitiliaze: () => void;
 };
 
+type ACTION = INIT_ACTION;
+
 export function iguHealthReducer(
   state: IGUHealthContextState,
-  action: Action,
+  action: ACTION,
 ): IGUHealthContextState {
   switch (action.type) {
-    case "INIT_CLIENT": {
+    case "INIT": {
       const user = parseJwt(action.payload.id_token);
       return {
         ...state,
         isAuthenticated: true,
+        well_known: action.well_known,
         id_token: action.payload.id_token,
         user,
         access_token: action.payload.access_token,
