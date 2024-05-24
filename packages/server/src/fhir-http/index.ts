@@ -809,11 +809,17 @@ export type HTTPResponse = {
 export function fhirResponseToHTTPResponse(
   fhirResponse: FHIRResponse,
 ): HTTPResponse {
+  // https://github.com/koajs/koa/blob/master/docs/api/response.md#object
+  // Will default to application/json unless specified.
+  const headers: Record<string, string> = {
+    "Content-Type": "application/fhir+json",
+  };
   switch (fhirResponse.type) {
     case "read-response":
     case "vread-response":
       return {
         headers: {
+          ...headers,
           "Content-Location": `${fhirResponse.body.resourceType}/${
             fhirResponse.body.id
           }${
@@ -829,6 +835,7 @@ export function fhirResponseToHTTPResponse(
     case "patch-response":
       return {
         headers: {
+          ...headers,
           Location: `${fhirResponse.body.resourceType}/${fhirResponse.body.id}`,
         },
         body: fhirResponse.body,
@@ -836,10 +843,16 @@ export function fhirResponseToHTTPResponse(
       };
     case "delete-response":
       return {
+        headers: {
+          ...headers,
+        },
         status: 200,
       };
     case "history-response":
       return {
+        headers: {
+          ...headers,
+        },
         status: 200,
         body: {
           type: "history",
@@ -850,6 +863,7 @@ export function fhirResponseToHTTPResponse(
     case "create-response":
       return {
         headers: {
+          ...headers,
           Location: `${fhirResponse.body.resourceType}/${fhirResponse.body.id}`,
         },
         body: fhirResponse.body,
@@ -857,6 +871,9 @@ export function fhirResponseToHTTPResponse(
       };
     case "search-response": {
       return {
+        headers: {
+          ...headers,
+        },
         status: 200,
         body:
           fhirResponse.fhirVersion === R4B
@@ -869,6 +886,9 @@ export function fhirResponseToHTTPResponse(
     case "batch-response":
     case "invoke-response":
       return {
+        headers: {
+          ...headers,
+        },
         status: 200,
         body: fhirResponse.body,
       };

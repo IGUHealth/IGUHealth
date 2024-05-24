@@ -137,7 +137,7 @@ async function handleSubscriptionPayload(
           fetch(subscription.channel.endpoint as string, {
             method: "POST",
             // headers: subscription.channel.header,
-            headers: { ...headers, "Content-Type": "application/json" },
+            headers: { ...headers, "Content-Type": "application/fhir+json" },
             body: JSON.stringify(resource),
           }),
         ),
@@ -255,7 +255,7 @@ async function handleSubscriptionPayload(
       const response = await fetch(endpoint as string, {
         method: "POST",
         // headers: subscription.channel.header,
-        headers: { ...headers, "Content-Type": "application/json" },
+        headers: { ...headers, "Content-Type": "application/fhir+json" },
         body: JSON.stringify(bundle),
       });
 
