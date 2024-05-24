@@ -1,2 +1,2 @@
 export * from "./IGUHealthProvider";
-export * from "./useIGUHealth";
+export * from "./hooks/useIGUHealth";
