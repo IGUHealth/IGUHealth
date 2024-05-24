@@ -34,8 +34,14 @@ export function iguHealthReducer(
   switch (action.type) {
     case "INIT": {
       const user = parseJwt(action.payload.id_token);
+      const rootURL = new URL(
+        `/w/${action.tenant ? action.tenant : user["https://iguhealth.app/tenants"][0]?.id}`,
+        action.domain,
+      ).toString();
+
       return {
         ...state,
+        rootURL,
         isAuthenticated: true,
         well_known: action.well_known,
         id_token: action.payload.id_token,
@@ -56,10 +62,7 @@ export function iguHealthReducer(
           return createHTTPClient({
             onAuthenticationError: action.reInitiliaze,
             getAccessToken: () => Promise.resolve(action.payload.access_token),
-            url: new URL(
-              `/w/${action.tenant ? action.tenant : user["https://iguhealth.app/tenants"][0]?.id}`,
-              action.domain,
-            ).toString(),
+            url: rootURL,
             headers: {},
           });
         },

@@ -14,7 +14,7 @@ npm install -g @iguhealth/cli
 
 For CLI authorization, we need to setup a client app with client credentials.
 
-1. Go to the [cloud admin console](https://admin.iguhealth.app/) or your self-hosted console.
+1. Login to the [cloud admin console](https://api.iguhealth.app/oidc/interaction/login) or your self-hosted console.
 2. Click Client Application under the Security Group.
 3. Set a name and grant the type of client credentials.
 4. Set a client secret
