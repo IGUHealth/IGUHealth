@@ -64,7 +64,7 @@ async function toHTTPRequest(
   body?: string;
 }> {
   const headers: Record<string, any> = {
-    "Content-Type": "application/json", //"application/fhir+json"
+    "Content-Type": "application/fhir+json",
     ...state.headers,
   };
   const FHIRUrl = versionUrl(state.url, request.fhirVersion);

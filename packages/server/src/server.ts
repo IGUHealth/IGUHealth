@@ -130,11 +130,6 @@ function createErrorHandlingMiddleware<T>(): Koa.Middleware<
           .sort()[operationOutcome.issue.length - 1];
 
         switch (ctx.accepts("json", "html", "text")) {
-          case "json": {
-            ctx.body = operationOutcome;
-            ctx.status = status;
-            return;
-          }
           case "text":
           case "html": {
             ctx.status = status;
@@ -148,8 +143,13 @@ function createErrorHandlingMiddleware<T>(): Koa.Middleware<
 
             return;
           }
+          case "json":
+          default: {
+            ctx.body = operationOutcome;
+            ctx.status = status;
+            return;
+          }
         }
-        throw new Error("Media type not supported");
       } else {
         logger.error(e);
         MonitoringSentry.logError(e, ctx);
@@ -365,7 +365,15 @@ export default async function createServer(): Promise<
       }),
     )
     .use(cors())
-    .use(bodyParser())
+    .use(
+      bodyParser({
+        extendTypes: {
+          // will parse application/fhir+json type body as a JSON string
+          json: ["application/fhir+json", "application/json"],
+        },
+        encoding: "utf-8",
+      }),
+    )
     .use(
       session(
         {
