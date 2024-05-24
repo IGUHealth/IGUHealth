@@ -3,7 +3,7 @@ import React, { useEffect, useReducer, useRef } from "react";
 import { AccessToken, IDToken, TenantId } from "@iguhealth/jwt";
 
 import IGUHealthContext, { InitialContext } from "./IGUHealthContext";
-import { iguHealthReducer } from "./reducer";
+import { OIDC_WELL_KNOWN, iguHealthReducer } from "./reducer";
 import { conditionalAddTenant, hasAuthQueryParams } from "./utilities";
 
 function dec2hex(dec: number) {
@@ -19,12 +19,10 @@ function generateRandomString(len: number) {
 const state_key = (client_id: string) => `iguhealth_${client_id}`;
 
 async function handleRedirectCallback({
-  domain,
+  token_endpoint,
   clientId,
-  tenant,
 }: {
-  tenant?: string;
-  domain: string;
+  token_endpoint: string;
   clientId: string;
 }) {
   const localStateParameter = window.localStorage.getItem(state_key(clientId));
@@ -43,11 +41,10 @@ async function handleRedirectCallback({
 
   window.history.replaceState(null, "", location.pathname);
 
-  const url = new URL(conditionalAddTenant(`/oidc/auth/token`, tenant), domain);
   const response: {
     access_token: AccessToken<string>;
     id_token: IDToken<string>;
-  } = await fetch(url, {
+  } = await fetch(token_endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -64,25 +61,20 @@ async function handleRedirectCallback({
 }
 
 async function handleAuthorizeInitial({
-  tenant,
+  authorize_endpoint,
   clientId,
-  domain,
   redirectUrl,
 }: {
-  tenant?: string;
+  authorize_endpoint: string;
   clientId: string;
-  domain: string;
   redirectUrl: string;
 }) {
   const state = generateRandomString(30);
   localStorage.setItem(state_key(clientId), state);
 
   const url = new URL(
-    conditionalAddTenant(
-      `/oidc/auth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&state=${state}&response_type=${"code"}`,
-      tenant,
-    ),
-    domain,
+    `?client_id=${clientId}&redirect_uri=${redirectUrl}&state=${state}&response_type=${"code"}`,
+    authorize_endpoint,
   );
 
   window.location.replace(url);
@@ -104,6 +96,7 @@ export function IGUHealthProvider({
   onRedirectCallback?: (initialPath: string) => void;
 }>) {
   const [state, dispatch] = useReducer(iguHealthReducer, InitialContext);
+
   const isInitialized = useRef(false);
 
   useEffect(() => {
@@ -114,21 +107,37 @@ export function IGUHealthProvider({
 
     (async (): Promise<void> => {
       try {
+        const well_known: OIDC_WELL_KNOWN = await fetch(
+          new URL(
+            conditionalAddTenant(
+              `/oidc/.well-known/openid-configuration`,
+              tenant,
+            ),
+            domain,
+          ).toString(),
+        ).then((v) => v.json());
+
         if (hasAuthQueryParams()) {
           const authorizationPayload = await handleRedirectCallback({
-            domain,
-            tenant,
+            token_endpoint: well_known.token_endpoint,
             clientId,
           });
+
           dispatch({
-            type: "INIT_CLIENT",
+            type: "INIT",
             domain,
+            well_known,
             tenant: tenant as TenantId,
             clientId,
             payload: authorizationPayload,
             reInitiliaze: () =>
-              handleAuthorizeInitial({ tenant, clientId, domain, redirectUrl }),
+              handleAuthorizeInitial({
+                authorize_endpoint: well_known.authorization_endpoint,
+                clientId,
+                redirectUrl,
+              }),
           });
+
           // Allows for SPA to redirect back.
           if (onRedirectCallback) {
             onRedirectCallback(sessionStorage.getItem("path") ?? "/");
@@ -138,7 +147,11 @@ export function IGUHealthProvider({
             "path",
             window.location.href.replace(window.location.origin, ""),
           );
-          handleAuthorizeInitial({ tenant, clientId, domain, redirectUrl });
+          handleAuthorizeInitial({
+            authorize_endpoint: well_known.authorization_endpoint,
+            clientId,
+            redirectUrl,
+          });
         }
       } catch (error) {
         console.error(error);
