@@ -150,7 +150,6 @@ function createErrorHandlingMiddleware<T>(): Koa.Middleware<
             return;
           }
         }
-        throw new Error("Media type not supported");
       } else {
         logger.error(e);
         MonitoringSentry.logError(e, ctx);
