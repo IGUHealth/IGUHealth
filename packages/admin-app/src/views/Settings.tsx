@@ -20,7 +20,7 @@ interface SettingProps {
   user?: IDTokenPayload<string>;
 }
 
-function SettingDisplay({ user }: SettingProps) {
+function SettingDisplay({ user }: Readonly<SettingProps>) {
   const iguhealth = useIGUHealth();
   return (
     <div className="flex flex-col flex-1">
@@ -42,41 +42,51 @@ function SettingDisplay({ user }: SettingProps) {
         <h2 className="text-xl font-semibold">Security</h2>
         <div className="mt-2 spacing-y-2">
           <div className="flex flex-col p-2">
-            <label>Token Endpoint</label>
-            <div className="flex flex-row">
-              <div className="flex flex-1">
-                <Input readOnly value={iguhealth.well_known?.token_endpoint} />
+            <label>
+              Token Endpoint
+              <div className="flex flex-row">
+                <div className="flex flex-1">
+                  <Input
+                    id="token_endpoint"
+                    readOnly
+                    value={iguhealth.well_known?.token_endpoint}
+                  />
+                </div>
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    copytoClipboard(iguhealth.well_known?.token_endpoint);
+                  }}
+                  className="ml-1"
+                >
+                  Copy
+                </Button>
               </div>
-              <Button
-                onClick={(e) => {
-                  e.preventDefault();
-                  copytoClipboard(iguhealth.well_known?.token_endpoint);
-                }}
-                className="ml-1"
-              >
-                Copy
-              </Button>
-            </div>
+            </label>
           </div>
           <div className="flex flex-col p-2">
-            <label>Authorization Endpoint</label>
-            <div className="flex flex-row">
-              <div className="flex flex-1">
-                <Input
-                  readOnly
-                  value={iguhealth.well_known?.authorization_endpoint}
-                />
+            <label>
+              Authorization Endpoint
+              <div className="flex flex-row">
+                <div className="flex flex-1">
+                  <Input
+                    readOnly
+                    value={iguhealth.well_known?.authorization_endpoint}
+                  />
+                </div>
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    copytoClipboard(
+                      iguhealth.well_known?.authorization_endpoint,
+                    );
+                  }}
+                  className="ml-1"
+                >
+                  Copy
+                </Button>
               </div>
-              <Button
-                onClick={(e) => {
-                  e.preventDefault();
-                  copytoClipboard(iguhealth.well_known?.authorization_endpoint);
-                }}
-                className="ml-1"
-              >
-                Copy
-              </Button>
-            </div>
+            </label>
           </div>
         </div>
       </div>
