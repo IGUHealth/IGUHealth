@@ -1,6 +1,6 @@
 import React from "react";
 
-import { versionUrl } from "@iguhealth/client/lib/http";
+import { versionUrl } from "@iguhealth/client/http";
 import {
   Button,
   Input,
