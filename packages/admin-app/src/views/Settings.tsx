@@ -17,11 +17,11 @@ function copytoClipboard(token: string | undefined) {
 }
 
 interface SettingProps {
-  token?: string;
   user?: IDTokenPayload<string>;
 }
 
-function SettingDisplay({ user, token }: SettingProps) {
+function SettingDisplay({ user }: SettingProps) {
+  const iguhealth = useIGUHealth();
   return (
     <div className="flex flex-col flex-1">
       <h2 className="text-2xl font-semibold mb-8">Settings</h2>
@@ -40,21 +40,43 @@ function SettingDisplay({ user, token }: SettingProps) {
       </div>
       <div className="mb-2">
         <h2 className="text-xl font-semibold">Security</h2>
-        <div className="flex flex-col p-2">
-          <label>Access Token</label>
-          <div className="flex flex-row">
-            <div className="flex flex-1">
-              <Input readOnly value={token} />
+        <div className="mt-2 spacing-y-2">
+          <div className="flex flex-col p-2">
+            <label>Token Endpoint</label>
+            <div className="flex flex-row">
+              <div className="flex flex-1">
+                <Input readOnly value={iguhealth.well_known?.token_endpoint} />
+              </div>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  copytoClipboard(iguhealth.well_known?.token_endpoint);
+                }}
+                className="ml-1"
+              >
+                Copy
+              </Button>
             </div>
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                copytoClipboard(token);
-              }}
-              className="ml-1"
-            >
-              Copy
-            </Button>
+          </div>
+          <div className="flex flex-col p-2">
+            <label>Authorization Endpoint</label>
+            <div className="flex flex-row">
+              <div className="flex flex-1">
+                <Input
+                  readOnly
+                  value={iguhealth.well_known?.authorization_endpoint}
+                />
+              </div>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  copytoClipboard(iguhealth.well_known?.authorization_endpoint);
+                }}
+                className="ml-1"
+              >
+                Copy
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -64,7 +86,6 @@ function SettingDisplay({ user, token }: SettingProps) {
 
 export default function Settings() {
   const iguhealth = useIGUHealth();
-
   return (
     <React.Suspense
       fallback={
@@ -74,7 +95,7 @@ export default function Settings() {
         </div>
       }
     >
-      <SettingDisplay user={iguhealth.user} token={iguhealth.access_token} />
+      <SettingDisplay user={iguhealth.user} />
     </React.Suspense>
   );
 }

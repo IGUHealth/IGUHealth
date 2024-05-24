@@ -108,7 +108,13 @@ export function IGUHealthProvider({
     (async (): Promise<void> => {
       try {
         const well_known: OIDC_WELL_KNOWN = await fetch(
-          new URL(`/.well-known/openid-configuration`, domain).toString(),
+          new URL(
+            conditionalAddTenant(
+              `/oidc/.well-known/openid-configuration`,
+              tenant,
+            ),
+            domain,
+          ).toString(),
         ).then((v) => v.json());
 
         if (hasAuthQueryParams()) {
