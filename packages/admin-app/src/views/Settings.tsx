@@ -12,7 +12,7 @@ import { IDTokenPayload } from "@iguhealth/jwt";
 function copytoClipboard(token: string | undefined) {
   if (token) {
     navigator.clipboard.writeText(token);
-    Toaster.success("Access Token copied");
+    Toaster.success("Value copied");
   }
 }
 
