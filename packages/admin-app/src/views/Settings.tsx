@@ -22,7 +22,10 @@ interface SettingProps {
   user?: IDTokenPayload<string>;
 }
 
-function Copyable({ value, label }: { value?: string; label?: string }) {
+function Copyable({
+  value,
+  label,
+}: Readonly<{ value?: string; label?: string }>) {
   return (
     <label>
       <span className="font-weight-500">{label}</span>
