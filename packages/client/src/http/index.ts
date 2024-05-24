@@ -44,7 +44,7 @@ function fhirUrlChunk(version: string) {
   }
 }
 
-function versionUrl(domain: string, fhirVersion: FHIR_VERSION): string {
+export function versionUrl(domain: string, fhirVersion: FHIR_VERSION): string {
   return new URL(
     pathJoin([
       new URL(domain).pathname,

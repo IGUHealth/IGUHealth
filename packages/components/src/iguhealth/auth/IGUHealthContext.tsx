@@ -6,6 +6,7 @@ import { AccessToken, IDToken, IDTokenPayload } from "@iguhealth/jwt";
 import { OIDC_WELL_KNOWN } from "./reducer";
 
 export type IGUHealthContextState = {
+  rootURL?: string;
   well_known?: OIDC_WELL_KNOWN;
   getClient: () => ReturnType<typeof createHTTPClient>;
   logout: (redirect: string) => void;

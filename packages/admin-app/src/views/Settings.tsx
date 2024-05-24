@@ -1,5 +1,6 @@
 import React from "react";
 
+import { versionUrl } from "@iguhealth/client/lib/http";
 import {
   Button,
   Input,
@@ -7,6 +8,7 @@ import {
   Toaster,
   useIGUHealth,
 } from "@iguhealth/components";
+import { R4, R4B } from "@iguhealth/fhir-types/versions";
 import { IDTokenPayload } from "@iguhealth/jwt";
 
 function copytoClipboard(token: string | undefined) {
@@ -18,6 +20,28 @@ function copytoClipboard(token: string | undefined) {
 
 interface SettingProps {
   user?: IDTokenPayload<string>;
+}
+
+function Copyable({ value, label }: { value?: string; label?: string }) {
+  return (
+    <label>
+      <span className="font-weight-500">{label}</span>
+      <div className="flex flex-row">
+        <div className="flex flex-1">
+          <Input readOnly value={value} />
+        </div>
+        <Button
+          onClick={(e) => {
+            e.preventDefault();
+            copytoClipboard(value);
+          }}
+          className="ml-1"
+        >
+          Copy
+        </Button>
+      </div>
+    </label>
+  );
 }
 
 function SettingDisplay({ user }: Readonly<SettingProps>) {
@@ -39,54 +63,45 @@ function SettingDisplay({ user }: Readonly<SettingProps>) {
         </div>
       </div>
       <div className="mb-2">
-        <h2 className="text-xl font-semibold">Security</h2>
-        <div className="mt-2 spacing-y-2">
-          <div className="flex flex-col p-2">
-            <label>
-              Token Endpoint
-              <div className="flex flex-row">
-                <div className="flex flex-1">
-                  <Input
-                    id="token_endpoint"
-                    readOnly
-                    value={iguhealth.well_known?.token_endpoint}
-                  />
-                </div>
-                <Button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    copytoClipboard(iguhealth.well_known?.token_endpoint);
-                  }}
-                  className="ml-1"
-                >
-                  Copy
-                </Button>
+        <h2 className="text-xl font-semibold">Endpoints</h2>
+        <div className="pl-2 mt-8 space-y-8">
+          <div>
+            <h3 className="text-lg font-semibold">FHIR</h3>
+            <div className="space-y-2">
+              <div className="flex flex-col p-2">
+                <Copyable
+                  label="FHIR R4 Endpoint"
+                  value={
+                    iguhealth.rootURL ? versionUrl(iguhealth.rootURL, R4) : ""
+                  }
+                />
               </div>
-            </label>
+              <div className="flex flex-col p-2">
+                <Copyable
+                  label="FHIR R4B Endpoint"
+                  value={
+                    iguhealth.rootURL ? versionUrl(iguhealth.rootURL, R4B) : ""
+                  }
+                />
+              </div>
+            </div>
           </div>
-          <div className="flex flex-col p-2">
-            <label>
-              Authorization Endpoint
-              <div className="flex flex-row">
-                <div className="flex flex-1">
-                  <Input
-                    readOnly
-                    value={iguhealth.well_known?.authorization_endpoint}
-                  />
-                </div>
-                <Button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    copytoClipboard(
-                      iguhealth.well_known?.authorization_endpoint,
-                    );
-                  }}
-                  className="ml-1"
-                >
-                  Copy
-                </Button>
+          <div>
+            <h3 className="text-lg font-semibold">Security</h3>
+            <div className="spacing-y-2">
+              <div className="flex flex-col p-2">
+                <Copyable
+                  label="Token Endpoint"
+                  value={iguhealth.well_known?.token_endpoint}
+                />
               </div>
-            </label>
+              <div className="flex flex-col p-2">
+                <Copyable
+                  label="Authorization Endpoint"
+                  value={iguhealth.well_known?.authorization_endpoint}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
