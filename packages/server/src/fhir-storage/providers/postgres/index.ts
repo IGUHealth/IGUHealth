@@ -1,4 +1,4 @@
-import { nanoid } from "nanoid";
+
 import jsonpatch, { Operation } from "fast-json-patch";
 import dayjs from "dayjs";
 import * as db from "zapatos/db";
@@ -54,6 +54,7 @@ import {
 import { createResolverRemoteCanonical } from "../../utilities/canonical.js";
 import { TenantId } from "@iguhealth/jwt";
 import { toDBFHIRVersion } from "../../utilities/version.js";
+import { generateId } from "../../utilities/generateId.js";
 
 async function getAllParametersForResource<
   CTX extends FHIRServerCTX,
@@ -1112,8 +1113,8 @@ function createPostgresMiddleware<
               ...context.request.body,
               // If the id is allowed to be set, use the id from the request body, otherwise generate a new id.
               id: context.request.allowIdSet
-                ? context.request.body.id ?? (nanoid() as id)
-                : (nanoid() as id),
+                ? context.request.body.id ?? generateId()
+                : generateId(),
             },
           );
 

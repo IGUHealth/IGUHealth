@@ -1,4 +1,3 @@
-import { nanoid } from "nanoid";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -23,6 +22,7 @@ import {
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../fhir-api/types.js";
+import { generateId } from "../../utilities/generateId.js";
 import {
   SearchParameterResource,
   SearchParameterResult,
@@ -297,7 +297,7 @@ function createMemoryMiddleware<
         }
         case "create-request": {
           const resource = context.request.body;
-          if (!resource?.id) resource.id = nanoid() as r4.id;
+          if (!resource?.id) resource.id = generateId();
           return {
             ...context,
             state: {
