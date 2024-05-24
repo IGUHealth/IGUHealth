@@ -16,16 +16,17 @@ For CLI authorization, we need to setup a client app with client credentials.
 
 1. Go to the [cloud admin console](https://admin.iguhealth.app/) or your self-hosted console.
 2. Under **Security**, click **Client Applications**.
-3. Set a name for the application, and under the **Grant Type** dropdown, select **Client Credentials**.
+3. Set a name for the application (may be arbitrary), and under the **Grant Type** dropdown, select **Client Credentials**.
 4. Set a client secret.
 5. At the top, click the **Actions** button and then choose **Create**.
 6. Write down the client ID and client secret.
-7. Click Access Policies under the Security group.
-8. Click Create New (or, if you have an existing policy you want to use, click that policy).
-9. Fill in the name and code.
-10. For full access, set the type property to Full Access; if limited access, set FHIR Rest.
-11. If not set to full access, click Add Access and set what access you want for CLI.
-12. Click Add Target and link your client application you created in step 5.
+7. Under **Security**, click **Access Policies**.
+8. Click **+ New** (or, if you have an existing policy you want to use, click that policy).
+9. Fill in the Name and Code fields (they can be arbitrary values).
+10. For full access, set the **Type** property to **Full Access**; if limited access, set it to **FHIR Rest**.
+11. If not set to Full Access, click **Add Access*** and set what access you want for CLI.
+12. Click **Add Target** and link your client application you created in step 5.
+13. At the top, click the **Actions** button and then choose **Create** (or if updating, choose **Update**).
 
 ## Setup the CLI tenant. ​
 
