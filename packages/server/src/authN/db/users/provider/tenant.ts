@@ -4,13 +4,14 @@ import type * as s from "zapatos/schema";
 import { TenantClaim, TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { KoaContext } from "../../../../fhir-api/types.js";
 import { UserManagement } from "../interface.js";
 import { LoginParameters, USER_QUERY_COLS, User } from "../types.js";
 import { determineEmailUpdate } from "../utilities.js";
 import GlobalUserManagement from "./global.js";
 
 async function loginUsingGlobalUser<T extends keyof LoginParameters>(
-  client: db.Queryable,
+  ctx: KoaContext.FHIRServices,
   tenant: TenantId,
   type: T,
   parameters: LoginParameters[T],
@@ -26,7 +27,7 @@ async function loginUsingGlobalUser<T extends keyof LoginParameters>(
 
       const globalUser: User[] = await db
         .select("users", where, { columns: USER_QUERY_COLS })
-        .run(client);
+        .run(ctx.postgres);
 
       if (globalUser[0] === undefined) {
         return;
@@ -42,7 +43,7 @@ async function loginUsingGlobalUser<T extends keyof LoginParameters>(
           },
           { columns: USER_QUERY_COLS },
         )
-        .run(client);
+        .run(ctx.postgres);
 
       if (tenantUser.length > 0) {
         return globalUser[0];
@@ -59,7 +60,7 @@ async function loginUsingGlobalUser<T extends keyof LoginParameters>(
  * Logins using the tenant user. Doesn't check the global user.
  */
 async function tenantLogin<T extends keyof LoginParameters>(
-  client: db.Queryable,
+  ctx: KoaContext.FHIRServices,
   tenant: TenantId,
   type: T,
   parameters: LoginParameters[T],
@@ -77,7 +78,7 @@ async function tenantLogin<T extends keyof LoginParameters>(
 
       const user: User[] = await db
         .select("users", where, { columns: USER_QUERY_COLS })
-        .run(client);
+        .run(ctx.postgres);
 
       // Sanity check should never happen given unique check on email.
       if (user.length > 1)
@@ -100,10 +101,10 @@ export default class TenantUserManagement implements UserManagement {
   }
 
   async getTenantClaims(
-    client: db.Queryable,
+    ctx: KoaContext.FHIRServices,
     id: string,
   ): Promise<TenantClaim<s.user_role>[]> {
-    const user = await this.get(client, id);
+    const user = await this.get(ctx, id);
     if (!user) return [];
 
     switch (user.scope) {
@@ -119,7 +120,7 @@ export default class TenantUserManagement implements UserManagement {
             { root_user: user.id, tenant: this.tenant },
             { columns: USER_QUERY_COLS },
           )
-          .run(client);
+          .run(ctx.postgres);
 
         return tenantUsers.map((tenantUser) => ({
           id: tenantUser.id as TenantId,
@@ -130,22 +131,25 @@ export default class TenantUserManagement implements UserManagement {
   }
 
   async login<T extends keyof LoginParameters>(
-    client: db.Queryable,
+    ctx: KoaContext.FHIRServices,
     type: T,
     parameters: LoginParameters[T],
   ): Promise<User | undefined> {
-    const tenantUser = await tenantLogin(client, this.tenant, type, parameters);
+    const tenantUser = await tenantLogin(ctx, this.tenant, type, parameters);
     if (tenantUser) return tenantUser;
-    return loginUsingGlobalUser(client, this.tenant, type, parameters);
+    return loginUsingGlobalUser(ctx, this.tenant, type, parameters);
   }
 
-  async get(client: db.Queryable, id: string): Promise<User | undefined> {
+  async get(
+    ctx: KoaContext.FHIRServices,
+    id: string,
+  ): Promise<User | undefined> {
     // Check global first
     const globalUserManagement = new GlobalUserManagement();
-    const globalUser = await globalUserManagement.get(client, id);
+    const globalUser = await globalUserManagement.get(ctx, id);
     if (globalUser) {
       const tenantClaims = await globalUserManagement.getTenantClaims(
-        client,
+        ctx,
         globalUser.id,
       );
       if (tenantClaims.find((t) => t.id === this.tenant)) {
@@ -155,7 +159,7 @@ export default class TenantUserManagement implements UserManagement {
             { root_user: globalUser.id, scope: "tenant", tenant: this.tenant },
             { columns: USER_QUERY_COLS },
           )
-          .run(client)) as User | undefined;
+          .run(ctx.postgres)) as User | undefined;
         return { ...globalUser, ...tenantUser };
       }
       return undefined;
@@ -167,7 +171,7 @@ export default class TenantUserManagement implements UserManagement {
         { id, tenant: this.tenant, scope: "tenant" },
         { columns: USER_QUERY_COLS },
       )
-      .run(client)) as User | undefined;
+      .run(ctx.postgres)) as User | undefined;
 
     if (tenantUser?.root_user) {
       const globalUser: User | undefined = (await db
@@ -176,7 +180,7 @@ export default class TenantUserManagement implements UserManagement {
           { id: tenantUser.root_user, scope: "global" },
           { columns: USER_QUERY_COLS },
         )
-        .run(client)) as User | undefined;
+        .run(ctx.postgres)) as User | undefined;
 
       return { ...globalUser, ...tenantUser };
     }
@@ -184,7 +188,7 @@ export default class TenantUserManagement implements UserManagement {
     return tenantUser;
   }
   async search(
-    client: db.Queryable,
+    ctx: KoaContext.FHIRServices,
     where: s.users.Whereable,
   ): Promise<User[]> {
     return db
@@ -193,19 +197,22 @@ export default class TenantUserManagement implements UserManagement {
         { ...where, tenant: this.tenant, scope: "tenant" },
         { columns: USER_QUERY_COLS },
       )
-      .run(client);
+      .run(ctx.postgres);
   }
-  async create(client: db.Queryable, user: s.users.Insertable): Promise<User> {
+  async create(
+    ctx: KoaContext.FHIRServices,
+    user: s.users.Insertable,
+  ): Promise<User> {
     return await db
       .insert("users", { ...user, tenant: this.tenant, scope: "tenant" })
-      .run(client);
+      .run(ctx.postgres);
   }
   async update(
-    client: db.Queryable,
+    ctx: KoaContext.FHIRServices,
     id: string,
     update: s.users.Updatable,
   ): Promise<User> {
-    return db.serializable(client, async (txnClient) => {
+    return db.serializable(ctx.postgres, async (txnClient) => {
       const where: s.users.Whereable = {
         scope: "tenant",
         tenant: this.tenant,
@@ -230,8 +237,11 @@ export default class TenantUserManagement implements UserManagement {
       return updatedUser[0];
     });
   }
-  async delete(client: db.Queryable, where_: s.users.Whereable): Promise<void> {
-    return db.serializable(client, async (txnClient) => {
+  async delete(
+    ctx: KoaContext.FHIRServices,
+    where_: s.users.Whereable,
+  ): Promise<void> {
+    return db.serializable(ctx.postgres, async (txnClient) => {
       const where: s.users.Whereable = {
         ...where_,
         tenant: this.tenant,

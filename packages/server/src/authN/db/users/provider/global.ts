@@ -5,6 +5,7 @@ import * as s from "zapatos/schema";
 import { TenantClaim, TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { KoaContext } from "../../../../fhir-api/types.js";
 import { UserManagement } from "../interface.js";
 import { LoginParameters, USER_QUERY_COLS, User } from "../types.js";
 import { determineEmailUpdate } from "../utilities.js";
@@ -15,15 +16,15 @@ const generateTenantId = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz");
 
 export default class GlobalUserManagement implements UserManagement {
   async getTenantClaims(
-    client: db.Queryable,
+    ctx: KoaContext.FHIRServices,
     id: string,
   ): Promise<TenantClaim<s.user_role>[]> {
-    const user = await this.get(client, id);
+    const user = await this.get(ctx, id);
     if (!user) return [];
 
     const tenantUsers: User[] = await db
       .select("users", { root_user: user.id }, { columns: USER_QUERY_COLS })
-      .run(client);
+      .run(ctx.postgres);
 
     return tenantUsers.map((tenantUser) => ({
       id: tenantUser.tenant as TenantId,
@@ -31,7 +32,7 @@ export default class GlobalUserManagement implements UserManagement {
     }));
   }
   async login<T extends keyof LoginParameters>(
-    client: db.Queryable,
+    ctx: KoaContext.FHIRServices,
     type: T,
     parameters: LoginParameters[T],
   ): Promise<User | undefined> {
@@ -46,7 +47,7 @@ export default class GlobalUserManagement implements UserManagement {
 
         const user: User[] = await db
           .select("users", where, { columns: USER_QUERY_COLS })
-          .run(client);
+          .run(ctx.postgres);
 
         // Sanity check should never happen given unique checks on db.
         if (user.length > 1)
@@ -60,13 +61,16 @@ export default class GlobalUserManagement implements UserManagement {
         return;
     }
   }
-  async get(client: db.Queryable, id: string): Promise<User | undefined> {
+  async get(
+    ctx: KoaContext.FHIRServices,
+    id: string,
+  ): Promise<User | undefined> {
     return db
       .selectOne("users", { id, scope: "global" }, { columns: USER_QUERY_COLS })
-      .run(client);
+      .run(ctx.postgres);
   }
   async search(
-    client: db.Queryable,
+    ctx: KoaContext.FHIRServices,
     where: s.users.Whereable,
   ): Promise<User[]> {
     return db
@@ -75,10 +79,13 @@ export default class GlobalUserManagement implements UserManagement {
         { ...where, scope: "global" },
         { columns: USER_QUERY_COLS },
       )
-      .run(client);
+      .run(ctx.postgres);
   }
-  async create(client: db.Queryable, user: s.users.Insertable): Promise<User> {
-    return await db.serializable(client, async (txnClient) => {
+  async create(
+    ctx: KoaContext.FHIRServices,
+    user: s.users.Insertable,
+  ): Promise<User> {
+    return await db.serializable(ctx.postgres, async (txnClient) => {
       if (!user.email) {
         throw new OperationError(outcomeError("invalid", "Email is required."));
       }
@@ -119,11 +126,11 @@ export default class GlobalUserManagement implements UserManagement {
     });
   }
   async update(
-    client: db.Queryable,
+    ctx: KoaContext.FHIRServices,
     id: string,
     update: s.users.Updatable,
   ): Promise<User> {
-    return db.serializable(client, async (txnClient) => {
+    return db.serializable(ctx.postgres, async (txnClient) => {
       const where: s.users.Whereable = {
         scope: "global",
         id,
@@ -158,8 +165,11 @@ export default class GlobalUserManagement implements UserManagement {
       return updatedUser[0];
     });
   }
-  async delete(client: db.Queryable, where_: s.users.Whereable): Promise<void> {
-    return db.serializable(client, async (txnClient) => {
+  async delete(
+    ctx: KoaContext.FHIRServices,
+    where_: s.users.Whereable,
+  ): Promise<void> {
+    return db.serializable(ctx.postgres, async (txnClient) => {
       const where: s.users.Whereable = {
         ...where_,
         scope: "global",
