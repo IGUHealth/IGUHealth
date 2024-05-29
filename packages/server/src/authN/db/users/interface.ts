@@ -1,4 +1,3 @@
-import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
 import { TenantClaim } from "@iguhealth/jwt";

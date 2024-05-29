@@ -1,5 +1,3 @@
-import * as db from "zapatos/db";
-
 import { KoaContext } from "../../fhir-api/types.js";
 
 export interface ModelManagement<
