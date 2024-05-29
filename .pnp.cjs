@@ -20980,7 +20980,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/unplugged/@surma-rollup-plugin-off-main-thread-npm-2.2.3-1f57d3eded/node_modules/@surma/rollup-plugin-off-main-thread/",\
         "packageDependencies": [\
           ["@surma/rollup-plugin-off-main-thread", "npm:2.2.3"],\
-          ["ejs", "npm:3.1.9"],\
+          ["ejs", "npm:3.1.10"],\
           ["json5", "npm:2.2.3"],\
           ["magic-string", "npm:0.25.9"],\
           ["string.prototype.matchall", "npm:4.0.8"]\
@@ -29395,14 +29395,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/ejs-npm-3.1.10-4e8cf4bdc1-a9cb7d7cd1.zip/node_modules/ejs/",\
         "packageDependencies": [\
           ["ejs", "npm:3.1.10"],\
-          ["jake", "npm:10.8.7"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:3.1.9", {\
-        "packageLocation": "./.yarn/cache/ejs-npm-3.1.9-e201b2088c-71f56d3754.zip/node_modules/ejs/",\
-        "packageDependencies": [\
-          ["ejs", "npm:3.1.9"],\
           ["jake", "npm:10.8.7"]\
         ],\
         "linkType": "HARD"\
