@@ -14699,7 +14699,7 @@ const RAW_RUNTIME_STATE =
           ["db-migrate-pg", "npm:1.5.2"],\
           ["dotenv", "npm:16.4.5"],\
           ["fast-json-patch", "npm:3.1.1"],\
-          ["ioredis", "npm:5.3.2"],\
+          ["ioredis", "npm:5.4.1"],\
           ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
           ["jose", "npm:5.3.0"],\
           ["json-schema-to-typescript", "npm:14.0.4"],\
@@ -22410,7 +22410,7 @@ const RAW_RUNTIME_STATE =
           ["@types/koa-ratelimit", "npm:5.0.3"],\
           ["@types/koa", "npm:2.13.6"],\
           ["@types/node", "npm:20.3.3"],\
-          ["ioredis", "npm:5.3.2"]\
+          ["ioredis", "npm:5.4.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -33329,10 +33329,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:5.3.2", {\
-        "packageLocation": "./.yarn/cache/ioredis-npm-5.3.2-58471071b1-0140f055ef.zip/node_modules/ioredis/",\
+      ["npm:5.4.1", {\
+        "packageLocation": "./.yarn/cache/ioredis-npm-5.4.1-c96e18ae67-9043b812ac.zip/node_modules/ioredis/",\
         "packageDependencies": [\
-          ["ioredis", "npm:5.3.2"],\
+          ["ioredis", "npm:5.4.1"],\
           ["@ioredis/commands", "npm:1.2.0"],\
           ["cluster-key-slot", "npm:1.1.2"],\
           ["debug", "virtual:1ff4b5f90832ba0a9c93ba1223af226e44ba70c1126a3740d93562b97bc36544e896a5e95908196f7458713e6a6089a34bfc67362fc6df7fa093bd06c878be47#npm:4.3.4"],\
