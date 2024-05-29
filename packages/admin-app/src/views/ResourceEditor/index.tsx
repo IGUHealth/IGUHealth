@@ -89,17 +89,21 @@ function ResourceEditorTabs() {
       className: "!text-red-600 hover:bg-red-600 hover:!text-white",
       label: "Delete",
       onClick: () => {
-        const deletingResource = client.delete(
+        const deletePromise = client.delete(
           {},
           R4,
           resourceType as ResourceType,
           id as id,
         );
-        Toaster.promise(deletingResource, {
+        Toaster.promise(deletePromise, {
           loading: "Deleting Resource",
           success: () => `Deleted ${resourceType}`,
           error: (error) => {
-            return `${error}`;
+            const message = (error.operationOutcome as OperationOutcome).issue
+              .map((issue) => issue.diagnostics)
+              .join("\n");
+
+            return message;
           },
         }).then(() =>
           navigate(
