@@ -25,7 +25,7 @@ import TenantUserManagement from "../../../authN/db/users/provider/tenant.js";
 import { membershipToUser } from "../../../authN/db/users/utilities.js";
 import { FHIRServerCTX } from "../../../fhir-api/types.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
-import validateResourceTypeMiddleware from "../../middleware/validate-resourcetype.js";
+import validateResourceTypesAllowedMiddleware from "../../middleware/validate-resourcetype.js";
 import { createPostgresClient } from "../postgres/index.js";
 
 export const AUTH_RESOURCETYPES: ResourceType[] = ["Membership"];
@@ -41,11 +41,6 @@ export const AUTH_METHODS_ALLOWED: FHIRRequest["type"][] = [
 async function customValidationMembership(
   membership: Membership,
 ): Promise<void> {
-  if (membership.role === "owner") {
-    throw new OperationError(
-      outcomeFatal("not-supported", "Cannot create owner membership."),
-    );
-  }
   if (!validator.isEmail(membership.email)) {
     throw new OperationError(
       outcomeError(
@@ -56,7 +51,86 @@ async function customValidationMembership(
   }
 }
 
-function membershipHandler<
+async function gateCheckSingleOwner(ctx: FHIRServerCTX) {
+  const owners = await ctx.client.search_type(ctx, R4, "Membership", [
+    {
+      name: "role",
+      value: ["owner"],
+    },
+  ]);
+
+  if (owners.resources.length === 0) {
+    throw new OperationError(
+      outcomeError(
+        "invariant",
+        "Must have a single owner associated to a tenant.",
+      ),
+    );
+  }
+}
+
+function validateOwnershipMiddleware<
+  State extends {
+    fhirDB: ReturnType<typeof createPostgresClient>;
+  },
+  CTX extends FHIRServerCTX,
+>(): MiddlewareAsyncChain<State, CTX> {
+  return async (context, next) => {
+    const res = await next(context);
+
+    switch (context.request.type) {
+      case "delete-request":
+      case "update-request":
+      case "patch-request":
+      case "create-request": {
+        await gateCheckSingleOwner(context.ctx);
+        return res;
+      }
+      default: {
+        return res;
+      }
+    }
+  };
+}
+
+function setInTransactionMiddleware<
+  State extends {
+    fhirDB: ReturnType<typeof createPostgresClient>;
+  },
+  CTX extends FHIRServerCTX,
+>(): MiddlewareAsyncChain<State, CTX> {
+  return async (context, next) => {
+    return db.serializable(context.ctx.db, async (txClient) => {
+      const res = await next({
+        ...context,
+        ctx: { ...context.ctx, db: txClient },
+      });
+      return res;
+    });
+  };
+}
+
+function customValidationMembershipMiddleware<
+  State extends {
+    fhirDB: ReturnType<typeof createPostgresClient>;
+  },
+  CTX extends FHIRServerCTX,
+>(): MiddlewareAsyncChain<State, CTX> {
+  return async (context, next) => {
+    switch (context.request.type) {
+      case "update-request":
+      case "create-request": {
+        await customValidationMembership(context.request.body as Membership);
+        return next(context);
+      }
+      default: {
+        return next(context);
+      }
+    }
+  };
+}
+
+function updateUserTableMiddleware<
   State extends {
     fhirDB: ReturnType<typeof createPostgresClient>;
   },
@@ -74,100 +148,90 @@ function membershipHandler<
 
     switch (context.request.type) {
       case "create-request": {
-        await customValidationMembership(context.request.body as Membership);
-        return db.serializable(context.ctx.db, async (txClient) => {
-          const res = await next({
-            ...context,
-            ctx: { ...context.ctx, db: txClient },
-          });
+        const res = await next(context);
 
-          const membership = (res.response as R4CreateResponse)?.body;
-          if (membership.resourceType !== "Membership") {
-            throw new OperationError(
-              outcomeError("invariant", "Invalid resource type."),
-            );
-          }
-          
-          try {
-            await tenantUserManagement.create(
-              txClient,
-              membershipToUser(membership),
-            );
-          } catch (e) {
-            console.error(e);
-            throw new OperationError(
-              outcomeError("invariant", "Failed to create user."),
-            );
-          }
+        const membership = (res.response as R4CreateResponse)?.body;
+        if (membership.resourceType !== "Membership") {
+          throw new OperationError(
+            outcomeError("invariant", "Invalid resource type."),
+          );
+        }
 
-          return res;
-        });
+        try {
+          await tenantUserManagement.create(
+            context.ctx.db,
+            membershipToUser(membership),
+          );
+        } catch (e) {
+          console.error(e);
+          throw new OperationError(
+            outcomeError("invariant", "Failed to create user."),
+          );
+        }
+
+        return res;
       }
       case "delete-request": {
         const id = context.request.id;
-        return db.serializable(context.ctx.db, async (txClient) => {
-          const membership = await context.state.fhirDB.read(
-            context.ctx,
-            R4,
-            "Membership",
-            id,
+
+        const membership = await context.state.fhirDB.read(
+          context.ctx,
+          R4,
+          "Membership",
+          id,
+        );
+        const versionId = membership?.meta?.versionId;
+        if (!versionId)
+          throw new OperationError(
+            outcomeFatal("not-found", "Membership not found."),
           );
-          const versionId = membership?.meta?.versionId;
-          if (!versionId)
-            throw new OperationError(
-              outcomeFatal("not-found", "Membership not found."),
-            );
 
-          await tenantUserManagement.delete(txClient, {
-            fhir_user_versionid: parseInt(versionId),
-          });
-
-          return next({ ...context, ctx: { ...context.ctx, db: txClient } });
+        await tenantUserManagement.delete(context.ctx.db, {
+          fhir_user_versionid: parseInt(versionId),
         });
+
+        return next(context);
       }
       case "update-request": {
-        await customValidationMembership(context.request.body as Membership);
         const id = context.request.id;
-        return db.serializable(context.ctx.db, async (txClient) => {
-          const ctx = { ...context.ctx, db: txClient };
-          const existingMembership = await context.state.fhirDB.read(
-            ctx,
-            R4,
-            "Membership",
-            id,
-          );
-          if (!existingMembership?.meta?.versionId)
-            throw new OperationError(
-              outcomeFatal("not-found", "Membership not found."),
-            );
 
-          const existingUser = await db
-            .selectOne("users", {
-              fhir_user_versionid: parseInt(existingMembership.meta.versionId),
-            })
-            .run(txClient);
-
-          if (!existingUser)
-            throw new OperationError(
-              outcomeFatal("not-found", "User not found."),
-            );
-
-          const res = await next({ ...context, ctx });
-          if (!(res.response as R4UpdateResponse)?.body)
-            throw new OperationError(
-              outcomeFatal("invariant", "Response body not found."),
-            );
-
-          tenantUserManagement.update(
-            txClient,
-            existingUser.id,
-            membershipToUser(
-              (res.response as R4UpdateResponse)?.body as Membership,
-            ),
+        const existingMembership = await context.state.fhirDB.read(
+          context.ctx,
+          R4,
+          "Membership",
+          id,
+        );
+        if (!existingMembership?.meta?.versionId)
+          throw new OperationError(
+            outcomeFatal("not-found", "Membership not found."),
           );
 
-          return res;
-        });
+        const existingUser = await db
+          .selectOne("users", {
+            fhir_user_versionid: parseInt(existingMembership.meta.versionId),
+          })
+          .run(context.ctx.db);
+
+        if (!existingUser)
+          throw new OperationError(
+            outcomeFatal("not-found", "User not found."),
+          );
+
+        const res = await next(context);
+        if (!(res.response as R4UpdateResponse)?.body)
+          throw new OperationError(
+            outcomeFatal("invariant", "Response body not found."),
+          );
+
+        tenantUserManagement.update(
+          context.ctx.db,
+          existingUser.id,
+          membershipToUser(
+            (res.response as R4UpdateResponse)?.body as Membership,
+          ),
+        );
+
+        return res;
       }
       case "read-request": {
         return next(context);
@@ -194,9 +258,12 @@ function createAuthMiddleware<
   CTX extends FHIRServerCTX,
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
-    validateResourceTypeMiddleware(AUTH_RESOURCETYPES),
+    validateResourceTypesAllowedMiddleware(AUTH_RESOURCETYPES),
     validateOperationsAllowed(AUTH_METHODS_ALLOWED),
-    membershipHandler(),
+    customValidationMembershipMiddleware(),
+    setInTransactionMiddleware(),
+    updateUserTableMiddleware(),
+    validateOwnershipMiddleware(),
     async (context) => {
       return {
         ...context,

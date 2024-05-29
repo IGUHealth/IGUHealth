@@ -3,7 +3,7 @@ import { ResourceType } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-export default function validateResourceTypeMiddleware<State, CTX>(
+export default function validateResourceTypesAllowedMiddleware<State, CTX>(
   typesAllowed: ResourceType[],
 ): MiddlewareAsyncChain<State, CTX> {
   return async (context, next) => {
