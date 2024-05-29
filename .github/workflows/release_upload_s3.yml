@@ -99,7 +99,7 @@ jobs:
           aws-region: us-east-1
       - name: Copy files to the production website with the AWS CLI
         run: |
-          aws s3 sync packages/docs/build s3://docs.iguhealth.app
+          aws s3 sync packages/docs/build s3://iguhealth.app
 
   build_story_book:
     environment: production
