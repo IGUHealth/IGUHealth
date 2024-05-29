@@ -5,11 +5,13 @@ import { useRecoilValue } from "recoil";
 
 import {
   Button,
+  FHIRCodeEditable,
   FHIRGenerativeSearchTable,
   FHIRStringEditable,
   Modal,
   Toaster,
 } from "@iguhealth/components";
+import { code, uri } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
   R4,
@@ -26,6 +28,8 @@ function InviteModal({
 }: Readonly<{ setOpen: (open: boolean) => void; refresh: () => void }>) {
   const client = useRecoilValue(getClient);
   const [email, setEmail] = useState<string | undefined>();
+  const [role, setRole] = useState<code | undefined>();
+
   return (
     <div className="space-y-4 mt-4">
       <FHIRStringEditable
@@ -34,6 +38,16 @@ function InviteModal({
         onChange={(email) => {
           setEmail(email);
         }}
+      />
+      <FHIRCodeEditable
+        label="Role"
+        system={
+          "https://iguhealth.app/fhir/ValueSet/MembershipRole|4.0.1" as uri
+        }
+        fhirVersion={R4}
+        client={client}
+        value={role}
+        onChange={setRole}
       />
       <div className="flex items-center">
         <div>
@@ -53,9 +67,14 @@ function InviteModal({
                 Toaster.error("Email is required");
                 return;
               }
+              if (!role) {
+                Toaster.error("Role is required");
+                return;
+              }
 
               client
                 .invoke_type(IguhealthInviteUser.Op, {}, R4, "Membership", {
+                  role,
                   email,
                 })
                 .then((output) => {

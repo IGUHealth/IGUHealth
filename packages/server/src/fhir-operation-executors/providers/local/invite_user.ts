@@ -1,5 +1,6 @@
 import React from "react";
 import { renderToString } from "react-dom/server";
+import * as db from "zapatos/db";
 
 import { FHIRRequest } from "@iguhealth/client/types";
 import { Membership, code } from "@iguhealth/fhir-types/r4/types";
@@ -29,24 +30,47 @@ const IguhealthInviteUserInvoke = InlineOperation(
       throw new OperationError(
         outcomeError("exception", "Encryption provider not configured"),
       );
-    const membership = await ctx.client.create(ctx, R4, {
-      resourceType: "Membership",
-      email: input.email,
-      role: "member" as code,
-    } as Membership);
-    const codeManagement = new TenantAuthorizationCodeManagement(ctx.tenant);
-    const userManagement = new TenantUserManagement(ctx.tenant);
-    const user = await userManagement.search(ctx, {
-      fhir_user_id: membership.id,
-    });
-    if (!user[0]) {
-      throw new OperationError(outcomeError("not-found", "User not found"));
-    }
-    const code = await codeManagement.create(ctx, {
-      type: "password_reset",
-      user_id: user[0].id,
-      expires_in: "15 minutes",
-    });
+
+    const [user, inviteCode] = await db.serializable(
+      ctx.db,
+      async (txnClient) => {
+        const membership = await ctx.client.create(
+          { ...ctx, db: txnClient },
+          R4,
+          {
+            resourceType: "Membership",
+            email: input.email,
+            role: input.role,
+          } as Membership,
+        );
+
+        const codeManagement = new TenantAuthorizationCodeManagement(
+          ctx.tenant,
+        );
+        const userManagement = new TenantUserManagement(ctx.tenant);
+
+        const user = await userManagement.search(
+          { ...ctx, db: txnClient },
+          {
+            fhir_user_id: membership.id,
+          },
+        );
+
+        if (!user[0]) {
+          throw new OperationError(outcomeError("not-found", "User not found"));
+        }
+        const code = await codeManagement.create(
+          { ...ctx, db: txnClient },
+          {
+            type: "password_reset",
+            user_id: user[0].id,
+            expires_in: "15 minutes",
+          },
+        );
+
+        return [user, code];
+      },
+    );
 
     const emailHTML = renderToString(
       React.createElement(EmailTemplate, {
@@ -65,7 +89,7 @@ const IguhealthInviteUserInvoke = InlineOperation(
           React.createElement(EmailTemplateButton, {
             title: "Accept Invite",
             href: new URL(
-              `/w/${ctx.tenant}/oidc/interaction/password-reset-verify?code=${code.code}`,
+              `/w/${ctx.tenant}/oidc/interaction/password-reset-verify?code=${inviteCode.code}`,
               process.env.API_URL,
             ).toString(),
           }),
