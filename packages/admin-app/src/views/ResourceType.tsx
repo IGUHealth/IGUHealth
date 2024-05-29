@@ -21,8 +21,9 @@ import { IguhealthInviteUser } from "@iguhealth/generated-ops/r4";
 import { getClient } from "../db/client";
 
 function InviteModal({
+  refresh,
   setOpen,
-}: Readonly<{ setOpen: (open: boolean) => void }>) {
+}: Readonly<{ setOpen: (open: boolean) => void; refresh: () => void }>) {
   const client = useRecoilValue(getClient);
   const [email, setEmail] = useState<string | undefined>();
   return (
@@ -59,6 +60,7 @@ function InviteModal({
                 })
                 .then((output) => {
                   Toaster.success(output.issue?.[0]?.diagnostics ?? "");
+                  refresh();
                   setOpen(false);
                 })
                 .catch((e) => {
@@ -76,7 +78,7 @@ function InviteModal({
   );
 }
 
-function ResourceTypeHeader() {
+function ResourceTypeHeader({ refresh }: Readonly<{ refresh: () => void }>) {
   const params = useParams();
   const navigate = useNavigate();
 
@@ -90,7 +92,9 @@ function ResourceTypeHeader() {
           {params.resourceType === "Membership" ? (
             <Modal
               modalTitle="Invite User"
-              ModalContent={(setOpen) => <InviteModal setOpen={setOpen} />}
+              ModalContent={(setOpen) => (
+                <InviteModal refresh={refresh} setOpen={setOpen} />
+              )}
             >
               {(setopen) => (
                 <Button
@@ -134,13 +138,19 @@ export default function ResourceTypeView() {
   const client = useRecoilValue(getClient);
   const params = useParams();
   const navigate = useNavigate();
+  const [refresh, setRefresh] = useState<(() => void) | undefined>(undefined);
 
   return (
     <div className="flex flex-col flex-1 w-full text-slate-700">
-      <ResourceTypeHeader />
+      {refresh && <ResourceTypeHeader refresh={refresh} />}
       <div className="overflow-auto">
         <FHIRGenerativeSearchTable
           key={params.resourceType}
+          refresh={(refreshFnc) => {
+            if (!refresh) {
+              setRefresh(() => refreshFnc);
+            }
+          }}
           onRowClick={(row) => {
             navigate(
               generatePath("/resources/:resourceType/:id", {

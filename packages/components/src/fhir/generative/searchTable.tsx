@@ -59,6 +59,7 @@ interface FHIRGenerativeSearchTableProps<Version extends FHIR_VERSION>
     ClientProps {
   fhirVersion: Version;
   resourceType: ResourceType<Version>;
+  refresh?: (refreshFunc: () => void) => void;
 }
 
 const modifiers: Record<string, string[]> = {
@@ -567,6 +568,15 @@ export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
   }>({ total: 0, resources: [] });
 
   const sortParam = parameters.find((p) => p.name === "_sort");
+
+  useEffect(() => {
+    if (props.refresh) {
+      props.refresh(() => {
+        // Refresh is to just reset parameters to same value to trigger search.
+        setParameters((params) => [...params]);
+      });
+    }
+  }, [props.refresh, setParameters]);
 
   useEffect(() => {
     setLoading(true);
