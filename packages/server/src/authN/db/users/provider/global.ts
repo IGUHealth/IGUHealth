@@ -10,8 +10,7 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 import { KoaContext, asSystemCTX } from "../../../../fhir-api/types.js";
 import { UserManagement } from "../interface.js";
 import { LoginParameters, USER_QUERY_COLS, User } from "../types.js";
-import { determineEmailUpdate } from "../utilities.js";
-import { userToMembership } from "../utilities.js";
+import { determineEmailUpdate, userToMembership } from "../utilities.js";
 
 // https://www.rfc-editor.org/rfc/rfc1035#section-2.3.3
 // Do not allow uppercase characters.
