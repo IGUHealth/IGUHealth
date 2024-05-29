@@ -2,13 +2,16 @@ import { customAlphabet } from "nanoid";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
+import { id } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 import { TenantClaim, TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaContext } from "../../../../fhir-api/types.js";
+import { KoaContext, asSystemCTX } from "../../../../fhir-api/types.js";
 import { UserManagement } from "../interface.js";
 import { LoginParameters, USER_QUERY_COLS, User } from "../types.js";
 import { determineEmailUpdate } from "../utilities.js";
+import { userToMembership } from "../utilities.js";
 
 // https://www.rfc-editor.org/rfc/rfc1035#section-2.3.3
 // Do not allow uppercase characters.
@@ -112,14 +115,26 @@ export default class GlobalUserManagement implements UserManagement {
         })
         .run(txnClient);
 
-      await db
-        .insert("users", {
+      const membership = await ctx.client.create(
+        asSystemCTX({ ...ctx, db: txnClient, tenant: tenant.id as TenantId }),
+        R4,
+        userToMembership({
           scope: "tenant",
           role: "owner",
           tenant: tenant.id,
           email: globalUser.email,
-          root_user: globalUser.id,
-        })
+        }),
+      );
+
+      // Associate to root user.
+      await db
+        .update(
+          "users",
+          {
+            root_user: globalUser.id,
+          },
+          { scope: "tenant", fhir_user_id: membership.id },
+        )
         .run(txnClient);
 
       return globalUser;
@@ -151,16 +166,27 @@ export default class GlobalUserManagement implements UserManagement {
         )
         .run(txnClient);
 
-      await db
-        .update(
+      const globalUserTenantUsers: User[] = await db
+        .select(
           "users",
-          {
-            ...update,
-            email_verified: determineEmailUpdate(update, currentUser),
-          },
           { scope: "tenant", root_user: id },
+          { columns: USER_QUERY_COLS },
         )
         .run(txnClient);
+
+      for (const tenantUser of globalUserTenantUsers) {
+        await ctx.client.update(
+          asSystemCTX({
+            ...ctx,
+            db: txnClient,
+            tenant: tenantUser.tenant as TenantId,
+          }),
+          R4,
+          "Membership",
+          tenantUser.fhir_user_id as id,
+          userToMembership(tenantUser),
+        );
+      }
 
       return updatedUser[0];
     });
@@ -177,7 +203,7 @@ export default class GlobalUserManagement implements UserManagement {
 
       const user = await db.select("users", where).run(txnClient);
 
-      if (user.length > 1) {
+      if (user.length !== 1) {
         throw new OperationError(
           outcomeError(
             "invariant",
@@ -186,10 +212,26 @@ export default class GlobalUserManagement implements UserManagement {
         );
       }
 
-      db.deletes("users", {
-        scope: "tenant",
-        root_user: db.sql<s.users.SQL>`${db.vals(user.map((u) => u.id))}`,
-      }).run(txnClient);
+      const globalUserTenantUsers: User[] = await db
+        .select(
+          "users",
+          { scope: "tenant", root_user: user[0].id },
+          { columns: USER_QUERY_COLS },
+        )
+        .run(txnClient);
+
+      for (const tenantUser of globalUserTenantUsers) {
+        await ctx.client.delete(
+          asSystemCTX({
+            ...ctx,
+            db: txnClient,
+            tenant: tenantUser.id as TenantId,
+          }),
+          R4,
+          "Membership",
+          tenantUser.fhir_user_id as id,
+        );
+      }
 
       await db.deletes("users", where).run(txnClient);
     });

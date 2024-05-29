@@ -6,18 +6,25 @@ import {
   id,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 
-export function userToMembership(user: s.users.JSONSelectable): Membership {
-  return {
+export function userToMembership(
+  user: Partial<s.users.JSONSelectable> & { email: string },
+): Membership {
+  const member: Membership = {
     resourceType: "Membership",
     emailVerified: user.email_verified ? user.email_verified : false,
-    id: user.id as id,
     email: user.email,
     name: {
       given: user.first_name ? [user.first_name] : [],
-      family: user.last_name ? user.last_name : undefined,
+      family: user.last_name ?? "",
     },
     role: (user.role ? user.role : "member") as code,
   };
+
+  if (user.id) {
+    member.id = user.id as id;
+  }
+
+  return member;
 }
 
 export function membershipToUser(user: Membership): s.users.Insertable {
