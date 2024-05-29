@@ -48,7 +48,7 @@ const Dashboard = () => {
           <a
             target="_blank"
             className="underline text-blue-400"
-            href="https://docs.iguhealth.app/pricing"
+            href="https://iguhealth.app/pricing"
           >
             here
           </a>
@@ -76,7 +76,7 @@ const Dashboard = () => {
           <a
             target="_blank"
             className="underline text-blue-400"
-            href="https://docs.iguhealth.app/pricing"
+            href="https://iguhealth.app/pricing"
           >
             here
           </a>
