@@ -1,6 +1,6 @@
 import { MergeView } from "@codemirror/merge";
 import { EditorState, Extension } from "@codemirror/state";
-import { EditorView, basicSetup } from "codemirror";
+import { EditorView } from "codemirror";
 import React, { useEffect, useRef, useState } from "react";
 
 interface DiffViewProps {
@@ -9,9 +9,13 @@ interface DiffViewProps {
   newValue: string;
 }
 
-export function MergeViewer({ extensions, oldValue, newValue }: DiffViewProps) {
-  const [view, setView] = useState<MergeView>();
-  const [, setState] = useState<EditorState>();
+export function MergeViewer({
+  extensions,
+  oldValue,
+  newValue,
+}: Readonly<DiffViewProps>) {
+  const [_view, setView] = useState<MergeView>();
+  const [_state, setState] = useState<EditorState>();
   const root = useRef<HTMLDivElement | null>(null);
 
   // Initial view set up.
