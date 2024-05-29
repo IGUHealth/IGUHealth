@@ -5219,7 +5219,11 @@ export namespace IguhealthEncrypt {
   } as fhirTypes.OperationDefinition);
 }
 export namespace IguhealthInviteUser {
-  export type Input = { email: fhirTypes.string };
+  export type Input = {
+    email: fhirTypes.string;
+    role: fhirTypes.code;
+    accessPolicy?: fhirTypes.Reference;
+  };
   export type Output = fhirTypes.OperationOutcome;
   export type IOp = IOperation<Input, Output>;
   export const Op: IOp = new Operation<Input, Output>({
@@ -5246,6 +5250,22 @@ export namespace IguhealthInviteUser {
         max: "1",
         documentation: "Email for new user",
         type: "string",
+      },
+      {
+        name: "role",
+        use: "in",
+        min: 1,
+        max: "1",
+        documentation: "Role for new user",
+        type: "code",
+      },
+      {
+        name: "accessPolicy",
+        use: "in",
+        min: 0,
+        max: "1",
+        documentation: "Access Policy for user.",
+        type: "Reference",
       },
       {
         name: "return",

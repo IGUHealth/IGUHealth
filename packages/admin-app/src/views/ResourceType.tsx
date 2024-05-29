@@ -5,11 +5,14 @@ import { useRecoilValue } from "recoil";
 
 import {
   Button,
+  FHIRCodeEditable,
   FHIRGenerativeSearchTable,
+  FHIRReferenceEditable,
   FHIRStringEditable,
   Modal,
   Toaster,
 } from "@iguhealth/components";
+import { Reference, code, uri } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
   R4,
@@ -26,6 +29,11 @@ function InviteModal({
 }: Readonly<{ setOpen: (open: boolean) => void; refresh: () => void }>) {
   const client = useRecoilValue(getClient);
   const [email, setEmail] = useState<string | undefined>();
+  const [role, setRole] = useState<code | undefined>();
+  const [accessPolicyRef, setAccessPolicyRef] = useState<
+    Reference | undefined
+  >();
+
   return (
     <div className="space-y-4 mt-4">
       <FHIRStringEditable
@@ -35,6 +43,25 @@ function InviteModal({
           setEmail(email);
         }}
       />
+      <FHIRCodeEditable
+        label="Role"
+        system={
+          "https://iguhealth.app/fhir/ValueSet/MembershipRole|4.0.1" as uri
+        }
+        fhirVersion={R4}
+        client={client}
+        value={role}
+        onChange={setRole}
+      />
+      <FHIRReferenceEditable
+        label="AccessPolicy"
+        resourceTypesAllowed={["AccessPolicy"]}
+        fhirVersion={R4}
+        client={client}
+        value={accessPolicyRef}
+        onChange={setAccessPolicyRef}
+      />
+
       <div className="flex items-center">
         <div>
           <Button
@@ -53,10 +80,16 @@ function InviteModal({
                 Toaster.error("Email is required");
                 return;
               }
+              if (!role) {
+                Toaster.error("Role is required");
+                return;
+              }
 
               client
                 .invoke_type(IguhealthInviteUser.Op, {}, R4, "Membership", {
+                  role,
                   email,
+                  accessPolicy: accessPolicyRef,
                 })
                 .then((output) => {
                   Toaster.success(output.issue?.[0]?.diagnostics ?? "");
