@@ -435,7 +435,7 @@ function Root() {
                 <a
                   target="_blank"
                   className="cursor text-slate-500 hover:text-slate-600 hover:underline"
-                  href="https://docs.iguhealth.app"
+                  href="https://iguhealth.app"
                 >
                   Documentation
                 </a>

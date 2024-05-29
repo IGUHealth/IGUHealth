@@ -9,7 +9,7 @@ export function Modal({
   ModalContent,
   children,
 }: {
-  size?: "small" | "medium" | "large";
+  size?: "small" | "medium" | "large" | "x-large";
   modalTitle?: string;
   ModalContent?: (
     setOpen: React.Dispatch<React.SetStateAction<boolean>>,
@@ -28,7 +28,7 @@ export function Modal({
     <>
       {children(setOpen)}
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+        <Dialog as="div" className="relative z-50" onClose={closeModal}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -59,6 +59,7 @@ export function Modal({
                       "max-w-md": size === "small",
                       "max-w-lg": size === "medium",
                       "max-w-2xl": size === "large",
+                      "max-w-4xl": size === "x-large",
                     },
                   )}
                 >

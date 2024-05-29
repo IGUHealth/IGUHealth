@@ -10,6 +10,8 @@ import {
   CodeMirror,
   DropDownMenu,
   FHIRGenerativeForm,
+  MergeViewer,
+  Modal,
   Table,
   Tabs,
 } from "@iguhealth/components";
@@ -57,6 +59,9 @@ function ResourceHistory() {
   const { resourceType, id } = useParams();
   const [loading, setLoading] = useState(true);
   const [history, setHistory] = useState<BundleEntry[]>([]);
+  const [diff, setDiff] = useState<[BundleEntry, BundleEntry] | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
     setLoading(true);
@@ -70,37 +75,59 @@ function ResourceHistory() {
   }, [resourceType, id, setHistory]);
 
   return (
-    <Table
-      isLoading={loading}
-      data={history || []}
-      columns={[
-        {
-          id: "interaction",
-          content: "Interaction",
-          selector: "$this.request.method",
-          selectorType: "fhirpath",
-        },
-        {
-          id: "Version",
-          content: "Version",
-          selector: "$this.resource.meta.versionId",
-          selectorType: "fhirpath",
-        },
-        {
-          id: "Author",
-          content: "Author",
-          selector:
-            "$this.resource.meta.extension.where(url='https://iguhealth.app/author').valueString",
-          selectorType: "fhirpath",
-        },
-        {
-          id: "Updated at",
-          content: "Updated at",
-          selector: "$this.resource.meta.lastUpdated",
-          selectorType: "fhirpath",
-        },
-      ]}
-    />
+    <Modal
+      size="x-large"
+      ModalContent={(_setOpen) => (
+        <MergeViewer
+          extensions={extensions}
+          oldValue={JSON.stringify(diff?.[0].resource, null, 2)}
+          newValue={JSON.stringify(diff?.[1].resource, null, 2)}
+        />
+      )}
+    >
+      {(openModal) => (
+        <Table
+          isLoading={loading}
+          data={history.map((d, i) => ({ ...d, index: i })) ?? []}
+          onRowClick={(_row: unknown) => {
+            const row = _row as { index: number };
+            setDiff([
+              history[row.index],
+              history[row.index + 1] ?? history[row.index],
+            ]);
+
+            openModal(true);
+          }}
+          columns={[
+            {
+              id: "interaction",
+              content: "Interaction",
+              selector: "$this.request.method",
+              selectorType: "fhirpath",
+            },
+            {
+              id: "Version",
+              content: "Version",
+              selector: "$this.resource.meta.versionId",
+              selectorType: "fhirpath",
+            },
+            {
+              id: "Author",
+              content: "Author",
+              selector:
+                "$this.resource.meta.extension.where(url='https://iguhealth.app/author').valueString",
+              selectorType: "fhirpath",
+            },
+            {
+              id: "Updated at",
+              content: "Updated at",
+              selector: "$this.resource.meta.lastUpdated",
+              selectorType: "fhirpath",
+            },
+          ]}
+        />
+      )}
+    </Modal>
   );
 }
 

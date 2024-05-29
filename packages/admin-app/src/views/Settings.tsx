@@ -67,21 +67,21 @@ function SettingDisplay({ user }: Readonly<SettingProps>) {
       </div>
       <div className="mb-2">
         <h2 className="text-xl font-semibold">Endpoints</h2>
-        <div className="pl-2 mt-8 space-y-8">
+        <div className="pl-2 mt-4 space-y-6">
           <div>
-            <h3 className="text-lg font-semibold">FHIR</h3>
-            <div className="space-y-2">
-              <div className="flex flex-col p-2">
+            <h3 className="text-lg font-semibold mb-2">FHIR</h3>
+            <div className="pl-2 space-y-2">
+              <div className="flex flex-col ">
                 <Copyable
-                  label="FHIR R4 Endpoint"
+                  label="R4"
                   value={
                     iguhealth.rootURL ? versionUrl(iguhealth.rootURL, R4) : ""
                   }
                 />
               </div>
-              <div className="flex flex-col p-2">
+              <div className="flex flex-col ">
                 <Copyable
-                  label="FHIR R4B Endpoint"
+                  label="R4B"
                   value={
                     iguhealth.rootURL ? versionUrl(iguhealth.rootURL, R4B) : ""
                   }
@@ -90,17 +90,17 @@ function SettingDisplay({ user }: Readonly<SettingProps>) {
             </div>
           </div>
           <div>
-            <h3 className="text-lg font-semibold">Security</h3>
-            <div className="spacing-y-2">
-              <div className="flex flex-col p-2">
+            <h3 className="text-lg font-semibold mb-2">Security</h3>
+            <div className="pl-2 space-y-2">
+              <div className="flex flex-col ">
                 <Copyable
-                  label="Token Endpoint"
+                  label="Token"
                   value={iguhealth.well_known?.token_endpoint}
                 />
               </div>
-              <div className="flex flex-col p-2">
+              <div className="flex flex-col ">
                 <Copyable
-                  label="Authorization Endpoint"
+                  label="Authorization"
                   value={iguhealth.well_known?.authorization_endpoint}
                 />
               </div>
