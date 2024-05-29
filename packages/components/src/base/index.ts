@@ -6,6 +6,7 @@ import { InputContainer } from "./containers";
 import { Input } from "./input";
 import { Loading } from "./loading";
 import { DropDownMenu, Menu } from "./menu";
+import { MergeViewer } from "./mergeViewer";
 import { Modal } from "./modal";
 import { Select } from "./select";
 import { Table } from "./table";
@@ -29,4 +30,5 @@ export {
   Modal,
   Add,
   Tag,
+  MergeViewer,
 };
