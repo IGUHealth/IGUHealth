@@ -617,7 +617,6 @@ async function validateElement(
   root: object,
   type: uri,
 ): Promise<OperationOutcome["issue"]> {
-  const value = get(path, root);
   const element = structureDefinition.snapshot?.element?.[elementIndex];
 
   if (!isElement(element)) {
@@ -631,10 +630,12 @@ async function validateElement(
   }
 
   const isArray = element.max === "*" || parseInt(element.max || "1") > 1;
-  // Validating cardinality
-  // Cardinality set to * on root element so just ignore it.
+  const value = get(path, root) ?? (isArray ? [] : undefined);
+
   if (
-    isArray != Array.isArray(value === undefined ? [] : value) &&
+    isArray != Array.isArray(value) &&
+    // Validating cardinality
+    // Cardinality set to * on root element so just ignore it.
     elementIndex !== 0
   ) {
     return [
@@ -648,7 +649,7 @@ async function validateElement(
     ];
   }
 
-  if (Array.isArray(value === undefined ? [] : value)) {
+  if (Array.isArray(value)) {
     // Validate each element in the array
     return (
       await Promise.all(
