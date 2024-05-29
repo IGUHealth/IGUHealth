@@ -1,4 +1,4 @@
-import * as db from "zapatos/db";
+import { KoaContext } from "../../fhir-api/types.js";
 
 export interface ModelManagement<
   Model extends Insertable & Updateable,
@@ -6,9 +6,25 @@ export interface ModelManagement<
   Insertable,
   Updateable,
 > {
-  get(client: db.Queryable, id: string): Promise<Model | undefined>;
-  search(client: db.Queryable, where: Whereable): Promise<Model[]>;
-  create(client: db.Queryable, model: Insertable): Promise<Model>;
-  update(client: db.Queryable, id: string, update: Updateable): Promise<Model>;
-  delete(client: db.Queryable, where: Whereable): Promise<void>;
+  get(
+    ctx: KoaContext.FHIRServices["FHIRContext"],
+    id: string,
+  ): Promise<Model | undefined>;
+  search(
+    ctx: KoaContext.FHIRServices["FHIRContext"],
+    where: Whereable,
+  ): Promise<Model[]>;
+  create(
+    ctx: KoaContext.FHIRServices["FHIRContext"],
+    model: Insertable,
+  ): Promise<Model>;
+  update(
+    ctx: KoaContext.FHIRServices["FHIRContext"],
+    id: string,
+    update: Updateable,
+  ): Promise<Model>;
+  delete(
+    ctx: KoaContext.FHIRServices["FHIRContext"],
+    where: Whereable,
+  ): Promise<void>;
 }

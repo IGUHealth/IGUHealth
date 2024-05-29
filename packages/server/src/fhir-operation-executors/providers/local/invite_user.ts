@@ -36,13 +36,13 @@ const IguhealthInviteUserInvoke = InlineOperation(
     } as Membership);
     const codeManagement = new TenantAuthorizationCodeManagement(ctx.tenant);
     const userManagement = new TenantUserManagement(ctx.tenant);
-    const user = await userManagement.search(ctx.db, {
+    const user = await userManagement.search(ctx, {
       fhir_user_id: membership.id,
     });
     if (!user[0]) {
       throw new OperationError(outcomeError("not-found", "User not found"));
     }
-    const code = await codeManagement.create(ctx.db, {
+    const code = await codeManagement.create(ctx, {
       type: "password_reset",
       user_id: user[0].id,
       expires_in: "15 minutes",

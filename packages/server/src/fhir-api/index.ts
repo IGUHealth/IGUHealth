@@ -559,7 +559,6 @@ export async function associateServicesKoaMiddleware<State, Context>(
   const fhirServices = await createFHIRServices(pool);
 
   return async (ctx, next) => {
-    ctx.postgres = pool;
     ctx.FHIRContext = fhirServices;
     await next();
   };

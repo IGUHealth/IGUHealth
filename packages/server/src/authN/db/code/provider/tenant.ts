@@ -5,6 +5,7 @@ import * as s from "zapatos/schema";
 import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { KoaContext } from "../../../../fhir-api/types.js";
 import { AuthorizationCodeManagement } from "../interface.js";
 import { AuthorizationCode } from "../types.js";
 import { is_expired, is_not_expired } from "../utilities.js";
@@ -17,7 +18,7 @@ export default class TenantAuthorizationCodeManagement
     this.tenantId = tenantId;
   }
   async get(
-    client: db.Queryable,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     id: string,
   ): Promise<AuthorizationCode | undefined> {
     return db
@@ -28,10 +29,10 @@ export default class TenantAuthorizationCodeManagement
           extras: { is_expired },
         },
       )
-      .run(client);
+      .run(ctx.db);
   }
   search(
-    client: db.Queryable,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     where: s.authorization_code.Whereable,
   ): Promise<AuthorizationCode[]> {
     const whereable: s.authorization_code.Whereable = {
@@ -48,10 +49,10 @@ export default class TenantAuthorizationCodeManagement
           extras: { is_expired },
         },
       )
-      .run(client);
+      .run(ctx.db);
   }
   create(
-    client: db.Queryable,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     model: Pick<
       s.authorization_code.Insertable,
       "type" | "user_id" | "tenant" | "expires_in" | "client_id" | "payload"
@@ -68,14 +69,14 @@ export default class TenantAuthorizationCodeManagement
         },
         { extras: { is_expired } },
       )
-      .run(client);
+      .run(ctx.db);
   }
   update(
-    client: db.Queryable,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     id: string,
     update: s.authorization_code.Updatable,
   ): Promise<AuthorizationCode> {
-    return db.serializable(client, async (txnClient) => {
+    return db.serializable(ctx.db, async (txnClient) => {
       const where: s.authorization_code.Whereable = {
         scope: "tenant",
         tenant: this.tenantId,
@@ -104,10 +105,10 @@ export default class TenantAuthorizationCodeManagement
     });
   }
   delete(
-    client: db.Queryable,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     where_: s.authorization_code.Whereable,
   ): Promise<void> {
-    return db.serializable(client, async (txnClient) => {
+    return db.serializable(ctx.db, async (txnClient) => {
       const where: s.authorization_code.Whereable = {
         ...where_,
         scope: "tenant",

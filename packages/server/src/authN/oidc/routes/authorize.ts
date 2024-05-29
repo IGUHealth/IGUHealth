@@ -46,7 +46,7 @@ export function authorizeGET(scope: user_scope): ManagementRouteHandler {
         );
       }
 
-      const code = await ctx.oidc.codeManagement.create(ctx.postgres, {
+      const code = await ctx.oidc.codeManagement.create(ctx.FHIRContext, {
         type: "oauth2_code_grant",
         client_id: client.id,
         // Should be safe to use here as is authenticated so user should be populated.

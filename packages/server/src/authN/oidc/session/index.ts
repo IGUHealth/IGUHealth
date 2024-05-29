@@ -15,7 +15,7 @@ export async function deserializeUser(
   try {
     const id = ctx.session?.[USER_SESSION_KEY];
     if (!id) return undefined;
-    const user = await ctx.oidc.userManagement.get(ctx.postgres, id);
+    const user = await ctx.oidc.userManagement.get(ctx.FHIRContext, id);
     if (!user) {
       return undefined;
     }
@@ -47,7 +47,7 @@ export async function sessionLogin<Method extends keyof LoginParameters>(
   }
 
   const user = await ctx.oidc.userManagement.login(
-    ctx.postgres,
+    ctx.FHIRContext,
     method,
     credentials,
   );

@@ -14,7 +14,7 @@ type UserInfoResponse = {
 export function userInfo(_scope: user_scope): ManagementRouteHandler {
   return async (ctx, next) => {
     const user = await ctx.oidc.userManagement.get(
-      ctx.postgres,
+      ctx.FHIRContext,
       // [TODO]
       //@ts-ignore
       ctx.FHIRContext.user.jwt.sub,

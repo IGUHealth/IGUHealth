@@ -4,6 +4,7 @@ import * as s from "zapatos/schema";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
+import { KoaContext } from "../../../../fhir-api/types.js";
 import { AuthorizationCodeManagement } from "../interface.js";
 import { AuthorizationCode } from "../types.js";
 import { is_expired, is_not_expired } from "../utilities.js";
@@ -12,7 +13,7 @@ export default class GlobalAuthorizationCodeManagement
   implements AuthorizationCodeManagement
 {
   async get(
-    client: db.Queryable,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     id: string,
   ): Promise<AuthorizationCode | undefined> {
     return db
@@ -23,10 +24,10 @@ export default class GlobalAuthorizationCodeManagement
           extras: { is_expired },
         },
       )
-      .run(client);
+      .run(ctx.db);
   }
   search(
-    client: db.Queryable,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     where: s.authorization_code.Whereable,
   ): Promise<AuthorizationCode[]> {
     const whereable: s.authorization_code.Whereable = {
@@ -42,10 +43,10 @@ export default class GlobalAuthorizationCodeManagement
           extras: { is_expired },
         },
       )
-      .run(client);
+      .run(ctx.db);
   }
   create(
-    client: db.Queryable,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     model: Pick<
       s.authorization_code.Insertable,
       "type" | "user_id" | "tenant" | "expires_in" | "client_id" | "payload"
@@ -57,14 +58,14 @@ export default class GlobalAuthorizationCodeManagement
         { ...model, code: randomBytes(32).toString("hex"), scope: "global" },
         { extras: { is_expired } },
       )
-      .run(client);
+      .run(ctx.db);
   }
   update(
-    client: db.Queryable,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     id: string,
     update: s.authorization_code.Updatable,
   ): Promise<AuthorizationCode> {
-    return db.serializable(client, async (txnClient) => {
+    return db.serializable(ctx.db, async (txnClient) => {
       const where: s.authorization_code.Whereable = {
         scope: "global",
         id,
@@ -91,10 +92,10 @@ export default class GlobalAuthorizationCodeManagement
     });
   }
   delete(
-    client: db.Queryable,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     where_: s.authorization_code.Whereable,
   ): Promise<void> {
-    return db.serializable(client, async (txnClient) => {
+    return db.serializable(ctx.db, async (txnClient) => {
       const where: s.authorization_code.Whereable = {
         ...where_,
         scope: "global",

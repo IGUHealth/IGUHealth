@@ -63,7 +63,7 @@ export function tokenPost<
         const body = (ctx.request as unknown as Record<string, unknown>).body;
 
         const response = await db.serializable(
-          ctx.postgres,
+          ctx.FHIRContext.db,
           async (txnClient) => {
             if (!isRecord(body))
               throw new OperationError(
@@ -75,9 +75,12 @@ export function tokenPost<
               );
             }
 
-            const code = await ctx.oidc.codeManagement.search(txnClient, {
-              code: body.code,
-            });
+            const code = await ctx.oidc.codeManagement.search(
+              { ...ctx.FHIRContext, db: txnClient },
+              {
+                code: body.code,
+              },
+            );
 
             if (code.length !== 1 || code[0].is_expired)
               throw new OperationError(outcomeError("invalid", "Invalid code"));
@@ -87,14 +90,17 @@ export function tokenPost<
               );
 
             const user = await ctx.oidc.userManagement.get(
-              txnClient,
+              { ...ctx.FHIRContext, db: txnClient },
               code[0].user_id,
             );
 
             if (!user)
               throw new OperationError(outcomeError("invalid", "Invalid user"));
 
-            await ctx.oidc.codeManagement.delete(txnClient, { id: code[0].id });
+            await ctx.oidc.codeManagement.delete(
+              { ...ctx.FHIRContext, db: txnClient },
+              { id: code[0].id },
+            );
 
             const signingKey = await getSigningKey(
               process.env.AUTH_LOCAL_CERTIFICATION_LOCATION as string,
@@ -105,7 +111,7 @@ export function tokenPost<
               iss: IGUHEALTH_ISSUER,
               [CUSTOM_CLAIMS.TENANTS]:
                 await ctx.oidc.userManagement.getTenantClaims(
-                  txnClient,
+                  { ...ctx.FHIRContext, db: txnClient },
                   user.id,
                 ),
               [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
