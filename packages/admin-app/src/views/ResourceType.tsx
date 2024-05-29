@@ -89,6 +89,7 @@ function InviteModal({
                 .invoke_type(IguhealthInviteUser.Op, {}, R4, "Membership", {
                   role,
                   email,
+                  accessPolicy: accessPolicyRef,
                 })
                 .then((output) => {
                   Toaster.success(output.issue?.[0]?.diagnostics ?? "");

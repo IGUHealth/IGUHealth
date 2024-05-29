@@ -3,7 +3,7 @@ import { renderToString } from "react-dom/server";
 import * as db from "zapatos/db";
 
 import { FHIRRequest } from "@iguhealth/client/types";
-import { Membership, code } from "@iguhealth/fhir-types/r4/types";
+import { Membership, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { IguhealthInviteUser } from "@iguhealth/generated-ops/r4";
 import {
@@ -43,6 +43,36 @@ const IguhealthInviteUserInvoke = InlineOperation(
             role: input.role,
           } as Membership,
         );
+
+        const accessPolicyId = input.accessPolicy?.reference?.split("/")[1];
+        if (accessPolicyId) {
+          const accessPolicy = await ctx.client.read(
+            { ...ctx, db: txnClient },
+            R4,
+            "AccessPolicy",
+            accessPolicyId as id,
+          );
+
+          if (accessPolicy) {
+            await ctx.client.update(
+              { ...ctx, db: txnClient },
+              R4,
+              "AccessPolicy",
+              accessPolicy.id as id,
+              {
+                ...accessPolicy,
+                target: [
+                  ...(accessPolicy.target || []),
+                  {
+                    link: {
+                      reference: `${membership.resourceType}/${membership.id}`,
+                    },
+                  },
+                ],
+              },
+            );
+          }
+        }
 
         const codeManagement = new TenantAuthorizationCodeManagement(
           ctx.tenant,
