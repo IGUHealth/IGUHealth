@@ -36,7 +36,7 @@ export function passwordResetGET(scope: user_scope): ManagementRouteHandler {
     }
 
     const authorizationCodeSearch = await ctx.oidc.codeManagement.search(
-      ctx.postgres,
+      ctx.FHIRContext,
       {
         type: "password_reset",
         code: queryCode,
@@ -138,7 +138,7 @@ export function passwordResetPOST(scope: user_scope): ManagementRouteHandler {
       return;
     }
 
-    const res = await ctx.oidc.codeManagement.search(ctx.postgres, {
+    const res = await ctx.oidc.codeManagement.search(ctx.FHIRContext, {
       type: "password_reset",
       code: body.code,
     });
@@ -158,16 +158,19 @@ export function passwordResetPOST(scope: user_scope): ManagementRouteHandler {
       );
     }
 
-    await db.serializable(ctx.postgres, async (txnClient) => {
+    await db.serializable(ctx.FHIRContext.db, async (txnClient) => {
       await ctx.oidc.userManagement.update(
-        txnClient,
+        { ...ctx.FHIRContext, db: txnClient },
         authorizationCode.user_id,
         {
           password: body.password,
           email_verified: true,
         },
       );
-      await ctx.oidc.codeManagement.delete(txnClient, { code: body.code });
+      await ctx.oidc.codeManagement.delete(
+        { ...ctx.FHIRContext, db: txnClient },
+        { code: body.code },
+      );
     });
 
     const loginRoute = ctx.router.url(
@@ -229,9 +232,12 @@ export function passwordResetInitiatePOST(
       );
     }
 
-    const usersWithEmail = await ctx.oidc.userManagement.search(ctx.postgres, {
-      email: body.email,
-    });
+    const usersWithEmail = await ctx.oidc.userManagement.search(
+      ctx.FHIRContext,
+      {
+        email: body.email,
+      },
+    );
 
     if (usersWithEmail.length > 1) {
       throw new OperationError(

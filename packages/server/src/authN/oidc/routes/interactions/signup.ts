@@ -48,14 +48,14 @@ export const signupPOST =
     }
 
     const existingUser = (
-      await ctx.oidc.userManagement.search(ctx.postgres, {
+      await ctx.oidc.userManagement.search(ctx.FHIRContext, {
         email,
       })
     )[0];
     if (existingUser !== undefined) {
       await sendPasswordResetEmail(scope, ctx, existingUser);
     } else {
-      const user = await ctx.oidc.userManagement.create(ctx.postgres, {
+      const user = await ctx.oidc.userManagement.create(ctx.FHIRContext, {
         email,
       });
 

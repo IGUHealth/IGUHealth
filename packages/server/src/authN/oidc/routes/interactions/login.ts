@@ -134,7 +134,7 @@ export const loginPOST =
         return;
       } else if (adminApp.ADMIN_APP() !== undefined) {
         const tenantClaims = await ctx.oidc.userManagement.getTenantClaims(
-          ctx.FHIRContext.db,
+          ctx.FHIRContext,
           user.id,
         );
         const tenantId = tenantClaims[0]?.id;

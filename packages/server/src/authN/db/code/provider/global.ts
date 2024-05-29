@@ -13,7 +13,7 @@ export default class GlobalAuthorizationCodeManagement
   implements AuthorizationCodeManagement
 {
   async get(
-    ctx: KoaContext.FHIRServices,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     id: string,
   ): Promise<AuthorizationCode | undefined> {
     return db
@@ -24,10 +24,10 @@ export default class GlobalAuthorizationCodeManagement
           extras: { is_expired },
         },
       )
-      .run(ctx.postgres);
+      .run(ctx.db);
   }
   search(
-    ctx: KoaContext.FHIRServices,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     where: s.authorization_code.Whereable,
   ): Promise<AuthorizationCode[]> {
     const whereable: s.authorization_code.Whereable = {
@@ -43,10 +43,10 @@ export default class GlobalAuthorizationCodeManagement
           extras: { is_expired },
         },
       )
-      .run(ctx.postgres);
+      .run(ctx.db);
   }
   create(
-    ctx: KoaContext.FHIRServices,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     model: Pick<
       s.authorization_code.Insertable,
       "type" | "user_id" | "tenant" | "expires_in" | "client_id" | "payload"
@@ -58,14 +58,14 @@ export default class GlobalAuthorizationCodeManagement
         { ...model, code: randomBytes(32).toString("hex"), scope: "global" },
         { extras: { is_expired } },
       )
-      .run(ctx.postgres);
+      .run(ctx.db);
   }
   update(
-    ctx: KoaContext.FHIRServices,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     id: string,
     update: s.authorization_code.Updatable,
   ): Promise<AuthorizationCode> {
-    return db.serializable(ctx.postgres, async (txnClient) => {
+    return db.serializable(ctx.db, async (txnClient) => {
       const where: s.authorization_code.Whereable = {
         scope: "global",
         id,
@@ -92,10 +92,10 @@ export default class GlobalAuthorizationCodeManagement
     });
   }
   delete(
-    ctx: KoaContext.FHIRServices,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     where_: s.authorization_code.Whereable,
   ): Promise<void> {
-    return db.serializable(ctx.postgres, async (txnClient) => {
+    return db.serializable(ctx.db, async (txnClient) => {
       const where: s.authorization_code.Whereable = {
         ...where_,
         scope: "global",

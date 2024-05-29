@@ -11,7 +11,7 @@ import { determineEmailUpdate } from "../utilities.js";
 import GlobalUserManagement from "./global.js";
 
 async function loginUsingGlobalUser<T extends keyof LoginParameters>(
-  ctx: KoaContext.FHIRServices,
+  ctx: KoaContext.FHIRServices["FHIRContext"],
   tenant: TenantId,
   type: T,
   parameters: LoginParameters[T],
@@ -27,7 +27,7 @@ async function loginUsingGlobalUser<T extends keyof LoginParameters>(
 
       const globalUser: User[] = await db
         .select("users", where, { columns: USER_QUERY_COLS })
-        .run(ctx.postgres);
+        .run(ctx.db);
 
       if (globalUser[0] === undefined) {
         return;
@@ -43,7 +43,7 @@ async function loginUsingGlobalUser<T extends keyof LoginParameters>(
           },
           { columns: USER_QUERY_COLS },
         )
-        .run(ctx.postgres);
+        .run(ctx.db);
 
       if (tenantUser.length > 0) {
         return globalUser[0];
@@ -60,7 +60,7 @@ async function loginUsingGlobalUser<T extends keyof LoginParameters>(
  * Logins using the tenant user. Doesn't check the global user.
  */
 async function tenantLogin<T extends keyof LoginParameters>(
-  ctx: KoaContext.FHIRServices,
+  ctx: KoaContext.FHIRServices["FHIRContext"],
   tenant: TenantId,
   type: T,
   parameters: LoginParameters[T],
@@ -78,7 +78,7 @@ async function tenantLogin<T extends keyof LoginParameters>(
 
       const user: User[] = await db
         .select("users", where, { columns: USER_QUERY_COLS })
-        .run(ctx.postgres);
+        .run(ctx.db);
 
       // Sanity check should never happen given unique check on email.
       if (user.length > 1)
@@ -101,7 +101,7 @@ export default class TenantUserManagement implements UserManagement {
   }
 
   async getTenantClaims(
-    ctx: KoaContext.FHIRServices,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     id: string,
   ): Promise<TenantClaim<s.user_role>[]> {
     const user = await this.get(ctx, id);
@@ -120,7 +120,7 @@ export default class TenantUserManagement implements UserManagement {
             { root_user: user.id, tenant: this.tenant },
             { columns: USER_QUERY_COLS },
           )
-          .run(ctx.postgres);
+          .run(ctx.db);
 
         return tenantUsers.map((tenantUser) => ({
           id: tenantUser.id as TenantId,
@@ -131,7 +131,7 @@ export default class TenantUserManagement implements UserManagement {
   }
 
   async login<T extends keyof LoginParameters>(
-    ctx: KoaContext.FHIRServices,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     type: T,
     parameters: LoginParameters[T],
   ): Promise<User | undefined> {
@@ -141,7 +141,7 @@ export default class TenantUserManagement implements UserManagement {
   }
 
   async get(
-    ctx: KoaContext.FHIRServices,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     id: string,
   ): Promise<User | undefined> {
     // Check global first
@@ -159,7 +159,7 @@ export default class TenantUserManagement implements UserManagement {
             { root_user: globalUser.id, scope: "tenant", tenant: this.tenant },
             { columns: USER_QUERY_COLS },
           )
-          .run(ctx.postgres)) as User | undefined;
+          .run(ctx.db)) as User | undefined;
         return { ...globalUser, ...tenantUser };
       }
       return undefined;
@@ -171,7 +171,7 @@ export default class TenantUserManagement implements UserManagement {
         { id, tenant: this.tenant, scope: "tenant" },
         { columns: USER_QUERY_COLS },
       )
-      .run(ctx.postgres)) as User | undefined;
+      .run(ctx.db)) as User | undefined;
 
     if (tenantUser?.root_user) {
       const globalUser: User | undefined = (await db
@@ -180,7 +180,7 @@ export default class TenantUserManagement implements UserManagement {
           { id: tenantUser.root_user, scope: "global" },
           { columns: USER_QUERY_COLS },
         )
-        .run(ctx.postgres)) as User | undefined;
+        .run(ctx.db)) as User | undefined;
 
       return { ...globalUser, ...tenantUser };
     }
@@ -188,7 +188,7 @@ export default class TenantUserManagement implements UserManagement {
     return tenantUser;
   }
   async search(
-    ctx: KoaContext.FHIRServices,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     where: s.users.Whereable,
   ): Promise<User[]> {
     return db
@@ -197,22 +197,22 @@ export default class TenantUserManagement implements UserManagement {
         { ...where, tenant: this.tenant, scope: "tenant" },
         { columns: USER_QUERY_COLS },
       )
-      .run(ctx.postgres);
+      .run(ctx.db);
   }
   async create(
-    ctx: KoaContext.FHIRServices,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     user: s.users.Insertable,
   ): Promise<User> {
     return await db
       .insert("users", { ...user, tenant: this.tenant, scope: "tenant" })
-      .run(ctx.postgres);
+      .run(ctx.db);
   }
   async update(
-    ctx: KoaContext.FHIRServices,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     id: string,
     update: s.users.Updatable,
   ): Promise<User> {
-    return db.serializable(ctx.postgres, async (txnClient) => {
+    return db.serializable(ctx.db, async (txnClient) => {
       const where: s.users.Whereable = {
         scope: "tenant",
         tenant: this.tenant,
@@ -238,10 +238,10 @@ export default class TenantUserManagement implements UserManagement {
     });
   }
   async delete(
-    ctx: KoaContext.FHIRServices,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     where_: s.users.Whereable,
   ): Promise<void> {
-    return db.serializable(ctx.postgres, async (txnClient) => {
+    return db.serializable(ctx.db, async (txnClient) => {
       const where: s.users.Whereable = {
         ...where_,
         tenant: this.tenant,

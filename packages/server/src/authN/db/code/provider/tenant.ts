@@ -18,7 +18,7 @@ export default class TenantAuthorizationCodeManagement
     this.tenantId = tenantId;
   }
   async get(
-    ctx: KoaContext.FHIRServices,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     id: string,
   ): Promise<AuthorizationCode | undefined> {
     return db
@@ -29,10 +29,10 @@ export default class TenantAuthorizationCodeManagement
           extras: { is_expired },
         },
       )
-      .run(ctx.postgres);
+      .run(ctx.db);
   }
   search(
-    ctx: KoaContext.FHIRServices,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     where: s.authorization_code.Whereable,
   ): Promise<AuthorizationCode[]> {
     const whereable: s.authorization_code.Whereable = {
@@ -49,10 +49,10 @@ export default class TenantAuthorizationCodeManagement
           extras: { is_expired },
         },
       )
-      .run(ctx.postgres);
+      .run(ctx.db);
   }
   create(
-    ctx: KoaContext.FHIRServices,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     model: Pick<
       s.authorization_code.Insertable,
       "type" | "user_id" | "tenant" | "expires_in" | "client_id" | "payload"
@@ -69,14 +69,14 @@ export default class TenantAuthorizationCodeManagement
         },
         { extras: { is_expired } },
       )
-      .run(ctx.postgres);
+      .run(ctx.db);
   }
   update(
-    ctx: KoaContext.FHIRServices,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     id: string,
     update: s.authorization_code.Updatable,
   ): Promise<AuthorizationCode> {
-    return db.serializable(ctx.postgres, async (txnClient) => {
+    return db.serializable(ctx.db, async (txnClient) => {
       const where: s.authorization_code.Whereable = {
         scope: "tenant",
         tenant: this.tenantId,
@@ -105,10 +105,10 @@ export default class TenantAuthorizationCodeManagement
     });
   }
   delete(
-    ctx: KoaContext.FHIRServices,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     where_: s.authorization_code.Whereable,
   ): Promise<void> {
-    return db.serializable(ctx.postgres, async (txnClient) => {
+    return db.serializable(ctx.db, async (txnClient) => {
       const where: s.authorization_code.Whereable = {
         ...where_,
         scope: "tenant",

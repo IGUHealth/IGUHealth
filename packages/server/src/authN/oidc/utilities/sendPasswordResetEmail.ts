@@ -23,7 +23,7 @@ export async function shouldSendPasswordReset(
   user: User,
 ): Promise<boolean> {
   // Prevent code creation if one already exists in the last 15 minutes.
-  const existingCodes = await ctx.oidc.codeManagement.search(ctx.postgres, {
+  const existingCodes = await ctx.oidc.codeManagement.search(ctx.FHIRContext, {
     user_id: user.id,
     type: "password_reset",
   });
@@ -43,7 +43,7 @@ export async function sendPasswordResetEmail(
     return;
   }
 
-  const code = await ctx.oidc.codeManagement.create(ctx.postgres, {
+  const code = await ctx.oidc.codeManagement.create(ctx.FHIRContext, {
     type: "password_reset",
     user_id: user.id,
     expires_in: "15 minutes",

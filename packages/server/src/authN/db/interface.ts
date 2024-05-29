@@ -8,13 +8,25 @@ export interface ModelManagement<
   Insertable,
   Updateable,
 > {
-  get(ctx: KoaContext.FHIRServices, id: string): Promise<Model | undefined>;
-  search(ctx: KoaContext.FHIRServices, where: Whereable): Promise<Model[]>;
-  create(ctx: KoaContext.FHIRServices, model: Insertable): Promise<Model>;
+  get(
+    ctx: KoaContext.FHIRServices["FHIRContext"],
+    id: string,
+  ): Promise<Model | undefined>;
+  search(
+    ctx: KoaContext.FHIRServices["FHIRContext"],
+    where: Whereable,
+  ): Promise<Model[]>;
+  create(
+    ctx: KoaContext.FHIRServices["FHIRContext"],
+    model: Insertable,
+  ): Promise<Model>;
   update(
-    ctx: KoaContext.FHIRServices,
+    ctx: KoaContext.FHIRServices["FHIRContext"],
     id: string,
     update: Updateable,
   ): Promise<Model>;
-  delete(ctx: KoaContext.FHIRServices, where: Whereable): Promise<void>;
+  delete(
+    ctx: KoaContext.FHIRServices["FHIRContext"],
+    where: Whereable,
+  ): Promise<void>;
 }

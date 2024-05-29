@@ -63,7 +63,6 @@ export namespace KoaContext {
     };
 
   export type FHIRServices = {
-    postgres: db.Queryable;
     FHIRContext: Omit<FHIRServerCTX, "user" | "tenant">;
   };
 

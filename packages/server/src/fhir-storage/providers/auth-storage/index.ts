@@ -159,7 +159,7 @@ function updateUserTableMiddleware<
 
         try {
           await tenantUserManagement.create(
-            context.ctx.db,
+            context.ctx,
             membershipToUser(membership),
           );
         } catch (e) {
@@ -186,7 +186,7 @@ function updateUserTableMiddleware<
             outcomeFatal("not-found", "Membership not found."),
           );
 
-        await tenantUserManagement.delete(context.ctx.db, {
+        await tenantUserManagement.delete(context.ctx, {
           fhir_user_versionid: parseInt(versionId),
         });
 
@@ -224,7 +224,7 @@ function updateUserTableMiddleware<
           );
 
         tenantUserManagement.update(
-          context.ctx.db,
+          context.ctx,
           existingUser.id,
           membershipToUser(
             (res.response as R4UpdateResponse)?.body as Membership,
