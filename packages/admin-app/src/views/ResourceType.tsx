@@ -7,11 +7,12 @@ import {
   Button,
   FHIRCodeEditable,
   FHIRGenerativeSearchTable,
+  FHIRReferenceEditable,
   FHIRStringEditable,
   Modal,
   Toaster,
 } from "@iguhealth/components";
-import { code, uri } from "@iguhealth/fhir-types/r4/types";
+import { Reference, code, uri } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
   R4,
@@ -29,6 +30,9 @@ function InviteModal({
   const client = useRecoilValue(getClient);
   const [email, setEmail] = useState<string | undefined>();
   const [role, setRole] = useState<code | undefined>();
+  const [accessPolicyRef, setAccessPolicyRef] = useState<
+    Reference | undefined
+  >();
 
   return (
     <div className="space-y-4 mt-4">
@@ -49,6 +53,15 @@ function InviteModal({
         value={role}
         onChange={setRole}
       />
+      <FHIRReferenceEditable
+        label="AccessPolicy"
+        resourceTypesAllowed={["AccessPolicy"]}
+        fhirVersion={R4}
+        client={client}
+        value={accessPolicyRef}
+        onChange={setAccessPolicyRef}
+      />
+
       <div className="flex items-center">
         <div>
           <Button
