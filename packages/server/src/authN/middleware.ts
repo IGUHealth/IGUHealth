@@ -181,6 +181,7 @@ export const allowPublicAccessMiddleware: Koa.Middleware = async (
       sub: "public-user",
       access_token: "sec-public",
       [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
+      [CUSTOM_CLAIMS.RESOURCE_ID]: "public",
       [CUSTOM_CLAIMS.TENANTS]: [
         {
           id: ctx.params.tenant,
