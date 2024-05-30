@@ -1,0 +1,73 @@
+---
+slug: updates_2024-05-30
+Title: Updates 2024-05-30
+authors: [confused-moniker]
+tags: [iguhealth, updates]
+---
+
+# Updates 2024-05-30
+
+## Server Enhancements
+
+### Author Parameter
+We've moved the author parameter from being a token search parameter to a reference parameter.
+Custom operations, ClientApplications with client credentials, and Membership users who make any updates will now be displayed as an extension pointing back to them.
+
+Below is an example of the extension (which is automatically generated on all resources under `meta.extension`).
+```json
+      {
+        "url": "https://iguhealth.app/author",
+        "valueReference": {
+          "reference": "Membership/NuqYfcMykSm1Qsq2wHUNet"
+        }
+      }
+```
+
+You can now also perform chained searches against the author parameter as an example:
+```bash
+iguhealth api search_type r4 Patient _iguhealth-author.email=dev@iguhealth.app
+```
+
+### Alignment with new root users
+Root users are now treated like every other member, with a membership resource being used to determine their role and access to newly created tenants.
+
+### Remove _ from ID generation
+Per FHIR Spec, this is not compatible with the id regex. 
+
+See [here](./2024-05-23-vanya-integration.mdx) for more information about how Vanya Client uncovered this on our server.
+
+## Admin Application Enhancements
+
+### Settings
+Settings now displays links to R4, R4B, and OIDC endpoints, which are pulled from our .well-known/openid-configuration.
+Additionally, we've updated our libraries to use well-known/openid-configuration for pulling OIDC endpoints instead of hardcoding them.
+
+### History View
+Versioned resources can now be viewed as a diff from the previous version.
+
+### Invite Modal
+The invite modal will now allow you to specify a user role and tie an access policy to them.
+
+
+
+## General
+
+### Updated Packages
+* @iguhealth/iguhealth.fhir.r4.core: 0.5.8
+* @iguhealth/admin-app: 0.7.8
+* @iguhealth/cli: 1.4.4
+* @iguhealth/client: 0.8.4
+* @iguhealth/components: 0.7.7
+* @iguhealth/fhir-validation: 0.7.2
+* @iguhealth/fhirpath: 0.5.2
+* @iguhealth/generated-ops: 0.5.4
+* @iguhealth/jwt: 0.4.1
+* @iguhealth/meta-value: 0.5.2
+* @iguhealth/operation-execution: 0.7.2
+* @iguhealth/server: 0.14.9
+
+### Dependencies Updated to Latest
+We've updated the following dependencies to their latest versions:
+
+* Storybook
+* ioredis
