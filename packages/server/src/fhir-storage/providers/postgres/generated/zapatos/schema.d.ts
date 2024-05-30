@@ -5587,11 +5587,17 @@ declare module 'zapatos/schema' {
     export type Table = 'resources';
     export interface Selectable {
       /**
-      * **resources.author**
+      * **resources.author_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      author: string;
+      author_id: string;
+      /**
+      * **resources.author_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      author_type: string;
       /**
       * **resources.created_at**
       * - `timestamptz` in database
@@ -5661,11 +5667,17 @@ declare module 'zapatos/schema' {
     }
     export interface JSONSelectable {
       /**
-      * **resources.author**
+      * **resources.author_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      author: string;
+      author_id: string;
+      /**
+      * **resources.author_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      author_type: string;
       /**
       * **resources.created_at**
       * - `timestamptz` in database
@@ -5735,11 +5747,17 @@ declare module 'zapatos/schema' {
     }
     export interface Whereable {
       /**
-      * **resources.author**
+      * **resources.author_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      author?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      author_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **resources.author_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      author_type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **resources.created_at**
       * - `timestamptz` in database
@@ -5809,11 +5827,17 @@ declare module 'zapatos/schema' {
     }
     export interface Insertable {
       /**
-      * **resources.author**
+      * **resources.author_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      author: string | db.Parameter<string> | db.SQLFragment;
+      author_id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **resources.author_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      author_type: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **resources.created_at**
       * - `timestamptz` in database
@@ -5871,11 +5895,17 @@ declare module 'zapatos/schema' {
     }
     export interface Updatable {
       /**
-      * **resources.author**
+      * **resources.author_id**
       * - `text` in database
       * - `NOT NULL`, no default
       */
-      author?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      author_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **resources.author_type**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      author_type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **resources.created_at**
       * - `timestamptz` in database

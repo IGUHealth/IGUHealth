@@ -20,9 +20,12 @@ function generateCanonicalReferenceSearch(
 ): db.SQLFragment {
   const where: s.r4_uri_idx.Whereable = {
     tenant: ctx.tenant,
-    resource_type: db.sql`${db.self} in (${sqlUtils.paramsWithComma(
-      parameter.searchParameter.target || [],
-    )})`,
+    resource_type:
+      (parameter.searchParameter.target ?? []).length === 0
+        ? db.sql`${db.self} IS NOT NULL`
+        : db.sql`${db.self} in (${sqlUtils.paramsWithComma(
+            parameter.searchParameter.target ?? [],
+          )})`,
     value: parameter.value[0].toString(),
   };
 
