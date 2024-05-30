@@ -1,5 +1,5 @@
 import { MiddlewareAsyncChain } from "@iguhealth/client/middleware";
-import { AccessPolicy, Membership, id } from "@iguhealth/fhir-types/r4/types";
+import { AccessPolicy, id } from "@iguhealth/fhir-types/r4/types";
 import { R4, Resource, ResourceType } from "@iguhealth/fhir-types/versions";
 import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
