@@ -196,6 +196,7 @@ async function handleSubscriptionPayload(
             userRole: "admin",
           },
         ],
+        [CUSTOM_CLAIMS.RESOURCE_ID]: operationDefinition.id as id,
         [CUSTOM_CLAIMS.RESOURCE_TYPE]: "OperationDefinition",
         sub: operationDefinition.id as unknown as Subject,
         scope: "openid profile email offline_access",
@@ -539,6 +540,7 @@ async function createWorker(
             jwt: {
               iss: IGUHEALTH_ISSUER,
               sub: `system-worker-${workerID}`,
+              [CUSTOM_CLAIMS.RESOURCE_ID]: `system-worker-${workerID}`,
               [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
             } as AccessTokenPayload<s.user_role>,
           },

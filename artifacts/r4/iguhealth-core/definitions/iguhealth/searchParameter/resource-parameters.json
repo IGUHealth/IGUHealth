@@ -35,8 +35,9 @@
         "description": "The author of the resource",
         "code": "_iguhealth-author",
         "base": ["Resource"],
-        "type": "token",
-        "expression": "Resource.meta.extension.where(url='https://iguhealth.app/author').value"
+        "type": "reference",
+        "expression": "Resource.meta.extension.where(url='https://iguhealth.app/author').value",
+        "target": ["Membership", "ClientApplication", "OperationDefinition"]
       }
     }
   ]

@@ -52,7 +52,7 @@ import {
   R4TypeHistoryRequest,
 } from "@iguhealth/client/lib/types";
 import { createResolverRemoteCanonical } from "../../utilities/canonical.js";
-import { TenantId } from "@iguhealth/jwt";
+import { CUSTOM_CLAIMS, TenantId } from "@iguhealth/jwt";
 import { toDBFHIRVersion } from "../../utilities/version.js";
 import { generateId } from "../../utilities/generateId.js";
 
@@ -661,7 +661,8 @@ async function createResource<
         tenant: ctx.tenant,
         fhir_version: toDBFHIRVersion(fhirVersion),
         request_method: "POST",
-        author: ctx.user.jwt.sub,
+        author_id: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID],
+        author_type: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE],
         resource: resource as unknown as db.JSONObject,
       };
       // the <const> prevents generalization to string[]
@@ -874,7 +875,8 @@ async function patchResource<
           tenant: ctx.tenant,
           fhir_version: toDBFHIRVersion(fhirVersion),
           request_method: "PATCH",
-          author: ctx.user.jwt.sub,
+          author_id: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID],
+          author_type: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE],
           resource: newResource as unknown as db.JSONObject,
           prev_version_id: parseInt(existingResource.meta?.versionId as string),
           patches: JSON.stringify(patches),
@@ -949,7 +951,8 @@ async function updateResource<
         tenant: ctx.tenant,
         fhir_version: toDBFHIRVersion(fhirVersion),
         request_method: "PUT",
-        author: ctx.user.jwt.sub,
+        author_id: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID],
+        author_type: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE],
         resource: resource as unknown as db.JSONObject,
         prev_version_id: parseInt(existingResource.meta?.versionId as string),
         // [TODO] probably uneccessary to insert this and can instead derive in case of syncing.
@@ -1010,7 +1013,8 @@ async function deleteResource<
         tenant: ctx.tenant,
         fhir_version: toDBFHIRVersion(fhirVersion),
         request_method: "DELETE",
-        author: ctx.user.jwt.sub,
+        author_id: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID],
+        author_type: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE],
         resource: resource as unknown as db.JSONObject,
         prev_version_id: parseInt(resource.meta?.versionId as string),
         deleted: true,

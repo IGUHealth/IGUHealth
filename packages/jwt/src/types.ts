@@ -46,7 +46,7 @@ export interface AccessTokenPayload<role> {
   /**
    * The ID of the resource the token is associated with.
    */
-  [CUSTOM_CLAIMS.RESOURCE_ID]?: id;
+  [CUSTOM_CLAIMS.RESOURCE_ID]: id;
   /**
    * What tenants the user has access to.
    */
