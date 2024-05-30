@@ -19,6 +19,7 @@ import { ClientProps, EditableProps } from "../types";
 
 export type FHIRReferenceEditableProps = EditableProps<Reference> &
   ClientProps & {
+    disabled?: boolean;
     resourceTypesAllowed?: ResourceType<FHIR_VERSION>[];
   };
 
@@ -155,6 +156,7 @@ const ReferenceSearch = ({
 
 export const FHIRReferenceEditable = ({
   value,
+  disabled,
   onChange,
   issue,
   client,
@@ -189,18 +191,24 @@ export const FHIRReferenceEditable = ({
           )}
         >
           {(openDisplay) => (
-            <InputContainer label={label} issues={issue ? [issue] : []}>
+            <InputContainer
+              disabled={disabled}
+              label={label}
+              issues={issue ? [issue] : []}
+            >
               <div className="flex space-x-1">
                 <div onClick={() => openDisplay(true)}>
                   <a className="text-blue-400 hover:text-blue-500 cursor-pointer">
                     {value?.reference}
                   </a>
                 </div>
-                <span onClick={() => openSearch(true)}>
-                  <a className="text-slate-700 hover:text-blue-700 cursor-pointer font-semibold">
-                    {<MagnifyingGlassCircleIcon className="w-5 h-5" />}
-                  </a>
-                </span>
+                {!disabled && (
+                  <span onClick={() => openSearch(true)}>
+                    <a className="text-slate-700 hover:text-blue-700 cursor-pointer font-semibold">
+                      {<MagnifyingGlassCircleIcon className="w-5 h-5" />}
+                    </a>
+                  </span>
+                )}
               </div>
             </InputContainer>
           )}

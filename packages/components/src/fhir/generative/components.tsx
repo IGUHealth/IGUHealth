@@ -11,6 +11,7 @@ import {
   ContactPoint,
   HumanName,
   Identifier,
+  Meta,
   Period,
   Quantity,
   Range,
@@ -63,6 +64,7 @@ export const TypeComponents: Record<string, TypeComponent> = {
       {...deriveSharedProps<string>(props)}
     />
   ),
+
   string: (props) => (
     <Primitives.FHIRStringEditable {...deriveSharedProps<string>(props)} />
   ),
@@ -187,6 +189,13 @@ export const TypeComponents: Record<string, TypeComponent> = {
   Attachment: (props) => (
     <ComplexTypes.FHIRAttachmentEditable
       {...deriveSharedProps<Attachment>(props)}
+    />
+  ),
+  Meta: (props) => (
+    <ComplexTypes.FHIRMetaReadOnly
+      fhirVersion={props.fhirVersion}
+      client={props.client}
+      {...deriveSharedProps<Meta>(props)}
     />
   ),
 };

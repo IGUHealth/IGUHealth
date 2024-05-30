@@ -2,25 +2,45 @@ import React from "react";
 
 import { Meta } from "@iguhealth/fhir-types/r4/types";
 
+import { InputContainer } from "../../base";
 import { FHIRStringEditable } from "../primitives/string";
+import { ClientProps } from "../types";
+import { FHIRReferenceEditable } from "./Reference";
 
-export interface FHIRMetaReadonlyProps {
-  value: Meta | undefined;
+export interface FHIRMetaReadonlyProps extends ClientProps {
+  value?: Meta;
 }
 
-export const FHIRMetaReadOnly = ({ value }: FHIRMetaReadonlyProps) => {
+export const FHIRMetaReadOnly = ({
+  value,
+  client,
+  fhirVersion,
+}: FHIRMetaReadonlyProps) => {
   return (
-    <div className="flex flex-1 space-x-1">
-      <FHIRStringEditable
-        value={value?.versionId}
-        disabled={true}
-        label="Version ID"
-      />
-      <FHIRStringEditable
-        value={value?.lastUpdated}
-        disabled={true}
-        label="Last Updated"
-      />
-    </div>
+    <InputContainer>
+      <div className="flex flex-1 space-x-1">
+        <FHIRStringEditable
+          value={value?.versionId}
+          disabled={true}
+          label="Version ID"
+        />
+        <FHIRStringEditable
+          value={value?.lastUpdated}
+          disabled={true}
+          label="Last Updated"
+        />
+        <FHIRReferenceEditable
+          fhirVersion={fhirVersion}
+          client={client}
+          value={
+            value?.extension?.find(
+              (e) => e.url === "https://iguhealth.app/author",
+            )?.valueReference ?? { reference: "not-found" }
+          }
+          disabled={true}
+          label="Author"
+        />
+      </div>
+    </InputContainer>
   );
 };

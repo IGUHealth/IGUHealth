@@ -60,3 +60,16 @@ export const OnError: Story = {
     onChange: (value) => console.log(value),
   },
 };
+
+export const Readonly: Story = {
+  args: {
+    disabled: true,
+    fhirVersion: R4,
+    client: createStorybookClient(),
+    value: {
+      reference: "Patient/123",
+    },
+    label: "Subject",
+    onChange: (value) => console.log(value),
+  },
+};

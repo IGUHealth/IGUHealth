@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { id, instant } from "@iguhealth/fhir-types/r4/types";
+import { Extension, id, instant } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
 
+import { createStorybookClient } from "../stories.client";
 import { FHIRMetaReadOnly } from "./Meta";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
@@ -22,9 +24,17 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
+    client: createStorybookClient(),
+    fhirVersion: R4,
     value: {
       versionId: "1" as id,
       lastUpdated: "1980-01-01" as instant,
+      extension: [
+        {
+          url: "https://iguhealth.app/author",
+          valueReference: { reference: "Patient/123" },
+        },
+      ] as Extension[],
     },
   },
 };
