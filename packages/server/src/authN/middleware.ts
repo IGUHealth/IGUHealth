@@ -6,9 +6,11 @@ import * as s from "zapatos/schema";
 import { code, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import {
+  AccessTokenPayload,
   CUSTOM_CLAIMS,
   IGUHEALTH_AUDIENCE,
   IGUHEALTH_ISSUER,
+  Subject,
   TenantClaim,
 } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -174,21 +176,22 @@ export const allowPublicAccessMiddleware: Koa.Middleware = async (
   ctx,
   next,
 ) => {
+  const user: AccessTokenPayload<s.user_role> = {
+    iss: IGUHEALTH_ISSUER,
+    sub: "public-user" as Subject,
+    access_token: "sec-public",
+    [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
+    [CUSTOM_CLAIMS.RESOURCE_ID]: "public" as id,
+    [CUSTOM_CLAIMS.TENANTS]: [
+      {
+        id: ctx.params.tenant,
+        userRole: "admin",
+      } as TenantClaim<s.user_role>,
+    ],
+  };
   ctx.state = {
     ...ctx.state,
-    user: {
-      iss: IGUHEALTH_ISSUER,
-      sub: "public-user",
-      access_token: "sec-public",
-      [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
-      [CUSTOM_CLAIMS.RESOURCE_ID]: "public",
-      [CUSTOM_CLAIMS.TENANTS]: [
-        {
-          id: ctx.params.tenant,
-          userRole: "admin",
-        } as TenantClaim<s.user_role>,
-      ],
-    },
+    user,
   };
   await next();
 };
