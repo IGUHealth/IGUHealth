@@ -193,7 +193,7 @@ async function handleSubscriptionPayload(
         [CUSTOM_CLAIMS.TENANTS]: [
           {
             id: ctx.tenant,
-            userRole: "admin",
+            userRole: "member",
           },
         ],
         [CUSTOM_CLAIMS.RESOURCE_ID]: operationDefinition.id as id,
