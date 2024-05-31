@@ -1,0 +1,21 @@
+services:
+  redis:
+    image: redislabs/redismod
+
+    ports:
+      - 6379:6379
+
+  postgres:
+    image: postgres:16.3
+
+    ports:
+      - 5432:5432
+
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+      # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    environment:
+      - POSTGRES_DB=iguhealth
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
