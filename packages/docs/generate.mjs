@@ -60,11 +60,36 @@ async function processStructureDefinition(artifacts, structureDefinition) {
         r.base.includes("DomainResource"),
     );
 
-  let doc = `import TabItem from "@theme/TabItem";
-  import Tabs from "@theme/Tabs";
+  let doc = `---
+id: ${structureDefinition.id}
+title: ${structureDefinition.name}
+tags:
+  - fhir
+  - Fast Healthcare Interoperability Resources
+  - hl7
+  - healthcare it
+  - interoperability
+---
 
-  # ${structureDefinition.name}\n
-  ${metaProperties(structureDefinition)}\n
+import TabItem from "@theme/TabItem";
+import Tabs from "@theme/Tabs";
+
+# ${structureDefinition.name}\n
+
+<head>
+  <meta name="keywords" content="fhir, hl7, interoperability, healthcare" />
+  <script type="application/ld+json">
+    {JSON.stringify({
+      '@context': 'https://schema.org/',
+      '@type': 'Organization',
+      name: 'IGUHealth',
+      url: 'https://iguhealth.app',
+      logo: 'https://iguhealth.app/img/logo.svg',
+    })}
+  </script>
+</head>
+
+${metaProperties(structureDefinition)}\n
   `;
   doc = `${doc} ## Structure\n
    | Path | Cardinality | Type | Description
