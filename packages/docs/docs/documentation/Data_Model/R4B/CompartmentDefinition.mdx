@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (FHIR Infrastructure)|
+|Publisher||
 |Name|CompartmentDefinition|
 |URL|http://hl7.org/fhir/StructureDefinition/CompartmentDefinition|
 |Status|draft|
-|Description|A compartment definition that defines how resources are accessed on a server.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | CompartmentDefinition | 0..* | CompartmentDefinition | A compartment definition that defines how resources are accessed on a server. 
@@ -46,8 +46,9 @@ import TabItem from "@theme/TabItem";
  | CompartmentDefinition.resource.code | 1..1 | code | The name of a resource supported by the server. 
  | CompartmentDefinition.resource.param | 0..* | string | The name of a search parameter that represents the link to the compartment. More than one may be listed because a resource may be linked to a compartment in more than one way,. 
  | CompartmentDefinition.resource.documentation | 0..1 | string | Additional documentation about the resource and compartment. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -79,5 +80,4 @@ import TabItem from "@theme/TabItem";
  | code | token | Patient / Encounter / RelatedPerson / Practitioner / Device | CompartmentDefinition.code  
  | resource | token | Name of resource type | CompartmentDefinition.resource.code  
 
-</TabItem>
-</Tabs>
+

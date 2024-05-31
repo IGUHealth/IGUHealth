@@ -6,17 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Pharmacy)|
+|Publisher||
 |Name|MedicationStatement|
 |URL|http://hl7.org/fhir/StructureDefinition/MedicationStatement|
 |Status|draft|
-|Description|A record of a medication that is being consumed by a patient.   A MedicationStatement may indicate that the patient may be taking the medication now or has taken the medication in the past or will be taking the medication in the future.  The source of this information can be the patient, significant other (such as a family member or spouse), or a clinician.  A common scenario where this information is captured is during the history taking process during a patient visit or stay.   The medication information may come from sources such as the patient's memory, from a prescription bottle,  or from a list of medications the patient, clinician or other party maintains. 
-
-The primary difference between a medication statement and a medication administration is that the medication administration has complete administration information and is based on actual administration information from the person who administered the medication.  A medication statement is often, if not always, less specific.  There is no required date/time when the medication was administered, in fact we only know that a source has reported the patient is taking this medication, where details such as time, quantity, or rate or even medication product may be incomplete or missing or less precise.  As stated earlier, the medication statement information may come from the patient's memory, from a prescription bottle or from a list of medications the patient, clinician or other party maintains.  Medication administration is more formal and is not missing detailed information.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | MedicationStatement | 0..* | MedicationStatement | A record of a medication that is being consumed by a patient.   A MedicationStatement may indicate that the patient may be taking the medication now or has taken the medication in the past or will be taking the medication in the future.  The source of this information can be the patient, significant other (such as a family member or spouse), or a clinician.  A common scenario where this information is captured is during the history taking process during a patient visit or stay.   The medication information may come from sources such as the patient's memory, from a prescription bottle,  or from a list of medications the patient, clinician or other party maintains. The primary difference between a medication statement and a medication administration is that the medication administration has complete administration information and is based on actual administration information from the person who administered the medication.  A medication statement is often, if not always, less specific.  There is no required date/time when the medication was administered, in fact we only know that a source has reported the patient is taking this medication, where details such as time, quantity, or rate or even medication product may be incomplete or missing or less precise.  As stated earlier, the medication statement information may come from the patient's memory, from a prescription bottle or from a list of medications the patient, clinician or other party maintains.  Medication administration is more formal and is not missing detailed information. 
@@ -45,8 +43,9 @@ The primary difference between a medication statement and a medication administr
  | MedicationStatement.reasonReference | 0..* | Reference | Condition or observation that supports why the medication is being/was taken. 
  | MedicationStatement.note | 0..* | Annotation | Provides extra information about the medication statement that is not conveyed by the other attributes. 
  | MedicationStatement.dosage | 0..* | Dosage | Indicates how the medication is/was or should be taken by the patient. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -70,7 +69,6 @@ The primary difference between a medication statement and a medication administr
  | source | reference | Who or where the information in the statement came from | MedicationStatement.informationSource  
  | subject | reference | The identity of a patient, animal or group to list statements for | MedicationStatement.subject  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

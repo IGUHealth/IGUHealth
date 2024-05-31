@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Community Based Collaborative Care)|
+|Publisher||
 |Name|Consent|
 |URL|http://hl7.org/fhir/StructureDefinition/Consent|
 |Status|draft|
-|Description|A record of a healthcare consumer’s  choices, which permits or denies identified recipient(s) or recipient role(s) to perform one or more actions within a given policy context, for specific purposes and periods of time.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | Consent | 0..* | Consent | A record of a healthcare consumer’s  choices, which permits or denies identified recipient(s) or recipient role(s) to perform one or more actions within a given policy context, for specific purposes and periods of time. 
@@ -74,8 +74,9 @@ import TabItem from "@theme/TabItem";
  | Consent.provision.data.meaning | 1..1 | code | How the resource reference is interpreted when testing consent restrictions. 
  | Consent.provision.data.reference | 1..1 | Reference | A reference to a specific resource that defines which resources are covered by this consent. 
  | Consent.provision.provision | 0..* | Consent | Rules which provide exceptions to the base rule or subrules. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -103,7 +104,6 @@ import TabItem from "@theme/TabItem";
  | source-reference | reference | Search by reference to a Consent, DocumentReference, Contract  or QuestionnaireResponse | Consent.source.ofType(Reference)  
  | status | token | draft / proposed / active / rejected / inactive / entered-in-error | Consent.status  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

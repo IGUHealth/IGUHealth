@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Public Health and Emergency Response)|
+|Publisher||
 |Name|ImmunizationEvaluation|
 |URL|http://hl7.org/fhir/StructureDefinition/ImmunizationEvaluation|
 |Status|draft|
-|Description|Describes a comparison of an immunization event against published recommendations to determine if the administration is "valid" in relation to those  recommendations.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | ImmunizationEvaluation | 0..* | ImmunizationEvaluation | Describes a comparison of an immunization event against published recommendations to determine if the administration is "valid" in relation to those  recommendations. 
@@ -39,8 +39,9 @@ import TabItem from "@theme/TabItem";
  | ImmunizationEvaluation.series | 0..1 | string | One possible path to achieve presumed immunity against a disease - within the context of an authority. 
  | ImmunizationEvaluation.doseNumber[x] | 0..1 | positiveInt | Nominal position in a series. 
  | ImmunizationEvaluation.seriesDoses[x] | 0..1 | positiveInt | The recommended number of doses to achieve immunity. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -60,7 +61,6 @@ import TabItem from "@theme/TabItem";
  | status | token | Immunization evaluation status | ImmunizationEvaluation.status  
  | target-disease | token | The vaccine preventable disease being evaluated against | ImmunizationEvaluation.targetDisease  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

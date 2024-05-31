@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Clinical Decision Support)|
+|Publisher||
 |Name|Evidence|
 |URL|http://hl7.org/fhir/StructureDefinition/Evidence|
 |Status|draft|
-|Description|The Evidence resource describes the conditional state (population and any exposures being compared within the population) and outcome (if specified) that the knowledge (evidence, assertion, recommendation) is about.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | Evidence | 0..* | Evidence | The Evidence resource describes the conditional state (population and any exposures being compared within the population) and outcome (if specified) that the knowledge (evidence, assertion, recommendation) is about. 
@@ -54,8 +54,9 @@ import TabItem from "@theme/TabItem";
  | Evidence.exposureBackground | 1..1 | Reference | A reference to a EvidenceVariable resource that defines the population for the research. 
  | Evidence.exposureVariant | 0..* | Reference | A reference to a EvidenceVariable resource that defines the exposure for the research. 
  | Evidence.outcome | 0..* | Reference | A reference to a EvidenceVariable resomece that defines the outcome for the research. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -90,7 +91,6 @@ import TabItem from "@theme/TabItem";
  | context-type-quantity | composite | A use context type and quantity- or range-based value assigned to the evidence | Evidence.useContext  
  | context-type-value | composite | A use context type and value assigned to the evidence | Evidence.useContext  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

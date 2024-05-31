@@ -1,9 +1,30 @@
 # Models
 
-All authentication is stored into three key FHIR resources
+All authentication is stored in three key FHIR resources.
 
-## Membership
+## Authorization
 
-## ClientApplication
+The following resources are used to authorize users in the system:
 
-## OperationDefinition
+### AccessPolicy
+We use [AccessPolicy](../Data_Model/R4/AccessPolicy.mdx) resources to define the authorization rules for the system.
+This is how we determine if a user has access to a resource.
+
+## Authentication
+
+The following resources are used to authenticate users in the system:
+
+### Membership
+
+Membership is used to represent a physical person in the system.
+Membership resources can be linked to clinical resources like Patient and/or Practitioner which will then be used during SMART on FHIR authentication.
+
+### ClientApplication
+
+ClientApplications with client_credentials grant type can be used to authenticate with the system.
+The user is represented in this case as the ClientApplication itself.
+
+### OperationDefinition
+
+OperationDefinition resources can be used to define custom operations that can be invoked by the system.
+This is how custom logic can be performed on the server. Each OperationDefinition that performs alterations on the server is represented as a user.

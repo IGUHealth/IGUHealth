@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Clinical Decision Support)|
+|Publisher||
 |Name|EffectEvidenceSynthesis|
 |URL|http://hl7.org/fhir/StructureDefinition/EffectEvidenceSynthesis|
 |Status|draft|
-|Description|The EffectEvidenceSynthesis resource describes the difference in an outcome between exposures states in a population where the effect estimate is derived from a combination of research studies.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | EffectEvidenceSynthesis | 0..* | EffectEvidenceSynthesis | The EffectEvidenceSynthesis resource describes the difference in an outcome between exposures states in a population where the effect estimate is derived from a combination of research studies. 
@@ -100,8 +100,9 @@ import TabItem from "@theme/TabItem";
  | EffectEvidenceSynthesis.certainty.certaintySubcomponent.type | 0..1 | CodeableConcept | Type of subcomponent of certainty rating. 
  | EffectEvidenceSynthesis.certainty.certaintySubcomponent.rating | 0..* | CodeableConcept | A rating of a subcomponent of rating certainty. 
  | EffectEvidenceSynthesis.certainty.certaintySubcomponent.note | 0..* | Annotation | A human-readable string to clarify or explain concepts about the resource. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -130,7 +131,6 @@ import TabItem from "@theme/TabItem";
  | context-type-quantity | composite | A use context type and quantity- or range-based value assigned to the effect evidence synthesis | EffectEvidenceSynthesis.useContext  
  | context-type-value | composite | A use context type and value assigned to the effect evidence synthesis | EffectEvidenceSynthesis.useContext  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

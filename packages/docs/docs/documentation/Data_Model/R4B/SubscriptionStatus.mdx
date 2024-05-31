@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (FHIR Infrastructure)|
+|Publisher||
 |Name|SubscriptionStatus|
 |URL|http://hl7.org/fhir/StructureDefinition/SubscriptionStatus|
 |Status|draft|
-|Description|The SubscriptionStatus resource describes the state of a Subscription during notifications.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | SubscriptionStatus | 0..* | SubscriptionStatus | The SubscriptionStatus resource describes the state of a Subscription during notifications. 
@@ -40,8 +40,9 @@ import TabItem from "@theme/TabItem";
  | SubscriptionStatus.subscription | 1..1 | Reference | The reference to the Subscription which generated this notification. 
  | SubscriptionStatus.topic | 0..1 | canonical | The reference to the SubscriptionTopic for the Subscription which generated this notification. 
  | SubscriptionStatus.error | 0..* | CodeableConcept | A record of errors that occurred when the server processed a notification. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -59,5 +60,4 @@ import TabItem from "@theme/TabItem";
  | _text | string | Search on the narrative text (html) of the resource |   
  | _type | token | Used when a search is performed in a context which doesn't limit the search to indicate which types are being searched. See the FHIR search page for further discussion |   
 
-</TabItem>
-</Tabs>
+

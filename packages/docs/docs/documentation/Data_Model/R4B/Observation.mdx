@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Orders and Observations)|
+|Publisher||
 |Name|Observation|
 |URL|http://hl7.org/fhir/StructureDefinition/Observation|
 |Status|active|
-|Description|Measurements and simple assertions made about a patient, device or other subject.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | Observation | 0..* | Observation | Measurements and simple assertions made about a patient, device or other subject. 
@@ -67,8 +67,9 @@ import TabItem from "@theme/TabItem";
  | Observation.component.dataAbsentReason | 0..1 | CodeableConcept | Provides a reason why the expected value in the element Observation.component.value[x] is missing. 
  | Observation.component.interpretation | 0..* | CodeableConcept | A categorical assessment of an observation value.  For example, high, low, normal. 
  | Observation.component.referenceRange | 0..* | Observation | Guidance on how to interpret the value by comparison to a normal or recommended range. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -124,5 +125,4 @@ import TabItem from "@theme/TabItem";
  | component-code-value-concept | composite | Component code and component coded value parameter pair | Observation.component  
  | component-code-value-quantity | composite | Component code and component quantity value parameter pair | Observation.component  
 
-</TabItem>
-</Tabs>
+

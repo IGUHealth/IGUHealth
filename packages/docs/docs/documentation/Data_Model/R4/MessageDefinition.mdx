@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Infrastructure And Messaging)|
+|Publisher||
 |Name|MessageDefinition|
 |URL|http://hl7.org/fhir/StructureDefinition/MessageDefinition|
 |Status|draft|
-|Description|Defines the characteristics of a message that can be shared between systems, including the type of event that initiates the message, the content to be transmitted and what response(s), if any, are permitted.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | MessageDefinition | 0..* | MessageDefinition | Defines the characteristics of a message that can be shared between systems, including the type of event that initiates the message, the content to be transmitted and what response(s), if any, are permitted. 
@@ -62,8 +62,9 @@ import TabItem from "@theme/TabItem";
  | MessageDefinition.allowedResponse.message | 1..1 | canonical | A reference to the message definition that must be adhered to by this supported response. 
  | MessageDefinition.allowedResponse.situation | 0..1 | markdown | Provides a description of the circumstances in which this response should be used (as opposed to one of the alternative responses). 
  | MessageDefinition.graph | 0..* | canonical | Canonical reference to a GraphDefinition. If a URL is provided, it is the canonical reference to a [GraphDefinition](graphdefinition.html) that it controls what resources are to be added to the bundle when building the document. The GraphDefinition can also specify profiles that apply to the various resources. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -95,7 +96,6 @@ import TabItem from "@theme/TabItem";
  | focus | token | A resource that is a permitted focus of the message | MessageDefinition.focus.code  
  | parent | reference | A resource that is the parent of the definition | MessageDefinition.parent  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

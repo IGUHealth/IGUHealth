@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Patient Care)|
+|Publisher||
 |Name|CareTeam|
 |URL|http://hl7.org/fhir/StructureDefinition/CareTeam|
 |Status|draft|
-|Description|The Care Team includes all the people and organizations who plan to participate in the coordination and delivery of care for a patient.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | CareTeam | 0..* | CareTeam | The Care Team includes all the people and organizations who plan to participate in the coordination and delivery of care for a patient. 
@@ -46,8 +46,9 @@ import TabItem from "@theme/TabItem";
  | CareTeam.managingOrganization | 0..* | Reference | The organization responsible for the care team. 
  | CareTeam.telecom | 0..* | ContactPoint | A central contact detail for the care team (that applies to all members). 
  | CareTeam.note | 0..* | Annotation | Comments made about the CareTeam. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -68,7 +69,6 @@ import TabItem from "@theme/TabItem";
  | status | token | proposed / active / suspended / inactive / entered-in-error | CareTeam.status  
  | subject | reference | Who care team is for | CareTeam.subject  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

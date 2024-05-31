@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Vocabulary)|
+|Publisher||
 |Name|CodeSystem|
 |URL|http://hl7.org/fhir/StructureDefinition/CodeSystem|
 |Status|active|
-|Description|The CodeSystem resource is used to declare the existence of and describe a code system or code system supplement and its key properties, and optionally define a part or all of its content.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | CodeSystem | 0..* | CodeSystem | The CodeSystem resource is used to declare the existence of and describe a code system or code system supplement and its key properties, and optionally define a part or all of its content. 
@@ -86,8 +86,9 @@ import TabItem from "@theme/TabItem";
  | CodeSystem.concept.property.code | 1..1 | code | A code that is a reference to CodeSystem.property.code. 
  | CodeSystem.concept.property.value[x] | 1..1 | code | The value of this property. 
  | CodeSystem.concept.concept | 0..* | CodeSystem | Defines children of a concept to produce a hierarchy of concepts. The nature of the relationships is variable (is-a/contains/categorizes) - see hierarchyMeaning. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -120,7 +121,6 @@ import TabItem from "@theme/TabItem";
  | supplements | reference | Find code system supplements for the referenced code system | CodeSystem.supplements  
  | system | uri | The system for any codes defined by this code system (same as 'url') | CodeSystem.url  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

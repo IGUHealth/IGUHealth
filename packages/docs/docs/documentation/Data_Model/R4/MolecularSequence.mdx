@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Clinical Genomics)|
+|Publisher||
 |Name|MolecularSequence|
 |URL|http://hl7.org/fhir/StructureDefinition/MolecularSequence|
 |Status|draft|
-|Description|Raw data describing a biological sequence.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | MolecularSequence | 0..* | MolecularSequence | Raw data describing a biological sequence. 
@@ -118,8 +118,9 @@ import TabItem from "@theme/TabItem";
  | MolecularSequence.structureVariant.inner.modifierExtension | 0..* | Extension | May be used to represent additional information that is not part of the basic definition of the element and that modifies the understanding of the element in which it is contained and/or the understanding of the containing element's descendants. Usually modifier elements provide negation or qualification. To make the use of extensions safe and manageable, there is a strict set of governance applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension. Applications processing a resource are required to check for modifier extensions.Modifier extensions SHALL NOT change the meaning of any elements on Resource or DomainResource (including cannot change the meaning of modifierExtension itself). 
  | MolecularSequence.structureVariant.inner.start | 0..1 | integer | Structural variant inner start. If the coordinate system is either 0-based or 1-based, then start position is inclusive. 
  | MolecularSequence.structureVariant.inner.end | 0..1 | integer | Structural variant inner end. If the coordinate system is 0-based then end is exclusive and does not include the last position. If the coordinate system is 1-base, then end is inclusive and includes the last position. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -145,7 +146,6 @@ import TabItem from "@theme/TabItem";
  | referenceseqid-variant-coordinate | composite | Search parameter by reference sequence and variant coordinate. This will refer to part of a locus or part of a gene where search region will be represented in 1-based system. Since the coordinateSystem can either be 0-based or 1-based, this search query will include the result of both coordinateSystem that contains the equivalent segment of the gene or whole genome sequence. For example, a search for sequence can be represented as \`referenceSeqId-variant-coordinate=NC_000001.11$lt345$gt123\`, this means it will search for the MolecularSequence resource with variants on NC_000001.11 and with position \>123 and \<345, where in 1-based system resource, all strings within region NC_000001.11:124-344 will be revealed, while in 0-based system resource, all strings within region NC_000001.11:123-344 will be revealed. You may want to check detail about 0-based v.s. 1-based above. | MolecularSequence.variant  
  | referenceseqid-window-coordinate | composite | Search parameter by reference sequence and window. This will refer to part of a locus or part of a gene where search region will be represented in 1-based system. Since the coordinateSystem can either be 0-based or 1-based, this search query will include the result of both coordinateSystem that contains the equivalent segment of the gene or whole genome sequence. For example, a search for sequence can be represented as \`referenceSeqId-window-coordinate=NC_000001.11$lt345$gt123\`, this means it will search for the MolecularSequence resource with a window on NC_000001.11 and with position \>123 and \<345, where in 1-based system resource, all strings within region NC_000001.11:124-344 will be revealed, while in 0-based system resource, all strings within region NC_000001.11:123-344 will be revealed. You may want to check detail about 0-based v.s. 1-based above. | MolecularSequence.referenceSeq  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

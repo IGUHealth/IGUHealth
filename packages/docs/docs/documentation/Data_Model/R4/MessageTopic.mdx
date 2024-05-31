@@ -13,8 +13,8 @@ import TabItem from "@theme/TabItem";
 |Description|The topic for a message broker. Correlates to a Kafka or AMQP topic.|
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | MessageTopic | 0..* | MessageTopic | undefined 
@@ -22,8 +22,9 @@ import TabItem from "@theme/TabItem";
  | MessageTopic.meta | 0..1 | Meta | The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource. 
  | MessageTopic.topicId | 1..1 | code | undefined 
  | MessageTopic.broker | 1..1 | Reference | undefined 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -38,7 +39,6 @@ import TabItem from "@theme/TabItem";
  | broker | reference | MessageTopic broker. | MessageTopic.broker  
  | Topic | token | MessageTopic topic id. | MessageTopic.topicId  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Clinical Decision Support)|
+|Publisher||
 |Name|RequestGroup|
 |URL|http://hl7.org/fhir/StructureDefinition/RequestGroup|
 |Status|draft|
-|Description|A group of related requests that can be used to capture intended activities that have inter-dependencies such as "give this medication after that one".|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | RequestGroup | 0..* | RequestGroup | A group of related requests that can be used to capture intended activities that have inter-dependencies such as "give this medication after that one". 
@@ -77,8 +77,9 @@ import TabItem from "@theme/TabItem";
  | RequestGroup.action.cardinalityBehavior | 0..1 | code | Defines whether the action can be selected multiple times. 
  | RequestGroup.action.resource | 0..1 | Reference | The resource that is the target of the action (e.g. CommunicationRequest). 
  | RequestGroup.action.action | 0..* | RequestGroup | Sub actions. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -110,5 +111,4 @@ import TabItem from "@theme/TabItem";
  | status | token | The status of the request group | RequestGroup.status  
  | subject | reference | The subject that the request group is about | RequestGroup.subject  
 
-</TabItem>
-</Tabs>
+

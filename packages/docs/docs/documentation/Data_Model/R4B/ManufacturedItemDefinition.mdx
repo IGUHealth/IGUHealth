@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Biomedical Research and Regulation)|
+|Publisher||
 |Name|ManufacturedItemDefinition|
 |URL|http://hl7.org/fhir/StructureDefinition/ManufacturedItemDefinition|
 |Status|draft|
-|Description|The definition and characteristics of a medicinal manufactured item, such as a tablet or capsule, as contained in a packaged medicinal product.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | ManufacturedItemDefinition | 0..* | ManufacturedItemDefinition | The definition and characteristics of a medicinal manufactured item, such as a tablet or capsule, as contained in a packaged medicinal product. 
@@ -38,8 +38,9 @@ import TabItem from "@theme/TabItem";
  | ManufacturedItemDefinition.property.modifierExtension | 0..* | Extension | May be used to represent additional information that is not part of the basic definition of the element and that modifies the understanding of the element in which it is contained and/or the understanding of the containing element's descendants. Usually modifier elements provide negation or qualification. To make the use of extensions safe and manageable, there is a strict set of governance applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension. Applications processing a resource are required to check for modifier extensions.Modifier extensions SHALL NOT change the meaning of any elements on Resource or DomainResource (including cannot change the meaning of modifierExtension itself). 
  | ManufacturedItemDefinition.property.type | 1..1 | CodeableConcept | A code expressing the type of characteristic. 
  | ManufacturedItemDefinition.property.value[x] | 0..1 | CodeableConcept | A value for the characteristic. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -60,5 +61,4 @@ import TabItem from "@theme/TabItem";
  | identifier | token | Unique identifier | ManufacturedItemDefinition.identifier  
  | ingredient | token | An ingredient of this item | ManufacturedItemDefinition.ingredient  
 
-</TabItem>
-</Tabs>
+

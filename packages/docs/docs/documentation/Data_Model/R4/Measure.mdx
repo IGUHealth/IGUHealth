@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Clinical Quality Information)|
+|Publisher||
 |Name|Measure|
 |URL|http://hl7.org/fhir/StructureDefinition/Measure|
 |Status|draft|
-|Description|The Measure resource provides the definition of a quality measure.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | Measure | 0..* | Measure | The Measure resource provides the definition of a quality measure. 
@@ -100,8 +100,9 @@ import TabItem from "@theme/TabItem";
  | Measure.supplementalData.usage | 0..* | CodeableConcept | An indicator of the intended usage for the supplemental data element. Supplemental data indicates the data is additional information requested to augment the measure information. Risk adjustment factor indicates the data is additional information used to calculate risk adjustment factors when applying a risk model to the measure calculation. 
  | Measure.supplementalData.description | 0..1 | string | The human readable description of this supplemental data. 
  | Measure.supplementalData.criteria | 1..1 | Expression | The criteria for the supplemental data. This is typically the name of a valid expression defined within a referenced library, but it may also be a path to a specific data element. The criteria defines the data to be returned for this element. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -136,7 +137,6 @@ import TabItem from "@theme/TabItem";
  | context-type-quantity | composite | A use context type and quantity- or range-based value assigned to the measure | Measure.useContext  
  | context-type-value | composite | A use context type and value assigned to the measure | Measure.useContext  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

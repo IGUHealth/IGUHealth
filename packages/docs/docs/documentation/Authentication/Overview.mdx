@@ -1,0 +1,21 @@
+---
+sidebar_position: 1
+---
+
+# Overview
+
+Authentication is built around tenants. Tenants are a logical seperation of resources. Each tenant will have it's own isolated set of resources.
+Access to a tenant is determined by JWT tokens. JWT tokens are expected to have custom claims specifying what tenant they have access too.
+
+## URL Structure for tenant access
+
+Requests are structured in the following format:
+URL: /w/:tenant/api/:version/fhir/:fhir_version/:\*,
+
+- **tenant:** slug identifying the tenant a user is attempting to access.
+- **version:** IGUHealth api version.
+- **fhir_version:** FHIR version for the request.
+
+## JWT Structure
+
+JWT structure is specified in our package [@iguhealth/jwt](https://www.npmjs.com/package/@iguhealth/jwt). See README for more information.

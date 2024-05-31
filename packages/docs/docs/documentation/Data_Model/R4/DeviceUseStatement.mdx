@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Orders and Observations)|
+|Publisher||
 |Name|DeviceUseStatement|
 |URL|http://hl7.org/fhir/StructureDefinition/DeviceUseStatement|
 |Status|draft|
-|Description|A record of a device being used by a patient where the record is the result of a report from the patient or another clinician.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | DeviceUseStatement | 0..* | DeviceUseStatement | A record of a device being used by a patient where the record is the result of a report from the patient or another clinician. 
@@ -39,8 +39,9 @@ import TabItem from "@theme/TabItem";
  | DeviceUseStatement.reasonReference | 0..* | Reference | Indicates another resource whose existence justifies this DeviceUseStatement. 
  | DeviceUseStatement.bodySite | 0..1 | CodeableConcept | Indicates the anotomic location on the subject's body where the device was used ( i.e. the target). 
  | DeviceUseStatement.note | 0..* | Annotation | Details about the device statement that were not represented at all or sufficiently in one of the attributes provided in a class. These may include for example a comment, an instruction, or a note associated with the statement. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -57,7 +58,6 @@ import TabItem from "@theme/TabItem";
  | identifier | token | Search by identifier | DeviceUseStatement.identifier  
  | subject | reference | Search by subject | DeviceUseStatement.subject  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

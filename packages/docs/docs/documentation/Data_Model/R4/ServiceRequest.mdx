@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Orders and Observations)|
+|Publisher||
 |Name|ServiceRequest|
 |URL|http://hl7.org/fhir/StructureDefinition/ServiceRequest|
 |Status|draft|
-|Description|A record of a request for service such as diagnostic investigations, treatments, or operations to be performed.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | ServiceRequest | 0..* | ServiceRequest | A record of a request for service such as diagnostic investigations, treatments, or operations to be performed. 
@@ -59,8 +59,9 @@ import TabItem from "@theme/TabItem";
  | ServiceRequest.note | 0..* | Annotation | Any other notes and comments made about the service request. For example, internal billing notes. 
  | ServiceRequest.patientInstruction | 0..1 | string | Instructions in terms that are understood by the patient or consumer. 
  | ServiceRequest.relevantHistory | 0..* | Reference | Key events in the history of the request. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -94,7 +95,6 @@ import TabItem from "@theme/TabItem";
  | status | token | draft / active / on-hold / revoked / completed / entered-in-error / unknown | ServiceRequest.status  
  | subject | reference | Search by subject | ServiceRequest.subject  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

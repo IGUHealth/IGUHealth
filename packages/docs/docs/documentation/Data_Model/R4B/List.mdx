@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (FHIR Infrastructure)|
+|Publisher||
 |Name|List|
 |URL|http://hl7.org/fhir/StructureDefinition/List|
 |Status|draft|
-|Description|A list is a curated collection of resources.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | List | 0..* | List | A list is a curated collection of resources. 
@@ -46,8 +46,9 @@ import TabItem from "@theme/TabItem";
  | List.entry.date | 0..1 | dateTime | When this item was added to the list. 
  | List.entry.item | 1..1 | Reference | A reference to the actual resource from which data was derived. 
  | List.emptyReason | 0..1 | CodeableConcept | If the list is empty, why the list is empty. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -77,5 +78,4 @@ import TabItem from "@theme/TabItem";
  | subject | reference | If all resources have the same subject | List.subject  
  | title | string | Descriptive name for the list | List.title  
 
-</TabItem>
-</Tabs>
+

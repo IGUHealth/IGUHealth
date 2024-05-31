@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Patient Administration)|
+|Publisher||
 |Name|EpisodeOfCare|
 |URL|http://hl7.org/fhir/StructureDefinition/EpisodeOfCare|
 |Status|draft|
-|Description|An association between a patient and an organization / healthcare provider(s) during which time encounters may occur. The managing organization assumes a level of responsibility for the patient during this time.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | EpisodeOfCare | 0..* | EpisodeOfCare | An association between a patient and an organization / healthcare provider(s) during which time encounters may occur. The managing organization assumes a level of responsibility for the patient during this time. 
@@ -49,8 +49,9 @@ import TabItem from "@theme/TabItem";
  | EpisodeOfCare.careManager | 0..1 | Reference | The practitioner that is the care manager/care coordinator for this patient. 
  | EpisodeOfCare.team | 0..* | Reference | The list of practitioners that may be facilitating this episode of care for specific purposes. 
  | EpisodeOfCare.account | 0..* | Reference | The set of accounts that may be used for billing for this EpisodeOfCare. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -72,7 +73,6 @@ import TabItem from "@theme/TabItem";
  | organization | reference | The organization that has assumed the specific responsibilities of this EpisodeOfCare | EpisodeOfCare.managingOrganization  
  | status | token | The current status of the Episode of Care as provided (does not check the status history collection) | EpisodeOfCare.status  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

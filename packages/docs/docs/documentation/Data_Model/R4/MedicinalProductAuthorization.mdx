@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Biomedical Research and Regulation)|
+|Publisher||
 |Name|MedicinalProductAuthorization|
 |URL|http://hl7.org/fhir/StructureDefinition/MedicinalProductAuthorization|
 |Status|draft|
-|Description|The regulatory authorization of a medicinal product.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | MedicinalProductAuthorization | 0..* | MedicinalProductAuthorization | The regulatory authorization of a medicinal product. 
@@ -57,8 +57,9 @@ import TabItem from "@theme/TabItem";
  | MedicinalProductAuthorization.procedure.type | 1..1 | CodeableConcept | Type of procedure. 
  | MedicinalProductAuthorization.procedure.date[x] | 0..1 | Period | Date of procedure. 
  | MedicinalProductAuthorization.procedure.application | 0..* | MedicinalProductAuthorization | Applcations submitted to obtain a marketing authorization. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -76,7 +77,6 @@ import TabItem from "@theme/TabItem";
  | status | token | The status of the marketing authorization | MedicinalProductAuthorization.status  
  | subject | reference | The medicinal product that is being authorized | MedicinalProductAuthorization.subject  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

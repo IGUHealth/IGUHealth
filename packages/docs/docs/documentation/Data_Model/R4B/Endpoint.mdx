@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Patient Administration)|
+|Publisher||
 |Name|Endpoint|
 |URL|http://hl7.org/fhir/StructureDefinition/Endpoint|
 |Status|draft|
-|Description|The technical details of an endpoint that can be used for electronic services, such as for web services providing XDS.b or a REST endpoint for another FHIR server. This may include any security context information.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | Endpoint | 0..* | Endpoint | The technical details of an endpoint that can be used for electronic services, such as for web services providing XDS.b or a REST endpoint for another FHIR server. This may include any security context information. 
@@ -37,8 +37,9 @@ import TabItem from "@theme/TabItem";
  | Endpoint.payloadMimeType | 0..* | code | The mime type to send the payload in - e.g. application/fhir+xml, application/fhir+json. If the mime type is not specified, then the sender could send any content (including no content depending on the connectionType). 
  | Endpoint.address | 1..1 | url | The uri that describes the actual end-point to connect to. 
  | Endpoint.header | 0..* | string | Additional headers / information to send as part of the notification. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -62,5 +63,4 @@ import TabItem from "@theme/TabItem";
  | payload-type | token | The type of content that may be used at this endpoint (e.g. XDS Discharge summaries) | Endpoint.payloadType  
  | status | token | The current status of the Endpoint (usually expected to be active) | Endpoint.status  
 
-</TabItem>
-</Tabs>
+

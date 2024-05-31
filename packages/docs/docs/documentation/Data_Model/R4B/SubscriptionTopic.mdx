@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (FHIR Infrastructure)|
+|Publisher||
 |Name|SubscriptionTopic|
 |URL|http://hl7.org/fhir/StructureDefinition/SubscriptionTopic|
 |Status|draft|
-|Description|Describes a stream of resource state changes identified by trigger criteria and annotated with labels useful to filter projections from this topic.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | SubscriptionTopic | 0..* | SubscriptionTopic | Describes a stream of resource state changes or events and annotated with labels useful to filter projections from this topic. 
@@ -84,8 +84,9 @@ import TabItem from "@theme/TabItem";
  | SubscriptionTopic.notificationShape.resource | 1..1 | uri | URL of the Resource that is the type used in this shape. This is the "focus" of the topic (or one of them if there are more than one) and the root resource for this shape definition. It will be the same, a generality, or a specificity of SubscriptionTopic.resourceTrigger.resource or SubscriptionTopic.eventTrigger.resource when they are present. 
  | SubscriptionTopic.notificationShape.include | 0..* | string | Search-style _include directives, rooted in the resource for this shape. Servers SHOULD include resources listed here, if they exist and the user is authorized to receive them.  Clients SHOULD be prepared to receive these additional resources, but SHALL function properly without them. 
  | SubscriptionTopic.notificationShape.revInclude | 0..* | string | Search-style _revinclude directives, rooted in the resource for this shape. Servers SHOULD include resources listed here, if they exist and the user is authorized to receive them.  Clients SHOULD be prepared to receive these additional resources, but SHALL function properly without them. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -112,5 +113,4 @@ import TabItem from "@theme/TabItem";
  | url | uri | Logical canonical URL to reference this SubscriptionTopic (globally unique) | SubscriptionTopic.url  
  | version | token | Business version of the SubscriptionTopic | SubscriptionTopic.version  
 
-</TabItem>
-</Tabs>
+

@@ -13,8 +13,8 @@ import TabItem from "@theme/TabItem";
 |Description|A set of rules that govern how a system resource is accessed and used.|
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | AccessPolicy | 0..* | AccessPolicy | A set of rules that govern how a system resource is accessed and used. 
@@ -33,8 +33,9 @@ import TabItem from "@theme/TabItem";
  | AccessPolicy.access.fhir.parameter | 0..* | BackboneElement | FHIR Parameters that are evaluated to determine if access is granted or denied. 
  | AccessPolicy.access.fhir.parameter.name | 1..1 | code | The name of the FHIR Parameter that is evaluated to determine if access is granted or denied. 
  | AccessPolicy.access.fhir.parameter.value | 1..1 | string | The value of the FHIR Parameter that is evaluated to determine if access is granted or denied. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -51,7 +52,6 @@ import TabItem from "@theme/TabItem";
  | name | string | An access policies name. | AccessPolicy.name  
  | type | token | An access policies type. | AccessPolicy.type  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

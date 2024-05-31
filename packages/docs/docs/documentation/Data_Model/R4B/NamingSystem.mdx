@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Vocabulary)|
+|Publisher||
 |Name|NamingSystem|
 |URL|http://hl7.org/fhir/StructureDefinition/NamingSystem|
 |Status|draft|
-|Description|A curated namespace that issues unique symbols within that namespace for the identification of concepts, people, devices, etc.  Represents a "System" used within the Identifier and Coding data types.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | NamingSystem | 0..* | NamingSystem | A curated namespace that issues unique symbols within that namespace for the identification of concepts, people, devices, etc.  Represents a "System" used within the Identifier and Coding data types. 
@@ -47,8 +47,9 @@ import TabItem from "@theme/TabItem";
  | NamingSystem.uniqueId.preferred | 0..1 | boolean | Indicates whether this identifier is the "preferred" identifier of this type. 
  | NamingSystem.uniqueId.comment | 0..1 | string | Notes about the past or intended usage of this identifier. 
  | NamingSystem.uniqueId.period | 0..1 | Period | Identifies the period of time over which this identifier is considered appropriate to refer to the naming system.  Outside of this window, the identifier might be non-deterministic. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -85,5 +86,4 @@ import TabItem from "@theme/TabItem";
  | type | token | e.g. driver,  provider,  patient, bank etc. | NamingSystem.type  
  | value | string | The unique identifier | NamingSystem.uniqueId.value  
 
-</TabItem>
-</Tabs>
+
