@@ -2,7 +2,7 @@ server {
   location / {
     root   /usr/share/nginx/html;
     try_files $uri /index.html;
-    sub_filter '</head>' '<script>window.REACT_APP_FHIR_BASE_URL = \'${REACT_APP_FHIR_BASE_URL}\'; window.REACT_APP_AUTH0_DOMAIN = \'${REACT_APP_AUTH0_DOMAIN}\'; window.REACT_APP_AUTH0_CLIENT_ID = \'${REACT_APP_AUTH0_CLIENT_ID}\'; </script></head>';
+    sub_filter '</head>' '<script>window.REACT_APP_FHIR_BASE_URL = \'${REACT_APP_FHIR_BASE_URL}\'; </script></head>';
     sub_filter_once on;
   }
 }
