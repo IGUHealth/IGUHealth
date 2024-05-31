@@ -47,3 +47,4 @@ dist-ssr
 *.sw?
 certifications/
 .yarn/install-state.gz
+docker/data/

@@ -8,18 +8,38 @@ services:
       file: services-compose.yml
       service: redis
 
+  migration:
+    image: ghcr.io/iguhealth/iguhealth/iguhealth:latest
+
+    command: ["migrate"]
+
+    depends_on:
+      - postgres
+
+    environment:
+      - SESSION_COOKIE_SECRETS=session_secret
+      - FHIR_DATABASE_NAME=iguhealth
+      - FHIR_DATABASE_HOST=postgres
+      - FHIR_DATABASE_PORT=5432
+      - FHIR_DATABASE_PASSWORD=postgres
+      - FHIR_DATABASE_USERNAME=postgres
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - API_URL=http://localhost:3000
+      - ADMIN_APP_REDIRECT_URI=http://*.localhost:3001
+
   iguheath:
     image: ghcr.io/iguhealth/iguhealth/iguhealth:latest
     ports:
       - "3000:3000"
 
     depends_on:
-      - postgres
+      - migration
       - redis
 
     environment:
       - SESSION_COOKIE_SECRETS=session_secret
-      - FHIR_DATABASE_NAME=iguhealth;
+      - FHIR_DATABASE_NAME=iguhealth
       - FHIR_DATABASE_HOST=postgres
       - FHIR_DATABASE_PORT=5432
       - FHIR_DATABASE_PASSWORD=postgres

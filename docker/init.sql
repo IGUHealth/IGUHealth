@@ -1,1 +1,1 @@
-CREATE DATABASE iguhealth;
+CREATE DATABASE "iguhealth";
