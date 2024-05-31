@@ -21,7 +21,7 @@ export async function deserializeUser(
     }
     return user;
   } catch (err) {
-    console.error(err);
+    ctx.logger.error(err);
     return undefined;
   }
 }

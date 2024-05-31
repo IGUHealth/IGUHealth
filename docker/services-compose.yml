@@ -1,0 +1,14 @@
+services:
+  redis:
+    image: redislabs/redismod
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: bitnami/postgresql:16.3.0
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres

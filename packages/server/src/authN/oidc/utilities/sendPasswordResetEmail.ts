@@ -36,8 +36,15 @@ export async function sendPasswordResetEmail(
   ctx: Parameters<ManagementRouteHandler>[0],
   user: User,
 ) {
+  if (!ctx.FHIRContext.emailProvider) {
+    ctx.logger.warn(
+      "Email provider not set. Cannot send password reset email.",
+    );
+    return;
+  }
+
   if (!(await shouldSendPasswordReset(ctx, user))) {
-    console.warn(
+    ctx.logger.warn(
       `Password reset already sent in the last 15 minutes. For user '${user.id}' with email '${user.email}'`,
     );
     return;
@@ -76,7 +83,7 @@ export async function sendPasswordResetEmail(
     }),
   );
 
-  await ctx.FHIRContext.emailProvider?.sendEmail({
+  await ctx.FHIRContext.emailProvider.sendEmail({
     from: process.env.EMAIL_FROM as string,
     to: user.email,
     subject: "IGUHealth Email Verification",

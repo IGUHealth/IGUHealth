@@ -163,7 +163,7 @@ function updateUserTableMiddleware<
             membershipToUser(membership),
           );
         } catch (e) {
-          console.error(e);
+          context.ctx.logger.error(e);
           throw new OperationError(
             outcomeError("invariant", "Failed to create user."),
           );
