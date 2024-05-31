@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Clinical Decision Support)|
+|Publisher||
 |Name|Library|
 |URL|http://hl7.org/fhir/StructureDefinition/Library|
 |Status|draft|
-|Description|The Library resource is a general-purpose container for knowledge asset definitions. It can be used to describe and expose existing knowledge assets such as logic libraries and information model descriptions, as well as to describe a collection of knowledge assets.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | Library | 0..* | Library | The Library resource is a general-purpose container for knowledge asset definitions. It can be used to describe and expose existing knowledge assets such as logic libraries and information model descriptions, as well as to describe a collection of knowledge assets. 
@@ -57,8 +57,9 @@ import TabItem from "@theme/TabItem";
  | Library.parameter | 0..* | ParameterDefinition | The parameter element defines parameters used by the library. 
  | Library.dataRequirement | 0..* | DataRequirement | Describes a set of data that must be provided in order to be able to successfully perform the computations defined by the library. 
  | Library.content | 0..* | Attachment | The content of the library as an Attachment. The content may be a reference to a url, or may be directly embedded as a base-64 string. Either way, the contentType of the attachment determines how to interpret the content. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -100,5 +101,4 @@ import TabItem from "@theme/TabItem";
  | context-type-quantity | composite | A use context type and quantity- or range-based value assigned to the library | Library.useContext  
  | context-type-value | composite | A use context type and value assigned to the library | Library.useContext  
 
-</TabItem>
-</Tabs>
+

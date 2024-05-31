@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Financial Management)|
+|Publisher||
 |Name|VisionPrescription|
 |URL|http://hl7.org/fhir/StructureDefinition/VisionPrescription|
 |Status|draft|
-|Description|An authorization for the provision of glasses and/or contact lenses to a patient.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | VisionPrescription | 0..* | VisionPrescription | An authorization for the provision of glasses and/or contact lenses to a patient. 
@@ -56,8 +56,9 @@ import TabItem from "@theme/TabItem";
  | VisionPrescription.lensSpecification.color | 0..1 | string | Special color or pattern. 
  | VisionPrescription.lensSpecification.brand | 0..1 | string | Brand recommendations or restrictions. 
  | VisionPrescription.lensSpecification.note | 0..* | Annotation | Notes for special requirements such as coatings and lens materials. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -76,7 +77,6 @@ import TabItem from "@theme/TabItem";
  | prescriber | reference | Who authorized the vision prescription | VisionPrescription.prescriber  
  | status | token | The status of the vision prescription | VisionPrescription.status  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

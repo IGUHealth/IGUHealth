@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Structured Documents)|
+|Publisher||
 |Name|DocumentReference|
 |URL|http://hl7.org/fhir/StructureDefinition/DocumentReference|
 |Status|draft|
-|Description|A reference to a document of any kind for any purpose. Provides metadata about the document so that the document can be discovered and managed. The scope of a document is any seralized object with a mime-type, so includes formal patient centric documents (CDA), cliical notes, scanned paper, and non-patient specific documents like policy text.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | DocumentReference | 0..* | DocumentReference | A reference to a document of any kind for any purpose. Provides metadata about the document so that the document can be discovered and managed. The scope of a document is any seralized object with a mime-type, so includes formal patient centric documents (CDA), cliical notes, scanned paper, and non-patient specific documents like policy text. 
@@ -62,8 +62,9 @@ import TabItem from "@theme/TabItem";
  | DocumentReference.context.practiceSetting | 0..1 | CodeableConcept | This property may convey specifics about the practice setting where the content was created, often reflecting the clinical specialty. 
  | DocumentReference.context.sourcePatientInfo | 0..1 | Reference | The Patient Information as known when the document was published. May be a reference to a version specific, or contained. 
  | DocumentReference.context.related | 0..* | Reference | Related identifiers or resources associated with the DocumentReference. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -101,7 +102,6 @@ import TabItem from "@theme/TabItem";
  | subject | reference | Who/what is the subject of the document | DocumentReference.subject  
  | relationship | composite | Combination of relation and relatesTo | DocumentReference.relatesTo  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

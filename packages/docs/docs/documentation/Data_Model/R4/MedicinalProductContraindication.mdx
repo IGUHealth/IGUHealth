@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Biomedical Research and Regulation)|
+|Publisher||
 |Name|MedicinalProductContraindication|
 |URL|http://hl7.org/fhir/StructureDefinition/MedicinalProductContraindication|
 |Status|draft|
-|Description|The clinical particulars - indications, contraindications etc. of a medicinal product, including for regulatory purposes.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | MedicinalProductContraindication | 0..* | MedicinalProductContraindication | The clinical particulars - indications, contraindications etc. of a medicinal product, including for regulatory purposes. 
@@ -38,8 +38,9 @@ import TabItem from "@theme/TabItem";
  | MedicinalProductContraindication.otherTherapy.therapyRelationshipType | 1..1 | CodeableConcept | The type of relationship between the medicinal product indication or contraindication and another therapy. 
  | MedicinalProductContraindication.otherTherapy.medication[x] | 1..1 | CodeableConcept | Reference to a specific medication (active substance, medicinal product or class of products) as part of an indication or contraindication. 
  | MedicinalProductContraindication.population | 0..* | Population | The population group to which this applies. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -53,7 +54,6 @@ import TabItem from "@theme/TabItem";
  | _tag | token | Tags applied to this resource | Resource.meta.tag  
  | subject | reference | The medication for which this is an contraindication | MedicinalProductContraindication.subject  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

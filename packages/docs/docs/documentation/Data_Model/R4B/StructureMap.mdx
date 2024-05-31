@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (FHIR Infrastructure)|
+|Publisher||
 |Name|StructureMap|
 |URL|http://hl7.org/fhir/StructureDefinition/StructureMap|
 |Status|draft|
-|Description|A Map of relationships between 2 structures that can be used to transform data.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | StructureMap | 0..* | StructureMap | A Map of relationships between 2 structures that can be used to transform data. 
@@ -110,8 +110,9 @@ import TabItem from "@theme/TabItem";
  | StructureMap.group.rule.dependent.name | 1..1 | id | Name of a rule or group to apply. 
  | StructureMap.group.rule.dependent.variable | 1..* | string | Variable to pass to the rule or group. 
  | StructureMap.group.rule.documentation | 0..1 | string | Documentation for this instance of data. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -144,5 +145,4 @@ import TabItem from "@theme/TabItem";
  | context-type-value | composite | Multiple Resources: * [CapabilityStatement](capabilitystatement.html): A use context type and value assigned to the capability statement* [CodeSystem](codesystem.html): A use context type and value assigned to the code system* [CompartmentDefinition](compartmentdefinition.html): A use context type and value assigned to the compartment definition* [ConceptMap](conceptmap.html): A use context type and value assigned to the concept map* [GraphDefinition](graphdefinition.html): A use context type and value assigned to the graph definition* [ImplementationGuide](implementationguide.html): A use context type and value assigned to the implementation guide* [MessageDefinition](messagedefinition.html): A use context type and value assigned to the message definition* [NamingSystem](namingsystem.html): A use context type and value assigned to the naming system* [OperationDefinition](operationdefinition.html): A use context type and value assigned to the operation definition* [SearchParameter](searchparameter.html): A use context type and value assigned to the search parameter* [StructureDefinition](structuredefinition.html): A use context type and value assigned to the structure definition* [StructureMap](structuremap.html): A use context type and value assigned to the structure map* [TerminologyCapabilities](terminologycapabilities.html): A use context type and value assigned to the terminology capabilities* [ValueSet](valueset.html): A use context type and value assigned to the value set | CapabilityStatement.useContext / CodeSystem.useContext / CompartmentDefinition.useContext / ConceptMap.useContext / GraphDefinition.useContext / ImplementationGuide.useContext / MessageDefinition.useContext / NamingSystem.useContext / OperationDefinition.useContext / SearchParameter.useContext / StructureDefinition.useContext / StructureMap.useContext / TerminologyCapabilities.useContext / ValueSet.useContext  
  | identifier | token | Multiple Resources: * [CodeSystem](codesystem.html): External identifier for the code system* [ConceptMap](conceptmap.html): External identifier for the concept map* [MessageDefinition](messagedefinition.html): External identifier for the message definition* [StructureDefinition](structuredefinition.html): External identifier for the structure definition* [StructureMap](structuremap.html): External identifier for the structure map* [ValueSet](valueset.html): External identifier for the value set | CodeSystem.identifier / ConceptMap.identifier / MessageDefinition.identifier / StructureDefinition.identifier / StructureMap.identifier / ValueSet.identifier  
 
-</TabItem>
-</Tabs>
+

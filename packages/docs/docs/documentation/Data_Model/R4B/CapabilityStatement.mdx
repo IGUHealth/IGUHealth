@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (FHIR Infrastructure)|
+|Publisher||
 |Name|CapabilityStatement|
 |URL|http://hl7.org/fhir/StructureDefinition/CapabilityStatement|
 |Status|active|
-|Description|A Capability Statement documents a set of capabilities (behaviors) of a FHIR Server for a particular version of FHIR that may be used as a statement of actual server functionality or a statement of required or desired server implementation.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | CapabilityStatement | 0..* | CapabilityStatement | A Capability Statement documents a set of capabilities (behaviors) of a FHIR Server for a particular version of FHIR that may be used as a statement of actual server functionality or a statement of required or desired server implementation. 
@@ -147,8 +147,9 @@ import TabItem from "@theme/TabItem";
  | CapabilityStatement.document.mode | 1..1 | code | Mode of this document declaration - whether an application is a producer or consumer. 
  | CapabilityStatement.document.documentation | 0..1 | markdown | A description of how the application supports or uses the specified document profile.  For example, when documents are created, what action is taken with consumed documents, etc. 
  | CapabilityStatement.document.profile | 1..1 | canonical | A profile on the document Bundle that constrains which resources are present, and their contents. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -189,5 +190,4 @@ import TabItem from "@theme/TabItem";
  | context-type-quantity | composite | Multiple Resources: * [CapabilityStatement](capabilitystatement.html): A use context type and quantity- or range-based value assigned to the capability statement* [CodeSystem](codesystem.html): A use context type and quantity- or range-based value assigned to the code system* [CompartmentDefinition](compartmentdefinition.html): A use context type and quantity- or range-based value assigned to the compartment definition* [ConceptMap](conceptmap.html): A use context type and quantity- or range-based value assigned to the concept map* [GraphDefinition](graphdefinition.html): A use context type and quantity- or range-based value assigned to the graph definition* [ImplementationGuide](implementationguide.html): A use context type and quantity- or range-based value assigned to the implementation guide* [MessageDefinition](messagedefinition.html): A use context type and quantity- or range-based value assigned to the message definition* [NamingSystem](namingsystem.html): A use context type and quantity- or range-based value assigned to the naming system* [OperationDefinition](operationdefinition.html): A use context type and quantity- or range-based value assigned to the operation definition* [SearchParameter](searchparameter.html): A use context type and quantity- or range-based value assigned to the search parameter* [StructureDefinition](structuredefinition.html): A use context type and quantity- or range-based value assigned to the structure definition* [StructureMap](structuremap.html): A use context type and quantity- or range-based value assigned to the structure map* [TerminologyCapabilities](terminologycapabilities.html): A use context type and quantity- or range-based value assigned to the terminology capabilities* [ValueSet](valueset.html): A use context type and quantity- or range-based value assigned to the value set | CapabilityStatement.useContext / CodeSystem.useContext / CompartmentDefinition.useContext / ConceptMap.useContext / GraphDefinition.useContext / ImplementationGuide.useContext / MessageDefinition.useContext / NamingSystem.useContext / OperationDefinition.useContext / SearchParameter.useContext / StructureDefinition.useContext / StructureMap.useContext / TerminologyCapabilities.useContext / ValueSet.useContext  
  | context-type-value | composite | Multiple Resources: * [CapabilityStatement](capabilitystatement.html): A use context type and value assigned to the capability statement* [CodeSystem](codesystem.html): A use context type and value assigned to the code system* [CompartmentDefinition](compartmentdefinition.html): A use context type and value assigned to the compartment definition* [ConceptMap](conceptmap.html): A use context type and value assigned to the concept map* [GraphDefinition](graphdefinition.html): A use context type and value assigned to the graph definition* [ImplementationGuide](implementationguide.html): A use context type and value assigned to the implementation guide* [MessageDefinition](messagedefinition.html): A use context type and value assigned to the message definition* [NamingSystem](namingsystem.html): A use context type and value assigned to the naming system* [OperationDefinition](operationdefinition.html): A use context type and value assigned to the operation definition* [SearchParameter](searchparameter.html): A use context type and value assigned to the search parameter* [StructureDefinition](structuredefinition.html): A use context type and value assigned to the structure definition* [StructureMap](structuremap.html): A use context type and value assigned to the structure map* [TerminologyCapabilities](terminologycapabilities.html): A use context type and value assigned to the terminology capabilities* [ValueSet](valueset.html): A use context type and value assigned to the value set | CapabilityStatement.useContext / CodeSystem.useContext / CompartmentDefinition.useContext / ConceptMap.useContext / GraphDefinition.useContext / ImplementationGuide.useContext / MessageDefinition.useContext / NamingSystem.useContext / OperationDefinition.useContext / SearchParameter.useContext / StructureDefinition.useContext / StructureMap.useContext / TerminologyCapabilities.useContext / ValueSet.useContext  
 
-</TabItem>
-</Tabs>
+

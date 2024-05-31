@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Clinical Decision Support)|
+|Publisher||
 |Name|GuidanceResponse|
 |URL|http://hl7.org/fhir/StructureDefinition/GuidanceResponse|
 |Status|draft|
-|Description|A guidance response is the formal response to a guidance request, including any output parameters returned by the evaluation, as well as the description of any proposed actions to be taken.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | GuidanceResponse | 0..* | GuidanceResponse | A guidance response is the formal response to a guidance request, including any output parameters returned by the evaluation, as well as the description of any proposed actions to be taken. 
@@ -41,8 +41,9 @@ import TabItem from "@theme/TabItem";
  | GuidanceResponse.outputParameters | 0..1 | Reference | The output parameters of the evaluation, if any. Many modules will result in the return of specific resources such as procedure or communication requests that are returned as part of the operation result. However, modules may define specific outputs that would be returned as the result of the evaluation, and these would be returned in this element. 
  | GuidanceResponse.result | 0..1 | Reference | The actions, if any, produced by the evaluation of the artifact. 
  | GuidanceResponse.dataRequirement | 0..* | DataRequirement | If the evaluation could not be completed due to lack of information, or additional information would potentially result in a more accurate response, this element will a description of the data required in order to proceed with the evaluation. A subsequent request to the service should include this data. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -59,7 +60,6 @@ import TabItem from "@theme/TabItem";
  | request | token | The identifier of the request associated with the response | GuidanceResponse.requestIdentifier  
  | subject | reference | The subject that the guidance response is about | GuidanceResponse.subject  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

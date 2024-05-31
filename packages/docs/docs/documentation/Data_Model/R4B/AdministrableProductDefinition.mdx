@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Biomedical Research and Regulation)|
+|Publisher||
 |Name|AdministrableProductDefinition|
 |URL|http://hl7.org/fhir/StructureDefinition/AdministrableProductDefinition|
 |Status|draft|
-|Description|A medicinal product in the final form which is suitable for administering to a patient (after any mixing of multiple components, dissolution etc. has been performed).|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | AdministrableProductDefinition | 0..* | AdministrableProductDefinition | A medicinal product in the final form which is suitable for administering to a patient (after any mixing of multiple components, dissolution etc. has been performed). 
@@ -63,8 +63,9 @@ import TabItem from "@theme/TabItem";
  | AdministrableProductDefinition.routeOfAdministration.targetSpecies.withdrawalPeriod.tissue | 1..1 | CodeableConcept | Coded expression for the type of tissue for which the withdrawal period applies, e.g. meat, milk. 
  | AdministrableProductDefinition.routeOfAdministration.targetSpecies.withdrawalPeriod.value | 1..1 | Quantity | A value for the time. 
  | AdministrableProductDefinition.routeOfAdministration.targetSpecies.withdrawalPeriod.supportingInformation | 0..1 | string | Extra information about the withdrawal period. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -90,5 +91,4 @@ import TabItem from "@theme/TabItem";
  | route | token | Coded expression for the route | AdministrableProductDefinition.routeOfAdministration.code  
  | target-species | token | Coded expression for the species | AdministrableProductDefinition.routeOfAdministration.targetSpecies.code  
 
-</TabItem>
-</Tabs>
+

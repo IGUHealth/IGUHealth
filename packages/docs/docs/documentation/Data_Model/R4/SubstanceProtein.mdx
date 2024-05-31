@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Biomedical Research and Regulation)|
+|Publisher||
 |Name|SubstanceProtein|
 |URL|http://hl7.org/fhir/StructureDefinition/SubstanceProtein|
 |Status|draft|
-|Description|A SubstanceProtein is defined as a single unit of a linear amino acid sequence, or a combination of subunits that are either covalently linked or have a defined invariant stoichiometric relationship. This includes all synthetic, recombinant and purified SubstanceProteins of defined sequence, whether the use is therapeutic or prophylactic. This set of elements will be used to describe albumins, coagulation factors, cytokines, growth factors, peptide/SubstanceProtein hormones, enzymes, toxins, toxoids, recombinant vaccines, and immunomodulators.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | SubstanceProtein | 0..* | SubstanceProtein | A SubstanceProtein is defined as a single unit of a linear amino acid sequence, or a combination of subunits that are either covalently linked or have a defined invariant stoichiometric relationship. This includes all synthetic, recombinant and purified SubstanceProteins of defined sequence, whether the use is therapeutic or prophylactic. This set of elements will be used to describe albumins, coagulation factors, cytokines, growth factors, peptide/SubstanceProtein hormones, enzymes, toxins, toxoids, recombinant vaccines, and immunomodulators. 
@@ -41,8 +41,9 @@ import TabItem from "@theme/TabItem";
  | SubstanceProtein.subunit.nTerminalModification | 0..1 | string | The name of the fragment modified at the N-terminal of the SubstanceProtein shall be specified. 
  | SubstanceProtein.subunit.cTerminalModificationId | 0..1 | Identifier | Unique identifier for molecular fragment modification based on the ISO 11238 Substance ID. 
  | SubstanceProtein.subunit.cTerminalModification | 0..1 | string | The modification at the C-terminal shall be specified. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -55,7 +56,6 @@ import TabItem from "@theme/TabItem";
  | _source | uri | Identifies where the resource comes from | Resource.meta.source  
  | _tag | token | Tags applied to this resource | Resource.meta.tag  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

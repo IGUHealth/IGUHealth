@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Patient Care)|
+|Publisher||
 |Name|CommunicationRequest|
 |URL|http://hl7.org/fhir/StructureDefinition/CommunicationRequest|
 |Status|draft|
-|Description|A request to convey information; e.g. the CDS system proposes that an alert be sent to a responsible provider, the CDS system proposes that the public health agency be notified about a reportable condition.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | CommunicationRequest | 0..* | CommunicationRequest | A request to convey information; e.g. the CDS system proposes that an alert be sent to a responsible provider, the CDS system proposes that the public health agency be notified about a reportable condition. 
@@ -52,8 +52,9 @@ import TabItem from "@theme/TabItem";
  | CommunicationRequest.reasonCode | 0..* | CodeableConcept | Describes why the request is being made in coded or textual form. 
  | CommunicationRequest.reasonReference | 0..* | Reference | Indicates another resource whose existence justifies this request. 
  | CommunicationRequest.note | 0..* | Annotation | Comments made about the request by the requester, sender, recipient, subject or other participants. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -87,5 +88,4 @@ import TabItem from "@theme/TabItem";
  | status | token | draft / active / on-hold / revoked / completed / entered-in-error / unknown | CommunicationRequest.status  
  | subject | reference | Focus of message | CommunicationRequest.subject  
 
-</TabItem>
-</Tabs>
+

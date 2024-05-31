@@ -33,15 +33,15 @@ function evaluateWithMeta(
 
 ### Arguments
 
-| name               | type                                  | description                                                                                |
-| ------------------ | ------------------------------------- | ------------------------------------------------------------------------------------------ |
-| expression         | string                                | FHIRPath expression to evaluate.                                                           |
-| ctx                | unknown                               | The context which the fhirpath is being evaluated from (sets $this context).               |
-| options            | Object                                | Includes variables and metadata deriviation functions.                                     |
-| options.variables  | Object \| Function                    | If an object is Record\<variableName, variableValue\> else (variableName)=> variableValue. |
-| options.meta       | Object                                | MetaInformation used to zip metadata with value. Used in type functions and operators.     |
-| options.meta.type  | string                                | Root type for ctx.                                                                         |
-| options.meta.getSD | (type: string) => StructureDefinition | Returns a StructureDefinition based on type passed in.                                     |
+| name               | type                                                             | description                                                                                |
+| ------------------ | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| expression         | string                                                           | FHIRPath expression to evaluate.                                                           |
+| ctx                | unknown                                                          | The context which the fhirpath is being evaluated from (sets $this context).               |
+| options            | Object                                                           | Includes variables and metadata deriviation functions.                                     |
+| options.variables  | Object \| Function                                               | If an object is Record\<variableName, variableValue\> else (variableName)=> variableValue. |
+| options.meta       | Object                                                           | MetaInformation used to zip metadata with value. Used in type functions and operators.     |
+| options.meta.type  | string                                                           | Root type for ctx.                                                                         |
+| options.meta.getSD | (fhir_version: FHIRVersion, type: string) => StructureDefinition | Returns a StructureDefinition based on type passed in.                                     |
 
 ## Usage
 
@@ -63,7 +63,7 @@ expect(
     {
       meta: {
         type: "Patient",
-        getSD: (type: code) => {
+        getSD: (fhirVersion, type: code) => {
           const foundSD = sds.find((sd) => sd.type === type);
           return foundSD;
         },

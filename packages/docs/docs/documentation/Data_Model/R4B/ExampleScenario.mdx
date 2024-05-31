@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (FHIR Infrastructure)|
+|Publisher||
 |Name|ExampleScenario|
 |URL|http://hl7.org/fhir/StructureDefinition/ExampleScenario|
 |Status|draft|
-|Description|Example of workflow instance.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | ExampleScenario | 0..* | ExampleScenario | Example of workflow instance. 
@@ -103,8 +103,9 @@ import TabItem from "@theme/TabItem";
  | ExampleScenario.process.step.alternative.description | 0..1 | markdown | A human-readable description of the alternative explaining when the alternative should occur rather than the base step. 
  | ExampleScenario.process.step.alternative.step | 0..* | ExampleScenario | What happens in each alternative option. 
  | ExampleScenario.workflow | 0..* | canonical | Another nested workflow. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -135,5 +136,4 @@ import TabItem from "@theme/TabItem";
  | context-type-quantity | composite | A use context type and quantity- or range-based value assigned to the example scenario | ExampleScenario.useContext  
  | context-type-value | composite | A use context type and value assigned to the example scenario | ExampleScenario.useContext  
 
-</TabItem>
-</Tabs>
+

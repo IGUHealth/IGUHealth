@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Orders and Observations)|
+|Publisher||
 |Name|DiagnosticReport|
 |URL|http://hl7.org/fhir/StructureDefinition/DiagnosticReport|
 |Status|draft|
-|Description|The findings and interpretation of diagnostic  tests performed on patients, groups of patients, devices, and locations, and/or specimens derived from these. The report includes clinical context such as requesting and provider information, and some mix of atomic results, images, textual and coded interpretations, and formatted representation of diagnostic reports.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | DiagnosticReport | 0..* | DiagnosticReport | The findings and interpretation of diagnostic  tests performed on patients, groups of patients, devices, and locations, and/or specimens derived from these. The report includes clinical context such as requesting and provider information, and some mix of atomic results, images, textual and coded interpretations, and formatted representation of diagnostic reports. 
@@ -49,8 +49,9 @@ import TabItem from "@theme/TabItem";
  | DiagnosticReport.conclusion | 0..1 | string | Concise and clinically contextualized summary conclusion (interpretation/impression) of the diagnostic report. 
  | DiagnosticReport.conclusionCode | 0..* | CodeableConcept | One or more codes that represent the summary conclusion (interpretation/impression) of the diagnostic report. 
  | DiagnosticReport.presentedForm | 0..* | Attachment | Rich text representation of the entire result as issued by the diagnostic service. Multiple formats are allowed but they SHALL be semantically equivalent. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -79,7 +80,6 @@ import TabItem from "@theme/TabItem";
  | status | token | The status of the report | DiagnosticReport.status  
  | subject | reference | The subject of the report | DiagnosticReport.subject  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

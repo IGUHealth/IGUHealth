@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Orders and Observations)|
+|Publisher||
 |Name|Media|
 |URL|http://hl7.org/fhir/StructureDefinition/Media|
 |Status|draft|
-|Description|A photo, video, or audio recording acquired or used in healthcare. The actual content may be inline or provided by direct reference.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | Media | 0..* | Media | A photo, video, or audio recording acquired or used in healthcare. The actual content may be inline or provided by direct reference. 
@@ -48,8 +48,9 @@ import TabItem from "@theme/TabItem";
  | Media.duration | 0..1 | decimal | The duration of the recording in seconds - for audio and video. 
  | Media.content | 1..1 | Attachment | The actual content of the media - inline or by direct reference to the media source file. 
  | Media.note | 0..* | Annotation | Comments made about the media by the performer, subject or other participants. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -75,7 +76,6 @@ import TabItem from "@theme/TabItem";
  | type | token | Classification of media as image, video, or audio | Media.type  
  | view | token | Imaging view, e.g. Lateral or Antero-posterior | Media.view  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

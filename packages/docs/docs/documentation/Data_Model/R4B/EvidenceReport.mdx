@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Clinical Decision Support)|
+|Publisher||
 |Name|EvidenceReport|
 |URL|http://hl7.org/fhir/StructureDefinition/EvidenceReport|
 |Status|draft|
-|Description|The EvidenceReport Resource is a specialized container for a collection of resources and codable concepts, adapted to support compositions of Evidence, EvidenceVariable, and Citation resources and related concepts.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | EvidenceReport | 0..* | EvidenceReport | The EvidenceReport Resource is a specialized container for a collection of resources and codable concepts, adapted to support compositions of Evidence, EvidenceVariable, and Citation resources and related concepts. 
@@ -76,8 +76,9 @@ import TabItem from "@theme/TabItem";
  | EvidenceReport.section.entryQuantity | 0..* | Quantity | Quantity as content. 
  | EvidenceReport.section.emptyReason | 0..1 | CodeableConcept | If the section is empty, why the list is empty. An empty section typically has some text explaining the empty reason. 
  | EvidenceReport.section.section | 0..* | EvidenceReport | A nested sub-section within this section. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -104,5 +105,4 @@ import TabItem from "@theme/TabItem";
  | context-type-quantity | composite | A use context type and quantity- or range-based value assigned to the evidence report | EvidenceReport.useContext  
  | context-type-value | composite | A use context type and value assigned to the evidence report | EvidenceReport.useContext  
 
-</TabItem>
-</Tabs>
+

@@ -65,9 +65,8 @@ async function processStructureDefinition(artifacts, structureDefinition) {
 
   # ${structureDefinition.name}\n
   ${metaProperties(structureDefinition)}\n
-  ## Information
-  <Tabs>`;
-  doc = `${doc} <TabItem value="structure" label="Structure">
+  `;
+  doc = `${doc} ## Structure\n
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  \n`;
   for (const element of structureDefinition.snapshot?.element || []) {
@@ -81,9 +80,9 @@ async function processStructureDefinition(artifacts, structureDefinition) {
     } | ${description} \n`;
   }
 
-  doc = `${doc}</TabItem>\n`;
+  doc = `${doc}\n`;
 
-  doc = `${doc} <TabItem value="searchparameter" label="Search Parameters">
+  doc = `${doc} ## Search Parameters\n
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  \n`;
   for (const parameter of parameters) {
@@ -96,9 +95,9 @@ async function processStructureDefinition(artifacts, structureDefinition) {
 
     doc = `${doc} | ${name} | ${type} | ${description} | ${expression}  \n`;
   }
-  doc = `${doc}\n</TabItem>\n`;
+  doc = `${doc}\n\n`;
 
-  doc = `${doc}</Tabs>`;
+  doc = `${doc}`;
 
   return doc;
 }

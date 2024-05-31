@@ -6,16 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Orders and Observations)|
+|Publisher||
 |Name|BiologicallyDerivedProduct|
 |URL|http://hl7.org/fhir/StructureDefinition/BiologicallyDerivedProduct|
 |Status|draft|
-|Description|A material substance originating from a biological entity intended to be transplanted or infused
-into another (possibly the same) biological entity.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | BiologicallyDerivedProduct | 0..* | BiologicallyDerivedProduct | A material substance originating from a biological entity intended to be transplanted or infusedinto another (possibly the same) biological entity. 
@@ -63,8 +62,9 @@ into another (possibly the same) biological entity.|
  | BiologicallyDerivedProduct.storage.temperature | 0..1 | decimal | Storage temperature. 
  | BiologicallyDerivedProduct.storage.scale | 0..1 | code | Temperature scale used. 
  | BiologicallyDerivedProduct.storage.duration | 0..1 | Period | Storage timeperiod. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -77,7 +77,6 @@ into another (possibly the same) biological entity.|
  | _source | uri | Identifies where the resource comes from | Resource.meta.source  
  | _tag | token | Tags applied to this resource | Resource.meta.tag  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

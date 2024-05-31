@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Patient Administration)|
+|Publisher||
 |Name|OrganizationAffiliation|
 |URL|http://hl7.org/fhir/StructureDefinition/OrganizationAffiliation|
 |Status|draft|
-|Description|Defines an affiliation/assotiation/relationship between 2 distinct oganizations, that is not a part-of relationship/sub-division relationship.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | OrganizationAffiliation | 0..* | OrganizationAffiliation | Defines an affiliation/assotiation/relationship between 2 distinct oganizations, that is not a part-of relationship/sub-division relationship. 
@@ -38,8 +38,9 @@ import TabItem from "@theme/TabItem";
  | OrganizationAffiliation.healthcareService | 0..* | Reference | Healthcare services provided through the role. 
  | OrganizationAffiliation.telecom | 0..* | ContactPoint | Contact details at the participatingOrganization relevant to this Affiliation. 
  | OrganizationAffiliation.endpoint | 0..* | Reference | Technical endpoints providing access to services operated for this role. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -66,7 +67,6 @@ import TabItem from "@theme/TabItem";
  | specialty | token | Specific specialty of the participatingOrganization in the context of the role | OrganizationAffiliation.specialty  
  | telecom | token | The value in any kind of contact | OrganizationAffiliation.telecom  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

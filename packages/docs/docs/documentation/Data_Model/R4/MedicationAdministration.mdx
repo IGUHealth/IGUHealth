@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Pharmacy)|
+|Publisher||
 |Name|MedicationAdministration|
 |URL|http://hl7.org/fhir/StructureDefinition/MedicationAdministration|
 |Status|draft|
-|Description|Describes the event of a patient consuming or otherwise being administered a medication.  This may be as simple as swallowing a tablet or it may be a long running infusion.  Related resources tie this event to the authorizing prescription, and the specific encounter between patient and health care practitioner.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | MedicationAdministration | 0..* | MedicationAdministration | Describes the event of a patient consuming or otherwise being administered a medication.  This may be as simple as swallowing a tablet or it may be a long running infusion.  Related resources tie this event to the authorizing prescription, and the specific encounter between patient and health care practitioner. 
@@ -59,8 +59,9 @@ import TabItem from "@theme/TabItem";
  | MedicationAdministration.dosage.dose | 0..1 | Quantity | The amount of the medication given at one administration event.   Use this value when the administration is essentially an instantaneous event such as a swallowing a tablet or giving an injection. 
  | MedicationAdministration.dosage.rate[x] | 0..1 | Ratio | Identifies the speed with which the medication was or will be introduced into the patient.  Typically, the rate for an infusion e.g. 100 ml per 1 hour or 100 ml/hr.  May also be expressed as a rate per unit of time, e.g. 500 ml per 2 hours.  Other examples:  200 mcg/min or 200 mcg/1 minute; 1 liter/8 hours. 
  | MedicationAdministration.eventHistory | 0..* | Reference | A summary of the events of interest that have occurred, such as when the administration was verified. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -86,7 +87,6 @@ import TabItem from "@theme/TabItem";
  | status | token | Multiple Resources: * [MedicationAdministration](medicationadministration.html): MedicationAdministration event status (for example one of active/paused/completed/nullified)* [MedicationDispense](medicationdispense.html): Returns dispenses with a specified dispense status* [MedicationRequest](medicationrequest.html): Status of the prescription* [MedicationStatement](medicationstatement.html): Return statements that match the given status | MedicationAdministration.status / MedicationDispense.status / MedicationRequest.status / MedicationStatement.status  
  | subject | reference | The identity of the individual or group to list administrations for | MedicationAdministration.subject  
  | _iguhealth-version-seq | number | The version sequence of the resource | Resource.meta.extension.where(url='https://iguhealth.app/version-sequence').value  
- | _iguhealth-author | token | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
+ | _iguhealth-author | reference | The author of the resource | Resource.meta.extension.where(url='https://iguhealth.app/author').value  
 
-</TabItem>
-</Tabs>
+

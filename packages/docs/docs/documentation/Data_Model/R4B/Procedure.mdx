@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Patient Care)|
+|Publisher||
 |Name|Procedure|
 |URL|http://hl7.org/fhir/StructureDefinition/Procedure|
 |Status|draft|
-|Description|An action that is or was performed on or for a patient. This can be a physical intervention like an operation, or less invasive like long term services, counseling, or hypnotherapy.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | Procedure | 0..* | Procedure | An action that is or was performed on or for a patient. This can be a physical intervention like an operation, or less invasive like long term services, counseling, or hypnotherapy. 
@@ -65,8 +65,9 @@ import TabItem from "@theme/TabItem";
  | Procedure.focalDevice.manipulated | 1..1 | Reference | The device that was manipulated (changed) during the procedure. 
  | Procedure.usedReference | 0..* | Reference | Identifies medications, devices and any other substance used as part of the procedure. 
  | Procedure.usedCode | 0..* | CodeableConcept | Identifies coded items that were used as part of the procedure. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -100,5 +101,4 @@ import TabItem from "@theme/TabItem";
  | status | token | preparation / in-progress / not-done / on-hold / stopped / completed / entered-in-error / unknown | Procedure.status  
  | subject | reference | Search by subject | Procedure.subject  
 
-</TabItem>
-</Tabs>
+

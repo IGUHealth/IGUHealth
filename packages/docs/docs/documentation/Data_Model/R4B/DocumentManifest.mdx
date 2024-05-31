@@ -6,15 +6,15 @@ import TabItem from "@theme/TabItem";
   
 |Property|Value|
 |---|---|
-|Publisher|Health Level Seven International (Structured Documents)|
+|Publisher||
 |Name|DocumentManifest|
 |URL|http://hl7.org/fhir/StructureDefinition/DocumentManifest|
 |Status|draft|
-|Description|A collection of documents compiled for a purpose together with metadata that applies to the collection.|
+|Description||
 |Abstract|false|
 
-  ## Information
-  <Tabs> <TabItem value="structure" label="Structure">
+   ## Structure
+
    | Path | Cardinality | Type | Description
   | ---- | ----------- | ---- | -------  
  | DocumentManifest | 0..* | DocumentManifest | A collection of documents compiled for a purpose together with metadata that applies to the collection. 
@@ -43,8 +43,9 @@ import TabItem from "@theme/TabItem";
  | DocumentManifest.related.modifierExtension | 0..* | Extension | May be used to represent additional information that is not part of the basic definition of the element and that modifies the understanding of the element in which it is contained and/or the understanding of the containing element's descendants. Usually modifier elements provide negation or qualification. To make the use of extensions safe and manageable, there is a strict set of governance applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension. Applications processing a resource are required to check for modifier extensions.Modifier extensions SHALL NOT change the meaning of any elements on Resource or DomainResource (including cannot change the meaning of modifierExtension itself). 
  | DocumentManifest.related.identifier | 0..1 | Identifier | Related identifier to this DocumentManifest.  For example, Order numbers, accession numbers, XDW workflow numbers. 
  | DocumentManifest.related.ref | 0..1 | Reference | Related Resource to this DocumentManifest. For example, Order, ServiceRequest,  Procedure, EligibilityRequest, etc. 
-</TabItem>
- <TabItem value="searchparameter" label="Search Parameters">
+
+ ## Search Parameters
+
    | Name | Type | Description  | Expression 
     | ---- | ---- | ------- | ------  
  | _text | string | Search on the narrative of the resource |   
@@ -75,5 +76,4 @@ import TabItem from "@theme/TabItem";
  | status | token | current / superseded / entered-in-error | DocumentManifest.status  
  | subject | reference | The subject of the set of documents | DocumentManifest.subject  
 
-</TabItem>
-</Tabs>
+
