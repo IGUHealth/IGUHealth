@@ -1,13 +1,20 @@
 services:
   redis:
     image: redislabs/redismod
+
     ports:
-      - "6379:6379"
+      - 6379:6379
 
   postgres:
     image: bitnami/postgresql:16.3.0
+
+    ports:
+      - 5432:5432
+
     volumes:
       - ./data/db:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres

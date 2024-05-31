@@ -8,9 +8,8 @@ services:
       file: services-compose.yml
       service: redis
 
-  iguheath-server: &iguhealth-server
-    image: iguhealth/iguhealth-server:latest
-
+  iguheath:
+    image: ghcr.io/iguhealth/iguhealth/iguhealth:latest
     ports:
       - "3000:3000"
 
@@ -19,32 +18,15 @@ services:
       - redis
 
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
-      - REDIS_URL=redis://redis:6379
+      - SESSION_COOKIE_SECRETS=session_secret
+      - FHIR_DATABASE_NAME=iguhealth;
+      - FHIR_DATABASE_HOST=postgres
+      - FHIR_DATABASE_PORT=5432
+      - FHIR_DATABASE_PASSWORD=postgres
+      - FHIR_DATABASE_USERNAME=postgres
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - API_URL=http://localhost:3000
+      - ADMIN_APP_REDIRECT_URI=http://*.localhost:3001
 
-  iguheath-worker: &iguhealth-server
-    image: iguhealth/iguhealth-server:latest
-
-    ports:
-      - "3000:3000"
-
-    depends_on:
-      - postgres
-      - redis
-
-    environment:
-      - SESSION_COOKIE_SECRETS: string;
-      - FHIR_DATABASE_NAME: string;
-      - FHIR_DATABASE_HOST: string;
-      - FHIR_DATABASE_PORT: string;
-      - FHIR_DATABASE_PASSWORD: string;
-      - FHIR_DATABASE_USERNAME: string;
-      - REDIS_HOST: string;
-      - REDIS_PORT: string;
-      - API_URL: string;
-      - ADMIN_APP_REDIRECT_URI?: string;
-
-      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
-      - REDIS_URL=redis://redis:6379
-
-    command: ["entrypoint", "worker"]
+    command: ["both"]
