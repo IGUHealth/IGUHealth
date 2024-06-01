@@ -10,7 +10,7 @@
   "main": "./lib/server.js",
   "type": "module",
   "scripts": {
-    "cli": "yarn node --enable-source-maps ./lib/cli.js",
+    "cli": "yarn node --enable-source-maps ./lib/cli/index.js",
     "build-css": "yarn tailwindcss -i ./index.css -o ./public/css/index.css --minify",
     "watch-css": "yarn tailwindcss -i ./index.css -o ./public/css/index.css --watch",
     "prebuild": "node -p \"'export const LIB_VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/version.ts",
