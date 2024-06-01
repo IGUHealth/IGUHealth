@@ -7775,6 +7775,8 @@ __metadata:
     typescript: "npm:5.4.5"
     validator: "npm:^13.12.0"
     zapatos: "npm:^6.4.0"
+  bin:
+    iguhealth-server: lib/cli/index.js
   languageName: unknown
   linkType: soft
 
