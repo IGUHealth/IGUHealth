@@ -21,7 +21,7 @@
     "ci": "yarn build & yarn cli run server & yarn cli run worker",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest) --runInBand",
     "db-migrate": "db-migrate --sql-file -m src/fhir-storage/providers/postgres/migrations",
-    "migrate": "yarn build && yarn cli run migrate && yarn cli generate-types",
+    "migrate": "yarn build && yarn cli run migrate && yarn cli generate types",
     "watch": "yarn prebuild && yarn migrate up && yarn tsc-watch --onSuccess \"yarn cli run both\"",
     "watch_server": "yarn prebuild && yarn migrate up && yarn tsc-watch --onSuccess \"yarn cli run server\"",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
