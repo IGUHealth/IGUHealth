@@ -6,6 +6,9 @@
     "type": "git",
     "url": "https://github.com/IGUHealth/IGUHealth.git"
   },
+  "bin": {
+    "iguhealth-server": "lib/cli/index.js"
+  },
   "description": "IGUHealth server",
   "main": "./lib/server.js",
   "type": "module",
