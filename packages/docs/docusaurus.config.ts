@@ -1,7 +1,10 @@
 import type { Config } from "@docusaurus/types";
 import autoprefixer from "autoprefixer";
+import dotenv from "dotenv";
 import { themes } from "prism-react-renderer";
 import tailwind from "tailwindcss";
+
+dotenv.config();
 
 const lightCodeTheme = themes.github;
 const darkCodeTheme = themes.dracula;
@@ -56,6 +59,12 @@ const config = {
     [
       "classic",
       {
+        gtag: process.env.GOOGLE_GTAG_TRACKING_ID
+          ? {
+              trackingID: process.env.GOOGLE_GTAG_TRACKING_ID,
+              anonymizeIP: true,
+            }
+          : undefined,
         theme: {
           customCss: ["./src/css/custom.css"],
         },

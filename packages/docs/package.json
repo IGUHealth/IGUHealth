@@ -21,11 +21,13 @@
   },
   "dependencies": {
     "@docusaurus/core": "^3.3.2",
+    "@docusaurus/plugin-google-gtag": "^3.4.0",
     "@docusaurus/preset-classic": "^3.3.2",
     "@docusaurus/theme-mermaid": "^3.3.2",
     "@mdx-js/react": "^3.0.0",
     "autoprefixer": "^10.4.19",
     "clsx": "^2.0.0",
+    "dotenv": "^16.4.5",
     "postcss": "^8.4.38",
     "prism-react-renderer": "^2.3.1",
     "react": "^18.3.1",

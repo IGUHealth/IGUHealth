@@ -91,6 +91,8 @@ jobs:
 
       - name: Compile dependencies
         run: yarn workspaces foreach -A -pt --topological-dev run build
+        env:
+          GOOGLE_GTAG_TRACKING_ID: ${{ secrets.GOOGLE_GTAG_TRACKING_ID }}
 
       - name: Configure AWS credentials from Github account
         uses: aws-actions/configure-aws-credentials@v4
