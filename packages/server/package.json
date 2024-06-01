@@ -6,11 +6,14 @@
     "type": "git",
     "url": "https://github.com/IGUHealth/IGUHealth.git"
   },
+  "bin": {
+    "iguhealth-server": "lib/cli/index.js"
+  },
   "description": "IGUHealth server",
   "main": "./lib/server.js",
   "type": "module",
   "scripts": {
-    "cli": "yarn node --enable-source-maps ./lib/cli.js",
+    "cli": "yarn node --enable-source-maps ./lib/cli/index.js",
     "build-css": "yarn tailwindcss -i ./index.css -o ./public/css/index.css --minify",
     "watch-css": "yarn tailwindcss -i ./index.css -o ./public/css/index.css --watch",
     "prebuild": "node -p \"'export const LIB_VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/version.ts",
@@ -18,7 +21,7 @@
     "ci": "yarn build & yarn cli run server & yarn cli run worker",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest) --runInBand",
     "db-migrate": "db-migrate --sql-file -m src/fhir-storage/providers/postgres/migrations",
-    "migrate": "yarn build && yarn cli run migrate && yarn cli generate-types",
+    "migrate": "yarn build && yarn cli run migrate && yarn cli generate types",
     "watch": "yarn prebuild && yarn migrate up && yarn tsc-watch --onSuccess \"yarn cli run both\"",
     "watch_server": "yarn prebuild && yarn migrate up && yarn tsc-watch --onSuccess \"yarn cli run server\"",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"

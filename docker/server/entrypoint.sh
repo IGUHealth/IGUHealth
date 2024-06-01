@@ -1,3 +1,3 @@
 #!/bin/bash
 cd ./packages/server
-exec yarn node ./lib/cli.js run $1
+exec yarn node ./lib/cli/index.js run $1
