@@ -6,8 +6,11 @@ import { readFileSync, writeFileSync } from "node:fs";
 import util from "node:util";
 import * as generateSQL from "zapatos/generate";
 
+import loadEnv from "./env.js";
 import createServer from "./server.js";
 import createWorker from "./worker/index.js";
+
+loadEnv();
 
 const execPromise = util.promisify(exec);
 
