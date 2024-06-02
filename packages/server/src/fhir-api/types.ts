@@ -10,6 +10,7 @@ import {
   OperationDefinition,
   canonical,
   code,
+  id,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
 import {
@@ -17,7 +18,13 @@ import {
   FHIR_VERSION,
   Resource,
 } from "@iguhealth/fhir-types/versions";
-import { AccessTokenPayload, IGUHEALTH_ISSUER, TenantId } from "@iguhealth/jwt";
+import {
+  AccessTokenPayload,
+  CUSTOM_CLAIMS,
+  IGUHEALTH_ISSUER,
+  Subject,
+  TenantId,
+} from "@iguhealth/jwt";
 
 import { AuthorizationCodeManagement } from "../authN/db/code/interface.js";
 import { UserManagement } from "../authN/db/users/interface.js";
@@ -130,15 +137,24 @@ export interface FHIRServerCTX {
  * @returns A new context with the user set to system.
  */
 export function asSystemCTX(ctx: Omit<FHIRServerCTX, "user">): FHIRServerCTX {
+  const jwt: AccessTokenPayload<s.user_role> = {
+    iss: IGUHEALTH_ISSUER,
+    [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
+    [CUSTOM_CLAIMS.RESOURCE_ID]: "system" as id,
+    [CUSTOM_CLAIMS.TENANTS]: [
+      {
+        id: ctx.tenant,
+        userRole: "admin",
+      },
+    ],
+    sub: "system" as Subject,
+  };
   return {
     ...ctx,
     tenant: ctx.tenant,
     user: {
       role: "admin",
-      jwt: {
-        iss: IGUHEALTH_ISSUER,
-        sub: "system",
-      } as AccessTokenPayload<s.user_role>,
+      jwt,
     },
   };
 }
