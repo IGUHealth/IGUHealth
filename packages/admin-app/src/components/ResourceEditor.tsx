@@ -80,8 +80,8 @@ function ResourceHistory() {
       ModalContent={(_setOpen) => (
         <MergeViewer
           extensions={extensions}
-          oldValue={JSON.stringify(diff?.[0].resource, null, 2)}
-          newValue={JSON.stringify(diff?.[1].resource, null, 2)}
+          oldValue={JSON.stringify(diff?.[1].resource, null, 2)}
+          newValue={JSON.stringify(diff?.[0].resource, null, 2)}
         />
       )}
     >
