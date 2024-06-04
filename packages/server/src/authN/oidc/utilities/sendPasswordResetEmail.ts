@@ -1,6 +1,5 @@
 import React from "react";
 import { renderToString } from "react-dom/server";
-import * as s from "zapatos/schema";
 
 import {
   EmailTemplate,
@@ -32,7 +31,6 @@ export async function shouldSendPasswordReset(
 }
 
 export async function sendPasswordResetEmail(
-  scope: s.user_scope,
   ctx: Parameters<ManagementRouteHandler>[0],
   user: User,
 ) {
@@ -57,7 +55,7 @@ export async function sendPasswordResetEmail(
   });
 
   const emailVerificationURL = ctx.router.url(
-    OIDC_ROUTES(scope).PASSWORD_RESET_VERIFY_GET,
+    OIDC_ROUTES.PASSWORD_RESET_VERIFY_GET,
     { tenant: ctx.oidc.tenant },
     { query: { code: code.code } },
   );

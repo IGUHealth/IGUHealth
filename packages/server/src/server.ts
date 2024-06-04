@@ -30,10 +30,7 @@ import {
 import { JWKS_GET } from "./authN/oidc/constants.js";
 import { createOIDCRouter } from "./authN/oidc/index.js";
 import { setAllowSignup } from "./authN/oidc/middleware/allow_signup.js";
-import {
-  injectGlobalManagement,
-  injectTenantManagement,
-} from "./authN/oidc/middleware/inject_management.js";
+import { injectTenantManagement } from "./authN/oidc/middleware/inject_management.js";
 import { verifyAndAssociateUserFHIRContext } from "./authZ/middleware/tenantAccess.js";
 import loadEnv from "./env.js";
 import {
@@ -246,19 +243,6 @@ export default async function createServer(): Promise<
       unknown
     >,
   ];
-
-  const managementRouter = await createOIDCRouter("/oidc", {
-    authMiddlewares,
-    scope: "global",
-    // Inject global management.
-    middleware: [
-      injectGlobalManagement(),
-      setAllowSignup(process.env.AUTH_ALLOW_GLOBAL_SIGNUP === "true"),
-    ],
-  });
-
-  rootRouter.use(managementRouter.routes());
-  rootRouter.use(managementRouter.allowedMethods());
 
   const tenantRouter = new Router<
     Koa.DefaultState,

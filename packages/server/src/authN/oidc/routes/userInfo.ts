@@ -1,5 +1,3 @@
-import { user_scope } from "zapatos/schema";
-
 import { ManagementRouteHandler } from "../index.js";
 
 type UserInfoResponse = {
@@ -11,7 +9,7 @@ type UserInfoResponse = {
   picture?: string;
 };
 
-export function userInfo(_scope: user_scope): ManagementRouteHandler {
+export function userInfo(): ManagementRouteHandler {
   return async (ctx, next) => {
     const user = await ctx.oidc.userManagement.get(
       ctx.FHIRContext,

@@ -148,27 +148,27 @@ type OIDCDiscoveryDocument = {
   op_tos_uri?: string;
 };
 
-export function discoveryGet(scope: user_scope): ManagementRouteHandler {
+export function discoveryGet(): ManagementRouteHandler {
   return async (ctx, next) => {
     const OIDC_DISCOVERY_DOCUMENT: OIDCDiscoveryDocument = {
       issuer: IGUHEALTH_ISSUER,
 
       userinfo_endpoint: new URL(
-        ctx.router.url(OIDC_ROUTES(scope).USER_INFO, {
+        ctx.router.url(OIDC_ROUTES.USER_INFO, {
           tenant: ctx.oidc.tenant,
         }) as string,
         process.env.API_URL,
       ).href,
 
       token_endpoint: new URL(
-        ctx.router.url(OIDC_ROUTES(scope).TOKEN_POST, {
+        ctx.router.url(OIDC_ROUTES.TOKEN_POST, {
           tenant: ctx.oidc.tenant,
         }) as string,
         process.env.API_URL,
       ).href,
 
       authorization_endpoint: new URL(
-        ctx.router.url(OIDC_ROUTES(scope).AUTHORIZE_GET, {
+        ctx.router.url(OIDC_ROUTES.AUTHORIZE_GET, {
           tenant: ctx.oidc.tenant,
         }) as string,
         process.env.API_URL,

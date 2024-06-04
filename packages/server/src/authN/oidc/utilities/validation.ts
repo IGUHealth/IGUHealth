@@ -3,6 +3,7 @@ type Email = string & { _emailBrand: never };
 const EMAIL_REGEX =
   /^[-!#$%&'*+/0-9=?A-Z^_a-z`{|}~](\.?[-!#$%&'*+/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
 // Pulled from https://github.com/manishsaraan/email-validator/blob/master/index.js
+
 export function validateEmail(email: string | undefined): email is Email {
   if (!email) return false;
   const emailParts = email.split("@");

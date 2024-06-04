@@ -1,6 +1,5 @@
 import React from "react";
 import * as db from "zapatos/db";
-import { user_scope } from "zapatos/schema";
 
 import { EmailForm, Feedback, PasswordResetForm } from "@iguhealth/components";
 import { OperationOutcome } from "@iguhealth/fhir-types/r4/types";
@@ -28,7 +27,7 @@ function validatePasswordStrength(
   return undefined;
 }
 
-export function passwordResetGET(scope: user_scope): ManagementRouteHandler {
+export function passwordResetGET(): ManagementRouteHandler {
   return async (ctx) => {
     const queryCode = ctx.request.query.code;
     if (typeof queryCode !== "string") {
@@ -56,7 +55,7 @@ export function passwordResetGET(scope: user_scope): ManagementRouteHandler {
     }
 
     const passwordResetPostUrl = ctx.router.url(
-      OIDC_ROUTES(scope).PASSWORD_RESET_VERIFY_POST,
+      OIDC_ROUTES.PASSWORD_RESET_VERIFY_POST,
       { tenant: ctx.oidc.tenant },
     );
     if (passwordResetPostUrl instanceof Error) throw passwordResetPostUrl;
@@ -74,7 +73,7 @@ export function passwordResetGET(scope: user_scope): ManagementRouteHandler {
   };
 }
 
-export function passwordResetPOST(scope: user_scope): ManagementRouteHandler {
+export function passwordResetPOST(): ManagementRouteHandler {
   return async (ctx) => {
     const body = ctx.request.body as
       | { code?: string; password?: string; passwordConfirm?: string }
@@ -84,7 +83,7 @@ export function passwordResetPOST(scope: user_scope): ManagementRouteHandler {
       throw new OperationError(outcomeError("invalid", "Code not found."));
     }
     const passwordResetPostUrl = ctx.router.url(
-      OIDC_ROUTES(scope).PASSWORD_RESET_VERIFY_POST,
+      OIDC_ROUTES.PASSWORD_RESET_VERIFY_POST,
       { tenant: ctx.oidc.tenant },
     );
     if (passwordResetPostUrl instanceof Error) throw passwordResetPostUrl;
@@ -174,7 +173,7 @@ export function passwordResetPOST(scope: user_scope): ManagementRouteHandler {
     });
 
     const loginRoute = ctx.router.url(
-      OIDC_ROUTES(scope).LOGIN_GET,
+      OIDC_ROUTES.LOGIN_GET,
       {
         tenant: ctx.oidc.tenant,
       },
@@ -187,10 +186,9 @@ export function passwordResetPOST(scope: user_scope): ManagementRouteHandler {
 }
 
 export const passwordResetInitiateGet =
-  (scope: user_scope): ManagementRouteHandler =>
-  async (ctx) => {
+  (): ManagementRouteHandler => async (ctx) => {
     const passwordResetInitiatePostURL = ctx.router.url(
-      OIDC_ROUTES(scope).PASSWORD_RESET_INITIATE_POST,
+      OIDC_ROUTES.PASSWORD_RESET_INITIATE_POST,
       { tenant: ctx.oidc.tenant },
     );
     if (typeof passwordResetInitiatePostURL !== "string")
@@ -210,9 +208,7 @@ export const passwordResetInitiateGet =
  * Initiates password reset process by sending an email to the user with a link to reset their password.
  * @param ctx Koa fhir context
  */
-export function passwordResetInitiatePOST(
-  scope: user_scope,
-): ManagementRouteHandler {
+export function passwordResetInitiatePOST(): ManagementRouteHandler {
   return async (ctx) => {
     const body = ctx.request.body as
       | { email?: string; password?: string }
@@ -273,7 +269,7 @@ export function passwordResetInitiatePOST(
       );
     }
 
-    await sendPasswordResetEmail(scope, ctx, user);
+    await sendPasswordResetEmail(ctx, user);
 
     ctx.status = 200;
     ctx.body = views.renderString(

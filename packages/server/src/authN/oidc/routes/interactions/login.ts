@@ -1,5 +1,4 @@
 import React from "react";
-import { user_scope } from "zapatos/schema";
 
 import { Login } from "@iguhealth/components";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -10,12 +9,9 @@ import { OIDC_ROUTES } from "../../constants.js";
 import * as adminApp from "../../hardcodedClients/admin-app.js";
 import type { ManagementRouteHandler } from "../../index.js";
 
-function getRoutes(
-  ctx: Parameters<ManagementRouteHandler>[0],
-  scope: user_scope,
-) {
+function getRoutes(ctx: Parameters<ManagementRouteHandler>[0]) {
   const loginRoute = ctx.router.url(
-    OIDC_ROUTES(scope).LOGIN_POST,
+    OIDC_ROUTES.LOGIN_POST,
     {
       tenant: ctx.oidc.tenant,
     },
@@ -23,13 +19,13 @@ function getRoutes(
   );
   if (loginRoute instanceof Error) throw loginRoute;
 
-  const signupURL = ctx.router.url(OIDC_ROUTES(scope).SIGNUP_GET, {
+  const signupURL = ctx.router.url(OIDC_ROUTES.SIGNUP_GET, {
     tenant: ctx.oidc.tenant,
   });
   if (signupURL instanceof Error) throw signupURL;
 
   const forgotPasswordURL = ctx.router.url(
-    OIDC_ROUTES(scope).PASSWORD_RESET_INITIATE_GET,
+    OIDC_ROUTES.PASSWORD_RESET_INITIATE_GET,
     { tenant: ctx.oidc.tenant },
   );
   if (forgotPasswordURL instanceof Error) throw forgotPasswordURL;
@@ -51,7 +47,6 @@ export function encodeState(state: LoginState): string {
 
 export function decodeState(
   ctx: Parameters<ManagementRouteHandler>[0],
-  scope: user_scope,
   stateString: string | undefined,
 ): LoginState | undefined {
   if (!stateString) return undefined;
@@ -68,7 +63,7 @@ export function decodeState(
     // Strict enforcement so redirect can only happen on authorize endpoint.
     if (
       !state.redirectUrl.startsWith(
-        ctx.router.url(OIDC_ROUTES(scope).AUTHORIZE_GET, {
+        ctx.router.url(OIDC_ROUTES.AUTHORIZE_GET, {
           tenant: ctx.oidc.tenant,
         }),
       )
@@ -113,84 +108,80 @@ async function validateCredentials(
   return undefined;
 }
 
-export const loginPOST =
-  (scope: user_scope): ManagementRouteHandler =>
-  async (ctx, next) => {
-    const loginURL = ctx.router.url(OIDC_ROUTES(scope).LOGIN_GET, {
-      tenant: ctx.oidc.tenant,
-    });
+export const loginPOST = (): ManagementRouteHandler => async (ctx, next) => {
+  const loginURL = ctx.router.url(OIDC_ROUTES.LOGIN_GET, {
+    tenant: ctx.oidc.tenant,
+  });
 
-    if (loginURL instanceof Error) throw loginURL;
+  if (loginURL instanceof Error) throw loginURL;
 
-    const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(ctx, scope);
+  const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(ctx);
 
-    const user = await validateCredentials(ctx);
+  const user = await validateCredentials(ctx);
 
-    if (user !== undefined) {
-      const state = decodeState(ctx, scope, ctx.query.state?.toString());
+  if (user !== undefined) {
+    const state = decodeState(ctx, ctx.query.state?.toString());
 
-      if (state?.redirectUrl) {
-        ctx.redirect(state?.redirectUrl);
-        return;
-      } else if (adminApp.ADMIN_APP() !== undefined) {
-        const tenantClaims = await ctx.oidc.userManagement.getTenantClaims(
-          ctx.FHIRContext,
-          user.id,
-        );
-        const tenantId = tenantClaims[0]?.id;
-        if (tenantId) {
-          ctx.redirect(adminApp.redirectURL(tenantId) as string);
-        }
-        return;
+    if (state?.redirectUrl) {
+      ctx.redirect(state?.redirectUrl);
+      return;
+    } else if (adminApp.ADMIN_APP() !== undefined) {
+      const tenantClaims = await ctx.oidc.userManagement.getTenantClaims(
+        ctx.FHIRContext,
+        user.id,
+      );
+      const tenantId = tenantClaims[0]?.id;
+      if (tenantId) {
+        ctx.redirect(adminApp.redirectURL(tenantId) as string);
       }
-
-      // If logged in but no redirect display login with success message.
-      ctx.status = 201;
-      ctx.body = views.renderString(
-        React.createElement(Login, {
-          title: "IGUHealth",
-          logo: "/public/img/logo.svg",
-          action: loginRoute,
-          signupURL,
-          forgotPasswordURL,
-          messages: ["You have successfully logged in."],
-        }),
-      );
-    } else {
-      ctx.status = 401;
-      ctx.body = views.renderString(
-        React.createElement(Login, {
-          title: "IGUHealth",
-          logo: "/public/img/logo.svg",
-          action: loginRoute,
-          signupURL,
-          forgotPasswordURL,
-          errors: ["Invalid email or password. Please try again."],
-        }),
-      );
       return;
     }
 
-    await next();
-  };
-
-export const loginGET =
-  (scope: user_scope): ManagementRouteHandler =>
-  async (ctx) => {
-    const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(ctx, scope);
-    const message = ctx.request.query["message"]?.toString();
-    const email = ctx.request.query["email"]?.toString();
-
-    ctx.status = 200;
+    // If logged in but no redirect display login with success message.
+    ctx.status = 201;
     ctx.body = views.renderString(
       React.createElement(Login, {
         title: "IGUHealth",
         logo: "/public/img/logo.svg",
-        email,
-        messages: message ? [message] : [],
         action: loginRoute,
         signupURL,
         forgotPasswordURL,
+        messages: ["You have successfully logged in."],
       }),
     );
-  };
+  } else {
+    ctx.status = 401;
+    ctx.body = views.renderString(
+      React.createElement(Login, {
+        title: "IGUHealth",
+        logo: "/public/img/logo.svg",
+        action: loginRoute,
+        signupURL,
+        forgotPasswordURL,
+        errors: ["Invalid email or password. Please try again."],
+      }),
+    );
+    return;
+  }
+
+  await next();
+};
+
+export const loginGET = (): ManagementRouteHandler => async (ctx) => {
+  const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(ctx);
+  const message = ctx.request.query["message"]?.toString();
+  const email = ctx.request.query["email"]?.toString();
+
+  ctx.status = 200;
+  ctx.body = views.renderString(
+    React.createElement(Login, {
+      title: "IGUHealth",
+      logo: "/public/img/logo.svg",
+      email,
+      messages: message ? [message] : [],
+      action: loginRoute,
+      signupURL,
+      forgotPasswordURL,
+    }),
+  );
+};
