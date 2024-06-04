@@ -16,7 +16,7 @@ export type ManagementRouteHandler = Parameters<
 >[2];
 
 /**
- * Management api for creating tenants and managing tenant owners.
+ * OIDC Router
  */
 export async function createOIDCRouter<
   C extends Koa.DefaultContext & KoaContext.OIDC & KoaContext.FHIRServices,

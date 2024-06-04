@@ -19,7 +19,7 @@ import {
   authenticateClientCredentials,
   createClientCredentialToken,
   getClientCredentials,
-} from "../../client_credentials_verification.js";
+} from "../client_credentials_verification.js";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;

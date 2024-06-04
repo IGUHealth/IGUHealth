@@ -21,7 +21,7 @@ import {
   authenticateClientCredentials,
   createClientCredentialToken,
   getBasicHeaderCredentials,
-} from "./client_credentials_verification.js";
+} from "./oidc/client_credentials_verification.js";
 
 async function createLocalJWTSecret(
   AUTH_LOCAL_CERTIFICATION_LOCATION: string | undefined,

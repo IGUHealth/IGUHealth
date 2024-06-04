@@ -4,6 +4,6 @@
  * If none redirect to signup page.
  */
 
-import { ManagementRouteHandler } from "../oidc/index.js";
+import { ManagementRouteHandler } from "../../oidc/index.js";
 
-const loginGet = (): ManagementRouteHandler => async (ctx) => {};
+const loginGET = (): ManagementRouteHandler => async (ctx) => {};
