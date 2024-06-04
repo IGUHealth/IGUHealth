@@ -29,7 +29,7 @@ import {
 import { AuthorizationCodeManagement } from "../authN/db/code/interface.js";
 import { UserManagement } from "../authN/db/users/interface.js";
 import { User } from "../authN/db/users/types.js";
-import { ManagementRouteHandler } from "../authN/oidc/index.js";
+import { OIDCRouteHandler } from "../authN/oidc/index.js";
 import { sessionLogin, sessionLogout } from "../authN/oidc/session/index.js";
 import type { IOCache } from "../cache/interface.js";
 import { EmailProvider } from "../email/interface.js";
@@ -43,7 +43,7 @@ export namespace KoaContext {
       sessionLogin: typeof sessionLogin;
       sessionLogout: typeof sessionLogout;
       isAuthenticated: (
-        ctx: Parameters<ManagementRouteHandler>[0],
+        ctx: Parameters<OIDCRouteHandler>[0],
       ) => Promise<boolean>;
 
       user?: User;

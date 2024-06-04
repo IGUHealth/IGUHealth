@@ -12,7 +12,7 @@ import {
 
 import * as views from "../../../../views/index.js";
 import { OIDC_ROUTES } from "../../constants.js";
-import type { ManagementRouteHandler } from "../../index.js";
+import type { OIDCRouteHandler } from "../../index.js";
 import { sendPasswordResetEmail } from "../../utilities/sendPasswordResetEmail.js";
 
 function validatePasswordStrength(
@@ -27,7 +27,7 @@ function validatePasswordStrength(
   return undefined;
 }
 
-export function passwordResetGET(): ManagementRouteHandler {
+export function passwordResetGET(): OIDCRouteHandler {
   return async (ctx) => {
     const queryCode = ctx.request.query.code;
     if (typeof queryCode !== "string") {
@@ -73,7 +73,7 @@ export function passwordResetGET(): ManagementRouteHandler {
   };
 }
 
-export function passwordResetPOST(): ManagementRouteHandler {
+export function passwordResetPOST(): OIDCRouteHandler {
   return async (ctx) => {
     const body = ctx.request.body as
       | { code?: string; password?: string; passwordConfirm?: string }
@@ -185,30 +185,29 @@ export function passwordResetPOST(): ManagementRouteHandler {
   };
 }
 
-export const passwordResetInitiateGet =
-  (): ManagementRouteHandler => async (ctx) => {
-    const passwordResetInitiatePostURL = ctx.router.url(
-      OIDC_ROUTES.PASSWORD_RESET_INITIATE_POST,
-      { tenant: ctx.oidc.tenant },
-    );
-    if (typeof passwordResetInitiatePostURL !== "string")
-      throw passwordResetInitiatePostURL;
+export const passwordResetInitiateGet = (): OIDCRouteHandler => async (ctx) => {
+  const passwordResetInitiatePostURL = ctx.router.url(
+    OIDC_ROUTES.PASSWORD_RESET_INITIATE_POST,
+    { tenant: ctx.oidc.tenant },
+  );
+  if (typeof passwordResetInitiatePostURL !== "string")
+    throw passwordResetInitiatePostURL;
 
-    ctx.status = 200;
-    ctx.body = views.renderString(
-      React.createElement(EmailForm, {
-        logo: "/public/img/logo.svg",
-        header: "Password Reset",
-        action: passwordResetInitiatePostURL,
-      }),
-    );
-  };
+  ctx.status = 200;
+  ctx.body = views.renderString(
+    React.createElement(EmailForm, {
+      logo: "/public/img/logo.svg",
+      header: "Password Reset",
+      action: passwordResetInitiatePostURL,
+    }),
+  );
+};
 
 /**
  * Initiates password reset process by sending an email to the user with a link to reset their password.
  * @param ctx Koa fhir context
  */
-export function passwordResetInitiatePOST(): ManagementRouteHandler {
+export function passwordResetInitiatePOST(): OIDCRouteHandler {
   return async (ctx) => {
     const body = ctx.request.body as
       | { email?: string; password?: string }

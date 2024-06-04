@@ -5,11 +5,11 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import * as views from "../../../../views/index.js";
 import { OIDC_ROUTES } from "../../constants.js";
-import type { ManagementRouteHandler } from "../../index.js";
+import type { OIDCRouteHandler } from "../../index.js";
 import { sendAlertEmail } from "../../utilities/sendAlertEmail.js";
 import { sendPasswordResetEmail } from "../../utilities/sendPasswordResetEmail.js";
 
-export const signupGET = (): ManagementRouteHandler => async (ctx) => {
+export const signupGET = (): OIDCRouteHandler => async (ctx) => {
   const signupURL = ctx.router.url(OIDC_ROUTES.SIGNUP_POST, {
     tenant: ctx.oidc.tenant,
   });
@@ -25,7 +25,7 @@ export const signupGET = (): ManagementRouteHandler => async (ctx) => {
   );
 };
 
-export const signupPOST = (): ManagementRouteHandler => async (ctx) => {
+export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
   if (!ctx.oidc.allowSignup) {
     throw new OperationError(
       outcomeError("forbidden", "Signup is not allowed."),

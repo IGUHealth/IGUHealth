@@ -5,14 +5,14 @@ import { KoaContext } from "../../fhir-api/types.js";
 import { ROUTES } from "./constants.js";
 import * as routes from "./routes/index.js";
 
-export type ManagementRouteHandler = Parameters<
-  Awaited<ReturnType<typeof globalAuthRouter>>["all"]
+export type GlobalAuthRouteHandler = Parameters<
+  Awaited<ReturnType<typeof createGlobalAuthRouter>>["all"]
 >[2];
 
 /**
  * Global signup for creating users and directing to tenants.
  */
-export async function globalAuthRouter<
+export async function createGlobalAuthRouter<
   C extends Koa.DefaultContext & KoaContext.FHIRServices,
 >(
   prefix: string,
@@ -28,12 +28,9 @@ export async function globalAuthRouter<
 
   globalAuthRouter.use(...middleware);
 
-  globalAuthRouter.get(
-    ROUTES.SIGNUP,
-    "/signup",
-
-    routes.signupGET(),
-  );
+  globalAuthRouter.get(ROUTES.SIGNUP_GET, "/signup", routes.signupGET());
+  globalAuthRouter.get(ROUTES.LOGIN_GET, "/login", routes.loginGET());
+  globalAuthRouter.post(ROUTES.LOGIN_POST, "/login", routes.loginPOST());
 
   return globalAuthRouter;
 }

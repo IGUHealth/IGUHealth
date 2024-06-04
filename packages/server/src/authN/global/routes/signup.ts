@@ -1,5 +1,5 @@
-import { ManagementRouteHandler } from "../../oidc/index.js";
+import { OIDCRouteHandler } from "../../oidc/index.js";
 
-export const signupGET = (): ManagementRouteHandler => async (ctx) => {};
+export const signupGET = (): OIDCRouteHandler => async (ctx) => {};
 
-export const signupPOST = (): ManagementRouteHandler => async (ctx) => {};
+export const signupPOST = (): OIDCRouteHandler => async (ctx) => {};

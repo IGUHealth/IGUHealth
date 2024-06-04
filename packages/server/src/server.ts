@@ -22,6 +22,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { createCertsIfNoneExists, getJWKS } from "./authN/certifications.js";
+import { createGlobalAuthRouter } from "./authN/global/index.js";
 import {
   allowPublicAccessMiddleware,
   createValidateUserJWTMiddleware,
@@ -243,6 +244,15 @@ export default async function createServer(): Promise<
       unknown
     >,
   ];
+
+  const globalAuth = await createGlobalAuthRouter("/auth", {
+    middleware: [
+      setAllowSignup(process.env.AUTH_ALLOW_GLOBAL_SIGNUP === "true"),
+    ],
+  });
+
+  rootRouter.use(globalAuth.routes());
+  rootRouter.use(globalAuth.allowedMethods());
 
   const tenantRouter = new Router<
     Koa.DefaultState,

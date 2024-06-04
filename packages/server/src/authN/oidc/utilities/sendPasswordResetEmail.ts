@@ -9,7 +9,7 @@ import {
 } from "../../../email/templates/base.js";
 import { User } from "../../db/users/types.js";
 import { OIDC_ROUTES } from "../constants.js";
-import { ManagementRouteHandler } from "../index.js";
+import { OIDCRouteHandler } from "../index.js";
 
 /**
  * Check if a password reset should be sent.
@@ -18,7 +18,7 @@ import { ManagementRouteHandler } from "../index.js";
  * @returns True if password reset should be sent. Based on no existing codes in the last 15 minutes.
  */
 export async function shouldSendPasswordReset(
-  ctx: Parameters<ManagementRouteHandler>[0],
+  ctx: Parameters<OIDCRouteHandler>[0],
   user: User,
 ): Promise<boolean> {
   // Prevent code creation if one already exists in the last 15 minutes.
@@ -31,7 +31,7 @@ export async function shouldSendPasswordReset(
 }
 
 export async function sendPasswordResetEmail(
-  ctx: Parameters<ManagementRouteHandler>[0],
+  ctx: Parameters<OIDCRouteHandler>[0],
   user: User,
 ) {
   if (!ctx.FHIRContext.emailProvider) {

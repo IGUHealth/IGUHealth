@@ -7,9 +7,9 @@ import * as views from "../../../../views/index.js";
 import { User } from "../../../db/users/types.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import * as adminApp from "../../hardcodedClients/admin-app.js";
-import type { ManagementRouteHandler } from "../../index.js";
+import type { OIDCRouteHandler } from "../../index.js";
 
-function getRoutes(ctx: Parameters<ManagementRouteHandler>[0]) {
+function getRoutes(ctx: Parameters<OIDCRouteHandler>[0]) {
   const loginRoute = ctx.router.url(
     OIDC_ROUTES.LOGIN_POST,
     {
@@ -46,7 +46,7 @@ export function encodeState(state: LoginState): string {
 }
 
 export function decodeState(
-  ctx: Parameters<ManagementRouteHandler>[0],
+  ctx: Parameters<OIDCRouteHandler>[0],
   stateString: string | undefined,
 ): LoginState | undefined {
   if (!stateString) return undefined;
@@ -87,7 +87,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 async function validateCredentials(
-  ctx: Parameters<ManagementRouteHandler>[0],
+  ctx: Parameters<OIDCRouteHandler>[0],
 ): Promise<User | undefined> {
   const body = ctx.request.body;
   if (isRecord(body)) {
@@ -108,7 +108,7 @@ async function validateCredentials(
   return undefined;
 }
 
-export const loginPOST = (): ManagementRouteHandler => async (ctx, next) => {
+export const loginPOST = (): OIDCRouteHandler => async (ctx, next) => {
   const loginURL = ctx.router.url(OIDC_ROUTES.LOGIN_GET, {
     tenant: ctx.oidc.tenant,
   });
@@ -167,7 +167,7 @@ export const loginPOST = (): ManagementRouteHandler => async (ctx, next) => {
   await next();
 };
 
-export const loginGET = (): ManagementRouteHandler => async (ctx) => {
+export const loginGET = (): OIDCRouteHandler => async (ctx) => {
   const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(ctx);
   const message = ctx.request.query["message"]?.toString();
   const email = ctx.request.query["email"]?.toString();

@@ -3,7 +3,7 @@ import { user_scope } from "zapatos/schema";
 import { IGUHEALTH_ISSUER } from "@iguhealth/jwt";
 
 import { JWKS_GET, OIDC_ROUTES } from "../constants.js";
-import { ManagementRouteHandler } from "../index.js";
+import { OIDCRouteHandler } from "../index.js";
 
 type OIDCDiscoveryDocument = {
   /**
@@ -148,7 +148,7 @@ type OIDCDiscoveryDocument = {
   op_tos_uri?: string;
 };
 
-export function discoveryGet(): ManagementRouteHandler {
+export function discoveryGet(): OIDCRouteHandler {
   return async (ctx, next) => {
     const OIDC_DISCOVERY_DOCUMENT: OIDCDiscoveryDocument = {
       issuer: IGUHEALTH_ISSUER,

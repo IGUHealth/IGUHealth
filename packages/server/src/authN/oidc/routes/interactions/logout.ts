@@ -1,7 +1,7 @@
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { OIDC_ROUTES } from "../../constants.js";
-import { ManagementRouteHandler } from "../../index.js";
+import { OIDCRouteHandler } from "../../index.js";
 import { isInvalidRedirectUrl } from "../../utilities/checkRedirectUrl.js";
 
 /**
@@ -9,7 +9,7 @@ import { isInvalidRedirectUrl } from "../../utilities/checkRedirectUrl.js";
  * Used in both GET and POST requests.
  * @param ctx FHIR Server Context
  */
-export const logout = (): ManagementRouteHandler => async (ctx) => {
+export const logout = (): OIDCRouteHandler => async (ctx) => {
   await ctx.oidc.sessionLogout(ctx);
 
   const client = ctx.oidc.client;

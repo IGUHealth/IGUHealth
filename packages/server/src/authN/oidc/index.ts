@@ -11,7 +11,7 @@ import { createValidateInjectOIDCParameters } from "../oidc/middleware/parameter
 import * as routes from "./routes/index.js";
 import { sessionAuthorizationMiddleware } from "./session/middleware.js";
 
-export type ManagementRouteHandler = Parameters<
+export type OIDCRouteHandler = Parameters<
   Awaited<ReturnType<typeof createOIDCRouter>>["all"]
 >[2];
 

@@ -1,4 +1,4 @@
-import { ManagementRouteHandler } from "../index.js";
+import { OIDCRouteHandler } from "../index.js";
 import {
   deserializeUser,
   isAuthenticated,
@@ -6,7 +6,7 @@ import {
   sessionLogout,
 } from "./index.js";
 
-export function sessionAuthorizationMiddleware(): ManagementRouteHandler {
+export function sessionAuthorizationMiddleware(): OIDCRouteHandler {
   return async (ctx, next) => {
     ctx.oidc.isAuthenticated = isAuthenticated;
 
