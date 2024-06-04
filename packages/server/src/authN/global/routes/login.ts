@@ -78,7 +78,7 @@ export const loginPOST = (): GlobalAuthRouteHandler => async (ctx) => {
       // Means user has completed signup process.
       {
         email,
-        // email_verified: true,
+        email_verified: true,
         scope: "tenant",
       },
       { columns: ["tenant", "role"] },
@@ -94,7 +94,7 @@ export const loginPOST = (): GlobalAuthRouteHandler => async (ctx) => {
 
   ctx.body = views.renderString(
     React.createElement(TenantSelect, {
-      title: "Select Tenant",
+      title: "IGUHealth",
       logo: "/public/img/logo.svg",
       email,
       tenants: tenantClaims,

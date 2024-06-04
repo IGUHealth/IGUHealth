@@ -50,10 +50,13 @@ export const TenantSelect = ({
 }: TenantSelectProps) => {
   return (
     <Container logo={logo} title={title}>
-      <ul className="spacing-y-2">
+      <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+        Choose a tenant
+      </h1>
+      <ul className="space-y-2">
         {tenants.map((t) => {
           return (
-            <li>
+            <li key={t.id}>
               <a
                 href={generateTenantURL(email, t.id)}
                 className="p-2 flex cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-800"
