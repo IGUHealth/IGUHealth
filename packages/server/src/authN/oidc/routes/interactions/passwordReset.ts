@@ -1,4 +1,5 @@
 import React from "react";
+import validator from "validator";
 import * as db from "zapatos/db";
 
 import { EmailForm, Feedback, PasswordResetForm } from "@iguhealth/components";
@@ -13,7 +14,6 @@ import * as views from "../../../../views/index.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import type { ManagementRouteHandler } from "../../index.js";
 import { sendPasswordResetEmail } from "../../utilities/sendPasswordResetEmail.js";
-import { validateEmail } from "../../utilities/validation.js";
 
 function validatePasswordStrength(
   password: string,
@@ -222,7 +222,9 @@ export function passwordResetInitiatePOST(): ManagementRouteHandler {
         ),
       );
 
-    if (!validateEmail(body?.email)) {
+    const email = body?.email ?? "";
+
+    if (!validator.isEmail(email)) {
       throw new OperationError(
         outcomeError("invalid", "Must have a valid email address."),
       );
@@ -231,7 +233,7 @@ export function passwordResetInitiatePOST(): ManagementRouteHandler {
     const usersWithEmail = await ctx.oidc.userManagement.search(
       ctx.FHIRContext,
       {
-        email: body.email,
+        email: email,
       },
     );
 
@@ -245,7 +247,7 @@ export function passwordResetInitiatePOST(): ManagementRouteHandler {
     // Pretend email sent to avoid phishing for email addresses.
     if (!user) {
       ctx.FHIRContext.logger.warn(
-        `not sending password reset for non existing user: '${body.email}' `,
+        `not sending password reset for non existing user: '${email}' `,
       );
       ctx.status = 200;
       ctx.body = views.renderString(
