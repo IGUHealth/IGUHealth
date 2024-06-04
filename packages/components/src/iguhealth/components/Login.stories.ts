@@ -28,3 +28,12 @@ export const WithErrors: Story = {
     errors: ["Invalid email or password"],
   },
 };
+
+export const JustEmail: Story = {
+  args: {
+    action: "#",
+    hidePassword: true,
+    signupURL: "singup",
+    forgotPasswordURL: "forgot",
+  },
+};
