@@ -248,7 +248,7 @@ export function passwordResetInitiatePOST(
     const user = usersWithEmail[0];
     // Pretend email sent to avoid phishing for email addresses.
     if (!user) {
-      ctx.logger.warn(
+      ctx.FHIRContext.logger.warn(
         `not sending password reset for non existing user: '${body.email}' `,
       );
       ctx.status = 200;

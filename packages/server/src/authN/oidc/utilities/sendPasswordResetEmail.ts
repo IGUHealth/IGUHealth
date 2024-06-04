@@ -37,14 +37,14 @@ export async function sendPasswordResetEmail(
   user: User,
 ) {
   if (!ctx.FHIRContext.emailProvider) {
-    ctx.logger.warn(
+    ctx.FHIRContext.logger.warn(
       "Email provider not set. Cannot send password reset email.",
     );
     return;
   }
 
   if (!(await shouldSendPasswordReset(ctx, user))) {
-    ctx.logger.warn(
+    ctx.FHIRContext.logger.warn(
       `Password reset already sent in the last 15 minutes. For user '${user.id}' with email '${user.email}'`,
     );
     return;

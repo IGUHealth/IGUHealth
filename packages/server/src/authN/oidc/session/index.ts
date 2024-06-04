@@ -21,7 +21,7 @@ export async function deserializeUser(
     }
     return user;
   } catch (err) {
-    ctx.logger.error(err);
+    ctx.FHIRContext.logger.error(err);
     return undefined;
   }
 }
