@@ -18,13 +18,9 @@ import { ROUTES } from "../constants.js";
 import { GlobalAuthRouteHandler } from "../index.js";
 
 function getRoutes(ctx: Parameters<GlobalAuthRouteHandler>[0]) {
-  const loginRoute = ctx.router.url(
-    ROUTES.LOGIN_POST,
-    {
-      tenant: ctx.oidc.tenant,
-    },
-    { query: { state: ctx.query.state } },
-  );
+  const loginRoute = ctx.router.url(ROUTES.LOGIN_POST, {
+    tenant: ctx.oidc.tenant,
+  });
   if (loginRoute instanceof Error) throw loginRoute;
 
   const signupURL = ctx.router.url(ROUTES.SIGNUP_GET, {
