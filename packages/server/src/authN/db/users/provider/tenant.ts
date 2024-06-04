@@ -65,21 +65,9 @@ export default class TenantUserManagement implements UserManagement {
           { id: user.tenant as TenantId, userRole: user.role as s.user_role },
         ];
       }
-      case "global": {
-        const tenantUsers: User[] = await db
-          .select(
-            "users",
-            { root_user: user.id, tenant: this.tenant },
-            { columns: USER_QUERY_COLS },
-          )
-          .run(ctx.db);
-
-        return tenantUsers.map((tenantUser) => ({
-          id: tenantUser.id as TenantId,
-          userRole: tenantUser.role as s.user_role,
-        }));
-      }
     }
+
+    return [];
   }
 
   async login<T extends keyof LoginParameters>(
@@ -102,18 +90,6 @@ export default class TenantUserManagement implements UserManagement {
         { columns: USER_QUERY_COLS },
       )
       .run(ctx.db)) as User | undefined;
-
-    if (tenantUser?.root_user) {
-      const globalUser: User | undefined = (await db
-        .selectOne(
-          "users",
-          { id: tenantUser.root_user, scope: "global" },
-          { columns: USER_QUERY_COLS },
-        )
-        .run(ctx.db)) as User | undefined;
-
-      return { ...globalUser, ...tenantUser };
-    }
 
     return tenantUser;
   }
