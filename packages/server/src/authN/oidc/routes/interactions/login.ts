@@ -179,12 +179,14 @@ export const loginGET =
   async (ctx) => {
     const { signupURL, loginRoute, forgotPasswordURL } = getRoutes(ctx, scope);
     const message = ctx.request.query["message"]?.toString();
+    const email = ctx.request.query["email"]?.toString();
 
     ctx.status = 200;
     ctx.body = views.renderString(
       React.createElement(Login, {
         title: "IGUHealth",
         logo: "/public/img/logo.svg",
+        email,
         messages: message ? [message] : [],
         action: loginRoute,
         signupURL,
