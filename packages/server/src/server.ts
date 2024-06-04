@@ -291,8 +291,6 @@ export default async function createServer(): Promise<
     KoaContext.FHIR<Koa.DefaultContext>
   >("/oidc", {
     authMiddlewares,
-    scope: "tenant",
-    // Inject global management.
     middleware: [
       injectTenantManagement(),
       setAllowSignup(process.env.AUTH_ALLOW_TENANT_SIGNUP === "true"),
