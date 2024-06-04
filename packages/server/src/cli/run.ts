@@ -52,7 +52,7 @@ const both: Parameters<Command["action"]>[0] = async (options) => {
   };
 };
 
-const migrate: Parameters<Command["action"]>[0] = async (options) => {
+const migrate: Parameters<Command["action"]>[0] = async () => {
   // @ts-ignore
   dbmigrate = DBMigrate.getInstance(true, {
     cmdOptions: {
