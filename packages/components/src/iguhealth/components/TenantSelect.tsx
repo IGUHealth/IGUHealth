@@ -1,14 +1,16 @@
 import classNames from "classnames";
 import React from "react";
 
-import { TenantClaim } from "@iguhealth/jwt";
+import { TenantClaim, TenantId } from "@iguhealth/jwt";
 
 import { Container } from "./Container";
 
 export interface TenantSelectProps {
+  email: string;
+  tenants: TenantClaim<string>[];
+  generateTenantURL: (email: string, tenantId: TenantId) => string;
   title?: string;
   logo?: string;
-  tenants: TenantClaim<string>[];
 }
 
 function generateTailwindColorFromValue(value: string) {
@@ -39,14 +41,23 @@ export const InitialDisplay = ({ value }: { value: string }) => {
   );
 };
 
-export const TenantSelect = ({ tenants, title, logo }: TenantSelectProps) => {
+export const TenantSelect = ({
+  email,
+  tenants,
+  title,
+  logo,
+  generateTenantURL,
+}: TenantSelectProps) => {
   return (
     <Container logo={logo} title={title}>
       <ul className="spacing-y-2">
         {tenants.map((t) => {
           return (
             <li>
-              <a className="p-2 flex cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-800">
+              <a
+                href={generateTenantURL(email, t.id)}
+                className="p-2 flex cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-800"
+              >
                 <div className="flex items-center space-x-4 rtl:space-x-reverse">
                   <div className="flex-shrink-0">
                     <InitialDisplay value={t.id as string} />

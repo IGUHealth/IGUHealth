@@ -23,6 +23,10 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     title: "IGUHealth",
+    email: "test@iguhealth.app",
+    generateTenantURL(email, tenantId) {
+      return `/${tenantId}?email=${email}`;
+    },
     tenants: [
       { id: "my-tenant" as TenantId, userRole: "member" },
       { id: "pen-health" as TenantId, userRole: "member" },
