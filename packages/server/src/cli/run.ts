@@ -23,13 +23,13 @@ type Services = {
 
 let runningServices: Services = {};
 
-function terminateServices(services: Services) {
-  if (services.server) services.server.close();
-  if (services.worker) services.worker();
+export function terminateServices() {
+  if (runningServices.server) runningServices.server.close();
+  if (runningServices.worker) runningServices.worker();
 }
 
 const server: Parameters<Command["action"]>[0] = async (options) => {
-  terminateServices(runningServices);
+  terminateServices();
   runningServices = {
     ...runningServices,
     server: await runServer(options.port),
@@ -37,7 +37,7 @@ const server: Parameters<Command["action"]>[0] = async (options) => {
 };
 
 const worker: Parameters<Command["action"]>[0] = async () => {
-  terminateServices(runningServices);
+  terminateServices();
   runningServices = {
     ...runningServices,
     worker: await createWorker(),
@@ -45,7 +45,7 @@ const worker: Parameters<Command["action"]>[0] = async () => {
 };
 
 const both: Parameters<Command["action"]>[0] = async (options) => {
-  terminateServices(runningServices);
+  terminateServices();
   runningServices = {
     server: await runServer(options.port),
     worker: await createWorker(),
@@ -77,9 +77,3 @@ export function runCommands(command: Command) {
     .action(both);
   command.command("migrate").description("Run SQL migrations.").action(migrate);
 }
-
-process.on("SIGINT", function () {
-  console.log("Exiting...");
-  terminateServices(runningServices);
-  process.exit();
-});
