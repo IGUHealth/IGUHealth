@@ -23,6 +23,9 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     title: "IGUHealth",
-    tenants: [{ id: "my-tenant" as TenantId, userRole: "member" }],
+    tenants: [
+      { id: "my-tenant" as TenantId, userRole: "member" },
+      { id: "pen-health" as TenantId, userRole: "member" },
+    ],
   },
 };
