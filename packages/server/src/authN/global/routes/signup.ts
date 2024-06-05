@@ -1,4 +1,3 @@
-import { customAlphabet } from "nanoid";
 import React from "react";
 import validator from "validator";
 import * as db from "zapatos/db";
@@ -10,17 +9,14 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { asSystemCTX } from "../../../fhir-api/types.js";
 import * as views from "../../../views/index.js";
-import TenantAuthorizationCodeManagement from "../../db/code/provider/tenant.js";
+import TenantAuthorizationCodeManagement from "../../db/code/index.js";
+import { TenantManagement } from "../../db/tenant.js";
 import { USER_QUERY_COLS, User } from "../../db/users/types.js";
 import { userToMembership } from "../../db/users/utilities.js";
 import { sendAlertEmail } from "../../oidc/utilities/sendAlertEmail.js";
 import { sendPasswordResetEmail } from "../../oidc/utilities/sendPasswordResetEmail.js";
 import { ROUTES } from "../constants.js";
 import type { GlobalAuthRouteHandler } from "../index.js";
-
-// https://www.rfc-editor.org/rfc/rfc1035#section-2.3.3
-// Do not allow uppercase characters.
-const generateTenantId = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz");
 
 async function alreadyOwner(pg: db.Queryable, email: string): Promise<boolean> {
   const userOwner = await db
@@ -82,17 +78,15 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
   const [user, tenant] = await db.serializable(
     ctx.FHIRContext.db,
     async (txnClient) => {
-      const tenantId = generateTenantId();
+      const tenantManagement = new TenantManagement();
 
-      const tenant = await db
-        .insert("tenants", {
-          id: tenantId,
-          tenant: {
-            id: tenantId,
-            name: "Default",
-          },
-        })
-        .run(txnClient);
+      const tenant = await tenantManagement.create(
+        {
+          ...ctx.FHIRContext,
+          db: txnClient,
+        },
+        {},
+      );
 
       const membership = await ctx.FHIRContext.client.create(
         asSystemCTX({

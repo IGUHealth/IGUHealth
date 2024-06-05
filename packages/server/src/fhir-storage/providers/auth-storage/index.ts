@@ -21,7 +21,7 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import TenantUserManagement from "../../../authN/db/users/provider/tenant.js";
+import TenantUserManagement from "../../../authN/db/users/index.js";
 import {
   determineEmailUpdate,
   membershipToUser,

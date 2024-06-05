@@ -1,5 +1,6 @@
 import graphlib from "@dagrejs/graphlib";
 import pg from "pg";
+import * as db from "zapatos/db";
 
 import { Reference, uri } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
@@ -191,8 +192,7 @@ function begin(isolation_level: ISOLATION_LEVEL) {
 export async function transaction<T>(
   isolation_level: ISOLATION_LEVEL,
   ctx: FHIRServerCTX,
-
-  client: pg.PoolClient,
+  client: db.Queryable,
   body: (ctx: FHIRServerCTX) => Promise<T>,
 ): Promise<T> {
   if (ctx.inTransaction) return body(ctx);

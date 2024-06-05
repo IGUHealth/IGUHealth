@@ -4,46 +4,10 @@ import type * as s from "zapatos/schema";
 import { TenantClaim, TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaContext } from "../../../../fhir-api/types.js";
-import { UserManagement } from "../interface.js";
-import { LoginParameters, USER_QUERY_COLS, User } from "../types.js";
-import { determineEmailUpdate } from "../utilities.js";
-
-/**
- * Logins using the tenant user.
- */
-async function tenantLogin<T extends keyof LoginParameters>(
-  ctx: KoaContext.FHIRServices["FHIRContext"],
-  tenant: TenantId,
-  type: T,
-  parameters: LoginParameters[T],
-): Promise<User | undefined> {
-  switch (type) {
-    case "email-password": {
-      const where: s.users.Whereable = {
-        scope: "tenant",
-        tenant: tenant,
-        method: "email-password",
-        email: parameters.email,
-        password: db.sql`${db.self} = crypt(${db.param((parameters as LoginParameters["email-password"]).password)}, ${db.self})`,
-      };
-
-      const user: User[] = await db
-        .select("users", where, { columns: USER_QUERY_COLS })
-        .run(ctx.db);
-
-      // Sanity check should never happen given unique check on email.
-      if (user.length > 1)
-        throw new Error(
-          "Multiple users found with the same email and password",
-        );
-
-      return user[0];
-    }
-    default:
-      return;
-  }
-}
+import { KoaContext } from "../../../fhir-api/types.js";
+import { UserManagement } from "./interface.js";
+import { LoginParameters, USER_QUERY_COLS, User } from "./types.js";
+import { determineEmailUpdate } from "./utilities.js";
 
 export default class TenantUserManagement implements UserManagement {
   private tenant: TenantId;
@@ -75,8 +39,31 @@ export default class TenantUserManagement implements UserManagement {
     type: T,
     parameters: LoginParameters[T],
   ): Promise<User | undefined> {
-    const tenantUser = await tenantLogin(ctx, this.tenant, type, parameters);
-    return tenantUser;
+    switch (type) {
+      case "email-password": {
+        const where: s.users.Whereable = {
+          scope: "tenant",
+          tenant: this.tenant,
+          method: "email-password",
+          email: parameters.email,
+          password: db.sql`${db.self} = crypt(${db.param((parameters as LoginParameters["email-password"]).password)}, ${db.self})`,
+        };
+
+        const user: User[] = await db
+          .select("users", where, { columns: USER_QUERY_COLS })
+          .run(ctx.db);
+
+        // Sanity check should never happen given unique check on email.
+        if (user.length > 1)
+          throw new Error(
+            "Multiple users found with the same email and password",
+          );
+
+        return user[0];
+      }
+      default:
+        return;
+    }
   }
 
   async get(
