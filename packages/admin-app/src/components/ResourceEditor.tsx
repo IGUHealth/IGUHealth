@@ -115,7 +115,7 @@ function ResourceHistory() {
               id: "Author",
               content: "Author",
               selector:
-                "$this.resource.meta.extension.where(url='https://iguhealth.app/author').valueString",
+                "$this.resource.meta.extension.where(url='https://iguhealth.app/author').valueReference.reference",
               selectorType: "fhirpath",
             },
             {
