@@ -157,6 +157,8 @@ function updateUserTableMiddleware<
           );
         }
 
+        membership.emailVerified = false;
+
         try {
           await tenantUserManagement.create(
             context.ctx,
@@ -216,6 +218,11 @@ function updateUserTableMiddleware<
           throw new OperationError(
             outcomeFatal("not-found", "User not found."),
           );
+
+        context.request.body = {
+          ...(context.request.body as Membership),
+          emailVerified: existingUser.email_verified,
+        } as Membership;
 
         const res = await next(context);
         if (!(res.response as R4UpdateResponse)?.body)

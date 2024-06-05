@@ -81,8 +81,6 @@ export const loginPOST = (): GlobalAuthRouteHandler => async (ctx) => {
     )
     .run(ctx.FHIRContext.db);
 
-  console.log(users);
-
   const tenantClaims: TenantClaim<s.user_role>[] = users.map((u) => ({
     id: u.tenant as TenantId,
     userRole: u.role as s.user_role,
