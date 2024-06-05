@@ -105,8 +105,6 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
         }),
       );
 
-      console.log(membership);
-
       const user: User[] = await db
         .select(
           "users",
@@ -114,8 +112,6 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
           { columns: USER_QUERY_COLS },
         )
         .run(txnClient);
-
-      console.log(user);
 
       if (!user[0]) {
         throw new OperationError(outcomeError("not-found", "User not found."));
