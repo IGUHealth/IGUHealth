@@ -86,6 +86,38 @@ export const loginPOST = (): GlobalAuthRouteHandler => async (ctx) => {
     userRole: u.role as s.user_role,
   }));
 
+  if (tenantClaims.length === 0) {
+    const signupURL = ctx.router.url(
+      ROUTES.SIGNUP_GET,
+      {},
+      {
+        query: {
+          email,
+          error:
+            "Tenant not found. Finish Sign up below to create a new tenant.",
+        },
+      },
+    );
+    if (signupURL instanceof Error) throw signupURL;
+
+    ctx.redirect(signupURL);
+    return;
+  }
+
+  // Auto redirect if one tenant.
+  if (tenantClaims.length === 1) {
+    const tenantRoute = ctx.router.url(
+      OIDC_ROUTES.LOGIN_GET,
+      {
+        tenant: tenantClaims[0].id,
+      },
+      { query: { email } },
+    );
+    if (tenantRoute instanceof Error) throw tenantRoute;
+    ctx.redirect(tenantRoute);
+    return;
+  }
+
   ctx.body = views.renderString(
     React.createElement(TenantSelect, {
       title: "IGUHealth",

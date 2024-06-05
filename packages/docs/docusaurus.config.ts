@@ -153,7 +153,6 @@ const config = {
           label: "Reference",
           position: "right",
         },
-
         {
           href: "https://github.com/iguhealth/iguhealth",
           label: "GitHub",

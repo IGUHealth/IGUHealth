@@ -34,9 +34,14 @@ export const signupGET = (): GlobalAuthRouteHandler => async (ctx) => {
   const signupURL = ctx.router.url(ROUTES.SIGNUP_POST);
   if (typeof signupURL !== "string") throw signupURL;
 
+  const email = ctx.request.query?.email ?? "";
+  const errors = ctx.request.query?.error ? ctx.request.query.error : [];
+
   ctx.status = 200;
   ctx.body = views.renderString(
     React.createElement(EmailForm, {
+      email: email.toString(),
+      errors: Array.isArray(errors) ? errors : [errors],
       logo: "/public/img/logo.svg",
       header: "Sign up",
       action: signupURL,
