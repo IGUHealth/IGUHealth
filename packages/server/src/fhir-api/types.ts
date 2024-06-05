@@ -102,7 +102,6 @@ export interface FHIRServerCTX {
   client: FHIRClientAsync<FHIRServerCTX>;
 
   // Services
-
   db: db.Queryable;
   logger: Logger<string>;
   lock: Lock<unknown>;
@@ -110,10 +109,6 @@ export interface FHIRServerCTX {
   terminologyProvider: TerminologyProvider;
   encryptionProvider?: EncryptionProvider;
   emailProvider?: EmailProvider;
-
-  // Contextual Information.
-  // If this is set to true, then the current request is part of a transaction.
-  inTransaction?: boolean;
 
   // Utilities
   resolveTypeToCanonical: (

@@ -1,4 +1,3 @@
-
 import jsonpatch, { Operation } from "fast-json-patch";
 import dayjs from "dayjs";
 import * as db from "zapatos/db";
@@ -27,6 +26,15 @@ import {
   outcomeError,
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
+import {
+  FHIRResponse,
+  R4BHistoryInstanceRequest,
+  R4BSystemHistoryRequest,
+  R4BTypeHistoryRequest,
+  R4HistoryInstanceRequest,
+  R4SystemHistoryRequest,
+  R4TypeHistoryRequest,
+} from "@iguhealth/client/lib/types";
 
 import dataConversion from "../../utilities/search/dataConversion.js";
 import {
@@ -40,19 +48,13 @@ import { asSystemCTX, FHIRServerCTX } from "../../../fhir-api/types.js";
 import { param_types_supported } from "./constants.js";
 import { executeSearchQuery } from "./search/index.js";
 import { ParsedParameter } from "@iguhealth/client/url";
-import { buildTransactionTopologicalGraph } from "../../transactions.js";
-import { validateResource } from "../../../fhir-operation-executors/providers/local/resource_validate.js";
 import {
-  FHIRResponse,
-  R4BHistoryInstanceRequest,
-  R4BSystemHistoryRequest,
-  R4BTypeHistoryRequest,
-  R4HistoryInstanceRequest,
-  R4SystemHistoryRequest,
-  R4TypeHistoryRequest,
-} from "@iguhealth/client/lib/types";
+  buildTransactionTopologicalGraph,
+  FHIRTransaction,
+} from "../../transactions.js";
+import { validateResource } from "../../../fhir-operation-executors/providers/local/resource_validate.js";
 import { createResolverRemoteCanonical } from "../../utilities/canonical.js";
-import { CUSTOM_CLAIMS, TenantId } from "@iguhealth/jwt";
+import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { toDBFHIRVersion } from "../../utilities/version.js";
 import { generateId } from "../../utilities/generateId.js";
 
@@ -89,7 +91,6 @@ async function indexSearchParameter<
   CTX extends FHIRServerCTX,
   Version extends FHIR_VERSION,
 >(
-  client: db.Queryable,
   ctx: CTX,
   fhirVersion: Version,
   parameter: Resource<Version, "SearchParameter">,
@@ -132,7 +133,7 @@ async function indexSearchParameter<
               db.constraint("quantity_idx_pkey"),
               { updateColumns: db.doNothing },
             )
-            .run(client);
+            .run(ctx.db);
           return;
         }
         case R4B: {
@@ -143,7 +144,7 @@ async function indexSearchParameter<
               db.constraint("r4b_quantity_idx_pkey"),
               { updateColumns: db.doNothing },
             )
-            .run(client);
+            .run(ctx.db);
           return;
         }
         default: {
@@ -180,7 +181,7 @@ async function indexSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(client);
+            .run(ctx.db);
           return;
         }
         case R4B: {
@@ -193,7 +194,7 @@ async function indexSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(client);
+            .run(ctx.db);
           return;
         }
         default: {
@@ -266,7 +267,7 @@ async function indexSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(client);
+            .run(ctx.db);
 
           return;
         }
@@ -280,7 +281,7 @@ async function indexSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(client);
+            .run(ctx.db);
 
           return;
         }
@@ -319,7 +320,7 @@ async function indexSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(client);
+            .run(ctx.db);
 
           return;
         }
@@ -333,7 +334,7 @@ async function indexSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(client);
+            .run(ctx.db);
           return;
         }
         default: {
@@ -374,7 +375,7 @@ async function indexSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(client);
+            .run(ctx.db);
 
           return;
         }
@@ -388,7 +389,7 @@ async function indexSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(client);
+            .run(ctx.db);
 
           return;
         }
@@ -436,7 +437,7 @@ async function indexSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(client);
+            .run(ctx.db);
           return;
         }
         case R4B: {
@@ -449,7 +450,7 @@ async function indexSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(client);
+            .run(ctx.db);
           return;
         }
         default: {
@@ -492,7 +493,7 @@ async function indexSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(client);
+            .run(ctx.db);
 
           return;
         }
@@ -506,7 +507,7 @@ async function indexSearchParameter<
                 updateColumns: db.doNothing,
               },
             )
-            .run(client);
+            .run(ctx.db);
 
           return;
         }
@@ -531,8 +532,7 @@ async function indexSearchParameter<
 }
 
 async function removeIndices<Version extends FHIR_VERSION>(
-  client: db.Queryable,
-  _ctx: FHIRServerCTX,
+  ctx: FHIRServerCTX,
   fhirVersion: Version,
   resource: Resource<Version, AllResourceTypes>,
 ) {
@@ -555,14 +555,14 @@ async function removeIndices<Version extends FHIR_VERSION>(
         | s.r4b_quantity_idx.SQL
       >`DELETE FROM ${searchParameterToTableName(fhirVersion, type)} WHERE ${{
         r_id: resource.id,
-      }}`.run(client);
+      }}`.run(ctx.db);
     }),
   );
 }
 
 function resourceIsValidForIndexing<Version extends FHIR_VERSION>(
   fhirVersion: Version,
-  resource: Resource<FHIR_VERSION, AllResourceTypes>,
+  resource: Resource<Version, AllResourceTypes>,
 ): resource is Resource<Version, AllResourceTypes> & {
   id: id;
   meta: { versionId: id };
@@ -581,12 +581,11 @@ async function indexResource<
   CTX extends FHIRServerCTX,
   Version extends FHIR_VERSION,
 >(
-  client: db.Queryable,
   ctx: CTX,
   fhirVersion: Version,
   resource: Resource<Version, AllResourceTypes>,
 ) {
-  await removeIndices(client, ctx, fhirVersion, resource);
+  await removeIndices(ctx, fhirVersion, resource);
   const searchParameters = await getAllParametersForResource(ctx, fhirVersion, [
     resource.resourceType as ResourceType<Version>,
   ]);
@@ -630,7 +629,6 @@ async function indexResource<
         );
       }
       return indexSearchParameter(
-        client,
         ctx,
         fhirVersion,
         searchParameter,
@@ -641,54 +639,44 @@ async function indexResource<
   );
 }
 
-
-
 async function createResource<
   CTX extends FHIRServerCTX,
   Version extends FHIR_VERSION,
 >(
-  client: db.Queryable,
-  initCTX: CTX,
+  ctx: CTX,
   fhirVersion: Version,
   resource: Resource<Version, AllResourceTypes>,
 ): Promise<Resource<Version, AllResourceTypes>> {
-  return db.transaction(
-    client,
-    db.IsolationLevel.ReadCommitted,
-    async (client) => {
-      const ctx = { ...initCTX, db: client };
-      const data: s.resources.Insertable = {
-        tenant: ctx.tenant,
-        fhir_version: toDBFHIRVersion(fhirVersion),
-        request_method: "POST",
-        author_id: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID],
-        author_type: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE],
-        resource: resource as unknown as db.JSONObject,
-      };
-      // the <const> prevents generalization to string[]
-      const resourceCol = <const>["resource"];
-      type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
-      const res = await db.sql<s.resources.SQL, ResourceReturn[]>`
+  return FHIRTransaction(ctx, db.IsolationLevel.ReadCommitted, async (ctx) => {
+    const data: s.resources.Insertable = {
+      tenant: ctx.tenant,
+      fhir_version: toDBFHIRVersion(fhirVersion),
+      request_method: "POST",
+      author_id: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID],
+      author_type: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE],
+      resource: resource as unknown as db.JSONObject,
+    };
+    // the <const> prevents generalization to string[]
+    const resourceCol = <const>["resource"];
+    type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
+    const res = await db.sql<s.resources.SQL, ResourceReturn[]>`
     INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
       data,
     )}) RETURNING ${db.cols(resourceCol)}
-    `.run(client);
+    `.run(ctx.db);
 
-      await indexResource(
-        client,
-        ctx,
-        fhirVersion,
-        res[0].resource as unknown as Resource<Version, AllResourceTypes>,
-      );
-      return res[0].resource as unknown as Resource<Version, AllResourceTypes>;
-    },
-  );
+    await indexResource(
+      ctx,
+      fhirVersion,
+      res[0].resource as unknown as Resource<Version, AllResourceTypes>,
+    );
+    return res[0].resource as unknown as Resource<Version, AllResourceTypes>;
+  });
 }
 
 async function getResource<Version extends FHIR_VERSION>(
-  client: db.Queryable,
+  ctx: FHIRServerCTX,
   fhirVersion: Version,
-  tenant: TenantId,
   resourceType: ResourceType<Version>,
   id: string,
 ): Promise<Resource<Version, AllResourceTypes>> {
@@ -696,7 +684,7 @@ async function getResource<Version extends FHIR_VERSION>(
   type ResourceReturn = s.resources.OnlyCols<typeof latestCols>;
   const getLatestVersionSQLFragment = db.sql<s.resources.SQL, ResourceReturn[]>`
     SELECT ${db.cols(latestCols)} FROM ${"resources"} WHERE ${{
-      tenant: tenant,
+      tenant: ctx.tenant,
       resource_type: resourceType,
       id: id,
       fhir_version: toDBFHIRVersion(fhirVersion),
@@ -705,7 +693,7 @@ async function getResource<Version extends FHIR_VERSION>(
 
   const res = await db.sql<s.resources.SQL, s.resources.Selectable[]>`
   SELECT * FROM (${getLatestVersionSQLFragment}) as t WHERE t.deleted = false
-  `.run(client);
+  `.run(ctx.db);
 
   if (res.length === 0) {
     throw new OperationError(
@@ -789,7 +777,6 @@ async function getHistory<
   CTX extends FHIRServerCTX,
   Version extends FHIR_VERSION,
 >(
-  client: db.Queryable,
   ctx: CTX,
   fhirVersion: Version,
   filters: s.resources.Whereable,
@@ -811,7 +798,7 @@ async function getHistory<
     ...processHistoryParameters(parameters),
   }} ORDER BY ${"version_id"} DESC LIMIT ${db.param(limit)}`;
 
-  const history = await historySQL.run(client);
+  const history = await historySQL.run(ctx.db);
 
   const resourceHistory = history.map((row) => ({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -827,136 +814,51 @@ async function getHistory<
   return resourceHistory;
 }
 
-async function patchResource<
-  CTX extends FHIRServerCTX,
-  Version extends FHIR_VERSION,
->(
-  client: db.Queryable,
-  initCTX: CTX,
+async function patchResource<Version extends FHIR_VERSION>(
+  ctx: FHIRServerCTX,
   fhirVersion: Version,
   resourceType: ResourceType<Version>,
   id: string,
   patches: Operation[],
 ): Promise<Resource<Version, AllResourceTypes>> {
-  return db.transaction(
-    client,
-    db.IsolationLevel.Serializable,
-    async (client) => {
-      const ctx = { ...initCTX, db: client };
-      const existingResource = await getResource(
-        client,
-        fhirVersion,
-        ctx.tenant,
-        resourceType,
-        id,
-      );
-      try {
-        const newResource = jsonpatch.applyPatch(existingResource, patches)
-          .newDocument as Resource<Version, AllResourceTypes>;
+  return FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
+    const existingResource = await getResource(
+      ctx,
+      fhirVersion,
+      resourceType,
+      id,
+    );
 
-        const outcome = await validateResource(ctx, fhirVersion, resourceType, {
-          resource: newResource,
-        });
+    try {
+      const newResource = jsonpatch.applyPatch(existingResource, patches)
+        .newDocument as Resource<Version, AllResourceTypes>;
 
-        // Need to revaluate post application of patch to ensure that the resource is still valid.
-        if (
-          outcome.issue.filter(
-            (i) => i.severity === "error" || i.severity === "fatal",
-          ).length > 0
-        ) {
-          throw new OperationError(outcome);
-        }
+      const outcome = await validateResource(ctx, fhirVersion, resourceType, {
+        resource: newResource,
+      });
 
-        if (newResource.id !== existingResource.id) {
-          newResource.id = existingResource.id;
-        }
-
-        const data: s.resources.Insertable = {
-          tenant: ctx.tenant,
-          fhir_version: toDBFHIRVersion(fhirVersion),
-          request_method: "PATCH",
-          author_id: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID],
-          author_type: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE],
-          resource: newResource as unknown as db.JSONObject,
-          prev_version_id: parseInt(existingResource.meta?.versionId as string),
-          patches: JSON.stringify(patches),
-        };
-
-        const resourceCol = <const>["resource"];
-        type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
-        const res = await db.sql<s.resources.SQL, ResourceReturn[]>`
-        INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
-          data,
-        )}) RETURNING ${db.cols(resourceCol)}`.run(client);
-
-        const patchedResource = res[0].resource as unknown as Resource<
-          Version,
-          AllResourceTypes
-        >;
-
-        await indexResource(client, ctx, fhirVersion, patchedResource);
-        return patchedResource;
-      } catch (e) {
-        if (isOperationError(e)) throw e;
-        else {
-          ctx.logger.error(e);
-          throw new OperationError(
-            outcomeError(
-              "structure",
-              `Patch could not be applied to the given resource '${resourceType}/${id}'`,
-            ),
-          );
-        }
+      // Need to revaluate post application of patch to ensure that the resource is still valid.
+      if (
+        outcome.issue.filter(
+          (i) => i.severity === "error" || i.severity === "fatal",
+        ).length > 0
+      ) {
+        throw new OperationError(outcome);
       }
-    },
-  );
-}
 
-async function updateResource<
-  CTX extends FHIRServerCTX,
-  Version extends FHIR_VERSION,
->(
-  client: db.Queryable,
-  initCTX: CTX,
-  fhirVersion: Version,
-  resource: Resource<Version, AllResourceTypes>,
-): Promise<Resource<Version, AllResourceTypes>> {
-  return db.transaction(
-    client,
-    db.IsolationLevel.Serializable,
-    async (client) => {
-      const ctx = { ...initCTX, db: client };
-      if (!resource.id)
-        throw new OperationError(
-          outcomeError("invalid", "Resource id not found on resource"),
-        );
-
-      const existingResource = await getResource(
-        client,
-        fhirVersion,
-        ctx.tenant,
-        resource.resourceType as ResourceType<Version>,
-        resource.id,
-      );
-
-      if (!existingResource)
-        throw new OperationError(
-          outcomeError(
-            "not-found",
-            `'${resource.resourceType}' with id '${resource.id}' was not found`,
-          ),
-        );
+      if (newResource.id !== existingResource.id) {
+        newResource.id = existingResource.id;
+      }
 
       const data: s.resources.Insertable = {
         tenant: ctx.tenant,
         fhir_version: toDBFHIRVersion(fhirVersion),
-        request_method: "PUT",
+        request_method: "PATCH",
         author_id: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID],
         author_type: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE],
-        resource: resource as unknown as db.JSONObject,
+        resource: newResource as unknown as db.JSONObject,
         prev_version_id: parseInt(existingResource.meta?.versionId as string),
-        // [TODO] probably uneccessary to insert this and can instead derive in case of syncing.
-        patches: JSON.stringify([{ op: "replace", path: "", value: resource }]),
+        patches: JSON.stringify(patches),
       };
 
       const resourceCol = <const>["resource"];
@@ -964,74 +866,130 @@ async function updateResource<
       const res = await db.sql<s.resources.SQL, ResourceReturn[]>`
         INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
           data,
-        )}) RETURNING ${db.cols(resourceCol)}`.run(client);
+        )}) RETURNING ${db.cols(resourceCol)}`.run(ctx.db);
 
-      const updatedResource = res[0].resource as unknown as Resource<
+      const patchedResource = res[0].resource as unknown as Resource<
         Version,
         AllResourceTypes
       >;
 
-      await indexResource(client, ctx, fhirVersion, updatedResource);
-      
-      return updatedResource;
-    },
-  );
+      await indexResource(ctx, fhirVersion, patchedResource);
+      return patchedResource;
+    } catch (e) {
+      if (isOperationError(e)) throw e;
+      else {
+        ctx.logger.error(e);
+        throw new OperationError(
+          outcomeError(
+            "structure",
+            `Patch could not be applied to the given resource '${resourceType}/${id}'`,
+          ),
+        );
+      }
+    }
+  });
+}
+
+async function updateResource<
+  CTX extends FHIRServerCTX,
+  Version extends FHIR_VERSION,
+>(
+  ctx: CTX,
+  fhirVersion: Version,
+  resource: Resource<Version, AllResourceTypes>,
+): Promise<Resource<Version, AllResourceTypes>> {
+  return FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
+    if (!resource.id)
+      throw new OperationError(
+        outcomeError("invalid", "Resource id not found on resource"),
+      );
+
+    const existingResource = await getResource(
+      ctx,
+      fhirVersion,
+      resource.resourceType as ResourceType<Version>,
+      resource.id,
+    );
+
+    if (!existingResource)
+      throw new OperationError(
+        outcomeError(
+          "not-found",
+          `'${resource.resourceType}' with id '${resource.id}' was not found`,
+        ),
+      );
+
+    const data: s.resources.Insertable = {
+      tenant: ctx.tenant,
+      fhir_version: toDBFHIRVersion(fhirVersion),
+      request_method: "PUT",
+      author_id: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID],
+      author_type: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE],
+      resource: resource as unknown as db.JSONObject,
+      prev_version_id: parseInt(existingResource.meta?.versionId as string),
+      // [TODO] probably uneccessary to insert this and can instead derive in case of syncing.
+      patches: JSON.stringify([{ op: "replace", path: "", value: resource }]),
+    };
+
+    const resourceCol = <const>["resource"];
+    type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
+    const res = await db.sql<s.resources.SQL, ResourceReturn[]>`
+        INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
+          data,
+        )}) RETURNING ${db.cols(resourceCol)}`.run(ctx.db);
+
+    const updatedResource = res[0].resource as unknown as Resource<
+      Version,
+      AllResourceTypes
+    >;
+
+    await indexResource(ctx, fhirVersion, updatedResource);
+
+    return updatedResource;
+  });
 }
 
 async function deleteResource<
   CTX extends FHIRServerCTX,
   Version extends FHIR_VERSION,
 >(
-  client: db.Queryable,
-  initCTX: CTX,
+  ctx: CTX,
   fhirVersion: Version,
   resourceType: ResourceType<Version>,
   id: string,
 ) {
-  return db.transaction(
-    client,
-    db.IsolationLevel.RepeatableRead,
-    async (client) => {
-      const ctx = { ...initCTX, db: client };
-
-      const resource = await getResource(
-        client,
-        fhirVersion,
-        ctx.tenant,
-        resourceType,
-        id,
+  return FHIRTransaction(ctx, db.IsolationLevel.RepeatableRead, async (ctx) => {
+    const resource = await getResource(ctx, fhirVersion, resourceType, id);
+    if (!resource)
+      throw new OperationError(
+        outcomeError(
+          "not-found",
+          `'${resourceType}' with id '${id}' was not found`,
+        ),
       );
-      if (!resource)
-        throw new OperationError(
-          outcomeError(
-            "not-found",
-            `'${resourceType}' with id '${id}' was not found`,
-          ),
-        );
 
-      const data: s.resources.Insertable = {
-        tenant: ctx.tenant,
-        fhir_version: toDBFHIRVersion(fhirVersion),
-        request_method: "DELETE",
-        author_id: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID],
-        author_type: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE],
-        resource: resource as unknown as db.JSONObject,
-        prev_version_id: parseInt(resource.meta?.versionId as string),
-        deleted: true,
-      };
+    const data: s.resources.Insertable = {
+      tenant: ctx.tenant,
+      fhir_version: toDBFHIRVersion(fhirVersion),
+      request_method: "DELETE",
+      author_id: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID],
+      author_type: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE],
+      resource: resource as unknown as db.JSONObject,
+      prev_version_id: parseInt(resource.meta?.versionId as string),
+      deleted: true,
+    };
 
-      const resourceCol = <const>["resource"];
-      type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
+    const resourceCol = <const>["resource"];
+    type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
 
-      const deleteResource = await db.sql<s.resources.SQL, ResourceReturn[]>`
+    const deleteResource = await db.sql<s.resources.SQL, ResourceReturn[]>`
       INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
         data,
       )}) RETURNING ${db.cols(resourceCol)}`;
 
-      await deleteResource.run(client);
-      await removeIndices(client, ctx, fhirVersion, resource);
-    },
-  );
+    await deleteResource.run(ctx.db);
+    await removeIndices(ctx, fhirVersion, resource);
+  });
 }
 
 function createPostgresMiddleware<
@@ -1045,9 +1003,8 @@ function createPostgresMiddleware<
       switch (context.request.type) {
         case "read-request": {
           const resource = await getResource(
-            context.ctx.db,
+            context.ctx,
             context.request.fhirVersion,
-            context.ctx.tenant,
             context.request.resourceType,
             context.request.id,
           );
@@ -1110,7 +1067,6 @@ function createPostgresMiddleware<
         }
         case "create-request": {
           const savedResource = await createResource(
-            context.ctx.db,
             context.ctx,
             context.request.fhirVersion,
             {
@@ -1138,7 +1094,6 @@ function createPostgresMiddleware<
 
         case "patch-request": {
           const savedResource = await patchResource(
-            context.ctx.db,
             context.ctx,
             context.request.fhirVersion,
             context.request.resourceType,
@@ -1162,7 +1117,6 @@ function createPostgresMiddleware<
         }
         case "update-request": {
           const savedResource = await updateResource(
-            context.ctx.db,
             context.ctx,
             context.request.fhirVersion,
             // Set the id for the request body to ensure that the resource is updated correctly.
@@ -1189,7 +1143,6 @@ function createPostgresMiddleware<
         }
         case "delete-request": {
           await deleteResource(
-            context.ctx.db,
             context.ctx,
             context.request.fhirVersion,
             context.request.resourceType,
@@ -1212,7 +1165,6 @@ function createPostgresMiddleware<
 
         case "history-request": {
           const history = await getHistory(
-            context.ctx.db,
             context.ctx,
             context.request.fhirVersion,
             historyLevelFilter(context.request),
@@ -1296,11 +1248,10 @@ function createPostgresMiddleware<
             ...new Array((transactionBundle.entry || []).length),
           ];
 
-          return db.transaction(
-            context.ctx.db,
+          return FHIRTransaction(
+            context.ctx,
             db.IsolationLevel.RepeatableRead,
-            async (client) => {
-              const ctx = { ...context.ctx, db: client };
+            async (ctx) => {
               for (const index of order) {
                 const entry = transactionBundle.entry?.[parseInt(index)];
                 if (!entry)

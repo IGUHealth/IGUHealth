@@ -143,68 +143,12 @@ async function retryFailedTransactions<ReturnType>(
   );
 }
 
-/*
- ** Postgres transactional isolation levels.
- */
-export enum ISOLATION_LEVEL {
-  /*
-   ** Dirty Read:            Not possible
-   ** Nonrepeatable Read:	 Possible
-   ** Phantom Read:          Possible
-   ** Serialization Anomaly: Possible
-   */
-  ReadCommitted = 0,
-  /*
-   ** Dirty Read:            Not possible
-   ** Nonrepeatable Read:	 Not possible
-   ** Phantom Read:          Allowed, but not in PG
-   ** Serialization Anomaly: Possible
-   */
-  RepeatableRead = 1,
-  /*
-   ** Dirty Read:            Not possible
-   ** Nonrepeatable Read:	 Not possible
-   ** Phantom Read:          Not possible
-   ** Serialization Anomaly: Not possible
-   */
-  Serializable = 2,
-}
-
-function begin(isolation_level: ISOLATION_LEVEL) {
-  switch (isolation_level) {
-    case ISOLATION_LEVEL.ReadCommitted: {
-      return "BEGIN";
-    }
-    case ISOLATION_LEVEL.RepeatableRead: {
-      return "BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ";
-    }
-    case ISOLATION_LEVEL.Serializable: {
-      return "BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE";
-    }
-    default: {
-      throw new OperationError(
-        outcomeFatal("exception", `Invalid isolation level ${isolation_level}`),
-      );
-    }
-  }
-}
-
-export async function transaction<T>(
-  isolation_level: ISOLATION_LEVEL,
-  ctx: FHIRServerCTX,
-  client: db.Queryable,
-  body: (ctx: FHIRServerCTX) => Promise<T>,
-): Promise<T> {
-  if (ctx.inTransaction) return body(ctx);
-  return retryFailedTransactions(ctx, 5, async () => {
-    try {
-      await client.query(begin(isolation_level));
-      const returnV = await body({ ...ctx, inTransaction: true });
-      await client.query("END");
-      return returnV;
-    } catch (e) {
-      await client.query("ROLLBACK");
-      throw e;
-    }
+export function FHIRTransaction<CTX extends Pick<FHIRServerCTX, "db">, R>(
+  ctx: CTX,
+  isolationLevel: db.IsolationLevel,
+  transaction: (ctx: CTX) => R,
+): Promise<R> {
+  return db.transaction(ctx.db, isolationLevel, async (client) => {
+    return transaction({ ...ctx, db: client });
   });
 }

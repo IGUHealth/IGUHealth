@@ -5,6 +5,7 @@ import { TenantClaim, TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaContext } from "../../../fhir-api/types.js";
+import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
 import { UserManagement } from "./interface.js";
 import { LoginParameters, USER_QUERY_COLS, User } from "./types.js";
 import { determineEmailUpdate } from "./utilities.js";
@@ -105,13 +106,13 @@ export default class TenantUserManagement implements UserManagement {
     id: string,
     update: s.users.Updatable,
   ): Promise<User> {
-    return db.serializable(ctx.db, async (txnClient) => {
+    return FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
       const where: s.users.Whereable = {
         scope: "tenant",
         tenant: this.tenant,
         id,
       };
-      const currentUser = await db.selectOne("users", where).run(txnClient);
+      const currentUser = await db.selectOne("users", where).run(ctx.db);
       if (!currentUser)
         throw new OperationError(outcomeError("not-found", "User not found."));
 
@@ -126,7 +127,7 @@ export default class TenantUserManagement implements UserManagement {
           },
           where,
         )
-        .run(txnClient);
+        .run(ctx.db);
       return updatedUser[0];
     });
   }
@@ -134,13 +135,13 @@ export default class TenantUserManagement implements UserManagement {
     ctx: KoaContext.FHIRServices["FHIRContext"],
     where_: s.users.Whereable,
   ): Promise<void> {
-    return db.serializable(ctx.db, async (txnClient) => {
+    await FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
       const where: s.users.Whereable = {
         ...where_,
         tenant: this.tenant,
         scope: "tenant",
       };
-      const user = await db.select("users", where).run(txnClient);
+      const user = await db.select("users", where).run(ctx.db);
       if (user.length > 1) {
         throw new OperationError(
           outcomeError(
@@ -150,7 +151,7 @@ export default class TenantUserManagement implements UserManagement {
         );
       }
 
-      await db.deletes("users", where).run(txnClient);
+      await db.deletes("users", where).run(ctx.db);
     });
   }
 }
