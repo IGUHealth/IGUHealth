@@ -48,6 +48,7 @@ import logAuditEvent, {
 } from "../fhir-logging/auditEvents.js";
 import { resolveOperationDefinition } from "../fhir-operation-executors/utilities.js";
 import { fitsSearchCriteria } from "../fhir-storage/providers/memory/search.js";
+import { createPGPool } from "../fhir-storage/providers/postgres/pg.js";
 import { createResolverRemoteCanonical } from "../fhir-storage/utilities/canonical.js";
 import {
   SearchParameterResource,
@@ -510,15 +511,7 @@ async function createWorker(
   fhirVersion: FHIR_VERSION = R4,
   loopInterval = 500,
 ) {
-  // Using a pool directly because need to query up tenants.
-  const pool = new pg.Pool({
-    user: process.env["FHIR_DATABASE_USERNAME"],
-    password: process.env["FHIR_DATABASE_PASSWORD"],
-    host: process.env["FHIR_DATABASE_HOST"],
-    database: process.env["FHIR_DATABASE_NAME"],
-    port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
-  });
-
+  const pool = createPGPool();
   const fhirServices = await createFHIRServices(pool);
   const fhirServer = await createFHIRAPI();
   let isRunning = true;

@@ -46,6 +46,7 @@ import {
   fhirResponseToHTTPResponse,
   httpRequestToFHIRRequest,
 } from "./fhir-http/index.js";
+import { createPGPool } from "./fhir-storage/providers/postgres/pg.js";
 import * as MonitoringSentry from "./monitoring/sentry.js";
 import { LIB_VERSION } from "./version.js";
 import * as views from "./views/index.js";
@@ -183,22 +184,7 @@ export default async function createServer(): Promise<
     );
   }
 
-  const pool = new pg.Pool({
-    user: process.env["FHIR_DATABASE_USERNAME"],
-    password: process.env["FHIR_DATABASE_PASSWORD"],
-    host: process.env["FHIR_DATABASE_HOST"],
-    database: process.env["FHIR_DATABASE_NAME"],
-    port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
-    ssl:
-      process.env["FHIR_DATABASE_SSL"] === "true"
-        ? {
-            // Self signed certificate CA is not used.
-            rejectUnauthorized: false,
-            host: process.env["FHIR_DATABASE_HOST"],
-            port: parseInt(process.env["FHIR_DATABASE_PORT"] || "5432"),
-          }
-        : false,
-  });
+  const pool = createPGPool();
 
   const app = new Koa();
   app.keys = process.env.SESSION_COOKIE_SECRETS.split(":").map((s) => s.trim());
