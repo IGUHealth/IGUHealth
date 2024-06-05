@@ -3,14 +3,18 @@ import validator from "validator";
 import * as db from "zapatos/db";
 
 import { EmailForm, Feedback, PasswordResetForm } from "@iguhealth/components";
-import { OperationOutcome } from "@iguhealth/fhir-types/r4/types";
+import { OperationOutcome, id } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
+import { TenantId } from "@iguhealth/jwt";
 import {
   OperationError,
   outcomeError,
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
+import { asSystemCTX } from "../../../../fhir-api/types.js";
 import * as views from "../../../../views/index.js";
+import { userToMembership } from "../../../db/users/utilities.js";
 import { OIDC_ROUTES } from "../../constants.js";
 import type { OIDCRouteHandler } from "../../index.js";
 import { sendPasswordResetEmail } from "../../utilities/sendPasswordResetEmail.js";
@@ -158,7 +162,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
     }
 
     await db.serializable(ctx.FHIRContext.db, async (txnClient) => {
-      await ctx.oidc.userManagement.update(
+      const update = await ctx.oidc.userManagement.update(
         { ...ctx.FHIRContext, db: txnClient },
         authorizationCode.user_id,
         {
@@ -166,6 +170,19 @@ export function passwordResetPOST(): OIDCRouteHandler {
           email_verified: true,
         },
       );
+
+      await ctx.FHIRContext.client.update(
+        asSystemCTX({
+          ...ctx.FHIRContext,
+          db: txnClient,
+          tenant: update.tenant as TenantId,
+        }),
+        R4,
+        "Membership",
+        update.fhir_user_id as id,
+        userToMembership(update),
+      );
+
       await ctx.oidc.codeManagement.delete(
         { ...ctx.FHIRContext, db: txnClient },
         { code: body.code },

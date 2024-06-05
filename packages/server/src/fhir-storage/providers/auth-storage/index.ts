@@ -22,7 +22,10 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import TenantUserManagement from "../../../authN/db/users/provider/tenant.js";
-import { membershipToUser } from "../../../authN/db/users/utilities.js";
+import {
+  determineEmailUpdate,
+  membershipToUser,
+} from "../../../authN/db/users/utilities.js";
 import { FHIRServerCTX } from "../../../fhir-api/types.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 import validateResourceTypesAllowedMiddleware from "../../middleware/validate-resourcetype.js";
@@ -203,6 +206,7 @@ function updateUserTableMiddleware<
           "Membership",
           id,
         );
+
         if (!existingMembership?.meta?.versionId)
           throw new OperationError(
             outcomeFatal("not-found", "Membership not found."),
@@ -221,7 +225,10 @@ function updateUserTableMiddleware<
 
         context.request.body = {
           ...(context.request.body as Membership),
-          emailVerified: existingUser.email_verified,
+          emailVerified: determineEmailUpdate(
+            membershipToUser(context.request?.body as Membership),
+            existingUser,
+          ),
         } as Membership;
 
         const res = await next(context);
