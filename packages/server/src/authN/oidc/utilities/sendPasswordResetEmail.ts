@@ -1,3 +1,4 @@
+import Router from "@koa/router";
 import React from "react";
 import { renderToString } from "react-dom/server";
 
@@ -7,9 +8,10 @@ import {
   EmailTemplateImage,
   EmailTemplateText,
 } from "../../../email/templates/base.js";
+import { FHIRServerCTX } from "../../../fhir-api/types.js";
+import { AuthorizationCodeManagement } from "../../db/code/interface.js";
 import { User } from "../../db/users/types.js";
 import { OIDC_ROUTES } from "../constants.js";
-import { OIDCRouteHandler } from "../index.js";
 
 /**
  * Check if a password reset should be sent.
@@ -17,12 +19,13 @@ import { OIDCRouteHandler } from "../index.js";
  * @param user User to check if password reset should be sent.
  * @returns True if password reset should be sent. Based on no existing codes in the last 15 minutes.
  */
-export async function shouldSendPasswordReset(
-  ctx: Parameters<OIDCRouteHandler>[0],
+async function shouldSendPasswordReset(
+  ctx: Omit<FHIRServerCTX, "user" | "tenant">,
+  codeManagement: AuthorizationCodeManagement,
   user: User,
 ): Promise<boolean> {
   // Prevent code creation if one already exists in the last 15 minutes.
-  const existingCodes = await ctx.oidc.codeManagement.search(ctx.FHIRContext, {
+  const existingCodes = await codeManagement.search(ctx, {
     user_id: user.id,
     type: "password_reset",
   });
@@ -31,32 +34,35 @@ export async function shouldSendPasswordReset(
 }
 
 export async function sendPasswordResetEmail(
-  ctx: Parameters<OIDCRouteHandler>[0],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  router: Router<any, any>,
+  ctx: Omit<FHIRServerCTX, "user">,
+  codeManagement: AuthorizationCodeManagement,
   user: User,
 ) {
-  if (!ctx.FHIRContext.emailProvider) {
-    ctx.FHIRContext.logger.warn(
+  if (!ctx.emailProvider) {
+    ctx.logger.warn(
       "Email provider not set. Cannot send password reset email.",
     );
     return;
   }
 
-  if (!(await shouldSendPasswordReset(ctx, user))) {
-    ctx.FHIRContext.logger.warn(
+  if (!(await shouldSendPasswordReset(ctx, codeManagement, user))) {
+    ctx.logger.warn(
       `Password reset already sent in the last 15 minutes. For user '${user.id}' with email '${user.email}'`,
     );
     return;
   }
 
-  const code = await ctx.oidc.codeManagement.create(ctx.FHIRContext, {
+  const code = await codeManagement.create(ctx, {
     type: "password_reset",
     user_id: user.id,
     expires_in: "15 minutes",
   });
 
-  const emailVerificationURL = ctx.router.url(
+  const emailVerificationURL = router.url(
     OIDC_ROUTES.PASSWORD_RESET_VERIFY_GET,
-    { tenant: ctx.oidc.tenant },
+    { tenant: ctx.tenant },
     { query: { code: code.code } },
   );
 
@@ -81,7 +87,7 @@ export async function sendPasswordResetEmail(
     }),
   );
 
-  await ctx.FHIRContext.emailProvider.sendEmail({
+  await ctx.emailProvider.sendEmail({
     from: process.env.EMAIL_FROM as string,
     to: user.email,
     subject: "IGUHealth Email Verification",

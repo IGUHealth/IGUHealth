@@ -29,6 +29,7 @@ export async function createGlobalAuthRouter<
   globalAuthRouter.use(...middleware);
 
   globalAuthRouter.get(ROUTES.SIGNUP_GET, "/signup", routes.signupGET());
+  globalAuthRouter.post(ROUTES.SIGNUP_POST, "/signup", routes.signupPOST());
   globalAuthRouter.get(ROUTES.LOGIN_GET, "/login", routes.loginGET());
   globalAuthRouter.post(ROUTES.LOGIN_POST, "/login", routes.loginPOST());
 

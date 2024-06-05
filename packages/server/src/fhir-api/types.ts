@@ -47,7 +47,7 @@ export namespace KoaContext {
       ) => Promise<boolean>;
 
       user?: User;
-      tenant?: TenantId;
+      tenant: TenantId;
       userManagement: UserManagement;
       codeManagement: AuthorizationCodeManagement;
       client?: ClientApplication;

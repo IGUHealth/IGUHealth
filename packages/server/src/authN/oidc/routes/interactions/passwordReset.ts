@@ -287,7 +287,12 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
       );
     }
 
-    await sendPasswordResetEmail(ctx, user);
+    await sendPasswordResetEmail(
+      ctx.router,
+      { ...ctx.FHIRContext, tenant: ctx.oidc.tenant },
+      ctx.oidc.codeManagement,
+      user,
+    );
 
     ctx.status = 200;
     ctx.body = views.renderString(

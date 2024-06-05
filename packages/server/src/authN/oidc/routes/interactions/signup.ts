@@ -48,7 +48,12 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
     })
   )[0];
   if (existingUser !== undefined) {
-    await sendPasswordResetEmail(ctx, existingUser);
+    await sendPasswordResetEmail(
+      ctx.router,
+      { ...ctx.FHIRContext, tenant: ctx.oidc.tenant },
+      ctx.oidc.codeManagement,
+      existingUser,
+    );
   } else {
     const user = await ctx.oidc.userManagement.create(ctx.FHIRContext, {
       email,
@@ -60,7 +65,12 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
       "New User",
       `A new user with email '${user.email}' has signed up.`,
     );
-    await sendPasswordResetEmail(ctx, user);
+    await sendPasswordResetEmail(
+      ctx.router,
+      { ...ctx.FHIRContext, tenant: ctx.oidc.tenant },
+      ctx.oidc.codeManagement,
+      user,
+    );
   }
 
   ctx.status = 200;

@@ -15,7 +15,7 @@ import { TenantClaim, TenantId } from "@iguhealth/jwt";
 import * as views from "../../../views/index.js";
 import { OIDC_ROUTES } from "../../oidc/constants.js";
 import { ROUTES } from "../constants.js";
-import { GlobalAuthRouteHandler } from "../index.js";
+import type { GlobalAuthRouteHandler } from "../index.js";
 
 function getRoutes(ctx: Parameters<GlobalAuthRouteHandler>[0]) {
   const loginRoute = ctx.router.url(ROUTES.LOGIN_POST, {
