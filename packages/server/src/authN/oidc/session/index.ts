@@ -1,16 +1,17 @@
 /**
  * Session utilities for managing user session login.
  */
+
 import { LoginParameters, User } from "../../db/users/types.js";
 import { USER_SESSION_KEY } from "../constants.js";
-import { ManagementRouteHandler } from "../index.js";
+import { OIDCRouteHandler } from "../index.js";
 
 export function serializeUser(user: User): string {
   return user.id;
 }
 
 export async function deserializeUser(
-  ctx: Parameters<ManagementRouteHandler>[0],
+  ctx: Parameters<OIDCRouteHandler>[0],
 ): Promise<User | undefined> {
   try {
     const id = ctx.session?.[USER_SESSION_KEY];
@@ -27,7 +28,7 @@ export async function deserializeUser(
 }
 
 export async function isAuthenticated(
-  ctx: Parameters<ManagementRouteHandler>[0],
+  ctx: Parameters<OIDCRouteHandler>[0],
 ): Promise<boolean> {
   return ctx.oidc.user !== undefined;
 }
@@ -38,7 +39,7 @@ export async function isAuthenticated(
  * @returns True if the user is logged in. False otherwise.
  */
 export async function sessionLogin<Method extends keyof LoginParameters>(
-  ctx: Parameters<ManagementRouteHandler>[0],
+  ctx: Parameters<OIDCRouteHandler>[0],
   method: Method,
   credentials: LoginParameters[Method],
 ): Promise<User | undefined> {
@@ -66,7 +67,7 @@ export async function sessionLogin<Method extends keyof LoginParameters>(
  * Logout the current user.
  * @param ctx Koa context
  */
-export function sessionLogout(ctx: Parameters<ManagementRouteHandler>[0]) {
+export function sessionLogout(ctx: Parameters<OIDCRouteHandler>[0]) {
   if (!ctx.session) {
     return;
   }

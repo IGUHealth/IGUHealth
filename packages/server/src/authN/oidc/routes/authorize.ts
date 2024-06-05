@@ -1,9 +1,7 @@
-import { user_scope } from "zapatos/schema";
-
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { OIDC_ROUTES } from "../constants.js";
-import { ManagementRouteHandler } from "../index.js";
+import { OIDCRouteHandler } from "../index.js";
 import { isInvalidRedirectUrl } from "../utilities/checkRedirectUrl.js";
 import { encodeState } from "./interactions/login.js";
 
@@ -29,7 +27,7 @@ import { encodeState } from "./interactions/login.js";
          to the client.  The parameter SHOULD be used for preventing
          cross-site request forgery as described in Section 10.12.
  */
-export function authorizeGET(scope: user_scope): ManagementRouteHandler {
+export function authorizeGET(): OIDCRouteHandler {
   return async (ctx, next) => {
     if (await ctx.oidc.isAuthenticated(ctx)) {
       const redirectUrl = ctx.request.query.redirect_uri?.toString();
@@ -61,7 +59,7 @@ export function authorizeGET(scope: user_scope): ManagementRouteHandler {
 
       ctx.redirect(
         ctx.router.url(
-          OIDC_ROUTES(scope).LOGIN_GET,
+          OIDC_ROUTES.LOGIN_GET,
           {
             tenant: ctx.oidc.tenant,
           },

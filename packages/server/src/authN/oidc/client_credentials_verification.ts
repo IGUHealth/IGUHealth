@@ -12,7 +12,7 @@ import {
   createToken,
 } from "@iguhealth/jwt";
 
-import { getSigningKey } from "./certifications.js";
+import { getSigningKey } from "../certifications.js";
 
 export type ClientCredentials = { client_id: string; client_secret: string };
 

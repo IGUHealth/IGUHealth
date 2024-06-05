@@ -3,7 +3,7 @@ import * as Koa from "koa";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaContext } from "../../../fhir-api/types.js";
-import { getClientId } from "../../client_credentials_verification.js";
+import { getClientId } from "../client_credentials_verification.js";
 
 type Parameters = KoaContext.OIDC["oidc"]["parameters"];
 type ParameterKey = keyof Parameters;

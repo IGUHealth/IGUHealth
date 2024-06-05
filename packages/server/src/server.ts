@@ -22,6 +22,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { createCertsIfNoneExists, getJWKS } from "./authN/certifications.js";
+import { createGlobalAuthRouter } from "./authN/global/index.js";
 import {
   allowPublicAccessMiddleware,
   createValidateUserJWTMiddleware,
@@ -30,10 +31,7 @@ import {
 import { JWKS_GET } from "./authN/oidc/constants.js";
 import { createOIDCRouter } from "./authN/oidc/index.js";
 import { setAllowSignup } from "./authN/oidc/middleware/allow_signup.js";
-import {
-  injectGlobalManagement,
-  injectTenantManagement,
-} from "./authN/oidc/middleware/inject_management.js";
+import { injectTenantManagement } from "./authN/oidc/middleware/inject_management.js";
 import { verifyAndAssociateUserFHIRContext } from "./authZ/middleware/tenantAccess.js";
 import loadEnv from "./env.js";
 import {
@@ -247,18 +245,14 @@ export default async function createServer(): Promise<
     >,
   ];
 
-  const managementRouter = await createOIDCRouter("/oidc", {
-    authMiddlewares,
-    scope: "global",
-    // Inject global management.
+  const globalAuth = await createGlobalAuthRouter("/auth", {
     middleware: [
-      injectGlobalManagement(),
       setAllowSignup(process.env.AUTH_ALLOW_GLOBAL_SIGNUP === "true"),
     ],
   });
 
-  rootRouter.use(managementRouter.routes());
-  rootRouter.use(managementRouter.allowedMethods());
+  rootRouter.use(globalAuth.routes());
+  rootRouter.use(globalAuth.allowedMethods());
 
   const tenantRouter = new Router<
     Koa.DefaultState,
@@ -307,8 +301,6 @@ export default async function createServer(): Promise<
     KoaContext.FHIR<Koa.DefaultContext>
   >("/oidc", {
     authMiddlewares,
-    scope: "tenant",
-    // Inject global management.
     middleware: [
       injectTenantManagement(),
       setAllowSignup(process.env.AUTH_ALLOW_TENANT_SIGNUP === "true"),

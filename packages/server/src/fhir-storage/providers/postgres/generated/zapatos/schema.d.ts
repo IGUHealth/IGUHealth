@@ -6340,12 +6340,6 @@ declare module 'zapatos/schema' {
       */
       role: user_role | null;
       /**
-      * **users.root_user**
-      * - `uuid` in database
-      * - Nullable, no default
-      */
-      root_user: string | null;
-      /**
       * **users.scope**
       * - `user_scope` in database
       * - `NOT NULL`, default: `'global'::user_scope`
@@ -6443,12 +6437,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       role: user_role | null;
-      /**
-      * **users.root_user**
-      * - `uuid` in database
-      * - Nullable, no default
-      */
-      root_user: string | null;
       /**
       * **users.scope**
       * - `user_scope` in database
@@ -6548,12 +6536,6 @@ declare module 'zapatos/schema' {
       */
       role?: user_role | db.Parameter<user_role> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, user_role | db.Parameter<user_role> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **users.root_user**
-      * - `uuid` in database
-      * - Nullable, no default
-      */
-      root_user?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **users.scope**
       * - `user_scope` in database
       * - `NOT NULL`, default: `'global'::user_scope`
@@ -6652,12 +6634,6 @@ declare module 'zapatos/schema' {
       */
       role?: user_role | db.Parameter<user_role> | null | db.DefaultType | db.SQLFragment;
       /**
-      * **users.root_user**
-      * - `uuid` in database
-      * - Nullable, no default
-      */
-      root_user?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
-      /**
       * **users.scope**
       * - `user_scope` in database
       * - `NOT NULL`, default: `'global'::user_scope`
@@ -6755,12 +6731,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       role?: user_role | db.Parameter<user_role> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, user_role | db.Parameter<user_role> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **users.root_user**
-      * - `uuid` in database
-      * - Nullable, no default
-      */
-      root_user?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **users.scope**
       * - `user_scope` in database

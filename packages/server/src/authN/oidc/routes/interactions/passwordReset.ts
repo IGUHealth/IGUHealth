@@ -1,20 +1,23 @@
 import React from "react";
+import validator from "validator";
 import * as db from "zapatos/db";
-import { user_scope } from "zapatos/schema";
 
 import { EmailForm, Feedback, PasswordResetForm } from "@iguhealth/components";
-import { OperationOutcome } from "@iguhealth/fhir-types/r4/types";
+import { OperationOutcome, id } from "@iguhealth/fhir-types/r4/types";
+import { R4 } from "@iguhealth/fhir-types/versions";
+import { TenantId } from "@iguhealth/jwt";
 import {
   OperationError,
   outcomeError,
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
+import { asSystemCTX } from "../../../../fhir-api/types.js";
 import * as views from "../../../../views/index.js";
+import { userToMembership } from "../../../db/users/utilities.js";
 import { OIDC_ROUTES } from "../../constants.js";
-import type { ManagementRouteHandler } from "../../index.js";
+import type { OIDCRouteHandler } from "../../index.js";
 import { sendPasswordResetEmail } from "../../utilities/sendPasswordResetEmail.js";
-import { validateEmail } from "../../utilities/validation.js";
 
 function validatePasswordStrength(
   password: string,
@@ -28,7 +31,7 @@ function validatePasswordStrength(
   return undefined;
 }
 
-export function passwordResetGET(scope: user_scope): ManagementRouteHandler {
+export function passwordResetGET(): OIDCRouteHandler {
   return async (ctx) => {
     const queryCode = ctx.request.query.code;
     if (typeof queryCode !== "string") {
@@ -56,7 +59,7 @@ export function passwordResetGET(scope: user_scope): ManagementRouteHandler {
     }
 
     const passwordResetPostUrl = ctx.router.url(
-      OIDC_ROUTES(scope).PASSWORD_RESET_VERIFY_POST,
+      OIDC_ROUTES.PASSWORD_RESET_VERIFY_POST,
       { tenant: ctx.oidc.tenant },
     );
     if (passwordResetPostUrl instanceof Error) throw passwordResetPostUrl;
@@ -74,7 +77,7 @@ export function passwordResetGET(scope: user_scope): ManagementRouteHandler {
   };
 }
 
-export function passwordResetPOST(scope: user_scope): ManagementRouteHandler {
+export function passwordResetPOST(): OIDCRouteHandler {
   return async (ctx) => {
     const body = ctx.request.body as
       | { code?: string; password?: string; passwordConfirm?: string }
@@ -84,7 +87,7 @@ export function passwordResetPOST(scope: user_scope): ManagementRouteHandler {
       throw new OperationError(outcomeError("invalid", "Code not found."));
     }
     const passwordResetPostUrl = ctx.router.url(
-      OIDC_ROUTES(scope).PASSWORD_RESET_VERIFY_POST,
+      OIDC_ROUTES.PASSWORD_RESET_VERIFY_POST,
       { tenant: ctx.oidc.tenant },
     );
     if (passwordResetPostUrl instanceof Error) throw passwordResetPostUrl;
@@ -159,7 +162,7 @@ export function passwordResetPOST(scope: user_scope): ManagementRouteHandler {
     }
 
     await db.serializable(ctx.FHIRContext.db, async (txnClient) => {
-      await ctx.oidc.userManagement.update(
+      const update = await ctx.oidc.userManagement.update(
         { ...ctx.FHIRContext, db: txnClient },
         authorizationCode.user_id,
         {
@@ -167,6 +170,19 @@ export function passwordResetPOST(scope: user_scope): ManagementRouteHandler {
           email_verified: true,
         },
       );
+
+      await ctx.FHIRContext.client.update(
+        asSystemCTX({
+          ...ctx.FHIRContext,
+          db: txnClient,
+          tenant: update.tenant as TenantId,
+        }),
+        R4,
+        "Membership",
+        update.fhir_user_id as id,
+        userToMembership(update),
+      );
+
       await ctx.oidc.codeManagement.delete(
         { ...ctx.FHIRContext, db: txnClient },
         { code: body.code },
@@ -174,7 +190,7 @@ export function passwordResetPOST(scope: user_scope): ManagementRouteHandler {
     });
 
     const loginRoute = ctx.router.url(
-      OIDC_ROUTES(scope).LOGIN_GET,
+      OIDC_ROUTES.LOGIN_GET,
       {
         tenant: ctx.oidc.tenant,
       },
@@ -186,33 +202,29 @@ export function passwordResetPOST(scope: user_scope): ManagementRouteHandler {
   };
 }
 
-export const passwordResetInitiateGet =
-  (scope: user_scope): ManagementRouteHandler =>
-  async (ctx) => {
-    const passwordResetInitiatePostURL = ctx.router.url(
-      OIDC_ROUTES(scope).PASSWORD_RESET_INITIATE_POST,
-      { tenant: ctx.oidc.tenant },
-    );
-    if (typeof passwordResetInitiatePostURL !== "string")
-      throw passwordResetInitiatePostURL;
+export const passwordResetInitiateGet = (): OIDCRouteHandler => async (ctx) => {
+  const passwordResetInitiatePostURL = ctx.router.url(
+    OIDC_ROUTES.PASSWORD_RESET_INITIATE_POST,
+    { tenant: ctx.oidc.tenant },
+  );
+  if (typeof passwordResetInitiatePostURL !== "string")
+    throw passwordResetInitiatePostURL;
 
-    ctx.status = 200;
-    ctx.body = views.renderString(
-      React.createElement(EmailForm, {
-        logo: "/public/img/logo.svg",
-        header: "Password Reset",
-        action: passwordResetInitiatePostURL,
-      }),
-    );
-  };
+  ctx.status = 200;
+  ctx.body = views.renderString(
+    React.createElement(EmailForm, {
+      logo: "/public/img/logo.svg",
+      header: "Password Reset",
+      action: passwordResetInitiatePostURL,
+    }),
+  );
+};
 
 /**
  * Initiates password reset process by sending an email to the user with a link to reset their password.
  * @param ctx Koa fhir context
  */
-export function passwordResetInitiatePOST(
-  scope: user_scope,
-): ManagementRouteHandler {
+export function passwordResetInitiatePOST(): OIDCRouteHandler {
   return async (ctx) => {
     const body = ctx.request.body as
       | { email?: string; password?: string }
@@ -226,7 +238,9 @@ export function passwordResetInitiatePOST(
         ),
       );
 
-    if (!validateEmail(body?.email)) {
+    const email = body?.email ?? "";
+
+    if (!validator.isEmail(email)) {
       throw new OperationError(
         outcomeError("invalid", "Must have a valid email address."),
       );
@@ -235,7 +249,7 @@ export function passwordResetInitiatePOST(
     const usersWithEmail = await ctx.oidc.userManagement.search(
       ctx.FHIRContext,
       {
-        email: body.email,
+        email: email,
       },
     );
 
@@ -249,7 +263,7 @@ export function passwordResetInitiatePOST(
     // Pretend email sent to avoid phishing for email addresses.
     if (!user) {
       ctx.FHIRContext.logger.warn(
-        `not sending password reset for non existing user: '${body.email}' `,
+        `not sending password reset for non existing user: '${email}' `,
       );
       ctx.status = 200;
       ctx.body = views.renderString(
@@ -273,7 +287,12 @@ export function passwordResetInitiatePOST(
       );
     }
 
-    await sendPasswordResetEmail(scope, ctx, user);
+    await sendPasswordResetEmail(
+      ctx.router,
+      { ...ctx.FHIRContext, tenant: ctx.oidc.tenant },
+      ctx.oidc.codeManagement,
+      user,
+    );
 
     ctx.status = 200;
     ctx.body = views.renderString(

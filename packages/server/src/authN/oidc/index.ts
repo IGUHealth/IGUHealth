@@ -1,6 +1,5 @@
 import Router from "@koa/router";
 import type * as Koa from "koa";
-import * as s from "zapatos/schema";
 
 import { KoaContext } from "../../fhir-api/types.js";
 import { OIDC_ROUTES } from "../oidc/constants.js";
@@ -12,12 +11,12 @@ import { createValidateInjectOIDCParameters } from "../oidc/middleware/parameter
 import * as routes from "./routes/index.js";
 import { sessionAuthorizationMiddleware } from "./session/middleware.js";
 
-export type ManagementRouteHandler = Parameters<
+export type OIDCRouteHandler = Parameters<
   Awaited<ReturnType<typeof createOIDCRouter>>["all"]
 >[2];
 
 /**
- * Management api for creating tenants and managing tenant owners.
+ * OIDC Router
  */
 export async function createOIDCRouter<
   C extends Koa.DefaultContext & KoaContext.OIDC & KoaContext.FHIRServices,
@@ -25,11 +24,9 @@ export async function createOIDCRouter<
   prefix: string,
   {
     authMiddlewares,
-    scope,
     middleware,
   }: {
     authMiddlewares: Koa.Middleware<unknown, unknown, unknown>[];
-    scope: s.user_scope;
     middleware: Router.Middleware<Koa.DefaultState, C>[];
   },
 ) {
@@ -41,74 +38,74 @@ export async function createOIDCRouter<
   managementRouter.use(sessionAuthorizationMiddleware());
 
   managementRouter.get(
-    OIDC_ROUTES(scope).OIDC_DISCOVERY,
+    OIDC_ROUTES.OIDC_DISCOVERY,
     "/.well-known/openid-configuration",
-    routes.discoveryGet(scope),
+    routes.discoveryGet(),
   );
 
   managementRouter.get(
-    OIDC_ROUTES(scope).USER_INFO,
+    OIDC_ROUTES.USER_INFO,
     "/auth/userinfo",
     ...authMiddlewares,
-    routes.userInfo(scope),
+    routes.userInfo(),
   );
 
   managementRouter.post(
-    OIDC_ROUTES(scope).USER_INFO,
+    OIDC_ROUTES.USER_INFO,
     "/auth/userinfo",
     ...authMiddlewares,
-    routes.userInfo(scope),
+    routes.userInfo(),
   );
 
   managementRouter.get(
-    OIDC_ROUTES(scope).SIGNUP_GET,
+    OIDC_ROUTES.SIGNUP_GET,
     "/interaction/signup",
-    routes.signupGET(scope),
+    routes.signupGET(),
   );
 
   managementRouter.post(
-    OIDC_ROUTES(scope).SIGNUP_POST,
+    OIDC_ROUTES.SIGNUP_POST,
     "/interaction/signup",
-    routes.signupPOST(scope),
+    routes.signupPOST(),
   );
 
   managementRouter.post(
-    OIDC_ROUTES(scope).PASSWORD_RESET_INITIATE_POST,
+    OIDC_ROUTES.PASSWORD_RESET_INITIATE_POST,
     "/interaction/password-reset",
-    routes.passwordResetInitiatePOST(scope),
+    routes.passwordResetInitiatePOST(),
   );
 
   managementRouter.get(
-    OIDC_ROUTES(scope).PASSWORD_RESET_INITIATE_GET,
+    OIDC_ROUTES.PASSWORD_RESET_INITIATE_GET,
     "/interaction/password-reset",
-    routes.passwordResetInitiateGet(scope),
+    routes.passwordResetInitiateGet(),
   );
 
   managementRouter.get(
-    OIDC_ROUTES(scope).PASSWORD_RESET_VERIFY_GET,
+    OIDC_ROUTES.PASSWORD_RESET_VERIFY_GET,
     "/interaction/password-reset-verify",
-    routes.passwordResetGET(scope),
+    routes.passwordResetGET(),
   );
 
   managementRouter.post(
-    OIDC_ROUTES(scope).PASSWORD_RESET_VERIFY_POST,
+    OIDC_ROUTES.PASSWORD_RESET_VERIFY_POST,
     "/interaction/password-reset-verify",
-    routes.passwordResetPOST(scope),
+    routes.passwordResetPOST(),
   );
   managementRouter.get(
-    OIDC_ROUTES(scope).LOGIN_GET,
+    OIDC_ROUTES.LOGIN_GET,
     "/interaction/login",
-    routes.loginGET(scope),
+    routes.loginGET(),
   );
   managementRouter.post(
-    OIDC_ROUTES(scope).LOGIN_POST,
+    OIDC_ROUTES.LOGIN_POST,
     "/interaction/login",
-    routes.loginPOST(scope),
+    routes.loginPOST(),
   );
   // Adding both as options to either get or post.
 
   managementRouter.get(
-    OIDC_ROUTES(scope).LOGOUT_GET,
+    OIDC_ROUTES.LOGOUT_GET,
     "/interaction/logout",
     createValidateInjectOIDCParameters({
       required: [],
@@ -116,11 +113,11 @@ export async function createOIDCRouter<
     }),
     injectHardcodedClients(),
     clientInjectFHIRMiddleware(),
-    routes.logout(scope),
+    routes.logout(),
   );
 
   managementRouter.post(
-    OIDC_ROUTES(scope).LOGOUT_POST,
+    OIDC_ROUTES.LOGOUT_POST,
     "/interaction/logout",
     createValidateInjectOIDCParameters({
       required: [],
@@ -128,11 +125,11 @@ export async function createOIDCRouter<
     }),
     injectHardcodedClients(),
     clientInjectFHIRMiddleware(),
-    routes.logout(scope),
+    routes.logout(),
   );
 
   managementRouter.get(
-    OIDC_ROUTES(scope).AUTHORIZE_GET,
+    OIDC_ROUTES.AUTHORIZE_GET,
     "/auth/authorize",
     createValidateInjectOIDCParameters({
       required: ["client_id", "response_type", "state"],
@@ -140,11 +137,11 @@ export async function createOIDCRouter<
     }),
     injectHardcodedClients(),
     clientInjectFHIRMiddleware(),
-    routes.authorizeGET(scope),
+    routes.authorizeGET(),
   );
 
   managementRouter.post(
-    OIDC_ROUTES(scope).TOKEN_POST,
+    OIDC_ROUTES.TOKEN_POST,
     "/auth/token",
     createValidateInjectOIDCParameters({
       required: ["client_id"],

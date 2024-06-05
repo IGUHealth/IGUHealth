@@ -1,6 +1,4 @@
-import { user_scope } from "zapatos/schema";
-
-import { ManagementRouteHandler } from "../index.js";
+import { OIDCRouteHandler } from "../index.js";
 
 type UserInfoResponse = {
   sub?: string;
@@ -11,7 +9,7 @@ type UserInfoResponse = {
   picture?: string;
 };
 
-export function userInfo(_scope: user_scope): ManagementRouteHandler {
+export function userInfo(): OIDCRouteHandler {
   return async (ctx, next) => {
     const user = await ctx.oidc.userManagement.get(
       ctx.FHIRContext,

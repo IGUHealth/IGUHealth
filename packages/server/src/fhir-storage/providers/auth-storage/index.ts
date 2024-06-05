@@ -22,7 +22,10 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import TenantUserManagement from "../../../authN/db/users/provider/tenant.js";
-import { membershipToUser } from "../../../authN/db/users/utilities.js";
+import {
+  determineEmailUpdate,
+  membershipToUser,
+} from "../../../authN/db/users/utilities.js";
 import { FHIRServerCTX } from "../../../fhir-api/types.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 import validateResourceTypesAllowedMiddleware from "../../middleware/validate-resourcetype.js";
@@ -157,6 +160,8 @@ function updateUserTableMiddleware<
           );
         }
 
+        membership.emailVerified = false;
+
         try {
           await tenantUserManagement.create(
             context.ctx,
@@ -201,6 +206,7 @@ function updateUserTableMiddleware<
           "Membership",
           id,
         );
+
         if (!existingMembership?.meta?.versionId)
           throw new OperationError(
             outcomeFatal("not-found", "Membership not found."),
@@ -216,6 +222,14 @@ function updateUserTableMiddleware<
           throw new OperationError(
             outcomeFatal("not-found", "User not found."),
           );
+
+        context.request.body = {
+          ...(context.request.body as Membership),
+          emailVerified: determineEmailUpdate(
+            membershipToUser(context.request?.body as Membership),
+            existingUser,
+          ),
+        } as Membership;
 
         const res = await next(context);
         if (!(res.response as R4UpdateResponse)?.body)

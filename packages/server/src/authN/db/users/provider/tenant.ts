@@ -8,56 +8,9 @@ import { KoaContext } from "../../../../fhir-api/types.js";
 import { UserManagement } from "../interface.js";
 import { LoginParameters, USER_QUERY_COLS, User } from "../types.js";
 import { determineEmailUpdate } from "../utilities.js";
-import GlobalUserManagement from "./global.js";
-
-async function loginUsingGlobalUser<T extends keyof LoginParameters>(
-  ctx: KoaContext.FHIRServices["FHIRContext"],
-  tenant: TenantId,
-  type: T,
-  parameters: LoginParameters[T],
-): Promise<User | undefined> {
-  switch (type) {
-    case "email-password": {
-      const where: s.users.Whereable = {
-        scope: "global",
-        method: "email-password",
-        email: parameters.email,
-        password: db.sql`${db.self} = crypt(${db.param((parameters as LoginParameters["email-password"]).password)}, ${db.self})`,
-      };
-
-      const globalUser: User[] = await db
-        .select("users", where, { columns: USER_QUERY_COLS })
-        .run(ctx.db);
-
-      if (globalUser[0] === undefined) {
-        return;
-      }
-
-      const tenantUser: User[] = await db
-        .select(
-          "users",
-          {
-            scope: "tenant",
-            tenant: tenant,
-            root_user: globalUser[0]?.id,
-          },
-          { columns: USER_QUERY_COLS },
-        )
-        .run(ctx.db);
-
-      if (tenantUser.length > 0) {
-        return globalUser[0];
-      }
-
-      return;
-    }
-    default:
-      return;
-  }
-}
 
 /**
- * Logins using the tenant user. Doesn't check the global user.
+ * Logins using the tenant user.
  */
 async function tenantLogin<T extends keyof LoginParameters>(
   ctx: KoaContext.FHIRServices["FHIRContext"],
@@ -66,7 +19,6 @@ async function tenantLogin<T extends keyof LoginParameters>(
   parameters: LoginParameters[T],
 ): Promise<User | undefined> {
   switch (type) {
-    // [TODO] handle when auth is set on global user.
     case "email-password": {
       const where: s.users.Whereable = {
         scope: "tenant",
@@ -113,21 +65,9 @@ export default class TenantUserManagement implements UserManagement {
           { id: user.tenant as TenantId, userRole: user.role as s.user_role },
         ];
       }
-      case "global": {
-        const tenantUsers: User[] = await db
-          .select(
-            "users",
-            { root_user: user.id, tenant: this.tenant },
-            { columns: USER_QUERY_COLS },
-          )
-          .run(ctx.db);
-
-        return tenantUsers.map((tenantUser) => ({
-          id: tenantUser.id as TenantId,
-          userRole: tenantUser.role as s.user_role,
-        }));
-      }
     }
+
+    return [];
   }
 
   async login<T extends keyof LoginParameters>(
@@ -136,35 +76,13 @@ export default class TenantUserManagement implements UserManagement {
     parameters: LoginParameters[T],
   ): Promise<User | undefined> {
     const tenantUser = await tenantLogin(ctx, this.tenant, type, parameters);
-    if (tenantUser) return tenantUser;
-    return loginUsingGlobalUser(ctx, this.tenant, type, parameters);
+    return tenantUser;
   }
 
   async get(
     ctx: KoaContext.FHIRServices["FHIRContext"],
     id: string,
   ): Promise<User | undefined> {
-    // Check global first
-    const globalUserManagement = new GlobalUserManagement();
-    const globalUser = await globalUserManagement.get(ctx, id);
-    if (globalUser) {
-      const tenantClaims = await globalUserManagement.getTenantClaims(
-        ctx,
-        globalUser.id,
-      );
-      if (tenantClaims.find((t) => t.id === this.tenant)) {
-        const tenantUser: User | undefined = (await db
-          .selectOne(
-            "users",
-            { root_user: globalUser.id, scope: "tenant", tenant: this.tenant },
-            { columns: USER_QUERY_COLS },
-          )
-          .run(ctx.db)) as User | undefined;
-        return { ...globalUser, ...tenantUser };
-      }
-      return undefined;
-    }
-
     const tenantUser: User | undefined = (await db
       .selectOne(
         "users",
@@ -172,18 +90,6 @@ export default class TenantUserManagement implements UserManagement {
         { columns: USER_QUERY_COLS },
       )
       .run(ctx.db)) as User | undefined;
-
-    if (tenantUser?.root_user) {
-      const globalUser: User | undefined = (await db
-        .selectOne(
-          "users",
-          { id: tenantUser.root_user, scope: "global" },
-          { columns: USER_QUERY_COLS },
-        )
-        .run(ctx.db)) as User | undefined;
-
-      return { ...globalUser, ...tenantUser };
-    }
 
     return tenantUser;
   }
