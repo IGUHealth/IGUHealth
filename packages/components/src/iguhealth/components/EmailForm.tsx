@@ -3,13 +3,17 @@ import React from "react";
 import { Container } from "./Container";
 
 export type EmailFormProps = {
+  email?: string;
   title?: string;
   logo?: string;
   header?: string;
   action: string;
+  errors?: string[];
 };
 
 export const EmailForm = ({
+  email,
+  errors = [],
   title = "IGUHealth",
   header = "Signup",
   logo,
@@ -17,6 +21,19 @@ export const EmailForm = ({
 }: EmailFormProps) => {
   return (
     <Container logo={logo} title={title}>
+      <div>
+        {Array.isArray(errors) &&
+          errors.map((error) => {
+            return (
+              <div
+                key={error}
+                className="text-sm text-red-600 dark:text-red-400"
+              >
+                {error}
+              </div>
+            );
+          })}
+      </div>
       <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
         {header}
       </h1>
@@ -32,6 +49,7 @@ export const EmailForm = ({
             type="email"
             name="email"
             id="email"
+            defaultValue={email}
             className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="name@company.com"
             required={true}
