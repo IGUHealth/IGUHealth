@@ -29,6 +29,7 @@ import {
 import { FHIRServerCTX } from "../../../fhir-api/types.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 import validateResourceTypesAllowedMiddleware from "../../middleware/validate-resourcetype.js";
+import { FHIRTransaction } from "../../transactions.js";
 import { createPostgresClient } from "../postgres/index.js";
 
 export const AUTH_RESOURCETYPES: ResourceType[] = ["Membership"];
@@ -103,13 +104,17 @@ function setInTransactionMiddleware<
   CTX extends FHIRServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async (context, next) => {
-    return db.serializable(context.ctx.db, async (txClient) => {
-      const res = await next({
-        ...context,
-        ctx: { ...context.ctx, db: txClient },
-      });
-      return res;
-    });
+    return FHIRTransaction(
+      context.ctx,
+      db.IsolationLevel.Serializable,
+      async (ctx) => {
+        const res = await next({
+          ...context,
+          ctx,
+        });
+        return res;
+      },
+    );
   };
 }
 

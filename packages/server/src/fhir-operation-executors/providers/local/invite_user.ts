@@ -21,6 +21,7 @@ import {
   EmailTemplateText,
 } from "../../../email/templates/base.js";
 import { FHIRServerCTX } from "../../../fhir-api/types.js";
+import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
 import InlineOperation from "./interface.js";
 
 const IguhealthInviteUserInvoke = InlineOperation(
@@ -31,23 +32,20 @@ const IguhealthInviteUserInvoke = InlineOperation(
         outcomeError("exception", "Encryption provider not configured"),
       );
 
-    const [user, inviteCode] = await db.serializable(
-      ctx.db,
-      async (txnClient) => {
-        const membership = await ctx.client.create(
-          { ...ctx, db: txnClient },
-          R4,
-          {
-            resourceType: "Membership",
-            email: input.email,
-            role: input.role,
-          } as Membership,
-        );
+    const [user, inviteCode] = await FHIRTransaction(
+      ctx,
+      db.IsolationLevel.Serializable,
+      async (ctx) => {
+        const membership = await ctx.client.create(ctx, R4, {
+          resourceType: "Membership",
+          email: input.email,
+          role: input.role,
+        } as Membership);
 
         const accessPolicyId = input.accessPolicy?.reference?.split("/")[1];
         if (accessPolicyId) {
           const accessPolicy = await ctx.client.read(
-            { ...ctx, db: txnClient },
+            ctx,
             R4,
             "AccessPolicy",
             accessPolicyId as id,
@@ -55,7 +53,7 @@ const IguhealthInviteUserInvoke = InlineOperation(
 
           if (accessPolicy) {
             await ctx.client.update(
-              { ...ctx, db: txnClient },
+              ctx,
               R4,
               "AccessPolicy",
               accessPolicy.id as id,
@@ -79,24 +77,18 @@ const IguhealthInviteUserInvoke = InlineOperation(
         );
         const userManagement = new TenantUserManagement(ctx.tenant);
 
-        const user = await userManagement.search(
-          { ...ctx, db: txnClient },
-          {
-            fhir_user_id: membership.id,
-          },
-        );
+        const user = await userManagement.search(ctx, {
+          fhir_user_id: membership.id,
+        });
 
         if (!user[0]) {
           throw new OperationError(outcomeError("not-found", "User not found"));
         }
-        const code = await codeManagement.create(
-          { ...ctx, db: txnClient },
-          {
-            type: "password_reset",
-            user_id: user[0].id,
-            expires_in: "15 minutes",
-          },
-        );
+        const code = await codeManagement.create(ctx, {
+          type: "password_reset",
+          user_id: user[0].id,
+          expires_in: "15 minutes",
+        });
 
         return [user, code];
       },

@@ -13,6 +13,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { asSystemCTX } from "../../../../fhir-api/types.js";
+import { FHIRTransaction } from "../../../../fhir-storage/transactions.js";
 import * as views from "../../../../views/index.js";
 import { userToMembership } from "../../../db/users/utilities.js";
 import { OIDC_ROUTES } from "../../constants.js";
@@ -161,33 +162,33 @@ export function passwordResetPOST(): OIDCRouteHandler {
       );
     }
 
-    await db.serializable(ctx.FHIRContext.db, async (txnClient) => {
-      const update = await ctx.oidc.userManagement.update(
-        { ...ctx.FHIRContext, db: txnClient },
-        authorizationCode.user_id,
-        {
-          password: body.password,
-          email_verified: true,
-        },
-      );
+    await FHIRTransaction(
+      ctx.FHIRContext,
+      db.IsolationLevel.Serializable,
+      async (fhirContext) => {
+        const update = await ctx.oidc.userManagement.update(
+          fhirContext,
+          authorizationCode.user_id,
+          {
+            password: body.password,
+            email_verified: true,
+          },
+        );
 
-      await ctx.FHIRContext.client.update(
-        asSystemCTX({
-          ...ctx.FHIRContext,
-          db: txnClient,
-          tenant: update.tenant as TenantId,
-        }),
-        R4,
-        "Membership",
-        update.fhir_user_id as id,
-        userToMembership(update),
-      );
+        await ctx.FHIRContext.client.update(
+          asSystemCTX({
+            ...fhirContext,
+            tenant: update.tenant as TenantId,
+          }),
+          R4,
+          "Membership",
+          update.fhir_user_id as id,
+          userToMembership(update),
+        );
 
-      await ctx.oidc.codeManagement.delete(
-        { ...ctx.FHIRContext, db: txnClient },
-        { code: body.code },
-      );
-    });
+        await ctx.oidc.codeManagement.delete(fhirContext, { code: body.code });
+      },
+    );
 
     const loginRoute = ctx.router.url(
       OIDC_ROUTES.LOGIN_GET,

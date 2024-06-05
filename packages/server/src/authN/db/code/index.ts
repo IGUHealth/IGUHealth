@@ -6,6 +6,7 @@ import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaContext } from "../../../fhir-api/types.js";
+import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
 import { AuthorizationCodeManagement } from "./interface.js";
 import { AuthorizationCode } from "./types.js";
 import { is_expired, is_not_expired } from "./utilities.js";
@@ -71,12 +72,12 @@ export default class TenantAuthorizationCodeManagement
       )
       .run(ctx.db);
   }
-  update(
+  async update(
     ctx: KoaContext.FHIRServices["FHIRContext"],
     id: string,
     update: s.authorization_code.Updatable,
   ): Promise<AuthorizationCode> {
-    return db.serializable(ctx.db, async (txnClient) => {
+    return FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
       const where: s.authorization_code.Whereable = {
         scope: "tenant",
         tenant: this.tenantId,
@@ -84,7 +85,7 @@ export default class TenantAuthorizationCodeManagement
       };
       const authorization_codes = await db
         .selectOne("authorization_code", where)
-        .run(txnClient);
+        .run(ctx.db);
 
       if (!authorization_codes)
         throw new OperationError(outcomeError("not-found", "Code not found."));
@@ -100,15 +101,15 @@ export default class TenantAuthorizationCodeManagement
           where,
           { extras: { is_expired } },
         )
-        .run(txnClient);
+        .run(ctx.db);
       return updatedAuthorizationCode[0];
     });
   }
-  delete(
+  async delete(
     ctx: KoaContext.FHIRServices["FHIRContext"],
     where_: s.authorization_code.Whereable,
   ): Promise<void> {
-    return db.serializable(ctx.db, async (txnClient) => {
+    return FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
       const where: s.authorization_code.Whereable = {
         ...where_,
         scope: "tenant",
@@ -116,7 +117,7 @@ export default class TenantAuthorizationCodeManagement
       };
       const authorization_code = await db
         .select("authorization_code", where)
-        .run(txnClient);
+        .run(ctx.db);
       if (authorization_code.length > 1) {
         throw new OperationError(
           outcomeError(
@@ -125,7 +126,7 @@ export default class TenantAuthorizationCodeManagement
           ),
         );
       }
-      await db.deletes("authorization_code", where).run(txnClient);
+      await db.deletes("authorization_code", where).run(ctx.db);
     });
   }
 }

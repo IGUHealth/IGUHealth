@@ -14,6 +14,7 @@ import {
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaContext } from "../../../fhir-api/types.js";
+import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
 import { getSigningKey } from "../../certifications.js";
 import {
   authenticateClientCredentials,
@@ -62,9 +63,10 @@ export function tokenPost<
       case "authorization_code": {
         const body = (ctx.request as unknown as Record<string, unknown>).body;
 
-        const response = await db.serializable(
-          ctx.FHIRContext.db,
-          async (txnClient) => {
+        const response = await FHIRTransaction(
+          ctx.FHIRContext,
+          db.IsolationLevel.Serializable,
+          async (fhirContext) => {
             if (!isRecord(body))
               throw new OperationError(
                 outcomeError("invalid", "Body must be a record."),
@@ -75,12 +77,9 @@ export function tokenPost<
               );
             }
 
-            const code = await ctx.oidc.codeManagement.search(
-              { ...ctx.FHIRContext, db: txnClient },
-              {
-                code: body.code,
-              },
-            );
+            const code = await ctx.oidc.codeManagement.search(fhirContext, {
+              code: body.code,
+            });
 
             if (code.length !== 1 || code[0].is_expired)
               throw new OperationError(outcomeError("invalid", "Invalid code"));
@@ -90,17 +89,16 @@ export function tokenPost<
               );
 
             const user = await ctx.oidc.userManagement.get(
-              { ...ctx.FHIRContext, db: txnClient },
+              fhirContext,
               code[0].user_id,
             );
 
             if (!user)
               throw new OperationError(outcomeError("invalid", "Invalid user"));
 
-            await ctx.oidc.codeManagement.delete(
-              { ...ctx.FHIRContext, db: txnClient },
-              { id: code[0].id },
-            );
+            await ctx.oidc.codeManagement.delete(fhirContext, {
+              id: code[0].id,
+            });
 
             const signingKey = await getSigningKey(
               process.env.AUTH_LOCAL_CERTIFICATION_LOCATION as string,
@@ -111,7 +109,7 @@ export function tokenPost<
               iss: IGUHEALTH_ISSUER,
               [CUSTOM_CLAIMS.TENANTS]:
                 await ctx.oidc.userManagement.getTenantClaims(
-                  { ...ctx.FHIRContext, db: txnClient },
+                  fhirContext,
                   user.id,
                 ),
               [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
@@ -149,6 +147,7 @@ export function tokenPost<
             };
           },
         );
+
         ctx.body = response;
         ctx.status = 200;
         ctx.set("Content-Type", "application/json");

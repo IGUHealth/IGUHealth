@@ -8,6 +8,7 @@ import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { asSystemCTX } from "../../../fhir-api/types.js";
+import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
 import * as views from "../../../views/index.js";
 import TenantAuthorizationCodeManagement from "../../db/code/index.js";
 import { TenantManagement } from "../../db/tenant.js";
@@ -75,23 +76,17 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
     );
   }
 
-  const [user, tenant] = await db.serializable(
-    ctx.FHIRContext.db,
-    async (txnClient) => {
+  const [user, tenant] = await FHIRTransaction(
+    ctx.FHIRContext,
+    db.IsolationLevel.Serializable,
+    async (ctx) => {
       const tenantManagement = new TenantManagement();
 
-      const tenant = await tenantManagement.create(
-        {
-          ...ctx.FHIRContext,
-          db: txnClient,
-        },
-        {},
-      );
+      const tenant = await tenantManagement.create(ctx, {});
 
-      const membership = await ctx.FHIRContext.client.create(
+      const membership = await ctx.client.create(
         asSystemCTX({
-          ...ctx.FHIRContext,
-          db: txnClient,
+          ...ctx,
           tenant: tenant.id as TenantId,
         }),
         R4,
@@ -109,7 +104,7 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
           { fhir_user_id: membership.id },
           { columns: USER_QUERY_COLS },
         )
-        .run(txnClient);
+        .run(ctx.db);
 
       if (!user[0]) {
         throw new OperationError(outcomeError("not-found", "User not found."));
