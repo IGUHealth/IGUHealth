@@ -11,8 +11,11 @@ generateCommands(program.command("generate"));
 
 await program.parseAsync();
 
-process.on("SIGINT", function () {
+function shutdown() {
   console.log("Exiting...");
   terminateServices();
   process.exit();
-});
+}
+
+process.on("SIGTERM", shutdown);
+process.on("SIGINT", shutdown);
