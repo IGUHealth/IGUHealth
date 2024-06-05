@@ -13,7 +13,6 @@ import * as views from "../../../views/index.js";
 import TenantAuthorizationCodeManagement from "../../db/code/provider/tenant.js";
 import { USER_QUERY_COLS, User } from "../../db/users/types.js";
 import { userToMembership } from "../../db/users/utilities.js";
-import { OIDC_ROUTES } from "../../oidc/constants.js";
 import { sendAlertEmail } from "../../oidc/utilities/sendAlertEmail.js";
 import { sendPasswordResetEmail } from "../../oidc/utilities/sendPasswordResetEmail.js";
 import { ROUTES } from "../constants.js";

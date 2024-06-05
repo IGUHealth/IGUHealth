@@ -1,5 +1,3 @@
-import { user_scope } from "zapatos/schema";
-
 import { IGUHEALTH_ISSUER } from "@iguhealth/jwt";
 
 import { JWKS_GET, OIDC_ROUTES } from "../constants.js";
