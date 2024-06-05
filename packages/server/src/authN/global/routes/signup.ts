@@ -24,14 +24,9 @@ import type { GlobalAuthRouteHandler } from "../index.js";
 const generateTenantId = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz");
 
 async function alreadyOwner(pg: db.Queryable, email: string): Promise<boolean> {
-  console.log(email);
   const userOwner = await db
     .select("users", { email, email_verified: true, role: "owner" })
     .run(pg);
-
-  console.log(await db.select("users", { email }).run(pg));
-
-  console.log(userOwner);
 
   return userOwner.length > 0;
 }
@@ -71,8 +66,6 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
     throw new OperationError(outcomeError("invalid", "Email is not valid."));
   }
 
-  console.log(await alreadyOwner(ctx.FHIRContext.db, email));
-
   if (await alreadyOwner(ctx.FHIRContext.db, email)) {
     throw new OperationError(
       outcomeError(
@@ -82,46 +75,55 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
     );
   }
 
-  const [user, tenant] = await db.serializable(ctx.db, async (txnClient) => {
-    const tenantId = generateTenantId();
-    const tenant = await db
-      .insert("tenants", {
-        id: tenantId,
-        tenant: {
+  const [user, tenant] = await db.serializable(
+    ctx.FHIRContext.db,
+    async (txnClient) => {
+      const tenantId = generateTenantId();
+
+      const tenant = await db
+        .insert("tenants", {
           id: tenantId,
-          name: "Default",
-        },
-      })
-      .run(txnClient);
-    const membership = await ctx.client.create(
-      asSystemCTX({
-        ...ctx.FHIRContext,
-        db: txnClient,
-        tenant: tenant.id as TenantId,
-      }),
-      R4,
-      userToMembership({
-        scope: "tenant",
-        role: "owner",
-        tenant: tenant.id,
-        email: email,
-      }),
-    );
+          tenant: {
+            id: tenantId,
+            name: "Default",
+          },
+        })
+        .run(txnClient);
 
-    const user: User[] = await db
-      .select(
-        "users",
-        { fhir_user_id: membership.id },
-        { columns: USER_QUERY_COLS },
-      )
-      .run(txnClient);
+      const membership = await ctx.FHIRContext.client.create(
+        asSystemCTX({
+          ...ctx.FHIRContext,
+          db: txnClient,
+          tenant: tenant.id as TenantId,
+        }),
+        R4,
+        userToMembership({
+          scope: "tenant",
+          role: "owner",
+          tenant: tenant.id,
+          email: email,
+        }),
+      );
 
-    if (!user[0]) {
-      throw new OperationError(outcomeError("not-found", "User not found."));
-    }
+      console.log(membership);
 
-    return [user[0], tenant];
-  });
+      const user: User[] = await db
+        .select(
+          "users",
+          { fhir_user_id: membership.id },
+          { columns: USER_QUERY_COLS },
+        )
+        .run(txnClient);
+
+      console.log(user);
+
+      if (!user[0]) {
+        throw new OperationError(outcomeError("not-found", "User not found."));
+      }
+
+      return [user[0], tenant];
+    },
+  );
 
   // Alert system admin of new user.
   await sendAlertEmail(
