@@ -10,7 +10,6 @@ function tenantCommands(command: Command) {
     .action(async () => {
       const pool = createPGPool();
       const services = await createFHIRServices(pool);
-      
     });
 }
 
