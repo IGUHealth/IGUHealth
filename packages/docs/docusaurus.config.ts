@@ -166,7 +166,7 @@ const config = {
         },
 
         {
-          href: "https://api.iguhealth.app/oidc/interaction/login",
+          href: "https://api.iguhealth.app/auth/login",
           label: "Sign In",
           position: "right",
         },
