@@ -5,10 +5,10 @@ import * as s from "zapatos/schema";
 import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaContext } from "../../../../fhir-api/types.js";
-import { AuthorizationCodeManagement } from "../interface.js";
-import { AuthorizationCode } from "../types.js";
-import { is_expired, is_not_expired } from "../utilities.js";
+import { KoaContext } from "../../../fhir-api/types.js";
+import { AuthorizationCodeManagement } from "./interface.js";
+import { AuthorizationCode } from "./types.js";
+import { is_expired, is_not_expired } from "./utilities.js";
 
 export default class TenantAuthorizationCodeManagement
   implements AuthorizationCodeManagement

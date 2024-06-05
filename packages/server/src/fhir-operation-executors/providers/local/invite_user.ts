@@ -12,8 +12,8 @@ import {
   outcomeInfo,
 } from "@iguhealth/operation-outcomes";
 
-import TenantAuthorizationCodeManagement from "../../../authN/db/code/provider/tenant.js";
-import TenantUserManagement from "../../../authN/db/users/provider/tenant.js";
+import TenantAuthorizationCodeManagement from "../../../authN/db/code/index.js";
+import TenantUserManagement from "../../../authN/db/users/index.js";
 import {
   EmailTemplate,
   EmailTemplateButton,
