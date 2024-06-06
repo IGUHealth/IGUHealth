@@ -1,0 +1,50 @@
+---
+slug: updates_2024-06-05
+Title: Updates 2024-06-05
+authors: [confused-moniker]
+tags: [iguhealth, updates]
+---
+
+# Updates 2024-06-05
+
+## Server Enhancements
+
+### Alterations to the User Data Model
+Our data model had the concept of a root user that could be connected to multiple tenants. This was done to allow a user to easily access multiple tenants that they were a member of.
+We've removed this, and instead, each user is now entirely isolated and connected to a FHIR Membership resource.
+
+### Tenant Discovery
+On root login, we now return a list of tenants that a user is registered with (via email). After selecting a tenant a user is directed to that tenants login.
+
+## Local Development
+
+### Docker
+We now have the following Docker compose files for local development:
+
+* docker/services-compose.yml: Will setup all the services needed for local development.
+* docker/iguhealth-compose.yml: Will setup services and the iguhealth server and admin app.
+
+## Security
+
+### OperationDefinition Execution
+OperationDefinitions must now be tied to an AccessPolicy resource to access and mutate data back on the server.
+
+## General
+
+### Updated Packages
+* @iguhealth/server: 0.14.17
+* @iguhealth/components: 0.7.10
+* @iguhealth/admin-app: 0.8.3
+
+
+### Dependencies Updated to Latest
+We've updated the following dependencies to their latest versions:
+
+* tailwind: 3.4.4
+* prettier: 3.3.1
+* headless/react: 2.0.4
+* pg: 8.12.0
+* jose: 5.4.0
+* ajv: 8.16.0
+* adm-zip: 0.5.14
+* json-schema-to-typescript: 14.0.5
