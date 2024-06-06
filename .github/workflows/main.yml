@@ -98,11 +98,8 @@ jobs:
       - name: Version Check
         run: yarn version check
 
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Compile
-        run: yarn workspaces foreach -A -pt --topological-dev run build
+      - name: Build
+        run: sh install.sh
 
       - name: start server
         run: yarn workspace @iguhealth/server migrate up && yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/system/api/v1/fhir/r4/metadata

@@ -38,11 +38,8 @@ jobs:
       - name: Version Check
         run: yarn version check
 
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Compile dependencies
-        run: yarn workspaces foreach -A -pt --topological-dev run build
+      - name: Build
+        run: sh install.sh
 
       - name: Compile documentation
         run: yarn generate-documentation
@@ -86,11 +83,8 @@ jobs:
       - name: Version Check
         run: yarn version check
 
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Compile dependencies
-        run: yarn workspaces foreach -A -pt --topological-dev run build
+      - name: Build
+        run: sh install.sh
         env:
           GOOGLE_GTAG_TRACKING_ID: ${{ secrets.GOOGLE_GTAG_TRACKING_ID }}
 
@@ -132,11 +126,8 @@ jobs:
       - name: Version Check
         run: yarn version check
 
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Compile dependencies
-        run: yarn workspaces foreach -A -pt --topological-dev run build
+      - name: Build
+        run: sh install.sh
 
       - name: Compile storybook
         run: yarn workspace @iguhealth/components build-storybook
