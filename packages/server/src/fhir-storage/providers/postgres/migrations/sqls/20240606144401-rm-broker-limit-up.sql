@@ -1,0 +1,1 @@
+delete from limitations where (resource_type = 'MessageTopic' or resource_type = 'MessageBroker') and fhir_version = 'r4b';
