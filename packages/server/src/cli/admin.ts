@@ -21,7 +21,20 @@ async function createTenant(ctx: Omit<FHIRServerCTX, "tenant" | "user">) {
     async (ctx) => {
       const tenantManagement = new TenantManagement();
 
-      const tenant = await tenantManagement.create(ctx, {});
+      const tiers = await db.select("subscription_tier", {}).run(ctx.db);
+
+      const subtier = await inquirer.select({
+        message: "Select tenant tier",
+        default: tiers[2].id,
+        choices: tiers.map((t) => ({
+          name: t.name,
+          value: t.id,
+        })),
+      });
+
+      const tenant = await tenantManagement.create(ctx, {
+        subscription_tier: subtier,
+      });
 
       const email = await inquirer.input({
         message: "Enter root user email.",
