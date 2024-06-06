@@ -153,17 +153,17 @@ const config = {
           label: "Reference",
           position: "right",
         },
+        { to: "/pricing", label: "Pricing", position: "right" },
         {
           href: "https://github.com/iguhealth/iguhealth",
-          label: "GitHub",
+          "aria-label": "GitHub repository",
+          className: "header-github-link",
           position: "right",
         },
-        { to: "/pricing", label: "Pricing", position: "right" },
         {
           type: "search",
           position: "right",
         },
-
         {
           href: "https://api.iguhealth.app/auth/login",
           label: "Sign In",
