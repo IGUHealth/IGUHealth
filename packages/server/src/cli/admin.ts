@@ -32,9 +32,9 @@ async function createTenant(ctx: Omit<FHIRServerCTX, "tenant" | "user">) {
 
       const password = await inquirer.password({
         message: "Enter root user password.",
-        validate: (input) => {
-          return validator.isStrongPassword(input);
-        },
+        // validate: (input) => {
+        //   return validator.isStrongPassword(input);
+        // },
       });
 
       const membership: Membership = await ctx.client.create(
