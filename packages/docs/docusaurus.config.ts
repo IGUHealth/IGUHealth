@@ -179,7 +179,15 @@ const config = {
           items: [
             {
               label: "Documentation",
-              to: "/",
+              to: "/documentation/Getting%20Started/Quick_Start",
+            },
+            {
+              label: "RFCs",
+              to: "/rfcs/format",
+            },
+            {
+              label: "Blog",
+              to: "/blog",
             },
           ],
         },
