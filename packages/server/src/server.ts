@@ -2,6 +2,7 @@ import { bodyParser } from "@koa/bodyparser";
 import cors from "@koa/cors";
 import Router from "@koa/router";
 import Koa from "koa";
+import helmet from "koa-helmet";
 import mount from "koa-mount";
 import ratelimit from "koa-ratelimit";
 import redisStore from "koa-redis";
@@ -184,6 +185,7 @@ export default async function createServer(): Promise<
   const pool = createPGPool();
 
   const app = new Koa();
+
   app.keys = process.env.SESSION_COOKIE_SECRETS.split(":").map((s) => s.trim());
 
   const rootRouter = new Router<
@@ -298,6 +300,17 @@ export default async function createServer(): Promise<
   rootRouter.use(tenantRouter.allowedMethods());
 
   app
+    .use(
+      helmet({
+        contentSecurityPolicy: {
+          // See https://github.com/w3c/webappsec-csp/issues/8
+          // Not compatible with redirect on OIDC
+          directives: {
+            "form-action": null,
+          },
+        },
+      }),
+    )
     .use(
       mount(
         "/public",

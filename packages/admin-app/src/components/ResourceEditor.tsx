@@ -77,7 +77,7 @@ function ResourceHistory() {
   return (
     <Modal
       size="x-large"
-      ModalContent={(_setOpen) => (
+      ModalContent={() => (
         <MergeViewer
           extensions={extensions}
           oldValue={JSON.stringify(diff?.[1].resource, null, 2)}

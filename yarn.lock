@@ -8869,6 +8869,7 @@ __metadata:
     keygrip: "npm:^1.1.0"
     koa: "npm:^2.15.3"
     koa-body: "npm:^6.0.1"
+    koa-helmet: "npm:^7.0.2"
     koa-jwt: "npm:^4.0.4"
     koa-mount: "npm:^4.0.0"
     koa-ratelimit: "npm:^5.1.0"
@@ -22861,6 +22862,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"helmet@npm:^6.0.1":
+  version: 6.2.0
+  resolution: "helmet@npm:6.2.0"
+  checksum: 10/f112fcd0d8494e6c8ad10e9307e182f1be9c9c4917a3f9a3718c13ae120d4c4e1f251e735297d6a9266e068dcc0463ab101c8d7f2b809c0ceabcef4681f81a2a
+  languageName: node
+  linkType: hard
+
 "hexoid@npm:^1.0.0":
   version: 1.0.0
   resolution: "hexoid@npm:1.0.0"
@@ -25787,6 +25795,15 @@ __metadata:
     co: "npm:^4.6.0"
     koa-compose: "npm:^4.1.0"
   checksum: 10/7385b3391995f59c1312142e110d5dff677f9850dbfbcf387cd36a7b0af03b5d26e82b811eb9bb008b4f3e661cdab1f8817596e46b1929da2cf6e97a2f7456ed
+  languageName: node
+  linkType: hard
+
+"koa-helmet@npm:^7.0.2":
+  version: 7.0.2
+  resolution: "koa-helmet@npm:7.0.2"
+  dependencies:
+    helmet: "npm:^6.0.1"
+  checksum: 10/a2f8f72f053402fd8b70deb219ab1535cb6dbc8975ae9bd84d2a976a88a2349f47289485d5db718f21c4d493a9555e8b4bb962119f47d2b0ff95877edc232004
   languageName: node
   linkType: hard
 
