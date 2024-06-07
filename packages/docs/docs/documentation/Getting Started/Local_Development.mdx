@@ -1,5 +1,5 @@
 ---
-sidebar_position: 1
+sidebar_position: 2
 ---
 
 # Local Development
@@ -9,48 +9,54 @@ Get started by Downloading our [repo](https://github.com/iguhealth/iguhealth) or
 ## What you'll need
 
 - [Node.js](https://nodejs.org/en/download/) version 21.6.1 or above
-- [Postgres](https://www.postgresql.org/) version 13 or above
-- [Redis](https://redis.io/) version 7.0.12 or above
+- [Docker](https://www.docker.com/) version 25.0.3 or above
 
-## Start the server
+## Setup
+1. <b>Install dependencies</b>
+    
+    Run the following command to install dependencies required for iguhealth. 
+    From the root of the repository run the following command:
+    ```bash
+    sh install.sh
+    ```
 
-Create a database on your postgres instance and then provide the following environment variables to the iguhealth server
+2. <b>Start the services</b>
 
-| name                   | description                        | required | defaults  |
-| ---------------------- | ---------------------------------- | -------- | --------- |
-| FHIR_DATABASE_NAME     | Postgres database name.            | true     | iguhealth |
-| FHIR_DATABASE_HOST     | Postgres host                      | true     | localhost |
-| FHIR_DATABASE_PORT     | Postgres port                      | true     | 5432      |
-| FHIR_DATABASE_PASSWORD | Postgres password                  | true     | ""        |
-| FHIR_DATABASE_USERNAME | Postgres username                  | true     | postgres  |
-| FHIR_DATABASE_SSL      | Whether Postgres connection is SSL | false    | false     |
-| REDIS_HOST             | Redis Host                         | true     | 127.0.0.1 |
-| REDIS_PORT             | Redis port                         | true     | 6379      |
+    Run the following command to start services required for iguhealth. 
+    From the root of the repository run the following command:
+    ```bash
+    docker compose -f docker/services-compose.yml up
+    ```
 
-## RUN API Queries
+3. <b>Start the server</b>
+    
+    Run the following command to start the iguhealth server. 
+    From the root of the repository run the following command:
+    ```bash
+    yarn workspace @iguhealth/server watch
+    ```
 
-The server is setup where data is organized according to **tenants**. Tenants are a logical seperation of data. Data cannot be referenced between tenants or queried. By default server is setup with an initial tenant of **system**.
+4. <b>Create a tenant</b>
+    
+    Run the following command to create a new tenant. 
+    From the root of the repository run the following command:
+    ```bash
+    yarn workspace @iguhealth/server cli admin tenant create
+    ```
+    Follow the prompts to create a new tenant and user.
 
-### Get Server capabilities
+5. <b>Start the admin Application</b>
+    
+    Run the following to start the admin app:
+    ```bash
+    yarn workspace @iguhealth/admin-app start
+    ```
 
-Run the following query
+6. <b>Login to the admin app</b>
+   
+   Go to `http://localhost:3000/auth/login` and follow the prompts to login to the admin app.
 
-```bash
-curl --request GET --url http://localhost:3000/w/system/api/v1/fhir/r4/metadata
-```
-
-### Post Patient
-
-Run the following query
-
-```bash
-curl --request POST --url http://localhost:3000/w/system/api/v1/fhir/r4/Patient \\n  --header 'content-type: application/json' \\n  --data '{"resourceType":"Patient", "name": [{"family": "parker", "given": ["John"]}]}'
-```
-
-### Search Patient by Name
-
-Run the following query
-
-```bash
-curl --request GET --url http://localhost:3000/w/system/api/v1/fhir/r4/Patient?name=parker
-```
+## Next Steps
+* Setup the CLI by Following the tutorial [here](../Tutorials/SETUP_CLI.md).
+* Read our Documentation for our FHIR API [here](../FHIR%20API/FHIRSearch.md)
+* Setup Custom Operations [here](../Custom%20Code/Overview.md)

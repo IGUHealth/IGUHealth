@@ -85,19 +85,11 @@ export interface IGUHealthEnvironment {
   /**
    * Location for local certifications for IGUHEALTH ISSUER
    */
-  AUTH_LOCAL_CERTIFICATION_LOCATION?: string;
+  AUTH_LOCAL_CERTIFICATION_LOCATION: string;
   /**
    * The signing key used to generate new local tokens
    */
-  AUTH_LOCAL_SIGNING_KEY?: string;
-  /**
-   * JWK remote url to pull JSON WEB Key Set.
-   */
-  AUTH_EXTERNAL_JWK_URI?: string;
-  /**
-   * Issuer of the JWT.
-   */
-  AUTH_EXTERNAL_JWT_ISSUER?: string;
+  AUTH_LOCAL_SIGNING_KEY: string;
   /**
    * Set the email provider.
    */

@@ -1,6 +1,12 @@
 import * as jose from "jose";
 import { KeyObject } from "node:crypto";
-import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  writeFileSync,
+} from "node:fs";
 import path from "node:path";
 
 /**
@@ -101,6 +107,14 @@ export async function getSigningKey(
   return { kid, key: privateKey };
 }
 
+export function getCertLocation() {
+  return path.resolve(process.env.AUTH_LOCAL_CERTIFICATION_LOCATION);
+}
+
+export function getCertKey() {
+  return process.env.AUTH_LOCAL_SIGNING_KEY;
+}
+
 /**
  * Create certifications if not exist. Saves by default
  * private keys under /${directory}/{kid}.p8 and public keys under /${directory}/{kid}.spki.
@@ -117,6 +131,9 @@ export async function createCertsIfNoneExists(
   try {
     await getSigningKey(directory, kid, alg);
   } catch (e) {
+    if (!existsSync(directory)) {
+      mkdirSync(directory);
+    }
     await createCertifications(directory, kid, alg);
   }
 }

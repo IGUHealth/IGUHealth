@@ -15,7 +15,11 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaContext } from "../../../fhir-api/types.js";
 import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
-import { getSigningKey } from "../../certifications.js";
+import {
+  getCertKey,
+  getCertLocation,
+  getSigningKey,
+} from "../../certifications.js";
 import {
   authenticateClientCredentials,
   createClientCredentialToken,
@@ -101,8 +105,8 @@ export function tokenPost<
             });
 
             const signingKey = await getSigningKey(
-              process.env.AUTH_LOCAL_CERTIFICATION_LOCATION as string,
-              process.env.AUTH_LOCAL_SIGNING_KEY as string,
+              getCertLocation(),
+              getCertKey(),
             );
 
             const accessTokenPayload: AccessTokenPayload<s.user_role> = {

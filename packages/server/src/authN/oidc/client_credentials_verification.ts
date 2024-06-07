@@ -12,7 +12,11 @@ import {
   createToken,
 } from "@iguhealth/jwt";
 
-import { getSigningKey } from "../certifications.js";
+import {
+  getCertKey,
+  getCertLocation,
+  getSigningKey,
+} from "../certifications.js";
 
 export type ClientCredentials = { client_id: string; client_secret: string };
 
@@ -66,10 +70,7 @@ export async function createClientCredentialToken(
   tenant: TenantId,
   client: ClientApplication,
 ): Promise<JWT<AccessTokenPayload<s.user_role>>> {
-  const signingKey = await getSigningKey(
-    process.env.AUTH_LOCAL_CERTIFICATION_LOCATION as string,
-    process.env.AUTH_LOCAL_SIGNING_KEY as string,
-  );
+  const signingKey = await getSigningKey(getCertLocation(), getCertKey());
 
   const accessTokenPayload: AccessTokenPayload<s.user_role> = {
     iss: IGUHEALTH_ISSUER,

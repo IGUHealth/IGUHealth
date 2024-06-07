@@ -37,6 +37,8 @@ import {
 
 import {
   createCertsIfNoneExists,
+  getCertKey,
+  getCertLocation,
   getSigningKey,
 } from "../authN/certifications.js";
 import { createFHIRAPI, createFHIRServices } from "../fhir-api/index.js";
@@ -61,15 +63,8 @@ import { LIB_VERSION } from "../version.js";
 
 dotEnv.config();
 
-if (
-  process.env.AUTH_LOCAL_SIGNING_KEY &&
-  process.env.AUTH_LOCAL_CERTIFICATION_LOCATION &&
-  process.env.NODE_ENV === "development"
-) {
-  await createCertsIfNoneExists(
-    process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
-    process.env.AUTH_LOCAL_SIGNING_KEY,
-  );
+if (process.env.NODE_ENV === "development") {
+  await createCertsIfNoneExists(getCertLocation(), getCertKey());
 }
 
 if (process.env.SENTRY_WORKER_DSN)
@@ -176,16 +171,7 @@ async function handleSubscriptionPayload(
         operation,
       );
 
-      if (
-        !process.env.AUTH_LOCAL_CERTIFICATION_LOCATION ||
-        !process.env.AUTH_LOCAL_SIGNING_KEY
-      ) {
-        throw new Error("Missing environment variables for JWT creation.");
-      }
-      const signingKey = await getSigningKey(
-        process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
-        process.env.AUTH_LOCAL_SIGNING_KEY,
-      );
+      const signingKey = await getSigningKey(getCertLocation(), getCertKey());
 
       const user_access_token = await createToken<
         AccessTokenPayload<s.user_role>
