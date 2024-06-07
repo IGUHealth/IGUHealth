@@ -201,7 +201,6 @@ export default async function createServer(): Promise<
     const jwks = await getJWKS(getCertLocation());
     ctx.body = jwks;
     await next();
-    return;
   });
 
   const jwtMiddleware = await createValidateUserJWTMiddleware({
