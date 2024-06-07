@@ -13,7 +13,9 @@
     "FHIR_DATABASE_USERNAME",
     "REDIS_HOST",
     "REDIS_PORT",
-    "SESSION_COOKIE_SECRETS"
+    "SESSION_COOKIE_SECRETS",
+    "AUTH_LOCAL_CERTIFICATION_LOCATION",
+    "AUTH_LOCAL_SIGNING_KEY"
   ],
   "properties": {
     "SESSION_COOKIE_SECRETS": {
@@ -124,15 +126,6 @@
     "AUTH_LOCAL_SIGNING_KEY": {
       "type": "string",
       "description": "The signing key used to generate new local tokens"
-    },
-
-    "AUTH_EXTERNAL_JWK_URI": {
-      "type": "string",
-      "description": "JWK remote url to pull JSON WEB Key Set."
-    },
-    "AUTH_EXTERNAL_JWT_ISSUER": {
-      "type": "string",
-      "description": "Issuer of the JWT."
     },
 
     "EMAIL_PROVIDER": {

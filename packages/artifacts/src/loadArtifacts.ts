@@ -68,10 +68,7 @@ export default function loadArtifacts<
   let deps = { ...packageJSON.dependencies };
   // https://jestjs.io/docs/environment-variables
   // JEST sets environment to test by default.
-  if (
-    process.env.NODE_ENV === "development" ||
-    process.env.NODE_ENV === "test"
-  ) {
+  if (process.env.NODE_ENV !== "production") {
     deps = { ...packageJSON.devDependencies, ...deps };
   }
 

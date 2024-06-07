@@ -8,7 +8,6 @@ import redisStore from "koa-redis";
 import session from "koa-session";
 import serve from "koa-static";
 import path from "node:path";
-import pg from "pg";
 import React from "react";
 import { fileURLToPath } from "url";
 import * as db from "zapatos/db";
@@ -21,7 +20,12 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
-import { createCertsIfNoneExists, getJWKS } from "./authN/certifications.js";
+import {
+  createCertsIfNoneExists,
+  getCertKey,
+  getCertLocation,
+  getJWKS,
+} from "./authN/certifications.js";
 import { createGlobalAuthRouter } from "./authN/global/index.js";
 import {
   allowPublicAccessMiddleware,
@@ -173,15 +177,8 @@ export default async function createServer(): Promise<
       ),
     });
 
-  if (
-    process.env.NODE_ENV === "development" &&
-    process.env.AUTH_LOCAL_CERTIFICATION_LOCATION &&
-    process.env.AUTH_LOCAL_SIGNING_KEY
-  ) {
-    await createCertsIfNoneExists(
-      process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
-      process.env.AUTH_LOCAL_SIGNING_KEY,
-    );
+  if (process.env.NODE_ENV === "development") {
+    await createCertsIfNoneExists(getCertLocation(), getCertKey());
   }
 
   const pool = createPGPool();
@@ -201,22 +198,13 @@ export default async function createServer(): Promise<
   );
 
   rootRouter.get(JWKS_GET, "/certs/jwks", async (ctx, next) => {
-    if (process.env.AUTH_LOCAL_CERTIFICATION_LOCATION) {
-      const jwks = await getJWKS(process.env.AUTH_LOCAL_CERTIFICATION_LOCATION);
-      ctx.body = jwks;
-      await next();
-      return;
-    }
-
-    throw new OperationError(outcomeError("not-found", "No certs found."));
+    const jwks = await getJWKS(getCertLocation());
+    ctx.body = jwks;
+    await next();
   });
 
   const jwtMiddleware = await createValidateUserJWTMiddleware({
-    AUTH_LOCAL_CERTIFICATION_LOCATION:
-      process.env.AUTH_LOCAL_CERTIFICATION_LOCATION,
-    AUTH_LOCAL_SIGNING_KEY: process.env.AUTH_LOCAL_SIGNING_KEY,
-    AUTH_EXTERNAL_JWT_ISSUER: process.env.AUTH_EXTERNAL_JWT_ISSUER,
-    AUTH_EXTERNAL_JWK_URI: process.env.AUTH_EXTERNAL_JWK_URI,
+    AUTH_LOCAL_CERTIFICATION_LOCATION: getCertLocation(),
   });
 
   const authMiddlewares = [
