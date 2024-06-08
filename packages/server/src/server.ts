@@ -307,6 +307,8 @@ export default async function createServer(): Promise<
           // Not compatible with redirect on OIDC
           directives: {
             "form-action": null,
+            "style-src": "'self'",
+            "default-src": "none",
           },
         },
       }),
