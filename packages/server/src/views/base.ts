@@ -1,8 +1,4 @@
-import { createRequire } from "module";
-import fs from "node:fs";
 import React from "react";
-
-const require = createRequire(import.meta.url);
 
 export default function Base({
   title = "IGUHealth",
