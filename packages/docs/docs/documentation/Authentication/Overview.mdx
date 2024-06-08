@@ -2,20 +2,77 @@
 sidebar_position: 1
 ---
 
+import TabItem from "@theme/TabItem";
+import Tabs from "@theme/Tabs";
+
 # Overview
 
-Authentication is built around tenants. Tenants are a logical seperation of resources. Each tenant will have it's own isolated set of resources.
-Access to a tenant is determined by JWT tokens. JWT tokens are expected to have custom claims specifying what tenant they have access too.
+This section covers the basics of authentication in IGUHealth.
+Each IGUHealth tenant is its own IDP(OIDC provider), and you can use the OIDC protocol to authenticate users and clients.
 
-## URL Structure for tenant access
+## Registration 
+Client registration is done through the [ClientApplication](../Data_Model/R4/ClientApplication.mdx) resource.
+To register a client you create a new Client Application via the API or the Admin UI.
 
-Requests are structured in the following format:
-URL: /w/:tenant/api/:version/fhir/:fhir_version/:\*,
+### Creating a Client Application
+<Tabs>
+  <TabItem value="cli" label="IGUHealth CLI">
+  ```bash
+  iguhealth create r4 ClientApplication --file clientapplication.json
+  ```
+  </TabItem>
+  <TabItem value="admin" label="Admin UI">
+    1. Go to the Admin UI
+    2. Click on sidebar Security -> Client Applications
+    3. Click `New` on the top right 
+    4. Fill in the form to create a new Client Application.
+  </TabItem>
+  <TabItem value="curl" label="Bash">
+  ```bash
+   curl --request POST --header "Authorization: Bearer <token>" --header "Content-Type: application/fhir+json" --file clientapplication.json https://api.iguhealth.app/w/{tenant}/api/v1/fhir/r4/ClientApplication
+  ```
+  </TabItem>
+</Tabs>
 
-- **tenant:** slug identifying the tenant a user is attempting to access.
-- **version:** IGUHealth api version.
-- **fhir_version:** FHIR version for the request.
+## Authentication flows
+Below is a diagram of the two main authentication flows supported by IGUHealth.
+To authenticate a machine/trusted client you should use the client credentials flow.
+To authenticate a user you should use the authorization code flow.
 
-## JWT Structure
+### Client Credentials
+```mermaid
+sequenceDiagram
+participant App
+participant IGUHealth Tenant
 
-JWT structure is specified in our package [@iguhealth/jwt](https://www.npmjs.com/package/@iguhealth/jwt). See README for more information.
+App ->> IGUHealth Tenant: Authenticates with client credentials
+IGUHealth Tenant ->> IGUHealth Tenant: Validates client credentials
+IGUHealth Tenant ->> App: Sends back an access token
+App ->> IGUHealth Tenant: Requests data with access token
+IGUHealth Tenant ->> App: Sends back data
+```
+
+### Authorization Code
+
+```mermaid
+sequenceDiagram
+participant User
+participant Web App
+participant IGUHealth Tenant
+
+
+User  ->> Web App: Goes to web app
+Web App ->> IGUHealth Tenant: Requests an authorization code
+IGUHealth Tenant ->> User: Redirects to login
+User ->> IGUHealth Tenant: User authenticates and consents
+IGUHealth Tenant ->> Web App: Redirects back to web app with authorization code
+Web App ->> IGUHealth Tenant: Requests an access token with authorization code
+IGUHealth Tenant ->> IGUHealth Tenant: Validates authorization code
+IGUHealth Tenant ->> Web App: Sends back both an access token and id token.
+Web App ->> IGUHealth Tenant: Requests data with access token.
+IGUHealth Tenant ->> Web App: Sends back data
+```
+
+## React provider
+To make it easier to authenticate users in a React application, we provide a component that will automate the authorization code flow.
+You can read more about this component [here](./OIDC.mdx#frontend-react).
