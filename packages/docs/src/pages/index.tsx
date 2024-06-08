@@ -19,7 +19,7 @@ function HeroBanner() {
             height="200"
           />
           <span className={styles.heroTitleTextHtml}>
-            Build <b>interoperable</b> healthcare apps based on{" "}
+            Build an <b>interoperable</b> healthcare <b>platform</b> based on{" "}
             <b>open standards</b>.
           </span>
         </Heading>
