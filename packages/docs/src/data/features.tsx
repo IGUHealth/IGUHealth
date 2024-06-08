@@ -30,10 +30,10 @@ const FEATURES: FeatureItem[] = [
     },
     text: (
       <Translate>
-        Built on top of the FHIR standard, IGUHealth is a FHIR native platform
-        that allows you to manage, store, and exchange healthcare data in a
-        secure, scalable, and compliant way. We support FHIR R4 and R4B
-        resources.
+        Build on top of the FHIR standard, IGUHealth is FHIR native. Create your
+        own platform that allows you to manage, store, and exchange healthcare
+        data in a secure, scalable, and compliant way. We support FHIR R4 and
+        R4B resources.
       </Translate>
     ),
   },
