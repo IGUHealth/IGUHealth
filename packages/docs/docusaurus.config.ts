@@ -96,6 +96,11 @@ const config = {
         autoCollapseCategories: false,
       },
     },
+    mermaid: {
+      theme: {
+        light: "neutral",
+      },
+    },
     algolia: {
       // The application ID provided by Algolia
       appId: "9M3PZB2S4M",
