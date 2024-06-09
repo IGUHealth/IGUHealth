@@ -1,14 +1,14 @@
-import { Parameters, id } from "@iguhealth/fhir-types/r4/types";
+import { Parameters, code, id } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
   FHIR_VERSION,
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
-import type { IOperation, OPMetadata } from "@iguhealth/operation-execution";
+import type { IOperation } from "@iguhealth/operation-execution";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import type { FHIRClientAsync } from "./interface.js";
+import type { FHIRClientAsync, InvokeParameter } from "./interface.js";
 import { MiddlewareAsync } from "./middleware/index.js";
 import type { FHIRRequest, FHIRResponse } from "./types/index.js";
 import type { ParsedParameter } from "./url.js";
@@ -296,13 +296,22 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   }
   async invoke_system<
     FHIRVersion extends FHIR_VERSION,
-    Op extends IOperation<any, any>,
-  >(
-    op: Op,
-    ctx: CTX,
-    fhirVersion: FHIRVersion,
-    input: OPMetadata<Op>["Input"],
-  ): Promise<OPMetadata<Op>["Output"]> {
+    Op extends IOperation<any, any> | code,
+    Input extends InvokeParameter<FHIRVersion, Op, "Input">,
+    Output extends InvokeParameter<FHIRVersion, Op, "Output">,
+  >(op: Op, ctx: CTX, fhirVersion: FHIRVersion, input: Input): Promise<Output> {
+    if (typeof op === "string") {
+      const response = await this.request(ctx, {
+        fhirVersion,
+        type: "invoke-request",
+        level: "system",
+        operation: op,
+        body: input,
+      } as FHIRRequest);
+
+      return (response as unknown as Record<string, unknown>).body as Output;
+    }
+
     const response = await this.request(ctx, {
       fhirVersion,
       type: "invoke-request",
@@ -310,21 +319,37 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       operation: op.code,
       body: op.parseToParameters("in", input) as Parameters,
     } as FHIRRequest);
+
     if (response.type !== "invoke-response")
       throw new Error("Unexpected response type");
     return op.parseToObject("out", response.body);
   }
   async invoke_type<
     FHIRVersion extends FHIR_VERSION,
-    Op extends IOperation<any, any>,
+    Op extends IOperation<any, any> | code,
+    Input extends InvokeParameter<FHIRVersion, Op, "Input">,
+    Output extends InvokeParameter<FHIRVersion, Op, "Output">,
     T extends AllResourceTypes,
   >(
     op: Op,
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
-    input: OPMetadata<Op>["Input"],
-  ): Promise<OPMetadata<Op>["Output"]> {
+    input: Input,
+  ): Promise<Output> {
+    if (typeof op === "string") {
+      const response = await this.request(ctx, {
+        fhirVersion,
+        type: "invoke-request",
+        level: "type",
+        resourceType,
+        operation: op,
+        body: input,
+      } as FHIRRequest);
+
+      return (response as unknown as Record<string, unknown>).body as Output;
+    }
+
     const response = await this.request(ctx, {
       fhirVersion,
       type: "invoke-request",
@@ -340,7 +365,9 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   }
   async invoke_instance<
     FHIRVersion extends FHIR_VERSION,
-    Op extends IOperation<any, any>,
+    Op extends IOperation<any, any> | code,
+    Input extends InvokeParameter<FHIRVersion, Op, "Input">,
+    Output extends InvokeParameter<FHIRVersion, Op, "Output">,
     T extends AllResourceTypes,
   >(
     op: Op,
@@ -348,8 +375,22 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     fhirVersion: FHIRVersion,
     resourceType: T,
     id: NonNullable<Resource<FHIRVersion, AllResourceTypes>["id"]>,
-    input: OPMetadata<Op>["Input"],
-  ): Promise<OPMetadata<Op>["Output"]> {
+    input: Input,
+  ): Promise<Output> {
+    if (typeof op === "string") {
+      const response = await this.request(ctx, {
+        fhirVersion,
+        type: "invoke-request",
+        level: "instance",
+        operation: op,
+        resourceType,
+        id,
+        body: input,
+      } as FHIRRequest);
+
+      return (response as unknown as Record<string, unknown>).body as Output;
+    }
+
     const response = await this.request(ctx, {
       fhirVersion,
       type: "invoke-request",

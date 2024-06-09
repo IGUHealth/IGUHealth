@@ -37,7 +37,7 @@ import SendGrid from "../email/providers/sendgrid.js";
 import { encryptValue } from "../encryption/index.js";
 import { AWSKMSProvider } from "../encryption/provider/kms.js";
 import AWSLambdaExecutioner from "../fhir-operation-executors/providers/awsLambda/index.js";
-import IguhealthEncryptInvoke from "../fhir-operation-executors/providers/local/encrypt.js";
+// import IguhealthEncryptInvoke from "../fhir-operation-executors/providers/local/encrypt.js";
 import InlineExecutioner from "../fhir-operation-executors/providers/local/index.js";
 import IguhealthInviteUserInvoke from "../fhir-operation-executors/providers/local/invite_user.js";
 import IguhealthMessagePostInvoke from "../fhir-operation-executors/providers/local/message_post.js";
@@ -394,7 +394,7 @@ export async function createFHIRServices(
 
   const inlineOperationExecution = InlineExecutioner([
     StructureDefinitionSnapshotInvoke,
-    IguhealthEncryptInvoke,
+    // IguhealthEncryptInvoke,
     ResourceValidateInvoke,
     ValueSetExpandInvoke,
     ValueSetValidateInvoke,
