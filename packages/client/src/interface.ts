@@ -1,3 +1,4 @@
+import { code } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
   AllResourceTypes,
   FHIR_VERSION,
@@ -10,6 +11,15 @@ import type { FHIRRequest, FHIRResponse } from "./types/index.js";
 import type { ParsedParameter } from "./url.js";
 
 export type FHIRClient<CTX> = FHIRClientAsync<CTX>;
+
+export type InvokeParameter<
+  FHIRVersion extends FHIR_VERSION,
+  Op,
+  direction extends "Output" | "Input",
+> =
+  Op extends IOperation<any, any>
+    ? OPMetadata<Op>[direction]
+    : Resource<FHIRVersion, "Parameters">;
 
 export interface FHIRClientAsync<CTX> {
   request(ctx: CTX, request: FHIRRequest): Promise<FHIRResponse>;
@@ -97,27 +107,33 @@ export interface FHIRClientAsync<CTX> {
   ): Promise<NonNullable<Resource<FHIRVersion, "Bundle">["entry"]>>;
   invoke_system<
     FHIRVersion extends FHIR_VERSION,
-    Op extends IOperation<any, any>,
+    Op extends IOperation<any, any> | code,
+    Input extends InvokeParameter<FHIRVersion, Op, "Input">,
+    Output extends InvokeParameter<FHIRVersion, Op, "Output">,
   >(
     op: Op,
     ctx: CTX,
     fhirVersion: FHIRVersion,
-    input: OPMetadata<Op>["Input"],
-  ): Promise<OPMetadata<Op>["Output"]>;
+    input: Input,
+  ): Promise<Output>;
   invoke_type<
     FHIRVersion extends FHIR_VERSION,
-    Op extends IOperation<any, any>,
+    Op extends IOperation<any, any> | code,
+    Input extends InvokeParameter<FHIRVersion, Op, "Input">,
+    Output extends InvokeParameter<FHIRVersion, Op, "Output">,
     T extends AllResourceTypes,
   >(
     op: Op,
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
-    input: OPMetadata<Op>["Input"],
-  ): Promise<OPMetadata<Op>["Output"]>;
+    input: Input,
+  ): Promise<Output>;
   invoke_instance<
     FHIRVersion extends FHIR_VERSION,
-    Op extends IOperation<any, any>,
+    Op extends IOperation<any, any> | code,
+    Input extends InvokeParameter<FHIRVersion, Op, "Input">,
+    Output extends InvokeParameter<FHIRVersion, Op, "Output">,
     T extends AllResourceTypes,
   >(
     op: Op,
@@ -125,8 +141,8 @@ export interface FHIRClientAsync<CTX> {
     fhirVersion: FHIRVersion,
     resourceType: T,
     id: NonNullable<Resource<FHIRVersion, AllResourceTypes>["id"]>,
-    input: OPMetadata<Op>["Input"],
-  ): Promise<OPMetadata<Op>["Output"]>;
+    input: Input,
+  ): Promise<Output>;
   transaction<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
