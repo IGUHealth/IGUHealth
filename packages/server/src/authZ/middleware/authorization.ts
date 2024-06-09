@@ -112,6 +112,8 @@ function accessPolicyMethodToRequestType(
       return "read-request";
     case "search":
       return "search-request";
+    case "invoke":
+      return "invoke-request";
     default:
       return undefined;
   }
