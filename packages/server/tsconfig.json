@@ -5,7 +5,8 @@
     "lib/*",
     "jest.config.js",
     "scripts/*",
-    "tailwind.config.js"
+    "tailwind.config.js",
+    "postcss.config.js"
   ],
   "compilerOptions": {
     "jsx": "react" /* Specify what JSX code is generated. */,
