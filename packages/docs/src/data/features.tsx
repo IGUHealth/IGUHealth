@@ -21,7 +21,7 @@ export type FeatureItem = {
 const FEATURES: FeatureItem[] = [
   {
     title: translate({
-      message: "FHIR Native Platform",
+      message: "FHIR Native",
     }),
     image: {
       src: "/img/campfire.svg",
