@@ -5,7 +5,7 @@ import {
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
-import type { IOperation, OPMetadata } from "@iguhealth/operation-execution";
+import type { IOperation } from "@iguhealth/operation-execution";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import type { FHIRClientAsync, InvokeParameter } from "./interface.js";
