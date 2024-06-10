@@ -176,7 +176,12 @@ const config = {
           position: "right",
         },
         {
-          href: "https://api.iguhealth.app/auth/login",
+          to: "/#schedule-demo",
+          label: "Request demo",
+          position: "right",
+        },
+        {
+          to: "https://api.iguhealth.app/auth/login",
           label: "Sign In",
           position: "right",
         },
