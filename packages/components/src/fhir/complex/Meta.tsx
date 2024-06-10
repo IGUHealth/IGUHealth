@@ -35,7 +35,7 @@ export const FHIRMetaReadOnly = ({
           value={
             value?.extension?.find(
               (e) => e.url === "https://iguhealth.app/author",
-            )?.valueReference ?? { reference: "not-found" }
+            )?.valueReference
           }
           disabled={true}
           label="Author"
