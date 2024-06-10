@@ -13,9 +13,15 @@ const config = {
   title: "IGUHealth",
   tagline: "FHIR Development platform",
   favicon: "img/logo.svg",
+  customFields: {
+    // Put your custom environment here
+    iguhealthTenantUrl: process.env.IGUHEALTH_TENANT_URL,
+    iguhealthClientId: process.env.IGUHEALTH_CLIENT_ID,
+    iguhealthClientSecret: process.env.IGUHEALTH_CLIENT_SECRET,
+  },
 
   // Set the production url of your site here
-  url: "https://docs.iguhealth.app",
+  url: "https://iguhealth.app",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/",
