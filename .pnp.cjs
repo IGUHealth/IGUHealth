@@ -15255,6 +15255,7 @@ const RAW_RUNTIME_STATE =
           ["@docusaurus/tsconfig", "npm:3.3.2"],\
           ["@docusaurus/types", "virtual:9f288d48d2ea76719e04b1b7e59356fc6efd647c59fb847eff6fa2e56b3608f12273a918949e2afe8f77891c06fb4b346f8580227efcb8876b86b9519ca03ad2#npm:3.3.2"],\
           ["@iguhealth/artifacts", "workspace:packages/artifacts"],\
+          ["@iguhealth/client", "workspace:packages/client"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
           ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
           ["@iguhealth/hl7.fhir.r4b.core", "workspace:artifacts/r4b/hl7-core"],\

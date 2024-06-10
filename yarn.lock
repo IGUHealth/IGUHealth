@@ -8586,6 +8586,7 @@ __metadata:
     "@docusaurus/tsconfig": "npm:^3.3.2"
     "@docusaurus/types": "npm:^3.3.2"
     "@iguhealth/artifacts": "workspace:^"
+    "@iguhealth/client": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
     "@iguhealth/hl7.fhir.r4.core": "workspace:^"
     "@iguhealth/hl7.fhir.r4b.core": "workspace:^"
