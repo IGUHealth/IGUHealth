@@ -1,6 +1,5 @@
 import Link from "@docusaurus/Link";
 import { useBaseUrlUtils } from "@docusaurus/useBaseUrl";
-import useBaseUrl from "@docusaurus/useBaseUrl";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Features, { type FeatureItem } from "@site/src/data/features";
 import Heading from "@theme/Heading";
@@ -115,7 +114,6 @@ function DemoForm() {
   } = useDocusaurusContext();
   const { withBaseUrl } = useBaseUrlUtils();
   const {
-    reset,
     register,
     handleSubmit,
     formState: { errors },
