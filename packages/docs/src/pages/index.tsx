@@ -89,7 +89,7 @@ function FeaturesContainer() {
   const secondRow = Features.slice(3);
 
   return (
-    <div className="container text--center text-gray-900">
+    <div className="container text--center">
       <div className="row margin-top--lg margin-bottom--lg">
         {firstRow.map((feature, idx) => (
           <Feature feature={feature} key={idx} />
@@ -206,7 +206,7 @@ function DemoForm() {
           <div className="row">
             <div className="col flex flex-col justify-center items-center">
               <div className="sm:w-full row">
-                <div className="flex flex-col col px-8 mb-8 pt-12 text-gray-900">
+                <div className="flex flex-col col px-8 mb-8 pt-12 text-slate-900">
                   <h1
                     style={{ color: "#3578E5" }}
                     className="text-4xl font-weight-900"
