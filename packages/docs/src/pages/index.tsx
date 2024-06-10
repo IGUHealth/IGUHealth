@@ -121,33 +121,40 @@ function DemoForm() {
   } = useForm();
 
   const client = useMemo(() => {
-    return createHTTPClient({
-      url: customFields.iguhealthTenantUrl as string,
-      getAccessToken: async () => {
-        const response = await fetch(
-          `${customFields.iguhealthTenantUrl}/oidc/auth/token`,
-          {
-            method: "POST",
-            body: new URLSearchParams({
-              grant_type: "client_credentials",
-              client_id: customFields.iguhealthClientId as string,
-              client_secret: customFields.iguhealthClientSecret as string,
-            }),
-          },
-        );
+    if (customFields.iguhealthTenantUrl !== undefined) {
+      return createHTTPClient({
+        url: customFields.iguhealthTenantUrl as string,
+        getAccessToken: async () => {
+          const response = await fetch(
+            `${customFields.iguhealthTenantUrl}/oidc/auth/token`,
+            {
+              method: "POST",
+              body: new URLSearchParams({
+                grant_type: "client_credentials",
+                client_id: customFields.iguhealthClientId as string,
+                client_secret: customFields.iguhealthClientSecret as string,
+              }),
+            },
+          );
 
-        const data = await response.json();
+          const data = await response.json();
 
-        if (response.status >= 400) {
-          throw new Error(JSON.stringify(data));
-        }
+          if (response.status >= 400) {
+            throw new Error(JSON.stringify(data));
+          }
 
-        return data.access_token;
-      },
-    });
+          return data.access_token;
+        },
+      });
+    }
+    return undefined;
   }, [customFields]);
 
   const onSubmit = (formState) => {
+    if (client === undefined) {
+      alert("Failed to submit");
+      return;
+    }
     client
       .create({}, R4, {
         resourceType: "QuestionnaireResponse",
