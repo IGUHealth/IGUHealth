@@ -9,7 +9,8 @@ export const inputClassNames = ({
   issues: string[];
 }) =>
   classNames(
-    "flex relative px-3 py-2 group-aria-disabled:bg-gray-50",
+    "min-h-8",
+    "flex relative px-2 py-1 group-aria-disabled:bg-gray-50",
     "placeholder-slate-400 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200",
     "focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm ",
     "invalid:border-red-500 invalid:text-red-600 focus:invalid:border-red-500 focus:invalid:ring-red-500 disabled:shadow-none",
