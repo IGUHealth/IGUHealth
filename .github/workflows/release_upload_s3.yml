@@ -87,6 +87,9 @@ jobs:
         run: sh install.sh
         env:
           GOOGLE_GTAG_TRACKING_ID: ${{ secrets.GOOGLE_GTAG_TRACKING_ID }}
+          IGUHEALTH_TENANT_URL: ${{ secrets.DOCUMENTATION_IGUHEALTH_TENANT }}
+          IGUHEALTH_CLIENT_ID: ${{ secrets.DOCUMENTATION_IGUHEALTH_CLIENT_ID }}
+          IGUHEALTH_CLIENT_SECRET: ${{ secrets.DOCUMENTATION_IGUHEALTH_CLIENT_SECRET }}
 
       - name: Configure AWS credentials from Github account
         uses: aws-actions/configure-aws-credentials@v4
