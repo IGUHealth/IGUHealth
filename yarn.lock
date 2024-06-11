@@ -8901,6 +8901,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@iguhealth/testscript_runner@workspace:packages/testscript_runner":
+  version: 0.0.0-use.local
+  resolution: "@iguhealth/testscript_runner@workspace:packages/testscript_runner"
+  dependencies:
+    "@iguhealth/fhir-types": "workspace:^"
+    "@iguhealth/fhirpath": "workspace:^"
+    typescript: "npm:5.4.5"
+  languageName: unknown
+  linkType: soft
+
 "@inquirer/checkbox@npm:^2.3.4":
   version: 2.3.4
   resolution: "@inquirer/checkbox@npm:2.3.4"

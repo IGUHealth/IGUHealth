@@ -1,11 +1,13 @@
 import jsonpointer from "jsonpointer";
 
+import { id } from "@iguhealth/fhir-types/r4/types";
 import {
-  AResource,
+  AllResourceTypes,
+  FHIR_VERSION,
+  R4,
   Resource,
   ResourceType,
-  id,
-} from "@iguhealth/fhir-types/r4/types";
+} from "@iguhealth/fhir-types/versions";
 
 // Parent Loc
 declare const __parent: unique symbol;
@@ -81,14 +83,17 @@ export function toJSONPointer<T, R, P extends Parent<T>>(loc: Loc<T, R, P>) {
   return loc.substring(indexOfLastSlash, loc.length);
 }
 
-export function pathMeta<T extends Resource, R, P extends Parent<T>>(
-  loc: Loc<T, R, P>,
-): { resourceType: ResourceType; id: id } {
+export function pathMeta<
+  Version extends FHIR_VERSION,
+  T extends Resource<Version, AllResourceTypes>,
+  R,
+  P extends Parent<T>,
+>(loc: Loc<T, R, P>): { resourceType: ResourceType<Version>; id: id } {
   const indexOfLastSlash = loc.indexOf("/");
   const [resourceType, id] = loc
     .substring(0, indexOfLastSlash === -1 ? loc.length : indexOfLastSlash)
     .split("|");
-  return { resourceType: resourceType as ResourceType, id: id as id };
+  return { resourceType: resourceType as ResourceType<Version>, id: id as id };
 }
 
 export function get<T extends object, R, P extends Parent<T>>(
@@ -102,7 +107,7 @@ export function fields<T extends object, R, P extends Parent<T>>(
   loc: Loc<T, R, P>,
 ) {
   let asc = ascend(loc);
-  let fields = [];
+  const fields = [];
   while (asc) {
     fields.unshift(asc.field);
     asc = ascend(asc.parent);
@@ -110,32 +115,41 @@ export function fields<T extends object, R, P extends Parent<T>>(
   return fields;
 }
 
-export function root<T extends Resource, R, P extends Parent<T>>(
-  loc: Loc<T, R, P>,
-): Loc<T, T> {
+export function root<
+  Version extends FHIR_VERSION,
+  T extends Resource<Version, AllResourceTypes>,
+  R,
+  P extends Parent<T>,
+>(loc: Loc<T, R, P>): Loc<T, T> {
   const { resourceType, id } = pathMeta(loc);
   return pointer(resourceType, id) as any as Loc<T, T>;
 }
 
-function metaString(resourceType: ResourceType, id: id) {
+function metaString<Version extends FHIR_VERSION>(
+  resourceType: ResourceType<Version>,
+  id: id,
+) {
   return `${resourceType}|${id}`;
 }
 
 /*
  ** Creates a Loc pointer for a resource.
  */
-export function pointer<T extends ResourceType>(
+export function pointer<
+  Version extends FHIR_VERSION,
+  T extends ResourceType<Version>,
+>(
   resourceType: T,
   resourceId: id,
-): Loc<AResource<T>, AResource<T>> {
+): Loc<Resource<Version, T>, Resource<Version, T>> {
   return `${metaString(resourceType, resourceId)}` as Loc<
-    AResource<T>,
-    AResource<T>
+    Resource<Version, T>,
+    Resource<Version, T>
   >;
 }
 
 export function typedPointer<V, T>(): Loc<V, T, Parent<V>> {
-  return metaString("Unknown" as ResourceType, "unknown" as id) as Loc<
+  return metaString("Unknown" as ResourceType<R4>, "unknown" as id) as Loc<
     V,
     T,
     Parent<V>

@@ -1,0 +1,20 @@
+{
+  "name": "@iguhealth/testscript_runner",
+  "version": "0.0.0",
+  "types": "lib/index.d.ts",
+  "target": "node",
+  "type": "module",
+  "dependencies": {
+    "@iguhealth/fhirpath": "workspace:^"
+  },
+  "devDependencies": {
+    "@iguhealth/fhir-types": "workspace:^",
+    "typescript": "5.4.5"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "files": [
+    "lib/**"
+  ]
+}
