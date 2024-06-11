@@ -116,6 +116,10 @@ const RAW_RUNTIME_STATE =
     {\
       "name": "@iguhealth/server",\
       "reference": "workspace:packages/server"\
+    },\
+    {\
+      "name": "@iguhealth/testscript_runner",\
+      "reference": "workspace:packages/testscript_runner"\
     }\
   ],\
   "enableTopLevelFallback": true,\
@@ -146,6 +150,7 @@ const RAW_RUNTIME_STATE =
     ["@iguhealth/operation-outcomes", ["workspace:packages/operation-outcomes"]],\
     ["@iguhealth/rs_cpu-count", ["workspace:packages/rs_cpu-count"]],\
     ["@iguhealth/server", ["workspace:packages/server"]],\
+    ["@iguhealth/testscript_runner", ["workspace:packages/testscript_runner"]],\
     ["hl7.fhir.r4b.examples", ["workspace:artifacts/r4b/test-data/examples-json"]],\
     ["iguhealth-workspace", ["workspace:."]]\
   ],\
@@ -15604,6 +15609,18 @@ const RAW_RUNTIME_STATE =
           ["typescript", "patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>::version=5.4.5&hash=5adc0c"],\
           ["validator", "npm:13.12.0"],\
           ["zapatos", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:6.4.0"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@iguhealth/testscript_runner", [\
+      ["workspace:packages/testscript_runner", {\
+        "packageLocation": "./packages/testscript_runner/",\
+        "packageDependencies": [\
+          ["@iguhealth/testscript_runner", "workspace:packages/testscript_runner"],\
+          ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
+          ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
+          ["typescript", "patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>::version=5.4.5&hash=5adc0c"]\
         ],\
         "linkType": "SOFT"\
       }]\
