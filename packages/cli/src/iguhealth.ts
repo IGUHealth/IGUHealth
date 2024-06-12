@@ -1,9 +1,9 @@
 import { Command } from "commander";
 
-import { apiCommands } from "./api.js";
-import { codeGenerationCommands } from "./codeGeneration.js";
+import { codeGenerationCommands } from "./commands/codeGeneration.js";
+import { apiCommands } from "./commands/api.js";
 import { configurationCommands } from "./config.js";
-import { minimizeCommands } from "./minimize.js";
+import { minimizeCommands } from "./commands/minimize.js";
 
 const program = new Command();
 

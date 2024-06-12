@@ -20,6 +20,7 @@
     "@iguhealth/hl7.fhir.r4.core": "workspace:^",
     "@iguhealth/hl7.fhir.r4b.core": "workspace:^",
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^",
+    "@iguhealth/testscript_runner": "workspace:^",
     "@inquirer/prompts": "^5.0.4",
     "@types/node": "^20.12.12",
     "commander": "^12.1.0"
