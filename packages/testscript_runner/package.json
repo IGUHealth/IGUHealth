@@ -5,7 +5,9 @@
   "target": "node",
   "type": "module",
   "dependencies": {
-    "@iguhealth/fhirpath": "workspace:^"
+    "@iguhealth/client": "workspace:^",
+    "@iguhealth/fhirpath": "workspace:^",
+    "@iguhealth/operation-outcomes": "workspace:^"
   },
   "devDependencies": {
     "@iguhealth/fhir-types": "workspace:^",
