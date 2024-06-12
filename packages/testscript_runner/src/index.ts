@@ -481,6 +481,5 @@ export async function run<Version extends FHIR_VERSION>(
   } finally {
     const output = await runTeardown(state, testscript.teardown);
     testReport.teardown = output.result;
-    state = output.state;
   }
 }
