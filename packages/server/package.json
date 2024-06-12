@@ -63,6 +63,7 @@
     "ioredis": "5.4.1",
     "jose": "^5.4.0",
     "json-schema-to-typescript": "^14.0.5",
+    "jsonpath": "^1.1.1",
     "jwks-rsa": "^3.1.0",
     "kafkajs": "^2.2.4",
     "keygrip": "^1.1.0",
