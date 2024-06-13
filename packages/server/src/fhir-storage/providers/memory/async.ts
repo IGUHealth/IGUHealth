@@ -480,10 +480,12 @@ export class Memory<CTX extends FHIRServerCTX>
   public patch: FHIRClientAsync<CTX>["patch"];
   public read: FHIRClientAsync<CTX>["read"];
   public vread: FHIRClientAsync<CTX>["vread"];
-  public delete: FHIRClientAsync<CTX>["delete"];
-  public historySystem: FHIRClientAsync<CTX>["historySystem"];
-  public historyType: FHIRClientAsync<CTX>["historyType"];
-  public historyInstance: FHIRClientAsync<CTX>["historyInstance"];
+  public delete_instance: FHIRClientAsync<CTX>["delete_instance"];
+  public delete_type: FHIRClientAsync<CTX>["delete_type"];
+  public delete_system: FHIRClientAsync<CTX>["delete_system"];
+  public history_system: FHIRClientAsync<CTX>["history_system"];
+  public history_type: FHIRClientAsync<CTX>["history_type"];
+  public history_instance: FHIRClientAsync<CTX>["history_instance"];
   public invoke_system: FHIRClientAsync<CTX>["invoke_system"];
   public invoke_type: FHIRClientAsync<CTX>["invoke_type"];
   public invoke_instance: FHIRClientAsync<CTX>["invoke_instance"];
@@ -517,11 +519,13 @@ export class Memory<CTX extends FHIRServerCTX>
     this.patch = this._client.patch.bind(this._client);
     this.read = this._client.read.bind(this._client);
     this.vread = this._client.vread.bind(this._client);
-    this.delete = this._client.delete.bind(this._client);
+    this.delete_instance = this._client.delete_instance.bind(this._client);
+    this.delete_type = this._client.delete_type.bind(this._client);
+    this.delete_system = this._client.delete_system.bind(this._client);
 
-    this.historySystem = this._client.historySystem.bind(this._client);
-    this.historyType = this._client.historyType.bind(this._client);
-    this.historyInstance = this._client.historyInstance.bind(this._client);
+    this.history_system = this._client.history_system.bind(this._client);
+    this.history_type = this._client.history_type.bind(this._client);
+    this.history_instance = this._client.history_instance.bind(this._client);
 
     this.invoke_system = this._client.invoke_system.bind(this._client);
     this.invoke_type = this._client.invoke_type.bind(this._client);

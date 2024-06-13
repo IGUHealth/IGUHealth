@@ -112,13 +112,34 @@ async function toHTTPRequest(
         headers,
       };
 
-    case "delete-request":
-      return {
-        url: `${FHIRUrl}/${request.resourceType}/${request.id}`,
-        method: "DELETE",
-        headers,
-      };
-
+    case "delete-request": {
+      switch (request.level) {
+        case "instance": {
+          return {
+            url: `${FHIRUrl}/${request.resourceType}/${request.id}`,
+            method: "DELETE",
+            headers,
+          };
+        }
+        case "type": {
+          const queryString = parametersToQueryString(request.parameters);
+          return {
+            url: `${FHIRUrl}/${request.resourceType}${queryString ? `?${queryString}` : ""}`,
+            method: "DELETE",
+            headers,
+          };
+        }
+        case "system": {
+          const queryString = parametersToQueryString(request.parameters);
+          return {
+            url: `${FHIRUrl}${queryString ? `?${queryString}` : ""}`,
+            method: "DELETE",
+            headers,
+          };
+        }
+      }
+      throw new OperationError(outcomeError("exception", "Invalid level"));
+    }
     case "history-request": {
       let url;
       const queryString = parametersToQueryString(request.parameters || []);
@@ -308,13 +329,35 @@ async function httpResponseToFHIRResponse(
     }
 
     case "delete-request": {
-      return {
-        fhirVersion: request.fhirVersion,
-        type: "delete-response",
-        level: "instance",
-        resourceType: request.resourceType,
-        id: request.id,
-      } as FHIRResponse;
+      switch (request.level) {
+        case "instance": {
+          return {
+            fhirVersion: request.fhirVersion,
+            type: "delete-response",
+            level: "instance",
+            resourceType: request.resourceType,
+            id: request.id,
+          } as FHIRResponse;
+        }
+        case "type": {
+          return {
+            fhirVersion: request.fhirVersion,
+            type: "delete-response",
+            level: "type",
+            resourceType: request.resourceType,
+            parameters: request.parameters,
+          } as FHIRResponse;
+        }
+        case "system": {
+          return {
+            fhirVersion: request.fhirVersion,
+            type: "delete-response",
+            level: "system",
+            parameters: request.parameters,
+          } as FHIRResponse;
+        }
+      }
+      throw new OperationError(outcomeError("exception", "Invalid level"));
     }
 
     case "history-request": {

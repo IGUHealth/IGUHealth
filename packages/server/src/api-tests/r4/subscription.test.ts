@@ -92,7 +92,7 @@ test("No filter QR", async () => {
       [{ name: "identifier", value: ["iguhealth-system|test-qr"] }],
     );
     expect(response.resources.length).toEqual(1);
-    await client2.delete(
+    await client2.delete_instance(
       {},
       R4,
       "QuestionnaireResponse",
@@ -101,7 +101,7 @@ test("No filter QR", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, R4, resourceType, id as id);
+        return await client.delete_instance({}, R4, resourceType, id as id);
       }),
     );
   }
@@ -142,11 +142,11 @@ test("Filter patient sub ", async () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     const response = await client2.search_type({}, R4, "Patient", []);
     expect(response.resources.length).toEqual(1);
-    await client2.delete({}, R4, "Patient", response.resources[0].id as id);
+    await client2.delete_instance({}, R4, "Patient", response.resources[0].id as id);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, R4, resourceType, id as id);
+        return await client.delete_instance({}, R4, resourceType, id as id);
       }),
     );
   }
@@ -187,11 +187,11 @@ test("name check", async () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     const response = await client2.search_type({}, R4, "Patient", []);
     expect(response.resources.length).toEqual(1);
-    await client2.delete({}, R4, "Patient", response.resources[0].id as id);
+    await client2.delete_instance({}, R4, "Patient", response.resources[0].id as id);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, R4, resourceType, id as id);
+        return await client.delete_instance({}, R4, resourceType, id as id);
       }),
     );
   }
@@ -251,12 +251,12 @@ test("Reference canonical", async () => {
     expect(qrs.resources.length).toEqual(1);
 
     for (const qr of qrs.resources) {
-      await client2.delete({}, R4, "QuestionnaireResponse", qr.id as id);
+      await client2.delete_instance({}, R4, "QuestionnaireResponse", qr.id as id);
     }
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, R4, resourceType, id as id);
+        return await client.delete_instance({}, R4, resourceType, id as id);
       }),
     );
   }
@@ -321,7 +321,7 @@ test("Reference standard", async () => {
       `Patient/${patient.id}`,
     );
 
-    await client2.delete({}, R4, "Encounter", encounters.resources[0].id as id);
+    await client2.delete_instance({}, R4, "Encounter", encounters.resources[0].id as id);
 
     await client.update(
       {},
@@ -370,11 +370,11 @@ test("Reference standard", async () => {
       `Patient/${patient.id}`,
     );
 
-    await client2.delete({}, R4, "Encounter", encounters.resources[0].id as id);
+    await client2.delete_instance({}, R4, "Encounter", encounters.resources[0].id as id);
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, R4, resourceType, id as id);
+        return await client.delete_instance({}, R4, resourceType, id as id);
       }),
     );
   }

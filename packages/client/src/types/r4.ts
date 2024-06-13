@@ -49,7 +49,17 @@ export type R4PatchRequest = R4InstanceInteraction & {
   body: unknown;
 };
 
-export type R4DeleteRequest = R4InstanceInteraction & {
+export type R4InstanceDeleteRequest = R4InstanceInteraction & {
+  type: RequestInteractionTypes["delete"];
+};
+
+export type R4TypeDeleteRequest = R4TypeInteraction & {
+  parameters: ParsedParameter<string | number>[];
+  type: RequestInteractionTypes["delete"];
+};
+
+export type R4SystemDeleteRequest = R4SystemInteraction & {
+  parameters: ParsedParameter<string | number>[];
   type: RequestInteractionTypes["delete"];
 };
 
@@ -127,16 +137,18 @@ export type R4FHIRRequest =
   | R4VersionReadRequest
   | R4UpdateRequest
   | R4PatchRequest
-  | R4DeleteRequest
   | R4HistoryInstanceRequest
+  | R4InstanceDeleteRequest
   | R4CreateRequest
   | R4TypeSearchRequest
   | R4TypeHistoryRequest
+  | R4TypeDeleteRequest
   | R4CapabilitiesRequest
   | R4BatchRequest
   | R4TransactionRequest
   | R4SystemHistoryRequest
-  | R4SystemSearchRequest;
+  | R4SystemSearchRequest
+  | R4SystemDeleteRequest;
 
 export type R4ReadResponse = R4InstanceInteraction & {
   type: ResponseInteractionTypes["read"];
@@ -160,7 +172,17 @@ export type R4PatchResponse = R4InstanceInteraction & {
   body: Resource;
 };
 
-export type R4DeleteResponse = R4InstanceInteraction & {
+export type R4InstanceDeleteResponse = R4InstanceInteraction & {
+  type: ResponseInteractionTypes["delete"];
+};
+
+export type R4TypeDeleteResponse = R4TypeInteraction & {
+  parameters: ParsedParameter<string | number>[];
+  type: ResponseInteractionTypes["delete"];
+};
+
+export type R4SystemDeleteResponse = R4SystemInteraction & {
+  parameters: ParsedParameter<string | number>[];
   type: ResponseInteractionTypes["delete"];
 };
 
@@ -251,13 +273,15 @@ export type R4FHIRResponse =
   | R4VersionReadResponse
   | R4UpdateResponse
   | R4PatchResponse
-  | R4DeleteResponse
   | R4InstanceHistoryResponse
+  | R4InstanceDeleteResponse
   | R4CreateResponse
   | R4TypeSearchResponse
   | R4TypeHistoryResponse
+  | R4TypeDeleteResponse
   | R4CapabilitiesResponse
   | R4BatchResponse
   | R4TransactionResponse
   | R4SystemHistoryResponse
-  | R4SystemSearchResponse;
+  | R4SystemSearchResponse
+  | R4SystemDeleteResponse;

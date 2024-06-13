@@ -1,3 +1,4 @@
+import { request } from "node:http";
 import validator from "validator";
 import * as db from "zapatos/db";
 
@@ -182,25 +183,37 @@ function updateUserTableMiddleware<
         return res;
       }
       case "delete-request": {
-        const id = context.request.id;
+        switch (context.request.level) {
+          case "instance": {
+            const id = context.request.id;
 
-        const membership = await context.state.fhirDB.read(
-          context.ctx,
-          R4,
-          "Membership",
-          id,
-        );
-        const versionId = membership?.meta?.versionId;
-        if (!versionId)
-          throw new OperationError(
-            outcomeFatal("not-found", "Membership not found."),
-          );
+            const membership = await context.state.fhirDB.read(
+              context.ctx,
+              R4,
+              "Membership",
+              id,
+            );
+            const versionId = membership?.meta?.versionId;
+            if (!versionId)
+              throw new OperationError(
+                outcomeFatal("not-found", "Membership not found."),
+              );
 
-        await tenantUserManagement.delete(context.ctx, {
-          fhir_user_versionid: parseInt(versionId),
-        });
+            await tenantUserManagement.delete(context.ctx, {
+              fhir_user_versionid: parseInt(versionId),
+            });
 
-        return next(context);
+            return next(context);
+          }
+          default: {
+            throw new OperationError(
+              outcomeError(
+                "not-supported",
+                "Only instance level delete is supported for auth types.",
+              ),
+            );
+          }
+        }
       }
       case "update-request": {
         const id = context.request.id;
