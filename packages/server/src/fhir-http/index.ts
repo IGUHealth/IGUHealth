@@ -38,6 +38,8 @@ read            	  /[type]/[id]	                      GET‡	N/A	N/A	N/A	O: If-M
 update             	/[type]/[id]                      	PUT	R	Resource	O	O: If-Match
 patch        	      /[type]/[id]                      	PATCH	R (may be a patch type)	Patch	O	O: If-Match
 delete	            /[type]/[id]	                      DELETE	N/A	N/A	N/A	N/A
+delete-conditional  /[type]?                            DELETE	N/A	N/A	N/A	O: If-Match
+                    /?	                                DELETE	N/A	N/A	N/A	O: If-Match
 history-type	      /[type]/_history	                  GET	N/A	N/A	N/A	N/A
 
 (operation)         /[type]/[id]/$[name]                POST	R	Parameters	N/A	N/A 
@@ -96,6 +98,8 @@ type HTTPRequest = {
 /* 
 transaction	        /	                                  POST	R	Bundle	O	N/A
 batch	              /	                                  POST	R	Bundle	O	N/A
+search-system	      ?	                                  GET	N/A	N/A	N/A	N/A
+delete-conditional  ?                                   DELETE N/A N/A N/A O: If-Match
 */
 function parseRequest1Empty<Version extends FHIR_VERSION>(
   fhirVersion: Version,
@@ -158,6 +162,14 @@ function parseRequest1Empty<Version extends FHIR_VERSION>(
         parameters: parseUrl(request.url),
       };
     }
+    case "DELETE": {
+      return {
+        fhirVersion,
+        type: "delete-request",
+        level: "system",
+        parameters: parseUrl(request.url),
+      };
+    }
     default: {
       throw new OperationError(
         outcomeError("invalid", "Request could not be parsed at type level."),
@@ -173,6 +185,7 @@ capabilities	      /metadata	                          GET‡	N/A	N/A	N/A	N/A
 create         	    /[type]                           	POST	R	Resource	O	O: If-None-Exist
 search-type	        /[type]?                           	GET	N/A	N/A	N/A	N/A
 search-system       /_search	                          POST	application/x-www-form-urlencoded	form data	N/A	N/A
+delete-conditional	/[type]?	                          DELETE	N/A	N/A	N/A	O: If-Match
 history-system	    /_history	                          GET	N/A	N/A	N/A	N/A
 (operation)	        /$[name]                            POST	R	Parameters	N/A	N/A 
                                                         GET	N/A	N/A	N/A	N/A
@@ -259,6 +272,40 @@ function parseRequest1NonEmpty(
         outcomeError("invalid", `Invalid resource type ${urlPieces[0]}`),
       );
     }
+    case request.method === "DELETE": {
+      const resourceType = urlPieces[0].split("?")[0];
+      if (verifyResourceType(fhirVersion, resourceType)) {
+        switch (fhirVersion) {
+          case R4: {
+            return {
+              fhirVersion,
+              type: "delete-request",
+              level: "type",
+              resourceType: resourceType as r4.ResourceType,
+              parameters: parseUrl(request.url),
+            };
+          }
+          case R4B: {
+            return {
+              fhirVersion,
+              type: "delete-request",
+              level: "type",
+              resourceType: resourceType as r4b.ResourceType,
+              parameters: parseUrl(request.url),
+            };
+          }
+          default: {
+            throw new OperationError(
+              outcomeError("invalid", `Invalid FHIR version '${fhirVersion}'`),
+            );
+          }
+        }
+      } else {
+        throw new OperationError(
+          outcomeError("invalid", "Invalid resource type"),
+        );
+      }
+    }
     case request.method === "GET": {
       switch (true) {
         case urlPieces[0] === "metadata": {
@@ -300,6 +347,10 @@ function parseRequest1NonEmpty(
                 };
               }
             }
+          } else {
+            throw new OperationError(
+              outcomeError("invalid", "Invalid resource type for search."),
+            );
           }
         }
       }

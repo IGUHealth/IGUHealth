@@ -66,7 +66,7 @@ function ResourceHistory() {
   useEffect(() => {
     setLoading(true);
     client
-      .historyInstance({}, R4, resourceType as ResourceType, id as id)
+      .history_instance({}, R4, resourceType as ResourceType, id as id)
       .then((response) => {
         setHistory(response);
         setLoading(false);

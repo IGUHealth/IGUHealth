@@ -193,7 +193,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       throw new Error("Unexpected response type");
     return response.body as Resource<FHIRVersion, T> | undefined;
   }
-  async delete<
+  async delete_instance<
     FHIRVersion extends FHIR_VERSION,
     T extends ResourceType<FHIRVersion>,
   >(
@@ -212,7 +212,40 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     if (response.type !== "delete-response")
       throw new Error("Unexpected response type");
   }
-  async historySystem<FHIRVersion extends FHIR_VERSION>(
+  async delete_type<
+    FHIRVersion extends FHIR_VERSION,
+    T extends ResourceType<FHIRVersion>,
+  >(
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
+    resourceType: T,
+    parameters?: ParsedParameter<string | number>[] | string,
+  ): Promise<void> {
+    const response = await this.request(ctx, {
+      fhirVersion,
+      type: "delete-request",
+      level: "type",
+      resourceType: resourceType,
+      parameters: parameters,
+    } as FHIRRequest);
+    if (response.type !== "delete-response")
+      throw new Error("Unexpected response type");
+  }
+  async delete_system<FHIRVersion extends FHIR_VERSION>(
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
+    parameters?: ParsedParameter<string | number>[] | string,
+  ): Promise<void> {
+    const response = await this.request(ctx, {
+      fhirVersion,
+      type: "delete-request",
+      level: "system",
+      parameters: parameters,
+    } as FHIRRequest);
+    if (response.type !== "delete-response")
+      throw new Error("Unexpected response type");
+  }
+  async history_system<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     parameters?: ParsedParameter<string | number>[] | string,
@@ -236,7 +269,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       Resource<FHIRVersion, "Bundle">["entry"]
     >;
   }
-  async historyType<
+  async history_type<
     FHIRVersion extends FHIR_VERSION,
     T extends AllResourceTypes,
   >(
@@ -264,7 +297,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       Resource<FHIRVersion, "Bundle">["entry"]
     >;
   }
-  async historyInstance<
+  async history_instance<
     FHIRVersion extends FHIR_VERSION,
     T extends AllResourceTypes,
   >(

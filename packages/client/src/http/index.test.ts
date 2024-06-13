@@ -37,5 +37,5 @@ test("Test creating and destroying with HTTP Client", async () => {
     parameter: [],
   });
 
-  await client.delete({}, R4, "OperationDefinition", response.id as id);
+  await client.delete_instance({}, R4, "OperationDefinition", response.id as id);
 });

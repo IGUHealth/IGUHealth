@@ -1142,25 +1142,32 @@ function createPostgresMiddleware<
           };
         }
         case "delete-request": {
-          await deleteResource(
-            context.ctx,
-            context.request.fhirVersion,
-            context.request.resourceType,
-            context.request.id,
-          );
-
-          return {
-            request: context.request,
-            state: context.state,
-            ctx: context.ctx,
-            response: {
-              fhirVersion: context.request.fhirVersion,
-              type: "delete-response",
-              level: "instance",
-              resourceType: context.request.resourceType,
-              id: context.request.id,
-            } as FHIRResponse,
-          };
+          switch(context.request.level){
+            case "instance": {
+              await deleteResource(
+                context.ctx,
+                context.request.fhirVersion,
+                context.request.resourceType,
+                context.request.id,
+              );
+    
+              return {
+                request: context.request,
+                state: context.state,
+                ctx: context.ctx,
+                response: {
+                  fhirVersion: context.request.fhirVersion,
+                  type: "delete-response",
+                  level: "instance",
+                  resourceType: context.request.resourceType,
+                  id: context.request.id,
+                } as FHIRResponse,
+              };
+            }
+            default: {
+              throw new OperationError(outcomeError("not-supported", `Deletion not supported at '${context.request.level}' level`))
+            }
+          }
         }
 
         case "history-request": {

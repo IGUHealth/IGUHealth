@@ -350,7 +350,7 @@ function processSubscription(
 
       switch (request.level) {
         case "system": {
-          historyPoll = await server.historySystem(ctx, fhirVersion, [
+          historyPoll = await server.history_system(ctx, fhirVersion, [
             {
               name: "_since-version",
               value: [latestVersionIdForSub],
@@ -359,7 +359,7 @@ function processSubscription(
           break;
         }
         case "type": {
-          historyPoll = await server.historyType(
+          historyPoll = await server.history_type(
             ctx,
             fhirVersion,
             request.resourceType,

@@ -208,7 +208,7 @@ export function apiCommands(command: Command) {
       });
 
       if (shouldDelete) {
-        await client.delete({}, FHIRVersion, resourceType, id);
+        await client.delete_instance({}, FHIRVersion, resourceType, id);
         console.log("Resource has been deleted.");
       }
     });
@@ -299,7 +299,7 @@ export function apiCommands(command: Command) {
       const client = createClient(CONFIG_LOCATION);
       const FHIRVersion = asFHIRType(userFHIRVersion);
 
-      const history = await client.historySystem({}, FHIRVersion);
+      const history = await client.history_system({}, FHIRVersion);
       console.log(JSON.stringify(history, null, 2));
     });
 
@@ -313,7 +313,7 @@ export function apiCommands(command: Command) {
 
       if (!validateResourceType(FHIRVersion, resourceType))
         throw new Error("Invalid resource type");
-      const history = await client.historyType({}, FHIRVersion, resourceType);
+      const history = await client.history_type({}, FHIRVersion, resourceType);
       console.log(JSON.stringify(history, null, 2));
     });
 
@@ -328,7 +328,7 @@ export function apiCommands(command: Command) {
 
       if (!validateResourceType(FHIRVersion, resourceType))
         throw new Error("Invalid resource type");
-      const history = await client.historyInstance(
+      const history = await client.history_instance(
         {},
         FHIRVersion,
         resourceType,

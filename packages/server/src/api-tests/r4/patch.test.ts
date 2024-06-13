@@ -97,7 +97,7 @@ test("Test successfull patch", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, R4, resourceType, id as id);
+        return await client.delete_instance({}, R4, resourceType, id as id);
       }),
     );
   }

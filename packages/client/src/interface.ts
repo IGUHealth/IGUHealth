@@ -80,25 +80,45 @@ export interface FHIRClientAsync<CTX> {
     id: NonNullable<Resource<FHIRVersion, AllResourceTypes>["id"]>,
     versionId: NonNullable<Resource<FHIRVersion, AllResourceTypes>["id"]>,
   ): Promise<Resource<FHIRVersion, T> | undefined>;
-  delete<FHIRVersion extends FHIR_VERSION, T extends ResourceType<FHIRVersion>>(
+  delete_instance<
+    FHIRVersion extends FHIR_VERSION,
+    T extends ResourceType<FHIRVersion>,
+  >(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
     id: NonNullable<Resource<FHIRVersion, AllResourceTypes>["id"]>,
   ): Promise<void>;
+  delete_type<
+    FHIRVersion extends FHIR_VERSION,
+    T extends ResourceType<FHIRVersion>,
+  >(
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
+    resourceType: T,
+    parameters?: ParsedParameter<string | number>[] | string,
+  ): Promise<void>;
+  delete_system<FHIRVersion extends FHIR_VERSION>(
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
+    parameters?: ParsedParameter<string | number>[] | string,
+  ): Promise<void>;
 
-  historySystem<FHIRVersion extends FHIR_VERSION>(
+  history_system<FHIRVersion extends FHIR_VERSION>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     parameters?: ParsedParameter<string | number>[] | string,
   ): Promise<NonNullable<Resource<FHIRVersion, "Bundle">["entry"]>>;
-  historyType<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
+  history_type<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
     parameters?: ParsedParameter<string | number>[] | string,
   ): Promise<NonNullable<Resource<FHIRVersion, "Bundle">["entry"]>>;
-  historyInstance<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
+  history_instance<
+    FHIRVersion extends FHIR_VERSION,
+    T extends AllResourceTypes,
+  >(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,

@@ -262,7 +262,7 @@ test("Parameter chains", async () => {
     } finally {
       await Promise.all(
         resources.map(async ({ resourceType, id }) => {
-          return await client.delete({}, R4, resourceType, id as id);
+          return await client.delete_instance({}, R4, resourceType, id as id);
         }),
       );
     }
@@ -310,7 +310,7 @@ test("test offsets and count", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, R4, resourceType, id as id);
+        return await client.delete_instance({}, R4, resourceType, id as id);
       }),
     );
   }
@@ -343,7 +343,7 @@ test("test total accurate", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, R4, resourceType, id as id);
+        return await client.delete_instance({}, R4, resourceType, id as id);
       }),
     );
   }
@@ -437,7 +437,7 @@ test("Test sort ", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, R4, resourceType, id as id);
+        return await client.delete_instance({}, R4, resourceType, id as id);
       }),
     );
   }
@@ -504,7 +504,7 @@ test("Testing custom extension added to resources", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, R4, resourceType, id as id);
+        return await client.delete_instance({}, R4, resourceType, id as id);
       }),
     );
   }
@@ -562,7 +562,7 @@ test("Number range", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, R4, resourceType, id as id);
+        return await client.delete_instance({}, R4, resourceType, id as id);
       }),
     );
   }
@@ -685,7 +685,7 @@ test("Number prefixes", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, R4, resourceType, id as id);
+        return await client.delete_instance({}, R4, resourceType, id as id);
       }),
     );
   }
@@ -736,7 +736,7 @@ test("INDEXING REFERENCE FOR QUESTIONNAIRERESPONSE", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, R4, resourceType, id as id);
+        return await client.delete_instance({}, R4, resourceType, id as id);
       }),
     );
   }
@@ -791,7 +791,7 @@ test("Type filter", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, R4, resourceType, id as id);
+        return await client.delete_instance({}, R4, resourceType, id as id);
       }),
     );
   }
@@ -857,7 +857,7 @@ test("Encoding test", async () => {
   } finally {
     await Promise.all(
       resources.map(async ({ resourceType, id }) => {
-        return await client.delete({}, R4, resourceType, id as id);
+        return await client.delete_instance({}, R4, resourceType, id as id);
       }),
     );
   }
