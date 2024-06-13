@@ -15070,6 +15070,7 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
           ["@iguhealth/hl7.fhir.r4b.core", "workspace:artifacts/r4b/hl7-core"],\
           ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
+          ["@iguhealth/testscript_runner", "workspace:packages/testscript_runner"],\
           ["@inquirer/prompts", "npm:5.0.4"],\
           ["@types/node", "npm:20.12.12"],\
           ["commander", "npm:12.1.0"],\

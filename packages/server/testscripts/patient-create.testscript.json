@@ -1,0 +1,66 @@
+{
+  "id": "create-patient",
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "id": "patient-chalmers",
+      "resourceType": "Patient",
+      "name": [{ "family": "Chalmers", "given": ["Peter"] }]
+    }
+  ],
+  "fixture": [
+    {
+      "id": "fixture-patient-create",
+      "autocreate": false,
+      "autodelete": false,
+      "resource": {
+        "reference": "#patient-chalmers",
+        "display": "Peter Chalmers"
+      }
+    }
+  ],
+
+  "test": [
+    {
+      "id": "01-Create Patient",
+      "name": "Create Patient",
+      "description": "Create a Patient and validate response.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "create"
+            },
+            "resource": "Patient",
+            "sourceId": "fixture-patient-create",
+            "responseId": "fixture-patient-read"
+          }
+        },
+        {
+          "assert": {
+            "label": "01-ReadPatientOK",
+            "description": "Confirm patient created.",
+            "direction": "response",
+            "resource": "Patient"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+          },
+          "resource": "Patient",
+          "description": "Delete the patient resource on the test server using the id from fixture-patient-create.",
+          "targetId": "fixture-patient-create"
+        }
+      }
+    ]
+  }
+}

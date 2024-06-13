@@ -1,9 +1,10 @@
 {
   "name": "@iguhealth/testscript_runner",
   "version": "0.0.1",
-  "types": "lib/index.d.ts",
   "target": "node",
   "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "dependencies": {
     "@iguhealth/client": "workspace:^",
     "@iguhealth/fhirpath": "workspace:^",

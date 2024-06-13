@@ -1,0 +1,39 @@
+{
+  "testScript": {
+    "reference": "TestScript/create-patient"
+  },
+  "result": "pending",
+  "resourceType": "TestReport",
+  "setup": {
+    "action": []
+  },
+  "test": [
+    {
+      "name": "Create Patient",
+      "action": [
+        {
+          "operation": {
+            "result": "pass",
+            "message": "Operation 'undefined' succeeded with operation 'create'"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "result": "pass",
+          "message": "Operation 'undefined' succeeded with operation 'delete'"
+        }
+      }
+    ]
+  }
+}
