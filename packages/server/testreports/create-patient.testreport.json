@@ -2,7 +2,7 @@
   "testScript": {
     "reference": "TestScript/create-patient"
   },
-  "result": "pending",
+  "result": "fail",
   "resourceType": "TestReport",
   "setup": {
     "action": []
@@ -14,13 +14,13 @@
         {
           "operation": {
             "result": "pass",
-            "message": "Operation 'undefined' succeeded with operation 'create'"
+            "message": "[SUCCEEDED]<create> label: ''"
           }
         },
         {
           "assert": {
-            "result": "pass",
-            "message": "Assertions passed"
+            "result": "fail",
+            "message": "Expected resource type 'Appointment' but got 'Patient'"
           }
         }
       ]
@@ -31,7 +31,7 @@
       {
         "operation": {
           "result": "pass",
-          "message": "Operation 'undefined' succeeded with operation 'delete'"
+          "message": "[SUCCEEDED]<delete> label: ''"
         }
       }
     ]

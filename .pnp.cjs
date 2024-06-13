@@ -118,8 +118,8 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:packages/server"\
     },\
     {\
-      "name": "@iguhealth/testscript_runner",\
-      "reference": "workspace:packages/testscript_runner"\
+      "name": "@iguhealth/testscript-runner",\
+      "reference": "workspace:packages/testscript-runner"\
     }\
   ],\
   "enableTopLevelFallback": true,\
@@ -150,7 +150,7 @@ const RAW_RUNTIME_STATE =
     ["@iguhealth/operation-outcomes", ["workspace:packages/operation-outcomes"]],\
     ["@iguhealth/rs_cpu-count", ["workspace:packages/rs_cpu-count"]],\
     ["@iguhealth/server", ["workspace:packages/server"]],\
-    ["@iguhealth/testscript_runner", ["workspace:packages/testscript_runner"]],\
+    ["@iguhealth/testscript-runner", ["workspace:packages/testscript-runner"]],\
     ["hl7.fhir.r4b.examples", ["workspace:artifacts/r4b/test-data/examples-json"]],\
     ["iguhealth-workspace", ["workspace:."]]\
   ],\
@@ -15070,10 +15070,12 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/hl7.fhir.r4.core", "workspace:artifacts/r4/hl7-core"],\
           ["@iguhealth/hl7.fhir.r4b.core", "workspace:artifacts/r4b/hl7-core"],\
           ["@iguhealth/iguhealth.fhir.r4.core", "workspace:artifacts/r4/iguhealth-core"],\
-          ["@iguhealth/testscript_runner", "workspace:packages/testscript_runner"],\
+          ["@iguhealth/testscript-runner", "workspace:packages/testscript-runner"],\
           ["@inquirer/prompts", "npm:5.0.4"],\
           ["@types/node", "npm:20.12.12"],\
           ["commander", "npm:12.1.0"],\
+          ["pino", "npm:9.2.0"],\
+          ["pino-pretty", "npm:11.2.1"],\
           ["typescript", "patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>::version=5.4.5&hash=5adc0c"]\
         ],\
         "linkType": "SOFT"\
@@ -15615,15 +15617,16 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@iguhealth/testscript_runner", [\
-      ["workspace:packages/testscript_runner", {\
-        "packageLocation": "./packages/testscript_runner/",\
+    ["@iguhealth/testscript-runner", [\
+      ["workspace:packages/testscript-runner", {\
+        "packageLocation": "./packages/testscript-runner/",\
         "packageDependencies": [\
-          ["@iguhealth/testscript_runner", "workspace:packages/testscript_runner"],\
+          ["@iguhealth/testscript-runner", "workspace:packages/testscript-runner"],\
           ["@iguhealth/client", "workspace:packages/client"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
           ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
           ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
+          ["pino", "npm:9.2.0"],\
           ["typescript", "patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>::version=5.4.5&hash=5adc0c"]\
         ],\
         "linkType": "SOFT"\
@@ -29619,6 +29622,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["dateformat", [\
+      ["npm:4.6.3", {\
+        "packageLocation": "./.yarn/cache/dateformat-npm-4.6.3-aa1a4cb7f9-5c149c91bf.zip/node_modules/dateformat/",\
+        "packageDependencies": [\
+          ["dateformat", "npm:4.6.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["dayjs", [\
       ["npm:1.11.11", {\
         "packageLocation": "./.yarn/cache/dayjs-npm-1.11.11-3555b1f819-f03948b172.zip/node_modules/dayjs/",\
@@ -32037,6 +32049,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["fast-copy", [\
+      ["npm:3.0.2", {\
+        "packageLocation": "./.yarn/cache/fast-copy-npm-3.0.2-d747bd131f-97e1022e2a.zip/node_modules/fast-copy/",\
+        "packageDependencies": [\
+          ["fast-copy", "npm:3.0.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["fast-deep-equal", [\
       ["npm:3.1.3", {\
         "packageLocation": "./.yarn/cache/fast-deep-equal-npm-3.1.3-790edcfcf5-e21a9d8d84.zip/node_modules/fast-deep-equal/",\
@@ -32125,6 +32146,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/fast-redact-npm-3.3.0-2f2f249914-a69c5cb523.zip/node_modules/fast-redact/",\
         "packageDependencies": [\
           ["fast-redact", "npm:3.3.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["fast-safe-stringify", [\
+      ["npm:2.1.1", {\
+        "packageLocation": "./.yarn/cache/fast-safe-stringify-npm-2.1.1-7ce89033ca-dc1f063c2c.zip/node_modules/fast-safe-stringify/",\
+        "packageDependencies": [\
+          ["fast-safe-stringify", "npm:2.1.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -33664,6 +33694,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/helmet-npm-6.2.0-43622c54ea-f112fcd0d8.zip/node_modules/helmet/",\
         "packageDependencies": [\
           ["helmet", "npm:6.2.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["help-me", [\
+      ["npm:5.0.0", {\
+        "packageLocation": "./.yarn/cache/help-me-npm-5.0.0-6239bd310f-5f99bd91da.zip/node_modules/help-me/",\
+        "packageDependencies": [\
+          ["help-me", "npm:5.0.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -36525,6 +36564,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/jose-npm-5.4.0-14d9a81bcc-1e1664d252.zip/node_modules/jose/",\
         "packageDependencies": [\
           ["jose", "npm:5.4.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["joycon", [\
+      ["npm:3.1.1", {\
+        "packageLocation": "./.yarn/cache/joycon-npm-3.1.1-3033e0e5f4-4b36e34791.zip/node_modules/joycon/",\
+        "packageDependencies": [\
+          ["joycon", "npm:3.1.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -40872,6 +40920,24 @@ const RAW_RUNTIME_STATE =
           ["thread-stream", "npm:3.0.0"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:9.2.0", {\
+        "packageLocation": "./.yarn/cache/pino-npm-9.2.0-dc3662cd9b-7d8db2228a.zip/node_modules/pino/",\
+        "packageDependencies": [\
+          ["pino", "npm:9.2.0"],\
+          ["atomic-sleep", "npm:1.0.0"],\
+          ["fast-redact", "npm:3.3.0"],\
+          ["on-exit-leak-free", "npm:2.1.0"],\
+          ["pino-abstract-transport", "npm:1.2.0"],\
+          ["pino-std-serializers", "npm:7.0.0"],\
+          ["process-warning", "npm:3.0.0"],\
+          ["quick-format-unescaped", "npm:4.0.4"],\
+          ["real-require", "npm:0.2.0"],\
+          ["safe-stable-stringify", "npm:2.4.3"],\
+          ["sonic-boom", "npm:4.0.1"],\
+          ["thread-stream", "npm:3.0.0"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["pino-abstract-transport", [\
@@ -40881,6 +40947,29 @@ const RAW_RUNTIME_STATE =
           ["pino-abstract-transport", "npm:1.2.0"],\
           ["readable-stream", "npm:4.4.2"],\
           ["split2", "npm:4.2.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["pino-pretty", [\
+      ["npm:11.2.1", {\
+        "packageLocation": "./.yarn/cache/pino-pretty-npm-11.2.1-c01fdb342c-e53bc52e73.zip/node_modules/pino-pretty/",\
+        "packageDependencies": [\
+          ["pino-pretty", "npm:11.2.1"],\
+          ["colorette", "npm:2.0.20"],\
+          ["dateformat", "npm:4.6.3"],\
+          ["fast-copy", "npm:3.0.2"],\
+          ["fast-safe-stringify", "npm:2.1.1"],\
+          ["help-me", "npm:5.0.0"],\
+          ["joycon", "npm:3.1.1"],\
+          ["minimist", "npm:1.2.8"],\
+          ["on-exit-leak-free", "npm:2.1.0"],\
+          ["pino-abstract-transport", "npm:1.2.0"],\
+          ["pump", "npm:3.0.0"],\
+          ["readable-stream", "npm:4.4.2"],\
+          ["secure-json-parse", "npm:2.7.0"],\
+          ["sonic-boom", "npm:4.0.1"],\
+          ["strip-json-comments", "npm:3.1.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -47876,6 +47965,15 @@ const RAW_RUNTIME_STATE =
           ["section-matter", "npm:1.0.0"],\
           ["extend-shallow", "npm:2.0.1"],\
           ["kind-of", "npm:6.0.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["secure-json-parse", [\
+      ["npm:2.7.0", {\
+        "packageLocation": "./.yarn/cache/secure-json-parse-npm-2.7.0-d5b89b0a3e-9743865870.zip/node_modules/secure-json-parse/",\
+        "packageDependencies": [\
+          ["secure-json-parse", "npm:2.7.0"]\
         ],\
         "linkType": "HARD"\
       }]\
