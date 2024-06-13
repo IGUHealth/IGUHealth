@@ -1,9 +1,10 @@
 import { Command } from "commander";
 
-import { codeGenerationCommands } from "./commands/codeGeneration.js";
 import { apiCommands } from "./commands/api.js";
-import { configurationCommands } from "./config.js";
+import { codeGenerationCommands } from "./commands/codeGeneration.js";
 import { minimizeCommands } from "./commands/minimize.js";
+import { testscriptCommands } from "./commands/testscript.js";
+import { configurationCommands } from "./config.js";
 
 const program = new Command();
 
@@ -16,5 +17,6 @@ configurationCommands(program.command("config"));
 codeGenerationCommands(program.command("generate"));
 apiCommands(program.command("api"));
 minimizeCommands(program.command("minimize"));
+testscriptCommands(program.command("test"));
 
 program.parse();

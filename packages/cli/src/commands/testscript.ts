@@ -22,15 +22,42 @@ function getAllFiles(directory: string): string[] {
   return files;
 }
 
-export function codeGenerationCommands(command: Command) {
+async function executeTestScript<Version extends FHIR_VERSION>(
+  outputDir: string,
+  fhirVersion: Version,
+  testScript: Resource<Version, "TestScript">,
+): Promise<Resource<Version, "TestReport">> {
+  const report = await ts.run(
+    createClient(CONFIG_LOCATION),
+    fhirVersion,
+    testScript,
+  );
+
+  const output = path.join(
+    outputDir,
+    `${testScript.id ?? new Date().toString()}.testreport.json`,
+  );
+
+  fs.writeFileSync(output, JSON.stringify(report, null, 2));
+
+  return report;
+}
+
+export function testscriptCommands(command: Command) {
   command
     .command("run")
     .description("Run testscript files against server.")
-    .option("-d, --directory <directory>", "")
-    .option("-e, --extension   <extension>", "")
-    .option("--fhir-version <fhirVersion>", "4.0")
+    .requiredOption("-i, --input <input>")
+    .requiredOption("-o --output <output>", "Where to output files")
+    .option(
+      "-e, --extension   <extension>",
+      "Extensions to search for tests",
+      ".testscript.json",
+    )
+    .option("--fhir-version <fhirVersion>", "FHIR Version to use", "4.0")
+
     .action(async (options) => {
-      const files = getAllFiles(options.directory)
+      const files = getAllFiles(options.input)
         .flat()
         .filter((f) => f.endsWith(options.extension))
         .sort((a, b) => a.localeCompare(b));
@@ -48,21 +75,19 @@ export function codeGenerationCommands(command: Command) {
                   r?.resourceType === "TestScript",
               ) ?? [];
           for (const testScript of testscripts) {
-            const report = await ts.run(
-              createClient(CONFIG_LOCATION),
+            await executeTestScript(
+              options.output,
               options.fhirVersion,
               testScript,
             );
-            console.log(JSON.stringify(report));
           }
         } else if (json.resourceType === "TestScript") {
           const testScript = json as Resource<FHIR_VERSION, "TestScript">;
-          const report = await ts.run(
-            createClient(CONFIG_LOCATION),
+          await executeTestScript(
+            options.output,
             options.fhirVersion,
             testScript,
           );
-          console.log(JSON.stringify(report));
         }
       }
     });

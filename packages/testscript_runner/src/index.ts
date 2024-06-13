@@ -224,6 +224,17 @@ async function evaluateOperation<Version extends FHIR_VERSION>(
     const request = operationToFHIRRequest(state, operation);
     const response = await state.client.request({}, request);
 
+    // In event of an update or create operation, store the response body back as a fixture
+    if (
+      operation.sourceId &&
+      "body" in response &&
+      "resourceType" in response.body
+    ) {
+      state.fixtures[operation.sourceId] = response.body as Resource<
+        Version,
+        AllResourceTypes
+      >;
+    }
     return {
       state: {
         ...state,
@@ -243,6 +254,7 @@ async function evaluateOperation<Version extends FHIR_VERSION>(
       },
     };
   } catch (e) {
+    console.error(e);
     return {
       state,
       result: {

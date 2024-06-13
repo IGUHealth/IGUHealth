@@ -1,20 +1,8 @@
-import { confirm } from "@inquirer/prompts";
-import { Command } from "commander";
-import fs from "node:fs";
 import path from "node:path";
 
 import httpClient from "@iguhealth/client/http";
-import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
-import { Bundle, Resource, ResourceType } from "@iguhealth/fhir-types/r4/types";
-import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
-import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 
-import {
-  CONFIG_LOCATION,
-  Tenant,
-  getCurrentTenant,
-  loadConfig,
-} from "./config.js";
+import { Tenant, getCurrentTenant, loadConfig } from "./config.js";
 
 function concatenateURLPaths(url: URL, urlPath: string) {
   return new URL(path.join(url.pathname, urlPath), url.origin);

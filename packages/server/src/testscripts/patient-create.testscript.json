@@ -1,5 +1,4 @@
 {
-  "id": "create-patient",
   "resourceType": "TestScript",
   "contained": [
     {
