@@ -1,9 +1,10 @@
 import { Command } from "commander";
 import fs from "node:fs";
 import path from "node:path";
+import { pino } from "pino";
 
 import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
-import * as ts from "@iguhealth/testscript_runner";
+import * as ts from "@iguhealth/testscript-runner";
 
 import { createClient } from "../client.js";
 import { CONFIG_LOCATION } from "../config.js";
@@ -23,22 +24,31 @@ function getAllFiles(directory: string): string[] {
 }
 
 async function executeTestScript<Version extends FHIR_VERSION>(
-  outputDir: string,
   fhirVersion: Version,
   testScript: Resource<Version, "TestScript">,
+  outputDir?: string,
 ): Promise<Resource<Version, "TestReport">> {
+  const logger = pino<string>({
+    transport: {
+      target: process.env.NODE_ENV !== "production" ? "pino-pretty" : "",
+    },
+  });
+
   const report = await ts.run(
+    logger,
     createClient(CONFIG_LOCATION),
     fhirVersion,
     testScript,
   );
 
-  const output = path.join(
-    outputDir,
-    `${testScript.id ?? new Date().toString()}.testreport.json`,
-  );
+  if (outputDir) {
+    const output = path.join(
+      outputDir,
+      `${testScript.id ?? new Date().toString()}.testreport.json`,
+    );
 
-  fs.writeFileSync(output, JSON.stringify(report, null, 2));
+    fs.writeFileSync(output, JSON.stringify(report, null, 2));
+  }
 
   return report;
 }
@@ -48,7 +58,7 @@ export function testscriptCommands(command: Command) {
     .command("run")
     .description("Run testscript files against server.")
     .requiredOption("-i, --input <input>")
-    .requiredOption("-o --output <output>", "Where to output files")
+    .option("-o --output <output>", "Where to output files")
     .option(
       "-e, --extension   <extension>",
       "Extensions to search for tests",
@@ -57,6 +67,7 @@ export function testscriptCommands(command: Command) {
     .option("--fhir-version <fhirVersion>", "FHIR Version to use", "4.0")
 
     .action(async (options) => {
+      let exitCode = 0;
       const files = getAllFiles(options.input)
         .flat()
         .filter((f) => f.endsWith(options.extension))
@@ -75,20 +86,28 @@ export function testscriptCommands(command: Command) {
                   r?.resourceType === "TestScript",
               ) ?? [];
           for (const testScript of testscripts) {
-            await executeTestScript(
-              options.output,
+            const report = await executeTestScript(
               options.fhirVersion,
               testScript,
+              options.output,
             );
+            if (report.result === "fail") {
+              exitCode = 1;
+            }
           }
         } else if (json.resourceType === "TestScript") {
           const testScript = json as Resource<FHIR_VERSION, "TestScript">;
-          await executeTestScript(
-            options.output,
+          const report = await executeTestScript(
             options.fhirVersion,
             testScript,
+            options.output,
           );
+          if (report.result === "fail") {
+            exitCode = 1;
+          }
         }
       }
+
+      process.exit(exitCode);
     });
 }

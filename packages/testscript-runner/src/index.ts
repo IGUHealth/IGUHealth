@@ -1,3 +1,5 @@
+import { Logger } from "pino";
+
 import createHTTPClient from "@iguhealth/client/http";
 import { FHIRRequest, FHIRResponse } from "@iguhealth/client/lib/types";
 import { code, id, markdown } from "@iguhealth/fhir-types/r4/types";
@@ -10,6 +12,8 @@ import {
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 type TestScriptState<Version extends FHIR_VERSION> = {
+  logger: Logger<string>;
+  result: "pass" | "fail" | "pending";
   version: Version;
   fixtures: Record<
     string,
@@ -158,6 +162,8 @@ function getFHIRResponseFixture<Version extends FHIR_VERSION>(
     return response as FHIRResponse;
   }
 
+  state.logger.error(response);
+
   throw new OperationError(
     outcomeFatal("invalid", "response fixture not found"),
   );
@@ -178,21 +184,28 @@ async function evaluateAssertion<Version extends FHIR_VERSION>(
       response.level !== "type" ||
       response.resourceType !== assertion.resource
     ) {
+      const result = {
+        result: "fail",
+        message: `Expected resource type '${assertion.resource}' but got '${response.level === "type" ? response.resourceType : "not a resource"}'`,
+      } as NonNullable<TestReportAction<Version>["assert"]>;
+      state.logger.error(result);
+
       return {
-        state,
-        result: {
-          result: "fail",
-          message: `Expected resource type '${assertion.resource}' but got '${response.level === "type" ? response.resourceType : "not a resource"}'`,
-        } as NonNullable<TestReportAction<Version>["assert"]>,
+        state: { ...state, result: "fail" },
+        result,
       };
     }
   }
 
+  const result = {
+    result: "pass",
+    message: "Assertions passed",
+  } as NonNullable<TestReportAction<Version>["assert"]>;
+  state.logger.info(result);
+
   return {
     state,
-    result: { result: "pass", message: "Assertions passed" } as NonNullable<
-      TestReportAction<Version>["assert"]
-    >,
+    result,
   };
 }
 
@@ -235,6 +248,14 @@ async function evaluateOperation<Version extends FHIR_VERSION>(
         AllResourceTypes
       >;
     }
+
+    const result = {
+      result: "pass" as code,
+      message:
+        `[SUCCEEDED]<${operation.type?.code}> label: '${operation.label ?? ""}'` as markdown,
+    };
+
+    state.logger.info(result);
     return {
       state: {
         ...state,
@@ -247,21 +268,18 @@ async function evaluateOperation<Version extends FHIR_VERSION>(
         latestRequest: request,
         latestResponse: response,
       },
-      result: {
-        result: "pass" as code,
-        message:
-          `Operation '${operation.label}' succeeded with operation '${operation.type?.code}'` as markdown,
-      },
+      result,
     };
   } catch (e) {
-    console.error(e);
+    const result = {
+      result: "fail" as code,
+      message:
+        `[FAILED]<${operation.type?.code}> label: '${operation.label ?? ""}'` as markdown,
+    };
+    state.logger.error(result);
     return {
-      state,
-      result: {
-        result: "fail" as code,
-        message:
-          `Operation '${operation.label}' failed with operation '${operation.type?.code}'` as markdown,
-      },
+      state: { ...state, result: "fail" },
+      result,
     };
   }
 }
@@ -318,12 +336,21 @@ async function evaluateTest<Version extends FHIR_VERSION>(
   const testReports: TestReportAction<Version>[] = [];
 
   for (const action of test.action) {
-    const output = await evaluateAction(curState, action);
+    const output = await evaluateAction(
+      {
+        ...curState,
+        logger: state.logger.child({
+          test: test.name,
+          description: test.description,
+        }),
+      },
+      action,
+    );
     curState = output.state;
     testReports.push(output.result);
   }
 
-  return { state: curState, result: testReports };
+  return { state: { ...curState, logger: state.logger }, result: testReports };
 }
 
 async function evaluateTests<Version extends FHIR_VERSION>(
@@ -337,13 +364,16 @@ async function evaluateTests<Version extends FHIR_VERSION>(
   const testResults = [];
 
   for (const test of tests ?? []) {
-    const output = await evaluateTest(state, test);
+    const output = await evaluateTest(curState, test);
     curState = output.state;
     testResults.push({
       name: test.name,
       action: output.result,
     });
   }
+
+  curState =
+    curState.result === "pending" ? { ...curState, result: "pass" } : curState;
 
   return { state: curState, result: testResults };
 }
@@ -461,6 +491,7 @@ async function resolveFixtures<Version extends FHIR_VERSION>(
  * @returns TestReport of results from testscript.
  */
 export async function run<Version extends FHIR_VERSION>(
+  logger: Logger<string>,
   client: ReturnType<typeof createHTTPClient>,
   version: Version,
   testscript: Resource<Version, "TestScript">,
@@ -473,6 +504,8 @@ export async function run<Version extends FHIR_VERSION>(
 
   let { state } = await resolveFixtures(
     {
+      logger,
+      result: "pending",
       version,
       fixtures: {},
       client,
@@ -488,6 +521,8 @@ export async function run<Version extends FHIR_VERSION>(
     const testsOutput = await evaluateTests(state, testscript.test);
     testReport.test = testsOutput.result;
     state = testsOutput.state;
+
+    testReport.result = state.result as code;
 
     return testReport;
   } finally {

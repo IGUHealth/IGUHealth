@@ -42,7 +42,7 @@
             "label": "01-ReadPatientOK",
             "description": "Confirm patient created.",
             "direction": "response",
-            "resource": "Patient"
+            "resource": "Appointment"
           }
         }
       ]

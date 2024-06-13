@@ -20,10 +20,12 @@
     "@iguhealth/hl7.fhir.r4.core": "workspace:^",
     "@iguhealth/hl7.fhir.r4b.core": "workspace:^",
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^",
-    "@iguhealth/testscript_runner": "workspace:^",
+    "@iguhealth/testscript-runner": "workspace:^",
     "@inquirer/prompts": "^5.0.4",
     "@types/node": "^20.12.12",
-    "commander": "^12.1.0"
+    "commander": "^12.1.0",
+    "pino": "^9.2.0",
+    "pino-pretty": "^11.2.1"
   },
   "devDependencies": {
     "@iguhealth/fhir-types": "workspace:^",
