@@ -1,13 +1,11 @@
 import {
   Bundle,
-  BundleEntry,
   CapabilityStatement,
   Parameters,
   Resource,
   ResourceType,
   code,
   id,
-  unsignedInt,
 } from "@iguhealth/fhir-types/r4b/types";
 import { R4B } from "@iguhealth/fhir-types/versions";
 
@@ -186,11 +184,9 @@ export type R4BSystemDeleteResponse = R4BSystemInteraction & {
   type: ResponseInteractionTypes["delete"];
 };
 
-type HISTORY_BODY = BundleEntry[];
-
 export type R4BInstanceHistoryResponse = R4BInstanceInteraction & {
   type: ResponseInteractionTypes["history"];
-  body: HISTORY_BODY;
+  body: Bundle;
 };
 
 export type R4BCreateResponse = R4BTypeInteraction & {
@@ -201,13 +197,12 @@ export type R4BCreateResponse = R4BTypeInteraction & {
 export type R4BTypeSearchResponse = R4BTypeInteraction & {
   parameters: ParsedParameter<string | number>[];
   type: ResponseInteractionTypes["search"];
-  total?: unsignedInt;
-  body: Resource[];
+  body: Bundle;
 };
 
 export type R4BTypeHistoryResponse = R4BTypeInteraction & {
   type: ResponseInteractionTypes["history"];
-  body: HISTORY_BODY;
+  body: Bundle;
 };
 
 export type R4BCapabilitiesResponse = R4BSystemInteraction & {
@@ -227,14 +222,13 @@ export type R4BTransactionResponse = R4BSystemInteraction & {
 
 export type R4BSystemHistoryResponse = R4BSystemInteraction & {
   type: ResponseInteractionTypes["history"];
-  body: HISTORY_BODY;
+  body: Bundle;
 };
 
 export type R4BSystemSearchResponse = R4BSystemInteraction & {
   parameters: ParsedParameter<string | number>[];
   type: ResponseInteractionTypes["search"];
-  total?: unsignedInt;
-  body: Resource[];
+  body: Bundle;
 };
 
 export type R4BInvokeInstanceResponse = R4BInstanceInteraction & {

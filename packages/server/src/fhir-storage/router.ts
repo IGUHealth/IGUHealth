@@ -183,11 +183,21 @@ function createRouterMiddleware<
               res.type === "search-response",
           );
 
+          const entry = responses.map((b) => b.body.entry ?? []).flat();
           return {
             ...context,
             response: {
               ...responses[0],
-              body: responses.map((r) => r.body).flat(),
+              body: {
+                resourceType: "Bundle",
+                type: "searchset" as r4.code,
+                total: responses.reduce(
+                  (acc: number | undefined, res) =>
+                    res.body.total ? (acc ?? 0) + res.body.total : undefined,
+                  undefined,
+                ) as r4.unsignedInt | undefined,
+                entry,
+              },
             },
           };
         }
@@ -207,11 +217,17 @@ function createRouterMiddleware<
               | R4InstanceHistoryResponse => res.type === "history-response",
           );
 
+          const entry = responses.map((b) => b.body.entry ?? []).flat();
+
           return {
             ...context,
             response: {
               ...responses[0],
-              body: responses.map((r) => r.body).flat(),
+              body: {
+                resourceType: "Bundle",
+                type: "history" as r4.code,
+                entry,
+              },
             },
           };
         }

@@ -905,11 +905,7 @@ export function fhirResponseToHTTPResponse(
           ...headers,
         },
         status: 200,
-        body: {
-          type: "history",
-          resourceType: "Bundle",
-          entry: fhirResponse.body,
-        },
+        body: fhirResponse.body,
       };
     case "create-response":
       return {
@@ -926,10 +922,7 @@ export function fhirResponseToHTTPResponse(
           ...headers,
         },
         status: 200,
-        body:
-          fhirResponse.fhirVersion === R4B
-            ? toR4BBundle("searchset", fhirResponse.total, fhirResponse.body)
-            : toR4Bundle("searchset", fhirResponse.total, fhirResponse.body),
+        body: fhirResponse.body,
       };
     }
     case "transaction-response":

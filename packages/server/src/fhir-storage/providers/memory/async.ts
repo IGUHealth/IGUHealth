@@ -246,7 +246,11 @@ function createMemoryMiddleware<
                   level: context.request.level,
                   parameters: context.request.parameters,
                   type: "search-response",
-                  body: result,
+                  body: {
+                    type: "searchset",
+                    resourceType: "Bundle",
+                    entry: result.map((r) => ({ resource: r })),
+                  },
                 } as FHIRResponse,
               };
             }
@@ -259,7 +263,11 @@ function createMemoryMiddleware<
                   level: "type",
                   parameters: context.request.parameters,
                   type: "search-response",
-                  body: result,
+                  body: {
+                    type: "searchset",
+                    resourceType: "Bundle",
+                    entry: result.map((r) => ({ resource: r })),
+                  },
                 } as FHIRResponse,
               };
             }
