@@ -4,3 +4,4 @@ releases:
   "@iguhealth/components": patch
   "@iguhealth/generated-ops": patch
   "@iguhealth/server": patch
+  "@iguhealth/testscript-runner": patch

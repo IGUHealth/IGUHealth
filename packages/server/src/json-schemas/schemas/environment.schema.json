@@ -73,6 +73,13 @@
       "default": "false"
     },
 
+    "FHIR_DELETE_CONDITIONAL_LIMIT": {
+      "type": "string",
+      "pattern": "[0-9]{3}",
+      "description": "Maximum total number of records to delete in a single conditional delete operation",
+      "default": "20"
+    },
+
     "API_URL": {
       "type": "string",
       "description": "Current url where API is hosted from (used in operation execution clients)."
