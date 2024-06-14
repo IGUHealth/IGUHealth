@@ -2,6 +2,7 @@ import { Logger } from "pino";
 
 import createHTTPClient from "@iguhealth/client/http";
 import { FHIRRequest, FHIRResponse } from "@iguhealth/client/lib/types";
+import { parseQuery } from "@iguhealth/client/url";
 import { code, id, markdown } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
@@ -121,19 +122,40 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
       } as FHIRRequest;
     }
     case "delete": {
-      if (!operation.targetId)
-        throw new OperationError(
-          outcomeFatal("invalid", "targetId is required for read operation"),
-        );
-
-      return {
-        fhirVersion: state.version,
-        level: "instance",
-        type: "delete-request",
-        resourceType: getFixtureResource(state, operation.targetId)
-          ?.resourceType,
-        id: getFixtureResource(state, operation.targetId)?.id as id,
-      } as FHIRRequest;
+      switch (true) {
+        case operation.targetId !== undefined: {
+          return {
+            fhirVersion: state.version,
+            level: "instance",
+            type: "delete-request",
+            resourceType: getFixtureResource(state, operation.targetId)
+              ?.resourceType,
+            id: getFixtureResource(state, operation.targetId)?.id as id,
+          } as FHIRRequest;
+        }
+        case operation.resource !== undefined: {
+          return {
+            fhirVersion: state.version,
+            level: "type",
+            type: "delete-request",
+            resourceType: operation.resource,
+            parameters: parseQuery(operation.params ?? ""),
+          } as FHIRRequest;
+        }
+        case operation.params !== undefined: {
+          return {
+            fhirVersion: state.version,
+            level: "system",
+            type: "delete-request",
+            parameters: parseQuery(operation.params ?? ""),
+          } as FHIRRequest;
+        }
+        default: {
+          throw new OperationError(
+            outcomeFatal("invalid", "Delete request is invalid."),
+          );
+        }
+      }
     }
     case "history":
     case "search":
@@ -275,6 +297,7 @@ async function evaluateOperation<Version extends FHIR_VERSION>(
       result: "fail" as code,
       message:
         `[FAILED]<${operation.type?.code}> label: '${operation.label ?? ""}'` as markdown,
+      outcome: e instanceof OperationError ? e.operationOutcome : undefined,
     };
     state.logger.error(result);
     return {

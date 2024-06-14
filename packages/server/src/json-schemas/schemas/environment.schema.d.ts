@@ -47,6 +47,10 @@ export interface IGUHealthEnvironment {
    */
   REDIS_SSL?: "true" | "false";
   /**
+   * Maximum total number of records to delete in a single conditional delete operation
+   */
+  FHIR_DELETE_CONDITIONAL_LIMIT?: string;
+  /**
    * Current url where API is hosted from (used in operation execution clients).
    */
   API_URL: string;

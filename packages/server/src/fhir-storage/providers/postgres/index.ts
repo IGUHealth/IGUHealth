@@ -30,10 +30,14 @@ import {
   FHIRResponse,
   R4BHistoryInstanceRequest,
   R4BSystemHistoryRequest,
+  R4BSystemSearchRequest,
   R4BTypeHistoryRequest,
+  R4BTypeSearchRequest,
   R4HistoryInstanceRequest,
   R4SystemHistoryRequest,
+  R4SystemSearchRequest,
   R4TypeHistoryRequest,
+  R4TypeSearchRequest,
 } from "@iguhealth/client/lib/types";
 
 import dataConversion from "../../utilities/search/dataConversion.js";
@@ -992,6 +996,54 @@ async function deleteResource<
   });
 }
 
+async function conditionalDelete(ctx: FHIRServerCTX, searchRequest:R4TypeSearchRequest | R4BTypeSearchRequest | R4SystemSearchRequest | R4BSystemSearchRequest) {
+  const limit = parseInt(process.env.FHIR_DELETE_CONDITIONAL_LIMIT ?? "20");
+  searchRequest.parameters = [...searchRequest.parameters.filter(p => p.name !== "_total" && p.name !== "_count"), 
+    {"name": "_total", value: ["accurate"]},
+    {"name": "_count", value: [limit]}
+  ];
+
+  const result = await executeSearchQuery(ctx.db, ctx, searchRequest);
+
+  if((result.total ?? limit+1) > limit) 
+    throw new OperationError(outcomeError("too-costly", "The operation is too costly to perform."))
+  
+  for(const resource of result.resources){
+    await deleteResource(
+      ctx,
+      searchRequest.fhirVersion,
+      resource.resourceType,
+      resource.id as id,
+    );
+  }
+
+  switch(searchRequest.level){
+    case "type":{
+      switch(searchRequest.fhirVersion){
+        case R4:
+        case R4B:{
+          return {
+            fhirVersion: searchRequest.fhirVersion,
+            type: "delete-response",
+            level: "type",
+            resourceType: searchRequest.resourceType,
+          } as FHIRResponse;
+        }
+        default: {
+          throw new OperationError(outcomeError("not-supported", `Unknown FHIR version.`));
+        }
+      }
+    }
+    case "system":{
+      return {
+        fhirVersion: searchRequest.fhirVersion,
+        type: "delete-response",
+        level: "system",
+      } as FHIRResponse;
+    }
+  }
+}
+
 function createPostgresMiddleware<
   State extends {
     transaction_entry_limit: number;
@@ -1164,8 +1216,45 @@ function createPostgresMiddleware<
                 } as FHIRResponse,
               };
             }
+            case "type": {
+              const limit = parseInt(process.env.FHIR_DELETE_CONDITIONAL_LIMIT ?? "20");
+              const parameters = [...context.request.parameters.filter(p => p.name !== "_total" && p.name !== "_count"), 
+                {"name": "_total", value: ["accurate"]},
+                {"name": "_count", value: [limit]}
+              ];
+              return {
+                request: context.request,
+                state: context.state,
+                ctx: context.ctx,
+                response: await conditionalDelete(context.ctx, {
+                  type: "search-request",
+                  fhirVersion: context.request.fhirVersion,
+                  level: "type",
+                  resourceType: context.request.resourceType,
+                  parameters,
+                } as R4BTypeSearchRequest | R4TypeSearchRequest)
+              }
+            }
+            case "system": {
+              const limit = parseInt(process.env.FHIR_DELETE_CONDITIONAL_LIMIT ?? "20");
+              const parameters = [...context.request.parameters.filter(p => p.name !== "_total" && p.name !== "_count"), 
+                {"name": "_total", value: ["accurate"]},
+                {"name": "_count", value: [limit]}
+              ];
+              return {
+                  request: context.request,
+                  state: context.state,
+                  ctx: context.ctx,
+                  response: await conditionalDelete(context.ctx, {
+                    type: "search-request",
+                    fhirVersion: context.request.fhirVersion,
+                    level: "system",
+                    parameters,
+                  } as R4BSystemSearchRequest | R4SystemSearchRequest)
+              };
+            }
             default: {
-              throw new OperationError(outcomeError("not-supported", `Deletion not supported at '${context.request.level}' level`))
+              throw new OperationError(outcomeError("not-supported", `Invalid level.`));
             }
           }
         }

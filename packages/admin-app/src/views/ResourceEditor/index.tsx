@@ -89,7 +89,7 @@ function ResourceEditorTabs() {
       className: "!text-red-600 hover:bg-red-600 hover:!text-white",
       label: "Delete",
       onClick: () => {
-        const deletePromise = client.delete(
+        const deletePromise = client.delete_instance(
           {},
           R4,
           resourceType as ResourceType,
