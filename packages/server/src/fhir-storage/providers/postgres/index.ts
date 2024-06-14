@@ -1217,11 +1217,6 @@ function createPostgresMiddleware<
               };
             }
             case "type": {
-              const limit = parseInt(process.env.FHIR_DELETE_CONDITIONAL_LIMIT ?? "20");
-              const parameters = [...context.request.parameters.filter(p => p.name !== "_total" && p.name !== "_count"), 
-                {"name": "_total", value: ["accurate"]},
-                {"name": "_count", value: [limit]}
-              ];
               return {
                 request: context.request,
                 state: context.state,
@@ -1231,16 +1226,11 @@ function createPostgresMiddleware<
                   fhirVersion: context.request.fhirVersion,
                   level: "type",
                   resourceType: context.request.resourceType,
-                  parameters,
+                  parameters: context.request.parameters,
                 } as R4BTypeSearchRequest | R4TypeSearchRequest)
               }
             }
             case "system": {
-              const limit = parseInt(process.env.FHIR_DELETE_CONDITIONAL_LIMIT ?? "20");
-              const parameters = [...context.request.parameters.filter(p => p.name !== "_total" && p.name !== "_count"), 
-                {"name": "_total", value: ["accurate"]},
-                {"name": "_count", value: [limit]}
-              ];
               return {
                   request: context.request,
                   state: context.state,
@@ -1249,7 +1239,7 @@ function createPostgresMiddleware<
                     type: "search-request",
                     fhirVersion: context.request.fhirVersion,
                     level: "system",
-                    parameters,
+                    parameters: context.request.parameters,
                   } as R4BSystemSearchRequest | R4SystemSearchRequest)
               };
             }
