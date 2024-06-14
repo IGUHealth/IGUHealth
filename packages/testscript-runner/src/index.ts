@@ -173,6 +173,12 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
   }
 }
 
+function isResponseOrRequest<T extends FHIRRequest | FHIRResponse>(
+  v: unknown,
+): v is T {
+  return v !== null && typeof v === "object" && "type" in v && "level" in v;
+}
+
 function getFHIRResponseFixture<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
   assertion: NonNullable<TestScriptAction<Version>["assert"]>,
@@ -181,8 +187,8 @@ function getFHIRResponseFixture<Version extends FHIR_VERSION>(
     ? state.fixtures[assertion.sourceId]
     : state.latestResponse;
 
-  if (response && "type" in response && "level" in response) {
-    return response as FHIRResponse;
+  if (isResponseOrRequest<FHIRResponse>(response)) {
+    return response;
   }
 
   state.logger.error(response);
@@ -273,6 +279,24 @@ function assertionFailureMessage(
   return `Failed Assertion <'${JSON.stringify(v1)}' ${operator} '${v2 ? JSON.stringify(v2) : ""}'>`;
 }
 
+function getSource<Version extends FHIR_VERSION>(
+  state: TestScriptState<Version>,
+  assertion: NonNullable<TestScriptAction<Version>["assert"]>,
+  requestOrResponse: FHIRRequest | FHIRResponse,
+): Resource<Version, AllResourceTypes> | undefined {
+  const source = assertion.sourceId
+    ? state.fixtures[assertion.sourceId]
+    : requestOrResponse;
+  if (isResponseOrRequest(source)) {
+    if ("body" in source) {
+      return source.body as Resource<Version, AllResourceTypes>;
+    }
+    return undefined;
+  }
+
+  return source;
+}
+
 async function evaluateAssertion<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
   assertion: NonNullable<TestScriptAction<Version>["assert"]>,
@@ -284,12 +308,12 @@ async function evaluateAssertion<Version extends FHIR_VERSION>(
   const request = state.latestRequest as FHIRRequest;
   const requestOrResponse =
     (assertion.direction ?? "response") === "response" ? response : request;
-  const source = assertion.sourceId
-    ? state.fixtures[assertion.sourceId]
-    : requestOrResponse;
+
+  const source = getSource(state, assertion, requestOrResponse);
 
   if (assertion.resource) {
     if (
+      source === undefined ||
       !("resourceType" in source) ||
       !evaluateOperator(
         source.resourceType,
@@ -300,9 +324,7 @@ async function evaluateAssertion<Version extends FHIR_VERSION>(
       const result = {
         result: "fail",
         message: assertionFailureMessage(
-          "resourceType" in source
-            ? source.resourceType
-            : "InvalidResourceType",
+          source?.resourceType ?? "InvalidResourceType",
           assertion.resource,
           assertion.operator,
         ),
@@ -317,7 +339,6 @@ async function evaluateAssertion<Version extends FHIR_VERSION>(
   }
   if (assertion.expression) {
     const compValue = await deriveComparision(state, assertion);
-    console.log(assertion.expression, JSON.stringify(source));
     const fpEvaluation = fp.evaluate(assertion.expression, source)[0];
 
     if (!evaluateOperator(fpEvaluation, compValue, assertion.operator)) {

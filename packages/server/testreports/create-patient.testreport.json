@@ -2,7 +2,7 @@
   "testScript": {
     "reference": "TestScript/create-patient"
   },
-  "result": "pass",
+  "result": "fail",
   "resourceType": "TestReport",
   "setup": {
     "action": []
@@ -25,8 +25,8 @@
         },
         {
           "assert": {
-            "result": "pass",
-            "message": "Assertions passed"
+            "result": "fail",
+            "message": "Failed Assertion <'\"Peter\"' equals '\"Peer\"'>"
           }
         }
       ]
