@@ -1,6 +1,6 @@
 {
   "testScript": {
-    "reference": "TestScript/create-patient"
+    "reference": "TestScript/conditionally-delete-patient"
   },
   "result": "pass",
   "resourceType": "TestReport",
@@ -9,7 +9,7 @@
   },
   "test": [
     {
-      "name": "Create Patient",
+      "name": "Create and conditionally delete patient",
       "action": [
         {
           "operation": {
@@ -22,18 +22,17 @@
             "result": "pass",
             "message": "Assertions passed"
           }
+        },
+        {
+          "operation": {
+            "result": "pass",
+            "message": "[SUCCEEDED]<delete> label: ''"
+          }
         }
       ]
     }
   ],
   "teardown": {
-    "action": [
-      {
-        "operation": {
-          "result": "pass",
-          "message": "[SUCCEEDED]<delete> label: ''"
-        }
-      }
-    ]
+    "action": []
   }
 }
