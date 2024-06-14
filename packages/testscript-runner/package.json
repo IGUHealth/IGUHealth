@@ -16,7 +16,8 @@
     "typescript": "5.4.5"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
   "files": [
     "lib/**"
