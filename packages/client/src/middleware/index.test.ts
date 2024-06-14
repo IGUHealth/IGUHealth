@@ -1,5 +1,6 @@
 import { expect, test } from "@jest/globals";
 
+import { Bundle, code } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { R4 } from "@iguhealth/fhir-types/lib/versions";
 
 import { FHIRResponse } from "../types/index.js";
@@ -15,10 +16,16 @@ test("Test middleware Async", async () => {
           ...nextVal,
           response: {
             ...nextVal.response,
-            body: (nextVal.response as any).body?.map((resource: any) => ({
-              ...resource,
-              id: "123",
-            })),
+            body: {
+              ...((nextVal as any).response?.body as any),
+              entry: (nextVal.response as any).body?.entry?.map((e: any) => ({
+                ...e,
+                resource: {
+                  id: "123",
+                  ...e.resource,
+                },
+              })),
+            } as Bundle,
           } as FHIRResponse,
         };
       }
@@ -33,7 +40,11 @@ test("Test middleware Async", async () => {
             : [],
           type: "search-response",
           level: "system",
-          body: [],
+          body: {
+            resourceType: "Bundle",
+            type: "searchset" as code,
+            entry: [],
+          } as Bundle,
         },
       };
     },
@@ -49,7 +60,11 @@ test("Test middleware Async", async () => {
             : [],
           type: "search-response",
           level: "system",
-          body: [{ resourceType: "Patient" }],
+          body: {
+            resourceType: "Bundle",
+            type: "searchset" as code,
+            entry: [{ resource: { resourceType: "Patient" } }],
+          } as Bundle,
         },
       };
     },
@@ -66,7 +81,11 @@ test("Test middleware Async", async () => {
       parameters: [],
       type: "search-response",
       level: "system",
-      body: [{ id: "123", resourceType: "Patient" }],
+      body: {
+        resourceType: "Bundle",
+        type: "searchset",
+        entry: [{ resource: { id: "123", resourceType: "Patient" } }],
+      },
     },
   });
 });

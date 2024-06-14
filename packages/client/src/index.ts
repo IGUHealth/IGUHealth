@@ -62,8 +62,11 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     if (response.type !== "search-response")
       throw new Error("Unexpected response type");
     return {
-      total: response.total,
-      resources: response.body as Resource<FHIRVersion, AllResourceTypes>[],
+      total: response.body.total,
+      resources: response.body.entry?.map((e) => e.resource) as Resource<
+        FHIRVersion,
+        AllResourceTypes
+      >[],
     };
   }
   async search_type<
@@ -92,8 +95,11 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     if (response.type !== "search-response")
       throw new Error(`Unexpected response type '${response.type}'`);
     return {
-      total: response.total,
-      resources: response.body as Resource<FHIRVersion, T>[],
+      total: response.body.total,
+      resources: response.body.entry?.map((e) => e.resource) as Resource<
+        FHIRVersion,
+        T
+      >[],
     };
   }
   async create<
@@ -265,9 +271,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     });
     if (response.type !== "history-response")
       throw new Error("Unexpected response type");
-    return response.body as NonNullable<
-      Resource<FHIRVersion, "Bundle">["entry"]
-    >;
+    return response.body.entry ?? [];
   }
   async history_type<
     FHIRVersion extends FHIR_VERSION,
@@ -293,9 +297,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     } as FHIRRequest);
     if (response.type !== "history-response")
       throw new Error("Unexpected response type");
-    return response.body as NonNullable<
-      Resource<FHIRVersion, "Bundle">["entry"]
-    >;
+    return response.body.entry ?? [];
   }
   async history_instance<
     FHIRVersion extends FHIR_VERSION,
@@ -323,9 +325,7 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     } as FHIRRequest);
     if (response.type !== "history-response")
       throw new Error("Unexpected response type");
-    return response.body as NonNullable<
-      Resource<FHIRVersion, "Bundle">["entry"]
-    >;
+    return response.body.entry ?? [];
   }
   async invoke_system<
     FHIRVersion extends FHIR_VERSION,

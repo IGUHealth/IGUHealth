@@ -1,8 +1,4 @@
-import {
-  Bundle,
-  OperationOutcome,
-  Resource,
-} from "@iguhealth/fhir-types/r4/types";
+import { Bundle, OperationOutcome } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -364,15 +360,14 @@ async function httpResponseToFHIRResponse(
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
 
-      const hresource = await response.json();
-      const resources = hresource.entry || [];
+      const bundle = (await response.json()) as Bundle | r4b.Bundle;
       switch (request.level) {
         case "system": {
           return {
             fhirVersion: request.fhirVersion,
             type: "history-response",
             level: "system",
-            body: resources,
+            body: bundle,
           } as FHIRResponse;
         }
         case "type": {
@@ -381,7 +376,7 @@ async function httpResponseToFHIRResponse(
             type: "history-response",
             level: "type",
             resourceType: request.resourceType,
-            body: resources,
+            body: bundle,
           } as FHIRResponse;
         }
         case "instance": {
@@ -391,7 +386,7 @@ async function httpResponseToFHIRResponse(
             level: "instance",
             resourceType: request.resourceType,
             id: request.id,
-            body: resources,
+            body: bundle,
           } as FHIRResponse;
         }
       }
@@ -415,10 +410,6 @@ async function httpResponseToFHIRResponse(
       if (!response.body)
         throw new OperationError(outcomeError("exception", "No response body"));
       const bundle = (await response.json()) as Bundle | r4b.Bundle;
-      const resources =
-        bundle.entry
-          ?.map((e) => e.resource)
-          .filter((r): r is Resource => r !== undefined) || [];
       switch (request.level) {
         case "system": {
           return {
@@ -426,8 +417,7 @@ async function httpResponseToFHIRResponse(
             type: "search-response",
             level: "system",
             parameters: request.parameters,
-            total: bundle.total,
-            body: resources,
+            body: bundle,
           } as FHIRResponse;
         }
         case "type": {
@@ -437,8 +427,7 @@ async function httpResponseToFHIRResponse(
             level: "type",
             parameters: request.parameters,
             resourceType: request.resourceType,
-            total: bundle.total,
-            body: resources,
+            body: bundle,
           } as FHIRResponse;
         }
       }

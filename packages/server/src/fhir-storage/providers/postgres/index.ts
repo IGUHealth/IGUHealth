@@ -1091,8 +1091,12 @@ function createPostgresMiddleware<
                   type: "search-response",
                   parameters: context.request.parameters,
                   level: "system",
-                  total: result.total as unsignedInt | undefined,
-                  body: result.resources,
+                  body: {
+                    total: result.total as unsignedInt | undefined,
+                    resourceType: "Bundle",
+                    type: "searchset",
+                    entry: result.resources.map(resource => ({resource}))
+                  },
                 } as FHIRResponse,
               };
             }
@@ -1107,8 +1111,12 @@ function createPostgresMiddleware<
                   parameters: context.request.parameters,
                   level: "type",
                   resourceType: context.request.resourceType,
-                  total: result.total as unsignedInt | undefined,
-                  body: result.resources,
+                  body: {
+                    total: result.total as unsignedInt | undefined,
+                    resourceType: "Bundle",
+                    type: "searchset",
+                    entry: result.resources.map(resource => ({resource}))
+                  },
                 } as FHIRResponse,
               };
             }
@@ -1269,7 +1277,11 @@ function createPostgresMiddleware<
                   level: "instance",
                   resourceType: context.request.resourceType,
                   id: context.request.id,
-                  body: history,
+                  body: {
+                    resourceType: "Bundle",
+                    type: "history",
+                    entry: history
+                  },
                 } as FHIRResponse,
               };
             }
@@ -1283,7 +1295,11 @@ function createPostgresMiddleware<
                   type: "history-response",
                   level: "type",
                   resourceType: context.request.resourceType,
-                  body: history,
+                  body: {
+                    resourceType: "Bundle",
+                    type: "history",
+                    entry: history
+                  },
                 } as FHIRResponse,
               };
             }
@@ -1296,7 +1312,11 @@ function createPostgresMiddleware<
                   fhirVersion: context.request.fhirVersion,
                   type: "history-response",
                   level: "system",
-                  body: history,
+                  body: {
+                    resourceType: "Bundle",
+                    type: "history",
+                    entry: history
+                  },
                 } as FHIRResponse,
               };
             }
