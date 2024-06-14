@@ -19,7 +19,6 @@
       }
     }
   ],
-
   "test": [
     {
       "id": "01-Create Patient",
@@ -43,6 +42,13 @@
             "description": "Confirm patient created.",
             "direction": "response",
             "resource": "Patient"
+          }
+        },
+        {
+          "assert": {
+            "label": "Confirm first name is Peter",
+            "expression": "Patient.name.given[0]",
+            "value": "Peer"
           }
         }
       ]
