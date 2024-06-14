@@ -275,13 +275,15 @@ function evaluateInvocation(
       throw new Error("Not implemented");
     case "This":
       return context;
-    case "Identifier":
+    case "Identifier": {
       return flatten(context.map((v) => flattenedDescend(v, ast.value.value)));
-    case "Function":
+    }
+    case "Function": {
       const fp_func = fp_functions[ast.value.value.value];
       if (!fp_func)
         throw new Error("Unknown function '" + ast.value.value.value + "'");
       return fp_func(ast.value, context, options);
+    }
     default:
       throw new Error("Unknown invocation type: '" + ast.value.type + "'");
   }
@@ -293,7 +295,7 @@ function _evaluateTermStart(
   options?: Options,
 ): MetaValueSingular<unknown>[] {
   switch (ast.value.type) {
-    case "Invocation":
+    case "Invocation": {
       // Special code handling for start with typeidentifier
       if (ast.value.value.type === "Identifier") {
         const typeIdentifier = ast?.value?.value?.value;
@@ -301,13 +303,16 @@ function _evaluateTermStart(
         if (result.length > 0) return result;
       }
       return evaluateInvocation(ast.value, context, options);
+    }
     case "Literal": {
       return toMetaValueSingulars({ type: options?.meta }, ast.value.value);
     }
-    case "Variable":
+    case "Variable": {
       return getVariableValue(ast.value.value.value, options);
-    case "Expression":
+    }
+    case "Expression": {
       return _evaluate(ast.value, context, options);
+    }
     default:
       throw new Error("Unknown term type: '" + ast.value.type + "'");
   }
@@ -319,15 +324,18 @@ function evaluateProperty(
   options?: Options,
 ): MetaValueSingular<unknown>[] {
   switch (ast.type) {
-    case "Invocation":
+    case "Invocation": {
       return evaluateInvocation(ast, context, options);
-    case "Indexed":
-      let indexed = _evaluate(ast.value, context, options);
+    }
+    case "Indexed": {
+      const indexed = _evaluate(ast.value, context, options);
       if (indexed.length !== 1)
         throw new Error("Indexing requires a single value");
       if (!typeChecking("number", indexed))
         throw new Error("Indexing requires a number");
-      return [context[indexed[0].valueOf()]];
+      const value = context[indexed[0].valueOf()];
+      return value !== undefined ? [value] : [];
+    }
     default:
       throw new Error("Unknown term type: '" + ast.type + "'");
   }

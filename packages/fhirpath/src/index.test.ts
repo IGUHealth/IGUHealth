@@ -840,3 +840,35 @@ test("Get Locations for extensions", () => {
   expect(nodes.map((n) => n.valueOf())).toEqual(["Test"]);
   expect(nodes.map((n) => n.location())).toEqual([["name"]]);
 });
+
+test("Patient with name given", () => {
+  expect(
+    evaluate("Patient.name.given[0]", {
+      fhirVersion: "4.0",
+      type: "create-response",
+      level: "type",
+      resourceType: "Patient",
+      body: {
+        id: "1tdKkJKtV5LuZVrn43yvHB",
+        meta: {
+          extension: [
+            {
+              url: "https://iguhealth.app/version-sequence",
+              valueInteger: 191,
+            },
+            {
+              url: "https://iguhealth.app/author",
+              valueReference: {
+                reference: "ClientApplication/rB5mVKQ7wIxMeSWthQCE3l",
+              },
+            },
+          ],
+          versionId: "191",
+          lastUpdated: "2024-06-14T18:15:48.285+00:00",
+        },
+        name: [{ given: ["Peter"], family: "Chalmers" }],
+        resourceType: "Patient",
+      },
+    }),
+  ).toEqual([]);
+});

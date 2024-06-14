@@ -10,6 +10,7 @@ import {
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
+import * as fp from "@iguhealth/fhirpath";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 type TestScriptState<Version extends FHIR_VERSION> = {
@@ -172,6 +173,12 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
   }
 }
 
+function isResponseOrRequest<T extends FHIRRequest | FHIRResponse>(
+  v: unknown,
+): v is T {
+  return v !== null && typeof v === "object" && "type" in v && "level" in v;
+}
+
 function getFHIRResponseFixture<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
   assertion: NonNullable<TestScriptAction<Version>["assert"]>,
@@ -180,8 +187,8 @@ function getFHIRResponseFixture<Version extends FHIR_VERSION>(
     ? state.fixtures[assertion.sourceId]
     : state.latestResponse;
 
-  if (response && "type" in response && "level" in response) {
-    return response as FHIRResponse;
+  if (isResponseOrRequest<FHIRResponse>(response)) {
+    return response;
   }
 
   state.logger.error(response);
@@ -189,6 +196,105 @@ function getFHIRResponseFixture<Version extends FHIR_VERSION>(
   throw new OperationError(
     outcomeFatal("invalid", "response fixture not found"),
   );
+}
+
+async function deriveComparision<Version extends FHIR_VERSION>(
+  state: TestScriptState<Version>,
+  assertion: NonNullable<TestScriptAction<Version>["assert"]>,
+): Promise<unknown> {
+  if (assertion.sourceId) {
+    const data = state.fixtures[assertion.sourceId];
+
+    switch (true) {
+      case assertion.compareToSourceExpression !== undefined: {
+        return fp.evaluate(assertion.compareToSourceExpression, data)[0];
+      }
+    }
+  } else if (assertion.value) {
+    return assertion.value;
+  }
+  return true;
+}
+
+/**
+ * [https://hl7.org/fhir/r4/valueset-assert-operator-codes.html]
+ * equals	equals	Default value. Equals comparison.
+ * notEquals	notEquals	Not equals comparison.
+ * in	in	Compare value within a known set of values.
+ * notIn	notIn	Compare value not within a known set of values.
+ * greaterThan	greaterThan	Compare value to be greater than a known value.
+ * lessThan	lessThan	Compare value to be less than a known value.
+ * empty	empty	Compare value is empty.
+ * notEmpty	notEmpty	Compare value is not empty.
+ * contains	contains	Compare value string contains a known value.
+ * notContains	notContains	Compare value string does not contain a known value.
+ * eval	evaluate	Evaluate the FHIRPath expression as a boolean condition.
+ */
+function evaluateOperator(
+  v1: unknown,
+  v2: unknown,
+  operator: code = "equals" as code,
+): boolean {
+  switch (operator) {
+    case "equals":
+      return JSON.stringify(v1) === JSON.stringify(v2);
+    case "notEquals":
+      return JSON.stringify(v1) !== JSON.stringify(v2);
+    case "in":
+      return Array.isArray(v2) ? v2.includes(v1) : false;
+    case "notIn":
+      return Array.isArray(v2) ? !v2.includes(v1) : false;
+    case "greaterThan":
+      return parseInt(v1?.toString() ?? "") > parseInt(v2?.toString() ?? "");
+    case "lessThan":
+      return parseInt(v1?.toString() ?? "") < parseInt(v2?.toString() ?? "");
+    case "empty":
+      return Array.isArray(v1)
+        ? v1.length === 0
+        : v1 === undefined || v1 === null;
+    case "notEmpty":
+      return Array.isArray(v1)
+        ? v1.length !== 0
+        : v1 !== undefined && v1 !== null;
+    case "contains":
+      return typeof v1 === "string" && typeof v2 === "string"
+        ? v1.includes(v2)
+        : false;
+    case "notContains":
+      return typeof v1 === "string" && typeof v2 === "string"
+        ? !v1.includes(v2)
+        : false;
+    case "eval":
+      return v1 === v2;
+    default:
+      return false;
+  }
+}
+
+function assertionFailureMessage(
+  v1: unknown,
+  v2: unknown,
+  operator: code = "equals" as code,
+): string {
+  return `Failed Assertion <'${JSON.stringify(v1)}' ${operator} '${v2 ? JSON.stringify(v2) : ""}'>`;
+}
+
+function getSource<Version extends FHIR_VERSION>(
+  state: TestScriptState<Version>,
+  assertion: NonNullable<TestScriptAction<Version>["assert"]>,
+  requestOrResponse: FHIRRequest | FHIRResponse,
+): Resource<Version, AllResourceTypes> | undefined {
+  const source = assertion.sourceId
+    ? state.fixtures[assertion.sourceId]
+    : requestOrResponse;
+  if (isResponseOrRequest(source)) {
+    if ("body" in source) {
+      return source.body as Resource<Version, AllResourceTypes>;
+    }
+    return undefined;
+  }
+
+  return source;
 }
 
 async function evaluateAssertion<Version extends FHIR_VERSION>(
@@ -199,17 +305,52 @@ async function evaluateAssertion<Version extends FHIR_VERSION>(
   result: NonNullable<TestReportAction<Version>["assert"]>;
 }> {
   const response: FHIRResponse = getFHIRResponseFixture(state, assertion);
-  const request = state.latestRequest;
+  const request = state.latestRequest as FHIRRequest;
+  const requestOrResponse =
+    (assertion.direction ?? "response") === "response" ? response : request;
+
+  const source = getSource(state, assertion, requestOrResponse);
 
   if (assertion.resource) {
     if (
-      response.level !== "type" ||
-      response.resourceType !== assertion.resource
+      source === undefined ||
+      !("resourceType" in source) ||
+      !evaluateOperator(
+        source.resourceType,
+        assertion.resource,
+        assertion.operator,
+      )
     ) {
       const result = {
         result: "fail",
-        message: `Expected resource type '${assertion.resource}' but got '${response.level === "type" ? response.resourceType : "not a resource"}'`,
+        message: assertionFailureMessage(
+          source?.resourceType ?? "InvalidResourceType",
+          assertion.resource,
+          assertion.operator,
+        ),
       } as NonNullable<TestReportAction<Version>["assert"]>;
+      state.logger.error(result);
+
+      return {
+        state: { ...state, result: "fail" },
+        result,
+      };
+    }
+  }
+  if (assertion.expression) {
+    const compValue = await deriveComparision(state, assertion);
+    const fpEvaluation = fp.evaluate(assertion.expression, source)[0];
+
+    if (!evaluateOperator(fpEvaluation, compValue, assertion.operator)) {
+      const result = {
+        result: "fail",
+        message: assertionFailureMessage(
+          fpEvaluation,
+          compValue,
+          assertion.operator,
+        ),
+      } as NonNullable<TestReportAction<Version>["assert"]>;
+
       state.logger.error(result);
 
       return {
