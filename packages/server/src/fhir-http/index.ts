@@ -905,11 +905,7 @@ export function fhirResponseToHTTPResponse(
           ...headers,
         },
         status: 200,
-        body: {
-          type: "history",
-          resourceType: "Bundle",
-          entry: fhirResponse.body,
-        },
+        body: fhirResponse.body,
       };
     case "create-response":
       return {
