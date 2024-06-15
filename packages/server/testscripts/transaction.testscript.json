@@ -84,9 +84,9 @@
             "description": "Confirm transaction was successful.",
             "direction": "response",
             "expression": "Bundle.entry[0].resource.generalPractitioner.reference",
+            "operator": "contains",
             "compareToSourceId": "transaction-response",
-            "compareToSourceExpression": "Bundle.entry[1].resource.id",
-            "operator": "contains"
+            "compareToSourceExpression": "Bundle.entry[1].resource.id"
           }
         }
       ]
