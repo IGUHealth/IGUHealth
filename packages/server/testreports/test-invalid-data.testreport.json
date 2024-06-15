@@ -1,6 +1,6 @@
 {
   "testScript": {
-    "reference": "TestScript/transaction-tests"
+    "reference": "TestScript/test-invalid-data"
   },
   "result": "pass",
   "resourceType": "TestReport",
@@ -9,12 +9,12 @@
   },
   "test": [
     {
-      "name": "Submit Transaction",
+      "name": "Attempt to create invalid patient",
       "action": [
         {
           "operation": {
-            "result": "pass",
-            "message": "[SUCCEEDED]<transaction> label: ''"
+            "result": "fail",
+            "message": "[FAILED]<create> label: ''"
           }
         },
         {
@@ -38,12 +38,35 @@
       ]
     },
     {
-      "name": "Circular Transaction test",
+      "name": "Validate Operation",
       "action": [
         {
           "operation": {
             "result": "fail",
-            "message": "[FAILED]<transaction> label: ''"
+            "message": "[FAILED]<invoke> label: ''"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Validate Expansion Operation",
+      "action": [
+        {
+          "operation": {
+            "result": "fail",
+            "message": "[FAILED]<invoke> label: ''"
           }
         },
         {
@@ -62,13 +85,6 @@
     }
   ],
   "teardown": {
-    "action": [
-      {
-        "operation": {
-          "result": "pass",
-          "message": "[SUCCEEDED]<delete> label: ''"
-        }
-      }
-    ]
+    "action": []
   }
 }

@@ -37,7 +37,10 @@ test("Patient expansion", async () => {
         url: PATIENT_URL,
       },
     )
-    .catch((e) => e.operationOutcome);
+    .catch((e) => {
+      return e.response.body;
+    });
+
   expect(result).toEqual(sds.find((sd) => sd.url === PATIENT_URL));
 
   const patientTest = await client
@@ -75,7 +78,7 @@ test("Patient expansion", async () => {
         } as StructureDefinition,
       },
     )
-    .catch((e) => e.operationOutcome);
+    .catch((e) => e.response.body);
 
   expect(patientTest.snapshot.element).toMatchSnapshot();
 });
@@ -91,7 +94,7 @@ test("us-core-snapshot", async () => {
         definition: { ...usCoreDifferential, snapshot: undefined },
       },
     )
-    .catch((e) => console.error(e.operationOutcome));
+    .catch((e) => console.error(e.response.body));
 
   const idSets = new Set(
     sds

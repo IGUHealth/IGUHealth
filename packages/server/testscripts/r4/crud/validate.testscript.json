@@ -1,0 +1,164 @@
+{
+  "id": "test-invalid-data",
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "id": "bad-patient",
+      "resourceType": "Binary",
+      "contentType": "application/fhir+json",
+      "data": "{\"resourceType\":\"Patient\",\"name\": \"Bad name\"}"
+    },
+    {
+      "id": "bad-patient-parameters",
+      "resourceType": "Binary",
+      "contentType": "application/fhir+json",
+      "data": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\": \"resource\", \"resource\": {\"resourceType\":\"Patient\",\"name\": \"Bad name\"}}]}"
+    },
+    {
+      "id": "bad-expansion-parameters",
+      "resourceType": "Binary",
+      "contentType": "application/fhir+json",
+      "data": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\": \"asdf\", \"valueInteger\": 1 }]}"
+    }
+  ],
+  "fixture": [
+    {
+      "id": "fixture-bad-patient",
+      "autocreate": false,
+      "autodelete": false,
+      "resource": {
+        "reference": "#bad-patient"
+      }
+    },
+    {
+      "id": "fixture-bad-patient-parameters",
+      "autocreate": false,
+      "autodelete": false,
+      "resource": {
+        "reference": "#bad-patient-parameters"
+      }
+    },
+    {
+      "id": "fixture-bad-expansion-parameters",
+      "autocreate": false,
+      "autodelete": false,
+      "resource": {
+        "reference": "#bad-expansion-parameters"
+      }
+    }
+  ],
+  "test": [
+    {
+      "id": "01-AttemptCreatePatient",
+      "name": "Attempt to create invalid patient",
+      "description": "Attempt to create a patient with invalid name",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "create"
+            },
+            "resource": "Patient",
+            "sourceId": "fixture-bad-patient"
+          }
+        },
+        {
+          "assert": {
+            "label": "01-Verify is OO",
+            "description": "Confirm return is OperationOutcome.",
+            "direction": "response",
+            "resource": "OperationOutcome"
+          }
+        },
+        {
+          "assert": {
+            "label": "02-Verify OO Status",
+            "description": "Confirm return is OperationOutcome status is error.",
+            "expression": "OperationOutcome.issue[0].severity",
+            "value": "error"
+          }
+        },
+        {
+          "assert": {
+            "label": "03-Verify OO Pointer",
+            "description": "Check pointer of OO.",
+            "expression": "OperationOutcome.issue[0].expression",
+            "value": "/name"
+          }
+        }
+      ]
+    },
+    {
+      "id": "02-ValidateOperation",
+      "name": "Validate Operation",
+      "description": "Invoke validation operation",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "invoke"
+            },
+            "url": "validate",
+            "resource": "Patient",
+            "sourceId": "fixture-bad-patient-parameters"
+          }
+        },
+        {
+          "assert": {
+            "label": "01-Verify is OO",
+            "description": "Confirm return is OperationOutcome.",
+            "direction": "response",
+            "resource": "OperationOutcome"
+          }
+        },
+        {
+          "assert": {
+            "label": "02-Verify OO Status",
+            "description": "Confirm return is OperationOutcome status is error.",
+            "expression": "OperationOutcome.issue[0].expression",
+            "value": "/parameter/0/resource/name"
+          }
+        }
+      ]
+    },
+    {
+      "id": "03-ExpansionValidate",
+      "name": "Validate Expansion Operation",
+      "description": "Invoke expansion operation with bad data",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "invoke"
+            },
+            "url": "expand",
+            "resource": "ValueSet",
+            "sourceId": "fixture-bad-expansion-parameters"
+          }
+        },
+        {
+          "assert": {
+            "label": "01-Verify is OO",
+            "description": "Confirm return is OperationOutcome.",
+            "direction": "response",
+            "resource": "OperationOutcome"
+          }
+        },
+        {
+          "assert": {
+            "label": "02-Verify OO Status",
+            "description": "Confirm return is OperationOutcome status is error.",
+            "expression": "OperationOutcome.issue[0].code",
+            "value": "invalid"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": []
+  }
+}

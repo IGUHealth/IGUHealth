@@ -11,7 +11,11 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import * as fp from "@iguhealth/fhirpath";
-import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
+import {
+  OperationError,
+  outcomeError,
+  outcomeFatal,
+} from "@iguhealth/operation-outcomes";
 
 type ResourceFixture<Version extends FHIR_VERSION> = {
   type: "resource";
@@ -77,6 +81,13 @@ function getFixtureResource<Version extends FHIR_VERSION>(
       );
     }
     case "resource": {
+      if (
+        v.data.resourceType === "Binary" &&
+        v.data.contentType === "application/fhir+json" &&
+        v.data.data
+      ) {
+        return JSON.parse(v.data.data);
+      }
       return v.data;
     }
   }
@@ -122,8 +133,75 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
   operation: NonNullable<TestScriptAction<Version>["operation"]>,
 ): FHIRRequest {
   // See https://hl7.org/fhir/r4/valueset-testscript-operation-codes.html
-  // case "updateCreate":
+
+  // Extending this with "invoke" for invoking generic operations.
   switch (operation?.type?.code) {
+    case "invoke": {
+      // Assume the op code is provided by url.
+      const op = operation.url;
+      if (!op) {
+        throw new OperationError(
+          outcomeFatal(
+            "invalid",
+            `url is required for invoke operation which is used as the operation code.`,
+          ),
+        );
+      }
+      if (!operation.sourceId) {
+        throw new OperationError(
+          outcomeError("invalid", "sourceId is required for invoke operation"),
+        );
+      }
+      const parameters = getFixtureResource(state, operation.sourceId);
+      if (parameters.resourceType !== "Parameters") {
+        throw new OperationError(
+          outcomeError(
+            "invalid",
+            `sourceId must point to Parameters resource for ${operation.sourceId}`,
+          ),
+        );
+      }
+      switch (true) {
+        case operation.targetId !== undefined: {
+          const target = getFixtureResource(state, operation.targetId);
+          if (!target.id)
+            throw new OperationError(
+              outcomeFatal(
+                "invalid",
+                `targetId must have an id on resource for '${operation.targetId}'`,
+              ),
+            );
+          return {
+            fhirVersion: state.version,
+            level: "instance",
+            type: "invoke-request",
+            resourceType: target.resourceType as any,
+            id: target.id,
+            operation: op as code,
+            body: parameters as any,
+          };
+        }
+        case operation.resource !== undefined: {
+          return {
+            fhirVersion: state.version,
+            level: "type",
+            type: "invoke-request",
+            resourceType: operation.resource as any,
+            operation: op as code,
+            body: parameters as any,
+          };
+        }
+        default: {
+          return {
+            fhirVersion: state.version,
+            level: "system",
+            type: "invoke-request",
+            operation: op as code,
+            body: parameters as any,
+          };
+        }
+      }
+    }
     case "read": {
       if (!operation.targetId)
         throw new OperationError(
