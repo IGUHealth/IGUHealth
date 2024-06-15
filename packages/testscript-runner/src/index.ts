@@ -104,16 +104,15 @@ function getSource<Version extends FHIR_VERSION>(
         AllResourceTypes
       >;
     }
-    case assertion.direction === "response": {
+    // Default can be assumed as response.
+    case assertion.direction === "response":
+    default: {
       if (!state.latestResponse?.data || !("body" in state.latestResponse.data))
         return undefined;
       return state.latestResponse?.data.body as Resource<
         Version,
         AllResourceTypes
       >;
-    }
-    default: {
-      return undefined;
     }
   }
 }
@@ -130,6 +129,7 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
         throw new OperationError(
           outcomeFatal("invalid", "targetId is required for read operation"),
         );
+
       return {
         fhirVersion: state.version,
         level: "instance",
@@ -592,6 +592,7 @@ async function runTest<Version extends FHIR_VERSION>(
       action,
     );
     curState = output.state;
+
     testReports.push(output.result);
   }
 
@@ -770,9 +771,9 @@ export async function run<Version extends FHIR_VERSION>(
     testReport.setup = output.result;
 
     const testsOutput = await runTests(state, testscript.test);
+
     testReport.test = testsOutput.result;
     state = testsOutput.state;
-
     testReport.result = state.result as code;
 
     return testReport;
