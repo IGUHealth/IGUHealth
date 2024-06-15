@@ -59,7 +59,7 @@ test("test successful transaction", async () => {
     ]);
   } catch (e) {
     // @ts-ignore
-    console.error(JSON.stringify(e.operationOutcome));
+    console.error(JSON.stringify(e.response.body));
   } finally {
     const transaction: Bundle = {
       resourceType: "Bundle",

@@ -55,7 +55,7 @@ test("ValidationOperation", async () => {
       { resource: badPatient },
     )
     .catch((e) => {
-      throw e.operationOutcome;
+      throw e.response.body;
     });
   expect(invocation).rejects.toEqual({
     resourceType: "OperationOutcome",
@@ -115,7 +115,7 @@ test("Invalid Operation Payload", async () => {
   expect(
     // @ts-ignore
     client.invoke_system(ValueSetExpand.Op, {}, R4, { url: 5 }).catch((e) => {
-      throw e.operationOutcome;
+      throw e.response.body;
     }),
   ).rejects.toEqual({
     issue: [

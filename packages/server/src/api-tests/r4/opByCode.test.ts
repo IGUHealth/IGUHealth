@@ -24,7 +24,7 @@ test("Test invocation by code Resource Level", async () => {
         },
       ],
     } as Parameters)
-    .catch((e) => e.operationOutcome);
+    .catch((e) => e.response.body);
 
   expect(invocation).toEqual({
     resourceType: "OperationOutcome",

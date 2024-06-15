@@ -31,7 +31,7 @@ test("Test successfull patch", async () => {
         { op: "add", path: "/name/0/family", value: "Smith" },
       ])
       .catch((e) => {
-        throw e.operationOutcome;
+        throw e.response.body;
       });
 
     expect(patientUpdated.name).toEqual([{ family: "Smith" }]);
@@ -41,7 +41,7 @@ test("Test successfull patch", async () => {
         { op: "add", path: "/d", value: "Smith" },
       ])
       .catch((e) => {
-        return e.operationOutcome;
+        return e.response.body;
       });
 
     expect(OOFAILURE).toEqual({
@@ -61,7 +61,7 @@ test("Test successfull patch", async () => {
         { z: "add", path: "/d", value: "Smith" },
       ])
       .catch((e) => {
-        return e.operationOutcome;
+        return e.response.body;
       });
 
     expect(invalidPatchData).toEqual({
@@ -81,7 +81,7 @@ test("Test successfull patch", async () => {
         { op: "add", path: "/d/1", value: "Z" },
       ])
       .catch((e) => {
-        return e.operationOutcome;
+        return e.response.body;
       });
 
     expect(invalidAppliedPatch).toEqual({
