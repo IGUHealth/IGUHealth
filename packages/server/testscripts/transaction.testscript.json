@@ -66,7 +66,7 @@
         {
           "assert": {
             "label": "01-Practitioner reference equals newly created Practitioner.",
-            "description": "Confirm patient created.",
+            "description": "Confirm transaction was successful.",
             "direction": "response",
             "expression": "Bundle.entry[0].resource.generalPractitioner.reference",
             "compareToSourceId": "fixture-transaction",
