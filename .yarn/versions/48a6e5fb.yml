@@ -1,0 +1,12 @@
+releases:
+  "@iguhealth/client": patch
+  "@iguhealth/operation-outcomes": patch
+  "@iguhealth/testscript-runner": patch
+
+declined:
+  - "@iguhealth/admin-app"
+  - "@iguhealth/cli"
+  - "@iguhealth/components"
+  - "@iguhealth/fhir-validation"
+  - "@iguhealth/operation-execution"
+  - "@iguhealth/server"

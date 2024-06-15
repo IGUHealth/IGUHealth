@@ -42,4 +42,8 @@ export type Request<
 > = {
   fhirVersion: Version;
   level: RequestLevel[level];
+  http?: {
+    status: number;
+    headers: Record<string, string>;
+  };
 };

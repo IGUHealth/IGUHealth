@@ -13,16 +13,33 @@ import {
 import * as fp from "@iguhealth/fhirpath";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
+type ResourceFixture<Version extends FHIR_VERSION> = {
+  type: "resource";
+  data: Resource<Version, AllResourceTypes>;
+};
+
+type ResponseFixture = {
+  type: "response";
+  data: FHIRResponse;
+};
+
+type RequestFixture = {
+  type: "request";
+  data: FHIRRequest;
+};
+
+type Fixture<Version extends FHIR_VERSION> =
+  | ResourceFixture<Version>
+  | ResponseFixture
+  | RequestFixture;
+
 type TestScriptState<Version extends FHIR_VERSION> = {
   logger: Logger<string>;
   result: "pass" | "fail" | "pending";
   version: Version;
-  fixtures: Record<
-    string,
-    Resource<Version, AllResourceTypes> | FHIRRequest | FHIRResponse
-  >;
-  latestResponse?: FHIRResponse;
-  latestRequest?: FHIRRequest;
+  fixtures: Record<string, Fixture<Version> | undefined>;
+  latestResponse?: ResponseFixture;
+  latestRequest?: RequestFixture;
   client: ReturnType<typeof createHTTPClient>;
 };
 
@@ -40,23 +57,64 @@ function getFixtureResource<Version extends FHIR_VERSION>(
 ): Resource<Version, AllResourceTypes> {
   const v = state.fixtures[id];
 
-  if (isResponseOrRequest<FHIRResponse | FHIRRequest>(v)) {
-    if ("body" in v) {
-      return v.body as Resource<Version, AllResourceTypes>;
-    }
+  if (!v) {
     throw new OperationError(
-      outcomeFatal(
-        "invalid",
-        `Response or Request body not found on fixture '${id}'`,
-      ),
+      outcomeFatal("invalid", `fixture with id '${id}' not found`),
     );
-  } else if ((v as unknown as Record<string, unknown>).resourceType) {
-    return v as Resource<Version, AllResourceTypes>;
   }
 
-  throw new OperationError(
-    outcomeFatal("invalid", `fixture with id '${id}' not found`),
-  );
+  switch (v.type) {
+    case "response":
+    case "request": {
+      if ("body" in v.data) {
+        return v.data.body as Resource<Version, AllResourceTypes>;
+      }
+      throw new OperationError(
+        outcomeFatal(
+          "invalid",
+          `Response or Request body not found on fixture '${id}'`,
+        ),
+      );
+    }
+    case "resource": {
+      return v.data;
+    }
+  }
+}
+
+/**
+ * Return the default source (by default is Response in unless specified a sourceId or direction request)
+ * @param state Current test state
+ * @param assertion
+ * @returns
+ */
+function getSource<Version extends FHIR_VERSION>(
+  state: TestScriptState<Version>,
+  assertion: NonNullable<TestScriptAction<Version>["assert"]>,
+): Resource<Version, AllResourceTypes> | undefined {
+  switch (true) {
+    case assertion.sourceId !== undefined: {
+      return getFixtureResource(state, assertion.sourceId);
+    }
+    case assertion.direction === "request": {
+      if (!state.latestRequest?.data || !("body" in state.latestRequest.data))
+        return undefined;
+      return state.latestRequest?.data.body as Resource<
+        Version,
+        AllResourceTypes
+      >;
+    }
+    // Default can be assumed as response.
+    case assertion.direction === "response":
+    default: {
+      if (!state.latestResponse?.data || !("body" in state.latestResponse.data))
+        return undefined;
+      return state.latestResponse?.data.body as Resource<
+        Version,
+        AllResourceTypes
+      >;
+    }
+  }
 }
 
 function operationToFHIRRequest<Version extends FHIR_VERSION>(
@@ -71,6 +129,7 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
         throw new OperationError(
           outcomeFatal("invalid", "targetId is required for read operation"),
         );
+
       return {
         fhirVersion: state.version,
         level: "instance",
@@ -249,49 +308,6 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
   }
 }
 
-function isResponseOrRequest<T extends FHIRRequest | FHIRResponse>(
-  v: unknown,
-): v is T {
-  return v !== null && typeof v === "object" && "type" in v && "level" in v;
-}
-
-function getFHIRResponseFixture<Version extends FHIR_VERSION>(
-  state: TestScriptState<Version>,
-  assertion: NonNullable<TestScriptAction<Version>["assert"]>,
-): FHIRResponse {
-  const response = assertion.sourceId
-    ? state.fixtures[assertion.sourceId]
-    : state.latestResponse;
-
-  if (isResponseOrRequest<FHIRResponse>(response)) {
-    return response;
-  }
-
-  state.logger.error(response);
-
-  throw new OperationError(
-    outcomeFatal("invalid", "response fixture not found"),
-  );
-}
-
-function getSource<Version extends FHIR_VERSION>(
-  state: TestScriptState<Version>,
-  assertion: NonNullable<TestScriptAction<Version>["assert"]>,
-  requestOrResponse: FHIRRequest | FHIRResponse,
-): Resource<Version, AllResourceTypes> | undefined {
-  const source = assertion.sourceId
-    ? state.fixtures[assertion.sourceId]
-    : requestOrResponse;
-  if (isResponseOrRequest(source)) {
-    if ("body" in source) {
-      return source.body as Resource<Version, AllResourceTypes>;
-    }
-    return undefined;
-  }
-
-  return source;
-}
-
 async function deriveComparision<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
   assertion: NonNullable<TestScriptAction<Version>["assert"]>,
@@ -380,12 +396,7 @@ async function evaluateAssertion<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>;
   result: NonNullable<TestReportAction<Version>["assert"]>;
 }> {
-  const response: FHIRResponse = getFHIRResponseFixture(state, assertion);
-  const request = state.latestRequest as FHIRRequest;
-  const requestOrResponse =
-    (assertion.direction ?? "response") === "response" ? response : request;
-
-  const source = getSource(state, assertion, requestOrResponse);
+  const source = getSource(state, assertion);
 
   if (assertion.resource) {
     if (
@@ -456,10 +467,16 @@ function associateResponseRequestVariables<Version extends FHIR_VERSION>(
 ) {
   let fixtures = { ..._fixtures };
   if (operation.responseId) {
-    fixtures = { ...fixtures, [operation.responseId]: response };
+    fixtures = {
+      ...fixtures,
+      [operation.responseId]: { type: "response", data: response },
+    };
   }
   if (operation.requestId) {
-    fixtures = { ...fixtures, [operation.requestId]: request };
+    fixtures = {
+      ...fixtures,
+      [operation.requestId]: { type: "request", data: request },
+    };
   }
 
   return fixtures;
@@ -492,8 +509,8 @@ async function evaluateOperation<Version extends FHIR_VERSION>(
           request,
           response,
         ),
-        latestRequest: request,
-        latestResponse: response,
+        latestRequest: { type: "request", data: request },
+        latestResponse: { type: "response", data: response },
       },
       result,
     };
@@ -575,6 +592,7 @@ async function runTest<Version extends FHIR_VERSION>(
       action,
     );
     curState = output.state;
+
     testReports.push(output.result);
   }
 
@@ -706,7 +724,10 @@ async function resolveFixtures<Version extends FHIR_VERSION>(
       ...state,
       fixtures: {
         ...state.fixtures,
-        [fixture.id]: resolvedResource as Resource<Version, AllResourceTypes>,
+        [fixture.id]: {
+          type: "resource",
+          data: resolvedResource as Resource<Version, AllResourceTypes>,
+        },
       },
     };
   }
@@ -750,9 +771,9 @@ export async function run<Version extends FHIR_VERSION>(
     testReport.setup = output.result;
 
     const testsOutput = await runTests(state, testscript.test);
+
     testReport.test = testsOutput.result;
     state = testsOutput.state;
-
     testReport.result = state.result as code;
 
     return testReport;

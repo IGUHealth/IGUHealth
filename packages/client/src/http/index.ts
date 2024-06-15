@@ -486,6 +486,10 @@ function httpMiddleware<CTX>(): MiddlewareAsync<HTTPClientState, CTX> {
           context.request,
           response,
         );
+        fhirResponse.http = {
+          status: response.status,
+          headers: Object.fromEntries(response.headers),
+        };
 
         return {
           ...context,
