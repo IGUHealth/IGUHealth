@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 
+import { isResponseError } from "@iguhealth/client/lib/http";
 import { Toaster } from "@iguhealth/components";
 import { Loading } from "@iguhealth/components";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { IguhealthUsageStatistics } from "@iguhealth/generated-ops/lib/r4/ops";
-import { isOperationError } from "@iguhealth/operation-outcomes";
 
 import Card from "../components/Card";
 import { getClient } from "../db/client";
@@ -25,10 +25,9 @@ const Dashboard = () => {
         ),
       )
       .catch((e) => {
-        if (isOperationError(e))
+        if (isResponseError(e))
           Toaster.error(
-            e.operationOutcome.issue?.[0]?.diagnostics ??
-              "Failed to fetch stats.",
+            e.response.body.issue?.[0]?.diagnostics ?? "Failed to fetch stats.",
           );
         else {
           Toaster.error("Failed to usage stats.");

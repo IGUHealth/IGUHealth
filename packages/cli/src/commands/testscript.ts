@@ -9,11 +9,14 @@ import * as ts from "@iguhealth/testscript-runner";
 import { createClient } from "../client.js";
 import { CONFIG_LOCATION } from "../config.js";
 
-function getAllFiles(directory: string): string[] {
+function getAllFiles(location: string): string[] {
+  if (fs.lstatSync(location).isFile()) {
+    return [location];
+  }
   const files: string[] = [];
-  const filesInDirectory = fs.readdirSync(directory);
+  const filesInDirectory = fs.readdirSync(location);
   for (const file of filesInDirectory) {
-    const absolute = path.join(directory, file);
+    const absolute = path.join(location, file);
     if (fs.statSync(absolute).isDirectory()) {
       files.push(...getAllFiles(absolute));
     } else {

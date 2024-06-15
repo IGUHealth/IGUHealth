@@ -1,8 +1,8 @@
 import { selector } from "recoil";
 
+import { isResponseError } from "@iguhealth/client/http";
 import { Toaster } from "@iguhealth/components";
 import { R4 } from "@iguhealth/fhir-types/versions";
-import { isOperationError } from "@iguhealth/operation-outcomes";
 
 import { getClient } from "./client";
 
@@ -14,9 +14,9 @@ export const getCapabilities = selector({
       const capabilityStatement = await client.capabilities({}, R4);
       return capabilityStatement;
     } catch (e) {
-      if (isOperationError(e)) {
+      if (isResponseError(e)) {
         Toaster.error(
-          e.operationOutcome.issue?.[0]?.diagnostics ??
+          e.response.body.issue?.[0]?.diagnostics ??
             "Failed to fetch server capabilities.",
         );
       } else {

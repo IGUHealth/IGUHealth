@@ -13,10 +13,7 @@ import {
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { R4 } from "@iguhealth/fhir-types/lib/versions";
 import { evaluate } from "@iguhealth/fhirpath";
-import {
-  OperationError,
-  isOperationError,
-} from "@iguhealth/operation-outcomes";
+import { isOperationError } from "@iguhealth/operation-outcomes";
 
 const client = HTTPClient({
   url: "http://localhost:3000/w/system",

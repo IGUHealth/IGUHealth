@@ -2,7 +2,7 @@
   "testScript": {
     "reference": "TestScript/transaction-tests"
   },
-  "result": "pass",
+  "result": "fail",
   "resourceType": "TestReport",
   "setup": {
     "action": []
@@ -33,6 +33,29 @@
           "assert": {
             "result": "pass",
             "message": "Assertions passed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Circular Transaction test",
+      "action": [
+        {
+          "operation": {
+            "result": "fail",
+            "message": "[FAILED]<transaction> label: ''"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        },
+        {
+          "assert": {
+            "result": "fail",
+            "message": "Failed Assertion <'\"exception\"' equals '\"exeption\"'>"
           }
         }
       ]

@@ -1,11 +1,16 @@
-import { Bundle, OperationOutcome } from "@iguhealth/fhir-types/r4/types";
+import { Bundle } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { AsynchronousClient } from "../index.js";
 import { MiddlewareAsync, createMiddlewareAsync } from "../middleware/index.js";
-import { FHIRRequest, FHIRResponse } from "../types/index.js";
+import {
+  FHIRRequest,
+  FHIRResponse,
+  R4BFHIRErrorResponse,
+  R4FHIRErrorResponse,
+} from "../types/index.js";
 import { ParsedParameter } from "../url.js";
 
 type HTTPClientState = {
@@ -210,6 +215,29 @@ async function toHTTPRequest(
   }
 }
 
+export class ResponseError extends Error {
+  private readonly _request: FHIRRequest;
+  private readonly _response: R4FHIRErrorResponse | R4BFHIRErrorResponse;
+  constructor(
+    request: FHIRRequest,
+    response: R4FHIRErrorResponse | R4BFHIRErrorResponse,
+  ) {
+    super();
+    this._request = request;
+    this._response = response;
+  }
+  get response() {
+    return this._response;
+  }
+  get request() {
+    return this._request;
+  }
+}
+
+export function isResponseError(e: unknown): e is ResponseError {
+  return e instanceof ResponseError;
+}
+
 async function httpResponseToFHIRResponse(
   request: FHIRRequest,
   response: Response,
@@ -217,15 +245,47 @@ async function httpResponseToFHIRResponse(
   if (response.status >= 400) {
     switch (response.status) {
       case 401: {
-        throw new OperationError(outcomeError("login", "Unauthorized"));
+        throw new ResponseError(request, {
+          fhirVersion: request.fhirVersion,
+          level: request.level,
+          type: "error-response",
+          body: outcomeError("login", "Unauthorized") as any,
+          http: {
+            status: response.status,
+            headers: Object.fromEntries(response.headers),
+          },
+        });
       }
       case 403: {
-        throw new OperationError(outcomeError("forbidden", "Forbidden"));
+        throw new ResponseError(request, {
+          fhirVersion: request.fhirVersion,
+          level: request.level,
+          type: "error-response",
+          body: outcomeError("forbidden", "Forbidden") as any,
+          http: {
+            status: response.status,
+            headers: Object.fromEntries(response.headers),
+          },
+        });
       }
       default: {
         if (!response.body) throw new Error(response.statusText);
-        const oo = (await response.json()) as OperationOutcome;
-        throw new OperationError(oo);
+        const oo = await response.json();
+
+        if (!("resourceType" in oo) || oo.resourceType !== "OperationOutcome") {
+          throw new Error(response.statusText);
+        }
+
+        throw new ResponseError(request, {
+          fhirVersion: request.fhirVersion,
+          level: request.level,
+          type: "error-response",
+          body: oo,
+          http: {
+            status: response.status,
+            headers: Object.fromEntries(response.headers),
+          },
+        });
       }
     }
   }
@@ -496,8 +556,8 @@ function httpMiddleware<CTX>(): MiddlewareAsync<HTTPClientState, CTX> {
           response: fhirResponse,
         };
       } catch (e) {
-        if (e instanceof OperationError) {
-          if (e.operationOutcome.issue[0].code === "login") {
+        if (isResponseError(e)) {
+          if (e.response.body.issue[0].code === "login") {
             if (context.state.onAuthenticationError) {
               context.state.onAuthenticationError();
             }
