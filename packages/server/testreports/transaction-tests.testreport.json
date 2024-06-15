@@ -1,6 +1,6 @@
 {
   "testScript": {
-    "reference": "TestScript/create-patient"
+    "reference": "TestScript/transaction-tests"
   },
   "result": "pass",
   "resourceType": "TestReport",
@@ -9,12 +9,18 @@
   },
   "test": [
     {
-      "name": "Create Patient",
+      "name": "Submit Transaction",
       "action": [
         {
           "operation": {
             "result": "pass",
-            "message": "[SUCCEEDED]<create> label: ''"
+            "message": "[SUCCEEDED]<transaction> label: ''"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
           }
         },
         {

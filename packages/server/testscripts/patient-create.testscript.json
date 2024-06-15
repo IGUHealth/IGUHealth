@@ -33,7 +33,7 @@
             },
             "resource": "Patient",
             "sourceId": "fixture-patient-create",
-            "responseId": "fixture-patient-read"
+            "responseId": "create-response"
           }
         },
         {
@@ -48,7 +48,7 @@
           "assert": {
             "label": "Confirm first name is Peter",
             "expression": "Patient.name.given[0]",
-            "value": "Peer"
+            "value": "Peter"
           }
         }
       ]
@@ -63,8 +63,8 @@
             "code": "delete"
           },
           "resource": "Patient",
-          "description": "Delete the patient resource on the test server using the id from fixture-patient-create.",
-          "targetId": "fixture-patient-create"
+          "description": "Delete the patient resource on the test server using the id from create-response.",
+          "targetId": "create-response"
         }
       }
     ]

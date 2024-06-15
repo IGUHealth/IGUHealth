@@ -39,12 +39,21 @@ function getFixtureResource<Version extends FHIR_VERSION>(
   id: id,
 ): Resource<Version, AllResourceTypes> {
   const v = state.fixtures[id];
-  if (
-    (v as unknown as Record<string, unknown>).resourceType &&
-    (v as unknown as Record<string, unknown>).id
-  ) {
+
+  if (isResponseOrRequest<FHIRResponse | FHIRRequest>(v)) {
+    if ("body" in v) {
+      return v.body as Resource<Version, AllResourceTypes>;
+    }
+    throw new OperationError(
+      outcomeFatal(
+        "invalid",
+        `Response or Request body not found on fixture '${id}'`,
+      ),
+    );
+  } else if ((v as unknown as Record<string, unknown>).resourceType) {
     return v as Resource<Version, AllResourceTypes>;
   }
+
   throw new OperationError(
     outcomeFatal("invalid", `fixture with id '${id}' not found`),
   );
@@ -158,10 +167,77 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
         }
       }
     }
+
+    case "search": {
+      if (operation.resource) {
+        return {
+          fhirVersion: state.version,
+          level: "type",
+          type: "search-request",
+          resourceType: operation.resource,
+          parameters: parseQuery(operation.params ?? ""),
+        } as FHIRRequest;
+      } else {
+        return {
+          fhirVersion: state.version,
+          level: "system",
+          type: "search-request",
+          parameters: parseQuery(operation.params ?? ""),
+        } as FHIRRequest;
+      }
+    }
+    case "batch": {
+      if (!operation.sourceId)
+        throw new OperationError(
+          outcomeFatal("invalid", "sourceId is required for read operation"),
+        );
+
+      const batch = getFixtureResource(state, operation.sourceId);
+
+      if (batch.resourceType !== "Bundle" || batch.type !== "batch") {
+        throw new OperationError(
+          outcomeFatal(
+            "invalid",
+            "Batch request must be a bundle and a of type batch.",
+          ),
+        );
+      }
+
+      return {
+        fhirVersion: state.version,
+        level: "system",
+        type: "batch-request",
+        body: batch,
+      } as FHIRRequest;
+    }
+    case "transaction": {
+      if (!operation.sourceId)
+        throw new OperationError(
+          outcomeFatal("invalid", "sourceId is required for read operation"),
+        );
+
+      const transaction = getFixtureResource(state, operation.sourceId);
+
+      if (
+        transaction.resourceType !== "Bundle" ||
+        transaction.type !== "transaction"
+      ) {
+        throw new OperationError(
+          outcomeFatal(
+            "invalid",
+            "Transaction request must be a bundle and a of type transaction.",
+          ),
+        );
+      }
+
+      return {
+        fhirVersion: state.version,
+        level: "system",
+        type: "transaction-request",
+        body: transaction,
+      } as FHIRRequest;
+    }
     case "history":
-    case "search":
-    case "batch":
-    case "transaction":
     default: {
       throw new OperationError(
         outcomeFatal(
@@ -198,12 +274,30 @@ function getFHIRResponseFixture<Version extends FHIR_VERSION>(
   );
 }
 
+function getSource<Version extends FHIR_VERSION>(
+  state: TestScriptState<Version>,
+  assertion: NonNullable<TestScriptAction<Version>["assert"]>,
+  requestOrResponse: FHIRRequest | FHIRResponse,
+): Resource<Version, AllResourceTypes> | undefined {
+  const source = assertion.sourceId
+    ? state.fixtures[assertion.sourceId]
+    : requestOrResponse;
+  if (isResponseOrRequest(source)) {
+    if ("body" in source) {
+      return source.body as Resource<Version, AllResourceTypes>;
+    }
+    return undefined;
+  }
+
+  return source;
+}
+
 async function deriveComparision<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
   assertion: NonNullable<TestScriptAction<Version>["assert"]>,
 ): Promise<unknown> {
-  if (assertion.sourceId) {
-    const data = state.fixtures[assertion.sourceId];
+  if (assertion.compareToSourceId) {
+    const data = getFixtureResource(state, assertion.compareToSourceId as id);
 
     switch (true) {
       case assertion.compareToSourceExpression !== undefined: {
@@ -277,24 +371,6 @@ function assertionFailureMessage(
   operator: code = "equals" as code,
 ): string {
   return `Failed Assertion <'${JSON.stringify(v1)}' ${operator} '${v2 ? JSON.stringify(v2) : ""}'>`;
-}
-
-function getSource<Version extends FHIR_VERSION>(
-  state: TestScriptState<Version>,
-  assertion: NonNullable<TestScriptAction<Version>["assert"]>,
-  requestOrResponse: FHIRRequest | FHIRResponse,
-): Resource<Version, AllResourceTypes> | undefined {
-  const source = assertion.sourceId
-    ? state.fixtures[assertion.sourceId]
-    : requestOrResponse;
-  if (isResponseOrRequest(source)) {
-    if ("body" in source) {
-      return source.body as Resource<Version, AllResourceTypes>;
-    }
-    return undefined;
-  }
-
-  return source;
 }
 
 async function evaluateAssertion<Version extends FHIR_VERSION>(
@@ -400,18 +476,6 @@ async function evaluateOperation<Version extends FHIR_VERSION>(
     const request = operationToFHIRRequest(state, operation);
     const response = await state.client.request({}, request);
 
-    // In event of an update or create operation, store the response body back as a fixture
-    if (
-      operation.sourceId &&
-      "body" in response &&
-      "resourceType" in response.body
-    ) {
-      state.fixtures[operation.sourceId] = response.body as Resource<
-        Version,
-        AllResourceTypes
-      >;
-    }
-
     const result = {
       result: "pass" as code,
       message:
@@ -489,7 +553,7 @@ async function evaluateAction<Version extends FHIR_VERSION>(
   }
 }
 
-async function evaluateTest<Version extends FHIR_VERSION>(
+async function runTest<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
   test: NonNullable<Resource<Version, "TestScript">["test"]>[number],
 ): Promise<{
@@ -517,29 +581,32 @@ async function evaluateTest<Version extends FHIR_VERSION>(
   return { state: { ...curState, logger: state.logger }, result: testReports };
 }
 
-async function evaluateTests<Version extends FHIR_VERSION>(
+async function runTests<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
   tests: Resource<Version, "TestScript">["test"],
 ): Promise<{
   state: TestScriptState<Version>;
   result: Resource<Version, "TestReport">["test"];
 }> {
-  let curState = state;
   const testResults = [];
-
+  let curState = state;
   for (const test of tests ?? []) {
-    const output = await evaluateTest(curState, test);
+    const output = await runTest(state, test);
     curState = output.state;
+
     testResults.push({
       name: test.name,
       action: output.result,
     });
   }
 
-  curState =
-    curState.result === "pending" ? { ...curState, result: "pass" } : curState;
-
-  return { state: curState, result: testResults };
+  return {
+    state:
+      curState.result === "pending"
+        ? { ...curState, result: "pass" }
+        : curState,
+    result: testResults,
+  };
 }
 
 async function runSetup<Version extends FHIR_VERSION>(
@@ -682,7 +749,7 @@ export async function run<Version extends FHIR_VERSION>(
     state = output.state;
     testReport.setup = output.result;
 
-    const testsOutput = await evaluateTests(state, testscript.test);
+    const testsOutput = await runTests(state, testscript.test);
     testReport.test = testsOutput.result;
     state = testsOutput.state;
 
