@@ -158,10 +158,77 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
         }
       }
     }
+
+    case "search": {
+      if (operation.resource) {
+        return {
+          fhirVersion: state.version,
+          level: "type",
+          type: "search-request",
+          resourceType: operation.resource,
+          parameters: parseQuery(operation.params ?? ""),
+        } as FHIRRequest;
+      } else {
+        return {
+          fhirVersion: state.version,
+          level: "system",
+          type: "search-request",
+          parameters: parseQuery(operation.params ?? ""),
+        } as FHIRRequest;
+      }
+    }
+    case "batch": {
+      if (!operation.sourceId)
+        throw new OperationError(
+          outcomeFatal("invalid", "sourceId is required for read operation"),
+        );
+
+      const batch = getFixtureResource(state, operation.sourceId);
+
+      if (batch.resourceType !== "Bundle" || batch.type !== "batch") {
+        throw new OperationError(
+          outcomeFatal(
+            "invalid",
+            "Batch request must be a bundle and a of type batch.",
+          ),
+        );
+      }
+
+      return {
+        fhirVersion: state.version,
+        level: "system",
+        type: "batch-request",
+        body: batch,
+      } as FHIRRequest;
+    }
+    case "transaction": {
+      if (!operation.sourceId)
+        throw new OperationError(
+          outcomeFatal("invalid", "sourceId is required for read operation"),
+        );
+
+      const transaction = getFixtureResource(state, operation.sourceId);
+
+      if (
+        transaction.resourceType !== "Bundle" ||
+        transaction.type !== "transaction"
+      ) {
+        throw new OperationError(
+          outcomeFatal(
+            "invalid",
+            "Transaction request must be a bundle and a of type transaction.",
+          ),
+        );
+      }
+
+      return {
+        fhirVersion: state.version,
+        level: "system",
+        type: "transaction-request",
+        body: transaction,
+      } as FHIRRequest;
+    }
     case "history":
-    case "search":
-    case "batch":
-    case "transaction":
     default: {
       throw new OperationError(
         outcomeFatal(
