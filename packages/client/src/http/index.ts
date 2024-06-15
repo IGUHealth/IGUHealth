@@ -1,11 +1,6 @@
-import { Bundle, OperationOutcome } from "@iguhealth/fhir-types/r4/types";
+import { Bundle } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
-import {
-  FHIR_VERSION,
-  R4,
-  R4B,
-  Resource,
-} from "@iguhealth/fhir-types/versions";
+import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { AsynchronousClient } from "../index.js";
@@ -239,6 +234,10 @@ export class ResponseError extends Error {
   }
 }
 
+export function isResponseError(e: unknown): e is ResponseError {
+  return e instanceof ResponseError;
+}
+
 async function httpResponseToFHIRResponse(
   request: FHIRRequest,
   response: Response,
@@ -246,10 +245,28 @@ async function httpResponseToFHIRResponse(
   if (response.status >= 400) {
     switch (response.status) {
       case 401: {
-        throw new OperationError(outcomeError("login", "Unauthorized"));
+        throw new ResponseError(request, {
+          fhirVersion: request.fhirVersion,
+          level: request.level,
+          type: "error-response",
+          body: outcomeError("login", "Unauthorized") as any,
+          http: {
+            status: response.status,
+            headers: Object.fromEntries(response.headers),
+          },
+        });
       }
       case 403: {
-        throw new OperationError(outcomeError("forbidden", "Forbidden"));
+        throw new ResponseError(request, {
+          fhirVersion: request.fhirVersion,
+          level: request.level,
+          type: "error-response",
+          body: outcomeError("forbidden", "Forbidden") as any,
+          http: {
+            status: response.status,
+            headers: Object.fromEntries(response.headers),
+          },
+        });
       }
       default: {
         if (!response.body) throw new Error(response.statusText);
@@ -264,6 +281,10 @@ async function httpResponseToFHIRResponse(
           level: request.level,
           type: "error-response",
           body: oo,
+          http: {
+            status: response.status,
+            headers: Object.fromEntries(response.headers),
+          },
         });
       }
     }
@@ -535,8 +556,8 @@ function httpMiddleware<CTX>(): MiddlewareAsync<HTTPClientState, CTX> {
           response: fhirResponse,
         };
       } catch (e) {
-        if (e instanceof OperationError) {
-          if (e.operationOutcome.issue[0].code === "login") {
+        if (isResponseError(e)) {
+          if (e.response.body.issue[0].code === "login") {
             if (context.state.onAuthenticationError) {
               context.state.onAuthenticationError();
             }

@@ -1,6 +1,6 @@
 import { Logger } from "pino";
 
-import createHTTPClient from "@iguhealth/client/http";
+import createHTTPClient, { isResponseError } from "@iguhealth/client/http";
 import { FHIRRequest, FHIRResponse } from "@iguhealth/client/lib/types";
 import { parseQuery } from "@iguhealth/client/url";
 import { code, id, markdown } from "@iguhealth/fhir-types/r4/types";
@@ -521,11 +521,24 @@ async function runOperation<Version extends FHIR_VERSION>(
         `[FAILED]<${operation.type?.code}> label: '${operation.label ?? ""}'` as markdown,
       outcome: e instanceof OperationError ? e.operationOutcome : undefined,
     };
-    state.logger.error(result);
-    return {
-      state: { ...state, result: "fail" },
-      result,
-    };
+    if (isResponseError(e)) {
+      return {
+        state: {
+          ...state,
+          fixtures: associateResponseRequestVariables(
+            state.fixtures,
+            operation,
+            e.request,
+            e.response,
+          ),
+          latestRequest: { type: "request", data: e.request },
+          latestResponse: { type: "response", data: e.response },
+        },
+        result,
+      };
+    }
+
+    throw e;
   }
 }
 
