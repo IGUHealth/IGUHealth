@@ -269,8 +269,8 @@ async function deriveComparision<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
   assertion: NonNullable<TestScriptAction<Version>["assert"]>,
 ): Promise<unknown> {
-  if (assertion.sourceId) {
-    const data = state.fixtures[assertion.sourceId];
+  if (assertion.compareToSourceId) {
+    const data = state.fixtures[assertion.compareToSourceId];
 
     switch (true) {
       case assertion.compareToSourceExpression !== undefined: {

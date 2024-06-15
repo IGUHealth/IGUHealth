@@ -68,9 +68,9 @@
             "label": "01-Practitioner reference equals newly created Practitioner.",
             "description": "Confirm patient created.",
             "direction": "response",
-            "comparseSoureId": "fixture-transaction",
-            "expression": "Bundle.entry[0].generalPractitioner.reference",
-            "compareSourceExpression": "Bundle.entry[1].id",
+            "expression": "Bundle.entry[0].resource.generalPractitioner.reference",
+            "compareToSourceId": "fixture-transaction",
+            "compareToSourceExpression": "Bundle.entry[1].resource.id",
             "operator": "contains"
           }
         }
@@ -86,8 +86,7 @@
             "code": "delete"
           },
           "params": "_tag=transaction-test",
-          "description": "Delete the patient resource on the test server using the id from fixture-patient-create.",
-          "targetId": "fixture-patient-create"
+          "description": "Delete the transaction data."
         }
       }
     ]
