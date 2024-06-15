@@ -1,7 +1,0 @@
-releases:
-  "@iguhealth/admin-app": patch
-  "@iguhealth/cli": patch
-  "@iguhealth/components": patch
-  "@iguhealth/generated-ops": patch
-  "@iguhealth/server": patch
-  "@iguhealth/testscript-runner": patch
