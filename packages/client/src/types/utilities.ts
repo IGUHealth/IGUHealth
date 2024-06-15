@@ -1,6 +1,6 @@
 import { FHIR_VERSIONS_SUPPORTED } from "@iguhealth/fhir-types/versions";
 
-type RequestLevel = {
+export type RequestLevel = {
   instance: "instance";
   system: "system";
   type: "type";
@@ -22,6 +22,7 @@ export type RequestInteractionTypes = {
 };
 
 export type ResponseInteractionTypes = {
+  error: "error-response";
   read: "read-response";
   vread: "vread-response";
   update: "update-response";

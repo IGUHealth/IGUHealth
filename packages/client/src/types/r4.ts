@@ -1,6 +1,7 @@
 import {
   Bundle,
   CapabilityStatement,
+  OperationOutcome,
   Parameters,
   Resource,
   ResourceType,
@@ -13,6 +14,7 @@ import type { ParsedParameter } from "../url.js";
 import {
   Request,
   RequestInteractionTypes,
+  RequestLevel,
   ResponseInteractionTypes,
 } from "./utilities.js";
 
@@ -259,7 +261,19 @@ export type R4InvokeRequest =
   | R4InvokeTypeRequest
   | R4InvokeSystemRequest;
 
+interface R4ErrorResponse<Level extends keyof RequestLevel>
+  extends Request<R4, Level> {
+  type: ResponseInteractionTypes["error"];
+  body: OperationOutcome;
+}
+
+export type R4FHIRErrorResponse =
+  | R4ErrorResponse<"system">
+  | R4ErrorResponse<"type">
+  | R4ErrorResponse<"instance">;
+
 export type R4FHIRResponse =
+  | R4FHIRErrorResponse
   | R4InvokeInstanceResponse
   | R4InvokeTypeResponse
   | R4InvokeSystemResponse

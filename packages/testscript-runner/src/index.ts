@@ -389,7 +389,7 @@ function assertionFailureMessage(
   return `Failed Assertion <'${JSON.stringify(v1)}' ${operator} '${v2 ? JSON.stringify(v2) : ""}'>`;
 }
 
-async function evaluateAssertion<Version extends FHIR_VERSION>(
+async function runAssertion<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
   assertion: NonNullable<TestScriptAction<Version>["assert"]>,
 ): Promise<{
@@ -482,7 +482,7 @@ function associateResponseRequestVariables<Version extends FHIR_VERSION>(
   return fixtures;
 }
 
-async function evaluateOperation<Version extends FHIR_VERSION>(
+async function runOperation<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
   operation: NonNullable<TestScriptAction<Version>["operation"]>,
 ): Promise<{
@@ -529,7 +529,7 @@ async function evaluateOperation<Version extends FHIR_VERSION>(
   }
 }
 
-async function evaluateAction<Version extends FHIR_VERSION>(
+async function runAction<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
   action: TestScriptAction<Version>,
 ): Promise<{
@@ -546,14 +546,14 @@ async function evaluateAction<Version extends FHIR_VERSION>(
   }
   switch (true) {
     case action.operation !== undefined: {
-      const output = await evaluateOperation(state, action.operation);
+      const output = await runOperation(state, action.operation);
       return {
         state: output.state,
         result: { operation: output.result },
       };
     }
     case action.assert !== undefined: {
-      const output = await evaluateAssertion(state, action.assert);
+      const output = await runAssertion(state, action.assert);
       return {
         state: output.state,
         result: { assert: output.result },
@@ -581,7 +581,7 @@ async function runTest<Version extends FHIR_VERSION>(
   const testReports: TestReportAction<Version>[] = [];
 
   for (const action of test.action) {
-    const output = await evaluateAction(
+    const output = await runAction(
       {
         ...curState,
         logger: state.logger.child({
@@ -638,7 +638,7 @@ async function runSetup<Version extends FHIR_VERSION>(
   const setupResults = [];
 
   for (const action of setup?.action ?? []) {
-    const output = await evaluateAction(state, action);
+    const output = await runAction(state, action);
     curState = output.state;
     setupResults.push(output.result);
   }
@@ -657,7 +657,7 @@ async function runTeardown<Version extends FHIR_VERSION>(
   const teardownResults = [];
 
   for (const action of teardown?.action ?? []) {
-    const output = await evaluateOperation(state, action.operation);
+    const output = await runOperation(state, action.operation);
     curState = output.state;
     teardownResults.push({ operation: output.result });
   }
