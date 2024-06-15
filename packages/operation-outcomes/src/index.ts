@@ -2,9 +2,9 @@ import { OperationOutcome, code } from "@iguhealth/fhir-types/r4/types";
 
 export class OperationError extends Error {
   public readonly operationOutcome: OperationOutcome;
-  constructor(operationOtucome: OperationOutcome) {
+  constructor(operationOutcome: OperationOutcome) {
     super();
-    this.operationOutcome = operationOtucome;
+    this.operationOutcome = operationOutcome;
   }
   get outcome() {
     return this.operationOutcome;
