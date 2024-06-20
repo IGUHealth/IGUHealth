@@ -1,0 +1,228 @@
+{
+  "id": "sorting",
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "id": "patients",
+      "resourceType": "Bundle",
+      "type": "batch",
+      "entry": [
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "sort-test" }]
+            },
+            "name": [{ "given": ["A"], "family": "A" }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "sort-test" }]
+            },
+            "name": [{ "given": ["A"], "family": "B" }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "sort-test" }]
+            },
+            "name": [{ "given": ["A"], "family": "C" }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "sort-test" }]
+            },
+            "name": [{ "given": ["B"], "family": "A" }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "sort-test" }]
+            },
+            "name": [{ "given": ["B"], "family": "B" }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "sort-test" }]
+            },
+            "name": [{ "given": ["B"], "family": "C" }]
+          }
+        }
+      ]
+    }
+  ],
+  "fixture": [
+    {
+      "id": "patients",
+      "autocreate": false,
+      "autodelete": false,
+      "resource": {
+        "reference": "#patients"
+      }
+    }
+  ],
+  "test": [
+    {
+      "id": "01-sort-search",
+      "name": "Sort using search",
+      "description": "Sort for name and filter using tag.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "batch"
+            },
+            "resource": "Patient",
+            "sourceId": "patients"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "params": "_tag=sort-test&_sort=given",
+            "resource": "Patient"
+          }
+        },
+        {
+          "assert": {
+            "label": "Assert name is sorted at top.",
+            "description": "Confirm patient created.",
+            "operator": "equals",
+            "expression": "Bundle.entry.resource[0].name.given[0]",
+            "value": "A"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "params": "_tag=sort-test&_sort=-given",
+            "resource": "Patient"
+          }
+        },
+        {
+          "assert": {
+            "label": "Assert name is sorted at top.",
+            "description": "Confirm patient created.",
+            "operator": "equals",
+            "expression": "Bundle.entry.resource[0].name.given[0]",
+            "value": "B"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "params": "_tag=sort-test&_sort=-given,-family",
+            "resource": "Patient"
+          }
+        },
+        {
+          "assert": {
+            "label": "Assert name is sorted at top.",
+            "description": "Confirm patient created.",
+            "operator": "equals",
+            "expression": "Bundle.entry.resource[0].name.given[0]",
+            "value": "B"
+          }
+        },
+        {
+          "assert": {
+            "label": "Assert name is sorted at top.",
+            "description": "Confirm patient created.",
+            "operator": "equals",
+            "expression": "Bundle.entry.resource[0].name.family[0]",
+            "value": "C"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "params": "_tag=sort-test&_sort=-given,family",
+            "resource": "Patient"
+          }
+        },
+        {
+          "assert": {
+            "label": "Assert name is sorted at top.",
+            "description": "Confirm patient created.",
+            "operator": "equals",
+            "expression": "Bundle.entry.resource[0].name.given[0]",
+            "value": "B"
+          }
+        },
+        {
+          "assert": {
+            "label": "Assert name is sorted at top.",
+            "description": "Confirm patient created.",
+            "operator": "equals",
+            "expression": "Bundle.entry.resource[0].name.family[0]",
+            "value": "A"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+          },
+          "params": "_tag=sort-test",
+          "description": "Delete the tests data."
+        }
+      }
+    ]
+  }
+}

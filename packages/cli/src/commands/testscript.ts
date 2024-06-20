@@ -88,6 +88,7 @@ export function testscriptCommands(command: Command) {
                 (r): r is Resource<FHIR_VERSION, "TestScript"> =>
                   r?.resourceType === "TestScript",
               ) ?? [];
+
           for (const testScript of testscripts) {
             const report = await executeTestScript(
               options.fhirVersion,

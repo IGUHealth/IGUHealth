@@ -1,0 +1,270 @@
+{
+  "id": "offset",
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "id": "patients",
+      "resourceType": "Bundle",
+      "type": "batch",
+      "entry": [
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "offset-test" }]
+            },
+            "name": [{ "given": ["A"] }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "offset-test" }]
+            },
+            "name": [{ "given": ["B"] }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "offset-test" }]
+            },
+            "name": [{ "given": ["C"] }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "offset-test" }]
+            },
+            "name": [{ "given": ["D"] }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "offset-test" }]
+            },
+            "name": [{ "given": ["E"] }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "offset-test" }]
+            },
+            "name": [{ "given": ["F"] }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "offset-test" }]
+            },
+            "name": [{ "given": ["G"] }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "offset-test" }]
+            },
+            "name": [{ "given": ["H"] }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "offset-test" }]
+            },
+            "name": [{ "given": ["I"] }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "offset-test" }]
+            },
+            "name": [{ "given": ["J"] }]
+          }
+        }
+      ]
+    }
+  ],
+  "fixture": [
+    {
+      "id": "patients",
+      "autocreate": false,
+      "autodelete": false,
+      "resource": {
+        "reference": "#patients"
+      }
+    }
+  ],
+  "test": [
+    {
+      "id": "01-offset-search",
+      "name": "Offset searches",
+      "description": "Offset searches.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "batch"
+            },
+            "resource": "Patient",
+            "sourceId": "patients"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "params": "_tag=offset-test&_sort=given&_count=1",
+            "resource": "Patient"
+          }
+        },
+        {
+          "assert": {
+            "label": "Assert name is sorted at top.",
+            "description": "Confirm patient created.",
+            "operator": "equals",
+            "expression": "Bundle.entry.resource[0].name.given[0]",
+            "value": "A"
+          }
+        },
+        {
+          "assert": {
+            "label": "Assert name is sorted at top.",
+            "description": "Confirm patient created.",
+            "operator": "equals",
+            "expression": "Bundle.entry.resource.count()",
+            "value": "1"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "params": "_tag=offset-test&_sort=given&_count=4&_offset=2",
+            "resource": "Patient"
+          }
+        },
+        {
+          "assert": {
+            "label": "Assert name is sorted at top.",
+            "description": "Confirm patient created.",
+            "operator": "equals",
+            "expression": "Bundle.entry.resource[0].name.given[0]",
+            "value": "C"
+          }
+        },
+        {
+          "assert": {
+            "label": "Assert name is sorted at top.",
+            "description": "Confirm patient created.",
+            "operator": "equals",
+            "expression": "Bundle.entry.resource.count()",
+            "value": "4"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "params": "_tag=offset-test&_sort=given&_count=4&_offset=4",
+            "resource": "Patient"
+          }
+        },
+        {
+          "assert": {
+            "label": "Assert name is sorted at top.",
+            "description": "Confirm patient created.",
+            "operator": "equals",
+            "expression": "Bundle.entry.resource[0].name.given[0]",
+            "value": "E"
+          }
+        },
+        {
+          "assert": {
+            "label": "Assert name is sorted at top.",
+            "description": "Confirm patient created.",
+            "operator": "equals",
+            "expression": "Bundle.entry.resource.count()",
+            "value": "4"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+          },
+          "params": "_tag=offset-test",
+          "description": "Delete the tests data."
+        }
+      }
+    ]
+  }
+}
