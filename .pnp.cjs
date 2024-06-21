@@ -15613,6 +15613,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@iguhealth/testscript-runner", "workspace:packages/testscript-runner"],\
           ["@iguhealth/client", "workspace:packages/client"],\
+          ["@iguhealth/fhir-pointer", "workspace:packages/fhir-pointer"],\
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
           ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
           ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\

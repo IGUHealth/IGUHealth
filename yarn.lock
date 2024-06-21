@@ -8902,6 +8902,7 @@ __metadata:
   resolution: "@iguhealth/testscript-runner@workspace:packages/testscript-runner"
   dependencies:
     "@iguhealth/client": "workspace:^"
+    "@iguhealth/fhir-pointer": "workspace:^"
     "@iguhealth/fhir-types": "workspace:^"
     "@iguhealth/fhirpath": "workspace:^"
     "@iguhealth/operation-outcomes": "workspace:^"

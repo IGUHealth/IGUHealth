@@ -9,7 +9,7 @@
   },
   "test": [
     {
-      "name": "Create Patient",
+      "name": "History testing",
       "action": [
         {
           "operation": {
