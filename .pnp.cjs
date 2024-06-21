@@ -116,6 +116,10 @@ const RAW_RUNTIME_STATE =
     {\
       "name": "@iguhealth/testscript-runner",\
       "reference": "workspace:packages/testscript-runner"\
+    },\
+    {\
+      "name": "@iguhealth/x-fhir-query",\
+      "reference": "workspace:packages/x-fhir-query"\
     }\
   ],\
   "enableTopLevelFallback": true,\
@@ -146,6 +150,7 @@ const RAW_RUNTIME_STATE =
     ["@iguhealth/operation-outcomes", ["workspace:packages/operation-outcomes"]],\
     ["@iguhealth/server", ["workspace:packages/server"]],\
     ["@iguhealth/testscript-runner", ["workspace:packages/testscript-runner"]],\
+    ["@iguhealth/x-fhir-query", ["workspace:packages/x-fhir-query"]],\
     ["hl7.fhir.r4b.examples", ["workspace:artifacts/r4b/test-data/examples-json"]],\
     ["iguhealth-workspace", ["workspace:."]]\
   ],\
@@ -15611,7 +15616,23 @@ const RAW_RUNTIME_STATE =
           ["@iguhealth/fhir-types", "workspace:packages/fhir-types"],\
           ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
           ["@iguhealth/operation-outcomes", "workspace:packages/operation-outcomes"],\
+          ["@iguhealth/x-fhir-query", "workspace:packages/x-fhir-query"],\
           ["pino", "npm:9.2.0"],\
+          ["typescript", "patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>::version=5.4.5&hash=5adc0c"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@iguhealth/x-fhir-query", [\
+      ["workspace:packages/x-fhir-query", {\
+        "packageLocation": "./packages/x-fhir-query/",\
+        "packageDependencies": [\
+          ["@iguhealth/x-fhir-query", "workspace:packages/x-fhir-query"],\
+          ["@iguhealth/fhirpath", "workspace:packages/fhirpath"],\
+          ["@jest/globals", "npm:29.7.0"],\
+          ["@types/jest", "npm:29.5.12"],\
+          ["jest", "virtual:7f09fa02c9babdfacb1c285f0b849384e669fe1360ecb1809783f47c51f50eac1b0e3d1362d920492a4534a08ea162e4eb1df3b2bb3eac59058138b4b01e50b1#npm:29.7.0"],\
+          ["ts-jest", "virtual:60d59201a81fdf9d844335582569d604f77c0cfb33012fc0d97d31d995c40a543914afd8f900018942c3e21e71ae879a5dcdf97d4008644edf9f0ce84a7e8664#npm:29.1.4"],\
           ["typescript", "patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>::version=5.4.5&hash=5adc0c"]\
         ],\
         "linkType": "SOFT"\

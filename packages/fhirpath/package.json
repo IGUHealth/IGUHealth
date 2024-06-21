@@ -16,9 +16,6 @@
     "generate": "peggy --plugin ./node_modules/ts-pegjs/dist/tspegjs.js -o src/parser.ts --cache src/grammar.pegjs",
     "publish": "yarn build && yarn npm publish --access public --tolerate-republish"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@iguhealth/meta-value": "workspace:^"
   },
