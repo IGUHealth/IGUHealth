@@ -1,0 +1,98 @@
+{
+  "id": "batch-tests",
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "id": "batch",
+      "resourceType": "Bundle",
+      "type": "batch",
+      "entry": [
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "meta": {
+              "tag": [{ "code": "batch-test" }]
+            },
+            "resourceType": "Patient"
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Practitioner"
+          },
+          "resource": {
+            "meta": {
+              "tag": [{ "code": "batch-test" }]
+            },
+            "resourceType": "Practitioner"
+          }
+        }
+      ]
+    }
+  ],
+  "fixture": [
+    {
+      "id": "fixture-batch",
+      "resource": {
+        "reference": "#batch"
+      }
+    }
+  ],
+  "test": [
+    {
+      "id": "01-Submit Batch",
+      "name": "Submit Batch",
+      "description": "Submit a Batch bundle.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "batch"
+            },
+            "sourceId": "fixture-batch"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.type",
+            "operator": "equals",
+            "value": "batch-response"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry[0].resource.resourceType",
+            "operator": "equals",
+            "value": "Patient"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry[1].resource.resourceType",
+            "operator": "equals",
+            "value": "Practitioner"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+          },
+          "params": "_tag=batch-test",
+          "description": "Delete the batch data."
+        }
+      }
+    ]
+  }
+}
