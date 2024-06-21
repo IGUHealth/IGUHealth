@@ -15,6 +15,20 @@
           "valueCode": "male"
         }
       ]
+    },
+    {
+      "id": "validate-fail",
+      "resourceType": "Parameters",
+      "parameter": [
+        {
+          "name": "url",
+          "valueUri": "http://hl7.org/fhir/ValueSet/administrative-gender|4.0.1"
+        },
+        {
+          "name": "code",
+          "valueCode": "mal"
+        }
+      ]
     }
   ],
   "fixture": [
@@ -22,6 +36,12 @@
       "id": "validate-male",
       "resource": {
         "reference": "#validate-male"
+      }
+    },
+    {
+      "id": "validate-fail",
+      "resource": {
+        "reference": "#validate-fail"
       }
     }
   ],
@@ -46,6 +66,24 @@
           "assert": {
             "expression": "Parameters.parameter.where(name='result').value",
             "value": "true"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "invoke"
+            },
+            "url": "validate-code",
+            "resource": "ValueSet",
+            "sourceId": "validate-fail"
+          }
+        },
+        { "assert": { "resource": "Parameters" } },
+        {
+          "assert": {
+            "expression": "Parameters.parameter.where(name='result').value",
+            "value": "false"
           }
         }
       ]
