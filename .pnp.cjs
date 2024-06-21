@@ -110,10 +110,6 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:packages/operation-outcomes"\
     },\
     {\
-      "name": "@iguhealth/rs_cpu-count",\
-      "reference": "workspace:packages/rs_cpu-count"\
-    },\
-    {\
       "name": "@iguhealth/server",\
       "reference": "workspace:packages/server"\
     },\
@@ -148,7 +144,6 @@ const RAW_RUNTIME_STATE =
     ["@iguhealth/meta-value", ["workspace:packages/meta-value"]],\
     ["@iguhealth/operation-execution", ["workspace:packages/operation-execution"]],\
     ["@iguhealth/operation-outcomes", ["workspace:packages/operation-outcomes"]],\
-    ["@iguhealth/rs_cpu-count", ["workspace:packages/rs_cpu-count"]],\
     ["@iguhealth/server", ["workspace:packages/server"]],\
     ["@iguhealth/testscript-runner", ["workspace:packages/testscript-runner"]],\
     ["hl7.fhir.r4b.examples", ["workspace:artifacts/r4b/test-data/examples-json"]],\
@@ -15504,16 +15499,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@iguhealth/rs_cpu-count", [\
-      ["workspace:packages/rs_cpu-count", {\
-        "packageLocation": "./packages/rs_cpu-count/",\
-        "packageDependencies": [\
-          ["@iguhealth/rs_cpu-count", "workspace:packages/rs_cpu-count"],\
-          ["cargo-cp-artifact", "npm:0.1.9"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
     ["@iguhealth/server", [\
       ["workspace:packages/server", {\
         "packageLocation": "./packages/server/",\
@@ -27010,15 +26995,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/caniuse-lite-npm-1.0.30001599-834cd4cb82-c9a5ad806f.zip/node_modules/caniuse-lite/",\
         "packageDependencies": [\
           ["caniuse-lite", "npm:1.0.30001599"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["cargo-cp-artifact", [\
-      ["npm:0.1.9", {\
-        "packageLocation": "./.yarn/cache/cargo-cp-artifact-npm-0.1.9-58b9093c2a-51fcb9641c.zip/node_modules/cargo-cp-artifact/",\
-        "packageDependencies": [\
-          ["cargo-cp-artifact", "npm:0.1.9"]\
         ],\
         "linkType": "HARD"\
       }]\
