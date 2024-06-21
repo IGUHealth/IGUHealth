@@ -1,20 +1,21 @@
 import { expect, test } from "@jest/globals";
-import dotEnv from "dotenv";
-import pg from "pg";
-import * as db from "zapatos/db";
-import type * as s from "zapatos/schema";
 
-import HTTPClient from "@iguhealth/client/lib/http";
-import {
-  Encounter,
-  Patient,
-  Questionnaire,
-  QuestionnaireResponse,
-  Resource,
-  Subscription,
-  id,
-} from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { R4 } from "@iguhealth/fhir-types/lib/versions";
+// import dotEnv from "dotenv";
+// import pg from "pg";
+// import * as db from "zapatos/db";
+// import type * as s from "zapatos/schema";
+
+// import HTTPClient from "@iguhealth/client/lib/http";
+// import {
+//   Encounter,
+//   Patient,
+//   Questionnaire,
+//   QuestionnaireResponse,
+//   Resource,
+//   Subscription,
+//   id,
+// } from "@iguhealth/fhir-types/lib/generated/r4/types";
+// import { R4 } from "@iguhealth/fhir-types/lib/versions";
 
 // dotEnv.config();
 

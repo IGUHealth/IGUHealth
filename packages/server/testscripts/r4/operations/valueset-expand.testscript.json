@@ -1,0 +1,55 @@
+{
+  "id": "valueset-expand-tests",
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "id": "valueset-gender-expand",
+      "resourceType": "Parameters",
+      "parameter": [
+        {
+          "name": "url",
+          "valueUri": "http://hl7.org/fhir/ValueSet/administrative-gender|4.0.1"
+        }
+      ]
+    }
+  ],
+  "fixture": [
+    {
+      "id": "valueset-gender-expand",
+      "resource": {
+        "reference": "#valueset-gender-expand"
+      }
+    }
+  ],
+  "test": [
+    {
+      "id": "include-test",
+      "name": "Test include",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "invoke"
+            },
+            "url": "expand",
+            "resource": "ValueSet",
+            "sourceId": "valueset-gender-expand"
+          }
+        },
+        {
+          "assert": {
+            "expression": "ValueSet.expansion.contains.where(code='male').code",
+            "value": "male"
+          }
+        },
+        {
+          "assert": {
+            "expression": "ValueSet.expansion.contains.where(code='female').code",
+            "value": "female"
+          }
+        }
+      ]
+    }
+  ]
+}
