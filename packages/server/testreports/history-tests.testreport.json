@@ -60,9 +60,45 @@
           }
         },
         {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        },
+        {
           "operation": {
             "result": "pass",
             "message": "[SUCCEEDED]<history> label: ''"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        },
+        {
+          "operation": {
+            "result": "pass",
+            "message": "[SUCCEEDED]<history> label: ''"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
           }
         }
       ]
