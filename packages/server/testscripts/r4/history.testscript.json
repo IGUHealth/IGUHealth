@@ -18,6 +18,23 @@
       }
     }
   ],
+  "variable": [
+    {
+      "name": "Ver",
+      "sourceId": "create-response",
+      "expression": "Patient.meta.versionId"
+    },
+    {
+      "name": "PatientCreateLastUpdated",
+      "sourceId": "create-response",
+      "expression": "Patient.meta.lastUpdated"
+    },
+    {
+      "name": "PatientUpdateLastUpdated",
+      "sourceId": "update-response",
+      "expression": "Patient.meta.lastUpdated"
+    }
+  ],
   "test": [
     {
       "id": "01-history",
@@ -78,8 +95,14 @@
               "code": "history"
             },
             "resource": "Patient",
-            "targetId": "create-response",
-            "sourceId": "fixture-patient1"
+            "targetId": "create-response"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.count()",
+            "operator": "equals",
+            "value": "2"
           }
         },
         {
@@ -94,6 +117,81 @@
             "expression": "Bundle.entry.resource.meta.versionId",
             "compareToSourceExpression": "Patient.meta.versionId",
             "compareToSourceId": "update-response"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "history"
+            },
+            "resource": "Patient",
+            "params": "_since-version=${Ver}"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.count()",
+            "operator": "equals",
+            "value": "1"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.id",
+            "compareToSourceExpression": "Patient.id",
+            "compareToSourceId": "update-response",
+            "operator": "equals"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "history"
+            },
+            "resource": "Patient",
+            "params": "_since=${PatientUpdateLastUpdated}"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.count()",
+            "operator": "equals",
+            "value": "1"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.id",
+            "compareToSourceExpression": "Patient.id",
+            "compareToSourceId": "update-response",
+            "operator": "equals"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "history"
+            },
+            "resource": "Patient",
+            "params": "_since=${PatientCreateLastUpdated}"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.count()",
+            "operator": "equals",
+            "value": "2"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry[1].resource.id",
+            "compareToSourceExpression": "Patient.id",
+            "compareToSourceId": "create-response",
+            "operator": "equals"
           }
         }
       ]
