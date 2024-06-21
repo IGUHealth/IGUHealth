@@ -8905,7 +8905,21 @@ __metadata:
     "@iguhealth/fhir-types": "workspace:^"
     "@iguhealth/fhirpath": "workspace:^"
     "@iguhealth/operation-outcomes": "workspace:^"
+    "@iguhealth/x-fhir-query": "workspace:^"
     pino: "npm:^9.2.0"
+    typescript: "npm:5.4.5"
+  languageName: unknown
+  linkType: soft
+
+"@iguhealth/x-fhir-query@workspace:^, @iguhealth/x-fhir-query@workspace:packages/x-fhir-query":
+  version: 0.0.0-use.local
+  resolution: "@iguhealth/x-fhir-query@workspace:packages/x-fhir-query"
+  dependencies:
+    "@iguhealth/fhirpath": "workspace:^"
+    "@jest/globals": "npm:^29.7.0"
+    "@types/jest": "npm:^29.5.12"
+    jest: "npm:^29.7.0"
+    ts-jest: "npm:^29.1.4"
     typescript: "npm:5.4.5"
   languageName: unknown
   linkType: soft

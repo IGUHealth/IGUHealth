@@ -9,6 +9,7 @@
     "@iguhealth/client": "workspace:^",
     "@iguhealth/fhirpath": "workspace:^",
     "@iguhealth/operation-outcomes": "workspace:^",
+    "@iguhealth/x-fhir-query": "workspace:^",
     "pino": "^9.2.0"
   },
   "devDependencies": {
