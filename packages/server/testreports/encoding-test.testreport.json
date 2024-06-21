@@ -1,6 +1,6 @@
 {
   "testScript": {
-    "reference": "TestScript/numbers"
+    "reference": "TestScript/encoding-test"
   },
   "result": "pass",
   "resourceType": "TestReport",
@@ -9,42 +9,12 @@
   },
   "test": [
     {
-      "name": "Number tests",
+      "name": "Encoding tests",
       "action": [
         {
           "operation": {
             "result": "pass",
-            "message": "[SUCCEEDED]<create> label: ''"
-          }
-        },
-        {
-          "assert": {
-            "result": "pass",
-            "message": "Assertions passed"
-          }
-        },
-        {
-          "operation": {
-            "result": "pass",
-            "message": "[SUCCEEDED]<search> label: ''"
-          }
-        },
-        {
-          "assert": {
-            "result": "pass",
-            "message": "Assertions passed"
-          }
-        },
-        {
-          "operation": {
-            "result": "pass",
-            "message": "[SUCCEEDED]<search> label: ''"
-          }
-        },
-        {
-          "assert": {
-            "result": "pass",
-            "message": "Assertions passed"
+            "message": "[SUCCEEDED]<batch> label: ''"
           }
         },
         {

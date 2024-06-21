@@ -1,0 +1,122 @@
+{
+  "id": "qr-indexing-test",
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "id": "q-response",
+      "meta": {
+        "tag": [{ "code": "qr-indexing-test" }]
+      },
+      "url": "https://iguhealth.com/PREPARE",
+      "title": "TEST QUESTIONNAIRE",
+      "name": "PREPARE",
+      "status": "active",
+      "resourceType": "Questionnaire"
+    },
+    {
+      "id": "qr-response",
+      "meta": {
+        "tag": [{ "code": "qr-indexing-test" }]
+      },
+      "status": "in-progress",
+      "resourceType": "QuestionnaireResponse",
+      "questionnaire": "https://iguhealth.com/PREPARE"
+    }
+  ],
+  "fixture": [
+    {
+      "id": "fixture-qr-response",
+      "resource": {
+        "reference": "#qr-response"
+      }
+    },
+    {
+      "id": "fixture-q-response",
+      "resource": {
+        "reference": "#q-response"
+      }
+    }
+  ],
+
+  "test": [
+    {
+      "id": "q-qr-testing",
+      "name": "QR and Q Indexing",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "create"
+            },
+            "resource": "Questionnaire",
+            "sourceId": "fixture-q-response",
+            "responseId": "qresponse"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "create"
+            },
+            "resource": "QuestionnaireResponse",
+            "sourceId": "fixture-qr-response",
+            "responseId": "qrresponse"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "resource": "QuestionnaireResponse",
+            "params": "questionnaire.name=PREPARE"
+          }
+        },
+        {
+          "assert": {
+            "direction": "response",
+            "expression": "Bundle.entry.resource.id",
+            "operator": "equals",
+            "compareToSourceId": "qrresponse",
+            "compareToSourceExpression": "QuestionnaireResponse.id"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "resource": "QuestionnaireResponse",
+            "params": "questionnaire=https://iguhealth.com/PREPARE"
+          }
+        },
+        {
+          "assert": {
+            "direction": "response",
+            "expression": "Bundle.entry.resource.id",
+            "operator": "equals",
+            "compareToSourceId": "qrresponse",
+            "compareToSourceExpression": "QuestionnaireResponse.id"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+          },
+          "params": "_tag=qr-indexing-test"
+        }
+      }
+    ]
+  }
+}

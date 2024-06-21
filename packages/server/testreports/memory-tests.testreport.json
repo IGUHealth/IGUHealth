@@ -1,0 +1,44 @@
+{
+  "testScript": {
+    "reference": "TestScript/memory-tests"
+  },
+  "result": "pass",
+  "resourceType": "TestReport",
+  "setup": {
+    "action": []
+  },
+  "test": [
+    {
+      "name": "Memory tests",
+      "action": [
+        {
+          "operation": {
+            "result": "pass",
+            "message": "[SUCCEEDED]<search> label: ''"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": []
+  }
+}
