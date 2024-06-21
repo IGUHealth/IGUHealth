@@ -15,7 +15,7 @@ export default function execute(
       throw new Error("Invalid expression");
     }
 
-    const evaluation = evaluate(expression, fpOptions)
+    const evaluation = evaluate(expression, undefined, fpOptions)
       .map((e) => e.toString())
       .join(",");
     output = output.replace(match, evaluation);
