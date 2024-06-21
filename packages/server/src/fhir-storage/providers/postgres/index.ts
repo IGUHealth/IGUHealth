@@ -834,7 +834,7 @@ async function patchResource<Version extends FHIR_VERSION>(
     );
 
     try {
-      const newResource = jsonpatch.applyPatch(existingResource, patches)
+      const newResource = jsonpatch.applyPatch(existingResource, patches, true, false)
         .newDocument as Resource<Version, AllResourceTypes>;
 
       const outcome = await validateResource(ctx, fhirVersion, resourceType, {
