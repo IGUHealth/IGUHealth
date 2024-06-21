@@ -1,6 +1,6 @@
 import { evaluate } from "@iguhealth/fhirpath";
 
-const EXPRESSION_REGEX = new RegExp("{{([^}]*)}}");
+const EXPRESSION_REGEX = /{{([^}]*)}}/;
 
 export default function execute(
   xfhirQuery: string,
@@ -8,7 +8,7 @@ export default function execute(
 ): string {
   let output = xfhirQuery;
   while (EXPRESSION_REGEX.test(output)) {
-    const result = output.match(EXPRESSION_REGEX);
+    const result = EXPRESSION_REGEX.exec(output);
     const expression = result?.[1];
     const match = result?.[0];
     if (!match || !expression) {
