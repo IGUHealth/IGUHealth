@@ -1,6 +1,6 @@
 {
   "testScript": {
-    "reference": "TestScript/valueset-expand-tests"
+    "reference": "TestScript/codesystem-lookup-tests"
   },
   "result": "pass",
   "resourceType": "TestReport",
@@ -9,7 +9,7 @@
   },
   "test": [
     {
-      "name": "Valueset Expansion tests.",
+      "name": "CodeSystem Lookup tests.",
       "action": [
         {
           "operation": {
@@ -21,6 +21,18 @@
           "assert": {
             "result": "pass",
             "message": "Assertions passed"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        },
+        {
+          "operation": {
+            "result": "fail",
+            "message": "[FAILED]<invoke> label: ''"
           }
         },
         {

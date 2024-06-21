@@ -23,8 +23,8 @@
   ],
   "test": [
     {
-      "id": "include-test",
-      "name": "Test include",
+      "id": "expand-test",
+      "name": "Valueset Expansion tests.",
       "action": [
         {
           "operation": {

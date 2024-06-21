@@ -29,6 +29,34 @@
           "valueCode": "mal"
         }
       ]
+    },
+    {
+      "id": "validate-nested",
+      "resourceType": "Parameters",
+      "parameter": [
+        {
+          "name": "url",
+          "valueUri": "http://hl7.org/fhir/ValueSet/name-use|4.0.1"
+        },
+        {
+          "name": "code",
+          "valueCode": "maiden"
+        }
+      ]
+    },
+    {
+      "id": "validate-nested-fail",
+      "resourceType": "Parameters",
+      "parameter": [
+        {
+          "name": "url",
+          "valueUri": "http://hl7.org/fhir/ValueSet/name-use|4.0.1"
+        },
+        {
+          "name": "code",
+          "valueCode": "maide"
+        }
+      ]
     }
   ],
   "fixture": [
@@ -43,12 +71,24 @@
       "resource": {
         "reference": "#validate-fail"
       }
+    },
+    {
+      "id": "validate-nested",
+      "resource": {
+        "reference": "#validate-nested"
+      }
+    },
+    {
+      "id": "validate-nested-fail",
+      "resource": {
+        "reference": "#validate-nested-fail"
+      }
     }
   ],
   "test": [
     {
-      "id": "include-test",
-      "name": "Test include",
+      "id": "validation-tests",
+      "name": "Test valueset validation.",
       "action": [
         {
           "operation": {
@@ -80,6 +120,46 @@
           }
         },
         { "assert": { "resource": "Parameters" } },
+        {
+          "assert": {
+            "expression": "Parameters.parameter.where(name='result').value",
+            "value": "false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "validation-tests-nested",
+      "name": "Test valueset validation on nested .",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "invoke"
+            },
+            "url": "validate-code",
+            "resource": "ValueSet",
+            "sourceId": "validate-nested"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Parameters.parameter.where(name='result').value",
+            "value": "true"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "invoke"
+            },
+            "url": "validate-code",
+            "resource": "ValueSet",
+            "sourceId": "validate-nested-fail"
+          }
+        },
         {
           "assert": {
             "expression": "Parameters.parameter.where(name='result').value",

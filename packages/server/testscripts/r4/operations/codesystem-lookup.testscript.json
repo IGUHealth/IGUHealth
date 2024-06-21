@@ -1,0 +1,89 @@
+{
+  "id": "codesystem-lookup-tests",
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "id": "name-lookup",
+      "resourceType": "Parameters",
+      "parameter": [
+        {
+          "name": "system",
+          "valueUri": "http://hl7.org/fhir/name-use"
+        },
+        { "name": "code", "valueCode": "maiden" }
+      ]
+    },
+    {
+      "id": "name-invalid",
+      "resourceType": "Parameters",
+      "parameter": [
+        {
+          "name": "system",
+          "valueUri": "http://hl7.org/fhir/name-use"
+        },
+        { "name": "code", "valueCode": "maide" }
+      ]
+    }
+  ],
+  "fixture": [
+    {
+      "id": "name-lookup",
+      "resource": {
+        "reference": "#name-lookup"
+      }
+    },
+    {
+      "id": "name-invalid",
+      "resource": {
+        "reference": "#name-invalid"
+      }
+    }
+  ],
+  "test": [
+    {
+      "id": "expand-test",
+      "name": "CodeSystem Lookup tests.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "invoke"
+            },
+            "url": "lookup",
+            "resource": "CodeSystem",
+            "sourceId": "name-lookup"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Parameters.parameter.where(name='name').value",
+            "value": "NameUse"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Parameters.parameter.where(name='display').value",
+            "value": "Name changed for Marriage"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "invoke"
+            },
+            "url": "lookup",
+            "resource": "CodeSystem",
+            "sourceId": "name-invalid"
+          }
+        },
+        {
+          "assert": {
+            "resource": "OperationOutcome"
+          }
+        }
+      ]
+    }
+  ]
+}

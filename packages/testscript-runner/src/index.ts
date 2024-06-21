@@ -551,7 +551,7 @@ async function deriveComparision<Version extends FHIR_VERSION>(
       }
     }
   } else if (assertion.value) {
-    const numberValue = parseInt(assertion.value);
+    const numberValue = parseFloat(assertion.value);
     switch (true) {
       case !isNaN(numberValue): {
         return numberValue;
