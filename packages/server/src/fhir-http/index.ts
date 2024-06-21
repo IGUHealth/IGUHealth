@@ -937,4 +937,8 @@ export function fhirResponseToHTTPResponse(
         body: fhirResponse.body,
       };
   }
+
+  throw new OperationError(
+    outcomeError("invalid", "Response could not be parsed."),
+  );
 }
