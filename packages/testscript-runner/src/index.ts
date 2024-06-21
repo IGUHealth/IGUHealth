@@ -3,6 +3,13 @@ import { Logger } from "pino";
 import createHTTPClient, { isResponseError } from "@iguhealth/client/http";
 import { FHIRRequest, FHIRResponse } from "@iguhealth/client/lib/types";
 import { parseQuery } from "@iguhealth/client/url";
+import {
+  Loc,
+  NullGuard,
+  descend,
+  get,
+  typedPointer,
+} from "@iguhealth/fhir-pointer";
 import { code, id, markdown } from "@iguhealth/fhir-types/r4/types";
 import {
   AllResourceTypes,
@@ -38,6 +45,7 @@ type Fixture<Version extends FHIR_VERSION> =
   | RequestFixture;
 
 type TestScriptState<Version extends FHIR_VERSION> = {
+  testScript: Resource<Version, "TestScript">;
   logger: Logger<string>;
   result: "pass" | "fail" | "pending";
   version: Version;
@@ -523,11 +531,24 @@ function assertionFailureMessage(
 
 async function runAssertion<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
-  assertion: NonNullable<TestScriptAction<Version>["assert"]>,
+  pointer: Loc<
+    Resource<Version, "TestScript">,
+    | NonNullable<
+        NonNullable<Resource<Version, "TestScript">["setup"]>["action"]
+      >[number]["assert"]
+    | undefined,
+    any
+  >,
 ): Promise<{
   state: TestScriptState<Version>;
   result: NonNullable<TestReportAction<Version>["assert"]>;
 }> {
+  const assertion = get(pointer, state.testScript);
+  if (!assertion)
+    throw new OperationError(
+      outcomeFatal("invalid", `Assertion not found at ${pointer}`),
+    );
+
   const source = getSource(state, assertion);
 
   if (assertion.resource) {
@@ -616,11 +637,24 @@ function associateResponseRequestVariables<Version extends FHIR_VERSION>(
 
 async function runOperation<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
-  operation: NonNullable<TestScriptAction<Version>["operation"]>,
+  pointer: Loc<
+    Resource<Version, "TestScript">,
+    | NonNullable<
+        NonNullable<Resource<Version, "TestScript">["setup"]>["action"]
+      >[number]["operation"]
+    | undefined,
+    any
+  >,
 ): Promise<{
   state: TestScriptState<Version>;
   result: NonNullable<TestReportAction<Version>["operation"]>;
 }> {
+  const operation = get(pointer, state.testScript);
+  if (!operation)
+    throw new OperationError(
+      outcomeFatal("invalid", `Operation not found at '${pointer}'`),
+    );
+
   try {
     const request = operationToFHIRRequest(state, operation);
     const response = await state.client.request({}, request);
@@ -676,12 +710,20 @@ async function runOperation<Version extends FHIR_VERSION>(
 
 async function runAction<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
-  action: TestScriptAction<Version>,
+  pointer: Loc<
+    Resource<Version, "TestScript">,
+    | NonNullable<
+        NonNullable<Resource<Version, "TestScript">["setup"]>["action"]
+      >[number]
+    | undefined,
+    any
+  >,
 ): Promise<{
   state: TestScriptState<Version>;
   result: TestReportAction<Version>;
 }> {
-  if (action.operation && action.assert) {
+  const action = get(pointer, state.testScript);
+  if (action?.operation && action?.assert) {
     throw new OperationError(
       outcomeFatal(
         "invalid",
@@ -690,15 +732,15 @@ async function runAction<Version extends FHIR_VERSION>(
     );
   }
   switch (true) {
-    case action.operation !== undefined: {
-      const output = await runOperation(state, action.operation);
+    case action?.operation !== undefined: {
+      const output = await runOperation(state, descend(pointer, "operation"));
       return {
         state: output.state,
         result: { operation: output.result },
       };
     }
-    case action.assert !== undefined: {
-      const output = await runAssertion(state, action.assert);
+    case action?.assert !== undefined: {
+      const output = await runAssertion(state, descend(pointer, "assert"));
       return {
         state: output.state,
         result: { assert: output.result },
@@ -717,24 +759,30 @@ async function runAction<Version extends FHIR_VERSION>(
 
 async function runTest<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
-  test: NonNullable<Resource<Version, "TestScript">["test"]>[number],
+  pointer: Loc<
+    Resource<Version, "TestScript">,
+    NonNullable<Resource<Version, "TestScript">["test"]>[number] | undefined,
+    any
+  >,
 ): Promise<{
   state: TestScriptState<Version>;
   result: TestReportAction<Version>[];
 }> {
   let curState = state;
   const testReports: TestReportAction<Version>[] = [];
+  const test = get(pointer, state.testScript);
+  const actions = test?.action ?? [];
 
-  for (const action of test.action) {
+  for (let i = 0; i < actions.length; i++) {
     const output = await runAction(
       {
         ...curState,
         logger: state.logger.child({
-          test: test.name,
-          description: test.description,
+          test: test?.name,
+          description: test?.description,
         }),
       },
-      action,
+      descend(descend(pointer, "action"), i),
     );
     curState = output.state;
 
@@ -746,19 +794,25 @@ async function runTest<Version extends FHIR_VERSION>(
 
 async function runTests<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
-  tests: Resource<Version, "TestScript">["test"],
+  pointer: Loc<
+    Resource<Version, "TestScript">,
+    NullGuard<Resource<Version, "TestScript">, "test">,
+    any
+  >,
 ): Promise<{
   state: TestScriptState<Version>;
   result: Resource<Version, "TestReport">["test"];
 }> {
   const testResults = [];
   let curState = state;
-  for (const test of tests ?? []) {
-    const output = await runTest(state, test);
-    curState = output.state;
 
+  const tests = get(pointer, state.testScript) ?? [];
+
+  for (let i = 0; i < tests.length; i++) {
+    const output = await runTest(state, descend(pointer, i));
+    curState = output.state;
     testResults.push({
-      name: test.name,
+      name: get(descend(pointer, i), state.testScript)?.name,
       action: output.result,
     });
   }
@@ -774,16 +828,23 @@ async function runTests<Version extends FHIR_VERSION>(
 
 async function runSetup<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
-  setup: Resource<Version, "TestScript">["setup"],
+  pointer: Loc<
+    Resource<Version, "TestScript">,
+    NullGuard<Resource<Version, "TestScript">, "setup">,
+    any
+  >,
 ): Promise<{
   state: TestScriptState<Version>;
   result: Resource<Version, "TestReport">["setup"];
 }> {
   let curState = state;
   const setupResults = [];
-
-  for (const action of setup?.action ?? []) {
-    const output = await runAction(state, action);
+  const actions = get(pointer, state.testScript)?.action ?? [];
+  for (let i = 0; i < actions.length; i++) {
+    const output = await runAction(
+      state,
+      descend(descend(pointer, "action"), i),
+    );
     curState = output.state;
     setupResults.push(output.result);
   }
@@ -793,27 +854,40 @@ async function runSetup<Version extends FHIR_VERSION>(
 
 async function runTeardown<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
-  teardown: Resource<Version, "TestScript">["teardown"],
+  pointer: Loc<
+    Resource<Version, "TestScript">,
+    NullGuard<Resource<Version, "TestScript">, "teardown">,
+    any
+  >,
 ): Promise<{
   state: TestScriptState<Version>;
   result: Resource<Version, "TestReport">["teardown"];
 }> {
   let curState = state;
   const teardownResults = [];
-
-  for (const action of teardown?.action ?? []) {
-    const output = await runOperation(state, action.operation);
+  const actions = get(pointer, state.testScript)?.action ?? [];
+  for (let i = 0; i < actions.length; i++) {
+    const output = await runOperation(
+      state,
+      descend(descend(descend(pointer, "action"), i), "operation"),
+    );
     curState = output.state;
     teardownResults.push({ operation: output.result });
   }
+
   return { state: curState, result: { action: teardownResults } };
 }
 
 async function resolveFixtures<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
-  testScript: Resource<Version, "TestScript">,
-): Promise<{ state: TestScriptState<Version> }> {
-  for (const fixture of testScript.fixture ?? []) {
+  pointer: Loc<
+    Resource<Version, "TestScript">,
+    Resource<Version, "TestScript">,
+    any
+  >,
+): Promise<TestScriptState<Version>> {
+  for (const fixture of get(descend(pointer, "fixture"), state.testScript) ??
+    []) {
     if (!fixture.id) {
       throw new OperationError(
         outcomeFatal("invalid", "fixture must have an id"),
@@ -832,7 +906,10 @@ async function resolveFixtures<Version extends FHIR_VERSION>(
     switch (true) {
       case fixture.resource?.reference?.startsWith("#"): {
         const id = (fixture.resource?.reference ?? "").slice(1);
-        resolvedResource = testScript.contained?.find((r) => r.id === id);
+        resolvedResource = get(
+          descend(pointer, "contained"),
+          state.testScript,
+        )?.find((r) => r.id === id);
         break;
       }
       default: {
@@ -877,45 +954,51 @@ async function resolveFixtures<Version extends FHIR_VERSION>(
     };
   }
 
-  return { state };
+  return state;
 }
 
 /**
  * Execute a TestScript and return results as TestReport.
  * @param client IGUHealth client instance
  * @param version FHIR Version
- * @param testscript The testscript to run.
+ * @param testScript The testscript to run.
  * @returns TestReport of results from testscript.
  */
 export async function run<Version extends FHIR_VERSION>(
   logger: Logger<string>,
   client: ReturnType<typeof createHTTPClient>,
   version: Version,
-  testscript: Resource<Version, "TestScript">,
+  testScript: Resource<Version, "TestScript">,
 ): Promise<Resource<Version, "TestReport">> {
   const testReport = {
-    testScript: { reference: `TestScript/${testscript.id}` },
+    testScript: { reference: `TestScript/${testScript.id}` },
     result: "pending",
     resourceType: "TestReport",
   } as Resource<Version, "TestReport">;
 
-  let { state } = await resolveFixtures(
+  const pointer = typedPointer<
+    Resource<Version, "TestScript">,
+    Resource<Version, "TestScript">
+  >();
+
+  let state = await resolveFixtures(
     {
       logger,
       result: "pending",
       version,
       fixtures: {},
       client,
+      testScript,
     },
-    testscript,
+    pointer,
   );
 
   try {
-    const output = await runSetup(state, testscript.setup);
+    const output = await runSetup(state, descend(pointer, "setup"));
     state = output.state;
     testReport.setup = output.result;
 
-    const testsOutput = await runTests(state, testscript.test);
+    const testsOutput = await runTests(state, descend(pointer, "test"));
 
     testReport.test = testsOutput.result;
     state = testsOutput.state;
@@ -923,7 +1006,7 @@ export async function run<Version extends FHIR_VERSION>(
 
     return testReport;
   } finally {
-    const output = await runTeardown(state, testscript.teardown);
+    const output = await runTeardown(state, descend(pointer, "teardown"));
     testReport.teardown = output.result;
   }
 }

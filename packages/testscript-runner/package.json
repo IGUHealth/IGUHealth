@@ -7,6 +7,7 @@
   "types": "lib/index.d.ts",
   "dependencies": {
     "@iguhealth/client": "workspace:^",
+    "@iguhealth/fhir-pointer": "workspace:^",
     "@iguhealth/fhirpath": "workspace:^",
     "@iguhealth/operation-outcomes": "workspace:^",
     "@iguhealth/x-fhir-query": "workspace:^",

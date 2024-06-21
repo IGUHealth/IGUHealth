@@ -25,7 +25,7 @@ export type Loc<
  ** Access field in potentially Nullable V
  ** If V is nullable then set the return type to potentially nullable as well.
  */
-type NullGuard<V, Field extends keyof NonNullable<V>> =
+export type NullGuard<V, Field extends keyof NonNullable<V>> =
   V extends NonNullable<V>
     ? NonNullable<V>[Field]
     : NonNullable<V>[Field] | undefined;
