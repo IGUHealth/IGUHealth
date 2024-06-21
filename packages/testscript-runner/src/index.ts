@@ -175,30 +175,30 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
             fhirVersion: state.version,
             level: "instance",
             type: "invoke-request",
-            resourceType: target.resourceType as any,
+            resourceType: target.resourceType,
             id: target.id,
             operation: op as code,
-            body: parameters as any,
-          };
+            body: parameters,
+          } as FHIRRequest;
         }
         case operation.resource !== undefined: {
           return {
             fhirVersion: state.version,
             level: "type",
             type: "invoke-request",
-            resourceType: operation.resource as any,
+            resourceType: operation.resource,
             operation: op as code,
-            body: parameters as any,
-          };
+            body: parameters,
+          } as FHIRRequest;
         }
         default: {
           return {
             fhirVersion: state.version,
             level: "system",
             type: "invoke-request",
-            operation: op as code,
-            body: parameters as any,
-          };
+            operation: op,
+            body: parameters,
+          } as FHIRRequest;
         }
       }
     }
@@ -394,7 +394,38 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
         body: transaction,
       } as FHIRRequest;
     }
-    case "history":
+    case "history": {
+      switch (true) {
+        case operation.targetId !== undefined: {
+          return {
+            fhirVersion: state.version,
+            level: "instance",
+            type: "history-request",
+            resourceType: getFixtureResource(state, operation.targetId)
+              ?.resourceType as unknown as ResourceType<Version>,
+            id: getFixtureResource(state, operation.targetId)?.id as id,
+            parameters: parseQuery(operation.params ?? ""),
+          } as FHIRRequest;
+        }
+        case operation.resource !== undefined: {
+          return {
+            fhirVersion: state.version,
+            level: "type",
+            type: "history-request",
+            resourceType: operation.resource,
+            parameters: parseQuery(operation.params ?? ""),
+          } as FHIRRequest;
+        }
+        default: {
+          return {
+            fhirVersion: state.version,
+            level: "system",
+            type: "history-request",
+            parameters: parseQuery(operation.params ?? ""),
+          } as FHIRRequest;
+        }
+      }
+    }
     default: {
       throw new OperationError(
         outcomeFatal(
