@@ -1,0 +1,38 @@
+{
+  "testScript": {
+    "reference": "TestScript/valueset-validate-tests"
+  },
+  "result": "pass",
+  "resourceType": "TestReport",
+  "setup": {
+    "action": []
+  },
+  "test": [
+    {
+      "name": "Test include",
+      "action": [
+        {
+          "operation": {
+            "result": "pass",
+            "message": "[SUCCEEDED]<invoke> label: ''"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": []
+  }
+}
