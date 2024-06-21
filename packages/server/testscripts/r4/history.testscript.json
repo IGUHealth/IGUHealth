@@ -1,0 +1,115 @@
+{
+  "id": "history-tests",
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "id": "patient1",
+      "resourceType": "Patient",
+      "meta": {
+        "tag": [{ "code": "history-test" }]
+      }
+    }
+  ],
+  "fixture": [
+    {
+      "id": "fixture-patient1",
+      "resource": {
+        "reference": "#patient1"
+      }
+    }
+  ],
+  "test": [
+    {
+      "id": "01-history",
+      "name": "History testing",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "create"
+            },
+            "resource": "Patient",
+            "sourceId": "fixture-patient1",
+            "responseId": "create-response"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "history"
+            },
+            "resource": "Patient",
+            "targetId": "create-response",
+            "sourceId": "fixture-patient1"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.id",
+            "compareToSourceExpression": "Patient.id",
+            "compareToSourceId": "create-response"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.meta.versionId",
+            "compareToSourceExpression": "Patient.meta.versionId",
+            "compareToSourceId": "create-response"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "update"
+            },
+            "resource": "Patient",
+            "targetId": "create-response",
+            "sourceId": "fixture-patient1",
+            "responseId": "update-response"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "history"
+            },
+            "resource": "Patient",
+            "targetId": "create-response",
+            "sourceId": "fixture-patient1"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.id",
+            "compareToSourceExpression": "Patient.id",
+            "compareToSourceId": "update-response"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.meta.versionId",
+            "compareToSourceExpression": "Patient.meta.versionId",
+            "compareToSourceId": "update-response"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+          },
+          "params": "_tag=history-test"
+        }
+      }
+    ]
+  }
+}

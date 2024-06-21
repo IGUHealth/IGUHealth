@@ -1,0 +1,75 @@
+{
+  "testScript": {
+    "reference": "TestScript/history-tests"
+  },
+  "result": "pass",
+  "resourceType": "TestReport",
+  "setup": {
+    "action": []
+  },
+  "test": [
+    {
+      "name": "Create Patient",
+      "action": [
+        {
+          "operation": {
+            "result": "pass",
+            "message": "[SUCCEEDED]<create> label: ''"
+          }
+        },
+        {
+          "operation": {
+            "result": "pass",
+            "message": "[SUCCEEDED]<history> label: ''"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        },
+        {
+          "operation": {
+            "result": "pass",
+            "message": "[SUCCEEDED]<update> label: ''"
+          }
+        },
+        {
+          "operation": {
+            "result": "pass",
+            "message": "[SUCCEEDED]<history> label: ''"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "result": "pass",
+          "message": "[SUCCEEDED]<delete> label: ''"
+        }
+      }
+    ]
+  }
+}
