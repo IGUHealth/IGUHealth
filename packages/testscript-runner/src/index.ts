@@ -231,6 +231,26 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
         body: getFixtureResource(state, operation.sourceId),
       } as FHIRRequest;
     }
+    case "patch": {
+      if (!operation.targetId)
+        throw new OperationError(
+          outcomeFatal("invalid", "targetId is required for patch operation"),
+        );
+      if (!operation.sourceId)
+        throw new OperationError(
+          outcomeFatal("invalid", "sourceId is required for patch operation"),
+        );
+
+      return {
+        fhirVersion: state.version,
+        level: "instance",
+        type: "patch-request",
+        resourceType: getFixtureResource(state, operation.targetId)
+          ?.resourceType as unknown as ResourceType<Version>,
+        id: getFixtureResource(state, operation.targetId)?.id as id,
+        body: getFixtureResource(state, operation.sourceId),
+      } as FHIRRequest;
+    }
     case "vread": {
       if (!operation.targetId)
         throw new OperationError(
