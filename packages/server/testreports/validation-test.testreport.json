@@ -1,6 +1,6 @@
 {
   "testScript": {
-    "reference": "TestScript/numbers"
+    "reference": "TestScript/validation-test"
   },
   "result": "pass",
   "resourceType": "TestReport",
@@ -9,12 +9,12 @@
   },
   "test": [
     {
-      "name": "Number tests",
+      "name": "Attempt to create invalid patient",
       "action": [
         {
           "operation": {
-            "result": "pass",
-            "message": "[SUCCEEDED]<create> label: ''"
+            "result": "fail",
+            "message": "[FAILED]<create> label: ''"
           }
         },
         {
@@ -24,9 +24,26 @@
           }
         },
         {
-          "operation": {
+          "assert": {
             "result": "pass",
-            "message": "[SUCCEEDED]<search> label: ''"
+            "message": "Assertions passed"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Validate Operation",
+      "action": [
+        {
+          "operation": {
+            "result": "fail",
+            "message": "[FAILED]<invoke> label: ''"
           }
         },
         {
@@ -36,33 +53,26 @@
           }
         },
         {
-          "operation": {
+          "assert": {
             "result": "pass",
-            "message": "[SUCCEEDED]<search> label: ''"
+            "message": "Assertions passed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Validate Expansion Operation",
+      "action": [
+        {
+          "operation": {
+            "result": "fail",
+            "message": "[FAILED]<invoke> label: ''"
           }
         },
         {
           "assert": {
             "result": "pass",
             "message": "Assertions passed"
-          }
-        },
-        {
-          "operation": {
-            "result": "pass",
-            "message": "[SUCCEEDED]<search> label: ''"
-          }
-        },
-        {
-          "assert": {
-            "result": "pass",
-            "message": "Assertions passed"
-          }
-        },
-        {
-          "operation": {
-            "result": "pass",
-            "message": "[SUCCEEDED]<search> label: ''"
           }
         },
         {
@@ -75,13 +85,6 @@
     }
   ],
   "teardown": {
-    "action": [
-      {
-        "operation": {
-          "result": "pass",
-          "message": "[SUCCEEDED]<delete> label: ''"
-        }
-      }
-    ]
+    "action": []
   }
 }

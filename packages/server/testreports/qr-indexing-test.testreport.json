@@ -1,6 +1,6 @@
 {
   "testScript": {
-    "reference": "TestScript/numbers"
+    "reference": "TestScript/qr-indexing-test"
   },
   "result": "pass",
   "resourceType": "TestReport",
@@ -9,7 +9,7 @@
   },
   "test": [
     {
-      "name": "Number tests",
+      "name": "QR and Q Indexing",
       "action": [
         {
           "operation": {
@@ -18,33 +18,9 @@
           }
         },
         {
-          "assert": {
-            "result": "pass",
-            "message": "Assertions passed"
-          }
-        },
-        {
           "operation": {
             "result": "pass",
-            "message": "[SUCCEEDED]<search> label: ''"
-          }
-        },
-        {
-          "assert": {
-            "result": "pass",
-            "message": "Assertions passed"
-          }
-        },
-        {
-          "operation": {
-            "result": "pass",
-            "message": "[SUCCEEDED]<search> label: ''"
-          }
-        },
-        {
-          "assert": {
-            "result": "pass",
-            "message": "Assertions passed"
+            "message": "[SUCCEEDED]<create> label: ''"
           }
         },
         {

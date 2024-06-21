@@ -1,0 +1,123 @@
+{
+  "id": "encoding-test",
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "id": "batch",
+      "resourceType": "Bundle",
+      "type": "batch",
+      "entry": [
+        {
+          "request": {
+            "method": "POST",
+            "url": "Questionnaire"
+          },
+          "resource": {
+            "id": "encoding-questionnaire",
+            "url": "https://iguhealth.com/PREPARE",
+            "meta": {
+              "tag": [{ "code": "encoding-test" }]
+            },
+            "title": "test/encoding=123",
+            "status": "active",
+            "resourceType": "Questionnaire"
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Questionnaire"
+          },
+          "resource": {
+            "id": "encoding-questionnaire",
+            "url": "https://iguhealth.com/PREPARE",
+            "meta": {
+              "tag": [{ "code": "encoding-test" }]
+            },
+            "title": "test&encoding=3",
+            "status": "active",
+            "resourceType": "Questionnaire"
+          }
+        }
+      ]
+    }
+  ],
+  "fixture": [
+    {
+      "id": "batch",
+      "resource": {
+        "reference": "#batch"
+      }
+    }
+  ],
+  "test": [
+    {
+      "id": "01-encoding-test",
+      "name": "Encoding tests",
+      "description": "Testing number searches.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "batch"
+            },
+            "sourceId": "batch",
+            "responseId": "batch-response"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "resource": "Questionnaire",
+            "params": "title=test%26encoding%3D3"
+          }
+        },
+        {
+          "assert": {
+            "direction": "response",
+            "expression": "Bundle.entry.resource.id",
+            "operator": "equals",
+            "compareToSourceId": "batch-response",
+            "compareToSourceExpression": "Bundle.entry.resource[1].id"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "resource": "Questionnaire",
+            "params": "title=test%2Fencoding%3D123"
+          }
+        },
+        {
+          "assert": {
+            "direction": "response",
+            "expression": "Bundle.entry.resource.id",
+            "operator": "equals",
+            "compareToSourceId": "batch-response",
+            "compareToSourceExpression": "Bundle.entry.resource[0].id"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+          },
+          "params": "_tag=encoding-test"
+        }
+      }
+    ]
+  }
+}

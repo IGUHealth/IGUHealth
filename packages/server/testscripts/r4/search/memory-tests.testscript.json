@@ -1,0 +1,46 @@
+{
+  "id": "memory-tests",
+  "resourceType": "TestScript",
+  "test": [
+    {
+      "id": "Memory search tests",
+      "name": "Memory tests",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "resource": "StructureDefinition",
+            "params": "kind=primitive-type&name=base64Binary"
+          }
+        },
+        {
+          "assert": {
+            "label": "Check the count",
+            "direction": "response",
+            "expression": "Bundle.entry.count()",
+            "value": "1"
+          }
+        },
+        {
+          "assert": {
+            "label": "Check the return name.",
+            "direction": "response",
+            "expression": "Bundle.entry.resource.name",
+            "value": "base64Binary"
+          }
+        },
+        {
+          "assert": {
+            "label": "Check the return name.",
+            "direction": "response",
+            "expression": "Bundle.entry.resource.kind",
+            "value": "primitive-type"
+          }
+        }
+      ]
+    }
+  ]
+}

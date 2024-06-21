@@ -1,5 +1,5 @@
 {
-  "id": "test-invalid-data",
+  "id": "validation-test",
   "resourceType": "TestScript",
   "contained": [
     {
