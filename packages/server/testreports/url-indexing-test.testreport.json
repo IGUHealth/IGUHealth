@@ -1,6 +1,6 @@
 {
   "testScript": {
-    "reference": "TestScript/qr-indexing-test"
+    "reference": "TestScript/url-indexing-test"
   },
   "result": "pass",
   "resourceType": "TestReport",
