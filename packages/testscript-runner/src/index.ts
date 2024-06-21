@@ -105,27 +105,21 @@ function getFixtureResource<Version extends FHIR_VERSION>(
 function getVariable<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
   variables: NonNullable<Resource<Version, "TestScript">["variable"]>,
-  variableId: string,
+  variableName: string,
 ): unknown {
-  const variable = variables.find((v) => v.id === variableId);
+  const variable = variables.find((v) => v.name === variableName);
   if (!variable)
     throw new OperationError(
-      outcomeFatal("invalid", `variable with id '${variableId}' not found`),
-    );
-
-  if (!variable.sourceId)
-    throw new OperationError(
-      outcomeFatal(
-        "invalid",
-        `sourceId is required for variable with id '${variableId}'`,
-      ),
+      outcomeFatal("invalid", `variable with id '${variableName}' not found`),
     );
 
   switch (true) {
     case variable.expression !== undefined: {
       return fp.evaluate(
         variable.expression,
-        getFixtureResource(state, variable.sourceId),
+        variable.sourceId
+          ? getFixtureResource(state, variable.sourceId)
+          : undefined,
       )[0];
     }
     default: {
@@ -174,7 +168,7 @@ function getSource<Version extends FHIR_VERSION>(
   }
 }
 
-const EXPRESSION_REGEX = /${([^}]*)}/;
+const EXPRESSION_REGEX = /\${([^}]*)}/;
 
 function evaluateVariables<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
@@ -187,21 +181,27 @@ function evaluateVariables<Version extends FHIR_VERSION>(
 
   while (EXPRESSION_REGEX.test(output)) {
     const result = EXPRESSION_REGEX.exec(output);
-    const expression = result?.[1];
+    const variableName = result?.[1];
     const match = result?.[0];
-    if (!match || !expression) {
+
+    if (!match || !variableName) {
       throw new Error("Invalid expression");
     }
 
-    const evaluation = fp
-      .evaluate(expression, undefined, {
-        variables: (variableId: string) => {
-          return getVariable(state, variables, variableId);
-        },
-      })
-      .map((e) => e.toString())
-      .join(",");
-    output = output.replace(match, evaluation);
+    const variableValue = getVariable(
+      state,
+      variables,
+      variableName,
+    )?.toString();
+    if (!variableValue)
+      throw new OperationError(
+        outcomeError(
+          "invalid",
+          `Variable with id '${variableName}' not found.`,
+        ),
+      );
+
+    output = output.replace(match, variableValue);
   }
 
   return output;
