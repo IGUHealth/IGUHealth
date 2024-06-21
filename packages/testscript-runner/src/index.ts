@@ -101,6 +101,43 @@ function getFixtureResource<Version extends FHIR_VERSION>(
   }
 }
 
+function getVariable<Version extends FHIR_VERSION>(
+  state: TestScriptState<Version>,
+  variables: NonNullable<Resource<Version, "TestScript">["variable"]>,
+  variableId: string,
+): unknown {
+  const variable = variables.find((v) => v.id === variableId);
+  if (!variable)
+    throw new OperationError(
+      outcomeFatal("invalid", `variable with id '${variableId}' not found`),
+    );
+
+  if (!variable.sourceId)
+    throw new OperationError(
+      outcomeFatal(
+        "invalid",
+        `sourceId is required for variable with id '${variableId}'`,
+      ),
+    );
+
+  switch (true) {
+    case variable.expression !== undefined: {
+      return fp.evaluate(
+        variable.expression,
+        getFixtureResource(state, variable.sourceId),
+      )[0];
+    }
+    default: {
+      throw new OperationError(
+        outcomeFatal(
+          "not-supported",
+          `expression variables are only supported for now.`,
+        ),
+      );
+    }
+  }
+}
+
 /**
  * Return the default source (by default is Response in unless specified a sourceId or direction request)
  * @param state Current test state
