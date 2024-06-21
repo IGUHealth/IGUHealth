@@ -399,7 +399,10 @@ async function deriveComparision<Version extends FHIR_VERSION>(
       }
     }
   } else if (assertion.value) {
-    return assertion.value;
+    const numberValue = parseInt(assertion.value);
+    if (isNaN(numberValue)) return assertion.value;
+
+    return numberValue;
   }
   return true;
 }
@@ -464,7 +467,7 @@ function assertionFailureMessage(
   v2: unknown,
   operator: code = "equals" as code,
 ): string {
-  return `Failed Assertion <'${JSON.stringify(v1)}' ${operator} '${v2 ? JSON.stringify(v2) : ""}'>`;
+  return `Failed Assertion '${JSON.stringify(v1)}' ${operator} '${v2 ? JSON.stringify(v2) : ""}'`;
 }
 
 async function runAssertion<Version extends FHIR_VERSION>(
