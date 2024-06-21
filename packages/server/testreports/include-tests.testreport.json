@@ -1,0 +1,57 @@
+{
+  "testScript": {
+    "reference": "TestScript/include-tests"
+  },
+  "result": "pass",
+  "resourceType": "TestReport",
+  "setup": {
+    "action": []
+  },
+  "test": [
+    {
+      "name": "Test include",
+      "action": [
+        {
+          "operation": {
+            "result": "pass",
+            "message": "[SUCCEEDED]<transaction> label: ''"
+          }
+        },
+        {
+          "operation": {
+            "result": "pass",
+            "message": "[SUCCEEDED]<search> label: ''"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "result": "pass",
+          "message": "[SUCCEEDED]<delete> label: ''"
+        }
+      }
+    ]
+  }
+}

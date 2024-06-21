@@ -1,0 +1,50 @@
+{
+  "testScript": {
+    "reference": "TestScript/codesystem-lookup-tests"
+  },
+  "result": "pass",
+  "resourceType": "TestReport",
+  "setup": {
+    "action": []
+  },
+  "test": [
+    {
+      "name": "CodeSystem Lookup tests.",
+      "action": [
+        {
+          "operation": {
+            "result": "pass",
+            "message": "[SUCCEEDED]<invoke> label: ''"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        },
+        {
+          "operation": {
+            "result": "fail",
+            "message": "[FAILED]<invoke> label: ''"
+          }
+        },
+        {
+          "assert": {
+            "result": "pass",
+            "message": "Assertions passed"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": []
+  }
+}
