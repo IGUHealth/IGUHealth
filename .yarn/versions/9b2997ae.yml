@@ -1,0 +1,9 @@
+releases:
+  "@iguhealth/admin-app": patch
+  "@iguhealth/cli": patch
+  "@iguhealth/components": patch
+  "@iguhealth/fhirpath": patch
+  "@iguhealth/generated-ops": patch
+  "@iguhealth/server": patch
+  "@iguhealth/testscript-runner": patch
+  "@iguhealth/x-fhir-query": patch
