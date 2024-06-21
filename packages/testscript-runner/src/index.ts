@@ -8,6 +8,7 @@ import {
   NullGuard,
   descend,
   get,
+  root,
   typedPointer,
 } from "@iguhealth/fhir-pointer";
 import { code, id, markdown } from "@iguhealth/fhir-types/r4/types";
@@ -173,12 +174,53 @@ function getSource<Version extends FHIR_VERSION>(
   }
 }
 
+const EXPRESSION_REGEX = /${([^}]*)}/;
+
+function evaluateVariables<Version extends FHIR_VERSION>(
+  state: TestScriptState<Version>,
+  pointer: Loc<Resource<Version, "TestScript">, any, any>,
+  value: string,
+): string {
+  let output = value;
+  const variables =
+    get(descend(root(pointer), "variable"), state.testScript) ?? [];
+
+  while (EXPRESSION_REGEX.test(output)) {
+    const result = EXPRESSION_REGEX.exec(output);
+    const expression = result?.[1];
+    const match = result?.[0];
+    if (!match || !expression) {
+      throw new Error("Invalid expression");
+    }
+
+    const evaluation = fp
+      .evaluate(expression, undefined, {
+        variables: (variableId: string) => {
+          return getVariable(state, variables, variableId);
+        },
+      })
+      .map((e) => e.toString())
+      .join(",");
+    output = output.replace(match, evaluation);
+  }
+
+  return output;
+}
+
 function operationToFHIRRequest<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
-  operation: NonNullable<TestScriptAction<Version>["operation"]>,
+  pointer: Loc<
+    Resource<Version, "TestScript">,
+    | NonNullable<
+        NonNullable<Resource<Version, "TestScript">["setup"]>["action"]
+      >[number]["operation"]
+    | undefined,
+    any
+  >,
 ): FHIRRequest {
   // See https://hl7.org/fhir/r4/valueset-testscript-operation-codes.html
 
+  const operation = get(pointer, state.testScript);
   // Extending this with "invoke" for invoking generic operations.
   switch (operation?.type?.code) {
     case "invoke": {
@@ -351,7 +393,9 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
             level: "type",
             type: "delete-request",
             resourceType: operation.resource,
-            parameters: parseQuery(operation.params ?? ""),
+            parameters: parseQuery(
+              evaluateVariables(state, pointer, operation.params ?? ""),
+            ),
           } as FHIRRequest;
         }
         case operation.params !== undefined: {
@@ -359,7 +403,9 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
             fhirVersion: state.version,
             level: "system",
             type: "delete-request",
-            parameters: parseQuery(operation.params ?? ""),
+            parameters: parseQuery(
+              evaluateVariables(state, pointer, operation.params ?? ""),
+            ),
           } as FHIRRequest;
         }
         default: {
@@ -377,14 +423,18 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
           level: "type",
           type: "search-request",
           resourceType: operation.resource,
-          parameters: parseQuery(operation.params ?? ""),
+          parameters: parseQuery(
+            evaluateVariables(state, pointer, operation.params ?? ""),
+          ),
         } as FHIRRequest;
       } else {
         return {
           fhirVersion: state.version,
           level: "system",
           type: "search-request",
-          parameters: parseQuery(operation.params ?? ""),
+          parameters: parseQuery(
+            evaluateVariables(state, pointer, operation.params ?? ""),
+          ),
         } as FHIRRequest;
       }
     }
@@ -449,7 +499,9 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
             resourceType: getFixtureResource(state, operation.targetId)
               ?.resourceType as unknown as ResourceType<Version>,
             id: getFixtureResource(state, operation.targetId)?.id as id,
-            parameters: parseQuery(operation.params ?? ""),
+            parameters: parseQuery(
+              evaluateVariables(state, pointer, operation.params ?? ""),
+            ),
           } as FHIRRequest;
         }
         case operation.resource !== undefined: {
@@ -458,7 +510,9 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
             level: "type",
             type: "history-request",
             resourceType: operation.resource,
-            parameters: parseQuery(operation.params ?? ""),
+            parameters: parseQuery(
+              evaluateVariables(state, pointer, operation.params ?? ""),
+            ),
           } as FHIRRequest;
         }
         default: {
@@ -466,7 +520,9 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
             fhirVersion: state.version,
             level: "system",
             type: "history-request",
-            parameters: parseQuery(operation.params ?? ""),
+            parameters: parseQuery(
+              evaluateVariables(state, pointer, operation.params ?? ""),
+            ),
           } as FHIRRequest;
         }
       }
@@ -693,7 +749,7 @@ async function runOperation<Version extends FHIR_VERSION>(
     );
 
   try {
-    const request = operationToFHIRRequest(state, operation);
+    const request = operationToFHIRRequest(state, pointer);
     const response = await state.client.request({}, request);
 
     const result = {
