@@ -4,6 +4,8 @@ import validator from "validator";
 import * as db from "zapatos/db";
 
 import {
+  AccessPolicy,
+  Bundle,
   ClientApplication,
   Membership,
   code,
@@ -143,19 +145,47 @@ function clientAppCommands(command: Command) {
       const pool = createPGPool();
       const services = await createFHIRServices(pool);
 
-      const clientApp = await services.client.create(
+      const transaction = await services.client.transaction(
         asSystemCTX({ ...services, tenant: options.tenant }),
         R4,
         {
-          name: "Tester",
-          secret: options.secret,
-          grantType: ["client_credentials"],
-          resourceType: "ClientApplication",
-          responseTypes: "token",
-        } as ClientApplication,
+          resourceType: "Bundle",
+          type: "transaction",
+          entry: [
+            {
+              request: { method: "POST", url: "AccessPolicy" },
+              resource: {
+                name: "Admin Access",
+                code: "admin-access",
+                type: "full-access",
+                resourceType: "AccessPolicy",
+                target: [
+                  {
+                    link: {
+                      reference: "clientapp",
+                    },
+                  },
+                ],
+              } as AccessPolicy,
+            },
+            {
+              fullUrl: "clientapp",
+              request: { method: "POST", url: "ClientApplication" },
+              resource: {
+                name: "Tester",
+                secret: options.secret,
+                grantType: ["client_credentials"],
+                resourceType: "ClientApplication",
+                responseTypes: "token",
+              } as ClientApplication,
+            },
+          ],
+        } as Bundle,
       );
 
-      console.log(JSON.stringify(clientApp, undefined, 2));
+      console.log(
+        JSON.stringify(transaction.entry?.[1]?.resource, undefined, 2),
+      );
 
       process.exit(0);
     });
