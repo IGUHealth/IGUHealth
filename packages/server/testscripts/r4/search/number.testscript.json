@@ -1,6 +1,8 @@
 {
   "id": "numbers",
   "resourceType": "TestScript",
+  "title": "Number Precision tests",
+  "description": "Precision tests for number searches.",
   "contained": [
     {
       "id": "risk-assessment",

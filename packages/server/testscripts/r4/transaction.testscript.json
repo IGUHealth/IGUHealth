@@ -1,5 +1,7 @@
 {
   "id": "transaction-tests",
+  "title": "Transaction tests",
+  "description": "Test the transaction operation.",
   "resourceType": "TestScript",
   "contained": [
     {

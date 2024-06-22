@@ -1,6 +1,8 @@
 {
   "id": "type-filter",
   "resourceType": "TestScript",
+  "title": "Type filtering tests",
+  "description": "Tests _type for type filtering. Checks both database and memory searches.",
   "contained": [
     {
       "id": "q-response",

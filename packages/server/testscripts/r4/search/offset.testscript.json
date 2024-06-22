@@ -1,6 +1,8 @@
 {
   "id": "offset",
   "resourceType": "TestScript",
+  "title": "Offset search tests",
+  "description": "Verify that the offset parameter works as expected.",
   "contained": [
     {
       "id": "patients",

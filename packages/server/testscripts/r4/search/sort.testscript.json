@@ -1,5 +1,7 @@
 {
   "id": "sorting",
+  "title": "Sorting tests",
+  "description": "Test _sort parameter. Validates nested sorting.",
   "resourceType": "TestScript",
   "contained": [
     {

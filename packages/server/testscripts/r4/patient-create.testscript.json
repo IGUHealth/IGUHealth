@@ -1,5 +1,7 @@
 {
   "id": "create-patient",
+  "title": "Create tests",
+  "description": "Creates a patient and validate the response.",
   "resourceType": "TestScript",
   "contained": [
     {

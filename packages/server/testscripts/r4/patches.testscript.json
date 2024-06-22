@@ -1,5 +1,7 @@
 {
   "id": "patch-testing",
+  "title": "Patch tests",
+  "description": "Test the PATCH operation.",
   "resourceType": "TestScript",
   "contained": [
     {

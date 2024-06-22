@@ -208,7 +208,9 @@ export default function RenderReports() {
             </div>
             <table>
               <tr>
-                <th className="w-[100%]">Test Suite</th>
+                <th>id</th>
+                <th>title</th>
+                <th className="w-[100%]">description</th>
                 <th>Status</th>
               </tr>
               {testScripts.map((testScript) => {
@@ -233,6 +235,8 @@ export default function RenderReports() {
                     `}
                   >
                     <td>{testScript.id}</td>
+                    <td>{testScript.title}</td>
+                    <td>{testScript.description}</td>
                     <td>{testReport?.result}</td>
                   </tr>
                 );

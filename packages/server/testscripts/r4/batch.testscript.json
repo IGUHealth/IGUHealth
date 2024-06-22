@@ -1,6 +1,8 @@
 {
   "id": "batch-tests",
   "resourceType": "TestScript",
+  "title": "Batch tests",
+  "description": "Test the batch operation.",
   "contained": [
     {
       "id": "batch",

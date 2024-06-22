@@ -1,5 +1,7 @@
 {
   "id": "conditionally-delete-patient",
+  "title": "Conditional Deletes",
+  "description": "Tests conditional delete operations.",
   "resourceType": "TestScript",
   "contained": [
     {

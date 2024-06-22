@@ -1,6 +1,8 @@
 {
   "id": "encoding-test",
   "resourceType": "TestScript",
+  "title": "Encoding tests",
+  "description": "This test script tests the encoding of parameters in searches.",
   "contained": [
     {
       "id": "batch",

@@ -1,6 +1,8 @@
 {
   "id": "memory-tests",
   "resourceType": "TestScript",
+  "title": "Memory search tests",
+  "description": "Tests will validate searches against memory provider.",
   "test": [
     {
       "id": "Memory search tests",

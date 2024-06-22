@@ -1,5 +1,7 @@
 {
   "id": "include-tests",
+  "title": "Include tests",
+  "description": "Test the _include parameter",
   "resourceType": "TestScript",
   "contained": [
     {

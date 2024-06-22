@@ -1,6 +1,8 @@
 {
   "id": "total",
   "resourceType": "TestScript",
+  "title": "Total tests",
+  "description": "This test verifies the total parameter off of Bundle.total",
   "contained": [
     {
       "id": "patients",

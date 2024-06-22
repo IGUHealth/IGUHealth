@@ -1,5 +1,7 @@
 {
   "id": "url-indexing-test",
+  "title": "Canonical indexing tests",
+  "description": "This test script is designed to test the indexing of resources with canonical URLs",
   "resourceType": "TestScript",
   "contained": [
     {

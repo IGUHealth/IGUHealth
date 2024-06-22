@@ -1,5 +1,7 @@
 {
   "id": "revinclude-tests",
+  "title": "Revinclude tests",
+  "description": "This test script tests the _revinclude parameter.",
   "resourceType": "TestScript",
   "contained": [
     {

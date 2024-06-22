@@ -1,6 +1,8 @@
 {
   "id": "history-tests",
   "resourceType": "TestScript",
+  "title": "History tests",
+  "description": "This test script tests the history operation.",
   "contained": [
     {
       "id": "patient1",

@@ -1,5 +1,7 @@
 {
   "id": "validation-test",
+  "title": "Validation tests",
+  "description": "Test the validation operation and validation basic crud operations.",
   "resourceType": "TestScript",
   "contained": [
     {

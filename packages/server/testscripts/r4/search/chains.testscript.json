@@ -6,6 +6,8 @@
       "resource": {
         "id": "chain-search",
         "resourceType": "TestScript",
+        "title": "Chain Search tests",
+        "description": "Validates chain parameters in search. For example Patient?general-practitioner.name=Adam",
         "contained": [
           {
             "id": "transaction-bundle",

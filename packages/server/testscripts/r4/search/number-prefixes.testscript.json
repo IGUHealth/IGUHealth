@@ -1,6 +1,8 @@
 {
   "id": "number-prefixes",
   "resourceType": "TestScript",
+  "title": "Number Prefix tests",
+  "description": "This test script tests the number prefixes in search parameters. for example ge123, gt123, le123, lt123, ne123, eq123",
   "contained": [
     {
       "id": "risk-assessment",

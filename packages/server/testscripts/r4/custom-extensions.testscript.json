@@ -1,6 +1,8 @@
 {
   "id": "custom-extensions",
   "resourceType": "TestScript",
+  "title": "Custom extension tests",
+  "description": "This test script is used to verify that custom extensions are being added to the Patient resource. Specifically version-sequence and author.",
   "contained": [
     {
       "id": "patient1",
