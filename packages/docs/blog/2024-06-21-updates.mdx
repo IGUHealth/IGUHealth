@@ -1,0 +1,41 @@
+---
+slug: updates_2024-06-21
+Title: Updates 2024-06-21
+authors: [confused-moniker]
+tags: [iguhealth, updates]
+---
+
+# Updates 2024-06-21
+
+## Testing
+
+### Migrations
+We've finished migrating our API tests to TestScripts [here](https://github.com/IGUHealth/IGUHealth/tree/main/packages/server/testscripts/r4).
+These tests are run on all PRs and the main branch.
+
+### Publishing Test Reports
+We now publish test reports on our main site. You can view them [here](https://iguhealth.app/reports).
+These tests are generated off the main branch for the latest published version of our server.
+
+### Support for Variables
+Variables are now supported on our TestScript runner. You can use them to create dynamic parameters for your testscripts.
+An example can be found [here](https://github.com/IGUHealth/IGUHealth/blob/main/packages/server/testscripts/r4/history.testscript.json)
+
+### Support for Operations and Assertions
+We now support the following operations and assertions:
+* Assert: CompareToSourceExpression
+* Operation: history
+* Operation: patch
+
+
+## General
+
+### Updated Packages
+* @iguhealth/server: 0.14.33
+* @iguhealth/components: 0.7.22
+* @iguhealth/generated-ops: 0.5.15
+* @iguhealth/cli: 1.4.15
+* @iguhealth/testscript-runner: 0.0.8
+
+
+
