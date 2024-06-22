@@ -2,6 +2,11 @@ name: Publish TestReports
 on:
   release:
     types: [published]
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
+
 env:
   NODE_ENV: development
   API_URL: http://localhost:3000
@@ -90,4 +95,4 @@ jobs:
 
       - name: Copy files to the production website with the AWS CLI
         run: |
-          aws s3 sync ./packages/reports.json s3://iguhealth.app/testscripts/reports.json
+          aws s3 cp ./packages/server/reports.json s3://iguhealth.app/testscripts/reports.json
