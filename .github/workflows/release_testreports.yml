@@ -1,55 +1,24 @@
-name: Workflow for Codecov example-javascript
-on: [push, pull_request]
+name: Publish TestReports
+on:
+  release:
+    types: [published]
+env:
+  NODE_ENV: development
+  API_URL: http://localhost:3000
+  FHIR_DATABASE_NAME: postgres
+  FHIR_DATABASE_HOST: localhost
+  FHIR_DATABASE_PORT: 5432
+  FHIR_DATABASE_PASSWORD: "postgres"
+  FHIR_DATABASE_USERNAME: postgres
+  REDIS_HOST: localhost
+  REDIS_PORT: 6379
+  SESSION_COOKIE_SECRETS: "session-secret"
+  RATE_LIMIT_MAX: 10000000
+
 jobs:
-  security:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-  linting:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Set up Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 21.6.1
-          cache: "yarn"
-
-      - name: EnableCorePack
-        run: corepack enable
-
-      - name: Yarn v4
-        run: corepack prepare yarn@4.1.1 --activate
-
-      - name: Version Check
-        run: yarn version check
-
-      - name: Install dependencies
-        run: yarn
-      - name: Lint
-        run: yarn eslint packages/server --quiet && yarn eslint packages/components --quiet && yarn eslint packages/admin-app --quiet
   server-tests:
+    environment: production
     runs-on: ubuntu-latest
-    env:
-      NODE_ENV: development
-      API_URL: http://localhost:3000
-      FHIR_DATABASE_NAME: postgres
-      FHIR_DATABASE_HOST: localhost
-      FHIR_DATABASE_PORT: 5432
-      FHIR_DATABASE_PASSWORD: "postgres"
-      FHIR_DATABASE_USERNAME: postgres
-      REDIS_HOST: localhost
-      REDIS_PORT: 6379
-      SESSION_COOKIE_SECRETS: "session-secret"
-      RATE_LIMIT_MAX: 10000000
     services:
       redis:
         image: redis
@@ -71,6 +40,7 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -88,9 +58,6 @@ jobs:
 
       - name: Yarn Setup
         run: corepack prepare yarn@4.1.1 --activate
-
-      - name: Version Check
-        run: yarn version check
 
       - name: Build
         run: sh install.sh
@@ -113,13 +80,14 @@ jobs:
         run: yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/test-system/oidc/interaction/login
 
       - name: TestScripts
-        run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts
+        run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts -o reports.json
 
-      - name: Jest tests
-        run: yarn workspaces foreach -A run test
-        timeout-minutes: 10
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+      - name: Configure AWS credentials from Github account
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          role-to-assume: arn:aws:iam::611909812228:role/iguhealth_github_action_user
+          aws-region: us-east-1
+
+      - name: Copy files to the production website with the AWS CLI
+        run: |
+          aws s3 sync ./packages/reports.json s3://iguhealth.app/testscripts/reports.json

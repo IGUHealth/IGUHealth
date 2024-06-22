@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { pino } from "pino";
 
+import { code } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 import * as ts from "@iguhealth/testscript-runner";
 
@@ -29,7 +30,6 @@ function getAllFiles(location: string): string[] {
 async function executeTestScript<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   testScript: Resource<Version, "TestScript">,
-  outputDir?: string,
 ): Promise<Resource<Version, "TestReport">> {
   const logger = pino<string>({
     transport: {
@@ -43,15 +43,6 @@ async function executeTestScript<Version extends FHIR_VERSION>(
     fhirVersion,
     testScript,
   );
-
-  if (outputDir) {
-    const output = path.join(
-      outputDir,
-      `${testScript.id ?? new Date().toString()}.testreport.json`,
-    );
-
-    fs.writeFileSync(output, JSON.stringify(report, null, 2));
-  }
 
   return report;
 }
@@ -76,6 +67,12 @@ export function testscriptCommands(command: Command) {
         .filter((f) => f.endsWith(options.extension))
         .sort((a, b) => a.localeCompare(b));
 
+      const output: Resource<FHIR_VERSION, "Bundle"> = {
+        resourceType: "Bundle",
+        type: "collection" as code,
+        entry: [],
+      };
+
       for (const file of files) {
         const fileContents = fs.readFileSync(file);
         const json = JSON.parse(fileContents.toString("utf8"));
@@ -90,26 +87,32 @@ export function testscriptCommands(command: Command) {
               ) ?? [];
 
           for (const testScript of testscripts) {
+            output.entry?.push({ resource: testScript as any });
             const report = await executeTestScript(
               options.fhirVersion,
               testScript,
-              options.output,
             );
+            output.entry?.push({ resource: report as any });
             if (report.result === "fail") {
               exitCode = 1;
             }
           }
         } else if (json.resourceType === "TestScript") {
           const testScript = json as Resource<FHIR_VERSION, "TestScript">;
+          output.entry?.push({ resource: testScript as any });
           const report = await executeTestScript(
             options.fhirVersion,
             testScript,
-            options.output,
           );
+          output.entry?.push({ resource: report as any });
           if (report.result === "fail") {
             exitCode = 1;
           }
         }
+      }
+
+      if (options.output) {
+        fs.writeFileSync(options.output, JSON.stringify(output, null, 2));
       }
 
       process.exit(exitCode);
