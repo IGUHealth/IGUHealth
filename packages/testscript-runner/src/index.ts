@@ -7,9 +7,9 @@ import {
   Loc,
   NullGuard,
   descend,
+  pointer as fhirPointer,
   get,
   root,
-  typedPointer,
 } from "@iguhealth/fhir-pointer";
 import { code, id, markdown } from "@iguhealth/fhir-types/r4/types";
 import {
@@ -673,7 +673,7 @@ async function runAssertion<Version extends FHIR_VERSION>(
           assertion.operator,
         ),
       } as NonNullable<TestReportAction<Version>["assert"]>;
-      state.logger.error(result);
+      state.logger.error({ pointer, assertion, result });
 
       return {
         state: { ...state, result: "fail" },
@@ -695,7 +695,7 @@ async function runAssertion<Version extends FHIR_VERSION>(
         ),
       } as NonNullable<TestReportAction<Version>["assert"]>;
 
-      state.logger.error(result);
+      state.logger.error({ pointer, assertion, result });
 
       return {
         state: { ...state, result: "fail" },
@@ -708,7 +708,7 @@ async function runAssertion<Version extends FHIR_VERSION>(
     result: "pass",
     message: "Assertions passed",
   } as NonNullable<TestReportAction<Version>["assert"]>;
-  state.logger.info(result);
+  state.logger.info({ pointer, assertion, result });
 
   return {
     state,
@@ -769,7 +769,7 @@ async function runOperation<Version extends FHIR_VERSION>(
         `[SUCCEEDED]<${operation.type?.code}> label: '${operation.label ?? ""}'` as markdown,
     };
 
-    state.logger.info(result);
+    state.logger.info({ pointer, operation, result });
     return {
       state: {
         ...state,
@@ -1080,10 +1080,14 @@ export async function run<Version extends FHIR_VERSION>(
     resourceType: "TestReport",
   } as Resource<Version, "TestReport">;
 
-  const pointer = typedPointer<
+  const pointer = fhirPointer<Version, ResourceType<Version>>(
+    "TestScript" as ResourceType<Version>,
+    testScript.id as id,
+  ) as unknown as Loc<
     Resource<Version, "TestScript">,
-    Resource<Version, "TestScript">
-  >();
+    Resource<Version, "TestScript">,
+    any
+  >;
 
   let state = await resolveFixtures(
     {
