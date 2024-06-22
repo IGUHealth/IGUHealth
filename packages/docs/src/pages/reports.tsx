@@ -24,7 +24,17 @@ function RenderTestScript({
           </span>
         </div>
 
-        <h1>{testScript.id}</h1>
+        <div className="mb-2">
+          <span className="text-slate-300 text-sm">{testScript.id}</span>{" "}
+        </div>
+        <div className="mb-4">
+          <h1 className="mr-2 mb-1">{testScript.title} </h1>
+          <div>
+            <span className="text-slate-500 text-base">
+              {testScript.description}
+            </span>{" "}
+          </div>
+        </div>
 
         <div>
           <div>

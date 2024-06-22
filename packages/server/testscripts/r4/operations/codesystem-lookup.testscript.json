@@ -1,6 +1,8 @@
 {
   "id": "codesystem-lookup-tests",
   "resourceType": "TestScript",
+  "title": "CodeSystem Lookup tests",
+  "description": "Tests the CodeSystem $lookup operation",
   "contained": [
     {
       "id": "name-lookup",

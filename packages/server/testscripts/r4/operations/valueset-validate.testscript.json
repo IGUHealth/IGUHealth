@@ -1,6 +1,8 @@
 {
   "id": "valueset-validate-tests",
   "resourceType": "TestScript",
+  "title": "ValueSet validate tests",
+  "description": "This test script tests the ValueSet $validate-code operation.",
   "contained": [
     {
       "id": "validate-male",

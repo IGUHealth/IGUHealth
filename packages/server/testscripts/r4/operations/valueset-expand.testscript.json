@@ -1,6 +1,8 @@
 {
   "id": "valueset-expand-tests",
   "resourceType": "TestScript",
+  "title": "ValueSet Expansion tests",
+  "description": "Test the $expand operation for the ValueSet resource.",
   "contained": [
     {
       "id": "valueset-gender-expand",
