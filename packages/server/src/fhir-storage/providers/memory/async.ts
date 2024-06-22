@@ -557,6 +557,7 @@ export function createArtifactMemoryDatabase<CTX extends FHIRServerCTX>({
   const r4Resources: r4.Resource[] = r4
     .map((resourceType) =>
       loadArtifacts({
+        silence: true,
         fhirVersion: R4,
         resourceType,
         packageLocation: path.join(
@@ -581,6 +582,7 @@ export function createArtifactMemoryDatabase<CTX extends FHIRServerCTX>({
   const r4bResources: r4b.Resource[] = r4b
     .map((resourceType) =>
       loadArtifacts({
+        silence: true,
         fhirVersion: R4B,
         resourceType,
         packageLocation: path.join(

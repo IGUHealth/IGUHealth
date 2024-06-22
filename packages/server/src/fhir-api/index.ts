@@ -558,6 +558,8 @@ export async function associateServicesKoaMiddleware<State, Context>(
 > {
   const fhirServices = await createFHIRServices(pool);
 
+  fhirServices.logger.info("FHIR Services created");
+
   return async (ctx, next) => {
     ctx.FHIRContext = fhirServices;
     await next();
