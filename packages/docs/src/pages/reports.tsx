@@ -209,8 +209,8 @@ export default function RenderReports() {
             <table>
               <tr>
                 <th>id</th>
-                <th>title</th>
-                <th className="w-[100%]">description</th>
+                <th className="w-[30%]">title</th>
+                <th className="w-[70%]">description</th>
                 <th>Status</th>
               </tr>
               {testScripts.map((testScript) => {
