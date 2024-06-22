@@ -74,17 +74,25 @@ export function configurationCommands(command: Command) {
   command
     .command("switch-tenant")
     .description("Switch tenant to use to add a tenant use add-tenant")
-    .action(async () => {
+    .option("-t, --tenant <tenant>", "Tenant name")
+    .action(async (options) => {
       const config = loadConfig(CONFIG_LOCATION);
-      const defaultTenant = await inquirer.select({
-        message: "Switch tenant to use",
-        choices: config.tenants.map((t) => ({
-          name: t.name,
-          value: t.name,
-        })),
-      });
 
-      saveConfig(CONFIG_LOCATION, { ...config, defaultTenant });
+      if (options.tenant) {
+        const tenant = config.tenants.find((t) => t.name === options.tenant);
+        if (!tenant) throw new Error("No tenant found with that name");
+        saveConfig(CONFIG_LOCATION, { ...config, defaultTenant: tenant.name });
+      } else {
+        const defaultTenant = await inquirer.select({
+          message: "Switch tenant to use",
+          choices: config.tenants.map((t) => ({
+            name: t.name,
+            value: t.name,
+          })),
+        });
+
+        saveConfig(CONFIG_LOCATION, { ...config, defaultTenant });
+      }
     });
 
   command
@@ -105,30 +113,47 @@ export function configurationCommands(command: Command) {
   command
     .command("add-tenant")
     .description("Add a tenant to the configuration file")
-    .action(async () => {
+    .option("-u, --url <url>", "Tenant url")
+    .option("-i, --id <id>", "Tenant id")
+    .option("-n, --name <name>", "Tenant name")
+    .option("--client-id <clientId>", "Client id")
+    .option("--client-secret <clientSecret>", "Client secret")
+    .action(async (options) => {
       const config = loadConfig(CONFIG_LOCATION);
 
-      const apiOrigin = await inquirer.input({
-        message: "Enter the API origin example:",
-        default: "https://api.iguhealth.app",
-      });
+      const apiOrigin = options.url
+        ? options.url
+        : await inquirer.input({
+            message: "Enter the API origin example:",
+            default: "https://api.iguhealth.app",
+          });
 
-      const id = await inquirer.input({ message: "Enter tenant id:" });
-      const name = await inquirer.input({
-        message: "Enter tenant name:",
-        validate: async (value) => {
-          const existingTenant = config.tenants.find((t) => t.name === value);
-          return existingTenant !== undefined
-            ? `Tenant with name '${value}' already exists. Must be unique.`
-            : true;
-        },
-      });
-      const client_id = await inquirer.input({
-        message: "Enter client id:",
-      });
-      const client_secret = await inquirer.password({
-        message: "Enter client secret:",
-      });
+      const id = options.id
+        ? options.id
+        : await inquirer.input({ message: "Enter tenant id:" });
+      const name = options.name
+        ? options.name
+        : await inquirer.input({
+            message: "Enter tenant name:",
+            validate: async (value) => {
+              const existingTenant = config.tenants.find(
+                (t) => t.name === value,
+              );
+              return existingTenant !== undefined
+                ? `Tenant with name '${value}' already exists. Must be unique.`
+                : true;
+            },
+          });
+      const client_id = options.clientId
+        ? options.clientId
+        : await inquirer.input({
+            message: "Enter client id:",
+          });
+      const client_secret = options.clientSecret
+        ? options.clientSecret
+        : await inquirer.password({
+            message: "Enter client secret:",
+          });
 
       config.tenants.push({
         api_origin: apiOrigin,

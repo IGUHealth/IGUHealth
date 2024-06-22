@@ -38,6 +38,18 @@ jobs:
         run: yarn eslint packages/server --quiet && yarn eslint packages/components --quiet && yarn eslint packages/admin-app --quiet
   server-tests:
     runs-on: ubuntu-latest
+    env:
+      NODE_ENV: development
+      API_URL: http://localhost:3000
+      FHIR_DATABASE_NAME: postgres
+      FHIR_DATABASE_HOST: localhost
+      FHIR_DATABASE_PORT: 5432
+      FHIR_DATABASE_PASSWORD: "postgres"
+      FHIR_DATABASE_USERNAME: postgres
+      REDIS_HOST: localhost
+      REDIS_PORT: 6379
+      SESSION_COOKIE_SECRETS: "session-secret"
+      RATE_LIMIT_MAX: 10000000
     services:
       redis:
         # Docker Hub image
@@ -71,18 +83,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Ran into this issue [https://github.com/crate-ci/typos/issues/347]
-      # Because action appears to be diffing off main and overrides exclude extends
-      # It will trigger this. So we are disabling it for now.
-      # May move to different lib or just fork the action and alter logic later.
-
-      # - name: typos-action
-      #   uses: crate-ci/typos@bd033903f43a309e5226c11a04457034edefb115
-      #   # https://github.com/crate-ci/typos/blob/master/docs/github-action.md
-      #   with:
-      #     files: *.md
-      #     config: ./typos.config.toml
-
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
@@ -101,35 +101,31 @@ jobs:
       - name: Build
         run: sh install.sh
 
-      - name: start server
-        run: yarn workspace @iguhealth/server migrate up && yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/system/api/v1/fhir/r4/metadata
-        env:
-          NODE_ENV: development
-          API_URL: http://localhost:3000
-          AUTH_PUBLIC_ACCESS: true
-          FHIR_DATABASE_NAME: postgres
-          FHIR_DATABASE_HOST: localhost
-          FHIR_DATABASE_PORT: 5432
-          FHIR_DATABASE_PASSWORD: "postgres"
-          FHIR_DATABASE_USERNAME: postgres
-          REDIS_HOST: localhost
-          REDIS_PORT: 6379
-          SESSION_COOKIE_SECRETS: "session-secret"
-          RATE_LIMIT_MAX: 10000000
+      - name: Migrate
+        run: yarn workspace @iguhealth/server migrate up
 
-      - name: Run tests and collect coverage
+      - name: Create Test environment.
+        run: |
+          yarn workspace @iguhealth/server cli admin tenant create -i test-system -t team -e test@iguhealth.app -p testing
+          CLIENT_APP=$(yarn workspace @iguhealth/server cli admin client-app create -t test-system -s mysecret)
+          yarn workspace @iguhealth/server iguhealth config add-tenant \
+           --name my-tenant \
+           --url http://localhost:3000 \
+           --id test-system \
+           --client-secret $(echo $CLIENT_APP | jq -r '.secret') \
+           --client-id $(echo $CLIENT_APP | jq -r '.id')
+      - name: Quick Test on root
+        run: cat ~/.iguhealth/config.toml
+
+      - name: Start server
+        run: yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/test-system/oidc/interaction/login
+
+      - name: TestScripts
+        run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts -o testreports
+
+      - name: Jest tests
         run: yarn workspaces foreach -A run test
         timeout-minutes: 10
-        env:
-          NODE_ENV: development
-          FHIR_DATABASE_NAME: postgres
-          FHIR_DATABASE_HOST: localhost
-          FHIR_DATABASE_PORT: 5432
-          FHIR_DATABASE_PASSWORD: "postgres"
-          FHIR_DATABASE_USERNAME: postgres
-          REDIS_HOST: localhost
-          SESSION_COOKIE_SECRETS: "session-secret"
-          REDIS_PORT: 6379
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3

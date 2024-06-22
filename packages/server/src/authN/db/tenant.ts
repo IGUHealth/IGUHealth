@@ -34,15 +34,17 @@ export class TenantManagement
     ctx: Omit<FHIRServerCTX, "tenant" | "user">,
     model: Partial<s.tenants.Insertable>,
   ): Promise<s.tenants.JSONSelectable> {
-    const tenantId = generateTenantId();
+    const tenantId =
+      typeof model.id === "string" ? model.id : generateTenantId();
+
     const tenant = await db
       .insert("tenants", {
+        ...model,
         id: tenantId,
         tenant: {
           id: tenantId,
           name: "Default",
         },
-        ...model,
       })
       .run(ctx.db);
 

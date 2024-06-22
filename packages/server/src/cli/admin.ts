@@ -3,7 +3,11 @@ import { Command } from "commander";
 import validator from "validator";
 import * as db from "zapatos/db";
 
-import { Membership, code } from "@iguhealth/fhir-types/r4/types";
+import {
+  ClientApplication,
+  Membership,
+  code,
+} from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt";
 
@@ -14,46 +18,83 @@ import { FHIRServerCTX, asSystemCTX } from "../fhir-api/types.js";
 import { createPGPool } from "../fhir-storage/providers/postgres/pg.js";
 import { FHIRTransaction } from "../fhir-storage/transactions.js";
 
-async function createTenant(ctx: Omit<FHIRServerCTX, "tenant" | "user">) {
-  return await FHIRTransaction(
-    ctx,
-    db.IsolationLevel.Serializable,
-    async (ctx) => {
-      const tenantManagement = new TenantManagement();
+async function getTenant(
+  ctx: Omit<FHIRServerCTX, "tenant" | "user">,
+  options: {
+    id?: string;
+    tier?: string;
+  },
+): Promise<Parameters<TenantManagement["create"]>[1]> {
+  const tenant: Parameters<TenantManagement["create"]>[1] = {
+    id: options.id,
+    subscription_tier: options.tier,
+  };
 
-      const tiers = await db.select("subscription_tier", {}).run(ctx.db);
+  console.log(options, tenant);
+  if (!tenant.subscription_tier) {
+    const tiers = await db.select("subscription_tier", {}).run(ctx.db);
 
-      const subtier = await inquirer.select({
-        message: "Select tenant tier",
-        default: tiers[2].id,
-        choices: tiers.map((t) => ({
-          name: t.name,
-          value: t.id,
-        })),
-      });
+    tenant.subscription_tier = await inquirer.select({
+      message: "Select tenant tier",
+      default: tiers[2].id,
+      choices: tiers.map((t) => ({
+        name: t.name,
+        value: t.id,
+      })),
+    });
+  }
 
-      const tenant = await tenantManagement.create(ctx, {
-        subscription_tier: subtier,
-      });
+  return tenant;
+}
 
-      const email = await inquirer.input({
+async function getMembership(options: {
+  email?: string;
+  password?: string;
+}): Promise<Membership> {
+  const email = options.email
+    ? options.email
+    : await inquirer.input({
         message: "Enter root user email.",
         validate: (input) => {
           return validator.isEmail(input);
         },
       });
 
-      const password = await inquirer.password({
-        message: "Enter root user password.",
-        // validate: (input) => {
-        //   return validator.isStrongPassword(input);
-        // },
-      });
+  return {
+    resourceType: "Membership",
+    role: "owner" as code,
+    email,
+  };
+}
+
+async function createTenant(
+  options: {
+    id?: string;
+    tier?: string;
+    email?: string;
+    password?: string;
+  },
+  ctx: Omit<FHIRServerCTX, "tenant" | "user">,
+) {
+  return await FHIRTransaction(
+    ctx,
+    db.IsolationLevel.Serializable,
+    async (ctx) => {
+      const tenantManagement = new TenantManagement();
+      const tenant = await tenantManagement.create(
+        ctx,
+        await getTenant(ctx, options),
+      );
+      const password = options.password
+        ? options.password
+        : await inquirer.password({
+            message: "Enter root user password.",
+          });
 
       const membership: Membership = await ctx.client.create(
         asSystemCTX({ ...ctx, tenant: tenant.id as TenantId }),
         R4,
-        { resourceType: "Membership", email, role: "owner" as code },
+        await getMembership(options),
       );
 
       const userManagement = new TenantUserManagement(tenant.id as TenantId);
@@ -78,10 +119,43 @@ function tenantCommands(command: Command) {
   command
     .command("create")
     .description("Create a new tenant.")
-    .action(async () => {
+    .option("-i, --id <id>", "Id for tenant")
+    .option("-t, --tier <tier>", "tier for tenant")
+    .option("-e, --email <email>", "Email for root user")
+    .option("-p, --password <password>", "Password for root user")
+    .action(async (options) => {
       const pool = createPGPool();
       const services = await createFHIRServices(pool);
-      await createTenant(services);
+
+      await createTenant(options, services);
+
+      process.exit(0);
+    });
+}
+
+function clientAppCommands(command: Command) {
+  command
+    .command("create")
+    .description("Create a new clientapp.")
+    .requiredOption("-t, --tenant <tenant>", "Id for tenant")
+    .requiredOption("-s, --secret <secret>", "Secret for client app")
+    .action(async (options) => {
+      const pool = createPGPool();
+      const services = await createFHIRServices(pool);
+
+      const clientApp = await services.client.create(
+        asSystemCTX({ ...services, tenant: options.tenant }),
+        R4,
+        {
+          name: "Tester",
+          secret: options.secret,
+          grantType: ["client_credentials"],
+          resourceType: "ClientApplication",
+          responseTypes: "token",
+        } as ClientApplication,
+      );
+
+      console.log(JSON.stringify(clientApp, undefined, 2));
 
       process.exit(0);
     });
@@ -89,4 +163,5 @@ function tenantCommands(command: Command) {
 
 export function adminCommands(command: Command) {
   tenantCommands(command.command("tenant"));
+  clientAppCommands(command.command("client-app"));
 }
