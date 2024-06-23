@@ -295,11 +295,12 @@ export function apiCommands(command: Command) {
   command
     .command("history_system")
     .argument("<fhirVersion>", "FHIR Version")
-    .action(async (userFHIRVersion) => {
+    .argument("[query]", "query")
+    .action(async (userFHIRVersion, query?: string) => {
       const client = createClient(CONFIG_LOCATION);
       const FHIRVersion = asFHIRType(userFHIRVersion);
 
-      const history = await client.history_system({}, FHIRVersion);
+      const history = await client.history_system({}, FHIRVersion, query);
       console.log(JSON.stringify(history, null, 2));
     });
 
@@ -307,13 +308,19 @@ export function apiCommands(command: Command) {
     .command("history_type")
     .argument("<fhirVersion>", "FHIR Version")
     .argument("<resourceType>", "Resource Type")
-    .action(async (userFHIRVersion, resourceType) => {
+    .argument("[query]", "query")
+    .action(async (userFHIRVersion, resourceType, query?: string) => {
       const client = createClient(CONFIG_LOCATION);
       const FHIRVersion = asFHIRType(userFHIRVersion);
 
       if (!validateResourceType(FHIRVersion, resourceType))
         throw new Error("Invalid resource type");
-      const history = await client.history_type({}, FHIRVersion, resourceType);
+      const history = await client.history_type(
+        {},
+        FHIRVersion,
+        resourceType,
+        query,
+      );
       console.log(JSON.stringify(history, null, 2));
     });
 
@@ -322,7 +329,8 @@ export function apiCommands(command: Command) {
     .argument("<fhirVersion>", "FHIR Version")
     .argument("<resourceType>", "Resource Type")
     .argument("<id>", "Resource ID")
-    .action(async (userFHIRVersion, resourceType, id) => {
+    .argument("[query]", "query")
+    .action(async (userFHIRVersion, resourceType, id, query?: string) => {
       const client = createClient(CONFIG_LOCATION);
       const FHIRVersion = asFHIRType(userFHIRVersion);
 
@@ -333,6 +341,7 @@ export function apiCommands(command: Command) {
         FHIRVersion,
         resourceType,
         id,
+        query,
       );
       console.log(JSON.stringify(history, null, 2));
     });

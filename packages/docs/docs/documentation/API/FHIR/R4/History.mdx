@@ -1,6 +1,10 @@
+import TabItem from "@theme/TabItem";
+import Tabs from "@theme/Tabs";
+
 # History
 
-All updates and mutations are stored within our database (including deletions). To query for the history of operations that have occured to a resource you can use the history api.
+All updates and mutations are stored within our database (including deletions). To query for the history of operations that have occured to resources you can use the history api.
+History API returns a bundle of resources that have been updated, created, or deleted.
 
 ## API
 
@@ -14,27 +18,67 @@ All updates and mutations are stored within our database (including deletions). 
 
 ### System level
 
-System level history encompasses all mutations that have happened at the system level:
-Example:
-
+System level history encompasses all mutations that have happened on the system level
+<Tabs>
+  <TabItem value="cli" label="CLI">
 ```bash
-curl --request GET --url https://{my-api}/_history?{parameters}
+iguhealth api history_system r4 _since-version=2550
 ```
+  </TabItem>
+  <TabItem value="curl" label="Curl">
+```bash
+ curl --request GET --header "Authorization: Header" --header "Content-Type: application/fhir+json" ${domain}/w/${tenant}/api/v1/fhir/r4/_history?_since-version=2550
+```
+  </TabItem>
+   <TabItem value="typescript" label="Typescript">
+```typescript
+await client.history_system({}, FHIRVersion, [{name: "_since-version", value: ["2550"]}]);
+```
+   </TabItem>
+</Tabs>
 
 ### Type level
 
 Type level history encompasses all mutations that have happened at the type level:
 Example:
 
+<Tabs>
+  <TabItem value="cli" label="CLI">
 ```bash
-curl --request GET --url https://{my-api}/{type}/_history?{parameters}
+iguhealth api history_type r4 $ResourceType _since-version=2550
 ```
+  </TabItem>
+  <TabItem value="curl" label="Curl">
+```bash
+ curl --request GET --header "Authorization: Header" --header "Content-Type: application/fhir+json" ${domain}/w/${tenant}/api/v1/fhir/r4/${ResourceType}/_history?_since-version=2550
+```
+  </TabItem>
+   <TabItem value="typescript" label="Typescript">
+```typescript
+await client.history_type({}, FHIRVersion, resourceType, [{name: "_since-version", value: ["2550"]}]);
+```
+   </TabItem>
+</Tabs>
 
 ### Instance level
 
 Instance level history encompasses all mutations that have happened to a single resource:
 Example:
 
+<Tabs>
+  <TabItem value="cli" label="CLI">
 ```bash
-curl --request GET --url https://{my-api}/{type}/{id}/_history?{parameters}
+iguhealth api history_instance r4 $ResourceType $ResourceId _since-version=2550
 ```
+  </TabItem>
+  <TabItem value="curl" label="Curl">
+```bash
+ curl --request GET --header "Authorization: Header" --header "Content-Type: application/fhir+json" ${domain}/w/${tenant}/api/v1/fhir/r4/${ResourceType}/${ResourceId}/_history?_since-version=2550
+```
+  </TabItem>
+   <TabItem value="typescript" label="Typescript">
+```typescript
+await client.history_instance({}, FHIRVersion, resourceType, id, [{name: "_since-version", value: ["2550"]}]);
+```
+   </TabItem>
+</Tabs>

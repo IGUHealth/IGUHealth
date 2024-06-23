@@ -16,9 +16,14 @@ iguhealth api batch r4 --data '$MY_BATCH_BUNDLE'
   </TabItem>
   <TabItem value="curl" label="Curl">
 ```bash
- curl --request POST --header "Authorization: Basic basic-auth" --header "Content-Type: application/fhir+json" --data '$MY_BATCH_BUNDLE' ${domain}/w/${tenant}/api/v1/fhir/r4
+ curl --request POST --header "Authorization: Header" --header "Content-Type: application/fhir+json" --data '$MY_BATCH_BUNDLE' ${domain}/w/${tenant}/api/v1/fhir/r4
 ```
   </TabItem>
+   <TabItem value="typescript" label="Typescript">
+```typescript
+await client.batch({}, R4, batchBundle);
+```
+   </TabItem>
 </Tabs>
 
 ## Bundle example

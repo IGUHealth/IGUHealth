@@ -1,0 +1,63 @@
+import TabItem from "@theme/TabItem";
+import Tabs from "@theme/Tabs";
+
+# Create
+
+The create operation is used to create a new resource on the server. The server will return the created resource with an id and meta information.
+For R4 Endpoint we support create operation for all data models under the [R4](/documentation/Data_Model/R4/AccessPolicy) Data model.
+
+
+
+## API
+<Tabs>
+  <TabItem value="cli" label="CLI">
+```bash
+iguhealth api create r4 --data '$MY_RESOURCE'
+```
+  </TabItem>
+  <TabItem value="curl" label="Curl">
+```bash
+ curl --request POST --header "Authorization: Header" --header "Content-Type: application/fhir+json" ${domain}/w/${tenant}/api/v1/fhir/r4/${resourceType}
+```
+  </TabItem>
+   <TabItem value="typescript" label="Typescript">
+```typescript
+await client.create({}, FHIRVersion, resource);
+```
+   </TabItem>
+</Tabs>
+
+## Create response
+The following is an example of a create response for a Patient resource.
+<Tabs>
+<TabItem value="request" label="Request">
+```bash
+iguhealth api create r4 --data '{"resourceType" :"Patient"}'
+```
+</TabItem>
+<TabItem value="response" label="Response">
+```json
+{
+  "id": "gfH47MJRa8wG9eH5XZwibo",
+  "meta": {
+    "extension": [
+      {
+        "url": "https://iguhealth.app/version-sequence",
+        "valueInteger": 2551
+      },
+      {
+        "url": "https://iguhealth.app/author",
+        "valueReference": {
+          "reference": "ClientApplication/5K89P9NcTjtw4wjy-POJsD"
+        }
+      }
+    ],
+    "versionId": "2551",
+    "lastUpdated": "2024-06-23T23:01:15.346+00:00"
+  },
+  "resourceType": "Patient"
+}
+```
+</TabItem>
+</Tabs>
+
