@@ -516,11 +516,80 @@ The following example tests Patient read operation.
 
 ### Teardown
 
+After tests have finished execution the teardown section is executed. This is used to clean up the testing environment to ensure that the system is in a consistent state.
+Often this involves deleting resources that were created during the setup phase and/or testing phase.
+
+#### Example
+
+The following example deletes all Patients with the tag `read-test`.
+
+```json
+{
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+          },
+          "resource": "Patient",
+          "param": "_tag=read-test",
+          "description": "Delete Patients created in test."
+        }
+      }
+    ]
+  }
+}
+```
 
 ## Variables
 
+Variables are how you store values that are to be used later in the testscript. These can be used to store values from responses, requests, or other sources.
+This allows you to write dynamic parameters for operations and assertions.
 
-# 
+|Field|Description|
+|---|---|
+|`variable.name`| The name of the variable |
+|`variable.sourceId`| The sourceId to get the value from |
+|`variable.expression`| The fhirpath expression to extract the value from the sourceId |
+
+### Using Variables
+Variables can be used under `action.operation.params` by using `${VariableName}` which is defined in `TestScript.variable.name`.
+
+### Example
+A full testscript of using variables can be found [here](https://github.com/IGUHealth/IGUHealth/blob/main/packages/server/testscripts/r4/history.testscript.json).
+
+The key pieces from that Testscript are as follows:
+<Tabs>
+  <TabItem value="define" label="Defining Variables" default>
+```json
+{
+  "variable": [
+    {
+      "name": "PatientUpdateLastUpdated",
+      "sourceId": "update-response",
+      "expression": "Patient.meta.lastUpdated"
+    }
+  ]
+}
+```
+  </TabItem>
+  <TabItem value="use-variables" label="Using Variables" default>
+```json
+{
+    "operation": {
+        "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "history"
+        },
+        "resource": "Patient",
+        "params": "_since-version=${Ver}"
+    }
+}
+```
+  </TabItem>
+</Tabs>
 
 ## How to run TestScripts
 <Tabs>
@@ -579,8 +648,12 @@ The following example tests Patient read operation.
 </TabItem>
 </Tabs>
 
+## Example TestScripts
+Examples for testscripts can be found in our repo [here](https://github.com/IGUHealth/IGUHealth/tree/main/packages/server/testscripts/r4).
+These can be used as a reference for writing your own testscripts.
+
 ## Our Test Reports
-You can view reports from our [testscripts](https://github.com/IGUHealth/IGUHealth/tree/main/packages/server/testscripts/r4) on this [site](https://iguhealth.app/reports).
+You can view reports for our testscripts [here](https://iguhealth.app/reports).
 Reports for [TestScripts](/documentation/Data_model/R4/TestScript) are generated as [TestReports](/documentation/Data_model/R4/TestReport).
 These are updated on each release of our code.
 
