@@ -10,8 +10,6 @@ The TestScript resource is used to define a series of operations that are to be 
 
 These operations can include creating, reading, updating, and deleting resources; searching for resources; validating resources; and executing custom operations.
 
-# Writing TestScripts
-
 ## Fixtures
 
 A fixture is a resource that is used for testing. This can be used as the body of a request using `TestScript.sourceId`. 
@@ -34,8 +32,6 @@ Below show both use cases:
   "fixture": [
     {
       "id": "fixture-patient-create",
-      "autocreate": false,
-      "autodelete": false,
       "resource": {
         "reference": "#patient-chalmers",
         "display": "Peter Chalmers"
@@ -52,8 +48,6 @@ Below show both use cases:
   "fixture": [
     {
       "id": "fixture-patient-create",
-      "autocreate": false,
-      "autodelete": false,
       "resource": {
         "reference": "Patient/123"
       }
