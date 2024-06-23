@@ -430,8 +430,71 @@ The following fields are used to define an assertion:
 ### Test
 ### Teardown
 
-# Running TestScripts
-## CLI
-## SDK
+
+## Variables
 
 
+# 
+
+## How to run TestScripts:
+
+<Tabs>
+  <TabItem value="cli" label="CLI" default>
+1. Install the CLI:
+    ```bash
+    npm i -g @iguhealth/cli
+    ```
+    __Setup__:
+    Refer to the tutorial on setting up CLI for IGUHealth which can be found [here](/documentation/Tutorials/SETUP_CLI).
+
+2. To execute testscripts run the following:
+    ```bash
+    iguhealth test run -i tesetscripts -o output.json
+    ```
+
+    * `-i` is the input directory/file for your testscripts.
+    * `-o` is the output file for the results of the testscripts.
+</TabItem>
+<TabItem value="sdk" label="SDK" >
+1. Install the SDK
+    ```bash
+    npm i @iguhealth/testscript-runner
+    ```
+3. Use the SDK in code
+    ```typescript
+    import { pino } from "pino";
+
+    import httpClient from "@iguhealth/client/http";
+    import * as ts from "@iguhealth/testscript-runner";
+
+
+    async function executeTestScript<Version extends FHIR_VERSION>(
+    fhirVersion: Version,
+    testScript: Resource<Version, "TestScript">,
+    ): Promise<Resource<Version, "TestReport">> {
+    const logger = pino<string>({
+        transport: {
+        target: process.env.NODE_ENV !== "production" ? "pino-pretty" : "",
+        },
+    });
+
+    const report = await ts.run(
+        logger,
+        httpClient({
+            url: "https://my-fhir-server.com",
+            getAccessToken: async function () { return "my-token" }
+        }),
+        fhirVersion,
+        testScript,
+    );
+
+    return report;
+    }
+    ```
+</TabItem>
+</Tabs>
+
+## Source Code
+
+The source code for our testscript runner can be found [here](https://github.com/IGUHealth/IGUHealth/tree/main/packages/testscript-runner).
+And is Licensed under the BSD-3-Clause license.
