@@ -489,6 +489,7 @@ export async function createFHIRServices(
           levelsSupported: ["system", "type", "instance"],
           resourcesSupported: R4_DB_TYPES,
           interactionsSupported: [
+            "vread-request",
             "read-request",
             "search-request",
             "create-request",
@@ -504,6 +505,7 @@ export async function createFHIRServices(
           levelsSupported: ["system", "type", "instance"],
           resourcesSupported: R4B_DB_TYPES,
           interactionsSupported: [
+            "vread-request",
             "read-request",
             "search-request",
             "create-request",
