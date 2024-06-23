@@ -946,7 +946,7 @@ async function runSetup<Version extends FHIR_VERSION>(
   const actions = get(pointer, state.testScript)?.action ?? [];
   for (let i = 0; i < actions.length; i++) {
     const output = await runAction(
-      state,
+      curState,
       descend(descend(pointer, "action"), i),
     );
     curState = output.state;
@@ -972,7 +972,7 @@ async function runTeardown<Version extends FHIR_VERSION>(
   const actions = get(pointer, state.testScript)?.action ?? [];
   for (let i = 0; i < actions.length; i++) {
     const output = await runOperation(
-      state,
+      curState,
       descend(descend(descend(pointer, "action"), i), "operation"),
     );
     curState = output.state;
