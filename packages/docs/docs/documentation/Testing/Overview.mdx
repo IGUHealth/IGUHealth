@@ -426,8 +426,94 @@ The following fields are used to define an assertion:
 </Tabs>
 
 ## Flow
+
+This covers the order of how actions are executed.
+
 ### Setup
+
+After fixtures are loaded `Testscript.setup` actions are executed. These are used to setup the testing environment.
+#### Example
+The following setups a Patient for testing
+```json
+{
+  "setup": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "create"
+          },
+          "resource": "Patient",
+          "sourceId": "fixture-patient-create",
+          "responseId": "create-response"
+        }
+      },
+      {
+        "assert": {
+          "label": "01-ReadPatientOK",
+          "description": "Confirm patient created.",
+          "direction": "response",
+          "resource": "Patient"
+        }
+      },
+      {
+        "assert": {
+          "label": "Confirm first name is Peter",
+          "expression": "Patient.name.given[0]",
+          "value": "Peter"
+        }
+      }
+    ]
+  }
+}
+```
+
 ### Test
+
+After setup individual tests are executed. These are defined in `TestScript.test`. Each test is a series of actions that are executed in order.
+
+#### Example
+The following example tests Patient read operation.
+```json
+{
+  "test": [
+    {
+      "id": "Read Patient",
+      "name": "Create Patient",
+      "description": "Create a Patient and validate response.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "read"
+            },
+            "targetId": "create-response"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Patient.id",
+            "operator": "equals",
+            "compareToSourceId": "create-response",
+            "compareToSourceExpression": "Patient.id"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Patient.meta.versionId",
+            "operator": "equals",
+            "compareToSourceId": "create-response",
+            "compareToSourceExpression": "Patient.meta.versionId"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
 ### Teardown
 
 
