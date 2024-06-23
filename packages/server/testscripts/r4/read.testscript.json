@@ -1,0 +1,103 @@
+{
+  "id": "read-patient",
+  "title": "Read tests",
+  "description": "Creates a patient and validate read response.",
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "id": "patient-chalmers",
+      "resourceType": "Patient",
+      "meta": {
+        "tag": [{ "code": "read-test" }]
+      },
+      "name": [{ "family": "Chalmers", "given": ["Peter"] }]
+    }
+  ],
+  "fixture": [
+    {
+      "id": "fixture-patient-create",
+      "resource": {
+        "reference": "#patient-chalmers"
+      }
+    }
+  ],
+  "setup": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "create"
+          },
+          "resource": "Patient",
+          "sourceId": "fixture-patient-create",
+          "responseId": "create-response"
+        }
+      },
+      {
+        "assert": {
+          "label": "01-ReadPatientOK",
+          "description": "Confirm patient created.",
+          "direction": "response",
+          "resource": "Patient"
+        }
+      },
+      {
+        "assert": {
+          "label": "Confirm first name is Peter",
+          "expression": "Patient.name.given[0]",
+          "value": "Peter"
+        }
+      }
+    ]
+  },
+  "test": [
+    {
+      "id": "Read Patient",
+      "name": "Read Patient",
+      "description": "Read a Patient and validate response.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "read"
+            },
+            "targetId": "create-response"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Patient.id",
+            "operator": "equals",
+            "compareToSourceId": "create-response",
+            "compareToSourceExpression": "Patient.id"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Patient.meta.versionId",
+            "operator": "equals",
+            "compareToSourceId": "create-response",
+            "compareToSourceExpression": "Patient.meta.versionId"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+          },
+          "resource": "Patient",
+          "param": "_tag=read-test",
+          "description": "Delete Patients created in test."
+        }
+      }
+    ]
+  }
+}

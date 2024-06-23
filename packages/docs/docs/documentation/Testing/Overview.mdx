@@ -1,0 +1,663 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Overview
+
+For testing, we use the [TestScript](/documentation/Data_model/R4/TestScript) resource.
+
+This resource defines a set of actions and assertions to test a FHIR API.
+The TestScript resource is used to define a series of operations that are to be performed on a system under test.
+
+These operations can include creating, reading, updating, and deleting resources; searching for resources; validating resources; and executing custom operations.
+
+# Writing TestScripts
+
+## Fixtures
+
+A fixture is a resource that is used for testing. This can be used as the body of a request using `TestScript.sourceId`. 
+A fixture is resolved by the Testscript engine using `TestScript.fixture`. These can either be local or remote references.
+
+Below show both use cases:
+<Tabs>
+  <TabItem value="contained" label="Contained" default>
+  Resolution will resolve the fixture under `.contained` if reference starts with `#`. It will search for the resource with the id after `#`.
+```json
+{
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "id": "patient-chalmers",
+      "resourceType": "Patient",
+      "name": [{ "family": "Chalmers", "given": ["Peter"] }]
+    }
+  ],
+  "fixture": [
+    {
+      "id": "fixture-patient-create",
+      "autocreate": false,
+      "autodelete": false,
+      "resource": {
+        "reference": "#patient-chalmers",
+        "display": "Peter Chalmers"
+      }
+    }
+  ]
+}
+```
+  </TabItem>
+  <TabItem value="remote" label="Remote">
+```json
+{
+  "resourceType": "TestScript",
+  "fixture": [
+    {
+      "id": "fixture-patient-create",
+      "autocreate": false,
+      "autodelete": false,
+      "resource": {
+        "reference": "Patient/123"
+      }
+    }
+  ]
+}
+```
+  </TabItem>
+</Tabs>
+
+### Invalid Data
+For using invalid data you must wrap the data in a Binary resource.
+The `Binary.contentType` must be `application/fhir+json` and the data should be a stringified JSON object.
+
+Below is an example of an invalid Patient resource with `Patient.name` is a string instead of an array:
+```json
+{
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "id": "bad-patient",
+      "resourceType": "Binary",
+      "contentType": "application/fhir+json",
+      "data": "{\"resourceType\":\"Patient\",\"name\": \"Bad name\"}"
+    }
+  ],
+  "fixture": [
+    {
+      "id": "fixture-bad-patient",
+      "resource": {
+        "reference": "#bad-patient"
+      }
+    }
+  ]
+}
+```
+### Patches
+
+To test Json Patches you must use Binary resource in the same way as invalid data.
+The `Binary.contentType` must be `application/fhir+json` and the data should be a stringified JSON object of the patches.
+
+Below is an example of submitting a patch to a Patient resource that adds a name:
+```json
+{
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "id": "patient1",
+      "resourceType": "Patient",
+      "meta": {
+        "tag": [{ "code": "patch-testing" }]
+      }
+    },
+    {
+      "id": "patch1",
+      "resourceType": "Binary",
+      "contentType": "application/fhir+json",
+      "data": "[{\"op\":\"add\",\"path\":\"/name\",\"value\":[]},{\"op\":\"add\",\"path\":\"/name/0\",\"value\":{}},{\"op\":\"add\",\"path\":\"/name/0/family\",\"value\":\"Smith\"}]"
+    }
+  ],
+  "fixture": [
+    {
+      "id": "fixture-patient1",
+      "resource": {
+        "reference": "#patient1"
+      }
+    },
+    {
+      "id": "fixture-patch1",
+      "resource": {
+        "reference": "#patch1"
+      }
+    }
+  ],
+  "test": [
+    {
+      "id": "01-Create Patient",
+      "name": "Create Patient",
+      "description": "Create a Patient and validate response.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "create"
+            },
+            "resource": "Patient",
+            "sourceId": "fixture-patient1",
+            "responseId": "create-response"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "patch"
+            },
+            "targetId": "create-response",
+            "resource": "Patient",
+            "sourceId": "fixture-patch1"
+          }
+        }
+    ]
+    }
+  ]
+}
+```
+
+### Using Fixtures
+
+To use a fixture in a test, you must reference the fixture by its id in the `sourceId` field of the operation.
+The `sourceId` field is used to reference the fixture that is to be used in the operation.
+
+Below is an example of using a fixture in a test:
+
+```json
+{
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "id": "patient-chalmers",
+      "resourceType": "Patient",
+      "name": [{ "family": "Chalmers", "given": ["Peter"] }]
+    }
+  ],
+  "fixture": [
+    {
+      "id": "fixture-patient-create",
+      "resource": {
+        "reference": "#patient-chalmers"
+      }
+    }
+  ],
+  "test": [
+    {
+      "id": "01-create-patient",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "create"
+            },
+            "resource": "Patient",
+            "sourceId": "fixture-patient-create"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+## Operations
+
+Operations are how you interact with the FHIR server. These are API calls that you can make to the server to perform actions on resources.
+
+### Supported Operations
+
+* search
+* create
+* update
+* read
+* delete
+* invoke
+* patch
+* vread
+* batch
+* transaction
+* history
+
+### Writing Operations
+The following fields are used to define an operation:
+|Field|Description|
+|---|---|
+|`action.operation.type`| is used to define the type of operation that is to be performed.|
+|`action.operation.resource`| is used to define the resource type that the operation is to be performed on.|
+|`action.operation.sourceId`| is used to reference the fixture that is to be used in the operation.|
+|`action.operation.responseId`| defines the fixtureId for the response to be used by later actions.|
+|`action.operation.targetId`| is used to reference a response fixture. This is used to derive the resourceType, Id, and versionId of the resource for read, vread operations.|
+|`action.operation.params`| is used to define the parameters that are to be used in the operation.|
+
+#### Examples
+<Tabs>
+  <TabItem value="search" label="Search" default>
+```json
+{
+    "operation": {
+        "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "search"
+        },
+        "resource": "Patient",
+        "params": "name=Bob"
+    }
+}
+```
+  </TabItem>
+  <TabItem value="create" label="Create" default>
+```json
+{
+    "operation": {
+        "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "create"
+        },
+        "resource": "Patient",
+        "sourceId": "fixture-patient-create",
+        "responseId": "create-response"
+    }
+}
+```
+  </TabItem>
+  <TabItem value="update" label="Update" default>
+```json
+{
+    "operation": {
+        "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "update"
+        },
+        "resource": "Patient",
+        "targetId": "create-response",
+        "sourceId": "fixture-patient1",
+        "responseId": "update-response"
+    }
+}
+```
+  </TabItem>
+  <TabItem value="read" label="Read" default>
+```json
+{
+    "operation": {
+        "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "read"
+        },
+        "targetId": "create-response"
+    }
+}
+```
+  </TabItem>
+  <TabItem value="delete" label="Delete" default>
+```json
+{
+    "operation": {
+        "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+        },
+        "params": "_tag=batch-test",
+        "description": "Delete the batch data."
+    }
+}
+```
+  </TabItem>
+  <TabItem value="invoke" label="Invoke" default>
+```json
+{
+    "operation": {
+        "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "invoke"
+        },
+        "url": "expand",
+        "resource": "ValueSet",
+        "sourceId": "valueset-gender-expand"
+    }
+}
+```
+  </TabItem>
+  <TabItem value="patch" label="Patch" default>
+```json
+{
+    "operation": {
+        "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "patch"
+        },
+        "targetId": "create-response",
+        "resource": "Patient",
+        "sourceId": "fixture-patch1"
+    }
+}
+```
+  </TabItem>
+  <TabItem value="batch" label="Batch" default>
+```json
+{
+    "operation": {
+        "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "batch"
+        },
+        "sourceId": "fixture-batch"
+    }
+}
+```
+  </TabItem>
+  <TabItem value="transaction" label="Transaction" default>
+```json
+{
+    "operation": {
+        "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "transaction"
+        },
+        "sourceId": "fixture-transaction",
+        "responseId": "transaction-response"
+    }
+}
+```
+  </TabItem>
+  <TabItem value="history" label="History" default>
+```json
+{
+    "operation": {
+        "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "history"
+        },
+        "resource": "Patient",
+        "targetId": "create-response",
+        "sourceId": "fixture-patient1"
+    }
+}
+```
+  </TabItem>
+</Tabs>
+
+
+## Assertions
+Assertions are used to validate the response, request from operations. These are used to ensure that the system under test is behaving as expected.
+
+The following fields are used to define an assertion:
+|Field|Description|
+|---|---|
+|`action.assert.expression`| A FHIRPath expression that is used to evaluate the response.|
+|`action.assert.sourceId`| By default the source will be the last operations response (or request if direction is request).|
+|`action.assert.direction`| By default the direction is response which will use the response from the last operation. This can be set to request to use the last operations request.|
+|`action.assert.operator`| The type of operator to use for the assertion `equals`, `notEquals`, `in`, `notIn`, `greaterThan`, `lessThan`, `empty`, `notEmpty`, `contains`, `notContains`, `eval`|
+|`action.assert.value`| The value to compare to.|
+|`action.assert.compareToSourceId`| The sourceId to compare to.|
+|`action.assert.compareToSourceExpression`| The expression to derive a value from the compareToSourceId.|
+
+### Examples
+<Tabs>
+  <TabItem value="compareToSource" label="Assert against Source" default>
+```json
+{
+    "assert": {
+        "expression": "Bundle.entry.resource.id",
+        "compareToSourceExpression": "Patient.id",
+        "compareToSourceId": "create-response"
+    }
+}
+```
+  </TabItem>
+  <TabItem value="compareToValue" label="Assert against Value" default>
+```json
+{
+    "assert": {
+        "expression": "Bundle.type",
+        "operator": "equals",
+        "value": "batch-response"
+    }
+}
+```
+  </TabItem>
+</Tabs>
+
+## Flow
+
+This covers the order of how actions are executed.
+
+### Setup
+
+After fixtures are loaded `Testscript.setup` actions are executed. These are used to setup the testing environment.
+#### Example
+The following setups a Patient for testing
+```json
+{
+  "setup": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "create"
+          },
+          "resource": "Patient",
+          "sourceId": "fixture-patient-create",
+          "responseId": "create-response"
+        }
+      },
+      {
+        "assert": {
+          "label": "01-ReadPatientOK",
+          "description": "Confirm patient created.",
+          "direction": "response",
+          "resource": "Patient"
+        }
+      },
+      {
+        "assert": {
+          "label": "Confirm first name is Peter",
+          "expression": "Patient.name.given[0]",
+          "value": "Peter"
+        }
+      }
+    ]
+  }
+}
+```
+
+### Test
+
+After setup individual tests are executed. These are defined in `TestScript.test`. Each test is a series of actions that are executed in order.
+
+#### Example
+The following example tests Patient read operation.
+```json
+{
+  "test": [
+    {
+      "id": "Read Patient",
+      "name": "Create Patient",
+      "description": "Create a Patient and validate response.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "read"
+            },
+            "targetId": "create-response"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Patient.id",
+            "operator": "equals",
+            "compareToSourceId": "create-response",
+            "compareToSourceExpression": "Patient.id"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Patient.meta.versionId",
+            "operator": "equals",
+            "compareToSourceId": "create-response",
+            "compareToSourceExpression": "Patient.meta.versionId"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Teardown
+
+After tests have finished execution the teardown section is executed. This is used to clean up the testing environment to ensure that the system is in a consistent state.
+Often this involves deleting resources that were created during the setup phase and/or testing phase.
+
+#### Example
+
+The following example deletes all Patients with the tag `read-test`.
+
+```json
+{
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+          },
+          "resource": "Patient",
+          "param": "_tag=read-test",
+          "description": "Delete Patients created in test."
+        }
+      }
+    ]
+  }
+}
+```
+
+## Variables
+
+Variables are how you store values that are to be used later in the testscript. These can be used to store values from responses, requests, or other sources.
+This allows you to write dynamic parameters for operations and assertions.
+
+|Field|Description|
+|---|---|
+|`variable.name`| The name of the variable |
+|`variable.sourceId`| The sourceId to get the value from |
+|`variable.expression`| The fhirpath expression to extract the value from the sourceId |
+
+### Using Variables
+Variables can be used under `action.operation.params` by using `${VariableName}` which is defined in `TestScript.variable.name`.
+
+### Example
+A full testscript of using variables can be found [here](https://github.com/IGUHealth/IGUHealth/blob/main/packages/server/testscripts/r4/history.testscript.json).
+
+The key pieces from that Testscript are as follows:
+<Tabs>
+  <TabItem value="define" label="Defining Variables" default>
+```json
+{
+  "variable": [
+    {
+      "name": "PatientUpdateLastUpdated",
+      "sourceId": "update-response",
+      "expression": "Patient.meta.lastUpdated"
+    }
+  ]
+}
+```
+  </TabItem>
+  <TabItem value="use-variables" label="Using Variables" default>
+```json
+{
+    "operation": {
+        "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "history"
+        },
+        "resource": "Patient",
+        "params": "_since-version=${Ver}"
+    }
+}
+```
+  </TabItem>
+</Tabs>
+
+## How to run TestScripts
+<Tabs>
+  <TabItem value="cli" label="CLI" default>
+1. Install the CLI:
+    ```bash
+    npm i -g @iguhealth/cli
+    ```
+    __Setup__:
+    Refer to the tutorial on setting up CLI for IGUHealth which can be found [here](/documentation/Tutorials/SETUP_CLI).
+
+2. To execute testscripts run the following:
+    ```bash
+    iguhealth test run -i tesetscripts -o output.json
+    ```
+
+    * `-i` is the input directory/file for your testscripts.
+    * `-o` is the output file for the results of the testscripts.
+</TabItem>
+<TabItem value="sdk" label="SDK" >
+1. Install the SDK
+    ```bash
+    npm i @iguhealth/testscript-runner
+    ```
+3. Use the SDK in code
+    ```typescript
+    import { pino } from "pino";
+
+    import httpClient from "@iguhealth/client/http";
+    import * as ts from "@iguhealth/testscript-runner";
+
+
+    async function executeTestScript<Version extends FHIR_VERSION>(
+    fhirVersion: Version,
+    testScript: Resource<Version, "TestScript">,
+    ): Promise<Resource<Version, "TestReport">> {
+    const logger = pino<string>({
+        transport: {
+        target: process.env.NODE_ENV !== "production" ? "pino-pretty" : "",
+        },
+    });
+
+    const report = await ts.run(
+        logger,
+        httpClient({
+            url: "https://my-fhir-server.com",
+            getAccessToken: async function () { return "my-token" }
+        }),
+        fhirVersion,
+        testScript,
+    );
+
+    return report;
+    }
+    ```
+</TabItem>
+</Tabs>
+
+## Example TestScripts
+Examples for testscripts can be found in our repo [here](https://github.com/IGUHealth/IGUHealth/tree/main/packages/server/testscripts/r4).
+These can be used as a reference for writing your own testscripts.
+
+## Our Test Reports
+You can view reports for our testscripts [here](https://iguhealth.app/reports).
+Reports for [TestScripts](/documentation/Data_model/R4/TestScript) are generated as [TestReports](/documentation/Data_model/R4/TestReport).
+These are updated on each release of our code.
+
+## Source Code
+
+The source code for our testscript runner can be found [here](https://github.com/IGUHealth/IGUHealth/tree/main/packages/testscript-runner).
+And is Licensed under the BSD-3-Clause license.
