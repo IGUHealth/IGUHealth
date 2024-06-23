@@ -54,8 +54,8 @@
   "test": [
     {
       "id": "Read Patient",
-      "name": "Create Patient",
-      "description": "Create a Patient and validate response.",
+      "name": "Read Patient",
+      "description": "Read a Patient and validate response.",
       "action": [
         {
           "operation": {
