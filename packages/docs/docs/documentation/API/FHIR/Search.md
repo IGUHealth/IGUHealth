@@ -1,4 +1,4 @@
-# FHIR Search
+# Search
 
 This is an overview of what we support from the FHIR search [specification](https://hl7.org/fhir/r4/search).
 
