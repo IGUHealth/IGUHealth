@@ -1,0 +1,164 @@
+{
+  "id": "include-tests",
+  "title": "Include tests",
+  "description": "Test the _include parameter",
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "id": "transaction",
+      "resourceType": "Bundle",
+      "type": "transaction",
+      "entry": [
+        {
+          "fullUrl": "local_patient",
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "include-test" }]
+            },
+            "generalPractitioner": [{ "reference": "local_practitioner" }]
+          }
+        },
+        {
+          "fullUrl": "local_practitioner",
+          "request": {
+            "method": "POST",
+            "url": "Practitioner"
+          },
+          "resource": {
+            "resourceType": "Practitioner",
+            "meta": {
+              "tag": [{ "code": "include-test" }]
+            },
+            "name": [{ "given": ["Bob"] }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Observation"
+          },
+          "resource": {
+            "meta": {
+              "tag": [{ "code": "include-test" }]
+            },
+            "status": "final",
+            "code": {
+              "coding": [
+                {
+                  "code": "test"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "local_patient"
+            },
+            "resourceType": "Observation"
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Observation"
+          },
+          "resource": {
+            "meta": {
+              "tag": [{ "code": "include-test" }]
+            },
+            "status": "final",
+            "code": {
+              "coding": [
+                {
+                  "code": "test2"
+                }
+              ]
+            },
+            "subject": {
+              "reference": "local_patient"
+            },
+            "resourceType": "Observation"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "name": "OBID",
+      "sourceId": "transaction-response",
+      "expression": "Bundle.entry[2].resource.id"
+    }
+  ],
+  "fixture": [
+    {
+      "id": "fixture-transaction",
+      "resource": {
+        "reference": "#transaction"
+      }
+    }
+  ],
+  "test": [
+    {
+      "id": "include-test",
+      "name": "Test include",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "transaction"
+            },
+            "sourceId": "fixture-transaction",
+            "responseId": "transaction-response"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "resource": "Observation",
+            "params": "_id=${OBID}&_include=Observation:subject"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.count()",
+            "value": "2"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry[0].resource.resourceType",
+            "value": "Observation"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry[1].resource.resourceType",
+            "value": "Patient"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+          },
+          "params": "_tag=include-test",
+          "description": "Delete the batch data."
+        }
+      }
+    ]
+  }
+}

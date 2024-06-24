@@ -14,7 +14,7 @@ import {
   searchParameterToTableName,
   searchResources,
 } from "../../../utilities/search/parameters.js";
-import { param_types_supported } from "../constants.js";
+import { isSupportedSearchType, param_types_supported } from "../constants.js";
 
 type SORT_DIRECTION = "ascending" | "descending";
 
@@ -94,7 +94,16 @@ export async function deriveSortQuery<Version extends FHIR_VERSION>(
   // Need to create LEFT JOINS on the queries so we can orderby postgres.
   const sortQueries = db.mapWithSeparator(
     sortInformation.map(({ direction, parameter }, sortOrder: number) => {
-      const table = searchParameterToTableName(fhirVersion, parameter.type);
+      const parameterType = parameter.type as string;
+      if (!isSupportedSearchType(parameterType)) {
+        throw new OperationError(
+          outcomeError(
+            "not-supported",
+            `Parameter of type '${parameter.type}' is not yet supported.`,
+          ),
+        );
+      }
+      const table = searchParameterToTableName(fhirVersion, parameterType);
       const sort_column_name = getSortColumn(sortOrder);
       const column_name = db.raw(getParameterSortColumn(direction, parameter));
       return db.sql` LEFT JOIN 

@@ -112,8 +112,11 @@ jobs:
       - name: Start server
         run: yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/test-system/oidc/interaction/login
 
-      - name: TestScripts
-        run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts
+      - name: R4 TestScripts
+        run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts/r4
+
+      - name: R4B TestScripts
+        run: yarn workspace @iguhealth/server iguhealth test run --fhir-version 4.3 -i testscripts/r4b
 
       - name: Jest tests
         run: yarn workspaces foreach -A run test

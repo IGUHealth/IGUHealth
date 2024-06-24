@@ -107,7 +107,7 @@ async function indexSearchParameter<
   switch (parameter.type) {
     case "quantity": {
       const quantity_indexes = (
-        await dataConversion(parameter, "quantity", evaluation)
+        await dataConversion(fhirVersion, parameter, "quantity", evaluation)
       ).map(
         (
           value,
@@ -162,7 +162,7 @@ async function indexSearchParameter<
       }
     }
     case "date": {
-      const date_indexes = (await dataConversion(parameter, "date", evaluation))
+      const date_indexes = (await dataConversion(fhirVersion, parameter, "date", evaluation))
         .flat()
         .map((value): s.r4_date_idx.Insertable | s.r4b_date_idx.Insertable => ({
           tenant: ctx.tenant,
@@ -215,6 +215,7 @@ async function indexSearchParameter<
     case "reference": {
       const references = (
         await dataConversion(
+          fhirVersion,
           parameter,
           "reference",
           evaluation,
@@ -301,7 +302,7 @@ async function indexSearchParameter<
       }
     }
     case "uri": {
-      const uri_indexes = (await dataConversion(parameter, "uri", evaluation))
+      const uri_indexes = (await dataConversion(fhirVersion, parameter, "uri", evaluation))
         .flat()
         .map((value): s.r4_uri_idx.Insertable | s.r4b_uri_idx.Insertable => ({
           tenant: ctx.tenant,
@@ -353,7 +354,7 @@ async function indexSearchParameter<
     }
     case "token": {
       const token_indexes = (
-        await dataConversion(parameter, "token", evaluation)
+        await dataConversion(fhirVersion, parameter, "token", evaluation)
       )
         .flat()
         .map(
@@ -409,7 +410,7 @@ async function indexSearchParameter<
     }
     case "number": {
       const number_indexes = (
-        await dataConversion(parameter, "number", evaluation)
+        await dataConversion(fhirVersion, parameter, "number", evaluation)
       ).map(
         (value): s.r4_number_idx.Insertable | s.r4b_number_idx.Insertable => {
           if (typeof value !== "number")
@@ -470,7 +471,7 @@ async function indexSearchParameter<
 
     case "string": {
       const string_indexes = (
-        await dataConversion(parameter, "string", evaluation)
+        await dataConversion(fhirVersion, parameter, "string", evaluation)
       )
         .flat()
         .map(

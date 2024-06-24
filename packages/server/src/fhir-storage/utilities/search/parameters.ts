@@ -13,7 +13,10 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { param_types_supported } from "../../providers/postgres/constants.js";
+import {
+  isSupportedSearchType,
+  param_types_supported,
+} from "../../providers/postgres/constants.js";
 
 export type SearchParameterResource = ParsedParameter<string | number> & {
   type: "resource";
@@ -61,39 +64,20 @@ export function getDecimalPrecision(value: number): number {
   return decimalPrecision;
 }
 
-type R4SearchTables =
-  | "r4_date_idx"
-  | "r4_number_idx"
-  | "r4_quantity_idx"
-  | "r4_reference_idx"
-  | "r4_string_idx"
-  | "r4_token_idx"
-  | "r4_uri_idx";
-
-type R4BSearchTables =
-  | "r4b_date_idx"
-  | "r4b_number_idx"
-  | "r4b_quantity_idx"
-  | "r4b_reference_idx"
-  | "r4b_string_idx"
-  | "r4b_token_idx"
-  | "r4b_uri_idx";
-
-type SearchTable<Version extends FHIR_VERSION> = Version extends R4
-  ? R4SearchTables
-  : R4BSearchTables;
-
-export function searchParameterToTableName<Version extends FHIR_VERSION>(
+export function searchParameterToTableName<
+  Version extends FHIR_VERSION,
+  Type extends string,
+>(
   fhirVersion: Version,
-  searchparameter_type: Resource<Version, "SearchParameter">["type"],
-): SearchTable<Version> {
-  if (param_types_supported.includes(searchparameter_type)) {
+  searchparameter_type: Type,
+): `${Version extends R4 ? "r4" : "r4b"}_${Type}_idx` {
+  if (isSupportedSearchType(searchparameter_type)) {
     switch (fhirVersion) {
       case R4B: {
-        return `r4b_${searchparameter_type}_idx` as SearchTable<Version>;
+        return `r4b_${searchparameter_type}_idx` as `${Version extends "4.0" ? "r4" : "r4b"}_${Type}_idx`;
       }
       case R4: {
-        return `r4_${searchparameter_type}_idx` as SearchTable<Version>;
+        return `r4_${searchparameter_type}_idx` as `${Version extends "4.0" ? "r4" : "r4b"}_${Type}_idx`;
       }
     }
   }

@@ -1,0 +1,120 @@
+{
+  "id": "custom-extensions",
+  "resourceType": "TestScript",
+  "title": "Custom extension tests",
+  "description": "This test script is used to verify that custom extensions are being added to the Patient resource. Specifically version-sequence and author.",
+  "contained": [
+    {
+      "id": "patient1",
+      "resourceType": "Patient",
+      "meta": {
+        "tag": [{ "code": "custom-extension-test" }]
+      }
+    },
+    {
+      "id": "patient2",
+      "resourceType": "Patient",
+      "meta": {
+        "tag": [{ "code": "custom-extension-test" }],
+        "extension": [
+          { "url": "https://test.com", "valueString": "test" },
+          { "url": "https://iguhealth.app/author", "valueString": "test" },
+          {
+            "url": "https://iguhealth.app/version-sequence",
+            "valueInteger": 1
+          }
+        ]
+      }
+    }
+  ],
+  "fixture": [
+    {
+      "id": "fixture-patient1",
+      "resource": {
+        "reference": "#patient1"
+      }
+    },
+    {
+      "id": "fixture-patient2",
+      "resource": {
+        "reference": "#patient2"
+      }
+    }
+  ],
+  "test": [
+    {
+      "id": "01-Create Patient",
+      "name": "Create Patient",
+      "description": "Create a Patient and validate response.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "create"
+            },
+            "resource": "Patient",
+            "sourceId": "fixture-patient1",
+            "responseId": "create-response"
+          }
+        },
+        {
+          "assert": {
+            "label": "01-ReadPatientOK",
+            "description": "Confirm patient created.",
+            "direction": "response",
+            "resource": "Patient"
+          }
+        },
+        {
+          "assert": {
+            "label": "Confirm expression extensions",
+            "expression": "Patient.meta.extension.where(url='https://iguhealth.app/version-sequence').valueInteger",
+            "operator": "greaterThan",
+            "value": "0"
+          }
+        },
+        {
+          "assert": {
+            "label": "Confirm expression extensions",
+            "expression": "Patient.meta.extension.where(url='https://iguhealth.app/author').valueReference.reference",
+            "operator": "contains",
+            "value": "ClientApplication"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "create"
+            },
+            "resource": "Patient",
+            "sourceId": "fixture-patient2",
+            "responseId": "create-response"
+          }
+        },
+        {
+          "assert": {
+            "label": "Confirm extensions from client are still present.",
+            "expression": "Patient.meta.extension.where(url='https://test.com').value",
+            "operator": "equals",
+            "value": "test"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+          },
+          "params": "_tag=custom-extension-test"
+        }
+      }
+    ]
+  }
+}

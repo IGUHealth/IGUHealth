@@ -127,6 +127,7 @@ function createErrorHandlingMiddleware<T>(): Koa.Middleware<
     try {
       await next();
     } catch (e) {
+      logger.error(e);
       if (isOperationError(e)) {
         const operationOutcome = e.outcome;
         const status = operationOutcome.issue
@@ -155,7 +156,6 @@ function createErrorHandlingMiddleware<T>(): Koa.Middleware<
           }
         }
       } else {
-        logger.error(e);
         MonitoringSentry.logError(e, ctx);
 
         // Resend to default koa error handler.

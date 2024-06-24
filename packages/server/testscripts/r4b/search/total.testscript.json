@@ -1,0 +1,216 @@
+{
+  "id": "total",
+  "resourceType": "TestScript",
+  "title": "Total tests",
+  "description": "This test verifies the total parameter off of Bundle.total",
+  "contained": [
+    {
+      "id": "patients",
+      "resourceType": "Bundle",
+      "type": "batch",
+      "entry": [
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "total-test" }]
+            },
+            "name": [{ "given": ["A"] }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "total-test" }]
+            },
+            "name": [{ "given": ["B"] }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "total-test" }]
+            },
+            "name": [{ "given": ["C"] }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "total-test" }]
+            },
+            "name": [{ "given": ["D"] }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "total-test" }]
+            },
+            "name": [{ "given": ["E"] }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "total-test" }]
+            },
+            "name": [{ "given": ["F"] }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "total-test" }]
+            },
+            "name": [{ "given": ["G"] }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "total-test" }]
+            },
+            "name": [{ "given": ["H"] }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "total-test" }]
+            },
+            "name": [{ "given": ["I"] }]
+          }
+        },
+        {
+          "request": {
+            "method": "POST",
+            "url": "Patient"
+          },
+          "resource": {
+            "resourceType": "Patient",
+            "meta": {
+              "tag": [{ "code": "total-test" }]
+            },
+            "name": [{ "given": ["J"] }]
+          }
+        }
+      ]
+    }
+  ],
+  "fixture": [
+    {
+      "id": "patients",
+      "autocreate": false,
+      "autodelete": false,
+      "resource": {
+        "reference": "#patients"
+      }
+    }
+  ],
+  "test": [
+    {
+      "id": "01-total-test",
+      "name": "Total tests",
+      "description": "total tests.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "batch"
+            },
+            "resource": "Patient",
+            "sourceId": "patients"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "params": "_tag=total-test&_count=5&_total=accurate",
+            "resource": "Patient"
+          }
+        },
+        {
+          "assert": {
+            "label": "Assert name is sorted at top.",
+            "description": "Confirm patient created.",
+            "operator": "equals",
+            "expression": "Bundle.entry.resource.count()",
+            "value": "5"
+          }
+        },
+        {
+          "assert": {
+            "label": "Assert name is sorted at top.",
+            "description": "Confirm patient created.",
+            "operator": "equals",
+            "expression": "Bundle.total",
+            "value": "10"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+          },
+          "params": "_tag=total-test",
+          "description": "Delete the tests data."
+        }
+      }
+    ]
+  }
+}
