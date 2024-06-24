@@ -17,7 +17,7 @@ iguhealth api create r4 --data '$MY_RESOURCE'
   </TabItem>
   <TabItem value="curl" label="Curl">
 ```bash
- curl --request POST --header "Authorization: Header" --header "Content-Type: application/fhir+json" ${domain}/w/${tenant}/api/v1/fhir/r4/${resourceType}
+ curl --request POST --header "Authorization: Header" --header "Content-Type: application/fhir+json" --data '$MY_RESOURCE' ${domain}/w/${tenant}/api/v1/fhir/r4/${resourceType}
 ```
   </TabItem>
    <TabItem value="typescript" label="Typescript">

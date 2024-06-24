@@ -22,7 +22,7 @@ iguhealth api invoke_system r4 --data $Parameters
   </TabItem>
   <TabItem value="curl" label="Curl">
 ```bash
- curl --request GET --header "Authorization: Header" --header "Content-Type: application/fhir+json" ${domain}/w/${tenant}/api/v1/fhir/r4/$code --data $Parameters
+ curl --request POST --header "Authorization: Header" --header "Content-Type: application/fhir+json" ${domain}/w/${tenant}/api/v1/fhir/r4/$code --data $Parameters
 ```
   </TabItem>
    <TabItem value="typescript" label="Typescript">
@@ -42,7 +42,7 @@ iguhealth api invoke_type r4 $ResourceType --data $Parameters
   </TabItem>
   <TabItem value="curl" label="Curl">
 ```bash
- curl --request GET --header "Authorization: Header" --header "Content-Type: application/fhir+json" ${domain}/w/${tenant}/api/v1/fhir/r4/${ResourceType}/$code --data $Parameters
+ curl --request POST --header "Authorization: Header" --header "Content-Type: application/fhir+json" ${domain}/w/${tenant}/api/v1/fhir/r4/${ResourceType}/$code --data $Parameters
 ```
   </TabItem>
    <TabItem value="typescript" label="Typescript">
@@ -62,7 +62,7 @@ iguhealth api invoke_instance r4 $ResourceType $ResourceId --data $Parameters
   </TabItem>
   <TabItem value="curl" label="Curl">
 ```bash
- curl --request GET --header "Authorization: Header" --header "Content-Type: application/fhir+json" ${domain}/w/${tenant}/api/v1/fhir/r4/${ResourceType}/${ResourceId}/$code --data $Parameters
+ curl --request POST --header "Authorization: Header" --header "Content-Type: application/fhir+json" ${domain}/w/${tenant}/api/v1/fhir/r4/${ResourceType}/${ResourceId}/$code --data $Parameters
 ```
   </TabItem>
    <TabItem value="typescript" label="Typescript">

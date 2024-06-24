@@ -1,0 +1,66 @@
+import TabItem from "@theme/TabItem";
+import Tabs from "@theme/Tabs";
+
+# Update
+
+The update operation is used to update a resource on the server. 
+The server will return the updated resource with an id and meta information.
+
+## API
+
+<Tabs>
+  <TabItem value="cli" label="CLI">
+```bash
+iguhealth api update r4 $ResourceType $ResourceId --data '$MY_RESOURCE'
+```
+  </TabItem>
+  <TabItem value="curl" label="Curl">
+```bash
+ curl --request PUT --header "Authorization: Header" --header "Content-Type: application/json" --data '$MY_RESOURCE' ${domain}/w/${tenant}/api/v1/fhir/r4/${ResourceType}/${ResourceId} 
+ ```
+  </TabItem>
+ <TabItem value="typescript" label="Typescript">
+```typescript
+await client.update({}, R4, resourceType, id, resource);
+```
+   </TabItem>
+</Tabs>
+
+## Response
+
+<Tabs>
+    <TabItem value="request" label="Request">
+    ```bash
+    iguhealth api update r4 Patient FsHg1Z14IE1D3up03EBqDQ --file resource.json
+    ```
+    </TabItem>
+    <TabItem value="response" label="Response">
+```json
+{
+  "id": "FsHg1Z14IE1D3up03EBqDQ",
+  "meta": {
+    "extension": [
+      {
+        "url": "https://iguhealth.app/version-sequence",
+        "valueInteger": 4121
+      },
+      {
+        "url": "https://iguhealth.app/author",
+        "valueReference": {
+          "reference": "ClientApplication/5K89P9NcTjtw4wjy-POJsD"
+        }
+      }
+    ],
+    "versionId": "4121",
+    "lastUpdated": "2024-06-24T20:59:58.434+00:00"
+  },
+  "name": [
+    {
+      "family": "Smith"
+    }
+  ],
+  "resourceType": "Patient"
+}
+```
+    </TabItem>
+</Tabs>

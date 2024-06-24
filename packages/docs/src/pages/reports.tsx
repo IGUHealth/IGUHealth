@@ -1,7 +1,7 @@
 import Layout from "@theme/Layout";
 import React, { useEffect, useMemo, useState } from "react";
 
-import { R4, Resource } from "@iguhealth/fhir-types/version";
+import { R4, R4B, Resource } from "@iguhealth/fhir-types/versions";
 
 function RenderAction({ action, report }) {
   if (action.operation) {
@@ -18,22 +18,26 @@ function RenderAction({ action, report }) {
           </div>
         </div>
         <table>
-          <tr>
-            <th>Type</th>
-            <th>Resource</th>
-            <th>SourceId</th>
-            <th>TargetId</th>
-            <th>ResponseId</th>
-            <th>Parameters</th>
-          </tr>
-          <tr>
-            <td>{action.operation?.type?.code}</td>
-            <td>{action.operation?.resource}</td>
-            <td>{action.operation?.sourceId}</td>
-            <td>{action.operation?.targetId}</td>
-            <td>{action.operation?.responseId}</td>
-            <td>{action.operation?.params}</td>
-          </tr>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Resource</th>
+              <th>SourceId</th>
+              <th>TargetId</th>
+              <th>ResponseId</th>
+              <th>Parameters</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{action.operation?.type?.code}</td>
+              <td>{action.operation?.resource}</td>
+              <td>{action.operation?.sourceId}</td>
+              <td>{action.operation?.targetId}</td>
+              <td>{action.operation?.responseId}</td>
+              <td>{action.operation?.params}</td>
+            </tr>
+          </tbody>
         </table>
       </div>
     );
@@ -51,22 +55,26 @@ function RenderAction({ action, report }) {
           </div>
         </div>
         <table>
-          <tr>
-            <th>Resource</th>
-            <th>Expression</th>
-            <th>Operator</th>
-            <th>Value</th>
-            <th>Compare to Source Id</th>
-            <th>Compare to Source Expression</th>
-          </tr>
-          <tr>
-            <td>{action.assert?.resource}</td>
-            <td>{action.assert?.expression}</td>
-            <td>{action.assert?.operator}</td>
-            <td>{action.assert?.value}</td>
-            <td>{action.assert?.compareToSourceId}</td>
-            <td>{action.assert?.compareToSourceExpression}</td>
-          </tr>
+          <thead>
+            <tr>
+              <th>Resource</th>
+              <th>Expression</th>
+              <th>Operator</th>
+              <th>Value</th>
+              <th>Compare to Source Id</th>
+              <th>Compare to Source Expression</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{action.assert?.resource}</td>
+              <td>{action.assert?.expression}</td>
+              <td>{action.assert?.operator}</td>
+              <td>{action.assert?.value}</td>
+              <td>{action.assert?.compareToSourceId}</td>
+              <td>{action.assert?.compareToSourceExpression}</td>
+            </tr>
+          </tbody>
         </table>
       </div>
     );
@@ -112,18 +120,22 @@ function RenderTestScript({
             <span>Fixtures</span>
           </div>
           <table>
-            <tr>
-              <th>id</th>
-              <th>reference</th>
-            </tr>
-            {testScript.fixture?.map((fixture) => {
-              return (
-                <tr>
-                  <td>{fixture.id}</td>
-                  <td>{fixture.resource?.reference}</td>
-                </tr>
-              );
-            })}
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>reference</th>
+              </tr>
+            </thead>
+            <tbody>
+              {testScript.fixture?.map((fixture) => {
+                return (
+                  <tr>
+                    <td>{fixture.id}</td>
+                    <td>{fixture.resource?.reference}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
           </table>
           <div className="mb-4">
             <span className="block mb-2 font-bold text-2xl">Setup</span>
@@ -163,10 +175,57 @@ function RenderTestScript({
   );
 }
 
+function ListTestReports({ testScripts, testReports, onClick }) {
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>id</th>
+          <th className="w-[30%]">title</th>
+          <th className="w-[70%]">description</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {testScripts.map((testScript) => {
+          const testReport = testReports.find(
+            (t) => t.testScript?.reference === `TestScript/${testScript.id}`,
+          );
+
+          return (
+            <tr
+              onClick={(_e) => {
+                onClick(testScript, testReport);
+              }}
+              key={testScript.id}
+              className={`
+                    cursor-pointer
+                    ${
+                      testReport.result === "pass"
+                        ? "!bg-green-200 hover:!bg-green-300 !text-green-900"
+                        : "!bg-red-200 hover:!bg-red-300 !text-red-900"
+                    }
+                    `}
+            >
+              <td>{testScript.id}</td>
+              <td>{testScript.title}</td>
+              <td>{testScript.description}</td>
+              <td>{testReport?.result}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
+}
+
 export default function RenderReports() {
-  const [bundle, setBundle] = useState<Resource<R4, "Bundle"> | undefined>(
+  const [r4Bundle, setR4Bundle] = useState<Resource<R4, "Bundle"> | undefined>(
     undefined,
   );
+  const [r4bBundle, setR4BBundle] = useState<
+    Resource<R4B, "Bundle"> | undefined
+  >(undefined);
 
   const [context, setContext] = useState<
     | {
@@ -177,27 +236,47 @@ export default function RenderReports() {
   >(undefined);
 
   useEffect(() => {
-    fetch("https://iguhealth.app/testscripts/reports.json")
+    fetch("https://iguhealth.app/testscripts/r4-reports.json")
       .then((res) => res.json())
-      .then(setBundle)
+      .then(setR4Bundle)
+      .catch(console.error);
+    fetch("https://iguhealth.app/testscripts/r4b-reports.json")
+      .then((res) => res.json())
+      .then(setR4BBundle)
       .catch(console.error);
   }, []);
 
-  const testScripts: Resource<R4, "TestScript">[] = useMemo(() => {
+  const r4TestScripts: Resource<R4, "TestScript">[] = useMemo(() => {
     return (
-      bundle?.entry
+      r4Bundle?.entry
         ?.map((entry) => entry.resource)
         .filter((r) => r.resourceType === "TestScript") ?? []
     );
-  }, [bundle]);
+  }, [r4Bundle]);
 
-  const testReports: Resource<R4, "TestReport">[] = useMemo(() => {
+  const r4TestReports: Resource<R4, "TestReport">[] = useMemo(() => {
     return (
-      bundle?.entry
+      r4Bundle?.entry
         ?.map((entry) => entry.resource)
         .filter((r) => r.resourceType === "TestReport") ?? []
     );
-  }, [bundle]);
+  }, [r4Bundle]);
+
+  const r4bTestScripts: Resource<R4, "TestScript">[] = useMemo(() => {
+    return (
+      r4bBundle?.entry
+        ?.map((entry) => entry.resource)
+        .filter((r) => r.resourceType === "TestScript") ?? []
+    );
+  }, [r4bBundle]);
+
+  const r4bTestReports: Resource<R4, "TestReport">[] = useMemo(() => {
+    return (
+      r4bBundle?.entry
+        ?.map((entry) => entry.resource)
+        .filter((r) => r.resourceType === "TestReport") ?? []
+    );
+  }, [r4bBundle]);
 
   return (
     <Layout title={`Test Reports`} description="Test script reports">
@@ -230,42 +309,26 @@ export default function RenderReports() {
                 .
               </span>
             </div>
-            <table>
-              <tr>
-                <th>id</th>
-                <th className="w-[30%]">title</th>
-                <th className="w-[70%]">description</th>
-                <th>Status</th>
-              </tr>
-              {testScripts.map((testScript) => {
-                const testReport = testReports.find(
-                  (t) =>
-                    t.testScript?.reference === `TestScript/${testScript.id}`,
-                );
-
-                return (
-                  <tr
-                    onClick={(_e) => {
-                      setContext({ testScript, testReport });
-                    }}
-                    key={testScript.id}
-                    className={`
-                    cursor-pointer
-                    ${
-                      testReport.result === "pass"
-                        ? "!bg-green-200 hover:!bg-green-300 !text-green-900"
-                        : "!bg-red-200 hover:!bg-red-300 !text-red-900"
-                    }
-                    `}
-                  >
-                    <td>{testScript.id}</td>
-                    <td>{testScript.title}</td>
-                    <td>{testScript.description}</td>
-                    <td>{testReport?.result}</td>
-                  </tr>
-                );
-              })}
-            </table>
+            <div className="mt-4 mb-12">
+              <h2>R4</h2>
+              <ListTestReports
+                onClick={(testScript, testReport) => {
+                  setContext({ testScript, testReport });
+                }}
+                testScripts={r4TestScripts}
+                testReports={r4TestReports}
+              />
+            </div>
+            <div className="mb-12">
+              <h2>R4B</h2>
+              <ListTestReports
+                onClick={(testScript, testReport) => {
+                  setContext({ testScript, testReport });
+                }}
+                testScripts={r4bTestScripts}
+                testReports={r4bTestReports}
+              />
+            </div>
           </div>
         </main>
       )}
