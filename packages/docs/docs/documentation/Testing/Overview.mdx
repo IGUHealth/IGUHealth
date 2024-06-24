@@ -87,7 +87,7 @@ Below is an example of an invalid Patient resource with `Patient.name` is a stri
 ### Patches
 
 To test Json Patches you must use Binary resource in the same way as invalid data.
-The `Binary.contentType` must be `application/fhir+json` and the data should be a stringified JSON object of the patches.
+The `Binary.contentType` must be `application/json-patch+json` and the data should be a stringified JSON object of the patches.
 
 Below is an example of submitting a patch to a Patient resource that adds a name:
 ```json
@@ -104,7 +104,7 @@ Below is an example of submitting a patch to a Patient resource that adds a name
     {
       "id": "patch1",
       "resourceType": "Binary",
-      "contentType": "application/fhir+json",
+      "contentType": "application/json-patch+json",
       "data": "[{\"op\":\"add\",\"path\":\"/name\",\"value\":[]},{\"op\":\"add\",\"path\":\"/name/0\",\"value\":{}},{\"op\":\"add\",\"path\":\"/name/0/family\",\"value\":\"Smith\"}]"
     }
   ],

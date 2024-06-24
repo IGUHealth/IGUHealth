@@ -101,6 +101,45 @@ function getFixtureResource<Version extends FHIR_VERSION>(
     }
   }
 }
+const PATCH_CONTENT_TYPE = "application/json-patch+json";
+
+function getPatches<Version extends FHIR_VERSION>(
+  state: TestScriptState<Version>,
+  id: id,
+) {
+  const fixture = state.fixtures[id];
+  if (fixture?.type !== "resource" || fixture.data.resourceType !== "Binary") {
+    throw new OperationError(
+      outcomeFatal("invalid", `Binary with id '${id}' not found`),
+    );
+  }
+
+  if (fixture.data.contentType !== PATCH_CONTENT_TYPE) {
+    throw new OperationError(
+      outcomeFatal(
+        "invalid",
+        `Binary with id '${id}' must be of content type '${PATCH_CONTENT_TYPE}' `,
+      ),
+    );
+  }
+  if (!fixture.data.data) {
+    throw new OperationError(
+      outcomeFatal("invalid", `Binary with id '${id}' must have data.`),
+    );
+  }
+  let patches;
+  try {
+    patches = JSON.parse(fixture.data.data);
+  } catch (e) {
+    throw new OperationError(outcomeError("invalid", `Invalid JSON Patch`));
+  }
+
+  if (!Array.isArray(patches)) {
+    throw new OperationError(outcomeError("invalid", `Invalid JSON Patch`));
+  }
+
+  return patches;
+}
 
 function getVariable<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
@@ -335,7 +374,7 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
         resourceType: getFixtureResource(state, operation.targetId)
           ?.resourceType as unknown as ResourceType<Version>,
         id: getFixtureResource(state, operation.targetId)?.id as id,
-        body: getFixtureResource(state, operation.sourceId),
+        body: getPatches(state, operation.sourceId),
       } as FHIRRequest;
     }
     case "vread": {

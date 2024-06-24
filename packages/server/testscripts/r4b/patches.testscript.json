@@ -14,25 +14,25 @@
     {
       "id": "patch1",
       "resourceType": "Binary",
-      "contentType": "application/fhir+json",
+      "contentType": "application/json-patch+json",
       "data": "[{\"op\":\"add\",\"path\":\"/name\",\"value\":[]},{\"op\":\"add\",\"path\":\"/name/0\",\"value\":{}},{\"op\":\"add\",\"path\":\"/name/0/family\",\"value\":\"Smith\"}]"
     },
     {
       "id": "badpatch1",
       "resourceType": "Binary",
-      "contentType": "application/fhir+json",
+      "contentType": "application/json-patch+json",
       "data": "[{\"op\":\"add\",\"path\":\"/d\",\"value\":\"Smith\"}]"
     },
     {
       "id": "badpatch2",
       "resourceType": "Binary",
-      "contentType": "application/fhir+json",
+      "contentType": "application/json-patch+json",
       "data": "[{\"p\":\"add\",\"path\":\"/name/0\",\"value\":\"Smith\"}]"
     },
     {
       "id": "badpatch3",
       "resourceType": "Binary",
-      "contentType": "application/fhir+json",
+      "contentType": "application/json-patch+json",
       "data": "[{\"op\":\"replace\",\"path\":\"/id\",\"value\":\"my-id\"}]"
     }
   ],
