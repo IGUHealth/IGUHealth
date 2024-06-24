@@ -3,6 +3,77 @@ import React, { useEffect, useMemo, useState } from "react";
 
 import { R4, Resource } from "@iguhealth/fhir-types/version";
 
+function RenderAction({ action, report }) {
+  if (action.operation) {
+    return (
+      <div>
+        <div className="flex items-center mb-2">
+          <div className="flex flex-1 mr-2">
+            <span className="text-lg font-semibold">Operation</span>
+          </div>
+          <div
+            className={`p-1 ${report.operation.result === "pass" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
+          >
+            {report.operation.result}
+          </div>
+        </div>
+        <table>
+          <tr>
+            <th>Type</th>
+            <th>Resource</th>
+            <th>SourceId</th>
+            <th>TargetId</th>
+            <th>ResponseId</th>
+            <th>Parameters</th>
+          </tr>
+          <tr>
+            <td>{action.operation?.type?.code}</td>
+            <td>{action.operation?.resource}</td>
+            <td>{action.operation?.sourceId}</td>
+            <td>{action.operation?.targetId}</td>
+            <td>{action.operation?.responseId}</td>
+            <td>{action.operation?.params}</td>
+          </tr>
+        </table>
+      </div>
+    );
+  } else if (action.assert) {
+    return (
+      <div>
+        <div className="flex items-center mb-2">
+          <div className="flex flex-1 mr-2">
+            <span className="text-lg font-semibold">Assertion</span>
+          </div>
+          <div
+            className={`p-1 ${report.assert.result === "pass" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
+          >
+            {report.assert.result}
+          </div>
+        </div>
+        <table>
+          <tr>
+            <th>Resource</th>
+            <th>Expression</th>
+            <th>Operator</th>
+            <th>Value</th>
+            <th>Compare to Source Id</th>
+            <th>Compare to Source Expression</th>
+          </tr>
+          <tr>
+            <td>{action.assert?.resource}</td>
+            <td>{action.assert?.expression}</td>
+            <td>{action.assert?.operator}</td>
+            <td>{action.assert?.value}</td>
+            <td>{action.assert?.compareToSourceId}</td>
+            <td>{action.assert?.compareToSourceExpression}</td>
+          </tr>
+        </table>
+      </div>
+    );
+  }
+  return null;
+}
+
 function RenderTestScript({
   goBack,
   testScript,
@@ -38,7 +109,7 @@ function RenderTestScript({
 
         <div>
           <div>
-            <h3>Fixtures</h3>
+            <span>Fixtures</span>
           </div>
           <table>
             <tr>
@@ -54,93 +125,36 @@ function RenderTestScript({
               );
             })}
           </table>
-
-          <div>
-            <h3>Tests</h3>
+          <div className="mb-4">
+            <span className="block mb-2 font-bold text-2xl">Setup</span>
+            {testScript.setup?.action?.map((action, ti) => (
+              <RenderAction
+                action={action}
+                report={testReport.setup.action[ti]}
+              />
+            ))}
+          </div>
+          <div className="mb-4">
+            <span className="block mb-2 font-bold text-2xl">Tests</span>
             {testScript.test?.map((test, ti) => (
               <div>
                 <h4>{test.name}</h4>
-                {test.action.map((action, actionIndex) => {
-                  if (action.operation) {
-                    return (
-                      <div>
-                        <div className="flex items-center mb-2">
-                          <div className="flex flex-1 mr-2">
-                            <span className="text-lg font-semibold">
-                              Operation
-                            </span>
-                          </div>
-                          <div
-                            className={`p-1 ${testReport.test[ti].action[actionIndex].operation.result === "pass" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
-                          >
-                            {
-                              testReport.test[ti].action[actionIndex].operation
-                                .result
-                            }
-                          </div>
-                        </div>
-                        <table>
-                          <tr>
-                            <th>Type</th>
-                            <th>Resource</th>
-                            <th>SourceId</th>
-                            <th>TargetId</th>
-                            <th>ResponseId</th>
-                            <th>Parameters</th>
-                          </tr>
-                          <tr>
-                            <td>{action.operation?.type?.code}</td>
-                            <td>{action.operation?.resource}</td>
-                            <td>{action.operation?.sourceId}</td>
-                            <td>{action.operation?.targetId}</td>
-                            <td>{action.operation?.responseId}</td>
-                            <td>{action.operation?.params}</td>
-                          </tr>
-                        </table>
-                      </div>
-                    );
-                  } else if (action.assert) {
-                    return (
-                      <div>
-                        <div className="flex items-center mb-2">
-                          <div className="flex flex-1 mr-2">
-                            <span className="text-lg font-semibold">
-                              Assertion
-                            </span>
-                          </div>
-                          <div
-                            className={`p-1 ${testReport.test[ti].action[actionIndex].assert.result === "pass" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
-                          >
-                            {
-                              testReport.test[ti].action[actionIndex].assert
-                                .result
-                            }
-                          </div>
-                        </div>
-                        <table>
-                          <tr>
-                            <th>Resource</th>
-                            <th>Expression</th>
-                            <th>Operator</th>
-                            <th>Value</th>
-                            <th>Compare to Source Id</th>
-                            <th>Compare to Source Expression</th>
-                          </tr>
-                          <tr>
-                            <td>{action.assert?.resource}</td>
-                            <td>{action.assert?.expression}</td>
-                            <td>{action.assert?.operator}</td>
-                            <td>{action.assert?.value}</td>
-                            <td>{action.assert?.compareToSourceId}</td>
-                            <td>{action.assert?.compareToSourceExpression}</td>
-                          </tr>
-                        </table>
-                      </div>
-                    );
-                  }
-                  return null;
-                })}
+                {test.action.map((action, actionIndex) => (
+                  <RenderAction
+                    action={action}
+                    report={testReport.test[ti].action[actionIndex]}
+                  />
+                ))}
               </div>
+            ))}
+          </div>
+          <div>
+            <span className="block mb-2 font-bold text-2xl">Teardown</span>
+            {testScript.teardown?.action?.map((action, ti) => (
+              <RenderAction
+                action={action}
+                report={testReport.teardown.action[ti]}
+              />
             ))}
           </div>
         </div>
