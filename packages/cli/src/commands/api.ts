@@ -3,7 +3,14 @@ import { Command } from "commander";
 import fs from "node:fs";
 
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
-import { Bundle, Resource, ResourceType } from "@iguhealth/fhir-types/r4/types";
+import {
+  Bundle,
+  Parameters,
+  Resource,
+  ResourceType,
+  code,
+  id,
+} from "@iguhealth/fhir-types/r4/types";
 import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 
@@ -64,6 +71,10 @@ function readData(option: MutationOptions): unknown {
 
 function isBundle(value: unknown): value is Bundle {
   return (value as Record<string, unknown>)?.resourceType === "Bundle";
+}
+
+function isParameters(value: unknown): value is Parameters {
+  return (value as Record<string, unknown>)?.resourceType === "Parameters";
 }
 
 export function apiCommands(command: Command) {
@@ -345,4 +356,100 @@ export function apiCommands(command: Command) {
       );
       console.log(JSON.stringify(history, null, 2));
     });
+
+  dataCommand(
+    command
+      .command("invoke_system")
+      .argument("<fhirVersion>", "FHIR Version")
+      .argument("<code>", "code")
+      .action(async (userFHIRVersion, code: string, options) => {
+        const client = createClient(CONFIG_LOCATION);
+        const FHIRVersion = asFHIRType(userFHIRVersion);
+        const parameters = readData(options);
+        if (!parameters) {
+          throw new Error("No Parameters provided");
+        }
+        if (!isParameters(parameters)) throw new Error("invalid Parameters.");
+
+        const output = await client.invoke_system(
+          code as code,
+          {},
+          FHIRVersion,
+          parameters,
+        );
+        console.log(JSON.stringify(output, null, 2));
+      }),
+  );
+
+  dataCommand(
+    command
+      .command("invoke_type")
+      .argument("<fhirVersion>", "FHIR Version")
+      .argument("<resourceType>", "Resource Type")
+      .argument("<code>", "code")
+      .action(
+        async (
+          userFHIRVersion,
+          resourceType: string,
+          code: string,
+          options,
+        ) => {
+          const client = createClient(CONFIG_LOCATION);
+          const FHIRVersion = asFHIRType(userFHIRVersion);
+          const parameters = readData(options);
+          if (!parameters) {
+            throw new Error("No Parameters provided");
+          }
+          if (!isParameters(parameters)) throw new Error("invalid Parameters.");
+          if (!validateResourceType(FHIRVersion, resourceType))
+            throw new Error("Invalid resource type");
+
+          const output = await client.invoke_type(
+            code as code,
+            {},
+            FHIRVersion,
+            resourceType,
+            parameters,
+          );
+          console.log(JSON.stringify(output, null, 2));
+        },
+      ),
+  );
+  dataCommand(
+    command
+      .command("invoke_instance")
+      .argument("<fhirVersion>", "FHIR Version")
+      .argument("<resourceType>", "Resource Type")
+      .argument("<id>", "Resource ID")
+      .argument("<code>", "code")
+      .action(
+        async (
+          userFHIRVersion,
+          resourceType: string,
+          id: string,
+          code: string,
+          options,
+        ) => {
+          const client = createClient(CONFIG_LOCATION);
+          const FHIRVersion = asFHIRType(userFHIRVersion);
+          const parameters = readData(options);
+          if (!parameters) {
+            throw new Error("No Parameters provided");
+          }
+          if (!isParameters(parameters)) throw new Error("invalid Parameters.");
+          if (!validateResourceType(FHIRVersion, resourceType))
+            throw new Error("Invalid resource type");
+
+          const output = await client.invoke_instance(
+            code as code,
+            {},
+            FHIRVersion,
+            resourceType,
+            id as id,
+            parameters,
+          );
+          console.log(JSON.stringify(output, null, 2));
+        },
+      ),
+  );
 }
