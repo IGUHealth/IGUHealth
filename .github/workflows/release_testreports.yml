@@ -84,8 +84,11 @@ jobs:
       - name: Start server
         run: yarn workspace @iguhealth/server ci & node .github/workflows/wait_server.js http://localhost:3000/w/test-system/oidc/interaction/login
 
-      - name: TestScripts
-        run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts -o reports.json
+      - name: R4 TestScripts
+        run: yarn workspace @iguhealth/server iguhealth test run -i  testscripts/r4 -o r4-reports.json
+
+      - name: R4B TestScripts
+        run: yarn workspace @iguhealth/server iguhealth test run --fhir-version 4.3 -i testscripts/r4b -o r4b-reports.json
 
       - name: Configure AWS credentials from Github account
         uses: aws-actions/configure-aws-credentials@v4
@@ -95,4 +98,5 @@ jobs:
 
       - name: Copy files to the production website with the AWS CLI
         run: |
-          aws s3 cp ./packages/server/reports.json s3://iguhealth.app/testscripts/reports.json
+          aws s3 cp ./packages/server/r4-reports.json s3://iguhealth.app/testscripts/r4-reports.json
+          aws s3 cp ./packages/server/r4b-reports.json s3://iguhealth.app/testscripts/r4b-reports.json

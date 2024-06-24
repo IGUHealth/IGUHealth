@@ -5,7 +5,10 @@ import { SearchParameter } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
 import { FHIRServerCTX } from "../../../../../fhir-api/types.js";
-import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
+import {
+  SearchParameterResource,
+  searchParameterToTableName,
+} from "../../../../utilities/search/parameters.js";
 import * as sqlUtils from "../../../../utilities/sql.js";
 import { buildParameterSQL } from "./index.js";
 import { missingModifier } from "./shared.js";
@@ -16,9 +19,10 @@ import { missingModifier } from "./shared.js";
  */
 function generateCanonicalReferenceSearch(
   ctx: FHIRServerCTX,
+  fhirVersion: FHIR_VERSION,
   parameter: SearchParameterResource,
 ): db.SQLFragment {
-  const where: s.r4_uri_idx.Whereable = {
+  const where: s.r4_uri_idx.Whereable | s.r4b_uri_idx.Whereable = {
     tenant: ctx.tenant,
     resource_type:
       (parameter.searchParameter.target ?? []).length === 0
@@ -29,8 +33,8 @@ function generateCanonicalReferenceSearch(
     value: parameter.value[0].toString(),
   };
 
-  return db.sql<s.r4_uri_idx.SQL>`
-    ( SELECT DISTINCT ON (${"r_id"}) ${"r_id"} FROM ${"r4_uri_idx"} WHERE ${where} )`;
+  return db.sql<s.r4_uri_idx.SQL | s.r4b_uri_idx.SQL>`
+    ( SELECT DISTINCT ON (${"r_id"}) ${"r_id"} FROM ${searchParameterToTableName(fhirVersion, "uri")} WHERE ${where} )`;
 }
 
 function isChainParameter(
@@ -108,13 +112,15 @@ function chainSQL<Version extends FHIR_VERSION>(
   return db.sql`${"r_id"} in (select ${"r_id"} from ${referencesSQL} as referencechain)`;
 }
 
-function sqlParameterValue(
+function sqlParameterValue<Version extends FHIR_VERSION>(
   ctx: FHIRServerCTX,
+  fhirVersion: Version,
   parameter: SearchParameterResource,
   parameterValue: string | number,
 ) {
   const canonicalSQL = db.sql<s.r4_reference_idx.SQL>`${"reference_id"} in ${generateCanonicalReferenceSearch(
     ctx,
+    fhirVersion,
     parameter,
   )}`;
 
@@ -160,7 +166,7 @@ export default function referenceClauses<Version extends FHIR_VERSION>(
       else {
         return db.conditions.or(
           ...parameter.value.map((value) =>
-            sqlParameterValue(ctx, parameter, value),
+            sqlParameterValue(ctx, fhirVersion, parameter, value),
           ),
         );
       }

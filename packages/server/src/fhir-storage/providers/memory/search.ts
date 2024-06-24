@@ -88,6 +88,7 @@ async function expressionSearch<CTX extends MemorySearchCTX>(
   );
   const searchType = parameter.searchParameter.type as SEARCH_TYPE;
   const data = await dataConversion(
+    fhirVersion,
     parameter.searchParameter,
     searchType,
     evaluation,

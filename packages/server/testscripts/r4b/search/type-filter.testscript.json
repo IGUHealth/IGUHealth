@@ -1,0 +1,157 @@
+{
+  "id": "type-filter",
+  "resourceType": "TestScript",
+  "title": "Type filtering tests",
+  "description": "Tests _type for type filtering. Checks both database and memory searches.",
+  "contained": [
+    {
+      "id": "q-response",
+      "meta": {
+        "tag": [{ "code": "type-test" }]
+      },
+      "url": "https://iguhealth.com/PREPARE",
+      "title": "TEST QUESTIONNAIRE",
+      "name": "PREPARE",
+      "status": "active",
+      "resourceType": "Questionnaire"
+    },
+    {
+      "id": "qr-response",
+      "meta": {
+        "tag": [{ "code": "type-test" }]
+      },
+      "status": "in-progress",
+      "resourceType": "QuestionnaireResponse",
+      "questionnaire": "https://iguhealth.com/PREPARE"
+    }
+  ],
+  "fixture": [
+    {
+      "id": "fixture-qr-response",
+      "resource": {
+        "reference": "#qr-response"
+      }
+    },
+    {
+      "id": "fixture-q-response",
+      "resource": {
+        "reference": "#q-response"
+      }
+    }
+  ],
+
+  "test": [
+    {
+      "id": "type-filtering",
+      "name": "Type filtering",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "create"
+            },
+            "resource": "Questionnaire",
+            "sourceId": "fixture-q-response",
+            "responseId": "qresponse"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "create"
+            },
+            "resource": "QuestionnaireResponse",
+            "sourceId": "fixture-qr-response",
+            "responseId": "qrresponse"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "params": "_type=QuestionnaireResponse"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.resourceType",
+            "operator": "equals",
+            "value": "QuestionnaireResponse"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "params": "_type=Questionnaire"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.resourceType",
+            "operator": "equals",
+            "value": "Questionnaire"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "params": "_type=SearchParameter"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.resourceType",
+            "operator": "equals",
+            "value": "SearchParameter"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "params": "_type=StructureDefinition&_count=1"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.resourceType",
+            "operator": "equals",
+            "value": "StructureDefinition"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.count()",
+            "operator": "equals",
+            "value": "1"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+          },
+          "params": "_tag=type-test"
+        }
+      }
+    ]
+  }
+}

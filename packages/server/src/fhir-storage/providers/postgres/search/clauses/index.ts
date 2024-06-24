@@ -9,6 +9,7 @@ import {
   SearchParameterResource,
   searchParameterToTableName,
 } from "../../../../utilities/search/parameters.js";
+import { isSupportedSearchType } from "../../constants.js";
 import dateClauses from "./date.js";
 import numberClauses from "./number.js";
 import quantityClauses from "./quantity.js";
@@ -41,35 +42,35 @@ export function buildParameterSQL<Version extends FHIR_VERSION>(
   columns: s.Column[] = [],
 ): db.SQLFragment {
   const searchParameter = parameter.searchParameter;
-  const search_table = searchParameterToTableName(
-    fhirVersion,
-    searchParameter.type,
-  );
+  const parameterType = searchParameter.type as string;
 
-  switch (searchParameter.type) {
-    case "number":
-    case "string":
-    case "uri":
-    case "date":
-    case "token":
-    case "reference":
-    case "quantity": {
-      return db.sql<
-        | s.r4_number_idx.SQL
-        | s.r4_string_idx.SQL
-        | s.r4_uri_idx.SQL
-        | s.r4_date_idx.SQL
-        | s.r4_token_idx.SQL
-        | s.r4_reference_idx.SQL
-        | s.r4_quantity_idx.SQL
-        | s.r4b_number_idx.SQL
-        | s.r4b_string_idx.SQL
-        | s.r4b_uri_idx.SQL
-        | s.r4b_date_idx.SQL
-        | s.r4b_token_idx.SQL
-        | s.r4b_reference_idx.SQL
-        | s.r4b_quantity_idx.SQL
-      >`
+  if (!isSupportedSearchType(parameterType)) {
+    throw new OperationError(
+      outcomeError(
+        "not-supported",
+        `Parameter of type '${searchParameter.type}' is not yet supported.`,
+      ),
+    );
+  }
+
+  const search_table = searchParameterToTableName(fhirVersion, parameterType);
+
+  return db.sql<
+    | s.r4_number_idx.SQL
+    | s.r4_string_idx.SQL
+    | s.r4_uri_idx.SQL
+    | s.r4_date_idx.SQL
+    | s.r4_token_idx.SQL
+    | s.r4_reference_idx.SQL
+    | s.r4_quantity_idx.SQL
+    | s.r4b_number_idx.SQL
+    | s.r4b_string_idx.SQL
+    | s.r4b_uri_idx.SQL
+    | s.r4b_date_idx.SQL
+    | s.r4b_token_idx.SQL
+    | s.r4b_reference_idx.SQL
+    | s.r4b_quantity_idx.SQL
+  >`
       SELECT ${
         columns.length === 0
           ? db.raw("DISTINCT(r_version_id)")
@@ -81,13 +82,4 @@ export function buildParameterSQL<Version extends FHIR_VERSION>(
         PARAMETER_CLAUSES[searchParameter.type](ctx, fhirVersion, parameter),
       )}
       `;
-    }
-    default:
-      throw new OperationError(
-        outcomeError(
-          "not-supported",
-          `Parameter of type '${searchParameter.type}' is not yet supported.`,
-        ),
-      );
-  }
 }

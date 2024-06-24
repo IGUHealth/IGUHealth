@@ -24,6 +24,7 @@ import {
   deriveResourceTypeFilter,
   findSearchParameter,
   parametersWithMetaAssociated,
+  searchParameterToTableName,
 } from "../../../utilities/search/parameters.js";
 import * as sqlUtils from "../../../utilities/sql.js";
 import { toDBFHIRVersion } from "../../../utilities/version.js";
@@ -172,11 +173,11 @@ async function processInclude<Version extends FHIR_VERSION>(
 
         // Derive the id and type from the reference_idx table for the given param for the resources.
         const idResult = await db.sql<
-          s.r4_reference_idx.SQL,
-          s.r4_reference_idx.Selectable[]
+          s.r4_reference_idx.SQL | s.r4b_reference_idx.SQL,
+          (s.r4_reference_idx.Selectable | s.r4b_reference_idx.Selectable)[]
         >`
         SELECT ${"reference_id"}, ${"reference_type"}
-        FROM ${"r4_reference_idx"} 
+        FROM ${searchParameterToTableName(fhirVersion, "reference")} 
         WHERE ${"r_id"} IN (${sqlUtils.paramsWithComma(ids)}) AND
         ${"parameter_url"} = ${db.param(
           includeParameterSearchParam.resources[0].url,
