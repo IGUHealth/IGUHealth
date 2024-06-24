@@ -1,0 +1,22 @@
+---
+sidebar_position: 1
+---
+
+# Overview
+
+This documentation covers the API endpoints available on the IGUHealth server.
+Our server is based around the FHIR standard and provides a RESTful API for interacting with FHIR resources.
+
+## Endpoints
+
+We support the following versions of FHIR which can be accessed via the following endpoints:
+
+### R4
+```bash
+curl --request GET ${domain}/w/${tenant}/api/v1/fhir/r4/metadata
+```
+
+### R4B
+```bash
+curl --request GET ${domain}/w/${tenant}/api/v1/fhir/r4b/metadata
+```

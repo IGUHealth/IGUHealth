@@ -1,0 +1,65 @@
+import TabItem from "@theme/TabItem";
+import Tabs from "@theme/Tabs";
+
+# Capabilities
+
+Capabilities returns what operations and resources are supported by the server. 
+This is returned to the client as a [CapabilityStatment](/documentation/Data_Model/R4/CapabilityStatement) resource.
+
+
+## API
+<Tabs>
+  <TabItem value="cli" label="CLI">
+```bash
+iguhealth api capabilities r4
+```
+  </TabItem>
+  <TabItem value="curl" label="Curl">
+```bash
+ curl --request GET --header "Authorization: Header" --header "Content-Type: application/fhir+json" ${domain}/w/${tenant}/api/v1/fhir/r4/metadata
+```
+  </TabItem>
+   <TabItem value="typescript" label="Typescript">
+```typescript
+await client.capabilities({}, FHIRVersion);
+```
+   </TabItem>
+</Tabs>
+
+## CapabilityStatement example
+
+<Tabs>
+  <TabItem value="response" label="Response">
+```json
+{
+  "resourceType": "CapabilityStatement",
+  "status": "active",
+  "fhirVersion": "4.0",
+  "date": "2024-06-23T22:57:09.826Z",
+  "kind": "capability",
+  "format": [
+    "json"
+  ],
+  "rest": [
+    {
+      "mode": "server",
+      "security": {
+        "cors": true
+      },
+      "interaction": [
+        {
+          "code": "search-system"
+        }
+      ],
+      "searchParam": [
+        {
+          "name": "_text",
+          "definition": "http://hl7.org/fhir/SearchParameter/DomainResource-text",
+          "type": "string",
+          "documentation": "Search on the narrative of the resource"
+        },
+        {
+... capabilities
+```
+  </TabItem>
+</Tabs>

@@ -710,6 +710,31 @@ async function getResource<Version extends FHIR_VERSION>(
   return res[0].resource as unknown as Resource<Version, AllResourceTypes>;
 }
 
+async function getVersionedResource<Version extends FHIR_VERSION>(  ctx: FHIRServerCTX,
+  fhirVersion: Version,
+  resourceType: ResourceType<Version>,
+  id: string,
+versionId: string){
+  const res = await db.select("resources", {
+    tenant: ctx.tenant,
+    resource_type: resourceType,
+    id: id,
+    version_id: parseInt(versionId),
+    fhir_version: toDBFHIRVersion(fhirVersion),
+  }).run(ctx.db);
+
+  if (res.length === 0) {
+    throw new OperationError(
+      outcomeError(
+        "not-found",
+        `'${resourceType}' with id '${id}' was not found`,
+      ),
+    );
+  }
+
+  return res[0].resource as unknown as Resource<Version, AllResourceTypes>;
+}
+
 const validHistoryParameters = ["_count", "_since", "_since-version"]; // "_at", "_list"]
 function processHistoryParameters(
   parameters: ParsedParameter<string | number>[],
@@ -1073,6 +1098,31 @@ function createPostgresMiddleware<
               body: resource,
             } as FHIRResponse,
           };
+        }
+        case "vread-request": {
+          const resource = await getVersionedResource(
+            context.ctx,
+            context.request.fhirVersion,
+            context.request.resourceType,
+            context.request.id,
+            context.request.versionId,
+          );
+
+          return {
+            state: context.state,
+            ctx: context.ctx,
+            request: context.request,
+            response: {
+              fhirVersion: context.request.fhirVersion,
+              level: "instance",
+              type: "vread-response",
+              resourceType: context.request.resourceType,
+              id: context.request.id,
+              versionId: context.request.versionId,
+              body: resource,
+            } as FHIRResponse,
+          };
+
         }
         case "search-request": {
           const result = await executeSearchQuery(

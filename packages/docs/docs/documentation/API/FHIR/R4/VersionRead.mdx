@@ -1,0 +1,59 @@
+import TabItem from "@theme/TabItem";
+import Tabs from "@theme/Tabs";
+
+# Version Read
+
+The version read operation retrieves the version of a resource at a specific point in time specified by the version id.
+
+
+## API
+<Tabs>
+  <TabItem value="cli" label="CLI">
+```bash
+yarn iguhealth api vread r4 $ResourceType $ResourceId $ResourceVersionId
+```
+  </TabItem>
+  <TabItem value="curl" label="Curl">
+```bash
+ curl --request GET --header "Authorization: Header" --header "Content-Type: application/fhir+json" --data '$MY_BATCH_BUNDLE' ${domain}/w/${tenant}/api/v1/fhir/r4/${ResourceType}/${ResourceId}/${ResourceVersionId}
+```
+  </TabItem>
+   <TabItem value="typescript" label="Typescript">
+```typescript
+await client.vread({}, FHIRVersion, resourceType, id, versionId);
+```
+   </TabItem>
+</Tabs>
+
+## Version Read response
+<Tabs>
+<TabItem value="request" label="Request">
+```bash
+yarn iguhealth api vread r4 Patient gfH47MJRa8wG9eH5XZwibo 2551
+```
+</TabItem>
+<TabItem value="response" label="Response">
+```json
+{
+  "id": "gfH47MJRa8wG9eH5XZwibo",
+  "meta": {
+    "extension": [
+      {
+        "url": "https://iguhealth.app/version-sequence",
+        "valueInteger": 2551
+      },
+      {
+        "url": "https://iguhealth.app/author",
+        "valueReference": {
+          "reference": "ClientApplication/5K89P9NcTjtw4wjy-POJsD"
+        }
+      }
+    ],
+    "versionId": "2551",
+    "lastUpdated": "2024-06-23T23:01:15.346+00:00"
+  },
+  "resourceType": "Patient"
+}
+```
+</TabItem>
+</Tabs>

@@ -348,7 +348,8 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
         fhirVersion: state.version,
         level: "instance",
         type: "vread-request",
-        resourceType: operation.resource as unknown as ResourceType<Version>,
+        resourceType: getFixtureResource(state, operation.targetId)
+          ?.resourceType,
         id: getFixtureResource(state, operation.targetId)?.id as id,
         versionId: getFixtureResource(state, operation.targetId)?.meta
           ?.versionId as id,
@@ -621,7 +622,9 @@ function evaluateOperator(
     case "eval":
       return v1 === v2;
     default:
-      return false;
+      throw new OperationError(
+        outcomeError("invalid", `Invalid operator '${operator}'`),
+      );
   }
 }
 
