@@ -1,7 +1,7 @@
 import Layout from "@theme/Layout";
 import React, { useEffect, useMemo, useState } from "react";
 
-import { R4, Resource } from "@iguhealth/fhir-types/version";
+import { R4, R4B, Resource } from "@iguhealth/fhir-types/versions";
 
 function RenderAction({ action, report }) {
   if (action.operation) {
@@ -164,9 +164,12 @@ function RenderTestScript({
 }
 
 export default function RenderReports() {
-  const [bundle, setBundle] = useState<Resource<R4, "Bundle"> | undefined>(
+  const [r4Bundle, setR4Bundle] = useState<Resource<R4, "Bundle"> | undefined>(
     undefined,
   );
+  const [r4bBundle, setR4BBundle] = useState<
+    Resource<R4B, "Bundle"> | undefined
+  >(undefined);
 
   const [context, setContext] = useState<
     | {
@@ -177,27 +180,31 @@ export default function RenderReports() {
   >(undefined);
 
   useEffect(() => {
-    fetch("https://iguhealth.app/testscripts/reports.json")
+    fetch("https://iguhealth.app/testscripts/r4-reports.json")
       .then((res) => res.json())
-      .then(setBundle)
+      .then(setR4Bundle)
+      .catch(console.error);
+    fetch("https://iguhealth.app/testscripts/r4b-reports.json")
+      .then((res) => res.json())
+      .then(setR4BBundle)
       .catch(console.error);
   }, []);
 
   const testScripts: Resource<R4, "TestScript">[] = useMemo(() => {
     return (
-      bundle?.entry
+      r4Bundle?.entry
         ?.map((entry) => entry.resource)
         .filter((r) => r.resourceType === "TestScript") ?? []
     );
-  }, [bundle]);
+  }, [r4Bundle]);
 
   const testReports: Resource<R4, "TestReport">[] = useMemo(() => {
     return (
-      bundle?.entry
+      r4Bundle?.entry
         ?.map((entry) => entry.resource)
         .filter((r) => r.resourceType === "TestReport") ?? []
     );
-  }, [bundle]);
+  }, [r4Bundle]);
 
   return (
     <Layout title={`Test Reports`} description="Test script reports">
