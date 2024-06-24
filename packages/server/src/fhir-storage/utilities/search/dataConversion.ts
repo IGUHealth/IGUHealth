@@ -211,8 +211,6 @@ async function toReferenceRemote<Version extends FHIR_VERSION>(
     url?: canonical | uri;
   }>
 > {
-  console.log("Reference Type:", value.meta()?.type);
-
   switch (value.meta()?.type) {
     case "Reference": {
       const reference: Reference = value.valueOf() as Reference;
@@ -247,8 +245,6 @@ async function toReferenceRemote<Version extends FHIR_VERSION>(
             value.valueOf().toString() as canonical,
           )
         : undefined;
-
-      console.log(resource, value.valueOf().toString());
 
       if (!resource) {
         return [];

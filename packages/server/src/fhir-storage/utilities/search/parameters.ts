@@ -270,8 +270,6 @@ export async function parametersWithMetaAssociated(
       );
 
       if (searchParameterSearchResult.length === 0) {
-        console.trace();
-        console.log(searchParameterSearchResult, resourceTypes, p.name);
         throw new OperationError(
           outcomeError(
             "not-found",
