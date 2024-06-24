@@ -1,8 +1,8 @@
 import { program } from "commander";
 
 import loadEnv from "../env.js";
-import { generateCommands } from "./generate.js";
 import { adminCommands } from "./admin.js";
+import { generateCommands } from "./generate.js";
 import { runCommands, terminateServices } from "./run.js";
 
 loadEnv();
