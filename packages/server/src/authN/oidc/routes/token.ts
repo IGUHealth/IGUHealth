@@ -154,7 +154,7 @@ export function tokenPost<
 
         ctx.body = response;
         ctx.status = 200;
-        ctx.set("Content-Type", "application/json");
+        ctx.set("Content-Type", "application/json; charset=utf-8");
         return;
       }
       // https://www.rfc-editor.org/rfc/rfc6749.html#section-6
@@ -186,7 +186,7 @@ export function tokenPost<
           expires_in: 7200,
         };
         ctx.status = 200;
-        ctx.set("Content-Type", "application/json");
+        ctx.set("Content-Type", "application/json; charset=utf-8");
         break;
       }
       default: {

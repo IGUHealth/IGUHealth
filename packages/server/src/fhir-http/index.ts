@@ -863,7 +863,7 @@ export function fhirResponseToHTTPResponse(
   // https://github.com/koajs/koa/blob/master/docs/api/response.md#object
   // Will default to application/json unless specified.
   const headers: Record<string, string> = {
-    "Content-Type": "application/fhir+json",
+    "Content-Type": "application/fhir+json; charset=utf-8",
   };
   switch (fhirResponse.type) {
     case "read-response":
