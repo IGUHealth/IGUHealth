@@ -934,6 +934,8 @@ async function updateResource<
         outcomeError("invalid", "Resource id not found on resource"),
       );
 
+
+
     const existingResource = await getResource(
       ctx,
       fhirVersion,
@@ -961,14 +963,9 @@ async function updateResource<
       patches: JSON.stringify([{ op: "replace", path: "", value: resource }]),
     };
 
-    const resourceCol = <const>["resource"];
-    type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
-    const res = await db.sql<s.resources.SQL, ResourceReturn[]>`
-        INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
-          data,
-        )}) RETURNING ${db.cols(resourceCol)}`.run(ctx.db);
+    const res = await db.insert("resources", data, {returning: ["resource"]}).run(ctx.db);
 
-    const updatedResource = res[0].resource as unknown as Resource<
+    const updatedResource = res.resource as unknown as Resource<
       Version,
       AllResourceTypes
     >;
@@ -1227,6 +1224,9 @@ function createPostgresMiddleware<
           };
         }
         case "update-request": {
+          if(context.request.id !== context.request.body.id){
+            throw new OperationError(outcomeError("invalid", "The id of the request does not match the id of the resource."))
+          }
           const savedResource = await updateResource(
             context.ctx,
             context.request.fhirVersion,
