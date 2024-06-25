@@ -24,7 +24,7 @@
   "devDependencies": {
     "@iguhealth/fhir-types": "workspace:^",
     "@types/node": "^20.12.12",
-    "typescript": "5.4.5"
+    "typescript": "5.5.2"
   },
   "files": [
     "lib/**",
