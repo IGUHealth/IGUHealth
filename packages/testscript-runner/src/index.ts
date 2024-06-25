@@ -301,7 +301,7 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
             fhirVersion: state.version,
             level: "instance",
             type: "invoke-request",
-            resourceType: target.resourceType,
+            resourceType: operation.resource ?? target.resourceType,
             id: target.id,
             operation: op as code,
             body: parameters,
@@ -334,13 +334,16 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
           outcomeFatal("invalid", "targetId is required for read operation"),
         );
 
+      const target = getFixtureResource(state, operation.targetId);
+
       return {
         fhirVersion: state.version,
         level: "instance",
         type: "read-request",
-        resourceType: getFixtureResource(state, operation.targetId)
-          ?.resourceType as unknown as ResourceType<Version>,
-        id: getFixtureResource(state, operation.targetId)?.id as id,
+        resourceType:
+          operation.resource ??
+          (target?.resourceType as unknown as ResourceType<Version>),
+        id: target?.id as id,
       } as FHIRRequest;
     }
     case "create": {
@@ -348,13 +351,13 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
         throw new OperationError(
           outcomeFatal("invalid", "sourceId is required for read operation"),
         );
+      const target = getFixtureResource(state, operation.sourceId);
       return {
         fhirVersion: state.version,
         level: "type",
         type: "create-request",
-        resourceType: getFixtureResource(state, operation.sourceId)
-          .resourceType,
-        body: getFixtureResource(state, operation.sourceId),
+        resourceType: operation.resource ?? target.resourceType,
+        body: target,
       } as FHIRRequest;
     }
     case "patch": {
@@ -366,30 +369,30 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
         throw new OperationError(
           outcomeFatal("invalid", "sourceId is required for patch operation"),
         );
-
+      const target = getFixtureResource(state, operation.targetId);
       return {
         fhirVersion: state.version,
         level: "instance",
         type: "patch-request",
-        resourceType: getFixtureResource(state, operation.targetId)
-          ?.resourceType as unknown as ResourceType<Version>,
-        id: getFixtureResource(state, operation.targetId)?.id as id,
+        resourceType:
+          operation.resource ??
+          (target?.resourceType as unknown as ResourceType<Version>),
+        id: target?.id as id,
         body: getPatches(state, operation.sourceId),
       } as FHIRRequest;
     }
     case "vread": {
       if (!operation.targetId)
         throw new OperationError(
-          outcomeFatal("invalid", "targetId is required for read operation"),
+          outcomeFatal("invalid", "targetId is required for vread operation"),
         );
-
+      const target = getFixtureResource(state, operation.targetId);
       return {
         fhirVersion: state.version,
         level: "instance",
         type: "vread-request",
-        resourceType: getFixtureResource(state, operation.targetId)
-          ?.resourceType,
-        id: getFixtureResource(state, operation.targetId)?.id as id,
+        resourceType: operation.resource ?? target?.resourceType,
+        id: target?.id as id,
         versionId: getFixtureResource(state, operation.targetId)?.meta
           ?.versionId as id,
       } as FHIRRequest;
@@ -402,29 +405,30 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
         );
       if (!operation.targetId)
         throw new OperationError(
-          outcomeFatal("invalid", "targetId is required for read operation"),
+          outcomeFatal("invalid", "targetId is required for update operation"),
         );
-
+      const target = getFixtureResource(state, operation.targetId);
       return {
         fhirVersion: state.version,
         level: "instance",
         type: "update-request",
-        resourceType: getFixtureResource(state, operation.targetId)
-          ?.resourceType as unknown as ResourceType<Version>,
-        id: getFixtureResource(state, operation.targetId)?.id as id,
+        resourceType:
+          operation.resource ??
+          (target?.resourceType as unknown as ResourceType<Version>),
+        id: target?.id as id,
         body: getFixtureResource(state, operation.sourceId),
       } as FHIRRequest;
     }
     case "delete": {
       switch (true) {
         case operation.targetId !== undefined: {
+          const target = getFixtureResource(state, operation.targetId);
           return {
             fhirVersion: state.version,
             level: "instance",
             type: "delete-request",
-            resourceType: getFixtureResource(state, operation.targetId)
-              ?.resourceType,
-            id: getFixtureResource(state, operation.targetId)?.id as id,
+            resourceType: operation.resource ?? target?.resourceType,
+            id: target?.id as id,
           } as FHIRRequest;
         }
         case operation.resource !== undefined: {
@@ -532,13 +536,15 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
     case "history": {
       switch (true) {
         case operation.targetId !== undefined: {
+          const target = getFixtureResource(state, operation.targetId);
           return {
             fhirVersion: state.version,
             level: "instance",
             type: "history-request",
-            resourceType: getFixtureResource(state, operation.targetId)
-              ?.resourceType as unknown as ResourceType<Version>,
-            id: getFixtureResource(state, operation.targetId)?.id as id,
+            resourceType:
+              operation.resource ??
+              (target?.resourceType as unknown as ResourceType<Version>),
+            id: target?.id as id,
             parameters: parseQuery(
               evaluateVariables(state, pointer, operation.params ?? ""),
             ),

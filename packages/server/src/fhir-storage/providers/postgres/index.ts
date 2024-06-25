@@ -660,6 +660,7 @@ async function createResource<
       author_id: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID],
       author_type: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE],
       resource: resource as unknown as db.JSONObject,
+      
     };
     // the <const> prevents generalization to string[]
     const resourceCol = <const>["resource"];
@@ -679,18 +680,16 @@ async function createResource<
   });
 }
 
-async function getResource<Version extends FHIR_VERSION>(
+async function getResourceById<Version extends FHIR_VERSION>(
   ctx: FHIRServerCTX,
   fhirVersion: Version,
-  resourceType: ResourceType<Version>,
   id: string,
-): Promise<Resource<Version, AllResourceTypes>> {
+): Promise<Resource<Version, AllResourceTypes> | undefined> {
   const latestCols = <const>["resource", "deleted"];
   type ResourceReturn = s.resources.OnlyCols<typeof latestCols>;
   const getLatestVersionSQLFragment = db.sql<s.resources.SQL, ResourceReturn[]>`
     SELECT ${db.cols(latestCols)} FROM ${"resources"} WHERE ${{
       tenant: ctx.tenant,
-      resource_type: resourceType,
       id: id,
       fhir_version: toDBFHIRVersion(fhirVersion),
     }} ORDER BY ${"version_id"} DESC LIMIT 1
@@ -700,7 +699,17 @@ async function getResource<Version extends FHIR_VERSION>(
   SELECT * FROM (${getLatestVersionSQLFragment}) as t WHERE t.deleted = false
   `.run(ctx.db);
 
-  if (res.length === 0) {
+  return res[0]?.resource as unknown as Resource<Version, AllResourceTypes> | undefined;
+}
+
+async function getResource<Version extends FHIR_VERSION, Type extends ResourceType<Version>>(
+  ctx: FHIRServerCTX,
+  fhirVersion: Version,
+  resourceType: Type,
+  id: string,
+): Promise<Resource<Version, Type>> {
+  const resource = await getResourceById(ctx, fhirVersion, id);
+  if(resource === undefined || resource.resourceType !== resourceType){
     throw new OperationError(
       outcomeError(
         "not-found",
@@ -708,7 +717,8 @@ async function getResource<Version extends FHIR_VERSION>(
       ),
     );
   }
-  return res[0].resource as unknown as Resource<Version, AllResourceTypes>;
+
+  return resource as Resource<Version, Type>;
 }
 
 async function getVersionedResource<Version extends FHIR_VERSION>(  ctx: FHIRServerCTX,
@@ -934,20 +944,29 @@ async function updateResource<
         outcomeError("invalid", "Resource id not found on resource"),
       );
 
-    const existingResource = await getResource(
+    const existingResource = await getResourceById(
       ctx,
       fhirVersion,
-      resource.resourceType as ResourceType<Version>,
       resource.id,
     );
 
-    if (!existingResource)
+    if(existingResource && existingResource.resourceType !== resource.resourceType){
       throw new OperationError(
         outcomeError(
-          "not-found",
-          `'${resource.resourceType}' with id '${resource.id}' was not found`,
+          "invalid",
+          `'${existingResource.resourceType}' is not the same as '${resource.resourceType}'`,
         ),
       );
+    }
+
+    // https://hl7.org/fhir/R4/http.html#upsert
+    // Allow clients to define their own ids.
+    // Necessary for certain external test suites.
+    // Note we automatically set id to be the request.id from update.
+    
+    if(!existingResource){
+      ctx.logger.warn({message: "Resource not found. Creating new resource with id.", id: resource.id});
+    }
 
     const data: s.resources.Insertable = {
       tenant: ctx.tenant,
@@ -956,19 +975,14 @@ async function updateResource<
       author_id: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID],
       author_type: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE],
       resource: resource as unknown as db.JSONObject,
-      prev_version_id: parseInt(existingResource.meta?.versionId as string),
+      prev_version_id: existingResource ? parseInt(existingResource.meta?.versionId as string) : undefined,
       // [TODO] probably uneccessary to insert this and can instead derive in case of syncing.
       patches: JSON.stringify([{ op: "replace", path: "", value: resource }]),
     };
 
-    const resourceCol = <const>["resource"];
-    type ResourceReturn = s.resources.OnlyCols<typeof resourceCol>;
-    const res = await db.sql<s.resources.SQL, ResourceReturn[]>`
-        INSERT INTO ${"resources"}(${db.cols(data)}) VALUES(${db.vals(
-          data,
-        )}) RETURNING ${db.cols(resourceCol)}`.run(ctx.db);
+    const res = await db.insert("resources", data, {returning: ["resource"]}).run(ctx.db);
 
-    const updatedResource = res[0].resource as unknown as Resource<
+    const updatedResource = res.resource as unknown as Resource<
       Version,
       AllResourceTypes
     >;

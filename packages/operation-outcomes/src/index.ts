@@ -18,6 +18,9 @@ export function issueToStatusCode(issue: Issue): number {
     }
     case "error": {
       switch (issue.code) {
+        case "not-found": {
+          return 404;
+        }
         case "login": {
           return 401;
         }
