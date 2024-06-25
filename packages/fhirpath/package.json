@@ -30,7 +30,7 @@
     "peggy": "^4.0.2",
     "ts-jest": "^29.1.4",
     "ts-pegjs": "^4.2.1",
-    "typescript": "5.4.5"
+    "typescript": "5.5.2"
   },
   "files": [
     "lib/**"

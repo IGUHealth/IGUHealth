@@ -34,7 +34,7 @@
     "react-scripts": "^5.0.1",
     "react-window": "^1.8.10",
     "recoil": "^0.7.7",
-    "typescript": "5.4.5",
+    "typescript": "5.5.2",
     "web-vitals": "^3.5.2"
   },
   "scripts": {
