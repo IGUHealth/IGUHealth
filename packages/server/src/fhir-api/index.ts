@@ -162,7 +162,7 @@ async function serverCapabilities<Version extends FHIR_VERSION>(
   return {
     resourceType: "CapabilityStatement",
     status: "active",
-    fhirVersion: fhirVersion,
+    fhirVersion: fhirVersion === R4 ? "4.0.1" : "4.3.0",
     date: new Date().toISOString(),
     kind: "capability",
     format: ["json"],
