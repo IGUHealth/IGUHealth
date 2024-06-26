@@ -46,7 +46,7 @@ import {
   deriveLimit,
   searchParameterToTableName,
 } from "../../utilities/search/parameters.js";
-import { fhirResponseToBundleEntry } from "../../utilities/bundle.js";
+import { fhirResourceToBundleEntry, fhirResponseToBundleEntry, fullUrl } from "../../utilities/bundle.js";
 import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
 import { asSystemCTX, FHIRServerCTX } from "../../../fhir-api/types.js";
 import { param_types_supported } from "./constants.js";
@@ -843,6 +843,7 @@ async function getHistory<
   const resourceHistory = history.map((row) => ({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resource: row.resource as any,
+    fullUrl: fullUrl(fhirVersion, ctx.tenant, `${row.resource.resourceType}/${row.resource.id}`),
     request: {
       url: `${(row.resource as unknown as Resource<Version, AllResourceTypes>).resourceType}/${
         (row.resource as unknown as Resource<Version, AllResourceTypes>).id
@@ -1084,6 +1085,8 @@ async function conditionalDelete(ctx: FHIRServerCTX, searchRequest:R4TypeSearchR
   }
 }
 
+
+
 function createPostgresMiddleware<
   State extends {
     transaction_entry_limit: number;
@@ -1160,7 +1163,7 @@ function createPostgresMiddleware<
                     total: result.total as unsignedInt | undefined,
                     resourceType: "Bundle",
                     type: "searchset",
-                    entry: result.resources.map(resource => ({resource}))
+                    entry: result.resources.map(r => fhirResourceToBundleEntry(context.request.fhirVersion, context.ctx.tenant, r))
                   },
                 } as FHIRResponse,
               };
@@ -1180,7 +1183,7 @@ function createPostgresMiddleware<
                     total: result.total as unsignedInt | undefined,
                     resourceType: "Bundle",
                     type: "searchset",
-                    entry: result.resources.map(resource => ({resource}))
+                    entry: result.resources.map(r => fhirResourceToBundleEntry(context.request.fhirVersion, context.ctx.tenant, r))
                   },
                 } as FHIRResponse,
               };
@@ -1422,7 +1425,7 @@ function createPostgresMiddleware<
           return FHIRTransaction(
             context.ctx,
             db.IsolationLevel.RepeatableRead,
-            async (ctx) => {
+            async (ctx: FHIRServerCTX) => {
               for (const index of order) {
                 const entry = transactionBundle.entry?.[parseInt(index)];
                 if (!entry)
@@ -1461,7 +1464,7 @@ function createPostgresMiddleware<
 
                 const fhirResponse = await ctx.client.request(ctx, fhirRequest);
 
-                const responseEntry = fhirResponseToBundleEntry(fhirResponse);
+                const responseEntry = fhirResponseToBundleEntry(ctx.tenant, fhirResponse);
                 responseEntries[parseInt(index)] = responseEntry;
                 // Generate patches to update the transaction references.
                 const patches = entry.fullUrl

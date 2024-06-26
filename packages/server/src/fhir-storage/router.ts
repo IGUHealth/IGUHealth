@@ -294,7 +294,10 @@ function createRouterMiddleware<
                     context.ctx,
                     fhirRequest,
                   );
-                  return fhirResponseToBundleEntry(fhirResponse);
+                  return fhirResponseToBundleEntry(
+                    context.ctx.tenant,
+                    fhirResponse,
+                  );
                 } catch (e) {
                   if (isOperationError(e)) {
                     return {
