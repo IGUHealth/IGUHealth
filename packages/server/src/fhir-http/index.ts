@@ -834,6 +834,7 @@ export function fhirResponseToHTTPResponse(
               ? `/${fhirResponse.versionId}`
               : ""
           }`,
+          ETag: `W/"${fhirResponse.body.meta?.versionId}"`,
         },
         body: fhirResponse.body,
         status: 200,
@@ -844,6 +845,7 @@ export function fhirResponseToHTTPResponse(
         headers: {
           ...headers,
           Location: `${fhirResponse.body.resourceType}/${fhirResponse.body.id}`,
+          ETag: `W/"${fhirResponse.body.meta?.versionId}"`,
         },
         body: fhirResponse.body,
         status: 200,
@@ -868,6 +870,7 @@ export function fhirResponseToHTTPResponse(
         headers: {
           ...headers,
           Location: `${fhirResponse.body.resourceType}/${fhirResponse.body.id}`,
+          ETag: `W/"${fhirResponse.body.meta?.versionId}"`,
         },
         body: fhirResponse.body,
         status: 201,

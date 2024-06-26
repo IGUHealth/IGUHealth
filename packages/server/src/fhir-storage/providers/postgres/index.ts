@@ -847,11 +847,17 @@ async function getHistory<
     return ({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       resource: resource as any,
-      fullUrl: fullUrl(fhirVersion, ctx.tenant, `${(resource).resourceType}/${resource.id}/_history/${resource.meta?.versionId}`),
+      fullUrl: fullUrl(fhirVersion, ctx.tenant, `${(resource).resourceType}/${resource.id}`),
       request: {
         url: `resource.resourceType}/${resource.id}` as uri,
         method: row.request_method as code,
       },
+      response: {
+        location: `resource.resourceType}/${resource.id}` as uri,
+        status: "200",
+        etag: resource.meta?.versionId as id,
+        lastModified: resource.meta?.lastUpdated 
+      }
     })
   });
 

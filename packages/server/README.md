@@ -12,7 +12,8 @@
 | REDIS_HOST | Redis host | true | 127.0.0.1 |
 | REDIS_PORT | Redis port | true | 6379 |
 | REDIS_SSL | Whether Redis connection is SSL | false | false |
-| API_URL | Current url where API is hosted from (used in operation execution clients). | false |  |
+| FHIR_DELETE_CONDITIONAL_LIMIT | Maximum total number of records to delete in a single conditional delete operation | false | 20 |
+| API_URL | Current url where API is hosted from (used in operation execution clients). | true |  |
 | AWS_REGION | AWS Region where you want lambdas to be executed from. | false |  |
 | AWS_LAMBDA_ROLE | Execution role of lambda functions. | false |  |
 | AWS_LAMBDA_ACCESS_KEY_ID | Access key id for lambda (must have permission to invoke and create lambda functions) | false |  |
@@ -21,10 +22,8 @@
 | AUTH_PUBLIC_ACCESS | Sets the server to allow full public access when set to true. | false | false |
 | AUTH_ALLOW_GLOBAL_SIGNUP | Sets whether to allow global signup for users. | false | false |
 | AUTH_ALLOW_TENANT_SIGNUP | Sets whether to allow tenant signup for users. | false | false |
-| AUTH_LOCAL_CERTIFICATION_LOCATION | Location for local certifications for IGUHEALTH ISSUER | false |  |
-| AUTH_LOCAL_SIGNING_KEY | The signing key used to generate new local tokens | false |  |
-| AUTH_EXTERNAL_JWK_URI | JWK remote url to pull JSON WEB Key Set. | false |  |
-| AUTH_EXTERNAL_JWT_ISSUER | Issuer of the JWT. | false |  |
+| AUTH_LOCAL_CERTIFICATION_LOCATION | Location for local certifications for IGUHEALTH ISSUER | true |  |
+| AUTH_LOCAL_SIGNING_KEY | The signing key used to generate new local tokens | true |  |
 | EMAIL_PROVIDER | Set the email provider. | false |  |
 | EMAIL_SENDGRID_API_KEY | Set the sendgrid api key (only used on email provider set to sendgrid). | false |  |
 | EMAIL_FROM | Set the email from address. | false |  |
