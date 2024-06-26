@@ -195,6 +195,14 @@
             "compareToSourceId": "create-response",
             "operator": "equals"
           }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry[1].response.etag",
+            "compareToSourceExpression": "Patient.meta.versionId",
+            "compareToSourceId": "create-response",
+            "operator": "equals"
+          }
         }
       ]
     }
