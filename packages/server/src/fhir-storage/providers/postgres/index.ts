@@ -840,17 +840,20 @@ async function getHistory<
 
   const history = await historySQL.run(ctx.db);
 
-  const resourceHistory = history.map((row) => ({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    resource: row.resource as any,
-    fullUrl: fullUrl(fhirVersion, ctx.tenant, `${row.resource.resourceType}/${row.resource.id}`),
-    request: {
-      url: `${(row.resource as unknown as Resource<Version, AllResourceTypes>).resourceType}/${
-        (row.resource as unknown as Resource<Version, AllResourceTypes>).id
-      }` as uri,
-      method: row.request_method as code,
-    },
-  }));
+
+
+  const resourceHistory = history.map((row) => {
+    const resource = row.resource as unknown as Resource<Version, AllResourceTypes>
+    return ({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      resource: resource as any,
+      fullUrl: fullUrl(fhirVersion, ctx.tenant, `${(resource).resourceType}/${resource.id}/_history/${resource.meta?.versionId}`),
+      request: {
+        url: `resource.resourceType}/${resource.id}` as uri,
+        method: row.request_method as code,
+      },
+    })
+  });
 
   return resourceHistory;
 }
