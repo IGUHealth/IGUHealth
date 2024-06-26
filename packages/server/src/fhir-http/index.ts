@@ -1,3 +1,7 @@
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone.js";
+import utc from "dayjs/plugin/utc.js";
+
 import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
 import parseUrl from "@iguhealth/client/url";
 import { resourceTypes } from "@iguhealth/fhir-types/r4/sets";
@@ -6,6 +10,9 @@ import { resourceTypes as r4bResourceTypes } from "@iguhealth/fhir-types/r4b/set
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 /*
  ** For Summary of types see:
@@ -813,6 +820,13 @@ export type HTTPResponse = {
   headers?: Record<string, string>;
 };
 
+function lastModified(instant: r4.instant | undefined): string | undefined {
+  if (!instant) return undefined;
+  return dayjs(instant, "YYYY-MM-DDThh:mm:ss.SSSZ")
+    .tz("GMT")
+    .format("ddd, DD MMM YYYY HH:mm:ss [GMT]");
+}
+
 export function fhirResponseToHTTPResponse(
   fhirResponse: FHIRResponse,
 ): HTTPResponse {
@@ -835,6 +849,8 @@ export function fhirResponseToHTTPResponse(
               : ""
           }`,
           ETag: `W/"${fhirResponse.body.meta?.versionId}"`,
+          "Last-Modified":
+            lastModified(fhirResponse.body.meta?.lastUpdated) ?? "",
         },
         body: fhirResponse.body,
         status: 200,
@@ -846,6 +862,8 @@ export function fhirResponseToHTTPResponse(
           ...headers,
           Location: `${fhirResponse.body.resourceType}/${fhirResponse.body.id}`,
           ETag: `W/"${fhirResponse.body.meta?.versionId}"`,
+          "Last-Modified":
+            lastModified(fhirResponse.body.meta?.lastUpdated) ?? "",
         },
         body: fhirResponse.body,
         status: 200,
@@ -871,6 +889,8 @@ export function fhirResponseToHTTPResponse(
           ...headers,
           Location: `${fhirResponse.body.resourceType}/${fhirResponse.body.id}`,
           ETag: `W/"${fhirResponse.body.meta?.versionId}"`,
+          "Last-Modified":
+            lastModified(fhirResponse.body.meta?.lastUpdated) ?? "",
         },
         body: fhirResponse.body,
         status: 201,
