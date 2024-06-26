@@ -807,50 +807,6 @@ export function httpRequestToFHIRRequest(
   }
 }
 
-function toR4Bundle(
-  bundleType:
-    | "document"
-    | "message"
-    | "transaction"
-    | "transaction-response"
-    | "batch"
-    | "batch-response"
-    | "history"
-    | "searchset"
-    | "collection",
-  total: r4.unsignedInt | undefined,
-  resources: r4.Resource[],
-): r4.Bundle {
-  return {
-    resourceType: "Bundle",
-    type: bundleType as r4.code,
-    total: total,
-    entry: resources.map((resource) => ({ resource })),
-  };
-}
-
-function toR4BBundle(
-  bundleType:
-    | "document"
-    | "message"
-    | "transaction"
-    | "transaction-response"
-    | "batch"
-    | "batch-response"
-    | "history"
-    | "searchset"
-    | "collection",
-  total: r4b.unsignedInt | undefined,
-  resources: r4b.Resource[],
-): r4b.Bundle {
-  return {
-    resourceType: "Bundle",
-    type: bundleType as r4b.code,
-    total: total,
-    entry: resources.map((resource) => ({ resource })),
-  };
-}
-
 export type HTTPResponse = {
   status: number;
   body?: unknown;
