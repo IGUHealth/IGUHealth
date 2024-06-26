@@ -42,20 +42,20 @@ export function fhirResponseToBundleEntry(
   tenant: TenantId,
   fhirResponse: FHIRResponse,
 ): BundleEntry {
-  const koaResponse = fhirResponseToHTTPResponse(fhirResponse);
+  const httpResponse = fhirResponseToHTTPResponse(fhirResponse);
   return {
     response: {
-      status: koaResponse.status ? koaResponse.status?.toString() : "200",
-      location: (koaResponse.headers?.Location ??
-        koaResponse.headers?.["Content-Location"]) as uri | undefined,
+      status: httpResponse.status ? httpResponse.status?.toString() : "200",
+      location: (httpResponse.headers?.Location ??
+        httpResponse.headers?.["Content-Location"]) as uri | undefined,
     },
     fullUrl: fullUrl(
       fhirResponse.fhirVersion,
       tenant,
-      koaResponse.headers?.Location ?? "",
+      httpResponse.headers?.Location ?? "",
     ),
-    resource: koaResponse.body
-      ? (koaResponse.body as Resource<R4, AllResourceTypes>)
+    resource: httpResponse.body
+      ? (httpResponse.body as Resource<R4, AllResourceTypes>)
       : undefined,
   };
 }
