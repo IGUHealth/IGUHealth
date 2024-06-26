@@ -94,7 +94,7 @@
             "code": "delete"
           },
           "resource": "Patient",
-          "param": "_tag=read-test",
+          "params": "_tag=read-test",
           "description": "Delete Patients created in test."
         }
       }

@@ -139,7 +139,7 @@
             "code": "delete"
           },
           "resource": "Patient",
-          "param": "_tag=vread-test",
+          "params": "_tag=vread-test",
           "description": "Delete Patients created in test."
         }
       }

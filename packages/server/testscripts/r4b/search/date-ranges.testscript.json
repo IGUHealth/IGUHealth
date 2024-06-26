@@ -1,0 +1,242 @@
+{
+  "id": "date-ranges",
+  "resourceType": "TestScript",
+  "title": "Date range tests",
+  "contained": [
+    {
+      "id": "observation",
+      "resourceType": "Observation",
+      "meta": {
+        "tag": [{ "code": "date-range-test" }]
+      },
+
+      "effectiveDateTime": "2024-06-26T12:50:26-05:00",
+      "code": {
+        "coding": [
+          {
+            "code": "123"
+          }
+        ]
+      },
+      "status": "final"
+    }
+  ],
+  "fixture": [
+    {
+      "id": "fixture-observation",
+      "resource": {
+        "reference": "#observation"
+      }
+    }
+  ],
+  "test": [
+    {
+      "id": "01-date-range",
+      "name": "Date ranges tests",
+      "description": "Testing date range searches and ranges.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "create"
+            },
+            "resource": "Observation",
+            "responseId": "create-response",
+            "sourceId": "fixture-observation"
+          }
+        },
+        {
+          "assert": {
+            "resource": "Observation"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "resource": "Observation",
+            "params": "date=2024"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.id",
+            "compareToSourceId": "create-response",
+            "compareToSourceExpression": "Observation.id"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "resource": "Observation",
+            "params": "date=2023"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.count()",
+            "value": "0"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "resource": "Observation",
+            "params": "date=2024-06"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.id",
+            "compareToSourceId": "create-response",
+            "compareToSourceExpression": "Observation.id"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "resource": "Observation",
+            "params": "date=2024-05"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.count()",
+            "value": "0"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "resource": "Observation",
+            "params": "date=2024-06-26"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.id",
+            "compareToSourceId": "create-response",
+            "compareToSourceExpression": "Observation.id"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "resource": "Observation",
+            "params": "date=2024-06-25"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.count()",
+            "value": "0"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "resource": "Observation",
+            "params": "date=2024-06-26T12:50-05:00"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.id",
+            "compareToSourceId": "create-response",
+            "compareToSourceExpression": "Observation.id"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "resource": "Observation",
+            "params": "date=2024-06-26T12:51-05:00"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.count()",
+            "value": "0"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "resource": "Observation",
+            "params": "date=2024-06-26T12:50:26-05:00"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.count()",
+            "value": "1"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.id",
+            "compareToSourceId": "create-response",
+            "compareToSourceExpression": "Observation.id"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "resource": "Observation",
+            "params": "date=2024-06-26T12:50:27-05:00"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.count()",
+            "value": "0"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+          },
+          "resource": "Observation",
+          "params": "_tag=date-range-test"
+        }
+      }
+    ]
+  }
+}
