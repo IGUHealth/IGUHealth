@@ -51,6 +51,7 @@ export default function dateClauses(
             const [startValueRange, endValueRange] = getValueRange(value);
 
             switch (prefix) {
+              // the range of the search value fully contains the range of the target value
               case "eq":
               case undefined: {
                 return {
@@ -58,22 +59,42 @@ export default function dateClauses(
                   end_date: db.sql`${db.self} >= ${db.param(startValueRange)}`,
                 };
               }
+
+              //	the range of the search value does not fully contain the range of the target value
               case "ne": {
                 return db.sql<s.r4_date_idx.SQL | s.r4b_date_idx.SQL>`
               ${"start_date"} > ${db.param(endValueRange)} OR
               ${"end_date"}   < ${db.param(startValueRange)}`;
               }
 
+              // the range above the search value intersects (i.e. overlaps) with the range of the target value
               case "gt": {
                 return db.sql<s.r4_date_idx.SQL | s.r4b_date_idx.SQL>`
                 ${"end_date"} > ${db.param(endValueRange)}`;
               }
 
+              // the range below the search value intersects (i.e. overlaps) with the range of the target value
               case "lt": {
                 return db.sql<s.r4_date_idx.SQL | s.r4b_date_idx.SQL>`
                 ${"start_date"} < ${db.param(startValueRange)}`;
               }
 
+              //	the range above the search value intersects (i.e. overlaps) with the range of the target value,
+              // or the range of the search value fully contains the range of the target value
+              case "ge": {
+                return db.sql<s.r4_date_idx.SQL | s.r4b_date_idx.SQL>`
+                ${"end_date"} >= ${db.param(startValueRange)}`;
+              }
+
+              //the range below the search value intersects (i.e. overlaps) with the range of the target value or the range of the search value fully contains the range of the target value
+              case "le": {
+                return db.sql<s.r4_date_idx.SQL | s.r4b_date_idx.SQL>`
+                ${"start_date"} <= ${db.param(endValueRange)}`;
+              }
+
+              case "sa":
+              case "eb":
+              case "ap":
               default: {
                 throw new OperationError(
                   outcomeError(
