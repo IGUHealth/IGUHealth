@@ -1,0 +1,157 @@
+{
+  "id": "update-client-supplied-id",
+  "title": "Update with client supplied id",
+  "description": "Tests client supplied id on update.",
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "id": "patient",
+      "resourceType": "Patient",
+      "meta": {
+        "tag": [{ "code": "update-test" }]
+      },
+      "name": [{ "family": "Chalmers", "given": ["Peter"] }]
+    },
+    {
+      "id": "encounter",
+      "resourceType": "Encounter",
+      "meta": {
+        "tag": [{ "code": "update-test" }]
+      },
+      "class": {
+        "code": "123"
+      },
+      "status": "in-progress"
+    }
+  ],
+  "fixture": [
+    {
+      "id": "fixture-patient",
+      "resource": {
+        "reference": "#patient"
+      }
+    },
+    {
+      "id": "fixture-encounter",
+      "resource": {
+        "reference": "#encounter"
+      }
+    }
+  ],
+  "test": [
+    {
+      "id": "update-client-supplied",
+      "name": "Update Patient with client supplied id",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "update"
+            },
+            "targetId": "fixture-patient",
+            "sourceId": "fixture-patient",
+            "responseId": "update-response"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "read"
+            },
+            "resource": "Patient",
+            "targetId": "update-response"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Patient.id",
+            "value": "patient"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "update"
+            },
+            "resource": "Encounter",
+            "targetId": "update-response",
+            "sourceId": "fixture-encounter"
+          }
+        },
+        {
+          "assert": {
+            "resource": "OperationOutcome"
+          }
+        },
+        {
+          "assert": {
+            "expression": "OperationOutcome.issue[0].code",
+            "value": "invalid"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "update"
+            },
+            "resource": "Encounter",
+            "targetId": "fixture-encounter",
+            "sourceId": "fixture-encounter",
+            "responseId": "encounter-response"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Encounter.id",
+            "value": "encounter"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "update"
+            },
+            "resource": "Encounter",
+            "targetId": "fixture-encounter",
+            "sourceId": "fixture-encounter"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Encounter.id",
+            "compareToSourceId": "encounter-response",
+            "compareToSourceExpression": "Encounter.id",
+            "operator": "equals"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Encounter.meta.versionId",
+            "compareToSourceId": "encounter-response",
+            "compareToSourceExpression": "Encounter.meta.versionId",
+            "operator": "greaterThan"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+          },
+          "params": "_tag=update-test",
+          "description": "Delete data created during test."
+        }
+      }
+    ]
+  }
+}
