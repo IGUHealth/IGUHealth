@@ -853,7 +853,7 @@ async function getHistory<
         method: row.request_method as code,
       },
       response: {
-        location: `resource.resourceType}/${resource.id}` as uri,
+        location: `${resource.resourceType}/${resource.id}` as uri,
         status: "200",
         etag: resource.meta?.versionId as id,
         lastModified: resource.meta?.lastUpdated 
