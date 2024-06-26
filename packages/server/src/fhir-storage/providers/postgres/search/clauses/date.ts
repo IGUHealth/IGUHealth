@@ -3,9 +3,13 @@ import * as db from "zapatos/db";
 import type * as s from "zapatos/schema";
 
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { FHIRServerCTX } from "../../../../../fhir-api/types.js";
-import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
+import {
+  SearchParameterResource,
+  parseValuePrefix,
+} from "../../../../utilities/search/parameters.js";
 import { missingModifier } from "./shared.js";
 
 export default function dateClauses(
@@ -19,16 +23,43 @@ export default function dateClauses(
     }
     default: {
       return db.conditions.or(
-        ...parameter.value.map((value): s.r4_date_idx.Whereable => {
-          const formattedDate = dayjs(
-            value,
-            "YYYY-MM-DDThh:mm:ss+zz:zz",
-          ).toISOString();
-          return {
-            start_date: db.sql`${db.self} <= ${db.param(formattedDate)}`,
-            end_date: db.sql`${db.self} >= ${db.param(formattedDate)}`,
-          };
-        }),
+        ...parameter.value.map(
+          (parameterValue): s.r4_date_idx.Whereable | db.SQLFragment => {
+            const { prefix, value } = parseValuePrefix(parameterValue);
+            const formattedDate = db.param(
+              dayjs(value, "YYYY-MM-DDThh:mm:ss+zz:zz").toISOString(),
+            );
+
+            switch (prefix) {
+              case "eq":
+              case undefined: {
+                return {
+                  start_date: db.sql`${db.self} <= ${formattedDate}`,
+                  end_date: db.sql`${db.self} >= ${formattedDate}`,
+                };
+              }
+              case "ne": {
+                return db.sql<s.r4_date_idx.SQL | s.r4b_date_idx.SQL>`
+              ${"start_date"} > ${formattedDate} OR
+              ${"end_date"}   < ${formattedDate}`;
+              }
+
+              // case "gt": {
+              //   return db.sql<s.r4_date_idx.SQL | s.r4b_date_idx.SQL>`
+              //   `;
+              // }
+
+              default: {
+                throw new OperationError(
+                  outcomeError(
+                    "not-supported",
+                    `Prefix ${prefix} not supported for parameter '${parameter.searchParameter.name}' and value '${parameterValue}'`,
+                  ),
+                );
+              }
+            }
+          },
+        ),
       );
     }
   }

@@ -2,6 +2,7 @@ import { FHIRClientAsync } from "@iguhealth/client/interface";
 import { FHIRRequest } from "@iguhealth/client/types";
 import { ParsedParameter } from "@iguhealth/client/url";
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
+import { date, dateTime } from "@iguhealth/fhir-types/r4/types";
 import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import {
   AllResourceTypes,
@@ -299,4 +300,66 @@ export async function parametersWithMetaAssociated(
   );
 
   return result;
+}
+
+const PREFIX_REG = /^(?<prefix>eq|ne|gt|lt|ge|le|sa|eb|ap)?(?<value>.+)$/;
+
+/**
+ * Derives the value and prefix being used.
+ * The following parameter types support prefixes: number, date, and quantity
+ * The types of prefixes are defined here  number, date, and quantity.
+ * @param value Parameter value.
+ */
+export function parseValuePrefix(value: string | number): {
+  prefix: string | undefined;
+  value: string;
+} {
+  const result = PREFIX_REG.exec(value.toString());
+
+  if (!result) {
+    throw new OperationError(
+      outcomeError("invalid", `Invalid input value '${value}' for parameter.`),
+    );
+  }
+  const valuePortion = result.groups?.value;
+  const prefix = result.groups?.prefix;
+
+  if (!valuePortion) {
+    throw new OperationError(
+      outcomeError("invalid", `A value must be provided for parameter.`),
+    );
+  }
+
+  return {
+    prefix,
+    value: valuePortion,
+  };
+}
+
+const DATE_TIME_REGEX =
+  /^(?<year>\d(\d(\d[1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(?<month>0[1-9]|1[0-2])(-(?<day>0[1-9]|[1-2]\d|3[0-1])(T(?<hour>[01]\d|2[0-3]):(?<minute>[0-5]\d):(?<second>[0-5]\d|60)(?<ms>\.\d{1,9})?)?)?(?<timezone>Z|(\+|-)((0\d|1[0-3]):[0-5]\d|14:00)?)?)?$/;
+
+const precisionLevels = <const>[
+  "ms",
+  "second",
+  "minute",
+  "hour",
+  "day",
+  "month",
+  "year",
+];
+
+export function getDatePrecision(v: date | dateTime) {
+  const match = v.match(DATE_TIME_REGEX);
+  if (match) {
+    for (const precision of precisionLevels) {
+      if (match.groups?.[precision]) {
+        return precision;
+      }
+    }
+    throw new Error(`could not determine precision level of '${v}'`);
+  }
+  throw new OperationError(
+    outcomeError("invalid", `Invalid date or dateTime format '${v}'`),
+  );
 }

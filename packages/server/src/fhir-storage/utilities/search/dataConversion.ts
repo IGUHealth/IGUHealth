@@ -271,37 +271,6 @@ async function toReferenceRemote<Version extends FHIR_VERSION>(
   }
 }
 
-// const DATE_REGEX =
-//   /^(?<year>[0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(?<month>0[1-9]|1[0-2])(-(?<day>0[1-9]|[1-2][0-9]|3[0-1]))?)?$/;
-
-const DATE_TIME_REGEX =
-  /^(?<year>[0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(?<month>0[1-9]|1[0-2])(-(?<day>0[1-9]|[1-2][0-9]|3[0-1])(T(?<hour>[01][0-9]|2[0-3]):(?<minute>[0-5][0-9]):(?<second>[0-5][0-9]|60)(?<ms>\.[0-9]{1,9})?)?)?(?<timezone>Z|(\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)?)?)?$/;
-
-const precisionLevels = [
-  "ms",
-  "second",
-  "minute",
-  "hour",
-  "day",
-  "month",
-  "year",
-];
-
-function getPrecision(v: date | dateTime) {
-  const match = v.match(DATE_TIME_REGEX);
-  if (match) {
-    for (const precision of precisionLevels) {
-      if (match.groups?.[precision]) {
-        return precision;
-      }
-    }
-    throw new Error(`could not determine precision level of '${v}'`);
-  }
-  throw new OperationError(
-    outcomeError("invalid", `Invalid date or dateTime format '${v}'`),
-  );
-}
-
 function toDateRange(
   value: MetaValueSingular<NonNullable<unknown>>,
 ): { start: string; end: string }[] {
@@ -331,51 +300,18 @@ function toDateRange(
         },
       ];
     }
-    // TODO: Handle date and dateTime
     case "date": {
       const v: date = value.valueOf() as date;
-      const precision = getPrecision(v);
-      switch (precision) {
-        case "day":
-        case "month":
-        case "year": {
-          return [
-            {
-              start: dayjs(v, "YYYY-MM-DD").startOf(precision).toISOString(),
-              end: dayjs(v, "YYYY-MM-DD").endOf(precision).toISOString(),
-            },
-          ];
-        }
-        default:
-          throw new Error(`Unknown precision '${precision}'for date '${v}'`);
-      }
+      return [
+        {
+          start: dayjs(v, "YYYY-MM-DD").toISOString(),
+          end: dayjs(v, "YYYY-MM-DD").toISOString(),
+        },
+      ];
     }
     case "dateTime": {
       const v: dateTime = value.valueOf() as dateTime;
-      const precision = getPrecision(v);
-      /* eslint-disable no-fallthrough */
-      switch (precision) {
-        case "ms": {
-          return [{ start: v, end: v }];
-        }
-        case "second":
-        case "minute":
-        case "hour":
-        case "day":
-        case "month":
-        case "year": {
-          return [
-            {
-              start: dayjs(v, "YYYY-MM-DDThh:mm:ss+zz:zz")
-                .startOf(precision)
-                .toISOString(),
-              end: dayjs(v, "YYYY-MM-DDThh:mm:ss+zz:zz")
-                .endOf(precision)
-                .toISOString(),
-            },
-          ];
-        }
-      }
+      return [{ start: v, end: v }];
     }
     default:
       throw new Error(`Cannot index as date value '${value.meta()?.type}'`);

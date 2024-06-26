@@ -8,6 +8,7 @@ import { FHIRServerCTX } from "../../../../../fhir-api/types.js";
 import {
   SearchParameterResource,
   getDecimalPrecision,
+  parseValuePrefix,
 } from "../../../../utilities/search/parameters.js";
 import { missingModifier } from "./shared.js";
 
@@ -22,32 +23,10 @@ export default function numberClauses(
     }
     default: {
       return db.conditions.or(
-        ...parameter.value.map((value): db.SQLFragment => {
-          const result = value
-            .toString()
-            .match(/^(?<prefix>eq|ne|gt|lt|ge|le|sa|eb|ap)?(?<value>.+)$/);
+        ...parameter.value.map((parameterValue): db.SQLFragment => {
+          const { prefix, value } = parseValuePrefix(parameterValue);
 
-          if (!result) {
-            throw new OperationError(
-              outcomeError(
-                "invalid",
-                `Invalid input value '${parameter.value}' for parameter '${parameter.searchParameter.name}'`,
-              ),
-            );
-          }
-          const numericPortion = result?.groups?.value;
-          const prefix = result?.groups?.prefix;
-
-          if (!numericPortion) {
-            throw new OperationError(
-              outcomeError(
-                "invalid",
-                `A Number must be provided for parameter '${parameter.searchParameter.name}'`,
-              ),
-            );
-          }
-
-          const numberValue = parseFloat(numericPortion);
+          const numberValue = parseFloat(value);
           if (isNaN(numberValue)) {
             throw new OperationError(
               outcomeError(
