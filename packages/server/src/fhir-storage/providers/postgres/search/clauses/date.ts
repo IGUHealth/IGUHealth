@@ -64,6 +64,16 @@ export default function dateClauses(
               ${"end_date"}   < ${db.param(startValueRange)}`;
               }
 
+              case "gt": {
+                return db.sql<s.r4_date_idx.SQL | s.r4b_date_idx.SQL>`
+                ${"end_date"} > ${db.param(endValueRange)}`;
+              }
+
+              case "lt": {
+                return db.sql<s.r4_date_idx.SQL | s.r4b_date_idx.SQL>`
+                ${"start_date"} < ${db.param(startValueRange)}`;
+              }
+
               default: {
                 throw new OperationError(
                   outcomeError(
