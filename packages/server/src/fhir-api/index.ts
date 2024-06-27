@@ -191,7 +191,7 @@ async function serverCapabilities<Version extends FHIR_VERSION>(
 
 export const logger = pino<string>({
   transport: {
-    target: process.env.NODE_ENV !== "production" ? "pino-pretty" : "",
+    target: process.env.NODE_ENV === "development" ? "pino-pretty" : "",
   },
 });
 
