@@ -189,11 +189,15 @@ async function serverCapabilities<Version extends FHIR_VERSION>(
   } as Resource<Version, "CapabilityStatement">;
 }
 
-export const logger = pino<string>({
-  transport: {
-    target: process.env.NODE_ENV === "development" ? "pino-pretty" : "",
-  },
-});
+export const logger = pino<string>(
+  process.env.NODE_ENV === "development"
+    ? {
+        transport: {
+          target: "pino-pretty",
+        },
+      }
+    : undefined,
+);
 
 function getResourceTypeToValidate(
   request: FHIRRequest,
