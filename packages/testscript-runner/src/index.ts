@@ -584,6 +584,8 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
   }
 }
 
+const numberRegex = /^-?\d+(\.\d+)?$/;
+
 async function deriveComparision<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
   assertion: NonNullable<TestScriptAction<Version>["assert"]>,
@@ -597,10 +599,9 @@ async function deriveComparision<Version extends FHIR_VERSION>(
       }
     }
   } else if (assertion.value) {
-    const numberValue = parseFloat(assertion.value);
     switch (true) {
-      case !isNaN(numberValue): {
-        return numberValue;
+      case numberRegex.test(assertion.value): {
+        return parseFloat(assertion.value);
       }
       case assertion.value === "true": {
         return true;
