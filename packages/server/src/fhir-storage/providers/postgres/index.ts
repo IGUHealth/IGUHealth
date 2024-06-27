@@ -947,7 +947,7 @@ async function updateResource<
   ctx: CTX,
   fhirVersion: Version,
   resource: Resource<Version, AllResourceTypes>,
-): Promise<Resource<Version, AllResourceTypes>> {
+): Promise<{created: boolean; resource: Resource<Version, AllResourceTypes>}> {
   return FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
     if (!resource.id)
       throw new OperationError(
@@ -999,7 +999,7 @@ async function updateResource<
 
     await indexResource(ctx, fhirVersion, updatedResource);
 
-    return updatedResource;
+    return {created: existingResource === undefined, resource:updatedResource};
   });
 }
 
@@ -1253,7 +1253,7 @@ function createPostgresMiddleware<
           };
         }
         case "update-request": {
-          const savedResource = await updateResource(
+          const { created, resource } = await updateResource(
             context.ctx,
             context.request.fhirVersion,
             // Set the id for the request body to ensure that the resource is updated correctly.
@@ -1274,7 +1274,8 @@ function createPostgresMiddleware<
               resourceType: context.request.resourceType,
               id: context.request.id,
               type: "update-response",
-              body: savedResource,
+              created: created,
+              body: resource,
             } as FHIRResponse,
           };
         }

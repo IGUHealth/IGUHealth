@@ -163,6 +163,7 @@ export type R4BVersionReadResponse = R4BInstanceInteraction & {
 
 export type R4BUpdateResponse = R4BInstanceInteraction & {
   type: ResponseInteractionTypes["update"];
+  created?: boolean;
   body: Resource;
 };
 

@@ -367,7 +367,12 @@ export default async function createServer(): Promise<
     .use(async (ctx, next) => {
       await next();
       const rt = ctx.response.get("X-Response-Time");
-      logger.info(`${ctx.method} ${ctx.url} - ${rt}`);
+      logger.info({
+        status: ctx.response.status,
+        method: ctx.method,
+        url: ctx.url,
+        responseTime: rt,
+      });
     })
     .use(async (ctx, next) => {
       const start = Date.now();

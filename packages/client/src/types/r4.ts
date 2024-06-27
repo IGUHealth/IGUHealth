@@ -163,6 +163,7 @@ export type R4VersionReadResponse = R4InstanceInteraction & {
 
 export type R4UpdateResponse = R4InstanceInteraction & {
   type: ResponseInteractionTypes["update"];
+  created?: boolean;
   body: Resource;
 };
 
