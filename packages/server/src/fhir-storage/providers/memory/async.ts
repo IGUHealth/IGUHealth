@@ -191,29 +191,27 @@ function createMemoryMiddleware<
                 (v): v is SearchParameterResource => v.type === "resource",
               );
 
-              const resourceSet =
-                context.request.level === "type"
-                  ? Object.values(
-                      getResourceType(
-                        context.state.data,
-                        context.request.fhirVersion,
-                        context.request.resourceType,
-                      ),
-                    )
-                  : ((resourceTypes.length > 0
-                      ? resourceTypes
-                      : Object.keys(
-                          context.state.data[context.request.fhirVersion],
-                        )
-                    )
-                      .map((k) =>
-                        Object.values(
-                          context.state.data[context.request.fhirVersion][
-                            k as AllResourceTypes
-                          ] ?? {},
-                        ),
-                      )
-                      .flat() as r4.Resource[]);
+              const resourceSet = Object.values(
+                getResourceType(
+                  context.state.data,
+                  context.request.fhirVersion,
+                  context.request.resourceType,
+                ),
+              );
+              // : ((resourceTypes.length > 0
+              //     ? resourceTypes
+              //     : Object.keys(
+              //         context.state.data[context.request.fhirVersion],
+              //       )
+              //   )
+              //     .map((k) =>
+              //       Object.values(
+              //         context.state.data[context.request.fhirVersion][
+              //           k as AllResourceTypes
+              //         ] ?? {},
+              //       ),
+              //     )
+              //     .flat() as r4.Resource[]);
 
               let result = [];
               for (const resource of resourceSet || []) {
