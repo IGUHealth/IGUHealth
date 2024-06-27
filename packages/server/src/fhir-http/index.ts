@@ -866,7 +866,10 @@ export function fhirResponseToHTTPResponse(
             lastModified(fhirResponse.body.meta?.lastUpdated) ?? "",
         },
         body: fhirResponse.body,
-        status: 200,
+        status:
+          "created" in fhirResponse && fhirResponse.created === true
+            ? 201
+            : 200,
       };
     case "delete-response":
       return {
