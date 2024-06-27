@@ -15592,6 +15592,7 @@ const RAW_RUNTIME_STATE =
           ["openid-client", "npm:5.6.5"],\
           ["pg", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:8.12.0"],\
           ["pino", "npm:9.1.0"],\
+          ["pino-pretty", "npm:11.2.1"],\
           ["postcss", "npm:8.4.38"],\
           ["postcss-cli", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:11.0.0"],\
           ["postcss-import", "virtual:59e475d6eb4a0655656bc3a35b914ff56999134e6d189b3be0074f0930e5ace25c3ec82edd84ead299163bb91695873eb5ca57416faf6d3fb0ca5928fd65fe6a#npm:16.1.0"],\
