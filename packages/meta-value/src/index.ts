@@ -114,10 +114,8 @@ function getField<T extends { [key: string]: unknown }>(
   field: string,
 ): string | undefined {
   if (Object.prototype.hasOwnProperty.call(value, field)) return field;
-  const foundField = Object.keys(value).find(
-    (k) =>
-      k.startsWith(field.toString()) || k.startsWith(`_${field.toString()}`),
-  );
+  const reg = new RegExp(`^(_?)${field}([A-Z].*)?$`);
+  const foundField = Object.keys(value).find((k) => reg.test(k));
 
   return foundField?.startsWith("_") ? foundField.substring(1) : foundField;
 }

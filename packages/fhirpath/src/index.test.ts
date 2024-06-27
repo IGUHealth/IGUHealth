@@ -872,3 +872,17 @@ test("Patient with name given", () => {
     }),
   ).toEqual([]);
 });
+
+test("QR testing for authored", () => {
+  expect(
+    evaluateWithMeta(
+      "QuestionnaireResponse.author",
+      {
+        resourceType: "QuestionnaireResponse",
+        authored: "2024-06-27T04:22:10-05:00",
+        status: "in-progress",
+      },
+      metaOptions("QuestionnaireResponse.author"),
+    ).map((v) => v.meta()?.type),
+  ).toEqual([]);
+});

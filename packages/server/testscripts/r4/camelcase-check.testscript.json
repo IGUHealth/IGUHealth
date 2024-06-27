@@ -1,0 +1,71 @@
+{
+  "id": "camel-case-check",
+  "title": "Camel Case check",
+  "description": "Verify that FP expression returns only on camel case in this case author vs authored.",
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "id": "qr",
+      "resourceType": "QuestionnaireResponse",
+      "status": "in-progress",
+      "authored": "2024-06-27T04:22:10-05:00"
+    }
+  ],
+  "fixture": [
+    {
+      "id": "fixture-qr",
+      "resource": {
+        "reference": "#qr"
+      }
+    }
+  ],
+  "test": [
+    {
+      "id": "01-Create QR",
+      "name": "Create QR",
+      "description": "Create a QR and validate response.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "create"
+            },
+            "resource": "QuestionnaireResponse",
+            "sourceId": "fixture-qr",
+            "responseId": "create-response"
+          }
+        },
+        {
+          "assert": {
+            "label": "01-QR Ok",
+            "description": "Confirm qr created.",
+            "direction": "response",
+            "resource": "QuestionnaireResponse"
+          }
+        },
+        {
+          "assert": {
+            "label": "Confirm assertion on authored",
+            "expression": "QuestionnaireResponse.authored",
+            "value": "2024-06-27T04:22:10-05:00"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+          },
+          "resource": "QuestionnaireResponse",
+          "targetId": "create-response"
+        }
+      }
+    ]
+  }
+}
