@@ -149,96 +149,9 @@ function createMemoryMiddleware<
       /* eslint-disable no-fallthrough */
       switch (context.request.type) {
         case "search-request": {
-          const resourceTypes = deriveResourceTypeFilter(context.request);
-          // Remove _type as using on derived resourceTypeFilter
-          context.request.parameters = context.request.parameters.filter(
-            (p) => p.name !== "_type",
-          );
-
-          const parameters = await parametersWithMetaAssociated(
-            async (resourceTypes, name) =>
-              resolveParameter(
-                context.state.data,
-                context.request.fhirVersion,
-                resourceTypes,
-                name,
-              ),
-            resourceTypes,
-            context.request.parameters,
-          );
-
-          // Standard parameters
-          const resourceParameters = parameters.filter(
-            (v): v is SearchParameterResource => v.type === "resource",
-          );
-
-          const resourceSet =
-            context.request.level === "type"
-              ? Object.values(
-                  getResourceType(
-                    context.state.data,
-                    context.request.fhirVersion,
-                    context.request.resourceType,
-                  ),
-                )
-              : ((resourceTypes.length > 0
-                  ? resourceTypes
-                  : Object.keys(context.state.data[context.request.fhirVersion])
-                )
-                  .map((k) =>
-                    Object.values(
-                      context.state.data[context.request.fhirVersion][
-                        k as AllResourceTypes
-                      ] ?? {},
-                    ),
-                  )
-                  .flat() as r4.Resource[]);
-
-          let result = [];
-          for (const resource of resourceSet || []) {
-            // Performance opt and removes issue of recursion with search parameter queries.
-            if (resource.resourceType === "SearchParameter") {
-              if (checkSearchParameter(resource, resourceParameters)) {
-                result.push(resource);
-              }
-            } else if (
-              await fitsSearchCriteria(
-                context.ctx,
-                context.request.fhirVersion,
-                resource,
-                resourceParameters,
-              )
-            ) {
-              result.push(resource);
-            }
-          }
-
-          const parametersResult = parameters.filter(
-            (v): v is SearchParameterResult => v.type === "result",
-          );
-
-          const offsetParam = parametersResult.find(
-            (v) => v.name === "_offset",
-          );
-
-          if (offsetParam) {
-            if (isNaN(parseInt(offsetParam.value[0].toString())))
-              throw new OperationError(
-                outcomeError("invalid", "_offset must be a single number"),
-              );
-            result = result.slice(parseInt(offsetParam.value[0].toString()));
-          }
-
-          const countParam = parametersResult.find((v) => v.name === "_count");
-          const total =
-            countParam && !isNaN(parseInt(countParam.value[0].toString()))
-              ? parseInt(countParam.value[0].toString())
-              : 50;
-
-          result = result.slice(0, total);
-
           switch (context.request.level) {
             case "system": {
+              // For system searches going to skip.
               return {
                 ...context,
                 response: {
@@ -247,14 +160,107 @@ function createMemoryMiddleware<
                   parameters: context.request.parameters,
                   type: "search-response",
                   body: {
-                    type: "searchset",
+                    type: "searchset" as r4.code,
                     resourceType: "Bundle",
-                    entry: result.map((r) => ({ resource: r })),
+                    entry: [],
                   },
                 } as FHIRResponse,
               };
             }
             case "type": {
+              const resourceTypes = deriveResourceTypeFilter(context.request);
+              // Remove _type as using on derived resourceTypeFilter
+              context.request.parameters = context.request.parameters.filter(
+                (p) => p.name !== "_type",
+              );
+
+              const parameters = await parametersWithMetaAssociated(
+                async (resourceTypes, name) =>
+                  resolveParameter(
+                    context.state.data,
+                    context.request.fhirVersion,
+                    resourceTypes,
+                    name,
+                  ),
+                resourceTypes,
+                context.request.parameters,
+              );
+
+              // Standard parameters
+              const resourceParameters = parameters.filter(
+                (v): v is SearchParameterResource => v.type === "resource",
+              );
+
+              const resourceSet =
+                context.request.level === "type"
+                  ? Object.values(
+                      getResourceType(
+                        context.state.data,
+                        context.request.fhirVersion,
+                        context.request.resourceType,
+                      ),
+                    )
+                  : ((resourceTypes.length > 0
+                      ? resourceTypes
+                      : Object.keys(
+                          context.state.data[context.request.fhirVersion],
+                        )
+                    )
+                      .map((k) =>
+                        Object.values(
+                          context.state.data[context.request.fhirVersion][
+                            k as AllResourceTypes
+                          ] ?? {},
+                        ),
+                      )
+                      .flat() as r4.Resource[]);
+
+              let result = [];
+              for (const resource of resourceSet || []) {
+                // Performance opt and removes issue of recursion with search parameter queries.
+                if (resource.resourceType === "SearchParameter") {
+                  if (checkSearchParameter(resource, resourceParameters)) {
+                    result.push(resource);
+                  }
+                } else if (
+                  await fitsSearchCriteria(
+                    context.ctx,
+                    context.request.fhirVersion,
+                    resource,
+                    resourceParameters,
+                  )
+                ) {
+                  result.push(resource);
+                }
+              }
+
+              const parametersResult = parameters.filter(
+                (v): v is SearchParameterResult => v.type === "result",
+              );
+
+              const offsetParam = parametersResult.find(
+                (v) => v.name === "_offset",
+              );
+
+              if (offsetParam) {
+                if (isNaN(parseInt(offsetParam.value[0].toString())))
+                  throw new OperationError(
+                    outcomeError("invalid", "_offset must be a single number"),
+                  );
+                result = result.slice(
+                  parseInt(offsetParam.value[0].toString()),
+                );
+              }
+
+              const countParam = parametersResult.find(
+                (v) => v.name === "_count",
+              );
+              const total =
+                countParam && !isNaN(parseInt(countParam.value[0].toString()))
+                  ? parseInt(countParam.value[0].toString())
+                  : 50;
+
+              result = result.slice(0, total);
               return {
                 ...context,
                 response: {
