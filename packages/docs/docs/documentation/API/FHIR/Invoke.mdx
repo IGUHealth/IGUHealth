@@ -4,16 +4,34 @@ import Tabs from "@theme/Tabs";
 # Invoke
 
 The invoke operation is used to invoke a specific operation either at the system, type or instance level. 
-The request body is a [parameters](/documentation/Data_Model/R4B/Parameters) resource that contains the input for the operation. 
+The request body is a [parameters](/documentation/Data_Model/R4/Parameters) resource that contains the input for the operation. 
 
-What is required will be dependent on the [operation](/documentation/Data_Model/R4B/OperationDefinition) that is being invoked.
+What is required will be dependent on the [operation](/documentation/Data_Model/R4/OperationDefinition) that is being invoked.
 This is defined under `OperationDefinition.parameter`.
 Invocations will return the result as a Parameters resource.
 
 ## API
 
 ### System level
-
+#### R4
+<Tabs>
+  <TabItem value="cli" label="CLI">
+```bash
+iguhealth api invoke_system r4 --data $Parameters
+```
+  </TabItem>
+  <TabItem value="curl" label="Curl">
+```bash
+ curl --request POST --header "Authorization: Header" --header "Content-Type: application/fhir+json" ${domain}/w/${tenant}/api/v1/fhir/r4/$code --data $Parameters
+```
+  </TabItem>
+   <TabItem value="typescript" label="Typescript">
+```typescript
+await client.invoke_system(opCode, {}, R4, parameters);
+```
+   </TabItem>
+</Tabs>
+#### R4B
 <Tabs>
   <TabItem value="cli" label="CLI">
 ```bash
@@ -27,13 +45,31 @@ iguhealth api invoke_system r4b --data $Parameters
   </TabItem>
    <TabItem value="typescript" label="Typescript">
 ```typescript
-await client.invoke_system(opCode, {}, R4b, parameters);
+await client.invoke_system(opCode, {}, R4B, parameters);
 ```
    </TabItem>
 </Tabs>
 
 ### Type level
-
+#### R4
+<Tabs>
+  <TabItem value="cli" label="CLI">
+```bash
+iguhealth api invoke_type r4 $ResourceType --data $Parameters
+```
+  </TabItem>
+  <TabItem value="curl" label="Curl">
+```bash
+ curl --request POST --header "Authorization: Header" --header "Content-Type: application/fhir+json" ${domain}/w/${tenant}/api/v1/fhir/r4/${ResourceType}/$code --data $Parameters
+```
+  </TabItem>
+   <TabItem value="typescript" label="Typescript">
+```typescript
+await client.invoke_type(opCode, {}, R4, resourceType, parameters);
+```
+   </TabItem>
+</Tabs>
+#### R4B
 <Tabs>
   <TabItem value="cli" label="CLI">
 ```bash
@@ -53,7 +89,25 @@ await client.invoke_type(opCode, {}, R4B, resourceType, parameters);
 </Tabs>
 
 ### Instance level
-
+#### R4
+<Tabs>
+  <TabItem value="cli" label="CLI">
+```bash
+iguhealth api invoke_instance r4 $ResourceType $ResourceId --data $Parameters
+```
+  </TabItem>
+  <TabItem value="curl" label="Curl">
+```bash
+ curl --request POST --header "Authorization: Header" --header "Content-Type: application/fhir+json" ${domain}/w/${tenant}/api/v1/fhir/r4/${ResourceType}/${ResourceId}/$code --data $Parameters
+```
+  </TabItem>
+   <TabItem value="typescript" label="Typescript">
+```typescript
+await client.invoke_instance(opCode, {}, R4, resourceType, id, parameters);
+```
+   </TabItem>
+</Tabs>
+#### R4B
 <Tabs>
   <TabItem value="cli" label="CLI">
 ```bash
@@ -73,12 +127,12 @@ await client.invoke_instance(opCode, {}, R4B, resourceType, id, parameters);
 </Tabs>
 
 
-### Invoke response
+### Example
 
 <Tabs>
 <TabItem value="request" label="Request">
 ```bash
-iguhealth api invoke_type r4b ValueSet expand --data '{"resourceType": "Parameters", "parameter": [{"name": "url", "valueUri": "http://hl7.org/fhir/ValueSet/administrative-gender|4.0.1"}] }'
+iguhealth api invoke_type r4 ValueSet expand --data '{"resourceType": "Parameters", "parameter": [{"name": "url", "valueUri": "http://hl7.org/fhir/ValueSet/administrative-gender|4.0.1"}] }'
 ```
 </TabItem>
 <TabItem value="response" label="Response">

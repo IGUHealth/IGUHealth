@@ -9,6 +9,7 @@ For R4 Endpoint we support create operation for all data models under the [R4](/
 
 
 ## API
+### R4
 <Tabs>
   <TabItem value="cli" label="CLI">
 ```bash
@@ -22,12 +23,30 @@ iguhealth api create r4 --data '$MY_RESOURCE'
   </TabItem>
    <TabItem value="typescript" label="Typescript">
 ```typescript
-await client.create({}, FHIRVersion, resource);
+await client.create({}, R4, resource);
+```
+   </TabItem>
+</Tabs>
+### R4B
+<Tabs>
+  <TabItem value="cli" label="CLI">
+```bash
+iguhealth api create r4b --data '$MY_RESOURCE'
+```
+  </TabItem>
+  <TabItem value="curl" label="Curl">
+```bash
+ curl --request POST --header "Authorization: Header" --header "Content-Type: application/fhir+json" --data '$MY_RESOURCE' ${domain}/w/${tenant}/api/v1/fhir/r4b/${resourceType}
+```
+  </TabItem>
+   <TabItem value="typescript" label="Typescript">
+```typescript
+await client.create({}, R4B, resource);
 ```
    </TabItem>
 </Tabs>
 
-## Create response
+## Example
 The following is an example of a create response for a Patient resource.
 <Tabs>
 <TabItem value="request" label="Request">

@@ -7,6 +7,7 @@ The version read operation retrieves the version of a resource at a specific poi
 
 
 ## API
+### R4
 <Tabs>
   <TabItem value="cli" label="CLI">
 ```bash
@@ -20,12 +21,30 @@ yarn iguhealth api vread r4 $ResourceType $ResourceId $ResourceVersionId
   </TabItem>
    <TabItem value="typescript" label="Typescript">
 ```typescript
-await client.vread({}, FHIRVersion, resourceType, id, versionId);
+await client.vread({}, R4, resourceType, id, versionId);
+```
+   </TabItem>
+</Tabs>
+### R4B
+<Tabs>
+  <TabItem value="cli" label="CLI">
+```bash
+yarn iguhealth api vread r4b $ResourceType $ResourceId $ResourceVersionId
+```
+  </TabItem>
+  <TabItem value="curl" label="Curl">
+```bash
+ curl --request GET --header "Authorization: Header" --header "Content-Type: application/fhir+json" --data '$MY_BATCH_BUNDLE' ${domain}/w/${tenant}/api/v1/fhir/r4b/${ResourceType}/${ResourceId}/${ResourceVersionId}
+```
+  </TabItem>
+   <TabItem value="typescript" label="Typescript">
+```typescript
+await client.vread({}, R4B, resourceType, id, versionId);
 ```
    </TabItem>
 </Tabs>
 
-## Version Read response
+## Example
 <Tabs>
 <TabItem value="request" label="Request">
 ```bash

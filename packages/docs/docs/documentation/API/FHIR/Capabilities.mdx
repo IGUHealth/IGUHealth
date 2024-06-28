@@ -4,10 +4,30 @@ import Tabs from "@theme/Tabs";
 # Capabilities
 
 Capabilities returns what operations and resources are supported by the server. 
-This is returned to the client as a [CapabilityStatment](/documentation/Data_Model/R4B/CapabilityStatement) resource.
+This is returned to the client as a [CapabilityStatment](/documentation/Data_Model/R4/CapabilityStatement) resource.
 
 
 ## API
+### R4
+<Tabs>
+  <TabItem value="cli" label="CLI">
+```bash
+iguhealth api capabilities r4
+```
+  </TabItem>
+  <TabItem value="curl" label="Curl">
+```bash
+ curl --request GET --header "Authorization: Header" --header "Content-Type: application/fhir+json" ${domain}/w/${tenant}/api/v1/fhir/r4/metadata
+```
+  </TabItem>
+   <TabItem value="typescript" label="Typescript">
+```typescript
+await client.capabilities({}, R4);
+```
+   </TabItem>
+</Tabs>
+
+### R4B
 <Tabs>
   <TabItem value="cli" label="CLI">
 ```bash
@@ -21,12 +41,12 @@ iguhealth api capabilities r4b
   </TabItem>
    <TabItem value="typescript" label="Typescript">
 ```typescript
-await client.capabilities({}, FHIRVersion);
+await client.capabilities({}, R4B);
 ```
    </TabItem>
 </Tabs>
 
-## CapabilityStatement example
+## Example
 
 <Tabs>
   <TabItem value="response" label="Response">
@@ -34,7 +54,7 @@ await client.capabilities({}, FHIRVersion);
 {
   "resourceType": "CapabilityStatement",
   "status": "active",
-  "fhirVersion": "4.0",
+  "fhirVersion": "4.0.1",
   "date": "2024-06-23T22:57:09.826Z",
   "kind": "capability",
   "format": [
