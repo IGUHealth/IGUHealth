@@ -10,14 +10,14 @@
   "dependencies": {
     "@iguhealth/client": "workspace:^",
     "@iguhealth/components": "workspace:^",
-    "@testing-library/jest-dom": "^6.4.5",
-    "@testing-library/react": "^14.3.1",
+    "@testing-library/jest-dom": "^6.4.6",
+    "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.2",
     "classnames": "^2.5.1",
     "nanoid": "^5.0.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.23.1",
+    "react-router-dom": "^6.24.0",
     "react-scripts": "^5.0.1",
     "typescript": "5.5.2",
     "web-vitals": "^3.5.2"
@@ -48,8 +48,8 @@
   "devDependencies": {
     "@iguhealth/fhir-types": "workspace:^",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.12.12",
-    "@types/react": "^18.3.2",
+    "@types/node": "^20.14.9",
+    "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/react-window": "^1.8.8",
     "tailwindcss": "^3.4.4"

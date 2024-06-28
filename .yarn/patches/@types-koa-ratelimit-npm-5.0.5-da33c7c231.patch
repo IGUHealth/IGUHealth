@@ -1,0 +1,13 @@
+diff --git a/index.d.ts b/index.d.ts
+index e05bf6070f44fd79dd7d5d804ab5d1923d3deb8c..c2a4953840f6ed99b6306a0068e296b26174c159 100644
+--- a/index.d.ts
++++ b/index.d.ts
+@@ -30,7 +30,7 @@ declare namespace KoaRatelimit {
+         /**
+          * The database powering the backing rate-limiter package.
+          */
+-        db: Redis | Map<any, any>;
++        db: any | Map<any, any>;
+ 
+         /**
+          * The length of a single limiting period. This value is expressed
