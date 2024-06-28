@@ -1,6 +1,6 @@
 {
   "name": "@iguhealth/fhir-types",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "homepage": "https://docs.iguhealth.app",
   "repository": {
     "type": "git",
