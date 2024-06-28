@@ -20,10 +20,10 @@
     "generate": "NODE_ENV=development yarn node generate.mjs"
   },
   "dependencies": {
-    "@docusaurus/core": "^3.3.2",
+    "@docusaurus/core": "^3.4.0",
     "@docusaurus/plugin-google-gtag": "^3.4.0",
-    "@docusaurus/preset-classic": "^3.3.2",
-    "@docusaurus/theme-mermaid": "^3.3.2",
+    "@docusaurus/preset-classic": "^3.4.0",
+    "@docusaurus/theme-mermaid": "^3.4.0",
     "@iguhealth/client": "workspace:^",
     "@mdx-js/react": "^3.0.0",
     "autoprefixer": "^10.4.19",
@@ -37,9 +37,9 @@
     "tailwindcss": "^3.4.4"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "^3.3.2",
-    "@docusaurus/tsconfig": "^3.3.2",
-    "@docusaurus/types": "^3.3.2",
+    "@docusaurus/module-type-aliases": "^3.4.0",
+    "@docusaurus/tsconfig": "^3.4.0",
+    "@docusaurus/types": "^3.4.0",
     "@iguhealth/artifacts": "workspace:^",
     "@iguhealth/fhir-types": "workspace:^",
     "@iguhealth/hl7.fhir.r4.core": "workspace:^",
