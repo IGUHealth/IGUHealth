@@ -176,7 +176,7 @@ const config = {
           position: "right",
         },
         {
-          to: "/#schedule-demo",
+          href: "/#schedule-demo",
           label: "Request demo",
           position: "right",
         },

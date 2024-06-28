@@ -8,6 +8,7 @@ The server will return the updated resource with an id and meta information.
 
 ## API
 
+### R4
 <Tabs>
   <TabItem value="cli" label="CLI">
 ```bash
@@ -25,8 +26,26 @@ await client.update({}, R4, resourceType, id, resource);
 ```
    </TabItem>
 </Tabs>
+### R4B
+<Tabs>
+  <TabItem value="cli" label="CLI">
+```bash
+iguhealth api update r4b $ResourceType $ResourceId --data '$MY_RESOURCE'
+```
+  </TabItem>
+  <TabItem value="curl" label="Curl">
+```bash
+ curl --request PUT --header "Authorization: Header" --header "Content-Type: application/json" --data '$MY_RESOURCE' ${domain}/w/${tenant}/api/v1/fhir/r4b/${ResourceType}/${ResourceId} 
+ ```
+  </TabItem>
+ <TabItem value="typescript" label="Typescript">
+```typescript
+await client.update({}, R4B, resourceType, id, resource);
+```
+   </TabItem>
+</Tabs>
 
-## Response
+## Example
 
 <Tabs>
     <TabItem value="request" label="Request">

@@ -3,11 +3,12 @@ import Tabs from "@theme/Tabs";
 
 # Batch
 
-Submitting batch bundles (designated by batch on [Bundle.type](../Data_Model/R4/Bundle.mdx)) allows you to submit sets of actions.
+Submitting batch bundles (designated by batch on [Bundle.type](/documentation/Data_Model/R4/Bundle.mdx)) allows you to submit sets of actions.
 These actions, unlike terminology, are non-atomic (an error occurring in one operation will not prevent other actions from being applied on the server).
 Use batch if you want to evaluate multiple actions in a single request but don't care or do not want all actions to fail if one fails.
 
 ## API
+### R4
 <Tabs>
   <TabItem value="cli" label="CLI">
 ```bash
@@ -25,8 +26,26 @@ await client.batch({}, R4, batchBundle);
 ```
    </TabItem>
 </Tabs>
+### R4B
+<Tabs>
+  <TabItem value="cli" label="CLI">
+```bash
+iguhealth api batch r4b --data '$MY_BATCH_BUNDLE'
+```
+  </TabItem>
+  <TabItem value="curl" label="Curl">
+```bash
+ curl --request POST --header "Authorization: Header" --header "Content-Type: application/fhir+json" --data '$MY_BATCH_BUNDLE' ${domain}/w/${tenant}/api/v1/fhir/r4b
+```
+  </TabItem>
+   <TabItem value="typescript" label="Typescript">
+```typescript
+await client.batch({}, R4B, batchBundle);
+```
+   </TabItem>
+</Tabs>
 
-## Bundle example
+## Example
 
 The following is a batch bundle with two operations one that creates a Patient and another that creates a Practitioner.
 

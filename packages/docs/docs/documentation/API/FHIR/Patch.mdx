@@ -8,6 +8,7 @@ The return type from the patch operation is the updated resource.
 
 ## API
 
+### R4
 <Tabs>
   <TabItem value="cli" label="CLI">
 ```bash
@@ -26,7 +27,26 @@ await client.patch({}, R4, resourceType, id, patches);
    </TabItem>
 </Tabs>
 
-## Response
+### R4B
+<Tabs>
+  <TabItem value="cli" label="CLI">
+```bash
+iguhealth api patch r4b $ResourceType $ResourceId --data $Patches
+```
+  </TabItem>
+  <TabItem value="curl" label="Curl">
+```bash
+ curl --request GET --header "Authorization: Header" --header "Content-Type: application/json" ${domain}/w/${tenant}/api/v1/fhir/r4b/${ResourceType}/${ResourceId} --data $Patches
+```
+  </TabItem>
+   <TabItem value="typescript" label="Typescript">
+```typescript
+await client.patch({}, R4B, resourceType, id, patches);
+```
+   </TabItem>
+</Tabs>
+
+## Example
 
 <Tabs>
     <TabItem value="request" label="Request">
