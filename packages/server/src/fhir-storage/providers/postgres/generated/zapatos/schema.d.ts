@@ -5793,7 +5793,7 @@ declare module 'zapatos/schema' {
       * - `int8` in database
       * - Nullable, no default
       */
-      prev_version_id?: (number | db.Int8String) | db.Parameter<(number | db.Int8String)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.Int8String) | db.Parameter<(number | db.Int8String)> | db.SQLFragment | db.ParentColumn>;
+      prev_version_id?: (number | db.Int8String | bigint) | db.Parameter<(number | db.Int8String | bigint)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (number | db.Int8String | bigint) | db.Parameter<(number | db.Int8String | bigint)> | db.SQLFragment | db.ParentColumn>;
       /**
       * **resources.request_method**
       * - `varchar` in database
@@ -5867,7 +5867,7 @@ declare module 'zapatos/schema' {
       * - `int8` in database
       * - Nullable, no default
       */
-      prev_version_id?: (number | db.Int8String) | db.Parameter<(number | db.Int8String)> | null | db.DefaultType | db.SQLFragment;
+      prev_version_id?: (number | db.Int8String | bigint) | db.Parameter<(number | db.Int8String | bigint)> | null | db.DefaultType | db.SQLFragment;
       /**
       * **resources.request_method**
       * - `varchar` in database
@@ -5935,7 +5935,7 @@ declare module 'zapatos/schema' {
       * - `int8` in database
       * - Nullable, no default
       */
-      prev_version_id?: (number | db.Int8String) | db.Parameter<(number | db.Int8String)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (number | db.Int8String) | db.Parameter<(number | db.Int8String)> | null | db.DefaultType | db.SQLFragment>;
+      prev_version_id?: (number | db.Int8String | bigint) | db.Parameter<(number | db.Int8String | bigint)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (number | db.Int8String | bigint) | db.Parameter<(number | db.Int8String | bigint)> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **resources.request_method**
       * - `varchar` in database

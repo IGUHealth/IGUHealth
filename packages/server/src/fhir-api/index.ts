@@ -352,7 +352,7 @@ let _redis_client: Redis | undefined = undefined;
  * Returns instantiated Redis client based on environment variables.
  * @returns Singleton Redis client
  */
-export function getRedisClient() {
+export function getRedisClient(): Redis {
   if (!_redis_client) {
     _redis_client = new Redis({
       host: process.env.REDIS_HOST,
