@@ -1,0 +1,41 @@
+---
+slug: 2024-06-29-postman-integration
+title: Postman Integration
+authors: [confused-moniker]
+tags: [iguhealth, features, postman]
+---
+
+# Postman
+[Postman](https://www.postman.com/) is a platform that allows you to use APIs with a user-friendly interface. 
+It can be a great way to test your API endpoints and check for conformance and data quality.
+This guide will cover how to integrate with Postman.
+
+## How to integrate Postman with Iguhealth
+
+### Download Postman
+1. Download Postman from the [official website](https://www.postman.com/).
+
+### Setup IGUHealth
+1. Go to the admin application and create a new ClientApplication.
+2. Set the name to Postman
+3. Set the grant type to `client_credentials`.
+4. Set the response type to token.
+5. Set the secret to a secure value.
+6. Hit Actions and create
+7. Mark down the client ID and secret.
+8. Click Security->AccessPolicy in the admin app and create a new access policy.
+9. Create AccessPolicy with the type set to `Full Access'.
+10. Under Target.Link reference the ClientApplication created on step 5.
+
+### Authorize Postman
+1. Open Postman and create a new request.
+2. Under Authorization set type to OAuth 2.0.
+3. Under Configure New Token set Grant Type to Client Credentials.
+4. Set ClientID and ClientSecret to the values from step 7.
+5. Set the Access Token URL to value at User -> Settings -> Endpoints -> Security -> Token
+6. Click Get New Access Token and confirm that you get an access token.
+
+### Test
+1. Get R4 endpoint from User -> Settings -> Endpoints -> FHIR -> R4
+2. Make get requests in Postman to the `${r4Endpoint}/metadata`
+3. Confirm that you get a 200 response with CapabilityStatement in body.
