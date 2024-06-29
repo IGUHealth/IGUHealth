@@ -576,39 +576,6 @@ export async function associateServicesKoaMiddleware<State, Context>(
   };
 }
 
-export async function associateTenantFHIRContextMiddleware<
-  State extends {
-    access_token?: string;
-    user: { [key: string]: unknown };
-  },
-  Context extends KoaContext.FHIRServices,
->(): Promise<
-  koa.Middleware<
-    State,
-    KoaContext.FHIR<Context> &
-      Router.RouterParamContext<State, KoaContext.FHIR<Context>>
-  >
-> {
-  return async (ctx, next) => {
-    if (!ctx.params.tenant)
-      throw new OperationError(
-        outcomeError("invalid", "No tenant present in request."),
-      );
-
-    if (!ctx.FHIRContext) {
-      throw new OperationError(
-        outcomeError("invariant", "FHIR Context not set"),
-      );
-    }
-
-    ctx.FHIRContext = {
-      ...ctx.FHIRContext,
-      tenant: ctx.params.tenant as TenantId,
-    };
-    await next();
-  };
-}
-
 async function fhirAPIMiddleware(): Promise<
   MiddlewareAsyncChain<unknown, FHIRServerCTX>
 > {

@@ -14,6 +14,7 @@ import { fileURLToPath } from "url";
 import * as db from "zapatos/db";
 
 import { FHIROperationOutcomeDisplay } from "@iguhealth/components";
+import { TenantId } from "@iguhealth/jwt";
 import {
   OperationError,
   isOperationError,
@@ -41,7 +42,6 @@ import { verifyAndAssociateUserFHIRContext } from "./authZ/middleware/tenantAcce
 import loadEnv from "./env.js";
 import {
   associateServicesKoaMiddleware,
-  associateTenantFHIRContextMiddleware,
   createFHIRAPI,
   getRedisClient,
   logger,
@@ -237,25 +237,27 @@ export default async function createServer(): Promise<
     prefix: "/w/:tenant",
   });
 
-  tenantRouter.use(
-    "/",
-    // Error handling middleware. Checks for OperationError and converts to OperationOutcome with status based on level and/or code.
+  tenantRouter.use("/", async (ctx, next) => {
+    if (!ctx.params.tenant)
+      throw new OperationError(
+        outcomeError("invalid", "No tenant present in request."),
+      );
 
-    // Associate FHIR Context for all routes
-    // [NOTE] for oidc we pull in fhir data so we need to associate the context on top of non fhir apis.
-    await associateTenantFHIRContextMiddleware(),
-    async (ctx, next) => {
-      const tenantId = ctx.FHIRContext.tenant;
-      const tenant = await db
-        .selectOne("tenants", { id: tenantId }, { columns: ["id"] })
-        .run(pool);
+    const tenant = await db
+      .selectOne("tenants", { id: ctx.params.tenant }, { columns: ["id"] })
+      .run(pool);
 
-      if (!tenant) {
-        throw new OperationError(outcomeError("not-found", "Tenant not found"));
-      }
-      await next();
-    },
-  );
+    if (!tenant) {
+      throw new OperationError(outcomeError("not-found", "Tenant not found"));
+    }
+
+    ctx.FHIRContext = {
+      ...ctx.FHIRContext,
+      tenant: tenant.id as TenantId,
+    };
+
+    await next();
+  });
 
   const tenantAPIV1Router = new Router<
     Koa.DefaultState,
