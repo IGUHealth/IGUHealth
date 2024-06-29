@@ -10,7 +10,7 @@ import {
 import * as fp from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import dataConversion, {
   ResolveRemoteCanonical,
   SEARCH_TYPE,
@@ -21,8 +21,8 @@ import fitsCriteria from "./search/fitsCriteria.js";
 dayjs.extend(isBetween);
 
 interface MemorySearchCTX {
-  resolveCanonical: FHIRServerCTX["resolveCanonical"];
-  resolveTypeToCanonical: FHIRServerCTX["resolveTypeToCanonical"];
+  resolveCanonical: IGUHealthServerCTX["resolveCanonical"];
+  resolveTypeToCanonical: IGUHealthServerCTX["resolveTypeToCanonical"];
   /*
    ** Used to resolve remote canonicals in the toReference function.
    */

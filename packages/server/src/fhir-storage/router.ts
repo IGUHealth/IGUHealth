@@ -25,7 +25,7 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../fhir-api/types.js";
 import { httpRequestToFHIRRequest } from "../fhir-http/index.js";
 import { fhirResponseToBundleEntry } from "./utilities/bundle.js";
 import { deriveResourceTypeFilter } from "./utilities/search/parameters.js";
@@ -153,7 +153,7 @@ export function findSource<T>(
 }
 
 function createRouterMiddleware<
-  CTX extends FHIRServerCTX,
+  CTX extends IGUHealthServerCTX,
   State extends { sources: Sources<CTX> },
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
@@ -376,7 +376,7 @@ function createRouterMiddleware<
   ]);
 }
 
-export default function RouterClient<CTX extends FHIRServerCTX>(
+export default function RouterClient<CTX extends IGUHealthServerCTX>(
   middleware: MiddlewareAsyncChain<{ sources: Sources<CTX> }, CTX>[],
   sources: Sources<CTX>,
 ): AsynchronousClient<{ sources: Sources<CTX> }, CTX> {

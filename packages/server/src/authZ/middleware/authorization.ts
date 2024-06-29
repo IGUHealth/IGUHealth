@@ -7,7 +7,7 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../fhir-api/types.js";
 
 /**
  * Determine whether or not the policy access has access to the resource type.
@@ -142,7 +142,7 @@ function validateFHIRMethodAccess(
  * @returns boolean as to whether or not a user is being granted access.
  */
 function evaluateAccessPolicy(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   request: FHIRRequest,
 ): boolean {
   for (const accessPolicy of ctx.user.accessPolicies ?? []) {
@@ -182,7 +182,10 @@ function evaluateAccessPolicy(
  * @param request  The FHIR request being made.
  * @returns boolean as to whether or not a user is being granted access.
  */
-function canUserMakeRequest(ctx: FHIRServerCTX, request: FHIRRequest): boolean {
+function canUserMakeRequest(
+  ctx: IGUHealthServerCTX,
+  request: FHIRRequest,
+): boolean {
   if (ctx.user.role === "admin" || ctx.user.role === "owner") return true;
   return evaluateAccessPolicy(ctx, request);
 }
@@ -195,7 +198,7 @@ function canUserMakeRequest(ctx: FHIRServerCTX, request: FHIRRequest): boolean {
  */
 export function createAuthorizationMiddleWare<T>(): MiddlewareAsyncChain<
   T,
-  FHIRServerCTX
+  IGUHealthServerCTX
 > {
   return async (context, next) => {
     if (canUserMakeRequest(context.ctx, context.request)) {

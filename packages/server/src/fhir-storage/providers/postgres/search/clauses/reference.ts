@@ -4,7 +4,7 @@ import type * as s from "zapatos/schema";
 import { SearchParameter } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 
-import { FHIRServerCTX } from "../../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
 import {
   SearchParameterResource,
   searchParameterToTableName,
@@ -18,7 +18,7 @@ import { missingModifier } from "./shared.js";
  ** Performs a search on the uri table to find the reference_id for the canonical reference.
  */
 function generateCanonicalReferenceSearch(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: FHIR_VERSION,
   parameter: SearchParameterResource,
 ): db.SQLFragment {
@@ -48,7 +48,7 @@ function isChainParameter(
 }
 
 function chainSQL<Version extends FHIR_VERSION>(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   parameter: SearchParameterResource & {
     chainedParameters: SearchParameter[][];
@@ -113,7 +113,7 @@ function chainSQL<Version extends FHIR_VERSION>(
 }
 
 function sqlParameterValue<Version extends FHIR_VERSION>(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   parameter: SearchParameterResource,
   parameterValue: string | number,
@@ -152,7 +152,7 @@ function sqlParameterValue<Version extends FHIR_VERSION>(
 }
 
 export default function referenceClauses<Version extends FHIR_VERSION>(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, unknown> {

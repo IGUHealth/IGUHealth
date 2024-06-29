@@ -4,7 +4,7 @@ import type * as s from "zapatos/schema";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
 import {
   SearchParameterResource,
   getDecimalPrecision,
@@ -13,7 +13,7 @@ import {
 import { missingModifier } from "./shared.js";
 
 export default function numberClauses(
-  _ctx: FHIRServerCTX,
+  _ctx: IGUHealthServerCTX,
   fhirVersion: FHIR_VERSION,
   parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, unknown> {

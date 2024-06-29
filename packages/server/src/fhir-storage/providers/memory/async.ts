@@ -21,7 +21,7 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import { generateId } from "../../utilities/generateId.js";
 import {
   SearchParameterResource,
@@ -142,7 +142,7 @@ function setResource<Version extends FHIR_VERSION>(
 
 function createMemoryMiddleware<
   State extends { data: MemoryData },
-  CTX extends FHIRServerCTX,
+  CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
     async (context) => {
@@ -400,7 +400,7 @@ function createURLMap<Version extends FHIR_VERSION>(
 
 function createResolveCanonical(
   data: MemoryData,
-): FHIRServerCTX["resolveCanonical"] {
+): IGUHealthServerCTX["resolveCanonical"] {
   const r4Map = createURLMap(data, R4);
   const r4bMap = createURLMap(data, R4B);
 
@@ -478,7 +478,7 @@ type MemoryData = {
   [R4B]: InternalData<R4B, AllResourceTypes>;
 };
 
-export class Memory<CTX extends FHIRServerCTX>
+export class Memory<CTX extends IGUHealthServerCTX>
   implements MemoryClientInterface<CTX>
 {
   private _client;
@@ -551,7 +551,7 @@ export class Memory<CTX extends FHIRServerCTX>
   }
 }
 
-export function createArtifactMemoryDatabase<CTX extends FHIRServerCTX>({
+export function createArtifactMemoryDatabase<CTX extends IGUHealthServerCTX>({
   r4,
   r4b,
 }: {

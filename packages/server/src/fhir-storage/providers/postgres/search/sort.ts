@@ -8,7 +8,7 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX, asSystemCTX } from "../../../../fhir-api/types.js";
+import { IGUHealthServerCTX, asSystemCTX } from "../../../../fhir-api/types.js";
 import {
   SearchParameterResult,
   searchParameterToTableName,
@@ -39,7 +39,7 @@ function getSortColumn(index: number): db.DangerousRawString {
 }
 
 export async function deriveSortQuery<Version extends FHIR_VERSION>(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   resourceTypes: ResourceType<Version>[],
   sortParameter: SearchParameterResult,

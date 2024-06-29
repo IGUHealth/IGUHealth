@@ -12,14 +12,17 @@ import { OperationDefinition } from "@iguhealth/fhir-types/r4/types";
 import { R4, R4B } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import { InlineOp } from "./interface.js";
 
 function createExecutor(): MiddlewareAsync<
   InlineOp<unknown, unknown>[],
-  FHIRServerCTX
+  IGUHealthServerCTX
 > {
-  return createMiddlewareAsync<InlineOp<unknown, unknown>[], FHIRServerCTX>([
+  return createMiddlewareAsync<
+    InlineOp<unknown, unknown>[],
+    IGUHealthServerCTX
+  >([
     async (context) => {
       switch (context.request.fhirVersion) {
         case R4B: {
@@ -71,12 +74,15 @@ function createExecutor(): MiddlewareAsync<
 
 class OperationClient extends AsynchronousClient<
   InlineOp<unknown, unknown>[],
-  FHIRServerCTX
+  IGUHealthServerCTX
 > {
   _state: InlineOp<unknown, unknown>[];
   constructor(
     initialState: InlineOp<unknown, unknown>[],
-    middleware: MiddlewareAsync<InlineOp<unknown, unknown>[], FHIRServerCTX>,
+    middleware: MiddlewareAsync<
+      InlineOp<unknown, unknown>[],
+      IGUHealthServerCTX
+    >,
   ) {
     super(initialState, middleware);
     this._state = initialState;

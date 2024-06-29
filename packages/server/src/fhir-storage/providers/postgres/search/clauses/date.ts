@@ -6,7 +6,7 @@ import { date, dateTime } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
 import {
   SearchParameterResource,
   getDatePrecision,
@@ -35,7 +35,7 @@ function getValueRange(value: string): [string, string] {
 }
 
 export default function dateClauses(
-  _ctx: FHIRServerCTX,
+  _ctx: IGUHealthServerCTX,
   fhirVersion: FHIR_VERSION,
   parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, unknown> {

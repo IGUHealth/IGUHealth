@@ -13,7 +13,7 @@ import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { toDBFHIRVersion } from "../../fhir-storage/utilities/version.js";
-import { FHIRServerCTX } from "../types.js";
+import { IGUHealthServerCTX } from "../types.js";
 
 export async function getResourceCountTotal<Version extends FHIR_VERSION>(
   pg: db.Queryable,
@@ -127,7 +127,7 @@ async function checkTenantUsage(
  */
 export function checkTenantUsageMiddleware<T>(): MiddlewareAsyncChain<
   T,
-  FHIRServerCTX
+  IGUHealthServerCTX
 > {
   return async (context, next) => {
     await checkTenantUsage(context.ctx.db, context.ctx.tenant, context.request);

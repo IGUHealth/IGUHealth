@@ -5,11 +5,11 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
 
-import { FHIRServerCTX } from "../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../fhir-api/types.js";
 import type { ResolveRemoteCanonical } from "./search/dataConversion.js";
 
 export function createResolverRemoteCanonical(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
 ): ResolveRemoteCanonical {
   return async <FHIRVersion extends FHIR_VERSION>(
     fhirVersion: FHIRVersion,

@@ -17,7 +17,7 @@ import {
 import { AccessTokenPayload, TenantId } from "@iguhealth/jwt";
 
 import { IOCache } from "../cache/interface.js";
-import { FHIRServerCTX } from "../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../fhir-api/types.js";
 import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
 import { Lock } from "../synchronization/interfaces.js";
 import { Memory } from "./providers/memory/async.js";
@@ -51,7 +51,7 @@ class TestCache<CTX extends { tenant: TenantId }> implements IOCache<CTX> {
   }
 }
 
-export const testServices: FHIRServerCTX = {
+export const testServices: IGUHealthServerCTX = {
   tenant: "tenant" as TenantId,
   db: new pg.Pool({
     user: process.env["FHIR_DATABASE_USERNAME"],

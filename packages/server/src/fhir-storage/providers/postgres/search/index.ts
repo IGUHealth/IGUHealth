@@ -16,7 +16,7 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX, asSystemCTX } from "../../../../fhir-api/types.js";
+import { IGUHealthServerCTX, asSystemCTX } from "../../../../fhir-api/types.js";
 import {
   SearchParameterResource,
   SearchParameterResult,
@@ -32,7 +32,7 @@ import { buildParameterSQL } from "./clauses/index.js";
 import { deriveSortQuery } from "./sort.js";
 
 function buildParametersSQL<Version extends FHIR_VERSION>(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   parameters: SearchParameterResource[],
 ): db.SQLFragment[] {
@@ -47,7 +47,7 @@ function buildParametersSQL<Version extends FHIR_VERSION>(
  * @returns
  */
 async function getParameterForLatestId<Version extends FHIR_VERSION>(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   resourceTypes: ResourceType<Version>[],
 ): Promise<SearchParameterResource[]> {
@@ -75,7 +75,7 @@ const getIds: (
   resources.map((r) => r.id).filter((r): r is id => r !== undefined);
 
 async function processRevInclude<Version extends FHIR_VERSION>(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   param: SearchParameterResult,
   results: Resource<Version, AllResourceTypes>[],
@@ -120,7 +120,7 @@ async function processRevInclude<Version extends FHIR_VERSION>(
 
 async function processInclude<Version extends FHIR_VERSION>(
   client: db.Queryable,
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   param: SearchParameterResult,
   results: Resource<Version, AllResourceTypes>[],
@@ -210,7 +210,7 @@ export async function executeSearchQuery<
     | R4BTypeSearchRequest,
 >(
   client: db.Queryable,
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   request: Request,
 ): Promise<{
   total?: number;

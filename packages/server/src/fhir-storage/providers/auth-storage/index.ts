@@ -26,7 +26,7 @@ import {
   determineEmailUpdate,
   membershipToUser,
 } from "../../../authN/db/users/utilities.js";
-import { FHIRServerCTX } from "../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import validateOperationsAllowed from "../../middleware/validate-operations-allowed.js";
 import validateResourceTypesAllowedMiddleware from "../../middleware/validate-resourcetype.js";
 import { FHIRTransaction } from "../../transactions.js";
@@ -55,7 +55,7 @@ async function customValidationMembership(
   }
 }
 
-async function gateCheckSingleOwner(ctx: FHIRServerCTX) {
+async function gateCheckSingleOwner(ctx: IGUHealthServerCTX) {
   const owners = await ctx.client.search_type(ctx, R4, "Membership", [
     {
       name: "role",
@@ -77,7 +77,7 @@ function validateOwnershipMiddleware<
   State extends {
     fhirDB: ReturnType<typeof createPostgresClient>;
   },
-  CTX extends FHIRServerCTX,
+  CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async (context, next) => {
     const res = await next(context);
@@ -101,7 +101,7 @@ function setInTransactionMiddleware<
   State extends {
     fhirDB: ReturnType<typeof createPostgresClient>;
   },
-  CTX extends FHIRServerCTX,
+  CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async (context, next) => {
     return FHIRTransaction(
@@ -122,7 +122,7 @@ function customValidationMembershipMiddleware<
   State extends {
     fhirDB: ReturnType<typeof createPostgresClient>;
   },
-  CTX extends FHIRServerCTX,
+  CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async (context, next) => {
     switch (context.request.type) {
@@ -142,7 +142,7 @@ function updateUserTableMiddleware<
   State extends {
     fhirDB: ReturnType<typeof createPostgresClient>;
   },
-  CTX extends FHIRServerCTX,
+  CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsyncChain<State, CTX> {
   return async (context, next) => {
     const tenantUserManagement = new TenantUserManagement(context.ctx.tenant);
@@ -286,7 +286,7 @@ function createAuthMiddleware<
   State extends {
     fhirDB: ReturnType<typeof createPostgresClient>;
   },
-  CTX extends FHIRServerCTX,
+  CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
     validateResourceTypesAllowedMiddleware(AUTH_RESOURCETYPES),
@@ -307,7 +307,7 @@ function createAuthMiddleware<
   ]);
 }
 
-export function createAuthStorageClient<CTX extends FHIRServerCTX>(
+export function createAuthStorageClient<CTX extends IGUHealthServerCTX>(
   fhirDB: ReturnType<typeof createPostgresClient>,
 ): FHIRClientAsync<CTX> {
   return new AsynchronousClient<

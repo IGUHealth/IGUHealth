@@ -4,7 +4,7 @@ import type * as s from "zapatos/schema";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
 import {
   SearchParameterResource,
   searchParameterToTableName,
@@ -21,7 +21,7 @@ import uriClauses from "./uri.js";
 const PARAMETER_CLAUSES: Record<
   string,
   (
-    ctx: FHIRServerCTX,
+    ctx: IGUHealthServerCTX,
     fhirVersion: FHIR_VERSION,
     parameter: SearchParameterResource,
   ) => db.SQLFragment<boolean | null, unknown>
@@ -36,7 +36,7 @@ const PARAMETER_CLAUSES: Record<
 };
 
 export function buildParameterSQL<Version extends FHIR_VERSION>(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   parameter: SearchParameterResource,
   columns: s.Column[] = [],

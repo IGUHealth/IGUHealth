@@ -14,7 +14,7 @@ import {
 } from "@iguhealth/generated-ops/r4";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../fhir-api/types.js";
 import { TerminologyProvider } from "./interface.js";
 
 import ExpandInput = ValueSetExpand.Input;
@@ -60,7 +60,7 @@ function codeSystemConceptToValuesetExpansion(
 }
 
 async function getValuesetExpansionContains<Version extends FHIR_VERSION>(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   valueSet: Resource<Version, "ValueSet">,
 ): Promise<
@@ -160,7 +160,7 @@ function findConcept(
 export class TerminologyProviderMemory implements TerminologyProvider {
   constructor() {}
   async validate(
-    ctx: FHIRServerCTX,
+    ctx: IGUHealthServerCTX,
     fhirVersion: FHIR_VERSION,
     input: ValidateInput,
   ): Promise<ValidateOutput> {
@@ -186,7 +186,7 @@ export class TerminologyProviderMemory implements TerminologyProvider {
     };
   }
   async expand<Version extends FHIR_VERSION>(
-    ctx: FHIRServerCTX,
+    ctx: IGUHealthServerCTX,
     fhirVersion: Version,
     input: ExpandInput,
   ): Promise<ExpandOutput> {
@@ -228,7 +228,7 @@ export class TerminologyProviderMemory implements TerminologyProvider {
     return valueset as Resource<R4, "ValueSet">;
   }
   async lookup(
-    ctx: FHIRServerCTX,
+    ctx: IGUHealthServerCTX,
     fhirVersion: FHIR_VERSION,
     input: CodeSystemLookup.Input,
   ): Promise<CodeSystemLookup.Output> {
