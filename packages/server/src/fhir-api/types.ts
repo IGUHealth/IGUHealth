@@ -63,25 +63,25 @@ export namespace KoaContext {
     };
   };
 
-  export type FHIR<C> = C &
+  export type IGUHealthKoa<C> = C &
     OIDC &
-    FHIRServices & {
-      FHIRContext: Omit<FHIRServerCTX, "user"> | FHIRServerCTX;
+    IGUHealthServices & {
+      iguhealth: Omit<IGUHealthServerCTX, "user"> | IGUHealthServerCTX;
     };
 
-  export type FHIRServices = {
-    FHIRContext: Omit<FHIRServerCTX, "user" | "tenant">;
+  export type IGUHealthServices = {
+    iguhealth: Omit<IGUHealthServerCTX, "user" | "tenant">;
   };
 
   /**
-   * Verifies whether ctx is FHIRServerCTX with user.
+   * Verifies whether ctx is IGUHealthServerCTX with user.
    * @param ctx CTX that should be verified as user associated
-   * @returns  Verifies whether ctx is FHIRServerCTX with user
+   * @returns  Verifies whether ctx is IGUHealthServerCTX with user
    */
   export function isFHIRServerAuthorizedUserCTX(
-    ctx: FHIRServerCTX | Omit<FHIRServerCTX, "user">,
-  ): ctx is FHIRServerCTX {
-    return (ctx as FHIRServerCTX).user !== undefined;
+    ctx: IGUHealthServerCTX | Omit<IGUHealthServerCTX, "user">,
+  ): ctx is IGUHealthServerCTX {
+    return (ctx as IGUHealthServerCTX).user !== undefined;
   }
 }
 
@@ -93,19 +93,19 @@ export interface UserContext {
   accessToken?: string;
 }
 
-export interface FHIRServerCTX {
+export interface IGUHealthServerCTX {
   // Server Information
   tenant: TenantId;
   user: UserContext;
 
   // FHIR Client
-  client: FHIRClientAsync<FHIRServerCTX>;
+  client: FHIRClientAsync<IGUHealthServerCTX>;
 
   // Services
   db: db.Queryable;
   logger: Logger<string>;
   lock: Lock<unknown>;
-  cache: IOCache<FHIRServerCTX>;
+  cache: IOCache<IGUHealthServerCTX>;
   terminologyProvider: TerminologyProvider;
   encryptionProvider?: EncryptionProvider;
   emailProvider?: EmailProvider;
@@ -131,7 +131,9 @@ export interface FHIRServerCTX {
  * @param ctx The current context
  * @returns A new context with the user set to system.
  */
-export function asSystemCTX(ctx: Omit<FHIRServerCTX, "user">): FHIRServerCTX {
+export function asSystemCTX(
+  ctx: Omit<IGUHealthServerCTX, "user">,
+): IGUHealthServerCTX {
   const jwt: AccessTokenPayload<s.user_role> = {
     iss: IGUHEALTH_ISSUER,
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",

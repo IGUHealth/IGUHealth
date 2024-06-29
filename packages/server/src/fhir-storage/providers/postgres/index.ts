@@ -48,7 +48,7 @@ import {
 } from "../../utilities/search/parameters.js";
 import { fhirResourceToBundleEntry, fhirResponseToBundleEntry, fullUrl } from "../../utilities/bundle.js";
 import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
-import { asSystemCTX, FHIRServerCTX } from "../../../fhir-api/types.js";
+import { asSystemCTX, IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import { param_types_supported } from "./constants.js";
 import { executeSearchQuery } from "./search/index.js";
 import { ParsedParameter } from "@iguhealth/client/url";
@@ -63,7 +63,7 @@ import { toDBFHIRVersion } from "../../utilities/version.js";
 import { generateId } from "../../utilities/generateId.js";
 
 async function getAllParametersForResource<
-  CTX extends FHIRServerCTX,
+  CTX extends IGUHealthServerCTX,
   Version extends FHIR_VERSION,
 >(
   ctx: CTX,
@@ -92,7 +92,7 @@ async function getAllParametersForResource<
 }
 
 async function indexSearchParameter<
-  CTX extends FHIRServerCTX,
+  CTX extends IGUHealthServerCTX,
   Version extends FHIR_VERSION,
 >(
   ctx: CTX,
@@ -537,7 +537,7 @@ async function indexSearchParameter<
 }
 
 async function removeIndices<Version extends FHIR_VERSION>(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   resource: Resource<Version, AllResourceTypes>,
 ) {
@@ -583,7 +583,7 @@ function resourceIsValidForIndexing<Version extends FHIR_VERSION>(
 }
 
 async function indexResource<
-  CTX extends FHIRServerCTX,
+  CTX extends IGUHealthServerCTX,
   Version extends FHIR_VERSION,
 >(
   ctx: CTX,
@@ -645,7 +645,7 @@ async function indexResource<
 }
 
 async function createResource<
-  CTX extends FHIRServerCTX,
+  CTX extends IGUHealthServerCTX,
   Version extends FHIR_VERSION,
 >(
   ctx: CTX,
@@ -681,7 +681,7 @@ async function createResource<
 }
 
 async function getResourceById<Version extends FHIR_VERSION>(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   id: string,
 ): Promise<Resource<Version, AllResourceTypes> | undefined> {
@@ -703,7 +703,7 @@ async function getResourceById<Version extends FHIR_VERSION>(
 }
 
 async function getResource<Version extends FHIR_VERSION, Type extends ResourceType<Version>>(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   resourceType: Type,
   id: string,
@@ -721,7 +721,7 @@ async function getResource<Version extends FHIR_VERSION, Type extends ResourceTy
   return resource as Resource<Version, Type>;
 }
 
-async function getVersionedResource<Version extends FHIR_VERSION>(  ctx: FHIRServerCTX,
+async function getVersionedResource<Version extends FHIR_VERSION>(  ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   resourceType: ResourceType<Version>,
   id: string,
@@ -814,7 +814,7 @@ function historyLevelFilter(
 }
 
 async function getHistory<
-  CTX extends FHIRServerCTX,
+  CTX extends IGUHealthServerCTX,
   Version extends FHIR_VERSION,
 >(
   ctx: CTX,
@@ -865,7 +865,7 @@ async function getHistory<
 }
 
 async function patchResource<Version extends FHIR_VERSION>(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   resourceType: ResourceType<Version>,
   id: string,
@@ -941,7 +941,7 @@ async function patchResource<Version extends FHIR_VERSION>(
 }
 
 async function updateResource<
-  CTX extends FHIRServerCTX,
+  CTX extends IGUHealthServerCTX,
   Version extends FHIR_VERSION,
 >(
   ctx: CTX,
@@ -1004,7 +1004,7 @@ async function updateResource<
 }
 
 async function deleteResource<
-  CTX extends FHIRServerCTX,
+  CTX extends IGUHealthServerCTX,
   Version extends FHIR_VERSION,
 >(
   ctx: CTX,
@@ -1046,7 +1046,7 @@ async function deleteResource<
   });
 }
 
-async function conditionalDelete(ctx: FHIRServerCTX, searchRequest:R4TypeSearchRequest | R4BTypeSearchRequest | R4SystemSearchRequest | R4BSystemSearchRequest) {
+async function conditionalDelete(ctx: IGUHealthServerCTX, searchRequest:R4TypeSearchRequest | R4BTypeSearchRequest | R4SystemSearchRequest | R4BSystemSearchRequest) {
   const limit = parseInt(process.env.FHIR_DELETE_CONDITIONAL_LIMIT ?? "20");
   searchRequest.parameters = [...searchRequest.parameters.filter(p => p.name !== "_total" && p.name !== "_count"), 
     {"name": "_total", value: ["accurate"]},
@@ -1100,7 +1100,7 @@ function createPostgresMiddleware<
   State extends {
     transaction_entry_limit: number;
   },
-  CTX extends FHIRServerCTX,
+  CTX extends IGUHealthServerCTX,
 >(): MiddlewareAsync<State, CTX> {
   return createMiddlewareAsync<State, CTX>([
     async (context) => {
@@ -1435,7 +1435,7 @@ function createPostgresMiddleware<
           return FHIRTransaction(
             context.ctx,
             db.IsolationLevel.RepeatableRead,
-            async (ctx: FHIRServerCTX) => {
+            async (ctx: IGUHealthServerCTX) => {
               for (const index of order) {
                 const entry = transactionBundle.entry?.[parseInt(index)];
                 if (!entry)
@@ -1542,7 +1542,7 @@ function createPostgresMiddleware<
   ]);
 }
 
-export function createPostgresClient<CTX extends FHIRServerCTX>(
+export function createPostgresClient<CTX extends IGUHealthServerCTX>(
   { transaction_entry_limit }: { transaction_entry_limit: number } = {
     transaction_entry_limit: 20,
   },

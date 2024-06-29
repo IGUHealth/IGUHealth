@@ -7,12 +7,12 @@ import {
   getResourceCountTotal,
   getTenantLimits,
 } from "../../../fhir-api/middleware/usageCheck.js";
-import { FHIRServerCTX } from "../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import InlineOperation from "./interface.js";
 
 const IguhealthUsageStatisticsInvoke = InlineOperation(
   IguhealthUsageStatistics.Op,
-  async (ctx: FHIRServerCTX, _request: FHIRRequest, _input) => {
+  async (ctx: IGUHealthServerCTX, _request: FHIRRequest, _input) => {
     const r4Limits = await getTenantLimits(ctx.db, ctx.tenant, R4);
     const r4bLimits = await getTenantLimits(ctx.db, ctx.tenant, R4B);
     const statistics = [

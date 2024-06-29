@@ -16,12 +16,12 @@ import { TenantId } from "@iguhealth/jwt";
 import { TenantManagement } from "../authN/db/tenant.js";
 import TenantUserManagement from "../authN/db/users/index.js";
 import { createFHIRServices } from "../fhir-api/index.js";
-import { FHIRServerCTX, asSystemCTX } from "../fhir-api/types.js";
+import { IGUHealthServerCTX, asSystemCTX } from "../fhir-api/types.js";
 import { createPGPool } from "../fhir-storage/providers/postgres/pg.js";
 import { FHIRTransaction } from "../fhir-storage/transactions.js";
 
 async function getTenant(
-  ctx: Omit<FHIRServerCTX, "tenant" | "user">,
+  ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
   options: {
     id?: string;
     tier?: string;
@@ -76,7 +76,7 @@ async function createTenant(
     email?: string;
     password?: string;
   },
-  ctx: Omit<FHIRServerCTX, "tenant" | "user">,
+  ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
 ) {
   return await FHIRTransaction(
     ctx,

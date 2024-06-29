@@ -12,10 +12,10 @@ type UserInfoResponse = {
 export function userInfo(): OIDCRouteHandler {
   return async (ctx, next) => {
     const user = await ctx.oidc.userManagement.get(
-      ctx.FHIRContext,
+      ctx.iguhealth,
       // [TODO]
       //@ts-ignore
-      ctx.FHIRContext.user.jwt.sub,
+      ctx.iguhealth.user.jwt.sub,
     );
     ctx.body = {
       sub: user?.id,

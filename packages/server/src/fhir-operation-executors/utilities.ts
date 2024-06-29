@@ -15,7 +15,7 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../fhir-api/types.js";
 
 export async function resolveOperationDefinition<
   CTX,
@@ -55,7 +55,7 @@ const EXT_URL =
   "https://iguhealth.github.io/fhir-operation-definition/operation-code";
 
 export async function getOperationCode(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   operation: OperationDefinition,
 ): Promise<string | undefined> {
   const code = evaluate(
@@ -79,7 +79,10 @@ export async function getOperationCode(
   return code[0];
 }
 
-export function getOpCTX(ctx: FHIRServerCTX, request: R4InvokeRequest): OpCTX {
+export function getOpCTX(
+  ctx: IGUHealthServerCTX,
+  request: R4InvokeRequest,
+): OpCTX {
   return {
     fhirVersion: request.fhirVersion,
     level: request.level,

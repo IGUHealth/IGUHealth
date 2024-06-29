@@ -6,7 +6,7 @@ import {
 import { IOperation, Operation } from "@iguhealth/operation-execution";
 import { OperationError, outcome } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import { getOpCTX } from "../../utilities.js";
 import { validateInvocationContext } from "../../utilities.js";
 
@@ -15,20 +15,23 @@ type Output<T> = T extends IOperation<unknown, infer Output> ? Output : never;
 
 export class InlineOp<T, V> extends Operation<T, V> {
   private _execute: (
-    ctx: FHIRServerCTX,
+    ctx: IGUHealthServerCTX,
     request: R4InvokeRequest,
   ) => Promise<Parameters>;
   constructor(
     definition: OperationDefinition,
     execute: (
-      ctx: FHIRServerCTX,
+      ctx: IGUHealthServerCTX,
       request: R4InvokeRequest,
     ) => Promise<Parameters>,
   ) {
     super(definition);
     this._execute = execute;
   }
-  execute(ctx: FHIRServerCTX, request: R4InvokeRequest): Promise<Parameters> {
+  execute(
+    ctx: IGUHealthServerCTX,
+    request: R4InvokeRequest,
+  ): Promise<Parameters> {
     return this._execute(ctx, request);
   }
 }
@@ -38,14 +41,14 @@ export default function InlineOperation<
 >(
   op: OP,
   executor: (
-    ctx: FHIRServerCTX,
+    ctx: IGUHealthServerCTX,
     request: R4FHIRRequest,
     v: Input<OP>,
   ) => Promise<Output<OP>>,
 ): InlineOp<Input<OP>, Output<OP>> {
   return new InlineOp(
     op.operationDefinition,
-    async (ctx: FHIRServerCTX, request: R4InvokeRequest) => {
+    async (ctx: IGUHealthServerCTX, request: R4InvokeRequest) => {
       const invocationOperationOutcome = validateInvocationContext(
         op.operationDefinition,
         request,

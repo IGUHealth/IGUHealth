@@ -10,7 +10,7 @@ import {
   outcomeInfo,
 } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import InlineOperation from "./interface.js";
 
 interface ChannelInformation {
@@ -68,7 +68,7 @@ async function postMessageBroker(
 
 const IguhealthMessagePostInvoke = InlineOperation(
   IguhealthMessagePost.Op,
-  async (ctx: FHIRServerCTX, request: FHIRRequest, input) => {
+  async (ctx: IGUHealthServerCTX, request: FHIRRequest, input) => {
     switch (request.level) {
       case "instance": {
         switch (request.resourceType) {

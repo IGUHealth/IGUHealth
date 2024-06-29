@@ -4,14 +4,14 @@ import { R4, Resource, ResourceType } from "@iguhealth/fhir-types/versions";
 import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX, asSystemCTX } from "../../fhir-api/types.js";
+import { IGUHealthServerCTX, asSystemCTX } from "../../fhir-api/types.js";
 
 // const membershipID = ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID] as
 // | id
 // | undefined;
 
 async function findResourceAndAccessPolicies<Type extends ResourceType<R4>>(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   resourceType: Type,
   id: id,
 ): Promise<{
@@ -52,13 +52,13 @@ async function findResourceAndAccessPolicies<Type extends ResourceType<R4>>(
  * Middleware to associate the user and access policies with the request.
  * Middlware uses JWT iss and sub to find the contextual user resource and _revinclude to find the access policies.
  *
- * @param context FHIRServerCTX
+ * @param context IGUHealthServerCTX
  * @param next Next chain in middleware.
- * @returns FHIRServerCTX with user resource and access policies attached.
+ * @returns IGUHealthServerCTX with user resource and access policies attached.
  */
 export const associateUserMiddleware: MiddlewareAsyncChain<
   unknown,
-  FHIRServerCTX
+  IGUHealthServerCTX
 > = async (context, next) => {
   switch (context.ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE]) {
     case "Membership":

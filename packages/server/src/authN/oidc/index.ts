@@ -19,7 +19,9 @@ export type OIDCRouteHandler = Parameters<
  * OIDC Router
  */
 export async function createOIDCRouter<
-  C extends Koa.DefaultContext & KoaContext.OIDC & KoaContext.FHIRServices,
+  C extends Koa.DefaultContext &
+    KoaContext.OIDC &
+    KoaContext.IGUHealthKoa<Koa.DefaultContext>,
 >(
   prefix: string,
   {

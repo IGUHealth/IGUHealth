@@ -50,7 +50,7 @@ interface ValidateUserJWTMiddlewareOptions {
  */
 export async function verifyBasicAuth<
   State extends Koa.DefaultState,
-  Context extends KoaContext.FHIR<Koa.DefaultContext>,
+  Context extends KoaContext.IGUHealthKoa<Koa.DefaultContext>,
 >(ctx: Koa.ParameterizedContext<State, Context>, next: Koa.Next) {
   const authHeader = ctx.req.headers.authorization;
 
@@ -62,8 +62,8 @@ export async function verifyBasicAuth<
       );
     }
 
-    const clientApplication = await ctx.FHIRContext.client.read(
-      asSystemCTX(ctx.FHIRContext),
+    const clientApplication = await ctx.iguhealth.client.read(
+      asSystemCTX(ctx.iguhealth),
       R4,
       "ClientApplication",
       credentials.client_id as id,
@@ -88,7 +88,7 @@ export async function verifyBasicAuth<
     }
 
     const token = await createClientCredentialToken(
-      ctx.FHIRContext.tenant,
+      ctx.iguhealth.tenant,
       clientApplication,
     );
     ctx.req.headers.authorization = "Bearer " + token;

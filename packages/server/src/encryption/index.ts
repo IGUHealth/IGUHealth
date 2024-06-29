@@ -3,7 +3,7 @@ import jsonpatch, { Operation } from "fast-json-patch";
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../fhir-api/types.js";
 
 function toFP(loc: (string | number)[]) {
   let FP = "$this";
@@ -17,7 +17,7 @@ function toFP(loc: (string | number)[]) {
 export const ENCRYPTION_URL = "https://iguhealth.app/Extension/encrypt-value";
 
 export async function encryptValue<T extends object>(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   valueToEncrypt: T,
 ): Promise<T> {
   const encryptionProvider = ctx.encryptionProvider;

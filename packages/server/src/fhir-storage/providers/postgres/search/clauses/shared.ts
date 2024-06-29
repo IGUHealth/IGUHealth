@@ -3,7 +3,7 @@ import type * as s from "zapatos/schema";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
 import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
 
 export type SEARCH_INDEX_WHEREABLE =
@@ -19,7 +19,7 @@ export type SEARCH_INDEX_VALUE_BASED =
   | s.r4_uri_idx.Whereable;
 
 export function missingModifier(
-  _ctx: FHIRServerCTX,
+  _ctx: IGUHealthServerCTX,
   parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, unknown> {
   return db.conditions.or(

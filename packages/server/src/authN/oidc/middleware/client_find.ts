@@ -4,11 +4,7 @@ import { id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import {
-  FHIRServerCTX,
-  KoaContext,
-  asSystemCTX,
-} from "../../../fhir-api/types.js";
+import { KoaContext, asSystemCTX } from "../../../fhir-api/types.js";
 
 /**
  * Creates koa middleware that injects the current ClientApplication under ctx.oidc.client.
@@ -17,7 +13,9 @@ import {
  */
 export function clientInjectFHIRMiddleware<State>(): Koa.Middleware<
   State,
-  Koa.DefaultContext & KoaContext.OIDC
+  Koa.DefaultContext &
+    KoaContext.OIDC &
+    KoaContext.IGUHealthKoa<Koa.DefaultContext>
 > {
   return async (ctx, next) => {
     if (!ctx.oidc.client) {
@@ -29,8 +27,8 @@ export function clientInjectFHIRMiddleware<State>(): Koa.Middleware<
         );
       }
 
-      const client = await (ctx.FHIRContext as FHIRServerCTX).client.read(
-        asSystemCTX(ctx.FHIRContext),
+      const client = await ctx.iguhealth.client.read(
+        asSystemCTX(ctx.iguhealth),
         R4,
         "ClientApplication",
         clientId as id,

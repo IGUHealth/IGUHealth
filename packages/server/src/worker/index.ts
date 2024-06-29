@@ -42,7 +42,7 @@ import {
   getSigningKey,
 } from "../authN/certifications.js";
 import { createFHIRAPI, createFHIRServices } from "../fhir-api/index.js";
-import { FHIRServerCTX } from "../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../fhir-api/types.js";
 import { httpRequestToFHIRRequest } from "../fhir-http/index.js";
 import logAuditEvent, {
   MAJOR_FAILURE,
@@ -96,8 +96,8 @@ function getVersionSequence(resource: Resource<R4, AllResourceTypes>): number {
 }
 
 async function handleSubscriptionPayload(
-  server: AsynchronousClient<unknown, FHIRServerCTX>,
-  ctx: FHIRServerCTX,
+  server: AsynchronousClient<unknown, IGUHealthServerCTX>,
+  ctx: IGUHealthServerCTX,
   fhirVersion: R4,
   subscription: Subscription,
   payload: Resource<FHIR_VERSION, AllResourceTypes>[],
@@ -267,9 +267,9 @@ function subscriptionLockKey(tenant: string, subscriptionId: string) {
 
 function processSubscription(
   workerID: string,
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: FHIR_VERSION,
-  server: AsynchronousClient<unknown, FHIRServerCTX>,
+  server: AsynchronousClient<unknown, IGUHealthServerCTX>,
 
   subscriptionId: id,
 ) {

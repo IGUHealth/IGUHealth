@@ -60,7 +60,7 @@ import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
 import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with { type: "json" };
 import RedisLock from "../synchronization/redis.lock.js";
 import { checkTenantUsageMiddleware } from "./middleware/usageCheck.js";
-import { FHIRServerCTX, KoaContext, asSystemCTX } from "./types.js";
+import { IGUHealthServerCTX, KoaContext, asSystemCTX } from "./types.js";
 
 const R4_SPECIAL_TYPES: {
   MEMORY: ResourceType<R4>[];
@@ -94,9 +94,9 @@ const R4B_DB_TYPES: ResourceType<R4B>[] = (
 ).filter((type) => R4B_ALL_SPECIAL_TYPES.indexOf(type) === -1);
 
 async function createResourceRestCapabilities(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: FHIR_VERSION,
-  memdb: FHIRClientAsync<FHIRServerCTX>,
+  memdb: FHIRClientAsync<IGUHealthServerCTX>,
   sd: Resource<FHIR_VERSION, "StructureDefinition">,
 ): Promise<CapabilityStatementRestResource> {
   const resourceParameters = await memdb.search_type(
@@ -135,9 +135,9 @@ async function createResourceRestCapabilities(
 }
 
 async function serverCapabilities<Version extends FHIR_VERSION>(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: Version,
-  client: FHIRClientAsync<FHIRServerCTX>,
+  client: FHIRClientAsync<IGUHealthServerCTX>,
 ): Promise<Resource<Version, "CapabilityStatement">> {
   const sds = (
     await client.search_type(ctx, fhirVersion, "StructureDefinition", [
@@ -236,7 +236,7 @@ type RouterState = Parameters<
 
 const validationMiddleware: MiddlewareAsyncChain<
   RouterState,
-  FHIRServerCTX
+  IGUHealthServerCTX
 > = async (context, next) => {
   switch (context.request.type) {
     case "update-request":
@@ -281,7 +281,7 @@ const validationMiddleware: MiddlewareAsyncChain<
 
 const capabilitiesMiddleware: MiddlewareAsyncChain<
   RouterState,
-  FHIRServerCTX
+  IGUHealthServerCTX
 > = async (context, next) => {
   if (context.request.type === "capabilities-request") {
     return {
@@ -304,7 +304,7 @@ const capabilitiesMiddleware: MiddlewareAsyncChain<
 
 const encryptionMiddleware: (
   resourceTypesToEncrypt: AllResourceTypes[],
-) => MiddlewareAsyncChain<RouterState, FHIRServerCTX> =
+) => MiddlewareAsyncChain<RouterState, IGUHealthServerCTX> =
   (resourceTypesToEncrypt: AllResourceTypes[]) => async (context, next) => {
     if (!context.ctx.encryptionProvider) {
       return next(context);
@@ -388,7 +388,7 @@ async function createFHIRClient(sources: RouterState["sources"]) {
 
 export async function createFHIRServices(
   pool: pg.Pool,
-): Promise<Omit<FHIRServerCTX, "tenant" | "user">> {
+): Promise<Omit<IGUHealthServerCTX, "tenant" | "user">> {
   const memDBAsync = createArtifactMemoryDatabase({
     r4: R4_SPECIAL_TYPES.MEMORY,
     r4b: R4B_SPECIAL_TYPES.MEMORY,
@@ -561,8 +561,8 @@ export async function associateServicesKoaMiddleware<State, Context>(
 ): Promise<
   koa.Middleware<
     State,
-    (Context & KoaContext.FHIRServices) &
-      Router.RouterParamContext<State, Context & KoaContext.FHIRServices>
+    (Context & KoaContext.IGUHealthServices) &
+      Router.RouterParamContext<State, Context & KoaContext.IGUHealthServices>
   >
 > {
   const fhirServices = await createFHIRServices(pool);
@@ -570,13 +570,13 @@ export async function associateServicesKoaMiddleware<State, Context>(
   fhirServices.logger.info("FHIR Services created");
 
   return async (ctx, next) => {
-    ctx.FHIRContext = fhirServices;
+    ctx.iguhealth = fhirServices;
     await next();
   };
 }
 
 async function fhirAPIMiddleware(): Promise<
-  MiddlewareAsyncChain<unknown, FHIRServerCTX>
+  MiddlewareAsyncChain<unknown, IGUHealthServerCTX>
 > {
   return createMiddlewareAsync([
     associateUserMiddleware,

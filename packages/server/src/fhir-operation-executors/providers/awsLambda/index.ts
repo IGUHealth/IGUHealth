@@ -32,7 +32,7 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import logAuditEvent, {
   MINOR_FAILURE,
 } from "../../../fhir-logging/auditEvents.js";
@@ -45,7 +45,7 @@ import {
 
 configDotenv();
 function getLambdaFunctionName(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   operation: Operation<unknown, unknown>,
 ): string {
   const definition = operation.operationDefinition;
@@ -58,7 +58,7 @@ function getLambdaFunctionName(
 }
 
 function getLambdaTags(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   op: OperationDefinition,
 ): Record<string, string> {
   return {
@@ -74,7 +74,7 @@ async function getLambda(
     lambda: LambdaClient;
     tagging: ResourceGroupsTaggingAPI;
   },
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   operation: Operation<unknown, unknown>,
 ) {
   try {
@@ -118,7 +118,7 @@ type Payload = {
   ctx: {
     SEC_TOKEN: string;
     API_URL: string;
-    tenant: FHIRServerCTX["tenant"];
+    tenant: IGUHealthServerCTX["tenant"];
     level: FHIRRequest["level"];
     resourceType?: ResourceType;
     id?: id;
@@ -169,7 +169,7 @@ function createZipFile(code: string): Buffer {
 }
 
 async function createEnvironmentVariables(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   operationDefinition: OperationDefinition,
 ): Promise<Record<string, string>> {
   const environment = (
@@ -220,7 +220,7 @@ async function createOrUpdateLambda(
   },
   layers: string[],
   role: string,
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   operation: Operation<unknown, unknown>,
 ) {
   const lambdaName = getLambdaFunctionName(ctx, operation);
@@ -279,7 +279,7 @@ async function createOrUpdateLambda(
 }
 
 async function createPayload(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   op: Operation<Record<string, unknown>, Record<string, unknown>>,
   request: R4InvokeRequest,
 ): Promise<Payload> {
@@ -315,7 +315,7 @@ async function confirmLambdaExistsAndReady(
   },
   layers: string[],
   role: string,
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   op: Operation<unknown, unknown>,
 ) {
   let lambda = await getLambda(client, ctx, op);
@@ -353,8 +353,8 @@ function createExecutor(
     lambda: LambdaClient;
     tagging: ResourceGroupsTaggingAPI;
   },
-): MiddlewareAsync<unknown, FHIRServerCTX> {
-  return createMiddlewareAsync<unknown, FHIRServerCTX>([
+): MiddlewareAsync<unknown, IGUHealthServerCTX> {
+  return createMiddlewareAsync<unknown, IGUHealthServerCTX>([
     async (context) => {
       try {
         switch (context.request.fhirVersion) {
@@ -523,7 +523,7 @@ export default function createLambdaExecutioner({
   LAMBDA_ROLE,
   AWS_ACCESS_KEY_ID,
   AWS_ACCESS_KEY_SECRET,
-}: Config): AsynchronousClient<unknown, FHIRServerCTX> {
+}: Config): AsynchronousClient<unknown, IGUHealthServerCTX> {
   const lambdaClient = new LambdaClient({
     region: AWS_REGION,
     credentials: {
@@ -539,7 +539,7 @@ export default function createLambdaExecutioner({
     },
   });
 
-  return new AsynchronousClient<unknown, FHIRServerCTX>(
+  return new AsynchronousClient<unknown, IGUHealthServerCTX>(
     {},
     createExecutor(LAYERS, LAMBDA_ROLE, {
       lambda: lambdaClient,

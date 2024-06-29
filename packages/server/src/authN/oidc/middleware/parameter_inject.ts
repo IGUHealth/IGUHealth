@@ -44,7 +44,7 @@ export function createValidateInjectOIDCParameters<
 }: {
   required?: ParameterKey[];
   optional?: ParameterKey[];
-}): Koa.Middleware<State, KoaContext.FHIR<C>> {
+}): Koa.Middleware<State, KoaContext.IGUHealthKoa<C>> {
   return async (ctx, next) => {
     const params = [
       ...(required ?? []).map((p) => ({ required: true, param: p })),

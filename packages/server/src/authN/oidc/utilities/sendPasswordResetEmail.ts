@@ -8,7 +8,7 @@ import {
   EmailTemplateImage,
   EmailTemplateText,
 } from "../../../email/templates/base.js";
-import { FHIRServerCTX } from "../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import { AuthorizationCodeManagement } from "../../db/code/interface.js";
 import { User } from "../../db/users/types.js";
 import { OIDC_ROUTES } from "../constants.js";
@@ -20,7 +20,7 @@ import { OIDC_ROUTES } from "../constants.js";
  * @returns True if password reset should be sent. Based on no existing codes in the last 15 minutes.
  */
 async function shouldSendPasswordReset(
-  ctx: Omit<FHIRServerCTX, "user" | "tenant">,
+  ctx: Omit<IGUHealthServerCTX, "user" | "tenant">,
   codeManagement: AuthorizationCodeManagement,
   user: User,
 ): Promise<boolean> {
@@ -36,7 +36,7 @@ async function shouldSendPasswordReset(
 export async function sendPasswordResetEmail(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   router: Router<any, any>,
-  ctx: Omit<FHIRServerCTX, "user">,
+  ctx: Omit<IGUHealthServerCTX, "user">,
   codeManagement: AuthorizationCodeManagement,
   user: User,
 ) {

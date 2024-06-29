@@ -5,21 +5,21 @@ import {
   ValueSetValidateCode,
 } from "@iguhealth/generated-ops/r4";
 
-import { FHIRServerCTX } from "../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../fhir-api/types.js";
 
 export interface TerminologyProvider {
   expand(
-    ctx: FHIRServerCTX,
+    ctx: IGUHealthServerCTX,
     fhirVersion: FHIR_VERSION,
     input: ValueSetExpand.Input,
   ): Promise<ValueSetExpand.Output>;
   validate(
-    ctx: FHIRServerCTX,
+    ctx: IGUHealthServerCTX,
     fhirVersion: FHIR_VERSION,
     input: ValueSetValidateCode.Input,
   ): Promise<ValueSetValidateCode.Output>;
   lookup(
-    ctx: FHIRServerCTX,
+    ctx: IGUHealthServerCTX,
     fhirVersion: FHIR_VERSION,
     input: CodeSystemLookup.Input,
   ): Promise<CodeSystemLookup.Output>;

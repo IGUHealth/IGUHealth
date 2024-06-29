@@ -7,7 +7,7 @@ import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
 import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../fhir-api/types.js";
 
 function getTransactionFullUrls(
   transaction: Resource<FHIR_VERSION, "Bundle">,
@@ -28,7 +28,7 @@ type LocationsToUpdate = {
 };
 
 export function buildTransactionTopologicalGraph<Version extends FHIR_VERSION>(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   transaction: Resource<Version, "Bundle">,
 ): {
@@ -112,7 +112,7 @@ export function buildTransactionTopologicalGraph<Version extends FHIR_VERSION>(
 }
 
 async function retryFailedTransactions<ReturnType>(
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   numberOfRetries: number,
   execute: () => Promise<ReturnType>,
 ): Promise<ReturnType> {
@@ -143,7 +143,7 @@ async function retryFailedTransactions<ReturnType>(
   );
 }
 
-export function FHIRTransaction<CTX extends Pick<FHIRServerCTX, "db">, R>(
+export function FHIRTransaction<CTX extends Pick<IGUHealthServerCTX, "db">, R>(
   ctx: CTX,
   isolationLevel: db.IsolationLevel,
   transaction: (ctx: CTX) => R,

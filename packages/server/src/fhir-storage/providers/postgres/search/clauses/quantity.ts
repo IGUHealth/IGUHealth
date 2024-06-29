@@ -5,14 +5,14 @@ import { splitParameter } from "@iguhealth/client/url";
 import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../../../fhir-api/types.js";
 import { SearchParameterResource } from "../../../../utilities/search/parameters.js";
 import { missingModifier } from "./shared.js";
 
 // /[^\\]\|/g
 
 export default function quantityClauses(
-  _ctx: FHIRServerCTX,
+  _ctx: IGUHealthServerCTX,
   fhirVersion: FHIR_VERSION,
   parameter: SearchParameterResource,
 ): db.SQLFragment<boolean | null, unknown> {

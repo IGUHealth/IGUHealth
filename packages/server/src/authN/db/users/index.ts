@@ -18,7 +18,7 @@ export default class TenantUserManagement implements UserManagement {
   }
 
   async getTenantClaims(
-    ctx: KoaContext.FHIRServices["FHIRContext"],
+    ctx: KoaContext.IGUHealthServices["iguhealth"],
     id: string,
   ): Promise<TenantClaim<s.user_role>[]> {
     const user = await this.get(ctx, id);
@@ -36,7 +36,7 @@ export default class TenantUserManagement implements UserManagement {
   }
 
   async login<T extends keyof LoginParameters>(
-    ctx: KoaContext.FHIRServices["FHIRContext"],
+    ctx: KoaContext.IGUHealthServices["iguhealth"],
     type: T,
     parameters: LoginParameters[T],
   ): Promise<User | undefined> {
@@ -68,7 +68,7 @@ export default class TenantUserManagement implements UserManagement {
   }
 
   async get(
-    ctx: KoaContext.FHIRServices["FHIRContext"],
+    ctx: KoaContext.IGUHealthServices["iguhealth"],
     id: string,
   ): Promise<User | undefined> {
     const tenantUser: User | undefined = (await db
@@ -82,7 +82,7 @@ export default class TenantUserManagement implements UserManagement {
     return tenantUser;
   }
   async search(
-    ctx: KoaContext.FHIRServices["FHIRContext"],
+    ctx: KoaContext.IGUHealthServices["iguhealth"],
     where: s.users.Whereable,
   ): Promise<User[]> {
     return db
@@ -94,7 +94,7 @@ export default class TenantUserManagement implements UserManagement {
       .run(ctx.db);
   }
   async create(
-    ctx: KoaContext.FHIRServices["FHIRContext"],
+    ctx: KoaContext.IGUHealthServices["iguhealth"],
     user: s.users.Insertable,
   ): Promise<User> {
     return await db
@@ -102,7 +102,7 @@ export default class TenantUserManagement implements UserManagement {
       .run(ctx.db);
   }
   async update(
-    ctx: KoaContext.FHIRServices["FHIRContext"],
+    ctx: KoaContext.IGUHealthServices["iguhealth"],
     id: string,
     update: s.users.Updatable,
   ): Promise<User> {
@@ -132,7 +132,7 @@ export default class TenantUserManagement implements UserManagement {
     });
   }
   async delete(
-    ctx: KoaContext.FHIRServices["FHIRContext"],
+    ctx: KoaContext.IGUHealthServices["iguhealth"],
     where_: s.users.Whereable,
   ): Promise<void> {
     await FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {

@@ -36,7 +36,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 export function tokenPost<
   State,
   C extends Koa.DefaultContext,
->(): Koa.Middleware<State, KoaContext.FHIR<C>> {
+>(): Koa.Middleware<State, KoaContext.IGUHealthKoa<C>> {
   return async (ctx) => {
     const body = (ctx.request as unknown as Record<string, unknown>).body;
     if (!isRecord(body)) {
@@ -68,7 +68,7 @@ export function tokenPost<
         const body = (ctx.request as unknown as Record<string, unknown>).body;
 
         const response = await FHIRTransaction(
-          ctx.FHIRContext,
+          ctx.iguhealth,
           db.IsolationLevel.Serializable,
           async (fhirContext) => {
             if (!isRecord(body))
@@ -179,7 +179,7 @@ export function tokenPost<
 
         ctx.body = {
           access_token: await createClientCredentialToken(
-            ctx.FHIRContext.tenant,
+            ctx.iguhealth.tenant,
             ctx.oidc.client,
           ),
           token_type: "Bearer",

@@ -10,11 +10,11 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
-import { FHIRServerCTX } from "../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import InlineOperation from "./interface.js";
 
 export const validateResource = async (
-  ctx: FHIRServerCTX,
+  ctx: IGUHealthServerCTX,
   fhirVersion: FHIR_VERSION,
   resourceType: r4.ResourceType | r4b.ResourceType,
   input: {

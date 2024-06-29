@@ -127,7 +127,7 @@ export const loginPOST = (): OIDCRouteHandler => async (ctx, next) => {
       return;
     } else if (adminApp.ADMIN_APP() !== undefined) {
       const tenantClaims = await ctx.oidc.userManagement.getTenantClaims(
-        ctx.FHIRContext,
+        ctx.iguhealth,
         user.id,
       );
       const tenantId = tenantClaims[0]?.id;
