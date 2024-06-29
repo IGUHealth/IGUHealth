@@ -26,7 +26,6 @@ import {
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
-import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { associateUserMiddleware } from "../authZ/middleware/associateUser.js";
