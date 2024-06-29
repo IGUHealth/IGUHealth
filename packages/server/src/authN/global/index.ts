@@ -13,7 +13,7 @@ export type GlobalAuthRouteHandler = Parameters<
  * Global signup for creating users and directing to tenants.
  */
 export async function createGlobalAuthRouter<
-  C extends Koa.DefaultContext & KoaContext.FHIRServices,
+  C extends Koa.DefaultContext & KoaContext.IGUHealthServices,
 >(
   prefix: string,
   {

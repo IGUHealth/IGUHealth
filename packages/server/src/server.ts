@@ -64,7 +64,7 @@ interface KoaFHIRMiddlewareState extends Koa.DefaultState {
 }
 
 /**
- * Koa middleware that handles FHIR API requests. [Note expectation is ctx.FHIRContext is set.]
+ * Koa middleware that handles FHIR API requests. [Note expectation is ctx.iguhealth is set.]
  * @returns Koa.Middleware[] that can be used to handle FHIR requests.
  */
 async function FHIRAPIKoaMiddleware<
@@ -72,8 +72,8 @@ async function FHIRAPIKoaMiddleware<
 >(): Promise<
   Koa.Middleware<
     T,
-    KoaContext.FHIR<Koa.DefaultContext> &
-      Router.RouterParamContext<T, KoaContext.FHIR<Koa.DefaultContext>>
+    KoaContext.IGUHealthKoa<Koa.DefaultContext> &
+      Router.RouterParamContext<T, KoaContext.IGUHealthKoa<Koa.DefaultContext>>
   >
 > {
   const fhirAPI = await createFHIRAPI();
@@ -87,13 +87,13 @@ async function FHIRAPIKoaMiddleware<
         op: "fhirserver",
       });
     }
-    if (!KoaContext.isFHIRServerAuthorizedUserCTX(ctx.FHIRContext)) {
+    if (!KoaContext.isFHIRServerAuthorizedUserCTX(ctx.iguhealth)) {
       throw new Error("FHIR Context is not authorized");
     }
 
     try {
       const response = await fhirAPI.request(
-        ctx.FHIRContext,
+        ctx.iguhealth,
         httpRequestToFHIRRequest(ctx.params.fhirVersion, {
           url: `${ctx.params.fhirUrl || ""}${
             ctx.request.querystring ? `?${ctx.request.querystring}` : ""
@@ -120,8 +120,8 @@ async function FHIRAPIKoaMiddleware<
 
 function createErrorHandlingMiddleware<T>(): Koa.Middleware<
   T,
-  KoaContext.FHIR<Koa.DefaultContext> &
-    Router.RouterParamContext<T, KoaContext.FHIR<Koa.DefaultContext>>
+  KoaContext.IGUHealthKoa<Koa.DefaultContext> &
+    Router.RouterParamContext<T, KoaContext.IGUHealthKoa<Koa.DefaultContext>>
 > {
   return async function errorHandlingMiddleware(ctx, next) {
     try {
@@ -190,7 +190,7 @@ export default async function createServer(): Promise<
 
   const rootRouter = new Router<
     Koa.DefaultState,
-    KoaContext.FHIR<Koa.DefaultContext>
+    KoaContext.IGUHealthKoa<Koa.DefaultContext>
   >();
 
   rootRouter.use(
@@ -232,7 +232,7 @@ export default async function createServer(): Promise<
 
   const tenantRouter = new Router<
     Koa.DefaultState,
-    KoaContext.FHIR<Koa.DefaultContext>
+    KoaContext.IGUHealthKoa<Koa.DefaultContext>
   >({
     prefix: "/w/:tenant",
   });
@@ -251,8 +251,8 @@ export default async function createServer(): Promise<
       throw new OperationError(outcomeError("not-found", "Tenant not found"));
     }
 
-    ctx.FHIRContext = {
-      ...ctx.FHIRContext,
+    ctx.iguhealth = {
+      ...ctx.iguhealth,
       tenant: tenant.id as TenantId,
     };
 
@@ -261,7 +261,7 @@ export default async function createServer(): Promise<
 
   const tenantAPIV1Router = new Router<
     Koa.DefaultState,
-    KoaContext.FHIR<Koa.DefaultContext>
+    KoaContext.IGUHealthKoa<Koa.DefaultContext>
   >({
     prefix: "/api/v1",
   });
@@ -276,7 +276,7 @@ export default async function createServer(): Promise<
 
   // Instantiate OIDC routes
   const tenantOIDCRouter = await createOIDCRouter<
-    KoaContext.FHIR<Koa.DefaultContext>
+    KoaContext.IGUHealthKoa<Koa.DefaultContext>
   >("/oidc", {
     authMiddlewares,
     middleware: [
@@ -286,7 +286,7 @@ export default async function createServer(): Promise<
       async (ctx, next) => {
         ctx.oidc = {
           ...ctx.oidc,
-          tenant: ctx.FHIRContext.tenant,
+          tenant: ctx.iguhealth.tenant,
         };
         await next();
       },

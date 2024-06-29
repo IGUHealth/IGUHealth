@@ -561,8 +561,8 @@ export async function associateServicesKoaMiddleware<State, Context>(
 ): Promise<
   koa.Middleware<
     State,
-    (Context & KoaContext.FHIRServices) &
-      Router.RouterParamContext<State, Context & KoaContext.FHIRServices>
+    (Context & KoaContext.IGUHealthServices) &
+      Router.RouterParamContext<State, Context & KoaContext.IGUHealthServices>
   >
 > {
   const fhirServices = await createFHIRServices(pool);
@@ -570,7 +570,7 @@ export async function associateServicesKoaMiddleware<State, Context>(
   fhirServices.logger.info("FHIR Services created");
 
   return async (ctx, next) => {
-    ctx.FHIRContext = fhirServices;
+    ctx.iguhealth = fhirServices;
     await next();
   };
 }

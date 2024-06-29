@@ -14,12 +14,12 @@ export interface UserManagement
     s.users.Updatable
   > {
   login<T extends keyof LoginParameters>(
-    ctx: KoaContext.FHIRServices["FHIRContext"],
+    ctx: KoaContext.IGUHealthServices["iguhealth"],
     type: T,
     parameters: LoginParameters[T],
   ): Promise<User | undefined>;
   getTenantClaims(
-    ctx: KoaContext.FHIRServices["FHIRContext"],
+    ctx: KoaContext.IGUHealthServices["iguhealth"],
     id: string,
   ): Promise<TenantClaim<s.user_role>[]>;
 }

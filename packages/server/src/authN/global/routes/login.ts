@@ -79,7 +79,7 @@ export const loginPOST = (): GlobalAuthRouteHandler => async (ctx) => {
       },
       { columns: ["tenant", "role"] },
     )
-    .run(ctx.FHIRContext.db);
+    .run(ctx.iguhealth.db);
 
   const tenantClaims: TenantClaim<s.user_role>[] = users.map((u) => ({
     id: u.tenant as TenantId,

@@ -63,14 +63,14 @@ export namespace KoaContext {
     };
   };
 
-  export type FHIR<C> = C &
+  export type IGUHealthKoa<C> = C &
     OIDC &
-    FHIRServices & {
-      FHIRContext: Omit<FHIRServerCTX, "user"> | FHIRServerCTX;
+    IGUHealthServices & {
+      iguhealth: Omit<FHIRServerCTX, "user"> | FHIRServerCTX;
     };
 
-  export type FHIRServices = {
-    FHIRContext: Omit<FHIRServerCTX, "user" | "tenant">;
+  export type IGUHealthServices = {
+    iguhealth: Omit<FHIRServerCTX, "user" | "tenant">;
   };
 
   /**

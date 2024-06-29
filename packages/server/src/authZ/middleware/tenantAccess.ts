@@ -11,10 +11,10 @@ import {
 import { KoaContext } from "../../fhir-api/types.js";
 
 function findCurrentTenant<Context extends Koa.DefaultContext>(
-  ctx: KoaContext.FHIR<Context>,
+  ctx: KoaContext.IGUHealthKoa<Context>,
 ): TenantClaim<s.user_role> | undefined {
   return ctx.state.user[CUSTOM_CLAIMS.TENANTS]?.find(
-    (t: TenantClaim<s.user_role>) => t.id === ctx.FHIRContext.tenant,
+    (t: TenantClaim<s.user_role>) => t.id === ctx.iguhealth.tenant,
   );
 }
 /**
@@ -26,9 +26,9 @@ function findCurrentTenant<Context extends Koa.DefaultContext>(
  */
 export async function verifyAndAssociateUserFHIRContext<
   State extends Koa.DefaultState,
-  Context extends KoaContext.FHIR<Koa.DefaultContext>,
+  Context extends KoaContext.IGUHealthKoa<Koa.DefaultContext>,
 >(ctx: Koa.ParameterizedContext<State, Context>, next: Koa.Next) {
-  if (!ctx.FHIRContext.tenant) {
+  if (!ctx.iguhealth.tenant) {
     throw new OperationError(outcomeError("invalid", "No tenant present."));
   }
 
@@ -50,8 +50,8 @@ export async function verifyAndAssociateUserFHIRContext<
       outcomeFatal("security", "JWT must have both sub and iss."),
     );
 
-  ctx.FHIRContext = {
-    ...ctx.FHIRContext,
+  ctx.iguhealth = {
+    ...ctx.iguhealth,
     user: {
       role: tenantClaim.userRole,
       jwt: ctx.state.user as AccessTokenPayload<s.user_role>,

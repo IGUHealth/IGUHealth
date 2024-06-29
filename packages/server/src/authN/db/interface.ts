@@ -7,24 +7,24 @@ export interface ModelManagement<
   Updateable,
 > {
   get(
-    ctx: KoaContext.FHIRServices["FHIRContext"],
+    ctx: KoaContext.IGUHealthServices["iguhealth"],
     id: string,
   ): Promise<Model | undefined>;
   search(
-    ctx: KoaContext.FHIRServices["FHIRContext"],
+    ctx: KoaContext.IGUHealthServices["iguhealth"],
     where: Whereable,
   ): Promise<Model[]>;
   create(
-    ctx: KoaContext.FHIRServices["FHIRContext"],
+    ctx: KoaContext.IGUHealthServices["iguhealth"],
     model: Insertable,
   ): Promise<Model>;
   update(
-    ctx: KoaContext.FHIRServices["FHIRContext"],
+    ctx: KoaContext.IGUHealthServices["iguhealth"],
     id: string,
     update: Updateable,
   ): Promise<Model>;
   delete(
-    ctx: KoaContext.FHIRServices["FHIRContext"],
+    ctx: KoaContext.IGUHealthServices["iguhealth"],
     where: Whereable,
   ): Promise<void>;
 }

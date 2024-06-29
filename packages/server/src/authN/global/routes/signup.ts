@@ -67,7 +67,7 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
     throw new OperationError(outcomeError("invalid", "Email is not valid."));
   }
 
-  if (await alreadyOwner(ctx.FHIRContext.db, email)) {
+  if (await alreadyOwner(ctx.iguhealth.db, email)) {
     throw new OperationError(
       outcomeError(
         "invalid",
@@ -77,7 +77,7 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
   }
 
   const [user, tenant] = await FHIRTransaction(
-    ctx.FHIRContext,
+    ctx.iguhealth,
     db.IsolationLevel.Serializable,
     async (ctx) => {
       const tenantManagement = new TenantManagement();
@@ -116,14 +116,14 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
 
   // Alert system admin of new user.
   await sendAlertEmail(
-    ctx.FHIRContext.emailProvider,
+    ctx.iguhealth.emailProvider,
     "New User",
     `A new user with email '${email}' has signed up.`,
   );
 
   await sendPasswordResetEmail(
     ctx.router,
-    { ...ctx.FHIRContext, tenant: tenant.id as TenantId },
+    { ...ctx.iguhealth, tenant: tenant.id as TenantId },
     new TenantAuthorizationCodeManagement(tenant.id as TenantId),
     user,
   );

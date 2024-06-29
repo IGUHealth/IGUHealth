@@ -43,31 +43,31 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
   }
 
   const existingUser = (
-    await ctx.oidc.userManagement.search(ctx.FHIRContext, {
+    await ctx.oidc.userManagement.search(ctx.iguhealth, {
       email,
     })
   )[0];
   if (existingUser !== undefined) {
     await sendPasswordResetEmail(
       ctx.router,
-      { ...ctx.FHIRContext, tenant: ctx.oidc.tenant },
+      { ...ctx.iguhealth, tenant: ctx.oidc.tenant },
       ctx.oidc.codeManagement,
       existingUser,
     );
   } else {
-    const user = await ctx.oidc.userManagement.create(ctx.FHIRContext, {
+    const user = await ctx.oidc.userManagement.create(ctx.iguhealth, {
       email,
     });
 
     // Alert system admin of new user.
     await sendAlertEmail(
-      ctx.FHIRContext.emailProvider,
+      ctx.iguhealth.emailProvider,
       "New User",
       `A new user with email '${user.email}' has signed up.`,
     );
     await sendPasswordResetEmail(
       ctx.router,
-      { ...ctx.FHIRContext, tenant: ctx.oidc.tenant },
+      { ...ctx.iguhealth, tenant: ctx.oidc.tenant },
       ctx.oidc.codeManagement,
       user,
     );

@@ -75,7 +75,7 @@ export async function sentrySpan<T>(
 // this tracing middleware creates a transaction per request
 export function tracingMiddleWare<
   State extends Koa.DefaultState,
-  Context extends KoaContext.FHIR<Koa.DefaultContext>,
+  Context extends KoaContext.IGUHealthKoa<Koa.DefaultContext>,
 >(dsn: string | undefined): Koa.Middleware<State, Context> {
   return async (
     ctx: Koa.ParameterizedContext<State, Context>,

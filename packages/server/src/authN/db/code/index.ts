@@ -19,7 +19,7 @@ export default class TenantAuthorizationCodeManagement
     this.tenantId = tenantId;
   }
   async get(
-    ctx: KoaContext.FHIRServices["FHIRContext"],
+    ctx: KoaContext.IGUHealthServices["iguhealth"],
     id: string,
   ): Promise<AuthorizationCode | undefined> {
     return db
@@ -33,7 +33,7 @@ export default class TenantAuthorizationCodeManagement
       .run(ctx.db);
   }
   search(
-    ctx: KoaContext.FHIRServices["FHIRContext"],
+    ctx: KoaContext.IGUHealthServices["iguhealth"],
     where: s.authorization_code.Whereable,
   ): Promise<AuthorizationCode[]> {
     const whereable: s.authorization_code.Whereable = {
@@ -53,7 +53,7 @@ export default class TenantAuthorizationCodeManagement
       .run(ctx.db);
   }
   create(
-    ctx: KoaContext.FHIRServices["FHIRContext"],
+    ctx: KoaContext.IGUHealthServices["iguhealth"],
     model: Pick<
       s.authorization_code.Insertable,
       "type" | "user_id" | "tenant" | "expires_in" | "client_id" | "payload"
@@ -73,7 +73,7 @@ export default class TenantAuthorizationCodeManagement
       .run(ctx.db);
   }
   async update(
-    ctx: KoaContext.FHIRServices["FHIRContext"],
+    ctx: KoaContext.IGUHealthServices["iguhealth"],
     id: string,
     update: s.authorization_code.Updatable,
   ): Promise<AuthorizationCode> {
@@ -106,7 +106,7 @@ export default class TenantAuthorizationCodeManagement
     });
   }
   async delete(
-    ctx: KoaContext.FHIRServices["FHIRContext"],
+    ctx: KoaContext.IGUHealthServices["iguhealth"],
     where_: s.authorization_code.Whereable,
   ): Promise<void> {
     return FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
