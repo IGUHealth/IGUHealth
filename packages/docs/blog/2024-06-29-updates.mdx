@@ -1,0 +1,84 @@
+---
+slug: updates_2024-06-29
+Title: Updates 2024-06-29
+authors: [confused-moniker]
+tags: [iguhealth, updates]
+---
+
+# Updates 2024-06-29
+
+## Server 
+
+### Date ranges and Prefixes
+
+#### Ranges
+Date range support is now handled properly for date and datetime values. 
+You can now search for a year like `_lastUpdated=2024` or by month `_lastUpdated=2024-02`.
+
+#### Date prefixes now supported
+The following prefixes are now supported for date queries:
+| prefix| description| example |
+|---|---|---|
+| gt | greater than | _lastUpdated=gt2024-01 |
+| lt | less than | _lastUpdated=lt2024-01 |
+| ge | greater than or equal to | _lastUpdated=ge2024-01 |
+| le | less than or equal to | _lastUpdated=le2024-01 |
+
+### Headers
+The following headers are now returned in the response:
+| Header | Description |
+|---|---|
+| Last-Modified | The last time the resource was modified |
+| Etag | The version id for the resource |
+
+### Conformance Testing
+We've begun testing our conformance using Touchstone https://touchstone.aegis.net/touchstone. We expect to be finished with their FHIR Standard R4 suite by EOW.
+
+### Migrated Internal tests to Testscripts on CI
+For CI we were testing our APIs using Jest. We've now migrated to using TestScripts. This allows us to test our APIs in a more FHIR compliant way.
+And to publish our results to our site at https://iguhealth.app/reports
+
+## CLI
+Operation invocation is now supported on the CLI. You can now invoke operations on the CLI as follows:
+### System
+```bash
+iguhealth api invoke_system r4 --data $Parameters
+```
+### Type
+```bash
+iguhealth api invoke_type r4 $ResourceType --data $Parameters
+```
+### Instance
+```bash
+iguhealth api invoke_instance r4 $ResourceType $ResourceId --data $Parameters
+```
+
+## Documentation Updated
+We've updated our API Documentation for FHIR operations. You can find it [here](/documentation/API/FHIR/R4/Batch).
+
+## Postman Integration guide
+We've added a guide on how to integrate Postman with Iguhealth. You can find it [here](/documentation/Integrations/Client/Postman).
+
+## General
+
+### Updated Packages
+* @iguhealth/server: 0.15.1
+* @iguhealth/admin-app: 0.9.0
+* @iguhealth/artifacts: 0.6.0
+* @iguhealth/cli: 1.5.0
+* @iguhealth/client: 0.9.0
+* @iguhealth/codegen: 0.7.0
+* @iguhealth/components: 0.8.0
+* @iguhealth/fhir-pointer: 0.5.0
+* @iguhealth/fhir-types: 0.7.0
+* @iguhealth/fhirpath: 0.6.0
+* @iguhealth/testscript-runner: 0.1.0
+* @iguhealth/hl7.fhir.r4.core: 0.4.2
+* @iguhealth/iguhealth.fhir.r4.core: 0.5.10
+* @iguhealth/hl7.fhir.r4.test-data: 0.2.1
+* @iguhealth/hl7.fhir.r4b.core: 0.2.2
+
+### Updated Dependencies
+* typescript: 5.5.2
+* react-router-dom: 6.24.0
+* @headlessui/react: ^2.1.1
