@@ -8,7 +8,7 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX, asSystemCTX } from "../../../../fhir-api/types.js";
+import { IGUHealthServerCTX, asRoot } from "../../../../fhir-api/types.js";
 import {
   SearchParameterResult,
   searchParameterToTableName,
@@ -59,7 +59,7 @@ export async function deriveSortQuery<Version extends FHIR_VERSION>(
           direction = "descending";
         }
         const searchParameter = await ctx.client.search_type(
-          asSystemCTX(ctx),
+          asRoot(ctx),
           fhirVersion,
           "SearchParameter",
           [

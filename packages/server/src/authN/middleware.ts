@@ -15,7 +15,7 @@ import {
 } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaContext, asSystemCTX } from "../fhir-api/types.js";
+import { KoaContext, asRoot } from "../fhir-api/types.js";
 import { getJWKS } from "./certifications.js";
 import {
   authenticateClientCredentials,
@@ -63,7 +63,7 @@ export async function verifyBasicAuth<
     }
 
     const clientApplication = await ctx.iguhealth.client.read(
-      asSystemCTX(ctx.iguhealth),
+      asRoot(ctx.iguhealth),
       R4,
       "ClientApplication",
       credentials.client_id as id,

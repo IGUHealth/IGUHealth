@@ -16,7 +16,7 @@ import {
 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX, asSystemCTX } from "../../../../fhir-api/types.js";
+import { IGUHealthServerCTX, asRoot } from "../../../../fhir-api/types.js";
 import {
   SearchParameterResource,
   SearchParameterResult,
@@ -147,7 +147,7 @@ async function processInclude<Version extends FHIR_VERSION>(
         const resourceType = include[0] as ResourceType<Version>;
         const includeParameterName = include[1];
         const includeParameterSearchParam = await ctx.client.search_type(
-          asSystemCTX(ctx),
+          asRoot(ctx),
           fhirVersion,
           "SearchParameter",
           [
@@ -224,7 +224,7 @@ export async function executeSearchQuery<
     async (resourceTypes, name) =>
       await findSearchParameter(
         ctx.client,
-        asSystemCTX(ctx),
+        asRoot(ctx),
         request.fhirVersion,
         resourceTypes,
         name,
@@ -237,7 +237,7 @@ export async function executeSearchQuery<
     .filter((v): v is SearchParameterResource => v.type === "resource")
     .concat(
       await getParameterForLatestId(
-        asSystemCTX(ctx),
+        asRoot(ctx),
         request.fhirVersion,
         resourceTypes,
       ),

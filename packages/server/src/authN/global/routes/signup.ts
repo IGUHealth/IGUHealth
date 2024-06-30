@@ -7,7 +7,7 @@ import { R4 } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { asSystemCTX } from "../../../fhir-api/types.js";
+import { asRoot } from "../../../fhir-api/types.js";
 import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
 import * as views from "../../../views/index.js";
 import TenantAuthorizationCodeManagement from "../../db/code/index.js";
@@ -85,7 +85,7 @@ export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
       const tenant = await tenantManagement.create(ctx, {});
 
       const membership = await ctx.client.create(
-        asSystemCTX({
+        asRoot({
           ...ctx,
           tenant: tenant.id as TenantId,
         }),

@@ -60,7 +60,7 @@ import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
 import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with { type: "json" };
 import RedisLock from "../synchronization/redis.lock.js";
 import { checkTenantUsageMiddleware } from "./middleware/usageCheck.js";
-import { IGUHealthServerCTX, KoaContext, asSystemCTX } from "./types.js";
+import { IGUHealthServerCTX, KoaContext, asRoot } from "./types.js";
 
 const R4_SPECIAL_TYPES: {
   MEMORY: ResourceType<R4>[];
@@ -245,7 +245,7 @@ const validationMiddleware: MiddlewareAsyncChain<
     case "invoke-request":
     case "transaction-request": {
       const outcome = await validateResource(
-        asSystemCTX(context.ctx),
+        asRoot(context.ctx),
         context.request.fhirVersion,
         getResourceTypeToValidate(context.request),
         {
