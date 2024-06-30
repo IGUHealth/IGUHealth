@@ -15056,11 +15056,14 @@ const RAW_RUNTIME_STATE =
           ["autoprefixer", "virtual:1546575b7ec54db1fe1d50f5f5081aa000ca754f6ac8c6b512360bc6b8d3014d07496e0f478bdac8bd2155d1f90e16ee399c5d78de1faa0cd8205f2ed4c00b3b#npm:10.4.19"],\
           ["clsx", "npm:2.0.0"],\
           ["dotenv", "npm:16.4.5"],\
+          ["graphology", "virtual:9f288d48d2ea76719e04b1b7e59356fc6efd647c59fb847eff6fa2e56b3608f12273a918949e2afe8f77891c06fb4b346f8580227efcb8876b86b9519ca03ad2#npm:0.25.4"],\
+          ["graphology-layout-forceatlas2", "virtual:9f288d48d2ea76719e04b1b7e59356fc6efd647c59fb847eff6fa2e56b3608f12273a918949e2afe8f77891c06fb4b346f8580227efcb8876b86b9519ca03ad2#npm:0.10.1"],\
           ["postcss", "npm:8.4.38"],\
           ["prism-react-renderer", "virtual:9f288d48d2ea76719e04b1b7e59356fc6efd647c59fb847eff6fa2e56b3608f12273a918949e2afe8f77891c06fb4b346f8580227efcb8876b86b9519ca03ad2#npm:2.3.1"],\
           ["react", "npm:18.3.1"],\
           ["react-dom", "virtual:9f288d48d2ea76719e04b1b7e59356fc6efd647c59fb847eff6fa2e56b3608f12273a918949e2afe8f77891c06fb4b346f8580227efcb8876b86b9519ca03ad2#npm:18.3.1"],\
           ["react-hook-form", "virtual:9f288d48d2ea76719e04b1b7e59356fc6efd647c59fb847eff6fa2e56b3608f12273a918949e2afe8f77891c06fb4b346f8580227efcb8876b86b9519ca03ad2#npm:7.52.0"],\
+          ["sigma", "npm:3.0.0-beta.23"],\
           ["tailwindcss", "npm:3.4.4"],\
           ["typescript", "patch:typescript@npm%3A5.5.2#optional!builtin<compat/typescript>::version=5.5.2&hash=379a07"]\
         ],\
@@ -32985,6 +32988,75 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["graphology", [\
+      ["npm:0.25.4", {\
+        "packageLocation": "./.yarn/cache/graphology-npm-0.25.4-f37e1f9f63-4a39004792.zip/node_modules/graphology/",\
+        "packageDependencies": [\
+          ["graphology", "npm:0.25.4"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:9f288d48d2ea76719e04b1b7e59356fc6efd647c59fb847eff6fa2e56b3608f12273a918949e2afe8f77891c06fb4b346f8580227efcb8876b86b9519ca03ad2#npm:0.25.4", {\
+        "packageLocation": "./.yarn/__virtual__/graphology-virtual-a3af88a67f/0/cache/graphology-npm-0.25.4-f37e1f9f63-4a39004792.zip/node_modules/graphology/",\
+        "packageDependencies": [\
+          ["graphology", "virtual:9f288d48d2ea76719e04b1b7e59356fc6efd647c59fb847eff6fa2e56b3608f12273a918949e2afe8f77891c06fb4b346f8580227efcb8876b86b9519ca03ad2#npm:0.25.4"],\
+          ["@types/graphology-types", null],\
+          ["events", "npm:3.3.0"],\
+          ["graphology-types", null],\
+          ["obliterator", "npm:2.0.4"]\
+        ],\
+        "packagePeers": [\
+          "@types/graphology-types",\
+          "graphology-types"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["graphology-layout-forceatlas2", [\
+      ["npm:0.10.1", {\
+        "packageLocation": "./.yarn/cache/graphology-layout-forceatlas2-npm-0.10.1-6579d95452-e66d17ba02.zip/node_modules/graphology-layout-forceatlas2/",\
+        "packageDependencies": [\
+          ["graphology-layout-forceatlas2", "npm:0.10.1"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:9f288d48d2ea76719e04b1b7e59356fc6efd647c59fb847eff6fa2e56b3608f12273a918949e2afe8f77891c06fb4b346f8580227efcb8876b86b9519ca03ad2#npm:0.10.1", {\
+        "packageLocation": "./.yarn/__virtual__/graphology-layout-forceatlas2-virtual-9987c13ea8/0/cache/graphology-layout-forceatlas2-npm-0.10.1-6579d95452-e66d17ba02.zip/node_modules/graphology-layout-forceatlas2/",\
+        "packageDependencies": [\
+          ["graphology-layout-forceatlas2", "virtual:9f288d48d2ea76719e04b1b7e59356fc6efd647c59fb847eff6fa2e56b3608f12273a918949e2afe8f77891c06fb4b346f8580227efcb8876b86b9519ca03ad2#npm:0.10.1"],\
+          ["@types/graphology-types", null],\
+          ["graphology-types", null],\
+          ["graphology-utils", "virtual:56d29b96e4ed464608493cb34e46ed957f2a0eca6ae0648fe6a55b490f090ff8ba04af03ca039ad186856dd57e9c3398e53388f9fbf703a355d03f7a673a0b26#npm:2.5.2"]\
+        ],\
+        "packagePeers": [\
+          "@types/graphology-types",\
+          "graphology-types"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["graphology-utils", [\
+      ["npm:2.5.2", {\
+        "packageLocation": "./.yarn/cache/graphology-utils-npm-2.5.2-374071b406-5df25d32b9.zip/node_modules/graphology-utils/",\
+        "packageDependencies": [\
+          ["graphology-utils", "npm:2.5.2"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:56d29b96e4ed464608493cb34e46ed957f2a0eca6ae0648fe6a55b490f090ff8ba04af03ca039ad186856dd57e9c3398e53388f9fbf703a355d03f7a673a0b26#npm:2.5.2", {\
+        "packageLocation": "./.yarn/__virtual__/graphology-utils-virtual-6ef3337def/0/cache/graphology-utils-npm-2.5.2-374071b406-5df25d32b9.zip/node_modules/graphology-utils/",\
+        "packageDependencies": [\
+          ["graphology-utils", "virtual:56d29b96e4ed464608493cb34e46ed957f2a0eca6ae0648fe6a55b490f090ff8ba04af03ca039ad186856dd57e9c3398e53388f9fbf703a355d03f7a673a0b26#npm:2.5.2"],\
+          ["@types/graphology-types", null],\
+          ["graphology-types", null]\
+        ],\
+        "packagePeers": [\
+          "@types/graphology-types",\
+          "graphology-types"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["gray-matter", [\
       ["npm:4.0.3", {\
         "packageLocation": "./.yarn/cache/gray-matter-npm-4.0.3-852ae4f34c-9a8f146a7a.zip/node_modules/gray-matter/",\
@@ -39618,6 +39690,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/objectorarray-npm-1.0.5-427ebc82ab-8fd776aa49.zip/node_modules/objectorarray/",\
         "packageDependencies": [\
           ["objectorarray", "npm:1.0.5"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["obliterator", [\
+      ["npm:2.0.4", {\
+        "packageLocation": "./.yarn/cache/obliterator-npm-2.0.4-b21b355294-5a49ce3736.zip/node_modules/obliterator/",\
+        "packageDependencies": [\
+          ["obliterator", "npm:2.0.4"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -47892,6 +47973,17 @@ const RAW_RUNTIME_STATE =
           ["call-bind", "npm:1.0.2"],\
           ["get-intrinsic", "npm:1.2.1"],\
           ["object-inspect", "npm:1.12.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["sigma", [\
+      ["npm:3.0.0-beta.23", {\
+        "packageLocation": "./.yarn/cache/sigma-npm-3.0.0-beta.23-56d29b96e4-94494663a4.zip/node_modules/sigma/",\
+        "packageDependencies": [\
+          ["sigma", "npm:3.0.0-beta.23"],\
+          ["events", "npm:3.3.0"],\
+          ["graphology-utils", "virtual:56d29b96e4ed464608493cb34e46ed957f2a0eca6ae0648fe6a55b490f090ff8ba04af03ca039ad186856dd57e9c3398e53388f9fbf703a355d03f7a673a0b26#npm:2.5.2"]\
         ],\
         "linkType": "HARD"\
       }]\

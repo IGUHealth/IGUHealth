@@ -8436,11 +8436,14 @@ __metadata:
     autoprefixer: "npm:^10.4.19"
     clsx: "npm:^2.0.0"
     dotenv: "npm:^16.4.5"
+    graphology: "npm:^0.25.4"
+    graphology-layout-forceatlas2: "npm:^0.10.1"
     postcss: "npm:^8.4.38"
     prism-react-renderer: "npm:^2.3.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     react-hook-form: "npm:^7.52.0"
+    sigma: "npm:^3.0.0-beta.23"
     tailwindcss: "npm:^3.4.4"
     typescript: "npm:~5.5.2"
   languageName: unknown
@@ -22370,6 +22373,38 @@ __metadata:
   languageName: node
   linkType: hard
 
+"graphology-layout-forceatlas2@npm:^0.10.1":
+  version: 0.10.1
+  resolution: "graphology-layout-forceatlas2@npm:0.10.1"
+  dependencies:
+    graphology-utils: "npm:^2.1.0"
+  peerDependencies:
+    graphology-types: ">=0.19.0"
+  checksum: 10/e66d17ba028a742ccb2383b52e9502eb0a5ad1c7611464672f48ee806bea323db0de4c64e40fc59e723e2f085fe4526698786ae02f70ebfaa42fa43a84746bfc
+  languageName: node
+  linkType: hard
+
+"graphology-utils@npm:^2.1.0, graphology-utils@npm:^2.5.2":
+  version: 2.5.2
+  resolution: "graphology-utils@npm:2.5.2"
+  peerDependencies:
+    graphology-types: ">=0.23.0"
+  checksum: 10/5df25d32b9aa7e72b7acbc7d5db9e34b23c47a12d110af2448bb588f3286dd60fe636b1ca501292b8fe8ae2b053d60ea4e693a587b827895684305f0e219ce06
+  languageName: node
+  linkType: hard
+
+"graphology@npm:^0.25.4":
+  version: 0.25.4
+  resolution: "graphology@npm:0.25.4"
+  dependencies:
+    events: "npm:^3.3.0"
+    obliterator: "npm:^2.0.2"
+  peerDependencies:
+    graphology-types: ">=0.24.0"
+  checksum: 10/4a390047924c03d844103fbf17f661d87bd7901fadb1d4a8ad982c73e3e7afe92076b73698e1b7ea08999925b0d757e60f6149201b7db5144f5836944333c5d8
+  languageName: node
+  linkType: hard
+
 "gray-matter@npm:^4.0.3":
   version: 4.0.3
   resolution: "gray-matter@npm:4.0.3"
@@ -28261,6 +28296,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"obliterator@npm:^2.0.2":
+  version: 2.0.4
+  resolution: "obliterator@npm:2.0.4"
+  checksum: 10/5a49ce3736aa9c8ae536e14e556e347b225c71215d3d3e0b191da0386284a804b9e22c09780645f2cea3981d4cecefaa394f59f4ffd6167fe6c2f2401777e1ae
+  languageName: node
+  linkType: hard
+
 "obuf@npm:^1.0.0, obuf@npm:^1.1.2, obuf@npm:~1.1.2":
   version: 1.1.2
   resolution: "obuf@npm:1.1.2"
@@ -33298,6 +33340,16 @@ __metadata:
     get-intrinsic: "npm:^1.0.2"
     object-inspect: "npm:^1.9.0"
   checksum: 10/c4998d9fc530b0e75a7fd791ad868fdc42846f072734f9080ff55cc8dc7d3899abcda24fd896aa6648c3ab7021b4bb478073eb4f44dfd55bce9714bc1a7c5d45
+  languageName: node
+  linkType: hard
+
+"sigma@npm:^3.0.0-beta.23":
+  version: 3.0.0-beta.23
+  resolution: "sigma@npm:3.0.0-beta.23"
+  dependencies:
+    events: "npm:^3.3.0"
+    graphology-utils: "npm:^2.5.2"
+  checksum: 10/94494663a4de599e6df940f4b7b2c7f0fbfa8e5aec1c20d8c49ec3cdae3daac5b1513222e190bbd999acbaeca68a81df985af491356df1bf61924ce76c46a6ab
   languageName: node
   linkType: hard
 
