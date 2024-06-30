@@ -20,7 +20,11 @@ export default function NetworkMap<Version extends FHIR_VERSION>({
       `https://open-api.iguhealth.app/w/system/api/v1/fhir/${version}/StructureDefinition?_count=1000&kind=resource`,
     )
       .then((res) => res.json())
-      .then((bundle) => setResourceSds(bundle.entry.map((e) => e.resource)));
+      .then((bundle) =>
+        setResourceSds(
+          bundle.entry.map((e) => e.resource).filter((r) => !r.abstract),
+        ),
+      );
   }, [setResourceSds, version]);
   //   const resourceSds = fetch(
   //     "https://open-api.iguhealth.app/w/system/api/v1/fhir/r4/StructureDefinition?_count=1000&type=resource",
@@ -51,10 +55,11 @@ export default function NetworkMap<Version extends FHIR_VERSION>({
       for (const element of resourceSd.snapshot.element) {
         if (element.type) {
           for (const type of element.type) {
-            if (type.code === "Reference") {
+            if (type.code === "Reference" || type.code === "canonical") {
               const target = type.targetProfile?.[0];
-              if (target) {
-                g.addEdge(resourceSd.id, target.split("/").pop(), {
+              const targetId = target?.split("/").pop();
+              if (resourceSds.find((r) => r.id === targetId)) {
+                g.addEdge(resourceSd.id, targetId, {
                   type: "arrow",
                   label: element.path,
                 });
@@ -66,7 +71,7 @@ export default function NetworkMap<Version extends FHIR_VERSION>({
     }
 
     const layout = new FA2Layout(g, {
-      settings: { gravity: 5, adjustSizes: true },
+      settings: { gravity: 30, adjustSizes: true },
     });
 
     // To start the layout
@@ -74,7 +79,7 @@ export default function NetworkMap<Version extends FHIR_VERSION>({
 
     setTimeout(() => {
       layout.stop();
-    }, 3000);
+    }, 1000);
 
     return g;
   }, [resourceSds]);
