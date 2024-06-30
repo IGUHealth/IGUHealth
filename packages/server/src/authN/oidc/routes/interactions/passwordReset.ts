@@ -12,7 +12,7 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { asSystemCTX } from "../../../../fhir-api/types.js";
+import { asRoot } from "../../../../fhir-api/types.js";
 import { FHIRTransaction } from "../../../../fhir-storage/transactions.js";
 import * as views from "../../../../views/index.js";
 import { userToMembership } from "../../../db/users/utilities.js";
@@ -176,7 +176,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
         );
 
         await ctx.iguhealth.client.update(
-          asSystemCTX({
+          asRoot({
             ...fhirContext,
             tenant: update.tenant as TenantId,
           }),

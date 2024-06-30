@@ -16,7 +16,7 @@ import { TenantId } from "@iguhealth/jwt";
 import { TenantManagement } from "../authN/db/tenant.js";
 import TenantUserManagement from "../authN/db/users/index.js";
 import { createFHIRServices } from "../fhir-api/index.js";
-import { IGUHealthServerCTX, asSystemCTX } from "../fhir-api/types.js";
+import { IGUHealthServerCTX, asRoot } from "../fhir-api/types.js";
 import { createPGPool } from "../fhir-storage/providers/postgres/pg.js";
 import { FHIRTransaction } from "../fhir-storage/transactions.js";
 
@@ -94,7 +94,7 @@ async function createTenant(
           });
 
       const membership: Membership = await ctx.client.create(
-        asSystemCTX({ ...ctx, tenant: tenant.id as TenantId }),
+        asRoot({ ...ctx, tenant: tenant.id as TenantId }),
         R4,
         await getMembership(options),
       );
@@ -146,7 +146,7 @@ function clientAppCommands(command: Command) {
       const services = await createFHIRServices(pool);
 
       const transaction = await services.client.transaction(
-        asSystemCTX({ ...services, tenant: options.tenant }),
+        asRoot({ ...services, tenant: options.tenant }),
         R4,
         {
           resourceType: "Bundle",

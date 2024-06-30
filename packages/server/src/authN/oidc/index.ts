@@ -21,7 +21,7 @@ export type OIDCRouteHandler = Parameters<
 export async function createOIDCRouter<
   C extends Koa.DefaultContext &
     KoaContext.OIDC &
-    KoaContext.IGUHealthKoa<Koa.DefaultContext>,
+    KoaContext.IGUHealth<Koa.DefaultContext>,
 >(
   prefix: string,
   {

@@ -63,7 +63,7 @@ export namespace KoaContext {
     };
   };
 
-  export type IGUHealthKoa<C> = C &
+  export type IGUHealth<C> = C &
     OIDC &
     IGUHealthServices & {
       iguhealth: Omit<IGUHealthServerCTX, "user"> | IGUHealthServerCTX;
@@ -131,7 +131,7 @@ export interface IGUHealthServerCTX {
  * @param ctx The current context
  * @returns A new context with the user set to system.
  */
-export function asSystemCTX(
+export function asRoot(
   ctx: Omit<IGUHealthServerCTX, "user">,
 ): IGUHealthServerCTX {
   const jwt: AccessTokenPayload<s.user_role> = {

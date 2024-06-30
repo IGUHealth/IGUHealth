@@ -4,7 +4,7 @@ import { R4, Resource, ResourceType } from "@iguhealth/fhir-types/versions";
 import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX, asSystemCTX } from "../../fhir-api/types.js";
+import { IGUHealthServerCTX, asRoot } from "../../fhir-api/types.js";
 
 // const membershipID = ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID] as
 // | id
@@ -19,7 +19,7 @@ async function findResourceAndAccessPolicies<Type extends ResourceType<R4>>(
   accessPolicies: AccessPolicy[];
 }> {
   const usersAndAccessPolicies = (await ctx.client.search_type(
-    asSystemCTX(ctx),
+    asRoot(ctx),
     R4,
     resourceType,
     [

@@ -11,7 +11,7 @@ import {
 import { KoaContext } from "../../fhir-api/types.js";
 
 function findCurrentTenant<Context extends Koa.DefaultContext>(
-  ctx: KoaContext.IGUHealthKoa<Context>,
+  ctx: KoaContext.IGUHealth<Context>,
 ): TenantClaim<s.user_role> | undefined {
   return ctx.state.user[CUSTOM_CLAIMS.TENANTS]?.find(
     (t: TenantClaim<s.user_role>) => t.id === ctx.iguhealth.tenant,
@@ -26,7 +26,7 @@ function findCurrentTenant<Context extends Koa.DefaultContext>(
  */
 export async function verifyAndAssociateUserFHIRContext<
   State extends Koa.DefaultState,
-  Context extends KoaContext.IGUHealthKoa<Koa.DefaultContext>,
+  Context extends KoaContext.IGUHealth<Koa.DefaultContext>,
 >(ctx: Koa.ParameterizedContext<State, Context>, next: Koa.Next) {
   if (!ctx.iguhealth.tenant) {
     throw new OperationError(outcomeError("invalid", "No tenant present."));

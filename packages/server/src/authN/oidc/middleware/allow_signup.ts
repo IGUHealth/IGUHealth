@@ -8,7 +8,7 @@ import { KoaContext } from "../../../fhir-api/types.js";
  */
 export function setAllowSignup<State, C>(
   allowSignup: boolean,
-): Koa.Middleware<State, KoaContext.IGUHealthKoa<C>> {
+): Koa.Middleware<State, KoaContext.IGUHealth<C>> {
   return async (ctx, next) => {
     ctx.oidc = {
       ...ctx.oidc,

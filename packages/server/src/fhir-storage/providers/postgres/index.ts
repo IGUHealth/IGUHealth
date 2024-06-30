@@ -48,7 +48,7 @@ import {
 } from "../../utilities/search/parameters.js";
 import { fhirResourceToBundleEntry, fhirResponseToBundleEntry, fullUrl } from "../../utilities/bundle.js";
 import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
-import { asSystemCTX, IGUHealthServerCTX } from "../../../fhir-api/types.js";
+import { asRoot, IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import { param_types_supported } from "./constants.js";
 import { executeSearchQuery } from "./search/index.js";
 import { ParsedParameter } from "@iguhealth/client/url";
@@ -83,7 +83,7 @@ async function getAllParametersForResource<
 
   return (
     await ctx.client.search_type(
-      asSystemCTX(ctx),
+      asRoot(ctx),
       fhirVersion,
       "SearchParameter",
       parameters,

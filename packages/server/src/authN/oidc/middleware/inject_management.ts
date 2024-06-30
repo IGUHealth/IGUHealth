@@ -12,7 +12,7 @@ import TenantUserManagement from "../../db/users/index.js";
  */
 export function injectTenantManagement<State, C>(): Koa.Middleware<
   State,
-  KoaContext.IGUHealthKoa<C>
+  KoaContext.IGUHealth<C>
 > {
   return async (ctx, next) => {
     if (!ctx.iguhealth.tenant) {
