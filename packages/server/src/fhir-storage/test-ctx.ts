@@ -1,4 +1,3 @@
-import dotEnv from "dotenv";
 import path from "path";
 import pg from "pg";
 import { pino } from "pino";
@@ -21,8 +20,6 @@ import { IGUHealthServerCTX } from "../fhir-api/types.js";
 import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
 import { Lock } from "../synchronization/interfaces.js";
 import { Memory } from "./providers/memory/async.js";
-
-dotEnv.config();
 
 const sds = loadArtifacts({
   fhirVersion: R4,

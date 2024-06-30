@@ -10,7 +10,6 @@ import {
   ResourceGroupsTaggingAPI,
 } from "@aws-sdk/client-resource-groups-tagging-api";
 import AdmZip from "adm-zip";
-import { configDotenv } from "dotenv";
 
 import { AsynchronousClient } from "@iguhealth/client";
 import {
@@ -43,7 +42,6 @@ import {
   validateInvocationContext,
 } from "../../utilities.js";
 
-configDotenv();
 function getLambdaFunctionName(
   ctx: IGUHealthServerCTX,
   operation: Operation<unknown, unknown>,

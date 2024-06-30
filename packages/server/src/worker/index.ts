@@ -1,6 +1,5 @@
 // Backend Processes used for subscriptions and cron jobs.
 import { randomUUID } from "crypto";
-import dotEnv from "dotenv";
 import pg from "pg";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
@@ -41,6 +40,7 @@ import {
   getCertLocation,
   getSigningKey,
 } from "../authN/certifications.js";
+import loadEnv from "../env.js";
 import { createFHIRAPI, createFHIRServices } from "../fhir-api/index.js";
 import { IGUHealthServerCTX } from "../fhir-api/types.js";
 import { httpRequestToFHIRRequest } from "../fhir-http/index.js";
@@ -61,7 +61,7 @@ import {
 import * as Sentry from "../monitoring/sentry.js";
 import { LIB_VERSION } from "../version.js";
 
-dotEnv.config();
+loadEnv();
 
 if (process.env.NODE_ENV === "development") {
   await createCertsIfNoneExists(getCertLocation(), getCertKey());
