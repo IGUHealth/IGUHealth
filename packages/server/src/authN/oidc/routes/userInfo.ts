@@ -11,7 +11,7 @@ type UserInfoResponse = {
 
 export function userInfo(): OIDCRouteHandler {
   return async (ctx, next) => {
-    const user = await ctx.oidc.userManagement.get(
+    const user = await ctx.state.oidc.userManagement.get(
       ctx.state.iguhealth,
       // [TODO]
       //@ts-ignore

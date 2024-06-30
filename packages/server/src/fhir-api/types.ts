@@ -52,7 +52,6 @@ export namespace KoaState {
       userManagement: UserManagement;
       codeManagement: AuthorizationCodeManagement;
       client?: ClientApplication;
-      allowSignup?: boolean;
       parameters: {
         state?: string;
         responseType?: code;
@@ -70,6 +69,7 @@ export namespace KoaState {
     };
 
   export type IGUHealthServices = {
+    allowSignup?: boolean;
     user: AccessTokenPayload<s.user_role> | undefined;
     access_token: AccessToken<s.user_role>;
     iguhealth: Omit<IGUHealthServerCTX, "user" | "tenant">;

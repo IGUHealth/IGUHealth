@@ -10,7 +10,7 @@ import TenantUserManagement from "../../db/users/index.js";
  * Inject Tenant management into the context.
  * @returns Koa.Middleware
  */
-export function injectTenantManagement<State, C>(): Koa.Middleware<
+export function injectTenantManagement(): Koa.Middleware<
   KoaState.IGUHealth,
   Koa.DefaultContext
 > {
@@ -19,8 +19,8 @@ export function injectTenantManagement<State, C>(): Koa.Middleware<
       throw new OperationError(outcomeFatal("invalid", "No Tenant"));
     }
 
-    ctx.oidc = {
-      ...ctx.oidc,
+    ctx.state.oidc = {
+      ...ctx.state.oidc,
       userManagement: new TenantUserManagement(ctx.state.iguhealth.tenant),
       codeManagement: new TenantAuthorizationCodeManagement(
         ctx.state.iguhealth.tenant,

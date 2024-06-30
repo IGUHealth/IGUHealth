@@ -25,7 +25,7 @@ function getRoutes(ctx: Parameters<GlobalAuthRouteHandler>[0]) {
   if (signupURL instanceof Error) throw signupURL;
 
   return {
-    signupURL: ctx.oidc.allowSignup ? signupURL : undefined,
+    signupURL: ctx.state.allowSignup ? signupURL : undefined,
     loginRoute,
   };
 }

@@ -10,9 +10,9 @@ import { isInvalidRedirectUrl } from "../../utilities/checkRedirectUrl.js";
  * @param ctx FHIR Server Context
  */
 export const logout = (): OIDCRouteHandler => async (ctx) => {
-  await ctx.oidc.sessionLogout(ctx);
+  await ctx.state.oidc.sessionLogout(ctx);
 
-  const client = ctx.oidc.client;
+  const client = ctx.state.oidc.client;
   const redirectUrl = ctx.request.query.redirect_uri?.toString();
 
   if (client) {
@@ -31,7 +31,7 @@ export const logout = (): OIDCRouteHandler => async (ctx) => {
 
   ctx.redirect(
     ctx.router.url(OIDC_ROUTES.LOGIN_GET, {
-      tenant: ctx.oidc.tenant,
+      tenant: ctx.state.oidc.tenant,
     }) as string,
   );
 };

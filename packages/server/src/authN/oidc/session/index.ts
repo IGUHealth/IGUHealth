@@ -16,7 +16,7 @@ export async function deserializeUser(
   try {
     const id = ctx.session?.[USER_SESSION_KEY];
     if (!id) return undefined;
-    const user = await ctx.oidc.userManagement.get(ctx.state.iguhealth, id);
+    const user = await ctx.state.oidc.userManagement.get(ctx.state.iguhealth, id);
     if (!user) {
       return undefined;
     }
@@ -30,7 +30,7 @@ export async function deserializeUser(
 export async function isAuthenticated(
   ctx: Parameters<OIDCRouteHandler>[0],
 ): Promise<boolean> {
-  return ctx.oidc.user !== undefined;
+  return ctx.state.oidc.user !== undefined;
 }
 
 /**
@@ -47,7 +47,7 @@ export async function sessionLogin<Method extends keyof LoginParameters>(
     throw new Error("Session not found in context.");
   }
 
-  const user = await ctx.oidc.userManagement.login(
+  const user = await ctx.state.oidc.userManagement.login(
     ctx.state.iguhealth,
     method,
     credentials,

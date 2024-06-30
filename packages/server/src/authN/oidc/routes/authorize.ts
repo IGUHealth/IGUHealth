@@ -29,11 +29,11 @@ import { encodeState } from "./interactions/login.js";
  */
 export function authorizeGET(): OIDCRouteHandler {
   return async (ctx, next) => {
-    if (await ctx.oidc.isAuthenticated(ctx)) {
+    if (await ctx.state.oidc.isAuthenticated(ctx)) {
       const redirectUrl = ctx.request.query.redirect_uri?.toString();
       // const scope = ctx.request.query.scope;
       const state = ctx.request.query.state;
-      const client = ctx.oidc.client;
+      const client = ctx.state.oidc.client;
 
       if (!client)
         throw new OperationError(outcomeError("invalid", "Client not found."));
@@ -44,13 +44,16 @@ export function authorizeGET(): OIDCRouteHandler {
         );
       }
 
-      const code = await ctx.oidc.codeManagement.create(ctx.state.iguhealth, {
-        type: "oauth2_code_grant",
-        client_id: client.id,
-        // Should be safe to use here as is authenticated so user should be populated.
-        user_id: ctx.oidc.user?.id as string,
-        expires_in: "15 minutes",
-      });
+      const code = await ctx.state.oidc.codeManagement.create(
+        ctx.state.iguhealth,
+        {
+          type: "oauth2_code_grant",
+          client_id: client.id,
+          // Should be safe to use here as is authenticated so user should be populated.
+          user_id: ctx.state.oidc.user?.id as string,
+          expires_in: "15 minutes",
+        },
+      );
 
       ctx.redirect(`${redirectUrl}?code=${code.code}&state=${state}`);
     } else {
@@ -61,7 +64,7 @@ export function authorizeGET(): OIDCRouteHandler {
         ctx.router.url(
           OIDC_ROUTES.LOGIN_GET,
           {
-            tenant: ctx.oidc.tenant,
+            tenant: ctx.state.oidc.tenant,
           },
           { query: { state } },
         ) as string,

@@ -6,11 +6,11 @@ import { KoaState } from "../../../fhir-api/types.js";
 import { ADMIN_APP } from "../hardcodedClients/admin-app.js";
 
 export function injectHardcodedClients<
-  State,
+  State extends KoaState.OIDC,
   C extends Koa.DefaultContext,
->(): Koa.Middleware<State, C & KoaState.OIDC> {
+>(): Koa.Middleware<State, C> {
   return async (ctx, next) => {
-    const clientId = ctx.oidc.parameters.client_id;
+    const clientId = ctx.state.oidc.parameters.client_id;
 
     if (!clientId || clientId === "") {
       throw new OperationError(
@@ -20,7 +20,7 @@ export function injectHardcodedClients<
 
     switch (clientId) {
       case ADMIN_APP()?.id: {
-        ctx.oidc.client = ADMIN_APP();
+        ctx.state.oidc.client = ADMIN_APP();
         await next();
         return;
       }

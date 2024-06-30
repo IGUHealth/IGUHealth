@@ -153,21 +153,21 @@ export function discoveryGet(): OIDCRouteHandler {
 
       userinfo_endpoint: new URL(
         ctx.router.url(OIDC_ROUTES.USER_INFO, {
-          tenant: ctx.oidc.tenant,
+          tenant: ctx.state.oidc.tenant,
         }) as string,
         process.env.API_URL,
       ).href,
 
       token_endpoint: new URL(
         ctx.router.url(OIDC_ROUTES.TOKEN_POST, {
-          tenant: ctx.oidc.tenant,
+          tenant: ctx.state.oidc.tenant,
         }) as string,
         process.env.API_URL,
       ).href,
 
       authorization_endpoint: new URL(
         ctx.router.url(OIDC_ROUTES.AUTHORIZE_GET, {
-          tenant: ctx.oidc.tenant,
+          tenant: ctx.state.oidc.tenant,
         }) as string,
         process.env.API_URL,
       ).href,

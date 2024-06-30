@@ -8,12 +8,12 @@ import {
 
 export function sessionAuthorizationMiddleware(): OIDCRouteHandler {
   return async (ctx, next) => {
-    ctx.oidc.isAuthenticated = isAuthenticated;
+    ctx.state.oidc.isAuthenticated = isAuthenticated;
 
-    ctx.oidc.sessionLogin = sessionLogin;
-    ctx.oidc.sessionLogout = sessionLogout;
+    ctx.state.oidc.sessionLogin = sessionLogin;
+    ctx.state.oidc.sessionLogout = sessionLogout;
 
-    ctx.oidc.user = await deserializeUser(ctx);
+    ctx.state.oidc.user = await deserializeUser(ctx);
 
     await next();
   };

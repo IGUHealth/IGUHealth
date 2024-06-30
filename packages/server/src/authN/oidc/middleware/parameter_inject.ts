@@ -35,16 +35,13 @@ function isValidParam(param: ParameterKey, value: unknown): value is string {
  * Middleware that finds+validates and injects oidc parameters.
  * @returns Koa.Middleware
  */
-export function createValidateInjectOIDCParameters<
-  State,
-  C extends Koa.DefaultContext & KoaState.OIDC,
->({
+export function createValidateInjectOIDCParameters({
   required,
   optional,
 }: {
   required?: ParameterKey[];
   optional?: ParameterKey[];
-}): Koa.Middleware<State, KoaState.IGUHealth<C>> {
+}): Koa.Middleware<KoaState.IGUHealth, Koa.DefaultContext> {
   return async (ctx, next) => {
     const params = [
       ...(required ?? []).map((p) => ({ required: true, param: p })),
@@ -68,8 +65,8 @@ export function createValidateInjectOIDCParameters<
       return { ...acc, [param]: value };
     }, {});
 
-    ctx.oidc = {
-      ...ctx.oidc,
+    ctx.state.oidc = {
+      ...ctx.state.oidc,
       parameters: { ...requiredParams },
     };
 
