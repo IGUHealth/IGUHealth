@@ -196,7 +196,7 @@ function canUserMakeRequest(
  * @param next Next middleware
  * @returns context with response.
  */
-export function createAuthorizationMiddleWare<T>(): MiddlewareAsyncChain<
+function createAuthorizationMiddleware<T>(): MiddlewareAsyncChain<
   T,
   IGUHealthServerCTX
 > {
@@ -208,3 +208,5 @@ export function createAuthorizationMiddleWare<T>(): MiddlewareAsyncChain<
     throw new OperationError(outcomeError("forbidden", "access-denied"));
   };
 }
+
+export default createAuthorizationMiddleware;

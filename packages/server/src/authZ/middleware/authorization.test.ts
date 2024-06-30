@@ -10,9 +10,9 @@ import {
 
 import { IGUHealthServerCTX } from "../../fhir-api/types.js";
 import { testServices } from "../../fhir-storage/test-ctx.js";
-import { createAuthorizationMiddleWare } from "./authorization.js";
+import createAuthorizationMiddleware from "./authorization.js";
 
-const authorizationMiddleware = createAuthorizationMiddleWare();
+const authorizationMiddleware = createAuthorizationMiddleware();
 
 test("Authorization test for read access on resource based on type and method", async () => {
   const ctx: IGUHealthServerCTX = {
@@ -41,7 +41,7 @@ test("Authorization test for read access on resource based on type and method", 
     },
   };
 
-  const responder: ReturnType<typeof createAuthorizationMiddleWare> = async (
+  const responder: ReturnType<typeof createAuthorizationMiddleware> = async (
     context,
   ) => {
     return {

@@ -1,48 +1,30 @@
 import Router from "@koa/router";
-import Ajv from "ajv";
 import { Redis } from "ioredis";
 import type * as koa from "koa";
 import pg from "pg";
 import { pino } from "pino";
 
 import { AsynchronousClient } from "@iguhealth/client";
-import { FHIRClientAsync } from "@iguhealth/client/interface";
 import {
   MiddlewareAsyncChain,
   createMiddlewareAsync,
 } from "@iguhealth/client/middleware";
-import { FHIRRequest, FHIRResponse } from "@iguhealth/client/types";
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
-import {
-  CapabilityStatementRestResource,
-  code,
-} from "@iguhealth/fhir-types/r4/types";
 import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
-import {
-  AllResourceTypes,
-  FHIR_VERSION,
-  R4,
-  R4B,
-  Resource,
-  ResourceType,
-} from "@iguhealth/fhir-types/versions";
-import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+import { R4, R4B, ResourceType } from "@iguhealth/fhir-types/versions";
 
 import { associateUserMiddleware } from "../authZ/middleware/associateUser.js";
-import { createAuthorizationMiddleWare } from "../authZ/middleware/authorization.js";
+import createAuthorizationMiddleware from "../authZ/middleware/authorization.js";
 import RedisCache from "../cache/providers/redis.js";
 import { EmailProvider } from "../email/interface.js";
 import SendGrid from "../email/providers/sendgrid.js";
-import { encryptValue } from "../encryption/index.js";
 import { AWSKMSProvider } from "../encryption/provider/kms.js";
 import AWSLambdaExecutioner from "../fhir-operation-executors/providers/awsLambda/index.js";
 // import IguhealthEncryptInvoke from "../fhir-operation-executors/providers/local/encrypt.js";
 import InlineExecutioner from "../fhir-operation-executors/providers/local/index.js";
 import IguhealthInviteUserInvoke from "../fhir-operation-executors/providers/local/invite_user.js";
 import IguhealthMessagePostInvoke from "../fhir-operation-executors/providers/local/message_post.js";
-import ResourceValidateInvoke, {
-  validateResource,
-} from "../fhir-operation-executors/providers/local/resource_validate.js";
+import ResourceValidateInvoke from "../fhir-operation-executors/providers/local/resource_validate.js";
 import StructureDefinitionSnapshotInvoke from "../fhir-operation-executors/providers/local/snapshot.js";
 import ValueSetExpandInvoke from "../fhir-operation-executors/providers/local/terminology/expand.js";
 import CodeSystemLookupInvoke from "../fhir-operation-executors/providers/local/terminology/lookup.js";
@@ -57,10 +39,12 @@ import { createArtifactMemoryDatabase } from "../fhir-storage/providers/memory/a
 import { createPostgresClient } from "../fhir-storage/providers/postgres/index.js";
 import RouterClient from "../fhir-storage/router.js";
 import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
-import JSONPatchSchema from "../json-schemas/schemas/jsonpatch.schema.json" with { type: "json" };
 import RedisLock from "../synchronization/redis.lock.js";
-import { checkTenantUsageMiddleware } from "./middleware/usageCheck.js";
-import { IGUHealthServerCTX, KoaContext, asRoot } from "./types.js";
+import createCapabilitiesMiddleware from "./middleware/capabilities.js";
+import createEncryptionMiddleware from "./middleware/encryption.js";
+import createCheckTenantUsageMiddleware from "./middleware/usageCheck.js";
+import createValidationMiddleware from "./middleware/validation.js";
+import { IGUHealthServerCTX, KoaContext } from "./types.js";
 
 const R4_SPECIAL_TYPES: {
   MEMORY: ResourceType<R4>[];
@@ -93,101 +77,6 @@ const R4B_DB_TYPES: ResourceType<R4B>[] = (
   [...r4bSets.resourceTypes] as ResourceType<R4B>[]
 ).filter((type) => R4B_ALL_SPECIAL_TYPES.indexOf(type) === -1);
 
-async function createResourceRestCapabilities(
-  ctx: IGUHealthServerCTX,
-  fhirVersion: FHIR_VERSION,
-  memdb: FHIRClientAsync<IGUHealthServerCTX>,
-  sd: Resource<FHIR_VERSION, "StructureDefinition">,
-): Promise<CapabilityStatementRestResource> {
-  const resourceParameters = await memdb.search_type(
-    ctx,
-    fhirVersion,
-    "SearchParameter",
-    [
-      { name: "_count", value: [1000] },
-      {
-        name: "base",
-        value: ["Resource", "DomainResource", sd.type],
-      },
-    ],
-  );
-
-  return {
-    type: sd.type as unknown as code,
-    profile: sd.url,
-    interaction: [
-      { code: "read" },
-      { code: "update" },
-      { code: "delete" },
-      { code: "search-type" },
-      { code: "create" },
-      { code: "history-instance" },
-    ],
-    versioning: "versioned",
-    updateCreate: false,
-    searchParam: resourceParameters.resources.map((resource) => ({
-      name: resource.name,
-      definition: resource.url,
-      type: resource.type,
-      documentation: resource.description,
-    })),
-  } as CapabilityStatementRestResource;
-}
-
-async function serverCapabilities<Version extends FHIR_VERSION>(
-  ctx: IGUHealthServerCTX,
-  fhirVersion: Version,
-  client: FHIRClientAsync<IGUHealthServerCTX>,
-): Promise<Resource<Version, "CapabilityStatement">> {
-  const sds = (
-    await client.search_type(ctx, fhirVersion, "StructureDefinition", [
-      { name: "_count", value: [1000] },
-    ])
-  ).resources.filter((sd) => sd.abstract === false && sd.kind === "resource");
-
-  const rootParameters = await client.search_type(
-    ctx,
-    fhirVersion,
-    "SearchParameter",
-    [
-      { name: "_count", value: [1000] },
-      {
-        name: "base",
-        value: ["Resource", "DomainResource"],
-      },
-    ],
-  );
-
-  return {
-    resourceType: "CapabilityStatement",
-    status: "active",
-    fhirVersion: fhirVersion === R4 ? "4.0.1" : "4.3.0",
-    date: new Date().toISOString(),
-    kind: "capability",
-    format: ["json"],
-    rest: [
-      {
-        mode: "server",
-        security: {
-          cors: true,
-        },
-        interaction: [{ code: "search-system" }],
-        searchParam: rootParameters.resources.map((resource) => ({
-          name: resource.name,
-          definition: resource.url,
-          type: resource.type,
-          documentation: resource.description,
-        })),
-        resource: await Promise.all(
-          sds.map((sd) =>
-            createResourceRestCapabilities(ctx, fhirVersion, client, sd),
-          ),
-        ),
-      },
-    ],
-  } as Resource<Version, "CapabilityStatement">;
-}
-
 export const logger = pino<string>(
   process.env.NODE_ENV === "development"
     ? {
@@ -198,153 +87,12 @@ export const logger = pino<string>(
     : undefined,
 );
 
-function getResourceTypeToValidate(
-  request: FHIRRequest,
-): ResourceType<FHIR_VERSION> {
-  switch (request.type) {
-    case "create-request":
-      return request.resourceType;
-    case "update-request":
-      return request.resourceType;
-    case "invoke-request":
-      return request.body.resourceType;
-    case "transaction-request":
-    case "batch-request":
-      return "Bundle";
-    default:
-      throw new OperationError(
-        outcomeError(
-          "invalid",
-          `cannot validate resource type '${request.type}'`,
-        ),
-      );
-  }
-}
-
-/**
- * Used for JSON PATCH validation which is non FHIR data.
- */
-const ajv = new Ajv.default({});
-const validateJSONPatch = ajv.compile(JSONPatchSchema);
-
 /**
  * Type manipulation to get state of a routerclient used for subsequent middlewares.
  */
 type RouterState = Parameters<
   Parameters<typeof RouterClient>[0][number]
 >[0]["state"];
-
-const validationMiddleware: MiddlewareAsyncChain<
-  RouterState,
-  IGUHealthServerCTX
-> = async (context, next) => {
-  switch (context.request.type) {
-    case "update-request":
-    case "create-request":
-    case "batch-request":
-    case "invoke-request":
-    case "transaction-request": {
-      const outcome = await validateResource(
-        asRoot(context.ctx),
-        context.request.fhirVersion,
-        getResourceTypeToValidate(context.request),
-        {
-          mode: (context.request.type === "create-request"
-            ? "create"
-            : "update") as code,
-          resource: context.request.body,
-        },
-      );
-
-      if (
-        outcome.issue.find(
-          (i) => i.severity === "fatal" || i.severity === "error",
-        )
-      ) {
-        throw new OperationError(outcome);
-      }
-      break;
-    }
-    case "patch-request": {
-      const valid = validateJSONPatch(context.request.body);
-      if (!valid) {
-        throw new OperationError(
-          outcomeError("invalid", ajv.errorsText(validateJSONPatch.errors)),
-        );
-      }
-      break;
-    }
-  }
-
-  return next(context);
-};
-
-const capabilitiesMiddleware: MiddlewareAsyncChain<
-  RouterState,
-  IGUHealthServerCTX
-> = async (context, next) => {
-  if (context.request.type === "capabilities-request") {
-    return {
-      ...context,
-      response: {
-        fhirVersion: context.request.fhirVersion,
-        level: "system",
-        type: "capabilities-response",
-        body: await serverCapabilities(
-          context.ctx,
-          context.request.fhirVersion,
-          context.ctx.client,
-        ),
-      } as FHIRResponse,
-    };
-  }
-
-  return next(context);
-};
-
-const encryptionMiddleware: (
-  resourceTypesToEncrypt: AllResourceTypes[],
-) => MiddlewareAsyncChain<RouterState, IGUHealthServerCTX> =
-  (resourceTypesToEncrypt: AllResourceTypes[]) => async (context, next) => {
-    if (!context.ctx.encryptionProvider) {
-      return next(context);
-    }
-    if (
-      "resourceType" in context.request &&
-      resourceTypesToEncrypt.includes(context.request.resourceType)
-    ) {
-      switch (context.request.type) {
-        case "create-request":
-        case "update-request": {
-          const encrypted = await encryptValue(
-            context.ctx,
-            context.request.body,
-          );
-          return next({
-            ...context,
-            // @ts-ignore
-            request: { ...context.request, body: encrypted },
-          });
-        }
-        case "patch-request": {
-          const encrypted = await encryptValue(
-            context.ctx,
-            // Should be safe as given patch should be validated.
-            context.request.body as object,
-          );
-          return next({
-            ...context,
-            request: { ...context.request, body: encrypted },
-          });
-        }
-        default: {
-          return next(context);
-        }
-      }
-    } else {
-      return next(context);
-    }
-  };
 
 let _redis_client: Redis | undefined = undefined;
 /**
@@ -376,11 +124,11 @@ export function getRedisClient(): Redis {
 async function createFHIRClient(sources: RouterState["sources"]) {
   return RouterClient(
     [
-      checkTenantUsageMiddleware(),
-      validationMiddleware,
-      capabilitiesMiddleware,
-      encryptionMiddleware(["OperationDefinition"]),
-      createAuthorizationMiddleWare<RouterState>(),
+      createCheckTenantUsageMiddleware(),
+      createValidationMiddleware(),
+      createCapabilitiesMiddleware(),
+      createEncryptionMiddleware(["OperationDefinition"]),
+      createAuthorizationMiddleware<RouterState>(),
     ],
     sources,
   );

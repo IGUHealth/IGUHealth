@@ -125,7 +125,7 @@ async function checkTenantUsage(
  * @param next Next middleware
  * @returns context with response.
  */
-export function checkTenantUsageMiddleware<T>(): MiddlewareAsyncChain<
+function createCheckTenantUsageMiddleware<T>(): MiddlewareAsyncChain<
   T,
   IGUHealthServerCTX
 > {
@@ -135,3 +135,5 @@ export function checkTenantUsageMiddleware<T>(): MiddlewareAsyncChain<
     return next(context);
   };
 }
+
+export default createCheckTenantUsageMiddleware;
