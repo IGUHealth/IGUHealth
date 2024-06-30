@@ -49,7 +49,7 @@ import {
   getRedisClient,
   logger,
 } from "./fhir-api/index.js";
-import { KoaState } from "./fhir-api/types.js";
+import { KoaExtensions } from "./fhir-api/types.js";
 import {
   fhirResponseToHTTPResponse,
   httpRequestToFHIRRequest,
@@ -69,8 +69,11 @@ loadEnv();
  */
 async function FHIRAPIKoaMiddleware(): Promise<
   Koa.Middleware<
-    KoaState.IGUHealth,
-    Router.RouterParamContext<KoaState.IGUHealth, Koa.DefaultContext>
+    KoaExtensions.IGUHealth,
+    Router.RouterParamContext<
+      KoaExtensions.IGUHealth,
+      KoaExtensions.DefaultContext
+    >
   >
 > {
   const fhirAPI = await createFHIRAPI();
@@ -85,7 +88,7 @@ async function FHIRAPIKoaMiddleware(): Promise<
         op: "fhirserver",
       });
     }
-    if (!KoaState.isFHIRServerAuthorizedUserCTX(ctx.state.iguhealth)) {
+    if (!KoaExtensions.isFHIRServerAuthorizedUserCTX(ctx.state.iguhealth)) {
       throw new Error("FHIR Context is not authorized");
     }
 
@@ -116,10 +119,13 @@ async function FHIRAPIKoaMiddleware(): Promise<
   };
 }
 
-function createErrorHandlingMiddleware<T>(): Koa.Middleware<
-  KoaState.IGUHealth,
-  Koa.DefaultContext &
-    Router.RouterParamContext<KoaState.IGUHealth, Koa.DefaultContext>
+function createErrorHandlingMiddleware(): Koa.Middleware<
+  KoaExtensions.IGUHealth,
+  KoaExtensions.DefaultContext &
+    Router.RouterParamContext<
+      KoaExtensions.IGUHealth,
+      KoaExtensions.DefaultContext
+    >
 > {
   return async function errorHandlingMiddleware(ctx, next) {
     try {
@@ -154,7 +160,7 @@ function createErrorHandlingMiddleware<T>(): Koa.Middleware<
           }
         }
       } else {
-        MonitoringSentry.logError(e, ctx);
+        MonitoringSentry.logError(e);
 
         // Resend to default koa error handler.
         throw e;
@@ -164,7 +170,7 @@ function createErrorHandlingMiddleware<T>(): Koa.Middleware<
 }
 
 export default async function createServer(): Promise<
-  Koa<Koa.DefaultState, Koa.DefaultContext>
+  Koa<KoaExtensions.IGUHealth, KoaExtensions.DefaultContext>
 > {
   if (process.env.SENTRY_SERVER_DSN)
     MonitoringSentry.enableSentry(process.env.SENTRY_SERVER_DSN, LIB_VERSION, {
@@ -181,7 +187,7 @@ export default async function createServer(): Promise<
   }
 
   const redis = getRedisClient();
-  const app = new Koa();
+  const app = new Koa<KoaExtensions.IGUHealth, KoaExtensions.DefaultContext>();
   app.context.state = {
     db: createPGPool(),
     logger,
@@ -195,7 +201,10 @@ export default async function createServer(): Promise<
 
   app.keys = process.env.SESSION_COOKIE_SECRETS.split(":").map((s) => s.trim());
 
-  const rootRouter = new Router<KoaState.IGUHealth, Koa.DefaultContext>();
+  const rootRouter = new Router<
+    KoaExtensions.IGUHealth,
+    KoaExtensions.DefaultContext
+  >();
   rootRouter.use("/", createErrorHandlingMiddleware());
   rootRouter.get(JWKS_GET, "/certs/jwks", async (ctx, next) => {
     const jwks = await getJWKS(getCertLocation());
@@ -228,7 +237,10 @@ export default async function createServer(): Promise<
   rootRouter.use(globalAuth.routes());
   rootRouter.use(globalAuth.allowedMethods());
 
-  const tenantRouter = new Router<KoaState.IGUHealth, Koa.DefaultContext>({
+  const tenantRouter = new Router<
+    KoaExtensions.IGUHealth,
+    KoaExtensions.DefaultContext
+  >({
     prefix: "/w/:tenant",
   });
 
@@ -254,7 +266,10 @@ export default async function createServer(): Promise<
     await next();
   });
 
-  const tenantAPIV1Router = new Router<KoaState.IGUHealth, Koa.DefaultContext>({
+  const tenantAPIV1Router = new Router<
+    KoaExtensions.IGUHealth,
+    KoaExtensions.DefaultContext
+  >({
     prefix: "/api/v1",
   });
 
@@ -267,21 +282,24 @@ export default async function createServer(): Promise<
   );
 
   // Instantiate OIDC routes
-  const tenantOIDCRouter = await createOIDCRouter<KoaState.IGUHealth>("/oidc", {
-    authMiddlewares,
-    middleware: [
-      injectTenantManagement(),
-      setAllowSignup(process.env.AUTH_ALLOW_TENANT_SIGNUP === "true"),
-      // Inject tenant.
-      async (ctx, next) => {
-        ctx.state.oidc = {
-          ...ctx.state.oidc,
-          tenant: ctx.state.iguhealth.tenant,
-        };
-        await next();
-      },
-    ],
-  });
+  const tenantOIDCRouter = await createOIDCRouter<KoaExtensions.IGUHealth>(
+    "/oidc",
+    {
+      authMiddlewares,
+      middleware: [
+        injectTenantManagement(),
+        setAllowSignup(process.env.AUTH_ALLOW_TENANT_SIGNUP === "true"),
+        // Inject tenant.
+        async (ctx, next) => {
+          ctx.state.oidc = {
+            ...ctx.state.oidc,
+            tenant: ctx.state.iguhealth.tenant,
+          };
+          await next();
+        },
+      ],
+    },
+  );
 
   tenantRouter.use(tenantOIDCRouter.routes());
   tenantRouter.use(tenantOIDCRouter.allowedMethods());

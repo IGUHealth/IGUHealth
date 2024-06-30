@@ -8,10 +8,10 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { KoaState } from "../../fhir-api/types.js";
+import { KoaExtensions } from "../../fhir-api/types.js";
 
 function findCurrentTenant(
-  state: KoaState.IGUHealth,
+  state: KoaExtensions.IGUHealth,
 ): TenantClaim<s.user_role> | undefined {
   return state.user?.[CUSTOM_CLAIMS.TENANTS].find(
     (t: TenantClaim<s.user_role>) => t.id === state.iguhealth.tenant,
@@ -25,8 +25,8 @@ function findCurrentTenant(
  * @param next Koa Next function.
  */
 export async function verifyAndAssociateUserFHIRContext<
-  State extends KoaState.IGUHealth,
-  Context extends Koa.DefaultContext,
+  State extends KoaExtensions.IGUHealth,
+  Context extends KoaExtensions.DefaultContext,
 >(ctx: Koa.ParameterizedContext<State, Context>, next: Koa.Next) {
   if (!ctx.state.iguhealth.tenant) {
     throw new OperationError(outcomeError("invalid", "No tenant present."));

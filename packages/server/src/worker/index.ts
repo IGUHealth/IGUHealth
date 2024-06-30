@@ -455,7 +455,7 @@ function processSubscription(
       }
     } catch (e) {
       logger.error(e);
-      Sentry.logError(e, ctx);
+      Sentry.logError(e);
       let errorDescription = "Subscription failed to process";
 
       if (isOperationError(e)) {

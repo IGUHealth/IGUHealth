@@ -4,7 +4,7 @@ import type * as s from "zapatos/schema";
 import { TenantClaim, TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaState } from "../../../fhir-api/types.js";
+import { KoaExtensions } from "../../../fhir-api/types.js";
 import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
 import { UserManagement } from "./interface.js";
 import { LoginParameters, USER_QUERY_COLS, User } from "./types.js";
@@ -18,7 +18,7 @@ export default class TenantUserManagement implements UserManagement {
   }
 
   async getTenantClaims(
-    ctx: KoaState.IGUHealthServices["iguhealth"],
+    ctx: KoaExtensions.IGUHealthServices["iguhealth"],
     id: string,
   ): Promise<TenantClaim<s.user_role>[]> {
     const user = await this.get(ctx, id);
@@ -36,7 +36,7 @@ export default class TenantUserManagement implements UserManagement {
   }
 
   async login<T extends keyof LoginParameters>(
-    ctx: KoaState.IGUHealthServices["iguhealth"],
+    ctx: KoaExtensions.IGUHealthServices["iguhealth"],
     type: T,
     parameters: LoginParameters[T],
   ): Promise<User | undefined> {
@@ -68,7 +68,7 @@ export default class TenantUserManagement implements UserManagement {
   }
 
   async get(
-    ctx: KoaState.IGUHealthServices["iguhealth"],
+    ctx: KoaExtensions.IGUHealthServices["iguhealth"],
     id: string,
   ): Promise<User | undefined> {
     const tenantUser: User | undefined = (await db
@@ -82,7 +82,7 @@ export default class TenantUserManagement implements UserManagement {
     return tenantUser;
   }
   async search(
-    ctx: KoaState.IGUHealthServices["iguhealth"],
+    ctx: KoaExtensions.IGUHealthServices["iguhealth"],
     where: s.users.Whereable,
   ): Promise<User[]> {
     return db
@@ -94,7 +94,7 @@ export default class TenantUserManagement implements UserManagement {
       .run(ctx.db);
   }
   async create(
-    ctx: KoaState.IGUHealthServices["iguhealth"],
+    ctx: KoaExtensions.IGUHealthServices["iguhealth"],
     user: s.users.Insertable,
   ): Promise<User> {
     return await db
@@ -102,7 +102,7 @@ export default class TenantUserManagement implements UserManagement {
       .run(ctx.db);
   }
   async update(
-    ctx: KoaState.IGUHealthServices["iguhealth"],
+    ctx: KoaExtensions.IGUHealthServices["iguhealth"],
     id: string,
     update: s.users.Updatable,
   ): Promise<User> {
@@ -132,7 +132,7 @@ export default class TenantUserManagement implements UserManagement {
     });
   }
   async delete(
-    ctx: KoaState.IGUHealthServices["iguhealth"],
+    ctx: KoaExtensions.IGUHealthServices["iguhealth"],
     where_: s.users.Whereable,
   ): Promise<void> {
     await FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {

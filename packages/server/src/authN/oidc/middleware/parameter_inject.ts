@@ -2,10 +2,10 @@ import * as Koa from "koa";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaState } from "../../../fhir-api/types.js";
+import { KoaExtensions } from "../../../fhir-api/types.js";
 import { getClientId } from "../client_credentials_verification.js";
 
-type Parameters = KoaState.OIDC["oidc"]["parameters"];
+type Parameters = KoaExtensions.OIDC["oidc"]["parameters"];
 type ParameterKey = keyof Parameters;
 
 /**
@@ -41,7 +41,7 @@ export function createValidateInjectOIDCParameters({
 }: {
   required?: ParameterKey[];
   optional?: ParameterKey[];
-}): Koa.Middleware<KoaState.IGUHealth, Koa.DefaultContext> {
+}): Koa.Middleware<KoaExtensions.IGUHealth, KoaExtensions.DefaultContext> {
   return async (ctx, next) => {
     const params = [
       ...(required ?? []).map((p) => ({ required: true, param: p })),

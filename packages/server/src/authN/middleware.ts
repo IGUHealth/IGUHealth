@@ -15,7 +15,7 @@ import {
 } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaState, asRoot } from "../fhir-api/types.js";
+import { KoaExtensions, asRoot } from "../fhir-api/types.js";
 import { getJWKS } from "./certifications.js";
 import {
   authenticateClientCredentials,
@@ -49,8 +49,8 @@ interface ValidateUserJWTMiddlewareOptions {
  * @param next
  */
 export async function verifyBasicAuth<
-  State extends KoaState.IGUHealth,
-  Context extends Koa.DefaultContext,
+  State extends KoaExtensions.IGUHealth,
+  Context extends KoaExtensions.DefaultContext,
 >(ctx: Koa.ParameterizedContext<State, Context>, next: Koa.Next) {
   const authHeader = ctx.req.headers.authorization;
 

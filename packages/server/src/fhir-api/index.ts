@@ -43,7 +43,7 @@ import createCapabilitiesMiddleware from "./middleware/capabilities.js";
 import createEncryptionMiddleware from "./middleware/encryption.js";
 import createCheckTenantUsageMiddleware from "./middleware/usageCheck.js";
 import createValidationMiddleware from "./middleware/validation.js";
-import { IGUHealthServerCTX, KoaState } from "./types.js";
+import { IGUHealthServerCTX, KoaExtensions } from "./types.js";
 
 const R4_SPECIAL_TYPES: {
   MEMORY: ResourceType<R4>[];

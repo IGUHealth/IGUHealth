@@ -1,3 +1,4 @@
+import type Koa from "koa";
 import type { Logger } from "pino";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
@@ -38,7 +39,12 @@ import type { EncryptionProvider } from "../encryption/provider/interface.js";
 import type { TerminologyProvider } from "../fhir-terminology/interface.js";
 import type { Lock } from "../synchronization/interfaces.js";
 
-export namespace KoaState {
+export namespace KoaExtensions {
+  export type DefaultContext = {
+    params: Record<string, string>;
+    request: Koa.Request;
+    [key: string]: unknown;
+  };
   export type OIDC = {
     oidc: {
       sessionLogin: typeof sessionLogin;

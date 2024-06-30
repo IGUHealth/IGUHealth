@@ -13,7 +13,7 @@ import {
 } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaState } from "../../../fhir-api/types.js";
+import { KoaExtensions } from "../../../fhir-api/types.js";
 import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
 import {
   getCertKey,
@@ -34,8 +34,8 @@ function isRecord(value: unknown): value is Record<string, unknown> {
  * Returns an access token that can be used to access protected resources.
  */
 export function tokenPost<
-  State extends KoaState.IGUHealth,
-  C extends Koa.DefaultContext,
+  State extends KoaExtensions.IGUHealth,
+  C extends KoaExtensions.DefaultContext,
 >(): Koa.Middleware<State, C> {
   return async (ctx) => {
     const body = (ctx.request as unknown as Record<string, unknown>).body;
@@ -52,7 +52,9 @@ export function tokenPost<
     }
 
     if (
-      !ctx.state.oidc.client?.grantType.includes(body.grant_type?.toString() as code)
+      !ctx.state.oidc.client?.grantType.includes(
+        body.grant_type?.toString() as code,
+      )
     ) {
       throw new OperationError(
         outcomeError(
@@ -81,9 +83,12 @@ export function tokenPost<
               );
             }
 
-            const code = await ctx.state.oidc.codeManagement.search(fhirContext, {
-              code: body.code,
-            });
+            const code = await ctx.state.oidc.codeManagement.search(
+              fhirContext,
+              {
+                code: body.code,
+              },
+            );
 
             if (code.length !== 1 || code[0].is_expired)
               throw new OperationError(outcomeError("invalid", "Invalid code"));
@@ -171,7 +176,9 @@ export function tokenPost<
           );
         }
 
-        if (!authenticateClientCredentials(ctx.state.oidc.client, credentials)) {
+        if (
+          !authenticateClientCredentials(ctx.state.oidc.client, credentials)
+        ) {
           throw new OperationError(
             outcomeError("security", "Invalid credentials for client."),
           );

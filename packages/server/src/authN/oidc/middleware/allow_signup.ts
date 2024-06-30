@@ -1,6 +1,6 @@
 import * as Koa from "koa";
 
-import { KoaState } from "../../../fhir-api/types.js";
+import { KoaExtensions } from "../../../fhir-api/types.js";
 
 /**
  * Inject Tenant management into the context.
@@ -8,7 +8,10 @@ import { KoaState } from "../../../fhir-api/types.js";
  */
 export function setAllowSignup(
   allowSignup: boolean,
-): Koa.Middleware<KoaState.IGUHealthServices, Koa.DefaultContext> {
+): Koa.Middleware<
+  KoaExtensions.IGUHealthServices,
+  KoaExtensions.DefaultContext
+> {
   return async (ctx, next) => {
     ctx.state = {
       ...ctx.state,
