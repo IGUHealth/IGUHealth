@@ -2,13 +2,13 @@ import * as Koa from "koa";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaContext } from "../../../fhir-api/types.js";
+import { KoaState } from "../../../fhir-api/types.js";
 import { ADMIN_APP } from "../hardcodedClients/admin-app.js";
 
 export function injectHardcodedClients<
   State,
   C extends Koa.DefaultContext,
->(): Koa.Middleware<State, C & KoaContext.OIDC> {
+>(): Koa.Middleware<State, C & KoaState.OIDC> {
   return async (ctx, next) => {
     const clientId = ctx.oidc.parameters.client_id;
 

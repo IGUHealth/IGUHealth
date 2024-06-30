@@ -44,7 +44,7 @@ export function authorizeGET(): OIDCRouteHandler {
         );
       }
 
-      const code = await ctx.oidc.codeManagement.create(ctx.iguhealth, {
+      const code = await ctx.oidc.codeManagement.create(ctx.state.iguhealth, {
         type: "oauth2_code_grant",
         client_id: client.id,
         // Should be safe to use here as is authenticated so user should be populated.

@@ -3,7 +3,7 @@ import { stripUrlQueryAndFragment } from "@sentry/utils";
 import type Koa from "koa";
 import pg from "pg";
 
-import { KoaContext } from "../fhir-api/types.js";
+import { KoaState } from "../fhir-api/types.js";
 
 export function enableSentry(
   sentryDSN: string,
@@ -75,7 +75,7 @@ export async function sentrySpan<T>(
 // this tracing middleware creates a transaction per request
 export function tracingMiddleWare<
   State extends Koa.DefaultState,
-  Context extends KoaContext.IGUHealth<Koa.DefaultContext>,
+  Context extends KoaState.IGUHealth<Koa.DefaultContext>,
 >(dsn: string | undefined): Koa.Middleware<State, Context> {
   return async (
     ctx: Koa.ParameterizedContext<State, Context>,

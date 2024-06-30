@@ -2,7 +2,7 @@ import * as s from "zapatos/schema";
 
 import { TenantClaim } from "@iguhealth/jwt";
 
-import { KoaContext } from "../../../fhir-api/types.js";
+import { KoaState } from "../../../fhir-api/types.js";
 import { ModelManagement } from "../interface.js";
 import { LoginParameters, User } from "./types.js";
 
@@ -14,12 +14,12 @@ export interface UserManagement
     s.users.Updatable
   > {
   login<T extends keyof LoginParameters>(
-    ctx: KoaContext.IGUHealthServices["iguhealth"],
+    ctx: KoaState.IGUHealthServices["iguhealth"],
     type: T,
     parameters: LoginParameters[T],
   ): Promise<User | undefined>;
   getTenantClaims(
-    ctx: KoaContext.IGUHealthServices["iguhealth"],
+    ctx: KoaState.IGUHealthServices["iguhealth"],
     id: string,
   ): Promise<TenantClaim<s.user_role>[]>;
 }

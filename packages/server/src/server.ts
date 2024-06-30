@@ -39,47 +39,45 @@ import { createOIDCRouter } from "./authN/oidc/index.js";
 import { setAllowSignup } from "./authN/oidc/middleware/allow_signup.js";
 import { injectTenantManagement } from "./authN/oidc/middleware/inject_management.js";
 import { verifyAndAssociateUserFHIRContext } from "./authZ/middleware/tenantAccess.js";
+import RedisCache from "./cache/providers/redis.js";
+import createEmailProvider from "./email/index.js";
+import createEncryptionProvider from "./encryption/index.js";
 import loadEnv from "./env.js";
 import {
-  associateServicesKoaMiddleware,
+  createClient,
   createFHIRAPI,
   getRedisClient,
   logger,
 } from "./fhir-api/index.js";
-import { KoaContext } from "./fhir-api/types.js";
+import { KoaState } from "./fhir-api/types.js";
 import {
   fhirResponseToHTTPResponse,
   httpRequestToFHIRRequest,
 } from "./fhir-http/index.js";
 import { createPGPool } from "./fhir-storage/providers/postgres/pg.js";
+import { TerminologyProviderMemory } from "./fhir-terminology/index.js";
 import * as MonitoringSentry from "./monitoring/sentry.js";
+import RedisLock from "./synchronization/redis.lock.js";
 import { LIB_VERSION } from "./version.js";
 import * as views from "./views/index.js";
 
 loadEnv();
 
-interface KoaFHIRMiddlewareState extends Koa.DefaultState {
-  user: { [key: string]: unknown };
-  access_token: string;
-}
-
 /**
- * Koa middleware that handles FHIR API requests. [Note expectation is ctx.iguhealth is set.]
+ * Koa middleware that handles FHIR API requests. [Note expectation is ctx.state.iguhealth is set.]
  * @returns Koa.Middleware[] that can be used to handle FHIR requests.
  */
-async function FHIRAPIKoaMiddleware<
-  T extends KoaFHIRMiddlewareState,
->(): Promise<
+async function FHIRAPIKoaMiddleware(): Promise<
   Koa.Middleware<
-    T,
-    KoaContext.IGUHealth<Koa.DefaultContext> &
-      Router.RouterParamContext<T, KoaContext.IGUHealth<Koa.DefaultContext>>
+    KoaState.IGUHealth,
+    Router.RouterParamContext<KoaState.IGUHealth, Koa.DefaultContext>
   >
 > {
   const fhirAPI = await createFHIRAPI();
 
   return async (ctx, next) => {
     let span;
+    // @ts-ignore
     const transaction = ctx.__sentry_transaction;
     if (transaction) {
       span = transaction.startChild({
@@ -87,13 +85,13 @@ async function FHIRAPIKoaMiddleware<
         op: "fhirserver",
       });
     }
-    if (!KoaContext.isFHIRServerAuthorizedUserCTX(ctx.iguhealth)) {
+    if (!KoaState.isFHIRServerAuthorizedUserCTX(ctx.state.iguhealth)) {
       throw new Error("FHIR Context is not authorized");
     }
 
     try {
       const response = await fhirAPI.request(
-        ctx.iguhealth,
+        ctx.state.iguhealth,
         httpRequestToFHIRRequest(ctx.params.fhirVersion, {
           url: `${ctx.params.fhirUrl || ""}${
             ctx.request.querystring ? `?${ctx.request.querystring}` : ""
@@ -119,9 +117,9 @@ async function FHIRAPIKoaMiddleware<
 }
 
 function createErrorHandlingMiddleware<T>(): Koa.Middleware<
-  T,
-  KoaContext.IGUHealth<Koa.DefaultContext> &
-    Router.RouterParamContext<T, KoaContext.IGUHealth<Koa.DefaultContext>>
+  KoaState.IGUHealth,
+  Koa.DefaultContext &
+    Router.RouterParamContext<KoaState.IGUHealth, Koa.DefaultContext>
 > {
   return async function errorHandlingMiddleware(ctx, next) {
     try {
@@ -182,23 +180,23 @@ export default async function createServer(): Promise<
     await createCertsIfNoneExists(getCertLocation(), getCertKey());
   }
 
-  const pool = createPGPool();
-
+  const redis = getRedisClient();
   const app = new Koa();
+  app.context.state = {
+    db: createPGPool(),
+    logger,
+    lock: new RedisLock(redis),
+    cache: new RedisCache(redis),
+    terminologyProvider: new TerminologyProviderMemory(),
+    encryptionProvider: createEncryptionProvider(),
+    emailProvider: createEmailProvider(),
+    ...createClient(),
+  };
 
   app.keys = process.env.SESSION_COOKIE_SECRETS.split(":").map((s) => s.trim());
 
-  const rootRouter = new Router<
-    Koa.DefaultState,
-    KoaContext.IGUHealth<Koa.DefaultContext>
-  >();
-
-  rootRouter.use(
-    "/",
-    createErrorHandlingMiddleware(),
-    await associateServicesKoaMiddleware(pool),
-  );
-
+  const rootRouter = new Router<KoaState.IGUHealth, Koa.DefaultContext>();
+  rootRouter.use("/", createErrorHandlingMiddleware());
   rootRouter.get(JWKS_GET, "/certs/jwks", async (ctx, next) => {
     const jwks = await getJWKS(getCertLocation());
     ctx.body = jwks;
@@ -230,10 +228,7 @@ export default async function createServer(): Promise<
   rootRouter.use(globalAuth.routes());
   rootRouter.use(globalAuth.allowedMethods());
 
-  const tenantRouter = new Router<
-    Koa.DefaultState,
-    KoaContext.IGUHealth<Koa.DefaultContext>
-  >({
+  const tenantRouter = new Router<KoaState.IGUHealth, Koa.DefaultContext>({
     prefix: "/w/:tenant",
   });
 
@@ -245,24 +240,21 @@ export default async function createServer(): Promise<
 
     const tenant = await db
       .selectOne("tenants", { id: ctx.params.tenant }, { columns: ["id"] })
-      .run(pool);
+      .run(ctx.state.iguhealth.db);
 
     if (!tenant) {
       throw new OperationError(outcomeError("not-found", "Tenant not found"));
     }
 
-    ctx.iguhealth = {
-      ...ctx.iguhealth,
+    ctx.state.iguhealth = {
+      ...ctx.state.iguhealth,
       tenant: tenant.id as TenantId,
     };
 
     await next();
   });
 
-  const tenantAPIV1Router = new Router<
-    Koa.DefaultState,
-    KoaContext.IGUHealth<Koa.DefaultContext>
-  >({
+  const tenantAPIV1Router = new Router<KoaState.IGUHealth, Koa.DefaultContext>({
     prefix: "/api/v1",
   });
 
@@ -271,22 +263,20 @@ export default async function createServer(): Promise<
     "/fhir/:fhirVersion/:fhirUrl*",
     // MonitoringSentry.tracingMiddleWare<KoaFHIRMiddlewareState>(process.env.SENTRY_SERVER_DSN),
     ...authMiddlewares,
-    await FHIRAPIKoaMiddleware<KoaFHIRMiddlewareState>(),
+    await FHIRAPIKoaMiddleware(),
   );
 
   // Instantiate OIDC routes
-  const tenantOIDCRouter = await createOIDCRouter<
-    KoaContext.IGUHealth<Koa.DefaultContext>
-  >("/oidc", {
+  const tenantOIDCRouter = await createOIDCRouter<KoaState.IGUHealth>("/oidc", {
     authMiddlewares,
     middleware: [
       injectTenantManagement(),
       setAllowSignup(process.env.AUTH_ALLOW_TENANT_SIGNUP === "true"),
       // Inject tenant.
       async (ctx, next) => {
-        ctx.oidc = {
-          ...ctx.oidc,
-          tenant: ctx.iguhealth.tenant,
+        ctx.state.oidc = {
+          ...ctx.state.oidc,
+          tenant: ctx.state.iguhealth.tenant,
         };
         await next();
       },

@@ -8,13 +8,13 @@ import {
   outcomeFatal,
 } from "@iguhealth/operation-outcomes";
 
-import { KoaContext } from "../../fhir-api/types.js";
+import { KoaState } from "../../fhir-api/types.js";
 
-function findCurrentTenant<Context extends Koa.DefaultContext>(
-  ctx: KoaContext.IGUHealth<Context>,
+function findCurrentTenant(
+  state: KoaState.IGUHealth,
 ): TenantClaim<s.user_role> | undefined {
-  return ctx.state.user[CUSTOM_CLAIMS.TENANTS]?.find(
-    (t: TenantClaim<s.user_role>) => t.id === ctx.iguhealth.tenant,
+  return state.user?.[CUSTOM_CLAIMS.TENANTS].find(
+    (t: TenantClaim<s.user_role>) => t.id === state.iguhealth.tenant,
   );
 }
 /**
@@ -25,14 +25,14 @@ function findCurrentTenant<Context extends Koa.DefaultContext>(
  * @param next Koa Next function.
  */
 export async function verifyAndAssociateUserFHIRContext<
-  State extends Koa.DefaultState,
-  Context extends KoaContext.IGUHealth<Koa.DefaultContext>,
+  State extends KoaState.IGUHealth,
+  Context extends Koa.DefaultContext,
 >(ctx: Koa.ParameterizedContext<State, Context>, next: Koa.Next) {
-  if (!ctx.iguhealth.tenant) {
+  if (!ctx.state.iguhealth.tenant) {
     throw new OperationError(outcomeError("invalid", "No tenant present."));
   }
 
-  const tenantClaim = findCurrentTenant(ctx);
+  const tenantClaim = findCurrentTenant(ctx.state);
   if (tenantClaim === undefined) {
     throw new OperationError(
       outcomeError(
@@ -43,15 +43,15 @@ export async function verifyAndAssociateUserFHIRContext<
   }
 
   if (
-    typeof ctx.state.user.sub !== "string" ||
-    typeof ctx.state.user.iss !== "string"
+    typeof ctx.state.user?.sub !== "string" ||
+    typeof ctx.state.user?.iss !== "string"
   )
     throw new OperationError(
       outcomeFatal("security", "JWT must have both sub and iss."),
     );
 
-  ctx.iguhealth = {
-    ...ctx.iguhealth,
+  ctx.state.iguhealth = {
+    ...ctx.state.iguhealth,
     user: {
       role: tenantClaim.userRole,
       jwt: ctx.state.user as AccessTokenPayload<s.user_role>,

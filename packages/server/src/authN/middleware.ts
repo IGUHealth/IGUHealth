@@ -15,7 +15,7 @@ import {
 } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaContext, asRoot } from "../fhir-api/types.js";
+import { KoaState, asRoot } from "../fhir-api/types.js";
 import { getJWKS } from "./certifications.js";
 import {
   authenticateClientCredentials,
@@ -49,8 +49,8 @@ interface ValidateUserJWTMiddlewareOptions {
  * @param next
  */
 export async function verifyBasicAuth<
-  State extends Koa.DefaultState,
-  Context extends KoaContext.IGUHealth<Koa.DefaultContext>,
+  State extends KoaState.IGUHealth,
+  Context extends Koa.DefaultContext,
 >(ctx: Koa.ParameterizedContext<State, Context>, next: Koa.Next) {
   const authHeader = ctx.req.headers.authorization;
 
@@ -62,8 +62,8 @@ export async function verifyBasicAuth<
       );
     }
 
-    const clientApplication = await ctx.iguhealth.client.read(
-      asRoot(ctx.iguhealth),
+    const clientApplication = await ctx.state.iguhealth.client.read(
+      asRoot(ctx.state.iguhealth),
       R4,
       "ClientApplication",
       credentials.client_id as id,
@@ -88,7 +88,7 @@ export async function verifyBasicAuth<
     }
 
     const token = await createClientCredentialToken(
-      ctx.iguhealth.tenant,
+      ctx.state.iguhealth.tenant,
       clientApplication,
     );
     ctx.req.headers.authorization = "Bearer " + token;

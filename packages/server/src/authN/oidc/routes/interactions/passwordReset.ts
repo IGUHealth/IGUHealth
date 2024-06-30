@@ -40,7 +40,7 @@ export function passwordResetGET(): OIDCRouteHandler {
     }
 
     const authorizationCodeSearch = await ctx.oidc.codeManagement.search(
-      ctx.iguhealth,
+      ctx.state.iguhealth,
       {
         type: "password_reset",
         code: queryCode,
@@ -142,7 +142,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
       return;
     }
 
-    const res = await ctx.oidc.codeManagement.search(ctx.iguhealth, {
+    const res = await ctx.oidc.codeManagement.search(ctx.state.iguhealth, {
       type: "password_reset",
       code: body.code,
     });
@@ -163,7 +163,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
     }
 
     await FHIRTransaction(
-      ctx.iguhealth,
+      ctx.state.iguhealth,
       db.IsolationLevel.Serializable,
       async (fhirContext) => {
         const update = await ctx.oidc.userManagement.update(
@@ -175,7 +175,7 @@ export function passwordResetPOST(): OIDCRouteHandler {
           },
         );
 
-        await ctx.iguhealth.client.update(
+        await ctx.state.iguhealth.client.update(
           asRoot({
             ...fhirContext,
             tenant: update.tenant as TenantId,
@@ -231,7 +231,7 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
       | { email?: string; password?: string }
       | undefined;
 
-    if (!ctx.iguhealth.emailProvider)
+    if (!ctx.state.iguhealth.emailProvider)
       throw new OperationError(
         outcomeFatal(
           "not-supported",
@@ -247,9 +247,12 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
       );
     }
 
-    const usersWithEmail = await ctx.oidc.userManagement.search(ctx.iguhealth, {
-      email: email,
-    });
+    const usersWithEmail = await ctx.oidc.userManagement.search(
+      ctx.state.iguhealth,
+      {
+        email: email,
+      },
+    );
 
     if (usersWithEmail.length > 1) {
       throw new OperationError(
@@ -260,7 +263,7 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
     const user = usersWithEmail[0];
     // Pretend email sent to avoid phishing for email addresses.
     if (!user) {
-      ctx.iguhealth.logger.warn(
+      ctx.state.iguhealth.logger.warn(
         `not sending password reset for non existing user: '${email}' `,
       );
       ctx.status = 200;
@@ -287,7 +290,7 @@ export function passwordResetInitiatePOST(): OIDCRouteHandler {
 
     await sendPasswordResetEmail(
       ctx.router,
-      { ...ctx.iguhealth, tenant: ctx.oidc.tenant },
+      { ...ctx.state.iguhealth, tenant: ctx.oidc.tenant },
       ctx.oidc.codeManagement,
       user,
     );

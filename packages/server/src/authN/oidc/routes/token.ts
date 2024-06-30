@@ -13,7 +13,7 @@ import {
 } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaContext } from "../../../fhir-api/types.js";
+import { KoaState } from "../../../fhir-api/types.js";
 import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
 import {
   getCertKey,
@@ -34,9 +34,9 @@ function isRecord(value: unknown): value is Record<string, unknown> {
  * Returns an access token that can be used to access protected resources.
  */
 export function tokenPost<
-  State,
+  State extends KoaState.IGUHealth,
   C extends Koa.DefaultContext,
->(): Koa.Middleware<State, KoaContext.IGUHealth<C>> {
+>(): Koa.Middleware<State, C> {
   return async (ctx) => {
     const body = (ctx.request as unknown as Record<string, unknown>).body;
     if (!isRecord(body)) {
@@ -68,7 +68,7 @@ export function tokenPost<
         const body = (ctx.request as unknown as Record<string, unknown>).body;
 
         const response = await FHIRTransaction(
-          ctx.iguhealth,
+          ctx.state.iguhealth,
           db.IsolationLevel.Serializable,
           async (fhirContext) => {
             if (!isRecord(body))
@@ -179,7 +179,7 @@ export function tokenPost<
 
         ctx.body = {
           access_token: await createClientCredentialToken(
-            ctx.iguhealth.tenant,
+            ctx.state.iguhealth.tenant,
             ctx.oidc.client,
           ),
           token_type: "Bearer",

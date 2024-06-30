@@ -16,9 +16,8 @@ import { R4, R4B, ResourceType } from "@iguhealth/fhir-types/versions";
 import { associateUserMiddleware } from "../authZ/middleware/associateUser.js";
 import createAuthorizationMiddleware from "../authZ/middleware/authorization.js";
 import RedisCache from "../cache/providers/redis.js";
-import { EmailProvider } from "../email/interface.js";
-import SendGrid from "../email/providers/sendgrid.js";
-import { AWSKMSProvider } from "../encryption/provider/kms.js";
+import createEmailProvider from "../email/index.js";
+import createEncryptionProvider from "../encryption/index.js";
 import AWSLambdaExecutioner from "../fhir-operation-executors/providers/awsLambda/index.js";
 // import IguhealthEncryptInvoke from "../fhir-operation-executors/providers/local/encrypt.js";
 import InlineExecutioner from "../fhir-operation-executors/providers/local/index.js";
@@ -44,7 +43,7 @@ import createCapabilitiesMiddleware from "./middleware/capabilities.js";
 import createEncryptionMiddleware from "./middleware/encryption.js";
 import createCheckTenantUsageMiddleware from "./middleware/usageCheck.js";
 import createValidationMiddleware from "./middleware/validation.js";
-import { IGUHealthServerCTX, KoaContext } from "./types.js";
+import { IGUHealthServerCTX, KoaState } from "./types.js";
 
 const R4_SPECIAL_TYPES: {
   MEMORY: ResourceType<R4>[];
@@ -121,7 +120,7 @@ export function getRedisClient(): Redis {
  * @param sources Client sources
  * @returns FHIRClientAsync instance
  */
-async function createFHIRClient(sources: RouterState["sources"]) {
+function createFHIRClient(sources: RouterState["sources"]) {
   return RouterClient(
     [
       createCheckTenantUsageMiddleware(),
@@ -134,22 +133,25 @@ async function createFHIRClient(sources: RouterState["sources"]) {
   );
 }
 
-export async function createFHIRServices(
-  pool: pg.Pool,
-): Promise<Omit<IGUHealthServerCTX, "tenant" | "user">> {
-  const memDBAsync = createArtifactMemoryDatabase({
+export function createClient() {
+  const memSource = createArtifactMemoryDatabase({
     r4: R4_SPECIAL_TYPES.MEMORY,
     r4b: R4B_SPECIAL_TYPES.MEMORY,
   });
-  const pgFHIR = createPostgresClient({
+  const pgSource = createPostgresClient({
     transaction_entry_limit: parseInt(
       process.env.POSTGRES_TRANSACTION_ENTRY_LIMIT || "20",
     ),
   });
-
-  const inlineOperationExecution = InlineExecutioner([
+  const lambdaSource = AWSLambdaExecutioner({
+    AWS_REGION: process.env.AWS_REGION as string,
+    AWS_ACCESS_KEY_ID: process.env.AWS_LAMBDA_ACCESS_KEY_ID as string,
+    AWS_ACCESS_KEY_SECRET: process.env.AWS_LAMBDA_ACCESS_KEY_SECRET as string,
+    LAMBDA_ROLE: process.env.AWS_LAMBDA_ROLE as string,
+    LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
+  });
+  const inlineSource = InlineExecutioner([
     StructureDefinitionSnapshotInvoke,
-    // IguhealthEncryptInvoke,
     ResourceValidateInvoke,
     ValueSetExpandInvoke,
     ValueSetValidateInvoke,
@@ -158,50 +160,21 @@ export async function createFHIRServices(
     IguhealthInviteUserInvoke,
     IguhealthUsageStatisticsInvoke,
   ]);
-
-  const lambdaExecutioner = AWSLambdaExecutioner({
-    AWS_REGION: process.env.AWS_REGION as string,
-    AWS_ACCESS_KEY_ID: process.env.AWS_LAMBDA_ACCESS_KEY_ID as string,
-    AWS_ACCESS_KEY_SECRET: process.env.AWS_LAMBDA_ACCESS_KEY_SECRET as string,
-    LAMBDA_ROLE: process.env.AWS_LAMBDA_ROLE as string,
-    LAYERS: [process.env.AWS_LAMBDA_LAYER_ARN as string],
-  });
-
-  const redis = getRedisClient();
-  const terminologyProvider = new TerminologyProviderMemory();
-  const encryptionProvider =
-    process.env.ENCRYPTION_TYPE === "aws"
-      ? new AWSKMSProvider({
-          clientConfig: {
-            credentials: {
-              accessKeyId: process.env.AWS_KMS_ACCESS_KEY_ID as string,
-              secretAccessKey: process.env.AWS_KMS_ACCESS_KEY_SECRET as string,
-            },
-          },
-          generatorKeyARN: process.env.AWS_ENCRYPTION_GENERATOR_KEY as string,
-          encryptorKeyARNS: [process.env.AWS_ENCRYPTION_KEY as string],
-        })
-      : undefined;
-
-  const lock = new RedisLock(redis);
-  const cache = new RedisCache(redis);
-  const emailProvider = createEmailProvider();
-
-  const client = await createFHIRClient([
+  const client = createFHIRClient([
     // OP INVOCATION
     {
       filter: {
         useSource: (request) => {
           return (
             request.type === "invoke-request" &&
-            inlineOperationExecution
+            inlineSource
               .supportedOperations()
               .map((op) => op.code)
               .includes(request.operation)
           );
         },
       },
-      source: inlineOperationExecution,
+      source: inlineSource,
     },
     {
       filter: {
@@ -211,7 +184,7 @@ export async function createFHIRServices(
           interactionsSupported: ["invoke-request"],
         },
       },
-      source: lambdaExecutioner,
+      source: lambdaSource,
     },
     {
       filter: {
@@ -226,7 +199,7 @@ export async function createFHIRServices(
           interactionsSupported: ["read-request", "search-request"],
         },
       },
-      source: memDBAsync,
+      source: memSource,
     },
     {
       filter: {
@@ -236,7 +209,7 @@ export async function createFHIRServices(
           interactionsSupported: AUTH_METHODS_ALLOWED,
         },
       },
-      source: createAuthStorageClient(pgFHIR),
+      source: createAuthStorageClient(pgSource),
     },
     {
       filter: {
@@ -273,53 +246,39 @@ export async function createFHIRServices(
           ],
         },
       },
-      source: pgFHIR,
+      source: pgSource,
     },
   ]);
 
   return {
-    db: pool,
-    logger: logger,
+    resolveCanonical: memSource.resolveCanonical,
+    resolveTypeToCanonical: memSource.resolveTypeToCanonical,
+    client,
+  };
+}
+
+export async function createFHIRServices(
+  db: pg.Pool,
+): Promise<Omit<IGUHealthServerCTX, "tenant" | "user">> {
+  const terminologyProvider = new TerminologyProviderMemory();
+  const redis = getRedisClient();
+  const encryptionProvider = createEncryptionProvider();
+  const lock = new RedisLock(redis);
+  const cache = new RedisCache(redis);
+  const emailProvider = createEmailProvider();
+  const { client, resolveCanonical, resolveTypeToCanonical } = createClient();
+
+  return {
+    db,
+    logger,
     lock,
     cache,
     terminologyProvider,
     encryptionProvider,
     emailProvider,
-
-    resolveCanonical: memDBAsync.resolveCanonical,
-    resolveTypeToCanonical: memDBAsync.resolveTypeToCanonical,
+    resolveCanonical,
+    resolveTypeToCanonical,
     client,
-  };
-}
-
-function createEmailProvider(): EmailProvider | undefined {
-  switch (process.env.EMAIL_PROVIDER) {
-    case "sendgrid": {
-      if (!process.env.EMAIL_SENDGRID_API_KEY)
-        throw new Error("EMAIL_SENDGRID_API_KEY not set");
-      return new SendGrid(process.env.EMAIL_SENDGRID_API_KEY as string);
-    }
-    default:
-      return undefined;
-  }
-}
-
-export async function associateServicesKoaMiddleware<State, Context>(
-  pool: pg.Pool,
-): Promise<
-  koa.Middleware<
-    State,
-    (Context & KoaContext.IGUHealthServices) &
-      Router.RouterParamContext<State, Context & KoaContext.IGUHealthServices>
-  >
-> {
-  const fhirServices = await createFHIRServices(pool);
-
-  fhirServices.logger.info("FHIR Services created");
-
-  return async (ctx, next) => {
-    ctx.iguhealth = fhirServices;
-    await next();
   };
 }
 

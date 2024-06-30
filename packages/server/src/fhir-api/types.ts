@@ -19,6 +19,7 @@ import {
   Resource,
 } from "@iguhealth/fhir-types/versions";
 import {
+  AccessToken,
   AccessTokenPayload,
   CUSTOM_CLAIMS,
   IGUHEALTH_ISSUER,
@@ -37,7 +38,7 @@ import type { EncryptionProvider } from "../encryption/provider/interface.js";
 import type { TerminologyProvider } from "../fhir-terminology/interface.js";
 import type { Lock } from "../synchronization/interfaces.js";
 
-export namespace KoaContext {
+export namespace KoaState {
   export type OIDC = {
     oidc: {
       sessionLogin: typeof sessionLogin;
@@ -63,13 +64,14 @@ export namespace KoaContext {
     };
   };
 
-  export type IGUHealth<C> = C &
-    OIDC &
+  export type IGUHealth = OIDC &
     IGUHealthServices & {
       iguhealth: Omit<IGUHealthServerCTX, "user"> | IGUHealthServerCTX;
     };
 
   export type IGUHealthServices = {
+    user: AccessTokenPayload<s.user_role> | undefined;
+    access_token: AccessToken<s.user_role>;
     iguhealth: Omit<IGUHealthServerCTX, "user" | "tenant">;
   };
 

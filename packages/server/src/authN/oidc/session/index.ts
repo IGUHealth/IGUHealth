@@ -16,13 +16,13 @@ export async function deserializeUser(
   try {
     const id = ctx.session?.[USER_SESSION_KEY];
     if (!id) return undefined;
-    const user = await ctx.oidc.userManagement.get(ctx.iguhealth, id);
+    const user = await ctx.oidc.userManagement.get(ctx.state.iguhealth, id);
     if (!user) {
       return undefined;
     }
     return user;
   } catch (err) {
-    ctx.iguhealth.logger.error(err);
+    ctx.state.iguhealth.logger.error(err);
     return undefined;
   }
 }
@@ -48,7 +48,7 @@ export async function sessionLogin<Method extends keyof LoginParameters>(
   }
 
   const user = await ctx.oidc.userManagement.login(
-    ctx.iguhealth,
+    ctx.state.iguhealth,
     method,
     credentials,
   );
