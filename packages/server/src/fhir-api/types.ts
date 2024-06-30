@@ -63,7 +63,7 @@ export namespace KoaContext {
     };
   };
 
-  export type IGUHealthKoa<C> = C &
+  export type IGUHealth<C> = C &
     OIDC &
     IGUHealthServices & {
       iguhealth: Omit<IGUHealthServerCTX, "user"> | IGUHealthServerCTX;

@@ -15,7 +15,7 @@ export function clientInjectFHIRMiddleware<State>(): Koa.Middleware<
   State,
   Koa.DefaultContext &
     KoaContext.OIDC &
-    KoaContext.IGUHealthKoa<Koa.DefaultContext>
+    KoaContext.IGUHealth<Koa.DefaultContext>
 > {
   return async (ctx, next) => {
     if (!ctx.oidc.client) {

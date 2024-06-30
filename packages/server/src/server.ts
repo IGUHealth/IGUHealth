@@ -72,8 +72,8 @@ async function FHIRAPIKoaMiddleware<
 >(): Promise<
   Koa.Middleware<
     T,
-    KoaContext.IGUHealthKoa<Koa.DefaultContext> &
-      Router.RouterParamContext<T, KoaContext.IGUHealthKoa<Koa.DefaultContext>>
+    KoaContext.IGUHealth<Koa.DefaultContext> &
+      Router.RouterParamContext<T, KoaContext.IGUHealth<Koa.DefaultContext>>
   >
 > {
   const fhirAPI = await createFHIRAPI();
@@ -120,8 +120,8 @@ async function FHIRAPIKoaMiddleware<
 
 function createErrorHandlingMiddleware<T>(): Koa.Middleware<
   T,
-  KoaContext.IGUHealthKoa<Koa.DefaultContext> &
-    Router.RouterParamContext<T, KoaContext.IGUHealthKoa<Koa.DefaultContext>>
+  KoaContext.IGUHealth<Koa.DefaultContext> &
+    Router.RouterParamContext<T, KoaContext.IGUHealth<Koa.DefaultContext>>
 > {
   return async function errorHandlingMiddleware(ctx, next) {
     try {
@@ -190,7 +190,7 @@ export default async function createServer(): Promise<
 
   const rootRouter = new Router<
     Koa.DefaultState,
-    KoaContext.IGUHealthKoa<Koa.DefaultContext>
+    KoaContext.IGUHealth<Koa.DefaultContext>
   >();
 
   rootRouter.use(
@@ -232,7 +232,7 @@ export default async function createServer(): Promise<
 
   const tenantRouter = new Router<
     Koa.DefaultState,
-    KoaContext.IGUHealthKoa<Koa.DefaultContext>
+    KoaContext.IGUHealth<Koa.DefaultContext>
   >({
     prefix: "/w/:tenant",
   });
@@ -261,7 +261,7 @@ export default async function createServer(): Promise<
 
   const tenantAPIV1Router = new Router<
     Koa.DefaultState,
-    KoaContext.IGUHealthKoa<Koa.DefaultContext>
+    KoaContext.IGUHealth<Koa.DefaultContext>
   >({
     prefix: "/api/v1",
   });
@@ -276,7 +276,7 @@ export default async function createServer(): Promise<
 
   // Instantiate OIDC routes
   const tenantOIDCRouter = await createOIDCRouter<
-    KoaContext.IGUHealthKoa<Koa.DefaultContext>
+    KoaContext.IGUHealth<Koa.DefaultContext>
   >("/oidc", {
     authMiddlewares,
     middleware: [

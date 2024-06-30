@@ -50,7 +50,7 @@ interface ValidateUserJWTMiddlewareOptions {
  */
 export async function verifyBasicAuth<
   State extends Koa.DefaultState,
-  Context extends KoaContext.IGUHealthKoa<Koa.DefaultContext>,
+  Context extends KoaContext.IGUHealth<Koa.DefaultContext>,
 >(ctx: Koa.ParameterizedContext<State, Context>, next: Koa.Next) {
   const authHeader = ctx.req.headers.authorization;
 
