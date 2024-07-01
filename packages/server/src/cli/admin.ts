@@ -15,10 +15,17 @@ import { TenantId } from "@iguhealth/jwt";
 
 import { TenantManagement } from "../authN/db/tenant.js";
 import TenantUserManagement from "../authN/db/users/index.js";
-import { createFHIRServices } from "../fhir-api/index.js";
+import RedisCache from "../cache/providers/redis.js";
+import {
+  createClient,
+  createLogger,
+  getRedisClient,
+} from "../fhir-api/index.js";
 import { IGUHealthServerCTX, asRoot } from "../fhir-api/types.js";
 import { createPGPool } from "../fhir-storage/providers/postgres/pg.js";
 import { FHIRTransaction } from "../fhir-storage/transactions.js";
+import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
+import RedisLock from "../synchronization/redis.lock.js";
 
 async function getTenant(
   ctx: Omit<IGUHealthServerCTX, "tenant" | "user">,
@@ -126,8 +133,15 @@ function tenantCommands(command: Command) {
     .option("-e, --email <email>", "Email for root user")
     .option("-p, --password <password>", "Password for root user")
     .action(async (options) => {
-      const pool = createPGPool();
-      const services = await createFHIRServices(pool);
+      const redis = getRedisClient();
+      const services: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
+        db: createPGPool(),
+        lock: new RedisLock(redis),
+        cache: new RedisCache(redis),
+        logger: createLogger(),
+        terminologyProvider: new TerminologyProviderMemory(),
+        ...createClient(),
+      };
 
       await createTenant(options, services);
 
@@ -142,8 +156,15 @@ function clientAppCommands(command: Command) {
     .requiredOption("-t, --tenant <tenant>", "Id for tenant")
     .requiredOption("-s, --secret <secret>", "Secret for client app")
     .action(async (options) => {
-      const pool = createPGPool();
-      const services = await createFHIRServices(pool);
+      const redis = getRedisClient();
+      const services: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
+        db: createPGPool(),
+        lock: new RedisLock(redis),
+        cache: new RedisCache(redis),
+        logger: createLogger(),
+        terminologyProvider: new TerminologyProviderMemory(),
+        ...createClient(),
+      };
 
       const transaction = await services.client.transaction(
         asRoot({ ...services, tenant: options.tenant }),

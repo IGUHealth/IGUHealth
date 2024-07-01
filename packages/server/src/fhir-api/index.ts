@@ -1,5 +1,4 @@
 import { Redis } from "ioredis";
-import pg from "pg";
 import { pino } from "pino";
 
 import { AsynchronousClient } from "@iguhealth/client";
@@ -13,11 +12,7 @@ import { R4, R4B, ResourceType } from "@iguhealth/fhir-types/versions";
 
 import { associateUserMiddleware } from "../authZ/middleware/associateUser.js";
 import createAuthorizationMiddleware from "../authZ/middleware/authorization.js";
-import RedisCache from "../cache/providers/redis.js";
-import createEmailProvider from "../email/index.js";
-import createEncryptionProvider from "../encryption/index.js";
 import AWSLambdaExecutioner from "../fhir-operation-executors/providers/awsLambda/index.js";
-// import IguhealthEncryptInvoke from "../fhir-operation-executors/providers/local/encrypt.js";
 import InlineExecutioner from "../fhir-operation-executors/providers/local/index.js";
 import IguhealthInviteUserInvoke from "../fhir-operation-executors/providers/local/invite_user.js";
 import IguhealthMessagePostInvoke from "../fhir-operation-executors/providers/local/message_post.js";
@@ -35,8 +30,6 @@ import {
 import { createArtifactMemoryDatabase } from "../fhir-storage/providers/memory/async.js";
 import { createPostgresClient } from "../fhir-storage/providers/postgres/index.js";
 import RouterClient from "../fhir-storage/router.js";
-import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
-import RedisLock from "../synchronization/redis.lock.js";
 import createCapabilitiesMiddleware from "./middleware/capabilities.js";
 import createEncryptionMiddleware from "./middleware/encryption.js";
 import createCheckTenantUsageMiddleware from "./middleware/usageCheck.js";
@@ -252,31 +245,6 @@ export function createClient() {
   return {
     resolveCanonical: memSource.resolveCanonical,
     resolveTypeToCanonical: memSource.resolveTypeToCanonical,
-    client,
-  };
-}
-
-export async function createFHIRServices(
-  db: pg.Pool,
-): Promise<Omit<IGUHealthServerCTX, "tenant" | "user">> {
-  const terminologyProvider = new TerminologyProviderMemory();
-  const redis = getRedisClient();
-  const encryptionProvider = createEncryptionProvider();
-  const lock = new RedisLock(redis);
-  const cache = new RedisCache(redis);
-  const emailProvider = createEmailProvider();
-  const { client, resolveCanonical, resolveTypeToCanonical } = createClient();
-
-  return {
-    db,
-    logger: createLogger(),
-    lock,
-    cache,
-    terminologyProvider,
-    encryptionProvider,
-    emailProvider,
-    resolveCanonical,
-    resolveTypeToCanonical,
     client,
   };
 }
