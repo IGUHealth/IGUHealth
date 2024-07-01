@@ -1,3 +1,5 @@
+import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
+
 import { OIDCRouteHandler } from "../index.js";
 
 type UserInfoResponse = {
@@ -11,11 +13,14 @@ type UserInfoResponse = {
 
 export function userInfo(): OIDCRouteHandler {
   return async (ctx, next) => {
-    const user = await ctx.oidc.userManagement.get(
-      ctx.iguhealth,
-      // [TODO]
-      //@ts-ignore
-      ctx.iguhealth.user.jwt.sub,
+    if (!ctx.state.user) {
+      throw new OperationError(
+        outcomeError("forbidden", "User is not authenticated."),
+      );
+    }
+    const user = await ctx.state.oidc.userManagement.get(
+      ctx.state.iguhealth,
+      ctx.state.user.sub,
     );
     ctx.body = {
       sub: user?.id,

@@ -13,7 +13,7 @@ import {
 } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaContext } from "../../../fhir-api/types.js";
+import { KoaExtensions } from "../../../fhir-api/types.js";
 import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
 import {
   getCertKey,
@@ -34,9 +34,9 @@ function isRecord(value: unknown): value is Record<string, unknown> {
  * Returns an access token that can be used to access protected resources.
  */
 export function tokenPost<
-  State,
-  C extends Koa.DefaultContext,
->(): Koa.Middleware<State, KoaContext.IGUHealth<C>> {
+  State extends KoaExtensions.IGUHealth,
+  C extends KoaExtensions.DefaultContext,
+>(): Koa.Middleware<State, C> {
   return async (ctx) => {
     const body = (ctx.request as unknown as Record<string, unknown>).body;
     if (!isRecord(body)) {
@@ -45,14 +45,16 @@ export function tokenPost<
       );
     }
 
-    if (!ctx.oidc.client) {
+    if (!ctx.state.oidc.client) {
       throw new OperationError(
         outcomeError("invalid", "Could not find client in context."),
       );
     }
 
     if (
-      !ctx.oidc.client?.grantType.includes(body.grant_type?.toString() as code)
+      !ctx.state.oidc.client?.grantType.includes(
+        body.grant_type?.toString() as code,
+      )
     ) {
       throw new OperationError(
         outcomeError(
@@ -68,7 +70,7 @@ export function tokenPost<
         const body = (ctx.request as unknown as Record<string, unknown>).body;
 
         const response = await FHIRTransaction(
-          ctx.iguhealth,
+          ctx.state.iguhealth,
           db.IsolationLevel.Serializable,
           async (fhirContext) => {
             if (!isRecord(body))
@@ -81,18 +83,21 @@ export function tokenPost<
               );
             }
 
-            const code = await ctx.oidc.codeManagement.search(fhirContext, {
-              code: body.code,
-            });
+            const code = await ctx.state.oidc.codeManagement.search(
+              fhirContext,
+              {
+                code: body.code,
+              },
+            );
 
             if (code.length !== 1 || code[0].is_expired)
               throw new OperationError(outcomeError("invalid", "Invalid code"));
-            if (code[0].client_id !== ctx.oidc.client?.id)
+            if (code[0].client_id !== ctx.state.oidc.client?.id)
               throw new OperationError(
                 outcomeError("invalid", "Invalid client"),
               );
 
-            const user = await ctx.oidc.userManagement.get(
+            const user = await ctx.state.oidc.userManagement.get(
               fhirContext,
               code[0].user_id,
             );
@@ -100,7 +105,7 @@ export function tokenPost<
             if (!user)
               throw new OperationError(outcomeError("invalid", "Invalid user"));
 
-            await ctx.oidc.codeManagement.delete(fhirContext, {
+            await ctx.state.oidc.codeManagement.delete(fhirContext, {
               id: code[0].id,
             });
 
@@ -112,7 +117,7 @@ export function tokenPost<
             const accessTokenPayload: AccessTokenPayload<s.user_role> = {
               iss: IGUHEALTH_ISSUER,
               [CUSTOM_CLAIMS.TENANTS]:
-                await ctx.oidc.userManagement.getTenantClaims(
+                await ctx.state.oidc.userManagement.getTenantClaims(
                   fhirContext,
                   user.id,
                 ),
@@ -171,7 +176,9 @@ export function tokenPost<
           );
         }
 
-        if (!authenticateClientCredentials(ctx.oidc.client, credentials)) {
+        if (
+          !authenticateClientCredentials(ctx.state.oidc.client, credentials)
+        ) {
           throw new OperationError(
             outcomeError("security", "Invalid credentials for client."),
           );
@@ -179,8 +186,8 @@ export function tokenPost<
 
         ctx.body = {
           access_token: await createClientCredentialToken(
-            ctx.iguhealth.tenant,
-            ctx.oidc.client,
+            ctx.state.iguhealth.tenant,
+            ctx.state.oidc.client,
           ),
           token_type: "Bearer",
           expires_in: 7200,

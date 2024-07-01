@@ -5,7 +5,7 @@ import * as s from "zapatos/schema";
 import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaContext } from "../../../fhir-api/types.js";
+import { KoaExtensions } from "../../../fhir-api/types.js";
 import { FHIRTransaction } from "../../../fhir-storage/transactions.js";
 import { AuthorizationCodeManagement } from "./interface.js";
 import { AuthorizationCode } from "./types.js";
@@ -19,7 +19,7 @@ export default class TenantAuthorizationCodeManagement
     this.tenantId = tenantId;
   }
   async get(
-    ctx: KoaContext.IGUHealthServices["iguhealth"],
+    ctx: KoaExtensions.IGUHealthServices["iguhealth"],
     id: string,
   ): Promise<AuthorizationCode | undefined> {
     return db
@@ -33,7 +33,7 @@ export default class TenantAuthorizationCodeManagement
       .run(ctx.db);
   }
   search(
-    ctx: KoaContext.IGUHealthServices["iguhealth"],
+    ctx: KoaExtensions.IGUHealthServices["iguhealth"],
     where: s.authorization_code.Whereable,
   ): Promise<AuthorizationCode[]> {
     const whereable: s.authorization_code.Whereable = {
@@ -53,7 +53,7 @@ export default class TenantAuthorizationCodeManagement
       .run(ctx.db);
   }
   create(
-    ctx: KoaContext.IGUHealthServices["iguhealth"],
+    ctx: KoaExtensions.IGUHealthServices["iguhealth"],
     model: Pick<
       s.authorization_code.Insertable,
       "type" | "user_id" | "tenant" | "expires_in" | "client_id" | "payload"
@@ -73,7 +73,7 @@ export default class TenantAuthorizationCodeManagement
       .run(ctx.db);
   }
   async update(
-    ctx: KoaContext.IGUHealthServices["iguhealth"],
+    ctx: KoaExtensions.IGUHealthServices["iguhealth"],
     id: string,
     update: s.authorization_code.Updatable,
   ): Promise<AuthorizationCode> {
@@ -106,7 +106,7 @@ export default class TenantAuthorizationCodeManagement
     });
   }
   async delete(
-    ctx: KoaContext.IGUHealthServices["iguhealth"],
+    ctx: KoaExtensions.IGUHealthServices["iguhealth"],
     where_: s.authorization_code.Whereable,
   ): Promise<void> {
     return FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {

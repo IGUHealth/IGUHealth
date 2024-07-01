@@ -13,25 +13,25 @@ function getRoutes(ctx: Parameters<OIDCRouteHandler>[0]) {
   const loginRoute = ctx.router.url(
     OIDC_ROUTES.LOGIN_POST,
     {
-      tenant: ctx.oidc.tenant,
+      tenant: ctx.state.oidc.tenant,
     },
     { query: { state: ctx.query.state } },
   );
   if (loginRoute instanceof Error) throw loginRoute;
 
   const signupURL = ctx.router.url(OIDC_ROUTES.SIGNUP_GET, {
-    tenant: ctx.oidc.tenant,
+    tenant: ctx.state.oidc.tenant,
   });
   if (signupURL instanceof Error) throw signupURL;
 
   const forgotPasswordURL = ctx.router.url(
     OIDC_ROUTES.PASSWORD_RESET_INITIATE_GET,
-    { tenant: ctx.oidc.tenant },
+    { tenant: ctx.state.oidc.tenant },
   );
   if (forgotPasswordURL instanceof Error) throw forgotPasswordURL;
 
   return {
-    signupURL: ctx.oidc.allowSignup ? signupURL : undefined,
+    signupURL: ctx.state.allowSignup ? signupURL : undefined,
     loginRoute,
     forgotPasswordURL,
   };
@@ -64,7 +64,7 @@ export function decodeState(
     if (
       !state.redirectUrl.startsWith(
         ctx.router.url(OIDC_ROUTES.AUTHORIZE_GET, {
-          tenant: ctx.oidc.tenant,
+          tenant: ctx.state.oidc.tenant,
         }),
       )
     ) {
@@ -99,7 +99,7 @@ async function validateCredentials(
       );
     }
 
-    return await ctx.oidc.sessionLogin(ctx, "email-password", {
+    return await ctx.state.oidc.sessionLogin(ctx, "email-password", {
       email,
       password,
     });
@@ -110,7 +110,7 @@ async function validateCredentials(
 
 export const loginPOST = (): OIDCRouteHandler => async (ctx, next) => {
   const loginURL = ctx.router.url(OIDC_ROUTES.LOGIN_GET, {
-    tenant: ctx.oidc.tenant,
+    tenant: ctx.state.oidc.tenant,
   });
 
   if (loginURL instanceof Error) throw loginURL;
@@ -126,8 +126,8 @@ export const loginPOST = (): OIDCRouteHandler => async (ctx, next) => {
       ctx.redirect(state?.redirectUrl);
       return;
     } else if (adminApp.ADMIN_APP() !== undefined) {
-      const tenantClaims = await ctx.oidc.userManagement.getTenantClaims(
-        ctx.iguhealth,
+      const tenantClaims = await ctx.state.oidc.userManagement.getTenantClaims(
+        ctx.state.iguhealth,
         user.id,
       );
       const tenantId = tenantClaims[0]?.id;

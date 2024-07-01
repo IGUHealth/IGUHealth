@@ -18,18 +18,14 @@ import { ROUTES } from "../constants.js";
 import type { GlobalAuthRouteHandler } from "../index.js";
 
 function getRoutes(ctx: Parameters<GlobalAuthRouteHandler>[0]) {
-  const loginRoute = ctx.router.url(ROUTES.LOGIN_POST, {
-    tenant: ctx.oidc.tenant,
-  });
+  const loginRoute = ctx.router.url(ROUTES.LOGIN_POST);
   if (loginRoute instanceof Error) throw loginRoute;
 
-  const signupURL = ctx.router.url(ROUTES.SIGNUP_GET, {
-    tenant: ctx.oidc.tenant,
-  });
+  const signupURL = ctx.router.url(ROUTES.SIGNUP_GET);
   if (signupURL instanceof Error) throw signupURL;
 
   return {
-    signupURL: ctx.oidc.allowSignup ? signupURL : undefined,
+    signupURL: ctx.state.allowSignup ? signupURL : undefined,
     loginRoute,
   };
 }
@@ -79,7 +75,7 @@ export const loginPOST = (): GlobalAuthRouteHandler => async (ctx) => {
       },
       { columns: ["tenant", "role"] },
     )
-    .run(ctx.iguhealth.db);
+    .run(ctx.state.iguhealth.db);
 
   const tenantClaims: TenantClaim<s.user_role>[] = users.map((u) => ({
     id: u.tenant as TenantId,

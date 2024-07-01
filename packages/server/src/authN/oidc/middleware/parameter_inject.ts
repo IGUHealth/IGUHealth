@@ -2,10 +2,10 @@ import * as Koa from "koa";
 
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaContext } from "../../../fhir-api/types.js";
+import { KoaExtensions } from "../../../fhir-api/types.js";
 import { getClientId } from "../client_credentials_verification.js";
 
-type Parameters = KoaContext.OIDC["oidc"]["parameters"];
+type Parameters = KoaExtensions.OIDC["oidc"]["parameters"];
 type ParameterKey = keyof Parameters;
 
 /**
@@ -35,16 +35,13 @@ function isValidParam(param: ParameterKey, value: unknown): value is string {
  * Middleware that finds+validates and injects oidc parameters.
  * @returns Koa.Middleware
  */
-export function createValidateInjectOIDCParameters<
-  State,
-  C extends Koa.DefaultContext & KoaContext.OIDC,
->({
+export function createValidateInjectOIDCParameters({
   required,
   optional,
 }: {
   required?: ParameterKey[];
   optional?: ParameterKey[];
-}): Koa.Middleware<State, KoaContext.IGUHealth<C>> {
+}): Koa.Middleware<KoaExtensions.IGUHealth, KoaExtensions.DefaultContext> {
   return async (ctx, next) => {
     const params = [
       ...(required ?? []).map((p) => ({ required: true, param: p })),
@@ -68,8 +65,8 @@ export function createValidateInjectOIDCParameters<
       return { ...acc, [param]: value };
     }, {});
 
-    ctx.oidc = {
-      ...ctx.oidc,
+    ctx.state.oidc = {
+      ...ctx.state.oidc,
       parameters: { ...requiredParams },
     };
 

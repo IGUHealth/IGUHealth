@@ -1,3 +1,4 @@
+import type Koa from "koa";
 import type { Logger } from "pino";
 import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
@@ -19,6 +20,7 @@ import {
   Resource,
 } from "@iguhealth/fhir-types/versions";
 import {
+  AccessToken,
   AccessTokenPayload,
   CUSTOM_CLAIMS,
   IGUHEALTH_ISSUER,
@@ -37,7 +39,12 @@ import type { EncryptionProvider } from "../encryption/provider/interface.js";
 import type { TerminologyProvider } from "../fhir-terminology/interface.js";
 import type { Lock } from "../synchronization/interfaces.js";
 
-export namespace KoaContext {
+export namespace KoaExtensions {
+  export type DefaultContext = {
+    params: Record<string, string>;
+    request: Koa.Request;
+    [key: string]: unknown;
+  };
   export type OIDC = {
     oidc: {
       sessionLogin: typeof sessionLogin;
@@ -51,7 +58,6 @@ export namespace KoaContext {
       userManagement: UserManagement;
       codeManagement: AuthorizationCodeManagement;
       client?: ClientApplication;
-      allowSignup?: boolean;
       parameters: {
         state?: string;
         responseType?: code;
@@ -63,13 +69,15 @@ export namespace KoaContext {
     };
   };
 
-  export type IGUHealth<C> = C &
-    OIDC &
+  export type IGUHealth = OIDC &
     IGUHealthServices & {
       iguhealth: Omit<IGUHealthServerCTX, "user"> | IGUHealthServerCTX;
     };
 
   export type IGUHealthServices = {
+    allowSignup?: boolean;
+    user?: AccessTokenPayload<s.user_role>;
+    access_token?: AccessToken<s.user_role>;
     iguhealth: Omit<IGUHealthServerCTX, "user" | "tenant">;
   };
 

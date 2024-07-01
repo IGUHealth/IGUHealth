@@ -1,7 +1,6 @@
 import Router from "@koa/router";
-import Koa from "koa";
 
-import { KoaContext } from "../../fhir-api/types.js";
+import { KoaExtensions } from "../../fhir-api/types.js";
 import { ROUTES } from "./constants.js";
 import * as routes from "./routes/index.js";
 
@@ -12,17 +11,21 @@ export type GlobalAuthRouteHandler = Parameters<
 /**
  * Global signup for creating users and directing to tenants.
  */
-export async function createGlobalAuthRouter<
-  C extends Koa.DefaultContext & KoaContext.IGUHealthServices,
->(
+export async function createGlobalAuthRouter(
   prefix: string,
   {
     middleware,
   }: {
-    middleware: Router.Middleware<Koa.DefaultState, C>[];
+    middleware: Router.Middleware<
+      KoaExtensions.IGUHealthServices,
+      KoaExtensions.DefaultContext
+    >[];
   },
 ) {
-  const globalAuthRouter = new Router<Koa.DefaultState, C>({
+  const globalAuthRouter = new Router<
+    KoaExtensions.IGUHealthServices,
+    KoaExtensions.DefaultContext
+  >({
     prefix,
   });
 

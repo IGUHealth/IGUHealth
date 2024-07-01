@@ -1,7 +1,7 @@
 import Router from "@koa/router";
 import type * as Koa from "koa";
 
-import { KoaContext } from "../../fhir-api/types.js";
+import { KoaExtensions } from "../../fhir-api/types.js";
 import { OIDC_ROUTES } from "../oidc/constants.js";
 import {
   clientInjectFHIRMiddleware,
@@ -18,21 +18,17 @@ export type OIDCRouteHandler = Parameters<
 /**
  * OIDC Router
  */
-export async function createOIDCRouter<
-  C extends Koa.DefaultContext &
-    KoaContext.OIDC &
-    KoaContext.IGUHealth<Koa.DefaultContext>,
->(
+export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
   prefix: string,
   {
     authMiddlewares,
     middleware,
   }: {
-    authMiddlewares: Koa.Middleware<unknown, unknown, unknown>[];
-    middleware: Router.Middleware<Koa.DefaultState, C>[];
+    authMiddlewares: Koa.Middleware<State, KoaExtensions.DefaultContext>[];
+    middleware: Router.Middleware<State, KoaExtensions.DefaultContext>[];
   },
 ) {
-  const managementRouter = new Router<Koa.DefaultState, C>({
+  const managementRouter = new Router<State, KoaExtensions.DefaultContext>({
     prefix,
   });
 

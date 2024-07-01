@@ -11,7 +11,7 @@ import { sendPasswordResetEmail } from "../../utilities/sendPasswordResetEmail.j
 
 export const signupGET = (): OIDCRouteHandler => async (ctx) => {
   const signupURL = ctx.router.url(OIDC_ROUTES.SIGNUP_POST, {
-    tenant: ctx.oidc.tenant,
+    tenant: ctx.state.oidc.tenant,
   });
   if (typeof signupURL !== "string") throw signupURL;
 
@@ -26,7 +26,7 @@ export const signupGET = (): OIDCRouteHandler => async (ctx) => {
 };
 
 export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
-  if (!ctx.oidc.allowSignup) {
+  if (!ctx.state.allowSignup) {
     throw new OperationError(
       outcomeError("forbidden", "Signup is not allowed."),
     );
@@ -43,32 +43,35 @@ export const signupPOST = (): OIDCRouteHandler => async (ctx) => {
   }
 
   const existingUser = (
-    await ctx.oidc.userManagement.search(ctx.iguhealth, {
+    await ctx.state.oidc.userManagement.search(ctx.state.iguhealth, {
       email,
     })
   )[0];
   if (existingUser !== undefined) {
     await sendPasswordResetEmail(
       ctx.router,
-      { ...ctx.iguhealth, tenant: ctx.oidc.tenant },
-      ctx.oidc.codeManagement,
+      { ...ctx.state.iguhealth, tenant: ctx.state.oidc.tenant },
+      ctx.state.oidc.codeManagement,
       existingUser,
     );
   } else {
-    const user = await ctx.oidc.userManagement.create(ctx.iguhealth, {
-      email,
-    });
+    const user = await ctx.state.oidc.userManagement.create(
+      ctx.state.iguhealth,
+      {
+        email,
+      },
+    );
 
     // Alert system admin of new user.
     await sendAlertEmail(
-      ctx.iguhealth.emailProvider,
+      ctx.state.iguhealth.emailProvider,
       "New User",
       `A new user with email '${user.email}' has signed up.`,
     );
     await sendPasswordResetEmail(
       ctx.router,
-      { ...ctx.iguhealth, tenant: ctx.oidc.tenant },
-      ctx.oidc.codeManagement,
+      { ...ctx.state.iguhealth, tenant: ctx.state.oidc.tenant },
+      ctx.state.oidc.codeManagement,
       user,
     );
   }

@@ -3,7 +3,7 @@ import { stripUrlQueryAndFragment } from "@sentry/utils";
 import type Koa from "koa";
 import pg from "pg";
 
-import { KoaContext } from "../fhir-api/types.js";
+import { KoaExtensions } from "../fhir-api/types.js";
 
 export function enableSentry(
   sentryDSN: string,
@@ -29,17 +29,14 @@ export function disableSentry() {
   Sentry.close();
 }
 
-export const logError = (err: unknown, ctx: Koa.DefaultContext) => {
-  Sentry.withScope((scope) => {
-    scope.addEventProcessor((event) => {
-      return Sentry.addRequestDataToEvent(event, ctx.request);
-    });
+export const logError = (err: unknown) => {
+  Sentry.withScope((_scope) => {
     Sentry.captureException(err);
   });
 };
 
-export const onKoaError = (err: unknown, ctx: Koa.DefaultContext) => {
-  logError(err, ctx);
+export const onKoaError = (err: unknown) => {
+  logError(err);
 };
 
 export async function sentryTransaction<T>(
@@ -74,8 +71,8 @@ export async function sentrySpan<T>(
 
 // this tracing middleware creates a transaction per request
 export function tracingMiddleWare<
-  State extends Koa.DefaultState,
-  Context extends KoaContext.IGUHealth<Koa.DefaultContext>,
+  State extends KoaExtensions.IGUHealth,
+  Context extends KoaExtensions.DefaultContext,
 >(dsn: string | undefined): Koa.Middleware<State, Context> {
   return async (
     ctx: Koa.ParameterizedContext<State, Context>,

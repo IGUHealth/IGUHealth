@@ -4,6 +4,8 @@ import { evaluateWithMeta } from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../fhir-api/types.js";
+import { EncryptionProvider } from "./provider/interface.js";
+import { AWSKMSProvider } from "./provider/kms.js";
 
 function toFP(loc: (string | number)[]) {
   let FP = "$this";
@@ -98,4 +100,27 @@ export async function encryptValue<T extends object>(
 
   const value = jsonpatch.applyPatch(valueToEncrypt, operations.flat());
   return value.newDocument;
+}
+
+export default function createEncryptionProvider():
+  | EncryptionProvider
+  | undefined {
+  switch (process.env.ENCRYPTION_TYPE) {
+    case "aws": {
+      return new AWSKMSProvider({
+        clientConfig: {
+          credentials: {
+            accessKeyId: process.env.AWS_KMS_ACCESS_KEY_ID as string,
+            secretAccessKey: process.env.AWS_KMS_ACCESS_KEY_SECRET as string,
+          },
+        },
+        generatorKeyARN: process.env.AWS_ENCRYPTION_GENERATOR_KEY as string,
+        encryptorKeyARNS: [process.env.AWS_ENCRYPTION_KEY as string],
+      });
+    }
+
+    default: {
+      return undefined;
+    }
+  }
 }

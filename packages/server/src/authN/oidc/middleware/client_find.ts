@@ -4,22 +4,20 @@ import { id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { KoaContext, asRoot } from "../../../fhir-api/types.js";
+import { KoaExtensions, asRoot } from "../../../fhir-api/types.js";
 
 /**
- * Creates koa middleware that injects the current ClientApplication under ctx.oidc.client.
+ * Creates koa middleware that injects the current ClientApplication under ctx.state.oidc.client.
  * Used in subsequent oidc routes.
  * @returns Koa.Middleware
  */
-export function clientInjectFHIRMiddleware<State>(): Koa.Middleware<
-  State,
-  Koa.DefaultContext &
-    KoaContext.OIDC &
-    KoaContext.IGUHealth<Koa.DefaultContext>
+export function clientInjectFHIRMiddleware(): Koa.Middleware<
+  KoaExtensions.IGUHealth,
+  KoaExtensions.DefaultContext
 > {
   return async (ctx, next) => {
-    if (!ctx.oidc.client) {
-      const clientId = ctx.oidc.parameters.client_id;
+    if (!ctx.state.oidc.client) {
+      const clientId = ctx.state.oidc.parameters.client_id;
 
       if (!clientId) {
         throw new OperationError(
@@ -27,8 +25,8 @@ export function clientInjectFHIRMiddleware<State>(): Koa.Middleware<
         );
       }
 
-      const client = await ctx.iguhealth.client.read(
-        asRoot(ctx.iguhealth),
+      const client = await ctx.state.iguhealth.client.read(
+        asRoot(ctx.state.iguhealth),
         R4,
         "ClientApplication",
         clientId as id,
@@ -39,7 +37,7 @@ export function clientInjectFHIRMiddleware<State>(): Koa.Middleware<
           outcomeError("not-found", "No client was registered with given id."),
         );
       }
-      ctx.oidc = { ...ctx.oidc, client };
+      ctx.state.oidc = { ...ctx.state.oidc, client };
     }
     await next();
   };
