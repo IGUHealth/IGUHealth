@@ -10,7 +10,7 @@ export function setAllowSignup(
   allowSignup: boolean,
 ): Koa.Middleware<
   KoaExtensions.IGUHealthServices,
-  KoaExtensions.DefaultContext
+  KoaExtensions.KoaIGUHealthContext
 > {
   return async (ctx, next) => {
     ctx.state = {

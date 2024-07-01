@@ -72,7 +72,7 @@ export async function sentrySpan<T>(
 // this tracing middleware creates a transaction per request
 export function tracingMiddleWare<
   State extends KoaExtensions.IGUHealth,
-  Context extends KoaExtensions.DefaultContext,
+  Context extends KoaExtensions.KoaIGUHealthContext,
 >(dsn: string | undefined): Koa.Middleware<State, Context> {
   return async (
     ctx: Koa.ParameterizedContext<State, Context>,
@@ -109,10 +109,7 @@ export function tracingMiddleWare<
         setImmediate(() => {
           // if using koa router, a nicer way to capture transaction using the matched route
           if (ctx._matchedRoute) {
-            const mountPath = ctx.mountPath || "";
-            transaction.setName(
-              `${reqMethod} ${mountPath}${ctx._matchedRoute}`,
-            );
+            transaction.setName(`${reqMethod} ${ctx._matchedRoute}`);
           }
           transaction.setHttpStatus(ctx.status);
           transaction.finish();

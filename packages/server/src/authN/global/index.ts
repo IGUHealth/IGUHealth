@@ -18,13 +18,14 @@ export async function createGlobalAuthRouter(
   }: {
     middleware: Router.Middleware<
       KoaExtensions.IGUHealthServices,
-      KoaExtensions.DefaultContext
+      KoaExtensions.KoaIGUHealthContext,
+      unknown
     >[];
   },
 ) {
   const globalAuthRouter = new Router<
     KoaExtensions.IGUHealthServices,
-    KoaExtensions.DefaultContext
+    KoaExtensions.KoaIGUHealthContext
   >({
     prefix,
   });

@@ -68,13 +68,7 @@ loadEnv();
  * @returns Koa.Middleware[] that can be used to handle FHIR requests.
  */
 async function FHIRAPIKoaMiddleware(): Promise<
-  Koa.Middleware<
-    KoaExtensions.IGUHealth,
-    Router.RouterParamContext<
-      KoaExtensions.IGUHealth,
-      KoaExtensions.DefaultContext
-    >
-  >
+  Koa.Middleware<KoaExtensions.IGUHealth, KoaExtensions.KoaIGUHealthContext>
 > {
   const fhirAPI = await createFHIRAPI();
 
@@ -121,11 +115,7 @@ async function FHIRAPIKoaMiddleware(): Promise<
 
 function createErrorHandlingMiddleware(): Koa.Middleware<
   KoaExtensions.IGUHealth,
-  KoaExtensions.DefaultContext &
-    Router.RouterParamContext<
-      KoaExtensions.IGUHealth,
-      KoaExtensions.DefaultContext
-    >
+  KoaExtensions.KoaIGUHealthContext
 > {
   return async function errorHandlingMiddleware(ctx, next) {
     try {
@@ -170,7 +160,7 @@ function createErrorHandlingMiddleware(): Koa.Middleware<
 }
 
 export default async function createServer(): Promise<
-  Koa<KoaExtensions.IGUHealth, KoaExtensions.DefaultContext>
+  Koa<KoaExtensions.IGUHealth, KoaExtensions.KoaIGUHealthContext>
 > {
   if (process.env.SENTRY_SERVER_DSN)
     MonitoringSentry.enableSentry(process.env.SENTRY_SERVER_DSN, LIB_VERSION, {
@@ -187,7 +177,10 @@ export default async function createServer(): Promise<
   }
 
   const redis = getRedisClient();
-  const app = new Koa<KoaExtensions.IGUHealth, KoaExtensions.DefaultContext>();
+  const app = new Koa<
+    KoaExtensions.IGUHealth,
+    KoaExtensions.KoaIGUHealthContext
+  >();
   const logger = createLogger();
   const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
     db: createPGPool(),
@@ -211,7 +204,7 @@ export default async function createServer(): Promise<
 
   const rootRouter = new Router<
     KoaExtensions.IGUHealth,
-    KoaExtensions.DefaultContext
+    KoaExtensions.KoaIGUHealthContext
   >();
   rootRouter.use("/", createErrorHandlingMiddleware());
   rootRouter.get(JWKS_GET, "/certs/jwks", async (ctx, next) => {
@@ -226,7 +219,7 @@ export default async function createServer(): Promise<
 
   const authMiddlewares: Koa.Middleware<
     KoaExtensions.IGUHealth,
-    KoaExtensions.DefaultContext
+    KoaExtensions.KoaIGUHealthContext
   >[] = [
     verifyBasicAuth,
     process.env.AUTH_PUBLIC_ACCESS === "true"
@@ -246,7 +239,7 @@ export default async function createServer(): Promise<
 
   const tenantRouter = new Router<
     KoaExtensions.IGUHealth,
-    KoaExtensions.DefaultContext
+    KoaExtensions.KoaIGUHealthContext
   >({
     prefix: "/w/:tenant",
   });
@@ -275,7 +268,7 @@ export default async function createServer(): Promise<
 
   const tenantAPIV1Router = new Router<
     KoaExtensions.IGUHealth,
-    KoaExtensions.DefaultContext
+    KoaExtensions.KoaIGUHealthContext
   >({
     prefix: "/api/v1",
   });
