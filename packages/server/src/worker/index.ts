@@ -40,8 +40,16 @@ import {
   getCertLocation,
   getSigningKey,
 } from "../authN/certifications.js";
+import RedisCache from "../cache/providers/redis.js";
+import createEmailProvider from "../email/index.js";
+import createEncryptionProvider from "../encryption/index.js";
 import loadEnv from "../env.js";
-import { createFHIRAPI, createFHIRServices } from "../fhir-api/index.js";
+import {
+  createClient,
+  createFHIRAPI,
+  createLogger,
+  getRedisClient,
+} from "../fhir-api/index.js";
 import { IGUHealthServerCTX } from "../fhir-api/types.js";
 import { httpRequestToFHIRRequest } from "../fhir-http/index.js";
 import logAuditEvent, {
@@ -58,7 +66,9 @@ import {
   findSearchParameter,
   parametersWithMetaAssociated,
 } from "../fhir-storage/utilities/search/parameters.js";
+import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
 import * as Sentry from "../monitoring/sentry.js";
+import RedisLock from "../synchronization/redis.lock.js";
 import { LIB_VERSION } from "../version.js";
 
 loadEnv();
@@ -497,22 +507,36 @@ async function createWorker(
   fhirVersion: FHIR_VERSION = R4,
   loopInterval = 500,
 ) {
-  const pool = createPGPool();
-  const fhirServices = await createFHIRServices(pool);
+  const db = createPGPool();
+  const terminologyProvider = new TerminologyProviderMemory();
+  const redis = getRedisClient();
+  const encryptionProvider = createEncryptionProvider();
+  const lock = new RedisLock(redis);
+  const cache = new RedisCache(redis);
+  const emailProvider = createEmailProvider();
+  const { client, resolveCanonical, resolveTypeToCanonical } = createClient();
+  const logger = createLogger().child({ worker: workerID });
+
   const fhirServer = await createFHIRAPI();
   let isRunning = true;
 
-  fhirServices.logger.info(
-    { workerID },
-    `Worker started with interval '${loopInterval}'`,
-  );
+  logger.info(`Worker started with interval '${loopInterval}'`);
   /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
   while (isRunning) {
     try {
-      const activeTenants = await getActiveTenants(pool);
+      const activeTenants = await getActiveTenants(db);
       for (const tenant of activeTenants) {
-        const ctx = {
-          ...fhirServices,
+        const ctx: IGUHealthServerCTX = {
+          db,
+          logger,
+          lock,
+          cache,
+          terminologyProvider,
+          encryptionProvider,
+          emailProvider,
+          resolveCanonical,
+          resolveTypeToCanonical,
+          client,
           tenant: tenant,
           user: {
             role: "admin" as s.user_role,
@@ -534,7 +558,7 @@ async function createWorker(
           if (!subscriptionId)
             throw new Error("Subscription ID was undefined.");
           try {
-            await fhirServices.lock.withLock(
+            await lock.withLock(
               subscriptionLockKey(tenant, subscriptionId),
               processSubscription(
                 workerID,
@@ -545,12 +569,12 @@ async function createWorker(
               ),
             );
           } catch (e) {
-            fhirServices.logger.error(e);
+            logger.error(e);
           }
         }
       }
     } catch (e) {
-      fhirServices.logger.error(e);
+      logger.error(e);
     } finally {
       await new Promise((resolve) => setTimeout(resolve, loopInterval));
     }

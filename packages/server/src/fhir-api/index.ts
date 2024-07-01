@@ -35,8 +35,6 @@ import {
 import { createArtifactMemoryDatabase } from "../fhir-storage/providers/memory/async.js";
 import { createPostgresClient } from "../fhir-storage/providers/postgres/index.js";
 import RouterClient from "../fhir-storage/router.js";
-import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
-import RedisLock from "../synchronization/redis.lock.js";
 import createCapabilitiesMiddleware from "./middleware/capabilities.js";
 import createEncryptionMiddleware from "./middleware/encryption.js";
 import createCheckTenantUsageMiddleware from "./middleware/usageCheck.js";
@@ -252,31 +250,6 @@ export function createClient() {
   return {
     resolveCanonical: memSource.resolveCanonical,
     resolveTypeToCanonical: memSource.resolveTypeToCanonical,
-    client,
-  };
-}
-
-export async function createFHIRServices(
-  db: pg.Pool,
-): Promise<Omit<IGUHealthServerCTX, "tenant" | "user">> {
-  const terminologyProvider = new TerminologyProviderMemory();
-  const redis = getRedisClient();
-  const encryptionProvider = createEncryptionProvider();
-  const lock = new RedisLock(redis);
-  const cache = new RedisCache(redis);
-  const emailProvider = createEmailProvider();
-  const { client, resolveCanonical, resolveTypeToCanonical } = createClient();
-
-  return {
-    db,
-    logger: createLogger(),
-    lock,
-    cache,
-    terminologyProvider,
-    encryptionProvider,
-    emailProvider,
-    resolveCanonical,
-    resolveTypeToCanonical,
     client,
   };
 }
