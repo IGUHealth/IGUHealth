@@ -1,3 +1,4 @@
+import type { RouterParamContext } from "@koa/router";
 import type Koa from "koa";
 import type { Logger } from "pino";
 import * as db from "zapatos/db";
@@ -40,11 +41,11 @@ import type { TerminologyProvider } from "../fhir-terminology/interface.js";
 import type { Lock } from "../synchronization/interfaces.js";
 
 export namespace KoaExtensions {
-  export type DefaultContext = {
-    params: Record<string, string>;
-    request: Koa.Request;
-    [key: string]: unknown;
-  };
+  export type KoaIGUHealthContext = Koa.ParameterizedContext<
+    KoaExtensions.IGUHealth,
+    RouterParamContext<KoaExtensions.IGUHealth, KoaIGUHealthContext>
+  >;
+
   export type OIDC = {
     oidc: {
       sessionLogin: typeof sessionLogin;

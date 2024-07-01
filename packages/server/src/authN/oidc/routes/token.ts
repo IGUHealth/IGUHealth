@@ -35,7 +35,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
  */
 export function tokenPost<
   State extends KoaExtensions.IGUHealth,
-  C extends KoaExtensions.DefaultContext,
+  C extends KoaExtensions.KoaIGUHealthContext,
 >(): Koa.Middleware<State, C> {
   return async (ctx) => {
     const body = (ctx.request as unknown as Record<string, unknown>).body;

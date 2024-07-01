@@ -7,7 +7,7 @@ import { ADMIN_APP } from "../hardcodedClients/admin-app.js";
 
 export function injectHardcodedClients<
   State extends KoaExtensions.OIDC,
-  C extends KoaExtensions.DefaultContext,
+  C extends KoaExtensions.KoaIGUHealthContext,
 >(): Koa.Middleware<State, C> {
   return async (ctx, next) => {
     const clientId = ctx.state.oidc.parameters.client_id;

@@ -26,7 +26,7 @@ function findCurrentTenant(
  */
 export async function verifyAndAssociateUserFHIRContext<
   State extends KoaExtensions.IGUHealth,
-  Context extends KoaExtensions.DefaultContext,
+  Context extends KoaExtensions.KoaIGUHealthContext,
 >(ctx: Koa.ParameterizedContext<State, Context>, next: Koa.Next) {
   if (!ctx.state.iguhealth.tenant) {
     throw new OperationError(outcomeError("invalid", "No tenant present."));

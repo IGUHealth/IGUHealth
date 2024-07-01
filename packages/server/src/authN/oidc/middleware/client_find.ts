@@ -13,7 +13,7 @@ import { KoaExtensions, asRoot } from "../../../fhir-api/types.js";
  */
 export function clientInjectFHIRMiddleware(): Koa.Middleware<
   KoaExtensions.IGUHealth,
-  KoaExtensions.DefaultContext
+  KoaExtensions.KoaIGUHealthContext
 > {
   return async (ctx, next) => {
     if (!ctx.state.oidc.client) {

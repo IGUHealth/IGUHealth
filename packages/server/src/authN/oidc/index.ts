@@ -24,13 +24,15 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     authMiddlewares,
     middleware,
   }: {
-    authMiddlewares: Koa.Middleware<State, KoaExtensions.DefaultContext>[];
-    middleware: Router.Middleware<State, KoaExtensions.DefaultContext>[];
+    authMiddlewares: Koa.Middleware<State, KoaExtensions.KoaIGUHealthContext>[];
+    middleware: Router.Middleware<State, KoaExtensions.KoaIGUHealthContext>[];
   },
 ) {
-  const managementRouter = new Router<State, KoaExtensions.DefaultContext>({
-    prefix,
-  });
+  const managementRouter = new Router<State, KoaExtensions.KoaIGUHealthContext>(
+    {
+      prefix,
+    },
+  );
 
   managementRouter.use(...middleware);
   managementRouter.use(sessionAuthorizationMiddleware());

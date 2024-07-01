@@ -48,7 +48,7 @@ export const loginGET = (): GlobalAuthRouteHandler => async (ctx) => {
 
 export const loginPOST = (): GlobalAuthRouteHandler => async (ctx) => {
   const { signupURL, loginRoute } = getRoutes(ctx);
-  const email = ctx.request.body.email;
+  const email = (ctx.request.body as Record<string, string>).email;
   if (!validator.isEmail(email)) {
     ctx.body = views.renderString(
       React.createElement(Login, {
