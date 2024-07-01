@@ -13,7 +13,6 @@ import { R4, R4B, ResourceType } from "@iguhealth/fhir-types/versions";
 import { associateUserMiddleware } from "../authZ/middleware/associateUser.js";
 import createAuthorizationMiddleware from "../authZ/middleware/authorization.js";
 import AWSLambdaExecutioner from "../fhir-operation-executors/providers/awsLambda/index.js";
-// import IguhealthEncryptInvoke from "../fhir-operation-executors/providers/local/encrypt.js";
 import InlineExecutioner from "../fhir-operation-executors/providers/local/index.js";
 import IguhealthInviteUserInvoke from "../fhir-operation-executors/providers/local/invite_user.js";
 import IguhealthMessagePostInvoke from "../fhir-operation-executors/providers/local/message_post.js";
