@@ -24,7 +24,7 @@ export async function createOIDCRouter<State extends KoaExtensions.IGUHealth>(
     authMiddlewares,
     middleware,
   }: {
-    authMiddlewares: Koa.Middleware<unknown, unknown, unknown>[];
+    authMiddlewares: Koa.Middleware<State, KoaExtensions.DefaultContext>[];
     middleware: Router.Middleware<State, KoaExtensions.DefaultContext>[];
   },
 ) {

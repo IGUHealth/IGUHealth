@@ -100,7 +100,7 @@ async function FHIRAPIKoaMiddleware(): Promise<
             ctx.request.querystring ? `?${ctx.request.querystring}` : ""
           }`,
           method: ctx.request.method,
-          body: (ctx.request as unknown as Record<string, unknown>).body,
+          body: ctx.request.body,
         }),
       );
 
@@ -223,16 +223,15 @@ export default async function createServer(): Promise<
     AUTH_LOCAL_CERTIFICATION_LOCATION: getCertLocation(),
   });
 
-  const authMiddlewares = [
-    verifyBasicAuth as Koa.Middleware<unknown, unknown, unknown>,
-    (process.env.AUTH_PUBLIC_ACCESS === "true"
+  const authMiddlewares: Koa.Middleware<
+    KoaExtensions.IGUHealth,
+    KoaExtensions.DefaultContext
+  >[] = [
+    verifyBasicAuth,
+    process.env.AUTH_PUBLIC_ACCESS === "true"
       ? allowPublicAccessMiddleware
-      : jwtMiddleware) as Koa.Middleware<unknown, unknown, unknown>,
-    verifyAndAssociateUserFHIRContext as Koa.Middleware<
-      unknown,
-      unknown,
-      unknown
-    >,
+      : jwtMiddleware,
+    verifyAndAssociateUserFHIRContext,
   ];
 
   const globalAuth = await createGlobalAuthRouter("/auth", {
