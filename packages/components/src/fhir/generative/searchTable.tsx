@@ -105,8 +105,8 @@ function SearchColumnModalBodyInput({
     }
     case "date":
       return (
-        <FHIRDateEditable
-          value={(value.value[index]?.toString() ?? "") as date}
+        <FHIRStringEditable
+          value={(value.value[index]?.toString() ?? "") as string}
           onChange={onChange}
         />
       );
@@ -702,7 +702,10 @@ export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
                     selector: searchParameter.expression as string,
                     selectorType: "fhirpath",
                     renderer(data: unknown[]) {
-                      return DataDisplay(searchParameter.type, data);
+                      return DataDisplay(
+                        searchParameter.type,
+                        data.slice(0, 3),
+                      );
                     },
                   }) as Parameters<typeof Table>[0]["columns"][number],
               ),
