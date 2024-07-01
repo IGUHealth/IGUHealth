@@ -74,15 +74,16 @@ const R4B_DB_TYPES: ResourceType<R4B>[] = (
   [...r4bSets.resourceTypes] as ResourceType<R4B>[]
 ).filter((type) => R4B_ALL_SPECIAL_TYPES.indexOf(type) === -1);
 
-export const logger = pino<string>(
-  process.env.NODE_ENV === "development"
-    ? {
-        transport: {
-          target: "pino-pretty",
-        },
-      }
-    : undefined,
-);
+export const createLogger = () =>
+  pino<string>(
+    process.env.NODE_ENV === "development"
+      ? {
+          transport: {
+            target: "pino-pretty",
+          },
+        }
+      : undefined,
+  );
 
 /**
  * Type manipulation to get state of a routerclient used for subsequent middlewares.
@@ -268,7 +269,7 @@ export async function createFHIRServices(
 
   return {
     db,
-    logger,
+    logger: createLogger(),
     lock,
     cache,
     terminologyProvider,

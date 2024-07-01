@@ -46,8 +46,8 @@ import loadEnv from "./env.js";
 import {
   createClient,
   createFHIRAPI,
+  createLogger,
   getRedisClient,
-  logger,
 } from "./fhir-api/index.js";
 import { IGUHealthServerCTX, KoaExtensions } from "./fhir-api/types.js";
 import {
@@ -131,7 +131,7 @@ function createErrorHandlingMiddleware(): Koa.Middleware<
     try {
       await next();
     } catch (e) {
-      logger.error(e);
+      createLogger().error(e);
       if (isOperationError(e)) {
         const operationOutcome = e.outcome;
         const status = operationOutcome.issue
@@ -188,6 +188,7 @@ export default async function createServer(): Promise<
 
   const redis = getRedisClient();
   const app = new Koa<KoaExtensions.IGUHealth, KoaExtensions.DefaultContext>();
+  const logger = createLogger();
   const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
     db: createPGPool(),
     logger,
