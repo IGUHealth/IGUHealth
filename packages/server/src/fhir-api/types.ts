@@ -76,7 +76,7 @@ export namespace KoaExtensions {
 
   export type IGUHealthServices = {
     allowSignup?: boolean;
-    user?: AccessTokenPayload<s.user_role> | undefined;
+    user?: AccessTokenPayload<s.user_role>;
     access_token?: AccessToken<s.user_role>;
     iguhealth: Omit<IGUHealthServerCTX, "user" | "tenant">;
   };

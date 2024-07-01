@@ -1,5 +1,4 @@
 import Router from "@koa/router";
-import Koa from "koa";
 
 import { KoaExtensions } from "../../fhir-api/types.js";
 import { ROUTES } from "./constants.js";
