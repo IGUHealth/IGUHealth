@@ -47,7 +47,7 @@ export const signupGET = (): GlobalAuthRouteHandler => async (ctx) => {
 };
 
 export const signupPOST = (): GlobalAuthRouteHandler => async (ctx) => {
-  if (!ctx.allowSignup) {
+  if (!ctx.state.allowSignup) {
     throw new OperationError(
       outcomeError("forbidden", "Signup is not allowed."),
     );
