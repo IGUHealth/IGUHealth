@@ -49,7 +49,7 @@ import {
   getRedisClient,
   logger,
 } from "./fhir-api/index.js";
-import { KoaExtensions } from "./fhir-api/types.js";
+import { IGUHealthServerCTX, KoaExtensions } from "./fhir-api/types.js";
 import {
   fhirResponseToHTTPResponse,
   httpRequestToFHIRRequest,
@@ -188,7 +188,7 @@ export default async function createServer(): Promise<
 
   const redis = getRedisClient();
   const app = new Koa<KoaExtensions.IGUHealth, KoaExtensions.DefaultContext>();
-  app.context.state = {
+  const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
     db: createPGPool(),
     logger,
     lock: new RedisLock(redis),
@@ -198,6 +198,13 @@ export default async function createServer(): Promise<
     emailProvider: createEmailProvider(),
     ...createClient(),
   };
+  app.use(async (ctx, next) => {
+    ctx.state = {
+      ...ctx.state,
+      iguhealth: { ...ctx.state.iguhealth, ...iguhealthServices },
+    };
+    await next();
+  });
 
   app.keys = process.env.SESSION_COOKIE_SECRETS.split(":").map((s) => s.trim());
 
