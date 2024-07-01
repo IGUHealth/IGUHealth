@@ -7,6 +7,7 @@ import {
 import classNames from "classnames";
 import React, { useEffect, useMemo, useState } from "react";
 
+import { ResponseError } from "@iguhealth/client/lib/http";
 import { ParsedParameter } from "@iguhealth/client/url";
 import {
   Address,
@@ -20,7 +21,6 @@ import {
   Reference,
   Timing,
   code,
-  date,
   decimal,
   uri,
 } from "@iguhealth/fhir-types/r4/types";
@@ -30,7 +30,7 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
 
-import { Button, Modal, Select, Tag } from "../../base";
+import { Button, Modal, Select, Tag, Toaster } from "../../base";
 import { Pagination } from "../../base/pagination";
 import { Table, TableProps } from "../../base/table";
 import {
@@ -47,7 +47,6 @@ import { FHIRQuantityReadOnly } from "../complex/QuantityReadOnly";
 import { FHIRTimingReadOnly } from "../complex/TimingReadOnly";
 import {
   FHIRCodeEditable,
-  FHIRDateEditable,
   FHIRDecimalEditable,
   FHIRStringEditable,
   FHIRUriEditable,
@@ -104,12 +103,6 @@ function SearchColumnModalBodyInput({
       );
     }
     case "date":
-      return (
-        <FHIRDateEditable
-          value={(value.value[index]?.toString() ?? "") as date}
-          onChange={onChange}
-        />
-      );
     case "string":
       return (
         <FHIRStringEditable
@@ -594,6 +587,16 @@ export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
       .then((bundle) => {
         setData(bundle);
         setLoading(false);
+      })
+      .catch((e) => {
+        console.error(e);
+        if (e instanceof ResponseError) {
+          Toaster.error(
+            e.response.body.issue[0].diagnostics ?? "An Error Occured.",
+          );
+        }
+        setData({ total: 0, resources: [] });
+        setLoading(false);
       });
   }, [parameters, props.resourceType, props.fhirVersion, setLoading]);
 
@@ -702,7 +705,10 @@ export function FHIRGenerativeSearchTable<Version extends FHIR_VERSION>(
                     selector: searchParameter.expression as string,
                     selectorType: "fhirpath",
                     renderer(data: unknown[]) {
-                      return DataDisplay(searchParameter.type, data);
+                      return DataDisplay(
+                        searchParameter.type,
+                        data.slice(0, 3),
+                      );
                     },
                   }) as Parameters<typeof Table>[0]["columns"][number],
               ),
