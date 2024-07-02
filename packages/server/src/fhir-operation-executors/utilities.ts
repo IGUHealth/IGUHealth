@@ -87,6 +87,7 @@ export function getOpCTX(
     fhirVersion: request.fhirVersion,
     level: request.level,
     validateCode: async (url: string, code: string) => {
+      if (!ctx.terminologyProvider) return true;
       const result = await ctx.terminologyProvider.validate(
         ctx,
         request.fhirVersion,

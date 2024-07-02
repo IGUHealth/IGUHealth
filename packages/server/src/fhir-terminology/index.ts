@@ -15,7 +15,7 @@ import {
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../fhir-api/types.js";
-import { TerminologyProvider } from "./interface.js";
+import { TerminologyProvider as ITerminologyProvider } from "./interface.js";
 
 import ExpandInput = ValueSetExpand.Input;
 import ExpandOutput = ValueSetExpand.Output;
@@ -157,7 +157,7 @@ function findConcept(
   return undefined;
 }
 
-export class TerminologyProviderMemory implements TerminologyProvider {
+export class TerminologyProvider implements ITerminologyProvider {
   constructor() {}
   async validate(
     ctx: IGUHealthServerCTX,

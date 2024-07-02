@@ -115,7 +115,7 @@ export interface IGUHealthServerCTX {
   logger: Logger<string>;
   lock: Lock<unknown>;
   cache: IOCache<IGUHealthServerCTX>;
-  terminologyProvider: TerminologyProvider;
+  terminologyProvider?: TerminologyProvider;
   encryptionProvider?: EncryptionProvider;
   emailProvider?: EmailProvider;
 

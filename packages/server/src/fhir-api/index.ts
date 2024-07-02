@@ -41,7 +41,7 @@ const R4_SPECIAL_TYPES: {
   AUTH: ResourceType<R4>[];
 } = {
   AUTH: AUTH_RESOURCETYPES,
-  MEMORY: ["StructureDefinition", "SearchParameter", "ValueSet", "CodeSystem"],
+  MEMORY: ["StructureDefinition", "SearchParameter"],
 };
 const R4_ALL_SPECIAL_TYPES = Object.values(R4_SPECIAL_TYPES).flatMap((v) => v);
 const R4_DB_TYPES: ResourceType<R4>[] = (
@@ -58,7 +58,7 @@ const R4B_SPECIAL_TYPES: { MEMORY: ResourceType<R4B>[] } & Record<
     // "SubscriptionStatus",
     "OperationDefinition",
   ],
-  MEMORY: ["StructureDefinition", "SearchParameter", "ValueSet", "CodeSystem"],
+  MEMORY: ["StructureDefinition", "SearchParameter"],
 };
 const R4B_ALL_SPECIAL_TYPES = Object.values(R4B_SPECIAL_TYPES).flatMap(
   (v) => v,
