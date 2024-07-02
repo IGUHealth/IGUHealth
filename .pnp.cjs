@@ -15330,6 +15330,7 @@ const RAW_RUNTIME_STATE =
           ["@types/keygrip", "npm:1.0.6"],\
           ["@types/koa", "npm:2.15.0"],\
           ["@types/koa-bodyparser", "npm:4.3.12"],\
+          ["@types/koa-compress", "npm:4.0.6"],\
           ["@types/koa-mount", "npm:4.0.5"],\
           ["@types/koa-ratelimit", "patch:@types/koa-ratelimit@npm%3A5.0.5#~/.yarn/patches/@types-koa-ratelimit-npm-5.0.5-da33c7c231.patch::version=5.0.5&hash=19f3b2"],\
           ["@types/koa-redis", "npm:4.0.5"],\
@@ -15364,6 +15365,7 @@ const RAW_RUNTIME_STATE =
           ["keygrip", "npm:1.1.0"],\
           ["koa", "npm:2.15.3"],\
           ["koa-body", "npm:6.0.1"],\
+          ["koa-compress", "npm:5.1.1"],\
           ["koa-helmet", "npm:7.0.2"],\
           ["koa-jwt", "npm:4.0.4"],\
           ["koa-mount", "npm:4.0.0"],\
@@ -23080,6 +23082,17 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@types/koa-compose", "npm:3.2.5"],\
           ["@types/koa", "npm:2.15.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/koa-compress", [\
+      ["npm:4.0.6", {\
+        "packageLocation": "./.yarn/cache/@types-koa-compress-npm-4.0.6-ffc9ddb17c-0ec8ffac1b.zip/node_modules/@types/koa-compress/",\
+        "packageDependencies": [\
+          ["@types/koa-compress", "npm:4.0.6"],\
+          ["@types/koa", "npm:2.15.0"],\
+          ["@types/node", "npm:20.3.3"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -36739,6 +36752,19 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["koa-compress", [\
+      ["npm:5.1.1", {\
+        "packageLocation": "./.yarn/cache/koa-compress-npm-5.1.1-326fdc07bf-e768d33675.zip/node_modules/koa-compress/",\
+        "packageDependencies": [\
+          ["koa-compress", "npm:5.1.1"],\
+          ["bytes", "npm:3.1.2"],\
+          ["compressible", "npm:2.0.18"],\
+          ["http-errors", "npm:1.8.1"],\
+          ["koa-is-json", "npm:1.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["koa-convert", [\
       ["npm:2.0.0", {\
         "packageLocation": "./.yarn/cache/koa-convert-npm-2.0.0-d709eca55c-7385b33919.zip/node_modules/koa-convert/",\
@@ -36756,6 +36782,15 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["koa-helmet", "npm:7.0.2"],\
           ["helmet", "npm:6.2.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["koa-is-json", [\
+      ["npm:1.0.0", {\
+        "packageLocation": "./.yarn/cache/koa-is-json-npm-1.0.0-0fd77526f2-0f14a7780d.zip/node_modules/koa-is-json/",\
+        "packageDependencies": [\
+          ["koa-is-json", "npm:1.0.0"]\
         ],\
         "linkType": "HARD"\
       }]\

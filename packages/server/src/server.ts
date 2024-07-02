@@ -2,6 +2,7 @@ import { bodyParser } from "@koa/bodyparser";
 import cors from "@koa/cors";
 import Router from "@koa/router";
 import Koa from "koa";
+import koaCompress from "koa-compress";
 import helmet from "koa-helmet";
 import mount from "koa-mount";
 import ratelimit from "koa-ratelimit";
@@ -9,6 +10,7 @@ import redisStore from "koa-redis";
 import session from "koa-session";
 import serve from "koa-static";
 import path from "node:path";
+import zlib from "node:zlib";
 import React from "react";
 import { fileURLToPath } from "url";
 import * as db from "zapatos/db";
@@ -177,10 +179,7 @@ export default async function createServer(): Promise<
   }
 
   const redis = getRedisClient();
-  const app = new Koa<
-    KoaExtensions.IGUHealth,
-    KoaExtensions.KoaIGUHealthContext
-  >();
+
   const logger = createLogger();
   const iguhealthServices: Omit<IGUHealthServerCTX, "user" | "tenant"> = {
     db: createPGPool(),
@@ -192,6 +191,22 @@ export default async function createServer(): Promise<
     emailProvider: createEmailProvider(),
     ...createClient(),
   };
+
+  const app = new Koa<
+    KoaExtensions.IGUHealth,
+    KoaExtensions.KoaIGUHealthContext
+  >();
+  app.use(
+    koaCompress({
+      // Threshold defaults to 1kb.
+      gzip: {
+        flush: zlib.constants.Z_SYNC_FLUSH,
+      },
+      // Disable other compressions and allow only gzip.
+      deflate: false,
+      br: false,
+    }),
+  );
   app.use(async (ctx, next) => {
     ctx.state = {
       ...ctx.state,

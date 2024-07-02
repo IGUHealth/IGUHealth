@@ -8673,6 +8673,7 @@ __metadata:
     "@types/keygrip": "npm:^1.0.6"
     "@types/koa": "npm:^2.15.0"
     "@types/koa-bodyparser": "npm:^4.3.12"
+    "@types/koa-compress": "npm:^4.0.6"
     "@types/koa-mount": "npm:^4.0.5"
     "@types/koa-ratelimit": "patch:@types/koa-ratelimit@npm%3A5.0.5#~/.yarn/patches/@types-koa-ratelimit-npm-5.0.5-da33c7c231.patch"
     "@types/koa-redis": "npm:^4.0.5"
@@ -8707,6 +8708,7 @@ __metadata:
     keygrip: "npm:^1.1.0"
     koa: "npm:^2.15.3"
     koa-body: "npm:^6.0.1"
+    koa-compress: "npm:^5.1.1"
     koa-helmet: "npm:^7.0.2"
     koa-jwt: "npm:^4.0.4"
     koa-mount: "npm:^4.0.0"
@@ -14414,6 +14416,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/koa-compress@npm:^4.0.6":
+  version: 4.0.6
+  resolution: "@types/koa-compress@npm:4.0.6"
+  dependencies:
+    "@types/koa": "npm:*"
+    "@types/node": "npm:*"
+  checksum: 10/0ec8ffac1bf3c7dc36a9ee4588f83ade0a485b615aff7e9e08082319b1b3f7e2f5954ed5ce4303a7f9ba1b4144081e0700cbf3165d1aef54e5e12130c810b2e4
+  languageName: node
+  linkType: hard
+
 "@types/koa-mount@npm:^4.0.5":
   version: 4.0.5
   resolution: "@types/koa-mount@npm:4.0.5"
@@ -17023,7 +17035,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bytes@npm:3.1.2":
+"bytes@npm:3.1.2, bytes@npm:^3.1.2":
   version: 3.1.2
   resolution: "bytes@npm:3.1.2"
   checksum: 10/a10abf2ba70c784471d6b4f58778c0beeb2b5d405148e66affa91f23a9f13d07603d0a0354667310ae1d6dc141474ffd44e2a074be0f6e2254edb8fc21445388
@@ -17790,7 +17802,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"compressible@npm:~2.0.16":
+"compressible@npm:^2.0.18, compressible@npm:~2.0.16":
   version: 2.0.18
   resolution: "compressible@npm:2.0.18"
   dependencies:
@@ -22932,7 +22944,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"http-errors@npm:^1.6.3, http-errors@npm:^1.7.3, http-errors@npm:~1.8.0":
+"http-errors@npm:^1.6.3, http-errors@npm:^1.7.3, http-errors@npm:^1.8.1, http-errors@npm:~1.8.0":
   version: 1.8.1
   resolution: "http-errors@npm:1.8.1"
   dependencies:
@@ -25640,6 +25652,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"koa-compress@npm:^5.1.1":
+  version: 5.1.1
+  resolution: "koa-compress@npm:5.1.1"
+  dependencies:
+    bytes: "npm:^3.1.2"
+    compressible: "npm:^2.0.18"
+    http-errors: "npm:^1.8.1"
+    koa-is-json: "npm:^1.0.0"
+  checksum: 10/e768d336756e2009cd65db28c48472827a0eb503cdf3055bdb0af0e5d74b821bb8b9820dfdcb956e359fdea3c302286d2a17eef28bd4683217a6e8d503749e68
+  languageName: node
+  linkType: hard
+
 "koa-convert@npm:^2.0.0":
   version: 2.0.0
   resolution: "koa-convert@npm:2.0.0"
@@ -25656,6 +25680,13 @@ __metadata:
   dependencies:
     helmet: "npm:^6.0.1"
   checksum: 10/a2f8f72f053402fd8b70deb219ab1535cb6dbc8975ae9bd84d2a976a88a2349f47289485d5db718f21c4d493a9555e8b4bb962119f47d2b0ff95877edc232004
+  languageName: node
+  linkType: hard
+
+"koa-is-json@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "koa-is-json@npm:1.0.0"
+  checksum: 10/0f14a7780d7ca0caeda5981ab425b66dd9711fd1bc7a25c091b38331ade8861a2eea41ac9fec7f96537302690de68fe1213b576f2c765ff3b5be3c23e995fbe2
   languageName: node
   linkType: hard
 
