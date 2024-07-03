@@ -57,7 +57,7 @@ import {
   httpRequestToFHIRRequest,
 } from "./fhir-http/index.js";
 import { createPGPool } from "./fhir-storage/providers/postgres/pg.js";
-import { TerminologyProviderMemory } from "./fhir-terminology/index.js";
+import { TerminologyProvider } from "./fhir-terminology/index.js";
 import * as MonitoringSentry from "./monitoring/sentry.js";
 import RedisLock from "./synchronization/redis.lock.js";
 import { LIB_VERSION } from "./version.js";
@@ -186,7 +186,7 @@ export default async function createServer(): Promise<
     logger,
     lock: new RedisLock(redis),
     cache: new RedisCache(redis),
-    terminologyProvider: new TerminologyProviderMemory(),
+    terminologyProvider: new TerminologyProvider(),
     encryptionProvider: createEncryptionProvider(),
     emailProvider: createEmailProvider(),
     ...createClient(),
