@@ -18,12 +18,14 @@ import type { InternalData } from "./types.js";
 
 const artifactParameters = loadArtifacts({
   fhirVersion: R4,
+  loadDevelopmentPackages: true,
   resourceType: "SearchParameter",
   packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
   silence: true,
 });
 const sds = loadArtifacts({
   fhirVersion: R4,
+  loadDevelopmentPackages: true,
   resourceType: "StructureDefinition",
   packageLocation: path.join(fileURLToPath(import.meta.url), "../../../../"),
   silence: true,

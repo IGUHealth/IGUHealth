@@ -26,6 +26,7 @@ async function loadTestData() {
     for (const resourceType of resourceTypesToCheck) {
       const resources = loadArtifacts({
         resourceType,
+        loadDevelopmentPackages: true,
         packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
         silence: true,
       });

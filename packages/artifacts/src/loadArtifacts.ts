@@ -53,6 +53,7 @@ export default function loadArtifacts<
   resourceType,
   packageLocation,
   silence,
+  loadDevelopmentPackages,
   onlyPackages,
 }: {
   // Only support R4 and R4B for now.
@@ -60,15 +61,14 @@ export default function loadArtifacts<
   resourceType: T;
   packageLocation: string;
   silence?: boolean;
+  loadDevelopmentPackages?: boolean;
   onlyPackages?: string[];
 }): Resource<Version, T>[] {
   const requirer = createRequire(packageLocation);
   const packageJSON: PackageJSON = requirer("./package.json");
 
   let deps = { ...packageJSON.dependencies };
-  // https://jestjs.io/docs/environment-variables
-  // JEST sets environment to test by default.
-  if (process.env.NODE_ENV !== "production") {
+  if (loadDevelopmentPackages) {
     deps = { ...packageJSON.devDependencies, ...deps };
   }
 

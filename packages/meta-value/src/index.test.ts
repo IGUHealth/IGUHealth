@@ -16,6 +16,7 @@ import { MetaValueArray, MetaValueSingular, descend } from "./index";
 
 const sds: StructureDefinition[] = loadArtifacts({
   fhirVersion: R4,
+  loadDevelopmentPackages: true,
   resourceType: "StructureDefinition",
   packageLocation: path.join(fileURLToPath(import.meta.url), ".."),
 });

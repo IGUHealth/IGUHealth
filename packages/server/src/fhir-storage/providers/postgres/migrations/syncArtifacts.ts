@@ -2,6 +2,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
+import { id } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import { FHIR_VERSION, ResourceType } from "@iguhealth/fhir-types/versions";
 import { TenantId } from "@iguhealth/jwt";
 import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
@@ -32,42 +33,73 @@ export default async function syncArtifacts<Version extends FHIR_VERSION>(
     tenant,
   };
 
-  for (const type of types) {
-    const resources = loadArtifacts({
-      fhirVersion,
-      resourceType: type,
-      packageLocation: path.join(
-        fileURLToPath(import.meta.url),
-        "../../../../../../",
-      ),
-      silence: false,
-    });
+  const result = Promise.all(
+    types.map((type) => {
+      const resources = loadArtifacts({
+        fhirVersion,
+        resourceType: type,
+        packageLocation: path.join(
+          fileURLToPath(import.meta.url),
+          "../../../../../../",
+        ),
+        silence: false,
+      });
 
-    console.log("Resources:", resources.length);
-
-    return Promise.all(
-      resources.map((resource) => {
-        if (!resource.id) {
-          logger.error({
-            resource,
-            type,
-            fhirVersion,
-            message: "Resource must have an id",
-          });
-
-          throw new OperationError(
-            outcomeFatal("invalid", `Resource must have an id`),
-          );
-        }
-
-        return client.update(
-          asRoot(iguhealthServices),
-          fhirVersion,
-          type,
-          resource.id,
-          resource,
+      console.log("Resources:", type, resources.length);
+      if (new Set(resources.map((r) => r.id)).size !== resources.length) {
+        const duplicates = new Set();
+        const ids = resources.map((r) => r.id);
+        ids.forEach((id, index) => {
+          if (ids.indexOf(id, index + 1) !== -1) {
+            duplicates.add(id);
+          }
+        });
+        console.error(duplicates);
+        throw new OperationError(
+          outcomeFatal("invalid", `Resources must have unique ids`),
         );
-      }),
-    );
-  }
+      }
+
+      return Promise.all(
+        resources.map(async (resource) => {
+          if (!resource.id) {
+            logger.error({
+              resource,
+              type,
+              fhirVersion,
+              message: "Resource must have an id",
+            });
+
+            throw new OperationError(
+              outcomeFatal("invalid", `Resource must have an id`),
+            );
+          }
+
+          try {
+            await client.update(
+              asRoot(iguhealthServices),
+              fhirVersion,
+              type,
+              `${type}-${resource.id}` as id,
+              resource,
+            );
+          } catch (error) {
+            console.error(
+              "Failed to update resource",
+              resource.id,
+              resource.resourceType,
+            );
+            if (error instanceof OperationError) {
+              console.error(JSON.stringify(error.operationOutcome));
+            }
+            throw error;
+          }
+        }),
+      );
+    }),
+  );
+
+  redis.disconnect();
+
+  return result;
 }

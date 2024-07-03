@@ -30,6 +30,7 @@ function loadResources(
     .map((resourceType) =>
       loadArtifacts({
         fhirVersion: R4,
+        loadDevelopmentPackages: true,
         resourceType,
         packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
         silence: true,

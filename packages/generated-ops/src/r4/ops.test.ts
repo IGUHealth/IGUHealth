@@ -21,6 +21,7 @@ import { ValueSetExpand } from "./ops.js";
 
 const sds = loadArtifacts({
   fhirVersion: R4,
+  loadDevelopmentPackages: true,
   resourceType: "StructureDefinition",
   packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
 });

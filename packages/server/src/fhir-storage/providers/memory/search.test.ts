@@ -25,6 +25,7 @@ async function createMemoryDatabase(
       loadArtifacts({
         fhirVersion: R4,
         resourceType,
+        loadDevelopmentPackages: true,
         packageLocation: path.join(
           fileURLToPath(import.meta.url),
           "../../../../",
