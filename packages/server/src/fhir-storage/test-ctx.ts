@@ -17,12 +17,13 @@ import { AccessTokenPayload, TenantId } from "@iguhealth/jwt";
 
 import { IOCache } from "../cache/interface.js";
 import { IGUHealthServerCTX } from "../fhir-api/types.js";
-import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
+import { TerminologyProvider } from "../fhir-terminology/index.js";
 import { Lock } from "../synchronization/interfaces.js";
 import { Memory } from "./providers/memory/async.js";
 
 const sds = loadArtifacts({
   fhirVersion: R4,
+  loadDevelopmentPackages: true,
   resourceType: "StructureDefinition",
   packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
   silence: true,
@@ -70,7 +71,7 @@ export const testServices: IGUHealthServerCTX = {
     role: "admin",
     jwt: { iss: "test", sub: "test-user" } as AccessTokenPayload<s.user_role>,
   },
-  terminologyProvider: new TerminologyProviderMemory(),
+  terminologyProvider: new TerminologyProvider(),
   logger: pino<string>(),
   client: new Memory({ [R4]: {}, [R4B]: {} }),
   cache: new TestCache(),

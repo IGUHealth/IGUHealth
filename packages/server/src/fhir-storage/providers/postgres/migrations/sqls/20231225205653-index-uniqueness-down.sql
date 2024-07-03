@@ -1,1 +1,0 @@
-ALTER TABLE string_idx DROP CONSTRAINT string_idx_unique;

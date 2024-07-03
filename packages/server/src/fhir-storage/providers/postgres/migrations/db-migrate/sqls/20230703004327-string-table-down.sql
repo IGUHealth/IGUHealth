@@ -1,0 +1,1 @@
+drop table string_idx;

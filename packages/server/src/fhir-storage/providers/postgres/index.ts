@@ -660,7 +660,6 @@ async function createResource<
       author_id: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID],
       author_type: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE],
       resource: resource as unknown as db.JSONObject,
-      
     };
     // the <const> prevents generalization to string[]
     const resourceCol = <const>["resource"];
@@ -871,7 +870,7 @@ async function patchResource<Version extends FHIR_VERSION>(
   id: string,
   patches: Operation[],
 ): Promise<Resource<Version, AllResourceTypes>> {
-  return FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
+  return FHIRTransaction(ctx, db.IsolationLevel.RepeatableRead, async (ctx) => {
     const existingResource = await getResource(
       ctx,
       fhirVersion,
@@ -948,7 +947,7 @@ async function updateResource<
   fhirVersion: Version,
   resource: Resource<Version, AllResourceTypes>,
 ): Promise<{created: boolean; resource: Resource<Version, AllResourceTypes>}> {
-  return FHIRTransaction(ctx, db.IsolationLevel.Serializable, async (ctx) => {
+  return FHIRTransaction(ctx, db.IsolationLevel.RepeatableRead, async (ctx) => {
     if (!resource.id)
       throw new OperationError(
         outcomeError("invalid", "Resource id not found on resource"),

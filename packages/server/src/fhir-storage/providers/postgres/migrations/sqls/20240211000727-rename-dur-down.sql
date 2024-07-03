@@ -1,1 +1,0 @@
-ALTER Table authorization_code RENAME COLUMN expires_in TO duration_valid_seconds;

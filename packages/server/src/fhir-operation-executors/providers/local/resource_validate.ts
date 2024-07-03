@@ -38,6 +38,7 @@ export const validateResource = async (
         {
           fhirVersion,
           validateCode: async (url: r4.uri, code: r4.code) => {
+            if (!ctx.terminologyProvider) return true;
             const result = await ctx.terminologyProvider.validate(
               ctx,
               fhirVersion,

@@ -24,6 +24,7 @@ function getArtifactResources<Version extends FHIR_VERSION>(
     .map((resourceType) =>
       loadArtifacts({
         fhirVersion,
+        loadDevelopmentPackages: true,
         resourceType,
         packageLocation: path.join(fileURLToPath(import.meta.url), "../../"),
         // Limiting to strictly hl7 packages as iguhealth packages changing constantly for snapshots.

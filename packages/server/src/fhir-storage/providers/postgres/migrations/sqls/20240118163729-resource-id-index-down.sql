@@ -1,1 +1,0 @@
-DROP INDEX resources_id_idx;

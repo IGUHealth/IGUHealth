@@ -1,0 +1,1 @@
+ALTER TABLE resources DROP COLUMN request_method;

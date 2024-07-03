@@ -1,1 +1,0 @@
-ALTER TABLE reference_idx DROP CONSTRAINT reference_idx_unique;

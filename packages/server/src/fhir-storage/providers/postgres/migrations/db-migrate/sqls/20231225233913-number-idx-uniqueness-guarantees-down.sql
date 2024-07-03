@@ -1,0 +1,1 @@
+ALTER TABLE number_idx DROP CONSTRAINT number_idx_unique;

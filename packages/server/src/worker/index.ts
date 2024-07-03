@@ -66,7 +66,7 @@ import {
   findSearchParameter,
   parametersWithMetaAssociated,
 } from "../fhir-storage/utilities/search/parameters.js";
-import { TerminologyProviderMemory } from "../fhir-terminology/index.js";
+import { TerminologyProvider } from "../fhir-terminology/index.js";
 import * as Sentry from "../monitoring/sentry.js";
 import RedisLock from "../synchronization/redis.lock.js";
 import { LIB_VERSION } from "../version.js";
@@ -508,7 +508,7 @@ async function createWorker(
   loopInterval = 500,
 ) {
   const db = createPGPool();
-  const terminologyProvider = new TerminologyProviderMemory();
+  const terminologyProvider = new TerminologyProvider();
   const redis = getRedisClient();
   const encryptionProvider = createEncryptionProvider();
   const lock = new RedisLock(redis);

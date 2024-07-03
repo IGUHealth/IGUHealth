@@ -1,1 +1,0 @@
-ALTER TABLE token_idx DROP CONSTRAINT token_idx_unique;

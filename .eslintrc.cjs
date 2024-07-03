@@ -21,6 +21,6 @@ module.exports = {
     "rollup.config.js",
     "postcss.config.js",
     "*.test.ts",
-    "packages/server/src/fhir-storage/providers/postgres/migrations",
+    "packages/server/src/fhir-storage/providers/postgres/migrations/db-migrate",
   ],
 };

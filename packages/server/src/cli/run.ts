@@ -2,14 +2,16 @@ import { Command } from "commander";
 // @ts-ignore
 import DBMigrate from "db-migrate";
 
+// import { R4, R4B } from "@iguhealth/fhir-types/versions";
+// import { TenantId } from "@iguhealth/jwt";
+
+// import syncArtifacts from "../fhir-storage/providers/postgres/migrations/syncArtifacts.js";
 import createServer from "../server.js";
 import createWorker from "../worker/index.js";
 
 interface DBMigrate {
   up: () => Promise<void>;
 }
-
-let dbmigrate: DBMigrate;
 
 async function runServer(port: number) {
   const server = await createServer();
@@ -53,14 +55,16 @@ const both: Parameters<Command["action"]>[0] = async (options) => {
 };
 
 const migrate: Parameters<Command["action"]>[0] = async () => {
-  // @ts-ignore
-  dbmigrate = DBMigrate.getInstance(true, {
+  const dbmigrate: DBMigrate = DBMigrate.getInstance(true, {
     cmdOptions: {
       "sql-file": true,
-      "migrations-dir": "src/fhir-storage/providers/postgres/migrations",
+      "migrations-dir":
+        "src/fhir-storage/providers/postgres/migrations/db-migrate",
     },
   });
   await dbmigrate.up();
+  // await syncArtifacts(R4, "system" as TenantId, ["ValueSet", "CodeSystem"]);
+  // await syncArtifacts(R4B, "system" as TenantId, ["ValueSet", "CodeSystem"]);
 };
 
 export function runCommands(command: Command) {
