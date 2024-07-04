@@ -127,12 +127,18 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     parameters: ParsedParameter<string | number>[] | string,
     resource: Resource<FHIRVersion, T>,
   ): Promise<Resource<FHIRVersion, T>> {
+    const parsedParameters: ParsedParameter<string | number>[] =
+      typeof parameters === "string"
+        ? parseQuery(parameters)
+        : parameters
+          ? parameters
+          : [];
     const response = await this.request(ctx, {
       fhirVersion,
       type: "update-request",
       level: "type",
       resourceType,
-      parameters,
+      parameters: parsedParameters,
       body: resource,
     } as FHIRRequest);
     if (response.type !== "update-response")
@@ -243,12 +249,18 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     resourceType: T,
     parameters?: ParsedParameter<string | number>[] | string,
   ): Promise<void> {
+    const parsedParameters: ParsedParameter<string | number>[] =
+      typeof parameters === "string"
+        ? parseQuery(parameters)
+        : parameters
+          ? parameters
+          : [];
     const response = await this.request(ctx, {
       fhirVersion,
       type: "delete-request",
       level: "type",
       resourceType: resourceType,
-      parameters: parameters,
+      parameters: parsedParameters,
     } as FHIRRequest);
     if (response.type !== "delete-response")
       throw new Error("Unexpected response type");
@@ -258,11 +270,17 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
     fhirVersion: FHIRVersion,
     parameters?: ParsedParameter<string | number>[] | string,
   ): Promise<void> {
+    const parsedParameters: ParsedParameter<string | number>[] =
+      typeof parameters === "string"
+        ? parseQuery(parameters)
+        : parameters
+          ? parameters
+          : [];
     const response = await this.request(ctx, {
       fhirVersion,
       type: "delete-request",
       level: "system",
-      parameters: parameters,
+      parameters: parsedParameters,
     } as FHIRRequest);
     if (response.type !== "delete-response")
       throw new Error("Unexpected response type");
