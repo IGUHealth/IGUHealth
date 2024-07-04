@@ -489,6 +489,7 @@ export class Memory<CTX extends IGUHealthServerCTX>
   public search_type: FHIRClientAsync<CTX>["search_type"];
   public create: FHIRClientAsync<CTX>["create"];
   public update: FHIRClientAsync<CTX>["update"];
+  public conditionalUpdate: FHIRClientAsync<CTX>["conditionalUpdate"];
   public patch: FHIRClientAsync<CTX>["patch"];
   public read: FHIRClientAsync<CTX>["read"];
   public vread: FHIRClientAsync<CTX>["vread"];
@@ -528,6 +529,7 @@ export class Memory<CTX extends IGUHealthServerCTX>
 
     this.create = this._client.create.bind(this._client);
     this.update = this._client.update.bind(this._client);
+    this.conditionalUpdate = this._client.conditionalUpdate.bind(this._client);
     this.patch = this._client.patch.bind(this._client);
     this.read = this._client.read.bind(this._client);
     this.vread = this._client.vread.bind(this._client);
