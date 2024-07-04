@@ -50,7 +50,7 @@ export default async function syncArtifacts<Version extends FHIR_VERSION>(
         silence: false,
       });
 
-      console.log("Resources:", type, resources.length);
+      logger.info({ [`COUNT ${type}`]: resources.length });
       if (new Set(resources.map((r) => r.id)).size !== resources.length) {
         const duplicates = new Set();
         const ids = resources.map((r) => r.id);
@@ -59,7 +59,7 @@ export default async function syncArtifacts<Version extends FHIR_VERSION>(
             duplicates.add(id);
           }
         });
-        console.error(duplicates);
+        logger.error({ duplicates });
         throw new OperationError(
           outcomeFatal("invalid", `Resources must have unique ids`),
         );
@@ -94,19 +94,19 @@ export default async function syncArtifacts<Version extends FHIR_VERSION>(
           };
 
           try {
-            await client.conditionalUpdate(
+            const res = await client.conditionalUpdate(
               asRoot(iguhealthServices),
               fhirVersion,
               type,
-              `_tag:not=md5-checksum|${md5}&_id=${resource.id}`,
+              `_tag:not=md5-checksum|${md5}`,
               resource,
             );
+            logger.info(`Update finished '${res.id}'`);
           } catch (error) {
-            console.error(
-              "Failed to update resource",
-              resource.id,
-              resource.resourceType,
-            );
+            logger.error({
+              message: "Failed to update resource",
+              resource,
+            });
             if (error instanceof OperationError) {
               console.error(JSON.stringify(error.operationOutcome));
             }

@@ -1337,11 +1337,28 @@ function createPostgresMiddleware<
                     //   The server treats the interaction as an Update as Create interaction (or rejects it, if it does not support Update as Create)
                     case 0: {
                       if (request.body.id) {
+                        // From R5 but Applying here on all versions to dissallow updating a Resource if it already exists
+                        const existingResource = await getResource(
+                          ctx,
+                          request.fhirVersion,
+                          request.body.resourceType,
+                          request.body.id,
+                        );
+                        if (existingResource) {
+                          throw new OperationError(
+                            outcomeError(
+                              "conflict",
+                              "Resource already exists. But not found in conditional criteria.",
+                            ),
+                          );
+                        }
+
                         const { resource, created } = await updateResource(
-                          context.ctx,
+                          ctx,
                           request.fhirVersion,
                           request.body,
                         );
+
                         return {
                           request: context.request,
                           state: context.state,
@@ -1358,7 +1375,7 @@ function createPostgresMiddleware<
                         };
                       } else {
                         const resource = await createResource(
-                          context.ctx,
+                          ctx,
                           request.fhirVersion,
                           request.body,
                         );
@@ -1395,7 +1412,7 @@ function createPostgresMiddleware<
                         );
                       }
                       const { created, resource } = await updateResource(
-                        context.ctx,
+                        ctx,
                         request.fhirVersion,
                         { ...request.body, id: foundResource.id },
                       );
