@@ -209,7 +209,6 @@ export async function executeSearchQuery<
     | R4BSystemSearchRequest
     | R4BTypeSearchRequest,
 >(
-  client: db.Queryable,
   ctx: IGUHealthServerCTX,
   request: Request,
 ): Promise<{
@@ -335,7 +334,7 @@ export async function executeSearchQuery<
     ctx.logger.info(v.text);
   }
 
-  const result = await sql.run(client);
+  const result = await sql.run(ctx.db);
 
   const total =
     // In case where nothing returned means that total_count col will not be present.
@@ -374,7 +373,7 @@ export async function executeSearchQuery<
   if (includeParam) {
     resources = resources.concat(
       await processInclude(
-        client,
+        ctx.db,
         ctx,
         request.fhirVersion,
         includeParam,

@@ -70,10 +70,12 @@ export type R4BHistoryInstanceRequest = R4BInstanceInteraction & {
 
 export type R4BCreateRequest = R4BTypeInteraction & {
   type: RequestInteractionTypes["create"];
-  /**
-   * If provided, the server must use the provided id instead of a server assigned id.
-   */
-  allowIdSet?: boolean;
+  body: Resource;
+};
+
+export type R4BConditinalUpdateRequest = R4BTypeInteraction & {
+  type: RequestInteractionTypes["update"];
+  parameters: ParsedParameter<string | number>[];
   body: Resource;
 };
 
@@ -148,7 +150,8 @@ export type R4BFHIRRequest =
   | R4BTransactionRequest
   | R4BSystemHistoryRequest
   | R4BSystemSearchRequest
-  | R4BSystemDeleteRequest;
+  | R4BSystemDeleteRequest
+  | R4BConditinalUpdateRequest;
 
 export type R4BReadResponse = R4BInstanceInteraction & {
   type: ResponseInteractionTypes["read"];

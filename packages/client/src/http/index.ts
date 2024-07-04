@@ -1,4 +1,4 @@
-import { Bundle } from "@iguhealth/fhir-types/r4/types";
+import { Bundle, id } from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
 import { FHIR_VERSION, R4, R4B } from "@iguhealth/fhir-types/versions";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -85,12 +85,28 @@ async function toHTTPRequest(
         headers,
       };
     case "update-request":
-      return {
-        url: `${FHIRUrl}/${request.resourceType}/${request.id}`,
-        method: "PUT",
-        body: JSON.stringify(request.body),
-        headers,
-      };
+      switch (request.level) {
+        case "instance": {
+          return {
+            url: `${FHIRUrl}/${request.resourceType}/${request.id}`,
+            method: "PUT",
+            body: JSON.stringify(request.body),
+            headers,
+          };
+        }
+        case "type": {
+          const queryString = parametersToQueryString(request.parameters);
+          return {
+            url: `${FHIRUrl}/${request.resourceType}${queryString ? `?${queryString}` : ""}`,
+            method: "PUT",
+            body: JSON.stringify(request.body),
+            headers,
+          };
+        }
+        default: {
+          throw new OperationError(outcomeError("exception", "Invalid level"));
+        }
+      }
 
     case "patch-request":
       return {
@@ -361,14 +377,33 @@ async function httpResponseToFHIRResponse(
         throw new OperationError(outcomeError("exception", "No response body"));
       const uresource = await response.json();
 
-      return {
-        fhirVersion: request.fhirVersion,
-        type: "update-response",
-        level: "instance",
-        resourceType: request.resourceType,
-        id: request.id,
-        body: uresource,
-      } as FHIRResponse;
+      switch (request.level) {
+        case "instance": {
+          return {
+            fhirVersion: request.fhirVersion,
+            type: "update-response",
+            level: "instance",
+            resourceType: request.resourceType,
+            id: request.id,
+            body: uresource,
+          } as FHIRResponse;
+        }
+        case "type": {
+          const location = response.headers.get("Location") ?? "";
+          const parts = location.split("/");
+          return {
+            fhirVersion: request.fhirVersion,
+            type: "update-response",
+            level: "instance",
+            resourceType: request.resourceType,
+            id: parts[parts.length - 1] as id,
+            body: uresource,
+          } as FHIRResponse;
+        }
+        default: {
+          throw new OperationError(outcomeError("exception", "Invalid level"));
+        }
+      }
     }
     case "patch-request": {
       if (!response.body)

@@ -70,10 +70,12 @@ export type R4HistoryInstanceRequest = R4InstanceInteraction & {
 
 export type R4CreateRequest = R4TypeInteraction & {
   type: RequestInteractionTypes["create"];
-  /**
-   * If provided, the server must use the provided id instead of a server assigned id.
-   */
-  allowIdSet?: boolean;
+  body: Resource;
+};
+
+export type R4ConditinalUpdateRequest = R4TypeInteraction & {
+  type: RequestInteractionTypes["update"];
+  parameters: ParsedParameter<string | number>[];
   body: Resource;
 };
 
@@ -148,7 +150,8 @@ export type R4FHIRRequest =
   | R4TransactionRequest
   | R4SystemHistoryRequest
   | R4SystemSearchRequest
-  | R4SystemDeleteRequest;
+  | R4SystemDeleteRequest
+  | R4ConditinalUpdateRequest;
 
 export type R4ReadResponse = R4InstanceInteraction & {
   type: ResponseInteractionTypes["read"];

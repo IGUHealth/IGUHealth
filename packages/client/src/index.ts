@@ -105,18 +105,12 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
   async create<
     FHIRVersion extends FHIR_VERSION,
     T extends Resource<FHIRVersion, AllResourceTypes>,
-  >(
-    ctx: CTX,
-    fhirVersion: FHIRVersion,
-    resource: T,
-    allowIdSet?: boolean,
-  ): Promise<T> {
+  >(ctx: CTX, fhirVersion: FHIRVersion, resource: T): Promise<T> {
     const response = await this.request(ctx, {
       fhirVersion,
       type: "create-request",
       level: "type",
       resourceType: resource.resourceType,
-      allowIdSet,
       body: resource,
     } as FHIRRequest);
     if (response.type !== "create-response")

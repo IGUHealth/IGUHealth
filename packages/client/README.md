@@ -86,7 +86,6 @@ export interface FHIRClientAsync<CTX> {
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resource: Value,
-    allowIdSet?: boolean,
   ): Promise<Value>;
   update<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,

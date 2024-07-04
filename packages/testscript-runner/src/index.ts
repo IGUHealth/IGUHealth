@@ -401,23 +401,53 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
     case "update": {
       if (!operation.sourceId)
         throw new OperationError(
-          outcomeFatal("invalid", "sourceId is required for read operation"),
+          outcomeFatal("invalid", "sourceId is required for update operation"),
         );
-      if (!operation.targetId)
-        throw new OperationError(
-          outcomeFatal("invalid", "targetId is required for update operation"),
-        );
-      const target = getFixtureResource(state, operation.targetId);
-      return {
-        fhirVersion: state.version,
-        level: "instance",
-        type: "update-request",
-        resourceType:
-          operation.resource ??
-          (target?.resourceType as unknown as ResourceType<Version>),
-        id: target?.id as id,
-        body: getFixtureResource(state, operation.sourceId),
-      } as FHIRRequest;
+      switch (true) {
+        case operation.params !== undefined: {
+          let source = getFixtureResource(state, operation.sourceId);
+          if (operation.targetId) {
+            const target = getFixtureResource(state, operation.targetId);
+            source = {
+              ...source,
+              resourceType: (operation.resource ??
+                target?.resourceType) as unknown as ResourceType<Version>,
+              id: target?.id as id,
+            };
+          }
+          return {
+            fhirVersion: state.version,
+            level: "type",
+            type: "update-request",
+            resourceType: operation.resource,
+            parameters: parseQuery(
+              evaluateVariables(state, pointer, operation.params),
+            ),
+            body: source,
+          } as FHIRRequest;
+        }
+        case operation.targetId !== undefined: {
+          const target = getFixtureResource(state, operation.targetId);
+          return {
+            fhirVersion: state.version,
+            level: "instance",
+            type: "update-request",
+            resourceType:
+              operation.resource ??
+              (target?.resourceType as unknown as ResourceType<Version>),
+            id: target?.id as id,
+            body: getFixtureResource(state, operation.sourceId),
+          } as FHIRRequest;
+        }
+        default: {
+          throw new OperationError(
+            outcomeFatal(
+              "business-rule",
+              "Must have either a targetId or params for update.",
+            ),
+          );
+        }
+      }
     }
     case "delete": {
       switch (true) {
