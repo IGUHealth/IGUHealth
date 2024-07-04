@@ -1,0 +1,193 @@
+{
+  "id": "update-conditional-patient",
+  "title": "Update Conditional Tests",
+  "description": "Test Conditional Updates",
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "id": "patient-chalmers",
+      "resourceType": "Patient",
+      "name": [{ "family": "Chalmers", "given": ["Peter"] }],
+      "meta": {
+        "tag": [{ "code": "update-conditional-test" }]
+      }
+    }
+  ],
+  "fixture": [
+    {
+      "id": "fixture-patient",
+      "autocreate": false,
+      "autodelete": false,
+      "resource": {
+        "reference": "#patient-chalmers",
+        "display": "Peter Chalmers"
+      }
+    }
+  ],
+  "setup": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "create"
+          },
+          "resource": "Patient",
+          "sourceId": "fixture-patient",
+          "responseId": "create-response"
+        }
+      },
+      {
+        "assert": {
+          "label": "01-ReadPatientOK",
+          "description": "Confirm patient created.",
+          "direction": "response",
+          "resource": "Patient"
+        }
+      }
+    ]
+  },
+  "test": [
+    {
+      "id": "conditional-update-existing-id-aligned",
+      "name": "Conditional Update an Existing Patient IDS Aligned.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "update"
+            },
+            "resource": "Patient",
+            "params": "_tag=update-conditional-test&family=Chalmers&given=Peter",
+            "sourceId": "fixture-patient",
+            "targetId": "create-response",
+            "responseId": "update-response"
+          }
+        },
+        {
+          "assert": {
+            "label": "01-ReadPatientOK",
+            "description": "Confirm patient created.",
+            "direction": "response",
+            "resource": "Patient"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Patient.id",
+            "compareToSourceId": "create-response",
+            "compareToSourceExpression": "Patient.id"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Patient.meta.versionId",
+            "operator": "greaterThan",
+            "compareToSourceId": "create-response",
+            "compareToSourceExpression": "Patient.meta.versionId"
+          }
+        }
+      ]
+    },
+    {
+      "id": "conditional-update-existing-id-misaligned",
+      "name": "Conditional Update an Existing Patient IDS misaligned.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "update"
+            },
+            "resource": "Patient",
+            "sourceId": "fixture-patient",
+            "params": "_tag=update-conditional-test&family=Chalmers&given=Peter",
+            "responseId": "update-response"
+          }
+        },
+        {
+          "assert": {
+            "label": "01-Failure",
+            "description": "Confirm patient created.",
+            "direction": "response",
+            "resource": "OperationOutcome"
+          }
+        },
+        {
+          "assert": {
+            "expression": "OperationOutcome.issue[0].code",
+            "value": "invalid"
+          }
+        }
+      ]
+    },
+    {
+      "id": "conditional-fail-multiple",
+      "name": "Confirm conditional update fails on multiple.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "create"
+            },
+            "resource": "Patient",
+            "sourceId": "fixture-patient",
+            "responseId": "create-response2"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "update"
+            },
+            "resource": "Patient",
+            "sourceId": "fixture-patient",
+            "params": "_tag=update-conditional-test&family=Chalmers&given=Peter",
+            "responseId": "update-response"
+          }
+        },
+        {
+          "assert": {
+            "label": "01-Failure",
+            "description": "Confirm patient created.",
+            "direction": "response",
+            "resource": "OperationOutcome"
+          }
+        },
+        {
+          "assert": {
+            "expression": "OperationOutcome.issue[0].code",
+            "value": "multiple-matches"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "delete"
+            },
+            "resource": "Patient",
+            "targetId": "create-response2"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+          },
+          "resource": "Patient",
+          "params": "_tag=update-conditional-test"
+        }
+      }
+    ]
+  }
+}

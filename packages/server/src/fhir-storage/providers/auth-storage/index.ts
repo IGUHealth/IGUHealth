@@ -215,54 +215,68 @@ function updateUserTableMiddleware<
         }
       }
       case "update-request": {
-        const id = context.request.id;
+        switch (context.request.level) {
+          case "instance": {
+            const id = context.request.id;
 
-        const existingMembership = await context.state.fhirDB.read(
-          context.ctx,
-          R4,
-          "Membership",
-          id,
-        );
+            const existingMembership = await context.state.fhirDB.read(
+              context.ctx,
+              R4,
+              "Membership",
+              id,
+            );
 
-        if (!existingMembership?.meta?.versionId)
-          throw new OperationError(
-            outcomeFatal("not-found", "Membership not found."),
-          );
+            if (!existingMembership?.meta?.versionId)
+              throw new OperationError(
+                outcomeFatal("not-found", "Membership not found."),
+              );
 
-        const existingUser = await db
-          .selectOne("users", {
-            fhir_user_versionid: parseInt(existingMembership.meta.versionId),
-          })
-          .run(context.ctx.db);
+            const existingUser = await db
+              .selectOne("users", {
+                fhir_user_versionid: parseInt(
+                  existingMembership.meta.versionId,
+                ),
+              })
+              .run(context.ctx.db);
 
-        if (!existingUser)
-          throw new OperationError(
-            outcomeFatal("not-found", "User not found."),
-          );
+            if (!existingUser)
+              throw new OperationError(
+                outcomeFatal("not-found", "User not found."),
+              );
 
-        context.request.body = {
-          ...(context.request.body as Membership),
-          emailVerified: determineEmailUpdate(
-            membershipToUser(context.request?.body as Membership),
-            existingUser,
-          ),
-        } as Membership;
+            context.request.body = {
+              ...(context.request.body as Membership),
+              emailVerified: determineEmailUpdate(
+                membershipToUser(context.request?.body as Membership),
+                existingUser,
+              ),
+            } as Membership;
 
-        const res = await next(context);
-        if (!(res.response as R4UpdateResponse)?.body)
-          throw new OperationError(
-            outcomeFatal("invariant", "Response body not found."),
-          );
+            const res = await next(context);
+            if (!(res.response as R4UpdateResponse)?.body)
+              throw new OperationError(
+                outcomeFatal("invariant", "Response body not found."),
+              );
 
-        tenantUserManagement.update(
-          context.ctx,
-          existingUser.id,
-          membershipToUser(
-            (res.response as R4UpdateResponse)?.body as Membership,
-          ),
-        );
+            tenantUserManagement.update(
+              context.ctx,
+              existingUser.id,
+              membershipToUser(
+                (res.response as R4UpdateResponse)?.body as Membership,
+              ),
+            );
 
-        return res;
+            return res;
+          }
+          default: {
+            throw new OperationError(
+              outcomeError(
+                "not-supported",
+                "Only instance level update is supported for auth types.",
+              ),
+            );
+          }
+        }
       }
       case "read-request": {
         return next(context);

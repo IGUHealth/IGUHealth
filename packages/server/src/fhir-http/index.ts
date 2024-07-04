@@ -23,7 +23,6 @@ search-compartment	/[compartment]/[id]/*?	            GET	N/A	N/A	N/A	N/A
                     /[compartment]/[id]/[type]?	        GET	N/A	N/A	N/A	N/A
                     /[compartment]/[id]/_search?	      POST	application/x-www-form-urlencoded	form data	N/A	N/A
                     /[compartment]/[id]/[type]/_search?	POST	application/x-www-form-urlencoded	form data	N/A	N/A
-
 transaction	        /	                                  POST	R	Bundle	O	N/A
 batch	              /	                                  POST	R	Bundle	O	N/A
 search-system	      ?	                                  GET	N/A	N/A	N/A	N/A
@@ -36,13 +35,13 @@ history-system	    /_history	                          GET	N/A	N/A	N/A	N/A
 (operation)	        /$[name]                            POST	R	Parameters	N/A	N/A 
                                                         GET	N/A	N/A	N/A	N/A
                                                         POST	application/x-www-form-urlencoded	form data	N/A	N/A
-
 (operation)	        /[type]/$[name]                     POST	R	Parameters	N/A	N/A 
                                                         GET	N/A	N/A	N/A	N/A
                                                         POST	application/x-www-form-urlencoded	form data	N/A	N/A
 search-type         /[type]/_search?	                  POST	application/x-www-form-urlencoded	form data	N/A	N/A
 read            	  /[type]/[id]	                      GET‡	N/A	N/A	N/A	O: If-Modified-Since, If-None-Match
 update             	/[type]/[id]                      	PUT	R	Resource	O	O: If-Match
+update-conditional  /[type]?                            PUT	R	Resource	O	O: If-Match
 patch        	      /[type]/[id]                      	PATCH	R (may be a patch type)	Patch	O	O: If-Match
 delete	            /[type]/[id]	                      DELETE	N/A	N/A	N/A	N/A
 delete-conditional  /[type]?                            DELETE	N/A	N/A	N/A	O: If-Match
@@ -53,7 +52,6 @@ history-type	      /[type]/_history	                  GET	N/A	N/A	N/A	N/A
                                                         GET	N/A	N/A	N/A	N/A
                                                         POST	application/x-www-form-urlencoded	form data	N/A	N/A
 history-instance	  /[type]/[id]/_history	              GET	N/A	N/A	N/A	N/A
-
 vread            	  /[type]/[id]/_history/[vid]	        GET‡	N/A	N/A	N/A	N/A
  -----------------------------------------------------------------------------------------------------------------
 */
@@ -193,6 +191,7 @@ create         	    /[type]                           	POST	R	Resource	O	O: If-N
 search-type	        /[type]?                           	GET	N/A	N/A	N/A	N/A
 search-system       /_search	                          POST	application/x-www-form-urlencoded	form data	N/A	N/A
 delete-conditional	/[type]?	                          DELETE	N/A	N/A	N/A	O: If-Match
+update-conditional  /[type]?                            PUT	R	Resource	O	O: If-Match
 history-system	    /_history	                          GET	N/A	N/A	N/A	N/A
 (operation)	        /$[name]                            POST	R	Parameters	N/A	N/A 
                                                         GET	N/A	N/A	N/A	N/A
@@ -278,6 +277,42 @@ function parseRequest1NonEmpty(
       throw new OperationError(
         outcomeError("invalid", `Invalid resource type ${urlPieces[0]}`),
       );
+    }
+    case request.method === "PUT": {
+      const resourceType = urlPieces[0].split("?")[0];
+      if (verifyResourceType(fhirVersion, resourceType)) {
+        switch (fhirVersion) {
+          case R4: {
+            return {
+              fhirVersion,
+              type: "update-request",
+              level: "type",
+              resourceType: resourceType as r4.ResourceType,
+              body: request.body as r4.Resource,
+              parameters: parseUrl(request.url),
+            };
+          }
+          case R4B: {
+            return {
+              fhirVersion,
+              type: "update-request",
+              level: "type",
+              resourceType: resourceType as r4b.ResourceType,
+              body: request.body as r4b.Resource,
+              parameters: parseUrl(request.url),
+            };
+          }
+          default: {
+            throw new OperationError(
+              outcomeError("invalid", `Invalid FHIR version '${fhirVersion}'`),
+            );
+          }
+        }
+      } else {
+        throw new OperationError(
+          outcomeError("invalid", "Invalid resource type"),
+        );
+      }
     }
     case request.method === "DELETE": {
       const resourceType = urlPieces[0].split("?")[0];

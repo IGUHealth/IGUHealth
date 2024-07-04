@@ -46,7 +46,11 @@ import {
   deriveLimit,
   searchParameterToTableName,
 } from "../../utilities/search/parameters.js";
-import { fhirResourceToBundleEntry, fhirResponseToBundleEntry, fullUrl } from "../../utilities/bundle.js";
+import {
+  fhirResourceToBundleEntry,
+  fhirResponseToBundleEntry,
+  fullUrl,
+} from "../../utilities/bundle.js";
 import { httpRequestToFHIRRequest } from "../../../fhir-http/index.js";
 import { asRoot, IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import { param_types_supported } from "./constants.js";
@@ -162,7 +166,9 @@ async function indexSearchParameter<
       }
     }
     case "date": {
-      const date_indexes = (await dataConversion(fhirVersion, parameter, "date", evaluation))
+      const date_indexes = (
+        await dataConversion(fhirVersion, parameter, "date", evaluation)
+      )
         .flat()
         .map((value): s.r4_date_idx.Insertable | s.r4b_date_idx.Insertable => ({
           tenant: ctx.tenant,
@@ -302,7 +308,9 @@ async function indexSearchParameter<
       }
     }
     case "uri": {
-      const uri_indexes = (await dataConversion(fhirVersion, parameter, "uri", evaluation))
+      const uri_indexes = (
+        await dataConversion(fhirVersion, parameter, "uri", evaluation)
+      )
         .flat()
         .map((value): s.r4_uri_idx.Insertable | s.r4b_uri_idx.Insertable => ({
           tenant: ctx.tenant,
@@ -652,6 +660,8 @@ async function createResource<
   fhirVersion: Version,
   resource: Resource<Version, AllResourceTypes>,
 ): Promise<Resource<Version, AllResourceTypes>> {
+  // For creation force new id.
+  resource.id = generateId();
   return FHIRTransaction(ctx, db.IsolationLevel.ReadCommitted, async (ctx) => {
     const data: s.resources.Insertable = {
       tenant: ctx.tenant,
@@ -698,17 +708,22 @@ async function getResourceById<Version extends FHIR_VERSION>(
   SELECT * FROM (${getLatestVersionSQLFragment}) as t WHERE t.deleted = false
   `.run(ctx.db);
 
-  return res[0]?.resource as unknown as Resource<Version, AllResourceTypes> | undefined;
+  return res[0]?.resource as unknown as
+    | Resource<Version, AllResourceTypes>
+    | undefined;
 }
 
-async function getResource<Version extends FHIR_VERSION, Type extends ResourceType<Version>>(
+async function getResource<
+  Version extends FHIR_VERSION,
+  Type extends ResourceType<Version>,
+>(
   ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   resourceType: Type,
   id: string,
 ): Promise<Resource<Version, Type>> {
   const resource = await getResourceById(ctx, fhirVersion, id);
-  if(resource === undefined || resource.resourceType !== resourceType){
+  if (resource === undefined || resource.resourceType !== resourceType) {
     throw new OperationError(
       outcomeError(
         "not-found",
@@ -720,18 +735,22 @@ async function getResource<Version extends FHIR_VERSION, Type extends ResourceTy
   return resource as Resource<Version, Type>;
 }
 
-async function getVersionedResource<Version extends FHIR_VERSION>(  ctx: IGUHealthServerCTX,
+async function getVersionedResource<Version extends FHIR_VERSION>(
+  ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   resourceType: ResourceType<Version>,
   id: string,
-versionId: string){
-  const res = await db.select("resources", {
-    tenant: ctx.tenant,
-    resource_type: resourceType,
-    id: id,
-    version_id: parseInt(versionId),
-    fhir_version: toDBFHIRVersion(fhirVersion),
-  }).run(ctx.db);
+  versionId: string,
+) {
+  const res = await db
+    .select("resources", {
+      tenant: ctx.tenant,
+      resource_type: resourceType,
+      id: id,
+      version_id: parseInt(versionId),
+      fhir_version: toDBFHIRVersion(fhirVersion),
+    })
+    .run(ctx.db);
 
   if (res.length === 0) {
     throw new OperationError(
@@ -839,14 +858,19 @@ async function getHistory<
 
   const history = await historySQL.run(ctx.db);
 
-
-
   const resourceHistory = history.map((row) => {
-    const resource = row.resource as unknown as Resource<Version, AllResourceTypes>
-    return ({
+    const resource = row.resource as unknown as Resource<
+      Version,
+      AllResourceTypes
+    >;
+    return {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       resource: resource as any,
-      fullUrl: fullUrl(fhirVersion, ctx.tenant, `${(resource).resourceType}/${resource.id}`),
+      fullUrl: fullUrl(
+        fhirVersion,
+        ctx.tenant,
+        `${resource.resourceType}/${resource.id}`,
+      ),
       request: {
         url: `resource.resourceType}/${resource.id}` as uri,
         method: row.request_method as code,
@@ -855,9 +879,9 @@ async function getHistory<
         location: `${resource.resourceType}/${resource.id}` as uri,
         status: "200",
         etag: resource.meta?.versionId as id,
-        lastModified: resource.meta?.lastUpdated 
-      }
-    })
+        lastModified: resource.meta?.lastUpdated,
+      },
+    };
   });
 
   return resourceHistory;
@@ -879,8 +903,12 @@ async function patchResource<Version extends FHIR_VERSION>(
     );
 
     try {
-      const newResource = jsonpatch.applyPatch(existingResource, patches, true, false)
-        .newDocument as Resource<Version, AllResourceTypes>;
+      const newResource = jsonpatch.applyPatch(
+        existingResource,
+        patches,
+        true,
+        false,
+      ).newDocument as Resource<Version, AllResourceTypes>;
 
       const outcome = await validateResource(ctx, fhirVersion, resourceType, {
         resource: newResource,
@@ -946,7 +974,10 @@ async function updateResource<
   ctx: CTX,
   fhirVersion: Version,
   resource: Resource<Version, AllResourceTypes>,
-): Promise<{created: boolean; resource: Resource<Version, AllResourceTypes>}> {
+): Promise<{
+  created: boolean;
+  resource: Resource<Version, AllResourceTypes>;
+}> {
   return FHIRTransaction(ctx, db.IsolationLevel.RepeatableRead, async (ctx) => {
     if (!resource.id)
       throw new OperationError(
@@ -959,7 +990,10 @@ async function updateResource<
       resource.id,
     );
 
-    if(existingResource && existingResource.resourceType !== resource.resourceType){
+    if (
+      existingResource &&
+      existingResource.resourceType !== resource.resourceType
+    ) {
       throw new OperationError(
         outcomeError(
           "invalid",
@@ -972,9 +1006,12 @@ async function updateResource<
     // Allow clients to define their own ids.
     // Necessary for certain external test suites.
     // Note we automatically set id to be the request.id from update.
-    
-    if(!existingResource){
-      ctx.logger.warn({message: "Resource not found. Creating new resource with id.", id: resource.id});
+
+    if (!existingResource) {
+      ctx.logger.warn({
+        message: "Resource not found. Creating new resource with id.",
+        id: resource.id,
+      });
     }
 
     const data: s.resources.Insertable = {
@@ -984,12 +1021,16 @@ async function updateResource<
       author_id: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID],
       author_type: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE],
       resource: resource as unknown as db.JSONObject,
-      prev_version_id: existingResource ? parseInt(existingResource.meta?.versionId as string) : undefined,
+      prev_version_id: existingResource
+        ? parseInt(existingResource.meta?.versionId as string)
+        : undefined,
       // [TODO] probably uneccessary to insert this and can instead derive in case of syncing.
       patches: JSON.stringify([{ op: "replace", path: "", value: resource }]),
     };
 
-    const res = await db.insert("resources", data, {returning: ["resource"]}).run(ctx.db);
+    const res = await db
+      .insert("resources", data, { returning: ["resource"] })
+      .run(ctx.db);
 
     const updatedResource = res.resource as unknown as Resource<
       Version,
@@ -998,7 +1039,10 @@ async function updateResource<
 
     await indexResource(ctx, fhirVersion, updatedResource);
 
-    return {created: existingResource === undefined, resource:updatedResource};
+    return {
+      created: existingResource === undefined,
+      resource: updatedResource,
+    };
   });
 }
 
@@ -1045,19 +1089,31 @@ async function deleteResource<
   });
 }
 
-async function conditionalDelete(ctx: IGUHealthServerCTX, searchRequest:R4TypeSearchRequest | R4BTypeSearchRequest | R4SystemSearchRequest | R4BSystemSearchRequest) {
+async function conditionalDelete(
+  ctx: IGUHealthServerCTX,
+  searchRequest:
+    | R4TypeSearchRequest
+    | R4BTypeSearchRequest
+    | R4SystemSearchRequest
+    | R4BSystemSearchRequest,
+) {
   const limit = parseInt(process.env.FHIR_DELETE_CONDITIONAL_LIMIT ?? "20");
-  searchRequest.parameters = [...searchRequest.parameters.filter(p => p.name !== "_total" && p.name !== "_count"), 
-    {"name": "_total", value: ["accurate"]},
-    {"name": "_count", value: [limit]}
+  searchRequest.parameters = [
+    ...searchRequest.parameters.filter(
+      (p) => p.name !== "_total" && p.name !== "_count",
+    ),
+    { name: "_total", value: ["accurate"] },
+    { name: "_count", value: [limit] },
   ];
 
-  const result = await executeSearchQuery(ctx.db, ctx, searchRequest);
+  const result = await executeSearchQuery(ctx, searchRequest);
 
-  if((result.total ?? limit+1) > limit) 
-    throw new OperationError(outcomeError("too-costly", "The operation is too costly to perform."))
-  
-  for(const resource of result.resources){
+  if ((result.total ?? limit + 1) > limit)
+    throw new OperationError(
+      outcomeError("too-costly", "The operation is too costly to perform."),
+    );
+
+  for (const resource of result.resources) {
     await deleteResource(
       ctx,
       searchRequest.fhirVersion,
@@ -1066,11 +1122,11 @@ async function conditionalDelete(ctx: IGUHealthServerCTX, searchRequest:R4TypeSe
     );
   }
 
-  switch(searchRequest.level){
-    case "type":{
-      switch(searchRequest.fhirVersion){
+  switch (searchRequest.level) {
+    case "type": {
+      switch (searchRequest.fhirVersion) {
         case R4:
-        case R4B:{
+        case R4B: {
           return {
             fhirVersion: searchRequest.fhirVersion,
             type: "delete-response",
@@ -1079,11 +1135,13 @@ async function conditionalDelete(ctx: IGUHealthServerCTX, searchRequest:R4TypeSe
           } as FHIRResponse;
         }
         default: {
-          throw new OperationError(outcomeError("not-supported", `Unknown FHIR version.`));
+          throw new OperationError(
+            outcomeError("not-supported", `Unknown FHIR version.`),
+          );
         }
       }
     }
-    case "system":{
+    case "system": {
       return {
         fhirVersion: searchRequest.fhirVersion,
         type: "delete-response",
@@ -1092,8 +1150,6 @@ async function conditionalDelete(ctx: IGUHealthServerCTX, searchRequest:R4TypeSe
     }
   }
 }
-
-
 
 function createPostgresMiddleware<
   State extends {
@@ -1148,14 +1204,9 @@ function createPostgresMiddleware<
               body: resource,
             } as FHIRResponse,
           };
-
         }
         case "search-request": {
-          const result = await executeSearchQuery(
-            context.ctx.db,
-            context.ctx,
-            context.request,
-          );
+          const result = await executeSearchQuery(context.ctx, context.request);
           switch (context.request.level) {
             case "system": {
               return {
@@ -1171,7 +1222,13 @@ function createPostgresMiddleware<
                     total: result.total as unsignedInt | undefined,
                     resourceType: "Bundle",
                     type: "searchset",
-                    entry: result.resources.map(r => fhirResourceToBundleEntry(context.request.fhirVersion, context.ctx.tenant, r))
+                    entry: result.resources.map((r) =>
+                      fhirResourceToBundleEntry(
+                        context.request.fhirVersion,
+                        context.ctx.tenant,
+                        r,
+                      ),
+                    ),
                   },
                 } as FHIRResponse,
               };
@@ -1191,7 +1248,13 @@ function createPostgresMiddleware<
                     total: result.total as unsignedInt | undefined,
                     resourceType: "Bundle",
                     type: "searchset",
-                    entry: result.resources.map(r => fhirResourceToBundleEntry(context.request.fhirVersion, context.ctx.tenant, r))
+                    entry: result.resources.map((r) =>
+                      fhirResourceToBundleEntry(
+                        context.request.fhirVersion,
+                        context.ctx.tenant,
+                        r,
+                      ),
+                    ),
                   },
                 } as FHIRResponse,
               };
@@ -1202,18 +1265,6 @@ function createPostgresMiddleware<
           }
         }
         case "create-request": {
-          const savedResource = await createResource(
-            context.ctx,
-            context.request.fhirVersion,
-            {
-              ...context.request.body,
-              // If the id is allowed to be set, use the id from the request body, otherwise generate a new id.
-              id: context.request.allowIdSet
-                ? context.request.body.id ?? generateId()
-                : generateId(),
-            },
-          );
-
           return {
             request: context.request,
             state: context.state,
@@ -1223,7 +1274,11 @@ function createPostgresMiddleware<
               level: "type",
               resourceType: context.request.resourceType,
               type: "create-response",
-              body: savedResource,
+              body: await createResource(
+                context.ctx,
+                context.request.fhirVersion,
+                context.request.body,
+              ),
             } as FHIRResponse,
           };
         }
@@ -1252,34 +1307,164 @@ function createPostgresMiddleware<
           };
         }
         case "update-request": {
-          const { created, resource } = await updateResource(
-            context.ctx,
-            context.request.fhirVersion,
-            // Set the id for the request body to ensure that the resource is updated correctly.
-            // Should be pased on the request.id and request.resourceType
-            {
-              ...context.request.body,
-              id: context.request.id,
-            },
-          );
+          switch (context.request.level) {
+            case "type": {
+              const request = context.request;
+              return FHIRTransaction(
+                context.ctx,
+                db.IsolationLevel.RepeatableRead,
+                async (ctx) => {
+                  const result = await executeSearchQuery(ctx, {
+                    fhirVersion: request.fhirVersion,
+                    type: "search-request",
+                    level: "type",
+                    resourceType: request.resourceType,
+                    // Filter out _sort, _total and _count as not needed and setting count by default to be 2.
+                    parameters: [
+                      ...request.parameters.filter(
+                        (p) =>
+                          p.name !== "_total" &&
+                          p.name !== "_count" &&
+                          p.name !== "_sort",
+                      ),
+                      { name: "_count", value: [2] },
+                    ],
+                  } as R4TypeSearchRequest | R4BTypeSearchRequest);
+                  switch (result.resources.length) {
+                    // No matches, no id provided:
+                    //   The server creates the resource.
+                    // No matches, id provided:
+                    //   The server treats the interaction as an Update as Create interaction (or rejects it, if it does not support Update as Create)
+                    case 0: {
+                      if (request.body.id) {
+                        const { resource, created } = await updateResource(
+                          context.ctx,
+                          request.fhirVersion,
+                          request.body,
+                        );
+                        return {
+                          request: context.request,
+                          state: context.state,
+                          ctx: context.ctx,
+                          response: {
+                            fhirVersion: request.fhirVersion,
+                            level: "instance",
+                            resourceType: resource.resourceType,
+                            id: resource.id,
+                            type: "update-response",
+                            created: created,
+                            body: resource,
+                          } as FHIRResponse,
+                        };
+                      } else {
+                        const resource = await createResource(
+                          context.ctx,
+                          request.fhirVersion,
+                          request.body,
+                        );
+                        return {
+                          request: context.request,
+                          state: context.state,
+                          ctx: context.ctx,
+                          response: {
+                            fhirVersion: request.fhirVersion,
+                            level: "instance",
+                            resourceType: resource.resourceType,
+                            id: resource.id,
+                            type: "update-response",
+                            body: resource,
+                          } as FHIRResponse,
+                        };
+                      }
+                    }
+                    // One Match, no resource id provided OR (resource id provided and it matches the found resource):
+                    //   The server performs the update against the matching resource
+                    // One Match, resource id provided but does not match resource found:
+                    //   The server returns a 400 Bad Request error indicating the client id specification was a problem preferably with an OperationOutcome
+                    case 1: {
+                      const foundResource = result.resources[0];
+                      console.log(request.body.id, foundResource.id);
+                      if (
+                        request.body.id &&
+                        request.body.id !== foundResource.id
+                      ) {
+                        throw new OperationError(
+                          outcomeError(
+                            "invalid",
+                            "Resource id provided does not match resource found.",
+                          ),
+                        );
+                      }
+                      const { created, resource } = await updateResource(
+                        context.ctx,
+                        request.fhirVersion,
+                        { ...request.body, id: foundResource.id },
+                      );
+                      return {
+                        request: context.request,
+                        state: context.state,
+                        ctx: context.ctx,
+                        response: {
+                          fhirVersion: request.fhirVersion,
+                          level: "instance",
+                          resourceType: resource.resourceType,
+                          id: resource.id,
+                          created,
+                          type: "update-response",
+                          body: resource,
+                        } as FHIRResponse,
+                      };
+                    }
+                    // Multiple matches: The server returns a 412 Precondition
+                    // Failed error indicating the client's criteria were not selective enough preferably with an OperationOutcome
+                    default: {
+                      throw new OperationError(
+                        outcomeError(
+                          "multiple-matches",
+                          "Multiple matches found.",
+                        ),
+                      );
+                    }
+                  }
+                },
+              );
+            }
+            case "instance": {
+              const { created, resource } = await updateResource(
+                context.ctx,
+                context.request.fhirVersion,
+                // Set the id for the request body to ensure that the resource is updated correctly.
+                // Should be pased on the request.id and request.resourceType
+                {
+                  ...context.request.body,
+                  id: context.request.id,
+                },
+              );
 
-          return {
-            request: context.request,
-            state: context.state,
-            ctx: context.ctx,
-            response: {
-              fhirVersion: context.request.fhirVersion,
-              level: "instance",
-              resourceType: context.request.resourceType,
-              id: context.request.id,
-              type: "update-response",
-              created: created,
-              body: resource,
-            } as FHIRResponse,
-          };
+              return {
+                request: context.request,
+                state: context.state,
+                ctx: context.ctx,
+                response: {
+                  fhirVersion: context.request.fhirVersion,
+                  level: "instance",
+                  resourceType: context.request.resourceType,
+                  id: context.request.id,
+                  type: "update-response",
+                  created: created,
+                  body: resource,
+                } as FHIRResponse,
+              };
+            }
+            default: {
+              throw new OperationError(
+                outcomeError("not-supported", `Invalid level.`),
+              );
+            }
+          }
         }
         case "delete-request": {
-          switch(context.request.level){
+          switch (context.request.level) {
             case "instance": {
               await deleteResource(
                 context.ctx,
@@ -1287,7 +1472,7 @@ function createPostgresMiddleware<
                 context.request.resourceType,
                 context.request.id,
               );
-    
+
               return {
                 request: context.request,
                 state: context.state,
@@ -1312,24 +1497,26 @@ function createPostgresMiddleware<
                   level: "type",
                   resourceType: context.request.resourceType,
                   parameters: context.request.parameters,
-                } as R4BTypeSearchRequest | R4TypeSearchRequest)
-              }
+                } as R4BTypeSearchRequest | R4TypeSearchRequest),
+              };
             }
             case "system": {
               return {
-                  request: context.request,
-                  state: context.state,
-                  ctx: context.ctx,
-                  response: await conditionalDelete(context.ctx, {
-                    type: "search-request",
-                    fhirVersion: context.request.fhirVersion,
-                    level: "system",
-                    parameters: context.request.parameters,
-                  } as R4BSystemSearchRequest | R4SystemSearchRequest)
+                request: context.request,
+                state: context.state,
+                ctx: context.ctx,
+                response: await conditionalDelete(context.ctx, {
+                  type: "search-request",
+                  fhirVersion: context.request.fhirVersion,
+                  level: "system",
+                  parameters: context.request.parameters,
+                } as R4BSystemSearchRequest | R4SystemSearchRequest),
               };
             }
             default: {
-              throw new OperationError(outcomeError("not-supported", `Invalid level.`));
+              throw new OperationError(
+                outcomeError("not-supported", `Invalid level.`),
+              );
             }
           }
         }
@@ -1357,7 +1544,7 @@ function createPostgresMiddleware<
                   body: {
                     resourceType: "Bundle",
                     type: "history",
-                    entry: history
+                    entry: history,
                   },
                 } as FHIRResponse,
               };
@@ -1375,7 +1562,7 @@ function createPostgresMiddleware<
                   body: {
                     resourceType: "Bundle",
                     type: "history",
-                    entry: history
+                    entry: history,
                   },
                 } as FHIRResponse,
               };
@@ -1392,7 +1579,7 @@ function createPostgresMiddleware<
                   body: {
                     resourceType: "Bundle",
                     type: "history",
-                    entry: history
+                    entry: history,
                   },
                 } as FHIRResponse,
               };
@@ -1473,7 +1660,10 @@ function createPostgresMiddleware<
 
                 const fhirResponse = await ctx.client.request(ctx, fhirRequest);
 
-                const responseEntry = fhirResponseToBundleEntry(ctx.tenant, fhirResponse);
+                const responseEntry = fhirResponseToBundleEntry(
+                  ctx.tenant,
+                  fhirResponse,
+                );
                 responseEntries[parseInt(index)] = responseEntry;
                 // Generate patches to update the transaction references.
                 const patches = entry.fullUrl

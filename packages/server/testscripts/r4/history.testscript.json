@@ -54,6 +54,14 @@
           }
         },
         {
+          "assert": {
+            "expression": "Patient.id",
+            "compareToSourceExpression": "Patient.id",
+            "operator": "notEquals",
+            "compareToSourceId": "fixture-patient1"
+          }
+        },
+        {
           "operation": {
             "type": {
               "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
