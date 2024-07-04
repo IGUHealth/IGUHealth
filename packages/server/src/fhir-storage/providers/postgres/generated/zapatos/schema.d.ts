@@ -6112,12 +6112,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'free'::text`
       */
       subscription_tier: string;
-      /**
-      * **tenants.tenant**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: db.JSONValue;
     }
     export interface JSONSelectable {
       /**
@@ -6144,12 +6138,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'free'::text`
       */
       subscription_tier: string;
-      /**
-      * **tenants.tenant**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: db.JSONValue;
     }
     export interface Whereable {
       /**
@@ -6176,12 +6164,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'free'::text`
       */
       subscription_tier?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **tenants.tenant**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      tenant?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -6208,12 +6190,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'free'::text`
       */
       subscription_tier?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
-      /**
-      * **tenants.tenant**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      tenant: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -6240,12 +6216,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `'free'::text`
       */
       subscription_tier?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **tenants.tenant**
-      * - `jsonb` in database
-      * - `NOT NULL`, no default
-      */
-      tenant?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment>;
     }
     export type UniqueIndex = 'workspaces_pkey';
     export type Column = keyof Selectable;

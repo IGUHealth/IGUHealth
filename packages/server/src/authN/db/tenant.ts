@@ -41,10 +41,6 @@ export class TenantManagement
       .insert("tenants", {
         ...model,
         id: tenantId,
-        tenant: {
-          id: tenantId,
-          name: "Default",
-        },
       })
       .run(ctx.db);
 
