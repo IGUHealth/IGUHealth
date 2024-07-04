@@ -1,0 +1,191 @@
+{
+  "id": "token-search-tests",
+  "title": "Token Search Tests",
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "resourceType": "Encounter",
+      "id": "encounter-1",
+      "status": "in-progress",
+      "meta": {
+        "tag": [{ "code": "token-search-test" }]
+      },
+      "class": {
+        "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+        "code": "IMP"
+      }
+    },
+    {
+      "resourceType": "Encounter",
+      "id": "encounter-2",
+      "status": "finished",
+      "meta": {
+        "tag": [{ "code": "token-search-test" }]
+      },
+      "class": {
+        "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+        "code": "EMER"
+      }
+    }
+  ],
+  "fixture": [
+    {
+      "id": "encounter-1",
+      "resource": {
+        "reference": "#encounter-1"
+      }
+    },
+    {
+      "id": "encounter-2",
+      "resource": {
+        "reference": "#encounter-2"
+      }
+    }
+  ],
+  "setup": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "create"
+          },
+          "resource": "Encounter",
+          "sourceId": "encounter-1",
+          "responseId": "ec1-response"
+        }
+      },
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "create"
+          },
+          "resource": "Encounter",
+          "sourceId": "encounter-2",
+          "responseId": "ec2-response"
+        }
+      }
+    ]
+  },
+  "test": [
+    {
+      "id": "01-default-token-search",
+      "name": "Default Token Search",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "resource": "Encounter",
+            "params": "_tag=token-search-test&class=IMP"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.count()",
+            "value": 1
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.id",
+            "compareToSourceId": "ec1-response",
+            "compareToSourceExpression": "Encounter.id"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "resource": "Encounter",
+            "params": "_tag=token-search-test&class=EMER"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.count()",
+            "value": 1
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.id",
+            "compareToSourceId": "ec2-response",
+            "compareToSourceExpression": "Encounter.id"
+          }
+        }
+      ]
+    },
+    {
+      "id": "01-not-modifier-search",
+      "name": "Not Modified Token Search",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "resource": "Encounter",
+            "params": "_tag=token-search-test&class:not=IMP"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.count()",
+            "value": 1
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.id",
+            "compareToSourceId": "ec2-response",
+            "compareToSourceExpression": "Encounter.id"
+          }
+        },
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "search"
+            },
+            "resource": "Encounter",
+            "params": "_tag=token-search-test&class:not=EMER,ACUTE"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.count()",
+            "value": 1
+          }
+        },
+        {
+          "assert": {
+            "expression": "Bundle.entry.resource.id",
+            "compareToSourceId": "ec1-response",
+            "compareToSourceExpression": "Encounter.id"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+          },
+          "params": "_tag=token-search-test",
+          "description": "Delete the tests data."
+        }
+      }
+    ]
+  }
+}
