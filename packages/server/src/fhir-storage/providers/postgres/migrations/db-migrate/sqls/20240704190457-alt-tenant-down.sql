@@ -1,0 +1,2 @@
+ALTER TABLE tenants
+ ADD COLUMN tenant JSONB NOT NULL DEFAULT '{}'::jsonb;
