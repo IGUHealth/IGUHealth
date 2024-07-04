@@ -644,7 +644,8 @@ async function deriveComparision<Version extends FHIR_VERSION>(
       }
     }
   }
-  return true;
+
+  throw new Error("Invalid Value could not derive comparison.");
 }
 
 /**
