@@ -117,6 +117,28 @@ export class AsynchronousClient<State, CTX> implements FHIRClientAsync<CTX> {
       throw new Error("Unexpected response type");
     return response.body as T;
   }
+  async conditionalUpdate<
+    FHIRVersion extends FHIR_VERSION,
+    T extends AllResourceTypes,
+  >(
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
+    resourceType: T,
+    parameters: ParsedParameter<string | number>[] | string,
+    resource: Resource<FHIRVersion, T>,
+  ): Promise<Resource<FHIRVersion, T>> {
+    const response = await this.request(ctx, {
+      fhirVersion,
+      type: "update-request",
+      level: "type",
+      resourceType,
+      parameters,
+      body: resource,
+    } as FHIRRequest);
+    if (response.type !== "update-response")
+      throw new Error("Unexpected response type");
+    return response.body as Resource<FHIRVersion, T>;
+  }
   async update<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
     fhirVersion: FHIRVersion,

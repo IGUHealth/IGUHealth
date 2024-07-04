@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -13,6 +14,10 @@ import { getRedisClient } from "../../../../fhir-api/index.js";
 import { IGUHealthServerCTX, asRoot } from "../../../../fhir-api/types.js";
 import RedisLock from "../../../../synchronization/redis.lock.js";
 import { createPGPool } from "../pg.js";
+
+function createCheckSum(value: unknown): string {
+  return crypto.createHash("md5").update(JSON.stringify(value)).digest("hex");
+}
 
 export default async function syncArtifacts<Version extends FHIR_VERSION>(
   fhirVersion: Version,
@@ -75,12 +80,25 @@ export default async function syncArtifacts<Version extends FHIR_VERSION>(
             );
           }
 
+          const md5 = createCheckSum(resource);
+          resource = {
+            ...resource,
+            id: `${resource.id}-${resource.resourceType}`,
+            meta: {
+              ...resource.meta,
+              tag: [
+                ...(resource?.meta?.tag ?? []),
+                { system: "md5-checksum", code: md5 },
+              ],
+            },
+          };
+
           try {
-            await client.update(
+            await client.conditionalUpdate(
               asRoot(iguhealthServices),
               fhirVersion,
               type,
-              `${type}-${resource.id}` as id,
+              `_tag:not=md5-checksum|${md5}&_id=${resource.id}`,
               resource,
             );
           } catch (error) {
