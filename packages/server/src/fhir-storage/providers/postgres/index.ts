@@ -1383,7 +1383,6 @@ function createPostgresMiddleware<
                     //   The server returns a 400 Bad Request error indicating the client id specification was a problem preferably with an OperationOutcome
                     case 1: {
                       const foundResource = result.resources[0];
-                      console.log(request.body.id, foundResource.id);
                       if (
                         request.body.id &&
                         request.body.id !== foundResource.id
