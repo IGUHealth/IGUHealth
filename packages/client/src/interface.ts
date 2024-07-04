@@ -52,11 +52,22 @@ export interface FHIRClientAsync<CTX> {
     fhirVersion: FHIRVersion,
     resource: Value,
   ): Promise<Value>;
+
   update<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
     ctx: CTX,
     fhirVersion: FHIRVersion,
     resourceType: T,
     id: NonNullable<Resource<FHIRVersion, AllResourceTypes>["id"]>,
+    resource: Resource<FHIRVersion, T>,
+  ): Promise<Resource<FHIRVersion, T>>;
+  conditionalUpdate<
+    FHIRVersion extends FHIR_VERSION,
+    T extends AllResourceTypes,
+  >(
+    ctx: CTX,
+    fhirVersion: FHIRVersion,
+    resourceType: T,
+    parameters: ParsedParameter<string | number>[] | string,
     resource: Resource<FHIRVersion, T>,
   ): Promise<Resource<FHIRVersion, T>>;
   patch<FHIRVersion extends FHIR_VERSION, T extends AllResourceTypes>(
