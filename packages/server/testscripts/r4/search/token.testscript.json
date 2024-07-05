@@ -243,7 +243,7 @@
               "code": "search"
             },
             "resource": "Encounter",
-            "params": "_tag=token-search-test&class:not=non-system|EMER"
+            "params": "_tag=token-search-test&class:not=EMER"
           }
         },
         {
@@ -282,7 +282,7 @@
         {
           "assert": {
             "expression": "Bundle.entry.count()",
-            "value": "0"
+            "value": "1"
           }
         },
         {
