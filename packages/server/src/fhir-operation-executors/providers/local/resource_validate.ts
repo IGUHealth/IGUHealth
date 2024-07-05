@@ -10,7 +10,7 @@ import {
   outcomeError,
 } from "@iguhealth/operation-outcomes";
 
-import { asRoot, IGUHealthServerCTX } from "../../../fhir-api/types.js";
+import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import InlineOperation from "./interface.js";
 
 export const validateResource = async (
@@ -38,8 +38,6 @@ export const validateResource = async (
         {
           fhirVersion,
           validateCode: async (url: r4.uri, code: r4.code) => {
-            const id = Math.floor(Math.random() * 1000);
-            console.time(`${id} Time to Validate Code`);
             if (!ctx.terminologyProvider) return true;
             const result = await ctx.terminologyProvider.validate(
               ctx,
@@ -49,7 +47,6 @@ export const validateResource = async (
                 url,
               },
             );
-            console.timeEnd(`${id} Time to Validate Code`);
             return result.result;
           },
           resolveCanonical: ctx.resolveCanonical,

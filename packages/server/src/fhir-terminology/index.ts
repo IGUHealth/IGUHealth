@@ -3,6 +3,7 @@ import {
   CodeSystemConcept,
   ValueSetComposeInclude,
   ValueSetExpansionContains,
+  canonical,
   dateTime,
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, R4, Resource } from "@iguhealth/fhir-types/versions";
@@ -89,16 +90,11 @@ async function getValuesetExpansionContains<Version extends FHIR_VERSION>(
         );
       }
     } else if (include.system) {
-      let codeSystem;
-      const search = await ctx.client.search_type(
-        ctx,
+      const codeSystem = await ctx.resolveCanonical(
         fhirVersion,
         "CodeSystem",
-        [{ name: "system", value: [include.system] }],
+        include.system as canonical,
       );
-      if (search.resources.length === 1) {
-        codeSystem = search.resources[0];
-      }
 
       if (!codeSystem) {
         throw new OperationError(
@@ -194,30 +190,18 @@ export class TerminologyProvider implements ITerminologyProvider {
     fhirVersion: Version,
     input: ExpandInput,
   ): Promise<ExpandOutput> {
-    const id = Math.floor(Math.random() * 1000);
     let valueset: Resource<Version, "ValueSet"> | undefined;
     if (input.valueSet) {
       valueset = input.valueSet as Resource<Version, "ValueSet"> | undefined;
     } else if (input.url) {
       const [url, url_version] = splitParameter(input.url, "|");
       const version = url_version ? url_version : input.valueSetVersion;
-      const parameters = [{ name: "url", value: [url] }];
-      if (version) {
-        parameters.concat([{ name: "version", value: [version] }]);
-      }
 
-      console.time(`${id}RETRIEVE VALUESET`);
-      const search = await ctx.client.search_type(
-        ctx,
+      valueset = await ctx.resolveCanonical(
         fhirVersion,
         "ValueSet",
-        parameters,
+        url as canonical,
       );
-      console.timeEnd(`${id}RETRIEVE VALUESET`);
-
-      if (search.resources.length === 1) {
-        valueset = search.resources[0];
-      }
     }
 
     if (!valueset) {
@@ -227,13 +211,11 @@ export class TerminologyProvider implements ITerminologyProvider {
     }
 
     if (!valueset.expansion) {
-      console.time(`${id}GET EXPANSIONS`);
       const contains = await getValuesetExpansionContains(
         ctx,
         fhirVersion,
         valueset,
       );
-      console.timeEnd(`${id}GET EXPANSIONS`);
       valueset = {
         ...valueset,
         expansion: {
@@ -255,14 +237,12 @@ export class TerminologyProvider implements ITerminologyProvider {
         outcomeError("invalid", "Invalid input must have both system and code"),
       );
     }
-
     const codeSystem = await ctx.client.search_type(
       ctx,
       fhirVersion,
       "CodeSystem",
       [{ name: "url", value: [input.system] }],
     );
-
     if (codeSystem.resources.length < 1) {
       throw new OperationError(
         outcomeError(

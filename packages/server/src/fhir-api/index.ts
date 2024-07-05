@@ -35,19 +35,13 @@ import createEncryptionMiddleware from "./middleware/encryption.js";
 import createCheckTenantUsageMiddleware from "./middleware/usageCheck.js";
 import createValidationMiddleware from "./middleware/validation.js";
 import { IGUHealthServerCTX } from "./types.js";
-import {
-  createTerminologyClient,
-  TERMINOLOGY_METHODS_ALLOWED,
-} from "../fhir-storage/providers/terminology/index.js";
 
 const R4_SPECIAL_TYPES: {
   MEMORY: ResourceType<R4>[];
   AUTH: ResourceType<R4>[];
-  TERMINOLOGY: ResourceType<R4>[];
 } = {
   AUTH: AUTH_RESOURCETYPES,
-  TERMINOLOGY: ["ValueSet", "CodeSystem"],
-  MEMORY: ["StructureDefinition", "SearchParameter"],
+  MEMORY: ["StructureDefinition", "SearchParameter", "ValueSet", "CodeSystem"],
 };
 const R4_ALL_SPECIAL_TYPES = Object.values(R4_SPECIAL_TYPES).flatMap((v) => v);
 const R4_DB_TYPES: ResourceType<R4>[] = (
@@ -64,7 +58,7 @@ const R4B_SPECIAL_TYPES: { MEMORY: ResourceType<R4B>[] } & Record<
     // "SubscriptionStatus",
     "OperationDefinition",
   ],
-  MEMORY: ["StructureDefinition", "SearchParameter"],
+  MEMORY: ["StructureDefinition", "SearchParameter", "ValueSet", "CodeSystem"],
 };
 const R4B_ALL_SPECIAL_TYPES = Object.values(R4B_SPECIAL_TYPES).flatMap(
   (v) => v,
@@ -208,16 +202,6 @@ export function createClient() {
         },
       },
       source: createAuthStorageClient(pgSource),
-    },
-    {
-      filter: {
-        r4: {
-          levelsSupported: ["type", "instance"],
-          resourcesSupported: R4_SPECIAL_TYPES.TERMINOLOGY,
-          interactionsSupported: TERMINOLOGY_METHODS_ALLOWED,
-        },
-      },
-      source: createTerminologyClient(pgSource),
     },
     {
       filter: {
