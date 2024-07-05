@@ -32,13 +32,10 @@ function createTerminologyMiddleware<
     validateResourceTypesAllowedMiddleware(TERMINOLOGY_RESOURCETYPES),
     validateOperationsAllowed(TERMINOLOGY_METHODS_ALLOWED),
     async (context) => {
-      const id = Math.floor(Math.random() * 1000);
-      console.time(`${id} REQUEST ${JSON.stringify(context.request)}`);
       const response = await context.state.fhirDB.request(
         asRoot({ ...context.ctx, tenant: "iguhealth" as TenantId }),
         context.request,
       );
-      console.timeEnd(`${id} REQUEST ${JSON.stringify(context.request)}`);
 
       return {
         ...context,
