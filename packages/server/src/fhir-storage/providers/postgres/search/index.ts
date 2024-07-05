@@ -334,65 +334,70 @@ export async function executeSearchQuery<
     ctx.logger.info(v.text);
   }
 
-  const result = await sql.run(ctx.db);
+  try {
+    const result = await sql.run(ctx.db);
 
-  const total =
-    // In case where nothing returned means that total_count col will not be present.
-    result[0] === undefined
-      ? 0
-      : result[0]?.total_count !== undefined
-        ? parseInt(result[0]?.total_count)
-        : undefined;
+    const total =
+      // In case where nothing returned means that total_count col will not be present.
+      result[0] === undefined
+        ? 0
+        : result[0]?.total_count !== undefined
+          ? parseInt(result[0]?.total_count)
+          : undefined;
 
-  let resources: Resource<typeof request.fhirVersion, AllResourceTypes>[] =
-    result.map(
-      (r) =>
-        r.resource as unknown as Resource<
-          typeof request.fhirVersion,
-          AllResourceTypes
-        >,
-    );
+    let resources: Resource<typeof request.fhirVersion, AllResourceTypes>[] =
+      result.map(
+        (r) =>
+          r.resource as unknown as Resource<
+            typeof request.fhirVersion,
+            AllResourceTypes
+          >,
+      );
 
-  if (revIncludeParam) {
-    resources = resources.concat(
-      await processRevInclude(
-        ctx,
-        request.fhirVersion,
-        revIncludeParam,
-        result.map(
-          (r) =>
-            r.resource as unknown as Resource<
-              typeof request.fhirVersion,
-              AllResourceTypes
-            >,
+    if (revIncludeParam) {
+      resources = resources.concat(
+        await processRevInclude(
+          ctx,
+          request.fhirVersion,
+          revIncludeParam,
+          result.map(
+            (r) =>
+              r.resource as unknown as Resource<
+                typeof request.fhirVersion,
+                AllResourceTypes
+              >,
+          ),
         ),
-      ),
-    );
-  }
+      );
+    }
 
-  if (includeParam) {
-    resources = resources.concat(
-      await processInclude(
-        ctx.db,
-        ctx,
-        request.fhirVersion,
-        includeParam,
-        result.map(
-          (r) =>
-            r.resource as unknown as Resource<
-              typeof request.fhirVersion,
-              AllResourceTypes
-            >,
+    if (includeParam) {
+      resources = resources.concat(
+        await processInclude(
+          ctx.db,
+          ctx,
+          request.fhirVersion,
+          includeParam,
+          result.map(
+            (r) =>
+              r.resource as unknown as Resource<
+                typeof request.fhirVersion,
+                AllResourceTypes
+              >,
+          ),
         ),
-      ),
-    );
-  }
+      );
+    }
 
-  return {
-    total,
-    resources: resources as Resource<
-      Request["fhirVersion"],
-      AllResourceTypes
-    >[],
-  };
+    return {
+      total,
+      resources: resources as Resource<
+        Request["fhirVersion"],
+        AllResourceTypes
+      >[],
+    };
+  } catch (e) {
+    console.log(sql.compile().text, sql.compile().values);
+    throw e;
+  }
 }
