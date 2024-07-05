@@ -63,8 +63,8 @@ const migrate: Parameters<Command["action"]>[0] = async () => {
     },
   });
   await dbmigrate.up();
-  // await syncArtifacts(R4, "system" as TenantId, ["ValueSet", "CodeSystem"]);
-  // await syncArtifacts(R4B, "system" as TenantId, ["ValueSet", "CodeSystem"]);
+  // await syncArtifacts(R4, "iguhealth" as TenantId, ["ValueSet", "CodeSystem"]);
+  // await syncArtifacts(R4B, "iguhealth" as TenantId, ["ValueSet", "CodeSystem"]);
 };
 
 export function runCommands(command: Command) {

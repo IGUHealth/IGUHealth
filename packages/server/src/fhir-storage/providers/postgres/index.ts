@@ -721,15 +721,10 @@ async function getResource<
   fhirVersion: Version,
   resourceType: Type,
   id: string,
-): Promise<Resource<Version, Type>> {
+): Promise<Resource<Version, Type> | undefined> {
   const resource = await getResourceById(ctx, fhirVersion, id);
   if (resource === undefined || resource.resourceType !== resourceType) {
-    throw new OperationError(
-      outcomeError(
-        "not-found",
-        `'${resourceType}' with id '${id}' was not found`,
-      ),
-    );
+    return undefined;
   }
 
   return resource as Resource<Version, Type>;
@@ -901,6 +896,14 @@ async function patchResource<Version extends FHIR_VERSION>(
       resourceType,
       id,
     );
+    if (!existingResource) {
+      throw new OperationError(
+        outcomeError(
+          "not-found",
+          `'${resourceType}' with id '${id}' was not found`,
+        ),
+      );
+    }
 
     try {
       const newResource = jsonpatch.applyPatch(
@@ -1167,6 +1170,14 @@ function createPostgresMiddleware<
             context.request.resourceType,
             context.request.id,
           );
+          if (!resource) {
+            throw new OperationError(
+              outcomeError(
+                "not-found",
+                `'${context.request.resourceType}' with id '${context.request.id}' was not found`,
+              ),
+            );
+          }
           return {
             state: context.state,
             ctx: context.ctx,

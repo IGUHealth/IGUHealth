@@ -1,0 +1,1 @@
+INSERT INTO tenants (id, subscription_tier) VALUES ('iguhealth', 'unlimited');

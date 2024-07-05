@@ -79,7 +79,9 @@ export default async function syncArtifacts<Version extends FHIR_VERSION>(
               outcomeFatal("invalid", `Resource must have an id`),
             );
           }
-
+          if (resource.id === "message-broker-type-codesystem") {
+            console.log("RESOURCE: ", JSON.stringify(resource));
+          }
           const md5 = createCheckSum(resource);
           resource = {
             ...resource,
@@ -98,18 +100,22 @@ export default async function syncArtifacts<Version extends FHIR_VERSION>(
               asRoot(iguhealthServices),
               fhirVersion,
               type,
-              `_tag:not=md5-checksum|${md5}`,
+              `_tag:not=md5-checksum|${md5}&_id=${resource.id}`,
               resource,
             );
             logger.info(`Update finished '${res.id}'`);
           } catch (error) {
-            logger.error({
-              message: "Failed to update resource",
-              resource,
-            });
             if (error instanceof OperationError) {
-              console.error(JSON.stringify(error.operationOutcome));
+              if (error.operationOutcome.issue[0].code === "conflict") {
+                logger.warn({
+                  message: `Resource already exists with checksum`,
+                  resource: resource.id,
+                  checksum: md5,
+                });
+                return;
+              }
             }
+            logger.error(error);
             throw error;
           }
         }),

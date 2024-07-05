@@ -29,7 +29,7 @@ export default function tokenClauses(
           if (parts.length === 2) {
             if (parts[0] !== "" && parts[1] !== "") {
               return {
-                system: db.sql`${db.self} != ${db.param(parts[0])}`,
+                system: db.sql`${db.self} = ${db.param(parts[0])}`,
                 value: db.sql`${db.self} != ${db.param(parts[1])}`,
               };
             } else if (parts[0] !== "" && parts[1] === "") {
