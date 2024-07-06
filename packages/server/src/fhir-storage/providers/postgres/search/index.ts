@@ -217,7 +217,10 @@ export async function executeSearchQuery<
 }> {
   const resourceTypes = deriveResourceTypeFilter(request);
   // Remove _type as using on derived resourceTypeFilter
-  request.parameters = request.parameters.filter((p) => p.name !== "_type");
+  request.parameters = request.parameters.filter(
+    // Filter _type and empty param values.
+    (p) => p.name !== "_type" && p.value.length > 0,
+  );
 
   const parameters = await parametersWithMetaAssociated(
     async (resourceTypes, name) =>
