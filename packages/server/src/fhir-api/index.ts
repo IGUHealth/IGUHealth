@@ -9,6 +9,7 @@ import {
 import * as r4Sets from "@iguhealth/fhir-types/r4/sets";
 import * as r4bSets from "@iguhealth/fhir-types/r4b/sets";
 import { R4, R4B, ResourceType } from "@iguhealth/fhir-types/versions";
+import { FHIRClientAsync } from "@iguhealth/client/interface";
 
 import { associateUserMiddleware } from "../authZ/middleware/associateUser.js";
 import createAuthorizationMiddleware from "../authZ/middleware/authorization.js";
@@ -125,7 +126,11 @@ function createFHIRClient(sources: RouterState["sources"]) {
   );
 }
 
-export function createClient() {
+export function createClient(): {
+  client: FHIRClientAsync<IGUHealthServerCTX>;
+  resolveCanonical: IGUHealthServerCTX["resolveCanonical"];
+  resolveTypeToCanonical: IGUHealthServerCTX["resolveTypeToCanonical"];
+} {
   const memSource = createArtifactMemoryDatabase({
     r4: R4_SPECIAL_TYPES.MEMORY,
     r4b: R4B_SPECIAL_TYPES.MEMORY,
