@@ -68,7 +68,7 @@ export const testServices: IGUHealthServerCTX = {
         : false,
   }),
   user: {
-    jwt: {
+    payload: {
       iss: "test",
       sub: "test-user",
       [CUSTOM_CLAIMS.ROLE]: "member",

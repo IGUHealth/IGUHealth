@@ -13,14 +13,14 @@ type UserInfoResponse = {
 
 export function userInfo(): OIDCRouteHandler {
   return async (ctx, next) => {
-    if (!ctx.state.user) {
+    if (!ctx.state.iguhealth.user) {
       throw new OperationError(
         outcomeError("forbidden", "User is not authenticated."),
       );
     }
     const user = await ctx.state.oidc.userManagement.get(
       ctx.state.iguhealth,
-      ctx.state.user.sub,
+      ctx.state.iguhealth.user.payload.sub,
     );
     ctx.body = {
       sub: user?.id,

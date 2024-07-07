@@ -44,8 +44,8 @@ export default async function logAuditEvent<
     outcomeDesc: outcomeDescription,
     agent: [
       {
-        altId: ctx.user.jwt.sub,
-        name: ctx.user.jwt.sub,
+        altId: ctx.user.payload.sub,
+        name: ctx.user.payload.sub,
         requestor: true,
       },
     ],
