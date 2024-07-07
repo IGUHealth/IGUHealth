@@ -11,6 +11,7 @@ import {
   IGUHEALTH_AUDIENCE,
   IGUHEALTH_ISSUER,
   Subject,
+  TenantId,
 } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -122,17 +123,17 @@ export async function createValidateUserJWTMiddleware<T, C>({
  * @param ctx Koa.Context
  * @param next Koa.Next
  */
-export const allowPublicAccessMiddleware: Koa.Middleware = async (
-  ctx,
-  next,
-) => {
+export const allowPublicAccessMiddleware: Koa.Middleware<
+  KoaExtensions.IGUHealthServices,
+  KoaExtensions.KoaIGUHealthContext
+> = async (ctx, next) => {
   const user: AccessTokenPayload<s.user_role> = {
     iss: IGUHEALTH_ISSUER,
     sub: "public-user" as Subject,
     access_token: "sec-public",
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
     [CUSTOM_CLAIMS.RESOURCE_ID]: "public" as id,
-    [CUSTOM_CLAIMS.TENANT]: ctx.params.tenant,
+    [CUSTOM_CLAIMS.TENANT]: ctx.params.tenant as TenantId,
     [CUSTOM_CLAIMS.ROLE]: "admin",
   };
   ctx.state = {

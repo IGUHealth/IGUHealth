@@ -45,7 +45,7 @@ export async function verifyAndAssociateUserFHIRContext<
   ctx.state.iguhealth = {
     ...ctx.state.iguhealth,
     user: {
-      jwt: ctx.state.user as AccessTokenPayload<s.user_role>,
+      jwt: ctx.state.user,
       accessToken: ctx.state.access_token,
     },
   };
