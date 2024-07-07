@@ -27,9 +27,9 @@ function Copyable({
   label,
 }: Readonly<{ value?: string; label?: string }>) {
   return (
-    <label>
-      <span className="font-weight-500">{label}</span>
-      <div className="flex flex-row">
+    <div>
+      <label className="font-weight-500">{label}</label>
+      <div className="flex flex-1 flex-row items-center">
         <div className="flex flex-1">
           <Input readOnly value={value} />
         </div>
@@ -43,7 +43,7 @@ function Copyable({
           Copy
         </Button>
       </div>
-    </label>
+    </div>
   );
 }
 

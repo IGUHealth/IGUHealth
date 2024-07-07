@@ -1,7 +1,6 @@
 import Koa from "koa";
-import * as s from "zapatos/schema";
 
-import { AccessTokenPayload, CUSTOM_CLAIMS, TenantClaim } from "@iguhealth/jwt";
+import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import {
   OperationError,
   outcomeError,
@@ -10,13 +9,6 @@ import {
 
 import { KoaExtensions } from "../../fhir-api/types.js";
 
-function findCurrentTenant(
-  state: KoaExtensions.IGUHealth,
-): TenantClaim<s.user_role> | undefined {
-  return state.user?.[CUSTOM_CLAIMS.TENANTS].find(
-    (t: TenantClaim<s.user_role>) => t.id === state.iguhealth.tenant,
-  );
-}
 /**
  * Verify a users access to a given tenant based around JWT Claims
  * (see findCurrentTenant above for how search is done).
@@ -32,8 +24,7 @@ export async function verifyAndAssociateUserFHIRContext<
     throw new OperationError(outcomeError("invalid", "No tenant present."));
   }
 
-  const tenantClaim = findCurrentTenant(ctx.state);
-  if (tenantClaim === undefined) {
+  if (ctx.state.user?.[CUSTOM_CLAIMS.TENANT] !== ctx.state.iguhealth.tenant) {
     throw new OperationError(
       outcomeError(
         "security",
@@ -53,8 +44,7 @@ export async function verifyAndAssociateUserFHIRContext<
   ctx.state.iguhealth = {
     ...ctx.state.iguhealth,
     user: {
-      role: tenantClaim.userRole,
-      jwt: ctx.state.user as AccessTokenPayload<s.user_role>,
+      jwt: ctx.state.user,
       accessToken: ctx.state.access_token,
     },
   };

@@ -3,7 +3,7 @@ import {
   Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
 import classNames from "classnames";
-import React, { useEffect } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import {
   Outlet,
@@ -24,12 +24,7 @@ import {
   useIGUHealth,
 } from "@iguhealth/components";
 import "@iguhealth/components/dist/index.css";
-import {
-  CUSTOM_CLAIMS,
-  IDTokenPayload,
-  TenantClaim,
-  TenantId,
-} from "@iguhealth/jwt";
+import { TenantId } from "@iguhealth/jwt";
 
 import { Logo } from "./components/Logo";
 import Search from "./components/Search";
@@ -87,13 +82,6 @@ function ServiceSetup({ children }: { children: React.ReactNode }) {
   return <>{c ? <>{children}</> : undefined}</>;
 }
 
-function getTenants<role>(
-  jwt: IDTokenPayload<role> | undefined,
-): TenantClaim<role>[] {
-  if (!jwt) return [];
-  return jwt[CUSTOM_CLAIMS.TENANTS] as TenantClaim<role>[];
-}
-
 function deriveTenantID(): TenantId {
   const host = window.location.host;
   const tenantID = host.split(".")[0];
@@ -101,21 +89,6 @@ function deriveTenantID(): TenantId {
 }
 
 function WorkspaceCheck() {
-  const navigate = useNavigate();
-  const matches = useMatches();
-  const iguhealth = useIGUHealth();
-
-  const tenants = getTenants(iguhealth.user);
-
-  useEffect(() => {
-    if (
-      tenants.length === 0 &&
-      matches.find((match) => match.id === "empty-workspace") === undefined
-    ) {
-      navigate("/no-workspace", { replace: true });
-    }
-  }, [iguhealth.user, navigate, matches]);
-
   return (
     <>
       <Outlet />
@@ -203,7 +176,6 @@ function Root() {
   const iguhealth = useIGUHealth();
   const navigate = useNavigate();
   const matches = useMatches();
-  const tenants = getTenants(iguhealth.user);
 
   return (
     <>
@@ -447,40 +419,6 @@ function Root() {
                   }}
                 >
                   <div>
-                    <div>
-                      <div className="mt-1">
-                        <div className="p-2 text-sm text-slate-600 font-semibold">
-                          Tenants
-                        </div>
-                      </div>
-
-                      <table className="border-collapse bg-gray-50 w-full">
-                        {tenants.map((t) => (
-                          <tr
-                            key={t.id}
-                            className="border border-r-0 border-l-0 cursor-pointer"
-                            onClick={() => {
-                              const host = window.location.host.split(".");
-                              window.location.href = `${window.location.protocol}//${t.id}.${host
-                                .slice(1)
-                                .join(".")}`;
-                            }}
-                          >
-                            <td
-                              className={classNames(
-                                "hover:bg-blue-100 text-xs hover:text-blue-800 p-2 text-slate-800",
-                                {
-                                  "bg-blue-100 text-xs text-blue-800 p-2":
-                                    deriveTenantID() === t.id,
-                                },
-                              )}
-                            >
-                              {t.id}
-                            </td>
-                          </tr>
-                        ))}
-                      </table>
-                    </div>
                     <div className="mt-2">
                       <a
                         className={classNames(

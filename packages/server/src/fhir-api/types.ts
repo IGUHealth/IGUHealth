@@ -95,7 +95,6 @@ export namespace KoaExtensions {
 }
 
 export interface UserContext {
-  role: s.user_role;
   jwt: AccessTokenPayload<s.user_role>;
   resource?: Membership | ClientApplication | OperationDefinition | null;
   accessPolicies?: AccessPolicy[];
@@ -134,6 +133,17 @@ export interface IGUHealthServerCTX {
   ) => Resource<FHIRVersion, Type> | undefined;
 }
 
+export function rootJWT(tenant: TenantId): AccessTokenPayload<s.user_role> {
+  return {
+    iss: IGUHEALTH_ISSUER,
+    [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
+    [CUSTOM_CLAIMS.RESOURCE_ID]: "system" as id,
+    [CUSTOM_CLAIMS.ROLE]: "admin",
+    [CUSTOM_CLAIMS.TENANT]: tenant,
+    sub: "system" as Subject,
+  };
+}
+
 /**
  * For certain operations like parameter retrievals must treat context as a system user.
  * To bypass any access control checks, we can use this function to create a new context.
@@ -143,24 +153,11 @@ export interface IGUHealthServerCTX {
 export function asRoot(
   ctx: Omit<IGUHealthServerCTX, "user">,
 ): IGUHealthServerCTX {
-  const jwt: AccessTokenPayload<s.user_role> = {
-    iss: IGUHEALTH_ISSUER,
-    [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
-    [CUSTOM_CLAIMS.RESOURCE_ID]: "system" as id,
-    [CUSTOM_CLAIMS.TENANTS]: [
-      {
-        id: ctx.tenant,
-        userRole: "admin",
-      },
-    ],
-    sub: "system" as Subject,
-  };
   return {
     ...ctx,
     tenant: ctx.tenant,
     user: {
-      role: "admin",
-      jwt,
+      jwt: rootJWT(ctx.tenant),
     },
   };
 }

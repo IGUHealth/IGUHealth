@@ -13,7 +13,7 @@ import {
   R4B,
   Resource,
 } from "@iguhealth/fhir-types/versions";
-import { AccessTokenPayload, TenantId } from "@iguhealth/jwt";
+import { AccessTokenPayload, CUSTOM_CLAIMS, TenantId } from "@iguhealth/jwt";
 
 import { IOCache } from "../cache/interface.js";
 import { IGUHealthServerCTX } from "../fhir-api/types.js";
@@ -68,8 +68,11 @@ export const testServices: IGUHealthServerCTX = {
         : false,
   }),
   user: {
-    role: "admin",
-    jwt: { iss: "test", sub: "test-user" } as AccessTokenPayload<s.user_role>,
+    jwt: {
+      iss: "test",
+      sub: "test-user",
+      [CUSTOM_CLAIMS.ROLE]: "member",
+    } as AccessTokenPayload<s.user_role>,
   },
   terminologyProvider: new TerminologyProvider(),
   logger: pino<string>(),

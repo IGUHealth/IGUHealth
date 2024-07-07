@@ -337,7 +337,7 @@ export function parseValuePrefix(value: string | number): {
 }
 
 const DATE_TIME_REGEX =
-  /^(?<year>\d(\d(\d[1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(?<month>0[1-9]|1[0-2])(-(?<day>0[1-9]|[1-2]\d|3[0-1])(T(?<hour>[01]\d|2[0-3])(:(?<minute>[0-5]\d)(:(?<second>[0-5]\d|60))?)?)?)?(?<timezone>Z|(\+|-)((0\d|1[0-3]):[0-5]\d|14:00)?)?)?$/
+  /^(?<year>\d(\d(\d[1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(?<month>0[1-9]|1[0-2])(-(?<day>0[1-9]|[1-2]\d|3[0-1])(T(?<hour>[01]\d|2[0-3])(:(?<minute>[0-5]\d)(:(?<second>[0-5]\d|60))?)?)?)?(?<timezone>Z|(\+|-)((0\d|1[0-3]):[0-5]\d|14:00)?)?)?$/;
 
 const precisionLevels = <const>[
   "second",
