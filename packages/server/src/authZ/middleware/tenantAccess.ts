@@ -1,7 +1,6 @@
 import Koa from "koa";
-import * as s from "zapatos/schema";
 
-import { AccessTokenPayload, CUSTOM_CLAIMS } from "@iguhealth/jwt";
+import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 import {
   OperationError,
   outcomeError,
