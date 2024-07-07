@@ -58,7 +58,7 @@ export async function getOperationCode(
   ctx: IGUHealthServerCTX,
   operation: OperationDefinition,
 ): Promise<string | undefined> {
-  const code = evaluate(
+  const code = await evaluate(
     "$this.extension.where(url=%codeUrl).valueString",
     operation,
     {

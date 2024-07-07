@@ -18,7 +18,7 @@ import {
   R4,
   Resource,
 } from "@iguhealth/fhir-types/versions";
-import { evaluate } from "@iguhealth/fhirpath";
+import * as fhirpath from "@iguhealth/fhirpath";
 import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
@@ -87,15 +87,19 @@ if (process.env.SENTRY_WORKER_DSN)
     ),
   });
 
-function getVersionSequence(resource: Resource<R4, AllResourceTypes>): number {
-  const evaluation = evaluate(
-    "$this.meta.extension.where(url=%sequenceUrl).value",
-    resource,
-    {
-      variables: {
-        sequenceUrl: "https://iguhealth.app/version-sequence",
+async function getVersionSequence(
+  resource: Resource<R4, AllResourceTypes>,
+): Promise<number> {
+  const evaluation = (
+    await fhirpath.evaluate(
+      "$this.meta.extension.where(url=%sequenceUrl).value",
+      resource,
+      {
+        variables: {
+          sequenceUrl: "https://iguhealth.app/version-sequence",
+        },
       },
-    },
+    )
   )[0];
 
   if (typeof evaluation !== "number") {
@@ -112,14 +116,16 @@ async function handleSubscriptionPayload(
   subscription: Subscription,
   payload: Resource<FHIR_VERSION, AllResourceTypes>[],
 ): Promise<void> {
-  const channelType = evaluate(
-    "$this.channel.type | $this.channel.type.extension.where(url=%typeUrl).value",
-    subscription,
-    {
-      variables: {
-        typeUrl: "https://iguhealth.app/Subscription/channel-type",
+  const channelType = (
+    await fhirpath.evaluate(
+      "$this.channel.type | $this.channel.type.extension.where(url=%typeUrl).value",
+      subscription,
+      {
+        variables: {
+          typeUrl: "https://iguhealth.app/Subscription/channel-type",
+        },
       },
-    },
+    )
   )[0];
 
   switch (channelType) {
@@ -152,14 +158,16 @@ async function handleSubscriptionPayload(
     }
     case "operation": {
       const OPERATION_URL = "https://iguhealth.app/Subscription/operation-code";
-      const operation = evaluate(
-        "$this.channel.type.extension.where(url=%operationUrl).value",
-        subscription,
-        {
-          variables: {
-            operationUrl: OPERATION_URL,
+      const operation = (
+        await fhirpath.evaluate(
+          "$this.channel.type.extension.where(url=%operationUrl).value",
+          subscription,
+          {
+            variables: {
+              operationUrl: OPERATION_URL,
+            },
           },
-        },
+        )
       )[0];
       if (typeof operation !== "string") {
         logAuditEvent(
@@ -256,6 +264,15 @@ async function handleSubscriptionPayload(
         headers: { ...headers, "Content-Type": "application/fhir+json" },
         body: JSON.stringify(bundle),
       });
+
+      if (response.status >= 400) {
+        throw new OperationError(
+          outcomeError(
+            "invalid",
+            `Failed to send message to endpoint ${endpoint}.`,
+          ),
+        );
+      }
 
       return;
     }
@@ -354,7 +371,7 @@ function processSubscription(
       const latestVersionIdForSub = cachedSubID
         ? cachedSubID
         : // If latest isn't there then use the subscription version when created.
-          getVersionSequence(subscription);
+          await getVersionSequence(subscription);
 
       let historyPoll: (BundleEntry | r4b.BundleEntry)[] = [];
 
@@ -455,7 +472,7 @@ function processSubscription(
         await ctx.cache.set(
           ctx,
           `${subscription.id}_latest`,
-          getVersionSequence(
+          await getVersionSequence(
             historyPoll[historyPoll.length - 1].resource as Resource<
               R4,
               AllResourceTypes

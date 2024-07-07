@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import * as fhirpath from "@iguhealth/fhirpath";
 
@@ -22,11 +22,11 @@ export interface TableProps {
   onRowClick?: (row: unknown) => void;
 }
 
-function extract(
+async function extract(
   data: unknown,
   selector: string,
   selectorType: SelectorType,
-): unknown[] {
+): Promise<unknown[]> {
   switch (selectorType) {
     case "fhirpath": {
       return fhirpath.evaluate(selector, data);
@@ -34,6 +34,29 @@ function extract(
     default:
       throw new Error(`Unknown selector type: ${selectorType}`);
   }
+}
+
+function RenderRow({
+  column,
+  row,
+}: Readonly<{ column: Columns; row: unknown }>) {
+  const [value, setValue] = useState<unknown[]>([]);
+
+  useEffect(() => {
+    extract(row, column.selector, column.selectorType).then(setValue);
+  }, [column, row]);
+
+  const render = useMemo(() => {
+    return column.renderer ? column.renderer(value) : value.join(" ");
+  }, [column, value]);
+  return (
+    <td
+      key={column.id}
+      className="overflow-auto whitespace-nowrap px-4 py-2 font-medium"
+    >
+      {render}
+    </td>
+  );
 }
 
 export function Table({
@@ -67,23 +90,9 @@ export function Table({
                   className="border cursor-pointer hover:bg-slate-100"
                   onClick={() => onRowClick(row)}
                 >
-                  {columns.map((column) => {
-                    const data = extract(
-                      row,
-                      column.selector,
-                      column.selectorType,
-                    );
-                    return (
-                      <td
-                        key={column.id}
-                        className="overflow-auto whitespace-nowrap px-4 py-2 font-medium"
-                      >
-                        {column.renderer
-                          ? column.renderer(data)
-                          : data.join(" ")}
-                      </td>
-                    );
-                  })}
+                  {columns.map((column) => (
+                    <RenderRow key={column.id} row={row} column={column} />
+                  ))}
                 </tr>
               ))}
           </tbody>
