@@ -667,8 +667,8 @@ async function createResource<
       tenant: ctx.tenant,
       fhir_version: toDBFHIRVersion(fhirVersion),
       request_method: "POST",
-      author_id: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID],
-      author_type: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE],
+      author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+      author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
       resource: resource as unknown as db.JSONObject,
     };
     // the <const> prevents generalization to string[]
@@ -943,8 +943,8 @@ async function patchResource<Version extends FHIR_VERSION>(
         tenant: ctx.tenant,
         fhir_version: toDBFHIRVersion(fhirVersion),
         request_method: "PATCH",
-        author_id: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID],
-        author_type: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE],
+        author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+        author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
         resource: newResource as unknown as db.JSONObject,
         prev_version_id: parseInt(existingResource.meta?.versionId as string),
         patches: JSON.stringify(patches),
@@ -1030,8 +1030,8 @@ async function updateResource<
       tenant: ctx.tenant,
       fhir_version: toDBFHIRVersion(fhirVersion),
       request_method: "PUT",
-      author_id: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID],
-      author_type: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE],
+      author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+      author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
       resource: resource as unknown as db.JSONObject,
       prev_version_id: existingResource
         ? parseInt(existingResource.meta?.versionId as string)
@@ -1081,8 +1081,8 @@ async function deleteResource<
       tenant: ctx.tenant,
       fhir_version: toDBFHIRVersion(fhirVersion),
       request_method: "DELETE",
-      author_id: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID],
-      author_type: ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE],
+      author_id: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
+      author_type: ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
       resource: resource as unknown as db.JSONObject,
       prev_version_id: parseInt(resource.meta?.versionId as string),
       deleted: true,

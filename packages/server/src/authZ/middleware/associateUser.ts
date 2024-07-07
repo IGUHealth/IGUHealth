@@ -6,10 +6,6 @@ import { OperationError, outcomeFatal } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX, asRoot } from "../../fhir-api/types.js";
 
-// const membershipID = ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID] as
-// | id
-// | undefined;
-
 async function findResourceAndAccessPolicies<Type extends ResourceType<R4>>(
   ctx: IGUHealthServerCTX,
   resourceType: Type,
@@ -60,15 +56,15 @@ export const associateUserMiddleware: MiddlewareAsyncChain<
   unknown,
   IGUHealthServerCTX
 > = async (context, next) => {
-  switch (context.ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE]) {
+  switch (context.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE]) {
     case "Membership":
     case "ClientApplication":
     case "OperationDefinition": {
       const { resource: membership, accessPolicies } =
         await findResourceAndAccessPolicies(
           context.ctx,
-          context.ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE],
-          context.ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_ID],
+          context.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE],
+          context.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_ID],
         );
       return next({
         ...context,
@@ -87,7 +83,7 @@ export const associateUserMiddleware: MiddlewareAsyncChain<
       throw new OperationError(
         outcomeFatal(
           "invalid",
-          `Invalid resource type set on JWT '${context.ctx.user.jwt[CUSTOM_CLAIMS.RESOURCE_TYPE]}'`,
+          `Invalid resource type set on JWT '${context.ctx.user.payload[CUSTOM_CLAIMS.RESOURCE_TYPE]}'`,
         ),
       );
   }

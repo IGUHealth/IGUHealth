@@ -7,6 +7,7 @@ import { code, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import {
   AccessTokenPayload,
+  createToken,
   CUSTOM_CLAIMS,
   IGUHEALTH_AUDIENCE,
   IGUHEALTH_ISSUER,
@@ -16,7 +17,12 @@ import {
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { KoaExtensions, asRoot } from "../fhir-api/types.js";
-import { getJWKS } from "./certifications.js";
+import {
+  getCertKey,
+  getCertLocation,
+  getJWKS,
+  getSigningKey,
+} from "./certifications.js";
 import {
   authenticateClientCredentials,
   createClientCredentialToken,
@@ -108,6 +114,7 @@ export async function createValidateUserJWTMiddleware<T, C>({
   );
 
   return jwt({
+    key: "__user__",
     tokenKey: "access_token",
     secret: async (header: jwksRsa.TokenHeader) => {
       return IGUHEALTH_JWT_SECRET(header);
@@ -117,6 +124,29 @@ export async function createValidateUserJWTMiddleware<T, C>({
     algorithms: ["RS256"],
   }) as unknown as Middleware<T, C>;
 }
+
+/**
+ * Move the user JWT to the IGUHealth context
+ * @param ctx Koa Context
+ * @param next Next Middleware
+ */
+export const associateUserToIGUHealth: Koa.Middleware<
+  KoaExtensions.IGUHealthServices,
+  KoaExtensions.KoaIGUHealthContext
+> = async (ctx, next) => {
+  if (!ctx.state.__user__) {
+    throw new OperationError(
+      outcomeError("security", "No user found in context."),
+    );
+  }
+
+  ctx.state.iguhealth.user = {
+    payload: ctx.state.__user__,
+    accessToken: ctx.state.__access_token__,
+  };
+
+  await next();
+};
 
 /**
  * Middleware that allows full system access to all tenants (used on public server)
@@ -130,15 +160,19 @@ export const allowPublicAccessMiddleware: Koa.Middleware<
   const user: AccessTokenPayload<s.user_role> = {
     iss: IGUHEALTH_ISSUER,
     sub: "public-user" as Subject,
-    access_token: "sec-public",
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
     [CUSTOM_CLAIMS.RESOURCE_ID]: "public" as id,
     [CUSTOM_CLAIMS.TENANT]: ctx.params.tenant as TenantId,
     [CUSTOM_CLAIMS.ROLE]: "admin",
   };
+  const token = await createToken(
+    await getSigningKey(getCertLocation(), getCertKey()),
+    user,
+  );
   ctx.state = {
     ...ctx.state,
-    user,
+    __user__: user,
+    __access_token__: token,
   };
   await next();
 };

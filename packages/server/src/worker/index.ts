@@ -552,7 +552,7 @@ async function createWorker(
           client,
           tenant: tenant,
           user: {
-            jwt: {
+            payload: {
               iss: IGUHEALTH_ISSUER,
               sub: `system-worker-${workerID}`,
               [CUSTOM_CLAIMS.RESOURCE_ID]: `system-worker-${workerID}`,

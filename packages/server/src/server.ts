@@ -31,11 +31,7 @@ import {
   getJWKS,
 } from "./authN/certifications.js";
 import { createGlobalAuthRouter } from "./authN/global/index.js";
-import {
-  allowPublicAccessMiddleware,
-  createValidateUserJWTMiddleware,
-  verifyBasicAuth,
-} from "./authN/middleware.js";
+import * as authN from "./authN/middleware.js";
 import { JWKS_GET } from "./authN/oidc/constants.js";
 import { createOIDCRouter } from "./authN/oidc/index.js";
 import { setAllowSignup } from "./authN/oidc/middleware/allow_signup.js";
@@ -228,18 +224,17 @@ export default async function createServer(): Promise<
     await next();
   });
 
-  const jwtMiddleware = await createValidateUserJWTMiddleware({
-    AUTH_LOCAL_CERTIFICATION_LOCATION: getCertLocation(),
-  });
-
   const authMiddlewares: Koa.Middleware<
     KoaExtensions.IGUHealth,
     KoaExtensions.KoaIGUHealthContext
   >[] = [
-    verifyBasicAuth,
+    authN.verifyBasicAuth,
     process.env.AUTH_PUBLIC_ACCESS === "true"
-      ? allowPublicAccessMiddleware
-      : jwtMiddleware,
+      ? authN.allowPublicAccessMiddleware
+      : await authN.createValidateUserJWTMiddleware({
+          AUTH_LOCAL_CERTIFICATION_LOCATION: getCertLocation(),
+        }),
+    authN.associateUserToIGUHealth,
     verifyAndAssociateUserFHIRContext,
   ];
 

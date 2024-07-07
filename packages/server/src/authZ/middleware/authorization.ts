@@ -188,8 +188,8 @@ function canUserMakeRequest(
   request: FHIRRequest,
 ): boolean {
   if (
-    ctx.user.jwt[CUSTOM_CLAIMS.ROLE] === "admin" ||
-    ctx.user.jwt[CUSTOM_CLAIMS.ROLE] === "owner"
+    ctx.user.payload[CUSTOM_CLAIMS.ROLE] === "admin" ||
+    ctx.user.payload[CUSTOM_CLAIMS.ROLE] === "owner"
   )
     return true;
   return evaluateAccessPolicy(ctx, request);

@@ -24,7 +24,10 @@ export async function verifyAndAssociateUserFHIRContext<
     throw new OperationError(outcomeError("invalid", "No tenant present."));
   }
 
-  if (ctx.state.user?.[CUSTOM_CLAIMS.TENANT] !== ctx.state.iguhealth.tenant) {
+  if (
+    ctx.state.iguhealth.user?.payload[CUSTOM_CLAIMS.TENANT] !==
+    ctx.state.iguhealth.tenant
+  ) {
     throw new OperationError(
       outcomeError(
         "security",
@@ -34,19 +37,12 @@ export async function verifyAndAssociateUserFHIRContext<
   }
 
   if (
-    typeof ctx.state.user?.sub !== "string" ||
-    typeof ctx.state.user?.iss !== "string"
+    typeof ctx.state.iguhealth.user?.payload.sub !== "string" ||
+    typeof ctx.state.iguhealth.user?.payload.iss !== "string"
   )
     throw new OperationError(
       outcomeFatal("security", "JWT must have both sub and iss."),
     );
 
-  ctx.state.iguhealth = {
-    ...ctx.state.iguhealth,
-    user: {
-      jwt: ctx.state.user,
-      accessToken: ctx.state.access_token,
-    },
-  };
   await next();
 }

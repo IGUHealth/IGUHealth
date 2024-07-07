@@ -40,6 +40,10 @@ import type { EncryptionProvider } from "../encryption/provider/interface.js";
 import type { TerminologyProvider } from "../fhir-terminology/interface.js";
 import type { Lock } from "../synchronization/interfaces.js";
 
+type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [P in K]?: T[P];
+};
+
 export namespace KoaExtensions {
   export type KoaIGUHealthContext = Koa.ParameterizedContext<
     KoaExtensions.IGUHealth,
@@ -72,14 +76,14 @@ export namespace KoaExtensions {
 
   export type IGUHealth = OIDC &
     IGUHealthServices & {
-      iguhealth: Omit<IGUHealthServerCTX, "user"> | IGUHealthServerCTX;
+      iguhealth: MakeOptional<IGUHealthServerCTX, "user">;
     };
 
   export type IGUHealthServices = {
     allowSignup?: boolean;
-    user?: AccessTokenPayload<s.user_role>;
-    access_token?: AccessToken<s.user_role>;
-    iguhealth: Omit<IGUHealthServerCTX, "user" | "tenant">;
+    __user__?: AccessTokenPayload<s.user_role>;
+    __access_token__?: AccessToken<s.user_role>;
+    iguhealth: MakeOptional<IGUHealthServerCTX, "user" | "tenant">;
   };
 
   /**
@@ -95,7 +99,7 @@ export namespace KoaExtensions {
 }
 
 export interface UserContext {
-  jwt: AccessTokenPayload<s.user_role>;
+  payload: AccessTokenPayload<s.user_role>;
   resource?: Membership | ClientApplication | OperationDefinition | null;
   accessPolicies?: AccessPolicy[];
   accessToken?: string;
@@ -157,7 +161,7 @@ export function asRoot(
     ...ctx,
     tenant: ctx.tenant,
     user: {
-      jwt: rootJWT(ctx.tenant),
+      payload: rootJWT(ctx.tenant),
     },
   };
 }
