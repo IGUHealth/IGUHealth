@@ -69,6 +69,7 @@ test("Simple Type test", () => {
   const myValue = new MetaValueSingular(
     {
       type: {
+        fhirVersion: R4,
         type: "Patient" as uri,
         getSD,
       },
@@ -128,6 +129,7 @@ test("ConceptMap test", () => {
   const myValue = new MetaValueSingular(
     {
       type: {
+        fhirVersion: R4,
         type: "ConceptMap" as uri,
         getSD,
       },
@@ -166,6 +168,7 @@ test("Location test", () => {
   const myValue = new MetaValueSingular(
     {
       type: {
+        fhirVersion: R4,
         type: "Patient" as uri,
         getSD,
       },
@@ -193,6 +196,7 @@ test("typechoice", () => {
   const myValue = new MetaValueSingular(
     {
       type: {
+        fhirVersion: R4,
         type: "Practitioner" as uri,
         getSD,
       },
@@ -222,6 +226,7 @@ test("Location test primitive extensions", () => {
   const patient = new MetaValueSingular(
     {
       type: {
+        fhirVersion: R4,
         type: "Practitioner" as uri,
         getSD,
       },
