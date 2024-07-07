@@ -31,20 +31,20 @@ const metaOptions = (startingType: string) => ({
   },
 });
 
-test("Eval tests", () => {
+test("Eval tests", async () => {
   // Operator testing
-  expect(evaluate("4 + 5", {})).toEqual([9]);
-  expect(evaluate("$this.test + 2 * 4", { test: 4 })).toEqual([12]);
+  expect(await evaluate("4 + 5", {})).toEqual([9]);
+  expect(await evaluate("$this.test + 2 * 4", { test: 4 })).toEqual([12]);
 
-  expect(evaluate("2 * 4", { test: 4 })).toEqual([8]);
+  expect(await evaluate("2 * 4", { test: 4 })).toEqual([8]);
 
-  expect(evaluate("$this.test * 2", { test: 4 })).toEqual([8]);
+  expect(await evaluate("$this.test * 2", { test: 4 })).toEqual([8]);
 });
 
-test("Variable tests", () => {
-  expect(evaluate("%nonexistant", {})).toEqual([]);
+test("Variable tests", async () => {
+  expect(await evaluate("%nonexistant", {})).toEqual([]);
   expect(
-    evaluate(
+    await evaluate(
       "%hello.test",
       {},
       { variables: { hello: [{ test: 4 }, { test: 3 }] } },
@@ -52,7 +52,7 @@ test("Variable tests", () => {
   ).toEqual([4, 3]);
 
   expect(
-    evaluate(
+    await evaluate(
       "%hello.test",
       {},
       {
@@ -64,10 +64,10 @@ test("Variable tests", () => {
   ).toEqual([4, 3]);
 });
 
-test("PrimitiveExtensions", () => {
-  expect(evaluate("%nonexistant", {})).toEqual([]);
+test("PrimitiveExtensions", async () => {
+  expect(await evaluate("%nonexistant", {})).toEqual([]);
   expect(
-    evaluate(
+    await evaluate(
       "%hello.test.extension.valueBoolean",
       {},
       {
@@ -85,7 +85,7 @@ test("PrimitiveExtensions", () => {
   ).toEqual([true]);
 });
 
-test("PrimitiveExtensions array", () => {
+test("PrimitiveExtensions array", async () => {
   const options = {
     variables: {
       hello: [
@@ -101,14 +101,14 @@ test("PrimitiveExtensions array", () => {
       ],
     },
   };
-  expect(evaluate("%hello.test.id", {}, options)).toEqual([
+  expect(await evaluate("%hello.test.id", {}, options)).toEqual([
     "id1",
     "id2",
     "id3",
   ]);
 });
 
-test("typechoices", () => {
+test("typechoices", async () => {
   const options = {
     variables: {
       hello: [
@@ -124,152 +124,164 @@ test("typechoices", () => {
       ],
     },
   };
-  expect(evaluate("%hello.test", {}, options)).toEqual([4, 5, "3"]);
-  expect(evaluate("%hello.test.id", {}, options)).toEqual([
+  expect(await evaluate("%hello.test", {}, options)).toEqual([4, 5, "3"]);
+  expect(await evaluate("%hello.test.id", {}, options)).toEqual([
     "id1",
     "id2",
     "id3",
   ]);
 });
 
-test("Test all operations", () => {
-  expect(evaluate("(5 + 5) / (4-2)", {})).toEqual([5]);
-  expect(evaluate("4 + 4 / 4 - 2", {})).toEqual([3]);
-  expect(evaluate("(4 + 4) / (4 - 2)", {})).toEqual([4]);
+test("Test all operations", async () => {
+  expect(await evaluate("(5 + 5) / (4-2)", {})).toEqual([5]);
+  expect(await evaluate("4 + 4 / 4 - 2", {})).toEqual([3]);
+  expect(await evaluate("(4 + 4) / (4 - 2)", {})).toEqual([4]);
 });
 
-test("exists", () => {
-  expect(evaluate("$this.exists(test)", { test: [1, 2, 3] })).toEqual([true]);
-
-  expect(evaluate("$this.exists()", { test: [1, 2, 3] })).toEqual([true]);
-
-  expect(evaluate("$this.exists($this.z)", { test: [1, 2, 3] })).toEqual([
-    false,
-  ]);
-
-  expect(evaluate("$this.exists()", undefined)).toEqual([false]);
-});
-
-test("empty", () => {
-  expect(evaluate("5.empty()", { test: [1, 2, 3] })).toEqual([false]);
-
-  expect(evaluate("$this.test.empty()", { test: [1, 2, 3] })).toEqual([false]);
-
-  expect(evaluate("test.empty()", { test: [1, 2, 3] })).toEqual([false]);
-
-  expect(evaluate("empty()", undefined)).toEqual([true]);
-
-  expect(evaluate("$this.z.empty()", { test: [1, 2, 3] })).toEqual([true]);
-});
-
-test("all", () => {
-  expect(evaluate("$this.test.all($this=1)", { test: [1, 2, 3] })).toEqual([
-    false,
-  ]);
-  expect(evaluate("$this.test.all($this=1)", { test: [1, 1] })).toEqual([true]);
-  expect(evaluate("$this.test.all($this=1)", { test: [1] })).toEqual([true]);
-  expect(evaluate("1.all($this=1)", { test: [1] })).toEqual([true]);
-});
-
-test("allTrue", () => {
-  expect(evaluate("$this.test.allTrue()", { test: [true, true] })).toEqual([
+test("exists", async () => {
+  expect(await evaluate("$this.exists(test)", { test: [1, 2, 3] })).toEqual([
     true,
   ]);
+
+  expect(await evaluate("$this.exists()", { test: [1, 2, 3] })).toEqual([true]);
+
+  expect(await evaluate("$this.exists($this.z)", { test: [1, 2, 3] })).toEqual([
+    false,
+  ]);
+
+  expect(await evaluate("$this.exists()", undefined)).toEqual([false]);
+});
+
+test("empty", async () => {
+  expect(await evaluate("5.empty()", { test: [1, 2, 3] })).toEqual([false]);
+
+  expect(await evaluate("$this.test.empty()", { test: [1, 2, 3] })).toEqual([
+    false,
+  ]);
+
+  expect(await evaluate("test.empty()", { test: [1, 2, 3] })).toEqual([false]);
+
+  expect(await evaluate("empty()", undefined)).toEqual([true]);
+
+  expect(await evaluate("$this.z.empty()", { test: [1, 2, 3] })).toEqual([
+    true,
+  ]);
+});
+
+test("all", async () => {
   expect(
-    evaluate("$this.test.allTrue()", { test: [true, true, false] }),
+    await evaluate("$this.test.all($this=1)", { test: [1, 2, 3] }),
+  ).toEqual([false]);
+  expect(await evaluate("$this.test.all($this=1)", { test: [1, 1] })).toEqual([
+    true,
+  ]);
+  expect(await evaluate("$this.test.all($this=1)", { test: [1] })).toEqual([
+    true,
+  ]);
+  expect(await evaluate("1.all($this=1)", { test: [1] })).toEqual([true]);
+});
+
+test("allTrue", async () => {
+  expect(
+    await evaluate("$this.test.allTrue()", { test: [true, true] }),
+  ).toEqual([true]);
+  expect(
+    await evaluate("$this.test.allTrue()", { test: [true, true, false] }),
   ).toEqual([false]);
 
-  expect(evaluate("$this.test.allTrue()", { test: [true, true, 1] })).toEqual([
-    false,
-  ]);
+  expect(
+    await evaluate("$this.test.allTrue()", { test: [true, true, 1] }),
+  ).toEqual([false]);
 
-  expect(evaluate("true.allTrue()", { test: [true, true, 1] })).toEqual([true]);
-});
-
-test("anyTrue", () => {
-  expect(evaluate("$this.test.anyTrue()", { test: [true, true] })).toEqual([
+  expect(await evaluate("true.allTrue()", { test: [true, true, 1] })).toEqual([
     true,
   ]);
+});
+
+test("anyTrue", async () => {
   expect(
-    evaluate("$this.test.anyTrue()", { test: [true, true, false] }),
+    await evaluate("$this.test.anyTrue()", { test: [true, true] }),
   ).toEqual([true]);
-  expect(evaluate("$this.test.anyTrue()", { test: [true, true, 1] })).toEqual([
-    true,
-  ]);
-  expect(evaluate("false.anyTrue()", {})).toEqual([false]);
-  expect(evaluate("true.anyTrue()", {})).toEqual([true]);
-  expect(evaluate("$this.test.anyTrue()", { test: [false, 5, 1] })).toEqual([
-    false,
-  ]);
-});
-
-test("allFalse", () => {
-  expect(evaluate("$this.test.allFalse()", { test: [0, 1, false] })).toEqual([
-    false,
-  ]);
-});
-
-test("anyFalse", () => {
-  expect(evaluate("$this.test.anyFalse()", { test: [0, 1, false] })).toEqual([
-    true,
-  ]);
-});
-
-test("subsetOf", () => {
   expect(
-    evaluate("%set2.subsetOf(%set1)", undefined, {
+    await evaluate("$this.test.anyTrue()", { test: [true, true, false] }),
+  ).toEqual([true]);
+  expect(
+    await evaluate("$this.test.anyTrue()", { test: [true, true, 1] }),
+  ).toEqual([true]);
+  expect(await evaluate("false.anyTrue()", {})).toEqual([false]);
+  expect(await evaluate("true.anyTrue()", {})).toEqual([true]);
+  expect(
+    await evaluate("$this.test.anyTrue()", { test: [false, 5, 1] }),
+  ).toEqual([false]);
+});
+
+test("allFalse", async () => {
+  expect(
+    await evaluate("$this.test.allFalse()", { test: [0, 1, false] }),
+  ).toEqual([false]);
+});
+
+test("anyFalse", async () => {
+  expect(
+    await evaluate("$this.test.anyFalse()", { test: [0, 1, false] }),
+  ).toEqual([true]);
+});
+
+test("subsetOf", async () => {
+  expect(
+    await evaluate("%set2.subsetOf(%set1)", undefined, {
       variables: { set1: [0, 1, false], set2: [0, -1], set3: ["none"] },
     }),
   ).toEqual([false]);
   expect(
-    evaluate("%set2.subsetOf(%set1)", undefined, {
+    await evaluate("%set2.subsetOf(%set1)", undefined, {
       variables: { set1: [0, 1, false], set2: [0], set3: ["none"] },
     }),
   ).toEqual([true]);
   expect(
-    evaluate("%set2.subsetOf(%set1)", undefined, {
+    await evaluate("%set2.subsetOf(%set1)", undefined, {
       variables: { set1: [0, 1, false], set2: [0, 1], set3: ["none"] },
     }),
   ).toEqual([true]);
   expect(
-    evaluate("%set2.subsetOf(%set1)", undefined, {
+    await evaluate("%set2.subsetOf(%set1)", undefined, {
       variables: { set1: [0, 1, false], set2: [0, 1, false], set3: ["none"] },
     }),
   ).toEqual([true]);
   expect(
-    evaluate("%set1.subsetOf(%set2)", undefined, {
+    await evaluate("%set1.subsetOf(%set2)", undefined, {
       variables: { set1: [0, 1, false], set2: [0, 1], set3: ["none"] },
     }),
   ).toEqual([false]);
   expect(
-    evaluate("%set3.subsetOf(%set2)", undefined, {
+    await evaluate("%set3.subsetOf(%set2)", undefined, {
       variables: { set1: [0, 1, false], set2: [0, 1], set3: ["none"] },
     }),
   ).toEqual([false]);
 });
 
-test("supersetOf", () => {
+test("supersetOf", async () => {
   expect(
-    evaluate("%set1.supersetOf(%set2)", undefined, {
+    await evaluate("%set1.supersetOf(%set2)", undefined, {
       variables: { set1: [0, 1, false], set2: [0, 1], set3: ["none"] },
     }),
   ).toEqual([true]);
 
   expect(
-    evaluate("%set2.supersetOf(%set1)", undefined, {
+    await evaluate("%set2.supersetOf(%set1)", undefined, {
       variables: { set1: [0, 1, false], set2: [0, 1], set3: ["none"] },
     }),
   ).toEqual([false]);
 });
 
-test("distinct", () => {
-  expect(evaluate("$this.distinct()", [{ v: 1 }, { v: 1 }, 2])).toEqual([
+test("distinct", async () => {
+  expect(await evaluate("$this.distinct()", [{ v: 1 }, { v: 1 }, 2])).toEqual([
     2,
     { v: 1 },
   ]);
 
   expect(
-    evaluate(
+    await evaluate(
       "$this.distinct().count()= %set1.count()",
       [{ v: 1 }, { v: 1 }, 2],
       {
@@ -278,33 +290,35 @@ test("distinct", () => {
     ),
   ).toEqual([false]);
 
-  expect(evaluate("$this.isDistinct()", [{ v: 1 }, { v: 1 }, 2])).toEqual([
-    false,
+  expect(await evaluate("$this.isDistinct()", [{ v: 1 }, { v: 1 }, 2])).toEqual(
+    [false],
+  );
+
+  expect(await evaluate("$this.isDistinct()", [{ v: 1 }, { v: 2 }])).toEqual([
+    true,
   ]);
-
-  expect(evaluate("$this.isDistinct()", [{ v: 1 }, { v: 2 }])).toEqual([true]);
 });
 
-test("where", () => {
-  expect(evaluate("$this.where($this=1)", [1, 2, 3])).toEqual([1]);
+test("where", async () => {
+  expect(await evaluate("$this.where($this=1)", [1, 2, 3])).toEqual([1]);
 
-  expect(() => {
-    evaluate("$this.where('Bob')", [{ name: "John" }, { name: "Bob" }]);
-  }).toThrow();
+  expect(async () => {
+    await evaluate("$this.where('Bob')", [{ name: "John" }, { name: "Bob" }]);
+  }).rejects.toThrow();
 });
 
-test("select", () => {
+test("select", async () => {
   expect(
-    evaluate("$this.select($this.name.given + ' ' + $this.name.family)", [
+    await evaluate("$this.select($this.name.given + ' ' + $this.name.family)", [
       { name: { given: ["Bob"], family: "Jameson" } },
       { name: { given: ["Jason"], family: "Kyle" } },
     ]),
   ).toEqual(["Bob Jameson", "Jason Kyle"]);
 });
 
-test("repeat", () => {
+test("repeat", async () => {
   expect(
-    evaluate("$this.repeat(item)", [
+    await evaluate("$this.repeat(item)", [
       {
         resourceType: "Questionnaire",
         item: [{ id: "1", item: [{ id: "2", item: { id: "4" } }] }],
@@ -317,130 +331,144 @@ test("repeat", () => {
   ]);
 });
 
-test("indexed", () => {
-  expect(() => {
-    evaluate("$this.test['test']", { test: [1, 2, 3] });
-  }).toThrow();
-  expect(evaluate("$this.test[0]", { test: [1, 2, 3] })).toEqual([1]);
+test("indexed", async () => {
+  expect(async () => {
+    await evaluate("$this.test['test']", { test: [1, 2, 3] });
+  }).rejects.toThrow();
+  expect(await evaluate("$this.test[0]", { test: [1, 2, 3] })).toEqual([1]);
   expect(
-    evaluateWithMeta("$this.test[0]", { test: [1, 2, 3] }).map((v) =>
+    (await evaluateWithMeta("$this.test[0]", { test: [1, 2, 3] })).map((v) =>
       v.location(),
     ),
   ).toEqual([["test", 0]]);
 });
 
-test("backtick", () => {
-  expect(evaluate("$this.`PID-1`", { "PID-1": "PID-1 value" })).toEqual([
+test("backtick", async () => {
+  expect(await evaluate("$this.`PID-1`", { "PID-1": "PID-1 value" })).toEqual([
     "PID-1 value",
   ]);
 });
 
-test("ofType", () => {
+test("ofType", async () => {
   expect(
-    evaluate("ofType(Patient)", [
+    await evaluate("ofType(Patient)", [
       { resourceType: "Patient" },
       { resourceType: "MedicationRequest" },
     ]),
   ).toEqual([{ resourceType: "Patient" }]);
   expect(
-    evaluate("ofType(HumanName)", [
+    await evaluate("ofType(HumanName)", [
       { resourceType: "Patient" },
       { resourceType: "MedicationRequest" },
     ]),
   ).toEqual([]);
 });
 
-test("Return Type meta", () => {
+test("Return Type meta", async () => {
   expect(
-    evaluateWithMeta(
-      "$this.name",
-      {
-        resourceType: "Patient",
-        name: [{ given: ["bob"], family: "jameson" }],
-      },
-      metaOptions("Patient"),
+    (
+      await evaluateWithMeta(
+        "$this.name",
+        {
+          resourceType: "Patient",
+          name: [{ given: ["bob"], family: "jameson" }],
+        },
+        metaOptions("Patient"),
+      )
     ).map((v) => v.meta()?.type),
   ).toEqual(["HumanName"]);
 
   expect(
-    evaluateWithMeta(
-      "$this.name.given",
-      {
-        resourceType: "Patient",
-        name: [{ given: ["bob"], family: "jameson" }],
-      },
-      metaOptions("Patient"),
+    (
+      await evaluateWithMeta(
+        "$this.name.given",
+        {
+          resourceType: "Patient",
+          name: [{ given: ["bob"], family: "jameson" }],
+        },
+        metaOptions("Patient"),
+      )
     ).map((v) => v.meta()?.type),
   ).toEqual(["string"]);
 
   expect(
-    evaluateWithMeta(
-      "$this.identifier",
-      {
-        resourceType: "Patient",
-        name: [{ given: ["bob"], family: "jameson" }],
-        identifier: [{ system: "mrn", value: "123" }],
-      },
-      metaOptions("Patient"),
+    (
+      await evaluateWithMeta(
+        "$this.identifier",
+        {
+          resourceType: "Patient",
+          name: [{ given: ["bob"], family: "jameson" }],
+          identifier: [{ system: "mrn", value: "123" }],
+        },
+        metaOptions("Patient"),
+      )
     ).map((v) => v.meta()?.type),
   ).toEqual(["Identifier"]);
 
   expect(
-    evaluateWithMeta(
-      "$this.identifier.value",
-      {
-        resourceType: "Patient",
-        name: [{ given: ["bob"], family: "jameson" }],
-        identifier: [{ system: "mrn", value: "123" }],
-      },
-      metaOptions("Patient"),
+    (
+      await evaluateWithMeta(
+        "$this.identifier.value",
+        {
+          resourceType: "Patient",
+          name: [{ given: ["bob"], family: "jameson" }],
+          identifier: [{ system: "mrn", value: "123" }],
+        },
+        metaOptions("Patient"),
+      )
     ).map((v) => v.meta()?.type),
   ).toEqual(["string"]);
 
   expect(
-    evaluateWithMeta(
-      "$this.identifier.system",
-      {
-        resourceType: "Patient",
-        name: [{ given: ["bob"], family: "jameson" }],
-        identifier: [{ system: "mrn", value: "123" }],
-      },
-      metaOptions("Patient"),
+    (
+      await evaluateWithMeta(
+        "$this.identifier.system",
+        {
+          resourceType: "Patient",
+          name: [{ given: ["bob"], family: "jameson" }],
+          identifier: [{ system: "mrn", value: "123" }],
+        },
+        metaOptions("Patient"),
+      )
     ).map((v) => v.meta()?.type),
   ).toEqual(["uri"]);
 });
 
-test("Typechoice meta", () => {
+test("Typechoice meta", async () => {
   expect(
-    evaluateWithMeta(
-      "$this.deceased",
-      {
-        resourceType: "Patient",
-        name: [{ given: ["bob"], family: "jameson" }],
-        deceasedBoolean: false,
-        identifier: [{ system: "mrn", value: "123" }],
-      },
-      metaOptions("Patient"),
+    (
+      await evaluateWithMeta(
+        "$this.deceased",
+        {
+          resourceType: "Patient",
+          name: [{ given: ["bob"], family: "jameson" }],
+          deceasedBoolean: false,
+          identifier: [{ system: "mrn", value: "123" }],
+        },
+        metaOptions("Patient"),
+      )
     ).map((v) => v.meta()?.type),
   ).toEqual(["boolean"]);
 
   expect(
-    evaluateWithMeta(
-      "$this.deceased",
-      {
-        resourceType: "Patient",
-        name: [{ given: ["bob"], family: "jameson" }],
-        deceasedDateTime: "1980-01-01T00:00:00Z",
-        identifier: [{ system: "mrn", value: "123" }],
-      },
-      metaOptions("Patient"),
+    (
+      await evaluateWithMeta(
+        "$this.deceased",
+        {
+          resourceType: "Patient",
+          name: [{ given: ["bob"], family: "jameson" }],
+          deceasedDateTime: "1980-01-01T00:00:00Z",
+          identifier: [{ system: "mrn", value: "123" }],
+        },
+        metaOptions("Patient"),
+      )
     ).map((v) => v.meta()?.type),
   ).toEqual(["dateTime"]);
 });
 
-test("is operator", () => {
+test("is operator", async () => {
   expect(
-    evaluate(
+    await evaluate(
       "($this.deceased as dateTime)",
       {
         resourceType: "Patient",
@@ -455,7 +483,7 @@ test("is operator", () => {
   ).toEqual([]);
 
   expect(
-    evaluate(
+    await evaluate(
       "($this.deceased as dateTime)",
       {
         resourceType: "Patient",
@@ -470,9 +498,9 @@ test("is operator", () => {
   ).toEqual(["1980-01-01T00:00:00Z"]);
 });
 
-test("term with TypeIdentifier", () => {
+test("term with TypeIdentifier", async () => {
   expect(
-    evaluate(
+    await evaluate(
       "(Patient.deceased as dateTime)",
       {
         resourceType: "Patient",
@@ -487,7 +515,7 @@ test("term with TypeIdentifier", () => {
   ).toEqual([]);
 
   expect(
-    evaluate(
+    await evaluate(
       "(Patient.deceased as dateTime)",
       {
         resourceType: "Patient",
@@ -502,18 +530,18 @@ test("term with TypeIdentifier", () => {
   ).toEqual(["1980-01-01T00:00:00Z"]);
 });
 
-test("term with TypeIdentifier 'Resource'", () => {
+test("term with TypeIdentifier 'Resource'", async () => {
   expect(
-    evaluate("Resource.name", {
+    await evaluate("Resource.name", {
       resourceType: "Patient",
       name: [{ given: ["bob"], family: "waterson" }],
     }),
   ).toEqual([{ given: ["bob"], family: "waterson" }]);
 });
 
-test("union operation", () => {
+test("union operation", async () => {
   expect(
-    evaluate(
+    await evaluate(
       "$this.name.given | $this.name.family",
       {
         resourceType: "Patient",
@@ -528,9 +556,9 @@ test("union operation", () => {
   ).toEqual(["bob", "waterson"]);
 });
 
-test("resolve with is operation", () => {
+test("resolve with is operation", async () => {
   expect(
-    evaluate(
+    await evaluate(
       "CarePlan.subject.where(resolve is Patient)",
       {
         resourceType: "CarePlan",
@@ -546,7 +574,7 @@ test("resolve with is operation", () => {
   ).toEqual([{ reference: "Patient/123" }]);
 });
 
-test("Subscription extension test", () => {
+test("Subscription extension test", async () => {
   const sub = {
     id: "71298a23-1f35-486d-8d5a-27838966df8f",
     end: "2021-01-01T00:00:00Z",
@@ -598,34 +626,7 @@ test("Subscription extension test", () => {
   };
 
   expect(
-    evaluate("$this.channel.type.extension.where(url=%typeUrl).value", sub, {
-      variables: {
-        typeUrl: "https://iguhealth.app/Subscription/channel-type",
-      },
-    }),
-  ).toEqual(["operation"]);
-
-  expect(
-    evaluate("$this.channel.type.extension.where(url=%typeUrl).value", sub, {
-      variables: {
-        typeUrl: "https://iguhealth.app/Subscription/operation-code",
-      },
-    }),
-  ).toEqual(["test-1"]);
-
-  expect(
-    evaluateWithMeta(
-      "$this.channel.type.extension.where(url=%typeUrl).value",
-      sub,
-      {
-        variables: {
-          typeUrl: "https://iguhealth.app/Subscription/operation-code",
-        },
-      },
-    ).map((v) => v.location()),
-  ).toEqual([["channel", "_type", "extension", 1, "valueCode"]]);
-  expect(
-    evaluateWithMeta(
+    await evaluate(
       "$this.channel.type.extension.where(url=%typeUrl).value",
       sub,
       {
@@ -633,28 +634,69 @@ test("Subscription extension test", () => {
           typeUrl: "https://iguhealth.app/Subscription/channel-type",
         },
       },
+    ),
+  ).toEqual(["operation"]);
+
+  expect(
+    await evaluate(
+      "$this.channel.type.extension.where(url=%typeUrl).value",
+      sub,
+      {
+        variables: {
+          typeUrl: "https://iguhealth.app/Subscription/operation-code",
+        },
+      },
+    ),
+  ).toEqual(["test-1"]);
+
+  expect(
+    (
+      await evaluateWithMeta(
+        "$this.channel.type.extension.where(url=%typeUrl).value",
+        sub,
+        {
+          variables: {
+            typeUrl: "https://iguhealth.app/Subscription/operation-code",
+          },
+        },
+      )
+    ).map((v) => v.location()),
+  ).toEqual([["channel", "_type", "extension", 1, "valueCode"]]);
+  expect(
+    (
+      await evaluateWithMeta(
+        "$this.channel.type.extension.where(url=%typeUrl).value",
+        sub,
+        {
+          variables: {
+            typeUrl: "https://iguhealth.app/Subscription/channel-type",
+          },
+        },
+      )
     ).map((v) => v.location()),
   ).toEqual([["channel", "_type", "extension", 0, "valueCode"]]);
 });
 
-test("test reference finding", () => {
+test("test reference finding", async () => {
   expect(
-    evaluateWithMeta(
-      "CarePlan.subject.where(resolve is Patient)",
-      {
-        resourceType: "CarePlan",
-        subject: [
-          { reference: "Patient/123" },
-          { reference: "Practitioner/123" },
-          { reference: "Patient/4" },
-        ],
-      },
-      {
-        meta: {
-          type: "CarePlan" as uri,
-          getSD,
+    (
+      await evaluateWithMeta(
+        "CarePlan.subject.where(resolve is Patient)",
+        {
+          resourceType: "CarePlan",
+          subject: [
+            { reference: "Patient/123" },
+            { reference: "Practitioner/123" },
+            { reference: "Patient/4" },
+          ],
         },
-      },
+        {
+          meta: {
+            type: "CarePlan" as uri,
+            getSD,
+          },
+        },
+      )
     ).map((v) => v.location()),
   ).toEqual([
     ["subject", 0],
@@ -662,9 +704,9 @@ test("test reference finding", () => {
   ]);
 });
 
-test("children", () => {
+test("children", async () => {
   expect(
-    evaluate(
+    await evaluate(
       "CarePlan.children()",
       {
         resourceType: "CarePlan",
@@ -689,42 +731,46 @@ test("children", () => {
   ]);
 
   expect(
-    evaluateWithMeta(
-      "CarePlan.children()",
-      {
-        resourceType: "CarePlan",
-        subject: [
-          { reference: "Patient/123" },
-          { reference: "Practitioner/123" },
-          { reference: "Patient/4" },
-        ],
-      },
-      {
-        meta: {
-          type: "CarePlan" as uri,
-          getSD,
+    (
+      await evaluateWithMeta(
+        "CarePlan.children()",
+        {
+          resourceType: "CarePlan",
+          subject: [
+            { reference: "Patient/123" },
+            { reference: "Practitioner/123" },
+            { reference: "Patient/4" },
+          ],
         },
-      },
+        {
+          meta: {
+            type: "CarePlan" as uri,
+            getSD,
+          },
+        },
+      )
     ).map((v) => v.location()),
   ).toEqual([["resourceType"], ["subject", 0], ["subject", 1], ["subject", 2]]);
 
   expect(
-    evaluateWithMeta(
-      "CarePlan.children().ofType(Reference)",
-      {
-        resourceType: "CarePlan",
-        subject: [
-          { reference: "Patient/123" },
-          { reference: "Practitioner/123" },
-          { reference: "Patient/4" },
-        ],
-      },
-      {
-        meta: {
-          type: "CarePlan" as uri,
-          getSD,
+    (
+      await evaluateWithMeta(
+        "CarePlan.children().ofType(Reference)",
+        {
+          resourceType: "CarePlan",
+          subject: [
+            { reference: "Patient/123" },
+            { reference: "Practitioner/123" },
+            { reference: "Patient/4" },
+          ],
         },
-      },
+        {
+          meta: {
+            type: "CarePlan" as uri,
+            getSD,
+          },
+        },
+      )
     ).map((v) => v.location()),
   ).toEqual([
     ["subject", 0],
@@ -733,9 +779,9 @@ test("children", () => {
   ]);
 });
 
-test("descendants", () => {
+test("descendants", async () => {
   expect(
-    evaluate(
+    await evaluate(
       "Patient.descendants()",
       {
         resourceType: "Patient",
@@ -763,7 +809,7 @@ test("descendants", () => {
   ]);
 
   expect(
-    evaluate(
+    await evaluate(
       "Patient.descendants().ofType(Identifier)",
       {
         resourceType: "Patient",
@@ -780,7 +826,7 @@ test("descendants", () => {
     },
   ]);
   expect(
-    evaluate(
+    await evaluate(
       "Patient.descendants().ofType(string)",
       {
         resourceType: "Patient",
@@ -793,9 +839,9 @@ test("descendants", () => {
   ).toEqual(["bob", "jameson", "123"]);
 });
 
-test("descendants with type filter", () => {
+test("descendants with type filter", async () => {
   expect(
-    evaluate(
+    await evaluate(
       "Practitioner.descendants().ofType(Reference)",
       {
         extension: [
@@ -809,7 +855,7 @@ test("descendants with type filter", () => {
   ).toEqual([{ reference: "urn:oid:2" }]);
 });
 
-test("Get Locations for extensions", () => {
+test("Get Locations for extensions", async () => {
   const operationDefinition: OperationDefinition = {
     resourceType: "OperationDefinition",
     status: "active",
@@ -829,7 +875,7 @@ test("Get Locations for extensions", () => {
     },
   } as OperationDefinition;
 
-  const nodes = evaluateWithMeta(
+  const nodes = await evaluateWithMeta(
     "$this.descendants().where($this.extension.url=%extUrl).value",
     operationDefinition,
     {
@@ -842,9 +888,9 @@ test("Get Locations for extensions", () => {
   expect(nodes.map((n) => n.location())).toEqual([["name"]]);
 });
 
-test("Patient with name given", () => {
+test("Patient with name given", async () => {
   expect(
-    evaluate("Patient.name.given[0]", {
+    await evaluate("Patient.name.given[0]", {
       fhirVersion: "4.0",
       type: "create-response",
       level: "type",
@@ -874,16 +920,18 @@ test("Patient with name given", () => {
   ).toEqual([]);
 });
 
-test("QR testing for authored", () => {
+test("QR testing for authored", async () => {
   expect(
-    evaluateWithMeta(
-      "QuestionnaireResponse.author",
-      {
-        resourceType: "QuestionnaireResponse",
-        authored: "2024-06-27T04:22:10-05:00",
-        status: "in-progress",
-      },
-      metaOptions("QuestionnaireResponse.author"),
+    (
+      await evaluateWithMeta(
+        "QuestionnaireResponse.author",
+        {
+          resourceType: "QuestionnaireResponse",
+          authored: "2024-06-27T04:22:10-05:00",
+          status: "in-progress",
+        },
+        metaOptions("QuestionnaireResponse.author"),
+      )
     ).map((v) => v.meta()?.type),
   ).toEqual([]);
 });

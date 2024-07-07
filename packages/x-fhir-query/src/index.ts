@@ -1,11 +1,11 @@
-import { evaluate } from "@iguhealth/fhirpath";
+import * as fhirpath from "@iguhealth/fhirpath";
 
 const EXPRESSION_REGEX = /{{([^}]*)}}/;
 
-export default function execute(
+export default async function execute(
   xfhirQuery: string,
-  fpOptions: Parameters<typeof evaluate>[2],
-): string {
+  fpOptions: Parameters<typeof fhirpath.evaluate>[2],
+): Promise<string> {
   let output = xfhirQuery;
   while (EXPRESSION_REGEX.test(output)) {
     const result = EXPRESSION_REGEX.exec(output);
@@ -15,7 +15,9 @@ export default function execute(
       throw new Error("Invalid expression");
     }
 
-    const evaluation = evaluate(expression, undefined, fpOptions)
+    const evaluation = (
+      await fhirpath.evaluate(expression, undefined, fpOptions)
+    )
       .map((e) => e.toString())
       .join(",");
     output = output.replace(match, evaluation);

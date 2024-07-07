@@ -18,7 +18,7 @@ import {
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
-import * as fp from "@iguhealth/fhirpath";
+import * as fhirpath from "@iguhealth/fhirpath";
 import {
   OperationError,
   outcomeError,
@@ -141,11 +141,11 @@ function getPatches<Version extends FHIR_VERSION>(
   return patches;
 }
 
-function getVariable<Version extends FHIR_VERSION>(
+async function getVariable<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
   variables: NonNullable<Resource<Version, "TestScript">["variable"]>,
   variableName: string,
-): unknown {
+): Promise<unknown> {
   const variable = variables.find((v) => v.name === variableName);
   if (!variable)
     throw new OperationError(
@@ -154,11 +154,13 @@ function getVariable<Version extends FHIR_VERSION>(
 
   switch (true) {
     case variable.expression !== undefined: {
-      return fp.evaluate(
-        variable.expression,
-        variable.sourceId
-          ? getFixtureResource(state, variable.sourceId)
-          : undefined,
+      return (
+        await fhirpath.evaluate(
+          variable.expression,
+          variable.sourceId
+            ? getFixtureResource(state, variable.sourceId)
+            : undefined,
+        )
       )[0];
     }
     default: {
@@ -209,11 +211,11 @@ function getSource<Version extends FHIR_VERSION>(
 
 const EXPRESSION_REGEX = /\${([^}]*)}/;
 
-function evaluateVariables<Version extends FHIR_VERSION>(
+async function evaluateVariables<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
   pointer: Loc<Resource<Version, "TestScript">, any, any>,
   value: string,
-): string {
+): Promise<string> {
   let output = value;
   const variables =
     get(descend(root(pointer), "variable"), state.testScript) ?? [];
@@ -227,10 +229,8 @@ function evaluateVariables<Version extends FHIR_VERSION>(
       throw new Error("Invalid expression");
     }
 
-    const variableValue = getVariable(
-      state,
-      variables,
-      variableName,
+    const variableValue = (
+      await getVariable(state, variables, variableName)
     )?.toString();
     if (!variableValue)
       throw new OperationError(
@@ -246,7 +246,7 @@ function evaluateVariables<Version extends FHIR_VERSION>(
   return output;
 }
 
-function operationToFHIRRequest<Version extends FHIR_VERSION>(
+async function operationToFHIRRequest<Version extends FHIR_VERSION>(
   state: TestScriptState<Version>,
   pointer: Loc<
     Resource<Version, "TestScript">,
@@ -256,7 +256,7 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
     | undefined,
     any
   >,
-): FHIRRequest {
+): Promise<FHIRRequest> {
   // See https://hl7.org/fhir/r4/valueset-testscript-operation-codes.html
 
   const operation = get(pointer, state.testScript);
@@ -421,7 +421,7 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
             type: "update-request",
             resourceType: operation.resource,
             parameters: parseQuery(
-              evaluateVariables(state, pointer, operation.params),
+              await evaluateVariables(state, pointer, operation.params),
             ),
             body: source,
           } as FHIRRequest;
@@ -468,7 +468,7 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
             type: "delete-request",
             resourceType: operation.resource,
             parameters: parseQuery(
-              evaluateVariables(state, pointer, operation.params ?? ""),
+              await evaluateVariables(state, pointer, operation.params ?? ""),
             ),
           } as FHIRRequest;
         }
@@ -478,7 +478,7 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
             level: "system",
             type: "delete-request",
             parameters: parseQuery(
-              evaluateVariables(state, pointer, operation.params ?? ""),
+              await evaluateVariables(state, pointer, operation.params ?? ""),
             ),
           } as FHIRRequest;
         }
@@ -498,7 +498,7 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
           type: "search-request",
           resourceType: operation.resource,
           parameters: parseQuery(
-            evaluateVariables(state, pointer, operation.params ?? ""),
+            await evaluateVariables(state, pointer, operation.params ?? ""),
           ),
         } as FHIRRequest;
       } else {
@@ -507,7 +507,7 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
           level: "system",
           type: "search-request",
           parameters: parseQuery(
-            evaluateVariables(state, pointer, operation.params ?? ""),
+            await evaluateVariables(state, pointer, operation.params ?? ""),
           ),
         } as FHIRRequest;
       }
@@ -576,7 +576,7 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
               (target?.resourceType as unknown as ResourceType<Version>),
             id: target?.id as id,
             parameters: parseQuery(
-              evaluateVariables(state, pointer, operation.params ?? ""),
+              await evaluateVariables(state, pointer, operation.params ?? ""),
             ),
           } as FHIRRequest;
         }
@@ -587,7 +587,7 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
             type: "history-request",
             resourceType: operation.resource,
             parameters: parseQuery(
-              evaluateVariables(state, pointer, operation.params ?? ""),
+              await evaluateVariables(state, pointer, operation.params ?? ""),
             ),
           } as FHIRRequest;
         }
@@ -597,7 +597,7 @@ function operationToFHIRRequest<Version extends FHIR_VERSION>(
             level: "system",
             type: "history-request",
             parameters: parseQuery(
-              evaluateVariables(state, pointer, operation.params ?? ""),
+              await evaluateVariables(state, pointer, operation.params ?? ""),
             ),
           } as FHIRRequest;
         }
@@ -625,7 +625,9 @@ async function deriveComparision<Version extends FHIR_VERSION>(
 
     switch (true) {
       case assertion.compareToSourceExpression !== undefined: {
-        return fp.evaluate(assertion.compareToSourceExpression, data)[0];
+        return (
+          await fhirpath.evaluate(assertion.compareToSourceExpression, data)
+        )[0];
       }
     }
   } else if (assertion.value) {
@@ -763,7 +765,9 @@ async function runAssertion<Version extends FHIR_VERSION>(
   }
   if (assertion.expression) {
     const compValue = await deriveComparision(state, assertion);
-    const fpEvaluation = fp.evaluate(assertion.expression, source)[0];
+    const fpEvaluation = (
+      await fhirpath.evaluate(assertion.expression, source)
+    )[0];
 
     if (!evaluateOperator(fpEvaluation, compValue, assertion.operator)) {
       const result = {
@@ -840,7 +844,7 @@ async function runOperation<Version extends FHIR_VERSION>(
     );
 
   try {
-    const request = operationToFHIRRequest(state, pointer);
+    const request = await operationToFHIRRequest(state, pointer);
     const response = await state.client.request({}, request);
 
     const result = {

@@ -18,7 +18,7 @@ import {
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
-import { evaluateWithMeta } from "@iguhealth/fhirpath";
+import * as fhirpath from "@iguhealth/fhirpath";
 import { MetaValueSingular } from "@iguhealth/meta-value";
 import {
   isOperationError,
@@ -603,9 +603,9 @@ async function indexResource<
     resource.resourceType as ResourceType<Version>,
   ]);
   await Promise.all(
-    searchParameters.map((searchParameter) => {
+    searchParameters.map(async (searchParameter) => {
       if (searchParameter.expression === undefined) return;
-      const evaluation = evaluateWithMeta(
+      const evaluation = await fhirpath.evaluateWithMeta(
         searchParameter.expression,
         resource,
         {
@@ -781,15 +781,24 @@ function processHistoryParameters(
   }
 
   if (_since?.value[0] && typeof _since?.value[0] === "string") {
-    sqlParams["created_at"] = db.sql`${db.self} >= ${db.param(
-      dayjs(_since.value[0], "YYYY-MM-DDThh:mm:ss+zz:zz").toDate(),
-    )}`;
+    const value = dayjs(_since.value[0], "YYYY-MM-DDThh:mm:ss+zz:zz");
+    if (!value.isValid()) {
+      throw new OperationError(
+        outcomeError("invalid", "_since must be a valid date time."),
+      );
+    }
+    sqlParams["created_at"] = db.sql`${db.self} >= ${db.param(value.toDate())}`;
   }
 
   if (_since_versionId?.value[0]) {
-    sqlParams["version_id"] = db.sql`${db.self} > ${db.param(
-      parseInt(_since_versionId.value[0].toString()),
-    )}`;
+    const value = parseInt(_since_versionId.value[0].toString());
+    console.log(typeof _since_versionId.value[0]);
+    if (isNaN(value)) {
+      throw new OperationError(
+        outcomeError("invalid", "_since-version must be a number."),
+      );
+    }
+    sqlParams["version_id"] = db.sql`${db.self} > ${db.param(value)}`;
   }
 
   return sqlParams;
@@ -1621,11 +1630,12 @@ function createPostgresMiddleware<
 
         case "transaction-request": {
           let transactionBundle = context.request.body;
-          const { locationsToUpdate, order } = buildTransactionTopologicalGraph(
-            context.ctx,
-            context.request.fhirVersion,
-            transactionBundle,
-          );
+          const { locationsToUpdate, order } =
+            await buildTransactionTopologicalGraph(
+              context.ctx,
+              context.request.fhirVersion,
+              transactionBundle,
+            );
           if (
             (transactionBundle.entry || []).length >
             context.state.transaction_entry_limit

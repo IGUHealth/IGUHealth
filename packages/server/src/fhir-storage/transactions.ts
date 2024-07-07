@@ -1,5 +1,4 @@
 import graphlib from "@dagrejs/graphlib";
-import pg from "pg";
 import * as db from "zapatos/db";
 
 import { Reference, uri } from "@iguhealth/fhir-types/r4/types";
@@ -27,15 +26,17 @@ type LocationsToUpdate = {
   [key: string]: (string | number)[][] | undefined;
 };
 
-export function buildTransactionTopologicalGraph<Version extends FHIR_VERSION>(
+export async function buildTransactionTopologicalGraph<
+  Version extends FHIR_VERSION,
+>(
   ctx: IGUHealthServerCTX,
   fhirVersion: Version,
   transaction: Resource<Version, "Bundle">,
-): {
+): Promise<{
   order: string[];
   locationsToUpdate: LocationsToUpdate;
   graph: graphlib.Graph;
-} {
+}> {
   const entries = transaction.entry || [];
   const graph = new graphlib.Graph({ directed: true });
   const urlToIndice = getTransactionFullUrls(transaction);
@@ -47,7 +48,7 @@ export function buildTransactionTopologicalGraph<Version extends FHIR_VERSION>(
 
     // Pull dependencies from references.
     if (entry.resource) {
-      const resourceReferences = evaluateWithMeta(
+      const resourceReferences = await evaluateWithMeta(
         "$this.descendants().ofType(Reference)",
         entry.resource,
         {
@@ -109,38 +110,6 @@ export function buildTransactionTopologicalGraph<Version extends FHIR_VERSION>(
     );
   }
   return { locationsToUpdate, graph, order: graphlib.alg.topsort(graph) };
-}
-
-async function retryFailedTransactions<ReturnType>(
-  ctx: IGUHealthServerCTX,
-  numberOfRetries: number,
-  execute: () => Promise<ReturnType>,
-): Promise<ReturnType> {
-  for (let i = 0; i < numberOfRetries; i++) {
-    try {
-      const res = await execute();
-      return res;
-    } catch (e) {
-      if (!(e instanceof pg.DatabaseError)) {
-        ctx.logger.error("Error during transaction:", e);
-        throw e;
-      }
-      // Only going to retry on failed transactions
-      if (e.code !== "40001") {
-        ctx.logger.error("Postgres error threw :", e);
-        throw e;
-      }
-      ctx.logger.warn(`Retrying transaction : ${i + 1}`, { retry: i + 1 });
-    }
-  }
-
-  ctx.logger.error(`Max number of retries exceeded '${numberOfRetries}'`);
-  throw new OperationError(
-    outcomeFatal(
-      "lock-error",
-      `Could not apply transaction after '${numberOfRetries}' retries.`,
-    ),
-  );
 }
 
 export function FHIRTransaction<CTX extends Pick<IGUHealthServerCTX, "db">, R>(

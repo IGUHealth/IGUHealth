@@ -48,7 +48,7 @@ const r4ArtifactResources = getArtifactResources(R4, [
 
 test.each(
   [...r4Sets.resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)),
-)(`R4 Testing indexing resourceType '%s'`, (resourceType) => {
+)(`R4 Testing indexing resourceType '%s'`, async (resourceType) => {
   const searchParameters = r4ArtifactResources.filter(
     (r): r is Resource<R4, "SearchParameter"> =>
       r.resourceType === "SearchParameter" &&
@@ -65,17 +65,25 @@ test.each(
     for (const parameter of searchParameters) {
       if (parameter.expression) {
         try {
-          const evalResult = fhirpath.evaluate(parameter.expression, resource, {
-            meta: {
-              fhirVersion: R4,
-              getSD: (fhirVersion, type) => {
-                return r4ArtifactResources.find(
-                  (r) =>
-                    r.resourceType === "StructureDefinition" && r.type === type,
-                ) as Resource<R4, "StructureDefinition"> | undefined;
+          const evalResult = await fhirpath.evaluate(
+            parameter.expression,
+            resource,
+            {
+              meta: {
+                fhirVersion: R4,
+                getSD: <Version extends FHIR_VERSION>(
+                  fhirVersion: Version,
+                  type,
+                ) => {
+                  return r4ArtifactResources.find(
+                    (r) =>
+                      r.resourceType === "StructureDefinition" &&
+                      r.type === type,
+                  ) as Resource<Version, "StructureDefinition"> | undefined;
+                },
               },
             },
-          });
+          );
           expect([parameter.expression, evalResult]).toMatchSnapshot();
         } catch (e) {
           console.error(
@@ -95,7 +103,7 @@ const r4bArtifactResources = getArtifactResources(R4B, [
 
 test.each(
   [...r4bSets.resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)),
-)(`R4B Testing indexing resourceType '%s'`, (resourceType) => {
+)(`R4B Testing indexing resourceType '%s'`, async (resourceType) => {
   const searchParameters = r4bArtifactResources.filter(
     (r): r is Resource<R4B, "SearchParameter"> =>
       r.resourceType === "SearchParameter" &&
@@ -112,17 +120,25 @@ test.each(
     for (const parameter of searchParameters) {
       if (parameter.expression) {
         try {
-          const evalResult = fhirpath.evaluate(parameter.expression, resource, {
-            meta: {
-              fhirVersion: R4B,
-              getSD: (fhirVersion, type) => {
-                return r4bArtifactResources.find(
-                  (r) =>
-                    r.resourceType === "StructureDefinition" && r.type === type,
-                ) as Resource<R4B, "StructureDefinition"> | undefined;
+          const evalResult = await fhirpath.evaluate(
+            parameter.expression,
+            resource,
+            {
+              meta: {
+                fhirVersion: R4B,
+                getSD: <Version extends FHIR_VERSION>(
+                  fhirVersion: Version,
+                  type,
+                ) => {
+                  return r4bArtifactResources.find(
+                    (r) =>
+                      r.resourceType === "StructureDefinition" &&
+                      r.type === type,
+                  ) as Resource<Version, "StructureDefinition"> | undefined;
+                },
               },
             },
-          });
+          );
           expect([parameter.expression, evalResult]).toMatchSnapshot();
         } catch (e) {
           console.error(

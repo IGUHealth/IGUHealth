@@ -28,7 +28,7 @@ export async function encryptValue<T extends object>(
       outcomeError("invalid", "No encryption provider configured."),
     );
 
-  const encryptionLocations = evaluateWithMeta(
+  const encryptionLocations = await evaluateWithMeta(
     "$this.descendants().where($this.extension.url=%extUrl).value",
     valueToEncrypt,
     {
@@ -39,7 +39,7 @@ export async function encryptValue<T extends object>(
   );
   const operations = await Promise.all(
     encryptionLocations.map(async (value): Promise<Operation[]> => {
-      const encryptExtensionValue = evaluateWithMeta(
+      const encryptExtensionValue = await evaluateWithMeta(
         `${toFP(value.location())}.extension.where(url=%extUrl).value`,
         valueToEncrypt,
         {

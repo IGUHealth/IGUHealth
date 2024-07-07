@@ -59,8 +59,8 @@ const CTX = {
   },
 };
 
-test("Generate a graph from a transaction", () => {
-  const result = buildTransactionTopologicalGraph(CTX, R4, {
+test("Generate a graph from a transaction", async () => {
+  const result = await buildTransactionTopologicalGraph(CTX, R4, {
     resourceType: "Bundle",
     type: "transaction",
     entry: [
@@ -83,7 +83,7 @@ test("Generate a graph from a transaction", () => {
   expect(result.order).toEqual(["1", "0"]);
 });
 
-test("Test Cyclical", () => {
+test("Test Cyclical", async () => {
   expect(() => {
     return buildTransactionTopologicalGraph(CTX, R4, {
       resourceType: "Bundle",
@@ -108,7 +108,7 @@ test("Test Cyclical", () => {
         },
       ],
     } as Bundle);
-  }).toThrow(
+  }).rejects.toEqual(
     new OperationError(
       outcomeFatal(
         "exception",
@@ -119,7 +119,7 @@ test("Test Cyclical", () => {
     ),
   );
   try {
-    buildTransactionTopologicalGraph(CTX, R4, {
+    await buildTransactionTopologicalGraph(CTX, R4, {
       resourceType: "Bundle",
       type: "transaction",
       entry: [

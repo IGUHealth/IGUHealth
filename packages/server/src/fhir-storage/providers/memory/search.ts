@@ -7,7 +7,7 @@ import {
   FHIR_VERSION,
   Resource,
 } from "@iguhealth/fhir-types/versions";
-import * as fp from "@iguhealth/fhirpath";
+import * as fhirpath from "@iguhealth/fhirpath";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
@@ -58,7 +58,7 @@ async function expressionSearch<CTX extends MemorySearchCTX>(
       ),
     );
 
-  const evaluation = fp.evaluateWithMeta(
+  const evaluation = await fhirpath.evaluateWithMeta(
     parameter.searchParameter.expression,
     resource,
     {
