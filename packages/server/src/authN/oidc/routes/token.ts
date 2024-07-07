@@ -9,6 +9,7 @@ import {
   IDTokenPayload,
   IGUHEALTH_ISSUER,
   Subject,
+  TenantId,
   createToken,
 } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
@@ -116,11 +117,8 @@ export function tokenPost<
 
             const accessTokenPayload: AccessTokenPayload<s.user_role> = {
               iss: IGUHEALTH_ISSUER,
-              [CUSTOM_CLAIMS.TENANTS]:
-                await ctx.state.oidc.userManagement.getTenantClaims(
-                  fhirContext,
-                  user.id,
-                ),
+              [CUSTOM_CLAIMS.TENANT]: user.tenant as TenantId,
+              [CUSTOM_CLAIMS.ROLE]: user.role as s.user_role,
               [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
               [CUSTOM_CLAIMS.RESOURCE_ID]:
                 (user.fhir_user_id as id) ?? undefined,

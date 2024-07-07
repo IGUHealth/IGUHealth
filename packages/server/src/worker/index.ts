@@ -195,16 +195,12 @@ async function handleSubscriptionPayload(
         AccessTokenPayload<s.user_role>
       >(signingKey, {
         iss: IGUHEALTH_ISSUER,
-        [CUSTOM_CLAIMS.TENANTS]: [
-          {
-            id: ctx.tenant,
-            userRole: "member",
-          },
-        ],
-        [CUSTOM_CLAIMS.RESOURCE_ID]: operationDefinition.id as id,
-        [CUSTOM_CLAIMS.RESOURCE_TYPE]: "OperationDefinition",
         sub: operationDefinition.id as unknown as Subject,
         scope: "openid profile email offline_access",
+        [CUSTOM_CLAIMS.ROLE]: "member",
+        [CUSTOM_CLAIMS.TENANT]: ctx.tenant,
+        [CUSTOM_CLAIMS.RESOURCE_ID]: operationDefinition.id as id,
+        [CUSTOM_CLAIMS.RESOURCE_TYPE]: "OperationDefinition",
       });
 
       await server.invoke_system(
@@ -556,12 +552,13 @@ async function createWorker(
           client,
           tenant: tenant,
           user: {
-            role: "admin" as s.user_role,
             jwt: {
               iss: IGUHEALTH_ISSUER,
               sub: `system-worker-${workerID}`,
               [CUSTOM_CLAIMS.RESOURCE_ID]: `system-worker-${workerID}`,
               [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
+              [CUSTOM_CLAIMS.TENANT]: tenant,
+              [CUSTOM_CLAIMS.ROLE]: "admin",
             } as AccessTokenPayload<s.user_role>,
           },
         };

@@ -11,7 +11,6 @@ import {
   IGUHEALTH_AUDIENCE,
   IGUHEALTH_ISSUER,
   Subject,
-  TenantClaim,
 } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -133,12 +132,8 @@ export const allowPublicAccessMiddleware: Koa.Middleware = async (
     access_token: "sec-public",
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
     [CUSTOM_CLAIMS.RESOURCE_ID]: "public" as id,
-    [CUSTOM_CLAIMS.TENANTS]: [
-      {
-        id: ctx.params.tenant,
-        userRole: "admin",
-      } as TenantClaim<s.user_role>,
-    ],
+    [CUSTOM_CLAIMS.TENANT]: ctx.params.tenant,
+    [CUSTOM_CLAIMS.ROLE]: "admin",
   };
   ctx.state = {
     ...ctx.state,

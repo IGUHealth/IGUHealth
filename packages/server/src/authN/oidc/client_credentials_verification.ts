@@ -74,12 +74,8 @@ export async function createClientCredentialToken(
 
   const accessTokenPayload: AccessTokenPayload<s.user_role> = {
     iss: IGUHEALTH_ISSUER,
-    [CUSTOM_CLAIMS.TENANTS]: [
-      {
-        id: tenant,
-        userRole: "member",
-      },
-    ],
+    [CUSTOM_CLAIMS.TENANT]: tenant,
+    [CUSTOM_CLAIMS.ROLE]: "member",
     [CUSTOM_CLAIMS.RESOURCE_TYPE]: "ClientApplication",
     [CUSTOM_CLAIMS.RESOURCE_ID]: client.id as id,
     sub: client.id as string as Subject,

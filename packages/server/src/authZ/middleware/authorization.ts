@@ -8,6 +8,7 @@ import {
 } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../../fhir-api/types.js";
+import { CUSTOM_CLAIMS } from "@iguhealth/jwt";
 
 /**
  * Determine whether or not the policy access has access to the resource type.
@@ -186,7 +187,11 @@ function canUserMakeRequest(
   ctx: IGUHealthServerCTX,
   request: FHIRRequest,
 ): boolean {
-  if (ctx.user.role === "admin" || ctx.user.role === "owner") return true;
+  if (
+    ctx.user.jwt[CUSTOM_CLAIMS.ROLE] === "admin" ||
+    ctx.user.jwt[CUSTOM_CLAIMS.ROLE] === "owner"
+  )
+    return true;
   return evaluateAccessPolicy(ctx, request);
 }
 

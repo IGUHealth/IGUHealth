@@ -1,5 +1,11 @@
 import createHTTPClient from "@iguhealth/client/http";
-import { AccessToken, IDToken, TenantId, parseJwt } from "@iguhealth/jwt";
+import {
+  AccessToken,
+  CUSTOM_CLAIMS,
+  IDToken,
+  TenantId,
+  parseJwt,
+} from "@iguhealth/jwt";
 
 import type { IGUHealthContextState } from "./IGUHealthContext";
 import { conditionalAddTenant } from "./utilities";
@@ -35,7 +41,7 @@ export function iguHealthReducer(
     case "INIT": {
       const user = parseJwt(action.payload.id_token);
       const rootURL = new URL(
-        `/w/${action.tenant ? action.tenant : user["https://iguhealth.app/tenants"][0]?.id}`,
+        `/w/${action.tenant ? action.tenant : user[CUSTOM_CLAIMS.TENANT]}`,
         action.domain,
       ).toString();
 

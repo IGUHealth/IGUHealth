@@ -1,6 +1,6 @@
 import { expect, test } from "@jest/globals";
 
-import { FHIRRequest } from "@iguhealth/client/lib/types";
+import { FHIRRequest, FHIRResponse } from "@iguhealth/client/lib/types";
 import {
   AccessPolicy,
   Patient,
@@ -18,10 +18,8 @@ test("Authorization test for read access on resource based on type and method", 
   const ctx: IGUHealthServerCTX = {
     ...testServices,
     tenant: testServices.tenant,
-
     user: {
       ...testServices.user,
-      role: "USER",
       accessPolicies: [
         {
           resourceType: "AccessPolicy",
@@ -47,6 +45,7 @@ test("Authorization test for read access on resource based on type and method", 
     return {
       ...context,
       response: {
+        fhirVersion: context.request.fhirVersion,
         type: "read-response",
         level: "instance",
         resourceType: "Patient",
@@ -55,7 +54,7 @@ test("Authorization test for read access on resource based on type and method", 
           resourceType: "Patient",
           id: "1",
         } as Patient,
-      },
+      } as FHIRResponse,
     };
   };
 

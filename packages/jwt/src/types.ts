@@ -48,9 +48,13 @@ export interface AccessTokenPayload<role> {
    */
   [CUSTOM_CLAIMS.RESOURCE_ID]: id;
   /**
-   * What tenants the user has access to.
+   * The users role for the tenant.
    */
-  [CUSTOM_CLAIMS.TENANTS]: TenantClaim<role>[];
+  [CUSTOM_CLAIMS.ROLE]: role;
+  /**
+   * The tenant the token is associated with.
+   */
+  [CUSTOM_CLAIMS.TENANT]: TenantId;
 
   /**
    * Allow token to have additional claims.
