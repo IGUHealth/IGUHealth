@@ -8,7 +8,7 @@ import {
   MetaValueArray,
   MetaValueSingular,
   PartialMeta,
-  PartialTypeMeta,
+  TypeMeta,
   descend,
   toMetaValueNodes,
 } from "@iguhealth/meta-value";
@@ -38,7 +38,7 @@ function toMetaValueSingulars<T>(
 
 export type Options = {
   variables?: Record<string, unknown> | ((v: string) => unknown);
-  meta?: PartialTypeMeta;
+  meta?: Partial<TypeMeta>;
 };
 
 function flatten<T>(arr: T[][]): T[] {
