@@ -55,33 +55,20 @@ export async function buildTransactionTopologicalGraph<
           meta: {
             fhirVersion,
             type: entry.resource.resourceType as uri,
-            getSD: (fhirVersion, type) => {
-              const canonical = ctx.resolveTypeToCanonical(fhirVersion, type);
-              if (!canonical)
-                throw new OperationError(
-                  outcomeFatal(
-                    "exception",
-                    `Could not resolve canonical for type '${type}'.`,
-                  ),
-                );
-              return ctx.resolveCanonical(
-                fhirVersion,
-                "StructureDefinition",
-                canonical,
-              );
-            },
+            resolveCanonical: ctx.resolveCanonical,
+            resolveTypeToCanonical: ctx.resolveTypeToCanonical,
           },
         },
       );
 
       const bundleDependencies = resourceReferences.filter((v) => {
-        const ref = (v.valueOf() as Reference).reference;
+        const ref = (v.getValue() as Reference).reference;
         if (ref && urlToIndice[ref] !== undefined) return true;
         return false;
       });
 
       for (const dep of bundleDependencies) {
-        const ref = (dep.valueOf() as Reference).reference as string;
+        const ref = (dep.getValue() as Reference).reference as string;
         locationsToUpdate[ref] = locationsToUpdate[ref] || [];
         const location = dep.location();
         if (!location)

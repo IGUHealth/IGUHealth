@@ -1,7 +1,6 @@
 import * as r4 from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
-import { deriveNextMetaInformation, TypeMeta } from "./meta.js";
-import { R4 } from "@iguhealth/fhir-types/versions";
+import { deriveNextMetaInformation, initializeMeta, TypeMeta } from "./meta.js";
 
 type Element = r4.Element | r4b.Element;
 type uri = r4.uri | r4b.uri;
@@ -13,7 +12,7 @@ export type PartialMeta = { location?: Location; type?: Partial<TypeMeta> };
 
 export interface MetaValue<T> {
   meta(): TypeMeta | undefined;
-  valueOf(): T;
+  getValue(): T;
   isArray(): this is MetaValueArray<T>;
   location(): Location | undefined;
 }
@@ -63,30 +62,43 @@ function getField<T extends { [key: string]: unknown }>(
   return foundField?.startsWith("_") ? foundField.substring(1) : foundField;
 }
 
-export function toMetaValueNodes<T>(
-  meta: PartialMeta,
+export async function metaValue<T>(
+  initialMeta: PartialMeta,
   value: T | T[],
   element?: Element | Element[],
-): MetaValueSingular<T> | MetaValueArray<T> | undefined {
+): Promise<
+  MetaValueSingular<NonNullable<T>> | MetaValueArray<NonNullable<T>> | undefined
+> {
   if (value instanceof MetaValueArray || value instanceof MetaValueSingular)
     return value;
+  // Assign a type automatically if the value is a resourceType
+  if (isObject(value) && typeof value.resourceType === "string")
+    initialMeta = {
+      ...initialMeta,
+      type: initialMeta.type
+        ? { ...initialMeta.type, type: value.resourceType as uri }
+        : undefined,
+    };
+  const meta = {
+    location: initialMeta.location ? initialMeta.location : [],
+    type: await initializeMeta(initialMeta.type),
+  };
+  if ((value === undefined || value === null) && element === undefined)
+    return undefined;
+
   if (isArray(value)) {
     return new MetaValueArray(
       meta,
-      value,
+      value as NonNullable<T>[],
       element && isArray(element) ? element : undefined,
     );
   }
-  if (value === undefined && element === undefined) return undefined;
-  // Assign a type automatically if the value is a resourceType
-  if (isObject(value) && typeof value.resourceType === "string")
-    meta = {
-      ...meta,
-      type: meta.type
-        ? { ...meta.type, type: value.resourceType as uri }
-        : undefined,
-    };
-  return new MetaValueSingular(meta, value, element as Element | undefined);
+
+  return new MetaValueSingular(
+    meta,
+    value as NonNullable<T>,
+    element as Element | undefined,
+  );
 }
 
 // Need special handling for primitives which if going into elements will need to use _field.
@@ -115,103 +127,59 @@ function descendLoc<T>(v: MetaValueSingular<T>, field: string): Location {
   return [...loc, field];
 }
 
-export function descend<T>(
-  node: MetaValueSingular<T>,
+export async function descend<T>(
+  node: MetaValue<T>,
   field: string,
-): MetaValue<unknown> | undefined {
-  const internalValue = node.internalValue;
-  if (isObject(internalValue)) {
-    const computedField = getField(internalValue, field);
-    if (computedField) {
-      const v = internalValue[computedField];
-      const elementValue = internalValue[`_${computedField}`] as
-        | Element[]
-        | Element
-        | undefined;
-      const nextMeta = {
-        location: descendLoc(node, computedField),
-        type: deriveNextMetaInformation(node.meta(), computedField),
-      };
+): Promise<MetaValue<NonNullable<unknown>> | undefined> {
+  if (node instanceof MetaValueSingular) {
+    const internalValue = node.internalValue;
+    if (isObject(internalValue)) {
+      const computedField = getField(internalValue, field);
+      if (computedField) {
+        const v = internalValue[computedField];
+        const elementValue = internalValue[`_${computedField}`] as
+          | Element[]
+          | Element
+          | undefined;
+        const nextMeta = {
+          location: descendLoc(node, computedField),
+          type: await deriveNextMetaInformation(node.meta(), computedField),
+        };
 
-      return toMetaValueNodes(nextMeta, v, elementValue);
+        return metaValue(nextMeta, v, elementValue);
+      }
     }
   }
   return undefined;
 }
 
-export class MetaValueSingular<T> implements MetaValue<T> {
-  private _value: T | FHIRPathPrimitive<RawPrimitive>;
-  private _meta: Meta;
-  constructor(meta: PartialMeta, value: T, element?: Element) {
-    if (isRawPrimitive(value) || element !== undefined) {
-      this._value = toFPPrimitive(
-        isRawPrimitive(value) ? value : undefined,
-        element,
-      );
-    } else {
-      this._value = value;
-    }
-    this._meta = {
-      location: meta.location ? meta.location : [],
-      type: initializeMeta(meta.type),
-    };
-  }
-  get internalValue() {
-    return this._value;
-  }
-  valueOf(): T {
-    if (isFPPrimitive(this._value)) return this._value.value as T;
-    return this._value;
-  }
-  meta(): TypeMeta | undefined {
-    return this._meta.type;
-  }
-  isArray(): this is MetaValueArray<T> {
-    return false;
-  }
-  location(): Location {
-    return this._meta.location;
-  }
+export function flatten<T>(
+  node: MetaValue<T> | MetaValue<T[]> | undefined,
+): MetaValueSingular<T>[] {
+  if (node instanceof MetaValueArray) return node.toArray();
+  if (node instanceof MetaValueSingular) return [node];
+  return [];
 }
 
-export function initializeMeta(
-  partialMeta: Partial<TypeMeta> | undefined,
-): TypeMeta | undefined {
-  if (!partialMeta) return partialMeta;
-  if (!partialMeta.elementIndex) partialMeta.elementIndex = 0;
-  if (!partialMeta.fhirVersion) partialMeta.fhirVersion = R4;
-  if (!partialMeta.sd && partialMeta.type)
-    partialMeta.sd = partialMeta.getSD?.call(
-      undefined,
-      partialMeta.fhirVersion,
-      partialMeta.type,
-    );
-
-  return partialMeta.sd ? (partialMeta as TypeMeta) : undefined;
-}
-
-export class MetaValueArray<T> implements MetaValue<Array<T>> {
+class MetaValueArray<T> implements MetaValue<Array<T>> {
   private value: Array<MetaValueSingular<T>>;
   private _meta: Meta;
-  constructor(meta: PartialMeta, value: Array<T>, element?: Element[]) {
+  constructor(meta: Meta, value: Array<T>, element?: Element[]) {
     this.value = value.map((v, i: number) => {
       if (v instanceof MetaValueSingular) return v;
       return new MetaValueSingular(
         {
           ...meta,
-          location: meta?.location ? [...meta.location, i] : [],
+          location: [...meta.location, i],
         },
         v,
         element ? element[i] : undefined,
       );
     });
-    this._meta = {
-      location: meta.location ? meta.location : [],
-      type: initializeMeta(meta.type),
-    };
+    this._meta = meta;
   }
-  valueOf(): Array<T> {
-    return this.value.map((v) => v.valueOf());
+  getValue(): Array<T> {
+    return this.value.map((v) => v.getValue());
   }
   toArray(): Array<MetaValueSingular<T>> {
     return this.value;
@@ -221,6 +189,39 @@ export class MetaValueArray<T> implements MetaValue<Array<T>> {
   }
   meta(): TypeMeta | undefined {
     return this._meta.type;
+  }
+  location(): Location {
+    return this._meta.location;
+  }
+}
+
+class MetaValueSingular<T> implements MetaValue<T> {
+  private _value: T | FHIRPathPrimitive<RawPrimitive>;
+  private _meta: Meta;
+  constructor(meta: Meta, value: T, element?: Element) {
+    if (isRawPrimitive(value) || element !== undefined) {
+      this._value = toFPPrimitive(
+        isRawPrimitive(value) ? value : undefined,
+        element,
+      );
+    } else {
+      this._value = value;
+    }
+
+    this._meta = meta;
+  }
+  get internalValue() {
+    return this._value;
+  }
+  getValue(): T {
+    if (isFPPrimitive(this._value)) return this._value.value as T;
+    return this._value;
+  }
+  meta(): TypeMeta | undefined {
+    return this._meta.type;
+  }
+  isArray(): this is MetaValueArray<T> {
+    return false;
   }
   location(): Location {
     return this._meta.location;

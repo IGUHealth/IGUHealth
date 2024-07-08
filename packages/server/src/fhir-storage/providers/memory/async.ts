@@ -404,7 +404,10 @@ function createResolveCanonical(
   const r4Map = createURLMap(data, R4);
   const r4bMap = createURLMap(data, R4B);
 
-  return <FHIRVersion extends FHIR_VERSION, Type extends AllResourceTypes>(
+  return async <
+    FHIRVersion extends FHIR_VERSION,
+    Type extends AllResourceTypes,
+  >(
     fhirVersion: FHIRVersion,
     type: Type,
     url: r4.canonical,
@@ -422,7 +425,7 @@ function createResolveCanonical(
 
 function createResolveTypeToCanonical(
   data: MemoryData,
-): (version: FHIR_VERSION, type: r4.uri) => r4.canonical | undefined {
+): (version: FHIR_VERSION, type: r4.uri) => Promise<r4.canonical | undefined> {
   const r4Map = (
     Object.values(
       data?.[R4]?.["StructureDefinition"] ?? {},
@@ -451,7 +454,7 @@ function createResolveTypeToCanonical(
     new Map(),
   );
 
-  return (version: FHIR_VERSION, type: r4.uri) => {
+  return async (version: FHIR_VERSION, type: r4.uri) => {
     switch (version) {
       case R4: {
         return r4Map.get(type);

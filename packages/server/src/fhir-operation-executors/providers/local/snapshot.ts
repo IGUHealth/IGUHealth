@@ -34,11 +34,13 @@ async function generateSnapshot(
   // slice so I'm not altering the original when injecting values with splice.
   const baseSnapshotElements = sd.baseDefinition
     ? (
-        (await ctx.resolveCanonical(
-          fhirVersion,
-          "StructureDefinition",
-          sd.baseDefinition,
-        )?.snapshot?.element) ?? []
+        (
+          await ctx.resolveCanonical(
+            fhirVersion,
+            "StructureDefinition",
+            sd.baseDefinition,
+          )
+        )?.snapshot?.element ?? []
       ).slice()
     : [];
 

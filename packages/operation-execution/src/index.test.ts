@@ -232,19 +232,19 @@ test("execution", async () => {
 
   const ctx: OpCTX = {
     fhirVersion: R4,
-    resolveCanonical<
+    async resolveCanonical<
       FHIRVersion extends FHIR_VERSION,
       Type extends ResourceType<FHIRVersion>,
     >(
       fhirVersion: FHIRVersion,
       type: Type,
       url: canonical,
-    ): Resource<FHIRVersion, Type> | undefined {
+    ): Promise<Resource<FHIRVersion, Type> | undefined> {
       const sd = structureDefinitions.find((sd) => sd.url === url);
       if (!sd) throw new Error(`Could not resolve url ${url}`);
       return sd as Resource<FHIRVersion, Type> | undefined;
     },
-    resolveTypeToCanonical: (version: FHIR_VERSION, type: uri) => {
+    async resolveTypeToCanonical(version: FHIR_VERSION, type: uri) {
       const sd = structureDefinitions.find((sd) => sd.type === type);
       if (!sd) throw new Error(`Could not resolve type ${type}`);
       return sd.url as canonical;

@@ -1,11 +1,46 @@
 import { complexTypes, resourceTypes } from "@iguhealth/fhir-types/r4/sets";
 import * as r4 from "@iguhealth/fhir-types/r4/types";
 import * as r4b from "@iguhealth/fhir-types/r4b/types";
-import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
+import {
+  AllResourceTypes,
+  FHIR_VERSION,
+  R4,
+  Resource,
+} from "@iguhealth/fhir-types/versions";
 
 type ElementDefinition = r4.ElementDefinition | r4b.ElementDefinition;
 type StructureDefinition = r4.StructureDefinition | r4b.StructureDefinition;
 type uri = r4.uri | r4b.uri;
+
+async function getSD<T extends FHIR_VERSION>(
+  fhirVersion: T,
+  resolveCanonical: TypeMeta["resolveCanonical"] | undefined,
+  resolveTypeToCanonical: TypeMeta["resolveTypeToCanonical"] | undefined,
+  type: uri,
+): Promise<Resource<T, "StructureDefinition"> | undefined> {
+  if (!resolveCanonical || !resolveTypeToCanonical) return undefined;
+  const url = await resolveTypeToCanonical(fhirVersion, type);
+  if (!url) return undefined;
+  return resolveCanonical(fhirVersion, "StructureDefinition", url);
+}
+
+export async function initializeMeta(
+  partialMeta: Partial<TypeMeta> | undefined,
+): Promise<TypeMeta | undefined> {
+  if (!partialMeta) return partialMeta;
+  if (!partialMeta.elementIndex) partialMeta.elementIndex = 0;
+  if (!partialMeta.fhirVersion) partialMeta.fhirVersion = R4;
+  if (!partialMeta.sd && partialMeta.type && partialMeta.resolveCanonical) {
+    partialMeta.sd = await getSD(
+      partialMeta.fhirVersion,
+      partialMeta.resolveCanonical,
+      partialMeta.resolveTypeToCanonical,
+      partialMeta.type,
+    );
+  }
+
+  return partialMeta.sd ? (partialMeta as TypeMeta) : undefined;
+}
 
 export type TypeMeta = {
   fhirVersion: FHIR_VERSION;
@@ -13,10 +48,18 @@ export type TypeMeta = {
   elementIndex: number;
   // Typechoice so need to maintain the type here.
   type: uri;
-  getSD: <Version extends FHIR_VERSION>(
-    fhirVersion: Version,
+  resolveTypeToCanonical: (
+    fhirVersion: FHIR_VERSION,
     type: uri,
-  ) => Resource<Version, "StructureDefinition"> | undefined;
+  ) => Promise<r4.canonical | undefined>;
+  resolveCanonical: <
+    Version extends FHIR_VERSION,
+    Type extends AllResourceTypes,
+  >(
+    fhirVersion: Version,
+    type: Type,
+    url: r4.canonical,
+  ) => Promise<Resource<Version, Type> | undefined>;
 };
 
 function isResourceOrComplexType(type: string): boolean {
@@ -103,10 +146,10 @@ function searchElementIndexAndType(
  ** This could mean pulling in a new StructureDefinition (IE in case of complex type or resource)
  ** Or setting a new Element index with type.
  */
-export function deriveNextMetaInformation(
+export async function deriveNextMetaInformation(
   meta: TypeMeta | undefined,
   computedField: string,
-): TypeMeta | undefined {
+): Promise<TypeMeta | undefined> {
   if (meta?.elementIndex === undefined) return undefined;
 
   const curElement = meta.sd.snapshot?.element[meta.elementIndex];
@@ -135,7 +178,8 @@ export function deriveNextMetaInformation(
 
       return {
         fhirVersion: meta.fhirVersion,
-        getSD: meta.getSD,
+        resolveCanonical: meta.resolveCanonical,
+        resolveTypeToCanonical: meta.resolveTypeToCanonical,
         sd: meta.sd,
         type,
         elementIndex: referenceElementIndex,
@@ -150,13 +194,19 @@ export function deriveNextMetaInformation(
       // In this case pull in the SD means it's a complex or resource type
       // so need to retrieve the SD.
       if (isResourceOrComplexType(type)) {
-        const sd = meta.getSD?.call(undefined, meta.fhirVersion, type);
+        const sd = await getSD(
+          meta.fhirVersion,
+          meta.resolveCanonical,
+          meta.resolveTypeToCanonical,
+          type,
+        );
         if (!sd) {
           throw new Error(`Could not retrieve sd of type '${type}'`);
         }
         return {
           fhirVersion: meta.fhirVersion,
-          getSD: meta.getSD,
+          resolveCanonical: meta.resolveCanonical,
+          resolveTypeToCanonical: meta.resolveTypeToCanonical,
           sd: sd,
           type: type,
           elementIndex: 0,
@@ -165,7 +215,8 @@ export function deriveNextMetaInformation(
 
       return {
         fhirVersion: meta.fhirVersion,
-        getSD: meta.getSD,
+        resolveCanonical: meta.resolveCanonical,
+        resolveTypeToCanonical: meta.resolveTypeToCanonical,
         sd: meta.sd,
         type,
         elementIndex: index,

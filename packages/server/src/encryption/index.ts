@@ -7,7 +7,9 @@ import { IGUHealthServerCTX } from "../fhir-api/types.js";
 import { EncryptionProvider } from "./provider/interface.js";
 import { AWSKMSProvider } from "./provider/kms.js";
 
-function toFP(loc: (string | number)[]) {
+function toFP(loc: (string | number)[] | undefined) {
+  if (!loc)
+    throw new OperationError(outcomeError("invalid", "Location is undefined."));
   let FP = "$this";
   for (const field of loc) {
     if (typeof field === "string") FP = `${FP}.${field}`;
@@ -18,7 +20,13 @@ function toFP(loc: (string | number)[]) {
 
 export const ENCRYPTION_URL = "https://iguhealth.app/Extension/encrypt-value";
 
-export async function encryptValue<T extends object>(
+function toJSONPath(loc: (string | number)[] | undefined) {
+  if (!loc)
+    throw new OperationError(outcomeError("invalid", "Location is undefined."));
+  return loc.join("/");
+}
+
+export async function encryptValue<T>(
   ctx: IGUHealthServerCTX,
   valueToEncrypt: T,
 ): Promise<T> {
@@ -67,7 +75,7 @@ export async function encryptValue<T extends object>(
         );
       }
 
-      if (typeof value.valueOf() !== "string") {
+      if (typeof value.getValue() !== "string") {
         throw new OperationError(
           outcomeError("invalid", "Cannot encrypt a non string value.", [
             toFP(value.location()),
@@ -75,20 +83,20 @@ export async function encryptValue<T extends object>(
         );
       }
 
-      if (encryptExtensionValue[0].valueOf() !== value.valueOf()) {
+      if (encryptExtensionValue[0].getValue() !== value.getValue()) {
         const encryptedValue = await encryptionProvider.encrypt(
           { workspace: ctx.tenant },
-          value.valueOf() as string,
+          value.getValue() as string,
         );
         return [
           {
             op: "replace",
-            path: `/${value.location().join("/")}`,
+            path: `/${toJSONPath(value.location())}`,
             value: encryptedValue,
           },
           {
             op: "replace",
-            path: `/${encryptExtensionValue[0].location().join("/")}`,
+            path: `/${toJSONPath(encryptExtensionValue[0].location())}`,
             value: encryptedValue,
           },
         ];

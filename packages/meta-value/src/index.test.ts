@@ -4,15 +4,21 @@ import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import {
+  canonical,
   ConceptMap,
   Patient,
   Practitioner,
   StructureDefinition,
   uri,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { FHIR_VERSION, R4, Resource } from "@iguhealth/fhir-types/lib/versions";
+import {
+  AllResourceTypes,
+  FHIR_VERSION,
+  R4,
+  Resource,
+} from "@iguhealth/fhir-types/lib/versions";
 
-import { MetaValueArray, MetaValueSingular, descend } from "./index";
+import { flatten, descend, metaValue } from "./index";
 
 const sds: StructureDefinition[] = loadArtifacts({
   fhirVersion: R4,
@@ -21,26 +27,38 @@ const sds: StructureDefinition[] = loadArtifacts({
   packageLocation: path.join(fileURLToPath(import.meta.url), ".."),
 });
 
-const getSD = <Version extends FHIR_VERSION>(_version: Version, type: uri) => {
+async function resolveTypeToCanonical(
+  _fhirVersion: FHIR_VERSION,
+  type: uri,
+): Promise<canonical | undefined> {
   const foundSD = sds.find((sd) => sd.type === type);
-  return foundSD as Resource<Version, "StructureDefinition"> | undefined;
-};
-
-const patientSD = sds.find(
-  (sd) => sd.type === "Patient",
-) as StructureDefinition;
-
-function flattenedDescend<T>(
-  node: MetaValueSingular<T>,
-  field: string,
-): MetaValueSingular<unknown>[] {
-  const v = descend(node, field);
-  if (v instanceof MetaValueArray) return v.toArray();
-  if (v instanceof MetaValueSingular) return [v];
-  return [];
+  return foundSD?.url as canonical;
 }
 
-test("Untyped", () => {
+async function resolveCanonical<
+  Version extends FHIR_VERSION,
+  Type extends AllResourceTypes,
+>(
+  fhirVersion: Version,
+  type: Type,
+  url: canonical,
+): Promise<Resource<Version, Type> | undefined> {
+  const foundSD = sds.find((sd) => sd.url === url);
+  return foundSD as Resource<Version, Type> | undefined;
+}
+
+function meta(version: FHIR_VERSION, type: uri) {
+  return {
+    type: {
+      fhirVersion: version,
+      type,
+      resolveTypeToCanonical,
+      resolveCanonical,
+    },
+  };
+}
+
+test("Untyped", async () => {
   const patient: Patient = {
     id: "123",
     resourceType: "Patient",
@@ -48,17 +66,23 @@ test("Untyped", () => {
     name: [{ given: ["bob"] }],
     deceasedBoolean: true,
   } as Patient;
-  const myValue = new MetaValueSingular({}, patient) as any;
-
-  expect(descend(myValue, "name")?.valueOf()).toEqual([{ given: ["bob"] }]);
-  expect(descend(myValue, "deceased")?.valueOf()).toEqual(true);
-  expect(descend(myValue, "identifier")?.valueOf()).toEqual([
-    { system: "mrn", value: "123" },
+  const myValue = await metaValue({}, patient);
+  if (!myValue) throw new Error();
+  expect((await descend(flatten(myValue)[0], "name"))?.getValue()).toEqual([
+    { given: ["bob"] },
   ]);
-  expect(descend(myValue, "nonExistent")?.valueOf()).toEqual(undefined);
+  expect((await descend(flatten(myValue)[0], "deceased"))?.getValue()).toEqual(
+    true,
+  );
+  expect(
+    (await descend(flatten(myValue)[0], "identifier"))?.getValue(),
+  ).toEqual([{ system: "mrn", value: "123" }]);
+  expect(
+    (await descend(flatten(myValue)[0], "nonExistent"))?.getValue(),
+  ).toEqual(undefined);
 });
 
-test("Simple Type test", () => {
+test("Simple Type test", async () => {
   const patient: Patient = {
     id: "123",
     resourceType: "Patient",
@@ -66,35 +90,34 @@ test("Simple Type test", () => {
     name: [{ given: ["bob"] }],
     deceasedBoolean: true,
   } as Patient;
-  const myValue = new MetaValueSingular(
-    {
-      type: {
-        fhirVersion: R4,
-        type: "Patient" as uri,
-        getSD,
-      },
-    },
-    patient,
-  ) as any;
+  const myValue = flatten(
+    await metaValue(meta(R4, "Patient" as uri), patient),
+  )[0];
 
-  expect(descend(myValue, "name")?.valueOf()).toEqual([{ given: ["bob"] }]);
-  expect(descend(myValue, "name")?.meta()?.type).toEqual("HumanName");
-  expect(descend(myValue, "identifier")?.meta()?.type).toEqual("Identifier");
-  expect(descend(myValue, "id")?.meta()?.type).toEqual(
+  expect((await descend(myValue, "name"))?.getValue()).toEqual([
+    { given: ["bob"] },
+  ]);
+  expect((await descend(myValue, "name"))?.meta()?.type).toEqual("HumanName");
+  expect((await descend(myValue, "identifier"))?.meta()?.type).toEqual(
+    "Identifier",
+  );
+  expect((await descend(myValue, "id"))?.meta()?.type).toEqual(
     "http://hl7.org/fhirpath/System.String",
   );
-  expect(descend(myValue, "deceased")?.valueOf()).toEqual(true);
-  expect(descend(myValue, "deceased")?.meta()?.type).toEqual("boolean");
+  expect((await descend(myValue, "deceased"))?.getValue()).toEqual(true);
+  expect((await descend(myValue, "deceased"))?.meta()?.type).toEqual("boolean");
 
   let output: (string | undefined)[] = [];
-  const v = descend(myValue, "identifier");
+  const v = await descend(myValue, "identifier");
   if (v && v.isArray()) {
-    output = v.toArray().map((v) => descend(v, "system")?.meta()?.type);
+    output = await Promise.all(
+      v.toArray().map(async (v) => (await descend(v, "system"))?.meta()?.type),
+    );
   }
   expect(output).toEqual(["uri"]);
 });
 
-test("ConceptMap test", () => {
+test("ConceptMap test", async () => {
   const cm: ConceptMap = {
     resourceType: "ConceptMap",
     status: "final",
@@ -126,38 +149,32 @@ test("ConceptMap test", () => {
       },
     ],
   } as ConceptMap;
-  const myValue = new MetaValueSingular(
-    {
-      type: {
-        fhirVersion: R4,
-        type: "ConceptMap" as uri,
-        getSD,
-      },
-    },
-    cm,
-  ) as any;
+  const myValue = flatten(
+    await metaValue(meta(R4, "ConceptMap" as uri), cm),
+  )[0];
+
   //ConceptMap.group.element.target.product.property
-  let cur = flattenedDescend(myValue, "group");
-  expect(cur[0]?.meta()?.type).toEqual("BackboneElement");
-  cur = flattenedDescend(cur[0], "element");
-  expect(cur[0]?.meta()?.type).toEqual("BackboneElement");
-  cur = flattenedDescend(cur[0], "target");
-  expect(cur[0]?.meta()?.type).toEqual("BackboneElement");
-  cur = flattenedDescend(cur[0], "product");
-  expect(cur[0]?.meta()?.type).toEqual("BackboneElement");
-  cur = flattenedDescend(cur[0], "property");
-  expect(cur[0]?.meta()?.type).toEqual("uri");
+  let cur = flatten(await descend(myValue, "group"))[0];
+  expect(cur?.meta()?.type).toEqual("BackboneElement");
+  cur = flatten(await descend(cur, "element"))[0];
+  expect(cur?.meta()?.type).toEqual("BackboneElement");
+  cur = flatten(await descend(cur, "target"))[0];
+  expect(cur?.meta()?.type).toEqual("BackboneElement");
+  cur = flatten(await descend(cur, "product"))[0];
+  expect(cur?.meta()?.type).toEqual("BackboneElement");
+  cur = flatten(await descend(cur, "property"))[0];
+  expect(cur?.meta()?.type).toEqual("uri");
 
   // Test unmapped
-  cur = flattenedDescend(myValue, "group");
-  expect(cur[0]?.meta()?.type).toEqual("BackboneElement");
-  cur = flattenedDescend(cur[0], "unmapped");
-  expect(cur[0]?.meta()?.type).toEqual("BackboneElement");
-  cur = flattenedDescend(cur[0], "url");
-  expect(cur[0]?.meta()?.type).toEqual("canonical");
+  cur = flatten(await descend(myValue, "group"))[0];
+  expect(cur?.meta()?.type).toEqual("BackboneElement");
+  cur = flatten(await descend(cur, "unmapped"))[0];
+  expect(cur?.meta()?.type).toEqual("BackboneElement");
+  cur = flatten(await descend(cur, "url"))[0];
+  expect(cur?.meta()?.type).toEqual("canonical");
 });
 
-test("Location test", () => {
+test("Location test", async () => {
   const patient: Patient = {
     id: "123",
     resourceType: "Patient",
@@ -165,52 +182,38 @@ test("Location test", () => {
     name: [{ given: ["bob", "frank"] }],
     deceasedBoolean: true,
   } as Patient;
-  const myValue = new MetaValueSingular(
-    {
-      type: {
-        fhirVersion: R4,
-        type: "Patient" as uri,
-        getSD,
-      },
-    },
-    patient,
-  );
-  let cur = flattenedDescend(myValue, "name");
-  cur = flattenedDescend(cur[0], "given");
+  const myValue = flatten(
+    await metaValue(meta(R4, "Patient" as uri), patient),
+  )[0];
+  let cur = flatten(await descend(myValue, "name"));
+  cur = flatten(await descend(cur[0], "given"));
   expect(cur.map((v) => v.location())).toEqual([
     ["name", 0, "given", 0],
     ["name", 0, "given", 1],
   ]);
 
-  cur = flattenedDescend(myValue, "identifier");
-  cur = flattenedDescend(cur[0], "system");
+  cur = flatten(await descend(myValue, "identifier"));
+  cur = flatten(await descend(cur[0], "system"));
   expect(cur[0].location()).toEqual(["identifier", 0, "system"]);
 });
 
-test("typechoice", () => {
+test("typechoice", async () => {
   const practitioner: Practitioner = {
     extension: [{ url: "test", valueReference: { reference: "urn:oid:2" } }],
     resourceType: "Practitioner",
     name: [{ given: ["Bob"] }],
   } as Practitioner;
-  const myValue = new MetaValueSingular(
-    {
-      type: {
-        fhirVersion: R4,
-        type: "Practitioner" as uri,
-        getSD,
-      },
-    },
-    practitioner,
-  );
+  const myValue = flatten(
+    await metaValue(meta(R4, "Practitioner" as uri), practitioner),
+  )[0];
 
-  let cur = flattenedDescend(myValue, "extension");
-  cur = flattenedDescend(cur[0], "value");
+  let cur = flatten(await descend(myValue, "extension"));
+  cur = flatten(await descend(cur[0], "value"));
 
   expect(cur[0].meta()?.type).toEqual("Reference");
 
-  cur = flattenedDescend(myValue, "extension");
-  cur = flattenedDescend(cur[0], "valueReference");
+  cur = flatten(await descend(myValue, "extension"));
+  cur = flatten(await descend(cur[0], "valueReference"));
   expect(cur[0].meta()?.type).toEqual("Reference");
 });
 
@@ -222,16 +225,9 @@ function getValue(loc: (string | number)[] = [], obj: any) {
   return cur;
 }
 
-test("Location test primitive extensions", () => {
-  const patient = new MetaValueSingular(
-    {
-      type: {
-        fhirVersion: R4,
-        type: "Practitioner" as uri,
-        getSD,
-      },
-    },
-    {
+test("Location test primitive extensions", async () => {
+  const patient = flatten(
+    await metaValue(meta(R4, "Practitioner" as uri), {
       id: "123",
       resourceType: "Patient",
       identifier: [{ system: "mrn", value: "123" }],
@@ -247,25 +243,25 @@ test("Location test primitive extensions", () => {
       _deceasedBoolean: {
         extension: [{ url: "https://test.com", valueString: "boolean" }],
       },
-    },
-  );
+    }),
+  )[0];
 
-  let cur = flattenedDescend(patient, "deceased");
-  cur = flattenedDescend(cur[0], "extension");
-  cur = flattenedDescend(cur[0], "value");
+  let cur = flatten(await descend(patient, "deceased"));
+  cur = flatten(await descend(cur[0], "extension"));
+  cur = flatten(await descend(cur[0], "value"));
   expect(cur[0].location()).toEqual([
     "_deceasedBoolean",
     "extension",
     0,
     "valueString",
   ]);
-  expect(cur[0].valueOf()).toEqual("boolean");
-  expect(getValue(cur[0].location(), patient.valueOf())).toEqual("boolean");
+  expect(cur[0].getValue()).toEqual("boolean");
+  expect(getValue(cur[0].location(), patient.getValue())).toEqual("boolean");
 
-  cur = flattenedDescend(patient, "name");
-  cur = flattenedDescend(cur[0], "given");
-  cur = flattenedDescend(cur[0], "extension");
-  cur = flattenedDescend(cur[0], "value");
+  cur = flatten(await descend(patient, "name"));
+  cur = flatten(await descend(cur[0], "given"));
+  cur = flatten(await descend(cur[0], "extension"));
+  cur = flatten(await descend(cur[0], "value"));
 
   expect(cur[0].location()).toEqual([
     "name",
@@ -276,6 +272,6 @@ test("Location test primitive extensions", () => {
     0,
     "valueString",
   ]);
-  expect(cur[0].valueOf()).toEqual("given");
-  expect(getValue(cur[0].location(), patient.valueOf())).toEqual("given");
+  expect(cur[0].getValue()).toEqual("given");
+  expect(getValue(cur[0].location(), patient.getValue())).toEqual("given");
 });

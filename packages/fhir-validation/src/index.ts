@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { eleIndexToChildIndices as eleIndexToChildIndexes } from "@iguhealth/codegen";
 import {
   Loc,
@@ -35,7 +36,7 @@ export interface ValidationCTX {
   resolveTypeToCanonical<Version extends FHIR_VERSION>(
     version: Version,
     type: uri,
-  ): canonical | undefined;
+  ): Promise<canonical | undefined>;
   resolveCanonical: <
     FHIRVersion extends FHIR_VERSION,
     Type extends ResourceType<FHIRVersion>,
@@ -43,7 +44,7 @@ export interface ValidationCTX {
     fhirVersion: FHIRVersion,
     type: Type,
     url: canonical,
-  ) => Resource<FHIRVersion, Type> | undefined;
+  ) => Promise<Resource<FHIRVersion, Type> | undefined>;
   validateCode?(system: string, code: string): Promise<boolean>;
 }
 
@@ -321,7 +322,7 @@ async function validateReferenceTypeConstraint(
   if (referenceProfiles === undefined || referenceProfiles?.length === 0)
     return [];
   for (const profile of referenceProfiles || []) {
-    const sd = ctx.resolveCanonical(
+    const sd = await ctx.resolveCanonical(
       ctx.fhirVersion,
       "StructureDefinition",
       profile,
@@ -686,7 +687,7 @@ export default async function validate(
   if (primitiveTypes.has(type))
     return validatePrimitive(ctx, undefined, root, path, type);
 
-  const canonical = ctx.resolveTypeToCanonical(ctx.fhirVersion, type);
+  const canonical = await ctx.resolveTypeToCanonical(ctx.fhirVersion, type);
   if (!canonical) {
     throw new OperationError(
       outcomeFatal(
@@ -696,7 +697,7 @@ export default async function validate(
       ),
     );
   }
-  const sd = ctx.resolveCanonical(
+  const sd = await ctx.resolveCanonical(
     ctx.fhirVersion,
     "StructureDefinition",
     canonical,

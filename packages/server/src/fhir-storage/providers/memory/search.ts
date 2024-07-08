@@ -65,24 +65,8 @@ async function expressionSearch<CTX extends MemorySearchCTX>(
       meta: {
         fhirVersion,
         type: resource.resourceType as uri,
-        getSD: <Version extends FHIR_VERSION>(
-          fhirVersion: Version,
-          type: uri,
-        ) => {
-          const canonical = ctx.resolveTypeToCanonical(fhirVersion, type);
-          if (!canonical)
-            throw new OperationError(
-              outcomeError(
-                "invalid",
-                `Could not resolve canonical for type '${type}'.`,
-              ),
-            );
-          return ctx.resolveCanonical(
-            fhirVersion,
-            "StructureDefinition",
-            canonical,
-          );
-        },
+        resolveCanonical: ctx.resolveCanonical,
+        resolveTypeToCanonical: ctx.resolveTypeToCanonical,
       },
     },
   );

@@ -4,11 +4,17 @@ import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import {
+  canonical,
   OperationDefinition,
   StructureDefinition,
   uri,
 } from "@iguhealth/fhir-types/lib/generated/r4/types";
-import { FHIR_VERSION, R4, Resource } from "@iguhealth/fhir-types/lib/versions";
+import {
+  AllResourceTypes,
+  FHIR_VERSION,
+  R4,
+  Resource,
+} from "@iguhealth/fhir-types/lib/versions";
 
 import { evaluate, evaluateWithMeta } from "./index";
 
@@ -19,15 +25,31 @@ const sds: StructureDefinition[] = loadArtifacts({
   packageLocation: path.join(fileURLToPath(import.meta.url), ".."),
 });
 
-const getSD = <Version extends FHIR_VERSION>(_version: Version, type: uri) => {
+async function resolveTypeToCanonical(
+  _fhirVersion: FHIR_VERSION,
+  type: uri,
+): Promise<canonical | undefined> {
   const foundSD = sds.find((sd) => sd.type === type);
-  return foundSD as Resource<Version, "StructureDefinition"> | undefined;
-};
+  return foundSD?.url as canonical;
+}
+
+async function resolveCanonical<
+  Version extends FHIR_VERSION,
+  Type extends AllResourceTypes,
+>(
+  fhirVersion: Version,
+  type: Type,
+  url: canonical,
+): Promise<Resource<Version, Type> | undefined> {
+  const foundSD = sds.find((sd) => sd.url === url);
+  return foundSD as Resource<Version, Type> | undefined;
+}
 
 const metaOptions = (startingType: string) => ({
   meta: {
     type: startingType as uri,
-    getSD,
+    resolveCanonical,
+    resolveTypeToCanonical,
   },
 });
 
@@ -474,11 +496,7 @@ test("is operator", async () => {
         resourceType: "Patient",
         deceasedBoolean: false,
       },
-      {
-        meta: {
-          getSD,
-        },
-      },
+      metaOptions("Patient"),
     ),
   ).toEqual([]);
 
@@ -489,11 +507,7 @@ test("is operator", async () => {
         resourceType: "Patient",
         deceasedDateTime: "1980-01-01T00:00:00Z",
       },
-      {
-        meta: {
-          getSD,
-        },
-      },
+      metaOptions("Patient"),
     ),
   ).toEqual(["1980-01-01T00:00:00Z"]);
 });
@@ -506,11 +520,7 @@ test("term with TypeIdentifier", async () => {
         resourceType: "Patient",
         deceasedBoolean: false,
       },
-      {
-        meta: {
-          getSD,
-        },
-      },
+      metaOptions("Patient"),
     ),
   ).toEqual([]);
 
@@ -521,11 +531,7 @@ test("term with TypeIdentifier", async () => {
         resourceType: "Patient",
         deceasedDateTime: "1980-01-01T00:00:00Z",
       },
-      {
-        meta: {
-          getSD,
-        },
-      },
+      metaOptions("Patient"),
     ),
   ).toEqual(["1980-01-01T00:00:00Z"]);
 });
@@ -547,11 +553,7 @@ test("union operation", async () => {
         resourceType: "Patient",
         name: [{ given: ["bob"], family: "waterson" }],
       },
-      {
-        meta: {
-          getSD,
-        },
-      },
+      metaOptions("Patient"),
     ),
   ).toEqual(["bob", "waterson"]);
 });
@@ -564,12 +566,7 @@ test("resolve with is operation", async () => {
         resourceType: "CarePlan",
         subject: [{ reference: "Patient/123" }],
       },
-      {
-        meta: {
-          type: "CarePlan" as uri,
-          getSD,
-        },
-      },
+      metaOptions("CarePlan"),
     ),
   ).toEqual([{ reference: "Patient/123" }]);
 });
@@ -690,12 +687,7 @@ test("test reference finding", async () => {
             { reference: "Patient/4" },
           ],
         },
-        {
-          meta: {
-            type: "CarePlan" as uri,
-            getSD,
-          },
-        },
+        metaOptions("CarePlan"),
       )
     ).map((v) => v.location()),
   ).toEqual([
@@ -716,12 +708,7 @@ test("children", async () => {
           { reference: "Patient/4" },
         ],
       },
-      {
-        meta: {
-          type: "CarePlan" as uri,
-          getSD,
-        },
-      },
+      metaOptions("CarePlan"),
     ),
   ).toEqual([
     "CarePlan",
@@ -742,12 +729,7 @@ test("children", async () => {
             { reference: "Patient/4" },
           ],
         },
-        {
-          meta: {
-            type: "CarePlan" as uri,
-            getSD,
-          },
-        },
+        metaOptions("CarePlan"),
       )
     ).map((v) => v.location()),
   ).toEqual([["resourceType"], ["subject", 0], ["subject", 1], ["subject", 2]]);
@@ -764,12 +746,7 @@ test("children", async () => {
             { reference: "Patient/4" },
           ],
         },
-        {
-          meta: {
-            type: "CarePlan" as uri,
-            getSD,
-          },
-        },
+        metaOptions("CarePlan"),
       )
     ).map((v) => v.location()),
   ).toEqual([
@@ -850,7 +827,7 @@ test("descendants with type filter", async () => {
         resourceType: "Practitioner",
         name: [{ given: ["Bob"] }],
       },
-      metaOptions("Patient"),
+      metaOptions("Practitioner"),
     ),
   ).toEqual([{ reference: "urn:oid:2" }]);
 });
@@ -884,7 +861,7 @@ test("Get Locations for extensions", async () => {
       },
     },
   );
-  expect(nodes.map((n) => n.valueOf())).toEqual(["Test"]);
+  expect(nodes.map((n) => n.getValue())).toEqual(["Test"]);
   expect(nodes.map((n) => n.location())).toEqual([["name"]]);
 });
 

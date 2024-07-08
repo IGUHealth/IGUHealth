@@ -4,7 +4,12 @@ import { fileURLToPath } from "url";
 
 import { loadArtifacts } from "@iguhealth/artifacts";
 import * as r4Sets from "@iguhealth/fhir-types/lib/generated/r4/sets";
-import { code } from "@iguhealth/fhir-types/lib/generated/r4/types";
+import {
+  canonical,
+  code,
+  StructureDefinition,
+  uri,
+} from "@iguhealth/fhir-types/lib/generated/r4/types";
 import * as r4bSets from "@iguhealth/fhir-types/lib/generated/r4b/sets";
 import {
   AllResourceTypes,
@@ -46,6 +51,34 @@ const r4ArtifactResources = getArtifactResources(R4, [
   ...r4Sets.resourceTypes.values(),
 ] as ResourceType<R4>[]);
 
+async function resolveTypeToCanonical(
+  _fhirVersion: FHIR_VERSION,
+  type: uri,
+): Promise<canonical | undefined> {
+  const sd = r4ArtifactResources.find(
+    (resource) =>
+      resource.resourceType === "StructureDefinition" && resource.type === type,
+  );
+
+  return (sd as StructureDefinition)?.url as canonical;
+}
+
+async function resolveCanonical<
+  Version extends FHIR_VERSION,
+  Type extends AllResourceTypes,
+>(
+  fhirVersion: Version,
+  type: Type,
+  url: canonical,
+): Promise<Resource<Version, Type> | undefined> {
+  const foundSD = r4ArtifactResources.find(
+    (resource) =>
+      resource.resourceType === "StructureDefinition" && resource.url === url,
+  );
+
+  return foundSD as Resource<Version, Type> | undefined;
+}
+
 test.each(
   [...r4Sets.resourceTypes.values()].sort((r, r2) => (r > r2 ? 1 : -1)),
 )(`R4 Testing indexing resourceType '%s'`, async (resourceType) => {
@@ -71,16 +104,8 @@ test.each(
             {
               meta: {
                 fhirVersion: R4,
-                getSD: <Version extends FHIR_VERSION>(
-                  fhirVersion: Version,
-                  type,
-                ) => {
-                  return r4ArtifactResources.find(
-                    (r) =>
-                      r.resourceType === "StructureDefinition" &&
-                      r.type === type,
-                  ) as Resource<Version, "StructureDefinition"> | undefined;
-                },
+                resolveCanonical,
+                resolveTypeToCanonical,
               },
             },
           );
@@ -126,16 +151,8 @@ test.each(
             {
               meta: {
                 fhirVersion: R4B,
-                getSD: <Version extends FHIR_VERSION>(
-                  fhirVersion: Version,
-                  type,
-                ) => {
-                  return r4bArtifactResources.find(
-                    (r) =>
-                      r.resourceType === "StructureDefinition" &&
-                      r.type === type,
-                  ) as Resource<Version, "StructureDefinition"> | undefined;
-                },
+                resolveCanonical,
+                resolveTypeToCanonical,
               },
             },
           );
