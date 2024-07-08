@@ -28,19 +28,22 @@ const sds = loadArtifacts({
 
 test("Test ValueSet Expands", async () => {
   const ctx: OpCTX = {
-    resolveCanonical<
+    async resolveCanonical<
       FHIRVersion extends FHIR_VERSION,
       Type extends ResourceType<FHIRVersion>,
     >(
       fhirVersion: FHIRVersion,
       type: Type,
       url: canonical,
-    ): Resource<FHIRVersion, Type> | undefined {
+    ): Promise<Resource<FHIRVersion, Type> | undefined> {
       const sd = sds.find((sd) => sd.url === url);
       if (!sd) throw new Error(`Could not resolve type ${type}`);
       return sd as Resource<FHIRVersion, Type>;
     },
-    resolveTypeToCanonical(version: FHIR_VERSION, type: uri): canonical {
+    async resolveTypeToCanonical(
+      version: FHIR_VERSION,
+      type: uri,
+    ): Promise<canonical> {
       const sd = sds.find((sd) => sd.type === type);
       if (!sd) throw new Error(`Could not resolve type ${type}`);
       return sd.url as canonical;

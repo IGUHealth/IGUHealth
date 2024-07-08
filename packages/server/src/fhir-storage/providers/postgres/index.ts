@@ -19,7 +19,7 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
 import * as fhirpath from "@iguhealth/fhirpath";
-import { MetaValueSingular } from "@iguhealth/meta-value";
+import { MetaValue } from "@iguhealth/meta-value";
 import {
   isOperationError,
   OperationError,
@@ -106,7 +106,7 @@ async function indexSearchParameter<
     id: id;
     meta: { versionId: id };
   },
-  evaluation: MetaValueSingular<NonNullable<unknown>>[],
+  evaluation: MetaValue<NonNullable<unknown>>[],
 ) {
   switch (parameter.type) {
     case "quantity": {
@@ -611,24 +611,8 @@ async function indexResource<
         {
           meta: {
             fhirVersion,
-            getSD: (fhirVersion, type: uri) => {
-              const canonicalURL = ctx.resolveTypeToCanonical(
-                fhirVersion,
-                type,
-              );
-              if (!canonicalURL)
-                throw new OperationError(
-                  outcomeFatal(
-                    "exception",
-                    `Could not resolve canonical url for type '${type}'`,
-                  ),
-                );
-              return ctx.resolveCanonical(
-                fhirVersion,
-                "StructureDefinition",
-                canonicalURL,
-              );
-            },
+            resolveCanonical: ctx.resolveCanonical,
+            resolveTypeToCanonical: ctx.resolveTypeToCanonical,
           },
         },
       );

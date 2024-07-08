@@ -54,17 +54,20 @@ const memDatabase = createMemoryDatabase([
 
 const CTX: ValidationCTX = {
   fhirVersion: R4,
-  resolveTypeToCanonical: (version: FHIR_VERSION, type: uri): canonical => {
+  resolveTypeToCanonical: async (
+    version: FHIR_VERSION,
+    type: uri,
+  ): Promise<canonical> => {
     return `http://hl7.org/fhir/StructureDefinition/${type}` as canonical;
   },
-  resolveCanonical: <
+  resolveCanonical: async <
     Version extends FHIR_VERSION,
     Type extends ResourceType<Version>,
   >(
     version: Version,
     t: Type,
     url: canonical,
-  ): Resource<Version, Type> => {
+  ): Promise<Resource<Version, Type>> => {
     // @ts-ignore
     const sd: Resource<Version, Type> = memDatabase[t].find(
       (sd: unknown) => (sd as StructureDefinition).url === url,

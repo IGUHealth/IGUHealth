@@ -78,7 +78,7 @@ export const testServices: IGUHealthServerCTX = {
   logger: pino<string>(),
   client: new Memory({ [R4]: {}, [R4B]: {} }),
   cache: new TestCache(),
-  resolveCanonical: <
+  resolveCanonical: async <
     Version extends FHIR_VERSION,
     Type extends AllResourceTypes,
   >(
@@ -88,7 +88,7 @@ export const testServices: IGUHealthServerCTX = {
   ) => {
     return sds.find((sd) => sd.url === url) as Resource<Version, Type>;
   },
-  resolveTypeToCanonical: (_fhirVersion, type: uri) => {
+  resolveTypeToCanonical: async (_fhirVersion, type: uri) => {
     const sd = sds.find((sd) => sd.type === type);
     return sd?.url as canonical;
   },

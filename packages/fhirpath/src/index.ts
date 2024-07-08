@@ -1,56 +1,24 @@
-import {
-  Element,
-  Reference,
-  Resource,
-  uri,
-} from "@iguhealth/fhir-types/r4/types";
-import {
-  MetaValueArray,
-  MetaValueSingular,
-  PartialMeta,
-  TypeMeta,
-  descend,
-  toMetaValueNodes,
-} from "@iguhealth/meta-value";
+import { Reference, Resource, uri } from "@iguhealth/fhir-types/r4/types";
+import * as mv from "@iguhealth/meta-value";
 
 import { parse } from "./parser.js";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AST = any;
-
-function flattenedDescend<T>(
-  node: MetaValueSingular<T>,
-  field: string,
-): MetaValueSingular<unknown>[] {
-  const v = descend(node, field);
-  if (v instanceof MetaValueArray) return v.toArray();
-  if (v instanceof MetaValueSingular) return [v];
-  return [];
-}
-
-function toMetaValueSingulars<T>(
-  meta: PartialMeta | undefined,
-  value: T | T[],
-  element?: Element | Element[],
-): MetaValueSingular<T>[] {
-  const node = toMetaValueNodes(meta ? meta : {}, value, element);
-  if (node instanceof MetaValueArray) return node.toArray();
-  if (node instanceof MetaValueSingular) return [node];
-  return [];
-}
 
 export type Options = {
   variables?: Record<string, unknown> | ((v: string) => unknown);
-  meta?: Partial<TypeMeta>;
+  meta?: Partial<mv.TypeMeta>;
 };
 
 function flatten<T>(arr: T[][]): T[] {
   return arr.reduce((acc, v) => [...acc, ...v], []);
 }
 
-function getVariableValue(
+async function getVariableValue(
   name: string,
   options?: Options,
-): MetaValueSingular<unknown>[] {
+): Promise<mv.MetaValue<unknown>[]> {
   let value;
   if (options?.variables instanceof Function) {
     value = options.variables(name);
@@ -58,7 +26,7 @@ function getVariableValue(
     value = options.variables[name];
   }
 
-  return toMetaValueSingulars({ type: options?.meta }, value);
+  return mv.flatten(await mv.metaValue({ type: options?.meta }, value));
 }
 
 function assert(assertion: boolean, message?: string) {
@@ -81,109 +49,125 @@ const fp_functions: Record<
   string,
   (
     ast: AST,
-    context: MetaValueSingular<unknown>[],
+    context: mv.MetaValue<unknown>[],
     options?: Options,
-  ) => Promise<MetaValueSingular<unknown>[]>
+  ) => Promise<mv.MetaValue<unknown>[]>
 > = {
   // [EXISTENCE FUNCTIONS]
   // Returns true if the input collection is empty ({ }) and false otherwise.
   async exists(ast, context, options) {
     if (ast.next.length === 1) {
-      return toMetaValueSingulars(
-        { type: options?.meta },
-        (await _evaluate(ast.next[0], context, options)).length > 0,
+      return mv.flatten(
+        await mv.metaValue(
+          { type: options?.meta },
+          (await _evaluate(ast.next[0], context, options)).length > 0,
+        ),
       );
     }
-    return toMetaValueSingulars({ type: options?.meta }, context.length > 0);
+    return mv.flatten(
+      await mv.metaValue({ type: options?.meta }, context.length > 0),
+    );
   },
   // exists([criteria : expression]) : Boolean
   async empty(ast, context, options) {
-    return toMetaValueSingulars({ type: options?.meta }, context.length === 0);
+    return mv.flatten(
+      await mv.metaValue({ type: options?.meta }, context.length === 0),
+    );
   },
   async all(ast, context, options) {
-    return toMetaValueSingulars(
-      { type: options?.meta },
-      flatten(
-        await Promise.all(
-          context.map((v) => _evaluate(ast.next[0], [v], options)),
-        ),
-      )
-        .map((v) => v.valueOf())
-        .reduce((acc, v) => acc && v, true),
+    return mv.flatten(
+      await mv.metaValue(
+        { type: options?.meta },
+        flatten(
+          await Promise.all(
+            context.map((v) => _evaluate(ast.next[0], [v], options)),
+          ),
+        )
+          .map((v) => v.getValue())
+          .reduce((acc, v) => acc && v, true),
+      ),
     );
   },
   async allTrue(ast, context, options) {
-    return toMetaValueSingulars(
-      { type: options?.meta },
-      context.reduce((acc, v) => v.valueOf() === true && acc, true),
+    return mv.flatten(
+      await mv.metaValue(
+        { type: options?.meta },
+        context.reduce((acc, v) => v.getValue() === true && acc, true),
+      ),
     );
   },
   async anyTrue(ast, context, options) {
-    return toMetaValueSingulars(
-      { type: options?.meta },
-      context.reduce((acc, v) => v.valueOf() === true || acc, false),
+    return mv.flatten(
+      await mv.metaValue(
+        { type: options?.meta },
+        context.reduce((acc, v) => v.getValue() === true || acc, false),
+      ),
     );
   },
   async allFalse(ast, context, options) {
-    return toMetaValueSingulars(
-      { type: options?.meta },
-      context.reduce((acc, v) => v.valueOf() === false && acc, true),
+    return mv.flatten(
+      await mv.metaValue(
+        { type: options?.meta },
+        context.reduce((acc, v) => v.getValue() === false && acc, true),
+      ),
     );
   },
   async anyFalse(ast, context, options) {
-    return toMetaValueSingulars(
-      { type: options?.meta },
-      context.reduce((acc, v) => v.valueOf() === false || acc, false),
+    return mv.flatten(
+      await mv.metaValue(
+        { type: options?.meta },
+        context.reduce((acc, v) => v.getValue() === false || acc, false),
+      ),
     );
   },
   async subsetOf(ast, context, options) {
     const otherSet = await _evaluate(ast.next[0], context, options);
-    return toMetaValueSingulars(
-      { type: options?.meta },
-      context.reduce(
-        (acc, v1) =>
-          acc &&
-          otherSet.find((v2) => {
-            const result = equalityCheck([v1], [v2], options);
-            return result[0].valueOf();
-          }) !== undefined,
-        true,
+    return mv.flatten(
+      await mv.metaValue(
+        { type: options?.meta },
+        context.reduce(
+          (acc, v1) =>
+            acc &&
+            otherSet.find((v2) => {
+              return equalityCheck([v1], [v2]);
+            }) !== undefined,
+          true,
+        ),
       ),
     );
   },
   // Conceptionally this is the opposite of subsetOf.
   async supersetOf(ast, context, options) {
     const otherSet = await _evaluate(ast.next[0], context, options);
-    return toMetaValueSingulars(
-      { type: options?.meta },
-      otherSet.reduce(
-        (acc, v1) =>
-          acc &&
-          context.find((v2) => {
-            const result = equalityCheck([v1], [v2], options);
-            return result[0].valueOf();
-          }) !== undefined,
-        true,
+    return mv.flatten(
+      await mv.metaValue(
+        { type: options?.meta },
+        otherSet.reduce(
+          (acc, v1) =>
+            acc &&
+            context.find((v2) => {
+              return equalityCheck([v1], [v2]);
+            }) !== undefined,
+          true,
+        ),
       ),
     );
   },
   async count(_ast, context, options) {
-    return toMetaValueSingulars({ type: options?.meta }, context.length);
+    return mv.flatten(
+      await mv.metaValue({ type: options?.meta }, context.length),
+    );
   },
   async distinct(_ast, context) {
     const map = context
-      .map(
-        (
-          v: MetaValueSingular<unknown>,
-        ): [string, MetaValueSingular<unknown>] => [
-          JSON.stringify(v.valueOf()),
-          v,
-        ],
-      )
+      .map((v: mv.MetaValue<unknown>): [string, mv.MetaValue<unknown>] => [
+        JSON.stringify(v.getValue()),
+        v,
+      ])
       .reduce(
         (
-          m: { [key: string]: MetaValueSingular<unknown> },
-          [k, v]: [string, MetaValueSingular<unknown>],
+          m: { [key: string]: mv.MetaValue<unknown> },
+          [k, v]: [string, mv.MetaValue<unknown>],
         ) => {
           m[k] = v;
           return m;
@@ -194,22 +178,24 @@ const fp_functions: Record<
   },
   async isDistinct(ast, context, options) {
     const distinct = await fp_functions.distinct(undefined, context, options);
-    return toMetaValueSingulars(
-      { type: options?.meta },
-      context.length === distinct.length,
+    return mv.flatten(
+      await mv.metaValue(
+        { type: options?.meta },
+        context.length === distinct.length,
+      ),
     );
   },
   // [FILTER FUNCTIONS]
   async where(ast, context, options) {
     const criteria = ast.next[0];
-    const result: MetaValueSingular<unknown>[] = [];
+    const result: mv.MetaValue<unknown>[] = [];
     for (const v of context) {
       const evaluation = await _evaluate(criteria, [v], options);
       assert(evaluation.length === 1, "result must be one");
       if (!typeChecking("boolean", evaluation)) {
         throw new Error("Where clause criteria must evaluate to a boolean");
       }
-      if (evaluation[0].valueOf()) {
+      if (evaluation[0].getValue()) {
         result.push(v);
       }
     }
@@ -221,11 +207,19 @@ const fp_functions: Record<
    */
   async children(_ast, context) {
     const children = flatten(
-      context.map((node) => {
-        const v = node.valueOf();
-        const keys = Object.keys(v || {});
-        return flatten(keys.map((k) => flattenedDescend(node, k)));
-      }),
+      await Promise.all(
+        context.map(async (node) => {
+          const v = node.getValue();
+          const keys = Object.keys(v || {});
+
+          const children = flatten(
+            await Promise.all(
+              keys.map(async (k) => mv.flatten(await mv.descend(node, k))),
+            ),
+          );
+          return children;
+        }),
+      ),
     );
 
     return children;
@@ -248,7 +242,7 @@ const fp_functions: Record<
   },
   async repeat(ast, context, options) {
     const projection = ast.next[0];
-    let endResult: MetaValueSingular<unknown>[] = [];
+    let endResult: mv.MetaValue<unknown>[] = [];
     let cur = context;
     while (cur.length !== 0) {
       cur = await _evaluate(projection, cur, options);
@@ -279,9 +273,9 @@ const fp_functions: Record<
 
 async function evaluateInvocation(
   ast: AST,
-  context: MetaValueSingular<unknown>[],
+  context: mv.MetaValue<unknown>[],
   options?: Options,
-): Promise<MetaValueSingular<unknown>[]> {
+): Promise<mv.MetaValue<unknown>[]> {
   switch (ast.value.type) {
     case "Index":
       throw new Error("Not implemented");
@@ -290,7 +284,13 @@ async function evaluateInvocation(
     case "This":
       return context;
     case "Identifier": {
-      return flatten(context.map((v) => flattenedDescend(v, ast.value.value)));
+      return (
+        await Promise.all(
+          context.map(async (v) =>
+            mv.flatten(await mv.descend(v, ast.value.value)),
+          ),
+        )
+      ).flat();
     }
     case "Function": {
       const fp_func = fp_functions[ast.value.value.value];
@@ -305,9 +305,9 @@ async function evaluateInvocation(
 
 async function _evaluateTermStart(
   ast: AST,
-  context: MetaValueSingular<unknown>[],
+  context: mv.MetaValue<unknown>[],
   options?: Options,
-): Promise<MetaValueSingular<unknown>[]> {
+): Promise<mv.MetaValue<unknown>[]> {
   switch (ast.value.type) {
     case "Invocation": {
       // Special code handling for start with typeidentifier
@@ -319,7 +319,9 @@ async function _evaluateTermStart(
       return evaluateInvocation(ast.value, context, options);
     }
     case "Literal": {
-      return toMetaValueSingulars({ type: options?.meta }, ast.value.value);
+      return mv.flatten(
+        await mv.metaValue({ type: options?.meta }, ast.value.value),
+      );
     }
     case "Variable": {
       return getVariableValue(ast.value.value.value, options);
@@ -334,9 +336,9 @@ async function _evaluateTermStart(
 
 async function evaluateProperty(
   ast: AST,
-  context: MetaValueSingular<unknown>[],
+  context: mv.MetaValue<unknown>[],
   options?: Options,
-): Promise<MetaValueSingular<unknown>[]> {
+): Promise<mv.MetaValue<unknown>[]> {
   switch (ast.type) {
     case "Invocation": {
       return evaluateInvocation(ast, context, options);
@@ -347,7 +349,7 @@ async function evaluateProperty(
         throw new Error("Indexing requires a single value");
       if (!typeChecking("number", indexed))
         throw new Error("Indexing requires a number");
-      const value = context[indexed[0].valueOf()];
+      const value = context[indexed[0].getValue()];
       return value !== undefined ? [value] : [];
     }
     default:
@@ -357,9 +359,9 @@ async function evaluateProperty(
 
 async function evaluateSingular(
   ast: AST,
-  context: MetaValueSingular<unknown>[],
+  context: mv.MetaValue<unknown>[],
   options?: Options,
-): Promise<MetaValueSingular<unknown>[]> {
+): Promise<mv.MetaValue<unknown>[]> {
   let start = await _evaluateTermStart(ast, context, options);
   if (ast.next) {
     for (const next of ast.next) {
@@ -381,10 +383,10 @@ type ValidOperandType = "number" | "string" | "boolean";
 
 function typeChecking<T extends ValidOperandType>(
   typeChecking: T,
-  args: MetaValueSingular<unknown>[],
-): args is MetaValueSingular<OperatorType<T>>[] {
-  return args.reduce((acc: boolean, v: MetaValueSingular<unknown>) => {
-    if (typeof v.valueOf() !== typeChecking) return false;
+  args: mv.MetaValue<unknown>[],
+): args is mv.MetaValue<OperatorType<T>>[] {
+  return args.reduce((acc: boolean, v: mv.MetaValue<unknown>) => {
+    if (typeof v.getValue() !== typeChecking) return false;
     return acc;
   }, true) as boolean;
 }
@@ -402,18 +404,18 @@ export class InvalidOperandError extends Error {
 }
 
 type EvaledOperation = (
-  left: MetaValueSingular<unknown>[],
-  right: MetaValueSingular<unknown>[],
+  left: mv.MetaValue<unknown>[],
+  right: mv.MetaValue<unknown>[],
   options?: Options,
-) => Promise<MetaValueSingular<unknown>[]>;
+) => Promise<mv.MetaValue<unknown>[]>;
 
 function op_prevaled(
   operation_function: EvaledOperation,
 ): (
   ast: AST,
-  context: MetaValueSingular<unknown>[],
+  context: mv.MetaValue<unknown>[],
   options?: Options,
-) => Promise<MetaValueSingular<unknown>[]> {
+) => Promise<mv.MetaValue<unknown>[]> {
   return async (ast, context, options) => {
     const left = await _evaluate(ast.left, context, options);
     const right = await _evaluate(ast.right, context, options);
@@ -423,40 +425,35 @@ function op_prevaled(
 }
 
 const equalityCheck = (
-  left: MetaValueSingular<unknown>[],
-  right: MetaValueSingular<unknown>[],
-  options?: Options,
-): MetaValueSingular<boolean>[] => {
+  left: mv.MetaValue<unknown>[],
+  right: mv.MetaValue<unknown>[],
+): boolean => {
   // TODO improve Deep Equals speed.
-  if (left.length !== right.length)
-    return toMetaValueSingulars({ type: options?.meta }, false);
-  if (typeof left[0].valueOf() === "object") {
-    return toMetaValueSingulars(
-      { type: options?.meta },
-      JSON.stringify(left[0].valueOf()) === JSON.stringify(right[0].valueOf()),
+  if (left.length !== right.length) {
+    return false;
+  } else if (typeof left[0].getValue() === "object") {
+    return (
+      JSON.stringify(left[0].getValue()) === JSON.stringify(right[0].getValue())
     );
   }
-  return toMetaValueSingulars(
-    { type: { ...options?.meta, type: "boolean" as uri } },
-    left[0].valueOf() === right[0].valueOf(),
-  );
+  return left[0].getValue() === right[0].getValue();
 };
 
-function isType(v: MetaValueSingular<unknown>, type: string): boolean {
+function isType(v: mv.MetaValue<unknown>, type: string): boolean {
   if (v.meta()?.type === "Reference" && type !== "Reference") {
-    return (v.valueOf() as Reference).reference?.split("/")[0] === type;
+    return (v.getValue() as Reference).reference?.split("/")[0] === type;
   }
   if (v.meta()?.type) {
     return v.meta()?.type === type;
   }
-  return (v.valueOf() as Resource | undefined)?.resourceType === type;
+  return (v.getValue() as Resource | undefined)?.resourceType === type;
 }
 
-function filterByType<T>(type: string, context: MetaValueSingular<T>[]) {
+function filterByType<T>(type: string, context: mv.MetaValue<T>[]) {
   // Special handling for type 'Resource' and 'DomainResource' abstract types
   if (type === "Resource" || type === "DomainResource") {
     return context.filter(
-      (v) => (v.valueOf() as Resource).resourceType !== undefined,
+      (v) => (v.getValue() as Resource).resourceType !== undefined,
     );
   }
   return context.filter((v) => {
@@ -468,20 +465,24 @@ const fp_operations: Record<
   string,
   (
     ast: AST,
-    context: MetaValueSingular<unknown>[],
+    context: mv.MetaValue<unknown>[],
     options?: Options,
-  ) => Promise<MetaValueSingular<unknown>[]>
+  ) => Promise<mv.MetaValue<unknown>[]>
 > = {
   "+": op_prevaled(async (left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
-      return toMetaValueSingulars(
-        { type: options?.meta },
-        left[0].valueOf() + right[0].valueOf(),
+      return mv.flatten(
+        await mv.metaValue(
+          { type: options?.meta },
+          left[0].getValue() + right[0].getValue(),
+        ),
       );
     } else if (typeChecking("string", left) && typeChecking("string", right)) {
-      return toMetaValueSingulars(
-        { type: options?.meta },
-        left[0].valueOf() + right[0].valueOf(),
+      return mv.flatten(
+        await mv.metaValue(
+          { type: options?.meta },
+          left[0].getValue() + right[0].getValue(),
+        ),
       );
     } else {
       throw new InvalidOperandError([left[0], right[0]], "+");
@@ -503,18 +504,26 @@ const fp_operations: Record<
         "The 'is' operator left hand operand must be equal to length 1",
       );
     const typeIdentifier = expressionToTypeIdentifier(ast.right);
-    return context.map((c) => {
-      return new MetaValueSingular(
-        { type: { ...options?.meta, type: "boolean" as uri } },
-        isType(c, typeIdentifier),
-      );
-    });
+    return (
+      await Promise.all(
+        context.map(async (c) => {
+          return mv.flatten(
+            await mv.metaValue(
+              { type: { ...options?.meta, type: "boolean" as uri } },
+              isType(c, typeIdentifier),
+            ),
+          );
+        }),
+      )
+    ).flat();
   },
   "-": op_prevaled(async (left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
-      return toMetaValueSingulars(
-        { type: options?.meta },
-        left[0].valueOf() - right[0].valueOf(),
+      return mv.flatten(
+        await mv.metaValue(
+          { type: options?.meta },
+          left[0].getValue() - right[0].getValue(),
+        ),
       );
     } else {
       throw new InvalidOperandError([left[0], right[0]], "-");
@@ -522,9 +531,11 @@ const fp_operations: Record<
   }),
   "*": op_prevaled(async (left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
-      return toMetaValueSingulars(
-        { type: options?.meta },
-        left[0].valueOf() * right[0].valueOf(),
+      return mv.flatten(
+        await mv.metaValue(
+          { type: options?.meta },
+          left[0].getValue() * right[0].getValue(),
+        ),
       );
     } else {
       throw new InvalidOperandError([left[0], right[0]], "*");
@@ -532,9 +543,11 @@ const fp_operations: Record<
   }),
   "/": op_prevaled(async (left, right, options) => {
     if (typeChecking("number", left) && typeChecking("number", right)) {
-      return toMetaValueSingulars(
-        { type: options?.meta },
-        left[0].valueOf() / right[0].valueOf(),
+      return mv.flatten(
+        await mv.metaValue(
+          { type: options?.meta },
+          left[0].getValue() / right[0].getValue(),
+        ),
       );
     } else {
       throw new InvalidOperandError([left[0], right[0]], "/");
@@ -545,30 +558,36 @@ const fp_operations: Record<
   }),
   and: op_prevaled(async (left, right, options) => {
     if (typeChecking("boolean", left) && typeChecking("boolean", right)) {
-      return toMetaValueSingulars(
-        { type: { ...options?.meta, type: "boolean" as uri } },
-        left[0].valueOf() && right[0].valueOf(),
+      return mv.flatten(
+        await mv.metaValue(
+          { type: { ...options?.meta, type: "boolean" as uri } },
+          left[0].getValue() && right[0].getValue(),
+        ),
       );
     }
     throw new InvalidOperandError([left[0], right[0]], "/");
   }),
   "=": op_prevaled(async (left, right, options) =>
-    equalityCheck(left, right, options),
+    mv.flatten(
+      await mv.metaValue({ type: options?.meta }, equalityCheck(left, right)),
+    ),
   ),
   "!=": op_prevaled(async (left, right, options) => {
-    const equality = equalityCheck(left, right, options);
-    return toMetaValueSingulars(
-      { type: { ...options?.meta, type: "boolean" as uri } },
-      equality[0].valueOf() === false,
+    const equality = equalityCheck(left, right);
+    return mv.flatten(
+      await mv.metaValue(
+        { type: { ...options?.meta, type: "boolean" as uri } },
+        equality === false,
+      ),
     );
   }),
 };
 
 async function evaluateOperation(
   ast: AST,
-  context: MetaValueSingular<unknown>[],
+  context: mv.MetaValue<unknown>[],
   options?: Options,
-): Promise<MetaValueSingular<unknown>[]> {
+): Promise<mv.MetaValue<unknown>[]> {
   const operator = fp_operations[ast.operator];
   if (operator) return operator(ast, context, options);
   else throw new Error("Unsupported operator: '" + ast.operator + "'");
@@ -576,9 +595,9 @@ async function evaluateOperation(
 
 async function _evaluate(
   ast: AST,
-  context: MetaValueSingular<unknown>[],
+  context: mv.MetaValue<unknown>[],
   options?: Options,
-): Promise<MetaValueSingular<unknown>[]> {
+): Promise<mv.MetaValue<unknown>[]> {
   switch (ast.value.type) {
     case "Operation": {
       return evaluateOperation(ast.value, context, options);
@@ -604,7 +623,7 @@ export async function evaluateWithMeta(
   expression: string,
   ctx: unknown,
   options?: Options,
-): Promise<MetaValueSingular<NonNullable<unknown>>[]> {
+): Promise<mv.MetaValue<NonNullable<unknown>>[]> {
   if (!cachedAST[expression]) {
     const ast = parse(expression);
     cachedAST[expression] = ast;
@@ -612,13 +631,12 @@ export async function evaluateWithMeta(
   return (
     await _evaluate(
       cachedAST[expression],
-      toMetaValueSingulars({ type: options?.meta }, ctx),
+      mv.flatten(await mv.metaValue({ type: options?.meta }, ctx)),
       options,
     )
   ).filter(
-    (
-      v: MetaValueSingular<unknown>,
-    ): v is MetaValueSingular<NonNullable<unknown>> => nonNullable(v.valueOf()),
+    (v: mv.MetaValue<unknown>): v is mv.MetaValue<NonNullable<unknown>> =>
+      nonNullable(v.getValue()),
   );
 }
 
@@ -628,6 +646,6 @@ export async function evaluate(
   options?: Options,
 ): Promise<NonNullable<unknown>[]> {
   return (await evaluateWithMeta(expression, ctx, options)).map((v) =>
-    v.valueOf(),
+    v.getValue(),
   );
 }

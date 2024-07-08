@@ -126,7 +126,8 @@ export interface IGUHealthServerCTX {
   resolveTypeToCanonical: (
     fhirVersion: FHIR_VERSION,
     type: uri,
-  ) => canonical | undefined;
+  ) => Promise<canonical | undefined>;
+
   resolveCanonical: <
     FHIRVersion extends FHIR_VERSION,
     Type extends AllResourceTypes,
@@ -134,7 +135,7 @@ export interface IGUHealthServerCTX {
     fhirVersion: FHIRVersion,
     type: Type,
     url: canonical,
-  ) => Resource<FHIRVersion, Type> | undefined;
+  ) => Promise<Resource<FHIRVersion, Type> | undefined>;
 }
 
 export function rootJWT(tenant: TenantId): AccessTokenPayload<s.user_role> {

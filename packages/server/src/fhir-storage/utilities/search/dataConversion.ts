@@ -24,11 +24,7 @@ import {
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
-import {
-  MetaValueArray,
-  MetaValueSingular,
-  descend,
-} from "@iguhealth/meta-value";
+import { descend, MetaValue, flatten } from "@iguhealth/meta-value";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { getDecimalPrecision } from "./parameters.js";
@@ -39,17 +35,15 @@ import { getDecimalPrecision } from "./parameters.js";
 // https://hl7.org/fhir/r4/search.html#table
 // ---------------------------------------------------------
 
-function toStringParameters(
-  value: MetaValueSingular<NonNullable<unknown>>,
-): string[] {
+function toStringParameters(value: MetaValue<NonNullable<unknown>>): string[] {
   switch (value.meta()?.type) {
     // Even though spec states won't encounter this it does. [ImplementationGuide.description]
     case "markdown":
     case "string": {
-      return [value.valueOf() as string];
+      return [value.getValue() as string];
     }
     case "HumanName": {
-      const humanName = value.valueOf() as HumanName;
+      const humanName = value.getValue() as HumanName;
       return [
         humanName.text ? [humanName.text] : [],
         humanName.family ? [humanName.family] : [],
@@ -59,7 +53,7 @@ function toStringParameters(
       ].flat();
     }
     case "Address": {
-      const address = value.valueOf() as Address;
+      const address = value.getValue() as Address;
       return [
         address.text ? [address.text] : [],
         address.line ? address.line : [],
@@ -84,37 +78,38 @@ function toStringParameters(
 // uri		uri
 // string	n/a	string	Token is sometimes used for string to indicate that exact matching is the correct default search strategy
 
-function toTokenParameters(
-  value: MetaValueSingular<NonNullable<unknown>>,
-): Array<{ system?: string; code?: string }> {
+async function toTokenParameters(
+  value: MetaValue<NonNullable<unknown>>,
+): Promise<Array<{ system?: string; code?: string }>> {
   switch (value.meta()?.type) {
     case "Coding": {
-      const coding: Coding = value.valueOf() as CodeableConcept;
+      const coding: Coding = value.getValue() as CodeableConcept;
       return [{ system: coding.system, code: coding.code }];
     }
     case "CodeableConcept": {
-      const codings = descend(value, "coding");
-      if (codings instanceof MetaValueArray) {
-        return codings.toArray().map(toTokenParameters).flat();
-      }
-      return [];
+      const codings = (
+        await Promise.all(
+          flatten(value).map(async (v) => flatten(await descend(v, "coding"))),
+        )
+      ).flat();
+      return (await Promise.all(codings.map(toTokenParameters))).flat();
     }
     case "Identifier": {
-      const identifier: Identifier = value.valueOf() as Identifier;
+      const identifier: Identifier = value.getValue() as Identifier;
       return [{ system: identifier.system, code: identifier.value }];
     }
     case "ContactPoint": {
-      const contactPoint: ContactPoint = value.valueOf() as ContactPoint;
+      const contactPoint: ContactPoint = value.getValue() as ContactPoint;
       return [{ code: contactPoint.value }];
     }
     case "code": {
-      return [{ code: value.valueOf() as string }];
+      return [{ code: value.getValue() as string }];
     }
     case "boolean": {
       return [
         {
           system: "http://hl7.org/fhir/special-values",
-          code: (value.valueOf() as boolean).toString(),
+          code: (value.getValue() as boolean).toString(),
         },
       ];
     }
@@ -124,7 +119,7 @@ function toTokenParameters(
     case "string": {
       return [
         {
-          code: (value.valueOf() as string).toString(),
+          code: (value.getValue() as string).toString(),
         },
       ];
     }
@@ -132,34 +127,30 @@ function toTokenParameters(
       throw new Error(
         `Unknown token parameter of type '${
           value.meta()?.type
-        }' '${value.valueOf()}' indexing'`,
+        }' '${value.getValue()}' indexing'`,
       );
   }
 }
 
-function toURIParameters(
-  value: MetaValueSingular<NonNullable<unknown>>,
-): string[] {
+function toURIParameters(value: MetaValue<NonNullable<unknown>>): string[] {
   switch (value.meta()?.type) {
     case "uri":
     case "url":
     case "uuid":
     case "canonical": {
-      const v: canonical | uri = value.valueOf() as canonical | uri;
+      const v: canonical | uri = value.getValue() as canonical | uri;
       return [v];
     }
     default:
       throw new Error(
         `Unknown uri parameter of type '${
           value.meta()?.type
-        }' '${value.valueOf()}' indexing`,
+        }' '${value.getValue()}' indexing`,
       );
   }
 }
 
-function toReferenceLocal(
-  value: MetaValueSingular<NonNullable<unknown>>,
-): Array<{
+function toReferenceLocal(value: MetaValue<NonNullable<unknown>>): Array<{
   reference: Reference;
   resourceType?: ResourceType<FHIR_VERSION>;
   id?: id;
@@ -167,7 +158,7 @@ function toReferenceLocal(
 }> {
   switch (value.meta()?.type) {
     case "Reference": {
-      const reference: Reference = value.valueOf() as Reference;
+      const reference: Reference = value.getValue() as Reference;
       const [resourceType, id] = reference.reference?.split("/") || [];
       if (resourceTypes.has(resourceType) && id) {
         return [
@@ -201,7 +192,7 @@ export type ResolveRemoteCanonical = <FHIRVersion extends FHIR_VERSION>(
 async function toReferenceRemote<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   parameter: Resource<Version, "SearchParameter">,
-  value: MetaValueSingular<NonNullable<unknown>>,
+  value: MetaValue<NonNullable<unknown>>,
   resolveCanonical?: ResolveRemoteCanonical,
 ): Promise<
   Array<{
@@ -213,7 +204,7 @@ async function toReferenceRemote<Version extends FHIR_VERSION>(
 > {
   switch (value.meta()?.type) {
     case "Reference": {
-      const reference: Reference = value.valueOf() as Reference;
+      const reference: Reference = value.getValue() as Reference;
       const [resourceType, id] = reference.reference?.split("/") || [];
       if (resourceTypes.has(resourceType) && id) {
         return [
@@ -242,7 +233,7 @@ async function toReferenceRemote<Version extends FHIR_VERSION>(
         ? await resolveCanonical(
             fhirVersion,
             parameter.target as ResourceType<FHIR_VERSION>[],
-            value.valueOf().toString() as canonical,
+            value.getValue().toString() as canonical,
           )
         : undefined;
 
@@ -257,7 +248,7 @@ async function toReferenceRemote<Version extends FHIR_VERSION>(
           },
           resourceType: resource.resourceType as ResourceType<Version>,
           id: resource.id,
-          url: value.valueOf() as canonical | uri,
+          url: value.getValue() as canonical | uri,
         },
       ];
     }
@@ -271,12 +262,12 @@ async function toReferenceRemote<Version extends FHIR_VERSION>(
   }
 }
 
-function toDateRange(
-  value: MetaValueSingular<NonNullable<unknown>>,
-): { start: string; end: string }[] {
+async function toDateRange(
+  value: MetaValue<NonNullable<unknown>>,
+): Promise<{ start: string; end: string }[]> {
   switch (value.meta()?.type) {
     case "Period": {
-      const period: Period = value.valueOf() as Period;
+      const period: Period = value.getValue() as Period;
       return [
         {
           start: period.start || "-infinity",
@@ -285,14 +276,16 @@ function toDateRange(
       ];
     }
     case "Timing": {
-      const events = descend(value, "event");
-      if (events instanceof MetaValueArray) {
-        return events.toArray().map(toDateRange).flat();
-      }
-      return [];
+      const events = (
+        await Promise.all(
+          flatten(value).map(async (v) => flatten(await descend(v, "event"))),
+        )
+      ).flat();
+
+      return (await Promise.all(events.map(toDateRange))).flat();
     }
     case "instant": {
-      const instant: instant = value.valueOf() as instant;
+      const instant: instant = value.getValue() as instant;
       return [
         {
           start: instant,
@@ -301,7 +294,7 @@ function toDateRange(
       ];
     }
     case "date": {
-      const v: date = value.valueOf() as date;
+      const v: date = value.getValue() as date;
       return [
         {
           start: dayjs(v, "YYYY-MM-DD").toISOString(),
@@ -310,7 +303,7 @@ function toDateRange(
       ];
     }
     case "dateTime": {
-      const v: dateTime = value.valueOf() as dateTime;
+      const v: dateTime = value.getValue() as dateTime;
       return [{ start: v, end: v }];
     }
     default:
@@ -330,11 +323,11 @@ function getQuantityRange(value: number): { start: number; end: number } {
 }
 
 function toQuantityRange(
-  value: MetaValueSingular<NonNullable<unknown>>,
+  value: MetaValue<NonNullable<unknown>>,
 ): { start: QuantityIndex; end: QuantityIndex }[] {
   switch (value.meta()?.type) {
     case "Range": {
-      const range: Range = value.valueOf() as Range;
+      const range: Range = value.getValue() as Range;
       // Need to have some bound here otherwise would be returning infinite in both dirs.
       if (range.low?.value || range.high?.value) {
         return [
@@ -350,7 +343,7 @@ function toQuantityRange(
     case "Money":
     case "Duration":
     case "Quantity": {
-      const quantity: Quantity = value.valueOf() as Quantity;
+      const quantity: Quantity = value.getValue() as Quantity;
       // using decimalprecision subtract .5 of  decimal precision to get lower bound
       // and add .5 of decimal precision to get upper bound
       if (quantity.value) {
@@ -406,13 +399,13 @@ type DATA_CONVERSION = {
 
 export type ADataConversion<T extends SEARCH_TYPE> = DATA_CONVERSION[T];
 
-export function dataConversionLocal<T extends SEARCH_TYPE>(
+export async function dataConversionLocal<T extends SEARCH_TYPE>(
   type: T,
-  evaluation: MetaValueSingular<NonNullable<unknown>>[],
-): ADataConversion<T>[] {
+  evaluation: MetaValue<NonNullable<unknown>>[],
+): Promise<ADataConversion<T>[]> {
   switch (type) {
     case "number": {
-      return evaluation.map((e) => e.valueOf()) as ADataConversion<
+      return evaluation.map((e) => e.getValue()) as ADataConversion<
         typeof type
       >[];
     }
@@ -422,9 +415,9 @@ export function dataConversionLocal<T extends SEARCH_TYPE>(
       >[];
     }
     case "token": {
-      return evaluation.map(toTokenParameters).flat() as ADataConversion<
-        typeof type
-      >[];
+      return (
+        await Promise.all(evaluation.map(toTokenParameters))
+      ).flat() as ADataConversion<typeof type>[];
     }
     case "uri": {
       return evaluation.map(toURIParameters).flat() as ADataConversion<
@@ -437,9 +430,9 @@ export function dataConversionLocal<T extends SEARCH_TYPE>(
       >[];
     }
     case "date": {
-      return evaluation.map(toDateRange).flat() as ADataConversion<
-        typeof type
-      >[];
+      return (
+        await Promise.all(evaluation.map(toDateRange))
+      ).flat() as ADataConversion<typeof type>[];
     }
     case "reference": {
       return evaluation.map(toReferenceLocal).flat() as ADataConversion<
@@ -466,7 +459,7 @@ export default async function dataConversion<
   fhirVersion: Version,
   parameter: Resource<FHIR_VERSION, "SearchParameter">,
   type: T,
-  evaluation: MetaValueSingular<NonNullable<unknown>>[],
+  evaluation: MetaValue<NonNullable<unknown>>[],
   resolveRemoteCanonical?: ResolveRemoteCanonical,
 ): Promise<ADataConversion<T>[]> {
   switch (type) {
