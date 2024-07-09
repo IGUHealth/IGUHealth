@@ -200,11 +200,21 @@
       "type": "string",
       "description": "Sentry profiles rate."
     },
-
     "ADMIN_APP_REDIRECT_URI": {
       "type": "string",
       "description": "Redirect URI for admin app",
       "pattern": "^(http|https):\\/\\/\\*\\..+$"
+    },
+    "PROXY": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Whether behind proxy and server should use X-Forwarded-For header.",
+      "default": "false"
+    },
+    "PROXY_IP_HEADER": {
+      "type": "string",
+      "description": "Header to derive the users IP address from",
+      "default": "false"
     }
   }
 }
