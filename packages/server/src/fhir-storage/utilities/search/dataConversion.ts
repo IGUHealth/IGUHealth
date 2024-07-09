@@ -24,10 +24,9 @@ import {
   Resource,
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
-import { MetaValue, descend, flatten } from "@iguhealth/meta-value";
+import { descend, MetaValue, flatten } from "@iguhealth/meta-value";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
-import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import { getDecimalPrecision } from "./parameters.js";
 
 // ---------------------------------------------------------
@@ -184,11 +183,17 @@ function toReferenceLocal(value: MetaValue<NonNullable<unknown>>): Array<{
   }
 }
 
+export type ResolveRemoteCanonical = <FHIRVersion extends FHIR_VERSION>(
+  fhirVersion: FHIRVersion,
+  types: ResourceType<FHIRVersion>[],
+  url: canonical,
+) => Promise<Resource<FHIRVersion, ResourceType<FHIRVersion>> | undefined>;
+
 async function toReferenceRemote<Version extends FHIR_VERSION>(
   fhirVersion: Version,
   parameter: Resource<Version, "SearchParameter">,
   value: MetaValue<NonNullable<unknown>>,
-  resolveCanonical?: IGUHealthServerCTX["resolveCanonical"],
+  resolveCanonical?: ResolveRemoteCanonical,
 ): Promise<
   Array<{
     reference: Reference;
