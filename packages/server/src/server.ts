@@ -191,7 +191,10 @@ export default async function createServer(): Promise<
   const app = new Koa<
     KoaExtensions.IGUHealth,
     KoaExtensions.KoaIGUHealthContext
-  >();
+  >({
+    proxy: process.env.PROXY === "true",
+    proxyIpHeader: process.env.PROXY_IP_HEADER,
+  });
   app.use(
     koaCompress({
       // Threshold defaults to 1kb.
@@ -394,6 +397,7 @@ export default async function createServer(): Promise<
         process.env.NODE_ENV !== "development"
       ) {
         logger.info({
+          ip: ctx.ip,
           status: ctx.response.status,
           method: ctx.method,
           url: ctx.url,
