@@ -154,5 +154,13 @@ export interface IGUHealthEnvironment {
    * Redirect URI for admin app
    */
   ADMIN_APP_REDIRECT_URI?: string;
+  /**
+   * Whether behind proxy and server should use X-Forwarded-For header.
+   */
+  PROXY?: "true" | "false";
+  /**
+   * Header to derive the users IP address from
+   */
+  PROXY_IP_HEADER?: string;
   [k: string]: unknown;
 }

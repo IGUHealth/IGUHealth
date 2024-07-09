@@ -103,7 +103,7 @@ function validateNoExtraFields(
   paramNames.forEach((paramName) => {
     if (!definitionNames.has(paramName as code)) {
       throw new OperationError(
-        outcomeError("invalid", `Parameter ${paramName} not supported`),
+        outcomeError("invalid", `Parameter '${paramName}' not supported`),
       );
     }
   });
@@ -492,6 +492,7 @@ export class Operation<I, O> implements IOperation<I, O> {
         outcomeError("invalid", "Invalid input, input must be a Parameters"),
       );
     }
+
     const output = parseParameters(this._operationDefinition, use, input);
     return output as InputOutput<I, O>[Use];
   }

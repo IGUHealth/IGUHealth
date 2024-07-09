@@ -776,7 +776,6 @@ function processHistoryParameters(
 
   if (_since_versionId?.value[0]) {
     const value = parseInt(_since_versionId.value[0].toString());
-    console.log(typeof _since_versionId.value[0]);
     if (isNaN(value)) {
       throw new OperationError(
         outcomeError("invalid", "_since-version must be a number."),
