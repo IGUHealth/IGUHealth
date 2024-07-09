@@ -24,7 +24,6 @@ import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
   IGUHEALTH_ISSUER,
-  Subject,
   TenantId,
   createToken,
 } from "@iguhealth/jwt";
