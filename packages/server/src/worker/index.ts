@@ -198,26 +198,9 @@ async function handleSubscriptionPayload(
         operation,
       );
 
-      const signingKey = await getSigningKey(getCertLocation(), getCertKey());
-
-      const user_access_token = await createToken<
-        AccessTokenPayload<s.user_role>
-      >(signingKey, {
-        iss: IGUHEALTH_ISSUER,
-        sub: operationDefinition.id as unknown as Subject,
-        scope: "openid profile email offline_access",
-        [CUSTOM_CLAIMS.ROLE]: "member",
-        [CUSTOM_CLAIMS.TENANT]: services.tenant,
-        [CUSTOM_CLAIMS.RESOURCE_ID]: operationDefinition.id as id,
-        [CUSTOM_CLAIMS.RESOURCE_TYPE]: "OperationDefinition",
-      });
-
       await client.invoke_system(
         new Operation(operationDefinition),
-        {
-          ...services,
-          user: { ...services.user, accessToken: user_access_token },
-        },
+        {},
         fhirVersion,
         {
           payload,
@@ -318,7 +301,7 @@ function processSubscription(
   return async () => {
     // Reread here in event that concurrent process has altered the id.
     const subscription = await client.read(
-      ctx,
+      {},
       fhirVersion,
       "Subscription",
       subscriptionId,
@@ -385,7 +368,7 @@ function processSubscription(
 
       switch (request.level) {
         case "system": {
-          historyPoll = await client.history_system(ctx, fhirVersion, [
+          historyPoll = await client.history_system({}, fhirVersion, [
             {
               name: "_since-version",
               value: [latestVersionIdForSub],
@@ -395,7 +378,7 @@ function processSubscription(
         }
         case "type": {
           historyPoll = await client.history_type(
-            ctx,
+            {},
             fhirVersion,
             request.resourceType,
             [
@@ -513,7 +496,7 @@ function processSubscription(
       );
 
       await client.update(
-        ctx,
+        {},
         fhirVersion,
         "Subscription",
         subscription.id as id,
@@ -596,7 +579,7 @@ async function createWorker(
           },
         };
         const activeSubscriptionIds = (
-          await client.search_type(ctx, fhirVersion, "Subscription", [
+          await client.search_type({}, fhirVersion, "Subscription", [
             { name: "status", value: ["active"] },
           ])
         ).resources.map((r) => r.id);
