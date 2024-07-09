@@ -5,6 +5,7 @@ import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
 import { AsynchronousClient } from "@iguhealth/client";
+import createHTTPClient from "@iguhealth/client/lib/http";
 import {
   BundleEntry,
   Subscription,
@@ -23,7 +24,6 @@ import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
   IGUHEALTH_ISSUER,
-  Subject,
   TenantId,
   createToken,
 } from "@iguhealth/jwt";
@@ -41,22 +41,17 @@ import {
   getSigningKey,
 } from "../authN/certifications.js";
 import RedisCache from "../cache/providers/redis.js";
-import createEmailProvider from "../email/index.js";
-import createEncryptionProvider from "../encryption/index.js";
 import loadEnv from "../env.js";
-import {
-  createClient,
-  createFHIRAPI,
-  createLogger,
-  getRedisClient,
-} from "../fhir-api/index.js";
+import { createLogger, getRedisClient } from "../fhir-api/index.js";
 import { IGUHealthServerCTX } from "../fhir-api/types.js";
 import { httpRequestToFHIRRequest } from "../fhir-http/index.js";
 import logAuditEvent, {
   MAJOR_FAILURE,
   SERIOUS_FAILURE,
+  createAuditEvent,
 } from "../fhir-logging/auditEvents.js";
 import { resolveOperationDefinition } from "../fhir-operation-executors/utilities.js";
+import { createArtifactMemoryDatabase } from "../fhir-storage/providers/memory/async.js";
 import { fitsSearchCriteria } from "../fhir-storage/providers/memory/search.js";
 import { createPGPool } from "../fhir-storage/providers/postgres/pg.js";
 import { createResolverRemoteCanonical } from "../fhir-storage/utilities/canonical.js";
@@ -66,12 +61,22 @@ import {
   findSearchParameter,
   parametersWithMetaAssociated,
 } from "../fhir-storage/utilities/search/parameters.js";
-import { TerminologyProvider } from "../fhir-terminology/index.js";
 import * as Sentry from "../monitoring/sentry.js";
 import RedisLock from "../synchronization/redis.lock.js";
 import { LIB_VERSION } from "../version.js";
 
 loadEnv();
+
+type WorkerServices = Pick<
+  IGUHealthServerCTX,
+  | "db"
+  | "logger"
+  | "cache"
+  | "tenant"
+  | "user"
+  | "resolveCanonical"
+  | "resolveTypeToCanonical"
+>;
 
 if (process.env.NODE_ENV === "development") {
   await createCertsIfNoneExists(getCertLocation(), getCertKey());
@@ -110,8 +115,8 @@ async function getVersionSequence(
 }
 
 async function handleSubscriptionPayload(
-  server: AsynchronousClient<unknown, IGUHealthServerCTX>,
-  ctx: IGUHealthServerCTX,
+  client: AsynchronousClient<unknown, unknown>,
+  services: WorkerServices,
   fhirVersion: R4,
   subscription: Subscription,
   payload: Resource<FHIR_VERSION, AllResourceTypes>[],
@@ -171,41 +176,30 @@ async function handleSubscriptionPayload(
       )[0];
       if (typeof operation !== "string") {
         logAuditEvent(
-          server,
-          ctx,
+          client,
+          {},
           fhirVersion,
-          MAJOR_FAILURE,
-          { reference: `Subscription/${subscription.id}` },
-          `No Operation was specified, specifiy via extension '${OPERATION_URL}' with valueCode of operation code.`,
+          createAuditEvent(
+            services.user.payload,
+            MAJOR_FAILURE,
+            { reference: `Subscription/${subscription.id}` },
+            `No Operation was specified, specifiy via extension '${OPERATION_URL}' with valueCode of operation code.`,
+          ),
         );
         throw new OperationError(
           outcomeError("invalid", "Subscription contained invalid operation"),
         );
       }
       const operationDefinition = await resolveOperationDefinition(
-        server,
-        ctx,
+        client,
+        services,
         fhirVersion,
         operation,
       );
 
-      const signingKey = await getSigningKey(getCertLocation(), getCertKey());
-
-      const user_access_token = await createToken<
-        AccessTokenPayload<s.user_role>
-      >(signingKey, {
-        iss: IGUHEALTH_ISSUER,
-        sub: operationDefinition.id as unknown as Subject,
-        scope: "openid profile email offline_access",
-        [CUSTOM_CLAIMS.ROLE]: "member",
-        [CUSTOM_CLAIMS.TENANT]: ctx.tenant,
-        [CUSTOM_CLAIMS.RESOURCE_ID]: operationDefinition.id as id,
-        [CUSTOM_CLAIMS.RESOURCE_TYPE]: "OperationDefinition",
-      });
-
-      await server.invoke_system(
+      await client.invoke_system(
         new Operation(operationDefinition),
-        { ...ctx, user: { ...ctx.user, accessToken: user_access_token } },
+        {},
         fhirVersion,
         {
           payload,
@@ -273,13 +267,14 @@ async function handleSubscriptionPayload(
       return;
     }
 
-    default:
+    default: {
       throw new OperationError(
         outcomeError(
           `not-supported`,
           `'${channelType}' is not supported for subscription.`,
         ),
       );
+    }
   }
 }
 
@@ -290,10 +285,9 @@ function subscriptionLockKey(tenant: string, subscriptionId: string) {
 
 function processSubscription(
   workerID: string,
-  ctx: IGUHealthServerCTX,
+  ctx: WorkerServices,
   fhirVersion: FHIR_VERSION,
-  server: AsynchronousClient<unknown, IGUHealthServerCTX>,
-
+  client: AsynchronousClient<unknown, unknown>,
   subscriptionId: id,
 ) {
   if (fhirVersion !== R4)
@@ -305,8 +299,8 @@ function processSubscription(
     );
   return async () => {
     // Reread here in event that concurrent process has altered the id.
-    const subscription = await server.read(
-      ctx,
+    const subscription = await client.read(
+      {},
       fhirVersion,
       "Subscription",
       subscriptionId,
@@ -373,7 +367,7 @@ function processSubscription(
 
       switch (request.level) {
         case "system": {
-          historyPoll = await server.history_system(ctx, fhirVersion, [
+          historyPoll = await client.history_system({}, fhirVersion, [
             {
               name: "_since-version",
               value: [latestVersionIdForSub],
@@ -382,8 +376,8 @@ function processSubscription(
           break;
         }
         case "type": {
-          historyPoll = await server.history_type(
-            ctx,
+          historyPoll = await client.history_type(
+            {},
             fhirVersion,
             request.resourceType,
             [
@@ -406,7 +400,7 @@ function processSubscription(
       const parameters = await parametersWithMetaAssociated(
         async (resourceTypes, name) =>
           await findSearchParameter(
-            server,
+            client,
             ctx,
             fhirVersion,
             resourceTypes,
@@ -447,8 +441,12 @@ function processSubscription(
             entry.resource &&
             (await fitsSearchCriteria(
               {
-                ...ctx,
-                resolveRemoteCanonical: createResolverRemoteCanonical(ctx),
+                resolveCanonical: ctx.resolveCanonical,
+                resolveTypeToCanonical: ctx.resolveTypeToCanonical,
+                resolveRemoteCanonical: createResolverRemoteCanonical(
+                  client,
+                  {},
+                ),
               },
               R4,
               entry.resource,
@@ -459,7 +457,7 @@ function processSubscription(
           }
         }
         await handleSubscriptionPayload(
-          server,
+          client,
           ctx,
           fhirVersion,
           subscription,
@@ -485,16 +483,19 @@ function processSubscription(
         errorDescription = e.outcome.issue.map((i) => i.details).join(". ");
       }
       await logAuditEvent(
-        server,
-        ctx,
+        client,
+        {},
         fhirVersion,
-        SERIOUS_FAILURE,
-        { reference: `Subscription/${subscription.id}` },
-        errorDescription,
+        createAuditEvent(
+          ctx.user.payload,
+          SERIOUS_FAILURE,
+          { reference: `Subscription/${subscription.id}` },
+          errorDescription,
+        ),
       );
 
-      await server.update(
-        ctx,
+      await client.update(
+        {},
         fhirVersion,
         "Subscription",
         subscription.id as id,
@@ -515,22 +516,37 @@ async function getActiveTenants(pool: pg.Pool): Promise<TenantId[]> {
   return tenants.map((w) => w.id as TenantId);
 }
 
+function createTokenPayload(
+  workerID: string,
+  tenant: TenantId,
+): AccessTokenPayload<s.user_role> {
+  const accessTokenPayload = {
+    iss: IGUHEALTH_ISSUER,
+    sub: `system-worker-${workerID}`,
+    [CUSTOM_CLAIMS.RESOURCE_ID]: `system-worker-${workerID}`,
+    [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
+    [CUSTOM_CLAIMS.TENANT]: tenant,
+    [CUSTOM_CLAIMS.ROLE]: "admin",
+  } as AccessTokenPayload<s.user_role>;
+
+  return accessTokenPayload;
+}
+
 async function createWorker(
   workerID = randomUUID(),
   fhirVersion: FHIR_VERSION = R4,
   loopInterval = 500,
 ) {
   const db = createPGPool();
-  const terminologyProvider = new TerminologyProvider();
   const redis = getRedisClient();
-  const encryptionProvider = createEncryptionProvider();
   const lock = new RedisLock(redis);
   const cache = new RedisCache(redis);
-  const emailProvider = createEmailProvider();
-  const { client, resolveCanonical, resolveTypeToCanonical } = createClient();
   const logger = createLogger().child({ worker: workerID });
+  const sdArtifacts = createArtifactMemoryDatabase({
+    r4: ["StructureDefinition"],
+    r4b: ["StructureDefinition"],
+  });
 
-  const fhirServer = await createFHIRAPI();
   let isRunning = true;
 
   logger.info(`Worker started with interval '${loopInterval}'`);
@@ -539,31 +555,30 @@ async function createWorker(
     try {
       const activeTenants = await getActiveTenants(db);
       for (const tenant of activeTenants) {
-        const ctx: IGUHealthServerCTX = {
+        const client = createHTTPClient({
+          url: new URL(`w/${tenant}`, process.env.API_URL).href,
+          getAccessToken: async () => {
+            const token = createToken(
+              await getSigningKey(getCertLocation(), getCertKey()),
+              createTokenPayload(workerID, tenant),
+            );
+            return token;
+          },
+        });
+
+        const ctx: WorkerServices = {
+          resolveCanonical: sdArtifacts.resolveCanonical,
+          resolveTypeToCanonical: sdArtifacts.resolveTypeToCanonical,
           db,
           logger,
-          lock,
           cache,
-          terminologyProvider,
-          encryptionProvider,
-          emailProvider,
-          resolveCanonical,
-          resolveTypeToCanonical,
-          client,
           tenant: tenant,
           user: {
-            payload: {
-              iss: IGUHEALTH_ISSUER,
-              sub: `system-worker-${workerID}`,
-              [CUSTOM_CLAIMS.RESOURCE_ID]: `system-worker-${workerID}`,
-              [CUSTOM_CLAIMS.RESOURCE_TYPE]: "Membership",
-              [CUSTOM_CLAIMS.TENANT]: tenant,
-              [CUSTOM_CLAIMS.ROLE]: "admin",
-            } as AccessTokenPayload<s.user_role>,
+            payload: createTokenPayload(workerID, tenant),
           },
         };
         const activeSubscriptionIds = (
-          await fhirServer.search_type(ctx, fhirVersion, "Subscription", [
+          await client.search_type({}, fhirVersion, "Subscription", [
             { name: "status", value: ["active"] },
           ])
         ).resources.map((r) => r.id);
@@ -578,7 +593,7 @@ async function createWorker(
                 workerID,
                 ctx,
                 fhirVersion,
-                fhirServer,
+                client,
                 subscriptionId,
               ),
             );

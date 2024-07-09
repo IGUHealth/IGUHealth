@@ -387,12 +387,19 @@ export default async function createServer(): Promise<
     .use(async (ctx, next) => {
       await next();
       const rt = ctx.response.get("X-Response-Time");
-      logger.info({
-        status: ctx.response.status,
-        method: ctx.method,
-        url: ctx.url,
-        responseTime: rt,
-      });
+
+      // For development we don't want to log all worker requests.
+      if (
+        !ctx.state.iguhealth.user?.payload.sub.startsWith("system-worker") ||
+        process.env.NODE_ENV !== "development"
+      ) {
+        logger.info({
+          status: ctx.response.status,
+          method: ctx.method,
+          url: ctx.url,
+          responseTime: rt,
+        });
+      }
     })
     .use(async (ctx, next) => {
       const start = Date.now();

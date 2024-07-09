@@ -1,3 +1,4 @@
+import { FHIRClientAsync } from "@iguhealth/client/lib/interface";
 import { canonical } from "@iguhealth/fhir-types/lib/generated/r4/types";
 import {
   FHIR_VERSION,
@@ -5,18 +6,18 @@ import {
   ResourceType,
 } from "@iguhealth/fhir-types/versions";
 
-import { IGUHealthServerCTX } from "../../fhir-api/types.js";
 import type { ResolveRemoteCanonical } from "./search/dataConversion.js";
 
-export function createResolverRemoteCanonical(
-  ctx: IGUHealthServerCTX,
+export function createResolverRemoteCanonical<CTX>(
+  client: FHIRClientAsync<CTX>,
+  ctx: CTX,
 ): ResolveRemoteCanonical {
   return async <FHIRVersion extends FHIR_VERSION>(
     fhirVersion: FHIRVersion,
     types: ResourceType<FHIRVersion>[],
     url: canonical,
   ) => {
-    const results = await ctx.client.search_system(ctx, fhirVersion, [
+    const results = await client.search_system(ctx, fhirVersion, [
       { name: "_type", value: types },
       { name: "url", value: [url] },
     ]);

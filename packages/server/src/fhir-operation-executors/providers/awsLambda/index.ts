@@ -34,6 +34,7 @@ import {
 import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import logAuditEvent, {
   MINOR_FAILURE,
+  createAuditEvent,
 } from "../../../fhir-logging/auditEvents.js";
 import {
   getOpCTX,
@@ -422,13 +423,16 @@ function createExecutor(
                     context.ctx.client,
                     context.ctx,
                     context.request.fhirVersion,
-                    MINOR_FAILURE,
-                    {
-                      reference: `OperationDefinition/${operationDefinition.id}`,
-                    },
-                    output.trace
-                      ? output.trace.join("\n")
-                      : "No trace present.",
+                    createAuditEvent(
+                      context.ctx.user.payload,
+                      MINOR_FAILURE,
+                      {
+                        reference: `OperationDefinition/${operationDefinition.id}`,
+                      },
+                      output.trace
+                        ? output.trace.join("\n")
+                        : "No trace present.",
+                    ),
                   );
                   throw new OperationError(
                     outcomeFatal(
