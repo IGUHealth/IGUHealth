@@ -1,14 +1,9 @@
-import { FHIRClientAsync } from "@iguhealth/client/interface";
-import {
-  AuditEvent,
-  Reference,
-  code,
-  instant,
-  uri,
-} from "@iguhealth/fhir-types/r4/types";
-import { FHIR_VERSION } from "@iguhealth/fhir-types/versions";
+import * as s from "zapatos/schema";
 
-import { IGUHealthServerCTX } from "../fhir-api/types.js";
+import { FHIRClientAsync } from "@iguhealth/client/interface";
+import { Reference, code, instant, uri } from "@iguhealth/fhir-types/r4/types";
+import { FHIR_VERSION, Resource } from "@iguhealth/fhir-types/versions";
+import { AccessTokenPayload } from "@iguhealth/jwt";
 
 export type OUTCOMES = {
   SUCCESS: "0";
@@ -22,18 +17,13 @@ export const MINOR_FAILURE: OUTCOMES["MINOR_FAILURE"] = "4";
 export const SERIOUS_FAILURE: OUTCOMES["SERIOUS_FAILURE"] = "8";
 export const MAJOR_FAILURE: OUTCOMES["MAJOR_FAILURE"] = "12";
 
-export default async function logAuditEvent<
-  CTX extends IGUHealthServerCTX,
-  Client extends FHIRClientAsync<CTX>,
->(
-  client: Client,
-  ctx: CTX,
-  fhirVersion: FHIR_VERSION,
+export function createAuditEvent(
+  user: AccessTokenPayload<s.user_role>,
   outcome: OUTCOMES[keyof OUTCOMES],
   entity: Reference,
   outcomeDescription: string,
-) {
-  const auditEvent: AuditEvent = {
+): Resource<FHIR_VERSION, "AuditEvent"> {
+  return {
     resourceType: "AuditEvent",
     type: {
       system: "http://hl7.org/fhir/ValueSet/audit-event-type" as uri,
@@ -44,8 +34,8 @@ export default async function logAuditEvent<
     outcomeDesc: outcomeDescription,
     agent: [
       {
-        altId: ctx.user.payload.sub,
-        name: ctx.user.payload.sub,
+        altId: user.sub,
+        name: user.sub,
         requestor: true,
       },
     ],
@@ -63,7 +53,17 @@ export default async function logAuditEvent<
       },
     ],
   };
+}
 
-  const savedAuditEvent = await client.create(ctx, fhirVersion, auditEvent);
-  return savedAuditEvent;
+export default async function logAuditEvent<
+  CTX,
+  Version extends FHIR_VERSION,
+  Client extends FHIRClientAsync<CTX>,
+>(
+  client: Client,
+  ctx: CTX,
+  fhirVersion: Version,
+  auditEvent: Resource<Version, "AuditEvent">,
+): Promise<Resource<Version, "AuditEvent">> {
+  return client.create(ctx, fhirVersion, auditEvent);
 }

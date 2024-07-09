@@ -117,7 +117,7 @@ export interface IGUHealthServerCTX {
   db: db.Queryable;
   logger: Logger<string>;
   lock: Lock<unknown>;
-  cache: IOCache<IGUHealthServerCTX>;
+  cache: IOCache<Pick<IGUHealthServerCTX, "tenant">>;
   terminologyProvider?: TerminologyProvider;
   encryptionProvider?: EncryptionProvider;
   emailProvider?: EmailProvider;

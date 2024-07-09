@@ -12,7 +12,6 @@ import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
 import { IGUHealthServerCTX } from "../../../fhir-api/types.js";
 import dataConversion, {
-  ResolveRemoteCanonical,
   SEARCH_TYPE,
 } from "../../utilities/search/dataConversion.js";
 import { SearchParameterResource } from "../../utilities/search/parameters.js";
@@ -26,7 +25,7 @@ interface MemorySearchCTX {
   /*
    ** Used to resolve remote canonicals in the toReference function.
    */
-  resolveRemoteCanonical?: ResolveRemoteCanonical;
+  resolveRemoteCanonical?: IGUHealthServerCTX["resolveCanonical"];
 }
 
 async function expressionSearch<CTX extends MemorySearchCTX>(

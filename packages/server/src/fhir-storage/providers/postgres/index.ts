@@ -225,7 +225,7 @@ async function indexSearchParameter<
           parameter,
           "reference",
           evaluation,
-          createResolverRemoteCanonical(ctx),
+          createResolverRemoteCanonical(ctx.client, ctx),
         )
       ).flat();
 
