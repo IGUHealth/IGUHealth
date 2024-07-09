@@ -8,6 +8,7 @@ import { AsynchronousClient } from "@iguhealth/client";
 import createHTTPClient from "@iguhealth/client/lib/http";
 import {
   BundleEntry,
+  Parameters,
   Subscription,
   code,
   id,
@@ -27,7 +28,6 @@ import {
   TenantId,
   createToken,
 } from "@iguhealth/jwt";
-import { Operation } from "@iguhealth/operation-execution";
 import {
   OperationError,
   isOperationError,
@@ -197,14 +197,13 @@ async function handleSubscriptionPayload(
         operation,
       );
 
-      await client.invoke_system(
-        new Operation(operationDefinition),
-        {},
-        fhirVersion,
-        {
-          payload,
-        },
-      );
+      await client.invoke_system(operationDefinition.code, {}, fhirVersion, {
+        resourceType: "Parameters",
+        parameter: payload.map((resource) => ({
+          name: "payload",
+          resource: resource as Resource<R4, AllResourceTypes>,
+        })),
+      } as Parameters);
 
       return;
     }

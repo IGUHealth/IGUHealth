@@ -39,7 +39,6 @@ async function getTenant(
     subscription_tier: options.tier,
   };
 
-  console.log(options, tenant);
   if (!tenant.subscription_tier) {
     const tiers = await db.select("subscription_tier", {}).run(ctx.db);
 
