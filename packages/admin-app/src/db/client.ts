@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 
 import { AsynchronousClient } from "@iguhealth/client";
-import createHTTPClient from "@iguhealth/client/http";
+import createHTTPClient, { HTTPContext } from "@iguhealth/client/http";
 import { createMiddlewareAsync } from "@iguhealth/client/middleware";
 import { FHIRResponse } from "@iguhealth/client/types";
 
@@ -33,7 +33,7 @@ export function createAdminAppClient(
     { client: client },
     createMiddlewareAsync<
       { client: ReturnType<typeof createHTTPClient> },
-      unknown
+      HTTPContext
     >([
       async (context) => {
         switch (context.request.type) {

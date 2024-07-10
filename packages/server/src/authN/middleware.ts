@@ -7,12 +7,12 @@ import { code, id } from "@iguhealth/fhir-types/r4/types";
 import { R4 } from "@iguhealth/fhir-types/versions";
 import {
   AccessTokenPayload,
-  createToken,
   CUSTOM_CLAIMS,
   IGUHEALTH_AUDIENCE,
   IGUHEALTH_ISSUER,
   Subject,
   TenantId,
+  createToken,
 } from "@iguhealth/jwt";
 import { OperationError, outcomeError } from "@iguhealth/operation-outcomes";
 
@@ -115,7 +115,7 @@ export async function createValidateUserJWTMiddleware<T, C>({
 
   return jwt({
     key: "__user__",
-    tokenKey: "access_token",
+    tokenKey: "__access_token__",
     secret: async (header: jwksRsa.TokenHeader) => {
       return IGUHEALTH_JWT_SECRET(header);
     },

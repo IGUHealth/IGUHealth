@@ -13,13 +13,13 @@ import {
 } from "../types/index.js";
 import { ParsedParameter } from "../url.js";
 
-type HTTPClientState = {
+export type HTTPClientState = {
   onAuthenticationError?: () => void;
   getAccessToken?: () => Promise<string>;
   url: string;
 };
 
-type HTTPContext = {
+export type HTTPContext = {
   headers?: Record<string, string>;
 };
 

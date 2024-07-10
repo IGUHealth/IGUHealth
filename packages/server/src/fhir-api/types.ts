@@ -25,6 +25,7 @@ import {
   AccessTokenPayload,
   CUSTOM_CLAIMS,
   IGUHEALTH_ISSUER,
+  JWT,
   Subject,
   TenantId,
 } from "@iguhealth/jwt";
@@ -100,9 +101,9 @@ export namespace KoaExtensions {
 
 export interface UserContext {
   payload: AccessTokenPayload<s.user_role>;
+  accessToken?: JWT<AccessTokenPayload<s.user_role>>;
   resource?: Membership | ClientApplication | OperationDefinition | null;
   accessPolicies?: AccessPolicy[];
-  accessToken?: string;
 }
 
 export interface IGUHealthServerCTX {

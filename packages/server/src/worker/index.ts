@@ -557,7 +557,7 @@ async function createWorker(
         const client = createHTTPClient({
           url: new URL(`w/${tenant}`, process.env.API_URL).href,
           getAccessToken: async () => {
-            const token = createToken(
+            const token = await createToken(
               await getSigningKey(getCertLocation(), getCertKey()),
               createTokenPayload(workerID, tenant),
             );
