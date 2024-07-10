@@ -17,6 +17,9 @@ type HTTPClientState = {
   onAuthenticationError?: () => void;
   getAccessToken?: () => Promise<string>;
   url: string;
+};
+
+type HTTPContext = {
   headers?: Record<string, string>;
 };
 
@@ -57,6 +60,7 @@ export function versionUrl(domain: string, fhirVersion: FHIR_VERSION): string {
 
 async function toHTTPRequest(
   state: HTTPClientState,
+  context: HTTPContext,
   request: FHIRRequest,
 ): Promise<{
   url: string;
@@ -64,9 +68,9 @@ async function toHTTPRequest(
   method: string;
   body?: string;
 }> {
-  const headers: Record<string, any> = {
+  const headers: Record<string, string> = {
     "Content-Type": "application/fhir+json",
-    ...state.headers,
+    ...context.headers,
   };
   const FHIRUrl = versionUrl(state.url, request.fhirVersion);
   if (state.getAccessToken) {
@@ -567,11 +571,15 @@ async function httpResponseToFHIRResponse(
   }
 }
 
-function httpMiddleware<CTX>(): MiddlewareAsync<HTTPClientState, CTX> {
-  return createMiddlewareAsync<HTTPClientState, CTX>([
+function httpMiddleware(): MiddlewareAsync<HTTPClientState, HTTPContext> {
+  return createMiddlewareAsync<HTTPClientState, HTTPContext>([
     async (context) => {
       try {
-        const httpRequest = await toHTTPRequest(context.state, context.request);
+        const httpRequest = await toHTTPRequest(
+          context.state,
+          context.ctx,
+          context.request,
+        );
         const response = await fetch(httpRequest.url, {
           method: httpRequest.method,
           headers: httpRequest.headers,
@@ -585,7 +593,6 @@ function httpMiddleware<CTX>(): MiddlewareAsync<HTTPClientState, CTX> {
           status: response.status,
           headers: Object.fromEntries(response.headers),
         };
-
         return {
           ...context,
           response: fhirResponse,
@@ -604,12 +611,15 @@ function httpMiddleware<CTX>(): MiddlewareAsync<HTTPClientState, CTX> {
   ]);
 }
 
-export default function createHTTPClient<CTX>(
+export default function createHTTPClient(
   initialState: HTTPClientState,
-): AsynchronousClient<HTTPClientState, CTX> {
+): AsynchronousClient<HTTPClientState, HTTPContext> {
   // Removing trailing slash
   if (initialState.url.endsWith("/"))
     initialState.url = initialState.url.slice(0, -1);
-  const middleware = httpMiddleware<CTX>();
-  return new AsynchronousClient<HTTPClientState, CTX>(initialState, middleware);
+  const middleware = httpMiddleware();
+  return new AsynchronousClient<HTTPClientState, HTTPContext>(
+    initialState,
+    middleware,
+  );
 }

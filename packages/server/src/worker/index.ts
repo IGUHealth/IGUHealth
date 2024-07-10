@@ -5,7 +5,7 @@ import * as db from "zapatos/db";
 import * as s from "zapatos/schema";
 
 import { AsynchronousClient } from "@iguhealth/client";
-import createHTTPClient from "@iguhealth/client/lib/http";
+import createHTTPClient from "@iguhealth/client/http";
 import {
   BundleEntry,
   Parameters,
