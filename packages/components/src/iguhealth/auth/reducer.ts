@@ -69,7 +69,6 @@ export function iguHealthReducer(
             onAuthenticationError: action.reInitiliaze,
             getAccessToken: () => Promise.resolve(action.payload.access_token),
             url: rootURL,
-            headers: {},
           });
         },
       };
