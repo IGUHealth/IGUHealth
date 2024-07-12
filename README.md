@@ -2,122 +2,33 @@
 
 FHIR development environment. Code is written in typescript
 
-## Code Organizationg
+## Repository Structure
 
-Code is organized as separate packages in /packages.
+**The repository is organized as follows:**
 
-## Starting Local Server
+- **artifacts/**
 
-### Prerequisite
+  StructureDefinition, ValueSet, CodeSystem, etc. definitions for the FHIR resources.
+  This includes our own custom resources and parameters under the `iguhealth` namespace and those provided by `hl7`.
 
-- Running postgres that has a database with same name specified in environment variables.
-- Running instance of redis.
+- **config/**
 
-### Command
+  Contains configuration shared across packages such as jest and tsconfig
 
-```bash
-cd packages/server
-# If not present .env
-mv .env.defaults .env
-yarn watch
-```
+- **packages/**
 
-### Environment Variables
+  Code for various specifications and applications. This includes iguhealth server, fhirpath, admin app and others.
 
-#### Data layer
+- **docker/**
 
-| name                   | description                        | required | defaults  |
-| ---------------------- | ---------------------------------- | -------- | --------- |
-| FHIR_DATABASE_NAME     | Postgres database name.            | true     | iguhealth |
-| FHIR_DATABASE_HOST     | Postgres host                      | true     | localhost |
-| FHIR_DATABASE_PORT     | Postgres port                      | true     | 5432      |
-| FHIR_DATABASE_PASSWORD | Postgres password                  | true     | ""        |
-| FHIR_DATABASE_USERNAME | Postgres username                  | true     | postgres  |
-| FHIR_DATABASE_SSL      | Whether Postgres connection is SSL | false    | false     |
-| REDIS_HOST             | Redis Host                         | true     | 127.0.0.1 |
-| REDIS_PORT             | Redis port                         | true     | 6379      |
-| REDIS_SSL              | Whether Redis connection is SSL    | false    | false     |
+  Dockerfiles for our server. Docker images are available to download here: https://github.com/orgs/IGUHealth/packages?repo_name=IGUHealth.
 
-#### Meta Information
+- **layers/**
 
-| name    | description                                                                 | required |
-| ------- | --------------------------------------------------------------------------- | -------- |
-| API_URL | Current url where API is hosted from (used in operation execution clients). | false    |
+  Lambda layers used in Custom Operations.
 
-#### AWS Operation Invocation variables
+## Code Systems
 
-Optional depending on whether you are executing custom code for operations
+### LOINC
 
-| name                         | description                                                                                 | required |
-| ---------------------------- | ------------------------------------------------------------------------------------------- | -------- |
-| AWS_REGION                   | AWS Region where you want lambdas to be executed from.                                      | false    |
-| AWS_LAMBDA_ROLE              | Execution role of lambda functions.                                                         | false    |
-| AWS_LAMBDA_ACCESS_KEY_ID     | Access key id for lambda (must have permission to invoke and create lambda functions)       | false    |
-| AWS_LAMBDA_ACCESS_KEY_SECRET | Access key secret for lambda (must have permission to invoke and create lambda functions).  | false    |
-| AWS_LAMBDA_LAYER_ARN         | ARN Layer for lambda (current expectation is layer installed with all @iguhealth packages). | false    |
-
-#### AUTHENTICATION
-
-Authentication related variables.
-
-##### Unsafe
-
-| name               | description                                                   | required | defaults |
-| ------------------ | ------------------------------------------------------------- | -------- | -------- |
-| AUTH_PUBLIC_ACCESS | Sets the server to allow full public access when set to true. | false    |          |
-
-##### Local Authentication
-
-Local Auth variables.
-
-| name                              | description                                            | required | defaults |
-| --------------------------------- | ------------------------------------------------------ | -------- | -------- |
-| AUTH_LOCAL_CERTIFICATION_LOCATION | Location for local certifications for IGUHEALTH ISSUER | false    |          |
-| AUTH_LOCAL_SIGNING_KEY            | The signing key used to generate new local tokens      | false    |          |
-
-##### External Authentication
-
-External Auth variables.
-
-| name                     | description                              | required | defaults |
-| ------------------------ | ---------------------------------------- | -------- | -------- |
-| AUTH_EXTERNAL_JWK_URI    | JWK remote url to pull JSON WEB Key Set. | false    |          |
-| AUTH_EXTERNAL_JWT_ISSUER | Issuer of the JWT.                       | true     |          |
-
-#### Email
-
-| name             | description                                                            | required | defaults                                      |
-| ---------------- | ---------------------------------------------------------------------- | -------- | --------------------------------------------- |
-| EMAIL_PROVIDER   | Set the email provider                                                 | false    | none (currently only sendgrid option allowed) |
-| SENDGRID_API_KEY | Set the sendgrid api key (only used on email provider set to sendgrid) | false    | none                                          |
-
-#### Encryption
-
-Encryption is used for user passed in secrets (for example an external token for a service ). We currently only support encyrption via AWS KMS
-using the AWS encryption sdk.
-
-| name                         | description                                           | required | defaults                                   |
-| ---------------------------- | ----------------------------------------------------- | -------- | ------------------------------------------ |
-| ENCRYPTION_TYPE              | The type of encryption (used to encrypt user secrets) | false    | none (currently aws only option supported) |
-| AWS_KMS_ACCESS_KEY_ID        | KMS client access key ID                              | false    |                                            |
-| AWS_KMS_ACCESS_KEY_SECRET    | KMS client access key secret                          | false    |                                            |
-| AWS_ENCRYPTION_GENERATOR_KEY | KMS key used to generate data keys on keyring         | false    |                                            |
-| AWS_ENCRYPTION_KEY           | Additional KMS key used for encryption                | false    |                                            |
-
-#### Performance
-
-| name                             | description                      | required | defaults |
-| -------------------------------- | -------------------------------- | -------- | -------- |
-| RATE_LIMIT_MAX                   | Rate limiting amount per minute  | false    | 100      |
-| POSTGRES_TRANSACTION_ENTRY_LIMIT | Postgres transaction entry limit | false    | 20       |
-
-#### Monitoring
-
-Monitoring services
-
-| name                        | description                                                   | required | defaults |
-| --------------------------- | ------------------------------------------------------------- | -------- | -------- |
-| SENTRY_SERVER_DSN           | Sentry DSN URL for monitoring errors and performance.         | false    |          |
-| SENTRY_WORKER_DSN           | Sentry Worker for monitoring errors and performance on worker | false    |          |
-| SENTRY_TRACES_SAMPLE_RATE   | Sentry sample rate.                                           | false    |          |
-| SENTRY_PROFILES_SAMPLE_RATE | Sentry profiles rate.                                         | false    |          |
+This material contains content from LOINC (http://loinc.org). LOINC is copyright © 1995-2024, Regenstrief Institute, Inc. and the Logical Observation Identifiers Names and Codes (LOINC) Committee and is available at no cost under the license at http://loinc.org/license. LOINC® is a registered United States trademark of Regenstrief Institute, Inc
