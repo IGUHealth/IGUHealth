@@ -8,6 +8,42 @@ import * as s from "zapatos/schema";
 
 import { createPGPool } from "../fhir-storage/providers/postgres/pg.js";
 
+async function createSystem(pg: db.Queryable, url: string) {
+  return db
+    .upsert(
+      "terminology_systems",
+      [{ url }],
+      db.constraint("terminology_systems_pkey"),
+      { updateColumns: doNothing },
+    )
+    .run(pg);
+}
+
+async function insertCodesDB(
+  pg: db.Queryable,
+  values: s.terminology_codes.Insertable[],
+) {
+  try {
+    await db
+      .upsert(
+        "terminology_codes",
+        values,
+        db.constraint("terminology_codes_pkey"),
+        { updateColumns: doNothing },
+      )
+      .run(pg);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function readCSV(filepath: string): csv.parser.Parser {
+  const parser = fs
+    .createReadStream(filepath)
+    .pipe(csv.parse({ columns: true }));
+  return parser;
+}
+
 async function loadTerminology(pg: db.Queryable, system: string) {
   const root = path.join(
     fileURLToPath(import.meta.url),
@@ -16,58 +52,29 @@ async function loadTerminology(pg: db.Queryable, system: string) {
   switch (system) {
     case "iso-3166": {
       const system = "iso-3166";
-      await db
-        .upsert(
-          "terminology_systems",
-          [{ url: system }],
-          db.constraint("terminology_systems_pkey"),
-          { updateColumns: doNothing },
-        )
-        .run(pg);
+      await createSystem(pg, system);
       const inserts: s.terminology_codes.Insertable[] = [];
-      const parser = fs
-        .createReadStream(path.join(root, "./iso-3166/iso-3166.csv"))
-        .pipe(csv.parse({ columns: true }));
+      const csv = readCSV(path.join(root, "./iso-3166/iso-3166.csv"));
 
-      for await (const record of parser) {
+      for await (const record of csv) {
         inserts.push({
           code: record["alpha-3"],
           system: system,
         });
       }
 
-      try {
-        await db
-          .upsert(
-            "terminology_codes",
-            inserts,
-            db.constraint("terminology_codes_pkey"),
-            { updateColumns: doNothing },
-          )
-          .run(pg);
-      } catch (error) {
-        console.error(error);
-      }
+      await insertCodesDB(pg, inserts);
 
       return;
     }
 
     case "iso-4217": {
       const system = "iso-4217";
-      await db
-        .upsert(
-          "terminology_systems",
-          [{ url: system }],
-          db.constraint("terminology_systems_pkey"),
-          { updateColumns: doNothing },
-        )
-        .run(pg);
-
+      await createSystem(pg, system);
       const inserts: s.terminology_codes.Insertable[] = [];
-      const parser = fs
-        .createReadStream(path.join(root, "./iso-4217/iso-4217.csv"))
-        .pipe(csv.parse({ columns: true }));
-      for await (const record of parser) {
+      const csv = readCSV(path.join(root, "./iso-4217/iso-4217.csv"));
+
+      for await (const record of csv) {
         // Work with each record
         inserts.push({
           code: record["Alphabetic Code"],
@@ -75,18 +82,7 @@ async function loadTerminology(pg: db.Queryable, system: string) {
         });
       }
 
-      try {
-        await db
-          .upsert(
-            "terminology_codes",
-            inserts,
-            db.constraint("terminology_codes_pkey"),
-            { updateColumns: doNothing },
-          )
-          .run(pg);
-      } catch (error) {
-        console.error(error);
-      }
+      await insertCodesDB(pg, inserts);
 
       return;
     }
