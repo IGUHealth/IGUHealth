@@ -1,9 +1,12 @@
+import * as db from "zapatos/db";
+
 import { splitParameter } from "@iguhealth/client/url";
 import {
   CodeSystemConcept,
   ValueSetComposeInclude,
   ValueSetExpansionContains,
   canonical,
+  code,
   dateTime,
 } from "@iguhealth/fhir-types/r4/types";
 import { FHIR_VERSION, R4, Resource } from "@iguhealth/fhir-types/versions";
@@ -41,22 +44,68 @@ function areCodesInline(include: ValueSetComposeInclude) {
 }
 
 function codeSystemConceptToValuesetExpansion(
-  codesystem: Resource<FHIR_VERSION, "CodeSystem">,
+  url: Resource<FHIR_VERSION, "CodeSystem">["url"],
+  version: Resource<FHIR_VERSION, "CodeSystem">["version"],
   concepts: CodeSystemConcept[],
 ): ValueSetExpansionContains[] {
   return concepts.map((concept) => {
     return {
-      system: codesystem.url,
+      system: url,
       code: concept.code,
-      version: codesystem.version,
+      version: version,
       display: concept.display,
       designation: concept.designation,
       extension: concept.extension,
       contains: concept.concept
-        ? codeSystemConceptToValuesetExpansion(codesystem, concept.concept)
+        ? codeSystemConceptToValuesetExpansion(url, version, concept.concept)
         : undefined,
     };
   });
+}
+
+async function getConcepts<Version extends FHIR_VERSION>(
+  pg: db.Queryable,
+  codeSystem: Resource<Version, "CodeSystem">,
+): Promise<CodeSystemConcept[]> {
+  switch (codeSystem.content) {
+    case "not-present": {
+      const system = await db
+        .selectOne("terminology_systems", { url: codeSystem.url })
+        .run(pg);
+      if (system) {
+        const codes = await db
+          .select("terminology_codes", { system: codeSystem.url })
+          .run(pg);
+        return codes.map((code) => {
+          return {
+            code: code.code as code,
+            display: code.display,
+          };
+        });
+      } else {
+        throw new OperationError(
+          outcomeError(
+            "not-found",
+            `Could not find code system ${codeSystem.url}`,
+          ),
+        );
+      }
+    }
+    case "example": {
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `Example code systems are not supported for expansion.`,
+        ),
+      );
+    }
+    case "fragment":
+    case "complete":
+    case "supplement":
+    default: {
+      return codeSystem.concept || [];
+    }
+  }
 }
 
 async function getValuesetExpansionContains<Version extends FHIR_VERSION>(
@@ -106,8 +155,9 @@ async function getValuesetExpansionContains<Version extends FHIR_VERSION>(
       }
 
       const codesystemExpansion = codeSystemConceptToValuesetExpansion(
-        codeSystem,
-        codeSystem.concept ? codeSystem.concept : [],
+        codeSystem.url,
+        codeSystem.version,
+        await getConcepts(ctx.db, codeSystem),
       );
 
       expansion = expansion.concat(
@@ -141,7 +191,7 @@ function checkforCode(
   return false;
 }
 
-function findConcept(
+function findConceptLocal(
   concepts: CodeSystemConcept[],
   code: string,
 ): CodeSystemConcept | undefined {
@@ -150,11 +200,58 @@ function findConcept(
       return concept;
     }
     if (concept.concept) {
-      const foundConcept = findConcept(concept.concept, code);
+      const foundConcept = findConceptLocal(concept.concept, code);
       if (foundConcept) return foundConcept;
     }
   }
   return undefined;
+}
+
+async function findConcept<Version extends FHIR_VERSION>(
+  pg: db.Queryable,
+  codeSystem: Resource<Version, "CodeSystem">,
+  code: string,
+): Promise<CodeSystemConcept | undefined> {
+  switch (codeSystem.content) {
+    case "not-present": {
+      const system = await db
+        .selectOne("terminology_systems", { url: codeSystem.url })
+        .run(pg);
+      if (!system) {
+        throw new OperationError(
+          outcomeError(
+            "not-found",
+            `Could not find code system ${codeSystem.url}`,
+          ),
+        );
+      }
+
+      const foundCode = await db
+        .selectOne("terminology_codes", { system: codeSystem.url, code })
+        .run(pg);
+      if (!foundCode) return undefined;
+
+      return {
+        code: foundCode.code as code,
+        display: foundCode.display,
+      };
+    }
+
+    case "example": {
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          `Example code systems are not supported for expansion.`,
+        ),
+      );
+    }
+    case "fragment":
+    case "complete":
+    case "supplement":
+    default: {
+      return findConceptLocal(codeSystem.concept || [], code);
+    }
+  }
 }
 
 export class TerminologyProvider implements ITerminologyProvider {
@@ -237,13 +334,15 @@ export class TerminologyProvider implements ITerminologyProvider {
         outcomeError("invalid", "Invalid input must have both system and code"),
       );
     }
-    const codeSystem = await ctx.client.search_type(
-      ctx,
-      fhirVersion,
-      "CodeSystem",
-      [{ name: "url", value: [input.system] }],
-    );
-    if (codeSystem.resources.length < 1) {
+    const codeSystem = input.system
+      ? await ctx.resolveCanonical(
+          fhirVersion,
+          "CodeSystem",
+          input.system as canonical,
+        )
+      : undefined;
+
+    if (!codeSystem) {
       throw new OperationError(
         outcomeError(
           "not-found",
@@ -251,18 +350,8 @@ export class TerminologyProvider implements ITerminologyProvider {
         ),
       );
     }
-    if (codeSystem.resources.length > 1) {
-      throw new OperationError(
-        outcomeError(
-          "invalid",
-          `Found conflicting code systems with url: '${input.system}'`,
-        ),
-      );
-    }
 
-    const codeSystemResource = codeSystem.resources[0];
-
-    const found = findConcept(codeSystemResource.concept || [], input.code);
+    const found = await findConcept(ctx.db, codeSystem, input.code);
 
     if (!found)
       throw new OperationError(
@@ -273,8 +362,8 @@ export class TerminologyProvider implements ITerminologyProvider {
       );
 
     return {
-      name: codeSystemResource.name || `CodeSystem/${codeSystemResource.id}`,
-      version: codeSystemResource.version,
+      name: codeSystem.name || `CodeSystem/${codeSystem.id}`,
+      version: codeSystem.version,
       display: found.display || found.code,
       designation: found.designation ? found.designation : [],
       property: found.property ? found.property : [],

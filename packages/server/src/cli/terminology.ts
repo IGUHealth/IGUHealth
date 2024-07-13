@@ -45,13 +45,14 @@ function readCSV(filepath: string): csv.parser.Parser {
 }
 
 async function loadTerminology(pg: db.Queryable, system: string) {
+  console.log(`Loading terminology '${system}'`);
   const root = path.join(
     fileURLToPath(import.meta.url),
     "../../../external-codesystems",
   );
   switch (system) {
     case "iso-3166": {
-      const system = "iso-3166";
+      const system = "urn:iso:std:iso:3166";
       await createSystem(pg, system);
       const inserts: s.terminology_codes.Insertable[] = [];
       const csv = readCSV(path.join(root, "./iso-3166/iso-3166.csv"));
@@ -59,6 +60,7 @@ async function loadTerminology(pg: db.Queryable, system: string) {
       for await (const record of csv) {
         inserts.push({
           code: record["alpha-3"],
+          display: record["name"],
           system: system,
         });
       }
@@ -69,7 +71,7 @@ async function loadTerminology(pg: db.Queryable, system: string) {
     }
 
     case "iso-4217": {
-      const system = "iso-4217";
+      const system = "urn:iso:std:iso:4217";
       await createSystem(pg, system);
       const inserts: s.terminology_codes.Insertable[] = [];
       const csv = readCSV(path.join(root, "./iso-4217/iso-4217.csv"));
@@ -78,6 +80,7 @@ async function loadTerminology(pg: db.Queryable, system: string) {
         // Work with each record
         inserts.push({
           code: record["Alphabetic Code"],
+          display: record["Currency"],
           system: system,
         });
       }
@@ -93,9 +96,13 @@ export function terminologyCommands(command: Command) {
   command
     .command("load")
     .description("Load external codesystems into DB")
-    .requiredOption("-s, --system <system>", "System to load.")
+    .requiredOption("-s, --system <system...>", "System to load.")
     .action(async (options) => {
       const pg = createPGPool();
-      await loadTerminology(pg, options.system);
+      await Promise.all(
+        options.system.map(async (system: string) => {
+          await loadTerminology(pg, system);
+        }),
+      );
     });
 }

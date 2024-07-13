@@ -1,0 +1,51 @@
+{
+  "id": "iso-4217-tests",
+  "resourceType": "TestScript",
+  "title": "ISO 4217 tests",
+  "contained": [
+    {
+      "id": "iso-3166-lookup",
+      "resourceType": "Parameters",
+      "parameter": [
+        {
+          "name": "system",
+          "valueUri": "urn:iso:std:iso:3166"
+        },
+        { "name": "code", "valueCode": "LKA" }
+      ]
+    }
+  ],
+  "fixture": [
+    {
+      "id": "iso-3166-lookup",
+      "resource": {
+        "reference": "#iso-3166-lookup"
+      }
+    }
+  ],
+  "test": [
+    {
+      "id": "lookup-test",
+      "name": "CodeSystem lookup tests.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "invoke"
+            },
+            "url": "lookup",
+            "resource": "CodeSystem",
+            "sourceId": "iso-3166-lookup"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Parameters.parameter.where(name='display').value",
+            "value": "Sri Lanka"
+          }
+        }
+      ]
+    }
+  ]
+}

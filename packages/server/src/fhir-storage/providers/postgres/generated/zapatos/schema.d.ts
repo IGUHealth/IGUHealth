@@ -6244,6 +6244,12 @@ declare module 'zapatos/schema' {
       */
       created_at: Date;
       /**
+      * **terminology_codes.display**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      display: string;
+      /**
       * **terminology_codes.system**
       * - `text` in database
       * - `NOT NULL`, no default
@@ -6263,6 +6269,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `now()`
       */
       created_at: db.TimestampTzString;
+      /**
+      * **terminology_codes.display**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      display: string;
       /**
       * **terminology_codes.system**
       * - `text` in database
@@ -6284,6 +6296,12 @@ declare module 'zapatos/schema' {
       */
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
+      * **terminology_codes.display**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      display?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **terminology_codes.system**
       * - `text` in database
       * - `NOT NULL`, no default
@@ -6304,6 +6322,12 @@ declare module 'zapatos/schema' {
       */
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
+      * **terminology_codes.display**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      display: string | db.Parameter<string> | db.SQLFragment;
+      /**
       * **terminology_codes.system**
       * - `text` in database
       * - `NOT NULL`, no default
@@ -6323,6 +6347,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `now()`
       */
       created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **terminology_codes.display**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      display?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **terminology_codes.system**
       * - `text` in database
