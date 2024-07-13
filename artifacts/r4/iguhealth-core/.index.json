@@ -172,6 +172,14 @@
     {
       "filename": "definitions/iguhealth/terminology/access-policy/resource_type.json",
       "resourceType": "ValueSet"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/external/iso-3166-codesystem.json",
+      "resourceType": "CodeSystem"
+    },
+    {
+      "filename": "definitions/iguhealth/terminology/external/iso-4217-codesystem.json",
+      "resourceType": "CodeSystem"
     }
   ]
 }

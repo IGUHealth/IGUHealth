@@ -57,16 +57,20 @@ function ResourceEditorTabs() {
             setResource(response);
             return response;
           });
+
           Toaster.promise(editPromise, {
             loading: id === "new" ? "Creating Resource" : "Updating Resource",
             success: (success) =>
               `Updated ${(success as Resource).resourceType}`,
             error: (error) => {
-              const message = (error.operationOutcome as OperationOutcome).issue
-                .map((issue) => issue.diagnostics)
-                .join("\n");
+              if ("response" in error) {
+                const message = (error.response.body as OperationOutcome).issue
+                  .map((issue) => issue.diagnostics)
+                  .join("\n");
 
-              return message;
+                return message;
+              }
+              return "Unknown Error";
             },
           }).then((value) =>
             navigate(

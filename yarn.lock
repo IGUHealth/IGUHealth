@@ -8571,6 +8571,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@iguhealth/iguhealth.fhir.r4b.core@workspace:^, @iguhealth/iguhealth.fhir.r4b.core@workspace:artifacts/r4b/iguhealth-core":
+  version: 0.0.0-use.local
+  resolution: "@iguhealth/iguhealth.fhir.r4b.core@workspace:artifacts/r4b/iguhealth-core"
+  languageName: unknown
+  linkType: soft
+
 "@iguhealth/jwt@workspace:^, @iguhealth/jwt@workspace:packages/jwt":
   version: 0.0.0-use.local
   resolution: "@iguhealth/jwt@workspace:packages/jwt"
@@ -8656,6 +8662,7 @@ __metadata:
     "@iguhealth/hl7.fhir.r4b.core": "workspace:^"
     "@iguhealth/hl7.fhir.r4b.test-data": "workspace:^"
     "@iguhealth/iguhealth.fhir.r4.core": "workspace:^"
+    "@iguhealth/iguhealth.fhir.r4b.core": "workspace:^"
     "@iguhealth/jwt": "workspace:^"
     "@iguhealth/meta-value": "workspace:^"
     "@iguhealth/operation-execution": "workspace:^"

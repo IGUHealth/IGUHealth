@@ -1,0 +1,96 @@
+{
+  "id": "iso-4217-tests",
+  "resourceType": "TestScript",
+  "title": "ISO 4217 tests",
+  "contained": [
+    {
+      "id": "valueset-iso-4217-expand",
+      "resourceType": "Parameters",
+      "parameter": [
+        {
+          "name": "url",
+          "valueUri": "http://hl7.org/fhir/ValueSet/currencies"
+        }
+      ]
+    },
+    {
+      "id": "iso-4217-lookup",
+      "resourceType": "Parameters",
+      "parameter": [
+        {
+          "name": "system",
+          "valueUri": "urn:iso:std:iso:4217"
+        },
+        { "name": "code", "valueCode": "USD" }
+      ]
+    }
+  ],
+  "fixture": [
+    {
+      "id": "valueset-iso-4217-expand",
+      "resource": {
+        "reference": "#valueset-iso-4217-expand"
+      }
+    },
+    {
+      "id": "iso-4217-lookup",
+      "resource": {
+        "reference": "#iso-4217-lookup"
+      }
+    }
+  ],
+  "test": [
+    {
+      "id": "expand-test",
+      "name": "Valueset Expansion tests.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "invoke"
+            },
+            "url": "expand",
+            "resource": "ValueSet",
+            "sourceId": "valueset-iso-4217-expand"
+          }
+        },
+        {
+          "assert": {
+            "expression": "ValueSet.expansion.contains.where(code='USD').code",
+            "value": "USD"
+          }
+        },
+        {
+          "assert": {
+            "expression": "ValueSet.expansion.contains.where(code='GBP').code",
+            "value": "GBP"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lookup-test",
+      "name": "CodeSystem lookup tests.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "invoke"
+            },
+            "url": "lookup",
+            "resource": "CodeSystem",
+            "sourceId": "iso-4217-lookup"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Parameters.parameter.where(name='display').value",
+            "value": "US Dollar"
+          }
+        }
+      ]
+    }
+  ]
+}
