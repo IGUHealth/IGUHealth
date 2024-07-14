@@ -127,7 +127,7 @@ async function loadTerminology(pg: db.Queryable, system: string) {
           // Work with each record
           codes.push({
             code: record["Template"],
-            display: record["Name"],
+            display: record["Template"],
             system: system,
           });
           edges.push({

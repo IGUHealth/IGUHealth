@@ -2,6 +2,10 @@
   "index-version": "1",
   "files": [
     {
+      "filename": "definitions/terminology/external/bcp-13-codesystem.json",
+      "resourceType": "CodeSystem"
+    },
+    {
       "filename": "definitions/terminology/external/iso-3166-codesystem.json",
       "resourceType": "CodeSystem"
     },
