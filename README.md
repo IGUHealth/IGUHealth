@@ -17,7 +17,7 @@ FHIR development environment. Code is written in typescript
 
 - **packages/**
 
-  Code for various specifications and applications. This includes iguhealth server, fhirpath, admin app and others.
+  Library and application code. This includes iguhealth server, fhirpath, admin app and others.
 
 - **docker/**
 
