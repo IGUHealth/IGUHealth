@@ -37,6 +37,24 @@ async function insertCodesDB(
   }
 }
 
+async function insertEdgesDB(
+  pg: db.Queryable,
+  values: s.terminology_edge.Insertable[],
+) {
+  try {
+    await db
+      .upsert(
+        "terminology_edge",
+        values,
+        db.constraint("terminology_edge_pkey"),
+        { updateColumns: doNothing },
+      )
+      .run(pg);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 function readCSV(filepath: string): csv.parser.Parser {
   const parser = fs
     .createReadStream(filepath)
@@ -51,6 +69,7 @@ async function loadTerminology(pg: db.Queryable, system: string) {
     "../../../external-codesystems",
   );
   switch (system) {
+    // Country codes
     case "iso-3166": {
       const system = "urn:iso:std:iso:3166";
       await createSystem(pg, system);
@@ -69,7 +88,7 @@ async function loadTerminology(pg: db.Queryable, system: string) {
 
       return;
     }
-
+    // Currency codes
     case "iso-4217": {
       const system = "urn:iso:std:iso:4217";
       await createSystem(pg, system);
@@ -88,6 +107,53 @@ async function loadTerminology(pg: db.Queryable, system: string) {
       await insertCodesDB(pg, inserts);
 
       return;
+    }
+
+    // Media type codes
+    case "bcp-13": {
+      const system = "urn:ietf:bcp:13";
+      await createSystem(pg, system);
+
+      const loadMediaType = async (type: string) => {
+        // Split the media codes across files by type.
+
+        // Load application types.
+        const csv = readCSV(path.join(root, "./media-types", `${type}.csv`));
+        const codes: s.terminology_codes.Insertable[] = [
+          { code: type, system, display: type },
+        ];
+        const edges: s.terminology_edge.Insertable[] = [];
+        for await (const record of csv) {
+          // Work with each record
+          codes.push({
+            code: record["Template"],
+            display: record["Name"],
+            system: system,
+          });
+          edges.push({
+            system,
+            parent_code: type,
+            child_code: record["Template"],
+          });
+        }
+        await insertCodesDB(pg, codes);
+        await insertEdgesDB(pg, edges);
+      };
+
+      const mediaTypes = [
+        "application",
+        "audio",
+        "font",
+        "haptics",
+        "image",
+        "message",
+        "model",
+        "multipart",
+        "text",
+        "video",
+      ];
+
+      await Promise.all(mediaTypes.map(loadMediaType));
     }
   }
 }
