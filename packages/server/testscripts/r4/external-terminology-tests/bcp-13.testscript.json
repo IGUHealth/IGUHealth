@@ -1,0 +1,90 @@
+{
+  "id": "bcp-13-tests",
+  "resourceType": "TestScript",
+  "title": "BCP 13 Media Types",
+  "contained": [
+    {
+      "id": "bcp-13-lookup",
+      "resourceType": "Parameters",
+      "parameter": [
+        {
+          "name": "system",
+          "valueUri": "urn:ietf:bcp:13"
+        },
+        { "name": "code", "valueCode": "application/fhir+json" }
+      ]
+    },
+    {
+      "id": "bcp-13-lookup-failed",
+      "resourceType": "Parameters",
+      "parameter": [
+        {
+          "name": "system",
+          "valueUri": "urn:ietf:bcp:13"
+        },
+        { "name": "code", "valueCode": "application/test-bad" }
+      ]
+    }
+  ],
+  "fixture": [
+    {
+      "id": "bcp-13-lookup",
+      "resource": {
+        "reference": "#bcp-13-lookup"
+      }
+    },
+    {
+      "id": "bcp-13-lookup-failed",
+      "resource": {
+        "reference": "#bcp-13-lookup-failed"
+      }
+    }
+  ],
+  "test": [
+    {
+      "id": "lookup-test",
+      "name": "CodeSystem lookup tests.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "invoke"
+            },
+            "url": "lookup",
+            "resource": "CodeSystem",
+            "sourceId": "bcp-13-lookup"
+          }
+        },
+        {
+          "assert": {
+            "expression": "Parameters.parameter.where(name='display').value",
+            "value": "application/fhir+json"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lookup-test",
+      "name": "CodeSystem lookup tests Failed.",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "invoke"
+            },
+            "url": "lookup",
+            "resource": "CodeSystem",
+            "sourceId": "bcp-13-lookup-failed"
+          }
+        },
+        {
+          "assert": {
+            "resource": "OperationOutcome"
+          }
+        }
+      ]
+    }
+  ]
+}
