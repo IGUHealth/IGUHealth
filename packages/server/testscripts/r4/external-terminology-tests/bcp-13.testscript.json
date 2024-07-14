@@ -65,7 +65,7 @@
       ]
     },
     {
-      "id": "lookup-test",
+      "id": "lookup-test-failed",
       "name": "CodeSystem lookup tests Failed.",
       "action": [
         {
