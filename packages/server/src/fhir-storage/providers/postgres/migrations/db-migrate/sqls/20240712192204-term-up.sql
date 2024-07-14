@@ -17,5 +17,7 @@ CREATE TABLE terminology_edge (
     child_code    TEXT NOT NULL,
 
     FOREIGN KEY (system, parent_code) references terminology_codes (system, code) ON DELETE CASCADE,
-    FOREIGN KEY (system, child_code) references terminology_codes (system, code) ON DELETE CASCADE
+    FOREIGN KEY (system, child_code) references terminology_codes (system, code) ON DELETE CASCADE,
+
+    PRIMARY KEY (system, parent_code, child_code)
 );
