@@ -188,17 +188,64 @@ async function getValuesetExpansionContains<Version extends FHIR_VERSION>(
   ).flat();
 }
 
-function checkforCode(
-  contains: ValueSetExpansionContains[] | undefined,
-  code: string | undefined,
-): boolean {
-  if (!code) return false;
-  if (!contains) {
-    return false;
+async function validateInclude<Version extends FHIR_VERSION>(
+  ctx: IGUHealthServerCTX,
+  fhirVersion: Version,
+  include: NonNullable<
+    NonNullable<Resource<Version, "ValueSet">["compose"]>
+  >["include"][number],
+  code: code,
+): Promise<boolean> {
+  switch (true) {
+    case areCodesInline(include): {
+      return (
+        include.concept?.find((concept) => concept.code === code) !== undefined
+      );
+    }
+    // [TODO] Check for infinite recursion here.
+    // Users could exploit creation of valueset that refers to itself.
+    case include.valueSet !== undefined: {
+      return (
+        await Promise.all(
+          include.valueSet.map(async (includeValueSet) => {
+            const validation = await ctx.client.invoke_type(
+              ValueSetValidateCode.Op,
+              ctx,
+              fhirVersion,
+              "ValueSet",
+              { url: includeValueSet, code },
+            );
+
+            return validation.result;
+          }),
+        )
+      ).reduce((acc, res) => acc || res, false);
+    }
+    case include.system !== undefined: {
+      const lookup = await ctx.terminologyProvider?.lookup(ctx, fhirVersion, {
+        system: include.system,
+        code,
+      });
+
+      return lookup !== undefined;
+    }
+    default: {
+      throw new OperationError(
+        outcomeError("not-supported", `Could not expand valueset`),
+      );
+    }
   }
-  if (contains.find((v) => v.code === code)) return true;
-  for (const c of contains) {
-    if (checkforCode(c.contains, code)) return true;
+}
+
+async function validateCode<Version extends FHIR_VERSION>(
+  ctx: IGUHealthServerCTX,
+  fhirVersion: Version,
+  valueSet: Resource<Version, "ValueSet">,
+  code: code,
+): Promise<boolean> {
+  for (const include of valueSet.compose?.include || []) {
+    const result = await validateInclude(ctx, fhirVersion, include, code);
+    if (result) return true;
   }
   return false;
 }
@@ -267,7 +314,6 @@ async function findConcept<Version extends FHIR_VERSION>(
 }
 
 export class TerminologyProvider implements ITerminologyProvider {
-  constructor() {}
   async validate(
     ctx: IGUHealthServerCTX,
     fhirVersion: FHIR_VERSION,
@@ -285,13 +331,17 @@ export class TerminologyProvider implements ITerminologyProvider {
       );
     }
 
-    const doesCodeExists = checkforCode(
-      valueset.expansion?.contains,
-      input.code,
-    );
+    if (!input.code) {
+      throw new OperationError(
+        outcomeError(
+          "not-supported",
+          "Validation only supports validation with 'code' parameter",
+        ),
+      );
+    }
 
     return {
-      result: doesCodeExists,
+      result: await validateCode(ctx, fhirVersion, valueset, input.code),
     };
   }
   async expand<Version extends FHIR_VERSION>(
