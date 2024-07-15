@@ -49,5 +49,4 @@ RUN chmod +x /usr/local/bin/entrypoint
 
 ENV NODE_ENV=production
 ENTRYPOINT ["entrypoint"]
-
-CMD ["server"]
+CMD ["run", "server"]
