@@ -63,6 +63,9 @@ function codeSystemConceptToValuesetExpansion(
   });
 }
 
+// Limit the number of codes returned on externals.
+export const LIMIT = 201;
+
 async function getConcepts<Version extends FHIR_VERSION>(
   pg: db.Queryable,
   codeSystem: Resource<Version, "CodeSystem">,
@@ -77,10 +80,10 @@ async function getConcepts<Version extends FHIR_VERSION>(
           .select(
             "terminology_codes",
             { system: codeSystem.url },
-            { limit: 101 },
+            { limit: LIMIT },
           )
           .run(pg);
-        if (codes.length === 101) {
+        if (codes.length === LIMIT) {
           throw new OperationError(
             outcomeError(
               "too-costly",
