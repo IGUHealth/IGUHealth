@@ -108,37 +108,40 @@ async function getConcepts<Version extends FHIR_VERSION>(
   }
 }
 
-async function getValuesetExpansionContains<Version extends FHIR_VERSION>(
+async function getValueSetExpansion<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
   fhirVersion: Version,
-  valueSet: Resource<Version, "ValueSet">,
-): Promise<
-  NonNullable<Resource<Version, "ValueSet">["expansion"]>["contains"]
-> {
-  let expansion: ValueSetExpansionContains[] = [];
-  for (const include of valueSet.compose?.include || []) {
-    if (areCodesInline(include)) {
+  include: NonNullable<
+    NonNullable<Resource<Version, "ValueSet">["compose"]>
+  >["include"][number],
+): Promise<ValueSetExpansionContains[]> {
+  switch (true) {
+    case areCodesInline(include): {
       const inlineExpansion = inlineCodesetToValuesetExpansion(include);
-      expansion = expansion.concat(inlineExpansion ? inlineExpansion : []);
+      return inlineExpansion ? inlineExpansion : [];
     }
     // [TODO] Check for infinite recursion here.
     // Users could exploit creation of valueset that refers to itself.
-    else if (include.valueSet) {
-      for (const includeValueSet of include.valueSet) {
-        const expandedValueSet = await ctx.client.invoke_type(
-          ValueSetExpand.Op,
-          ctx,
-          fhirVersion,
-          "ValueSet",
-          { url: includeValueSet },
-        );
-        expansion = expansion.concat(
-          expandedValueSet?.expansion?.contains
-            ? expandedValueSet?.expansion?.contains
-            : [],
-        );
-      }
-    } else if (include.system) {
+    case include.valueSet !== undefined: {
+      return (
+        await Promise.all(
+          include.valueSet.map(async (includeValueSet) => {
+            const expandedValueSet = await ctx.client.invoke_type(
+              ValueSetExpand.Op,
+              ctx,
+              fhirVersion,
+              "ValueSet",
+              { url: includeValueSet },
+            );
+
+            return expandedValueSet?.expansion?.contains
+              ? expandedValueSet?.expansion?.contains
+              : [];
+          }),
+        )
+      ).flat();
+    }
+    case include.system !== undefined: {
       const codeSystem = await ctx.resolveCanonical(
         fhirVersion,
         "CodeSystem",
@@ -160,20 +163,30 @@ async function getValuesetExpansionContains<Version extends FHIR_VERSION>(
         await getConcepts(ctx.db, codeSystem),
       );
 
-      expansion = expansion.concat(
-        codesystemExpansion ? codesystemExpansion : [],
-      );
-    } else {
+      return codesystemExpansion ? codesystemExpansion : [];
+    }
+    default: {
       throw new OperationError(
-        outcomeError(
-          "not-supported",
-          `Could not expand valueset ${valueSet.id}`,
-        ),
+        outcomeError("not-supported", `Could not expand valueset`),
       );
     }
   }
+}
 
-  return expansion;
+async function getValuesetExpansionContains<Version extends FHIR_VERSION>(
+  ctx: IGUHealthServerCTX,
+  fhirVersion: Version,
+  valueSet: Resource<Version, "ValueSet">,
+): Promise<
+  NonNullable<Resource<Version, "ValueSet">["expansion"]>["contains"]
+> {
+  return (
+    await Promise.all(
+      (valueSet.compose?.include || []).map(async (include) =>
+        getValueSetExpansion(ctx, fhirVersion, include),
+      ),
+    )
+  ).flat();
 }
 
 function checkforCode(
