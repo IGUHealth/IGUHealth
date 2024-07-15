@@ -256,6 +256,21 @@ async function validateInclude<Version extends FHIR_VERSION>(
   }
 }
 
+async function resolveValueSet<Version extends FHIR_VERSION>(
+  ctx: IGUHealthServerCTX,
+  fhirVersion: Version,
+  input: ValueSetExpand.Input,
+): Promise<Resource<Version, "ValueSet"> | undefined> {
+  if (input.valueSet) {
+    return input.valueSet as Resource<Version, "ValueSet"> | undefined;
+  } else if (input.url) {
+    const [url, url_version] = splitParameter(input.url, "|");
+    const version = url_version ? url_version : input.valueSetVersion;
+
+    return ctx.resolveCanonical(fhirVersion, "ValueSet", url as canonical);
+  }
+}
+
 async function validateCode<Version extends FHIR_VERSION>(
   ctx: IGUHealthServerCTX,
   fhirVersion: Version,
@@ -338,7 +353,7 @@ export class TerminologyProvider implements ITerminologyProvider {
     fhirVersion: FHIR_VERSION,
     input: ValidateInput,
   ): Promise<ValidateOutput> {
-    const valueset = await this.expand(ctx, fhirVersion, {
+    const valueset = await resolveValueSet(ctx, fhirVersion, {
       url: input.url,
       valueSet: input.valueSet,
       valueSetVersion: input.valueSetVersion,
@@ -368,19 +383,7 @@ export class TerminologyProvider implements ITerminologyProvider {
     fhirVersion: Version,
     input: ExpandInput,
   ): Promise<ExpandOutput> {
-    let valueset: Resource<Version, "ValueSet"> | undefined;
-    if (input.valueSet) {
-      valueset = input.valueSet as Resource<Version, "ValueSet"> | undefined;
-    } else if (input.url) {
-      const [url, url_version] = splitParameter(input.url, "|");
-      const version = url_version ? url_version : input.valueSetVersion;
-
-      valueset = await ctx.resolveCanonical(
-        fhirVersion,
-        "ValueSet",
-        url as canonical,
-      );
-    }
+    let valueset = await resolveValueSet(ctx, fhirVersion, input);
 
     if (!valueset) {
       throw new OperationError(
