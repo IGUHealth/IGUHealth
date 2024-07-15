@@ -4,6 +4,16 @@
   "title": "BCP 13 Media Types",
   "contained": [
     {
+      "id": "valueset-bcp-13-expand",
+      "resourceType": "Parameters",
+      "parameter": [
+        {
+          "name": "url",
+          "valueUri": "http://hl7.org/fhir/ValueSet/mimetypes"
+        }
+      ]
+    },
+    {
       "id": "bcp-13-lookup",
       "resourceType": "Parameters",
       "parameter": [
@@ -28,6 +38,12 @@
   ],
   "fixture": [
     {
+      "id": "valueset-bcp-13-expand",
+      "resource": {
+        "reference": "#valueset-bcp-13-expand"
+      }
+    },
+    {
       "id": "bcp-13-lookup",
       "resource": {
         "reference": "#bcp-13-lookup"
@@ -41,6 +57,34 @@
     }
   ],
   "test": [
+    {
+      "id": "fail-expand-to-costly",
+      "name": "BCP 13 Fail on expansion",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "invoke"
+            },
+            "url": "expand",
+            "resource": "ValueSet",
+            "sourceId": "valueset-bcp-13-expand"
+          }
+        },
+        {
+          "assert": {
+            "resource": "OperationOutcome"
+          }
+        },
+        {
+          "assert": {
+            "expression": "OperationOutcome.issue.where(severity='error').code",
+            "value": "too-costly"
+          }
+        }
+      ]
+    },
     {
       "id": "lookup-test",
       "name": "CodeSystem lookup tests.",
