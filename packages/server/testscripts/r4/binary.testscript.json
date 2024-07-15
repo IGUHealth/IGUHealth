@@ -1,0 +1,105 @@
+{
+  "id": "binary-example-test",
+  "title": "Binary Example Test",
+  "resourceType": "TestScript",
+  "contained": [
+    {
+      "id": "binary-example",
+      "contentType": "application/fhir+json",
+      "resourceType": "Binary",
+      "meta": {
+        "tag": [{ "code": "binary-create-test" }]
+      }
+    },
+    {
+      "id": "binary-example-invalid-content",
+      "contentType": "application/fhir+jso",
+      "resourceType": "Binary",
+      "meta": {
+        "tag": [{ "code": "binary-create-test" }]
+      }
+    }
+  ],
+  "fixture": [
+    {
+      "id": "binary-example",
+      "resource": {
+        "reference": "#binary-example"
+      }
+    },
+    {
+      "id": "binary-example-invalid-content",
+      "resource": {
+        "reference": "#binary-example-invalid-content"
+      }
+    }
+  ],
+  "test": [
+    {
+      "id": "01-Create Binary",
+      "name": "Create Binary",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "create"
+            },
+            "resource": "Binary",
+            "sourceId": "binary-example",
+            "responseId": "create-response"
+          }
+        },
+        {
+          "assert": {
+            "label": "01-Read-Binary",
+            "direction": "response",
+            "resource": "Binary"
+          }
+        }
+      ]
+    },
+    {
+      "id": "01-Create-Binary-Invalid",
+      "name": "Create Binary Invalid",
+      "action": [
+        {
+          "operation": {
+            "type": {
+              "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+              "code": "create"
+            },
+            "resource": "Binary",
+            "sourceId": "binary-example-invalid-content",
+            "responseId": "create-response"
+          }
+        },
+        {
+          "assert": {
+            "resource": "OperationOutcome"
+          }
+        },
+        {
+          "assert": {
+            "expression": "OperationOutcome.issue.where(severity='error').code",
+            "value": "structure"
+          }
+        }
+      ]
+    }
+  ],
+  "teardown": {
+    "action": [
+      {
+        "operation": {
+          "type": {
+            "system": "http://terminology.hl7.org/CodeSystem/testscript-operation-codes",
+            "code": "delete"
+          },
+          "resource": "Binary",
+          "params": "_tag=binary-create-test"
+        }
+      }
+    ]
+  }
+}
