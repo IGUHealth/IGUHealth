@@ -222,12 +222,16 @@ async function validateInclude<Version extends FHIR_VERSION>(
       ).reduce((acc, res) => acc || res, false);
     }
     case include.system !== undefined: {
-      const lookup = await ctx.terminologyProvider?.lookup(ctx, fhirVersion, {
-        system: include.system,
-        code,
-      });
+      try {
+        const lookup = await ctx.terminologyProvider?.lookup(ctx, fhirVersion, {
+          system: include.system,
+          code,
+        });
 
-      return lookup !== undefined;
+        return lookup !== undefined;
+      } catch (e) {
+        return false;
+      }
     }
     default: {
       throw new OperationError(
