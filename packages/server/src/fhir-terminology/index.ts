@@ -156,13 +156,13 @@ async function getValueSetExpansion<Version extends FHIR_VERSION>(
         );
       }
 
-      const codesystemExpansion = codeSystemConceptToValuesetExpansion(
-        codeSystem.url,
-        codeSystem.version,
-        await getConcepts(ctx.db, codeSystem),
+      return (
+        codeSystemConceptToValuesetExpansion(
+          codeSystem.url,
+          codeSystem.version,
+          await getConcepts(ctx.db, codeSystem),
+        ) ?? []
       );
-
-      return codesystemExpansion ? codesystemExpansion : [];
     }
     default: {
       throw new OperationError(
