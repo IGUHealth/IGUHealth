@@ -74,8 +74,20 @@ async function getConcepts<Version extends FHIR_VERSION>(
         .run(pg);
       if (system) {
         const codes = await db
-          .select("terminology_codes", { system: codeSystem.url })
+          .select(
+            "terminology_codes",
+            { system: codeSystem.url },
+            { limit: 101 },
+          )
           .run(pg);
+        if (codes.length === 101) {
+          throw new OperationError(
+            outcomeError(
+              "too-costly",
+              `Too many codes in code system ${codeSystem.url}`,
+            ),
+          );
+        }
         return codes.map((code) => {
           return {
             code: code.code as code,
