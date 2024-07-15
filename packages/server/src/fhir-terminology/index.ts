@@ -117,8 +117,7 @@ async function getValueSetExpansion<Version extends FHIR_VERSION>(
 ): Promise<ValueSetExpansionContains[]> {
   switch (true) {
     case areCodesInline(include): {
-      const inlineExpansion = inlineCodesetToValuesetExpansion(include);
-      return inlineExpansion ? inlineExpansion : [];
+      return inlineCodesetToValuesetExpansion(include) ?? [];
     }
     // [TODO] Check for infinite recursion here.
     // Users could exploit creation of valueset that refers to itself.
