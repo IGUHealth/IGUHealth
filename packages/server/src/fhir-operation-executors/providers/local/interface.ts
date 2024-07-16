@@ -76,7 +76,6 @@ export default function InlineOperation<
       );
 
       if (outputIssues.length > 0) {
-        console.log(JSON.stringify(result));
         throw new OperationError(outcome(outputIssues));
       }
 
