@@ -344,7 +344,7 @@ test("paramValidation", async () => {
     issue: [
       {
         code: "structure",
-        diagnostics: "Element at path '/0/given' is expected to be an array.",
+        diagnostics: "Element is expected to be an array.",
         expression: ["/0/given"],
         severity: "error",
       },
